@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { getCurrentUser, logoutUser, isAdmin } from '@/lib/auth';
+import { logoutUser } from '@/lib/auth';
 import { getAllAvailableSessions, joinSession, updateSessionStatuses } from '@/lib/liveSessions';
 import { LiveSession } from '@/lib/types';
-import Auth from '@/components/Auth';
 import LiveSessionComponent from '@/components/LiveSession';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { useAuth } from '@/contexts/AuthContext';
 
-export default function LivePracticePage() {
-  const [currentUser, setCurrentUser] = useState(getCurrentUser());
+function LivePracticePageContent() {
+  const { user: currentUser, setUser, isAdmin } = useAuth();
   const [sessions, setSessions] = useState<LiveSession[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [error, setError] = useState('');
@@ -28,7 +29,8 @@ export default function LivePracticePage() {
 
   const handleLogout = () => {
     logoutUser();
-    setCurrentUser(null);
+    setUser(null);
+    router.push('/');
   };
 
   const handleJoinSession = (sessionId: string) => {
@@ -46,11 +48,6 @@ export default function LivePracticePage() {
     setActiveSessionId(null);
     refreshSessions();
   };
-
-  // Show auth screen if not logged in
-  if (!currentUser) {
-    return <Auth onSuccess={() => setCurrentUser(getCurrentUser())} />;
-  }
 
   // Show active session if user is in one
   if (activeSessionId) {
@@ -75,18 +72,18 @@ export default function LivePracticePage() {
             <div className="flex items-center space-x-4">
               <div className="text-right">
                 <p className="text-sm text-gray-600 dark:text-gray-400">Bienvenido,</p>
-                <p className="font-medium text-gray-900 dark:text-white">{currentUser.displayName}</p>
-                {isAdmin() && (
+                <p className="font-medium text-gray-900 dark:text-white">{currentUser?.displayName}</p>
+                {isAdmin && (
                   <p className="text-xs text-indigo-600 dark:text-indigo-400">Administrador</p>
                 )}
               </div>
               <button
-                onClick={() => router.push('/')}
+                onClick={() => router.push('/dashboard')}
                 className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
               >
                 Inicio
               </button>
-              {isAdmin() && (
+              {isAdmin && (
                 <button
                   onClick={() => router.push('/admin')}
                   className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
@@ -193,7 +190,7 @@ export default function LivePracticePage() {
                   >
                     {session.status === 'scheduled'
                       ? 'Próximamente'
-                      : session.participants.some(p => p.userId === currentUser.id)
+                      : session.participants.some(p => p.userId === currentUser?.id)
                       ? 'Volver a Entrar'
                       : 'Unirse'}
                   </button>
@@ -204,5 +201,13 @@ export default function LivePracticePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LivePracticePage() {
+  return (
+    <ProtectedRoute>
+      <LivePracticePageContent />
+    </ProtectedRoute>
   );
 }

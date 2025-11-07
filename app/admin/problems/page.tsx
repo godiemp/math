@@ -1,25 +1,16 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { isAdmin } from '@/lib/auth'
+import { useState } from 'react'
 import { questions } from '@/lib/questions'
 import { Question } from '@/lib/types'
+import { ProtectedRoute } from '@/components/ProtectedRoute'
 
-export default function ProblemsExplorer() {
-  const router = useRouter()
+function ProblemsExplorerContent() {
   const [selectedLevel, setSelectedLevel] = useState<'all' | 'M1' | 'M2'>('all')
   const [selectedSubject, setSelectedSubject] = useState<'all' | 'números' | 'álgebra' | 'geometría' | 'probabilidad'>('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard'>('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null)
-
-  useEffect(() => {
-    if (!isAdmin()) {
-      router.push('/')
-      return
-    }
-  }, [router])
 
   // Filter questions based on selected filters
   const filteredQuestions = questions.filter((q) => {
@@ -396,5 +387,13 @@ export default function ProblemsExplorer() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function ProblemsExplorer() {
+  return (
+    <ProtectedRoute requireAdmin={true}>
+      <ProblemsExplorerContent />
+    </ProtectedRoute>
   )
 }

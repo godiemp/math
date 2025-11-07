@@ -4,12 +4,13 @@ import { useState } from 'react';
 import Quiz from '@/components/Quiz';
 import { getQuestionsByLevel } from '@/lib/questions';
 import Link from 'next/link';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 type Subject = 'números' | 'álgebra' | 'geometría' | 'probabilidad';
 type QuizMode = 'zen' | 'rapidfire';
 type Difficulty = 'easy' | 'medium' | 'hard' | 'extreme';
 
-export default function M2Practice() {
+function M2PracticeContent() {
   const [selectedSubject, setSelectedSubject] = useState<Subject | null | undefined>(undefined);
   const [quizMode, setQuizMode] = useState<QuizMode | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
@@ -340,7 +341,7 @@ export default function M2Practice() {
         <div className="mb-8">
           <div className="flex justify-between items-start mb-4">
             <Link
-              href="/"
+              href="/dashboard"
               className="text-indigo-600 dark:text-indigo-400 hover:underline inline-block"
             >
               ← Volver al Inicio
@@ -366,5 +367,13 @@ export default function M2Practice() {
         {renderStartButton()}
       </div>
     </div>
+  );
+}
+
+export default function M2Practice() {
+  return (
+    <ProtectedRoute>
+      <M2PracticeContent />
+    </ProtectedRoute>
   );
 }
