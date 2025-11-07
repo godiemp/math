@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Question } from '@/lib/types';
+import { Question, QuestionAttempt } from '@/lib/types';
 import { MathText, BlockMath, InlineMath } from './MathDisplay';
 
 interface QuizProps {
@@ -47,6 +47,32 @@ export default function Quiz({ questions, level }: QuizProps) {
 
     // Save progress to localStorage
     localStorage.setItem(`paes-progress-${level}`, JSON.stringify(newScore));
+
+    // Save detailed question attempt history
+    const attempt: QuestionAttempt = {
+      questionId: currentQuestion.id,
+      question: currentQuestion.question,
+      topic: currentQuestion.topic,
+      level: level,
+      userAnswer: selectedAnswer,
+      correctAnswer: currentQuestion.correctAnswer,
+      isCorrect: isCorrect,
+      timestamp: Date.now(),
+      options: currentQuestion.options,
+      explanation: currentQuestion.explanation,
+      difficulty: currentQuestion.difficulty,
+    };
+
+    // Get existing history
+    const historyKey = `paes-history-${level}`;
+    const existingHistory = localStorage.getItem(historyKey);
+    const history: QuestionAttempt[] = existingHistory ? JSON.parse(existingHistory) : [];
+
+    // Add new attempt to the beginning of the array
+    history.unshift(attempt);
+
+    // Save updated history
+    localStorage.setItem(historyKey, JSON.stringify(history));
   };
 
   const handleNext = () => {
