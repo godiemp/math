@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
 
 function DashboardContent() {
-  const { user, setUser } = useAuth();
+  const { user, setUser, isAdmin } = useAuth();
   const router = useRouter();
 
   const handleLogout = () => {
@@ -27,6 +27,14 @@ function DashboardContent() {
             <span className="text-gray-700 dark:text-gray-300">
               Hola, {user?.displayName}
             </span>
+            {isAdmin && (
+              <button
+                onClick={() => router.push('/admin')}
+                className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                Admin
+              </button>
+            )}
             <button
               onClick={handleLogout}
               className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
