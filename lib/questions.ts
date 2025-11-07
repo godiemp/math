@@ -5,7 +5,7 @@ export const questions: Question[] = [
   {
     id: 'm1-1',
     level: 'M1',
-    topic: 'Números y Proporcionalidad',
+    topic: 'Números',
     question: 'Si 3 obreros construyen un muro en 12 días, ¿cuántos días tardarán 4 obreros en construir el mismo muro?',
     options: ['8 días', '9 días', '10 días', '16 días'],
     correctAnswer: 1,
@@ -65,7 +65,7 @@ export const questions: Question[] = [
   {
     id: 'm1-7',
     level: 'M1',
-    topic: 'Números y Proporcionalidad',
+    topic: 'Números',
     question: 'El 25% de 80 es igual a:',
     options: ['15', '20', '25', '30'],
     correctAnswer: 1,
@@ -83,79 +83,9 @@ export const questions: Question[] = [
     difficulty: 'easy'
   },
 
-  // M2 Questions
+  // M2 Questions - Advanced topics for science/engineering careers
   {
     id: 'm2-1',
-    level: 'M2',
-    topic: 'Límites y Derivadas',
-    question: '¿Cuál es el límite de f(x) = (x² - 4)/(x - 2) cuando x → 2?',
-    options: ['0', '2', '4', 'No existe'],
-    correctAnswer: 2,
-    explanation: 'Factorizando: (x² - 4)/(x - 2) = (x + 2)(x - 2)/(x - 2) = x + 2. Cuando x → 2, el límite es 4.',
-    difficulty: 'medium'
-  },
-  {
-    id: 'm2-2',
-    level: 'M2',
-    topic: 'Límites y Derivadas',
-    question: 'La derivada de f(x) = x³ es:',
-    options: ['x²', '2x²', '3x²', '3x³'],
-    correctAnswer: 2,
-    explanation: 'Usando la regla de potencias: d/dx(x³) = 3x²',
-    difficulty: 'easy'
-  },
-  {
-    id: 'm2-3',
-    level: 'M2',
-    topic: 'Álgebra y Funciones',
-    question: 'Las raíces de la ecuación x² - 5x + 6 = 0 son:',
-    options: ['x = 1, x = 6', 'x = 2, x = 3', 'x = -2, x = -3', 'x = 1, x = 5'],
-    correctAnswer: 1,
-    explanation: 'Factorizando: (x - 2)(x - 3) = 0, por lo tanto x = 2 o x = 3',
-    difficulty: 'medium'
-  },
-  {
-    id: 'm2-4',
-    level: 'M2',
-    topic: 'Geometría',
-    question: 'En un triángulo, si dos lados miden 5 cm y 12 cm, y el ángulo entre ellos es 90°, ¿cuál es el área?',
-    options: ['30 cm²', '60 cm²', '17 cm²', '85 cm²'],
-    correctAnswer: 0,
-    explanation: 'Área del triángulo rectángulo = (base × altura) / 2 = (5 × 12) / 2 = 30 cm²',
-    difficulty: 'medium'
-  },
-  {
-    id: 'm2-5',
-    level: 'M2',
-    topic: 'Cálculo Integral',
-    question: '¿Cuál es la integral de f(x) = 2x?',
-    options: ['x² + C', '2x² + C', 'x²/2 + C', '2'],
-    correctAnswer: 0,
-    explanation: '∫2x dx = 2 × (x²/2) + C = x² + C',
-    difficulty: 'medium'
-  },
-  {
-    id: 'm2-6',
-    level: 'M2',
-    topic: 'Límites y Derivadas',
-    question: 'La derivada de f(x) = sin(x) es:',
-    options: ['-cos(x)', 'cos(x)', '-sin(x)', 'tan(x)'],
-    correctAnswer: 1,
-    explanation: 'd/dx(sin(x)) = cos(x)',
-    difficulty: 'easy'
-  },
-  {
-    id: 'm2-7',
-    level: 'M2',
-    topic: 'Probabilidad y Estadística',
-    question: 'En una distribución normal, ¿qué porcentaje de los datos está dentro de una desviación estándar de la media?',
-    options: ['50%', '68%', '95%', '99%'],
-    correctAnswer: 1,
-    explanation: 'En una distribución normal, aproximadamente el 68% de los datos está dentro de ±1 desviación estándar.',
-    difficulty: 'medium'
-  },
-  {
-    id: 'm2-8',
     level: 'M2',
     topic: 'Álgebra y Funciones',
     question: 'Si log₂(8) = x, entonces x es igual a:',
@@ -165,23 +95,93 @@ export const questions: Question[] = [
     difficulty: 'medium'
   },
   {
+    id: 'm2-2',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    question: 'Las raíces de la ecuación x² - 5x + 6 = 0 son:',
+    options: ['x = 1, x = 6', 'x = 2, x = 3', 'x = -2, x = -3', 'x = 1, x = 5'],
+    correctAnswer: 1,
+    explanation: 'Factorizando: (x - 2)(x - 3) = 0, por lo tanto x = 2 o x = 3',
+    difficulty: 'medium'
+  },
+  {
+    id: 'm2-3',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    question: 'Si 2ˣ = 16, entonces x es igual a:',
+    options: ['2', '3', '4', '8'],
+    correctAnswer: 2,
+    explanation: '2ˣ = 16 = 2⁴, por lo tanto x = 4. Es una función exponencial.',
+    difficulty: 'easy'
+  },
+  {
+    id: 'm2-4',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    question: 'El valor de log₁₀(100) es:',
+    options: ['1', '2', '10', '100'],
+    correctAnswer: 1,
+    explanation: 'log₁₀(100) = log₁₀(10²) = 2',
+    difficulty: 'easy'
+  },
+  {
+    id: 'm2-5',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    question: 'Si f(x) = 3ˣ, ¿cuál es el valor de f(2)?',
+    options: ['6', '8', '9', '12'],
+    correctAnswer: 2,
+    explanation: 'f(2) = 3² = 9. Es una función exponencial con base 3.',
+    difficulty: 'easy'
+  },
+  {
+    id: 'm2-6',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    question: 'En un triángulo rectángulo con hipotenusa 10 y un cateto 6, el valor de sen(θ) donde θ es el ángulo opuesto al cateto es:',
+    options: ['0.6', '0.8', '6/10', 'Tanto A como C'],
+    correctAnswer: 3,
+    explanation: 'sen(θ) = cateto opuesto / hipotenusa = 6/10 = 0.6. Ambas formas son correctas.',
+    difficulty: 'medium'
+  },
+  {
+    id: 'm2-7',
+    level: 'M2',
+    topic: 'Geometría',
+    question: 'El volumen de un cubo con arista de 4 cm es:',
+    options: ['16 cm³', '24 cm³', '48 cm³', '64 cm³'],
+    correctAnswer: 3,
+    explanation: 'Volumen del cubo = arista³ = 4³ = 64 cm³',
+    difficulty: 'easy'
+  },
+  {
+    id: 'm2-8',
+    level: 'M2',
+    topic: 'Geometría',
+    question: 'Un paralelepípedo tiene dimensiones 2 cm × 3 cm × 4 cm. Su volumen es:',
+    options: ['9 cm³', '24 cm³', '26 cm³', '32 cm³'],
+    correctAnswer: 1,
+    explanation: 'Volumen = largo × ancho × alto = 2 × 3 × 4 = 24 cm³',
+    difficulty: 'easy'
+  },
+  {
     id: 'm2-9',
     level: 'M2',
-    topic: 'Cálculo Integral',
-    question: '¿Cuál es el valor de ∫₀² x dx?',
-    options: ['1', '2', '3', '4'],
+    topic: 'Probabilidad y Estadística',
+    question: 'El promedio de los números 10, 15, 20, 25 y 30 es:',
+    options: ['15', '20', '25', '30'],
     correctAnswer: 1,
-    explanation: '∫₀² x dx = [x²/2]₀² = (4/2) - (0/2) = 2 - 0 = 2',
-    difficulty: 'hard'
+    explanation: 'Promedio = (10 + 15 + 20 + 25 + 30) / 5 = 100 / 5 = 20',
+    difficulty: 'easy'
   },
   {
     id: 'm2-10',
     level: 'M2',
-    topic: 'Límites y Derivadas',
-    question: 'La pendiente de la recta tangente a f(x) = x² en el punto x = 3 es:',
-    options: ['3', '6', '9', '12'],
+    topic: 'Números',
+    question: 'Inviertes $100,000 a una tasa de interés simple del 5% anual. ¿Cuánto dinero tendrás después de 2 años?',
+    options: ['$105,000', '$110,000', '$115,000', '$120,000'],
     correctAnswer: 1,
-    explanation: 'f\'(x) = 2x, entonces f\'(3) = 2(3) = 6',
+    explanation: 'Interés simple = Capital × tasa × tiempo = 100,000 × 0.05 × 2 = 10,000. Total = 100,000 + 10,000 = $110,000',
     difficulty: 'medium'
   }
 ];

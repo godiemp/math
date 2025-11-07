@@ -57,26 +57,31 @@ export default function Home() {
 
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
           <h3 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
-            Temas Principales
+            Ejes Temáticos PAES
           </h3>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {[
-              "Números y Proporcionalidad",
-              "Álgebra y Funciones",
-              "Geometría",
-              "Probabilidad y Estadística",
-              "Límites y Derivadas",
-              "Cálculo Integral"
+              { title: "Números", desc: "Enteros, racionales, porcentajes, potencias" },
+              { title: "Álgebra y Funciones", desc: "Ecuaciones, funciones, logaritmos, exponenciales" },
+              { title: "Geometría", desc: "Figuras, cuerpos 3D, transformaciones" },
+              { title: "Probabilidad y Estadística", desc: "Medidas, gráficos, probabilidades" }
             ].map((topic, index) => (
               <div
                 key={index}
-                className="bg-indigo-50 dark:bg-gray-700 rounded-lg p-4 text-center hover:bg-indigo-100 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+                className="bg-indigo-50 dark:bg-gray-700 rounded-lg p-4 hover:bg-indigo-100 dark:hover:bg-gray-600 transition-colors"
               >
-                <p className="text-gray-800 dark:text-gray-200 font-medium">
-                  {topic}
+                <p className="text-gray-900 dark:text-gray-100 font-semibold mb-2">
+                  {topic.title}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  {topic.desc}
                 </p>
               </div>
             ))}
+          </div>
+          <div className="text-center text-sm text-gray-600 dark:text-gray-400">
+            <p className="mb-2">📚 M1: Contenidos básicos obligatorios (65 preguntas)</p>
+            <p>🎓 M2: Contenidos avanzados para ciencias e ingeniería (incluye funciones trigonométricas, logaritmos, matemática financiera)</p>
           </div>
         </div>
 
