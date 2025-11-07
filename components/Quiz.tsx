@@ -10,7 +10,7 @@ interface QuizProps {
   level: 'M1' | 'M2';
   subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
   quizMode?: 'zen' | 'rapidfire';
-  difficulty?: 'easy' | 'medium' | 'hard';
+  difficulty?: 'easy' | 'medium' | 'hard' | 'extreme';
 }
 
 export default function Quiz({ questions: allQuestions, level, subject, quizMode = 'zen', difficulty = 'medium' }: QuizProps) {
@@ -27,6 +27,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
       case 'easy': return 25 * 60; // 25 minutes = 1500 seconds
       case 'medium': return 20 * 60; // 20 minutes = 1200 seconds
       case 'hard': return 15 * 60; // 15 minutes = 900 seconds
+      case 'extreme': return 10 * 60; // 10 minutes = 600 seconds
       default: return 20 * 60;
     }
   };

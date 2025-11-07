@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 type Subject = 'números' | 'álgebra' | 'geometría' | 'probabilidad';
 type QuizMode = 'zen' | 'rapidfire';
-type Difficulty = 'easy' | 'medium' | 'hard';
+type Difficulty = 'easy' | 'medium' | 'hard' | 'extreme';
 
 export default function M1Practice() {
   const [selectedSubject, setSelectedSubject] = useState<Subject | undefined>(undefined);
@@ -62,6 +62,13 @@ export default function M1Practice() {
       emoji: '🔴',
       time: 15,
       description: '15 minutos - 1:30 por pregunta'
+    },
+    {
+      value: 'extreme',
+      label: 'Extremo',
+      emoji: '🟣',
+      time: 10,
+      description: '10 minutos - 1:00 por pregunta'
     }
   ];
 
@@ -210,7 +217,7 @@ export default function M1Practice() {
         <p className="text-gray-600 dark:text-gray-400 mb-6">
           ¿Cuánto tiempo necesitas para completar 10 preguntas?
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {difficulties.map((diff) => (
             <button
               key={diff.value}
