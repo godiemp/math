@@ -496,9 +496,12 @@ export default function AdminBackoffice() {
                       setFormData({ ...formData, questionCount: Number(e.target.value) })
                     }
                     min="5"
-                    max="20"
+                    max="65"
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                   />
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    PAES oficial: M1=60, M2=50 preguntas
+                  </p>
                 </div>
 
                 <div>
@@ -565,6 +568,9 @@ export default function AdminBackoffice() {
                     max="100"
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                   />
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Entre 2 y 100 participantes
+                  </p>
                 </div>
               </div>
 
