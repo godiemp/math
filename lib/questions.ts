@@ -338,6 +338,222 @@ export const questions: Question[] = [
     explanationLatex: '\\text{Rango} = 20 - 8 = 12',
     difficulty: 'easy'
   },
+  // Additional M1 Questions - Números (m1-26 to m1-29)
+  {
+    id: 'm1-26',
+    level: 'M1',
+    topic: 'Números y Operaciones',
+    subject: 'números',
+    question: '¿Cuál es el resultado de $(-3) \\times (-5)$?',
+    questionLatex: '\\text{¿Cuál es el resultado de } (-3) \\times (-5)?',
+    options: ['-15', '-8', '8', '15'],
+    correctAnswer: 3,
+    explanation: 'El producto de dos números negativos es positivo:',
+    explanationLatex: '(-3) \\times (-5) = 15',
+    difficulty: 'easy'
+  },
+  {
+    id: 'm1-27',
+    level: 'M1',
+    topic: 'Números y Proporcionalidad',
+    subject: 'números',
+    question: 'Una camisa cuesta $20.000 y tiene un descuento del 15%. ¿Cuál es el precio final?',
+    questionLatex: '\\text{Una camisa cuesta \\$20.000 y tiene un descuento del 15\\%. ¿Cuál es el precio final?}',
+    options: ['$15.000', '$17.000', '$17.500', '$18.000'],
+    correctAnswer: 1,
+    explanation: 'Calculamos el 15% de descuento y lo restamos del precio original:',
+    explanationLatex: '20.000 \\times 0.15 = 3.000 \\quad \\Rightarrow \\quad 20.000 - 3.000 = 17.000',
+    difficulty: 'easy'
+  },
+  {
+    id: 'm1-28',
+    level: 'M1',
+    topic: 'Números y Operaciones',
+    subject: 'números',
+    question: 'Si $\\frac{3}{4}$ de un número es 15, ¿cuál es el número?',
+    questionLatex: '\\text{Si } \\frac{3}{4} \\text{ de un número es 15, ¿cuál es el número?}',
+    options: ['12', '18', '20', '24'],
+    correctAnswer: 2,
+    explanation: 'Planteamos la ecuación y despejamos:',
+    explanationLatex: '\\frac{3}{4}x = 15 \\quad \\Rightarrow \\quad x = 15 \\times \\frac{4}{3} = 20',
+    difficulty: 'medium'
+  },
+  {
+    id: 'm1-29',
+    level: 'M1',
+    topic: 'Números y Operaciones',
+    subject: 'números',
+    question: '¿Cuál es el valor de $\\frac{2^3 \\times 2^2}{2^4}$?',
+    questionLatex: '\\text{¿Cuál es el valor de } \\frac{2^3 \\times 2^2}{2^4}?',
+    options: ['2', '4', '8', '16'],
+    correctAnswer: 0,
+    explanation: 'Usamos las propiedades de los exponentes:',
+    explanationLatex: '\\frac{2^3 \\times 2^2}{2^4} = \\frac{2^{3+2}}{2^4} = \\frac{2^5}{2^4} = 2^{5-4} = 2^1 = 2',
+    difficulty: 'medium'
+  },
+  // Additional M1 Questions - Álgebra (m1-30 to m1-33)
+  {
+    id: 'm1-30',
+    level: 'M1',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Si $x + 5 = 12$, ¿cuál es el valor de $2x$?',
+    questionLatex: '\\text{Si } x + 5 = 12 \\text{, ¿cuál es el valor de } 2x?',
+    options: ['7', '10', '14', '17'],
+    correctAnswer: 2,
+    explanation: 'Primero encontramos x, luego calculamos 2x:',
+    explanationLatex: 'x + 5 = 12 \\rightarrow x = 7 \\quad \\Rightarrow \\quad 2x = 2(7) = 14',
+    difficulty: 'easy'
+  },
+  {
+    id: 'm1-31',
+    level: 'M1',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Expandir: $(x + 3)(x + 2)$',
+    questionLatex: '\\text{Expandir: } (x + 3)(x + 2)',
+    options: ['$x^2 + 5x + 6$', '$x^2 + 6x + 5$', '$x^2 + 5x + 5$', '$x^2 + 6x + 6$'],
+    optionsLatex: ['x^2 + 5x + 6', 'x^2 + 6x + 5', 'x^2 + 5x + 5', 'x^2 + 6x + 6'],
+    correctAnswer: 0,
+    explanation: 'Aplicamos la propiedad distributiva:',
+    explanationLatex: '(x + 3)(x + 2) = x^2 + 2x + 3x + 6 = x^2 + 5x + 6',
+    difficulty: 'medium'
+  },
+  {
+    id: 'm1-32',
+    level: 'M1',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Si $f(x) = x^2 - 1$, ¿cuál es $f(3)$?',
+    questionLatex: '\\text{Si } f(x) = x^2 - 1 \\text{, ¿cuál es } f(3)?',
+    options: ['6', '7', '8', '9'],
+    correctAnswer: 2,
+    explanation: 'Sustituimos x por 3:',
+    explanationLatex: 'f(3) = 3^2 - 1 = 9 - 1 = 8',
+    difficulty: 'easy'
+  },
+  {
+    id: 'm1-33',
+    level: 'M1',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Resolver: $\\frac{x}{3} + 2 = 5$',
+    questionLatex: '\\text{Resolver: } \\frac{x}{3} + 2 = 5',
+    options: ['$x = 3$', '$x = 6$', '$x = 9$', '$x = 12$'],
+    optionsLatex: ['x = 3', 'x = 6', 'x = 9', 'x = 12'],
+    correctAnswer: 2,
+    explanation: 'Despejamos x:',
+    explanationLatex: '\\frac{x}{3} + 2 = 5 \\rightarrow \\frac{x}{3} = 3 \\rightarrow x = 9',
+    difficulty: 'easy'
+  },
+  // Additional M1 Questions - Geometría (m1-34 to m1-37)
+  {
+    id: 'm1-34',
+    level: 'M1',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'El área de un cuadrado con lado de 6 cm es:',
+    questionLatex: '\\text{El área de un cuadrado con lado de 6 cm es:}',
+    options: ['12 cm²', '24 cm²', '36 cm²', '48 cm²'],
+    correctAnswer: 2,
+    explanation: 'El área de un cuadrado es lado al cuadrado:',
+    explanationLatex: 'A = l^2 = 6^2 = 36 \\text{ cm}^2',
+    difficulty: 'easy'
+  },
+  {
+    id: 'm1-35',
+    level: 'M1',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'Si dos ángulos son suplementarios y uno mide 110°, ¿cuánto mide el otro?',
+    questionLatex: '\\text{Si dos ángulos son suplementarios y uno mide } 110^\\circ\\text{, ¿cuánto mide el otro?}',
+    options: ['70°', '80°', '90°', '180°'],
+    correctAnswer: 0,
+    explanation: 'Ángulos suplementarios suman 180°:',
+    explanationLatex: '180^\\circ - 110^\\circ = 70^\\circ',
+    difficulty: 'easy'
+  },
+  {
+    id: 'm1-36',
+    level: 'M1',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'El perímetro de un triángulo equilátero con lado de 5 cm es:',
+    questionLatex: '\\text{El perímetro de un triángulo equilátero con lado de 5 cm es:}',
+    options: ['10 cm', '15 cm', '20 cm', '25 cm'],
+    correctAnswer: 1,
+    explanation: 'Un triángulo equilátero tiene tres lados iguales:',
+    explanationLatex: 'P = 3 \\times 5 = 15 \\text{ cm}',
+    difficulty: 'easy'
+  },
+  {
+    id: 'm1-37',
+    level: 'M1',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'El área de un triángulo con base 8 cm y altura 6 cm es:',
+    questionLatex: '\\text{El área de un triángulo con base 8 cm y altura 6 cm es:}',
+    options: ['14 cm²', '24 cm²', '28 cm²', '48 cm²'],
+    correctAnswer: 1,
+    explanation: 'El área de un triángulo es base por altura dividido entre 2:',
+    explanationLatex: 'A = \\frac{b \\times h}{2} = \\frac{8 \\times 6}{2} = \\frac{48}{2} = 24 \\text{ cm}^2',
+    difficulty: 'easy'
+  },
+  // Additional M1 Questions - Probabilidad (m1-38 to m1-41)
+  {
+    id: 'm1-38',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    question: 'Al lanzar una moneda dos veces, ¿cuál es la probabilidad de obtener dos caras?',
+    questionLatex: '\\text{Al lanzar una moneda dos veces, ¿cuál es la probabilidad de obtener dos caras?}',
+    options: ['$\\frac{1}{2}$', '$\\frac{1}{3}$', '$\\frac{1}{4}$', '$\\frac{2}{3}$'],
+    optionsLatex: ['\\frac{1}{2}', '\\frac{1}{3}', '\\frac{1}{4}', '\\frac{2}{3}'],
+    correctAnswer: 2,
+    explanation: 'Los resultados posibles son CC, CS, SC, SS. Solo uno es favorable:',
+    explanationLatex: 'P(\\text{dos caras}) = \\frac{1}{4}',
+    difficulty: 'medium'
+  },
+  {
+    id: 'm1-39',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    question: 'La media de 5, 8, 10 y 13 es:',
+    questionLatex: '\\text{La media de 5, 8, 10 y 13 es:}',
+    options: ['8', '9', '10', '11'],
+    correctAnswer: 1,
+    explanation: 'Sumamos todos los valores y dividimos por la cantidad:',
+    explanationLatex: '\\bar{x} = \\frac{5 + 8 + 10 + 13}{4} = \\frac{36}{4} = 9',
+    difficulty: 'easy'
+  },
+  {
+    id: 'm1-40',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    question: 'En una clase hay 12 niños y 18 niñas. ¿Qué porcentaje son niños?',
+    questionLatex: '\\text{En una clase hay 12 niños y 18 niñas. ¿Qué porcentaje son niños?}',
+    options: ['30%', '40%', '50%', '60%'],
+    correctAnswer: 1,
+    explanation: 'Calculamos el porcentaje:',
+    explanationLatex: '\\frac{12}{12 + 18} = \\frac{12}{30} = 0.4 = 40\\%',
+    difficulty: 'easy'
+  },
+  {
+    id: 'm1-41',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    question: 'Al lanzar un dado, ¿cuál es la probabilidad de obtener un número mayor que 4?',
+    questionLatex: '\\text{Al lanzar un dado, ¿cuál es la probabilidad de obtener un número mayor que 4?}',
+    options: ['$\\frac{1}{6}$', '$\\frac{1}{3}$', '$\\frac{1}{2}$', '$\\frac{2}{3}$'],
+    optionsLatex: ['\\frac{1}{6}', '\\frac{1}{3}', '\\frac{1}{2}', '\\frac{2}{3}'],
+    correctAnswer: 1,
+    explanation: 'Los números mayores que 4 son 5 y 6. Hay 2 casos favorables de 6 posibles:',
+    explanationLatex: 'P = \\frac{2}{6} = \\frac{1}{3}',
+    difficulty: 'easy'
+  },
 
   // M2 Questions - Advanced PAES topics (NO calculus)
   {
@@ -482,8 +698,22 @@ export function getQuestionsByTopic(topic: string): Question[] {
   return questions.filter(q => q.topic === topic);
 }
 
-export function getRandomQuestions(level: 'M1' | 'M2', count: number = 10): Question[] {
-  const levelQuestions = getQuestionsByLevel(level);
+export function getQuestionsBySubject(subject: 'números' | 'álgebra' | 'geometría' | 'probabilidad', level?: 'M1' | 'M2'): Question[] {
+  return questions.filter(q => {
+    if (level) {
+      return q.subject === subject && q.level === level;
+    }
+    return q.subject === subject;
+  });
+}
+
+export function getRandomQuestions(level: 'M1' | 'M2', count: number = 10, subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad'): Question[] {
+  let levelQuestions = getQuestionsByLevel(level);
+
+  // Filter by subject if specified
+  if (subject) {
+    levelQuestions = levelQuestions.filter(q => q.subject === subject);
+  }
 
   // If there are fewer questions than requested, return all of them
   if (levelQuestions.length <= count) {

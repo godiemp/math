@@ -8,9 +8,10 @@ import { getRandomQuestions } from '@/lib/questions';
 interface QuizProps {
   questions: Question[];
   level: 'M1' | 'M2';
+  subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
 }
 
-export default function Quiz({ questions: allQuestions, level }: QuizProps) {
+export default function Quiz({ questions: allQuestions, level, subject }: QuizProps) {
   const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
@@ -26,10 +27,10 @@ export default function Quiz({ questions: allQuestions, level }: QuizProps) {
     }
 
     // Initialize quiz with 10 random questions
-    const randomQuestions = getRandomQuestions(level, 10);
+    const randomQuestions = getRandomQuestions(level, 10, subject);
     setQuizQuestions(randomQuestions);
     setUserAnswers(new Array(randomQuestions.length).fill(null));
-  }, [level]);
+  }, [level, subject]);
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
 
@@ -110,7 +111,7 @@ export default function Quiz({ questions: allQuestions, level }: QuizProps) {
   };
 
   const handleRestart = () => {
-    const randomQuestions = getRandomQuestions(level, 10);
+    const randomQuestions = getRandomQuestions(level, 10, subject);
     setQuizQuestions(randomQuestions);
     setUserAnswers(new Array(randomQuestions.length).fill(null));
     setCurrentQuestionIndex(0);
