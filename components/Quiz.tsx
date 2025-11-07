@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Question } from '@/lib/types';
+import { MathText, BlockMath } from './MathDisplay';
 
 interface QuizProps {
   questions: Question[];
@@ -129,7 +130,11 @@ export default function Quiz({ questions, level }: QuizProps) {
            currentQuestion.difficulty === 'medium' ? 'Media' : 'Difícil'}
         </span>
         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-          {currentQuestion.question}
+          {currentQuestion.questionLatex ? (
+            <BlockMath latex={currentQuestion.questionLatex} />
+          ) : (
+            <MathText content={currentQuestion.question} />
+          )}
         </h3>
       </div>
 
@@ -165,7 +170,11 @@ export default function Quiz({ questions, level }: QuizProps) {
               className={buttonClass}
             >
               <span className="font-semibold mr-2">{String.fromCharCode(65 + index)}.</span>
-              {option}
+              {currentQuestion.optionsLatex && currentQuestion.optionsLatex[index] ? (
+                <MathText content={currentQuestion.optionsLatex[index]} />
+              ) : (
+                <MathText content={option} />
+              )}
               {showResult && isCorrect && <span className="float-right">✓</span>}
               {showResult && isSelected && !isCorrect && <span className="float-right">✗</span>}
             </button>
@@ -176,7 +185,14 @@ export default function Quiz({ questions, level }: QuizProps) {
       {showExplanation && (
         <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 mb-6">
           <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Explicación:</h4>
-          <p className="text-blue-800 dark:text-blue-200">{currentQuestion.explanation}</p>
+          <div className="text-blue-800 dark:text-blue-200">
+            <MathText content={currentQuestion.explanation} />
+            {currentQuestion.explanationLatex && (
+              <div className="mt-2">
+                <BlockMath latex={currentQuestion.explanationLatex} />
+              </div>
+            )}
+          </div>
         </div>
       )}
 
