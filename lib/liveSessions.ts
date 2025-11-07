@@ -7,7 +7,16 @@ const LOBBY_OPEN_MINUTES = 15; // Lobby opens 15 minutes before start
 export function getAllSessions(): LiveSession[] {
   if (typeof window === 'undefined') return [];
   const sessionsJson = localStorage.getItem(SESSIONS_STORAGE_KEY);
-  return sessionsJson ? JSON.parse(sessionsJson) : [];
+  if (!sessionsJson) return [];
+
+  const sessions = JSON.parse(sessionsJson);
+
+  // Validate and fix sessions with missing properties (for backward compatibility)
+  return sessions.map((session: any) => ({
+    ...session,
+    registeredUsers: session.registeredUsers || [],
+    participants: session.participants || [],
+  }));
 }
 
 function saveSessions(sessions: LiveSession[]): void {
