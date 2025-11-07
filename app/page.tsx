@@ -30,12 +30,20 @@ export default function Home() {
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               Contenidos básicos: números, álgebra, geometría y probabilidades
             </p>
-            <Link
-              href="/practice/m1"
-              className="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              Practicar M1
-            </Link>
+            <div className="flex gap-2">
+              <Link
+                href="/practice/m1"
+                className="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Practicar M1
+              </Link>
+              <Link
+                href="/curriculum/m1"
+                className="inline-block bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-6 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+              >
+                Ver Curriculum
+              </Link>
+            </div>
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
@@ -46,12 +54,20 @@ export default function Home() {
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               Contenidos avanzados para carreras científicas y de ingeniería
             </p>
-            <Link
-              href="/practice/m2"
-              className="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              Practicar M2
-            </Link>
+            <div className="flex gap-2">
+              <Link
+                href="/practice/m2"
+                className="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Practicar M2
+              </Link>
+              <Link
+                href="/curriculum/m2"
+                className="inline-block bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-6 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+              >
+                Ver Curriculum
+              </Link>
+            </div>
           </div>
         </div>
 
