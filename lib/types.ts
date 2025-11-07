@@ -41,3 +41,47 @@ export interface QuestionAttempt {
   explanation: string;
   difficulty: 'easy' | 'medium' | 'hard';
 }
+
+// User authentication types
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+  displayName: string;
+  createdAt: number;
+}
+
+// Live practice session types
+export interface LiveSession {
+  id: string;
+  name: string;
+  level: 'M1' | 'M2';
+  hostId: string;
+  hostName: string;
+  questions: Question[];
+  participants: SessionParticipant[];
+  status: 'waiting' | 'active' | 'completed';
+  currentQuestionIndex: number;
+  createdAt: number;
+  startedAt?: number;
+  completedAt?: number;
+  maxParticipants: number;
+}
+
+export interface SessionParticipant {
+  userId: string;
+  username: string;
+  displayName: string;
+  answers: (number | null)[];
+  score: number;
+  joinedAt: number;
+  isReady: boolean;
+}
+
+export interface LiveSessionAnswer {
+  sessionId: string;
+  userId: string;
+  questionIndex: number;
+  answer: number;
+  timestamp: number;
+}
