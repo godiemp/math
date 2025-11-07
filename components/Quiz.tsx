@@ -9,16 +9,16 @@ interface QuizProps {
   questions: Question[];
   level: 'M1' | 'M2';
   subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
-  timerMode?: 'timed' | 'untimed';
+  quizMode?: 'zen' | 'rapidfire';
 }
 
-export default function Quiz({ questions: allQuestions, level, subject, timerMode = 'untimed' }: QuizProps) {
+export default function Quiz({ questions: allQuestions, level, subject, quizMode = 'zen' }: QuizProps) {
   const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
-  const [timeRemaining, setTimeRemaining] = useState(120); // 2 minutes per question in seconds
+  const [timeRemaining, setTimeRemaining] = useState(1200); // 20 minutes total for rapidfire mode
   const [totalTimeElapsed, setTotalTimeElapsed] = useState(0);
 
   useEffect(() => {
@@ -33,29 +33,22 @@ export default function Quiz({ questions: allQuestions, level, subject, timerMod
     const randomQuestions = getRandomQuestions(level, 10, subject);
     setQuizQuestions(randomQuestions);
     setUserAnswers(new Array(randomQuestions.length).fill(null));
-    setTimeRemaining(120); // Reset timer for new quiz
+    setTimeRemaining(1200); // Reset timer for new quiz (20 minutes)
     setTotalTimeElapsed(0);
   }, [level, subject]);
 
-  // Timer effect for timed mode
+  // Timer effect for rapidfire mode
   useEffect(() => {
-    if (timerMode !== 'timed' || quizSubmitted || quizQuestions.length === 0) {
+    if (quizMode !== 'rapidfire' || quizSubmitted || quizQuestions.length === 0) {
       return;
     }
 
     const timer = setInterval(() => {
       setTimeRemaining((prev) => {
         if (prev <= 1) {
-          // Time's up for this question
-          if (currentQuestionIndex < quizQuestions.length - 1) {
-            // Move to next question
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-            return 120; // Reset to 2 minutes
-          } else {
-            // This was the last question, auto-submit
-            handleSubmitQuiz();
-            return 0;
-          }
+          // Time's up, auto-submit the quiz
+          handleSubmitQuiz();
+          return 0;
         }
         return prev - 1;
       });
@@ -63,14 +56,7 @@ export default function Quiz({ questions: allQuestions, level, subject, timerMod
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timerMode, quizSubmitted, currentQuestionIndex, quizQuestions.length]);
-
-  // Reset timer when changing questions manually in timed mode
-  useEffect(() => {
-    if (timerMode === 'timed' && !quizSubmitted) {
-      setTimeRemaining(120);
-    }
-  }, [currentQuestionIndex]);
+  }, [quizMode, quizSubmitted, quizQuestions.length]);
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
 
@@ -273,32 +259,55 @@ export default function Quiz({ questions: allQuestions, level, subject, timerMod
 
   // Determine timer color based on time remaining
   const getTimerColor = () => {
-    if (timeRemaining > 60) return 'text-green-600 dark:text-green-400';
-    if (timeRemaining > 30) return 'text-yellow-600 dark:text-yellow-400';
+    const percentRemaining = (timeRemaining / 1200) * 100; // 1200 seconds = 20 minutes
+    if (percentRemaining > 50) return 'text-green-600 dark:text-green-400';
+    if (percentRemaining > 25) return 'text-yellow-600 dark:text-yellow-400';
     return 'text-red-600 dark:text-red-400';
+  };
+
+  // Calculate average time per question
+  const getAverageTimePerQuestion = () => {
+    const questionsAnswered = userAnswers.filter(a => a !== null).length || 1;
+    return Math.floor(totalTimeElapsed / questionsAnswered);
   };
 
   return (
     <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-      {/* Timer Display - Only show in timed mode and when quiz is not submitted */}
-      {timerMode === 'timed' && !quizSubmitted && (
+      {/* Timer Display - Only show in rapidfire mode and when quiz is not submitted */}
+      {quizMode === 'rapidfire' && !quizSubmitted && (
         <div className="mb-4 p-4 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-lg border-2 border-indigo-200 dark:border-indigo-700">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">⏱️</span>
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">⚡</span>
               <div>
-                <div className="text-xs text-gray-600 dark:text-gray-400">Tiempo restante</div>
-                <div className={`text-2xl font-bold ${getTimerColor()}`}>
+                <div className="text-xs text-gray-600 dark:text-gray-400 font-semibold">TIEMPO RESTANTE TOTAL</div>
+                <div className={`text-3xl font-bold ${getTimerColor()}`}>
                   {formatTime(timeRemaining)}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  {Math.floor(timeRemaining / 60)} min restantes
                 </div>
               </div>
             </div>
             <div className="text-right">
-              <div className="text-xs text-gray-600 dark:text-gray-400">Tiempo total</div>
-              <div className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+              <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Tiempo usado</div>
+              <div className="text-xl font-semibold text-gray-700 dark:text-gray-300">
                 {formatTime(totalTimeElapsed)}
               </div>
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                ~{formatTime(getAverageTimePerQuestion())}/pregunta
+              </div>
             </div>
+          </div>
+          {/* Progress bar */}
+          <div className="mt-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div
+              className={`h-2 rounded-full transition-all duration-1000 ${
+                timeRemaining > 600 ? 'bg-green-500' :
+                timeRemaining > 300 ? 'bg-yellow-500' : 'bg-red-500'
+              }`}
+              style={{ width: `${(timeRemaining / 1200) * 100}%` }}
+            />
           </div>
         </div>
       )}

@@ -6,10 +6,11 @@ import { getQuestionsByLevel } from '@/lib/questions';
 import Link from 'next/link';
 
 type Subject = 'números' | 'álgebra' | 'geometría' | 'probabilidad';
+type QuizMode = 'zen' | 'rapidfire';
 
 export default function M1Practice() {
   const [selectedSubject, setSelectedSubject] = useState<Subject | undefined>(undefined);
-  const [timerMode, setTimerMode] = useState<'timed' | 'untimed' | null>(null);
+  const [quizMode, setQuizMode] = useState<QuizMode | null>(null);
   const [quizStarted, setQuizStarted] = useState(false);
   const questions = getQuestionsByLevel('M1');
 
@@ -21,8 +22,25 @@ export default function M1Practice() {
     { value: 'probabilidad', label: 'Probabilidad', emoji: '🎲', description: 'Probabilidad y Estadística' },
   ];
 
+  const modes: { value: QuizMode; label: string; emoji: string; description: string; details: string }[] = [
+    {
+      value: 'zen',
+      label: 'Modo Zen',
+      emoji: '🧘',
+      description: 'Práctica sin presión de tiempo',
+      details: 'Tómate todo el tiempo que necesites para pensar y aprender'
+    },
+    {
+      value: 'rapidfire',
+      label: 'Rapid Fire',
+      emoji: '⚡',
+      description: 'Desafío contra el reloj',
+      details: '20 minutos para completar 10 preguntas (2 min promedio por pregunta)'
+    }
+  ];
+
   const handleStartQuiz = () => {
-    if (timerMode) {
+    if (quizMode) {
       setQuizStarted(true);
     }
   };
@@ -30,7 +48,7 @@ export default function M1Practice() {
   const handleResetSelection = () => {
     setQuizStarted(false);
     setSelectedSubject(undefined);
-    setTimerMode(null);
+    setQuizMode(null);
   };
 
   // Step 1: Subject Selection
@@ -48,7 +66,7 @@ export default function M1Practice() {
             key={subject.label}
             onClick={() => {
               setSelectedSubject(subject.value);
-              setTimerMode(null); // Reset timer mode when changing subject
+              setQuizMode(null); // Reset mode when changing subject
             }}
             className={`p-6 rounded-lg border-2 transition-all text-left ${
               selectedSubject === subject.value
@@ -84,9 +102,9 @@ export default function M1Practice() {
     </div>
   );
 
-  // Step 2: Timer Mode Selection
-  const renderTimerSelection = () => {
-    if (selectedSubject === undefined && timerMode === null) return null;
+  // Step 2: Mode Selection
+  const renderModeSelection = () => {
+    if (selectedSubject === undefined && quizMode === null) return null;
 
     return (
       <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
@@ -94,75 +112,53 @@ export default function M1Practice() {
           Paso 2: Selecciona el modo de práctica
         </h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6">
-          ¿Quieres practicar con o sin tiempo?
+          Elige cómo quieres practicar
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <button
-            onClick={() => setTimerMode('untimed')}
-            className={`p-6 rounded-lg border-2 transition-all text-left ${
-              timerMode === 'untimed'
-                ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 shadow-lg transform scale-105'
-                : 'border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-md'
-            }`}
-          >
-            <div className="flex items-start gap-4">
-              <div className="text-4xl">🎯</div>
-              <div className="flex-1">
-                <div className={`font-bold text-lg mb-1 ${
-                  timerMode === 'untimed'
-                    ? 'text-indigo-900 dark:text-indigo-100'
-                    : 'text-gray-900 dark:text-white'
-                }`}>
-                  Sin Tiempo
+          {modes.map((mode) => (
+            <button
+              key={mode.value}
+              onClick={() => setQuizMode(mode.value)}
+              className={`p-6 rounded-lg border-2 transition-all text-left ${
+                quizMode === mode.value
+                  ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 shadow-lg transform scale-105'
+                  : 'border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-md'
+              }`}
+            >
+              <div className="flex items-start gap-4">
+                <div className="text-5xl">{mode.emoji}</div>
+                <div className="flex-1">
+                  <div className={`font-bold text-xl mb-1 ${
+                    quizMode === mode.value
+                      ? 'text-indigo-900 dark:text-indigo-100'
+                      : 'text-gray-900 dark:text-white'
+                  }`}>
+                    {mode.label}
+                  </div>
+                  <div className={`text-sm font-medium mb-2 ${
+                    quizMode === mode.value
+                      ? 'text-indigo-700 dark:text-indigo-300'
+                      : 'text-gray-700 dark:text-gray-300'
+                  }`}>
+                    {mode.description}
+                  </div>
+                  <div className={`text-xs ${
+                    quizMode === mode.value
+                      ? 'text-indigo-600 dark:text-indigo-400'
+                      : 'text-gray-500 dark:text-gray-500'
+                  }`}>
+                    {mode.details}
+                  </div>
                 </div>
-                <div className={`text-sm ${
-                  timerMode === 'untimed'
-                    ? 'text-indigo-700 dark:text-indigo-300'
-                    : 'text-gray-600 dark:text-gray-400'
-                }`}>
-                  Practica a tu propio ritmo, sin presión de tiempo
-                </div>
+                {quizMode === mode.value && (
+                  <div className="text-indigo-600 dark:text-indigo-400 text-2xl">✓</div>
+                )}
               </div>
-              {timerMode === 'untimed' && (
-                <div className="text-indigo-600 dark:text-indigo-400 text-2xl">✓</div>
-              )}
-            </div>
-          </button>
-
-          <button
-            onClick={() => setTimerMode('timed')}
-            className={`p-6 rounded-lg border-2 transition-all text-left ${
-              timerMode === 'timed'
-                ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 shadow-lg transform scale-105'
-                : 'border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-md'
-            }`}
-          >
-            <div className="flex items-start gap-4">
-              <div className="text-4xl">⏱️</div>
-              <div className="flex-1">
-                <div className={`font-bold text-lg mb-1 ${
-                  timerMode === 'timed'
-                    ? 'text-indigo-900 dark:text-indigo-100'
-                    : 'text-gray-900 dark:text-white'
-                }`}>
-                  Con Tiempo
-                </div>
-                <div className={`text-sm ${
-                  timerMode === 'timed'
-                    ? 'text-indigo-700 dark:text-indigo-300'
-                    : 'text-gray-600 dark:text-gray-400'
-                }`}>
-                  Simula el examen real con tiempo limitado (2 minutos por pregunta)
-                </div>
-              </div>
-              {timerMode === 'timed' && (
-                <div className="text-indigo-600 dark:text-indigo-400 text-2xl">✓</div>
-              )}
-            </div>
-          </button>
+            </button>
+          ))}
         </div>
 
-        {timerMode && (
+        {quizMode && (
           <div className="flex gap-4">
             <button
               onClick={handleResetSelection}
@@ -183,7 +179,7 @@ export default function M1Practice() {
   };
 
   // Quiz View
-  if (quizStarted && timerMode) {
+  if (quizStarted && quizMode) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
         <div className="max-w-7xl mx-auto">
@@ -206,7 +202,7 @@ export default function M1Practice() {
             questions={questions}
             level="M1"
             subject={selectedSubject}
-            timerMode={timerMode}
+            quizMode={quizMode}
           />
         </div>
       </div>
@@ -241,7 +237,7 @@ export default function M1Practice() {
         </div>
 
         {renderSubjectSelection()}
-        {renderTimerSelection()}
+        {renderModeSelection()}
       </div>
     </div>
   );
