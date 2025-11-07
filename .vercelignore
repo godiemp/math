@@ -1,0 +1,5 @@
+# Ignore backend folder during Vercel deployment
+backend/
+
+# Backend is deployed separately on Railway
+# Only the Next.js frontend should be built on Vercel
