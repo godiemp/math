@@ -192,26 +192,6 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
                 })}
               </div>
 
-              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6 mb-8">
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
-                  Participantes en el Lobby ({session.participants.length})
-                </h3>
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {session.participants.map((p) => (
-                    <div
-                      key={p.userId}
-                      className={`px-3 py-1 rounded-full text-sm ${
-                        p.userId === currentUser.id
-                          ? 'bg-indigo-600 text-white'
-                          : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
-                      }`}
-                    >
-                      {p.displayName} {p.userId === currentUser.id && '(Tú)'}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
               <div className="space-y-2 mb-6 text-sm text-gray-600 dark:text-gray-400">
                 <p><strong>Nivel:</strong> {session.level}</p>
                 <p><strong>Preguntas:</strong> {session.questions.length}</p>
