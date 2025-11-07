@@ -16,6 +16,8 @@ export default function ProgressPage() {
   const [m2History, setM2History] = useState<QuestionAttempt[]>([]);
   const [recentQuestionsCount, setRecentQuestionsCount] = useState<number>(10);
   const [selectedAttempt, setSelectedAttempt] = useState<QuestionAttempt | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     // Load progress from localStorage
@@ -54,7 +56,12 @@ export default function ProgressPage() {
   };
 
   const allHistory = [...m1History, ...m2History].sort((a, b) => b.timestamp - a.timestamp);
-  const recentHistory = allHistory.slice(0, 50); // Show up to 50 recent questions in history
+
+  // Pagination logic
+  const totalPages = Math.ceil(allHistory.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedHistory = allHistory.slice(startIndex, endIndex);
 
   // Calculate recent stats for each level based on selected count
   const m1RecentStats = calculateRecentStats(m1History, recentQuestionsCount);
@@ -190,13 +197,18 @@ export default function ProgressPage() {
         </div>
 
         {/* Recent Questions History */}
-        {recentHistory.length > 0 && (
+        {allHistory.length > 0 && (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-              Historial de Preguntas Recientes
-            </h2>
-            <div className="space-y-3">
-              {recentHistory.map((attempt, index) => (
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                Historial de Preguntas Recientes
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Total: {allHistory.length} preguntas
+              </p>
+            </div>
+            <div className="space-y-3 mb-6">
+              {paginatedHistory.map((attempt, index) => (
                 <div
                   key={`${attempt.questionId}-${attempt.timestamp}`}
                   className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
@@ -241,6 +253,58 @@ export default function ProgressPage() {
                 </div>
               ))}
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-2">
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  ← Anterior
+                </button>
+
+                <div className="flex gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
+                    // Show first page, last page, current page, and pages around current
+                    if (
+                      page === 1 ||
+                      page === totalPages ||
+                      (page >= currentPage - 1 && page <= currentPage + 1)
+                    ) {
+                      return (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`px-3 py-2 rounded-lg transition-colors ${
+                            currentPage === page
+                              ? 'bg-indigo-600 text-white'
+                              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      );
+                    } else if (
+                      page === currentPage - 2 ||
+                      page === currentPage + 2
+                    ) {
+                      return <span key={page} className="px-2 text-gray-500">...</span>;
+                    }
+                    return null;
+                  })}
+                </div>
+
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Siguiente →
+                </button>
+              </div>
+            )}
           </div>
         )}
 
