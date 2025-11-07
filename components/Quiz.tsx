@@ -129,13 +129,11 @@ export default function Quiz({ questions, level }: QuizProps) {
           {currentQuestion.difficulty === 'easy' ? 'Fácil' :
            currentQuestion.difficulty === 'medium' ? 'Media' : 'Difícil'}
         </span>
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-          {currentQuestion.questionLatex ? (
+        <div className="text-xl font-semibold text-gray-900 dark:text-white mb-6 text-left">
+          {currentQuestion.questionLatex && (
             <BlockMath latex={currentQuestion.questionLatex} />
-          ) : (
-            <MathText content={currentQuestion.question} />
           )}
-        </h3>
+        </div>
       </div>
 
       <div className="space-y-3 mb-6">
