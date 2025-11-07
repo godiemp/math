@@ -25,3 +25,41 @@ body {
     text-wrap: balance;
   }
 }
+
+/* KaTeX math rendering styles */
+.math-display .katex-display {
+  text-align: left !important;
+  margin: 0 !important;
+}
+
+.math-display .katex {
+  text-align: left;
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: inline !important;
+}
+
+.math-display .katex-html {
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  display: inline !important;
+}
+
+.math-display .base {
+  white-space: normal !important;
+  display: inline !important;
+}
+
+.math-display .mord,
+.math-display .mbin,
+.math-display .mrel,
+.math-display .mop,
+.math-display .mopen,
+.math-display .mclose,
+.math-display .mpunct,
+.math-display .minner {
+  white-space: normal !important;
+}
