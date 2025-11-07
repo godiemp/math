@@ -54,17 +54,11 @@ export default function ProgressPage() {
   };
 
   const allHistory = [...m1History, ...m2History].sort((a, b) => b.timestamp - a.timestamp);
-  const recentHistory = allHistory.slice(0, recentQuestionsCount);
-  const recentStats = calculateRecentStats(allHistory, recentQuestionsCount);
+  const recentHistory = allHistory.slice(0, 50); // Show up to 50 recent questions in history
 
-  // Calculate last 10 stats for each level
-  const m1RecentStats = calculateRecentStats(m1History, 10);
-  const m2RecentStats = calculateRecentStats(m2History, 10);
-
-  const totalProgress = {
-    correct: m1Progress.correct + m2Progress.correct,
-    total: m1Progress.total + m2Progress.total
-  };
+  // Calculate recent stats for each level based on selected count
+  const m1RecentStats = calculateRecentStats(m1History, recentQuestionsCount);
+  const m2RecentStats = calculateRecentStats(m2History, recentQuestionsCount);
 
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -106,97 +100,25 @@ export default function ProgressPage() {
       </nav>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">
-          Mi Progreso
-        </h1>
-
-        {/* Recent Stats Section */}
-        {recentHistory.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 mb-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                Estadísticas Recientes
-              </h2>
-              <div className="flex items-center gap-3">
-                <label htmlFor="recent-count" className="text-sm text-gray-600 dark:text-gray-400">
-                  Mostrar últimas:
-                </label>
-                <select
-                  id="recent-count"
-                  value={recentQuestionsCount}
-                  onChange={(e) => setRecentQuestionsCount(Number(e.target.value))}
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
-                >
-                  <option value={5}>5 preguntas</option>
-                  <option value={10}>10 preguntas</option>
-                  <option value={20}>20 preguntas</option>
-                  <option value={50}>50 preguntas</option>
-                  <option value={100}>100 preguntas</option>
-                </select>
-              </div>
-            </div>
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-4xl font-bold text-indigo-600 dark:text-indigo-400 mb-2">
-                  {recentStats.total}
-                </div>
-                <div className="text-gray-600 dark:text-gray-400">
-                  Preguntas Recientes
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">
-                  {recentStats.correct}
-                </div>
-                <div className="text-gray-600 dark:text-gray-400">
-                  Respuestas Correctas
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-                  {recentStats.total > 0 ? calculatePercentage(recentStats) : 0}%
-                </div>
-                <div className="text-gray-600 dark:text-gray-400">
-                  Tasa de Acierto Reciente
-                </div>
-              </div>
-            </div>
-            <div className="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center">
-              Estas estadísticas reflejan tu rendimiento en las últimas {recentQuestionsCount} preguntas para motivarte basado en tu progreso reciente.
-            </div>
-          </div>
-        )}
-
-        {/* Overall Summary Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 mb-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-            Resumen General (Total)
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-indigo-600 dark:text-indigo-400 mb-2">
-                {totalProgress.total}
-              </div>
-              <div className="text-gray-600 dark:text-gray-400">
-                Preguntas Respondidas
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">
-                {totalProgress.correct}
-              </div>
-              <div className="text-gray-600 dark:text-gray-400">
-                Respuestas Correctas
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-                {calculatePercentage(totalProgress)}%
-              </div>
-              <div className="text-gray-600 dark:text-gray-400">
-                Tasa de Acierto Total
-              </div>
-            </div>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+            Mi Progreso
+          </h1>
+          <div className="flex items-center gap-3">
+            <label htmlFor="recent-count" className="text-sm text-gray-600 dark:text-gray-400">
+              Mostrar últimas:
+            </label>
+            <select
+              id="recent-count"
+              value={recentQuestionsCount}
+              onChange={(e) => setRecentQuestionsCount(Number(e.target.value))}
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value={5}>5 preguntas</option>
+              <option value={10}>10 preguntas</option>
+              <option value={20}>20 preguntas</option>
+              <option value={50}>50 preguntas</option>
+            </select>
           </div>
         </div>
 
@@ -208,7 +130,7 @@ export default function ProgressPage() {
             </h3>
             <div className="mb-4">
               <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-                <span>Últimas 10 preguntas</span>
+                <span>Últimas {recentQuestionsCount} preguntas</span>
                 <span>{m1RecentStats.total > 0 ? calculatePercentage(m1RecentStats) : 0}%</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
@@ -220,10 +142,10 @@ export default function ProgressPage() {
             </div>
             <div className="space-y-2 text-gray-700 dark:text-gray-300">
               <p className="text-3xl font-bold text-center">
-                {m1RecentStats.correct}/{Math.min(m1RecentStats.total, 10)}
+                {m1RecentStats.correct}/{m1RecentStats.total}
               </p>
               <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-                Respuestas correctas en las últimas {Math.min(m1History.length, 10)} preguntas
+                Respuestas correctas en las últimas {m1RecentStats.total} preguntas
               </p>
             </div>
             <Link
@@ -240,7 +162,7 @@ export default function ProgressPage() {
             </h3>
             <div className="mb-4">
               <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-                <span>Últimas 10 preguntas</span>
+                <span>Últimas {recentQuestionsCount} preguntas</span>
                 <span>{m2RecentStats.total > 0 ? calculatePercentage(m2RecentStats) : 0}%</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
@@ -252,10 +174,10 @@ export default function ProgressPage() {
             </div>
             <div className="space-y-2 text-gray-700 dark:text-gray-300">
               <p className="text-3xl font-bold text-center">
-                {m2RecentStats.correct}/{Math.min(m2RecentStats.total, 10)}
+                {m2RecentStats.correct}/{m2RecentStats.total}
               </p>
               <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-                Respuestas correctas en las últimas {Math.min(m2History.length, 10)} preguntas
+                Respuestas correctas en las últimas {m2RecentStats.total} preguntas
               </p>
             </div>
             <Link
@@ -322,7 +244,7 @@ export default function ProgressPage() {
           </div>
         )}
 
-        {totalProgress.total === 0 && (
+        {allHistory.length === 0 && (
           <div className="mt-8 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-4">
             <p className="text-yellow-800 dark:text-yellow-200">
               Aún no has comenzado a practicar. ¡Empieza ahora con M1 o M2!
