@@ -5,7 +5,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
-import { getUserRegisteredSessions, updateSessionStatuses } from "@/lib/liveSessions";
+import { getUserRegisteredSessions, updateSessionStatuses, getAllAvailableSessions } from "@/lib/liveSessions";
 import { useEffect, useState } from "react";
 import { LiveSession } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text } from "@/components/ui";
@@ -14,6 +14,7 @@ function DashboardContent() {
   const { user, setUser, isAdmin } = useAuth();
   const router = useRouter();
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
+  const [nextSession, setNextSession] = useState<LiveSession | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -32,6 +33,13 @@ function DashboardContent() {
       upcomingSessions.sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
 
       setRegisteredSessions(upcomingSessions);
+
+      // Get the next scheduled session (for all users, not just registered)
+      const allUpcoming = getAllAvailableSessions()
+        .filter(s => s.status === 'scheduled' || s.status === 'lobby')
+        .sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
+
+      setNextSession(allUpcoming[0] || null);
     }
   }, [user]);
 
@@ -156,12 +164,41 @@ function DashboardContent() {
             <Heading level={3} size="sm" className="mb-3 text-white">
               Ensayo PAES en Vivo
             </Heading>
-            <Text size="md" className="mb-6 max-w-2xl mx-auto text-white/90">
-              ¡Nuevo! Practica con ensayos PAES en tiempo real. Regístrate, únete al lobby antes de comenzar y compite con otros estudiantes.
-            </Text>
+            {nextSession ? (
+              <>
+                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 mb-4 inline-block">
+                  <Text size="xs" className="text-white/80 font-semibold uppercase tracking-wider mb-1">
+                    Próximo Ensayo
+                  </Text>
+                  <div className="text-2xl font-bold text-white mb-1">
+                    {new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', {
+                      weekday: 'long',
+                      day: 'numeric',
+                      month: 'long'
+                    })}
+                  </div>
+                  <div className="text-xl font-semibold text-white/95">
+                    {new Date(nextSession.scheduledStartTime).toLocaleTimeString('es-CL', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })} hrs
+                  </div>
+                  <Text size="sm" className="text-white/90 mt-2">
+                    {nextSession.name} - {nextSession.level}
+                  </Text>
+                </div>
+                <Text size="md" className="mb-6 max-w-2xl mx-auto text-white/90">
+                  ¡Regístrate ahora! Practica con ensayos PAES en tiempo real y compite con otros estudiantes.
+                </Text>
+              </>
+            ) : (
+              <Text size="md" className="mb-6 max-w-2xl mx-auto text-white/90">
+                ¡Nuevo! Practica con ensayos PAES en tiempo real. Regístrate, únete al lobby antes de comenzar y compite con otros estudiantes.
+              </Text>
+            )}
             <Button asChild className="bg-white text-[#5E5CE6] hover:bg-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]">
               <Link href="/live-practice">
-                Ver Ensayos Disponibles →
+                {nextSession ? '¡Regístrate Ahora! →' : 'Ver Ensayos Disponibles →'}
               </Link>
             </Button>
           </div>
