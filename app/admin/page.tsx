@@ -241,6 +241,12 @@ export default function AdminBackoffice() {
                 Inicio
               </button>
               <button
+                onClick={() => router.push('/admin/problems')}
+                className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+              >
+                Explorar Problemas
+              </button>
+              <button
                 onClick={() => router.push('/live-practice')}
                 className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors"
               >
