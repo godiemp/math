@@ -7,6 +7,17 @@ interface CurriculumProps {
   level: 'M1' | 'M2';
 }
 
+// Map curriculum subject names to practice page subject keys
+function mapSubjectToKey(subjectName: string): string {
+  const mapping: { [key: string]: string } = {
+    'Números': 'números',
+    'Álgebra y Funciones': 'álgebra',
+    'Geometría': 'geometría',
+    'Probabilidad y Estadística': 'probabilidad'
+  };
+  return mapping[subjectName] || '';
+}
+
 // Skill-Topic Matrix: Which skills are evaluated in each axis
 const skillTopicMatrix = {
   'Números': {
@@ -465,7 +476,7 @@ export default function Curriculum({ level }: CurriculumProps) {
                       </div>
                     </div>
                     <Link
-                      href={`/practice/${level.toLowerCase()}`}
+                      href={`/practice/${level.toLowerCase()}?subject=${mapSubjectToKey(area.name)}`}
                       className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium py-2 px-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 transition-colors text-sm whitespace-nowrap"
                     >
                       Practicar →

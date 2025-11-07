@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Quiz from '@/components/Quiz';
 import { getQuestionsByLevel } from '@/lib/questions';
 import Link from 'next/link';
@@ -12,11 +13,20 @@ type QuizMode = 'zen' | 'rapidfire';
 type Difficulty = 'easy' | 'medium' | 'hard' | 'extreme';
 
 function M2PracticeContent() {
+  const searchParams = useSearchParams();
   const [selectedSubject, setSelectedSubject] = useState<Subject | null | undefined>(undefined);
   const [quizMode, setQuizMode] = useState<QuizMode | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [quizStarted, setQuizStarted] = useState(false);
   const questions = getQuestionsByLevel('M2');
+
+  // Pre-select subject from URL parameter
+  useEffect(() => {
+    const subjectParam = searchParams.get('subject');
+    if (subjectParam && ['números', 'álgebra', 'geometría', 'probabilidad'].includes(subjectParam)) {
+      setSelectedSubject(subjectParam as Subject);
+    }
+  }, [searchParams]);
 
   const subjects: { value: Subject | null; label: string; emoji: string; description: string }[] = [
     { value: null, label: 'Todas las Materias', emoji: '📚', description: 'Practica con todas las materias mezcladas' },
