@@ -31,7 +31,6 @@ export default function AdminBackoffice() {
     scheduledTime: '',
     durationMinutes: 60,
     questionCount: 10,
-    maxParticipants: 20,
   });
 
   useEffect(() => {
@@ -63,7 +62,6 @@ export default function AdminBackoffice() {
       scheduledTime: '',
       durationMinutes: 60,
       questionCount: 10,
-      maxParticipants: 20,
     });
     setEditingSession(null);
   };
@@ -80,7 +78,6 @@ export default function AdminBackoffice() {
       scheduledTime: '15:00',
       durationMinutes: 140,
       questionCount: 60,
-      maxParticipants: 20,
     });
   };
 
@@ -96,7 +93,6 @@ export default function AdminBackoffice() {
       scheduledTime: '16:30',
       durationMinutes: 140,
       questionCount: 50,
-      maxParticipants: 15,
     });
   };
 
@@ -119,7 +115,6 @@ export default function AdminBackoffice() {
       scheduledTime: timeStr,
       durationMinutes: session.durationMinutes,
       questionCount: session.questions.length,
-      maxParticipants: session.maxParticipants,
     });
     setShowCreateModal(true);
   };
@@ -160,7 +155,6 @@ export default function AdminBackoffice() {
         scheduledStartTime: scheduledTimestamp,
         durationMinutes: formData.durationMinutes,
         questionCount: formData.questionCount,
-        maxParticipants: formData.maxParticipants,
       });
 
       if (result.success) {
@@ -180,8 +174,7 @@ export default function AdminBackoffice() {
         currentUser,
         scheduledTimestamp,
         formData.durationMinutes,
-        formData.questionCount,
-        formData.maxParticipants
+        formData.questionCount
       );
 
       setSuccess('Sesión programada exitosamente');
@@ -354,7 +347,7 @@ export default function AdminBackoffice() {
                             Participantes:
                           </span>{' '}
                           <span className="font-medium text-gray-900 dark:text-white">
-                            {session.participants.length}/{session.maxParticipants}
+                            {session.participants.length}
                           </span>
                         </div>
                         <div>
@@ -421,7 +414,7 @@ export default function AdminBackoffice() {
                       📐 M1 - Básico
                     </div>
                     <div className="text-xs text-blue-600 dark:text-blue-500">
-                      140 min (2h 20min) • 60 preguntas • 20 participantes
+                      140 min (2h 20min) • 60 preguntas
                     </div>
                   </button>
                   <button
@@ -433,7 +426,7 @@ export default function AdminBackoffice() {
                       🎓 M2 - Avanzado
                     </div>
                     <div className="text-xs text-purple-600 dark:text-purple-500">
-                      140 min (2h 20min) • 50 preguntas • 15 participantes
+                      140 min (2h 20min) • 50 preguntas
                     </div>
                   </button>
                 </div>
@@ -551,25 +544,6 @@ export default function AdminBackoffice() {
                   />
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Entre 15 y 240 minutos (4 horas)
-                  </p>
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Máximo de Participantes *
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.maxParticipants}
-                    onChange={(e) =>
-                      setFormData({ ...formData, maxParticipants: Number(e.target.value) })
-                    }
-                    min="2"
-                    max="100"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Entre 2 y 100 participantes
                   </p>
                 </div>
               </div>

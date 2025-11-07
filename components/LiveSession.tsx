@@ -123,7 +123,7 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
                 <p><strong>Nivel:</strong> {session.level}</p>
                 <p><strong>Preguntas:</strong> {session.questions.length}</p>
                 <p><strong>Duración:</strong> {session.durationMinutes} minutos</p>
-                <p><strong>Participantes:</strong> {session.participants.length}/{session.maxParticipants}</p>
+                <p><strong>Participantes:</strong> {session.participants.length}</p>
               </div>
 
               <p className="text-sm text-gray-500 dark:text-gray-500">

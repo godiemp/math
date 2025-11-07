@@ -182,13 +182,13 @@ export default function LivePracticePage() {
                     </div>
                     <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                       <span className="font-medium mr-2">Participantes:</span>
-                      <span>{session.participants.length}/{session.maxParticipants}</span>
+                      <span>{session.participants.length}</span>
                     </div>
                   </div>
 
                   <button
                     onClick={() => handleJoinSession(session.id)}
-                    disabled={session.participants.length >= session.maxParticipants || session.status === 'scheduled'}
+                    disabled={session.status === 'scheduled'}
                     className="w-full py-2 px-4 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
                   >
                     {session.status === 'scheduled'

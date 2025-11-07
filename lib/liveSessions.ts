@@ -23,7 +23,7 @@ export function createScheduledSession(
   scheduledStartTime: number,
   durationMinutes: number,
   questionCount: number = 10,
-  maxParticipants: number = 20
+  maxParticipants: number = 1000000
 ): LiveSession {
   const sessions = getAllSessions();
 
