@@ -108,53 +108,18 @@ function DashboardContent() {
           </Text>
         </div>
 
-        {/* Practice Cards with liquidGlass material */}
-        <div className="grid md:grid-cols-2 gap-4 mb-12">
-          {/* M1 Card */}
-          <Card hover className="p-4">
-            <div className="text-3xl mb-4">📐</div>
-            <Heading level={3} size="xs" className="mb-2">
-              Competencia Matemática M1
-            </Heading>
-            <Text size="sm" variant="secondary" className="mb-4">
-              Contenidos básicos: números, álgebra, geometría y probabilidades
-            </Text>
-            <Button asChild className="w-full">
-              <Link href="/practice/m1">
-                Practicar M1
-              </Link>
-            </Button>
-          </Card>
-
-          {/* M2 Card */}
-          <Card hover className="p-4">
-            <div className="text-3xl mb-4">🎓</div>
-            <Heading level={3} size="xs" className="mb-2">
-              Competencia Matemática M2
-            </Heading>
-            <Text size="sm" variant="secondary" className="mb-4">
-              Contenidos avanzados para carreras científicas y de ingeniería
-            </Text>
-            <Button asChild className="w-full">
-              <Link href="/practice/m2">
-                Practicar M2
-              </Link>
-            </Button>
-          </Card>
-        </div>
-
-        {/* Curriculum Card */}
+        {/* Combined Practice and Curriculum Card */}
         <div className="mb-12">
-          <Card hover className="p-6 max-w-2xl mx-auto">
-            <div className="text-center">
+          <Card hover className="p-6 max-w-3xl mx-auto">
+            <div className="text-center mb-6">
               <div className="text-5xl mb-4">📚</div>
               <Heading level={3} size="sm" className="mb-3">
-                Currículos PAES Matemática
+                Temario PAES Matemática
               </Heading>
               <Text size="sm" variant="secondary" className="mb-6 max-w-xl mx-auto">
                 Revisa los contenidos oficiales evaluados en la PAES de Matemática. Navega entre M1 y M2 para conocer todos los temas.
               </Text>
-              <div className="flex gap-3 justify-center">
+              <div className="flex gap-3 justify-center mb-8">
                 <Button asChild variant="primary">
                   <Link href="/curriculum/m1">
                     Ver Currículo M1
@@ -165,6 +130,43 @@ function DashboardContent() {
                     Ver Currículo M2
                   </Link>
                 </Button>
+              </div>
+            </div>
+
+            {/* Practice sections */}
+            <div className="border-t border-black/[0.12] dark:border-white/[0.16] pt-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* M1 Section */}
+                <div className="text-center">
+                  <div className="text-3xl mb-3">📐</div>
+                  <Heading level={4} size="xs" className="mb-2">
+                    Competencia Matemática M1
+                  </Heading>
+                  <Text size="sm" variant="secondary" className="mb-4">
+                    Contenidos básicos: números, álgebra, geometría y probabilidades
+                  </Text>
+                  <Button asChild className="w-full">
+                    <Link href="/practice/m1">
+                      Practicar M1
+                    </Link>
+                  </Button>
+                </div>
+
+                {/* M2 Section */}
+                <div className="text-center">
+                  <div className="text-3xl mb-3">🎓</div>
+                  <Heading level={4} size="xs" className="mb-2">
+                    Competencia Matemática M2
+                  </Heading>
+                  <Text size="sm" variant="secondary" className="mb-4">
+                    Contenidos avanzados para carreras científicas y de ingeniería
+                  </Text>
+                  <Button asChild className="w-full">
+                    <Link href="/practice/m2">
+                      Practicar M2
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </Card>
