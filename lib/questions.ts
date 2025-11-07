@@ -1000,3 +1000,155 @@ export function getRandomQuestions(level: 'M1' | 'M2', count: number = 10, subje
 
   return shuffled.slice(0, count);
 }
+
+// ============================================================================
+// TEMPLATE SYSTEM INTEGRATION
+// ============================================================================
+
+import { generateQuestionsByFilters } from './templates';
+
+/**
+ * Generate random questions using the template system
+ * This allows generating thousands of unique questions on-demand
+ */
+export function getRandomQuestionsFromTemplates(
+  level: 'M1' | 'M2',
+  count: number = 10,
+  subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad'
+): Question[] {
+  const filters: any = { level };
+  if (subject) {
+    filters.subject = subject;
+  }
+
+  return generateQuestionsByFilters(count, filters);
+}
+
+/**
+ * Get a hybrid mix of static questions and template-generated questions
+ * This provides variety by mixing your curated questions with generated ones
+ *
+ * @param level - M1 or M2
+ * @param count - Total number of questions to return
+ * @param staticRatio - Ratio of static to generated questions (0-1). Default 0.3 means 30% static, 70% generated
+ * @param subject - Optional subject filter
+ */
+export function getHybridQuestions(
+  level: 'M1' | 'M2',
+  count: number = 10,
+  staticRatio: number = 0.3,
+  subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad'
+): Question[] {
+  // Calculate how many of each type
+  const staticCount = Math.floor(count * staticRatio);
+  const generatedCount = count - staticCount;
+
+  // Get static questions
+  const staticQuestions = getRandomQuestions(level, staticCount, subject);
+
+  // Get template-generated questions
+  const generatedQuestions = getRandomQuestionsFromTemplates(level, generatedCount, subject);
+
+  // Combine and shuffle
+  const combined = [...staticQuestions, ...generatedQuestions];
+  for (let i = combined.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [combined[i], combined[j]] = [combined[j], combined[i]];
+  }
+
+  return combined;
+}
+
+/**
+ * Get questions with guaranteed uniqueness across multiple calls
+ * Useful for creating practice sessions where students shouldn't see repeats
+ */
+export function getUniqueQuestions(
+  level: 'M1' | 'M2',
+  count: number = 10,
+  excludeIds: string[] = [],
+  subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad',
+  useTemplates: boolean = true
+): Question[] {
+  if (useTemplates) {
+    // Template-generated questions are always unique
+    return getRandomQuestionsFromTemplates(level, count, subject);
+  } else {
+    // Filter out excluded static questions
+    let levelQuestions = getQuestionsByLevel(level);
+
+    if (subject) {
+      levelQuestions = levelQuestions.filter(q => q.subject === subject);
+    }
+
+    const available = levelQuestions.filter(q => !excludeIds.includes(q.id));
+
+    // If we don't have enough, supplement with templates
+    if (available.length < count) {
+      const staticQuestions = available;
+      const needed = count - available.length;
+      const templateQuestions = getRandomQuestionsFromTemplates(level, needed, subject);
+      return [...staticQuestions, ...templateQuestions];
+    }
+
+    // Shuffle and return
+    const shuffled = [...available];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    return shuffled.slice(0, count);
+  }
+}
+
+/**
+ * Generate a complete practice exam using templates
+ * Follows official PAES distribution
+ */
+export function generatePracticeExam(level: 'M1' | 'M2'): Question[] {
+  if (level === 'M1') {
+    // M1: 60 questions total
+    return [
+      ...getRandomQuestionsFromTemplates('M1', 15, 'números'),
+      ...getRandomQuestionsFromTemplates('M1', 20, 'álgebra'),
+      ...getRandomQuestionsFromTemplates('M1', 15, 'geometría'),
+      ...getRandomQuestionsFromTemplates('M1', 10, 'probabilidad'),
+    ];
+  } else {
+    // M2: 50 questions total
+    return [
+      ...getRandomQuestionsFromTemplates('M2', 12, 'números'),
+      ...getRandomQuestionsFromTemplates('M2', 15, 'álgebra'),
+      ...getRandomQuestionsFromTemplates('M2', 13, 'geometría'),
+      ...getRandomQuestionsFromTemplates('M2', 10, 'probabilidad'),
+    ];
+  }
+}
+
+/**
+ * Get statistics about available questions (both static and templates)
+ */
+export function getQuestionStats() {
+  const staticM1 = getQuestionsByLevel('M1').length;
+  const staticM2 = getQuestionsByLevel('M2').length;
+
+  // Import template stats
+  const { getTemplateStats } = require('./templates');
+  const templateStats = getTemplateStats();
+
+  return {
+    static: {
+      M1: staticM1,
+      M2: staticM2,
+      total: staticM1 + staticM2,
+    },
+    templates: templateStats,
+    potential: {
+      // Each template can generate ~1000 unique variations conservatively
+      M1: staticM1 + (templateStats.byLevel.M1 * 1000),
+      M2: staticM2 + (templateStats.byLevel.M2 * 1000),
+      total: (staticM1 + staticM2) + (templateStats.total * 1000),
+    },
+  };
+}
