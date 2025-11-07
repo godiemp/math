@@ -212,15 +212,23 @@ function LivePracticePageContent() {
                       <span>{session.questions.length}</span>
                     </div>
                     {session.status === 'scheduled' && (
+                      <>
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                          <span className="font-medium mr-2">Registrados:</span>
+                          <span>{session.registeredUsers.length}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                          <span className="font-medium mr-2">En lobby:</span>
+                          <span>{session.participants.length}</span>
+                        </div>
+                      </>
+                    )}
+                    {session.status === 'active' && (
                       <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                        <span className="font-medium mr-2">Registrados:</span>
-                        <span>{session.registeredUsers.length}</span>
+                        <span className="font-medium mr-2">Participantes:</span>
+                        <span>{session.participants.length}</span>
                       </div>
                     )}
-                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium mr-2">{session.status === 'scheduled' ? 'En lobby:' : 'Participantes:'}</span>
-                      <span>{session.participants.length}</span>
-                    </div>
                   </div>
 
                   {/* Action buttons based on session status */}
