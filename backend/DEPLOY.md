@@ -107,7 +107,9 @@ railway open
 | `JWT_SECRET` | (Generate: `openssl rand -base64 32`) |
 | `JWT_REFRESH_SECRET` | (Generate: `openssl rand -base64 32`) |
 | `NODE_ENV` | `production` |
-| `FRONTEND_URL` | `http://localhost:3000` |
+| `FRONTEND_URL` | `https://your-app.vercel.app` (your production Vercel URL) |
+
+**Important**: Set `FRONTEND_URL` to your **production** Vercel URL. Vercel preview deployments (`*.vercel.app`) are automatically allowed via CORS configuration!
 
 **To generate secrets on your terminal:**
 ```bash
@@ -130,7 +132,7 @@ echo "JWT_REFRESH_SECRET: $JWT_REFRESH_SECRET"
 
 Then add them via the Railway dashboard (see Method 1).
 
-**Note**: You'll update `FRONTEND_URL` later when you deploy your Next.js frontend to Vercel.
+**Note**: If you haven't deployed to Vercel yet, you can temporarily use a placeholder like `https://placeholder.vercel.app` and update it later. All Vercel preview deployments will still work!
 
 **DATABASE_URL** is automatically set by Railway when you add PostgreSQL - no need to set it manually!
 
@@ -347,12 +349,13 @@ railway logs
 **Solution**: Railway automatically sets the `PORT` environment variable. Your code uses `process.env.PORT || 3001`, which works correctly.
 
 ### Issue: CORS errors from frontend
-**Solution**: Update `FRONTEND_URL` to your Vercel URL via Railway dashboard:
-```bash
-railway open
-# Go to Variables tab → Edit FRONTEND_URL → Set to: https://your-app.vercel.app
-# The service will automatically restart
-```
+**Solution**:
+1. Make sure `FRONTEND_URL` is set to your production Vercel URL (e.g., `https://your-app.vercel.app`)
+2. Vercel preview deployments (`*.vercel.app`) are automatically allowed - no extra configuration needed
+3. If you're still getting CORS errors, check Railway logs to see which origin is being rejected:
+   ```bash
+   railway logs --tail
+   ```
 
 ---
 

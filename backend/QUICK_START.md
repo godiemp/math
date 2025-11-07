@@ -30,7 +30,8 @@ railway open
 #    - JWT_SECRET: (generate with: openssl rand -base64 32)
 #    - JWT_REFRESH_SECRET: (generate with: openssl rand -base64 32)
 #    - NODE_ENV: production
-#    - FRONTEND_URL: http://localhost:3000
+#    - FRONTEND_URL: https://your-app.vercel.app (your production Vercel URL)
+# NOTE: Vercel preview deployments (*.vercel.app) are automatically allowed!
 # Or see "Alternative Method" below
 
 # 7. Deploy
@@ -142,11 +143,10 @@ After deployment, save these:
 ## ⚠️ Important Notes
 
 1. **JWT Secrets**: NEVER commit these to git (they're in `.env` which is gitignored)
-2. **Frontend URL**: Update this when you deploy to Vercel:
-   ```bash
-   railway open
-   # Variables tab → Edit FRONTEND_URL → https://your-app.vercel.app
-   ```
+2. **CORS Configuration**:
+   - Set `FRONTEND_URL` to your **production** Vercel URL (e.g., `https://your-app.vercel.app`)
+   - **Vercel preview deployments** (`*.vercel.app`) are **automatically allowed** - no configuration needed!
+   - Localhost (`http://localhost:3000`) is always allowed for local development
 3. **Database**: Railway automatically provides `DATABASE_URL`
 4. **Port**: Railway automatically sets `PORT` (don't hardcode it)
 

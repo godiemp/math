@@ -8,7 +8,7 @@ Express.js backend with PostgreSQL for the PAES Math Learning Platform.
 - ✅ User Registration & Login
 - ✅ PostgreSQL database with connection pooling
 - ✅ TypeScript for type safety
-- ✅ CORS configured for frontend
+- ✅ CORS configured for Vercel (production + preview deployments)
 - ✅ Railway deployment ready
 
 ## Tech Stack
@@ -127,7 +127,7 @@ railway logs
 | `JWT_REFRESH_SECRET` | Secret for refresh tokens | - |
 | `JWT_EXPIRES_IN` | Access token expiry | 1h |
 | `JWT_REFRESH_EXPIRES_IN` | Refresh token expiry | 7d |
-| `FRONTEND_URL` | Frontend URL for CORS | http://localhost:3000 |
+| `FRONTEND_URL` | Production Vercel URL for CORS (preview deployments auto-allowed) | https://your-app.vercel.app |
 
 ## Project Structure
 
