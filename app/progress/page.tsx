@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { QuestionAttempt } from '@/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { Button, Card, Badge, Heading, Text, Modal, Navbar, NavbarLink } from '@/components/ui';
 
 interface Progress {
   correct: number;
@@ -79,12 +80,12 @@ function ProgressPageContent() {
     });
   };
 
-  const getDifficultyColor = (difficulty: string) => {
+  const getDifficultyBadgeVariant = (difficulty: string): 'success' | 'warning' | 'danger' | 'neutral' => {
     switch (difficulty) {
-      case 'easy': return 'bg-[#34C759]/10 text-[#34C759] dark:bg-[#30D158]/20 dark:text-[#5DE38D]';
-      case 'medium': return 'bg-[#FF9F0A]/10 text-[#FF9F0A] dark:bg-[#FF9F0A]/20 dark:text-[#FFB84D]';
-      case 'hard': return 'bg-[#FF453A]/10 text-[#FF453A] dark:bg-[#FF453A]/20 dark:text-[#FF7A72]';
-      default: return 'bg-black/[0.04] text-black dark:bg-white/[0.06] dark:text-white';
+      case 'easy': return 'success';
+      case 'medium': return 'warning';
+      case 'hard': return 'danger';
+      default: return 'neutral';
     }
   };
 
@@ -100,27 +101,22 @@ function ProgressPageContent() {
   return (
     <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">
       {/* Navbar with variableBlur material */}
-      <nav className="sticky top-0 z-30 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] saturate-[1.2]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-2 text-[15px] font-medium text-[#0A84FF] hover:text-[#0A84FF]/80 transition-colors duration-[180ms]"
-          >
-            ← Volver al Inicio
-          </Link>
-        </div>
-      </nav>
+      <Navbar>
+        <NavbarLink href="/dashboard">
+          ← Volver al Inicio
+        </NavbarLink>
+      </Navbar>
 
       <main className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 py-12">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-          <h1 className="text-[44px] leading-[1.1] font-semibold tracking-tight text-black dark:text-white" style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}>
+          <Heading level={1} size="lg">
             Mi Progreso
-          </h1>
+          </Heading>
           <div className="flex items-center gap-3">
-            <label htmlFor="recent-count" className="text-[13px] text-black/60 dark:text-white/70">
+            <Text size="xs" variant="secondary" as="label" htmlFor="recent-count">
               Mostrar últimas:
-            </label>
+            </Text>
             <select
               id="recent-count"
               value={recentQuestionsCount}
@@ -138,14 +134,14 @@ function ProgressPageContent() {
         {/* Level Progress Cards with liquidGlass material */}
         <div className="grid md:grid-cols-2 gap-4 mb-6">
           {/* M1 Progress Card */}
-          <div className="backdrop-blur-[12px] bg-white/60 dark:bg-[#1C1C1C]/60 rounded-2xl p-6 border border-black/[0.12] dark:border-white/[0.16] shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:shadow-[0_14px_36px_rgba(0,0,0,0.22)] transition-all duration-[240ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]">
-            <h3 className="text-[19px] font-semibold text-black dark:text-white mb-4" style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}>
+          <Card hover className="p-6">
+            <Heading level={3} size="xs" className="mb-4">
               Competencia Matemática M1
-            </h3>
+            </Heading>
             <div className="mb-4">
-              <div className="flex justify-between text-[13px] text-black/60 dark:text-white/70 mb-2">
-                <span>Últimas {recentQuestionsCount} preguntas</span>
-                <span className="font-semibold">{m1RecentStats.total > 0 ? calculatePercentage(m1RecentStats) : 0}%</span>
+              <div className="flex justify-between mb-2">
+                <Text size="xs" variant="secondary">Últimas {recentQuestionsCount} preguntas</Text>
+                <Text size="xs" variant="secondary" className="font-semibold">{m1RecentStats.total > 0 ? calculatePercentage(m1RecentStats) : 0}%</Text>
               </div>
               <div className="w-full bg-black/[0.04] dark:bg-white/[0.06] rounded-full h-2 overflow-hidden">
                 <div
@@ -154,31 +150,30 @@ function ProgressPageContent() {
                 />
               </div>
             </div>
-            <div className="space-y-2 text-black dark:text-white">
-              <p className="text-[34px] font-semibold text-center tracking-tight" style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}>
+            <div className="space-y-2">
+              <Heading level={4} size="md" className="text-center">
                 {m1RecentStats.correct}/{m1RecentStats.total}
-              </p>
-              <p className="text-center text-[13px] text-black/60 dark:text-white/70">
+              </Heading>
+              <Text size="xs" variant="secondary" className="text-center">
                 Respuestas correctas en las últimas {m1RecentStats.total} preguntas
-              </p>
+              </Text>
             </div>
-            <Link
-              href="/practice/m1"
-              className="mt-4 inline-flex items-center justify-center w-full h-11 rounded-xl text-[15px] font-semibold bg-[#0A84FF] text-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] active:scale-[0.98] transition-all duration-[180ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
-            >
-              Continuar Práctica
-            </Link>
-          </div>
+            <Button asChild className="mt-4 w-full">
+              <Link href="/practice/m1">
+                Continuar Práctica
+              </Link>
+            </Button>
+          </Card>
 
           {/* M2 Progress Card */}
-          <div className="backdrop-blur-[12px] bg-white/60 dark:bg-[#1C1C1C]/60 rounded-2xl p-6 border border-black/[0.12] dark:border-white/[0.16] shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:shadow-[0_14px_36px_rgba(0,0,0,0.22)] transition-all duration-[240ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]">
-            <h3 className="text-[19px] font-semibold text-black dark:text-white mb-4" style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}>
+          <Card hover className="p-6">
+            <Heading level={3} size="xs" className="mb-4">
               Competencia Matemática M2
-            </h3>
+            </Heading>
             <div className="mb-4">
-              <div className="flex justify-between text-[13px] text-black/60 dark:text-white/70 mb-2">
-                <span>Últimas {recentQuestionsCount} preguntas</span>
-                <span className="font-semibold">{m2RecentStats.total > 0 ? calculatePercentage(m2RecentStats) : 0}%</span>
+              <div className="flex justify-between mb-2">
+                <Text size="xs" variant="secondary">Últimas {recentQuestionsCount} preguntas</Text>
+                <Text size="xs" variant="secondary" className="font-semibold">{m2RecentStats.total > 0 ? calculatePercentage(m2RecentStats) : 0}%</Text>
               </div>
               <div className="w-full bg-black/[0.04] dark:bg-white/[0.06] rounded-full h-2 overflow-hidden">
                 <div
@@ -187,33 +182,32 @@ function ProgressPageContent() {
                 />
               </div>
             </div>
-            <div className="space-y-2 text-black dark:text-white">
-              <p className="text-[34px] font-semibold text-center tracking-tight" style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}>
+            <div className="space-y-2">
+              <Heading level={4} size="md" className="text-center">
                 {m2RecentStats.correct}/{m2RecentStats.total}
-              </p>
-              <p className="text-center text-[13px] text-black/60 dark:text-white/70">
+              </Heading>
+              <Text size="xs" variant="secondary" className="text-center">
                 Respuestas correctas en las últimas {m2RecentStats.total} preguntas
-              </p>
+              </Text>
             </div>
-            <Link
-              href="/practice/m2"
-              className="mt-4 inline-flex items-center justify-center w-full h-11 rounded-xl text-[15px] font-semibold bg-[#0A84FF] text-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] active:scale-[0.98] transition-all duration-[180ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
-            >
-              Continuar Práctica
-            </Link>
-          </div>
+            <Button asChild className="mt-4 w-full">
+              <Link href="/practice/m2">
+                Continuar Práctica
+              </Link>
+            </Button>
+          </Card>
         </div>
 
         {/* Recent Questions History */}
         {allHistory.length > 0 && (
-          <div className="backdrop-blur-[12px] bg-white/60 dark:bg-[#1C1C1C]/60 rounded-2xl p-8 border border-black/[0.12] dark:border-white/[0.16] shadow-[0_8px_24px_rgba(0,0,0,0.18)]">
+          <Card className="p-8">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-[28px] font-semibold text-black dark:text-white tracking-tight" style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}>
+              <Heading level={2} size="sm">
                 Historial de Preguntas Recientes
-              </h2>
-              <p className="text-[13px] text-black/60 dark:text-white/70">
+              </Heading>
+              <Text size="xs" variant="secondary">
                 Total: {allHistory.length} preguntas
-              </p>
+              </Text>
             </div>
             <div className="space-y-3 mb-6">
               {paginatedHistory.map((attempt, index) => (
@@ -229,26 +223,22 @@ function ProgressPageContent() {
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
-                        <span className={`inline-flex items-center h-6 px-2 rounded-full text-[12px] font-medium ${
-                          attempt.level === 'M1'
-                            ? 'bg-[#0A84FF]/10 text-[#0A84FF] dark:bg-[#0A84FF]/20 dark:text-[#66B2FF]'
-                            : 'bg-[#5E5CE6]/10 text-[#5E5CE6] dark:bg-[#9A99FF]/20 dark:text-[#B2B1FF]'
-                        }`}>
+                        <Badge size="sm" variant={attempt.level === 'M1' ? 'info' : 'secondary'}>
                           {attempt.level}
-                        </span>
-                        <span className={`inline-flex items-center h-6 px-2 rounded-full text-[12px] font-medium ${getDifficultyColor(attempt.difficulty)}`}>
+                        </Badge>
+                        <Badge size="sm" variant={getDifficultyBadgeVariant(attempt.difficulty)}>
                           {getDifficultyLabel(attempt.difficulty)}
-                        </span>
-                        <span className="text-[13px] text-black/60 dark:text-white/70">
+                        </Badge>
+                        <Text size="xs" variant="secondary">
                           {attempt.topic}
-                        </span>
+                        </Text>
                       </div>
-                      <p className="text-[15px] text-black dark:text-white font-medium mb-1">
+                      <Text size="sm" className="font-medium mb-1">
                         {attempt.question}
-                      </p>
-                      <p className="text-[13px] text-black/60 dark:text-white/70">
+                      </Text>
+                      <Text size="xs" variant="secondary">
                         {formatDate(attempt.timestamp)}
-                      </p>
+                      </Text>
                     </div>
                     <div className="ml-4">
                       {attempt.isCorrect ? (
@@ -265,13 +255,13 @@ function ProgressPageContent() {
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="flex justify-center items-center gap-2">
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
-                  className="h-11 px-4 rounded-xl text-[15px] font-medium bg-black/[0.04] dark:bg-white/[0.06] text-black dark:text-white hover:bg-black/[0.08] dark:hover:bg-white/[0.12] disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all duration-[180ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
                 >
                   ← Anterior
-                </button>
+                </Button>
 
                 <div className="flex gap-1">
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
@@ -282,90 +272,70 @@ function ProgressPageContent() {
                       (page >= currentPage - 1 && page <= currentPage + 1)
                     ) {
                       return (
-                        <button
+                        <Button
                           key={page}
+                          variant={currentPage === page ? 'primary' : 'ghost'}
                           onClick={() => setCurrentPage(page)}
-                          className={`h-11 w-11 rounded-xl text-[15px] font-medium active:scale-[0.98] transition-all duration-[180ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
-                            currentPage === page
-                              ? 'bg-[#0A84FF] text-white shadow-[0_4px_12px_rgba(10,132,255,0.3)]'
-                              : 'bg-black/[0.04] dark:bg-white/[0.06] text-black dark:text-white hover:bg-black/[0.08] dark:hover:bg-white/[0.12]'
-                          }`}
+                          className="w-11"
                         >
                           {page}
-                        </button>
+                        </Button>
                       );
                     } else if (
                       page === currentPage - 2 ||
                       page === currentPage + 2
                     ) {
-                      return <span key={page} className="px-2 text-black/60 dark:text-white/70">...</span>;
+                      return <Text key={page} size="xs" variant="secondary" className="px-2">...</Text>;
                     }
                     return null;
                   })}
                 </div>
 
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
-                  className="h-11 px-4 rounded-xl text-[15px] font-medium bg-black/[0.04] dark:bg-white/[0.06] text-black dark:text-white hover:bg-black/[0.08] dark:hover:bg-white/[0.12] disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all duration-[180ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
                 >
                   Siguiente →
-                </button>
+                </Button>
               </div>
             )}
-          </div>
+          </Card>
         )}
 
         {allHistory.length === 0 && (
           <div className="mt-8 backdrop-blur-[12px] bg-[#FF9F0A]/5 dark:bg-[#FF9F0A]/10 border-l-4 border-[#FF9F0A] rounded-r-xl p-4">
-            <p className="text-[15px] text-[#FF9F0A] dark:text-[#FFB84D]">
+            <Text size="sm" className="text-[#FF9F0A] dark:text-[#FFB84D]">
               Aún no has comenzado a practicar. ¡Empieza ahora con M1 o M2!
-            </p>
+            </Text>
           </div>
         )}
 
         {/* Review Modal with Liquid Glass */}
-        {selectedAttempt && (
-          <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-            onClick={() => setSelectedAttempt(null)}
-          >
-            <div
-              className="backdrop-blur-[20px] bg-white/90 dark:bg-[#1C1C1C]/90 rounded-3xl shadow-[0_20px_48px_rgba(0,0,0,0.26)] max-w-3xl w-full max-h-[90vh] overflow-y-auto p-8 border border-black/[0.12] dark:border-white/[0.16]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-start mb-6">
-                <h3 className="text-[28px] font-semibold text-black dark:text-white tracking-tight" style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}>
-                  Revisar Pregunta
-                </h3>
-                <button
-                  onClick={() => setSelectedAttempt(null)}
-                  className="text-black/60 hover:text-black dark:text-white/70 dark:hover:text-white text-3xl leading-none w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-all duration-[180ms]"
-                >
-                  ×
-                </button>
-              </div>
-
+        <Modal
+          isOpen={!!selectedAttempt}
+          onClose={() => setSelectedAttempt(null)}
+          title="Revisar Pregunta"
+          maxWidth="lg"
+        >
+          {selectedAttempt && (
+            <>
               <div className="mb-4 flex gap-2 flex-wrap">
-                <span className={`inline-flex items-center h-7 px-3 rounded-full text-[13px] font-medium ${
-                  selectedAttempt.level === 'M1'
-                    ? 'bg-[#0A84FF]/10 text-[#0A84FF] dark:bg-[#0A84FF]/20 dark:text-[#66B2FF]'
-                    : 'bg-[#5E5CE6]/10 text-[#5E5CE6] dark:bg-[#9A99FF]/20 dark:text-[#B2B1FF]'
-                }`}>
+                <Badge variant={selectedAttempt.level === 'M1' ? 'info' : 'secondary'}>
                   {selectedAttempt.level}
-                </span>
-                <span className={`inline-flex items-center h-7 px-3 rounded-full text-[13px] font-medium ${getDifficultyColor(selectedAttempt.difficulty)}`}>
+                </Badge>
+                <Badge variant={getDifficultyBadgeVariant(selectedAttempt.difficulty)}>
                   {getDifficultyLabel(selectedAttempt.difficulty)}
-                </span>
-                <span className="inline-flex items-center h-7 px-3 rounded-full text-[13px] font-medium bg-black/[0.04] text-black dark:bg-white/[0.06] dark:text-white">
+                </Badge>
+                <Badge variant="neutral">
                   {selectedAttempt.topic}
-                </span>
+                </Badge>
               </div>
 
               <div className="mb-6">
-                <h4 className="text-[17px] font-semibold text-black dark:text-white mb-4">
+                <Heading level={4} size="xs" className="text-[17px] mb-4">
                   {selectedAttempt.question}
-                </h4>
+                </Heading>
                 <div className="space-y-3">
                   {selectedAttempt.options.map((option, index) => {
                     const isUserAnswer = index === selectedAttempt.userAnswer;
@@ -382,12 +352,12 @@ function ProgressPageContent() {
 
                     return (
                       <div key={index} className={className}>
-                        <span className="font-semibold mr-2 text-[15px]">
+                        <Text size="sm" className="inline font-semibold mr-2">
                           {String.fromCharCode(65 + index)}.
-                        </span>
-                        <span className="text-[15px]">{option}</span>
-                        {isCorrectAnswer && <span className="float-right text-[13px]">✓ Correcta</span>}
-                        {isUserAnswer && !isCorrectAnswer && <span className="float-right text-[13px]">✗ Tu respuesta</span>}
+                        </Text>
+                        <Text size="sm" className="inline">{option}</Text>
+                        {isCorrectAnswer && <Text size="xs" className="float-right">✓ Correcta</Text>}
+                        {isUserAnswer && !isCorrectAnswer && <Text size="xs" className="float-right">✗ Tu respuesta</Text>}
                       </div>
                     );
                   })}
@@ -395,12 +365,12 @@ function ProgressPageContent() {
               </div>
 
               <div className="bg-[#0A84FF]/5 dark:bg-[#0A84FF]/10 border-l-4 border-[#0A84FF] rounded-r-xl p-4 mb-6">
-                <h4 className="font-semibold text-[15px] text-[#0A84FF] dark:text-[#66B2FF] mb-2">
+                <Text size="sm" className="font-semibold text-[#0A84FF] dark:text-[#66B2FF] mb-2">
                   Explicación:
-                </h4>
-                <p className="text-[15px] text-black/80 dark:text-white/80 leading-[1.4]">
+                </Text>
+                <Text size="sm" className="text-black/80 dark:text-white/80">
                   {selectedAttempt.explanation}
-                </p>
+                </Text>
               </div>
 
               <div className={`p-4 rounded-xl ${
@@ -408,25 +378,22 @@ function ProgressPageContent() {
                   ? 'bg-[#34C759]/10 dark:bg-[#30D158]/20 text-[#34C759] dark:text-[#5DE38D]'
                   : 'bg-[#FF453A]/10 dark:bg-[#FF453A]/20 text-[#FF453A] dark:text-[#FF7A72]'
               }`}>
-                <p className="font-semibold text-center text-[17px]">
+                <Text size="md" className="font-semibold text-center">
                   {selectedAttempt.isCorrect
                     ? '¡Respuesta Correcta! 🎉'
                     : 'Respuesta Incorrecta'}
-                </p>
-                <p className="text-[13px] text-center mt-1 opacity-80">
+                </Text>
+                <Text size="xs" className="text-center mt-1 opacity-80">
                   Respondida el {formatDate(selectedAttempt.timestamp)}
-                </p>
+                </Text>
               </div>
 
-              <button
-                onClick={() => setSelectedAttempt(null)}
-                className="mt-6 w-full h-11 rounded-xl text-[15px] font-semibold bg-[#0A84FF] text-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] active:scale-[0.98] transition-all duration-[180ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
-              >
+              <Button onClick={() => setSelectedAttempt(null)} className="mt-6 w-full">
                 Cerrar
-              </button>
-            </div>
-          </div>
-        )}
+              </Button>
+            </>
+          )}
+        </Modal>
       </main>
     </div>
   );
