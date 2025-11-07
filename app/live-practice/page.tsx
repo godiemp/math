@@ -8,6 +8,7 @@ import { LiveSession } from '@/lib/types';
 import LiveSessionComponent from '@/components/LiveSession';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
+import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 
 function LivePracticePageContent() {
   const { user: currentUser, setUser, isAdmin } = useAuth();
@@ -91,165 +92,160 @@ function LivePracticePageContent() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-6">
+        <Card className="mb-6" padding="lg">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              <Heading level={1} size="md" className="mb-2">
                 Ensayo PAES en Vivo
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400">
+              </Heading>
+              <Text variant="secondary">
                 Regístrate y practica ensayos PAES con otros estudiantes en tiempo real
-              </p>
+              </Text>
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-right">
-                <p className="text-sm text-gray-600 dark:text-gray-400">Bienvenido,</p>
-                <p className="font-medium text-gray-900 dark:text-white">{currentUser?.displayName}</p>
+                <Text size="xs" variant="secondary">Bienvenido,</Text>
+                <Text className="font-medium">{currentUser?.displayName}</Text>
                 {isAdmin && (
-                  <p className="text-xs text-indigo-600 dark:text-indigo-400">Administrador</p>
+                  <Badge variant="info" size="sm">Administrador</Badge>
                 )}
               </div>
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-              >
+              <Button variant="ghost" onClick={() => router.push('/dashboard')}>
                 Inicio
-              </button>
+              </Button>
               {isAdmin && (
-                <button
-                  onClick={() => router.push('/admin')}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-                >
+                <Button variant="secondary" onClick={() => router.push('/admin')}>
                   Admin
-                </button>
+                </Button>
               )}
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-              >
+              <Button variant="danger" onClick={handleLogout}>
                 Salir
-              </button>
+              </Button>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Error Message */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-            <p className="text-red-600 dark:text-red-400">{error}</p>
-          </div>
+          <Card className="mb-6 border-[#FF453A] dark:border-[#FF7A72]" padding="md">
+            <Text className="text-[#FF453A] dark:text-[#FF7A72]">{error}</Text>
+          </Card>
         )}
 
         {/* Available Ensayos */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+        <Card padding="lg">
+          <Heading level={2} size="xs" className="mb-4">
             Ensayos Disponibles ({sessions.length})
-          </h2>
+          </Heading>
 
           {sessions.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <Text variant="secondary" className="mb-4">
                 No hay ensayos disponibles en este momento
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-500">
+              </Text>
+              <Text size="xs" variant="secondary">
                 Espera a que un administrador cree un nuevo ensayo
-              </p>
+              </Text>
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
               {sessions.map((session) => (
                 <div
                   key={session.id}
-                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-lg transition-shadow"
+                  className="border border-black/[0.12] dark:border-white/[0.16] rounded-xl p-4 hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-all duration-[180ms]"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-1">
+                      <Heading level={3} size="xs" className="mb-1">
                         {session.name}
-                      </h3>
+                      </Heading>
                       {session.description && (
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mb-1">
+                        <Text size="xs" variant="secondary" className="mb-1">
                           {session.description}
-                        </p>
+                        </Text>
                       )}
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <Text size="xs" variant="secondary">
                         por {session.hostName}
-                      </p>
+                      </Text>
                     </div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      session.status === 'scheduled'
-                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                        : session.status === 'lobby'
-                        ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
-                        : session.status === 'active'
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
-                    }`}>
-                      {session.status === 'scheduled' ? 'Programado' : session.status === 'lobby' ? 'Lobby Abierto' : session.status === 'active' ? 'En Curso' : session.status}
-                    </span>
+                    <Badge
+                      variant={
+                        session.status === 'scheduled' ? 'info' :
+                        session.status === 'lobby' ? 'warning' :
+                        session.status === 'active' ? 'success' : 'neutral'
+                      }
+                      size="sm"
+                    >
+                      {session.status === 'scheduled' ? 'Programado' :
+                       session.status === 'lobby' ? 'Lobby Abierto' :
+                       session.status === 'active' ? 'En Curso' : session.status}
+                    </Badge>
                   </div>
 
                   <div className="space-y-2 mb-4">
                     {session.scheduledStartTime && (
-                      <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                        <span className="font-medium mr-2">📅 Fecha:</span>
-                        <span>
+                      <div className="flex items-center">
+                        <Text size="xs" variant="secondary" className="font-medium mr-2">📅 Fecha:</Text>
+                        <Text size="xs" variant="secondary">
                           {new Date(session.scheduledStartTime).toLocaleString('es-CL', {
                             dateStyle: 'medium',
                             timeStyle: 'short',
                           })}
-                        </span>
+                        </Text>
                       </div>
                     )}
-                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium mr-2">Nivel:</span>
-                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 rounded">
-                        {session.level}
-                      </span>
+                    <div className="flex items-center">
+                      <Text size="xs" variant="secondary" className="font-medium mr-2">Nivel:</Text>
+                      <Badge variant="info" size="sm">{session.level}</Badge>
                     </div>
-                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium mr-2">Preguntas:</span>
-                      <span>{session.questions.length}</span>
+                    <div className="flex items-center">
+                      <Text size="xs" variant="secondary" className="font-medium mr-2">Preguntas:</Text>
+                      <Text size="xs" variant="secondary">{session.questions.length}</Text>
                     </div>
                   </div>
 
                   {/* Action buttons based on session status */}
                   {session.status === 'scheduled' ? (
                     isUserRegistered(session) ? (
-                      <button
+                      <Button
+                        variant="danger"
                         onClick={() => handleUnregisterSession(session.id)}
-                        className="w-full py-2 px-4 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors"
+                        fullWidth
                       >
                         Cancelar Registro
-                      </button>
+                      </Button>
                     ) : (
-                      <button
+                      <Button
+                        variant="primary"
                         onClick={() => handleRegisterSession(session.id)}
-                        className="w-full py-2 px-4 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+                        fullWidth
                       >
                         Registrarse
-                      </button>
+                      </Button>
                     )
                   ) : session.status === 'lobby' ? (
-                    <button
+                    <Button
+                      variant="primary"
                       onClick={() => handleJoinSession(session.id)}
-                      className="w-full py-2 px-4 bg-yellow-600 text-white rounded-lg font-medium hover:bg-yellow-700 transition-colors"
+                      fullWidth
+                      className="bg-[#FF9F0A] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
                     >
                       {isUserInSession(session) ? 'Volver al Lobby' : 'Entrar al Lobby'}
-                    </button>
+                    </Button>
                   ) : session.status === 'active' ? (
-                    <button
+                    <Button
+                      variant="success"
                       onClick={() => handleJoinSession(session.id)}
-                      className="w-full py-2 px-4 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
+                      fullWidth
                     >
                       {isUserInSession(session) ? 'Volver a Entrar' : 'Unirse Ahora'}
-                    </button>
+                    </Button>
                   ) : null}
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </Card>
       </div>
     </div>
   );

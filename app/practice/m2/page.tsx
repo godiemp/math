@@ -5,6 +5,7 @@ import Quiz from '@/components/Quiz';
 import { getQuestionsByLevel } from '@/lib/questions';
 import Link from 'next/link';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { Card, Button, Heading, Text } from '@/components/ui';
 
 type Subject = 'números' | 'álgebra' | 'geometría' | 'probabilidad';
 type QuizMode = 'zen' | 'rapidfire';
@@ -94,13 +95,13 @@ function M2PracticeContent() {
 
   // Step 1: Subject Selection
   const renderSubjectSelection = () => (
-    <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+    <Card className="mb-6" padding="lg">
+      <Heading level={2} size="sm" className="mb-1">
         Paso 1: Selecciona una materia
-      </h2>
-      <p className="text-gray-600 dark:text-gray-400 mb-6">
+      </Heading>
+      <Text variant="secondary" className="mb-6">
         Elige el área que quieres practicar
-      </p>
+      </Text>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {subjects.map((subject) => (
           <button
@@ -110,38 +111,30 @@ function M2PracticeContent() {
               setQuizMode(null);
               setDifficulty(null);
             }}
-            className={`p-6 rounded-lg border-2 transition-all text-left ${
+            className={`p-4 rounded-xl border transition-all duration-[180ms] text-left ${
               selectedSubject === subject.value
-                ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 shadow-lg transform scale-105'
-                : 'border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-md'
+                ? 'border-[#0A84FF] bg-[#0A84FF]/[0.06] dark:bg-[#0A84FF]/[0.12] shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)] transform scale-105'
+                : 'border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50 dark:hover:border-[#0A84FF] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:scale-[1.02]'
             }`}
           >
-            <div className="flex items-start gap-4">
+            <div className="flex items-start gap-3">
               <div className="text-4xl">{subject.emoji}</div>
               <div className="flex-1">
-                <div className={`font-bold text-lg mb-1 ${
-                  selectedSubject === subject.value
-                    ? 'text-indigo-900 dark:text-indigo-100'
-                    : 'text-gray-900 dark:text-white'
-                }`}>
+                <Text size="md" className="font-semibold mb-0.5">
                   {subject.label}
-                </div>
-                <div className={`text-sm ${
-                  selectedSubject === subject.value
-                    ? 'text-indigo-700 dark:text-indigo-300'
-                    : 'text-gray-600 dark:text-gray-400'
-                }`}>
+                </Text>
+                <Text size="xs" variant="secondary">
                   {subject.description}
-                </div>
+                </Text>
               </div>
               {selectedSubject === subject.value && (
-                <div className="text-indigo-600 dark:text-indigo-400 text-2xl">✓</div>
+                <div className="text-[#0A84FF] text-2xl">✓</div>
               )}
             </div>
           </button>
         ))}
       </div>
-    </div>
+    </Card>
   );
 
   // Step 2: Mode Selection
@@ -149,13 +142,13 @@ function M2PracticeContent() {
     if (selectedSubject === undefined) return null;
 
     return (
-      <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+      <Card className="mb-6" padding="lg">
+        <Heading level={2} size="sm" className="mb-1">
           Paso 2: Selecciona el modo de práctica
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        </Heading>
+        <Text variant="secondary" className="mb-6">
           Elige cómo quieres practicar
-        </p>
+        </Text>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {modes.map((mode) => (
             <button
@@ -164,45 +157,33 @@ function M2PracticeContent() {
                 setQuizMode(mode.value);
                 setDifficulty(null);
               }}
-              className={`p-6 rounded-lg border-2 transition-all text-left ${
+              className={`p-4 rounded-xl border transition-all duration-[180ms] text-left ${
                 quizMode === mode.value
-                  ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 shadow-lg transform scale-105'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-md'
+                  ? 'border-[#0A84FF] bg-[#0A84FF]/[0.06] dark:bg-[#0A84FF]/[0.12] shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)] transform scale-105'
+                  : 'border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50 dark:hover:border-[#0A84FF] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:scale-[1.02]'
               }`}
             >
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-3">
                 <div className="text-5xl">{mode.emoji}</div>
                 <div className="flex-1">
-                  <div className={`font-bold text-xl mb-1 ${
-                    quizMode === mode.value
-                      ? 'text-indigo-900 dark:text-indigo-100'
-                      : 'text-gray-900 dark:text-white'
-                  }`}>
+                  <Text size="lg" className="font-semibold mb-1">
                     {mode.label}
-                  </div>
-                  <div className={`text-sm font-medium mb-2 ${
-                    quizMode === mode.value
-                      ? 'text-indigo-700 dark:text-indigo-300'
-                      : 'text-gray-700 dark:text-gray-300'
-                  }`}>
+                  </Text>
+                  <Text size="sm" className="font-medium mb-2">
                     {mode.description}
-                  </div>
-                  <div className={`text-xs ${
-                    quizMode === mode.value
-                      ? 'text-indigo-600 dark:text-indigo-400'
-                      : 'text-gray-500 dark:text-gray-500'
-                  }`}>
+                  </Text>
+                  <Text size="xs" variant="secondary">
                     {mode.details}
-                  </div>
+                  </Text>
                 </div>
                 {quizMode === mode.value && (
-                  <div className="text-indigo-600 dark:text-indigo-400 text-2xl">✓</div>
+                  <div className="text-[#0A84FF] text-2xl">✓</div>
                 )}
               </div>
             </button>
           ))}
         </div>
-      </div>
+      </Card>
     );
   };
 
@@ -211,48 +192,36 @@ function M2PracticeContent() {
     if (quizMode !== 'rapidfire') return null;
 
     return (
-      <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+      <Card className="mb-6" padding="lg">
+        <Heading level={2} size="sm" className="mb-1">
           Paso 3: Selecciona la dificultad
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        </Heading>
+        <Text variant="secondary" className="mb-6">
           ¿Cuánto tiempo necesitas para completar 10 preguntas?
-        </p>
+        </Text>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {difficulties.map((diff) => (
             <button
               key={diff.value}
               onClick={() => setDifficulty(diff.value)}
-              className={`p-6 rounded-lg border-2 transition-all text-center ${
+              className={`p-4 rounded-xl border transition-all duration-[180ms] text-center ${
                 difficulty === diff.value
-                  ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 shadow-lg transform scale-105'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-md'
+                  ? 'border-[#0A84FF] bg-[#0A84FF]/[0.06] dark:bg-[#0A84FF]/[0.12] shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)] transform scale-105'
+                  : 'border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50 dark:hover:border-[#0A84FF] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:scale-[1.02]'
               }`}
             >
               <div className="text-5xl mb-3">{diff.emoji}</div>
-              <div className={`font-bold text-xl mb-2 ${
-                difficulty === diff.value
-                  ? 'text-indigo-900 dark:text-indigo-100'
-                  : 'text-gray-900 dark:text-white'
-              }`}>
+              <Text size="lg" className="font-semibold mb-2">
                 {diff.label}
-              </div>
-              <div className={`text-lg font-semibold mb-1 ${
-                difficulty === diff.value
-                  ? 'text-indigo-700 dark:text-indigo-300'
-                  : 'text-gray-700 dark:text-gray-300'
-              }`}>
+              </Text>
+              <Text size="md" className="font-medium mb-1">
                 {diff.time} minutos
-              </div>
-              <div className={`text-xs ${
-                difficulty === diff.value
-                  ? 'text-indigo-600 dark:text-indigo-400'
-                  : 'text-gray-500 dark:text-gray-500'
-              }`}>
+              </Text>
+              <Text size="xs" variant="secondary">
                 {diff.description}
-              </div>
+              </Text>
               {difficulty === diff.value && (
-                <div className="text-indigo-600 dark:text-indigo-400 text-2xl mt-2">✓</div>
+                <div className="text-[#0A84FF] text-2xl mt-2">✓</div>
               )}
             </button>
           ))}
@@ -260,21 +229,15 @@ function M2PracticeContent() {
 
         {difficulty && (
           <div className="flex gap-4">
-            <button
-              onClick={handleResetSelection}
-              className="px-6 py-3 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-            >
+            <Button variant="ghost" onClick={handleResetSelection}>
               ← Cambiar Selección
-            </button>
-            <button
-              onClick={handleStartQuiz}
-              className="flex-1 px-6 py-3 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-colors shadow-lg"
-            >
+            </Button>
+            <Button variant="primary" onClick={handleStartQuiz} fullWidth>
               Comenzar Quiz →
-            </button>
+            </Button>
           </div>
         )}
-      </div>
+      </Card>
     );
   };
 
@@ -283,22 +246,16 @@ function M2PracticeContent() {
     if (quizMode !== 'zen') return null;
 
     return (
-      <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+      <Card className="mb-6" padding="lg">
         <div className="flex gap-4">
-          <button
-            onClick={handleResetSelection}
-            className="px-6 py-3 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-          >
+          <Button variant="ghost" onClick={handleResetSelection}>
             ← Cambiar Selección
-          </button>
-          <button
-            onClick={handleStartQuiz}
-            className="flex-1 px-6 py-3 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-colors shadow-lg"
-          >
+          </Button>
+          <Button variant="primary" onClick={handleStartQuiz} fullWidth>
             Comenzar Quiz →
-          </button>
+          </Button>
         </div>
-      </div>
+      </Card>
     );
   };
 
@@ -310,13 +267,13 @@ function M2PracticeContent() {
           <div className="mb-6 flex justify-between items-center">
             <button
               onClick={handleResetSelection}
-              className="text-indigo-600 dark:text-indigo-400 hover:underline inline-block font-semibold"
+              className="text-[#0A84FF] dark:text-[#66B2FF] hover:opacity-80 inline-block font-semibold transition-opacity"
             >
               ← Nueva Práctica
             </button>
             <Link
               href="/curriculum/m2"
-              className="text-indigo-600 dark:text-indigo-400 hover:underline inline-block"
+              className="text-[#0A84FF] dark:text-[#66B2FF] hover:opacity-80 inline-block transition-opacity"
             >
               📚 Ver Curriculum M2
             </Link>
@@ -342,23 +299,23 @@ function M2PracticeContent() {
           <div className="flex justify-between items-start mb-4">
             <Link
               href="/dashboard"
-              className="text-indigo-600 dark:text-indigo-400 hover:underline inline-block"
+              className="text-[#0A84FF] dark:text-[#66B2FF] hover:opacity-80 inline-block transition-opacity"
             >
               ← Volver al Inicio
             </Link>
             <Link
               href="/curriculum/m2"
-              className="text-indigo-600 dark:text-indigo-400 hover:underline inline-block"
+              className="text-[#0A84FF] dark:text-[#66B2FF] hover:opacity-80 inline-block transition-opacity"
             >
               📚 Ver Curriculum M2
             </Link>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+          <Heading level={1} size="lg" className="mb-2">
             Práctica PAES - Competencia Matemática M2
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          </Heading>
+          <Text variant="secondary" size="md">
             Contenidos avanzados para carreras científicas y de ingeniería
-          </p>
+          </Text>
         </div>
 
         {renderSubjectSelection()}

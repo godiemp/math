@@ -13,6 +13,7 @@ import {
 import { LiveSession } from '@/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
+import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 
 function AdminBackofficeContent() {
   const { user: currentUser } = useAuth();
@@ -213,170 +214,144 @@ function AdminBackofficeContent() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-6">
+        <Card className="mb-6" padding="lg">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              <Heading level={1} size="md" className="mb-2">
                 Panel de Administración
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400">
+              </Heading>
+              <Text variant="secondary">
                 Gestiona ensayos PAES en vivo
-              </p>
+              </Text>
             </div>
             <div className="flex items-center space-x-4">
-              <button
-                onClick={() => router.push('/')}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-              >
+              <Button variant="ghost" onClick={() => router.push('/')}>
                 Inicio
-              </button>
-              <button
-                onClick={() => router.push('/admin/problems')}
-                className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
-              >
+              </Button>
+              <Button variant="secondary" onClick={() => router.push('/admin/problems')}>
                 Explorar Problemas
-              </button>
-              <button
-                onClick={() => router.push('/live-practice')}
-                className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors"
-              >
+              </Button>
+              <Button variant="primary" onClick={() => router.push('/live-practice')}>
                 Ver Lobby
-              </button>
+              </Button>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Success/Error Messages */}
         {success && (
-          <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-            <p className="text-green-600 dark:text-green-400">{success}</p>
-          </div>
+          <Card className="mb-6 border-[#34C759] dark:border-[#5DE38D]" padding="md">
+            <Text className="text-[#34C759] dark:text-[#5DE38D]">{success}</Text>
+          </Card>
         )}
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-            <p className="text-red-600 dark:text-red-400">{error}</p>
-          </div>
+          <Card className="mb-6 border-[#FF453A] dark:border-[#FF7A72]" padding="md">
+            <Text className="text-[#FF453A] dark:text-[#FF7A72]">{error}</Text>
+          </Card>
         )}
 
         {/* Create Session Button */}
         <div className="mb-6">
-          <button
+          <Button
+            variant="primary"
+            size="lg"
             onClick={() => {
               resetForm();
               setShowCreateModal(true);
               setError('');
               setSuccess('');
             }}
-            className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors"
           >
             + Programar Nuevo Ensayo
-          </button>
+          </Button>
         </div>
 
         {/* Sessions List */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+        <Card padding="lg">
+          <Heading level={2} size="xs" className="mb-4">
             Ensayos Activos ({sessions.length})
-          </h2>
+          </Heading>
 
           {sessions.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <Text variant="secondary" className="mb-4">
                 No hay ensayos programados
-              </p>
-              <p className="text-sm text-gray-500">
+              </Text>
+              <Text size="xs" variant="secondary">
                 Crea un nuevo ensayo para comenzar
-              </p>
+              </Text>
             </div>
           ) : (
             <div className="space-y-4">
               {sessions.map((session) => (
                 <div
                   key={session.id}
-                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-lg transition-shadow"
+                  className="border border-black/[0.12] dark:border-white/[0.16] rounded-xl p-4 hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-all duration-[180ms]"
                 >
                   <div className="flex flex-col md:flex-row justify-between md:items-start space-y-4 md:space-y-0">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
-                        <h3 className="font-bold text-gray-900 dark:text-white text-lg">
+                        <Heading level={3} size="xs">
                           {session.name}
-                        </h3>
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            session.status === 'scheduled'
-                              ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                              : session.status === 'lobby'
-                              ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
-                              : session.status === 'active'
-                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                              : session.status === 'cancelled'
-                              ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                              : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
-                          }`}
+                        </Heading>
+                        <Badge
+                          variant={
+                            session.status === 'scheduled' ? 'info' :
+                            session.status === 'lobby' ? 'warning' :
+                            session.status === 'active' ? 'success' :
+                            session.status === 'cancelled' ? 'danger' : 'neutral'
+                          }
+                          size="sm"
                         >
-                          {session.status === 'scheduled'
-                            ? 'Programado'
-                            : session.status === 'lobby'
-                            ? 'Lobby Abierto'
-                            : session.status === 'active'
-                            ? 'En Curso'
-                            : session.status === 'cancelled'
-                            ? 'Cancelado'
-                            : session.status}
-                        </span>
+                          {session.status === 'scheduled' ? 'Programado' :
+                           session.status === 'lobby' ? 'Lobby Abierto' :
+                           session.status === 'active' ? 'En Curso' :
+                           session.status === 'cancelled' ? 'Cancelado' : session.status}
+                        </Badge>
                       </div>
 
                       {session.description && (
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        <Text size="xs" variant="secondary" className="mb-3">
                           {session.description}
-                        </p>
+                        </Text>
                       )}
 
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                         <div>
-                          <span className="text-gray-600 dark:text-gray-400">Nivel:</span>{' '}
-                          <span className="font-medium text-gray-900 dark:text-white">
+                          <Text size="xs" variant="secondary" className="inline">Nivel: </Text>
+                          <Text size="xs" className="font-medium inline">
                             {session.level}
-                          </span>
+                          </Text>
                         </div>
                         <div>
-                          <span className="text-gray-600 dark:text-gray-400">Preguntas:</span>{' '}
-                          <span className="font-medium text-gray-900 dark:text-white">
+                          <Text size="xs" variant="secondary" className="inline">Preguntas: </Text>
+                          <Text size="xs" className="font-medium inline">
                             {session.questions.length}
-                          </span>
+                          </Text>
                         </div>
                         <div>
-                          <span className="text-gray-600 dark:text-gray-400">Fecha:</span>{' '}
-                          <span className="font-medium text-gray-900 dark:text-white">
+                          <Text size="xs" variant="secondary" className="inline">Fecha: </Text>
+                          <Text size="xs" className="font-medium inline">
                             {session.scheduledStartTime
                               ? formatDate(session.scheduledStartTime)
                               : 'N/A'}
-                          </span>
+                          </Text>
                         </div>
                       </div>
                     </div>
 
                     {session.status === 'scheduled' && (
                       <div className="flex flex-wrap gap-2">
-                        <button
-                          onClick={() => handleEdit(session)}
-                          className="px-3 py-1.5 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors"
-                        >
+                        <Button variant="primary" size="sm" onClick={() => handleEdit(session)}>
                           Editar
-                        </button>
-                        <button
-                          onClick={() => handleCancel(session.id)}
-                          className="px-3 py-1.5 bg-orange-500 text-white text-sm rounded hover:bg-orange-600 transition-colors"
-                        >
+                        </Button>
+                        <Button variant="primary" size="sm" onClick={() => handleCancel(session.id)} className="bg-[#FF9F0A]">
                           Cancelar
-                        </button>
-                        <button
-                          onClick={() => handleDelete(session.id)}
-                          className="px-3 py-1.5 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition-colors"
-                        >
+                        </Button>
+                        <Button variant="danger" size="sm" onClick={() => handleDelete(session.id)}>
                           Eliminar
-                        </button>
+                        </Button>
                       </div>
                     )}
                   </div>
@@ -384,44 +359,44 @@ function AdminBackofficeContent() {
               ))}
             </div>
           )}
-        </div>
+        </Card>
       </div>
 
       {/* Create/Edit Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 max-w-2xl w-full my-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
+          <Card className="max-w-2xl w-full my-8 shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)]" padding="lg">
+            <Heading level={2} size="sm" className="mb-4">
               {editingSession ? 'Editar Ensayo' : 'Programar Nuevo Ensayo'}
-            </h2>
+            </Heading>
 
             {!editingSession && (
               <div className="mb-6">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                <Text size="xs" variant="secondary" className="mb-3">
                   Plantillas rápidas:
-                </p>
+                </Text>
                 <div className="flex gap-3">
                   <button
                     type="button"
                     onClick={applyM1Template}
-                    className="flex-1 px-4 py-3 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-300 dark:border-blue-700 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                    className="flex-1 px-4 py-3 bg-[#0A84FF]/[0.06] dark:bg-[#0A84FF]/[0.12] border-2 border-[#0A84FF]/30 dark:border-[#0A84FF]/50 rounded-xl hover:bg-[#0A84FF]/[0.12] dark:hover:bg-[#0A84FF]/[0.18] transition-all duration-[180ms] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
                   >
-                    <div className="font-semibold text-blue-800 dark:text-blue-400 mb-1">
+                    <div className="font-semibold text-[#0A84FF] dark:text-[#66B2FF] mb-1">
                       📐 M1 - Básico
                     </div>
-                    <div className="text-xs text-blue-600 dark:text-blue-500">
+                    <div className="text-xs text-[#0A84FF]/80 dark:text-[#66B2FF]/80">
                       140 min (2h 20min) • 60 preguntas
                     </div>
                   </button>
                   <button
                     type="button"
                     onClick={applyM2Template}
-                    className="flex-1 px-4 py-3 bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-300 dark:border-purple-700 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+                    className="flex-1 px-4 py-3 bg-[#5E5CE6]/[0.06] dark:bg-[#5E5CE6]/[0.12] border-2 border-[#5E5CE6]/30 dark:border-[#5E5CE6]/50 rounded-xl hover:bg-[#5E5CE6]/[0.12] dark:hover:bg-[#5E5CE6]/[0.18] transition-all duration-[180ms] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
                   >
-                    <div className="font-semibold text-purple-800 dark:text-purple-400 mb-1">
+                    <div className="font-semibold text-[#5E5CE6] dark:text-[#9F9DFF] mb-1">
                       🎓 M2 - Avanzado
                     </div>
-                    <div className="text-xs text-purple-600 dark:text-purple-500">
+                    <div className="text-xs text-[#5E5CE6]/80 dark:text-[#9F9DFF]/80">
                       140 min (2h 20min) • 50 preguntas
                     </div>
                   </button>
@@ -544,27 +519,29 @@ function AdminBackofficeContent() {
                 </div>
               </div>
 
-              <div className="flex space-x-4 pt-4">
-                <button
+              <div className="flex gap-4 pt-4">
+                <Button
                   type="button"
+                  variant="ghost"
                   onClick={() => {
                     setShowCreateModal(false);
                     resetForm();
                     setError('');
                   }}
-                  className="flex-1 px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors"
+                  fullWidth
                 >
                   Cancelar
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                  variant="primary"
+                  fullWidth
                 >
                   {editingSession ? 'Actualizar' : 'Programar Ensayo'}
-                </button>
+                </Button>
               </div>
             </form>
-          </div>
+          </Card>
         </div>
       )}
     </div>
