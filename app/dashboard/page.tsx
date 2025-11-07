@@ -123,38 +123,22 @@ function DashboardContent() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
-          <h3 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
-            Temas Principales
-          </h3>
-          <div className="grid md:grid-cols-3 gap-4">
-            {[
-              "Números y Proporcionalidad",
-              "Álgebra y Funciones",
-              "Geometría",
-              "Probabilidad y Estadística",
-              "Límites y Derivadas",
-              "Cálculo Integral"
-            ].map((topic, index) => (
-              <div
-                key={index}
-                className="bg-indigo-50 dark:bg-gray-700 rounded-lg p-4 text-center hover:bg-indigo-100 dark:hover:bg-gray-600 transition-colors cursor-pointer"
-              >
-                <p className="text-gray-800 dark:text-gray-200 font-medium">
-                  {topic}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
         <div className="mt-12 text-center">
-          <Link
-            href="/progress"
-            className="text-indigo-600 dark:text-indigo-400 hover:underline text-lg"
-          >
-            Ver mi progreso →
-          </Link>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 max-w-md mx-auto">
+            <div className="text-4xl mb-4">📊</div>
+            <h3 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">
+              Seguimiento de Progreso
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Revisa tu desempeño, estadísticas y mejora continua
+            </p>
+            <Link
+              href="/progress"
+              className="inline-block bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-semibold shadow-lg"
+            >
+              Ver Mi Progreso →
+            </Link>
+          </div>
         </div>
       </main>
 
