@@ -28,8 +28,8 @@ function LivePracticePageContent() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleLogout = () => {
-    logoutUser();
+  const handleLogout = async () => {
+    await logoutUser();
     setUser(null);
     router.push('/');
   };

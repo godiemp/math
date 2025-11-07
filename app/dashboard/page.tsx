@@ -35,8 +35,8 @@ function DashboardContent() {
     }
   }, [user]);
 
-  const handleLogout = () => {
-    logoutUser();
+  const handleLogout = async () => {
+    await logoutUser();
     setUser(null);
     router.push('/');
   };
