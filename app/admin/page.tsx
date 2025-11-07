@@ -74,12 +74,12 @@ export default function AdminBackoffice() {
 
     setFormData({
       name: 'Práctica M1 - Matemática Básica',
-      description: 'Sesión de práctica para nivel M1: números, álgebra básica, geometría y probabilidades.',
+      description: 'Sesión de práctica para nivel M1: números, álgebra básica, geometría y probabilidades. Duración oficial PAES: 2h 20min.',
       level: 'M1',
       scheduledDate: dateStr,
       scheduledTime: '15:00',
-      durationMinutes: 60,
-      questionCount: 10,
+      durationMinutes: 140,
+      questionCount: 60,
       maxParticipants: 20,
     });
   };
@@ -90,12 +90,12 @@ export default function AdminBackoffice() {
 
     setFormData({
       name: 'Práctica M2 - Matemática Avanzada',
-      description: 'Sesión de práctica para nivel M2: cálculo, límites, derivadas e integrales.',
+      description: 'Sesión de práctica para nivel M2: cálculo, límites, derivadas e integrales. Duración oficial PAES: 2h 20min.',
       level: 'M2',
       scheduledDate: dateStr,
       scheduledTime: '16:30',
-      durationMinutes: 90,
-      questionCount: 15,
+      durationMinutes: 140,
+      questionCount: 50,
       maxParticipants: 15,
     });
   };
@@ -421,7 +421,7 @@ export default function AdminBackoffice() {
                       📐 M1 - Básico
                     </div>
                     <div className="text-xs text-blue-600 dark:text-blue-500">
-                      60 min • 10 preguntas • 20 participantes
+                      140 min (2h 20min) • 60 preguntas • 20 participantes
                     </div>
                   </button>
                   <button
@@ -433,7 +433,7 @@ export default function AdminBackoffice() {
                       🎓 M2 - Avanzado
                     </div>
                     <div className="text-xs text-purple-600 dark:text-purple-500">
-                      90 min • 15 preguntas • 15 participantes
+                      140 min (2h 20min) • 50 preguntas • 15 participantes
                     </div>
                   </button>
                 </div>
