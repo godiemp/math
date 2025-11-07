@@ -1,24 +1,39 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { questions } from '@/lib/questions'
 import { Question } from '@/lib/types'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
+import { M1_SKILLS, getSkillNames } from '@/lib/skillTaxonomy'
 
 function ProblemsExplorerContent() {
   const router = useRouter()
   const [selectedLevel, setSelectedLevel] = useState<'all' | 'M1' | 'M2'>('all')
   const [selectedSubject, setSelectedSubject] = useState<'all' | 'números' | 'álgebra' | 'geometría' | 'probabilidad'>('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard'>('all')
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null)
+  const [showSkillsFilter, setShowSkillsFilter] = useState(false)
+
+  // Get all unique skills from questions
+  const allSkills = useMemo(() => {
+    const skillSet = new Set<string>()
+    questions.forEach(q => {
+      if (q.skills) {
+        q.skills.forEach(skill => skillSet.add(skill))
+      }
+    })
+    return Array.from(skillSet).sort()
+  }, [])
 
   // Filter questions based on selected filters
   const filteredQuestions = questions.filter((q) => {
     if (selectedLevel !== 'all' && q.level !== selectedLevel) return false
     if (selectedSubject !== 'all' && q.subject !== selectedSubject) return false
     if (selectedDifficulty !== 'all' && q.difficulty !== selectedDifficulty) return false
+    if (selectedSkills.length > 0 && !selectedSkills.every(skill => q.skills?.includes(skill))) return false
     if (searchQuery && !q.question.toLowerCase().includes(searchQuery.toLowerCase()) &&
         !q.topic.toLowerCase().includes(searchQuery.toLowerCase()) &&
         !q.id.toLowerCase().includes(searchQuery.toLowerCase())) return false
@@ -184,13 +199,84 @@ function ProblemsExplorerContent() {
             </div>
           </div>
 
+          {/* Skills Filter */}
+          <div className="mt-4">
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Habilidades ({selectedSkills.length} seleccionadas)
+              </label>
+              <button
+                onClick={() => setShowSkillsFilter(!showSkillsFilter)}
+                className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
+              >
+                {showSkillsFilter ? '▼ Ocultar' : '▶ Mostrar'}
+              </button>
+            </div>
+            {showSkillsFilter && (
+              <div className="border border-gray-300 dark:border-gray-600 rounded-lg p-4 max-h-60 overflow-y-auto bg-gray-50 dark:bg-gray-700">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                  {allSkills.map(skillId => {
+                    const skill = M1_SKILLS[skillId]
+                    const isSelected = selectedSkills.includes(skillId)
+                    return (
+                      <label
+                        key={skillId}
+                        className={`flex items-center gap-2 p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 ${
+                          isSelected ? 'bg-indigo-100 dark:bg-indigo-900' : ''
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedSkills([...selectedSkills, skillId])
+                            } else {
+                              setSelectedSkills(selectedSkills.filter(s => s !== skillId))
+                            }
+                          }}
+                          className="rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500"
+                        />
+                        <span className="text-sm text-gray-900 dark:text-white">
+                          {skill?.name || skillId}
+                        </span>
+                      </label>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+            {selectedSkills.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {selectedSkills.map(skillId => {
+                  const skill = M1_SKILLS[skillId]
+                  return (
+                    <span
+                      key={skillId}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 text-xs rounded-full"
+                    >
+                      {skill?.name || skillId}
+                      <button
+                        onClick={() => setSelectedSkills(selectedSkills.filter(s => s !== skillId))}
+                        className="hover:text-indigo-600 dark:hover:text-indigo-400"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+
           {/* Clear Filters */}
-          {(selectedLevel !== 'all' || selectedSubject !== 'all' || selectedDifficulty !== 'all' || searchQuery) && (
+          {(selectedLevel !== 'all' || selectedSubject !== 'all' || selectedDifficulty !== 'all' || selectedSkills.length > 0 || searchQuery) && (
             <button
               onClick={() => {
                 setSelectedLevel('all')
                 setSelectedSubject('all')
                 setSelectedDifficulty('all')
+                setSelectedSkills([])
                 setSearchQuery('')
               }}
               className="mt-4 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
@@ -225,6 +311,9 @@ function ProblemsExplorerContent() {
                     Dificultad
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Habilidades
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Acciones
                   </th>
                 </tr>
@@ -232,7 +321,7 @@ function ProblemsExplorerContent() {
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredQuestions.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                    <td colSpan={8} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                       No se encontraron problemas con los filtros seleccionados
                     </td>
                   </tr>
@@ -262,6 +351,15 @@ function ProblemsExplorerContent() {
                         <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getDifficultyColor(question.difficulty)}`}>
                           {question.difficulty}
                         </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-xs text-gray-600 dark:text-gray-400">
+                          {question.skills && question.skills.length > 0 ? (
+                            <span className="font-medium">{question.skills.length} habilidades</span>
+                          ) : (
+                            <span className="text-gray-400 dark:text-gray-500">Sin habilidades</span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <button
@@ -361,6 +459,35 @@ function ProblemsExplorerContent() {
                       {selectedQuestion.explanation}
                     </p>
                   </div>
+
+                  {selectedQuestion.skills && selectedQuestion.skills.length > 0 && (
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Habilidades Requeridas ({selectedQuestion.skills.length})
+                      </h3>
+                      <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                        <div className="flex flex-wrap gap-2">
+                          {selectedQuestion.skills.map(skillId => {
+                            const skill = M1_SKILLS[skillId]
+                            return (
+                              <div
+                                key={skillId}
+                                className="px-3 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-lg text-sm"
+                                title={skill?.description}
+                              >
+                                <div className="font-medium">{skill?.name || skillId}</div>
+                                {skill?.description && (
+                                  <div className="text-xs text-indigo-600 dark:text-indigo-400 mt-1">
+                                    {skill.description}
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {selectedQuestion.visualData && (
                     <div>

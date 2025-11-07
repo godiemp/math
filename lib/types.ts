@@ -15,6 +15,8 @@ export interface Question {
   difficulty: 'easy' | 'medium' | 'hard';
   // Subject area for better categorization
   subject: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
+  // Skills required to solve this problem (from skillTaxonomy.ts)
+  skills: string[];
   // Additional rendering metadata
   visualData?: {
     type: 'graph' | 'geometry' | 'table' | 'diagram';
