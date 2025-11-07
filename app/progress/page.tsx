@@ -57,6 +57,10 @@ export default function ProgressPage() {
   const recentHistory = allHistory.slice(0, recentQuestionsCount);
   const recentStats = calculateRecentStats(allHistory, recentQuestionsCount);
 
+  // Calculate last 10 stats for each level
+  const m1RecentStats = calculateRecentStats(m1History, 10);
+  const m2RecentStats = calculateRecentStats(m2History, 10);
+
   const totalProgress = {
     correct: m1Progress.correct + m2Progress.correct,
     total: m1Progress.total + m2Progress.total
@@ -204,20 +208,23 @@ export default function ProgressPage() {
             </h3>
             <div className="mb-4">
               <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-                <span>Progreso</span>
-                <span>{calculatePercentage(m1Progress)}%</span>
+                <span>Últimas 10 preguntas</span>
+                <span>{m1RecentStats.total > 0 ? calculatePercentage(m1RecentStats) : 0}%</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
                 <div
                   className="bg-indigo-600 h-4 rounded-full transition-all duration-300"
-                  style={{ width: `${calculatePercentage(m1Progress)}%` }}
+                  style={{ width: `${m1RecentStats.total > 0 ? calculatePercentage(m1RecentStats) : 0}%` }}
                 />
               </div>
             </div>
             <div className="space-y-2 text-gray-700 dark:text-gray-300">
-              <p>Preguntas respondidas: {m1Progress.total}</p>
-              <p>Respuestas correctas: {m1Progress.correct}</p>
-              <p>Respuestas incorrectas: {m1Progress.total - m1Progress.correct}</p>
+              <p className="text-3xl font-bold text-center">
+                {m1RecentStats.correct}/{Math.min(m1RecentStats.total, 10)}
+              </p>
+              <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+                Respuestas correctas en las últimas {Math.min(m1History.length, 10)} preguntas
+              </p>
             </div>
             <Link
               href="/practice/m1"
@@ -233,20 +240,23 @@ export default function ProgressPage() {
             </h3>
             <div className="mb-4">
               <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-                <span>Progreso</span>
-                <span>{calculatePercentage(m2Progress)}%</span>
+                <span>Últimas 10 preguntas</span>
+                <span>{m2RecentStats.total > 0 ? calculatePercentage(m2RecentStats) : 0}%</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
                 <div
                   className="bg-indigo-600 h-4 rounded-full transition-all duration-300"
-                  style={{ width: `${calculatePercentage(m2Progress)}%` }}
+                  style={{ width: `${m2RecentStats.total > 0 ? calculatePercentage(m2RecentStats) : 0}%` }}
                 />
               </div>
             </div>
             <div className="space-y-2 text-gray-700 dark:text-gray-300">
-              <p>Preguntas respondidas: {m2Progress.total}</p>
-              <p>Respuestas correctas: {m2Progress.correct}</p>
-              <p>Respuestas incorrectas: {m2Progress.total - m2Progress.correct}</p>
+              <p className="text-3xl font-bold text-center">
+                {m2RecentStats.correct}/{Math.min(m2RecentStats.total, 10)}
+              </p>
+              <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+                Respuestas correctas en las últimas {Math.min(m2History.length, 10)} preguntas
+              </p>
             </div>
             <Link
               href="/practice/m2"
