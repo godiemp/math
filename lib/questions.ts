@@ -318,6 +318,7 @@ export const questions: Question[] = [
     explanation: 'Usando el teorema de Pitágoras:',
     explanationLatex: 'c^2 = a^2 + b^2 = 6^2 + 8^2 = 36 + 64 = 100 \\quad \\Rightarrow \\quad c = \\sqrt{100} = 10 \\text{ cm}',
     difficulty: 'easy',
+    skills: ['geometria-triangulos', 'geometria-pitagoras', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     visualData: {
       type: 'geometry',
       data: [
@@ -350,6 +351,7 @@ export const questions: Question[] = [
     explanation: 'El área de un círculo es:',
     explanationLatex: 'A = \\pi r^2 = 3.14 \\times 7^2 = 3.14 \\times 49 = 153.86 \\text{ cm}^2 \\approx 153.94 \\text{ cm}^2',
     difficulty: 'easy',
+    skills: ['geometria-circulos', 'geometria-area-circulo', 'geometria-area', 'numeros-potencias', 'numeros-decimales', 'numeros-operaciones-basicas'],
     visualData: {
       type: 'geometry',
       data: [
@@ -379,6 +381,7 @@ export const questions: Question[] = [
     explanation: 'Los ángulos adyacentes se suman:',
     explanationLatex: '\\angle AOC = \\angle AOB + \\angle BOC = 60^\\circ + 50^\\circ = 110^\\circ',
     difficulty: 'easy',
+    skills: ['geometria-angulos', 'geometria-angulos-adyacentes', 'numeros-operaciones-basicas'],
     visualData: {
       type: 'geometry',
       data: [
@@ -408,6 +411,7 @@ export const questions: Question[] = [
     explanation: 'El perímetro de un rectángulo es:',
     explanationLatex: 'P = 2(l + w) = 2(12 + 5) = 2 \\times 17 = 34 \\text{ cm}',
     difficulty: 'easy',
+    skills: ['geometria-rectangulos', 'geometria-perimetro', 'numeros-operaciones-basicas'],
     visualData: {
       type: 'geometry',
       data: [
@@ -439,6 +443,7 @@ export const questions: Question[] = [
     explanation: 'En un triángulo equilátero, todos los lados son iguales:',
     explanationLatex: 'P = 3 \\times l = 3 \\times 8 = 24 \\text{ cm}',
     difficulty: 'easy',
+    skills: ['geometria-triangulos', 'geometria-perimetro', 'numeros-operaciones-basicas'],
     visualData: {
       type: 'geometry',
       data: [
