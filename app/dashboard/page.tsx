@@ -188,7 +188,6 @@ function DashboardContent() {
                   <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300 mb-4">
                     <p>📅 {formatDate(session.scheduledStartTime)}</p>
                     <p>📊 {session.level} - {session.questions.length} preguntas</p>
-                    <p>👥 {session.registeredUsers.length} registrado{session.registeredUsers.length !== 1 ? 's' : ''}</p>
                   </div>
                   <Link
                     href="/live-practice"

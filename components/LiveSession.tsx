@@ -139,7 +139,6 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
                 <p><strong>Nivel:</strong> {session.level}</p>
                 <p><strong>Preguntas:</strong> {session.questions.length}</p>
                 <p><strong>Duración:</strong> {session.durationMinutes} minutos</p>
-                <p><strong>Registrados:</strong> {session.registeredUsers.length}</p>
               </div>
 
               <p className="text-sm text-gray-500 dark:text-gray-500">
@@ -276,20 +275,13 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
       <div className="max-w-4xl mx-auto">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8">
           {/* Header */}
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                {session.name}
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Pregunta {currentQuestionIndex + 1} de {session.questions.length}
-              </p>
-            </div>
-            <div className="text-right">
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                {session.participants.length} participantes
-              </div>
-            </div>
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {session.name}
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Pregunta {currentQuestionIndex + 1} de {session.questions.length}
+            </p>
           </div>
 
           {/* Progress bar */}

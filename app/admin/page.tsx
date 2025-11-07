@@ -333,7 +333,7 @@ function AdminBackofficeContent() {
                         </p>
                       )}
 
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
                         <div>
                           <span className="text-gray-600 dark:text-gray-400">Nivel:</span>{' '}
                           <span className="font-medium text-gray-900 dark:text-white">
@@ -344,14 +344,6 @@ function AdminBackofficeContent() {
                           <span className="text-gray-600 dark:text-gray-400">Preguntas:</span>{' '}
                           <span className="font-medium text-gray-900 dark:text-white">
                             {session.questions.length}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-gray-600 dark:text-gray-400">
-                            {session.status === 'scheduled' ? 'Registrados:' : 'Participantes:'}
-                          </span>{' '}
-                          <span className="font-medium text-gray-900 dark:text-white">
-                            {session.status === 'scheduled' ? session.registeredUsers.length : session.participants.length}
                           </span>
                         </div>
                         <div>
