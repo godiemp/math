@@ -44,7 +44,12 @@ export default function MathDisplay({ latex, displayMode = false, className = ''
     <span
       ref={containerRef}
       className={`math-display ${displayMode ? 'block my-2 text-left' : 'inline-block align-middle'} ${className}`}
-      style={{ maxWidth: '100%', overflowWrap: 'break-word' }}
+      style={{
+        maxWidth: '100%',
+        overflowWrap: 'break-word',
+        wordBreak: 'break-word',
+        whiteSpace: displayMode ? 'normal' : 'nowrap'
+      }}
     />
   );
 }

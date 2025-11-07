@@ -346,9 +346,11 @@ export const questions: Question[] = [
     topic: 'Números',
     subject: 'números',
     question: 'El mínimo común múltiplo (MCM) de 12, 18 y 24 es:',
+    questionLatex: '\\text{El mínimo común múltiplo (MCM) de 12, 18 y 24 es:}',
     options: ['36', '48', '72', '144'],
     correctAnswer: 2,
     explanation: 'Factorizando: 12 = 2² × 3, 18 = 2 × 3², 24 = 2³ × 3. MCM = 2³ × 3² = 8 × 9 = 72',
+    explanationLatex: '12 = 2^2 \\times 3, \\quad 18 = 2 \\times 3^2, \\quad 24 = 2^3 \\times 3 \\quad \\Rightarrow \\quad \\text{MCM} = 2^3 \\times 3^2 = 8 \\times 9 = 72',
     difficulty: 'medium'
   },
   {
@@ -357,9 +359,11 @@ export const questions: Question[] = [
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
     question: 'Resuelve el sistema: 2x + y = 8 y x - y = 1',
+    questionLatex: '\\text{Resuelve el sistema: } 2x + y = 8 \\text{ y } x - y = 1',
     options: ['x = 2, y = 4', 'x = 3, y = 2', 'x = 4, y = 0', 'x = 1, y = 6'],
     correctAnswer: 1,
     explanation: 'Sumando las ecuaciones: 3x = 9, entonces x = 3. Sustituyendo: 3 - y = 1, entonces y = 2',
+    explanationLatex: '3x = 9 \\rightarrow x = 3. \\quad \\text{Sustituyendo: } 3 - y = 1 \\rightarrow y = 2',
     difficulty: 'medium'
   },
   {
@@ -368,9 +372,11 @@ export const questions: Question[] = [
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
     question: 'Las raíces de la ecuación x² - 5x + 6 = 0 son:',
+    questionLatex: '\\text{Las raíces de la ecuación } x^2 - 5x + 6 = 0 \\text{ son:}',
     options: ['x = 1, x = 6', 'x = 2, x = 3', 'x = -2, x = -3', 'x = 1, x = 5'],
     correctAnswer: 1,
     explanation: 'Factorizando: (x - 2)(x - 3) = 0, por lo tanto x = 2 o x = 3',
+    explanationLatex: '(x - 2)(x - 3) = 0 \\quad \\Rightarrow \\quad x = 2 \\text{ o } x = 3',
     difficulty: 'medium'
   },
   {
@@ -379,9 +385,11 @@ export const questions: Question[] = [
     topic: 'Geometría',
     subject: 'geometría',
     question: 'La distancia entre los puntos A(1, 2) y B(4, 6) es:',
+    questionLatex: '\\text{La distancia entre los puntos } A(1, 2) \\text{ y } B(4, 6) \\text{ es:}',
     options: ['3', '4', '5', '7'],
     correctAnswer: 2,
     explanation: 'd = √[(4-1)² + (6-2)²] = √[3² + 4²] = √[9 + 16] = √25 = 5',
+    explanationLatex: 'd = \\sqrt{(4-1)^2 + (6-2)^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5',
     difficulty: 'medium'
   },
   {
@@ -390,9 +398,11 @@ export const questions: Question[] = [
     topic: 'Geometría',
     subject: 'geometría',
     question: 'El volumen de un cilindro con radio 3 cm y altura 4 cm es (usar π ≈ 3.14):',
+    questionLatex: '\\text{El volumen de un cilindro con radio 3 cm y altura 4 cm es (usar } \\pi \\approx 3.14):',
     options: ['37.68 cm³', '75.36 cm³', '113.04 cm³', '150.72 cm³'],
     correctAnswer: 2,
     explanation: 'V = πr²h = 3.14 × 3² × 4 = 3.14 × 9 × 4 = 113.04 cm³',
+    explanationLatex: 'V = \\pi r^2 h = 3.14 \\times 3^2 \\times 4 = 3.14 \\times 9 \\times 4 = 113.04 \\text{ cm}^3',
     difficulty: 'medium'
   },
   {
@@ -401,9 +411,11 @@ export const questions: Question[] = [
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
     question: 'El discriminante de x² + 4x + 1 = 0 es:',
+    questionLatex: '\\text{El discriminante de } x^2 + 4x + 1 = 0 \\text{ es:}',
     options: ['12', '16', '20', '8'],
     correctAnswer: 0,
     explanation: 'Discriminante = b² - 4ac = 4² - 4(1)(1) = 16 - 4 = 12. Como es > 0, hay dos soluciones reales.',
+    explanationLatex: '\\Delta = b^2 - 4ac = 4^2 - 4(1)(1) = 16 - 4 = 12',
     difficulty: 'medium'
   },
   {
@@ -412,9 +424,11 @@ export const questions: Question[] = [
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
     question: 'En el conjunto de datos {2, 4, 5, 7, 9, 10, 12}, el rango intercuartílico (IQR) es:',
+    questionLatex: '\\text{En el conjunto de datos } \\{2, 4, 5, 7, 9, 10, 12\\}\\text{, el rango intercuartílico (IQR) es:}',
     options: ['4', '5', '6', '7'],
     correctAnswer: 2,
     explanation: 'Q1 = 4, Q3 = 10. IQR = Q3 - Q1 = 10 - 4 = 6',
+    explanationLatex: 'Q_1 = 4, \\quad Q_3 = 10 \\quad \\Rightarrow \\quad \\text{IQR} = Q_3 - Q_1 = 10 - 4 = 6',
     difficulty: 'hard'
   },
   {
@@ -423,9 +437,11 @@ export const questions: Question[] = [
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
     question: '¿De cuántas formas se pueden elegir 3 estudiantes de un grupo de 5?',
+    questionLatex: '\\text{¿De cuántas formas se pueden elegir 3 estudiantes de un grupo de 5?}',
     options: ['10', '15', '20', '60'],
     correctAnswer: 0,
     explanation: 'Combinaciones: C(5,3) = 5!/(3!×2!) = (5×4)/(2×1) = 10',
+    explanationLatex: 'C(5,3) = \\frac{5!}{3! \\times 2!} = \\frac{5 \\times 4}{2 \\times 1} = 10',
     difficulty: 'medium'
   },
   {
@@ -434,9 +450,12 @@ export const questions: Question[] = [
     topic: 'Números',
     subject: 'números',
     question: 'Racionaliza: 6/√3',
+    questionLatex: '\\text{Racionaliza: } \\frac{6}{\\sqrt{3}}',
     options: ['2√3', '3√2', '6√3', '√18'],
+    optionsLatex: ['2\\sqrt{3}', '3\\sqrt{2}', '6\\sqrt{3}', '\\sqrt{18}'],
     correctAnswer: 0,
     explanation: '6/√3 = (6/√3) × (√3/√3) = 6√3/3 = 2√3',
+    explanationLatex: '\\frac{6}{\\sqrt{3}} = \\frac{6}{\\sqrt{3}} \\times \\frac{\\sqrt{3}}{\\sqrt{3}} = \\frac{6\\sqrt{3}}{3} = 2\\sqrt{3}',
     difficulty: 'medium'
   },
   {
@@ -445,9 +464,12 @@ export const questions: Question[] = [
     topic: 'Geometría',
     subject: 'geometría',
     question: 'Dos rectas son perpendiculares. Si una tiene pendiente m = 2, ¿cuál es la pendiente de la otra?',
+    questionLatex: '\\text{Dos rectas son perpendiculares. Si una tiene pendiente } m = 2\\text{, ¿cuál es la pendiente de la otra?}',
     options: ['2', '-2', '1/2', '-1/2'],
+    optionsLatex: ['2', '-2', '\\frac{1}{2}', '-\\frac{1}{2}'],
     correctAnswer: 3,
     explanation: 'Rectas perpendiculares tienen pendientes que son recíprocas negativas: m₁ × m₂ = -1. Si m₁ = 2, entonces m₂ = -1/2',
+    explanationLatex: 'm_1 \\times m_2 = -1 \\quad \\Rightarrow \\quad 2 \\times m_2 = -1 \\quad \\Rightarrow \\quad m_2 = -\\frac{1}{2}',
     difficulty: 'medium'
   }
 ];
