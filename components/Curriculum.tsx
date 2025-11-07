@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { CurriculumSidebar } from './ui/CurriculumSidebar';
 
 interface CurriculumProps {
   level: 'M1' | 'M2';
@@ -379,30 +380,45 @@ export default function Curriculum({ level }: CurriculumProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
+    <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">
+      {/* Navbar */}
+      <nav className="sticky top-0 z-30 h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] saturate-[1.2]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 h-full flex justify-between items-center">
+          <h1 className="text-lg font-semibold text-[#0A84FF]">
+            PAES Chile - Matemática
+          </h1>
           <Link
             href="/dashboard"
-            className="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 mb-4"
+            className="text-sm text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors"
           >
             ← Volver al Inicio
           </Link>
-          <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 text-transparent bg-clip-text">
-            Curriculum PAES - Nivel {level}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300 text-lg mb-2">
-            {level === 'M1'
-              ? 'Competencia Matemática 1 - Contenidos básicos'
-              : 'Competencia Matemática 2 - Contenidos avanzados'}
-          </p>
-          <div className="text-sm text-gray-500 dark:text-gray-400">
-            <span className="font-semibold">Duración:</span> 2h 20min |
-            <span className="font-semibold ml-2">Preguntas:</span> {level === 'M1' ? '65 (60 para puntaje)' : '55 (50 para puntaje)'}
-            {level === 'M2' && ' | Incluye Suficiencia de Datos'}
-          </div>
         </div>
+      </nav>
+
+      {/* Main layout with sidebar */}
+      <div className="flex">
+        <CurriculumSidebar currentLevel={level} />
+
+        {/* Main content */}
+        <div className="flex-1 p-8">
+          <div className="max-w-5xl mx-auto">
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 text-transparent bg-clip-text">
+                Curriculum PAES - Nivel {level}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-300 text-lg mb-2">
+                {level === 'M1'
+                  ? 'Competencia Matemática 1 - Contenidos básicos'
+                  : 'Competencia Matemática 2 - Contenidos avanzados'}
+              </p>
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                <span className="font-semibold">Duración:</span> 2h 20min |
+                <span className="font-semibold ml-2">Preguntas:</span> {level === 'M1' ? '65 (60 para puntaje)' : '55 (50 para puntaje)'}
+                {level === 'M2' && ' | Incluye Suficiencia de Datos'}
+              </div>
+            </div>
 
         {/* Habilidades */}
         <div className="mb-8 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-6 border-2 border-indigo-200 dark:border-indigo-700">
@@ -607,20 +623,22 @@ export default function Curriculum({ level }: CurriculumProps) {
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-4 justify-center">
-          <Link
-            href={`/practice/${level.toLowerCase()}`}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg transition-colors"
-          >
-            Comenzar Práctica
-          </Link>
-          <Link
-            href="/dashboard"
-            className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-lg transition-colors"
-          >
-            Volver al Inicio
-          </Link>
+            {/* Action Buttons */}
+            <div className="flex gap-4 justify-center">
+              <Link
+                href={`/practice/${level.toLowerCase()}`}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg transition-colors"
+              >
+                Comenzar Práctica
+              </Link>
+              <Link
+                href="/dashboard"
+                className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-lg transition-colors"
+              >
+                Volver al Inicio
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -111,18 +111,11 @@ function DashboardContent() {
             <Text size="sm" variant="secondary" className="mb-4">
               Contenidos básicos: números, álgebra, geometría y probabilidades
             </Text>
-            <div className="flex gap-2">
-              <Button asChild>
-                <Link href="/practice/m1">
-                  Practicar M1
-                </Link>
-              </Button>
-              <Button variant="ghost" asChild>
-                <Link href="/curriculum/m1">
-                  Ver Curriculum
-                </Link>
-              </Button>
-            </div>
+            <Button asChild className="w-full">
+              <Link href="/practice/m1">
+                Practicar M1
+              </Link>
+            </Button>
           </Card>
 
           {/* M2 Card */}
@@ -134,17 +127,37 @@ function DashboardContent() {
             <Text size="sm" variant="secondary" className="mb-4">
               Contenidos avanzados para carreras científicas y de ingeniería
             </Text>
-            <div className="flex gap-2">
-              <Button asChild>
-                <Link href="/practice/m2">
-                  Practicar M2
-                </Link>
-              </Button>
-              <Button variant="ghost" asChild>
-                <Link href="/curriculum/m2">
-                  Ver Curriculum
-                </Link>
-              </Button>
+            <Button asChild className="w-full">
+              <Link href="/practice/m2">
+                Practicar M2
+              </Link>
+            </Button>
+          </Card>
+        </div>
+
+        {/* Curriculum Card */}
+        <div className="mb-12">
+          <Card hover className="p-6 max-w-2xl mx-auto">
+            <div className="text-center">
+              <div className="text-5xl mb-4">📚</div>
+              <Heading level={3} size="sm" className="mb-3">
+                Currículos PAES Matemática
+              </Heading>
+              <Text size="sm" variant="secondary" className="mb-6 max-w-xl mx-auto">
+                Revisa los contenidos oficiales evaluados en la PAES de Matemática. Navega entre M1 y M2 para conocer todos los temas.
+              </Text>
+              <div className="flex gap-3 justify-center">
+                <Button asChild variant="primary">
+                  <Link href="/curriculum/m1">
+                    Ver Currículo M1
+                  </Link>
+                </Button>
+                <Button asChild variant="secondary">
+                  <Link href="/curriculum/m2">
+                    Ver Currículo M2
+                  </Link>
+                </Button>
+              </div>
             </div>
           </Card>
         </div>

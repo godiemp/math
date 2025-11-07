@@ -12,3 +12,5 @@ export { Heading, Text } from './Typography';
 export type { HeadingLevel, HeadingSize, TextSize, TextVariant } from './Typography';
 
 export { Navbar, NavbarLink } from './Navbar';
+
+export { CurriculumSidebar } from './CurriculumSidebar';
