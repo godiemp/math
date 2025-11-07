@@ -50,9 +50,6 @@ export default function MathDisplay({ latex, displayMode = false, className = ''
           textAlign: 'left',
           width: '100%',
           maxWidth: '100%',
-          overflowX: 'auto',
-          overflowWrap: 'break-word',
-          wordBreak: 'break-word',
         }}
       />
     );
