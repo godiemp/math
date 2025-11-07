@@ -7,10 +7,12 @@ import Link from 'next/link';
 
 type Subject = 'números' | 'álgebra' | 'geometría' | 'probabilidad';
 type QuizMode = 'zen' | 'rapidfire';
+type Difficulty = 'easy' | 'medium' | 'hard';
 
 export default function M1Practice() {
   const [selectedSubject, setSelectedSubject] = useState<Subject | undefined>(undefined);
   const [quizMode, setQuizMode] = useState<QuizMode | null>(null);
+  const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [quizStarted, setQuizStarted] = useState(false);
   const questions = getQuestionsByLevel('M1');
 
@@ -35,12 +37,36 @@ export default function M1Practice() {
       label: 'Rapid Fire',
       emoji: '⚡',
       description: 'Desafío contra el reloj',
-      details: '20 minutos para completar 10 preguntas (2 min promedio por pregunta)'
+      details: 'Completa 10 preguntas contra el tiempo - elige tu dificultad'
+    }
+  ];
+
+  const difficulties: { value: Difficulty; label: string; emoji: string; time: number; description: string }[] = [
+    {
+      value: 'easy',
+      label: 'Fácil',
+      emoji: '🟢',
+      time: 25,
+      description: '25 minutos - 2:30 por pregunta'
+    },
+    {
+      value: 'medium',
+      label: 'Normal',
+      emoji: '🟡',
+      time: 20,
+      description: '20 minutos - 2:00 por pregunta'
+    },
+    {
+      value: 'hard',
+      label: 'Difícil',
+      emoji: '🔴',
+      time: 15,
+      description: '15 minutos - 1:30 por pregunta'
     }
   ];
 
   const handleStartQuiz = () => {
-    if (quizMode) {
+    if (quizMode === 'zen' || (quizMode === 'rapidfire' && difficulty)) {
       setQuizStarted(true);
     }
   };
@@ -49,6 +75,13 @@ export default function M1Practice() {
     setQuizStarted(false);
     setSelectedSubject(undefined);
     setQuizMode(null);
+    setDifficulty(null);
+  };
+
+  const canStartQuiz = () => {
+    if (quizMode === 'zen') return true;
+    if (quizMode === 'rapidfire' && difficulty) return true;
+    return false;
   };
 
   // Step 1: Subject Selection
@@ -66,7 +99,8 @@ export default function M1Practice() {
             key={subject.label}
             onClick={() => {
               setSelectedSubject(subject.value);
-              setQuizMode(null); // Reset mode when changing subject
+              setQuizMode(null);
+              setDifficulty(null);
             }}
             className={`p-6 rounded-lg border-2 transition-all text-left ${
               selectedSubject === subject.value
@@ -114,11 +148,14 @@ export default function M1Practice() {
         <p className="text-gray-600 dark:text-gray-400 mb-6">
           Elige cómo quieres practicar
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {modes.map((mode) => (
             <button
               key={mode.value}
-              onClick={() => setQuizMode(mode.value)}
+              onClick={() => {
+                setQuizMode(mode.value);
+                setDifficulty(null);
+              }}
               className={`p-6 rounded-lg border-2 transition-all text-left ${
                 quizMode === mode.value
                   ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 shadow-lg transform scale-105'
@@ -157,8 +194,63 @@ export default function M1Practice() {
             </button>
           ))}
         </div>
+      </div>
+    );
+  };
 
-        {quizMode && (
+  // Step 3: Difficulty Selection (only for Rapid Fire)
+  const renderDifficultySelection = () => {
+    if (quizMode !== 'rapidfire') return null;
+
+    return (
+      <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          Paso 3: Selecciona la dificultad
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">
+          ¿Cuánto tiempo necesitas para completar 10 preguntas?
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          {difficulties.map((diff) => (
+            <button
+              key={diff.value}
+              onClick={() => setDifficulty(diff.value)}
+              className={`p-6 rounded-lg border-2 transition-all text-center ${
+                difficulty === diff.value
+                  ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 shadow-lg transform scale-105'
+                  : 'border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-md'
+              }`}
+            >
+              <div className="text-5xl mb-3">{diff.emoji}</div>
+              <div className={`font-bold text-xl mb-2 ${
+                difficulty === diff.value
+                  ? 'text-indigo-900 dark:text-indigo-100'
+                  : 'text-gray-900 dark:text-white'
+              }`}>
+                {diff.label}
+              </div>
+              <div className={`text-lg font-semibold mb-1 ${
+                difficulty === diff.value
+                  ? 'text-indigo-700 dark:text-indigo-300'
+                  : 'text-gray-700 dark:text-gray-300'
+              }`}>
+                {diff.time} minutos
+              </div>
+              <div className={`text-xs ${
+                difficulty === diff.value
+                  ? 'text-indigo-600 dark:text-indigo-400'
+                  : 'text-gray-500 dark:text-gray-500'
+              }`}>
+                {diff.description}
+              </div>
+              {difficulty === diff.value && (
+                <div className="text-indigo-600 dark:text-indigo-400 text-2xl mt-2">✓</div>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {difficulty && (
           <div className="flex gap-4">
             <button
               onClick={handleResetSelection}
@@ -178,8 +270,32 @@ export default function M1Practice() {
     );
   };
 
+  // Start button for Zen mode (no difficulty needed)
+  const renderStartButton = () => {
+    if (quizMode !== 'zen') return null;
+
+    return (
+      <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <div className="flex gap-4">
+          <button
+            onClick={handleResetSelection}
+            className="px-6 py-3 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+          >
+            ← Cambiar Selección
+          </button>
+          <button
+            onClick={handleStartQuiz}
+            className="flex-1 px-6 py-3 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-colors shadow-lg"
+          >
+            Comenzar Quiz →
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   // Quiz View
-  if (quizStarted && quizMode) {
+  if (quizStarted && canStartQuiz()) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
         <div className="max-w-7xl mx-auto">
@@ -202,7 +318,8 @@ export default function M1Practice() {
             questions={questions}
             level="M1"
             subject={selectedSubject}
-            quizMode={quizMode}
+            quizMode={quizMode || 'zen'}
+            difficulty={difficulty || undefined}
           />
         </div>
       </div>
@@ -238,6 +355,8 @@ export default function M1Practice() {
 
         {renderSubjectSelection()}
         {renderModeSelection()}
+        {renderDifficultySelection()}
+        {renderStartButton()}
       </div>
     </div>
   );

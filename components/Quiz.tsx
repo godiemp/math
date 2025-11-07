@@ -10,15 +10,28 @@ interface QuizProps {
   level: 'M1' | 'M2';
   subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
   quizMode?: 'zen' | 'rapidfire';
+  difficulty?: 'easy' | 'medium' | 'hard';
 }
 
-export default function Quiz({ questions: allQuestions, level, subject, quizMode = 'zen' }: QuizProps) {
+export default function Quiz({ questions: allQuestions, level, subject, quizMode = 'zen', difficulty = 'medium' }: QuizProps) {
   const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
-  const [timeRemaining, setTimeRemaining] = useState(1200); // 20 minutes total for rapidfire mode
+
+  // Get time limit based on difficulty
+  const getTimeLimit = () => {
+    if (quizMode !== 'rapidfire') return 0;
+    switch (difficulty) {
+      case 'easy': return 25 * 60; // 25 minutes = 1500 seconds
+      case 'medium': return 20 * 60; // 20 minutes = 1200 seconds
+      case 'hard': return 15 * 60; // 15 minutes = 900 seconds
+      default: return 20 * 60;
+    }
+  };
+
+  const [timeRemaining, setTimeRemaining] = useState(getTimeLimit());
   const [totalTimeElapsed, setTotalTimeElapsed] = useState(0);
 
   useEffect(() => {
@@ -33,9 +46,9 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     const randomQuestions = getRandomQuestions(level, 10, subject);
     setQuizQuestions(randomQuestions);
     setUserAnswers(new Array(randomQuestions.length).fill(null));
-    setTimeRemaining(1200); // Reset timer for new quiz (20 minutes)
+    setTimeRemaining(getTimeLimit()); // Reset timer based on difficulty
     setTotalTimeElapsed(0);
-  }, [level, subject]);
+  }, [level, subject, difficulty]);
 
   // Timer effect for rapidfire mode
   useEffect(() => {
@@ -259,7 +272,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
   // Determine timer color based on time remaining
   const getTimerColor = () => {
-    const percentRemaining = (timeRemaining / 1200) * 100; // 1200 seconds = 20 minutes
+    const totalTime = getTimeLimit();
+    const percentRemaining = (timeRemaining / totalTime) * 100;
     if (percentRemaining > 50) return 'text-green-600 dark:text-green-400';
     if (percentRemaining > 25) return 'text-yellow-600 dark:text-yellow-400';
     return 'text-red-600 dark:text-red-400';
@@ -303,10 +317,10 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
           <div className="mt-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
             <div
               className={`h-2 rounded-full transition-all duration-1000 ${
-                timeRemaining > 600 ? 'bg-green-500' :
-                timeRemaining > 300 ? 'bg-yellow-500' : 'bg-red-500'
+                (timeRemaining / getTimeLimit()) > 0.5 ? 'bg-green-500' :
+                (timeRemaining / getTimeLimit()) > 0.25 ? 'bg-yellow-500' : 'bg-red-500'
               }`}
-              style={{ width: `${(timeRemaining / 1200) * 100}%` }}
+              style={{ width: `${(timeRemaining / getTimeLimit()) * 100}%` }}
             />
           </div>
         </div>
