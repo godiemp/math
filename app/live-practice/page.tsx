@@ -75,11 +75,11 @@ function LivePracticePageContent() {
   };
 
   const isUserRegistered = (session: LiveSession) => {
-    return session.registeredUsers.some(r => r.userId === currentUser?.id);
+    return session.registeredUsers?.some(r => r.userId === currentUser?.id) ?? false;
   };
 
   const isUserInSession = (session: LiveSession) => {
-    return session.participants.some(p => p.userId === currentUser?.id);
+    return session.participants?.some(p => p.userId === currentUser?.id) ?? false;
   };
 
   // Show active session if user is in one
