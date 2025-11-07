@@ -426,46 +426,7 @@ export default function Curriculum({ level }: CurriculumProps) {
             📚 Ejes Temáticos y Contenidos Oficiales PAES
           </h2>
 
-          {/* Habilidades */}
-          <div className="mb-6 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-6 border-2 border-indigo-200 dark:border-indigo-700">
-            <h3 className="text-xl font-bold mb-3 text-indigo-900 dark:text-indigo-100">
-              🎯 Habilidades Evaluadas
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {['Resolver problemas', 'Modelar', 'Representar', 'Argumentar'].map((skill) => (
-                <div key={skill} className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
-                  <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{skill}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Skill-Topic Matrix */}
-          <div className="mb-6 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-6 border-2 border-purple-200 dark:border-purple-700">
-            <h3 className="text-xl font-bold mb-3 text-purple-900 dark:text-purple-100">
-              🧩 Matriz Habilidad-Eje Temático
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-              Cada eje temático evalúa diferentes habilidades. Esta matriz muestra qué habilidades se requieren en cada área.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {Object.entries(skillTopicMatrix).map(([axis, data]) => (
-                <div key={axis} className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-purple-200 dark:border-purple-700">
-                  <h4 className="font-bold text-sm mb-2 text-gray-800 dark:text-gray-200">{axis}</h4>
-                  <div className="flex flex-wrap gap-1 mb-2">
-                    {data.skills.map((skill) => (
-                      <span key={skill} className="text-xs bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{data.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-4">
+          <div className="space-y-4 mb-6">
             {paesM1Content.map((area, index) => {
               const m2Addition = level === 'M2' ? paesM2AdditionalContent.find(a => a.name === area.name) : null;
               const displayQuestionCount = level === 'M2' && m2Addition ? m2Addition.questionCount : area.questionCount;
@@ -620,6 +581,45 @@ export default function Curriculum({ level }: CurriculumProps) {
                 </div>
               );
             })}
+          </div>
+
+          {/* Habilidades */}
+          <div className="mb-6 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-6 border-2 border-indigo-200 dark:border-indigo-700">
+            <h3 className="text-xl font-bold mb-3 text-indigo-900 dark:text-indigo-100">
+              🎯 Habilidades Evaluadas
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {['Resolver problemas', 'Modelar', 'Representar', 'Argumentar'].map((skill) => (
+                <div key={skill} className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
+                  <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{skill}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Skill-Topic Matrix */}
+          <div className="mb-6 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-6 border-2 border-purple-200 dark:border-purple-700">
+            <h3 className="text-xl font-bold mb-3 text-purple-900 dark:text-purple-100">
+              🧩 Matriz Habilidad-Eje Temático
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+              Cada eje temático evalúa diferentes habilidades. Esta matriz muestra qué habilidades se requieren en cada área.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {Object.entries(skillTopicMatrix).map(([axis, data]) => (
+                <div key={axis} className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-purple-200 dark:border-purple-700">
+                  <h4 className="font-bold text-sm mb-2 text-gray-800 dark:text-gray-200">{axis}</h4>
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {data.skills.map((skill) => (
+                      <span key={skill} className="text-xs bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{data.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
