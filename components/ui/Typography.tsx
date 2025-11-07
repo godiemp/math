@@ -21,7 +21,7 @@ const headingSizes: Record<HeadingSize, string> = {
 
 export const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
   ({ level = 2, size = 'lg', className, children, ...props }, ref) => {
-    const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+    const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4';
 
     return React.createElement(
       Tag,
@@ -50,11 +50,11 @@ Heading.displayName = 'Heading';
 export type TextSize = 'xs' | 'sm' | 'md' | 'lg';
 export type TextVariant = 'primary' | 'secondary';
 
-interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
+interface TextProps extends React.HTMLAttributes<HTMLElement> {
   size?: TextSize;
   variant?: TextVariant;
   children: React.ReactNode;
-  as?: 'p' | 'span' | 'div';
+  as?: 'p' | 'span' | 'div' | 'label';
 }
 
 const textSizes: Record<TextSize, string> = {
@@ -69,7 +69,7 @@ const textVariants: Record<TextVariant, string> = {
   secondary: 'text-black/60 dark:text-white/70',
 };
 
-export const Text = React.forwardRef<HTMLParagraphElement, TextProps>(
+export const Text = React.forwardRef<HTMLElement, TextProps>(
   ({ size = 'sm', variant = 'primary', as = 'p', className, children, ...props }, ref) => {
     const Tag = as;
 

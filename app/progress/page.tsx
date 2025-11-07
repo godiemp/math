@@ -114,9 +114,9 @@ function ProgressPageContent() {
             Mi Progreso
           </Heading>
           <div className="flex items-center gap-3">
-            <Text size="xs" variant="secondary" as="label" htmlFor="recent-count">
+            <label htmlFor="recent-count" className="text-[13px] text-black/60 dark:text-white/70">
               Mostrar últimas:
-            </Text>
+            </label>
             <select
               id="recent-count"
               value={recentQuestionsCount}
