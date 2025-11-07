@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Question, QuestionAttempt } from '@/lib/types';
 import { MathText, BlockMath, InlineMath } from './MathDisplay';
 import { getRandomQuestions } from '@/lib/questions';
+import { GeometryCanvas, GeometryFigure } from './GeometryCanvas';
 
 interface QuizProps {
   questions: Question[];
@@ -371,6 +372,15 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
             <BlockMath latex={currentQuestion.questionLatex} />
           )}
         </div>
+
+        {/* Render geometry visualization if available */}
+        {currentQuestion.visualData && currentQuestion.visualData.type === 'geometry' && (
+          <GeometryCanvas
+            figures={currentQuestion.visualData.data as GeometryFigure[]}
+            width={400}
+            height={300}
+          />
+        )}
       </div>
 
       <div className="space-y-3 mb-6">

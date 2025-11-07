@@ -284,6 +284,277 @@ export const questions: Question[] = [
     explanationLatex: 'A = \\frac{(b_1 + b_2) \\times h}{2} = \\frac{(6 + 10) \\times 4}{2} = \\frac{64}{2} = 32 \\text{ cm}^2',
     difficulty: 'medium'
   },
+  // Geometry with Visual Figures
+  {
+    id: 'm1-geo-visual-1',
+    level: 'M1',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'En el siguiente triángulo rectángulo, si los catetos miden 6 cm y 8 cm, ¿cuánto mide la hipotenusa?',
+    questionLatex: '\\text{En el siguiente triángulo rectángulo, si los catetos miden 6 cm y 8 cm, ¿cuánto mide la hipotenusa?}',
+    options: ['9 cm', '10 cm', '12 cm', '14 cm'],
+    correctAnswer: 1,
+    explanation: 'Usando el teorema de Pitágoras:',
+    explanationLatex: 'c^2 = a^2 + b^2 = 6^2 + 8^2 = 36 + 64 = 100 \\quad \\Rightarrow \\quad c = \\sqrt{100} = 10 \\text{ cm}',
+    difficulty: 'easy',
+    visualData: {
+      type: 'geometry',
+      data: [
+        {
+          type: 'triangle',
+          points: [
+            { x: 50, y: 200, label: 'A' },
+            { x: 200, y: 200, label: 'B' },
+            { x: 50, y: 80, label: 'C' }
+          ],
+          labels: {
+            sides: ['8 cm', '10 cm', '6 cm']
+          },
+          dimensions: {
+            showSides: true
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: 'm1-geo-visual-2',
+    level: 'M1',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'Un círculo tiene un radio de 7 cm. ¿Cuál es el área del círculo? (usar π ≈ 3.14)',
+    questionLatex: '\\text{Un círculo tiene un radio de 7 cm. ¿Cuál es el área del círculo? (usar } \\pi \\approx 3.14)',
+    options: ['43.96 cm²', '98.91 cm²', '153.86 cm²', '153.94 cm²'],
+    correctAnswer: 3,
+    explanation: 'El área de un círculo es:',
+    explanationLatex: 'A = \\pi r^2 = 3.14 \\times 7^2 = 3.14 \\times 49 = 153.86 \\text{ cm}^2 \\approx 153.94 \\text{ cm}^2',
+    difficulty: 'easy',
+    visualData: {
+      type: 'geometry',
+      data: [
+        {
+          type: 'circle',
+          center: { x: 200, y: 150, label: 'O' },
+          radius: 100,
+          labels: {
+            sides: ['r = 7 cm']
+          },
+          dimensions: {
+            showSides: true
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: 'm1-geo-visual-3',
+    level: 'M1',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'En la siguiente figura, el ángulo AOB mide 60°. Si añadimos un ángulo BOC de 50°, ¿cuánto mide el ángulo AOC?',
+    questionLatex: '\\text{En la siguiente figura, el ángulo AOB mide } 60^\\circ\\text{. Si añadimos un ángulo BOC de } 50^\\circ\\text{, ¿cuánto mide el ángulo AOC?}',
+    options: ['90°', '100°', '110°', '120°'],
+    correctAnswer: 2,
+    explanation: 'Los ángulos adyacentes se suman:',
+    explanationLatex: '\\angle AOC = \\angle AOB + \\angle BOC = 60^\\circ + 50^\\circ = 110^\\circ',
+    difficulty: 'easy',
+    visualData: {
+      type: 'geometry',
+      data: [
+        {
+          type: 'angle',
+          points: [
+            { x: 200, y: 150, label: 'O' },
+            { x: 320, y: 150, label: 'A' },
+            { x: 260, y: 46, label: 'C' }
+          ],
+          labels: {
+            angles: ['110°']
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: 'm1-geo-visual-4',
+    level: 'M1',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'El siguiente rectángulo tiene un largo de 12 cm y un ancho de 5 cm. ¿Cuál es su perímetro?',
+    questionLatex: '\\text{El siguiente rectángulo tiene un largo de 12 cm y un ancho de 5 cm. ¿Cuál es su perímetro?}',
+    options: ['17 cm', '24 cm', '34 cm', '60 cm'],
+    correctAnswer: 2,
+    explanation: 'El perímetro de un rectángulo es:',
+    explanationLatex: 'P = 2(l + w) = 2(12 + 5) = 2 \\times 17 = 34 \\text{ cm}',
+    difficulty: 'easy',
+    visualData: {
+      type: 'geometry',
+      data: [
+        {
+          type: 'rectangle',
+          points: [
+            { x: 50, y: 80, label: 'A' },
+            { x: 350, y: 220, label: 'C' }
+          ],
+          labels: {
+            sides: ['12 cm', '5 cm']
+          },
+          dimensions: {
+            showSides: true
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: 'm1-geo-visual-5',
+    level: 'M1',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'En el siguiente triángulo equilátero, cada lado mide 8 cm. ¿Cuál es su perímetro?',
+    questionLatex: '\\text{En el siguiente triángulo equilátero, cada lado mide 8 cm. ¿Cuál es su perímetro?}',
+    options: ['16 cm', '20 cm', '24 cm', '32 cm'],
+    correctAnswer: 2,
+    explanation: 'En un triángulo equilátero, todos los lados son iguales:',
+    explanationLatex: 'P = 3 \\times l = 3 \\times 8 = 24 \\text{ cm}',
+    difficulty: 'easy',
+    visualData: {
+      type: 'geometry',
+      data: [
+        {
+          type: 'triangle',
+          points: [
+            { x: 200, y: 220, label: 'A' },
+            { x: 340, y: 220, label: 'B' },
+            { x: 270, y: 79, label: 'C' }
+          ],
+          labels: {
+            sides: ['8 cm', '8 cm', '8 cm']
+          },
+          dimensions: {
+            showSides: true
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: 'm2-geo-visual-1',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'En el siguiente triángulo rectángulo, si un cateto mide 5 cm y la hipotenusa mide 13 cm, ¿cuánto mide el otro cateto?',
+    questionLatex: '\\text{En el siguiente triángulo rectángulo, si un cateto mide 5 cm y la hipotenusa mide 13 cm, ¿cuánto mide el otro cateto?}',
+    options: ['8 cm', '10 cm', '12 cm', '15 cm'],
+    correctAnswer: 2,
+    explanation: 'Usando el teorema de Pitágoras:',
+    explanationLatex: 'c^2 = a^2 + b^2 \\quad \\Rightarrow \\quad 13^2 = 5^2 + b^2 \\quad \\Rightarrow \\quad 169 = 25 + b^2 \\quad \\Rightarrow \\quad b^2 = 144 \\quad \\Rightarrow \\quad b = 12 \\text{ cm}',
+    difficulty: 'medium',
+    visualData: {
+      type: 'geometry',
+      data: [
+        {
+          type: 'triangle',
+          points: [
+            { x: 50, y: 220, label: 'A' },
+            { x: 290, y: 220, label: 'B' },
+            { x: 50, y: 70, label: 'C' }
+          ],
+          labels: {
+            sides: ['12 cm', '13 cm', '5 cm']
+          },
+          dimensions: {
+            showSides: true
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: 'm2-geo-visual-2',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'En la siguiente figura, un círculo está inscrito en un cuadrado de lado 10 cm. ¿Cuál es el área del círculo? (usar π ≈ 3.14)',
+    questionLatex: '\\text{En la siguiente figura, un círculo está inscrito en un cuadrado de lado 10 cm. ¿Cuál es el área del círculo? (usar } \\pi \\approx 3.14)',
+    options: ['31.4 cm²', '62.8 cm²', '78.5 cm²', '100 cm²'],
+    correctAnswer: 2,
+    explanation: 'El diámetro del círculo inscrito es igual al lado del cuadrado, entonces el radio es 5 cm:',
+    explanationLatex: 'r = \\frac{10}{2} = 5 \\text{ cm} \\quad \\Rightarrow \\quad A = \\pi r^2 = 3.14 \\times 5^2 = 3.14 \\times 25 = 78.5 \\text{ cm}^2',
+    difficulty: 'medium',
+    visualData: {
+      type: 'geometry',
+      data: [
+        {
+          type: 'rectangle',
+          points: [
+            { x: 100, y: 50 },
+            { x: 300, y: 250 }
+          ],
+          labels: {
+            sides: ['10 cm', '10 cm']
+          },
+          dimensions: {
+            showSides: true
+          }
+        },
+        {
+          type: 'circle',
+          center: { x: 200, y: 150 },
+          radius: 100,
+          labels: {
+            sides: ['r = 5 cm']
+          },
+          dimensions: {
+            showSides: true
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: 'm2-geo-visual-3',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'En el siguiente triángulo isósceles, dos lados miden 10 cm cada uno y el ángulo entre ellos es 60°. ¿Cuál es aproximadamente la longitud de la base? (usar cos(60°) = 0.5)',
+    questionLatex: '\\text{En el siguiente triángulo isósceles, dos lados miden 10 cm cada uno y el ángulo entre ellos es } 60^\\circ\\text{. ¿Cuál es aproximadamente la longitud de la base? (usar } \\cos(60^\\circ) = 0.5)',
+    options: ['5 cm', '8.66 cm', '10 cm', '12 cm'],
+    correctAnswer: 2,
+    explanation: 'Usando la ley de cosenos:',
+    explanationLatex: 'c^2 = a^2 + b^2 - 2ab\\cos(C) = 10^2 + 10^2 - 2(10)(10)(0.5) = 100 + 100 - 100 = 100 \\quad \\Rightarrow \\quad c = 10 \\text{ cm}',
+    difficulty: 'hard',
+    visualData: {
+      type: 'geometry',
+      data: [
+        {
+          type: 'triangle',
+          points: [
+            { x: 100, y: 220, label: 'A' },
+            { x: 300, y: 220, label: 'B' },
+            { x: 200, y: 80, label: 'C' }
+          ],
+          labels: {
+            sides: ['10 cm', '10 cm', '10 cm']
+          },
+          dimensions: {
+            showSides: true
+          }
+        },
+        {
+          type: 'angle',
+          points: [
+            { x: 200, y: 80 },
+            { x: 100, y: 220 },
+            { x: 300, y: 220 }
+          ],
+          labels: {
+            angles: ['60°']
+          }
+        }
+      ]
+    }
+  },
   // Additional M1 Questions - Probabilidad y Estadística
   {
     id: 'm1-22',
