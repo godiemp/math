@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  getScheduledSessions,
+  getAllAvailableSessions,
   createScheduledSession,
   updateScheduledSession,
   deleteSession,
@@ -42,7 +42,9 @@ function AdminBackofficeContent() {
 
   const refreshSessions = () => {
     updateSessionStatuses(); // Auto-update session statuses based on time
-    setSessions(getScheduledSessions());
+    // Show scheduled, lobby, and active sessions
+    const allSessions = getAllAvailableSessions();
+    setSessions(allSessions);
   };
 
   const resetForm = () => {
@@ -63,8 +65,8 @@ function AdminBackofficeContent() {
     const dateStr = today.toISOString().split('T')[0];
 
     setFormData({
-      name: 'Práctica M1 - Matemática Básica',
-      description: 'Sesión de práctica para nivel M1: números, álgebra básica, geometría y probabilidades. Duración oficial PAES: 2h 20min.',
+      name: 'Ensayo PAES M1 - Matemática Básica',
+      description: 'Ensayo oficial para nivel M1: números, álgebra básica, geometría y probabilidades. Duración oficial PAES: 2h 20min.',
       level: 'M1',
       scheduledDate: dateStr,
       scheduledTime: '15:00',
@@ -78,8 +80,8 @@ function AdminBackofficeContent() {
     const dateStr = today.toISOString().split('T')[0];
 
     setFormData({
-      name: 'Práctica M2 - Matemática Avanzada',
-      description: 'Sesión de práctica para nivel M2: cálculo, límites, derivadas e integrales. Duración oficial PAES: 2h 20min.',
+      name: 'Ensayo PAES M2 - Matemática Avanzada',
+      description: 'Ensayo oficial para nivel M2: cálculo, límites, derivadas e integrales. Duración oficial PAES: 2h 20min.',
       level: 'M2',
       scheduledDate: dateStr,
       scheduledTime: '16:30',
@@ -150,12 +152,12 @@ function AdminBackofficeContent() {
       });
 
       if (result.success) {
-        setSuccess('Sesión actualizada exitosamente');
+        setSuccess('Ensayo actualizado exitosamente');
         setShowCreateModal(false);
         resetForm();
         refreshSessions();
       } else {
-        setError(result.error || 'Error al actualizar la sesión');
+        setError(result.error || 'Error al actualizar el ensayo');
       }
     } else {
       // Create new session
@@ -169,7 +171,7 @@ function AdminBackofficeContent() {
         formData.questionCount
       );
 
-      setSuccess('Sesión programada exitosamente');
+      setSuccess('Ensayo programado exitosamente');
       setShowCreateModal(false);
       resetForm();
       refreshSessions();
@@ -177,25 +179,25 @@ function AdminBackofficeContent() {
   };
 
   const handleDelete = (sessionId: string) => {
-    if (confirm('¿Estás seguro de que deseas eliminar esta sesión?')) {
+    if (confirm('¿Estás seguro de que deseas eliminar este ensayo?')) {
       const result = deleteSession(sessionId);
       if (result.success) {
-        setSuccess('Sesión eliminada exitosamente');
+        setSuccess('Ensayo eliminado exitosamente');
         refreshSessions();
       } else {
-        setError(result.error || 'Error al eliminar la sesión');
+        setError(result.error || 'Error al eliminar el ensayo');
       }
     }
   };
 
   const handleCancel = (sessionId: string) => {
-    if (confirm('¿Estás seguro de que deseas cancelar esta sesión?')) {
+    if (confirm('¿Estás seguro de que deseas cancelar este ensayo?')) {
       const result = cancelSession(sessionId);
       if (result.success) {
-        setSuccess('Sesión cancelada exitosamente');
+        setSuccess('Ensayo cancelado exitosamente');
         refreshSessions();
       } else {
-        setError(result.error || 'Error al cancelar la sesión');
+        setError(result.error || 'Error al cancelar el ensayo');
       }
     }
   };
@@ -218,7 +220,7 @@ function AdminBackofficeContent() {
                 Panel de Administración
               </h1>
               <p className="text-gray-600 dark:text-gray-400">
-                Gestiona sesiones de práctica en vivo
+                Gestiona ensayos PAES en vivo
               </p>
             </div>
             <div className="flex items-center space-x-4">
@@ -268,23 +270,23 @@ function AdminBackofficeContent() {
             }}
             className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors"
           >
-            + Programar Nueva Sesión
+            + Programar Nuevo Ensayo
           </button>
         </div>
 
         {/* Sessions List */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-            Sesiones Programadas ({sessions.length})
+            Ensayos Activos ({sessions.length})
           </h2>
 
           {sessions.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-600 dark:text-gray-400 mb-4">
-                No hay sesiones programadas
+                No hay ensayos programados
               </p>
               <p className="text-sm text-gray-500">
-                Crea una nueva sesión para comenzar
+                Crea un nuevo ensayo para comenzar
               </p>
             </div>
           ) : (
@@ -304,15 +306,23 @@ function AdminBackofficeContent() {
                           className={`px-3 py-1 rounded-full text-xs font-medium ${
                             session.status === 'scheduled'
                               ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
+                              : session.status === 'lobby'
+                              ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+                              : session.status === 'active'
+                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                               : session.status === 'cancelled'
                               ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
                               : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
                           }`}
                         >
                           {session.status === 'scheduled'
-                            ? 'Programada'
+                            ? 'Programado'
+                            : session.status === 'lobby'
+                            ? 'Lobby Abierto'
+                            : session.status === 'active'
+                            ? 'En Curso'
                             : session.status === 'cancelled'
-                            ? 'Cancelada'
+                            ? 'Cancelado'
                             : session.status}
                         </span>
                       </div>
@@ -338,10 +348,10 @@ function AdminBackofficeContent() {
                         </div>
                         <div>
                           <span className="text-gray-600 dark:text-gray-400">
-                            Participantes:
+                            {session.status === 'scheduled' ? 'Registrados:' : 'Participantes:'}
                           </span>{' '}
                           <span className="font-medium text-gray-900 dark:text-white">
-                            {session.participants.length}
+                            {session.status === 'scheduled' ? session.registeredUsers.length : session.participants.length}
                           </span>
                         </div>
                         <div>
@@ -390,7 +400,7 @@ function AdminBackofficeContent() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 max-w-2xl w-full my-8">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              {editingSession ? 'Editar Sesión' : 'Programar Nueva Sesión'}
+              {editingSession ? 'Editar Ensayo' : 'Programar Nuevo Ensayo'}
             </h2>
 
             {!editingSession && (
@@ -431,13 +441,13 @@ function AdminBackofficeContent() {
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Nombre de la Sesión *
+                    Nombre del Ensayo *
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Ej: Práctica de Álgebra - Semana 1"
+                    placeholder="Ej: Ensayo PAES M1 - Matemática Básica"
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                     required
                   />
@@ -450,7 +460,7 @@ function AdminBackofficeContent() {
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Descripción opcional de la sesión"
+                    placeholder="Descripción opcional del ensayo"
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                   />
@@ -558,7 +568,7 @@ function AdminBackofficeContent() {
                   type="submit"
                   className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                 >
-                  {editingSession ? 'Actualizar' : 'Programar Sesión'}
+                  {editingSession ? 'Actualizar' : 'Programar Ensayo'}
                 </button>
               </div>
             </form>

@@ -81,9 +81,11 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
 
   const currentQuestion = session.questions[currentQuestionIndex];
 
-  // Scheduled - waiting for start time
+  // Scheduled - waiting for lobby to open
   if (session.status === 'scheduled') {
     const startTime = new Date(session.scheduledStartTime);
+    const lobbyTime = session.lobbyOpenTime ? new Date(session.lobbyOpenTime) : null;
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-8">
         <div className="max-w-4xl mx-auto">
@@ -103,10 +105,24 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
             <div className="text-center py-12">
               <div className="text-6xl mb-6">⏰</div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                Sesión Programada
+                Ensayo Programado
               </h2>
               <p className="text-gray-600 dark:text-gray-400 mb-6">
-                Esta sesión comenzará automáticamente el:
+                El lobby se abrirá el:
+              </p>
+              {lobbyTime && (
+                <div className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mb-4">
+                  {lobbyTime.toLocaleString('es-CL', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </div>
+              )}
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                El ensayo comenzará automáticamente el:
               </p>
               <div className="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-8">
                 {startTime.toLocaleString('es-CL', {
@@ -123,11 +139,87 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
                 <p><strong>Nivel:</strong> {session.level}</p>
                 <p><strong>Preguntas:</strong> {session.questions.length}</p>
                 <p><strong>Duración:</strong> {session.durationMinutes} minutos</p>
-                <p><strong>Participantes:</strong> {session.participants.length}</p>
+                <p><strong>Registrados:</strong> {session.registeredUsers.length}</p>
               </div>
 
               <p className="text-sm text-gray-500 dark:text-gray-500">
-                Mantén esta página abierta. La sesión comenzará automáticamente.
+                Vuelve cuando el lobby esté abierto para unirte antes del inicio.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Lobby - waiting for session to start
+  if (session.status === 'lobby') {
+    const startTime = new Date(session.scheduledStartTime);
+    const now = Date.now();
+    const minutesUntilStart = Math.max(0, Math.ceil((session.scheduledStartTime - now) / 60000));
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-100 dark:from-gray-900 dark:to-gray-800 p-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                {session.name}
+              </h1>
+              <button
+                onClick={handleLeave}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+              >
+                Salir del Lobby
+              </button>
+            </div>
+
+            <div className="text-center py-12">
+              <div className="text-6xl mb-6 animate-pulse">🎯</div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                ¡Bienvenido al Lobby!
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                El ensayo comenzará en aproximadamente:
+              </p>
+              <div className="text-4xl font-bold text-yellow-600 dark:text-yellow-400 mb-8">
+                {minutesUntilStart} minuto{minutesUntilStart !== 1 ? 's' : ''}
+              </div>
+              <div className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-8">
+                Hora de inicio: {startTime.toLocaleString('es-CL', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </div>
+
+              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6 mb-8">
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
+                  Participantes en el Lobby ({session.participants.length})
+                </h3>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {session.participants.map((p) => (
+                    <div
+                      key={p.userId}
+                      className={`px-3 py-1 rounded-full text-sm ${
+                        p.userId === currentUser.id
+                          ? 'bg-indigo-600 text-white'
+                          : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                      }`}
+                    >
+                      {p.displayName} {p.userId === currentUser.id && '(Tú)'}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2 mb-6 text-sm text-gray-600 dark:text-gray-400">
+                <p><strong>Nivel:</strong> {session.level}</p>
+                <p><strong>Preguntas:</strong> {session.questions.length}</p>
+                <p><strong>Duración:</strong> {session.durationMinutes} minutos</p>
+              </div>
+
+              <p className="text-sm text-gray-500 dark:text-gray-500">
+                Mantén esta página abierta. El ensayo comenzará automáticamente.
               </p>
             </div>
           </div>
@@ -145,7 +237,7 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
         <div className="max-w-4xl mx-auto">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
             <h1 className="text-3xl font-bold text-center mb-6 text-gray-900 dark:text-white">
-              Resultados de la Sesión
+              Resultados del Ensayo
             </h1>
 
             <div className="mb-8">
