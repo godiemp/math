@@ -9,14 +9,17 @@ interface QuizProps {
   questions: Question[];
   level: 'M1' | 'M2';
   subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
+  timerMode?: 'timed' | 'untimed';
 }
 
-export default function Quiz({ questions: allQuestions, level, subject }: QuizProps) {
+export default function Quiz({ questions: allQuestions, level, subject, timerMode = 'untimed' }: QuizProps) {
   const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
+  const [timeRemaining, setTimeRemaining] = useState(120); // 2 minutes per question in seconds
+  const [totalTimeElapsed, setTotalTimeElapsed] = useState(0);
 
   useEffect(() => {
     // Load progress from localStorage
@@ -30,7 +33,44 @@ export default function Quiz({ questions: allQuestions, level, subject }: QuizPr
     const randomQuestions = getRandomQuestions(level, 10, subject);
     setQuizQuestions(randomQuestions);
     setUserAnswers(new Array(randomQuestions.length).fill(null));
+    setTimeRemaining(120); // Reset timer for new quiz
+    setTotalTimeElapsed(0);
   }, [level, subject]);
+
+  // Timer effect for timed mode
+  useEffect(() => {
+    if (timerMode !== 'timed' || quizSubmitted || quizQuestions.length === 0) {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 1) {
+          // Time's up for this question
+          if (currentQuestionIndex < quizQuestions.length - 1) {
+            // Move to next question
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+            return 120; // Reset to 2 minutes
+          } else {
+            // This was the last question, auto-submit
+            handleSubmitQuiz();
+            return 0;
+          }
+        }
+        return prev - 1;
+      });
+      setTotalTimeElapsed((prev) => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timerMode, quizSubmitted, currentQuestionIndex, quizQuestions.length]);
+
+  // Reset timer when changing questions manually in timed mode
+  useEffect(() => {
+    if (timerMode === 'timed' && !quizSubmitted) {
+      setTimeRemaining(120);
+    }
+  }, [currentQuestionIndex]);
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
 
@@ -224,8 +264,45 @@ export default function Quiz({ questions: allQuestions, level, subject }: QuizPr
   const isCorrect = userAnswer === currentQuestion.correctAnswer;
   const showFeedback = quizSubmitted;
 
+  // Format time as MM:SS
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Determine timer color based on time remaining
+  const getTimerColor = () => {
+    if (timeRemaining > 60) return 'text-green-600 dark:text-green-400';
+    if (timeRemaining > 30) return 'text-yellow-600 dark:text-yellow-400';
+    return 'text-red-600 dark:text-red-400';
+  };
+
   return (
     <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+      {/* Timer Display - Only show in timed mode and when quiz is not submitted */}
+      {timerMode === 'timed' && !quizSubmitted && (
+        <div className="mb-4 p-4 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-lg border-2 border-indigo-200 dark:border-indigo-700">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">⏱️</span>
+              <div>
+                <div className="text-xs text-gray-600 dark:text-gray-400">Tiempo restante</div>
+                <div className={`text-2xl font-bold ${getTimerColor()}`}>
+                  {formatTime(timeRemaining)}
+                </div>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-xs text-gray-600 dark:text-gray-400">Tiempo total</div>
+              <div className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+                {formatTime(totalTimeElapsed)}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="mb-6">
         <div className="flex justify-between items-center mb-4">
           <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
