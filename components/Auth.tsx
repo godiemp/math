@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { registerUser, loginUser } from '@/lib/auth';
+import { useState, useEffect } from 'react';
+import { registerUser, loginUser, ensureAdminExists } from '@/lib/auth';
 
 interface AuthProps {
   onSuccess: () => void;
@@ -13,6 +13,11 @@ export default function Auth({ onSuccess }: AuthProps) {
   const [email, setEmail] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState('');
+
+  // Ensure admin user exists when component mounts
+  useEffect(() => {
+    ensureAdminExists();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
