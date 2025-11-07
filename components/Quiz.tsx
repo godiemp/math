@@ -8,14 +8,32 @@ import { getRandomQuestions } from '@/lib/questions';
 interface QuizProps {
   questions: Question[];
   level: 'M1' | 'M2';
+  subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
+  quizMode?: 'zen' | 'rapidfire';
+  difficulty?: 'easy' | 'medium' | 'hard' | 'extreme';
 }
 
-export default function Quiz({ questions: allQuestions, level }: QuizProps) {
+export default function Quiz({ questions: allQuestions, level, subject, quizMode = 'zen', difficulty = 'medium' }: QuizProps) {
   const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
+
+  // Get time limit based on difficulty
+  const getTimeLimit = () => {
+    if (quizMode !== 'rapidfire') return 0;
+    switch (difficulty) {
+      case 'easy': return 25 * 60; // 25 minutes = 1500 seconds
+      case 'medium': return 20 * 60; // 20 minutes = 1200 seconds
+      case 'hard': return 15 * 60; // 15 minutes = 900 seconds
+      case 'extreme': return 10 * 60; // 10 minutes = 600 seconds
+      default: return 20 * 60;
+    }
+  };
+
+  const [timeRemaining, setTimeRemaining] = useState(getTimeLimit());
+  const [totalTimeElapsed, setTotalTimeElapsed] = useState(0);
 
   useEffect(() => {
     // Load progress from localStorage
@@ -26,10 +44,33 @@ export default function Quiz({ questions: allQuestions, level }: QuizProps) {
     }
 
     // Initialize quiz with 10 random questions
-    const randomQuestions = getRandomQuestions(level, 10);
+    const randomQuestions = getRandomQuestions(level, 10, subject);
     setQuizQuestions(randomQuestions);
     setUserAnswers(new Array(randomQuestions.length).fill(null));
-  }, [level]);
+    setTimeRemaining(getTimeLimit()); // Reset timer based on difficulty
+    setTotalTimeElapsed(0);
+  }, [level, subject, difficulty]);
+
+  // Timer effect for rapidfire mode
+  useEffect(() => {
+    if (quizMode !== 'rapidfire' || quizSubmitted || quizQuestions.length === 0) {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 1) {
+          // Time's up, auto-submit the quiz
+          handleSubmitQuiz();
+          return 0;
+        }
+        return prev - 1;
+      });
+      setTotalTimeElapsed((prev) => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [quizMode, quizSubmitted, quizQuestions.length]);
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
 
@@ -110,11 +151,13 @@ export default function Quiz({ questions: allQuestions, level }: QuizProps) {
   };
 
   const handleRestart = () => {
-    const randomQuestions = getRandomQuestions(level, 10);
+    const randomQuestions = getRandomQuestions(level, 10, subject);
     setQuizQuestions(randomQuestions);
     setUserAnswers(new Array(randomQuestions.length).fill(null));
     setCurrentQuestionIndex(0);
     setQuizSubmitted(false);
+    setTimeRemaining(getTimeLimit()); // Reset timer based on difficulty
+    setTotalTimeElapsed(0); // Reset elapsed time
   };
 
   if (quizQuestions.length === 0) {
@@ -223,8 +266,69 @@ export default function Quiz({ questions: allQuestions, level }: QuizProps) {
   const isCorrect = userAnswer === currentQuestion.correctAnswer;
   const showFeedback = quizSubmitted;
 
+  // Format time as MM:SS
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Determine timer color based on time remaining
+  const getTimerColor = () => {
+    const totalTime = getTimeLimit();
+    const percentRemaining = (timeRemaining / totalTime) * 100;
+    if (percentRemaining > 50) return 'text-green-600 dark:text-green-400';
+    if (percentRemaining > 25) return 'text-yellow-600 dark:text-yellow-400';
+    return 'text-red-600 dark:text-red-400';
+  };
+
+  // Calculate average time per question
+  const getAverageTimePerQuestion = () => {
+    const questionsAnswered = userAnswers.filter(a => a !== null).length || 1;
+    return Math.floor(totalTimeElapsed / questionsAnswered);
+  };
+
   return (
     <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+      {/* Timer Display - Only show in rapidfire mode and when quiz is not submitted */}
+      {quizMode === 'rapidfire' && !quizSubmitted && (
+        <div className="mb-4 p-4 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-lg border-2 border-indigo-200 dark:border-indigo-700">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">⚡</span>
+              <div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 font-semibold">TIEMPO RESTANTE TOTAL</div>
+                <div className={`text-3xl font-bold ${getTimerColor()}`}>
+                  {formatTime(timeRemaining)}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  {Math.floor(timeRemaining / 60)} min restantes
+                </div>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Tiempo usado</div>
+              <div className="text-xl font-semibold text-gray-700 dark:text-gray-300">
+                {formatTime(totalTimeElapsed)}
+              </div>
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                ~{formatTime(getAverageTimePerQuestion())}/pregunta
+              </div>
+            </div>
+          </div>
+          {/* Progress bar */}
+          <div className="mt-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div
+              className={`h-2 rounded-full transition-all duration-1000 ${
+                (timeRemaining / getTimeLimit()) > 0.5 ? 'bg-green-500' :
+                (timeRemaining / getTimeLimit()) > 0.25 ? 'bg-yellow-500' : 'bg-red-500'
+              }`}
+              style={{ width: `${(timeRemaining / getTimeLimit()) * 100}%` }}
+            />
+          </div>
+        </div>
+      )}
+
       <div className="mb-6">
         <div className="flex justify-between items-center mb-4">
           <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
