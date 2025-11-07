@@ -1,11 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { questions } from '@/lib/questions'
 import { Question } from '@/lib/types'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 
 function ProblemsExplorerContent() {
+  const router = useRouter()
   const [selectedLevel, setSelectedLevel] = useState<'all' | 'M1' | 'M2'>('all')
   const [selectedSubject, setSelectedSubject] = useState<'all' | 'números' | 'álgebra' | 'geometría' | 'probabilidad'>('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard'>('all')
