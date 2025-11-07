@@ -10,14 +10,14 @@ type QuizMode = 'zen' | 'rapidfire';
 type Difficulty = 'easy' | 'medium' | 'hard' | 'extreme';
 
 export default function M1Practice() {
-  const [selectedSubject, setSelectedSubject] = useState<Subject | undefined>(undefined);
+  const [selectedSubject, setSelectedSubject] = useState<Subject | null | undefined>(undefined);
   const [quizMode, setQuizMode] = useState<QuizMode | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [quizStarted, setQuizStarted] = useState(false);
   const questions = getQuestionsByLevel('M1');
 
-  const subjects: { value: Subject | undefined; label: string; emoji: string; description: string }[] = [
-    { value: undefined, label: 'Todas las Materias', emoji: '📚', description: 'Practica con todas las materias mezcladas' },
+  const subjects: { value: Subject | null; label: string; emoji: string; description: string }[] = [
+    { value: null, label: 'Todas las Materias', emoji: '📚', description: 'Practica con todas las materias mezcladas' },
     { value: 'números', label: 'Números', emoji: '🔢', description: 'Números y Proporcionalidad' },
     { value: 'álgebra', label: 'Álgebra', emoji: '📐', description: 'Álgebra y Funciones' },
     { value: 'geometría', label: 'Geometría', emoji: '📏', description: 'Geometría' },
@@ -145,7 +145,7 @@ export default function M1Practice() {
 
   // Step 2: Mode Selection
   const renderModeSelection = () => {
-    if (selectedSubject === undefined && quizMode === null) return null;
+    if (selectedSubject === undefined) return null;
 
     return (
       <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
@@ -324,7 +324,7 @@ export default function M1Practice() {
           <Quiz
             questions={questions}
             level="M1"
-            subject={selectedSubject}
+            subject={selectedSubject === null ? undefined : selectedSubject}
             quizMode={quizMode || 'zen'}
             difficulty={difficulty || undefined}
           />
