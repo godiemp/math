@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { getCurrentUser, logoutUser } from '@/lib/auth';
-import { getActiveSessions, createSession, joinSession } from '@/lib/liveSessions';
+import { getCurrentUser, logoutUser, isAdmin } from '@/lib/auth';
+import { getAllScheduledAndActiveSessions, createSession, joinSession } from '@/lib/liveSessions';
 import { LiveSession } from '@/lib/types';
 import Auth from '@/components/Auth';
 import LiveSessionComponent from '@/components/LiveSession';
@@ -21,7 +21,7 @@ export default function LivePracticePage() {
   const router = useRouter();
 
   const refreshSessions = () => {
-    setSessions(getActiveSessions());
+    setSessions(getAllScheduledAndActiveSessions());
   };
 
   useEffect(() => {
@@ -102,6 +102,9 @@ export default function LivePracticePage() {
               <div className="text-right">
                 <p className="text-sm text-gray-600 dark:text-gray-400">Bienvenido,</p>
                 <p className="font-medium text-gray-900 dark:text-white">{currentUser.displayName}</p>
+                {isAdmin() && (
+                  <p className="text-xs text-indigo-600 dark:text-indigo-400">Administrador</p>
+                )}
               </div>
               <button
                 onClick={() => router.push('/')}
@@ -109,6 +112,14 @@ export default function LivePracticePage() {
               >
                 Inicio
               </button>
+              {isAdmin() && (
+                <button
+                  onClick={() => router.push('/admin')}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                >
+                  Admin
+                </button>
+              )}
               <button
                 onClick={handleLogout}
                 className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
@@ -163,20 +174,38 @@ export default function LivePracticePage() {
                       <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-1">
                         {session.name}
                       </h3>
+                      {session.description && (
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mb-1">
+                          {session.description}
+                        </p>
+                      )}
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         por {session.hostName}
                       </p>
                     </div>
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      session.status === 'waiting'
+                      session.status === 'scheduled'
+                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
+                        : session.status === 'waiting'
                         ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
                         : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                     }`}>
-                      {session.status === 'waiting' ? 'Esperando' : 'En Curso'}
+                      {session.status === 'scheduled' ? 'Programada' : session.status === 'waiting' ? 'Esperando' : 'En Curso'}
                     </span>
                   </div>
 
                   <div className="space-y-2 mb-4">
+                    {session.scheduledStartTime && (
+                      <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                        <span className="font-medium mr-2">📅 Fecha:</span>
+                        <span>
+                          {new Date(session.scheduledStartTime).toLocaleString('es-CL', {
+                            dateStyle: 'medium',
+                            timeStyle: 'short',
+                          })}
+                        </span>
+                      </div>
+                    )}
                     <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                       <span className="font-medium mr-2">Nivel:</span>
                       <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 rounded">
@@ -195,10 +224,12 @@ export default function LivePracticePage() {
 
                   <button
                     onClick={() => handleJoinSession(session.id)}
-                    disabled={session.participants.length >= session.maxParticipants}
+                    disabled={session.participants.length >= session.maxParticipants || session.status === 'scheduled'}
                     className="w-full py-2 px-4 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
                   >
-                    {session.participants.some(p => p.userId === currentUser.id)
+                    {session.status === 'scheduled'
+                      ? 'Próximamente'
+                      : session.participants.some(p => p.userId === currentUser.id)
                       ? 'Volver a Entrar'
                       : 'Unirse'}
                   </button>

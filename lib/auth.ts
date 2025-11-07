@@ -29,7 +29,7 @@ export function setCurrentUser(user: User | null): void {
   }
 }
 
-export function registerUser(username: string, email: string, displayName: string): { success: boolean; error?: string; user?: User } {
+export function registerUser(username: string, email: string, displayName: string, role: 'student' | 'admin' = 'student'): { success: boolean; error?: string; user?: User } {
   const users = getAllUsers();
 
   // Check if username already exists
@@ -48,6 +48,7 @@ export function registerUser(username: string, email: string, displayName: strin
     username,
     email,
     displayName,
+    role,
     createdAt: Date.now(),
   };
 
@@ -80,6 +81,42 @@ export function logoutUser(): void {
 
 export function isAuthenticated(): boolean {
   return getCurrentUser() !== null;
+}
+
+export function isAdmin(): boolean {
+  const user = getCurrentUser();
+  return user !== null && user.role === 'admin';
+}
+
+export function requireAdmin(): User | null {
+  const user = getCurrentUser();
+  if (!user || user.role !== 'admin') {
+    return null;
+  }
+  return user;
+}
+
+// Create a default admin user if none exists
+export function ensureAdminExists(): void {
+  const users = getAllUsers();
+
+  // Check if any admin exists
+  const hasAdmin = users.some(u => u.role === 'admin');
+
+  if (!hasAdmin) {
+    // Create default admin user
+    const adminUser: User = {
+      id: generateUserId(),
+      username: 'admin',
+      email: 'admin@paes.cl',
+      displayName: 'Administrador',
+      role: 'admin',
+      createdAt: Date.now(),
+    };
+
+    users.push(adminUser);
+    saveUsers(users);
+  }
 }
 
 function generateUserId(): string {

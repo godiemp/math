@@ -37,6 +37,7 @@ export function createSession(
     currentQuestionIndex: 0,
     createdAt: Date.now(),
     maxParticipants,
+    isScheduled: false,
   };
 
   // Host automatically joins the session
@@ -51,6 +52,43 @@ export function createSession(
   };
 
   newSession.participants.push(hostParticipant);
+
+  sessions.push(newSession);
+  saveSessions(sessions);
+
+  return newSession;
+}
+
+// Admin function to create scheduled sessions
+export function createScheduledSession(
+  name: string,
+  description: string,
+  level: 'M1' | 'M2',
+  host: User,
+  scheduledStartTime: number,
+  questionCount: number = 10,
+  maxParticipants: number = 20
+): LiveSession {
+  const sessions = getAllSessions();
+
+  const questions = getRandomQuestions(level, questionCount);
+
+  const newSession: LiveSession = {
+    id: generateSessionId(),
+    name,
+    description,
+    level,
+    hostId: host.id,
+    hostName: host.displayName,
+    questions,
+    participants: [],
+    status: 'scheduled',
+    currentQuestionIndex: 0,
+    createdAt: Date.now(),
+    scheduledStartTime,
+    maxParticipants,
+    isScheduled: true,
+  };
 
   sessions.push(newSession);
   saveSessions(sessions);
@@ -79,8 +117,16 @@ export function joinSession(sessionId: string, user: User): { success: boolean; 
   }
 
   // Check if session has already started or completed
-  if (session.status !== 'waiting') {
-    return { success: false, error: 'La sesión ya ha comenzado o terminado' };
+  if (session.status === 'active') {
+    return { success: false, error: 'La sesión ya ha comenzado' };
+  }
+
+  if (session.status === 'completed') {
+    return { success: false, error: 'La sesión ya ha terminado' };
+  }
+
+  if (session.status === 'cancelled') {
+    return { success: false, error: 'La sesión ha sido cancelada' };
   }
 
   // Check if user is already in the session
@@ -210,10 +256,133 @@ export function getActiveSessions(): LiveSession[] {
   return getAllSessions().filter(s => s.status === 'waiting' || s.status === 'active');
 }
 
+export function getScheduledSessions(): LiveSession[] {
+  return getAllSessions().filter(s => s.status === 'scheduled');
+}
+
+export function getAllScheduledAndActiveSessions(): LiveSession[] {
+  return getAllSessions().filter(s =>
+    s.status === 'scheduled' || s.status === 'waiting' || s.status === 'active'
+  );
+}
+
 export function getUserSessions(userId: string): LiveSession[] {
   return getAllSessions().filter(s =>
     s.participants.some(p => p.userId === userId)
   );
+}
+
+// Admin function to update a scheduled session
+export function updateScheduledSession(
+  sessionId: string,
+  updates: {
+    name?: string;
+    description?: string;
+    level?: 'M1' | 'M2';
+    scheduledStartTime?: number;
+    questionCount?: number;
+    maxParticipants?: number;
+  }
+): { success: boolean; error?: string } {
+  const sessions = getAllSessions();
+  const sessionIndex = sessions.findIndex(s => s.id === sessionId);
+
+  if (sessionIndex === -1) {
+    return { success: false, error: 'Sesión no encontrada' };
+  }
+
+  const session = sessions[sessionIndex];
+
+  if (!session.isScheduled) {
+    return { success: false, error: 'Solo se pueden editar sesiones programadas' };
+  }
+
+  if (session.status !== 'scheduled') {
+    return { success: false, error: 'Solo se pueden editar sesiones que aún no han comenzado' };
+  }
+
+  // Apply updates
+  if (updates.name) session.name = updates.name;
+  if (updates.description !== undefined) session.description = updates.description;
+  if (updates.level) session.level = updates.level;
+  if (updates.scheduledStartTime) session.scheduledStartTime = updates.scheduledStartTime;
+  if (updates.maxParticipants) session.maxParticipants = updates.maxParticipants;
+
+  // If question count or level changed, regenerate questions
+  if (updates.questionCount || updates.level) {
+    const count = updates.questionCount || session.questions.length;
+    const level = updates.level || session.level;
+    session.questions = getRandomQuestions(level, count);
+
+    // Reset all participant answers
+    session.participants.forEach(p => {
+      p.answers = new Array(count).fill(null);
+    });
+  }
+
+  sessions[sessionIndex] = session;
+  saveSessions(sessions);
+
+  return { success: true };
+}
+
+// Admin function to delete a session
+export function deleteSession(sessionId: string): { success: boolean; error?: string } {
+  const sessions = getAllSessions();
+  const sessionIndex = sessions.findIndex(s => s.id === sessionId);
+
+  if (sessionIndex === -1) {
+    return { success: false, error: 'Sesión no encontrada' };
+  }
+
+  sessions.splice(sessionIndex, 1);
+  saveSessions(sessions);
+
+  return { success: true };
+}
+
+// Admin function to cancel a scheduled session
+export function cancelSession(sessionId: string): { success: boolean; error?: string } {
+  const sessions = getAllSessions();
+  const sessionIndex = sessions.findIndex(s => s.id === sessionId);
+
+  if (sessionIndex === -1) {
+    return { success: false, error: 'Sesión no encontrada' };
+  }
+
+  const session = sessions[sessionIndex];
+
+  if (session.status === 'completed') {
+    return { success: false, error: 'No se puede cancelar una sesión completada' };
+  }
+
+  session.status = 'cancelled';
+  sessions[sessionIndex] = session;
+  saveSessions(sessions);
+
+  return { success: true };
+}
+
+// Function to activate a scheduled session (move from scheduled to waiting)
+export function activateScheduledSession(sessionId: string): { success: boolean; error?: string } {
+  const sessions = getAllSessions();
+  const sessionIndex = sessions.findIndex(s => s.id === sessionId);
+
+  if (sessionIndex === -1) {
+    return { success: false, error: 'Sesión no encontrada' };
+  }
+
+  const session = sessions[sessionIndex];
+
+  if (session.status !== 'scheduled') {
+    return { success: false, error: 'Solo se pueden activar sesiones programadas' };
+  }
+
+  session.status = 'waiting';
+  sessions[sessionIndex] = session;
+  saveSessions(sessions);
+
+  return { success: true };
 }
 
 function generateSessionId(): string {

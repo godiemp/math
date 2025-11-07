@@ -48,6 +48,7 @@ export interface User {
   username: string;
   email: string;
   displayName: string;
+  role: 'student' | 'admin';
   createdAt: number;
 }
 
@@ -55,17 +56,20 @@ export interface User {
 export interface LiveSession {
   id: string;
   name: string;
+  description?: string;
   level: 'M1' | 'M2';
   hostId: string;
   hostName: string;
   questions: Question[];
   participants: SessionParticipant[];
-  status: 'waiting' | 'active' | 'completed';
+  status: 'scheduled' | 'waiting' | 'active' | 'completed' | 'cancelled';
   currentQuestionIndex: number;
   createdAt: number;
+  scheduledStartTime?: number; // Unix timestamp for scheduled sessions
   startedAt?: number;
   completedAt?: number;
   maxParticipants: number;
+  isScheduled: boolean; // true for admin-scheduled sessions, false for instant sessions
 }
 
 export interface SessionParticipant {
