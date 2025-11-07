@@ -83,26 +83,26 @@ export const questions: Question[] = [
     difficulty: 'easy'
   },
 
-  // M2 Questions
+  // M2 Questions - Advanced PAES topics (NO calculus)
   {
     id: 'm2-1',
     level: 'M2',
-    topic: 'Límites y Derivadas',
-    question: '¿Cuál es el límite de f(x) = (x² - 4)/(x - 2) cuando x → 2?',
-    options: ['0', '2', '4', 'No existe'],
+    topic: 'Números',
+    question: 'El mínimo común múltiplo (MCM) de 12, 18 y 24 es:',
+    options: ['36', '48', '72', '144'],
     correctAnswer: 2,
-    explanation: 'Factorizando: (x² - 4)/(x - 2) = (x + 2)(x - 2)/(x - 2) = x + 2. Cuando x → 2, el límite es 4.',
+    explanation: 'Factorizando: 12 = 2² × 3, 18 = 2 × 3², 24 = 2³ × 3. MCM = 2³ × 3² = 8 × 9 = 72',
     difficulty: 'medium'
   },
   {
     id: 'm2-2',
     level: 'M2',
-    topic: 'Límites y Derivadas',
-    question: 'La derivada de f(x) = x³ es:',
-    options: ['x²', '2x²', '3x²', '3x³'],
-    correctAnswer: 2,
-    explanation: 'Usando la regla de potencias: d/dx(x³) = 3x²',
-    difficulty: 'easy'
+    topic: 'Álgebra y Funciones',
+    question: 'Resuelve el sistema: 2x + y = 8 y x - y = 1',
+    options: ['x = 2, y = 4', 'x = 3, y = 2', 'x = 4, y = 0', 'x = 1, y = 6'],
+    correctAnswer: 1,
+    explanation: 'Sumando las ecuaciones: 3x = 9, entonces x = 3. Sustituyendo: 3 - y = 1, entonces y = 2',
+    difficulty: 'medium'
   },
   {
     id: 'm2-3',
@@ -118,70 +118,70 @@ export const questions: Question[] = [
     id: 'm2-4',
     level: 'M2',
     topic: 'Geometría',
-    question: 'En un triángulo, si dos lados miden 5 cm y 12 cm, y el ángulo entre ellos es 90°, ¿cuál es el área?',
-    options: ['30 cm²', '60 cm²', '17 cm²', '85 cm²'],
-    correctAnswer: 0,
-    explanation: 'Área del triángulo rectángulo = (base × altura) / 2 = (5 × 12) / 2 = 30 cm²',
+    question: 'La distancia entre los puntos A(1, 2) y B(4, 6) es:',
+    options: ['3', '4', '5', '7'],
+    correctAnswer: 2,
+    explanation: 'd = √[(4-1)² + (6-2)²] = √[3² + 4²] = √[9 + 16] = √25 = 5',
     difficulty: 'medium'
   },
   {
     id: 'm2-5',
     level: 'M2',
-    topic: 'Cálculo Integral',
-    question: '¿Cuál es la integral de f(x) = 2x?',
-    options: ['x² + C', '2x² + C', 'x²/2 + C', '2'],
-    correctAnswer: 0,
-    explanation: '∫2x dx = 2 × (x²/2) + C = x² + C',
+    topic: 'Geometría',
+    question: 'El volumen de un cilindro con radio 3 cm y altura 4 cm es (usar π ≈ 3.14):',
+    options: ['37.68 cm³', '75.36 cm³', '113.04 cm³', '150.72 cm³'],
+    correctAnswer: 2,
+    explanation: 'V = πr²h = 3.14 × 3² × 4 = 3.14 × 9 × 4 = 113.04 cm³',
     difficulty: 'medium'
   },
   {
     id: 'm2-6',
     level: 'M2',
-    topic: 'Límites y Derivadas',
-    question: 'La derivada de f(x) = sin(x) es:',
-    options: ['-cos(x)', 'cos(x)', '-sin(x)', 'tan(x)'],
-    correctAnswer: 1,
-    explanation: 'd/dx(sin(x)) = cos(x)',
-    difficulty: 'easy'
+    topic: 'Álgebra y Funciones',
+    question: 'El discriminante de x² + 4x + 1 = 0 es:',
+    options: ['12', '16', '20', '8'],
+    correctAnswer: 0,
+    explanation: 'Discriminante = b² - 4ac = 4² - 4(1)(1) = 16 - 4 = 12. Como es > 0, hay dos soluciones reales.',
+    difficulty: 'medium'
   },
   {
     id: 'm2-7',
     level: 'M2',
     topic: 'Probabilidad y Estadística',
-    question: 'En una distribución normal, ¿qué porcentaje de los datos está dentro de una desviación estándar de la media?',
-    options: ['50%', '68%', '95%', '99%'],
-    correctAnswer: 1,
-    explanation: 'En una distribución normal, aproximadamente el 68% de los datos está dentro de ±1 desviación estándar.',
-    difficulty: 'medium'
+    question: 'En el conjunto de datos {2, 4, 5, 7, 9, 10, 12}, el rango intercuartílico (IQR) es:',
+    options: ['4', '5', '6', '7'],
+    correctAnswer: 2,
+    explanation: 'Q1 = 4, Q3 = 10. IQR = Q3 - Q1 = 10 - 4 = 6',
+    difficulty: 'hard'
   },
   {
     id: 'm2-8',
     level: 'M2',
-    topic: 'Álgebra y Funciones',
-    question: 'Si log₂(8) = x, entonces x es igual a:',
-    options: ['2', '3', '4', '8'],
-    correctAnswer: 1,
-    explanation: 'log₂(8) = x significa 2ˣ = 8. Como 2³ = 8, entonces x = 3',
+    topic: 'Probabilidad y Estadística',
+    question: '¿De cuántas formas se pueden elegir 3 estudiantes de un grupo de 5?',
+    options: ['10', '15', '20', '60'],
+    correctAnswer: 0,
+    explanation: 'Combinaciones: C(5,3) = 5!/(3!×2!) = (5×4)/(2×1) = 10',
     difficulty: 'medium'
   },
   {
     id: 'm2-9',
     level: 'M2',
-    topic: 'Cálculo Integral',
-    question: '¿Cuál es el valor de ∫₀² x dx?',
-    options: ['1', '2', '3', '4'],
-    correctAnswer: 1,
-    explanation: '∫₀² x dx = [x²/2]₀² = (4/2) - (0/2) = 2 - 0 = 2',
-    difficulty: 'hard'
+    topic: 'Números',
+    question: 'Racionaliza: 6/√3',
+    options: ['2√3', '3√2', '6√3', '√18'],
+    correctAnswer: 0,
+    explanation: '6/√3 = (6/√3) × (√3/√3) = 6√3/3 = 2√3',
+    difficulty: 'medium'
   },
   {
     id: 'm2-10',
     level: 'M2',
-    topic: 'Límites y Derivadas',
-    question: 'La pendiente de la recta tangente a f(x) = x² en el punto x = 3 es:',
-    options: ['3', '6', '9', '12'],
-    correctAnswer: 1,
-    explanation: 'f\'(x) = 2x, entonces f\'(3) = 2(3) = 6',
+    topic: 'Geometría',
+    question: 'Dos rectas son perpendiculares. Si una tiene pendiente m = 2, ¿cuál es la pendiente de la otra?',
+    options: ['2', '-2', '1/2', '-1/2'],
+    correctAnswer: 3,
+    explanation: 'Rectas perpendiculares tienen pendientes que son recíprocas negativas: m₁ × m₂ = -1. Si m₁ = 2, entonces m₂ = -1/2',
     difficulty: 'medium'
   }
 ];
