@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { getCurrentUser, isAdmin, ensureAdminExists } from '@/lib/auth';
 import {
   getScheduledSessions,
   createScheduledSession,
@@ -12,9 +11,11 @@ import {
   updateSessionStatuses,
 } from '@/lib/liveSessions';
 import { LiveSession } from '@/lib/types';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { useAuth } from '@/contexts/AuthContext';
 
-export default function AdminBackoffice() {
-  const [currentUser, setCurrentUser] = useState(getCurrentUser());
+function AdminBackofficeContent() {
+  const { user: currentUser } = useAuth();
   const [sessions, setSessions] = useState<LiveSession[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingSession, setEditingSession] = useState<LiveSession | null>(null);
@@ -34,19 +35,10 @@ export default function AdminBackoffice() {
   });
 
   useEffect(() => {
-    ensureAdminExists();
-    const user = getCurrentUser();
-    setCurrentUser(user);
-
-    if (!user || !isAdmin()) {
-      router.push('/');
-      return;
-    }
-
     refreshSessions();
     const interval = setInterval(refreshSessions, 5000);
     return () => clearInterval(interval);
-  }, [router]);
+  }, []);
 
   const refreshSessions = () => {
     updateSessionStatuses(); // Auto-update session statuses based on time
@@ -214,10 +206,6 @@ export default function AdminBackoffice() {
       timeStyle: 'short',
     });
   };
-
-  if (!currentUser || !isAdmin()) {
-    return null;
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
@@ -578,5 +566,13 @@ export default function AdminBackoffice() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AdminBackoffice() {
+  return (
+    <ProtectedRoute requireAdmin={true}>
+      <AdminBackofficeContent />
+    </ProtectedRoute>
   );
 }

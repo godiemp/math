@@ -373,7 +373,7 @@ export default function Curriculum({ level }: CurriculumProps) {
         {/* Header */}
         <div className="mb-8">
           <Link
-            href="/"
+            href="/dashboard"
             className="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 mb-4"
           >
             ← Volver al Inicio
@@ -605,7 +605,7 @@ export default function Curriculum({ level }: CurriculumProps) {
             Comenzar Práctica
           </Link>
           <Link
-            href="/"
+            href="/dashboard"
             className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-lg transition-colors"
           >
             Volver al Inicio

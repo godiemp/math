@@ -3,13 +3,14 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { QuestionAttempt } from '@/lib/types';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 interface Progress {
   correct: number;
   total: number;
 }
 
-export default function ProgressPage() {
+function ProgressPageContent() {
   const [m1Progress, setM1Progress] = useState<Progress>({ correct: 0, total: 0 });
   const [m2Progress, setM2Progress] = useState<Progress>({ correct: 0, total: 0 });
   const [m1History, setM1History] = useState<QuestionAttempt[]>([]);
@@ -100,7 +101,7 @@ export default function ProgressPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <nav className="bg-white dark:bg-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/" className="text-indigo-600 dark:text-indigo-400 hover:underline">
+          <Link href="/dashboard" className="text-indigo-600 dark:text-indigo-400 hover:underline">
             ← Volver al Inicio
           </Link>
         </div>
@@ -421,5 +422,13 @@ export default function ProgressPage() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function ProgressPage() {
+  return (
+    <ProtectedRoute>
+      <ProgressPageContent />
+    </ProtectedRoute>
   );
 }
