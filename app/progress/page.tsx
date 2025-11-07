@@ -81,10 +81,10 @@ function ProgressPageContent() {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-      case 'hard': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+      case 'easy': return 'bg-[#34C759]/10 text-[#34C759] dark:bg-[#30D158]/20 dark:text-[#5DE38D]';
+      case 'medium': return 'bg-[#FF9F0A]/10 text-[#FF9F0A] dark:bg-[#FF9F0A]/20 dark:text-[#FFB84D]';
+      case 'hard': return 'bg-[#FF453A]/10 text-[#FF453A] dark:bg-[#FF453A]/20 dark:text-[#FF7A72]';
+      default: return 'bg-black/[0.04] text-black dark:bg-white/[0.06] dark:text-white';
     }
   };
 
@@ -98,29 +98,34 @@ function ProgressPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      <nav className="bg-white dark:bg-gray-800 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/dashboard" className="text-indigo-600 dark:text-indigo-400 hover:underline">
+    <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">
+      {/* Navbar with variableBlur material */}
+      <nav className="sticky top-0 z-30 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] saturate-[1.2]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 text-[15px] font-medium text-[#0A84FF] hover:text-[#0A84FF]/80 transition-colors duration-[180ms]"
+          >
             ← Volver al Inicio
           </Link>
         </div>
       </nav>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+      <main className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 py-12">
+        {/* Header Section */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <h1 className="text-[44px] leading-[1.1] font-semibold tracking-tight text-black dark:text-white" style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}>
             Mi Progreso
           </h1>
           <div className="flex items-center gap-3">
-            <label htmlFor="recent-count" className="text-sm text-gray-600 dark:text-gray-400">
+            <label htmlFor="recent-count" className="text-[13px] text-black/60 dark:text-white/70">
               Mostrar últimas:
             </label>
             <select
               id="recent-count"
               value={recentQuestionsCount}
               onChange={(e) => setRecentQuestionsCount(Number(e.target.value))}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+              className="h-11 px-3 rounded-xl text-[15px] bg-white dark:bg-[#121212] text-black dark:text-white border border-black/[0.12] dark:border-white/[0.16] focus:outline-none focus:ring-3 focus:ring-[#0A84FF]/50 focus:border-[#0A84FF] transition-all duration-[180ms]"
             >
               <option value={5}>5 preguntas</option>
               <option value={10}>10 preguntas</option>
@@ -130,67 +135,69 @@ function ProgressPageContent() {
           </div>
         </div>
 
-        {/* Level Progress Cards */}
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+        {/* Level Progress Cards with liquidGlass material */}
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
+          {/* M1 Progress Card */}
+          <div className="backdrop-blur-[12px] bg-white/60 dark:bg-[#1C1C1C]/60 rounded-2xl p-6 border border-black/[0.12] dark:border-white/[0.16] shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:shadow-[0_14px_36px_rgba(0,0,0,0.22)] transition-all duration-[240ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]">
+            <h3 className="text-[19px] font-semibold text-black dark:text-white mb-4" style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}>
               Competencia Matemática M1
             </h3>
             <div className="mb-4">
-              <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
+              <div className="flex justify-between text-[13px] text-black/60 dark:text-white/70 mb-2">
                 <span>Últimas {recentQuestionsCount} preguntas</span>
-                <span>{m1RecentStats.total > 0 ? calculatePercentage(m1RecentStats) : 0}%</span>
+                <span className="font-semibold">{m1RecentStats.total > 0 ? calculatePercentage(m1RecentStats) : 0}%</span>
               </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
+              <div className="w-full bg-black/[0.04] dark:bg-white/[0.06] rounded-full h-2 overflow-hidden">
                 <div
-                  className="bg-indigo-600 h-4 rounded-full transition-all duration-300"
+                  className="bg-[#0A84FF] h-2 rounded-full transition-all duration-[300ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
                   style={{ width: `${m1RecentStats.total > 0 ? calculatePercentage(m1RecentStats) : 0}%` }}
                 />
               </div>
             </div>
-            <div className="space-y-2 text-gray-700 dark:text-gray-300">
-              <p className="text-3xl font-bold text-center">
+            <div className="space-y-2 text-black dark:text-white">
+              <p className="text-[34px] font-semibold text-center tracking-tight" style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}>
                 {m1RecentStats.correct}/{m1RecentStats.total}
               </p>
-              <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-center text-[13px] text-black/60 dark:text-white/70">
                 Respuestas correctas en las últimas {m1RecentStats.total} preguntas
               </p>
             </div>
             <Link
               href="/practice/m1"
-              className="mt-4 inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              className="mt-4 inline-flex items-center justify-center w-full h-11 rounded-xl text-[15px] font-semibold bg-[#0A84FF] text-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] active:scale-[0.98] transition-all duration-[180ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
             >
               Continuar Práctica
             </Link>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          {/* M2 Progress Card */}
+          <div className="backdrop-blur-[12px] bg-white/60 dark:bg-[#1C1C1C]/60 rounded-2xl p-6 border border-black/[0.12] dark:border-white/[0.16] shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:shadow-[0_14px_36px_rgba(0,0,0,0.22)] transition-all duration-[240ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]">
+            <h3 className="text-[19px] font-semibold text-black dark:text-white mb-4" style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}>
               Competencia Matemática M2
             </h3>
             <div className="mb-4">
-              <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
+              <div className="flex justify-between text-[13px] text-black/60 dark:text-white/70 mb-2">
                 <span>Últimas {recentQuestionsCount} preguntas</span>
-                <span>{m2RecentStats.total > 0 ? calculatePercentage(m2RecentStats) : 0}%</span>
+                <span className="font-semibold">{m2RecentStats.total > 0 ? calculatePercentage(m2RecentStats) : 0}%</span>
               </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
+              <div className="w-full bg-black/[0.04] dark:bg-white/[0.06] rounded-full h-2 overflow-hidden">
                 <div
-                  className="bg-indigo-600 h-4 rounded-full transition-all duration-300"
+                  className="bg-[#0A84FF] h-2 rounded-full transition-all duration-[300ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
                   style={{ width: `${m2RecentStats.total > 0 ? calculatePercentage(m2RecentStats) : 0}%` }}
                 />
               </div>
             </div>
-            <div className="space-y-2 text-gray-700 dark:text-gray-300">
-              <p className="text-3xl font-bold text-center">
+            <div className="space-y-2 text-black dark:text-white">
+              <p className="text-[34px] font-semibold text-center tracking-tight" style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}>
                 {m2RecentStats.correct}/{m2RecentStats.total}
               </p>
-              <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-center text-[13px] text-black/60 dark:text-white/70">
                 Respuestas correctas en las últimas {m2RecentStats.total} preguntas
               </p>
             </div>
             <Link
               href="/practice/m2"
-              className="mt-4 inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              className="mt-4 inline-flex items-center justify-center w-full h-11 rounded-xl text-[15px] font-semibold bg-[#0A84FF] text-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] active:scale-[0.98] transition-all duration-[180ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
             >
               Continuar Práctica
             </Link>
@@ -199,12 +206,12 @@ function ProgressPageContent() {
 
         {/* Recent Questions History */}
         {allHistory.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+          <div className="backdrop-blur-[12px] bg-white/60 dark:bg-[#1C1C1C]/60 rounded-2xl p-8 border border-black/[0.12] dark:border-white/[0.16] shadow-[0_8px_24px_rgba(0,0,0,0.18)]">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+              <h2 className="text-[28px] font-semibold text-black dark:text-white tracking-tight" style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}>
                 Historial de Preguntas Recientes
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-[13px] text-black/60 dark:text-white/70">
                 Total: {allHistory.length} preguntas
               </p>
             </div>
@@ -212,42 +219,42 @@ function ProgressPageContent() {
               {paginatedHistory.map((attempt, index) => (
                 <div
                   key={`${attempt.questionId}-${attempt.timestamp}`}
-                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                  className={`p-4 rounded-xl border cursor-pointer transition-all duration-[180ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] active:scale-[0.99] ${
                     attempt.isCorrect
-                      ? 'border-green-300 bg-green-50 dark:bg-green-900/20 hover:border-green-400'
-                      : 'border-red-300 bg-red-50 dark:bg-red-900/20 hover:border-red-400'
+                      ? 'border-[#34C759]/30 bg-[#34C759]/5 dark:border-[#30D158]/30 dark:bg-[#30D158]/10 hover:border-[#34C759]/50 dark:hover:border-[#30D158]/50'
+                      : 'border-[#FF453A]/30 bg-[#FF453A]/5 dark:border-[#FF453A]/30 dark:bg-[#FF453A]/10 hover:border-[#FF453A]/50 dark:hover:border-[#FF453A]/50'
                   }`}
                   onClick={() => setSelectedAttempt(attempt)}
                 >
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <span className={`inline-flex items-center h-6 px-2 rounded-full text-[12px] font-medium ${
                           attempt.level === 'M1'
-                            ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-                            : 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+                            ? 'bg-[#0A84FF]/10 text-[#0A84FF] dark:bg-[#0A84FF]/20 dark:text-[#66B2FF]'
+                            : 'bg-[#5E5CE6]/10 text-[#5E5CE6] dark:bg-[#9A99FF]/20 dark:text-[#B2B1FF]'
                         }`}>
                           {attempt.level}
                         </span>
-                        <span className={`px-2 py-1 rounded text-xs font-semibold ${getDifficultyColor(attempt.difficulty)}`}>
+                        <span className={`inline-flex items-center h-6 px-2 rounded-full text-[12px] font-medium ${getDifficultyColor(attempt.difficulty)}`}>
                           {getDifficultyLabel(attempt.difficulty)}
                         </span>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                        <span className="text-[13px] text-black/60 dark:text-white/70">
                           {attempt.topic}
                         </span>
                       </div>
-                      <p className="text-gray-900 dark:text-white font-medium mb-1">
+                      <p className="text-[15px] text-black dark:text-white font-medium mb-1">
                         {attempt.question}
                       </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-[13px] text-black/60 dark:text-white/70">
                         {formatDate(attempt.timestamp)}
                       </p>
                     </div>
                     <div className="ml-4">
                       {attempt.isCorrect ? (
-                        <span className="text-2xl text-green-600">✓</span>
+                        <span className="text-2xl text-[#34C759] dark:text-[#30D158]">✓</span>
                       ) : (
-                        <span className="text-2xl text-red-600">✗</span>
+                        <span className="text-2xl text-[#FF453A]">✗</span>
                       )}
                     </div>
                   </div>
@@ -261,7 +268,7 @@ function ProgressPageContent() {
                 <button
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
-                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="h-11 px-4 rounded-xl text-[15px] font-medium bg-black/[0.04] dark:bg-white/[0.06] text-black dark:text-white hover:bg-black/[0.08] dark:hover:bg-white/[0.12] disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all duration-[180ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
                 >
                   ← Anterior
                 </button>
@@ -278,10 +285,10 @@ function ProgressPageContent() {
                         <button
                           key={page}
                           onClick={() => setCurrentPage(page)}
-                          className={`px-3 py-2 rounded-lg transition-colors ${
+                          className={`h-11 w-11 rounded-xl text-[15px] font-medium active:scale-[0.98] transition-all duration-[180ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
                             currentPage === page
-                              ? 'bg-indigo-600 text-white'
-                              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                              ? 'bg-[#0A84FF] text-white shadow-[0_4px_12px_rgba(10,132,255,0.3)]'
+                              : 'bg-black/[0.04] dark:bg-white/[0.06] text-black dark:text-white hover:bg-black/[0.08] dark:hover:bg-white/[0.12]'
                           }`}
                         >
                           {page}
@@ -291,7 +298,7 @@ function ProgressPageContent() {
                       page === currentPage - 2 ||
                       page === currentPage + 2
                     ) {
-                      return <span key={page} className="px-2 text-gray-500">...</span>;
+                      return <span key={page} className="px-2 text-black/60 dark:text-white/70">...</span>;
                     }
                     return null;
                   })}
@@ -300,7 +307,7 @@ function ProgressPageContent() {
                 <button
                   onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="h-11 px-4 rounded-xl text-[15px] font-medium bg-black/[0.04] dark:bg-white/[0.06] text-black dark:text-white hover:bg-black/[0.08] dark:hover:bg-white/[0.12] disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all duration-[180ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
                 >
                   Siguiente →
                 </button>
@@ -310,53 +317,53 @@ function ProgressPageContent() {
         )}
 
         {allHistory.length === 0 && (
-          <div className="mt-8 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-4">
-            <p className="text-yellow-800 dark:text-yellow-200">
+          <div className="mt-8 backdrop-blur-[12px] bg-[#FF9F0A]/5 dark:bg-[#FF9F0A]/10 border-l-4 border-[#FF9F0A] rounded-r-xl p-4">
+            <p className="text-[15px] text-[#FF9F0A] dark:text-[#FFB84D]">
               Aún no has comenzado a practicar. ¡Empieza ahora con M1 o M2!
             </p>
           </div>
         )}
 
-        {/* Review Modal */}
+        {/* Review Modal with Liquid Glass */}
         {selectedAttempt && (
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
             onClick={() => setSelectedAttempt(null)}
           >
             <div
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-8"
+              className="backdrop-blur-[20px] bg-white/90 dark:bg-[#1C1C1C]/90 rounded-3xl shadow-[0_20px_48px_rgba(0,0,0,0.26)] max-w-3xl w-full max-h-[90vh] overflow-y-auto p-8 border border-black/[0.12] dark:border-white/[0.16]"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex justify-between items-start mb-6">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <h3 className="text-[28px] font-semibold text-black dark:text-white tracking-tight" style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}>
                   Revisar Pregunta
                 </h3>
                 <button
                   onClick={() => setSelectedAttempt(null)}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl"
+                  className="text-black/60 hover:text-black dark:text-white/70 dark:hover:text-white text-3xl leading-none w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-all duration-[180ms]"
                 >
                   ×
                 </button>
               </div>
 
-              <div className="mb-4 flex gap-2">
-                <span className={`px-3 py-1 rounded text-sm font-semibold ${
+              <div className="mb-4 flex gap-2 flex-wrap">
+                <span className={`inline-flex items-center h-7 px-3 rounded-full text-[13px] font-medium ${
                   selectedAttempt.level === 'M1'
-                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-                    : 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+                    ? 'bg-[#0A84FF]/10 text-[#0A84FF] dark:bg-[#0A84FF]/20 dark:text-[#66B2FF]'
+                    : 'bg-[#5E5CE6]/10 text-[#5E5CE6] dark:bg-[#9A99FF]/20 dark:text-[#B2B1FF]'
                 }`}>
                   {selectedAttempt.level}
                 </span>
-                <span className={`px-3 py-1 rounded text-sm font-semibold ${getDifficultyColor(selectedAttempt.difficulty)}`}>
+                <span className={`inline-flex items-center h-7 px-3 rounded-full text-[13px] font-medium ${getDifficultyColor(selectedAttempt.difficulty)}`}>
                   {getDifficultyLabel(selectedAttempt.difficulty)}
                 </span>
-                <span className="px-3 py-1 rounded text-sm font-semibold bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                <span className="inline-flex items-center h-7 px-3 rounded-full text-[13px] font-medium bg-black/[0.04] text-black dark:bg-white/[0.06] dark:text-white">
                   {selectedAttempt.topic}
                 </span>
               </div>
 
               <div className="mb-6">
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                <h4 className="text-[17px] font-semibold text-black dark:text-white mb-4">
                   {selectedAttempt.question}
                 </h4>
                 <div className="space-y-3">
@@ -364,56 +371,56 @@ function ProgressPageContent() {
                     const isUserAnswer = index === selectedAttempt.userAnswer;
                     const isCorrectAnswer = index === selectedAttempt.correctAnswer;
 
-                    let className = 'p-4 rounded-lg border-2 ';
+                    let className = 'p-4 rounded-xl border-2 transition-all duration-[180ms] ';
                     if (isCorrectAnswer) {
-                      className += 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-900 dark:text-green-100';
+                      className += 'border-[#34C759] bg-[#34C759]/10 dark:border-[#30D158] dark:bg-[#30D158]/20 text-[#34C759] dark:text-[#5DE38D]';
                     } else if (isUserAnswer && !isCorrectAnswer) {
-                      className += 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-100';
+                      className += 'border-[#FF453A] bg-[#FF453A]/10 dark:border-[#FF453A] dark:bg-[#FF453A]/20 text-[#FF453A] dark:text-[#FF7A72]';
                     } else {
-                      className += 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300';
+                      className += 'border-black/[0.12] dark:border-white/[0.16] bg-black/[0.02] dark:bg-white/[0.04] text-black/60 dark:text-white/70';
                     }
 
                     return (
                       <div key={index} className={className}>
-                        <span className="font-semibold mr-2">
+                        <span className="font-semibold mr-2 text-[15px]">
                           {String.fromCharCode(65 + index)}.
                         </span>
-                        {option}
-                        {isCorrectAnswer && <span className="float-right">✓ Correcta</span>}
-                        {isUserAnswer && !isCorrectAnswer && <span className="float-right">✗ Tu respuesta</span>}
+                        <span className="text-[15px]">{option}</span>
+                        {isCorrectAnswer && <span className="float-right text-[13px]">✓ Correcta</span>}
+                        {isUserAnswer && !isCorrectAnswer && <span className="float-right text-[13px]">✗ Tu respuesta</span>}
                       </div>
                     );
                   })}
                 </div>
               </div>
 
-              <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 mb-6">
-                <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
+              <div className="bg-[#0A84FF]/5 dark:bg-[#0A84FF]/10 border-l-4 border-[#0A84FF] rounded-r-xl p-4 mb-6">
+                <h4 className="font-semibold text-[15px] text-[#0A84FF] dark:text-[#66B2FF] mb-2">
                   Explicación:
                 </h4>
-                <p className="text-blue-800 dark:text-blue-200">
+                <p className="text-[15px] text-black/80 dark:text-white/80 leading-[1.4]">
                   {selectedAttempt.explanation}
                 </p>
               </div>
 
-              <div className={`p-4 rounded-lg ${
+              <div className={`p-4 rounded-xl ${
                 selectedAttempt.isCorrect
-                  ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200'
-                  : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200'
+                  ? 'bg-[#34C759]/10 dark:bg-[#30D158]/20 text-[#34C759] dark:text-[#5DE38D]'
+                  : 'bg-[#FF453A]/10 dark:bg-[#FF453A]/20 text-[#FF453A] dark:text-[#FF7A72]'
               }`}>
-                <p className="font-semibold text-center">
+                <p className="font-semibold text-center text-[17px]">
                   {selectedAttempt.isCorrect
                     ? '¡Respuesta Correcta! 🎉'
                     : 'Respuesta Incorrecta'}
                 </p>
-                <p className="text-sm text-center mt-1">
+                <p className="text-[13px] text-center mt-1 opacity-80">
                   Respondida el {formatDate(selectedAttempt.timestamp)}
                 </p>
               </div>
 
               <button
                 onClick={() => setSelectedAttempt(null)}
-                className="mt-6 w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-semibold"
+                className="mt-6 w-full h-11 rounded-xl text-[15px] font-semibold bg-[#0A84FF] text-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] active:scale-[0.98] transition-all duration-[180ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
               >
                 Cerrar
               </button>
