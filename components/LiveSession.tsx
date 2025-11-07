@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import type { LiveSession } from '@/lib/types';
 import { getSession, submitAnswer, leaveSession, updateSessionStatuses } from '@/lib/liveSessions';
 import { getCurrentUser } from '@/lib/auth';
-import { MathText } from './MathDisplay';
+import { QuestionRenderer } from './QuestionRenderer';
 
 interface LiveSessionProps {
   sessionId: string;
@@ -300,55 +300,16 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
                 {currentQuestion.topic}
               </h3>
-              <div className="text-gray-800 dark:text-gray-200">
-                {currentQuestion.questionLatex ? (
-                  <MathText content={currentQuestion.questionLatex} />
-                ) : (
-                  currentQuestion.question
-                )}
-              </div>
             </div>
 
-            {/* Options */}
-            <div className="space-y-3">
-              {currentQuestion.options.map((option, index) => {
-                const optionsLatex = currentQuestion.optionsLatex;
-                const displayOption = optionsLatex && optionsLatex[index] ? optionsLatex[index] : option;
-
-                return (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
-                      selectedAnswer === index
-                        ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30'
-                        : 'border-gray-300 dark:border-gray-600 hover:border-indigo-300 dark:hover:border-indigo-700'
-                    }`}
-                  >
-                    <div className="flex items-center">
-                      <div
-                        className={`w-6 h-6 rounded-full border-2 mr-3 flex items-center justify-center ${
-                          selectedAnswer === index
-                            ? 'border-indigo-500 bg-indigo-500'
-                            : 'border-gray-400'
-                        }`}
-                      >
-                        {selectedAnswer === index && (
-                          <div className="w-3 h-3 bg-white rounded-full" />
-                        )}
-                      </div>
-                      <div className="text-gray-900 dark:text-white">
-                        {optionsLatex && optionsLatex[index] ? (
-                          <MathText content={displayOption} />
-                        ) : (
-                          option
-                        )}
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+            {/* Use centralized QuestionRenderer */}
+            <QuestionRenderer
+              question={currentQuestion}
+              mode="with-options"
+              selectedAnswer={selectedAnswer}
+              onAnswerSelect={handleAnswerSelect}
+              disabled={false}
+            />
           </div>
 
           {/* Navigation */}

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { QuestionAttempt } from '@/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Button, Card, Badge, Heading, Text, Modal, Navbar, NavbarLink } from '@/components/ui';
+import { MathText } from '@/components/MathDisplay';
 
 interface Progress {
   correct: number;
@@ -233,9 +234,9 @@ function ProgressPageContent() {
                           {attempt.topic}
                         </Text>
                       </div>
-                      <Text size="sm" className="font-medium mb-1">
-                        {attempt.question}
-                      </Text>
+                      <div className="text-sm font-medium mb-1">
+                        <MathText content={attempt.question} />
+                      </div>
                       <Text size="xs" variant="secondary">
                         {formatDate(attempt.timestamp)}
                       </Text>
@@ -333,9 +334,9 @@ function ProgressPageContent() {
               </div>
 
               <div className="mb-6">
-                <Heading level={4} size="xs" className="text-[17px] mb-4">
-                  {selectedAttempt.question}
-                </Heading>
+                <div className="text-[17px] mb-4">
+                  <MathText content={selectedAttempt.question} />
+                </div>
                 <div className="space-y-3">
                   {selectedAttempt.options.map((option, index) => {
                     const isUserAnswer = index === selectedAttempt.userAnswer;
@@ -352,10 +353,10 @@ function ProgressPageContent() {
 
                     return (
                       <div key={index} className={className}>
-                        <Text size="sm" className="inline font-semibold mr-2">
+                        <span className="text-sm inline font-semibold mr-2">
                           {String.fromCharCode(65 + index)}.
-                        </Text>
-                        <Text size="sm" className="inline">{option}</Text>
+                        </span>
+                        <span className="text-sm inline"><MathText content={option} /></span>
                         {isCorrectAnswer && <Text size="xs" className="float-right">✓ Correcta</Text>}
                         {isUserAnswer && !isCorrectAnswer && <Text size="xs" className="float-right">✗ Tu respuesta</Text>}
                       </div>
@@ -368,9 +369,9 @@ function ProgressPageContent() {
                 <Text size="sm" className="font-semibold text-[#0A84FF] dark:text-[#66B2FF] mb-2">
                   Explicación:
                 </Text>
-                <Text size="sm" className="text-black/80 dark:text-white/80">
-                  {selectedAttempt.explanation}
-                </Text>
+                <div className="text-sm text-black/80 dark:text-white/80">
+                  <MathText content={selectedAttempt.explanation} />
+                </div>
               </div>
 
               <div className={`p-4 rounded-xl ${
