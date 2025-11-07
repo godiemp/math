@@ -6,6 +6,7 @@ import { questions } from '@/lib/questions'
 import { Question } from '@/lib/types'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { M1_SKILLS, getSkillNames } from '@/lib/skillTaxonomy'
+import { Card, Button, Heading, Text, Badge } from '@/components/ui'
 
 function ProblemsExplorerContent() {
   const router = useRouter()
@@ -95,45 +96,42 @@ function ProblemsExplorerContent() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+              <Heading level={1} size="lg" className="mb-2">
                 Explorador de Problemas
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400">
+              </Heading>
+              <Text variant="secondary">
                 Explora y gestiona todos los problemas de práctica
-              </p>
+              </Text>
             </div>
-            <button
-              onClick={() => router.push('/admin')}
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition"
-            >
+            <Button variant="link" onClick={() => router.push('/admin')}>
               ← Volver al Admin
-            </button>
+            </Button>
           </div>
 
           {/* Statistics Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{stats.total}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Total Problemas</div>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.byLevel.M1}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Nivel M1</div>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{stats.byLevel.M2}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Nivel M2</div>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-              <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{filteredQuestions.length}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Filtrados</div>
-            </div>
+            <Card padding="md">
+              <Heading level={2} size="sm" className="mb-1">{stats.total}</Heading>
+              <Text size="xs" variant="secondary">Total Problemas</Text>
+            </Card>
+            <Card padding="md">
+              <Heading level={2} size="sm" className="text-[#0A84FF] mb-1">{stats.byLevel.M1}</Heading>
+              <Text size="xs" variant="secondary">Nivel M1</Text>
+            </Card>
+            <Card padding="md">
+              <Heading level={2} size="sm" className="text-[#5E5CE6] dark:text-[#9A99FF] mb-1">{stats.byLevel.M2}</Heading>
+              <Text size="xs" variant="secondary">Nivel M2</Text>
+            </Card>
+            <Card padding="md">
+              <Heading level={2} size="sm" className="text-[#0A84FF] mb-1">{filteredQuestions.length}</Heading>
+              <Text size="xs" variant="secondary">Filtrados</Text>
+            </Card>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Filtros</h2>
+        <Card padding="lg" className="mb-6">
+          <Heading level={2} size="xs" className="mb-4">Filtros</Heading>
 
           {/* Search */}
           <div className="mb-4">
@@ -284,10 +282,10 @@ function ProblemsExplorerContent() {
               Limpiar filtros
             </button>
           )}
-        </div>
+        </Card>
 
         {/* Questions List */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+        <Card padding="lg" className="overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-700">
@@ -375,7 +373,7 @@ function ProblemsExplorerContent() {
               </tbody>
             </table>
           </div>
-        </div>
+        </Card>
 
         {/* Question Detail Modal */}
         {selectedQuestion && (
@@ -503,12 +501,9 @@ function ProblemsExplorerContent() {
 
                 {/* Modal Footer */}
                 <div className="mt-6 flex justify-end">
-                  <button
-                    onClick={() => setSelectedQuestion(null)}
-                    className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600"
-                  >
+                  <Button variant="ghost" onClick={() => setSelectedQuestion(null)}>
                     Cerrar
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
