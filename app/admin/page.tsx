@@ -68,6 +68,38 @@ export default function AdminBackoffice() {
     setEditingSession(null);
   };
 
+  const applyM1Template = () => {
+    const today = new Date();
+    const dateStr = today.toISOString().split('T')[0];
+
+    setFormData({
+      name: 'Práctica M1 - Matemática Básica',
+      description: 'Sesión de práctica para nivel M1: números, álgebra básica, geometría y probabilidades.',
+      level: 'M1',
+      scheduledDate: dateStr,
+      scheduledTime: '15:00',
+      durationMinutes: 60,
+      questionCount: 10,
+      maxParticipants: 20,
+    });
+  };
+
+  const applyM2Template = () => {
+    const today = new Date();
+    const dateStr = today.toISOString().split('T')[0];
+
+    setFormData({
+      name: 'Práctica M2 - Matemática Avanzada',
+      description: 'Sesión de práctica para nivel M2: cálculo, límites, derivadas e integrales.',
+      level: 'M2',
+      scheduledDate: dateStr,
+      scheduledTime: '16:30',
+      durationMinutes: 90,
+      questionCount: 15,
+      maxParticipants: 15,
+    });
+  };
+
   const handleEdit = (session: LiveSession) => {
     setEditingSession(session);
 
@@ -373,6 +405,40 @@ export default function AdminBackoffice() {
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               {editingSession ? 'Editar Sesión' : 'Programar Nueva Sesión'}
             </h2>
+
+            {!editingSession && (
+              <div className="mb-6">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                  Plantillas rápidas:
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={applyM1Template}
+                    className="flex-1 px-4 py-3 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-300 dark:border-blue-700 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                  >
+                    <div className="font-semibold text-blue-800 dark:text-blue-400 mb-1">
+                      📐 M1 - Básico
+                    </div>
+                    <div className="text-xs text-blue-600 dark:text-blue-500">
+                      60 min • 10 preguntas • 20 participantes
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={applyM2Template}
+                    className="flex-1 px-4 py-3 bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-300 dark:border-purple-700 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+                  >
+                    <div className="font-semibold text-purple-800 dark:text-purple-400 mb-1">
+                      🎓 M2 - Avanzado
+                    </div>
+                    <div className="text-xs text-purple-600 dark:text-purple-500">
+                      90 min • 15 preguntas • 15 participantes
+                    </div>
+                  </button>
+                </div>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
