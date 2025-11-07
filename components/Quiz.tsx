@@ -34,6 +34,18 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
   const [timeRemaining, setTimeRemaining] = useState(getTimeLimit());
   const [totalTimeElapsed, setTotalTimeElapsed] = useState(0);
+  const [showTimer, setShowTimer] = useState(() => {
+    // Load timer visibility preference from localStorage
+    const saved = localStorage.getItem('quiz-show-timer');
+    return saved !== null ? saved === 'true' : true; // Default to showing timer
+  });
+
+  // Toggle timer visibility and save preference
+  const toggleTimer = () => {
+    const newValue = !showTimer;
+    setShowTimer(newValue);
+    localStorage.setItem('quiz-show-timer', String(newValue));
+  };
 
   useEffect(() => {
     // Load progress from localStorage
@@ -290,42 +302,34 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
   return (
     <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-      {/* Timer Display - Only show in rapidfire mode and when quiz is not submitted */}
+      {/* Simplified Timer Display - Only show in rapidfire mode and when quiz is not submitted */}
       {quizMode === 'rapidfire' && !quizSubmitted && (
-        <div className="mb-4 p-4 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-lg border-2 border-indigo-200 dark:border-indigo-700">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">⚡</span>
-              <div>
-                <div className="text-xs text-gray-600 dark:text-gray-400 font-semibold">TIEMPO RESTANTE TOTAL</div>
-                <div className={`text-3xl font-bold ${getTimerColor()}`}>
+        <div className="mb-4">
+          {showTimer ? (
+            <div className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700/30 rounded border border-gray-200 dark:border-gray-700">
+              <div className="flex items-center gap-2">
+                <span className="text-sm">⏱️</span>
+                <span className={`text-sm font-medium ${getTimerColor()}`}>
                   {formatTime(timeRemaining)}
-                </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  {Math.floor(timeRemaining / 60)} min restantes
-                </div>
+                </span>
               </div>
+              <button
+                onClick={toggleTimer}
+                className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                title="Ocultar timer"
+              >
+                ✕
+              </button>
             </div>
-            <div className="text-right">
-              <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Tiempo usado</div>
-              <div className="text-xl font-semibold text-gray-700 dark:text-gray-300">
-                {formatTime(totalTimeElapsed)}
-              </div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                ~{formatTime(getAverageTimePerQuestion())}/pregunta
-              </div>
-            </div>
-          </div>
-          {/* Progress bar */}
-          <div className="mt-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-            <div
-              className={`h-2 rounded-full transition-all duration-1000 ${
-                (timeRemaining / getTimeLimit()) > 0.5 ? 'bg-green-500' :
-                (timeRemaining / getTimeLimit()) > 0.25 ? 'bg-yellow-500' : 'bg-red-500'
-              }`}
-              style={{ width: `${(timeRemaining / getTimeLimit()) * 100}%` }}
-            />
-          </div>
+          ) : (
+            <button
+              onClick={toggleTimer}
+              className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 underline"
+              title="Mostrar timer"
+            >
+              Mostrar tiempo
+            </button>
+          )}
         </div>
       )}
 
