@@ -471,6 +471,7 @@ export const questions: Question[] = [
     explanation: 'Usando el teorema de Pitágoras:',
     explanationLatex: 'c^2 = a^2 + b^2 \\quad \\Rightarrow \\quad 13^2 = 5^2 + b^2 \\quad \\Rightarrow \\quad 169 = 25 + b^2 \\quad \\Rightarrow \\quad b^2 = 144 \\quad \\Rightarrow \\quad b = 12 \\text{ cm}',
     difficulty: 'medium',
+    skills: ['geometria-pitagoras', 'geometria-triangulos', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     visualData: {
       type: 'geometry',
       data: [
@@ -503,6 +504,7 @@ export const questions: Question[] = [
     explanation: 'El diámetro del círculo inscrito es igual al lado del cuadrado, entonces el radio es 5 cm:',
     explanationLatex: 'r = \\frac{10}{2} = 5 \\text{ cm} \\quad \\Rightarrow \\quad A = \\pi r^2 = 3.14 \\times 5^2 = 3.14 \\times 25 = 78.5 \\text{ cm}^2',
     difficulty: 'medium',
+    skills: ['geometria-area-circulo', 'geometria-circulos', 'geometria-cuadrados', 'numeros-potencias', 'numeros-decimales', 'numeros-operaciones-basicas'],
     visualData: {
       type: 'geometry',
       data: [
@@ -545,6 +547,7 @@ export const questions: Question[] = [
     explanation: 'Usando la ley de cosenos:',
     explanationLatex: 'c^2 = a^2 + b^2 - 2ab\\cos(C) = 10^2 + 10^2 - 2(10)(10)(0.5) = 100 + 100 - 100 = 100 \\quad \\Rightarrow \\quad c = 10 \\text{ cm}',
     difficulty: 'hard',
+    skills: ['geometria-ley-cosenos', 'geometria-triangulos', 'numeros-potencias', 'numeros-operaciones-basicas'],
     visualData: {
       type: 'geometry',
       data: [
@@ -879,7 +882,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Factorizando: 12 = 2² × 3, 18 = 2 × 3², 24 = 2³ × 3. MCM = 2³ × 3² = 8 × 9 = 72',
     explanationLatex: '12 = 2^2 \\times 3, \\quad 18 = 2 \\times 3^2, \\quad 24 = 2^3 \\times 3 \\quad \\Rightarrow \\quad \\text{MCM} = 2^3 \\times 3^2 = 8 \\times 9 = 72',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-2',
@@ -892,7 +896,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Sumando las ecuaciones: 3x = 9, entonces x = 3. Sustituyendo: 3 - y = 1, entonces y = 2',
     explanationLatex: '3x = 9 \\rightarrow x = 3. \\quad \\text{Sustituyendo: } 3 - y = 1 \\rightarrow y = 2',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['algebra-sistemas-ecuaciones', 'algebra-metodo-eliminacion', 'algebra-metodo-sustitucion', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-3',
@@ -905,7 +910,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Factorizando: (x - 2)(x - 3) = 0, por lo tanto x = 2 o x = 3',
     explanationLatex: '(x - 2)(x - 3) = 0 \\quad \\Rightarrow \\quad x = 2 \\text{ o } x = 3',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['algebra-ecuaciones-cuadraticas', 'algebra-factorizacion-cuadratica', 'algebra-factorizacion', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-4',
@@ -918,7 +924,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'd = √[(4-1)² + (6-2)²] = √[3² + 4²] = √[9 + 16] = √25 = 5',
     explanationLatex: 'd = \\sqrt{(4-1)^2 + (6-2)^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['geometria-plano-cartesiano', 'geometria-distancia', 'geometria-pitagoras', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-5',
@@ -931,7 +938,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'V = πr²h = 3.14 × 3² × 4 = 3.14 × 9 × 4 = 113.04 cm³',
     explanationLatex: 'V = \\pi r^2 h = 3.14 \\times 3^2 \\times 4 = 3.14 \\times 9 \\times 4 = 113.04 \\text{ cm}^3',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['geometria-volumen', 'geometria-volumen-cilindro', 'numeros-potencias', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-6',
@@ -944,7 +952,8 @@ export const questions: Question[] = [
     correctAnswer: 0,
     explanation: 'Discriminante = b² - 4ac = 4² - 4(1)(1) = 16 - 4 = 12. Como es > 0, hay dos soluciones reales.',
     explanationLatex: '\\Delta = b^2 - 4ac = 4^2 - 4(1)(1) = 16 - 4 = 12',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['algebra-ecuaciones-cuadraticas', 'algebra-discriminante', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-7',
@@ -957,7 +966,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Q1 = 4, Q3 = 10. IQR = Q3 - Q1 = 10 - 4 = 6',
     explanationLatex: 'Q_1 = 4, \\quad Q_3 = 10 \\quad \\Rightarrow \\quad \\text{IQR} = Q_3 - Q_1 = 10 - 4 = 6',
-    difficulty: 'hard'
+    difficulty: 'hard',
+    skills: ['estadistica-cuartiles', 'estadistica-rango-intercuartilico', 'estadistica-mediana', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-8',
@@ -970,7 +980,8 @@ export const questions: Question[] = [
     correctAnswer: 0,
     explanation: 'Combinaciones: C(5,3) = 5!/(3!×2!) = (5×4)/(2×1) = 10',
     explanationLatex: 'C(5,3) = \\frac{5!}{3! \\times 2!} = \\frac{5 \\times 4}{2 \\times 1} = 10',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['probabilidad-combinatoria', 'probabilidad-combinaciones', 'probabilidad-factorial', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-9',
@@ -984,7 +995,8 @@ export const questions: Question[] = [
     correctAnswer: 0,
     explanation: '6/√3 = (6/√3) × (√3/√3) = 6√3/3 = 2√3',
     explanationLatex: '\\frac{6}{\\sqrt{3}} = \\frac{6}{\\sqrt{3}} \\times \\frac{\\sqrt{3}}{\\sqrt{3}} = \\frac{6\\sqrt{3}}{3} = 2\\sqrt{3}',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['numeros-racionalizacion', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-10',
@@ -998,7 +1010,8 @@ export const questions: Question[] = [
     correctAnswer: 3,
     explanation: 'Rectas perpendiculares tienen pendientes que son recíprocas negativas: m₁ × m₂ = -1. Si m₁ = 2, entonces m₂ = -1/2',
     explanationLatex: 'm_1 \\times m_2 = -1 \\quad \\Rightarrow \\quad 2 \\times m_2 = -1 \\quad \\Rightarrow \\quad m_2 = -\\frac{1}{2}',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['geometria-rectas-perpendiculares', 'geometria-pendiente-perpendicular', 'algebra-funciones-lineales', 'algebra-pendiente', 'numeros-fracciones', 'numeros-operaciones-basicas']
   }
 ];
 

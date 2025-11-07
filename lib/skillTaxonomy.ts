@@ -11,7 +11,7 @@ export interface Skill {
   parentSkill?: string; // For hierarchical relationships
 }
 
-export const M1_SKILLS: Record<string, Skill> = {
+export const SKILLS: Record<string, Skill> = {
   // ============================================================================
   // NÚMEROS Y OPERACIONES
   // ============================================================================
@@ -379,24 +379,162 @@ export const M1_SKILLS: Record<string, Skill> = {
     description: 'Calcular porcentajes a partir de datos',
     topic: 'probabilidad'
   },
+
+  // ============================================================================
+  // M2 ADVANCED SKILLS - NÚMEROS
+  // ============================================================================
+  'numeros-racionalizacion': {
+    id: 'numeros-racionalizacion',
+    name: 'Racionalización',
+    description: 'Racionalizar denominadores con raíces',
+    topic: 'números'
+  },
+  'numeros-factorizacion-prima': {
+    id: 'numeros-factorizacion-prima',
+    name: 'Factorización prima',
+    description: 'Descomponer números en factores primos',
+    topic: 'números'
+  },
+
+  // ============================================================================
+  // M2 ADVANCED SKILLS - ÁLGEBRA
+  // ============================================================================
+  'algebra-sistemas-ecuaciones': {
+    id: 'algebra-sistemas-ecuaciones',
+    name: 'Sistemas de ecuaciones',
+    description: 'Resolver sistemas de ecuaciones lineales',
+    topic: 'álgebra'
+  },
+  'algebra-metodo-sustitucion': {
+    id: 'algebra-metodo-sustitucion',
+    name: 'Método de sustitución',
+    description: 'Resolver sistemas por sustitución',
+    topic: 'álgebra',
+    parentSkill: 'algebra-sistemas-ecuaciones'
+  },
+  'algebra-metodo-eliminacion': {
+    id: 'algebra-metodo-eliminacion',
+    name: 'Método de eliminación',
+    description: 'Resolver sistemas por eliminación/suma',
+    topic: 'álgebra',
+    parentSkill: 'algebra-sistemas-ecuaciones'
+  },
+  'algebra-ecuaciones-cuadraticas': {
+    id: 'algebra-ecuaciones-cuadraticas',
+    name: 'Ecuaciones cuadráticas',
+    description: 'Resolver ecuaciones de segundo grado',
+    topic: 'álgebra'
+  },
+  'algebra-factorizacion-cuadratica': {
+    id: 'algebra-factorizacion-cuadratica',
+    name: 'Factorización cuadrática',
+    description: 'Factorizar ecuaciones cuadráticas',
+    topic: 'álgebra',
+    parentSkill: 'algebra-ecuaciones-cuadraticas'
+  },
+  'algebra-discriminante': {
+    id: 'algebra-discriminante',
+    name: 'Discriminante',
+    description: 'Calcular y analizar el discriminante',
+    topic: 'álgebra',
+    parentSkill: 'algebra-ecuaciones-cuadraticas'
+  },
+  'algebra-formula-cuadratica': {
+    id: 'algebra-formula-cuadratica',
+    name: 'Fórmula cuadrática',
+    description: 'Aplicar la fórmula general cuadrática',
+    topic: 'álgebra',
+    parentSkill: 'algebra-ecuaciones-cuadraticas'
+  },
+
+  // ============================================================================
+  // M2 ADVANCED SKILLS - GEOMETRÍA
+  // ============================================================================
+  'geometria-volumen-cilindro': {
+    id: 'geometria-volumen-cilindro',
+    name: 'Volumen de cilindro',
+    description: 'Calcular el volumen de un cilindro',
+    topic: 'geometría',
+    parentSkill: 'geometria-volumen'
+  },
+  'geometria-rectas-perpendiculares': {
+    id: 'geometria-rectas-perpendiculares',
+    name: 'Rectas perpendiculares',
+    description: 'Identificar y trabajar con rectas perpendiculares',
+    topic: 'geometría'
+  },
+  'geometria-pendiente-perpendicular': {
+    id: 'geometria-pendiente-perpendicular',
+    name: 'Pendientes perpendiculares',
+    description: 'Calcular pendiente de recta perpendicular',
+    topic: 'geometría',
+    parentSkill: 'geometria-rectas-perpendiculares'
+  },
+  'geometria-ley-cosenos': {
+    id: 'geometria-ley-cosenos',
+    name: 'Ley de cosenos',
+    description: 'Aplicar la ley de cosenos en triángulos',
+    topic: 'geometría',
+    parentSkill: 'geometria-triangulos'
+  },
+
+  // ============================================================================
+  // M2 ADVANCED SKILLS - PROBABILIDAD Y ESTADÍSTICA
+  // ============================================================================
+  'estadistica-cuartiles': {
+    id: 'estadistica-cuartiles',
+    name: 'Cuartiles',
+    description: 'Calcular cuartiles Q1, Q2, Q3',
+    topic: 'probabilidad'
+  },
+  'estadistica-rango-intercuartilico': {
+    id: 'estadistica-rango-intercuartilico',
+    name: 'Rango intercuartílico (IQR)',
+    description: 'Calcular el rango intercuartílico',
+    topic: 'probabilidad',
+    parentSkill: 'estadistica-cuartiles'
+  },
+  'probabilidad-combinatoria': {
+    id: 'probabilidad-combinatoria',
+    name: 'Combinatoria',
+    description: 'Combinaciones y permutaciones',
+    topic: 'probabilidad'
+  },
+  'probabilidad-combinaciones': {
+    id: 'probabilidad-combinaciones',
+    name: 'Combinaciones',
+    description: 'Calcular combinaciones C(n,r)',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-combinatoria'
+  },
+  'probabilidad-factorial': {
+    id: 'probabilidad-factorial',
+    name: 'Factorial',
+    description: 'Calcular y aplicar factoriales',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-combinatoria'
+  },
 };
 
 // Helper function to get all skills for a topic
 export function getSkillsByTopic(topic: 'números' | 'álgebra' | 'geometría' | 'probabilidad'): Skill[] {
-  return Object.values(M1_SKILLS).filter(skill => skill.topic === topic);
+  return Object.values(SKILLS).filter(skill => skill.topic === topic);
 }
 
 // Helper function to get skill by ID
 export function getSkillById(skillId: string): Skill | undefined {
-  return M1_SKILLS[skillId];
+  return SKILLS[skillId];
 }
 
 // Helper function to get all skill IDs
 export function getAllSkillIds(): string[] {
-  return Object.keys(M1_SKILLS);
+  return Object.keys(SKILLS);
 }
 
 // Helper function to get skill names for display
 export function getSkillNames(skillIds: string[]): string[] {
-  return skillIds.map(id => M1_SKILLS[id]?.name || id).filter(Boolean);
+  return skillIds.map(id => SKILLS[id]?.name || id).filter(Boolean);
 }
+
+// Legacy export for backward compatibility
+export const M1_SKILLS = SKILLS;
