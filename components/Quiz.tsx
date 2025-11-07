@@ -156,6 +156,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     setUserAnswers(new Array(randomQuestions.length).fill(null));
     setCurrentQuestionIndex(0);
     setQuizSubmitted(false);
+    setTimeRemaining(getTimeLimit()); // Reset timer based on difficulty
+    setTotalTimeElapsed(0); // Reset elapsed time
   };
 
   if (quizQuestions.length === 0) {
