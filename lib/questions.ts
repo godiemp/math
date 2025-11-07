@@ -481,3 +481,21 @@ export function getQuestionsByLevel(level: 'M1' | 'M2'): Question[] {
 export function getQuestionsByTopic(topic: string): Question[] {
   return questions.filter(q => q.topic === topic);
 }
+
+export function getRandomQuestions(level: 'M1' | 'M2', count: number = 10): Question[] {
+  const levelQuestions = getQuestionsByLevel(level);
+
+  // If there are fewer questions than requested, return all of them
+  if (levelQuestions.length <= count) {
+    return [...levelQuestions].sort(() => Math.random() - 0.5);
+  }
+
+  // Fisher-Yates shuffle algorithm to get random questions
+  const shuffled = [...levelQuestions];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled.slice(0, count);
+}

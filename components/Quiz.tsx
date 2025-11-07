@@ -3,20 +3,19 @@
 import { useState, useEffect } from 'react';
 import { Question, QuestionAttempt } from '@/lib/types';
 import { MathText, BlockMath, InlineMath } from './MathDisplay';
+import { getRandomQuestions } from '@/lib/questions';
 
 interface QuizProps {
   questions: Question[];
   level: 'M1' | 'M2';
 }
 
-export default function Quiz({ questions, level }: QuizProps) {
+export default function Quiz({ questions: allQuestions, level }: QuizProps) {
+  const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [showExplanation, setShowExplanation] = useState(false);
+  const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
+  const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
-  const [quizComplete, setQuizComplete] = useState(false);
-
-  const currentQuestion = questions[currentQuestionIndex];
 
   useEffect(() => {
     // Load progress from localStorage
@@ -25,23 +24,68 @@ export default function Quiz({ questions, level }: QuizProps) {
       const progress = JSON.parse(savedProgress);
       setScore(progress);
     }
+
+    // Initialize quiz with 10 random questions
+    const randomQuestions = getRandomQuestions(level, 10);
+    setQuizQuestions(randomQuestions);
+    setUserAnswers(new Array(randomQuestions.length).fill(null));
   }, [level]);
 
+  const currentQuestion = quizQuestions[currentQuestionIndex];
+
   const handleAnswerSelect = (answerIndex: number) => {
-    if (!showExplanation) {
-      setSelectedAnswer(answerIndex);
+    if (!quizSubmitted) {
+      const newAnswers = [...userAnswers];
+      newAnswers[currentQuestionIndex] = answerIndex;
+      setUserAnswers(newAnswers);
     }
   };
 
-  const handleSubmit = () => {
-    if (selectedAnswer === null) return;
+  const handlePrevious = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
 
-    setShowExplanation(true);
-    const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
+  const handleNext = () => {
+    if (currentQuestionIndex < quizQuestions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+  const handleSubmitQuiz = () => {
+    let correctCount = 0;
+    const attempts: QuestionAttempt[] = [];
+
+    quizQuestions.forEach((question, index) => {
+      const userAnswer = userAnswers[index];
+      const isCorrect = userAnswer === question.correctAnswer;
+
+      if (isCorrect) {
+        correctCount++;
+      }
+
+      if (userAnswer !== null) {
+        const attempt: QuestionAttempt = {
+          questionId: question.id,
+          question: question.question,
+          topic: question.topic,
+          level: level,
+          userAnswer: userAnswer,
+          correctAnswer: question.correctAnswer,
+          isCorrect: isCorrect,
+          timestamp: Date.now(),
+          options: question.options,
+          explanation: question.explanation,
+          difficulty: question.difficulty,
+        };
+        attempts.push(attempt);
+      }
+    });
 
     const newScore = {
-      correct: score.correct + (isCorrect ? 1 : 0),
-      total: score.total + 1
+      correct: score.correct + correctCount,
+      total: score.total + quizQuestions.length
     };
     setScore(newScore);
 
@@ -49,70 +93,119 @@ export default function Quiz({ questions, level }: QuizProps) {
     localStorage.setItem(`paes-progress-${level}`, JSON.stringify(newScore));
 
     // Save detailed question attempt history
-    const attempt: QuestionAttempt = {
-      questionId: currentQuestion.id,
-      question: currentQuestion.question,
-      topic: currentQuestion.topic,
-      level: level,
-      userAnswer: selectedAnswer,
-      correctAnswer: currentQuestion.correctAnswer,
-      isCorrect: isCorrect,
-      timestamp: Date.now(),
-      options: currentQuestion.options,
-      explanation: currentQuestion.explanation,
-      difficulty: currentQuestion.difficulty,
-    };
-
-    // Get existing history
     const historyKey = `paes-history-${level}`;
     const existingHistory = localStorage.getItem(historyKey);
     const history: QuestionAttempt[] = existingHistory ? JSON.parse(existingHistory) : [];
 
-    // Add new attempt to the beginning of the array
-    history.unshift(attempt);
+    // Add new attempts to the beginning of the array
+    attempts.reverse().forEach(attempt => {
+      history.unshift(attempt);
+    });
 
     // Save updated history
     localStorage.setItem(historyKey, JSON.stringify(history));
-  };
 
-  const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer(null);
-      setShowExplanation(false);
-    } else {
-      setQuizComplete(true);
-    }
+    setQuizSubmitted(true);
+    setCurrentQuestionIndex(0); // Go back to first question to review
   };
 
   const handleRestart = () => {
+    const randomQuestions = getRandomQuestions(level, 10);
+    setQuizQuestions(randomQuestions);
+    setUserAnswers(new Array(randomQuestions.length).fill(null));
     setCurrentQuestionIndex(0);
-    setSelectedAnswer(null);
-    setShowExplanation(false);
-    setQuizComplete(false);
+    setQuizSubmitted(false);
   };
 
-  if (quizComplete) {
-    const percentage = Math.round((score.correct / score.total) * 100);
+  if (quizQuestions.length === 0) {
+    return (
+      <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+        <p className="text-center text-gray-600 dark:text-gray-400">Cargando preguntas...</p>
+      </div>
+    );
+  }
+
+  // Completion screen after submission
+  if (quizSubmitted && currentQuestionIndex === quizQuestions.length) {
+    const answeredCount = userAnswers.filter(a => a !== null).length;
+    const correctCount = quizQuestions.filter((q, i) => userAnswers[i] === q.correctAnswer).length;
+    const percentage = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+
     return (
       <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
         <h2 className="text-3xl font-bold text-center mb-6 text-gray-900 dark:text-white">
-          ¡Quiz Completado! 🎉
+          ¡Quiz Completado!
         </h2>
         <div className="text-center mb-8">
           <div className="text-6xl font-bold text-indigo-600 dark:text-indigo-400 mb-4">
             {percentage}%
           </div>
           <p className="text-xl text-gray-700 dark:text-gray-300">
-            {score.correct} de {score.total} respuestas correctas
+            {correctCount} de {answeredCount} respuestas correctas
           </p>
+          {answeredCount < quizQuestions.length && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+              ({quizQuestions.length - answeredCount} preguntas sin responder)
+            </p>
+          )}
         </div>
+
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Resumen de respuestas:</h3>
+          <div className="space-y-2">
+            {quizQuestions.map((question, index) => {
+              const userAnswer = userAnswers[index];
+              const isCorrect = userAnswer === question.correctAnswer;
+              const isAnswered = userAnswer !== null;
+
+              return (
+                <div
+                  key={question.id}
+                  className={`p-3 rounded-lg border-2 ${
+                    !isAnswered
+                      ? 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50'
+                      : isCorrect
+                      ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                      : 'border-red-500 bg-red-50 dark:bg-red-900/20'
+                  }`}
+                >
+                  <button
+                    onClick={() => setCurrentQuestionIndex(index)}
+                    className="w-full text-left hover:opacity-80 transition-opacity"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">
+                        Pregunta {index + 1}: {question.topic}
+                      </span>
+                      <span className="text-sm font-semibold">
+                        {!isAnswered ? (
+                          <span className="text-gray-500 dark:text-gray-400">Sin responder</span>
+                        ) : isCorrect ? (
+                          <span className="text-green-700 dark:text-green-300">✓ Correcta</span>
+                        ) : (
+                          <span className="text-red-700 dark:text-red-300">✗ Incorrecta</span>
+                        )}
+                      </span>
+                    </div>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="space-y-4">
+          <button
+            onClick={() => setCurrentQuestionIndex(0)}
+            className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+          >
+            Revisar Respuestas
+          </button>
           <button
             onClick={handleRestart}
             className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-semibold"
           >
-            Reintentar Quiz
+            Nuevo Quiz
           </button>
           <a
             href="/"
@@ -125,6 +218,11 @@ export default function Quiz({ questions, level }: QuizProps) {
     );
   }
 
+  // Question view (before or after submission)
+  const userAnswer = userAnswers[currentQuestionIndex];
+  const isCorrect = userAnswer === currentQuestion.correctAnswer;
+  const showFeedback = quizSubmitted;
+
   return (
     <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
       <div className="mb-6">
@@ -133,16 +231,25 @@ export default function Quiz({ questions, level }: QuizProps) {
             {currentQuestion.topic}
           </span>
           <span className="text-sm text-gray-600 dark:text-gray-400">
-            Pregunta {currentQuestionIndex + 1} de {questions.length}
+            Pregunta {currentQuestionIndex + 1} de {quizQuestions.length}
           </span>
         </div>
         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
           <div
             className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
-            style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
+            style={{ width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%` }}
           />
         </div>
       </div>
+
+      {/* Question answered indicator */}
+      {!quizSubmitted && userAnswer !== null && (
+        <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+          <p className="text-sm text-blue-700 dark:text-blue-300 text-center">
+            Respuesta seleccionada. Puedes cambiarla antes de enviar el quiz.
+          </p>
+        </div>
+      )}
 
       <div className="mb-6">
         <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4 ${
@@ -164,16 +271,15 @@ export default function Quiz({ questions, level }: QuizProps) {
 
       <div className="space-y-3 mb-6">
         {currentQuestion.options.map((option, index) => {
-          const isSelected = selectedAnswer === index;
-          const isCorrect = index === currentQuestion.correctAnswer;
-          const showResult = showExplanation;
+          const isSelected = userAnswer === index;
+          const isCorrectAnswer = index === currentQuestion.correctAnswer;
 
           let buttonClass = 'w-full text-left p-4 rounded-lg border-2 transition-all flex items-start gap-2 ';
 
-          if (showResult) {
-            if (isCorrect) {
+          if (showFeedback) {
+            if (isCorrectAnswer) {
               buttonClass += 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-900 dark:text-green-100';
-            } else if (isSelected && !isCorrect) {
+            } else if (isSelected && !isCorrectAnswer) {
               buttonClass += 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-100';
             } else {
               buttonClass += 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300';
@@ -190,7 +296,7 @@ export default function Quiz({ questions, level }: QuizProps) {
             <button
               key={index}
               onClick={() => handleAnswerSelect(index)}
-              disabled={showExplanation}
+              disabled={quizSubmitted}
               className={buttonClass}
             >
               <span className="font-semibold shrink-0">{String.fromCharCode(65 + index)}.</span>
@@ -201,17 +307,32 @@ export default function Quiz({ questions, level }: QuizProps) {
                   <MathText content={option} />
                 )}
               </span>
-              {showResult && isCorrect && <span className="shrink-0 ml-auto">✓</span>}
-              {showResult && isSelected && !isCorrect && <span className="shrink-0 ml-auto">✗</span>}
+              {showFeedback && isCorrectAnswer && <span className="shrink-0 ml-auto">✓</span>}
+              {showFeedback && isSelected && !isCorrectAnswer && <span className="shrink-0 ml-auto">✗</span>}
             </button>
           );
         })}
       </div>
 
-      {showExplanation && (
-        <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 mb-6">
-          <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Explicación:</h4>
-          <div className="text-blue-800 dark:text-blue-200">
+      {showFeedback && (
+        <div className={`border-l-4 p-4 mb-6 ${
+          isCorrect
+            ? 'bg-green-50 dark:bg-green-900/20 border-green-500'
+            : 'bg-red-50 dark:bg-red-900/20 border-red-500'
+        }`}>
+          <h4 className={`font-semibold mb-2 ${
+            isCorrect
+              ? 'text-green-900 dark:text-green-100'
+              : 'text-red-900 dark:text-red-100'
+          }`}>
+            {userAnswer === null ? 'No respondida' : isCorrect ? '¡Correcto!' : 'Incorrecto'}
+          </h4>
+          <div className={`${
+            isCorrect
+              ? 'text-green-800 dark:text-green-200'
+              : 'text-red-800 dark:text-red-200'
+          }`}>
+            <p className="font-semibold mb-1">Explicación:</p>
             <MathText content={currentQuestion.explanation} />
             {currentQuestion.explanationLatex && (
               <div className="mt-2">
@@ -222,29 +343,61 @@ export default function Quiz({ questions, level }: QuizProps) {
         </div>
       )}
 
-      <div className="flex gap-4">
-        {!showExplanation ? (
+      {/* Navigation and Submit buttons */}
+      <div className="flex flex-col gap-4">
+        <div className="flex gap-4">
           <button
-            onClick={handleSubmit}
-            disabled={selectedAnswer === null}
-            className="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-semibold"
+            onClick={handlePrevious}
+            disabled={currentQuestionIndex === 0}
+            className="flex-1 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-semibold"
           >
-            Verificar Respuesta
+            ← Anterior
           </button>
-        ) : (
+          {currentQuestionIndex < quizQuestions.length - 1 ? (
+            <button
+              onClick={handleNext}
+              className="flex-1 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors font-semibold"
+            >
+              Siguiente →
+            </button>
+          ) : quizSubmitted ? (
+            <button
+              onClick={() => setCurrentQuestionIndex(quizQuestions.length)}
+              className="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-semibold"
+            >
+              Ver Resumen
+            </button>
+          ) : null}
+        </div>
+
+        {!quizSubmitted && (
           <button
-            onClick={handleNext}
-            className="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-semibold"
+            onClick={handleSubmitQuiz}
+            disabled={userAnswers.filter(a => a !== null).length === 0}
+            className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-semibold text-lg"
           >
-            {currentQuestionIndex < questions.length - 1 ? 'Siguiente Pregunta' : 'Finalizar Quiz'}
+            Enviar Quiz ({userAnswers.filter(a => a !== null).length} de {quizQuestions.length} respondidas)
           </button>
         )}
       </div>
 
-      <div className="mt-6 text-center text-gray-600 dark:text-gray-400">
-        Puntaje actual: {score.correct} / {score.total} correcto
-        {score.total > 0 && ` (${Math.round((score.correct / score.total) * 100)}%)`}
-      </div>
+      {!quizSubmitted && (
+        <div className="mt-6 text-center text-gray-600 dark:text-gray-400">
+          Preguntas respondidas: {userAnswers.filter(a => a !== null).length} / {quizQuestions.length}
+        </div>
+      )}
+
+      {quizSubmitted && (
+        <div className="mt-6 text-center">
+          <p className="text-gray-600 dark:text-gray-400 mb-2">
+            Puntaje de este quiz: {quizQuestions.filter((q, i) => userAnswers[i] === q.correctAnswer).length} / {userAnswers.filter(a => a !== null).length}
+          </p>
+          <p className="text-gray-600 dark:text-gray-400">
+            Puntaje total: {score.correct} / {score.total}
+            {score.total > 0 && ` (${Math.round((score.correct / score.total) * 100)}%)`}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
