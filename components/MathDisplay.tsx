@@ -18,7 +18,7 @@ interface MathDisplayProps {
  * @param className - Optional CSS classes to apply
  */
 export default function MathDisplay({ latex, displayMode = false, className = '' }: MathDisplayProps) {
-  const containerRef = useRef<HTMLSpanElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (containerRef.current && latex) {
@@ -40,15 +40,32 @@ export default function MathDisplay({ latex, displayMode = false, className = ''
     }
   }, [latex, displayMode]);
 
+  if (displayMode) {
+    return (
+      <div
+        ref={containerRef}
+        className={`math-display my-2 ${className}`}
+        style={{
+          display: 'block',
+          textAlign: 'left',
+          width: '100%',
+          maxWidth: '100%',
+          overflowX: 'auto',
+          overflowWrap: 'break-word',
+          wordBreak: 'break-word',
+        }}
+      />
+    );
+  }
+
   return (
     <span
-      ref={containerRef}
-      className={`math-display ${displayMode ? 'block my-2 text-left' : 'inline-block align-middle'} ${className}`}
+      ref={containerRef as any}
+      className={`math-display inline-block align-middle ${className}`}
       style={{
         maxWidth: '100%',
         overflowWrap: 'break-word',
         wordBreak: 'break-word',
-        whiteSpace: displayMode ? 'normal' : 'nowrap'
       }}
     />
   );

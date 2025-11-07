@@ -25,3 +25,23 @@ body {
     text-wrap: balance;
   }
 }
+
+/* KaTeX math rendering styles */
+.math-display .katex-display {
+  text-align: left !important;
+  margin: 0 !important;
+}
+
+.math-display .katex {
+  text-align: left;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.math-display .katex-html {
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
