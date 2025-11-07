@@ -7,6 +7,8 @@ import { Question } from '@/lib/types'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { M1_SKILLS, getSkillNames } from '@/lib/skillTaxonomy'
 import { Card, Button, Heading, Text, Badge } from '@/components/ui'
+import { QuestionPreview } from '@/components/QuestionRenderer'
+import { MathText } from '@/components/MathDisplay'
 
 function ProblemsExplorerContent() {
   const router = useRouter()
@@ -329,8 +331,10 @@ function ProblemsExplorerContent() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                         {question.id}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-900 dark:text-white max-w-md truncate">
-                        {question.question}
+                      <td className="px-6 py-4 text-sm text-gray-900 dark:text-white max-w-md">
+                        <div className="truncate">
+                          <QuestionPreview question={question} maxLength={80} />
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                         {question.topic}
@@ -422,7 +426,9 @@ function ProblemsExplorerContent() {
 
                   <div>
                     <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pregunta</h3>
-                    <p className="text-gray-900 dark:text-white">{selectedQuestion.question}</p>
+                    <div className="text-gray-900 dark:text-white">
+                      <MathText content={selectedQuestion.question} />
+                    </div>
                   </div>
 
                   <div>
@@ -441,7 +447,9 @@ function ProblemsExplorerContent() {
                             <span className="font-semibold text-gray-900 dark:text-white">
                               {String.fromCharCode(65 + index)}.
                             </span>
-                            <span className="text-gray-900 dark:text-white">{option}</span>
+                            <span className="text-gray-900 dark:text-white flex-1">
+                              <MathText content={option} />
+                            </span>
                             {index === selectedQuestion.correctAnswer && (
                               <span className="ml-auto text-green-600 dark:text-green-400 font-semibold">✓ Correcta</span>
                             )}
@@ -453,9 +461,9 @@ function ProblemsExplorerContent() {
 
                   <div>
                     <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Explicación</h3>
-                    <p className="text-gray-900 dark:text-white bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                      {selectedQuestion.explanation}
-                    </p>
+                    <div className="text-gray-900 dark:text-white bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                      <MathText content={selectedQuestion.explanation} />
+                    </div>
                   </div>
 
                   {selectedQuestion.skills && selectedQuestion.skills.length > 0 && (

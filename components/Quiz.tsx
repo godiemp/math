@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Question, QuestionAttempt } from '@/lib/types';
-import { MathText, BlockMath, InlineMath } from './MathDisplay';
 import { getRandomQuestions } from '@/lib/questions';
-import { GeometryCanvas, GeometryFigure } from './GeometryCanvas';
+import { QuestionRenderer } from './QuestionRenderer';
 
 interface QuizProps {
   questions: Question[];
@@ -367,95 +366,17 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
           {currentQuestion.difficulty === 'easy' ? 'Fácil' :
            currentQuestion.difficulty === 'medium' ? 'Media' : 'Difícil'}
         </span>
-        <div className="text-xl font-semibold text-gray-900 dark:text-white mb-6 text-left">
-          {currentQuestion.questionLatex && (
-            <BlockMath latex={currentQuestion.questionLatex} />
-          )}
-        </div>
-
-        {/* Render geometry visualization if available */}
-        {currentQuestion.visualData && currentQuestion.visualData.type === 'geometry' && (
-          <GeometryCanvas
-            figures={currentQuestion.visualData.data as GeometryFigure[]}
-            width={400}
-            height={300}
-          />
-        )}
       </div>
 
-      <div className="space-y-3 mb-6">
-        {currentQuestion.options.map((option, index) => {
-          const isSelected = userAnswer === index;
-          const isCorrectAnswer = index === currentQuestion.correctAnswer;
-
-          let buttonClass = 'w-full text-left p-4 rounded-lg border-2 transition-all flex items-start gap-2 ';
-
-          if (showFeedback) {
-            if (isCorrectAnswer) {
-              buttonClass += 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-900 dark:text-green-100';
-            } else if (isSelected && !isCorrectAnswer) {
-              buttonClass += 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-100';
-            } else {
-              buttonClass += 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300';
-            }
-          } else {
-            if (isSelected) {
-              buttonClass += 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-900 dark:text-indigo-100';
-            } else {
-              buttonClass += 'border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 text-gray-700 dark:text-gray-300';
-            }
-          }
-
-          return (
-            <button
-              key={index}
-              onClick={() => handleAnswerSelect(index)}
-              disabled={quizSubmitted}
-              className={buttonClass}
-            >
-              <span className="font-semibold shrink-0">{String.fromCharCode(65 + index)}.</span>
-              <span className="flex-1 min-w-0 break-words">
-                {currentQuestion.optionsLatex && currentQuestion.optionsLatex[index] ? (
-                  <InlineMath latex={currentQuestion.optionsLatex[index]} />
-                ) : (
-                  <MathText content={option} />
-                )}
-              </span>
-              {showFeedback && isCorrectAnswer && <span className="shrink-0 ml-auto">✓</span>}
-              {showFeedback && isSelected && !isCorrectAnswer && <span className="shrink-0 ml-auto">✗</span>}
-            </button>
-          );
-        })}
-      </div>
-
-      {showFeedback && (
-        <div className={`border-l-4 p-4 mb-6 ${
-          isCorrect
-            ? 'bg-green-50 dark:bg-green-900/20 border-green-500'
-            : 'bg-red-50 dark:bg-red-900/20 border-red-500'
-        }`}>
-          <h4 className={`font-semibold mb-2 ${
-            isCorrect
-              ? 'text-green-900 dark:text-green-100'
-              : 'text-red-900 dark:text-red-100'
-          }`}>
-            {userAnswer === null ? 'No respondida' : isCorrect ? '¡Correcto!' : 'Incorrecto'}
-          </h4>
-          <div className={`${
-            isCorrect
-              ? 'text-green-800 dark:text-green-200'
-              : 'text-red-800 dark:text-red-200'
-          }`}>
-            <p className="font-semibold mb-1">Explicación:</p>
-            <MathText content={currentQuestion.explanation} />
-            {currentQuestion.explanationLatex && (
-              <div className="mt-2">
-                <BlockMath latex={currentQuestion.explanationLatex} />
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {/* Use centralized QuestionRenderer */}
+      <QuestionRenderer
+        question={currentQuestion}
+        mode="full"
+        selectedAnswer={userAnswer}
+        showFeedback={showFeedback}
+        onAnswerSelect={handleAnswerSelect}
+        disabled={quizSubmitted}
+      />
 
       {/* Navigation and Submit buttons */}
       <div className="flex flex-col gap-4">
