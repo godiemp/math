@@ -1,21 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { Question } from '@/lib/types';
 
 interface CurriculumProps {
-  questions: Question[];
   level: 'M1' | 'M2';
-}
-
-interface TopicStats {
-  topic: string;
-  count: number;
-  difficulties: {
-    easy: number;
-    medium: number;
-    hard: number;
-  };
 }
 
 // Official PAES curriculum structure
@@ -109,36 +97,7 @@ const paesM2AdditionalContent = [
   }
 ];
 
-export default function Curriculum({ questions, level }: CurriculumProps) {
-  // Group questions by topic for statistics
-  const topicStats: Record<string, TopicStats> = {};
-
-  questions.forEach(q => {
-    if (!topicStats[q.topic]) {
-      topicStats[q.topic] = {
-        topic: q.topic,
-        count: 0,
-        difficulties: { easy: 0, medium: 0, hard: 0 }
-      };
-    }
-    topicStats[q.topic].count++;
-    topicStats[q.topic].difficulties[q.difficulty]++;
-  });
-
-  const topics = Object.values(topicStats);
-
-  const getDifficultyBadgeColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'easy':
-        return 'bg-green-200 text-green-800 dark:bg-green-800 dark:text-green-200';
-      case 'medium':
-        return 'bg-yellow-200 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200';
-      case 'hard':
-        return 'bg-red-200 text-red-800 dark:bg-red-800 dark:text-red-200';
-      default:
-        return 'bg-gray-200 text-gray-800';
-    }
-  };
+export default function Curriculum({ level }: CurriculumProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4">
@@ -237,78 +196,6 @@ export default function Curriculum({ questions, level }: CurriculumProps) {
             })}
           </div>
         </div>
-
-        {/* Practice Questions Available */}
-        {topics.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100">
-              ✅ Preguntas Disponibles para Práctica
-            </h2>
-
-            {/* Summary Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-indigo-500">
-                <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{questions.length}</div>
-                <div className="text-gray-600 dark:text-gray-300">Preguntas Totales</div>
-              </div>
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-purple-500">
-                <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">{topics.length}</div>
-                <div className="text-gray-600 dark:text-gray-300">Temas con Preguntas</div>
-              </div>
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-green-500">
-                <div className="text-3xl font-bold text-green-600 dark:text-green-400">
-                  {Math.round((questions.filter(q => q.difficulty === 'easy').length / questions.length) * 100)}%
-                </div>
-                <div className="text-gray-600 dark:text-gray-300">Nivel Fácil</div>
-              </div>
-            </div>
-
-            {/* Topics Breakdown */}
-            <div className="grid grid-cols-1 gap-4">
-              {topics.map((topic) => (
-                <div
-                  key={topic.topic}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
-                        {topic.topic}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-400">
-                        {topic.count} {topic.count === 1 ? 'pregunta disponible' : 'preguntas disponibles'}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Difficulty Distribution */}
-                  <div className="space-y-2">
-                    <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Distribución por dificultad:
-                    </div>
-                    <div className="flex gap-2 flex-wrap">
-                      {topic.difficulties.easy > 0 && (
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyBadgeColor('easy')}`}>
-                          Fácil: {topic.difficulties.easy}
-                        </span>
-                      )}
-                      {topic.difficulties.medium > 0 && (
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyBadgeColor('medium')}`}>
-                          Medio: {topic.difficulties.medium}
-                        </span>
-                      )}
-                      {topic.difficulties.hard > 0 && (
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyBadgeColor('hard')}`}>
-                          Difícil: {topic.difficulties.hard}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Action Buttons */}
         <div className="flex gap-4 justify-center">
