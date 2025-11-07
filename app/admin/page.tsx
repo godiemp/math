@@ -287,14 +287,14 @@ function AdminBackofficeContent() {
               {sessions.map((session) => (
                 <div
                   key={session.id}
-                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-lg transition-shadow"
+                  className="border border-black/[0.12] dark:border-white/[0.16] rounded-xl p-4 hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-all duration-[180ms]"
                 >
                   <div className="flex flex-col md:flex-row justify-between md:items-start space-y-4 md:space-y-0">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
-                        <h3 className="font-bold text-gray-900 dark:text-white text-lg">
+                        <Heading level={3} size="xs">
                           {session.name}
-                        </h3>
+                        </Heading>
                         <Badge
                           variant={
                             session.status === 'scheduled' ? 'info' :
@@ -312,31 +312,31 @@ function AdminBackofficeContent() {
                       </div>
 
                       {session.description && (
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        <Text size="xs" variant="secondary" className="mb-3">
                           {session.description}
-                        </p>
+                        </Text>
                       )}
 
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                         <div>
-                          <span className="text-gray-600 dark:text-gray-400">Nivel:</span>{' '}
-                          <span className="font-medium text-gray-900 dark:text-white">
+                          <Text size="xs" variant="secondary" className="inline">Nivel: </Text>
+                          <Text size="xs" className="font-medium inline">
                             {session.level}
-                          </span>
+                          </Text>
                         </div>
                         <div>
-                          <span className="text-gray-600 dark:text-gray-400">Preguntas:</span>{' '}
-                          <span className="font-medium text-gray-900 dark:text-white">
+                          <Text size="xs" variant="secondary" className="inline">Preguntas: </Text>
+                          <Text size="xs" className="font-medium inline">
                             {session.questions.length}
-                          </span>
+                          </Text>
                         </div>
                         <div>
-                          <span className="text-gray-600 dark:text-gray-400">Fecha:</span>{' '}
-                          <span className="font-medium text-gray-900 dark:text-white">
+                          <Text size="xs" variant="secondary" className="inline">Fecha: </Text>
+                          <Text size="xs" className="font-medium inline">
                             {session.scheduledStartTime
                               ? formatDate(session.scheduledStartTime)
                               : 'N/A'}
-                          </span>
+                          </Text>
                         </div>
                       </div>
                     </div>
@@ -364,39 +364,39 @@ function AdminBackofficeContent() {
 
       {/* Create/Edit Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 max-w-2xl w-full my-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
+          <Card className="max-w-2xl w-full my-8 shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)]" padding="lg">
+            <Heading level={2} size="sm" className="mb-4">
               {editingSession ? 'Editar Ensayo' : 'Programar Nuevo Ensayo'}
-            </h2>
+            </Heading>
 
             {!editingSession && (
               <div className="mb-6">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                <Text size="xs" variant="secondary" className="mb-3">
                   Plantillas rápidas:
-                </p>
+                </Text>
                 <div className="flex gap-3">
                   <button
                     type="button"
                     onClick={applyM1Template}
-                    className="flex-1 px-4 py-3 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-300 dark:border-blue-700 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                    className="flex-1 px-4 py-3 bg-[#0A84FF]/[0.06] dark:bg-[#0A84FF]/[0.12] border-2 border-[#0A84FF]/30 dark:border-[#0A84FF]/50 rounded-xl hover:bg-[#0A84FF]/[0.12] dark:hover:bg-[#0A84FF]/[0.18] transition-all duration-[180ms] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
                   >
-                    <div className="font-semibold text-blue-800 dark:text-blue-400 mb-1">
+                    <div className="font-semibold text-[#0A84FF] dark:text-[#66B2FF] mb-1">
                       📐 M1 - Básico
                     </div>
-                    <div className="text-xs text-blue-600 dark:text-blue-500">
+                    <div className="text-xs text-[#0A84FF]/80 dark:text-[#66B2FF]/80">
                       140 min (2h 20min) • 60 preguntas
                     </div>
                   </button>
                   <button
                     type="button"
                     onClick={applyM2Template}
-                    className="flex-1 px-4 py-3 bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-300 dark:border-purple-700 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+                    className="flex-1 px-4 py-3 bg-[#5E5CE6]/[0.06] dark:bg-[#5E5CE6]/[0.12] border-2 border-[#5E5CE6]/30 dark:border-[#5E5CE6]/50 rounded-xl hover:bg-[#5E5CE6]/[0.12] dark:hover:bg-[#5E5CE6]/[0.18] transition-all duration-[180ms] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
                   >
-                    <div className="font-semibold text-purple-800 dark:text-purple-400 mb-1">
+                    <div className="font-semibold text-[#5E5CE6] dark:text-[#9F9DFF] mb-1">
                       🎓 M2 - Avanzado
                     </div>
-                    <div className="text-xs text-purple-600 dark:text-purple-500">
+                    <div className="text-xs text-[#5E5CE6]/80 dark:text-[#9F9DFF]/80">
                       140 min (2h 20min) • 50 preguntas
                     </div>
                   </button>
@@ -519,27 +519,29 @@ function AdminBackofficeContent() {
                 </div>
               </div>
 
-              <div className="flex space-x-4 pt-4">
-                <button
+              <div className="flex gap-4 pt-4">
+                <Button
                   type="button"
+                  variant="ghost"
                   onClick={() => {
                     setShowCreateModal(false);
                     resetForm();
                     setError('');
                   }}
-                  className="flex-1 px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors"
+                  fullWidth
                 >
                   Cancelar
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                  variant="primary"
+                  fullWidth
                 >
                   {editingSession ? 'Actualizar' : 'Programar Ensayo'}
-                </button>
+                </Button>
               </div>
             </form>
-          </div>
+          </Card>
         </div>
       )}
     </div>
