@@ -71,6 +71,27 @@ export default function Home() {
           </div>
         </div>
 
+        <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-lg shadow-md p-8 mb-12">
+          <div className="text-center">
+            <div className="text-5xl mb-4">🎮</div>
+            <h3 className="text-2xl font-bold mb-3 text-white">
+              Práctica en Vivo
+            </h3>
+            <p className="text-purple-100 mb-6 max-w-2xl mx-auto">
+              ¡Nuevo! Practica con otros estudiantes en tiempo real. Únete a sesiones grupales, compite con tus compañeros y mejora tus habilidades juntos.
+            </p>
+            <Link
+              href="/live-practice"
+              className="inline-block bg-white text-purple-600 px-8 py-3 rounded-lg hover:bg-purple-50 transition-colors font-semibold shadow-lg"
+            >
+              Entrar a Práctica en Vivo →
+            </Link>
+            <p className="text-purple-100 text-sm mt-4">
+              Requiere registro gratuito
+            </p>
+          </div>
+        </div>
+
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
           <h3 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
             Temas Principales
