@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { QuestionAttempt } from '@/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { Button, Card, Badge, Heading, Text, Modal, Navbar, NavbarLink } from '@/components/ui';
 
 interface Progress {
   correct: number;
@@ -79,12 +80,12 @@ function ProgressPageContent() {
     });
   };
 
-  const getDifficultyColor = (difficulty: string) => {
+  const getDifficultyBadgeVariant = (difficulty: string): 'success' | 'warning' | 'danger' | 'neutral' => {
     switch (difficulty) {
-      case 'easy': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-      case 'hard': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+      case 'easy': return 'success';
+      case 'medium': return 'warning';
+      case 'hard': return 'danger';
+      default: return 'neutral';
     }
   };
 
@@ -98,29 +99,29 @@ function ProgressPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      <nav className="bg-white dark:bg-gray-800 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/dashboard" className="text-indigo-600 dark:text-indigo-400 hover:underline">
-            ← Volver al Inicio
-          </Link>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">
+      {/* Navbar with variableBlur material */}
+      <Navbar>
+        <NavbarLink href="/dashboard">
+          ← Volver al Inicio
+        </NavbarLink>
+      </Navbar>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+      <main className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 py-12">
+        {/* Header Section */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <Heading level={1} size="lg">
             Mi Progreso
-          </h1>
+          </Heading>
           <div className="flex items-center gap-3">
-            <label htmlFor="recent-count" className="text-sm text-gray-600 dark:text-gray-400">
+            <label htmlFor="recent-count" className="text-[13px] text-black/60 dark:text-white/70">
               Mostrar últimas:
             </label>
             <select
               id="recent-count"
               value={recentQuestionsCount}
               onChange={(e) => setRecentQuestionsCount(Number(e.target.value))}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+              className="h-11 px-3 rounded-xl text-[15px] bg-white dark:bg-[#121212] text-black dark:text-white border border-black/[0.12] dark:border-white/[0.16] focus:outline-none focus:ring-3 focus:ring-[#0A84FF]/50 focus:border-[#0A84FF] transition-all duration-[180ms]"
             >
               <option value={5}>5 preguntas</option>
               <option value={10}>10 preguntas</option>
@@ -130,124 +131,120 @@ function ProgressPageContent() {
           </div>
         </div>
 
-        {/* Level Progress Cards */}
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+        {/* Level Progress Cards with liquidGlass material */}
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
+          {/* M1 Progress Card */}
+          <Card hover className="p-6">
+            <Heading level={3} size="xs" className="mb-4">
               Competencia Matemática M1
-            </h3>
+            </Heading>
             <div className="mb-4">
-              <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-                <span>Últimas {recentQuestionsCount} preguntas</span>
-                <span>{m1RecentStats.total > 0 ? calculatePercentage(m1RecentStats) : 0}%</span>
+              <div className="flex justify-between mb-2">
+                <Text size="xs" variant="secondary">Últimas {recentQuestionsCount} preguntas</Text>
+                <Text size="xs" variant="secondary" className="font-semibold">{m1RecentStats.total > 0 ? calculatePercentage(m1RecentStats) : 0}%</Text>
               </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
+              <div className="w-full bg-black/[0.04] dark:bg-white/[0.06] rounded-full h-2 overflow-hidden">
                 <div
-                  className="bg-indigo-600 h-4 rounded-full transition-all duration-300"
+                  className="bg-[#0A84FF] h-2 rounded-full transition-all duration-[300ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
                   style={{ width: `${m1RecentStats.total > 0 ? calculatePercentage(m1RecentStats) : 0}%` }}
                 />
               </div>
             </div>
-            <div className="space-y-2 text-gray-700 dark:text-gray-300">
-              <p className="text-3xl font-bold text-center">
+            <div className="space-y-2">
+              <Heading level={4} size="md" className="text-center">
                 {m1RecentStats.correct}/{m1RecentStats.total}
-              </p>
-              <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+              </Heading>
+              <Text size="xs" variant="secondary" className="text-center">
                 Respuestas correctas en las últimas {m1RecentStats.total} preguntas
-              </p>
+              </Text>
             </div>
-            <Link
-              href="/practice/m1"
-              className="mt-4 inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              Continuar Práctica
-            </Link>
-          </div>
+            <Button asChild className="mt-4 w-full">
+              <Link href="/practice/m1">
+                Continuar Práctica
+              </Link>
+            </Button>
+          </Card>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          {/* M2 Progress Card */}
+          <Card hover className="p-6">
+            <Heading level={3} size="xs" className="mb-4">
               Competencia Matemática M2
-            </h3>
+            </Heading>
             <div className="mb-4">
-              <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-                <span>Últimas {recentQuestionsCount} preguntas</span>
-                <span>{m2RecentStats.total > 0 ? calculatePercentage(m2RecentStats) : 0}%</span>
+              <div className="flex justify-between mb-2">
+                <Text size="xs" variant="secondary">Últimas {recentQuestionsCount} preguntas</Text>
+                <Text size="xs" variant="secondary" className="font-semibold">{m2RecentStats.total > 0 ? calculatePercentage(m2RecentStats) : 0}%</Text>
               </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
+              <div className="w-full bg-black/[0.04] dark:bg-white/[0.06] rounded-full h-2 overflow-hidden">
                 <div
-                  className="bg-indigo-600 h-4 rounded-full transition-all duration-300"
+                  className="bg-[#0A84FF] h-2 rounded-full transition-all duration-[300ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
                   style={{ width: `${m2RecentStats.total > 0 ? calculatePercentage(m2RecentStats) : 0}%` }}
                 />
               </div>
             </div>
-            <div className="space-y-2 text-gray-700 dark:text-gray-300">
-              <p className="text-3xl font-bold text-center">
+            <div className="space-y-2">
+              <Heading level={4} size="md" className="text-center">
                 {m2RecentStats.correct}/{m2RecentStats.total}
-              </p>
-              <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+              </Heading>
+              <Text size="xs" variant="secondary" className="text-center">
                 Respuestas correctas en las últimas {m2RecentStats.total} preguntas
-              </p>
+              </Text>
             </div>
-            <Link
-              href="/practice/m2"
-              className="mt-4 inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              Continuar Práctica
-            </Link>
-          </div>
+            <Button asChild className="mt-4 w-full">
+              <Link href="/practice/m2">
+                Continuar Práctica
+              </Link>
+            </Button>
+          </Card>
         </div>
 
         {/* Recent Questions History */}
         {allHistory.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+          <Card className="p-8">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+              <Heading level={2} size="sm">
                 Historial de Preguntas Recientes
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              </Heading>
+              <Text size="xs" variant="secondary">
                 Total: {allHistory.length} preguntas
-              </p>
+              </Text>
             </div>
             <div className="space-y-3 mb-6">
               {paginatedHistory.map((attempt, index) => (
                 <div
                   key={`${attempt.questionId}-${attempt.timestamp}`}
-                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                  className={`p-4 rounded-xl border cursor-pointer transition-all duration-[180ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] active:scale-[0.99] ${
                     attempt.isCorrect
-                      ? 'border-green-300 bg-green-50 dark:bg-green-900/20 hover:border-green-400'
-                      : 'border-red-300 bg-red-50 dark:bg-red-900/20 hover:border-red-400'
+                      ? 'border-[#34C759]/30 bg-[#34C759]/5 dark:border-[#30D158]/30 dark:bg-[#30D158]/10 hover:border-[#34C759]/50 dark:hover:border-[#30D158]/50'
+                      : 'border-[#FF453A]/30 bg-[#FF453A]/5 dark:border-[#FF453A]/30 dark:bg-[#FF453A]/10 hover:border-[#FF453A]/50 dark:hover:border-[#FF453A]/50'
                   }`}
                   onClick={() => setSelectedAttempt(attempt)}
                 >
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                          attempt.level === 'M1'
-                            ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-                            : 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
-                        }`}>
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <Badge size="sm" variant={attempt.level === 'M1' ? 'info' : 'secondary'}>
                           {attempt.level}
-                        </span>
-                        <span className={`px-2 py-1 rounded text-xs font-semibold ${getDifficultyColor(attempt.difficulty)}`}>
+                        </Badge>
+                        <Badge size="sm" variant={getDifficultyBadgeVariant(attempt.difficulty)}>
                           {getDifficultyLabel(attempt.difficulty)}
-                        </span>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                        </Badge>
+                        <Text size="xs" variant="secondary">
                           {attempt.topic}
-                        </span>
+                        </Text>
                       </div>
-                      <p className="text-gray-900 dark:text-white font-medium mb-1">
+                      <Text size="sm" className="font-medium mb-1">
                         {attempt.question}
-                      </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      </Text>
+                      <Text size="xs" variant="secondary">
                         {formatDate(attempt.timestamp)}
-                      </p>
+                      </Text>
                     </div>
                     <div className="ml-4">
                       {attempt.isCorrect ? (
-                        <span className="text-2xl text-green-600">✓</span>
+                        <span className="text-2xl text-[#34C759] dark:text-[#30D158]">✓</span>
                       ) : (
-                        <span className="text-2xl text-red-600">✗</span>
+                        <span className="text-2xl text-[#FF453A]">✗</span>
                       )}
                     </div>
                   </div>
@@ -258,13 +255,13 @@ function ProgressPageContent() {
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="flex justify-center items-center gap-2">
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
-                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   ← Anterior
-                </button>
+                </Button>
 
                 <div className="flex gap-1">
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
@@ -275,151 +272,128 @@ function ProgressPageContent() {
                       (page >= currentPage - 1 && page <= currentPage + 1)
                     ) {
                       return (
-                        <button
+                        <Button
                           key={page}
+                          variant={currentPage === page ? 'primary' : 'ghost'}
                           onClick={() => setCurrentPage(page)}
-                          className={`px-3 py-2 rounded-lg transition-colors ${
-                            currentPage === page
-                              ? 'bg-indigo-600 text-white'
-                              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                          }`}
+                          className="w-11"
                         >
                           {page}
-                        </button>
+                        </Button>
                       );
                     } else if (
                       page === currentPage - 2 ||
                       page === currentPage + 2
                     ) {
-                      return <span key={page} className="px-2 text-gray-500">...</span>;
+                      return <Text key={page} size="xs" variant="secondary" className="px-2">...</Text>;
                     }
                     return null;
                   })}
                 </div>
 
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Siguiente →
-                </button>
+                </Button>
               </div>
             )}
-          </div>
+          </Card>
         )}
 
         {allHistory.length === 0 && (
-          <div className="mt-8 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-4">
-            <p className="text-yellow-800 dark:text-yellow-200">
+          <div className="mt-8 backdrop-blur-[12px] bg-[#FF9F0A]/5 dark:bg-[#FF9F0A]/10 border-l-4 border-[#FF9F0A] rounded-r-xl p-4">
+            <Text size="sm" className="text-[#FF9F0A] dark:text-[#FFB84D]">
               Aún no has comenzado a practicar. ¡Empieza ahora con M1 o M2!
-            </p>
+            </Text>
           </div>
         )}
 
-        {/* Review Modal */}
-        {selectedAttempt && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-            onClick={() => setSelectedAttempt(null)}
-          >
-            <div
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-8"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-start mb-6">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  Revisar Pregunta
-                </h3>
-                <button
-                  onClick={() => setSelectedAttempt(null)}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl"
-                >
-                  ×
-                </button>
-              </div>
-
-              <div className="mb-4 flex gap-2">
-                <span className={`px-3 py-1 rounded text-sm font-semibold ${
-                  selectedAttempt.level === 'M1'
-                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-                    : 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
-                }`}>
+        {/* Review Modal with Liquid Glass */}
+        <Modal
+          isOpen={!!selectedAttempt}
+          onClose={() => setSelectedAttempt(null)}
+          title="Revisar Pregunta"
+          maxWidth="lg"
+        >
+          {selectedAttempt && (
+            <>
+              <div className="mb-4 flex gap-2 flex-wrap">
+                <Badge variant={selectedAttempt.level === 'M1' ? 'info' : 'secondary'}>
                   {selectedAttempt.level}
-                </span>
-                <span className={`px-3 py-1 rounded text-sm font-semibold ${getDifficultyColor(selectedAttempt.difficulty)}`}>
+                </Badge>
+                <Badge variant={getDifficultyBadgeVariant(selectedAttempt.difficulty)}>
                   {getDifficultyLabel(selectedAttempt.difficulty)}
-                </span>
-                <span className="px-3 py-1 rounded text-sm font-semibold bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                </Badge>
+                <Badge variant="neutral">
                   {selectedAttempt.topic}
-                </span>
+                </Badge>
               </div>
 
               <div className="mb-6">
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                <Heading level={4} size="xs" className="text-[17px] mb-4">
                   {selectedAttempt.question}
-                </h4>
+                </Heading>
                 <div className="space-y-3">
                   {selectedAttempt.options.map((option, index) => {
                     const isUserAnswer = index === selectedAttempt.userAnswer;
                     const isCorrectAnswer = index === selectedAttempt.correctAnswer;
 
-                    let className = 'p-4 rounded-lg border-2 ';
+                    let className = 'p-4 rounded-xl border-2 transition-all duration-[180ms] ';
                     if (isCorrectAnswer) {
-                      className += 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-900 dark:text-green-100';
+                      className += 'border-[#34C759] bg-[#34C759]/10 dark:border-[#30D158] dark:bg-[#30D158]/20 text-[#34C759] dark:text-[#5DE38D]';
                     } else if (isUserAnswer && !isCorrectAnswer) {
-                      className += 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-100';
+                      className += 'border-[#FF453A] bg-[#FF453A]/10 dark:border-[#FF453A] dark:bg-[#FF453A]/20 text-[#FF453A] dark:text-[#FF7A72]';
                     } else {
-                      className += 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300';
+                      className += 'border-black/[0.12] dark:border-white/[0.16] bg-black/[0.02] dark:bg-white/[0.04] text-black/60 dark:text-white/70';
                     }
 
                     return (
                       <div key={index} className={className}>
-                        <span className="font-semibold mr-2">
+                        <Text size="sm" className="inline font-semibold mr-2">
                           {String.fromCharCode(65 + index)}.
-                        </span>
-                        {option}
-                        {isCorrectAnswer && <span className="float-right">✓ Correcta</span>}
-                        {isUserAnswer && !isCorrectAnswer && <span className="float-right">✗ Tu respuesta</span>}
+                        </Text>
+                        <Text size="sm" className="inline">{option}</Text>
+                        {isCorrectAnswer && <Text size="xs" className="float-right">✓ Correcta</Text>}
+                        {isUserAnswer && !isCorrectAnswer && <Text size="xs" className="float-right">✗ Tu respuesta</Text>}
                       </div>
                     );
                   })}
                 </div>
               </div>
 
-              <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 mb-6">
-                <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
+              <div className="bg-[#0A84FF]/5 dark:bg-[#0A84FF]/10 border-l-4 border-[#0A84FF] rounded-r-xl p-4 mb-6">
+                <Text size="sm" className="font-semibold text-[#0A84FF] dark:text-[#66B2FF] mb-2">
                   Explicación:
-                </h4>
-                <p className="text-blue-800 dark:text-blue-200">
+                </Text>
+                <Text size="sm" className="text-black/80 dark:text-white/80">
                   {selectedAttempt.explanation}
-                </p>
+                </Text>
               </div>
 
-              <div className={`p-4 rounded-lg ${
+              <div className={`p-4 rounded-xl ${
                 selectedAttempt.isCorrect
-                  ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200'
-                  : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200'
+                  ? 'bg-[#34C759]/10 dark:bg-[#30D158]/20 text-[#34C759] dark:text-[#5DE38D]'
+                  : 'bg-[#FF453A]/10 dark:bg-[#FF453A]/20 text-[#FF453A] dark:text-[#FF7A72]'
               }`}>
-                <p className="font-semibold text-center">
+                <Text size="md" className="font-semibold text-center">
                   {selectedAttempt.isCorrect
                     ? '¡Respuesta Correcta! 🎉'
                     : 'Respuesta Incorrecta'}
-                </p>
-                <p className="text-sm text-center mt-1">
+                </Text>
+                <Text size="xs" className="text-center mt-1 opacity-80">
                   Respondida el {formatDate(selectedAttempt.timestamp)}
-                </p>
+                </Text>
               </div>
 
-              <button
-                onClick={() => setSelectedAttempt(null)}
-                className="mt-6 w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-semibold"
-              >
+              <Button onClick={() => setSelectedAttempt(null)} className="mt-6 w-full">
                 Cerrar
-              </button>
-            </div>
-          </div>
-        )}
+              </Button>
+            </>
+          )}
+        </Modal>
       </main>
     </div>
   );
