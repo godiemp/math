@@ -13,7 +13,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Es una proporción inversa. Si aumentan los obreros, disminuyen los días.',
     explanationLatex: '3 \\times 12 = 4 \\times x \\text{, entonces } x = \\frac{36}{4} = 9 \\text{ días}',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['numeros-proporcionalidad', 'numeros-proporcionalidad-inversa', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-2',
@@ -26,7 +27,8 @@ export const questions: Question[] = [
     correctAnswer: 3,
     explanation: 'Sustituimos $x = 5$:',
     explanationLatex: 'f(5) = 2(5) + 3 = 10 + 3 = 13',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['algebra-funciones', 'algebra-evaluacion-funciones', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-3',
@@ -39,7 +41,8 @@ export const questions: Question[] = [
     correctAnswer: 0,
     explanation: 'Por el teorema de Pitágoras:',
     explanationLatex: 'h^2 = 3^2 + 4^2 = 9 + 16 = 25 \\text{, entonces } h = \\sqrt{25} = 5 \\text{ cm}',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['geometria-triangulos', 'geometria-pitagoras', 'numeros-raices', 'numeros-potencias']
   },
   {
     id: 'm1-4',
@@ -53,7 +56,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Los números pares son 2, 4 y 6. Hay 3 casos favorables de 6 posibles:',
     explanationLatex: 'P = \\frac{3}{6} = \\frac{1}{2}',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
   {
     id: 'm1-5',
@@ -67,7 +71,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Despejamos $x$:',
     explanationLatex: '2x - 5 = 11 \\rightarrow 2x = 16 \\rightarrow x = 8',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-6',
@@ -80,7 +85,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Usamos la fórmula del área del círculo:',
     explanationLatex: 'A = \\pi r^2 = 3.14 \\times 5^2 = 3.14 \\times 25 = 78.5 \\text{ cm}^2',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['geometria-circulos', 'geometria-area-circulo', 'geometria-area', 'numeros-potencias', 'numeros-decimales']
   },
   {
     id: 'm1-7',
@@ -93,7 +99,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Calculamos el porcentaje:',
     explanationLatex: '25\\% \\text{ de } 80 = 0.25 \\times 80 = 20',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-8',
@@ -106,7 +113,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Calculamos la media:',
     explanationLatex: '\\bar{x} = \\frac{4 + 6 + 8 + 10}{4} = \\frac{28}{4} = 7',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['estadistica-media', 'numeros-operaciones-basicas', 'numeros-fracciones']
   },
   // Additional M1 Questions - Números
   {
@@ -121,7 +129,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Para sumar fracciones, necesitamos un denominador común:',
     explanationLatex: '\\frac{2}{3} + \\frac{1}{4} = \\frac{8}{12} + \\frac{3}{12} = \\frac{11}{12}',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['numeros-fracciones', 'numeros-fracciones-suma', 'numeros-fracciones-comun-denominador', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-10',
@@ -134,7 +143,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'La raíz cuadrada de 49 es el número que multiplicado por sí mismo da 49:',
     explanationLatex: '\\sqrt{49} = 7 \\text{ porque } 7 \\times 7 = 49',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['numeros-raices', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-11',
@@ -147,7 +157,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Factorizamos ambos números y encontramos los factores comunes:',
     explanationLatex: '12 = 2^2 \\times 3, \\quad 18 = 2 \\times 3^2 \\quad \\Rightarrow \\quad \\text{MCD} = 2 \\times 3 = 6',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['numeros-mcd-mcm', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-12',
@@ -160,7 +171,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Multiplicamos 2 por sí mismo 4 veces:',
     explanationLatex: '2^4 = 2 \\times 2 \\times 2 \\times 2 = 16',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['numeros-potencias', 'numeros-operaciones-basicas']
   },
   // Additional M1 Questions - Álgebra
   {
@@ -175,7 +187,8 @@ export const questions: Question[] = [
     correctAnswer: 0,
     explanation: 'Sumamos y restamos los coeficientes de términos semejantes:',
     explanationLatex: '3x + 5x - 2x = (3 + 5 - 2)x = 6x',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['algebra-expresiones', 'algebra-terminos-semejantes', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-14',
@@ -189,7 +202,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Es una diferencia de cuadrados:',
     explanationLatex: 'x^2 - 9 = x^2 - 3^2 = (x-3)(x+3)',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['algebra-factorizacion', 'algebra-diferencia-cuadrados', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-15',
@@ -202,7 +216,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'En la forma $y = mx + b$, $m$ es la pendiente:',
     explanationLatex: 'y = 3x - 2 \\quad \\Rightarrow \\quad m = 3',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['algebra-funciones', 'algebra-funciones-lineales', 'algebra-pendiente']
   },
   {
     id: 'm1-16',
@@ -216,7 +231,8 @@ export const questions: Question[] = [
     correctAnswer: 0,
     explanation: 'Despejamos $x$ igual que en una ecuación:',
     explanationLatex: '2x + 3 > 7 \\rightarrow 2x > 4 \\rightarrow x > 2',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['algebra-desigualdades', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   // Additional M1 Questions - Geometría
   {
@@ -230,7 +246,8 @@ export const questions: Question[] = [
     correctAnswer: 0,
     explanation: 'Ángulos complementarios suman 90°:',
     explanationLatex: '90^\\circ - 35^\\circ = 55^\\circ',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['geometria-angulos', 'geometria-angulos-complementarios', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-18',
@@ -243,7 +260,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'El perímetro de un rectángulo es:',
     explanationLatex: 'P = 2(\\text{largo} + \\text{ancho}) = 2(8 + 5) = 2(13) = 26 \\text{ cm}',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['geometria-rectangulos', 'geometria-perimetro', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-19',
@@ -256,7 +274,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'El volumen de un cubo es:',
     explanationLatex: 'V = a^3 = 3^3 = 27 \\text{ cm}^3',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['geometria-volumen', 'geometria-volumen-cubo', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-20',
@@ -269,7 +288,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Usamos la fórmula de distancia:',
     explanationLatex: 'd = \\sqrt{(4-1)^2 + (6-2)^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['geometria-plano-cartesiano', 'geometria-distancia', 'geometria-pitagoras', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-21',
@@ -282,7 +302,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'El área de un trapecio es:',
     explanationLatex: 'A = \\frac{(b_1 + b_2) \\times h}{2} = \\frac{(6 + 10) \\times 4}{2} = \\frac{64}{2} = 32 \\text{ cm}^2',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['geometria-trapecio', 'geometria-area', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   // Geometry with Visual Figures
   {
@@ -567,7 +588,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Primero ordenamos los datos: 3, 5, 7, 9, 11. La mediana es el valor central:',
     explanationLatex: '\\text{Mediana} = 7',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['estadistica-mediana', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-23',
@@ -580,7 +602,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'La moda es el valor que más se repite:',
     explanationLatex: '\\text{Moda} = 3 \\text{ (aparece 3 veces)}',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['estadistica-moda']
   },
   {
     id: 'm1-24',
@@ -594,7 +617,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'La probabilidad es el cociente entre casos favorables y casos totales:',
     explanationLatex: 'P(\\text{azul}) = \\frac{3}{5+3} = \\frac{3}{8}',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
   {
     id: 'm1-25',
@@ -607,7 +631,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'El rango es la diferencia entre el valor máximo y mínimo:',
     explanationLatex: '\\text{Rango} = 20 - 8 = 12',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['estadistica-rango', 'numeros-operaciones-basicas']
   },
   // Additional M1 Questions - Números (m1-26 to m1-29)
   {
@@ -621,7 +646,8 @@ export const questions: Question[] = [
     correctAnswer: 3,
     explanation: 'El producto de dos números negativos es positivo:',
     explanationLatex: '(-3) \\times (-5) = 15',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['numeros-enteros', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-27',
@@ -634,7 +660,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Calculamos el 15% de descuento y lo restamos del precio original:',
     explanationLatex: '20.000 \\times 0.15 = 3.000 \\quad \\Rightarrow \\quad 20.000 - 3.000 = 17.000',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['numeros-porcentajes', 'numeros-porcentajes-descuentos', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-28',
@@ -647,7 +674,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Planteamos la ecuación y despejamos:',
     explanationLatex: '\\frac{3}{4}x = 15 \\quad \\Rightarrow \\quad x = 15 \\times \\frac{4}{3} = 20',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['numeros-fracciones', 'algebra-ecuaciones-lineales', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-29',
@@ -660,7 +688,8 @@ export const questions: Question[] = [
     correctAnswer: 0,
     explanation: 'Usamos las propiedades de los exponentes:',
     explanationLatex: '\\frac{2^3 \\times 2^2}{2^4} = \\frac{2^{3+2}}{2^4} = \\frac{2^5}{2^4} = 2^{5-4} = 2^1 = 2',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   // Additional M1 Questions - Álgebra (m1-30 to m1-33)
   {
@@ -674,7 +703,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Primero encontramos x, luego calculamos 2x:',
     explanationLatex: 'x + 5 = 12 \\rightarrow x = 7 \\quad \\Rightarrow \\quad 2x = 2(7) = 14',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-31',
@@ -688,7 +718,8 @@ export const questions: Question[] = [
     correctAnswer: 0,
     explanation: 'Aplicamos la propiedad distributiva:',
     explanationLatex: '(x + 3)(x + 2) = x^2 + 2x + 3x + 6 = x^2 + 5x + 6',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['algebra-expansion', 'algebra-propiedad-distributiva', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-32',
@@ -701,7 +732,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Sustituimos x por 3:',
     explanationLatex: 'f(3) = 3^2 - 1 = 9 - 1 = 8',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['algebra-funciones', 'algebra-evaluacion-funciones', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-33',
@@ -715,7 +747,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Despejamos x:',
     explanationLatex: '\\frac{x}{3} + 2 = 5 \\rightarrow \\frac{x}{3} = 3 \\rightarrow x = 9',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   // Additional M1 Questions - Geometría (m1-34 to m1-37)
   {
@@ -729,7 +762,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'El área de un cuadrado es lado al cuadrado:',
     explanationLatex: 'A = l^2 = 6^2 = 36 \\text{ cm}^2',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['geometria-cuadrados', 'geometria-area', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-35',
@@ -742,7 +776,8 @@ export const questions: Question[] = [
     correctAnswer: 0,
     explanation: 'Ángulos suplementarios suman 180°:',
     explanationLatex: '180^\\circ - 110^\\circ = 70^\\circ',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['geometria-angulos', 'geometria-angulos-suplementarios', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-36',
@@ -755,7 +790,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Un triángulo equilátero tiene tres lados iguales:',
     explanationLatex: 'P = 3 \\times 5 = 15 \\text{ cm}',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['geometria-triangulos', 'geometria-perimetro', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-37',
@@ -768,7 +804,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'El área de un triángulo es base por altura dividido entre 2:',
     explanationLatex: 'A = \\frac{b \\times h}{2} = \\frac{8 \\times 6}{2} = \\frac{48}{2} = 24 \\text{ cm}^2',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['geometria-triangulos', 'geometria-area-triangulo', 'geometria-area', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   // Additional M1 Questions - Probabilidad (m1-38 to m1-41)
   {
@@ -783,7 +820,8 @@ export const questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Los resultados posibles son CC, CS, SC, SS. Solo uno es favorable:',
     explanationLatex: 'P(\\text{dos caras}) = \\frac{1}{4}',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    skills: ['probabilidad-eventos-compuestos', 'probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
   {
     id: 'm1-39',
@@ -796,7 +834,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Sumamos todos los valores y dividimos por la cantidad:',
     explanationLatex: '\\bar{x} = \\frac{5 + 8 + 10 + 13}{4} = \\frac{36}{4} = 9',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['estadistica-media', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-40',
@@ -809,7 +848,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Calculamos el porcentaje:',
     explanationLatex: '\\frac{12}{12 + 18} = \\frac{12}{30} = 0.4 = 40\\%',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['estadistica-porcentajes', 'numeros-porcentajes', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
     id: 'm1-41',
@@ -823,7 +863,8 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Los números mayores que 4 son 5 y 6. Hay 2 casos favorables de 6 posibles:',
     explanationLatex: 'P = \\frac{2}{6} = \\frac{1}{3}',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
 
   // M2 Questions - Advanced PAES topics (NO calculus)
