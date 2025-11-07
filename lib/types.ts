@@ -27,3 +27,17 @@ export interface UserProgress {
   correctAnswers: number;
   topicProgress: Record<string, { total: number; correct: number }>;
 }
+
+export interface QuestionAttempt {
+  questionId: string;
+  question: string;
+  topic: string;
+  level: 'M1' | 'M2';
+  userAnswer: number;
+  correctAnswer: number;
+  isCorrect: boolean;
+  timestamp: number;
+  options: string[];
+  explanation: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+}
