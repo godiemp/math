@@ -52,7 +52,15 @@ export interface User {
   createdAt: number;
 }
 
-// Live practice session types
+// Registration for scheduled ensayos
+export interface SessionRegistration {
+  userId: string;
+  username: string;
+  displayName: string;
+  registeredAt: number;
+}
+
+// Live practice session types (Ensayo PAES)
 export interface LiveSession {
   id: string;
   name: string;
@@ -61,13 +69,15 @@ export interface LiveSession {
   hostId: string;
   hostName: string;
   questions: Question[];
-  participants: SessionParticipant[];
-  status: 'scheduled' | 'active' | 'completed' | 'cancelled';
+  registeredUsers: SessionRegistration[]; // Users who signed up for the ensayo
+  participants: SessionParticipant[]; // Users who joined the lobby/session
+  status: 'scheduled' | 'lobby' | 'active' | 'completed' | 'cancelled';
   currentQuestionIndex: number;
   createdAt: number;
   scheduledStartTime: number; // Unix timestamp for when session starts
   scheduledEndTime: number; // Unix timestamp for when session ends
   durationMinutes: number; // Duration in minutes
+  lobbyOpenTime?: number; // When lobby opens (e.g., 10 min before start)
   startedAt?: number;
   completedAt?: number;
   maxParticipants: number;

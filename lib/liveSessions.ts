@@ -1,7 +1,8 @@
-import { LiveSession, SessionParticipant, Question, User } from './types';
+import { LiveSession, SessionParticipant, SessionRegistration, Question, User } from './types';
 import { getRandomQuestions } from './questions';
 
 const SESSIONS_STORAGE_KEY = 'paes-live-sessions';
+const LOBBY_OPEN_MINUTES = 15; // Lobby opens 15 minutes before start
 
 export function getAllSessions(): LiveSession[] {
   if (typeof window === 'undefined') return [];
@@ -29,6 +30,7 @@ export function createScheduledSession(
 
   const questions = getRandomQuestions(level, questionCount);
   const scheduledEndTime = scheduledStartTime + (durationMinutes * 60 * 1000);
+  const lobbyOpenTime = scheduledStartTime - (LOBBY_OPEN_MINUTES * 60 * 1000);
 
   const newSession: LiveSession = {
     id: generateSessionId(),
@@ -38,6 +40,7 @@ export function createScheduledSession(
     hostId: host.id,
     hostName: host.displayName,
     questions,
+    registeredUsers: [],
     participants: [],
     status: 'scheduled',
     currentQuestionIndex: 0,
@@ -45,6 +48,7 @@ export function createScheduledSession(
     scheduledStartTime,
     scheduledEndTime,
     durationMinutes,
+    lobbyOpenTime,
     maxParticipants,
   };
 
@@ -64,27 +68,28 @@ export function joinSession(sessionId: string, user: User): { success: boolean; 
   const sessionIndex = sessions.findIndex(s => s.id === sessionId);
 
   if (sessionIndex === -1) {
-    return { success: false, error: 'Sesión no encontrada' };
+    return { success: false, error: 'Ensayo no encontrado' };
   }
 
   const session = sessions[sessionIndex];
 
-  // Check if session is already full
-  if (session.participants.length >= session.maxParticipants) {
-    return { success: false, error: 'La sesión está llena' };
-  }
-
-  // Check if session has already started or completed
-  if (session.status === 'active') {
-    return { success: false, error: 'La sesión ya ha comenzado' };
-  }
-
+  // Check if session is completed or cancelled
   if (session.status === 'completed') {
-    return { success: false, error: 'La sesión ya ha terminado' };
+    return { success: false, error: 'El ensayo ya ha terminado' };
   }
 
   if (session.status === 'cancelled') {
-    return { success: false, error: 'La sesión ha sido cancelada' };
+    return { success: false, error: 'El ensayo ha sido cancelado' };
+  }
+
+  // Check if lobby is open or session is active (allow joining)
+  if (session.status === 'scheduled') {
+    return { success: false, error: 'El lobby aún no está abierto. Regístrate primero o espera a que se abra.' };
+  }
+
+  // Check if session is already full
+  if (session.participants.length >= session.maxParticipants) {
+    return { success: false, error: 'El ensayo está lleno' };
   }
 
   // Check if user is already in the session
@@ -92,7 +97,7 @@ export function joinSession(sessionId: string, user: User): { success: boolean; 
     return { success: true, session };
   }
 
-  // Add participant
+  // Add participant (works for both lobby and active status - allowing late joins)
   const participant: SessionParticipant = {
     userId: user.id,
     username: user.username,
@@ -157,7 +162,74 @@ export function getActiveSessions(): LiveSession[] {
 
 export function getAllAvailableSessions(): LiveSession[] {
   return getAllSessions().filter(s =>
-    s.status === 'scheduled' || s.status === 'active'
+    s.status === 'scheduled' || s.status === 'lobby' || s.status === 'active'
+  );
+}
+
+// Register user for a scheduled ensayo
+export function registerForSession(sessionId: string, user: User): { success: boolean; error?: string } {
+  const sessions = getAllSessions();
+  const sessionIndex = sessions.findIndex(s => s.id === sessionId);
+
+  if (sessionIndex === -1) {
+    return { success: false, error: 'Ensayo no encontrado' };
+  }
+
+  const session = sessions[sessionIndex];
+
+  // Can only register for scheduled sessions
+  if (session.status !== 'scheduled') {
+    return { success: false, error: 'Solo puedes registrarte para ensayos programados' };
+  }
+
+  // Check if already registered
+  if (session.registeredUsers.some(r => r.userId === user.id)) {
+    return { success: true }; // Already registered, return success
+  }
+
+  // Check if registration would exceed max participants
+  if (session.registeredUsers.length >= session.maxParticipants) {
+    return { success: false, error: 'El ensayo está lleno' };
+  }
+
+  // Add registration
+  const registration: SessionRegistration = {
+    userId: user.id,
+    username: user.username,
+    displayName: user.displayName,
+    registeredAt: Date.now(),
+  };
+
+  session.registeredUsers.push(registration);
+  sessions[sessionIndex] = session;
+  saveSessions(sessions);
+
+  return { success: true };
+}
+
+// Unregister user from a scheduled ensayo
+export function unregisterFromSession(sessionId: string, userId: string): { success: boolean; error?: string } {
+  const sessions = getAllSessions();
+  const sessionIndex = sessions.findIndex(s => s.id === sessionId);
+
+  if (sessionIndex === -1) {
+    return { success: false, error: 'Ensayo no encontrado' };
+  }
+
+  const session = sessions[sessionIndex];
+
+  // Remove registration
+  session.registeredUsers = session.registeredUsers.filter(r => r.userId !== userId);
+  sessions[sessionIndex] = session;
+  saveSessions(sessions);
+
+  return { success: true };
+}
+
+// Get all sessions a user is registered for
+export function getUserRegisteredSessions(userId: string): LiveSession[] {
+  return getAllSessions().filter(s =>
+    s.registeredUsers.some(r => r.userId === userId)
   );
 }
 
@@ -168,8 +240,14 @@ export function updateSessionStatuses(): void {
   let updated = false;
 
   sessions.forEach(session => {
-    // Auto-start scheduled sessions that have reached start time
-    if (session.status === 'scheduled' && now >= session.scheduledStartTime) {
+    // Open lobby for scheduled sessions when lobby open time is reached
+    if (session.status === 'scheduled' && session.lobbyOpenTime && now >= session.lobbyOpenTime) {
+      session.status = 'lobby';
+      updated = true;
+    }
+
+    // Auto-start lobby sessions when scheduled start time is reached
+    if (session.status === 'lobby' && now >= session.scheduledStartTime) {
       session.status = 'active';
       session.startedAt = now;
       updated = true;
@@ -245,6 +323,11 @@ export function updateScheduledSession(
   } else if (updates.scheduledStartTime) {
     // If start time changed but not duration, recalculate end time with existing duration
     session.scheduledEndTime = updates.scheduledStartTime + (session.durationMinutes * 60 * 1000);
+  }
+
+  // Recalculate lobby open time if start time changed
+  if (updates.scheduledStartTime) {
+    session.lobbyOpenTime = updates.scheduledStartTime - (LOBBY_OPEN_MINUTES * 60 * 1000);
   }
 
   // If question count or level changed, regenerate questions
