@@ -8,12 +8,15 @@ The Calculator module is the computational engine of the PAES math app. It handl
 ## Responsibilities
 
 - Parse and evaluate mathematical expressions
-- Solve equations (linear, quadratic, systems, etc.)
-- Perform algebraic manipulations
-- Calculate derivatives and integrals
-- Evaluate trigonometric and logarithmic functions
+- Solve equations (linear, quadratic, systems of 2×2)
+- Perform algebraic manipulations (simplify, expand, factor)
+- Calculate powers, roots, and basic operations
+- Geometry calculations (area, perimeter, volume, distance, etc.)
+- Basic statistics (mean, median, mode, probability)
 - Generate step-by-step solutions
 - Validate student answers
+
+**Note**: This is for PAES (high school level). We do NOT need: calculus (derivatives/integrals), advanced trigonometry, logarithms, matrices, or complex numbers.
 
 ---
 
@@ -46,8 +49,8 @@ This module works **completely standalone**:
 │  │      Computer Algebra System (CAS)     │     │
 │  │  • Simplification Engine               │     │
 │  │  • Equation Solver                     │     │
-│  │  • Symbolic Math                       │     │
-│  │  • Calculus Operations                 │     │
+│  │  • Symbolic Math (algebra only)        │     │
+│  │  • Geometry Calculator                 │     │
 │  └────────────────────────────────────────┘     │
 │                     │                            │
 │                     ▼                            │
@@ -133,26 +136,55 @@ factor('x^2 - 4');              // => '(x-2)(x+2)'
 expand('(x+2)(x-3)');           // => 'x^2 - x - 6'
 ```
 
-### Calculus
+### Geometry Operations
 
 ```typescript
-// Derivatives
-function derivative(
-  expression: string,
-  variable: string
-): CalculusResult;
+// Triangles
+function pythagorean(a: number, b: number): number;  // find hypotenuse
+function triangleArea(base: number, height: number): number;
 
-// Integrals
-function integrate(
-  expression: string,
-  variable: string,
-  bounds?: [number, number]
-): CalculusResult;
+// Circles
+function circleArea(radius: number): number;
+function circumference(radius: number): number;
+
+// 3D Solids
+function cylinderVolume(r: number, h: number): number;
+function sphereVolume(r: number): number;
+function coneVolume(r: number, h: number): number;
+
+// Coordinate Geometry
+function distance(p1: Point, p2: Point): number;
+function midpoint(p1: Point, p2: Point): Point;
+function slope(p1: Point, p2: Point): number;
 
 // Examples:
-derivative('x^2 + 2x', 'x');    // => '2x + 2'
-integrate('2x', 'x');           // => 'x^2 + C'
-integrate('2x', 'x', [0, 5]);   // => 25
+pythagorean(3, 4);              // => 5
+circleArea(5);                  // => 78.54
+distance({x:0,y:0}, {x:3,y:4}); // => 5
+```
+
+### Statistics & Probability
+
+```typescript
+// Central Tendency
+function mean(data: number[]): number;
+function median(data: number[]): number;
+function mode(data: number[]): number[];
+
+// Dispersion
+function range(data: number[]): number;
+function standardDeviation(data: number[]): number;
+
+// Probability & Combinatorics
+function factorial(n: number): number;
+function permutation(n: number, r: number): number;
+function combination(n: number, r: number): number;
+function probability(favorable: number, total: number): number;
+
+// Examples:
+mean([2, 4, 6, 8, 10]);        // => 6
+combination(5, 2);             // => 10
+probability(1, 6);             // => 0.1667 (1 in 6, like a dice)
 ```
 
 ### Step-by-Step Solutions
@@ -269,12 +301,12 @@ validateAnswer('x^2 - 4', '(x-2)(x+2)');  // algebraically equivalent
 - [ ] Inequalities
 - [ ] Test with PAES problems
 
-### Phase 3: Advanced Math (Week 3)
-- [ ] Trigonometry functions
-- [ ] Logarithms and exponentials
-- [ ] Basic calculus (if needed for PAES)
-- [ ] Statistics calculations
-- [ ] Probability functions
+### Phase 3: Geometry & Statistics (Week 3)
+- [ ] Pythagorean theorem
+- [ ] Coordinate geometry (distance, midpoint, slope)
+- [ ] 3D solid volumes (cylinder, sphere, cone)
+- [ ] Statistics calculations (mean, median, mode, range)
+- [ ] Probability functions (basic probability, combinations, permutations)
 
 ### Phase 4: Step-by-Step Engine (Week 4)
 - [ ] Build step generator
@@ -502,10 +534,13 @@ calculator/
 │   │   ├── quadratic.ts
 │   │   ├── systems.ts
 │   │   └── inequalities.ts
-│   ├── advanced/
-│   │   ├── calculus.ts
-│   │   ├── trigonometry.ts
-│   │   └── statistics.ts
+│   ├── geometry/
+│   │   ├── plane.ts          // triangles, circles, quadrilaterals
+│   │   ├── coordinate.ts     // distance, midpoint, slope
+│   │   └── solids.ts         // 3D volumes
+│   ├── statistics/
+│   │   ├── descriptive.ts    // mean, median, mode, range
+│   │   └── probability.ts    // combinations, permutations
 │   ├── steps/
 │   │   ├── step-generator.ts
 │   │   └── explanations.ts
