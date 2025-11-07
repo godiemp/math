@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Question } from '@/lib/types';
-import { MathText, BlockMath } from './MathDisplay';
+import { MathText, BlockMath, InlineMath } from './MathDisplay';
 
 interface QuizProps {
   questions: Question[];
@@ -144,7 +144,7 @@ export default function Quiz({ questions, level }: QuizProps) {
           const isCorrect = index === currentQuestion.correctAnswer;
           const showResult = showExplanation;
 
-          let buttonClass = 'w-full text-left p-4 rounded-lg border-2 transition-all ';
+          let buttonClass = 'w-full text-left p-4 rounded-lg border-2 transition-all flex items-start gap-2 ';
 
           if (showResult) {
             if (isCorrect) {
@@ -169,14 +169,16 @@ export default function Quiz({ questions, level }: QuizProps) {
               disabled={showExplanation}
               className={buttonClass}
             >
-              <span className="font-semibold mr-2">{String.fromCharCode(65 + index)}.</span>
-              {currentQuestion.optionsLatex && currentQuestion.optionsLatex[index] ? (
-                <MathText content={currentQuestion.optionsLatex[index]} />
-              ) : (
-                <MathText content={option} />
-              )}
-              {showResult && isCorrect && <span className="float-right">✓</span>}
-              {showResult && isSelected && !isCorrect && <span className="float-right">✗</span>}
+              <span className="font-semibold shrink-0">{String.fromCharCode(65 + index)}.</span>
+              <span className="flex-1 min-w-0 break-words">
+                {currentQuestion.optionsLatex && currentQuestion.optionsLatex[index] ? (
+                  <InlineMath latex={currentQuestion.optionsLatex[index]} />
+                ) : (
+                  <MathText content={option} />
+                )}
+              </span>
+              {showResult && isCorrect && <span className="shrink-0 ml-auto">✓</span>}
+              {showResult && isSelected && !isCorrect && <span className="shrink-0 ml-auto">✗</span>}
             </button>
           );
         })}

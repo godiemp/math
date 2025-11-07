@@ -43,7 +43,8 @@ export default function MathDisplay({ latex, displayMode = false, className = ''
   return (
     <span
       ref={containerRef}
-      className={`math-display ${displayMode ? 'block my-2' : 'inline-block'} ${className}`}
+      className={`math-display ${displayMode ? 'block my-2' : 'inline-block align-middle'} ${className}`}
+      style={{ maxWidth: '100%', overflowWrap: 'break-word' }}
     />
   );
 }
