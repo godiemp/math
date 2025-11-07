@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import type { LiveSession, SessionParticipant } from '@/lib/types';
-import { getSession, submitAnswer, completeSession, updateParticipantReady, startSession, leaveSession } from '@/lib/liveSessions';
+import type { LiveSession } from '@/lib/types';
+import { getSession, submitAnswer, leaveSession, updateSessionStatuses } from '@/lib/liveSessions';
 import { getCurrentUser } from '@/lib/auth';
 import { MathText } from './MathDisplay';
 
@@ -16,9 +16,9 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
   const [currentUser, setCurrentUser] = useState(getCurrentUser());
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [showResults, setShowResults] = useState(false);
 
   const refreshSession = () => {
+    updateSessionStatuses(); // Auto-update session status based on time
     const updatedSession = getSession(sessionId);
     if (updatedSession) {
       setSession(updatedSession);
@@ -30,25 +30,6 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
     const interval = setInterval(refreshSession, 2000); // Refresh every 2 seconds
     return () => clearInterval(interval);
   }, [sessionId]);
-
-  const handleReady = () => {
-    if (!currentUser || !session) return;
-    const participant = session.participants.find(p => p.userId === currentUser.id);
-    if (participant) {
-      updateParticipantReady(sessionId, currentUser.id, !participant.isReady);
-      refreshSession();
-    }
-  };
-
-  const handleStart = () => {
-    if (!currentUser || !session) return;
-    if (session.hostId !== currentUser.id) return;
-
-    const result = startSession(sessionId);
-    if (result.success) {
-      refreshSession();
-    }
-  };
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (!currentUser || !session || session.status !== 'active') return;
@@ -82,13 +63,6 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
     }
   };
 
-  const handleComplete = () => {
-    if (!currentUser || !session) return;
-    completeSession(sessionId);
-    refreshSession();
-    setShowResults(true);
-  };
-
   const handleLeave = () => {
     if (!currentUser) return;
     leaveSession(sessionId, currentUser.id);
@@ -105,13 +79,11 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
     );
   }
 
-  const isHost = session.hostId === currentUser.id;
-  const currentParticipant = session.participants.find(p => p.userId === currentUser.id);
-  const allReady = session.participants.every(p => p.isReady);
   const currentQuestion = session.questions[currentQuestionIndex];
 
-  // Waiting room
-  if (session.status === 'waiting') {
+  // Scheduled - waiting for start time
+  if (session.status === 'scheduled') {
+    const startTime = new Date(session.scheduledStartTime);
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-8">
         <div className="max-w-4xl mx-auto">
@@ -128,65 +100,36 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
               </button>
             </div>
 
-            <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                <strong>Nivel:</strong> {session.level} • <strong>Preguntas:</strong> {session.questions.length} • <strong>Anfitrión:</strong> {session.hostName}
+            <div className="text-center py-12">
+              <div className="text-6xl mb-6">⏰</div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Sesión Programada
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                Esta sesión comenzará automáticamente el:
+              </p>
+              <div className="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-8">
+                {startTime.toLocaleString('es-CL', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </div>
+
+              <div className="space-y-2 mb-6 text-sm text-gray-600 dark:text-gray-400">
+                <p><strong>Nivel:</strong> {session.level}</p>
+                <p><strong>Preguntas:</strong> {session.questions.length}</p>
+                <p><strong>Duración:</strong> {session.durationMinutes} minutos</p>
+                <p><strong>Participantes:</strong> {session.participants.length}/{session.maxParticipants}</p>
+              </div>
+
+              <p className="text-sm text-gray-500 dark:text-gray-500">
+                Mantén esta página abierta. La sesión comenzará automáticamente.
               </p>
             </div>
-
-            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-              Participantes ({session.participants.length}/{session.maxParticipants})
-            </h2>
-
-            <div className="space-y-2 mb-6">
-              {session.participants.map((participant) => (
-                <div
-                  key={participant.userId}
-                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-3 h-3 rounded-full ${participant.isReady ? 'bg-green-500' : 'bg-gray-400'}`} />
-                    <span className="font-medium text-gray-900 dark:text-white">
-                      {participant.displayName}
-                      {participant.userId === session.hostId && ' (Anfitrión)'}
-                      {participant.userId === currentUser.id && ' (Tú)'}
-                    </span>
-                  </div>
-                  <span className={`text-sm ${participant.isReady ? 'text-green-600 dark:text-green-400' : 'text-gray-500'}`}>
-                    {participant.isReady ? 'Listo' : 'Esperando'}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex space-x-4">
-              <button
-                onClick={handleReady}
-                className={`flex-1 py-3 px-6 rounded-lg font-medium transition-colors ${
-                  currentParticipant?.isReady
-                    ? 'bg-gray-300 text-gray-700 hover:bg-gray-400'
-                    : 'bg-green-500 text-white hover:bg-green-600'
-                }`}
-              >
-                {currentParticipant?.isReady ? 'No Estoy Listo' : 'Estoy Listo'}
-              </button>
-
-              {isHost && (
-                <button
-                  onClick={handleStart}
-                  disabled={!allReady || session.participants.length < 1}
-                  className="flex-1 py-3 px-6 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-                >
-                  Iniciar Sesión
-                </button>
-              )}
-            </div>
-
-            {isHost && !allReady && (
-              <p className="mt-4 text-sm text-center text-gray-600 dark:text-gray-400">
-                Esperando a que todos los participantes estén listos...
-              </p>
-            )}
           </div>
         </div>
       </div>
@@ -194,7 +137,7 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
   }
 
   // Results screen
-  if (session.status === 'completed' || showResults) {
+  if (session.status === 'completed') {
     const sortedParticipants = [...session.participants].sort((a, b) => b.score - a.score);
 
     return (
@@ -354,21 +297,13 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
               Anterior
             </button>
 
-            {currentQuestionIndex < session.questions.length - 1 ? (
-              <button
-                onClick={handleNextQuestion}
-                className="flex-1 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-              >
-                Siguiente
-              </button>
-            ) : (
-              <button
-                onClick={handleComplete}
-                className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-              >
-                Finalizar
-              </button>
-            )}
+            <button
+              onClick={handleNextQuestion}
+              disabled={currentQuestionIndex >= session.questions.length - 1}
+              className="flex-1 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            >
+              {currentQuestionIndex < session.questions.length - 1 ? 'Siguiente' : 'Última pregunta'}
+            </button>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getCurrentUser, logoutUser, isAdmin } from '@/lib/auth';
-import { getAllScheduledAndActiveSessions, createSession, joinSession } from '@/lib/liveSessions';
+import { getAllAvailableSessions, joinSession, updateSessionStatuses } from '@/lib/liveSessions';
 import { LiveSession } from '@/lib/types';
 import Auth from '@/components/Auth';
 import LiveSessionComponent from '@/components/LiveSession';
@@ -11,17 +11,13 @@ import LiveSessionComponent from '@/components/LiveSession';
 export default function LivePracticePage() {
   const [currentUser, setCurrentUser] = useState(getCurrentUser());
   const [sessions, setSessions] = useState<LiveSession[]>([]);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [sessionName, setSessionName] = useState('');
-  const [sessionLevel, setSessionLevel] = useState<'M1' | 'M2'>('M1');
-  const [questionCount, setQuestionCount] = useState(10);
-  const [maxParticipants, setMaxParticipants] = useState(20);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [error, setError] = useState('');
   const router = useRouter();
 
   const refreshSessions = () => {
-    setSessions(getAllScheduledAndActiveSessions());
+    updateSessionStatuses(); // Auto-update session statuses based on time
+    setSessions(getAllAvailableSessions());
   };
 
   useEffect(() => {
@@ -33,28 +29,6 @@ export default function LivePracticePage() {
   const handleLogout = () => {
     logoutUser();
     setCurrentUser(null);
-  };
-
-  const handleCreateSession = () => {
-    if (!currentUser) return;
-    if (!sessionName.trim()) {
-      setError('Por favor ingresa un nombre para la sesión');
-      return;
-    }
-
-    const newSession = createSession(
-      sessionName.trim(),
-      sessionLevel,
-      currentUser,
-      questionCount,
-      maxParticipants
-    );
-
-    setShowCreateModal(false);
-    setSessionName('');
-    setError('');
-    setActiveSessionId(newSession.id);
-    refreshSessions();
   };
 
   const handleJoinSession = (sessionId: string) => {
@@ -130,16 +104,6 @@ export default function LivePracticePage() {
           </div>
         </div>
 
-        {/* Create Session Button */}
-        <div className="mb-6">
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="w-full md:w-auto px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors"
-          >
-            + Crear Nueva Sesión
-          </button>
-        </div>
-
         {/* Error Message */}
         {error && (
           <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
@@ -186,11 +150,11 @@ export default function LivePracticePage() {
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                       session.status === 'scheduled'
                         ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                        : session.status === 'waiting'
-                        ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
-                        : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                        : session.status === 'active'
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                        : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
                     }`}>
-                      {session.status === 'scheduled' ? 'Programada' : session.status === 'waiting' ? 'Esperando' : 'En Curso'}
+                      {session.status === 'scheduled' ? 'Programada' : session.status === 'active' ? 'En Curso' : session.status}
                     </span>
                   </div>
 
@@ -239,92 +203,6 @@ export default function LivePracticePage() {
           )}
         </div>
       </div>
-
-      {/* Create Session Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 max-w-md w-full">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              Crear Nueva Sesión
-            </h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Nombre de la Sesión
-                </label>
-                <input
-                  type="text"
-                  value={sessionName}
-                  onChange={(e) => setSessionName(e.target.value)}
-                  placeholder="Ej: Práctica de Álgebra"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Nivel
-                </label>
-                <select
-                  value={sessionLevel}
-                  onChange={(e) => setSessionLevel(e.target.value as 'M1' | 'M2')}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                >
-                  <option value="M1">M1</option>
-                  <option value="M2">M2</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Cantidad de Preguntas
-                </label>
-                <input
-                  type="number"
-                  value={questionCount}
-                  onChange={(e) => setQuestionCount(Number(e.target.value))}
-                  min="5"
-                  max="20"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Máximo de Participantes
-                </label>
-                <input
-                  type="number"
-                  value={maxParticipants}
-                  onChange={(e) => setMaxParticipants(Number(e.target.value))}
-                  min="2"
-                  max="50"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                />
-              </div>
-            </div>
-
-            <div className="flex space-x-4 mt-6">
-              <button
-                onClick={() => {
-                  setShowCreateModal(false);
-                  setError('');
-                }}
-                className="flex-1 px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleCreateSession}
-                className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-              >
-                Crear
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

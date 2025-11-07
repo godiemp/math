@@ -9,7 +9,7 @@ import {
   updateScheduledSession,
   deleteSession,
   cancelSession,
-  activateScheduledSession,
+  updateSessionStatuses,
 } from '@/lib/liveSessions';
 import { LiveSession } from '@/lib/types';
 
@@ -29,6 +29,7 @@ export default function AdminBackoffice() {
     level: 'M1' as 'M1' | 'M2',
     scheduledDate: '',
     scheduledTime: '',
+    durationMinutes: 60,
     questionCount: 10,
     maxParticipants: 20,
   });
@@ -49,6 +50,7 @@ export default function AdminBackoffice() {
   }, [router]);
 
   const refreshSessions = () => {
+    updateSessionStatuses(); // Auto-update session statuses based on time
     setSessions(getScheduledSessions());
   };
 
@@ -59,6 +61,7 @@ export default function AdminBackoffice() {
       level: 'M1',
       scheduledDate: '',
       scheduledTime: '',
+      durationMinutes: 60,
       questionCount: 10,
       maxParticipants: 20,
     });
@@ -82,6 +85,7 @@ export default function AdminBackoffice() {
       level: session.level,
       scheduledDate: dateStr,
       scheduledTime: timeStr,
+      durationMinutes: session.durationMinutes,
       questionCount: session.questions.length,
       maxParticipants: session.maxParticipants,
     });
@@ -122,6 +126,7 @@ export default function AdminBackoffice() {
         description: formData.description.trim(),
         level: formData.level,
         scheduledStartTime: scheduledTimestamp,
+        durationMinutes: formData.durationMinutes,
         questionCount: formData.questionCount,
         maxParticipants: formData.maxParticipants,
       });
@@ -142,6 +147,7 @@ export default function AdminBackoffice() {
         formData.level,
         currentUser,
         scheduledTimestamp,
+        formData.durationMinutes,
         formData.questionCount,
         formData.maxParticipants
       );
@@ -174,16 +180,6 @@ export default function AdminBackoffice() {
       } else {
         setError(result.error || 'Error al cancelar la sesión');
       }
-    }
-  };
-
-  const handleActivate = (sessionId: string) => {
-    const result = activateScheduledSession(sessionId);
-    if (result.success) {
-      setSuccess('Sesión activada. Los estudiantes ahora pueden entrar.');
-      refreshSessions();
-    } else {
-      setError(result.error || 'Error al activar la sesión');
     }
   };
 
@@ -349,12 +345,6 @@ export default function AdminBackoffice() {
                           Editar
                         </button>
                         <button
-                          onClick={() => handleActivate(session.id)}
-                          className="px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition-colors"
-                        >
-                          Activar
-                        </button>
-                        <button
                           onClick={() => handleCancel(session.id)}
                           className="px-3 py-1.5 bg-orange-500 text-white text-sm rounded hover:bg-orange-600 transition-colors"
                         >
@@ -473,6 +463,26 @@ export default function AdminBackoffice() {
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                     required
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Duración (minutos) *
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.durationMinutes}
+                    onChange={(e) =>
+                      setFormData({ ...formData, durationMinutes: Number(e.target.value) })
+                    }
+                    min="15"
+                    max="240"
+                    step="15"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Entre 15 y 240 minutos (4 horas)
+                  </p>
                 </div>
 
                 <div className="md:col-span-2">

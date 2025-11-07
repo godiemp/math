@@ -14,51 +14,6 @@ function saveSessions(sessions: LiveSession[]): void {
   localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
 }
 
-export function createSession(
-  name: string,
-  level: 'M1' | 'M2',
-  host: User,
-  questionCount: number = 10,
-  maxParticipants: number = 20
-): LiveSession {
-  const sessions = getAllSessions();
-
-  const questions = getRandomQuestions(level, questionCount);
-
-  const newSession: LiveSession = {
-    id: generateSessionId(),
-    name,
-    level,
-    hostId: host.id,
-    hostName: host.displayName,
-    questions,
-    participants: [],
-    status: 'waiting',
-    currentQuestionIndex: 0,
-    createdAt: Date.now(),
-    maxParticipants,
-    isScheduled: false,
-  };
-
-  // Host automatically joins the session
-  const hostParticipant: SessionParticipant = {
-    userId: host.id,
-    username: host.username,
-    displayName: host.displayName,
-    answers: new Array(questions.length).fill(null),
-    score: 0,
-    joinedAt: Date.now(),
-    isReady: false,
-  };
-
-  newSession.participants.push(hostParticipant);
-
-  sessions.push(newSession);
-  saveSessions(sessions);
-
-  return newSession;
-}
-
 // Admin function to create scheduled sessions
 export function createScheduledSession(
   name: string,
@@ -66,12 +21,14 @@ export function createScheduledSession(
   level: 'M1' | 'M2',
   host: User,
   scheduledStartTime: number,
+  durationMinutes: number,
   questionCount: number = 10,
   maxParticipants: number = 20
 ): LiveSession {
   const sessions = getAllSessions();
 
   const questions = getRandomQuestions(level, questionCount);
+  const scheduledEndTime = scheduledStartTime + (durationMinutes * 60 * 1000);
 
   const newSession: LiveSession = {
     id: generateSessionId(),
@@ -86,8 +43,9 @@ export function createScheduledSession(
     currentQuestionIndex: 0,
     createdAt: Date.now(),
     scheduledStartTime,
+    scheduledEndTime,
+    durationMinutes,
     maxParticipants,
-    isScheduled: true,
   };
 
   sessions.push(newSession);
@@ -142,7 +100,6 @@ export function joinSession(sessionId: string, user: User): { success: boolean; 
     answers: new Array(session.questions.length).fill(null),
     score: 0,
     joinedAt: Date.now(),
-    isReady: false,
   };
 
   session.participants.push(participant);
@@ -173,44 +130,6 @@ export function leaveSession(sessionId: string, userId: string): void {
   saveSessions(sessions);
 }
 
-export function updateParticipantReady(sessionId: string, userId: string, isReady: boolean): void {
-  const sessions = getAllSessions();
-  const sessionIndex = sessions.findIndex(s => s.id === sessionId);
-
-  if (sessionIndex === -1) return;
-
-  const session = sessions[sessionIndex];
-  const participant = session.participants.find(p => p.userId === userId);
-
-  if (participant) {
-    participant.isReady = isReady;
-    sessions[sessionIndex] = session;
-    saveSessions(sessions);
-  }
-}
-
-export function startSession(sessionId: string): { success: boolean; error?: string } {
-  const sessions = getAllSessions();
-  const sessionIndex = sessions.findIndex(s => s.id === sessionId);
-
-  if (sessionIndex === -1) {
-    return { success: false, error: 'Sesión no encontrada' };
-  }
-
-  const session = sessions[sessionIndex];
-
-  if (session.status !== 'waiting') {
-    return { success: false, error: 'La sesión ya ha comenzado' };
-  }
-
-  session.status = 'active';
-  session.startedAt = Date.now();
-  sessions[sessionIndex] = session;
-  saveSessions(sessions);
-
-  return { success: true };
-}
-
 export function submitAnswer(sessionId: string, userId: string, questionIndex: number, answer: number): void {
   const sessions = getAllSessions();
   const sessionIndex = sessions.findIndex(s => s.id === sessionId);
@@ -227,43 +146,57 @@ export function submitAnswer(sessionId: string, userId: string, questionIndex: n
   }
 }
 
-export function completeSession(sessionId: string): void {
-  const sessions = getAllSessions();
-  const sessionIndex = sessions.findIndex(s => s.id === sessionId);
-
-  if (sessionIndex === -1) return;
-
-  const session = sessions[sessionIndex];
-
-  // Calculate scores for all participants
-  session.participants.forEach(participant => {
-    let score = 0;
-    participant.answers.forEach((answer, index) => {
-      if (answer !== null && answer === session.questions[index].correctAnswer) {
-        score++;
-      }
-    });
-    participant.score = score;
-  });
-
-  session.status = 'completed';
-  session.completedAt = Date.now();
-  sessions[sessionIndex] = session;
-  saveSessions(sessions);
-}
-
-export function getActiveSessions(): LiveSession[] {
-  return getAllSessions().filter(s => s.status === 'waiting' || s.status === 'active');
-}
 
 export function getScheduledSessions(): LiveSession[] {
   return getAllSessions().filter(s => s.status === 'scheduled');
 }
 
-export function getAllScheduledAndActiveSessions(): LiveSession[] {
+export function getActiveSessions(): LiveSession[] {
+  return getAllSessions().filter(s => s.status === 'active');
+}
+
+export function getAllAvailableSessions(): LiveSession[] {
   return getAllSessions().filter(s =>
-    s.status === 'scheduled' || s.status === 'waiting' || s.status === 'active'
+    s.status === 'scheduled' || s.status === 'active'
   );
+}
+
+// Auto-update session status based on scheduled times
+export function updateSessionStatuses(): void {
+  const sessions = getAllSessions();
+  const now = Date.now();
+  let updated = false;
+
+  sessions.forEach(session => {
+    // Auto-start scheduled sessions that have reached start time
+    if (session.status === 'scheduled' && now >= session.scheduledStartTime) {
+      session.status = 'active';
+      session.startedAt = now;
+      updated = true;
+    }
+
+    // Auto-complete active sessions that have reached end time
+    if (session.status === 'active' && now >= session.scheduledEndTime) {
+      // Calculate final scores
+      session.participants.forEach(participant => {
+        let score = 0;
+        participant.answers.forEach((answer, index) => {
+          if (answer !== null && answer === session.questions[index].correctAnswer) {
+            score++;
+          }
+        });
+        participant.score = score;
+      });
+
+      session.status = 'completed';
+      session.completedAt = now;
+      updated = true;
+    }
+  });
+
+  if (updated) {
+    saveSessions(sessions);
+  }
 }
 
 export function getUserSessions(userId: string): LiveSession[] {
@@ -280,6 +213,7 @@ export function updateScheduledSession(
     description?: string;
     level?: 'M1' | 'M2';
     scheduledStartTime?: number;
+    durationMinutes?: number;
     questionCount?: number;
     maxParticipants?: number;
   }
@@ -293,10 +227,6 @@ export function updateScheduledSession(
 
   const session = sessions[sessionIndex];
 
-  if (!session.isScheduled) {
-    return { success: false, error: 'Solo se pueden editar sesiones programadas' };
-  }
-
   if (session.status !== 'scheduled') {
     return { success: false, error: 'Solo se pueden editar sesiones que aún no han comenzado' };
   }
@@ -307,6 +237,15 @@ export function updateScheduledSession(
   if (updates.level) session.level = updates.level;
   if (updates.scheduledStartTime) session.scheduledStartTime = updates.scheduledStartTime;
   if (updates.maxParticipants) session.maxParticipants = updates.maxParticipants;
+
+  // Update duration and recalculate end time
+  if (updates.durationMinutes) {
+    session.durationMinutes = updates.durationMinutes;
+    session.scheduledEndTime = session.scheduledStartTime + (updates.durationMinutes * 60 * 1000);
+  } else if (updates.scheduledStartTime) {
+    // If start time changed but not duration, recalculate end time with existing duration
+    session.scheduledEndTime = updates.scheduledStartTime + (session.durationMinutes * 60 * 1000);
+  }
 
   // If question count or level changed, regenerate questions
   if (updates.questionCount || updates.level) {
@@ -357,28 +296,6 @@ export function cancelSession(sessionId: string): { success: boolean; error?: st
   }
 
   session.status = 'cancelled';
-  sessions[sessionIndex] = session;
-  saveSessions(sessions);
-
-  return { success: true };
-}
-
-// Function to activate a scheduled session (move from scheduled to waiting)
-export function activateScheduledSession(sessionId: string): { success: boolean; error?: string } {
-  const sessions = getAllSessions();
-  const sessionIndex = sessions.findIndex(s => s.id === sessionId);
-
-  if (sessionIndex === -1) {
-    return { success: false, error: 'Sesión no encontrada' };
-  }
-
-  const session = sessions[sessionIndex];
-
-  if (session.status !== 'scheduled') {
-    return { success: false, error: 'Solo se pueden activar sesiones programadas' };
-  }
-
-  session.status = 'waiting';
   sessions[sessionIndex] = session;
   saveSessions(sessions);
 

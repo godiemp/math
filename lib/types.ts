@@ -62,14 +62,15 @@ export interface LiveSession {
   hostName: string;
   questions: Question[];
   participants: SessionParticipant[];
-  status: 'scheduled' | 'waiting' | 'active' | 'completed' | 'cancelled';
+  status: 'scheduled' | 'active' | 'completed' | 'cancelled';
   currentQuestionIndex: number;
   createdAt: number;
-  scheduledStartTime?: number; // Unix timestamp for scheduled sessions
+  scheduledStartTime: number; // Unix timestamp for when session starts
+  scheduledEndTime: number; // Unix timestamp for when session ends
+  durationMinutes: number; // Duration in minutes
   startedAt?: number;
   completedAt?: number;
   maxParticipants: number;
-  isScheduled: boolean; // true for admin-scheduled sessions, false for instant sessions
 }
 
 export interface SessionParticipant {
@@ -79,7 +80,6 @@ export interface SessionParticipant {
   answers: (number | null)[];
   score: number;
   joinedAt: number;
-  isReady: boolean;
 }
 
 export interface LiveSessionAnswer {
