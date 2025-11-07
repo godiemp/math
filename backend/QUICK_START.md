@@ -21,11 +21,17 @@ railway init
 # 5. Add PostgreSQL
 railway add -p postgresql
 
-# 6. Set environment variables
-railway variables set JWT_SECRET="$(openssl rand -base64 32)"
-railway variables set JWT_REFRESH_SECRET="$(openssl rand -base64 32)"
-railway variables set NODE_ENV="production"
-railway variables set FRONTEND_URL="http://localhost:3000"
+# 6. Set environment variables (use Railway Dashboard)
+railway open
+# In the dashboard:
+# 1. Click on your service (backend)
+# 2. Go to "Variables" tab
+# 3. Click "Add Variable" and add these:
+#    - JWT_SECRET: (generate with: openssl rand -base64 32)
+#    - JWT_REFRESH_SECRET: (generate with: openssl rand -base64 32)
+#    - NODE_ENV: production
+#    - FRONTEND_URL: http://localhost:3000
+# Or see "Alternative Method" below
 
 # 7. Deploy
 railway up
@@ -65,6 +71,30 @@ curl -X POST $API_URL/api/auth/login \
     "usernameOrEmail": "admin",
     "password": "admin123"
   }'
+```
+
+---
+
+## 🔧 Alternative: Set Variables via Command Line
+
+If you prefer command line, generate secrets first then add via dashboard:
+
+```bash
+# Generate JWT secrets
+echo "JWT_SECRET=$(openssl rand -base64 32)"
+echo "JWT_REFRESH_SECRET=$(openssl rand -base64 32)"
+
+# Copy the output and paste into Railway dashboard
+railway open
+```
+
+Or use Railway's service variable format:
+```bash
+# Link your service first
+railway link
+
+# Then use environment-specific commands (check Railway CLI docs)
+railway variables
 ```
 
 ---
@@ -114,8 +144,8 @@ After deployment, save these:
 1. **JWT Secrets**: NEVER commit these to git (they're in `.env` which is gitignored)
 2. **Frontend URL**: Update this when you deploy to Vercel:
    ```bash
-   railway variables set FRONTEND_URL="https://your-app.vercel.app"
-   railway restart
+   railway open
+   # Variables tab → Edit FRONTEND_URL → https://your-app.vercel.app
    ```
 3. **Database**: Railway automatically provides `DATABASE_URL`
 4. **Port**: Railway automatically sets `PORT` (don't hardcode it)

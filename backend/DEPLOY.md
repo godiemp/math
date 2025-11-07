@@ -88,29 +88,51 @@ railway add
 
 ## Step 7: Set Environment Variables
 
-Generate secure secrets and set them:
+### Method 1: Railway Dashboard (Recommended)
 
+1. Open Railway dashboard:
 ```bash
-# Generate JWT secrets (on macOS/Linux)
-railway variables set JWT_SECRET="$(openssl rand -base64 32)"
-railway variables set JWT_REFRESH_SECRET="$(openssl rand -base64 32)"
-
-# Or set manually with random strings
-railway variables set JWT_SECRET="your-super-secret-key-min-32-chars"
-railway variables set JWT_REFRESH_SECRET="your-refresh-secret-key-min-32-chars"
-
-# Set other variables
-railway variables set NODE_ENV="production"
-railway variables set FRONTEND_URL="http://localhost:3000"
-railway variables set PORT="3001"
+railway open
 ```
+
+2. In the dashboard:
+   - Click on your backend service
+   - Go to the **"Variables"** tab
+   - Click **"New Variable"** or **"Add Variable"**
+
+3. Add these variables:
+
+| Variable Name | Value |
+|---------------|-------|
+| `JWT_SECRET` | (Generate: `openssl rand -base64 32`) |
+| `JWT_REFRESH_SECRET` | (Generate: `openssl rand -base64 32`) |
+| `NODE_ENV` | `production` |
+| `FRONTEND_URL` | `http://localhost:3000` |
+
+**To generate secrets on your terminal:**
+```bash
+# Generate and display secrets
+echo "JWT_SECRET=$(openssl rand -base64 32)"
+echo "JWT_REFRESH_SECRET=$(openssl rand -base64 32)"
+
+# Copy each value and paste into Railway dashboard
+```
+
+### Method 2: Command Line (Alternative)
+
+First generate your secrets:
+```bash
+export JWT_SECRET=$(openssl rand -base64 32)
+export JWT_REFRESH_SECRET=$(openssl rand -base64 32)
+echo "JWT_SECRET: $JWT_SECRET"
+echo "JWT_REFRESH_SECRET: $JWT_REFRESH_SECRET"
+```
+
+Then add them via the Railway dashboard (see Method 1).
 
 **Note**: You'll update `FRONTEND_URL` later when you deploy your Next.js frontend to Vercel.
 
-Verify variables:
-```bash
-railway variables
-```
+**DATABASE_URL** is automatically set by Railway when you add PostgreSQL - no need to set it manually!
 
 ---
 
@@ -264,7 +286,9 @@ railway variables
 
 ### Update Environment Variable
 ```bash
-railway variables set VARIABLE_NAME="value"
+railway open
+# Go to Variables tab → Click on variable → Edit value
+# Or use Railway CLI (check docs for your version)
 ```
 
 ### Redeploy (after code changes)
@@ -323,10 +347,11 @@ railway logs
 **Solution**: Railway automatically sets the `PORT` environment variable. Your code uses `process.env.PORT || 3001`, which works correctly.
 
 ### Issue: CORS errors from frontend
-**Solution**: Update `FRONTEND_URL` to your Vercel URL:
+**Solution**: Update `FRONTEND_URL` to your Vercel URL via Railway dashboard:
 ```bash
-railway variables set FRONTEND_URL="https://your-app.vercel.app"
-railway restart
+railway open
+# Go to Variables tab → Edit FRONTEND_URL → Set to: https://your-app.vercel.app
+# The service will automatically restart
 ```
 
 ---
