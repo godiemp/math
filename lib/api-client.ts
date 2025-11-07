@@ -1,0 +1,188 @@
+/**
+ * API Client for making authenticated requests to the backend
+ */
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
+// Token storage keys
+const ACCESS_TOKEN_KEY = 'paes-access-token';
+const REFRESH_TOKEN_KEY = 'paes-refresh-token';
+
+/**
+ * Get stored access token
+ */
+export function getAccessToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem(ACCESS_TOKEN_KEY);
+}
+
+/**
+ * Get stored refresh token
+ */
+export function getRefreshToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem(REFRESH_TOKEN_KEY);
+}
+
+/**
+ * Store authentication tokens
+ */
+export function setTokens(accessToken: string, refreshToken: string): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+}
+
+/**
+ * Clear stored tokens
+ */
+export function clearTokens(): void {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(ACCESS_TOKEN_KEY);
+  localStorage.removeItem(REFRESH_TOKEN_KEY);
+}
+
+/**
+ * Refresh the access token using the refresh token
+ */
+async function refreshAccessToken(): Promise<string | null> {
+  const refreshToken = getRefreshToken();
+  if (!refreshToken) return null;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (!response.ok) {
+      // Refresh token is invalid or expired
+      clearTokens();
+      return null;
+    }
+
+    const data = await response.json();
+
+    // Update stored access token
+    if (data.accessToken) {
+      localStorage.setItem(ACCESS_TOKEN_KEY, data.accessToken);
+      return data.accessToken;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Token refresh failed:', error);
+    clearTokens();
+    return null;
+  }
+}
+
+export interface ApiError {
+  error: string;
+  statusCode: number;
+}
+
+export interface ApiResponse<T> {
+  data?: T;
+  error?: ApiError;
+}
+
+/**
+ * Make an authenticated API request
+ */
+export async function apiRequest<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<ApiResponse<T>> {
+  const url = `${API_BASE_URL}${endpoint}`;
+
+  // Add access token to headers if available
+  let accessToken = getAccessToken();
+
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    ...options.headers,
+  };
+
+  if (accessToken) {
+    headers['Authorization'] = `Bearer ${accessToken}`;
+  }
+
+  try {
+    let response = await fetch(url, {
+      ...options,
+      headers,
+    });
+
+    // If unauthorized and we have a refresh token, try to refresh
+    if (response.status === 401 && getRefreshToken()) {
+      const newAccessToken = await refreshAccessToken();
+
+      if (newAccessToken) {
+        // Retry the request with the new token
+        headers['Authorization'] = `Bearer ${newAccessToken}`;
+        response = await fetch(url, {
+          ...options,
+          headers,
+        });
+      } else {
+        // Refresh failed, user needs to login again
+        return {
+          error: {
+            error: 'Session expired. Please login again.',
+            statusCode: 401,
+          },
+        };
+      }
+    }
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        error: {
+          error: data.error || 'Request failed',
+          statusCode: response.status,
+        },
+      };
+    }
+
+    return { data };
+  } catch (error) {
+    console.error('API request failed:', error);
+    return {
+      error: {
+        error: 'Network error. Please check your connection.',
+        statusCode: 0,
+      },
+    };
+  }
+}
+
+/**
+ * Convenience methods for common HTTP verbs
+ */
+export const api = {
+  get: <T>(endpoint: string, options?: RequestInit) =>
+    apiRequest<T>(endpoint, { ...options, method: 'GET' }),
+
+  post: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
+    apiRequest<T>(endpoint, {
+      ...options,
+      method: 'POST',
+      body: body ? JSON.stringify(body) : undefined,
+    }),
+
+  put: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
+    apiRequest<T>(endpoint, {
+      ...options,
+      method: 'PUT',
+      body: body ? JSON.stringify(body) : undefined,
+    }),
+
+  delete: <T>(endpoint: string, options?: RequestInit) =>
+    apiRequest<T>(endpoint, { ...options, method: 'DELETE' }),
+};
