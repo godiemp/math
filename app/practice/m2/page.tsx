@@ -9,12 +9,20 @@ export default function M2Practice() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <Link
-            href="/"
-            className="text-indigo-600 dark:text-indigo-400 hover:underline mb-4 inline-block"
-          >
-            ← Volver al Inicio
-          </Link>
+          <div className="flex justify-between items-start mb-4">
+            <Link
+              href="/"
+              className="text-indigo-600 dark:text-indigo-400 hover:underline inline-block"
+            >
+              ← Volver al Inicio
+            </Link>
+            <Link
+              href="/curriculum/m2"
+              className="text-indigo-600 dark:text-indigo-400 hover:underline inline-block"
+            >
+              📚 Ver Curriculum M2
+            </Link>
+          </div>
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
             Práctica PAES - Competencia Matemática M2
           </h1>
