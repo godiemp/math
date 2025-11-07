@@ -1,5 +1,11 @@
 # AI Module
 
+> **Related Documentation:**
+> - 🧮 [Calculator Module](../calculator/README.md) - **Primary tool** that AI calls for math operations
+> - 🎨 [Math Renderer Module](../math-renderer/README.md) - AI requests rendering of solutions
+> - 📚 [PAES Curriculum Scope](../../content/paes-curriculum-scope.md) - Content the AI needs to teach
+> - 🏗️ [Architecture Overview](../../architecture/overview.md) - System design
+
 ## Overview
 The AI module is the intelligent tutoring system that provides personalized guidance, hints, explanations, and adaptive learning. It **orchestrates other modules** (especially the Calculator) as tools to solve problems and help students learn.
 
@@ -254,7 +260,11 @@ async function updateProfile(
 
 ## Tool Definitions for AI
 
+> **Important**: These tool definitions map directly to [Calculator Module functions](../calculator/README.md#public-api). Each tool calls a specific Calculator function. See [Calculator Module](../calculator/README.md) for implementation details.
+
 ### Calculator Tools
+
+These tools allow the AI to call Calculator module functions:
 
 ```typescript
 const calculatorTools = [

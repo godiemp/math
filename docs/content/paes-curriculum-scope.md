@@ -1,5 +1,12 @@
 # PAES Mathematics Curriculum - Content Scope
 
+> **Related Documentation:**
+> - 🧮 [Calculator Module](../modules/calculator/README.md) - Implementation of all functions listed here
+> - 🤖 [AI Module](../modules/ai-module/README.md) - How to teach this content
+> - 🎨 [Math Renderer Module](../modules/math-renderer/README.md) - How to display this content
+> - 🏗️ [Architecture Overview](../architecture/overview.md) - System design
+> - 📖 [Main README](../../README.md) - Project overview
+
 ## Overview
 
 This document defines the **exact scope** of mathematical content for the PAES (Prueba de Acceso a la Educación Superior) exam. Use this as the definitive guide for what the Calculator and AI modules need to support.
@@ -634,3 +641,35 @@ interface PAESProblem {
 - ❌ Advanced statistics
 
 This scope covers 100% of PAES requirements without overbuilding!
+
+---
+
+## Implementation References
+
+### For Developers
+
+Each PAES topic area maps to specific module implementations:
+
+| PAES Area | Calculator Functions | AI Teaching Approach | Rendering Needs |
+|-----------|---------------------|---------------------|-----------------|
+| **Números** | Fractions, percentages, GCD/LCM, powers/roots | Step-by-step arithmetic, common mistakes | LaTeX for fractions, radicals |
+| **Álgebra** | Equation solvers, factoring, simplify/expand | Solution strategies, hint system | Equation formatting, step-by-step display |
+| **Geometría** | Area/volume calculators, distance, slope | Visual explanations, diagrams | Interactive graphs, coordinate planes |
+| **Estadística** | Mean/median/mode, combinations/permutations | Data interpretation, probability concepts | Charts, graphs, box plots |
+
+**For detailed implementation:**
+- 🧮 [Calculator Module - Public API](../modules/calculator/README.md#public-api) - Function signatures
+- 🧮 [Calculator Module - Development Phases](../modules/calculator/README.md#development-phases) - Build order
+- 🤖 [AI Module - Tool Definitions](../modules/ai-module/README.md#tool-definitions-for-ai) - How AI calls Calculator
+- 🎨 [Math Renderer - Examples](../modules/math-renderer/README.md#example-usage) - How to display results
+
+---
+
+## Next Steps
+
+1. **Review this scope** with PAES subject matter experts
+2. **Start with Phase 1** (see [Development Priority](#development-priority))
+3. **Implement Calculator functions** following the [Calculator Module docs](../modules/calculator/README.md)
+4. **Build content database** with example problems from each topic
+5. **Integrate AI tutoring** using [AI Module patterns](../modules/ai-module/README.md)
+6. **Test with real PAES problems** to validate coverage

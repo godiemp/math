@@ -1,5 +1,11 @@
 # Math Renderer Module
 
+> **Related Documentation:**
+> - 🧮 [Calculator Module](../calculator/README.md) - Provides mathematical data to render (LaTeX, steps, graphs)
+> - 🤖 [AI Module](../ai-module/README.md) - Requests rendering of tutoring content
+> - 📚 [PAES Curriculum Scope](../../content/paes-curriculum-scope.md) - Types of math content to display
+> - 🏗️ [Architecture Overview](../../architecture/overview.md) - System design
+
 ## Overview
 The Math Renderer module handles all mathematical notation display, from simple expressions to complex equations. It's designed to be completely independent and can be developed/tested in isolation.
 
@@ -284,26 +290,66 @@ plotFunction('y = x^2 - 4x + 3', graphElement, {
 
 ## Integration with Other Modules
 
-### With Calculator Module
+### With Calculator Module 🧮
+
+📖 See: [Calculator Module](../calculator/README.md)
+
+**Primary role**: Display mathematical results from Calculator
+
 ```typescript
-// Calculator provides expression, renderer displays it
-const result = calculator.solve('2x + 3 = 7');
-renderLatex(result.steps[0].expression, element);
+// Calculator provides LaTeX expressions, Renderer displays them
+const solution = calculator.solveWithSteps('2x + 3 = 7');
+
+// Render each step
+solution.steps.forEach(step => {
+  renderLatex(step.latex, element);
+});
+
+// Render final answer
+renderLatex(solution.answerLatex, answerElement);
 ```
 
-### With AI Module
+**Data Contract**: Calculator always provides `latex` field in results
+- `solution.latex`: Main result in LaTeX
+- `step.latex`: Each step in LaTeX
+- `graphData`: Coordinates for plotting
+
+### With AI Module 🤖
+
+📖 See: [AI Module](../ai-module/README.md)
+
+**Primary role**: Display AI-generated tutoring content
+
 ```typescript
-// AI generates hint, renderer displays math notation
-const hint = ai.getHint(problemId);
-renderLatex(hint.mathExpression, hintElement);
+// AI generates explanations with math, Renderer displays
+const response = await ai.chat("How do I solve 2x + 3 = 7?");
+
+// Render the math content in the response
+if (response.mathContent) {
+  renderLatex(response.mathContent.latex, mathElement);
+}
+
+// Render step-by-step if provided
+if (response.steps) {
+  response.steps.forEach(step => {
+    renderLatex(step.latex, stepElement);
+  });
+}
 ```
+
+**Data Flow**: AI → Chat response with LaTeX → Renderer → Display
 
 ### With Content Module
+
 ```typescript
 // Content provides problem, renderer displays question
 const problem = content.getProblem(id);
-renderLatex(problem.question, questionElement);
-plotFunction(problem.graphData, graphElement);
+renderLatex(problem.questionLatex, questionElement);
+
+// If problem has a graph
+if (problem.graphData) {
+  plotFunction(problem.graphData.function, graphElement);
+}
 ```
 
 ---

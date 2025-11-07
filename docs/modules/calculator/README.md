@@ -1,5 +1,11 @@
 # Calculator Module
 
+> **Related Documentation:**
+> - 📚 [PAES Curriculum Scope](../../content/paes-curriculum-scope.md) - Exact topics this module must support
+> - 🤖 [AI Module](../ai-module/README.md) - Uses Calculator as tools via function calling
+> - 🎨 [Math Renderer Module](../math-renderer/README.md) - Displays Calculator results
+> - 🏗️ [Architecture Overview](../../architecture/overview.md) - How this fits in the system
+
 ## Overview
 The Calculator module is the computational engine of the PAES math app. It handles symbolic math, numerical calculations, equation solving, and step-by-step problem solving. This module is completely independent and can be developed as a standalone library.
 
@@ -488,7 +494,11 @@ function safeEvaluate(expression: string): EvaluationResult {
 
 ## Integration with Other Modules
 
-### With Math Renderer Module
+### With Math Renderer Module 🎨
+
+📖 See: [Math Renderer Module](../math-renderer/README.md)
+
+The Calculator provides data in LaTeX format that the Renderer displays:
 
 ```typescript
 // Calculator solves, renderer displays
@@ -498,14 +508,30 @@ solution.steps.forEach(step => {
 });
 ```
 
-### With AI Module
+**Data Flow**: Calculator → LaTeX strings → Math Renderer → Visual display
+
+### With AI Module 🤖
+
+📖 See: [AI Module - Tool Definitions](../ai-module/README.md#tool-definitions-for-ai)
+
+**The AI module calls Calculator functions as tools** (primary integration):
 
 ```typescript
-// AI asks calculator to verify student work
+// AI uses Calculator as a tool via function calling
+// When student asks: "Solve 2x + 3 = 7"
+
+// 1. AI recognizes this needs the Calculator
+// 2. AI calls: calculator.solveWithSteps('2x + 3 = 7', 'x')
+// 3. Calculator returns solution with steps
+// 4. AI explains the solution in pedagogical language
+
+// Example direct integration:
 const studentWork = '2x + 3 = 7; x = 2';
 const validation = calculator.validateAnswer(studentWork, '2');
-ai.provideFeedback(validation);
+const feedback = ai.generateFeedback(validation);
 ```
+
+**Data Flow**: Student question → AI → Calculator (tool call) → AI → Student response
 
 ### With Content Module
 

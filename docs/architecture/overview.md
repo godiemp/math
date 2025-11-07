@@ -1,5 +1,12 @@
 # PAES Math Learning App - Architecture Overview
 
+> **Quick Navigation:**
+> - [PAES Curriculum Scope](../content/paes-curriculum-scope.md) - What content we need to cover
+> - [Math Renderer Module](../modules/math-renderer/README.md) - Display & visualization
+> - [Calculator Module](../modules/calculator/README.md) - Computation engine
+> - [AI Module](../modules/ai-module/README.md) - Intelligent tutoring
+> - [Main README](../../README.md) - Project overview
+
 ## Vision
 A modular, scalable platform for students preparing for the PAES mathematics exam, featuring adaptive learning, comprehensive content coverage, and progress tracking.
 
@@ -46,7 +53,64 @@ A modular, scalable platform for students preparing for the PAES mathematics exa
 
 ---
 
-## Core Modules
+## Three Core Technical Modules
+
+The application is built around **three independent, reusable modules**:
+
+### 1. Math Renderer Module 🎨
+**Handles all mathematical display and visualization**
+
+📖 **[Full Documentation](../modules/math-renderer/README.md)**
+
+- LaTeX/MathML rendering (KaTeX or MathJax)
+- Interactive graphs and function plots
+- Geometry visualizations
+- Math input components
+
+**Key Responsibility**: Transform mathematical expressions into visual representations
+
+---
+
+### 2. Calculator Module 🧮
+**The computational engine for all math operations**
+
+📖 **[Full Documentation](../modules/calculator/README.md)**
+📚 **[PAES Content Scope](../content/paes-curriculum-scope.md)** - Defines what this module needs to support
+
+- Solve equations (linear, quadratic, systems)
+- Algebraic operations (simplify, expand, factor)
+- Geometry calculations (area, perimeter, volume, coordinate geometry)
+- Statistics & probability (mean, median, combinations, etc.)
+- Step-by-step solution generation
+- Answer validation and equivalence checking
+
+**Key Responsibility**: All mathematical computation and problem-solving
+
+**Note**: Scoped to PAES (high school level) - NO calculus, advanced trig, or matrices
+
+---
+
+### 3. AI Module 🤖
+**Intelligent tutoring that orchestrates the Calculator**
+
+📖 **[Full Documentation](../modules/ai-module/README.md)**
+
+- Chat-based tutoring interface
+- **Calls Calculator module as tools** (function calling with GPT-4/Claude)
+- Generates pedagogical hints and explanations
+- Adaptive difficulty adjustment
+- Misconception detection
+- Learning path optimization
+
+**Key Responsibility**: Provide personalized, intelligent tutoring by using the Calculator
+
+**Key Design Pattern**: AI doesn't do math itself - it calls Calculator functions and explains the results
+
+---
+
+## High-Level Service Modules
+
+These are the application-level services that use the three core modules:
 
 ### 1. Content Module
 **Purpose**: Manage all mathematical content aligned with PAES curriculum
