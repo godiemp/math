@@ -1,26 +1,16 @@
 import { User } from './types';
+import { api, setTokens, clearTokens, getAccessToken } from './api-client';
 
-const USERS_STORAGE_KEY = 'paes-users';
 const CURRENT_USER_KEY = 'paes-current-user';
 
-export function getAllUsers(): User[] {
-  if (typeof window === 'undefined') return [];
-  const usersJson = localStorage.getItem(USERS_STORAGE_KEY);
-  return usersJson ? JSON.parse(usersJson) : [];
-}
-
-function saveUsers(users: User[]): void {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
-}
-
+// Store user data in localStorage (but auth is via JWT tokens)
 export function getCurrentUser(): User | null {
   if (typeof window === 'undefined') return null;
   const userJson = localStorage.getItem(CURRENT_USER_KEY);
   return userJson ? JSON.parse(userJson) : null;
 }
 
-export function setCurrentUser(user: User | null): void {
+function setCurrentUser(user: User | null): void {
   if (typeof window === 'undefined') return;
   if (user) {
     localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
@@ -29,58 +19,119 @@ export function setCurrentUser(user: User | null): void {
   }
 }
 
-export function registerUser(username: string, email: string, displayName: string, role: 'student' | 'admin' = 'student'): { success: boolean; error?: string; user?: User } {
-  const users = getAllUsers();
-
-  // Check if username already exists
-  if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
-    return { success: false, error: 'El nombre de usuario ya está en uso' };
-  }
-
-  // Check if email already exists
-  if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-    return { success: false, error: 'El correo electrónico ya está registrado' };
-  }
-
-  // Create new user
-  const newUser: User = {
-    id: generateUserId(),
+/**
+ * Register a new user via backend API
+ */
+export async function registerUser(
+  username: string,
+  email: string,
+  password: string,
+  displayName: string
+): Promise<{ success: boolean; error?: string; user?: User }> {
+  const response = await api.post<{
+    user: User;
+    accessToken: string;
+    refreshToken: string;
+  }>('/api/auth/register', {
     username,
     email,
+    password,
     displayName,
-    role,
-    createdAt: Date.now(),
-  };
+  });
 
-  users.push(newUser);
-  saveUsers(users);
-  setCurrentUser(newUser);
-
-  return { success: true, user: newUser };
-}
-
-export function loginUser(usernameOrEmail: string): { success: boolean; error?: string; user?: User } {
-  const users = getAllUsers();
-
-  const user = users.find(u =>
-    u.username.toLowerCase() === usernameOrEmail.toLowerCase() ||
-    u.email.toLowerCase() === usernameOrEmail.toLowerCase()
-  );
-
-  if (!user) {
-    return { success: false, error: 'Usuario no encontrado. Por favor, regístrate primero.' };
+  if (response.error) {
+    return { success: false, error: response.error.error };
   }
 
-  setCurrentUser(user);
-  return { success: true, user };
+  if (response.data) {
+    // Store tokens
+    setTokens(response.data.accessToken, response.data.refreshToken);
+
+    // Store user data
+    setCurrentUser(response.data.user);
+
+    return { success: true, user: response.data.user };
+  }
+
+  return { success: false, error: 'Registration failed' };
 }
 
-export function logoutUser(): void {
+/**
+ * Login user via backend API
+ */
+export async function loginUser(
+  usernameOrEmail: string,
+  password: string
+): Promise<{ success: boolean; error?: string; user?: User }> {
+  const response = await api.post<{
+    user: User;
+    accessToken: string;
+    refreshToken: string;
+  }>('/api/auth/login', {
+    usernameOrEmail,
+    password,
+  });
+
+  if (response.error) {
+    return { success: false, error: response.error.error };
+  }
+
+  if (response.data) {
+    // Store tokens
+    setTokens(response.data.accessToken, response.data.refreshToken);
+
+    // Store user data
+    setCurrentUser(response.data.user);
+
+    return { success: true, user: response.data.user };
+  }
+
+  return { success: false, error: 'Login failed' };
+}
+
+/**
+ * Logout user via backend API
+ */
+export async function logoutUser(): Promise<void> {
+  const refreshToken = localStorage.getItem('paes-refresh-token');
+
+  if (refreshToken) {
+    // Call backend to revoke refresh token
+    await api.post('/api/auth/logout', { refreshToken });
+  }
+
+  // Clear local storage
+  clearTokens();
   setCurrentUser(null);
 }
 
+/**
+ * Fetch current user from backend
+ */
+export async function fetchCurrentUser(): Promise<User | null> {
+  if (!getAccessToken()) {
+    return null;
+  }
+
+  const response = await api.get<User>('/api/auth/me');
+
+  if (response.error) {
+    // Token is invalid or expired
+    clearTokens();
+    setCurrentUser(null);
+    return null;
+  }
+
+  if (response.data) {
+    setCurrentUser(response.data);
+    return response.data;
+  }
+
+  return null;
+}
+
 export function isAuthenticated(): boolean {
-  return getCurrentUser() !== null;
+  return getCurrentUser() !== null && getAccessToken() !== null;
 }
 
 export function isAdmin(): boolean {
@@ -94,31 +145,4 @@ export function requireAdmin(): User | null {
     return null;
   }
   return user;
-}
-
-// Create a default admin user if none exists
-export function ensureAdminExists(): void {
-  const users = getAllUsers();
-
-  // Check if any admin exists
-  const hasAdmin = users.some(u => u.role === 'admin');
-
-  if (!hasAdmin) {
-    // Create default admin user
-    const adminUser: User = {
-      id: generateUserId(),
-      username: 'admin',
-      email: 'admin@paes.cl',
-      displayName: 'Administrador',
-      role: 'admin',
-      createdAt: Date.now(),
-    };
-
-    users.push(adminUser);
-    saveUsers(users);
-  }
-}
-
-function generateUserId(): string {
-  return `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }

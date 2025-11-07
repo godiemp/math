@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { registerUser, loginUser, ensureAdminExists } from '@/lib/auth';
+import { useState } from 'react';
+import { registerUser, loginUser } from '@/lib/auth';
 
 interface AuthProps {
   onSuccess: () => void;
@@ -11,39 +11,56 @@ export default function Auth({ onSuccess }: AuthProps) {
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Ensure admin user exists when component mounts
-  useEffect(() => {
-    ensureAdminExists();
-  }, []);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
 
-    if (isLogin) {
-      // Login
-      const result = loginUser(username);
-      if (result.success) {
-        onSuccess();
-      } else {
-        setError(result.error || 'Error al iniciar sesión');
-      }
-    } else {
-      // Register
-      if (!username || !email || !displayName) {
-        setError('Por favor completa todos los campos');
-        return;
-      }
+    try {
+      if (isLogin) {
+        // Login
+        if (!username || !password) {
+          setError('Por favor completa todos los campos');
+          setIsLoading(false);
+          return;
+        }
 
-      const result = registerUser(username, email, displayName);
-      if (result.success) {
-        onSuccess();
+        const result = await loginUser(username, password);
+        if (result.success) {
+          onSuccess();
+        } else {
+          setError(result.error || 'Error al iniciar sesión');
+        }
       } else {
-        setError(result.error || 'Error al registrarse');
+        // Register
+        if (!username || !email || !password || !displayName) {
+          setError('Por favor completa todos los campos');
+          setIsLoading(false);
+          return;
+        }
+
+        if (password.length < 6) {
+          setError('La contraseña debe tener al menos 6 caracteres');
+          setIsLoading(false);
+          return;
+        }
+
+        const result = await registerUser(username, email, password, displayName);
+        if (result.success) {
+          onSuccess();
+        } else {
+          setError(result.error || 'Error al registrarse');
+        }
       }
+    } catch (err) {
+      setError('Error de conexión. Por favor intenta de nuevo.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -137,6 +154,54 @@ export default function Auth({ onSuccess }: AuthProps) {
                 outline: 'none',
               }}
               placeholder={isLogin ? 'usuario o email@ejemplo.com' : 'usuario123'}
+              onFocus={(e) => {
+                e.target.style.borderColor = 'var(--color-tint)';
+                e.target.style.borderWidth = '2px';
+                e.target.style.boxShadow = 'var(--shadow-ambient)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = 'var(--color-separator)';
+                e.target.style.borderWidth = '1px';
+                e.target.style.boxShadow = 'none';
+              }}
+            />
+          </div>
+
+          {/* Password Input */}
+          <div>
+            <label
+              htmlFor="password"
+              style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: 500,
+                color: 'var(--color-label-primary)',
+                marginBottom: 'var(--spacing-2)',
+              }}
+            >
+              Contraseña
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="spring-motion"
+              style={{
+                width: '100%',
+                height: '44px',
+                padding: '0 var(--spacing-6)',
+                fontSize: '17px',
+                fontFamily: 'var(--font-body)',
+                color: 'var(--color-label-primary)',
+                background: 'var(--color-surface)',
+                border: '1px solid var(--color-separator)',
+                borderRadius: 'var(--radius-sm)',
+                outline: 'none',
+              }}
+              placeholder={isLogin ? 'Tu contraseña' : 'Mínimo 6 caracteres'}
               onFocus={(e) => {
                 e.target.style.borderColor = 'var(--color-tint)';
                 e.target.style.borderWidth = '2px';
@@ -271,6 +336,7 @@ export default function Auth({ onSuccess }: AuthProps) {
           {/* Submit Button */}
           <button
             type="submit"
+            disabled={isLoading}
             className="spring-emphasized"
             style={{
               width: '100%',
@@ -281,28 +347,37 @@ export default function Auth({ onSuccess }: AuthProps) {
               fontWeight: 600,
               fontFamily: 'var(--font-body)',
               color: 'white',
-              background: 'var(--color-tint)',
+              background: isLoading ? 'var(--color-separator)' : 'var(--color-tint)',
               border: 'none',
               borderRadius: 'var(--radius-sm)',
               boxShadow: 'var(--shadow-ambient)',
-              cursor: 'pointer',
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              opacity: isLoading ? 0.7 : 1,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.02)';
-              e.currentTarget.style.boxShadow = 'var(--shadow-raised)';
+              if (!isLoading) {
+                e.currentTarget.style.transform = 'scale(1.02)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-raised)';
+              }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = 'var(--shadow-ambient)';
+              if (!isLoading) {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-ambient)';
+              }
             }}
             onMouseDown={(e) => {
-              e.currentTarget.style.transform = 'scale(0.98)';
+              if (!isLoading) {
+                e.currentTarget.style.transform = 'scale(0.98)';
+              }
             }}
             onMouseUp={(e) => {
-              e.currentTarget.style.transform = 'scale(1.02)';
+              if (!isLoading) {
+                e.currentTarget.style.transform = 'scale(1.02)';
+              }
             }}
           >
-            {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta Gratis'}
+            {isLoading ? 'Cargando...' : (isLogin ? 'Iniciar Sesión' : 'Crear Cuenta Gratis')}
           </button>
 
           {/* Footer Text */}

@@ -2,13 +2,14 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '@/lib/types';
-import { getCurrentUser, ensureAdminExists } from '@/lib/auth';
+import { getCurrentUser, fetchCurrentUser } from '@/lib/auth';
 
 interface AuthContextType {
   user: User | null;
   setUser: (user: User | null) => void;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -17,14 +18,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Ensure admin exists on mount
-    ensureAdminExists();
+  const refreshUser = async () => {
+    const fetchedUser = await fetchCurrentUser();
+    setUser(fetchedUser);
+  };
 
-    // Load current user from localStorage
-    const currentUser = getCurrentUser();
-    setUser(currentUser);
-    setIsLoading(false);
+  useEffect(() => {
+    // Try to load user from backend if we have a token
+    const initAuth = async () => {
+      // First check localStorage for cached user
+      const cachedUser = getCurrentUser();
+
+      if (cachedUser) {
+        setUser(cachedUser);
+        // Verify with backend in the background
+        const fetchedUser = await fetchCurrentUser();
+        if (fetchedUser) {
+          setUser(fetchedUser);
+        } else {
+          // Token was invalid, clear cached user
+          setUser(null);
+        }
+      }
+
+      setIsLoading(false);
+    };
+
+    initAuth();
   }, []);
 
   const value = {
@@ -32,6 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser,
     isAuthenticated: !!user,
     isAdmin: user?.role === 'admin',
+    refreshUser,
   };
 
   // Don't render children until we've checked auth status
