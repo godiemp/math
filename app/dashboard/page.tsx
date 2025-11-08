@@ -122,18 +122,8 @@ function DashboardContent() {
       </nav>
 
       <main className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <Heading level={2} size="lg" className="mb-4">
-            Prepárate para la PAES
-          </Heading>
-          <Text size="md" variant="secondary" className="mb-8 max-w-3xl mx-auto">
-            Practica para la Prueba de Acceso a la Educación Superior con ejercicios organizados por tema
-          </Text>
-        </div>
-
         {/* Streak Section */}
-        <div className="mb-12 max-w-2xl mx-auto">
+        <div className="mb-8 max-w-md mx-auto">
           <Streak initialStreak={user ? {
             currentStreak: user.currentStreak || 0,
             longestStreak: user.longestStreak || 0,
