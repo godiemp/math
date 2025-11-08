@@ -64,13 +64,47 @@ interface LoadingScreenProps {
 
 export function LoadingScreen({ message = 'Cargando...' }: LoadingScreenProps) {
   return (
-    <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] flex items-center justify-center">
-      <div className="text-center">
-        <Spinner size="lg" />
-        <p className="mt-6 text-lg font-medium text-black/60 dark:text-white/60">
-          {message}
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-[#F7F7F7] via-[#FAFAFA] to-[#F0F0F0] dark:from-[#000000] dark:via-[#0A0A0A] dark:to-[#000000] flex items-center justify-center relative overflow-hidden">
+      {/* Animated gradient orbs in background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#0A84FF]/5 dark:bg-[#0A84FF]/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }}></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#5E5CE6]/5 dark:bg-[#5E5CE6]/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }}></div>
       </div>
+
+      {/* Main content */}
+      <div className="text-center relative z-10 animate-fadeIn px-6">
+        {/* Spinner with glow effect */}
+        <div className="relative inline-block">
+          {/* Glow effect */}
+          <div className="absolute inset-0 blur-2xl opacity-20">
+            <Spinner size="lg" variant="primary" />
+          </div>
+          {/* Actual spinner */}
+          <div className="relative">
+            <Spinner size="lg" variant="primary" />
+          </div>
+        </div>
+
+        {/* Message with animated dots */}
+        <div className="mt-8 space-y-3">
+          <p className="text-xl font-semibold text-black/80 dark:text-white/90 tracking-tight animate-fadeIn">
+            {message}
+          </p>
+
+          {/* Animated progress dots */}
+          <div className="flex items-center justify-center gap-2 h-6">
+            <div className="w-2 h-2 rounded-full bg-[#0A84FF] animate-bounce" style={{ animationDelay: '0ms', animationDuration: '1s' }}></div>
+            <div className="w-2 h-2 rounded-full bg-[#0A84FF] animate-bounce" style={{ animationDelay: '150ms', animationDuration: '1s' }}></div>
+            <div className="w-2 h-2 rounded-full bg-[#0A84FF] animate-bounce" style={{ animationDelay: '300ms', animationDuration: '1s' }}></div>
+          </div>
+
+          {/* Subtle hint text */}
+          <p className="text-sm text-black/40 dark:text-white/40 animate-fadeIn" style={{ animationDelay: '200ms' }}>
+            Un momento por favor
+          </p>
+        </div>
+      </div>
+
     </div>
   );
 }
