@@ -179,36 +179,109 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
         </div>
 
         {/* Question Context Card */}
-        <div className="p-4 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-          <div className="text-sm mb-2">
-            <span className="font-semibold text-gray-700 dark:text-gray-300">Pregunta:</span>
+        <div className="p-4 bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 border-b-2 border-teal-200 dark:border-teal-700">
+          {/* AI Context Indicator */}
+          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-teal-200 dark:border-teal-700">
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-teal-500 text-white rounded-full text-xs font-semibold shadow-sm">
+              <span>🧠</span>
+              <span>Contexto completo cargado</span>
+            </div>
+            <span className="text-xs text-teal-700 dark:text-teal-300">
+              Tengo toda la información de esta pregunta
+            </span>
           </div>
-          <div className="text-sm text-gray-900 dark:text-white mb-3">
-            {question.questionLatex ? (
-              <SmartLatexRenderer latex={question.questionLatex} displayMode={false} />
-            ) : (
-              <MathText content={question.question} />
-            )}
+
+          {/* Question */}
+          <div className="mb-3">
+            <div className="text-xs font-semibold text-teal-700 dark:text-teal-300 mb-1.5">
+              📝 PREGUNTA:
+            </div>
+            <div className="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-800 p-3 rounded-lg">
+              {question.questionLatex ? (
+                <SmartLatexRenderer latex={question.questionLatex} displayMode={false} />
+              ) : (
+                <MathText content={question.question} />
+              )}
+            </div>
           </div>
 
           {/* Visual Data */}
           {question.visualData && question.visualData.type === 'geometry' && (
             <div className="mb-3">
-              <GeometryCanvas
-                figures={question.visualData.data as GeometryFigure[]}
-                width={300}
-                height={225}
-              />
+              <div className="text-xs font-semibold text-teal-700 dark:text-teal-300 mb-1.5">
+                📐 FIGURA GEOMÉTRICA:
+              </div>
+              <div className="bg-white dark:bg-gray-800 p-3 rounded-lg">
+                <GeometryCanvas
+                  figures={question.visualData.data as GeometryFigure[]}
+                  width={300}
+                  height={225}
+                />
+              </div>
             </div>
           )}
 
-          {/* User's answer status */}
-          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${
+          {/* Options with user answer and correct answer highlighted */}
+          <div className="mb-3">
+            <div className="text-xs font-semibold text-teal-700 dark:text-teal-300 mb-1.5">
+              🔤 OPCIONES:
+            </div>
+            <div className="space-y-1.5">
+              {question.options.map((option, index) => {
+                const isUserAnswer = userAnswer === index;
+                const isCorrectAnswer = index === question.correctAnswer;
+
+                return (
+                  <div
+                    key={index}
+                    className={`text-xs p-2 rounded-lg flex items-start gap-2 ${
+                      isCorrectAnswer
+                        ? 'bg-green-100 dark:bg-green-900/30 border-2 border-green-500 text-green-900 dark:text-green-100'
+                        : isUserAnswer
+                        ? 'bg-amber-100 dark:bg-amber-900/30 border-2 border-amber-500 text-amber-900 dark:text-amber-100'
+                        : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300'
+                    }`}
+                  >
+                    <span className="font-bold shrink-0">{String.fromCharCode(65 + index)}.</span>
+                    <span className="flex-1">
+                      {question.optionsLatex && question.optionsLatex[index] ? (
+                        <SmartLatexRenderer latex={question.optionsLatex[index]} displayMode={false} />
+                      ) : (
+                        <MathText content={option} />
+                      )}
+                    </span>
+                    {isCorrectAnswer && <span className="shrink-0 font-bold">✓ Correcta</span>}
+                    {isUserAnswer && !isCorrectAnswer && <span className="shrink-0 font-bold">Tu respuesta</span>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Status Summary */}
+          <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
             isCorrect
-              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-              : 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
+              ? 'bg-green-500 text-white'
+              : userAnswer === null
+              ? 'bg-gray-500 text-white'
+              : 'bg-amber-500 text-white'
           }`}>
-            {isCorrect ? '✓ Respondiste correctamente' : '◆ Puedo ayudarte a entender'}
+            {isCorrect ? (
+              <>
+                <span>🎉</span>
+                <span>Respondiste correctamente - ¡Podemos profundizar en el concepto!</span>
+              </>
+            ) : userAnswer === null ? (
+              <>
+                <span>🤔</span>
+                <span>No respondiste - ¡Puedo ayudarte a resolverla!</span>
+              </>
+            ) : (
+              <>
+                <span>🌿</span>
+                <span>Respuesta incorrecta - ¡Aprendamos juntos del error!</span>
+              </>
+            )}
           </div>
         </div>
 
