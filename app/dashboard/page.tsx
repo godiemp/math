@@ -7,9 +7,8 @@ import { useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
 import { getUserRegisteredSessions, updateSessionStatuses, getAllAvailableSessions } from "@/lib/liveSessions";
 import { useEffect, useState } from "react";
-import { LiveSession, QuestionAttempt } from "@/lib/types";
+import { LiveSession } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen } from "@/components/ui";
-import { getRecommendedSkills, summarizeSkillProgress } from "@/lib/skillProgress";
 import { Streak } from "@/components/Streak";
 
 function DashboardContent() {
@@ -18,8 +17,6 @@ function DashboardContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
   const [nextSession, setNextSession] = useState<LiveSession | null>(null);
-  const [allHistory, setAllHistory] = useState<QuestionAttempt[]>([]);
-  const [showSkillsSection, setShowSkillsSection] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -45,17 +42,6 @@ function DashboardContent() {
         .sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
 
       setNextSession(allUpcoming[0] || null);
-
-      // Load question history for skills recommendation
-      const m1HistoryData = localStorage.getItem('paes-history-M1');
-      const m2HistoryData = localStorage.getItem('paes-history-M2');
-      const m1History: QuestionAttempt[] = m1HistoryData ? JSON.parse(m1HistoryData) : [];
-      const m2History: QuestionAttempt[] = m2HistoryData ? JSON.parse(m2HistoryData) : [];
-      const combinedHistory = [...m1History, ...m2History];
-      setAllHistory(combinedHistory);
-
-      // Show skills section if user has attempted questions
-      setShowSkillsSection(combinedHistory.length > 0);
 
       // Mark loading as complete
       setIsLoading(false);
@@ -276,110 +262,6 @@ function DashboardContent() {
             </div>
           </div>
         )}
-
-        {/* Skills Recommendations Section */}
-        {showSkillsSection && (() => {
-          const recommended = getRecommendedSkills(allHistory, undefined, 3);
-          const summary = summarizeSkillProgress(allHistory);
-
-          return (
-            <div className="mb-12">
-              <div className="mb-6">
-                <Heading level={3} size="sm" className="mb-2">
-                  Tu Progreso de Habilidades
-                </Heading>
-                <Text size="sm" variant="secondary">
-                  Sigue desarrollando tus competencias matemáticas
-                </Text>
-              </div>
-
-              {/* Stats Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <Card className="p-4 text-center">
-                  <Heading level={4} size="md" className="text-[#34C759] dark:text-[#30D158] mb-1">
-                    {summary.mastered.length}
-                  </Heading>
-                  <Text size="xs" variant="secondary">Dominadas</Text>
-                </Card>
-                <Card className="p-4 text-center">
-                  <Heading level={4} size="md" className="text-[#FF9F0A] mb-1">
-                    {summary.learning.length}
-                  </Heading>
-                  <Text size="xs" variant="secondary">Aprendiendo</Text>
-                </Card>
-                <Card className="p-4 text-center">
-                  <Heading level={4} size="md" className="mb-1">
-                    {summary.notStarted.length}
-                  </Heading>
-                  <Text size="xs" variant="secondary">Por Aprender</Text>
-                </Card>
-                <Card className="p-4 text-center">
-                  <Heading level={4} size="md" className="mb-1">
-                    {summary.overallAccuracy}%
-                  </Heading>
-                  <Text size="xs" variant="secondary">Precisión</Text>
-                </Card>
-              </div>
-
-              {/* Recommended Skills */}
-              {recommended.length > 0 && (
-                <Card className="p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="text-2xl">💡</span>
-                    <Heading level={4} size="xs">
-                      Habilidades Recomendadas
-                    </Heading>
-                  </div>
-                  <Text size="sm" variant="secondary" className="mb-4">
-                    Basado en tu progreso actual, te recomendamos enfocarte en:
-                  </Text>
-                  <div className="grid gap-3 md:grid-cols-3">
-                    {recommended.map(skill => (
-                      <div
-                        key={skill.skillId}
-                        className="p-4 rounded-xl border border-black/[0.12] dark:border-white/[0.16] bg-white dark:bg-[#1C1C1E]"
-                      >
-                        <div className="flex justify-between items-start mb-2">
-                          <div className="flex-1 text-sm font-semibold text-black dark:text-white">
-                            {skill.skill.name}
-                          </div>
-                          <Badge size="sm" variant="info">
-                            {skill.skill.topic}
-                          </Badge>
-                        </div>
-                        <Text size="xs" variant="secondary" className="mb-2">
-                          {skill.skill.description}
-                        </Text>
-                        {skill.attemptsCount > 0 && (
-                          <div className="flex items-center gap-2">
-                            <div className="flex-1 bg-black/[0.04] dark:bg-white/[0.06] rounded-full h-1.5">
-                              <div
-                                className={`h-1.5 rounded-full ${
-                                  skill.accuracy >= 60 ? 'bg-[#FF9F0A]' : 'bg-[#FF453A]'
-                                }`}
-                                style={{ width: `${skill.accuracy}%` }}
-                              />
-                            </div>
-                            <Text size="xs" variant="secondary" className="font-semibold">
-                              {skill.accuracy}%
-                            </Text>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-4 text-center">
-                    <Button asChild variant="secondary">
-                      <Link href="/progress">
-                        Ver Todas las Habilidades →
-                      </Link>
-                    </Button>
-                  </div>
-                </Card>
-              )}
-            </div>
-          );
-        })()}
 
         {/* Progress Tracking Card */}
         <div className="mt-12 text-center">
