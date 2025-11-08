@@ -99,7 +99,7 @@ export const saveQuizAttempts = async (req: AuthRequest, res: Response): Promise
       return;
     }
 
-    const { attempts } = req.body;
+    const { attempts, quizSessionId, aiConversation } = req.body;
 
     if (!Array.isArray(attempts) || attempts.length === 0) {
       res.status(400).json({ error: 'Invalid attempts array' });
@@ -110,6 +110,30 @@ export const saveQuizAttempts = async (req: AuthRequest, res: Response): Promise
 
     try {
       await client.query('BEGIN');
+
+      // Create or update quiz session
+      const sessionId = quizSessionId || `quiz-${userId}-${Date.now()}`;
+      const level = attempts[0].level; // Use level from first attempt
+      const now = Date.now();
+      const startedAt = attempts[0].timestamp || now;
+
+      // Create quiz session
+      await client.query(
+        `INSERT INTO quiz_sessions (id, user_id, level, started_at, completed_at, ai_conversation, created_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         ON CONFLICT (id) DO UPDATE SET
+           completed_at = $5,
+           ai_conversation = $6`,
+        [
+          sessionId,
+          userId,
+          level,
+          startedAt,
+          now,
+          JSON.stringify(aiConversation || []),
+          now,
+        ]
+      );
 
       const savedIds = [];
 
@@ -134,13 +158,14 @@ export const saveQuizAttempts = async (req: AuthRequest, res: Response): Promise
 
         const result = await client.query(
           `INSERT INTO quiz_attempts (
-            user_id, question_id, level, topic, subject, question, options,
+            user_id, quiz_session_id, question_id, level, topic, subject, question, options,
             user_answer, correct_answer, is_correct, difficulty, explanation,
             skills, attempted_at
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
           RETURNING id`,
           [
             userId,
+            sessionId,
             questionId,
             level,
             topic,
@@ -166,6 +191,7 @@ export const saveQuizAttempts = async (req: AuthRequest, res: Response): Promise
         message: 'Quiz attempts saved successfully',
         count: savedIds.length,
         attemptIds: savedIds,
+        quizSessionId: sessionId,
       });
     } catch (error) {
       await client.query('ROLLBACK');

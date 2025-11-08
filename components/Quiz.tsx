@@ -33,6 +33,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     const saved = localStorage.getItem('quiz-show-quick-nav');
     return saved !== null ? saved === 'true' : true; // Default to showing
   });
+  const [quizSessionId] = useState(() => `quiz-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
+  const [aiConversation] = useState<Array<{role: string; message: string; timestamp: number}>>([]);
 
   // Get time limit based on difficulty
   const getTimeLimit = () => {
@@ -179,30 +181,29 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
     quizQuestions.forEach((question, index) => {
       const userAnswer = userAnswers[index];
-      const isCorrect = userAnswer === question.correctAnswer;
+      const isCorrect = userAnswer !== null && userAnswer === question.correctAnswer;
 
       if (isCorrect) {
         correctCount++;
       }
 
-      if (userAnswer !== null) {
-        const attempt: QuestionAttempt = {
-          questionId: question.id,
-          question: question.question,
-          topic: question.topic,
-          level: level,
-          userAnswer: userAnswer,
-          correctAnswer: question.correctAnswer,
-          isCorrect: isCorrect,
-          timestamp: Date.now(),
-          options: question.options,
-          explanation: question.explanation,
-          difficulty: question.difficulty,
-          subject: question.subject,
-          skills: question.skills,
-        };
-        attempts.push(attempt);
-      }
+      // Save ALL questions, including unanswered ones (use -1 for unanswered)
+      const attempt: QuestionAttempt = {
+        questionId: question.id,
+        question: question.question,
+        topic: question.topic,
+        level: level,
+        userAnswer: userAnswer !== null ? userAnswer : -1,
+        correctAnswer: question.correctAnswer,
+        isCorrect: isCorrect,
+        timestamp: Date.now(),
+        options: question.options,
+        explanation: question.explanation,
+        difficulty: question.difficulty,
+        subject: question.subject,
+        skills: question.skills,
+      };
+      attempts.push(attempt);
     });
 
     const newScore = {
@@ -231,9 +232,13 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     const saveToBackend = async () => {
       if (isAuthenticated()) {
         try {
-          // Save quiz attempts to backend
+          // Save quiz attempts to backend with session ID and AI conversation
           if (attempts.length > 0) {
-            await api.post('/api/quiz/attempts', { attempts });
+            await api.post('/api/quiz/attempts', {
+              attempts,
+              quizSessionId,
+              aiConversation
+            });
           }
 
           // Update streak
