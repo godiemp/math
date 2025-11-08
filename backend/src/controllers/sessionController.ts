@@ -88,8 +88,28 @@ export const createSession = async (req: Request, res: Response): Promise<void> 
       ]
     );
 
-    const session = result.rows[0];
-    // JSONB columns are automatically parsed by pg library
+    const row = result.rows[0];
+    const session = {
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      level: row.level,
+      hostId: row.host_id,
+      hostName: row.host_name,
+      questions: row.questions,
+      status: row.status,
+      currentQuestionIndex: row.current_question_index,
+      createdAt: row.created_at,
+      scheduledStartTime: row.scheduled_start_time,
+      scheduledEndTime: row.scheduled_end_time,
+      durationMinutes: row.duration_minutes,
+      lobbyOpenTime: row.lobby_open_time,
+      maxParticipants: row.max_participants,
+      startedAt: row.started_at,
+      completedAt: row.completed_at,
+      registeredUsers: [],
+      participants: [],
+    };
 
     res.json({
       success: true,
@@ -161,8 +181,23 @@ export const getSessions = async (req: Request, res: Response): Promise<void> =>
     const result = await pool.query(query, params);
 
     const sessions = result.rows.map((row: any) => ({
-      ...row,
-      // JSONB columns are automatically parsed by pg library
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      level: row.level,
+      hostId: row.host_id,
+      hostName: row.host_name,
+      questions: row.questions, // Already parsed by JSONB
+      status: row.status,
+      currentQuestionIndex: row.current_question_index,
+      createdAt: row.created_at,
+      scheduledStartTime: row.scheduled_start_time,
+      scheduledEndTime: row.scheduled_end_time,
+      durationMinutes: row.duration_minutes,
+      lobbyOpenTime: row.lobby_open_time,
+      maxParticipants: row.max_participants,
+      startedAt: row.started_at,
+      completedAt: row.completed_at,
       registeredUsers: row.registered_users || [],
       participants: row.participants || [],
     }));
@@ -224,10 +259,28 @@ export const getSession = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    const session = result.rows[0];
-    // JSONB columns are automatically parsed by pg library
-    session.registeredUsers = session.registered_users || [];
-    session.participants = session.participants || [];
+    const row = result.rows[0];
+    const session = {
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      level: row.level,
+      hostId: row.host_id,
+      hostName: row.host_name,
+      questions: row.questions,
+      status: row.status,
+      currentQuestionIndex: row.current_question_index,
+      createdAt: row.created_at,
+      scheduledStartTime: row.scheduled_start_time,
+      scheduledEndTime: row.scheduled_end_time,
+      durationMinutes: row.duration_minutes,
+      lobbyOpenTime: row.lobby_open_time,
+      maxParticipants: row.max_participants,
+      startedAt: row.started_at,
+      completedAt: row.completed_at,
+      registeredUsers: row.registered_users || [],
+      participants: row.participants || [],
+    };
 
     res.json({
       success: true,
@@ -346,8 +399,28 @@ export const updateSession = async (req: Request, res: Response): Promise<void> 
     const query = `UPDATE sessions SET ${updates.join(', ')} WHERE id = $${paramCount} RETURNING *`;
 
     const result = await pool.query(query, params);
-    const session = result.rows[0];
-    // JSONB columns are automatically parsed by pg library
+    const row = result.rows[0];
+    const session = {
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      level: row.level,
+      hostId: row.host_id,
+      hostName: row.host_name,
+      questions: row.questions,
+      status: row.status,
+      currentQuestionIndex: row.current_question_index,
+      createdAt: row.created_at,
+      scheduledStartTime: row.scheduled_start_time,
+      scheduledEndTime: row.scheduled_end_time,
+      durationMinutes: row.duration_minutes,
+      lobbyOpenTime: row.lobby_open_time,
+      maxParticipants: row.max_participants,
+      startedAt: row.started_at,
+      completedAt: row.completed_at,
+      registeredUsers: [],
+      participants: [],
+    };
 
     res.json({
       success: true,
@@ -416,8 +489,28 @@ export const cancelSession = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
-    const session = result.rows[0];
-    // JSONB columns are automatically parsed by pg library
+    const row = result.rows[0];
+    const session = {
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      level: row.level,
+      hostId: row.host_id,
+      hostName: row.host_name,
+      questions: row.questions,
+      status: row.status,
+      currentQuestionIndex: row.current_question_index,
+      createdAt: row.created_at,
+      scheduledStartTime: row.scheduled_start_time,
+      scheduledEndTime: row.scheduled_end_time,
+      durationMinutes: row.duration_minutes,
+      lobbyOpenTime: row.lobby_open_time,
+      maxParticipants: row.max_participants,
+      startedAt: row.started_at,
+      completedAt: row.completed_at,
+      registeredUsers: [],
+      participants: [],
+    };
 
     res.json({
       success: true,
