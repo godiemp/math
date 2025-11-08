@@ -62,16 +62,33 @@ export const Streak: React.FC<StreakProps> = ({ initialStreak }) => {
     return null;
   }
 
+  const getStreakEmoji = (currentStreak: number) => {
+    if (currentStreak === 0) return '🎯';
+    if (currentStreak < 7) return '🔥';
+    if (currentStreak < 30) return '⚡';
+    return '🏆';
+  };
+
   return (
-    <Card>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+    <Card className="relative overflow-hidden">
+      {/* Decorative gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-red-500/10 to-yellow-500/10 pointer-events-none" />
+
+      <div className="relative flex items-center gap-6">
+        {/* Emoji */}
+        <div className="text-4xl" role="img" aria-label="streak">
+          {getStreakEmoji(streak.currentStreak)}
+        </div>
+
+        {/* Stats */}
+        <div className="flex gap-8">
+          {/* Current Streak */}
           <div>
             <Text size="xs" variant="secondary" className="mb-1">
               Racha diaria
             </Text>
             <div className="flex items-baseline gap-2">
-              <Heading level={3} size="sm" className="font-bold text-gray-900 dark:text-white">
+              <Heading level={3} size="md" className="font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500">
                 {streak.currentStreak}
               </Heading>
               <Text size="xs" variant="secondary">
@@ -79,19 +96,20 @@ export const Streak: React.FC<StreakProps> = ({ initialStreak }) => {
               </Text>
             </div>
           </div>
-        </div>
 
-        <div className="text-right">
-          <Text size="xs" variant="secondary" className="mb-1">
-            Mejor racha
-          </Text>
-          <div className="flex items-baseline gap-2 justify-end">
-            <Heading level={3} size="sm" className="font-bold text-gray-900 dark:text-white">
-              {streak.longestStreak}
-            </Heading>
-            <Text size="xs" variant="secondary">
-              {streak.longestStreak === 1 ? 'día' : 'días'}
+          {/* Best Streak */}
+          <div>
+            <Text size="xs" variant="secondary" className="mb-1">
+              Mejor racha
             </Text>
+            <div className="flex items-baseline gap-2">
+              <Heading level={3} size="md" className="font-bold text-gray-900 dark:text-white">
+                {streak.longestStreak}
+              </Heading>
+              <Text size="xs" variant="secondary">
+                {streak.longestStreak === 1 ? 'día' : 'días'}
+              </Text>
+            </div>
           </div>
         </div>
       </div>

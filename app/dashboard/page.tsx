@@ -123,7 +123,7 @@ function DashboardContent() {
 
       <main className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-12">
         {/* Streak Section */}
-        <div className="mb-8 max-w-md mx-auto">
+        <div className="mb-8">
           <Streak initialStreak={user ? {
             currentStreak: user.currentStreak || 0,
             longestStreak: user.longestStreak || 0,
