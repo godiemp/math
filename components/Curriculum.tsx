@@ -565,9 +565,19 @@ export default function Curriculum({ level }: CurriculumProps) {
           <div className="max-w-5xl mx-auto">
             {/* Header */}
             <div className="mb-8">
-              <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 text-transparent bg-clip-text">
-                Curriculum PAES - Nivel {level}
-              </h1>
+              <div className="flex justify-between items-start mb-3">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 text-transparent bg-clip-text">
+                  Curriculum PAES - Nivel {level}
+                </h1>
+                {level === 'M1' && (
+                  <Link
+                    href="/curriculum/m1/docs"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors text-sm flex items-center gap-2"
+                  >
+                    📖 Ver Documentación Detallada
+                  </Link>
+                )}
+              </div>
               <p className="text-gray-600 dark:text-gray-300 text-lg mb-2">
                 {level === 'M1'
                   ? 'Competencia Matemática 1 - Contenidos básicos'
