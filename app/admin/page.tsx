@@ -518,7 +518,7 @@ function AdminBackofficeContent() {
 
       {/* Create/Edit Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
+        <div className="fixed inset-0 flex items-center justify-center p-4 z-50 overflow-y-auto">
           <Card className="max-w-2xl w-full my-8 shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)]" padding="lg">
             <Heading level={2} size="sm" className="mb-4">
               {editingSession ? 'Editar Ensayo' : 'Programar Nuevo Ensayo'}
