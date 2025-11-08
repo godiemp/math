@@ -89,7 +89,7 @@ export const createSession = async (req: Request, res: Response): Promise<void> 
     );
 
     const session = result.rows[0];
-    session.questions = JSON.parse(session.questions);
+    // JSONB columns are automatically parsed by pg library
 
     res.json({
       success: true,
@@ -162,7 +162,7 @@ export const getSessions = async (req: Request, res: Response): Promise<void> =>
 
     const sessions = result.rows.map((row: any) => ({
       ...row,
-      questions: JSON.parse(row.questions),
+      // JSONB columns are automatically parsed by pg library
       registeredUsers: row.registered_users || [],
       participants: row.participants || [],
     }));
@@ -225,7 +225,7 @@ export const getSession = async (req: Request, res: Response): Promise<void> => 
     }
 
     const session = result.rows[0];
-    session.questions = JSON.parse(session.questions);
+    // JSONB columns are automatically parsed by pg library
     session.registeredUsers = session.registered_users || [];
     session.participants = session.participants || [];
 
@@ -347,7 +347,7 @@ export const updateSession = async (req: Request, res: Response): Promise<void> 
 
     const result = await pool.query(query, params);
     const session = result.rows[0];
-    session.questions = JSON.parse(session.questions);
+    // JSONB columns are automatically parsed by pg library
 
     res.json({
       success: true,
@@ -417,7 +417,7 @@ export const cancelSession = async (req: Request, res: Response): Promise<void> 
     }
 
     const session = result.rows[0];
-    session.questions = JSON.parse(session.questions);
+    // JSONB columns are automatically parsed by pg library
 
     res.json({
       success: true,
