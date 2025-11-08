@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import api from '@/lib/api-client';
+import { api } from '@/lib/api-client';
 
 interface ExtractedQuestion {
   question: string;
