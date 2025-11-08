@@ -1,4 +1,5 @@
 import React from 'react';
+import { Slot } from '@radix-ui/react-slot';
 import { cn } from '@/lib/utils';
 
 export type ButtonVariant = 'primary' | 'ghost' | 'danger' | 'success' | 'secondary' | 'link';
@@ -28,9 +29,11 @@ const buttonSizes: Record<ButtonSize, string> = {
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'primary', size = 'md', className, children, fullWidth, disabled, ...props }, ref) => {
+  ({ variant = 'primary', size = 'md', className, children, fullWidth, disabled, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : 'button';
+
     return (
-      <button
+      <Comp
         ref={ref}
         disabled={disabled}
         className={cn(
@@ -51,7 +54,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {children}
-      </button>
+      </Comp>
     );
   }
 );
