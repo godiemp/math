@@ -87,7 +87,7 @@ export const uploadPDF = async (req: Request, res: Response): Promise<void> => {
         questionsFound: questions.length,
         validQuestions: validQuestions.length,
         questions: validQuestions,
-        rawText: rawText.substring(0, 500), // First 500 chars for preview
+        rawText: rawText, // Full raw text for debugging
         logs: processingLogs,
       });
     } catch (error) {
