@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { CurriculumSidebar } from './ui/CurriculumSidebar';
+import { skillsArray, type EnhancedSkill } from '@/lib/skillsArray';
+import { getSkillById } from '@/lib/skillTaxonomy';
 
 interface CurriculumProps {
   level: 'M1' | 'M2';
@@ -37,6 +39,156 @@ const skillTopicMatrix = {
     skills: ['Resolver', 'Modelar', 'Representar', 'Argumentar'],
     description: 'Datos, gráficos, inferencias'
   }
+};
+
+// Map curriculum topics to specific skills from the skill taxonomy
+const topicSkillMapping: Record<string, string[]> = {
+  // NÚMEROS
+  'Enteros y racionales: operaciones, orden, comparación y problemas': [
+    'numeros-operaciones-basicas',
+    'numeros-enteros',
+    'numeros-fracciones',
+    'numeros-orden-operaciones'
+  ],
+  'Porcentaje: concepto, cálculo y problemas en contexto': [
+    'numeros-porcentajes',
+    'numeros-porcentajes-descuentos',
+    'numeros-decimales'
+  ],
+  'Potencias y raíces enésimas: propiedades, descomposición y problemas': [
+    'numeros-potencias',
+    'numeros-potencias-propiedades',
+    'numeros-raices'
+  ],
+  'Números reales: operaciones y problemas': [
+    'numeros-enteros',
+    'numeros-decimales',
+    'numeros-raices'
+  ],
+  'Matemática financiera: AFP, jubilación, créditos': [
+    'numeros-porcentajes',
+    'numeros-proporcionalidad'
+  ],
+  'Logaritmos: relación con potencias y raíces, propiedades y aplicaciones': [
+    'numeros-potencias',
+    'numeros-raices'
+  ],
+
+  // ÁLGEBRA Y FUNCIONES
+  'Expresiones algebraicas: productos notables, factorizaciones, operatoria y aplicaciones': [
+    'algebra-expresiones',
+    'algebra-terminos-semejantes',
+    'algebra-factorizacion',
+    'algebra-diferencia-cuadrados',
+    'algebra-expansion',
+    'algebra-propiedad-distributiva'
+  ],
+  'Proporcionalidad directa e inversa': [
+    'numeros-proporcionalidad',
+    'numeros-proporcionalidad-directa',
+    'numeros-proporcionalidad-inversa'
+  ],
+  'Ecuaciones e inecuaciones lineales': [
+    'algebra-ecuaciones-lineales',
+    'algebra-despeje',
+    'algebra-desigualdades'
+  ],
+  'Sistemas de ecuaciones lineales (2×2)': [
+    'algebra-sistemas-ecuaciones',
+    'algebra-metodo-sustitucion',
+    'algebra-metodo-eliminacion'
+  ],
+  'Función lineal y afín: concepto, tablas, gráficos y problemas': [
+    'algebra-funciones',
+    'algebra-funciones-lineales',
+    'algebra-pendiente',
+    'algebra-evaluacion-funciones'
+  ],
+  'Función cuadrática: resolución, gráfica, vértice, ceros, intersecciones y problemas': [
+    'algebra-ecuaciones-cuadraticas',
+    'algebra-factorizacion-cuadratica',
+    'algebra-discriminante',
+    'algebra-formula-cuadratica'
+  ],
+  'Sistemas de ecuaciones lineales: análisis de soluciones (única, infinitas, ninguna)': [
+    'algebra-sistemas-ecuaciones',
+    'algebra-metodo-sustitucion',
+    'algebra-metodo-eliminacion'
+  ],
+  'Función potencia: gráficos y problemas': [
+    'algebra-funciones',
+    'numeros-potencias'
+  ],
+
+  // GEOMETRÍA
+  'Teorema de Pitágoras': [
+    'geometria-pitagoras',
+    'geometria-triangulos',
+    'numeros-raices'
+  ],
+  'Perímetro y área de triángulos, paralelogramos, trapecios y círculos': [
+    'geometria-perimetro',
+    'geometria-area',
+    'geometria-triangulos',
+    'geometria-area-triangulo',
+    'geometria-rectangulos',
+    'geometria-trapecio',
+    'geometria-circulos',
+    'geometria-area-circulo'
+  ],
+  'Área y volumen de prismas rectos y cilindros': [
+    'geometria-area',
+    'geometria-volumen',
+    'geometria-volumen-cubo',
+    'geometria-volumen-cilindro'
+  ],
+  'Transformaciones isométricas: rotación, traslación y reflexión': [
+    'geometria-plano-cartesiano'
+  ],
+  'Homotecia de figuras planas': [
+    'geometria-plano-cartesiano'
+  ],
+  'Razones trigonométricas (seno, coseno, tangente) y aplicaciones': [
+    'geometria-triangulos',
+    'geometria-pitagoras'
+  ],
+
+  // PROBABILIDAD Y ESTADÍSTICA
+  'Tablas y gráficos (frecuencia absoluta y relativa)': [
+    'estadistica-porcentajes'
+  ],
+  'Medidas de tendencia central y rango': [
+    'estadistica-media',
+    'estadistica-mediana',
+    'estadistica-moda',
+    'estadistica-rango'
+  ],
+  'Medidas de posición (cuartiles, percentiles, diagrama de caja)': [
+    'estadistica-cuartiles',
+    'estadistica-rango-intercuartilico'
+  ],
+  'Reglas de probabilidad (aditiva y multiplicativa)': [
+    'probabilidad-basica',
+    'probabilidad-casos-favorables',
+    'probabilidad-eventos-compuestos'
+  ],
+  'Medidas de dispersión': [
+    'estadistica-cuartiles',
+    'estadistica-rango-intercuartilico'
+  ],
+  'Probabilidad condicional': [
+    'probabilidad-basica',
+    'probabilidad-eventos-compuestos'
+  ],
+  'Permutaciones y combinatoria': [
+    'probabilidad-combinatoria',
+    'probabilidad-combinaciones',
+    'probabilidad-factorial'
+  ],
+  'Modelos probabilísticos (binomial)': [
+    'probabilidad-basica',
+    'probabilidad-combinatoria'
+  ]
 };
 
 // Official PAES curriculum structure with question distribution and difficulty
@@ -379,6 +531,14 @@ export default function Curriculum({ level }: CurriculumProps) {
     return { stars: stars[difficulty - 1] || '⭐', label: labels[difficulty - 1] || 'Básico' };
   };
 
+  // Get skills for a specific topic
+  const getTopicSkills = (topicText: string): EnhancedSkill[] => {
+    const skillIds = topicSkillMapping[topicText] || [];
+    return skillIds
+      .map(id => skillsArray.find(skill => skill.id === id))
+      .filter((skill): skill is EnhancedSkill => skill !== undefined);
+  };
+
   return (
     <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">
       {/* Navbar */}
@@ -504,6 +664,28 @@ export default function Curriculum({ level }: CurriculumProps) {
                                       <p className="font-semibold text-gray-700 dark:text-gray-300">📌 Puntos clave:</p>
                                       <p className="text-gray-600 dark:text-gray-400">{topic.keyPoints}</p>
                                     </div>
+                                    {(() => {
+                                      const topicSkills = getTopicSkills(topic.text);
+                                      if (topicSkills.length > 0) {
+                                        return (
+                                          <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded p-3 text-sm border border-green-200 dark:border-green-700">
+                                            <p className="font-semibold text-green-800 dark:text-green-200 mb-2">🎯 Habilidades específicas:</p>
+                                            <div className="flex flex-wrap gap-1.5">
+                                              {topicSkills.map(skill => (
+                                                <span
+                                                  key={skill.id}
+                                                  className="text-xs bg-white dark:bg-gray-800 text-green-700 dark:text-green-300 px-2 py-1 rounded border border-green-300 dark:border-green-600"
+                                                  title={skill.description}
+                                                >
+                                                  {skill.name}
+                                                </span>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        );
+                                      }
+                                      return null;
+                                    })()}
                                   </div>
                                 )}
                               </div>
@@ -565,6 +747,28 @@ export default function Curriculum({ level }: CurriculumProps) {
                                         <p className="font-semibold text-gray-700 dark:text-gray-300">📌 Puntos clave:</p>
                                         <p className="text-gray-600 dark:text-gray-400">{addition.keyPoints}</p>
                                       </div>
+                                      {(() => {
+                                        const topicSkills = getTopicSkills(addition.text);
+                                        if (topicSkills.length > 0) {
+                                          return (
+                                            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded p-3 text-sm border border-green-200 dark:border-green-700">
+                                              <p className="font-semibold text-green-800 dark:text-green-200 mb-2">🎯 Habilidades específicas:</p>
+                                              <div className="flex flex-wrap gap-1.5">
+                                                {topicSkills.map(skill => (
+                                                  <span
+                                                    key={skill.id}
+                                                    className="text-xs bg-white dark:bg-gray-800 text-green-700 dark:text-green-300 px-2 py-1 rounded border border-green-300 dark:border-green-600"
+                                                    title={skill.description}
+                                                  >
+                                                    {skill.name}
+                                                  </span>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          );
+                                        }
+                                        return null;
+                                      })()}
                                     </div>
                                   )}
                                 </div>
