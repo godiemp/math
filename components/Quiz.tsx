@@ -25,6 +25,13 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
   const [countdown, setCountdown] = useState(3);
   const [showZenIntro, setShowZenIntro] = useState(quizMode === 'zen');
   const [zenIntroPhase, setZenIntroPhase] = useState(0); // 0: fade in, 1: breathe, 2: fade out
+  const [aiHelpMap, setAiHelpMap] = useState<Map<number, string>>(new Map());
+  const [isLoadingAIHelp, setIsLoadingAIHelp] = useState(false);
+  const [showQuickNav, setShowQuickNav] = useState(() => {
+    // Load quick nav visibility from localStorage
+    const saved = localStorage.getItem('quiz-show-quick-nav');
+    return saved !== null ? saved === 'true' : true; // Default to showing
+  });
 
   // Get time limit based on difficulty
   const getTimeLimit = () => {
@@ -51,6 +58,13 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     const newValue = !showTimer;
     setShowTimer(newValue);
     localStorage.setItem('quiz-show-timer', String(newValue));
+  };
+
+  // Toggle quick nav visibility and save preference
+  const toggleQuickNav = () => {
+    const newValue = !showQuickNav;
+    setShowQuickNav(newValue);
+    localStorage.setItem('quiz-show-quick-nav', String(newValue));
   };
 
   useEffect(() => {
@@ -232,6 +246,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     setQuizSubmitted(false);
     setTimeRemaining(getTimeLimit()); // Reset timer based on difficulty
     setTotalTimeElapsed(0); // Reset elapsed time
+    setAiHelpMap(new Map()); // Reset AI help
+    setIsLoadingAIHelp(false);
     // Reset countdown for rapidfire mode
     if (quizMode === 'rapidfire') {
       setShowCountdown(true);
@@ -241,6 +257,49 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     if (quizMode === 'zen') {
       setShowZenIntro(true);
       setZenIntroPhase(0);
+    }
+  };
+
+  const handleRequestAIHelp = async () => {
+    const question = currentQuestion;
+    const userAnswer = userAnswers[currentQuestionIndex];
+
+    if (userAnswer === null || userAnswer === question.correctAnswer) {
+      return; // No need for help if correct or not answered
+    }
+
+    // Check if we already have help for this question
+    if (aiHelpMap.has(currentQuestionIndex)) {
+      return;
+    }
+
+    setIsLoadingAIHelp(true);
+
+    try {
+      const response = await fetch('/api/ai-help', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: question.question,
+          userAnswer: userAnswer,
+          correctAnswer: question.correctAnswer,
+          explanation: question.explanation,
+          options: question.options,
+          topic: question.topic,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.help) {
+        setAiHelpMap(new Map(aiHelpMap.set(currentQuestionIndex, data.help)));
+      }
+    } catch (error) {
+      console.error('Error fetching AI help:', error);
+    } finally {
+      setIsLoadingAIHelp(false);
     }
   };
 
@@ -640,12 +699,25 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
       {/* Quick Navigation Panel */}
       <div className="mb-6">
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center justify-between mb-3">
           <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
             Navegación rápida:
           </span>
+          <button
+            onClick={toggleQuickNav}
+            className={`text-xs px-3 py-1 rounded-md transition-colors ${
+              quizMode === 'zen'
+                ? 'text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30'
+                : quizMode === 'rapidfire'
+                ? 'text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30'
+                : 'text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30'
+            }`}
+          >
+            {showQuickNav ? '▲ Ocultar' : '▼ Mostrar'}
+          </button>
         </div>
-        <div className="grid grid-cols-10 gap-2">
+        {showQuickNav && (
+          <div className="grid grid-cols-10 gap-2">
           {quizQuestions.map((q, idx) => {
             const answer = userAnswers[idx];
             const isAnswered = answer !== null;
@@ -703,34 +775,37 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
             );
           })}
         </div>
-        <div className="flex items-center gap-4 mt-2 text-xs text-gray-600 dark:text-gray-400">
-          <div className="flex items-center gap-1">
-            <div className={`w-3 h-3 rounded ${
-              quizMode === 'zen'
-                ? 'bg-teal-500'
-                : quizMode === 'rapidfire'
-                ? 'bg-purple-500'
-                : 'bg-indigo-500'
-            }`}></div>
-            <span>Respondida</span>
+        )}
+        {showQuickNav && (
+          <div className="flex items-center gap-4 mt-2 text-xs text-gray-600 dark:text-gray-400">
+            <div className="flex items-center gap-1">
+              <div className={`w-3 h-3 rounded ${
+                quizMode === 'zen'
+                  ? 'bg-teal-500'
+                  : quizMode === 'rapidfire'
+                  ? 'bg-purple-500'
+                  : 'bg-indigo-500'
+              }`}></div>
+              <span>Respondida</span>
+            </div>
+            {quizSubmitted && (
+              <>
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 rounded bg-green-500"></div>
+                  <span>Correcta</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className={`w-3 h-3 rounded ${quizMode === 'zen' ? 'bg-amber-400' : 'bg-red-500'}`}></div>
+                  <span>Incorrecta</span>
+                </div>
+              </>
+            )}
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded bg-gray-200 dark:bg-gray-700"></div>
+              <span>Sin responder</span>
+            </div>
           </div>
-          {quizSubmitted && (
-            <>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded bg-green-500"></div>
-                <span>Correcta</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className={`w-3 h-3 rounded ${quizMode === 'zen' ? 'bg-amber-400' : 'bg-red-500'}`}></div>
-                <span>Incorrecta</span>
-              </div>
-            </>
-          )}
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-gray-200 dark:bg-gray-700"></div>
-            <span>Sin responder</span>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Question answered indicator */}
@@ -778,6 +853,9 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         onAnswerSelect={handleAnswerSelect}
         disabled={quizSubmitted}
         quizMode={quizMode}
+        onRequestAIHelp={handleRequestAIHelp}
+        aiHelp={aiHelpMap.get(currentQuestionIndex) || null}
+        isLoadingAIHelp={isLoadingAIHelp}
       />
 
       {/* Navigation and Submit buttons */}

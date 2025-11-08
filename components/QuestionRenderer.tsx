@@ -13,6 +13,9 @@ export interface QuestionRendererProps {
   disabled?: boolean;
   compact?: boolean;
   quizMode?: 'zen' | 'rapidfire';
+  onRequestAIHelp?: () => void;
+  aiHelp?: string | null;
+  isLoadingAIHelp?: boolean;
 }
 
 /**
@@ -32,6 +35,9 @@ export function QuestionRenderer({
   disabled = false,
   compact = false,
   quizMode = undefined,
+  onRequestAIHelp,
+  aiHelp = null,
+  isLoadingAIHelp = false,
 }: QuestionRendererProps) {
   const isCorrect = selectedAnswer === question.correctAnswer;
   const isZenMode = quizMode === 'zen';
@@ -154,6 +160,44 @@ export function QuestionRenderer({
               </div>
             )}
           </div>
+
+          {/* AI Help Button - Only in zen mode when answer is incorrect */}
+          {isZenMode && !isCorrect && selectedAnswer !== null && onRequestAIHelp && (
+            <div className="mt-4 pt-4 border-t border-amber-300 dark:border-amber-700">
+              {!aiHelp && !isLoadingAIHelp && (
+                <button
+                  onClick={onRequestAIHelp}
+                  className="w-full py-2 px-4 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                >
+                  <span>✨</span>
+                  <span>Obtener ayuda personalizada de IA</span>
+                </button>
+              )}
+
+              {isLoadingAIHelp && (
+                <div className="flex items-center justify-center gap-3 py-4">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-teal-600"></div>
+                  <span className="text-sm text-amber-700 dark:text-amber-300">
+                    Generando explicación personalizada...
+                  </span>
+                </div>
+              )}
+
+              {aiHelp && (
+                <div className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 p-4 rounded-lg border border-teal-300 dark:border-teal-700">
+                  <div className="flex items-start gap-2 mb-2">
+                    <span className="text-xl">🤖</span>
+                    <h5 className="font-semibold text-teal-900 dark:text-teal-100">
+                      Ayuda personalizada:
+                    </h5>
+                  </div>
+                  <div className="text-sm text-teal-900 dark:text-teal-100 whitespace-pre-wrap leading-relaxed">
+                    {aiHelp}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>
