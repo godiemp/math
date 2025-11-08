@@ -277,13 +277,13 @@ function M2PracticeContent() {
           <div className="mb-6 flex justify-between items-center">
             <button
               onClick={handleResetSelection}
-              className="text-[#0A84FF] dark:text-[#66B2FF] hover:opacity-80 inline-block font-semibold transition-opacity"
+              className="text-[#0A84FF] dark:text-[#66B2FF] hover:opacity-80 font-semibold transition-opacity px-3 py-2 rounded-lg hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
             >
               ← Nueva Práctica
             </button>
             <Link
               href="/curriculum/m2"
-              className="text-[#0A84FF] dark:text-[#66B2FF] hover:opacity-80 inline-block transition-opacity"
+              className="text-[#0A84FF] dark:text-[#66B2FF] hover:opacity-80 transition-opacity px-3 py-2 rounded-lg hover:bg-black/[0.04] dark:hover:bg-white/[0.06] inline-block"
             >
               📚 Ver Curriculum M2
             </Link>
@@ -309,13 +309,13 @@ function M2PracticeContent() {
           <div className="flex justify-between items-start mb-4">
             <Link
               href="/dashboard"
-              className="text-[#0A84FF] dark:text-[#66B2FF] hover:opacity-80 inline-block transition-opacity"
+              className="text-[#0A84FF] dark:text-[#66B2FF] hover:opacity-80 transition-opacity px-3 py-2 rounded-lg hover:bg-black/[0.04] dark:hover:bg-white/[0.06] inline-block"
             >
               ← Volver al Inicio
             </Link>
             <Link
               href="/curriculum/m2"
-              className="text-[#0A84FF] dark:text-[#66B2FF] hover:opacity-80 inline-block transition-opacity"
+              className="text-[#0A84FF] dark:text-[#66B2FF] hover:opacity-80 transition-opacity px-3 py-2 rounded-lg hover:bg-black/[0.04] dark:hover:bg-white/[0.06] inline-block"
             >
               📚 Ver Curriculum M2
             </Link>
