@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { LoadingScreen } from '@/components/ui';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -25,13 +26,13 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
     }
   }, [isAuthenticated, isAdmin, requireAdmin, router]);
 
-  // Don't render children until auth check is complete
+  // Show loading screen while redirecting if not authenticated
   if (!isAuthenticated) {
-    return null;
+    return <LoadingScreen message="Redirigiendo..." />;
   }
 
   if (requireAdmin && !isAdmin) {
-    return null;
+    return <LoadingScreen message="Redirigiendo..." />;
   }
 
   return <>{children}</>;

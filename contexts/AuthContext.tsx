@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '@/lib/types';
 import { getCurrentUser, fetchCurrentUser } from '@/lib/auth';
+import { LoadingScreen } from '@/components/ui';
 
 interface AuthContextType {
   user: User | null;
@@ -26,6 +27,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Try to load user from backend if we have a token
     const initAuth = async () => {
+      const startTime = Date.now();
+      const MIN_LOADING_TIME = 2000; // 2 seconds minimum
+
       // First check localStorage for cached user
       const cachedUser = getCurrentUser();
 
@@ -41,7 +45,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      setIsLoading(false);
+      // Ensure minimum loading time before hiding loader
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+
+      setTimeout(() => {
+        setIsLoading(false);
+      }, remainingTime);
     };
 
     initAuth();
@@ -55,9 +65,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refreshUser,
   };
 
-  // Don't render children until we've checked auth status
+  // Show loading screen while checking auth status
   if (isLoading) {
-    return null;
+    return <LoadingScreen message="Verificando autenticación..." />;
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
