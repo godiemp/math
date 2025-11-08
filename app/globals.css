@@ -161,15 +161,15 @@ body {
 .math-display .katex {
   text-align: left;
   white-space: normal !important;
-  word-wrap: break-word;
   overflow-wrap: break-word;
+  word-break: normal;
   display: inline !important;
 }
 
 .math-display .katex-html {
   white-space: normal !important;
-  word-wrap: break-word;
   overflow-wrap: break-word;
+  word-break: normal;
   max-width: 100%;
   display: inline !important;
 }
