@@ -1,0 +1,19 @@
+import { Question } from '../../../types';
+import { m1NumerosEnterosRacionalesQuestions } from './enteros-racionales';
+import { m1NumerosPorcentajeQuestions } from './porcentaje';
+import { m1NumerosPotenciasRaicesQuestions } from './potencias-raices';
+import { m1NumerosProporcionalidadQuestions } from './proporcionalidad';
+
+// Export individual modules
+export { m1NumerosEnterosRacionalesQuestions } from './enteros-racionales';
+export { m1NumerosPorcentajeQuestions } from './porcentaje';
+export { m1NumerosPotenciasRaicesQuestions } from './potencias-raices';
+export { m1NumerosProporcionalidadQuestions } from './proporcionalidad';
+
+// Export combined array for backward compatibility
+export const m1NumerosQuestions: Question[] = [
+  ...m1NumerosEnterosRacionalesQuestions,
+  ...m1NumerosPorcentajeQuestions,
+  ...m1NumerosPotenciasRaicesQuestions,
+  ...m1NumerosProporcionalidadQuestions,
+];

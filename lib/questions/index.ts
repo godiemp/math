@@ -1,8 +1,8 @@
 import { Question } from '../types';
-import { m1NumerosQuestions } from './m1-numeros';
-import { m1AlgebraQuestions } from './m1-algebra';
-import { m1GeometriaQuestions } from './m1-geometria';
-import { m1ProbabilidadQuestions } from './m1-probabilidad';
+import { m1NumerosQuestions } from './m1/numeros';
+import { m1AlgebraQuestions } from './m1/algebra';
+import { m1GeometriaQuestions } from './m1/geometria';
+import { m1ProbabilidadQuestions } from './m1/probabilidad';
 import { m2NumerosQuestions } from './m2-numeros';
 import { m2AlgebraQuestions } from './m2-algebra';
 import { m2GeometriaQuestions } from './m2-geometria';
