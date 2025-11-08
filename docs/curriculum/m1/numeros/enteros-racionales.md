@@ -211,11 +211,11 @@ $$\frac{12}{18} = \frac{12 \div 6}{18 \div 6} = \frac{2}{3}$$
 
 **Método de Euclides**:
 $$\text{MCD}(48, 18)$$
-$$\begin{align}
+$$\begin{aligned}
 48 &= 18 \times 2 + 12\\
 18 &= 12 \times 1 + 6\\
 12 &= 6 \times 2 + 0
-\end{align}$$
+\end{aligned}$$
 $$\Rightarrow \text{MCD} = 6$$
 <!-- /section -->
 
@@ -229,10 +229,10 @@ El MCM de dos números es el menor múltiplo común.
 **Ejemplo**:
 $$\text{MCM}(4, 6) = \,?$$
 
-$$\begin{align}
+$$\begin{aligned}
 \text{Múltiplos de 4:} &\quad 4, 8, 12, 16, 20, \ldots\\
 \text{Múltiplos de 6:} &\quad 6, 12, 18, 24, \ldots
-\end{align}$$
+\end{aligned}$$
 
 $$\text{MCM}(4, 6) = 12$$
 
@@ -327,10 +327,10 @@ $$\frac{8}{12} + \frac{3}{12} = \frac{11}{12}$$
 - D) $36$
 
 **Solución**:
-$$\begin{align}
+$$\begin{aligned}
 \text{Factores de 12:} &\quad 1, 2, 3, 4, 6, 12\\
 \text{Factores de 18:} &\quad 1, 2, 3, 6, 9, 18
-\end{align}$$
+\end{aligned}$$
 
 $$\text{Factores comunes: } 1, 2, 3, 6$$
 $$\text{Mayor: } 6$$

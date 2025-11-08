@@ -39,8 +39,8 @@ export function parseMarkdownSections(content: string): ParsedMarkdown {
   while ((match = sectionRegex.exec(content)) !== null) {
     const [fullMatch, id, importance, collapsible = 'true', defaultOpen = 'auto', sectionContent] = match;
 
-    // Extract title from first heading in section
-    const titleMatch = sectionContent.match(/###?\s+(.+)/);
+    // Extract title from first heading in section (H2, H3, H4, etc.)
+    const titleMatch = sectionContent.match(/^#{2,6}\s+(.+)/m);
     const title = titleMatch ? titleMatch[1] : id;
 
     sections.push({
