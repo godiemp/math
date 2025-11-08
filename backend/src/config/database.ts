@@ -117,6 +117,57 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
+    // Create sessions table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS sessions (
+        id VARCHAR(100) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        level VARCHAR(5) NOT NULL CHECK (level IN ('M1', 'M2')),
+        host_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        host_name VARCHAR(255) NOT NULL,
+        questions JSONB NOT NULL,
+        status VARCHAR(20) NOT NULL CHECK (status IN ('scheduled', 'lobby', 'active', 'completed', 'cancelled')),
+        current_question_index INTEGER DEFAULT 0,
+        created_at BIGINT NOT NULL,
+        scheduled_start_time BIGINT NOT NULL,
+        scheduled_end_time BIGINT NOT NULL,
+        duration_minutes INTEGER NOT NULL,
+        lobby_open_time BIGINT NOT NULL,
+        max_participants INTEGER DEFAULT 1000000,
+        started_at BIGINT,
+        completed_at BIGINT
+      )
+    `);
+
+    // Create session_registrations table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS session_registrations (
+        id SERIAL PRIMARY KEY,
+        session_id VARCHAR(100) NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        username VARCHAR(100) NOT NULL,
+        display_name VARCHAR(255) NOT NULL,
+        registered_at BIGINT NOT NULL,
+        UNIQUE(session_id, user_id)
+      )
+    `);
+
+    // Create session_participants table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS session_participants (
+        id SERIAL PRIMARY KEY,
+        session_id VARCHAR(100) NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        username VARCHAR(100) NOT NULL,
+        display_name VARCHAR(255) NOT NULL,
+        answers JSONB NOT NULL,
+        score INTEGER DEFAULT 0,
+        joined_at BIGINT NOT NULL,
+        UNIQUE(session_id, user_id)
+      )
+    `);
+
     // Create indexes
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)');
@@ -126,6 +177,12 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_questions_subject ON questions(subject)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_questions_difficulty ON questions(difficulty)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_pdf_uploads_uploaded_by ON pdf_uploads(uploaded_by)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_sessions_status ON sessions(status)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_sessions_host_id ON sessions(host_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_session_registrations_session_id ON session_registrations(session_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_session_registrations_user_id ON session_registrations(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_session_participants_session_id ON session_participants(session_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_session_participants_user_id ON session_participants(user_id)');
 
     await client.query('COMMIT');
     console.log('✅ Database tables initialized successfully');

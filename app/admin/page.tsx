@@ -9,7 +9,8 @@ import {
   deleteSession,
   cancelSession,
   updateSessionStatuses,
-} from '@/lib/liveSessions';
+} from '@/lib/sessionApi';
+import { getRandomQuestions, getOfficialPAESQuestions } from '@/lib/questions';
 import { LiveSession, Question } from '@/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
@@ -43,10 +44,10 @@ function AdminBackofficeContent() {
     return () => clearInterval(interval);
   }, []);
 
-  const refreshSessions = () => {
-    updateSessionStatuses(); // Auto-update session statuses based on time
+  const refreshSessions = async () => {
+    await updateSessionStatuses(); // Auto-update session statuses based on time
     // Show scheduled, lobby, and active sessions
-    const allSessions = getAllAvailableSessions();
+    const allSessions = await getAllAvailableSessions();
     setSessions(allSessions);
   };
 
@@ -116,7 +117,7 @@ function AdminBackofficeContent() {
     setShowCreateModal(true);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -143,62 +144,77 @@ function AdminBackofficeContent() {
       return;
     }
 
+    // Generate questions based on level and count
+    let questions: Question[];
+    if ((formData.level === 'M1' && formData.questionCount === 60) ||
+        (formData.level === 'M2' && formData.questionCount === 50)) {
+      questions = getOfficialPAESQuestions(formData.level);
+    } else {
+      questions = getRandomQuestions(formData.level, formData.questionCount);
+    }
+
     if (editingSession) {
       // Update existing session
-      const result = updateScheduledSession(editingSession.id, {
+      const result = await updateScheduledSession(editingSession.id, {
         name: formData.name.trim(),
         description: formData.description.trim(),
         level: formData.level,
         scheduledStartTime: scheduledTimestamp,
         durationMinutes: formData.durationMinutes,
         questionCount: formData.questionCount,
+        questions,
       });
 
       if (result.success) {
         setSuccess('Ensayo actualizado exitosamente');
         setShowCreateModal(false);
         resetForm();
-        refreshSessions();
+        await refreshSessions();
       } else {
         setError(result.error || 'Error al actualizar el ensayo');
       }
     } else {
       // Create new session
-      createScheduledSession(
+      const result = await createScheduledSession(
         formData.name.trim(),
         formData.description.trim(),
         formData.level,
         currentUser,
         scheduledTimestamp,
         formData.durationMinutes,
-        formData.questionCount
+        formData.questionCount,
+        questions
       );
 
-      setSuccess('Ensayo programado exitosamente');
-      setShowCreateModal(false);
-      resetForm();
-      refreshSessions();
+      if (result.success) {
+        setSuccess('Ensayo programado exitosamente');
+        setShowCreateModal(false);
+        resetForm();
+        await refreshSessions();
+      } else {
+        setError(result.error || 'Error al crear el ensayo');
+      }
     }
   };
 
-  const handleDelete = (sessionId: string) => {
+  const handleDelete = async (sessionId: string) => {
     if (confirm('¿Estás seguro de que deseas eliminar este ensayo?')) {
-      const result = deleteSession(sessionId);
+      const result = await deleteSession(sessionId);
       if (result.success) {
         setSuccess('Ensayo eliminado exitosamente');
-        refreshSessions();
+        await refreshSessions();
       } else {
         setError(result.error || 'Error al eliminar el ensayo');
       }
     }
   };
 
-  const handleCancel = (sessionId: string) => {
+  const handleCancel = async (sessionId: string) => {
     if (confirm('¿Estás seguro de que deseas cancelar este ensayo?')) {
-      const result = cancelSession(sessionId);
+      const result = await cancelSession(sessionId);
       if (result.success) {
         setSuccess('Ensayo cancelado exitosamente');
-        refreshSessions();
+        await refreshSessions();
       } else {
         setError(result.error || 'Error al cancelar el ensayo');
       }
@@ -442,7 +458,7 @@ function AdminBackofficeContent() {
                         </Text>
                       )}
 
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
                         <div>
                           <Text size="xs" variant="secondary" className="inline">Nivel: </Text>
                           <Text size="xs" className="font-medium inline">
@@ -456,6 +472,12 @@ function AdminBackofficeContent() {
                           </Text>
                         </div>
                         <div>
+                          <Text size="xs" variant="secondary" className="inline">Registrados: </Text>
+                          <Text size="xs" className="font-medium inline text-[#0A84FF] dark:text-[#66B2FF]">
+                            {session.registeredUsers?.length || 0}
+                          </Text>
+                        </div>
+                        <div>
                           <Text size="xs" variant="secondary" className="inline">Fecha: </Text>
                           <Text size="xs" className="font-medium inline">
                             {session.scheduledStartTime
@@ -464,6 +486,22 @@ function AdminBackofficeContent() {
                           </Text>
                         </div>
                       </div>
+
+                      {/* Registered Users List */}
+                      {session.registeredUsers && session.registeredUsers.length > 0 && (
+                        <div className="mt-3 pt-3 border-t border-black/[0.08] dark:border-white/[0.08]">
+                          <Text size="xs" variant="secondary" className="mb-2 font-medium">
+                            Usuarios Registrados ({session.registeredUsers.length}):
+                          </Text>
+                          <div className="flex flex-wrap gap-2">
+                            {session.registeredUsers.map((user) => (
+                              <Badge key={user.userId} variant="neutral" size="sm">
+                                {user.displayName}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex flex-wrap gap-2">
