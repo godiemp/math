@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import type { LiveSession } from '@/lib/types';
-import { getSession, submitAnswer, leaveSession, updateSessionStatuses } from '@/lib/liveSessions';
+import { getSessionById, submitAnswerAPI, getMyParticipationAPI } from '@/lib/sessionApi';
 import { getCurrentUser } from '@/lib/auth';
 import { QuestionRenderer } from './QuestionRenderer';
 
@@ -16,12 +16,27 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
   const [currentUser, setCurrentUser] = useState(getCurrentUser());
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [myAnswers, setMyAnswers] = useState<(number | null)[]>([]);
 
-  const refreshSession = () => {
-    updateSessionStatuses(); // Auto-update session status based on time
-    const updatedSession = getSession(sessionId);
-    if (updatedSession) {
-      setSession(updatedSession);
+  const refreshSession = async () => {
+    try {
+      // Fetch session from API
+      const updatedSession = await getSessionById(sessionId);
+      if (updatedSession) {
+        setSession(updatedSession);
+
+        // Fetch my participation data to get my answers
+        if (updatedSession.status === 'active' || updatedSession.status === 'completed') {
+          const participationResult = await getMyParticipationAPI(sessionId);
+          if (participationResult.success && participationResult.data) {
+            setMyAnswers(participationResult.data.answers);
+            // Set selected answer for current question
+            setSelectedAnswer(participationResult.data.answers[currentQuestionIndex]);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error refreshing session:', error);
     }
   };
 
@@ -31,41 +46,40 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
     return () => clearInterval(interval);
   }, [sessionId]);
 
-  const handleAnswerSelect = (answerIndex: number) => {
+  const handleAnswerSelect = async (answerIndex: number) => {
     if (!currentUser || !session || session.status !== 'active') return;
     setSelectedAnswer(answerIndex);
-    submitAnswer(sessionId, currentUser.id, currentQuestionIndex, answerIndex);
-    refreshSession();
+
+    // Submit answer to API
+    const result = await submitAnswerAPI(sessionId, currentQuestionIndex, answerIndex);
+    if (result.success) {
+      // Update local state
+      const newAnswers = [...myAnswers];
+      newAnswers[currentQuestionIndex] = answerIndex;
+      setMyAnswers(newAnswers);
+    }
   };
 
   const handleNextQuestion = () => {
     if (!session) return;
     if (currentQuestionIndex < session.questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-
-      // Load the participant's previously selected answer for this question
-      const participant = session.participants.find(p => p.userId === currentUser?.id);
-      if (participant) {
-        setSelectedAnswer(participant.answers[currentQuestionIndex + 1]);
-      }
+      const nextIndex = currentQuestionIndex + 1;
+      setCurrentQuestionIndex(nextIndex);
+      // Load the previously selected answer for this question
+      setSelectedAnswer(myAnswers[nextIndex]);
     }
   };
 
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-
-      // Load the participant's previously selected answer for this question
-      const participant = session?.participants.find(p => p.userId === currentUser?.id);
-      if (participant) {
-        setSelectedAnswer(participant.answers[currentQuestionIndex - 1]);
-      }
+      const prevIndex = currentQuestionIndex - 1;
+      setCurrentQuestionIndex(prevIndex);
+      // Load the previously selected answer for this question
+      setSelectedAnswer(myAnswers[prevIndex]);
     }
   };
 
   const handleLeave = () => {
-    if (!currentUser) return;
-    leaveSession(sessionId, currentUser.id);
     onExit();
   };
 

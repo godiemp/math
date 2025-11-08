@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { testConnection, initializeDatabase, closeDatabase } from './config/database';
+import { testConnection, initializeDatabase, closeDatabase, pool } from './config/database';
 import authRoutes from './routes/authRoutes';
 import adminRoutes from './routes/adminRoutes';
 import streakRoutes from './routes/streakRoutes';
@@ -96,6 +96,60 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
+// Auto-update session statuses
+let statusUpdateInterval: NodeJS.Timeout | null = null;
+
+async function autoUpdateSessionStatuses() {
+  try {
+    const now = Date.now();
+
+    // Open lobbies
+    await pool.query(
+      `UPDATE sessions
+       SET status = 'lobby'
+       WHERE status = 'scheduled' AND lobby_open_time <= $1`,
+      [now]
+    );
+
+    // Start sessions
+    await pool.query(
+      `UPDATE sessions
+       SET status = 'active', started_at = $1
+       WHERE status = 'lobby' AND scheduled_start_time <= $1`,
+      [now]
+    );
+
+    // Complete sessions
+    await pool.query(
+      `UPDATE sessions
+       SET status = 'completed', completed_at = $1
+       WHERE status = 'active' AND scheduled_end_time <= $1`,
+      [now]
+    );
+
+    console.log(`✅ Session statuses auto-updated at ${new Date().toISOString()}`);
+  } catch (error) {
+    console.error('❌ Error auto-updating session statuses:', error);
+  }
+}
+
+function startSessionStatusUpdater() {
+  // Run immediately on startup
+  autoUpdateSessionStatuses();
+
+  // Then run every 30 seconds
+  statusUpdateInterval = setInterval(autoUpdateSessionStatuses, 30000);
+  console.log('🔄 Session status auto-updater started (runs every 30 seconds)');
+}
+
+function stopSessionStatusUpdater() {
+  if (statusUpdateInterval) {
+    clearInterval(statusUpdateInterval);
+    statusUpdateInterval = null;
+    console.log('🛑 Session status auto-updater stopped');
+  }
+}
+
 // Start server
 const startServer = async () => {
   try {
@@ -104,6 +158,9 @@ const startServer = async () => {
 
     // Initialize database tables
     await initializeDatabase();
+
+    // Start session status auto-updater
+    startSessionStatusUpdater();
 
     // Start listening
     app.listen(PORT, () => {
@@ -146,12 +203,14 @@ const startServer = async () => {
 // Graceful shutdown
 process.on('SIGINT', async () => {
   console.log('\n🛑 Shutting down gracefully...');
+  stopSessionStatusUpdater();
   await closeDatabase();
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
   console.log('\n🛑 Shutting down gracefully...');
+  stopSessionStatusUpdater();
   await closeDatabase();
   process.exit(0);
 });

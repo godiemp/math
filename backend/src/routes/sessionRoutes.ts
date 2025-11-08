@@ -9,6 +9,9 @@ import {
   registerForSession,
   unregisterFromSession,
   updateSessionStatuses,
+  joinSession,
+  submitAnswer,
+  getMyParticipation,
 } from '../controllers/sessionController';
 import { authenticate, requireAdmin } from '../middleware/auth';
 
@@ -76,5 +79,26 @@ router.post('/:id/register', authenticate, registerForSession);
  * @access  Private
  */
 router.post('/:id/unregister', authenticate, unregisterFromSession);
+
+/**
+ * @route   POST /api/sessions/:id/join
+ * @desc    Join a session as a participant
+ * @access  Private
+ */
+router.post('/:id/join', authenticate, joinSession);
+
+/**
+ * @route   POST /api/sessions/:id/answers
+ * @desc    Submit an answer for a question
+ * @access  Private
+ */
+router.post('/:id/answers', authenticate, submitAnswer);
+
+/**
+ * @route   GET /api/sessions/:id/participants/me
+ * @desc    Get my participation data for a session
+ * @access  Private
+ */
+router.get('/:id/participants/me', authenticate, getMyParticipation);
 
 export default router;

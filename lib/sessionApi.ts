@@ -233,3 +233,86 @@ export async function unregisterFromSession(
 export async function updateSessionStatuses(): Promise<void> {
   await api.post<MessageResponse>('/api/sessions/update-statuses');
 }
+
+/**
+ * Join a session as a participant
+ */
+export async function joinSessionAPI(
+  sessionId: string
+): Promise<{ success: boolean; error?: string }> {
+  const response = await api.post<MessageResponse>(`/api/sessions/${sessionId}/join`);
+
+  if (response.error) {
+    return {
+      success: false,
+      error: response.error.error || 'Failed to join session',
+    };
+  }
+
+  return { success: true };
+}
+
+/**
+ * Submit an answer for a question
+ */
+export async function submitAnswerAPI(
+  sessionId: string,
+  questionIndex: number,
+  answer: number
+): Promise<{ success: boolean; score?: number; error?: string }> {
+  const response = await api.post<{ success: boolean; message: string; score: number }>(
+    `/api/sessions/${sessionId}/answers`,
+    { questionIndex, answer }
+  );
+
+  if (response.error) {
+    return {
+      success: false,
+      error: response.error.error || 'Failed to submit answer',
+    };
+  }
+
+  return {
+    success: true,
+    score: response.data?.score
+  };
+}
+
+/**
+ * Get my participation data for a session
+ */
+export async function getMyParticipationAPI(
+  sessionId: string
+): Promise<{
+  success: boolean;
+  data?: {
+    userId: string;
+    username: string;
+    displayName: string;
+    answers: (number | null)[];
+    score: number;
+    joinedAt: number;
+  };
+  error?: string;
+}> {
+  const response = await api.get<{
+    userId: string;
+    username: string;
+    displayName: string;
+    answers: (number | null)[];
+    score: number;
+    joinedAt: number;
+  }>(`/api/sessions/${sessionId}/participants/me`);
+
+  if (response.error) {
+    return {
+      success: false,
+      error: response.error.error || 'Failed to get participation data',
+    };
+  }
+
+  return {
+    success: true,
+    data: response.data,
+  };
+}
