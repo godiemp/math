@@ -7,6 +7,10 @@
  * - Production: Use NEXT_PUBLIC_API_URL from env
  * - Preview (Vercel): Use NEXT_PUBLIC_RAILWAY_URL or construct from PR
  * - Development: localhost:3001
+ *
+ * This function is called at RUNTIME to ensure environment variables
+ * are available, especially for PR deployments where VERCEL_GIT_PULL_REQUEST_ID
+ * might not be available at build time.
  */
 function getApiBaseUrl(): string {
   // Explicit env var takes precedence
@@ -44,16 +48,58 @@ function getApiBaseUrl(): string {
   return 'http://localhost:3001';
 }
 
-const API_BASE_URL = getApiBaseUrl();
+// Cache for API base URL - fetched from server at runtime on first access
+let cachedApiBaseUrl: string | null = null;
+let apiUrlPromise: Promise<string> | null = null;
+let hasLoggedDebugInfo = false;
 
-// Log the API URL for debugging (helps troubleshoot connection issues)
-if (typeof window !== 'undefined') {
-  console.log('🔗 API Base URL:', API_BASE_URL);
-  console.log('📦 Vercel Environment:', process.env.NEXT_PUBLIC_VERCEL_ENV);
-  console.log('🌿 Git Branch:', process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF);
-  console.log('🔢 PR Number:', process.env.NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID);
-  console.log('🚂 Railway URL (env):', process.env.NEXT_PUBLIC_RAILWAY_URL);
-  console.log('🔧 API URL (env):', process.env.NEXT_PUBLIC_API_URL);
+/**
+ * Fetch the backend URL from server-side config endpoint
+ * This ensures we get the PR number at REQUEST time, not BUILD time
+ */
+async function fetchBackendUrl(): Promise<string> {
+  try {
+    const response = await fetch('/api/config');
+    if (!response.ok) {
+      throw new Error('Failed to fetch backend config');
+    }
+    const data = await response.json();
+
+    // Log debug info once
+    if (typeof window !== 'undefined' && !hasLoggedDebugInfo) {
+      hasLoggedDebugInfo = true;
+      console.log('🔗 Backend URL (from server):', data.backendUrl);
+      console.log('📦 Vercel Environment:', data.debug.vercelEnv);
+      console.log('🔢 PR Number:', data.debug.prNumber);
+      console.log('🌿 Git Branch:', data.debug.branchName);
+    }
+
+    return data.backendUrl;
+  } catch (error) {
+    console.error('Failed to fetch backend URL, using fallback:', error);
+    // Fallback to client-side detection if server config fails
+    return getApiBaseUrl();
+  }
+}
+
+/**
+ * Get the API base URL, fetching from server on first call
+ * Returns a Promise that resolves to the backend URL
+ */
+async function getApiUrl(): Promise<string> {
+  if (cachedApiBaseUrl) {
+    return cachedApiBaseUrl;
+  }
+
+  // Avoid multiple concurrent fetches
+  if (!apiUrlPromise) {
+    apiUrlPromise = fetchBackendUrl().then(url => {
+      cachedApiBaseUrl = url;
+      return url;
+    });
+  }
+
+  return apiUrlPromise;
 }
 
 // Token storage keys
@@ -102,7 +148,8 @@ async function refreshAccessToken(): Promise<string | null> {
   if (!refreshToken) return null;
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
+    const backendUrl = await getApiUrl();
+    const response = await fetch(`${backendUrl}/api/auth/refresh`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -149,7 +196,8 @@ export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
-  const url = `${API_BASE_URL}${endpoint}`;
+  const backendUrl = await getApiUrl();
+  const url = `${backendUrl}${endpoint}`;
 
   // Add access token to headers if available
   let accessToken = getAccessToken();
