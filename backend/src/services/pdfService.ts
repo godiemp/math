@@ -1,6 +1,5 @@
 import { Question } from '../types';
 import { createWorker } from 'tesseract.js';
-import { pdf } from 'pdf-to-img';
 import sharp from 'sharp';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -45,6 +44,9 @@ async function extractTextWithOCR(buffer: Buffer, logs: string[]): Promise<strin
 
     // Convert PDF to high-resolution images (3x scale for better quality)
     log(`  Converting PDF to high-resolution images...`);
+
+    // Dynamic import for ES Module
+    const { pdf } = await import('pdf-to-img');
     const document = await pdf(tempFilePath, { scale: 3.0 });
 
     let pageNum = 0;
