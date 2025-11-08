@@ -6,6 +6,7 @@ import { QuestionAttempt } from '@/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Button, Card, Badge, Heading, Text, Modal, Navbar, NavbarLink } from '@/components/ui';
 import { MathText } from '@/components/MathDisplay';
+import { SkillsDisplay } from '@/components/SkillsDisplay';
 
 interface Progress {
   correct: number;
@@ -20,6 +21,7 @@ function ProgressPageContent() {
   const [recentQuestionsCount, setRecentQuestionsCount] = useState<number>(10);
   const [selectedAttempt, setSelectedAttempt] = useState<QuestionAttempt | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [viewMode, setViewMode] = useState<'overview' | 'skills-m1' | 'skills-m2'>('overview');
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -110,30 +112,69 @@ function ProgressPageContent() {
 
       <main className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 py-12">
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <Heading level={1} size="lg">
             Mi Progreso
           </Heading>
-          <div className="flex items-center gap-3">
-            <label htmlFor="recent-count" className="text-[13px] text-black/60 dark:text-white/70">
-              Mostrar últimas:
-            </label>
-            <select
-              id="recent-count"
-              value={recentQuestionsCount}
-              onChange={(e) => setRecentQuestionsCount(Number(e.target.value))}
-              className="h-11 px-3 rounded-xl text-[15px] bg-white dark:bg-[#121212] text-black dark:text-white border border-black/[0.12] dark:border-white/[0.16] focus:outline-none focus:ring-3 focus:ring-[#0A84FF]/50 focus:border-[#0A84FF] transition-all duration-[180ms]"
-            >
-              <option value={5}>5 preguntas</option>
-              <option value={10}>10 preguntas</option>
-              <option value={20}>20 preguntas</option>
-              <option value={50}>50 preguntas</option>
-            </select>
-          </div>
+          {viewMode === 'overview' && (
+            <div className="flex items-center gap-3">
+              <label htmlFor="recent-count" className="text-[13px] text-black/60 dark:text-white/70">
+                Mostrar últimas:
+              </label>
+              <select
+                id="recent-count"
+                value={recentQuestionsCount}
+                onChange={(e) => setRecentQuestionsCount(Number(e.target.value))}
+                className="h-11 px-3 rounded-xl text-[15px] bg-white dark:bg-[#121212] text-black dark:text-white border border-black/[0.12] dark:border-white/[0.16] focus:outline-none focus:ring-3 focus:ring-[#0A84FF]/50 focus:border-[#0A84FF] transition-all duration-[180ms]"
+              >
+                <option value={5}>5 preguntas</option>
+                <option value={10}>10 preguntas</option>
+                <option value={20}>20 preguntas</option>
+                <option value={50}>50 preguntas</option>
+              </select>
+            </div>
+          )}
         </div>
 
-        {/* Level Progress Cards with liquidGlass material */}
-        <div className="grid md:grid-cols-2 gap-4 mb-6">
+        {/* View Mode Tabs */}
+        <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
+          <button
+            onClick={() => setViewMode('overview')}
+            className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-[180ms] ${
+              viewMode === 'overview'
+                ? 'bg-[#0A84FF] text-white'
+                : 'bg-white dark:bg-[#1C1C1E] text-black/60 dark:text-white/70 border border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50'
+            }`}
+          >
+            📊 Resumen General
+          </button>
+          <button
+            onClick={() => setViewMode('skills-m1')}
+            className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-[180ms] ${
+              viewMode === 'skills-m1'
+                ? 'bg-[#0A84FF] text-white'
+                : 'bg-white dark:bg-[#1C1C1E] text-black/60 dark:text-white/70 border border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50'
+            }`}
+          >
+            📚 Habilidades M1
+          </button>
+          <button
+            onClick={() => setViewMode('skills-m2')}
+            className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-[180ms] ${
+              viewMode === 'skills-m2'
+                ? 'bg-[#0A84FF] text-white'
+                : 'bg-white dark:bg-[#1C1C1E] text-black/60 dark:text-white/70 border border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50'
+            }`}
+          >
+            📚 Habilidades M2
+          </button>
+        </div>
+
+        {/* Overview View */}
+        {viewMode === 'overview' && (
+          <>
+            {/* Level Progress Cards with liquidGlass material */}
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
           {/* M1 Progress Card */}
           <Card hover className="p-6">
             <Heading level={3} size="xs" className="mb-4">
@@ -310,6 +351,18 @@ function ProgressPageContent() {
               Aún no has comenzado a practicar. ¡Empieza ahora con M1 o M2!
             </Text>
           </div>
+        )}
+          </>
+        )}
+
+        {/* Skills M1 View */}
+        {viewMode === 'skills-m1' && (
+          <SkillsDisplay attempts={m1History} level="M1" />
+        )}
+
+        {/* Skills M2 View */}
+        {viewMode === 'skills-m2' && (
+          <SkillsDisplay attempts={m2History} level="M2" />
         )}
 
         {/* Review Modal with Liquid Glass */}
