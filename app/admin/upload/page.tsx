@@ -47,13 +47,23 @@ export default function UploadPDFPage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
-      if (selectedFile.type === 'application/pdf') {
-        setFile(selectedFile);
-        setError('');
-      } else {
+      const maxSizeMB = 5;
+      const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+      if (selectedFile.type !== 'application/pdf') {
         setError('Por favor, selecciona un archivo PDF válido');
         setFile(null);
+        return;
       }
+
+      if (selectedFile.size > maxSizeBytes) {
+        setError(`El archivo es demasiado grande. Tamaño máximo: ${maxSizeMB}MB`);
+        setFile(null);
+        return;
+      }
+
+      setFile(selectedFile);
+      setError('');
     }
   };
 
@@ -191,6 +201,9 @@ export default function UploadPDFPage() {
             <Heading level={2} size="md" className="mb-4">
               1. Seleccionar y Procesar PDF
             </Heading>
+            <Text variant="secondary" size="sm" className="mb-4">
+              Tamaño máximo: 5MB. Para PDFs grandes, divídelos en archivos más pequeños.
+            </Text>
 
             <div className="space-y-4">
               <div>

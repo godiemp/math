@@ -4,6 +4,18 @@ import { extractTextFromPDF, validateQuestion, convertToQuestionFormat } from '.
 import { Question } from '../types';
 
 /**
+ * Timeout wrapper for promises
+ */
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, errorMessage: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(errorMessage)), timeoutMs)
+    ),
+  ]);
+}
+
+/**
  * Upload and process PDF to extract questions
  * @route   POST /api/admin/upload-pdf
  * @access  Private (Admin only)
@@ -42,8 +54,12 @@ export const uploadPDF = async (req: Request, res: Response): Promise<void> => {
       processingLogs.push(`💾 Upload ID: ${uploadId}`);
       processingLogs.push(`🔄 Starting PDF text extraction...`);
 
-      // Extract text from PDF
-      const { questions, rawText, totalPages, logs } = await extractTextFromPDF(buffer);
+      // Extract text from PDF with 30 second timeout
+      const { questions, rawText, totalPages, logs } = await withTimeout(
+        extractTextFromPDF(buffer),
+        30000,
+        'PDF processing timed out after 30 seconds. Please try a smaller file.'
+      );
       processingLogs.push(...logs);
 
       // Filter valid questions
