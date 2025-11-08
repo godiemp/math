@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   getAllAvailableSessions,
@@ -211,6 +211,126 @@ function AdminBackofficeContent() {
       timeStyle: 'short',
     });
   };
+
+  // If viewing questions, show full-screen questions view
+  if (viewingQuestionsSession) {
+    const distribution = viewingQuestionsSession.questions.reduce((acc, q) => {
+      acc[q.subject] = (acc[q.subject] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    const difficultyDist = viewingQuestionsSession.questions.reduce((acc, q) => {
+      acc[q.difficulty] = (acc[q.difficulty] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <Card className="mb-6" padding="lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <Heading level={1} size="md" className="mb-2">
+                  Preguntas del Ensayo
+                </Heading>
+                <Text variant="secondary" className="mb-2">
+                  {viewingQuestionsSession.name}
+                </Text>
+                <div className="flex gap-2 flex-wrap">
+                  <Badge variant="info" size="sm">
+                    {viewingQuestionsSession.level}
+                  </Badge>
+                  <Badge variant="neutral" size="sm">
+                    {viewingQuestionsSession.questions.length} preguntas
+                  </Badge>
+                </div>
+              </div>
+              <Button variant="ghost" onClick={() => setViewingQuestionsSession(null)}>
+                ← Volver al Admin
+              </Button>
+            </div>
+          </Card>
+
+          {/* Distribution Statistics */}
+          <Card className="mb-6" padding="lg">
+            <Heading level={2} size="sm" className="mb-4">
+              Distribución de Preguntas
+            </Heading>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+              <Card padding="md" className="bg-indigo-50 dark:bg-indigo-900/20">
+                <Text size="xs" variant="secondary" className="mb-1">Números</Text>
+                <Heading level={3} size="sm">{distribution['números'] || 0}</Heading>
+              </Card>
+              <Card padding="md" className="bg-pink-50 dark:bg-pink-900/20">
+                <Text size="xs" variant="secondary" className="mb-1">Álgebra</Text>
+                <Heading level={3} size="sm">{distribution['álgebra'] || 0}</Heading>
+              </Card>
+              <Card padding="md" className="bg-teal-50 dark:bg-teal-900/20">
+                <Text size="xs" variant="secondary" className="mb-1">Geometría</Text>
+                <Heading level={3} size="sm">{distribution['geometría'] || 0}</Heading>
+              </Card>
+              <Card padding="md" className="bg-orange-50 dark:bg-orange-900/20">
+                <Text size="xs" variant="secondary" className="mb-1">Probabilidad</Text>
+                <Heading level={3} size="sm">{distribution['probabilidad'] || 0}</Heading>
+              </Card>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <Card padding="md" className="bg-green-50 dark:bg-green-900/20">
+                <Text size="xs" variant="secondary" className="mb-1">Fácil</Text>
+                <Heading level={3} size="sm">{difficultyDist['easy'] || 0}</Heading>
+              </Card>
+              <Card padding="md" className="bg-yellow-50 dark:bg-yellow-900/20">
+                <Text size="xs" variant="secondary" className="mb-1">Media</Text>
+                <Heading level={3} size="sm">{difficultyDist['medium'] || 0}</Heading>
+              </Card>
+              <Card padding="md" className="bg-red-50 dark:bg-red-900/20">
+                <Text size="xs" variant="secondary" className="mb-1">Difícil</Text>
+                <Heading level={3} size="sm">{difficultyDist['hard'] || 0}</Heading>
+              </Card>
+            </div>
+          </Card>
+
+          {/* Questions List */}
+          <Card padding="lg">
+            <Heading level={2} size="sm" className="mb-4">
+              Lista de Preguntas
+            </Heading>
+            <div className="space-y-3">
+              {viewingQuestionsSession.questions.map((question, index) => (
+                <Card key={question.id} padding="md" className="border-l-4 border-indigo-500">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex gap-2 items-center">
+                      <Badge variant="neutral" size="sm">#{index + 1}</Badge>
+                      <Badge variant="info" size="sm">{question.subject}</Badge>
+                      <Badge
+                        variant={
+                          question.difficulty === 'easy' ? 'success' :
+                          question.difficulty === 'medium' ? 'warning' : 'danger'
+                        }
+                        size="sm"
+                      >
+                        {question.difficulty}
+                      </Badge>
+                    </div>
+                    <Text size="xs" variant="secondary" className="font-mono">
+                      {question.id}
+                    </Text>
+                  </div>
+                  <Text size="xs" variant="secondary" className="mb-2">
+                    {question.topic}
+                  </Text>
+                  <div className="text-sm text-gray-900 dark:text-white">
+                    <MathText content={question.question} />
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
@@ -549,138 +669,6 @@ function AdminBackofficeContent() {
               </div>
             </form>
           </Card>
-        </div>
-      )}
-
-      {/* Questions Viewer Modal */}
-      {viewingQuestionsSession && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <div className="max-w-6xl w-full my-8">
-            <Card className="shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)]" padding="lg">
-              <div className="flex justify-between items-start mb-6">
-                <div>
-                  <Heading level={2} size="sm" className="mb-2">
-                    Preguntas del Ensayo
-                  </Heading>
-                  <Text variant="secondary" className="mb-2">
-                    {viewingQuestionsSession.name}
-                  </Text>
-                  <div className="flex gap-2 flex-wrap">
-                    <Badge variant="info" size="sm">
-                      {viewingQuestionsSession.level}
-                    </Badge>
-                    <Badge variant="neutral" size="sm">
-                      {viewingQuestionsSession.questions.length} preguntas
-                    </Badge>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setViewingQuestionsSession(null)}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* Distribution Statistics */}
-              {(() => {
-                const distribution = viewingQuestionsSession.questions.reduce((acc, q) => {
-                  acc[q.subject] = (acc[q.subject] || 0) + 1;
-                  return acc;
-                }, {} as Record<string, number>);
-
-                const difficultyDist = viewingQuestionsSession.questions.reduce((acc, q) => {
-                  acc[q.difficulty] = (acc[q.difficulty] || 0) + 1;
-                  return acc;
-                }, {} as Record<string, number>);
-
-                return (
-                  <div className="mb-6">
-                    <Heading level={3} size="xs" className="mb-3">
-                      Distribución de Preguntas
-                    </Heading>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                      <Card padding="md" className="bg-indigo-50 dark:bg-indigo-900/20">
-                        <Text size="xs" variant="secondary" className="mb-1">Números</Text>
-                        <Heading level={4} size="sm">{distribution['números'] || 0}</Heading>
-                      </Card>
-                      <Card padding="md" className="bg-pink-50 dark:bg-pink-900/20">
-                        <Text size="xs" variant="secondary" className="mb-1">Álgebra</Text>
-                        <Heading level={4} size="sm">{distribution['álgebra'] || 0}</Heading>
-                      </Card>
-                      <Card padding="md" className="bg-teal-50 dark:bg-teal-900/20">
-                        <Text size="xs" variant="secondary" className="mb-1">Geometría</Text>
-                        <Heading level={4} size="sm">{distribution['geometría'] || 0}</Heading>
-                      </Card>
-                      <Card padding="md" className="bg-orange-50 dark:bg-orange-900/20">
-                        <Text size="xs" variant="secondary" className="mb-1">Probabilidad</Text>
-                        <Heading level={4} size="sm">{distribution['probabilidad'] || 0}</Heading>
-                      </Card>
-                    </div>
-                    <div className="grid grid-cols-3 gap-4">
-                      <Card padding="md" className="bg-green-50 dark:bg-green-900/20">
-                        <Text size="xs" variant="secondary" className="mb-1">Fácil</Text>
-                        <Heading level={4} size="sm">{difficultyDist['easy'] || 0}</Heading>
-                      </Card>
-                      <Card padding="md" className="bg-yellow-50 dark:bg-yellow-900/20">
-                        <Text size="xs" variant="secondary" className="mb-1">Media</Text>
-                        <Heading level={4} size="sm">{difficultyDist['medium'] || 0}</Heading>
-                      </Card>
-                      <Card padding="md" className="bg-red-50 dark:bg-red-900/20">
-                        <Text size="xs" variant="secondary" className="mb-1">Difícil</Text>
-                        <Heading level={4} size="sm">{difficultyDist['hard'] || 0}</Heading>
-                      </Card>
-                    </div>
-                  </div>
-                );
-              })()}
-
-              {/* Questions List */}
-              <div className="max-h-[60vh] overflow-y-auto">
-                <Heading level={3} size="xs" className="mb-3">
-                  Lista de Preguntas
-                </Heading>
-                <div className="space-y-3">
-                  {viewingQuestionsSession.questions.map((question, index) => (
-                    <Card key={question.id} padding="md" className="border-l-4 border-indigo-500">
-                      <div className="flex justify-between items-start mb-2">
-                        <div className="flex gap-2 items-center">
-                          <Badge variant="neutral" size="sm">#{index + 1}</Badge>
-                          <Badge variant="info" size="sm">{question.subject}</Badge>
-                          <Badge
-                            variant={
-                              question.difficulty === 'easy' ? 'success' :
-                              question.difficulty === 'medium' ? 'warning' : 'danger'
-                            }
-                            size="sm"
-                          >
-                            {question.difficulty}
-                          </Badge>
-                        </div>
-                        <Text size="xs" variant="secondary" className="font-mono">
-                          {question.id}
-                        </Text>
-                      </div>
-                      <Text size="xs" variant="secondary" className="mb-2">
-                        {question.topic}
-                      </Text>
-                      <div className="text-sm text-gray-900 dark:text-white">
-                        <MathText content={question.question} />
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-6 flex justify-end">
-                <Button variant="ghost" onClick={() => setViewingQuestionsSession(null)}>
-                  Cerrar
-                </Button>
-              </div>
-            </Card>
-          </div>
         </div>
       )}
     </div>
