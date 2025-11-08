@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
+import { api } from '@/lib/api-client';
 
 interface AnalyticsData {
   northStar: {
@@ -99,25 +100,16 @@ function AnalyticsDashboardContent() {
       setIsLoading(true);
       setError('');
 
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        setError('No authentication token found');
+      const response = await api.get<{ data: AnalyticsData; timestamp: number }>('/api/analytics/dashboard');
+
+      if (response.error) {
+        setError(response.error.error || 'Failed to load analytics');
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/analytics/dashboard`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch analytics');
+      if (response.data) {
+        setAnalytics(response.data.data);
       }
-
-      const data = await response.json();
-      setAnalytics(data.data);
     } catch (err) {
       console.error('Error fetching analytics:', err);
       setError('Failed to load analytics. Please try again.');
