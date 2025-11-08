@@ -64,47 +64,40 @@ interface LoadingScreenProps {
 
 export function LoadingScreen({ message = 'Cargando...' }: LoadingScreenProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F7F7F7] via-[#FAFAFA] to-[#F0F0F0] dark:from-[#000000] dark:via-[#0A0A0A] dark:to-[#000000] flex items-center justify-center relative overflow-hidden">
-      {/* Animated gradient orbs in background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#0A84FF]/5 dark:bg-[#0A84FF]/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }}></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#5E5CE6]/5 dark:bg-[#5E5CE6]/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }}></div>
-      </div>
+    <div className="min-h-screen bg-white dark:bg-[#000000] flex items-center justify-center relative overflow-hidden">
+      {/* Subtle gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0A84FF]/[0.02] to-transparent dark:via-[#0A84FF]/[0.04]"></div>
 
-      {/* Main content */}
-      <div className="text-center relative z-10 animate-fadeIn px-6">
-        {/* Spinner with glow effect */}
-        <div className="relative inline-block">
-          {/* Glow effect */}
-          <div className="absolute inset-0 blur-2xl opacity-20">
-            <Spinner size="lg" variant="primary" />
-          </div>
-          {/* Actual spinner */}
+      {/* Main content card */}
+      <div className="text-center relative z-10 px-6 max-w-md">
+        {/* Clean spinner container */}
+        <div className="mb-8 flex justify-center">
           <div className="relative">
-            <Spinner size="lg" variant="primary" />
+            {/* Subtle outer ring */}
+            <div className="w-20 h-20 rounded-full border-2 border-[#0A84FF]/10 dark:border-[#0A84FF]/20"></div>
+
+            {/* Animated spinner ring */}
+            <div className="absolute inset-0 w-20 h-20 rounded-full border-2 border-transparent border-t-[#0A84FF] animate-spin"></div>
+
+            {/* Center icon */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-3xl animate-pulse" style={{ animationDuration: '2s' }}>π</span>
+            </div>
           </div>
         </div>
 
-        {/* Message with animated dots */}
-        <div className="mt-8 space-y-3">
-          <p className="text-xl font-semibold text-black/80 dark:text-white/90 tracking-tight animate-fadeIn">
-            {message}
-          </p>
+        {/* Message */}
+        <h2 className="text-2xl font-semibold text-black dark:text-white mb-3 tracking-tight">
+          {message}
+        </h2>
 
-          {/* Animated progress dots */}
-          <div className="flex items-center justify-center gap-2 h-6">
-            <div className="w-2 h-2 rounded-full bg-[#0A84FF] animate-bounce" style={{ animationDelay: '0ms', animationDuration: '1s' }}></div>
-            <div className="w-2 h-2 rounded-full bg-[#0A84FF] animate-bounce" style={{ animationDelay: '150ms', animationDuration: '1s' }}></div>
-            <div className="w-2 h-2 rounded-full bg-[#0A84FF] animate-bounce" style={{ animationDelay: '300ms', animationDuration: '1s' }}></div>
-          </div>
-
-          {/* Subtle hint text */}
-          <p className="text-sm text-black/40 dark:text-white/40 animate-fadeIn" style={{ animationDelay: '200ms' }}>
-            Un momento por favor
-          </p>
+        {/* Simple progress indicator */}
+        <div className="flex justify-center gap-1.5">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#0A84FF]/40 animate-pulse" style={{ animationDelay: '0ms', animationDuration: '1.5s' }}></div>
+          <div className="w-1.5 h-1.5 rounded-full bg-[#0A84FF]/60 animate-pulse" style={{ animationDelay: '200ms', animationDuration: '1.5s' }}></div>
+          <div className="w-1.5 h-1.5 rounded-full bg-[#0A84FF] animate-pulse" style={{ animationDelay: '400ms', animationDuration: '1.5s' }}></div>
         </div>
       </div>
-
     </div>
   );
 }
