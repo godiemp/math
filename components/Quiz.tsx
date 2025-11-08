@@ -194,6 +194,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
           options: question.options,
           explanation: question.explanation,
           difficulty: question.difficulty,
+          subject: question.subject,
+          skills: question.skills,
         };
         attempts.push(attempt);
       }
@@ -221,18 +223,25 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     // Save updated history
     localStorage.setItem(historyKey, JSON.stringify(history));
 
-    // Update streak if user is authenticated
-    const updateStreak = async () => {
+    // Save quiz attempts to backend and update streak if user is authenticated
+    const saveToBackend = async () => {
       if (isAuthenticated()) {
         try {
+          // Save quiz attempts to backend
+          if (attempts.length > 0) {
+            await api.post('/api/quiz/attempts', { attempts });
+          }
+
+          // Update streak
           await api.post('/api/streak/update');
         } catch (error) {
-          console.error('Failed to update streak:', error);
-          // Don't block the quiz submission if streak update fails
+          console.error('Failed to save quiz attempts or update streak:', error);
+          // Don't block the quiz submission if backend save fails
+          // Data is already saved in localStorage as fallback
         }
       }
     };
-    updateStreak();
+    saveToBackend();
 
     setQuizSubmitted(true);
     setCurrentQuestionIndex(0); // Go back to first question to review

@@ -7,6 +7,8 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Button, Card, Badge, Heading, Text, Modal, Navbar, NavbarLink } from '@/components/ui';
 import { MathText } from '@/components/MathDisplay';
 import { SkillsDisplay } from '@/components/SkillsDisplay';
+import { api } from '@/lib/api-client';
+import { isAuthenticated } from '@/lib/auth';
 
 interface Progress {
   correct: number;
@@ -25,27 +27,69 @@ function ProgressPageContent() {
   const itemsPerPage = 10;
 
   useEffect(() => {
-    // Load progress from localStorage
-    const m1Data = localStorage.getItem('paes-progress-M1');
-    const m2Data = localStorage.getItem('paes-progress-M2');
+    const loadProgressAndHistory = async () => {
+      // Try to load from backend if user is authenticated
+      if (isAuthenticated()) {
+        try {
+          // Fetch history from backend for both levels
+          const [m1Response, m2Response] = await Promise.all([
+            api.get('/api/quiz/history?level=M1'),
+            api.get('/api/quiz/history?level=M2'),
+          ]);
 
-    if (m1Data) {
-      setM1Progress(JSON.parse(m1Data));
-    }
-    if (m2Data) {
-      setM2Progress(JSON.parse(m2Data));
-    }
+          if (m1Response.data?.history) {
+            const m1Data = m1Response.data.history;
+            setM1History(m1Data);
 
-    // Load question history
-    const m1HistoryData = localStorage.getItem('paes-history-M1');
-    const m2HistoryData = localStorage.getItem('paes-history-M2');
+            // Calculate progress from history
+            const m1Correct = m1Data.filter((a: QuestionAttempt) => a.isCorrect).length;
+            setM1Progress({ correct: m1Correct, total: m1Data.length });
+          }
 
-    if (m1HistoryData) {
-      setM1History(JSON.parse(m1HistoryData));
-    }
-    if (m2HistoryData) {
-      setM2History(JSON.parse(m2HistoryData));
-    }
+          if (m2Response.data?.history) {
+            const m2Data = m2Response.data.history;
+            setM2History(m2Data);
+
+            // Calculate progress from history
+            const m2Correct = m2Data.filter((a: QuestionAttempt) => a.isCorrect).length;
+            setM2Progress({ correct: m2Correct, total: m2Data.length });
+          }
+        } catch (error) {
+          console.error('Failed to load quiz history from backend:', error);
+          // Fall back to localStorage
+          loadFromLocalStorage();
+        }
+      } else {
+        // User not authenticated, use localStorage
+        loadFromLocalStorage();
+      }
+    };
+
+    const loadFromLocalStorage = () => {
+      // Load progress from localStorage
+      const m1Data = localStorage.getItem('paes-progress-M1');
+      const m2Data = localStorage.getItem('paes-progress-M2');
+
+      if (m1Data) {
+        setM1Progress(JSON.parse(m1Data));
+      }
+      if (m2Data) {
+        setM2Progress(JSON.parse(m2Data));
+      }
+
+      // Load question history
+      const m1HistoryData = localStorage.getItem('paes-history-M1');
+      const m2HistoryData = localStorage.getItem('paes-history-M2');
+
+      if (m1HistoryData) {
+        setM1History(JSON.parse(m1HistoryData));
+      }
+      if (m2HistoryData) {
+        setM2History(JSON.parse(m2HistoryData));
+      }
+    };
+
+    loadProgressAndHistory();
   }, []);
 
   const calculatePercentage = (progress: Progress) => {

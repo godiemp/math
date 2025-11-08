@@ -7,9 +7,11 @@ import { useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
 import { getUserRegisteredSessions, updateSessionStatuses, getAllAvailableSessions } from "@/lib/liveSessions";
 import { useEffect, useState } from "react";
-import { LiveSession } from "@/lib/types";
+import { LiveSession, QuestionAttempt } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen } from "@/components/ui";
 import { Streak } from "@/components/Streak";
+import { api } from "@/lib/api-client";
+import { isAuthenticated } from "@/lib/auth";
 
 function DashboardContent() {
   const { user, setUser, isAdmin } = useAuth();
@@ -17,35 +19,53 @@ function DashboardContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
   const [nextSession, setNextSession] = useState<LiveSession | null>(null);
+  const [recentAttempts, setRecentAttempts] = useState<QuestionAttempt[]>([]);
 
   useEffect(() => {
-    if (user) {
-      // Update session statuses
-      updateSessionStatuses();
+    const loadDashboardData = async () => {
+      if (user) {
+        // Update session statuses
+        updateSessionStatuses();
 
-      // Get user's registered sessions
-      const sessions = getUserRegisteredSessions(user.id);
+        // Get user's registered sessions
+        const sessions = getUserRegisteredSessions(user.id);
 
-      // Filter for upcoming sessions only (scheduled, lobby, active)
-      const upcomingSessions = sessions.filter(s =>
-        s.status === 'scheduled' || s.status === 'lobby' || s.status === 'active'
-      );
+        // Filter for upcoming sessions only (scheduled, lobby, active)
+        const upcomingSessions = sessions.filter(s =>
+          s.status === 'scheduled' || s.status === 'lobby' || s.status === 'active'
+        );
 
-      // Sort by scheduled start time
-      upcomingSessions.sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
+        // Sort by scheduled start time
+        upcomingSessions.sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
 
-      setRegisteredSessions(upcomingSessions);
+        setRegisteredSessions(upcomingSessions);
 
-      // Get the next scheduled session (for all users, not just registered)
-      const allUpcoming = getAllAvailableSessions()
-        .filter(s => s.status === 'scheduled' || s.status === 'lobby')
-        .sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
+        // Get the next scheduled session (for all users, not just registered)
+        const allUpcoming = getAllAvailableSessions()
+          .filter(s => s.status === 'scheduled' || s.status === 'lobby')
+          .sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
 
-      setNextSession(allUpcoming[0] || null);
+        setNextSession(allUpcoming[0] || null);
 
-      // Mark loading as complete
-      setIsLoading(false);
-    }
+        // Load recent quiz attempts if user is authenticated
+        if (isAuthenticated()) {
+          try {
+            const response = await api.get('/api/quiz/history?limit=5');
+            if (response.data?.history) {
+              setRecentAttempts(response.data.history);
+            }
+          } catch (error) {
+            console.error('Failed to load recent quiz attempts:', error);
+            // Don't block dashboard loading if this fails
+          }
+        }
+
+        // Mark loading as complete
+        setIsLoading(false);
+      }
+    };
+
+    loadDashboardData();
   }, [user]);
 
   const handleLogout = async () => {
@@ -283,6 +303,67 @@ function DashboardContent() {
                       {session.status === 'lobby' ? 'Entrar al Lobby' : session.status === 'active' ? 'Unirse Ahora' : 'Ver Detalles'}
                     </Link>
                   </Button>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Recent Activity Section */}
+        {recentAttempts.length > 0 && (
+          <div className="mb-12">
+            <div className="flex justify-between items-center mb-6">
+              <Heading level={3} size="sm">
+                Actividad Reciente
+              </Heading>
+              <Button asChild variant="ghost">
+                <Link href="/progress">
+                  Ver Todo →
+                </Link>
+              </Button>
+            </div>
+            <div className="grid gap-3">
+              {recentAttempts.map((attempt, index) => (
+                <Card key={`${attempt.questionId}-${attempt.timestamp}`} hover className="p-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <Badge size="sm" variant={attempt.level === 'M1' ? 'info' : 'secondary'}>
+                          {attempt.level}
+                        </Badge>
+                        <Badge
+                          size="sm"
+                          variant={
+                            attempt.difficulty === 'easy' ? 'success' :
+                            attempt.difficulty === 'medium' ? 'warning' :
+                            'danger'
+                          }
+                        >
+                          {attempt.difficulty === 'easy' ? 'Fácil' :
+                           attempt.difficulty === 'medium' ? 'Media' :
+                           'Difícil'}
+                        </Badge>
+                        <Text size="xs" variant="secondary" className="truncate">
+                          {attempt.topic}
+                        </Text>
+                      </div>
+                      <Text size="xs" variant="secondary">
+                        {new Date(attempt.timestamp).toLocaleDateString('es-ES', {
+                          day: '2-digit',
+                          month: 'short',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </Text>
+                    </div>
+                    <div className="flex-shrink-0">
+                      {attempt.isCorrect ? (
+                        <span className="text-2xl text-[#34C759] dark:text-[#30D158]">✓</span>
+                      ) : (
+                        <span className="text-2xl text-[#FF453A]">✗</span>
+                      )}
+                    </div>
+                  </div>
                 </Card>
               ))}
             </div>

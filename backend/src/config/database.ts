@@ -200,6 +200,55 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
+    // Create quiz_sessions table for grouping quiz attempts and storing AI conversations
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS quiz_sessions (
+        id VARCHAR(100) PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        level VARCHAR(5) NOT NULL CHECK (level IN ('M1', 'M2')),
+        started_at BIGINT NOT NULL,
+        completed_at BIGINT,
+        ai_conversation JSONB DEFAULT '[]',
+        created_at BIGINT NOT NULL
+      )
+    `);
+
+    // Create quiz_attempts table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS quiz_attempts (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        quiz_session_id VARCHAR(100) REFERENCES quiz_sessions(id) ON DELETE SET NULL,
+        question_id VARCHAR(100) NOT NULL,
+        level VARCHAR(5) NOT NULL CHECK (level IN ('M1', 'M2')),
+        topic VARCHAR(255) NOT NULL,
+        subject VARCHAR(50) NOT NULL,
+        question TEXT NOT NULL,
+        options JSONB NOT NULL,
+        user_answer INTEGER NOT NULL,
+        correct_answer INTEGER NOT NULL,
+        is_correct BOOLEAN NOT NULL,
+        difficulty VARCHAR(20) NOT NULL CHECK (difficulty IN ('easy', 'medium', 'hard')),
+        explanation TEXT NOT NULL,
+        skills JSONB NOT NULL,
+        attempted_at BIGINT NOT NULL
+      )
+    `);
+
+    // Migration: Add quiz_session_id column if it doesn't exist (for existing databases)
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'quiz_attempts' AND column_name = 'quiz_session_id'
+        ) THEN
+          ALTER TABLE quiz_attempts
+          ADD COLUMN quiz_session_id VARCHAR(100) REFERENCES quiz_sessions(id) ON DELETE SET NULL;
+        END IF;
+      END $$;
+    `);
+
     // Create indexes
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)');
@@ -220,6 +269,11 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_attempted_at ON question_attempts(attempted_at)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_level ON question_attempts(level)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_subject ON question_attempts(subject)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_quiz_sessions_user_id ON quiz_sessions(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_quiz_sessions_started_at ON quiz_sessions(started_at)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_quiz_attempts_user_id ON quiz_attempts(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_quiz_attempts_quiz_session_id ON quiz_attempts(quiz_session_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_quiz_attempts_attempted_at ON quiz_attempts(attempted_at)');
 
     await client.query('COMMIT');
     console.log('✅ Database tables initialized successfully');
