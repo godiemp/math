@@ -44,5 +44,19 @@ export const m2ProbabilidadReglasProbabilidadQuestions: Question[] = [
     explanationLatex: 'P = \\frac{5}{8} \\times \\frac{4}{7} = \\frac{20}{56} = \\frac{5}{14}',
     difficulty: 'hard',
     skills: ['probabilidad-condicional', 'probabilidad-sin-reposicion', 'probabilidad-reglas-multiplicacion', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-prob-rp-4',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    question: 'En una prueba médica, el 95% de los enfermos dan positivo y el 10% de los sanos dan positivo. Si el 2% de la población está enferma, ¿cuál es la probabilidad de que una persona que dio positivo esté realmente enferma?',
+    questionLatex: '\\text{Prueba: 95\\% enfermos +, 10\\% sanos +, 2\\% población enferma. P(enfermo|positivo)?}',
+    options: ['Aproximadamente 16%', 'Aproximadamente 32%', 'Aproximadamente 48%', 'Aproximadamente 95%'],
+    correctAnswer: 0,
+    explanation: 'Usando teorema de Bayes: P(E|+) = P(+|E)×P(E) / [P(+|E)×P(E) + P(+|S)×P(S)]',
+    explanationLatex: 'P(E|+) = \\frac{0.95 \\times 0.02}{0.95 \\times 0.02 + 0.10 \\times 0.98} = \\frac{0.019}{0.117} \\approx 0.16',
+    difficulty: 'extreme',
+    skills: ['probabilidad-teorema-bayes', 'probabilidad-condicional', 'probabilidad-reglas-multiplicacion', 'numeros-decimales', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   }
 ];

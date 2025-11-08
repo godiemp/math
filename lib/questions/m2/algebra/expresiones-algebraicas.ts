@@ -45,5 +45,20 @@ export const m2AlgebraExpresionesAlgebraicasQuestions: Question[] = [
     explanationLatex: '\\frac{(x-2)(x+2)}{(x+2)^2} = \\frac{x-2}{x+2}',
     difficulty: 'hard',
     skills: ['algebra-fracciones-algebraicas', 'algebra-factorizacion', 'algebra-simplificacion', 'algebra-productos-notables']
+  },
+  {
+    id: 'm2-alg-expr-4',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Simplifica: $\\frac{1}{x-1} - \\frac{2}{x^2-1} + \\frac{1}{x+1}$',
+    questionLatex: '\\text{Simplifica: } \\frac{1}{x-1} - \\frac{2}{x^2-1} + \\frac{1}{x+1}',
+    options: ['$\\frac{2x}{x^2-1}$', '$\\frac{x}{x^2-1}$', '$\\frac{2}{x-1}$', '$\\frac{1}{x-1}$'],
+    optionsLatex: ['\\frac{2x}{x^2-1}', '\\frac{x}{x^2-1}', '\\frac{2}{x-1}', '\\frac{1}{x-1}'],
+    correctAnswer: 0,
+    explanation: 'Factorizamos x²-1 = (x-1)(x+1) y encontramos común denominador:',
+    explanationLatex: '\\frac{x+1}{x^2-1} - \\frac{2}{x^2-1} + \\frac{x-1}{x^2-1} = \\frac{x+1-2+x-1}{x^2-1} = \\frac{2x}{x^2-1}',
+    difficulty: 'extreme',
+    skills: ['algebra-fracciones-algebraicas', 'algebra-factorizacion', 'algebra-simplificacion', 'algebra-comun-denominador', 'numeros-operaciones-basicas']
   }
 ];

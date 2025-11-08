@@ -58,5 +58,20 @@ export const m2AlgebraEcuacionesCuadraticasQuestions: Question[] = [
     explanationLatex: 'x_v = -\\frac{b}{2a} = 2, \\quad y_v = (2)^2 - 4(2) + 3 = -1',
     difficulty: 'hard',
     skills: ['algebra-funciones-cuadraticas', 'algebra-vertice-parabola', 'algebra-forma-canonica', 'geometria-parabolas']
+  },
+  {
+    id: 'm2-alg-cuad-3',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Si la ecuación $x^2 + kx + 9 = 0$ tiene raíces reales iguales, ¿cuál es el valor de $k$?',
+    questionLatex: '\\text{Si la ecuación } x^2 + kx + 9 = 0 \\text{ tiene raíces reales iguales, ¿cuál es el valor de } k?',
+    options: ['$k = \\pm 3$', '$k = \\pm 6$', '$k = \\pm 9$', '$k = \\pm 12$'],
+    optionsLatex: ['k = \\pm 3', 'k = \\pm 6', 'k = \\pm 9', 'k = \\pm 12'],
+    correctAnswer: 1,
+    explanation: 'Para raíces iguales, el discriminante debe ser 0: k² - 4(1)(9) = 0',
+    explanationLatex: '\\Delta = k^2 - 36 = 0 \\rightarrow k^2 = 36 \\rightarrow k = \\pm 6',
+    difficulty: 'extreme',
+    skills: ['algebra-ecuaciones-cuadraticas', 'algebra-discriminante', 'algebra-ecuaciones-parametricas', 'numeros-raices', 'numeros-operaciones-basicas']
   }
 ];

@@ -42,5 +42,19 @@ export const m2GeometriaVolumenQuestions: Question[] = [
     explanationLatex: 'V = \\frac{1}{3}\\pi r^2 h = \\frac{1}{3} \\times 3.14 \\times 4^2 \\times 9 \\approx 150.72 \\text{ cm}^3',
     difficulty: 'hard',
     skills: ['geometria-volumen', 'geometria-volumen-cono', 'numeros-potencias', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-geo-vol-3',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'Un tanque cilíndrico tiene radio 5 m y altura 12 m. Si está lleno hasta 3/4 de su capacidad, ¿cuántos m³ de agua contiene? (usar π ≈ 3.14)',
+    questionLatex: '\\text{Tanque cilíndrico r=5m, h=12m, lleno 3/4. ¿Volumen de agua? (usar } \\pi \\approx 3.14)',
+    options: ['235.5 m³', '471 m³', '706.5 m³', '942 m³'],
+    correctAnswer: 2,
+    explanation: 'V_total = πr²h = 3.14 × 5² × 12 = 942 m³. V_agua = (3/4) × 942 = 706.5 m³',
+    explanationLatex: 'V_{total} = 3.14 \\times 25 \\times 12 = 942 \\text{ m}^3, \\quad V_{agua} = \\frac{3}{4} \\times 942 = 706.5 \\text{ m}^3',
+    difficulty: 'extreme',
+    skills: ['geometria-volumen', 'geometria-volumen-cilindro', 'geometria-aplicaciones', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   }
 ];

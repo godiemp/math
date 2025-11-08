@@ -42,5 +42,20 @@ export const m2AlgebraSistemasEcuacionesQuestions: Question[] = [
     explanationLatex: '\\text{Las rectas se intersectan en un punto único} \\rightarrow \\text{una solución}',
     difficulty: 'medium',
     skills: ['algebra-sistemas-ecuaciones', 'algebra-interpretacion-geometrica', 'geometria-rectas', 'algebra-solucion-sistemas']
+  },
+  {
+    id: 'm2-alg-sist-3',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Resuelve el sistema: $x + 2y + z = 6$, $2x - y + 3z = 14$, $x + y - z = -2$',
+    questionLatex: '\\text{Resuelve: } x + 2y + z = 6, \\; 2x - y + 3z = 14, \\; x + y - z = -2',
+    options: ['$x = 1, y = 2, z = 1$', '$x = 2, y = 1, z = 1$', '$x = 3, y = 0, z = 3$', '$x = 1, y = -1, z = 4$'],
+    optionsLatex: ['x = 1, y = 2, z = 1', 'x = 2, y = 1, z = 1', 'x = 3, y = 0, z = 3', 'x = 1, y = -1, z = 4'],
+    correctAnswer: 1,
+    explanation: 'Resolviendo por eliminación gaussiana: de las ecuaciones 1 y 3: z = 1, luego x = 2, y = 1',
+    explanationLatex: '\\text{Sistema 3×3: eliminación gaussiana} \\rightarrow x = 2, y = 1, z = 1',
+    difficulty: 'extreme',
+    skills: ['algebra-sistemas-ecuaciones', 'algebra-sistemas-3x3', 'algebra-eliminacion-gaussiana', 'algebra-despeje', 'numeros-operaciones-basicas']
   }
 ];

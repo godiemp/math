@@ -45,5 +45,20 @@ export const m2NumerosPotenciasRaicesQuestions: Question[] = [
     explanationLatex: '\\left(\\frac{1}{2}\\right)^{-3} = \\left(\\frac{2}{1}\\right)^{3} = 2^3 = 8',
     difficulty: 'hard',
     skills: ['numeros-potencias', 'numeros-exponentes-negativos', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-pot-4',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'Simplifica: $\\sqrt{50} + \\sqrt{32} - \\sqrt{18}$',
+    questionLatex: '\\text{Simplifica: } \\sqrt{50} + \\sqrt{32} - \\sqrt{18}',
+    options: ['$7\\sqrt{2}$', '$5\\sqrt{2}$', '$8\\sqrt{2}$', '$6\\sqrt{2}$'],
+    optionsLatex: ['7\\sqrt{2}', '5\\sqrt{2}', '8\\sqrt{2}', '6\\sqrt{2}'],
+    correctAnswer: 3,
+    explanation: '√50 = 5√2, √32 = 4√2, √18 = 3√2. Entonces: 5√2 + 4√2 - 3√2 = 6√2',
+    explanationLatex: '5\\sqrt{2} + 4\\sqrt{2} - 3\\sqrt{2} = (5+4-3)\\sqrt{2} = 6\\sqrt{2}',
+    difficulty: 'extreme',
+    skills: ['numeros-raices', 'numeros-simplificacion-raices', 'numeros-suma-radicales', 'numeros-factorizacion', 'numeros-operaciones-basicas']
   }
 ];
