@@ -1,5 +1,4 @@
 import { Question } from '../types';
-import * as pdfjsLib from 'pdfjs-dist';
 import { createWorker } from 'tesseract.js';
 import { createCanvas, Canvas } from 'canvas';
 
@@ -29,6 +28,9 @@ async function extractTextWithOCR(buffer: Buffer, logs: string[]): Promise<strin
 
   try {
     log('🔍 Starting OCR extraction...');
+
+    // Dynamically import pdfjs-dist (ES Module)
+    const pdfjsLib = await import('pdfjs-dist');
 
     // Load PDF with pdfjs-dist
     const loadingTask = pdfjsLib.getDocument({
