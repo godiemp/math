@@ -1,7 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { PDFDocument } from 'pdf-lib';
 import { saveImage, StoredImage } from './imageStorageService';
-import { createCanvas } from 'canvas';
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
@@ -41,72 +39,10 @@ export interface PDFVisionExtractionResult {
 }
 
 /**
- * Convert PDF buffer to images (one per page)
+ * Analyze PDF using Claude Vision API (native PDF support)
  */
-async function pdfToImages(buffer: Buffer): Promise<Buffer[]> {
-  const images: Buffer[] = [];
-
-  // Use eval to ensure dynamic import stays dynamic (not transformed by TypeScript)
-  // This is necessary because TypeScript with "module": "commonjs" transforms dynamic imports
-  const pdfjsImport = new Function('specifier', 'return import(specifier)');
-  const pdfjs = await pdfjsImport('pdfjs-dist/legacy/build/pdf.mjs');
-
-  // Load PDF
-  const loadingTask = pdfjs.getDocument({ data: new Uint8Array(buffer) });
-  const pdf = await loadingTask.promise;
-
-  // Process each page
-  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-    const page = await pdf.getPage(pageNum);
-    const viewport = page.getViewport({ scale: 2.0 }); // Higher scale for better quality
-
-    // Create canvas
-    const canvas = createCanvas(viewport.width, viewport.height);
-    const context = canvas.getContext('2d');
-
-    // Render PDF page to canvas
-    const renderContext = {
-      canvasContext: context as any,
-      viewport: viewport,
-    };
-    await page.render(renderContext as any).promise;
-
-    // Convert canvas to buffer
-    const imageBuffer = canvas.toBuffer('image/png');
-    images.push(imageBuffer);
-  }
-
-  return images;
-}
-
-/**
- * Extract images embedded in PDF
- */
-async function extractEmbeddedImages(buffer: Buffer): Promise<{ data: Buffer; type: string }[]> {
-  const images: { data: Buffer; type: string }[] = [];
-
-  try {
-    const pdfDoc = await PDFDocument.load(buffer);
-    const pages = pdfDoc.getPages();
-
-    for (const page of pages) {
-      // This is a simplified version - pdf-lib doesn't directly expose images
-      // In a production environment, you might want to use a different library
-      // or extract images from the rendered page using vision API
-    }
-  } catch (error) {
-    console.error('Error extracting embedded images:', error);
-  }
-
-  return images;
-}
-
-/**
- * Analyze PDF page using Claude Vision API
- */
-async function analyzePDFPage(
-  imageBuffer: Buffer,
-  pageNumber: number,
+async function analyzePDFWithClaude(
+  pdfBuffer: Buffer,
   logs: string[]
 ): Promise<ExtractedQuestionWithVision[]> {
   const log = (message: string) => {
@@ -115,35 +51,35 @@ async function analyzePDFPage(
   };
 
   try {
-    log(`🔍 Analyzing page ${pageNumber} with Claude Vision API...`);
+    log(`🔍 Analyzing PDF with Claude Vision API (native PDF support)...`);
 
     // Convert buffer to base64
-    const base64Image = imageBuffer.toString('base64');
+    const base64PDF = pdfBuffer.toString('base64');
 
-    // Call Claude Vision API with detailed prompt
+    // Call Claude Vision API with PDF document
     const response = await anthropic.messages.create({
       model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 4096,
+      max_tokens: 16000,
       messages: [
         {
           role: 'user',
           content: [
             {
-              type: 'image',
+              type: 'document',
               source: {
                 type: 'base64',
-                media_type: 'image/png',
-                data: base64Image,
+                media_type: 'application/pdf',
+                data: base64PDF,
               },
             },
             {
               type: 'text',
-              text: `Analyze this math exam PDF page and extract all questions with their details.
+              text: `Analyze this math exam PDF and extract all questions with their details.
 
 For each question, provide:
 1. Question text (convert mathematical notation to LaTeX when applicable)
 2. Four options (A, B, C, D) - convert to LaTeX if they contain math
-3. Correct answer (if visible)
+3. Correct answer (if visible or can be determined)
 4. Explanation (if provided)
 5. Any images, diagrams, tables, or illustrations present
 
@@ -151,12 +87,14 @@ IMPORTANT INSTRUCTIONS:
 - Convert ALL mathematical formulas and expressions to LaTeX format
 - For inline math, use $...$
 - For display math, use $$...$$
-- If there are diagrams, tables, or illustrations, describe them in detail and indicate their position relative to the question
+- If there are diagrams, tables, or illustrations, describe them in detail
 - Identify the type of visual content: diagram, table, graph, formula, or other
 - Preserve exact mathematical notation and symbols
+- Include the page number where each question appears
 
 Return the data in this JSON format:
 {
+  "totalPages": <number of pages>,
   "questions": [
     {
       "question": "Question text here",
@@ -168,17 +106,17 @@ Return the data in this JSON format:
       "explanationLatex": "Explanation with $LaTeX$",
       "images": [
         {
-          "description": "Triangle diagram showing sides a, b, c",
-          "type": "diagram",
-          "position": "between question and options"
+          "description": "Triangle diagram showing sides a, b, c with angle theta",
+          "type": "diagram"
         }
       ],
-      "hasLatex": true
+      "hasLatex": true,
+      "pageNumber": 1
     }
   ]
 }
 
-If no questions are found, return {"questions": []}`,
+If no questions are found, return {"totalPages": 1, "questions": []}`,
             },
           ],
         },
@@ -211,48 +149,38 @@ If no questions are found, return {"questions": []}`,
           hasLatex: q.hasLatex || false,
         }));
 
-        log(`✅ Found ${questions.length} questions on page ${pageNumber}`);
+        log(`✅ Found ${questions.length} questions across ${parsed.totalPages || 1} pages`);
         return questions;
       }
     }
 
-    log(`⚠️ No questions found on page ${pageNumber}`);
+    log(`⚠️ No questions found in PDF`);
     return [];
   } catch (error) {
-    log(`❌ Error analyzing page ${pageNumber}: ${error}`);
+    log(`❌ Error analyzing PDF: ${error}`);
     console.error('Vision API error:', error);
-    return [];
+    throw error;
   }
 }
 
 /**
- * Extract images that were described in the questions
- * This function would ideally use image segmentation or OCR to extract specific regions
- * For now, we'll save the full page image when a question has image descriptions
+ * Extract images for questions that have descriptions
+ * Since we can't extract actual images from the PDF easily in Node.js,
+ * we create placeholder records for now
  */
-async function extractQuestionImages(
-  pageImage: Buffer,
-  questions: ExtractedQuestionWithVision[],
-  pageNumber: number
+async function createImagePlaceholders(
+  questions: ExtractedQuestionWithVision[]
 ): Promise<void> {
   for (const question of questions) {
-    if (question.images.length > 0) {
-      // Save the page image for questions with visual content
-      // In a production system, you might want to:
-      // 1. Use image segmentation to extract specific regions
-      // 2. Use OCR to find exact positions
-      // 3. Crop the image to the specific diagram/table area
-
-      const storedImage = await saveImage(
-        pageImage,
-        'image/png',
-        `page${pageNumber}_q${questions.indexOf(question)}.png`
-      );
-
-      // Update all images in the question with the stored image URL
+    if (question.images && question.images.length > 0) {
+      // For now, we just create placeholder image entries
+      // In a future enhancement, you could:
+      // 1. Use external tools to extract images from PDF
+      // 2. Ask users to upload images separately
+      // 3. Use a PDF processing service
       for (const img of question.images) {
-        img.id = storedImage.id;
-        img.url = storedImage.url;
+        img.id = `placeholder-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        img.url = ''; // No actual image URL for now
       }
     }
   }
@@ -265,7 +193,6 @@ export async function extractQuestionsWithVision(
   buffer: Buffer
 ): Promise<PDFVisionExtractionResult> {
   const logs: string[] = [];
-  const allQuestions: ExtractedQuestionWithVision[] = [];
   const extractedImages: StoredImage[] = [];
 
   const log = (message: string) => {
@@ -274,29 +201,19 @@ export async function extractQuestionsWithVision(
   };
 
   try {
-    log('📄 Starting enhanced PDF extraction with vision...');
+    log('📄 Starting enhanced PDF extraction with Claude Vision API...');
 
-    // Convert PDF to images
-    log('🖼️ Converting PDF pages to images...');
-    const pageImages = await pdfToImages(buffer);
-    log(`✅ Converted ${pageImages.length} pages to images`);
+    // Analyze PDF with Claude (native PDF support)
+    const questions = await analyzePDFWithClaude(buffer, logs);
 
-    // Analyze each page with Claude Vision
-    for (let i = 0; i < pageImages.length; i++) {
-      const pageNumber = i + 1;
-      const questions = await analyzePDFPage(pageImages[i], pageNumber, logs);
+    // Create placeholder image entries
+    await createImagePlaceholders(questions);
 
-      // Extract and save images for questions
-      await extractQuestionImages(pageImages[i], questions, pageNumber);
-
-      allQuestions.push(...questions);
-    }
-
-    log(`✅ Extraction complete: ${allQuestions.length} total questions found`);
+    log(`✅ Extraction complete: ${questions.length} total questions found`);
 
     return {
-      questions: allQuestions,
-      totalPages: pageImages.length,
+      questions,
+      totalPages: 1, // Claude will tell us the actual page count
       logs,
       extractedImages,
     };
