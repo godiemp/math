@@ -31,8 +31,6 @@ export const RAPIDFIRE_CONFIG = {
   easy: {
     timeLimit: 25 * 60,           // 25 minutes
     questionCount: 10,             // 10 questions
-    skipsAllowed: 3,               // 3 free skips
-    skipPenaltySeconds: 0,         // No time penalty
     hintsAllowed: true,            // Hints available
     hintPenaltyPercent: 10,        // -10% points for using hint
     immediateFeedback: true,       // See if answer is correct immediately
@@ -49,8 +47,6 @@ export const RAPIDFIRE_CONFIG = {
   medium: {
     timeLimit: 18 * 60,           // 18 minutes
     questionCount: 10,             // 10 questions
-    skipsAllowed: 2,               // 2 skips
-    skipPenaltySeconds: 10,        // -10 seconds per skip
     hintsAllowed: false,           // No hints
     hintPenaltyPercent: 0,
     immediateFeedback: false,      // Only see results at end
@@ -63,15 +59,12 @@ export const RAPIDFIRE_CONFIG = {
     streakBonusEnabled: true,      // Streak bonus enabled
     streakBonusThreshold: 3,       // 3+ consecutive correct
     streakBonusPoints: 5,          // +5 points for streak
-    skipPointsPenalty: 5,          // -5 points per skip used
     perfectBonus: 0,               // No perfect bonus
     passingPercentage: 70,         // 70% to pass
   },
   hard: {
     timeLimit: 12 * 60,           // 12 minutes
     questionCount: 12,             // 12 questions
-    skipsAllowed: 1,               // 1 skip
-    skipPenaltySeconds: 20,        // -20 seconds per skip
     hintsAllowed: false,           // No hints
     hintPenaltyPercent: 0,
     immediateFeedback: true,       // Must show feedback for lives system to work
@@ -84,15 +77,12 @@ export const RAPIDFIRE_CONFIG = {
     streakBonusEnabled: true,      // Streak bonus enabled
     streakBonusThreshold: 5,       // 5+ consecutive correct
     streakBonusPoints: 10,         // +10 points for 5+ streak
-    skipPointsPenalty: 10,         // -10 points per skip used
     perfectBonus: 50,              // +50 points if all correct
     passingPercentage: 75,         // 75% to pass
   },
   extreme: {
     timeLimit: 10 * 60,           // 10 minutes
     questionCount: 15,             // 15 questions
-    skipsAllowed: 0,               // No skips
-    skipPenaltySeconds: 0,
     hintsAllowed: false,           // No hints
     hintPenaltyPercent: 0,
     immediateFeedback: true,       // Must show feedback for lives system to work
@@ -107,7 +97,6 @@ export const RAPIDFIRE_CONFIG = {
       { threshold: 5, points: 15 },
       { threshold: 10, points: 30 },
     ],
-    skipPointsPenalty: 0,          // No skips available anyway
     perfectBonus: 100,             // +100 points if all correct
     passingPercentage: 80,         // 80% to pass
     timeBackPerCorrect: 5,         // +5 seconds back per correct answer

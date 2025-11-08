@@ -56,8 +56,6 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
   // Rapid Fire state
   const [rapidFireState, setRapidFireState] = useState<RapidFireState>({
-    skipsUsed: 0,
-    skipsRemaining: config?.skipsAllowed || 0,
     hintsUsed: [],
     pausesUsed: 0,
     pausesRemaining: config?.pauseAllowed ? 1 : 0,
@@ -66,7 +64,6 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     currentStreak: 0,
     longestStreak: 0,
     timePerQuestion: [],
-    skippedQuestions: [],
     isPaused: false,
     pauseTimeRemaining: 0,
   });
@@ -108,8 +105,6 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     // Reset rapid fire state
     if (quizMode === 'rapidfire' && config) {
       setRapidFireState({
-        skipsUsed: 0,
-        skipsRemaining: config.skipsAllowed,
         hintsUsed: [],
         pausesUsed: 0,
         pausesRemaining: config.pauseAllowed ? 1 : 0,
@@ -118,7 +113,6 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         currentStreak: 0,
         longestStreak: 0,
         timePerQuestion: new Array(questionsToUse.length).fill(0),
-        skippedQuestions: [],
         isPaused: false,
         pauseTimeRemaining: 0,
       });
@@ -307,28 +301,6 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     }
   };
 
-  // Skip current question (rapid fire only)
-  const handleSkip = () => {
-    if (quizMode !== 'rapidfire' || !config || rapidFireState.skipsRemaining <= 0) return;
-
-    setRapidFireState(prev => ({
-      ...prev,
-      skipsUsed: prev.skipsUsed + 1,
-      skipsRemaining: prev.skipsRemaining - 1,
-      skippedQuestions: [...prev.skippedQuestions, currentQuestionIndex],
-    }));
-
-    // Apply time penalty
-    if (config.skipPenaltySeconds > 0) {
-      setTimeRemaining(prev => Math.max(0, prev - config.skipPenaltySeconds));
-    }
-
-    // Move to next question
-    if (currentQuestionIndex < quizQuestions.length - 1) {
-      handleNext();
-    }
-  };
-
   // Use hint for current question (easy mode only)
   const handleHint = () => {
     if (quizMode !== 'rapidfire' || !config || !config.hintsAllowed) return;
@@ -371,7 +343,6 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         streakBonus: 0,
         perfectBonus: 0,
         hintPenalty: 0,
-        skipPenalty: 0,
         totalPoints: 0,
         correctAnswers: 0,
         totalQuestions: quizQuestions.length,
@@ -424,13 +395,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
       ? rapidFireState.hintsUsed.length * (config.pointsPerCorrect * config.hintPenaltyPercent / 100)
       : 0;
 
-    // Skip penalty
-    const skipPenalty = 'skipPointsPenalty' in config
-      ? rapidFireState.skipsUsed * config.skipPointsPenalty
-      : 0;
-
     // Total
-    const totalPoints = Math.max(0, basePoints + speedBonus + streakBonus + perfectBonus - hintPenalty - skipPenalty);
+    const totalPoints = Math.max(0, basePoints + speedBonus + streakBonus + perfectBonus - hintPenalty);
 
     // Check if passed
     const accuracy = (correctCount / quizQuestions.length) * 100;
@@ -442,7 +408,6 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
       streakBonus,
       perfectBonus,
       hintPenalty,
-      skipPenalty,
       totalPoints,
       correctAnswers: correctCount,
       totalQuestions: quizQuestions.length,
@@ -549,8 +514,6 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     // Reset rapid fire state
     if (quizMode === 'rapidfire' && config) {
       setRapidFireState({
-        skipsUsed: 0,
-        skipsRemaining: config.skipsAllowed,
         hintsUsed: [],
         pausesUsed: 0,
         pausesRemaining: config.pauseAllowed ? 1 : 0,
@@ -559,7 +522,6 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         currentStreak: 0,
         longestStreak: 0,
         timePerQuestion: new Array(questionCount).fill(0),
-        skippedQuestions: [],
         isPaused: false,
         pauseTimeRemaining: 0,
       });
@@ -841,13 +803,6 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
                 </div>
               )}
 
-              {rapidFireScore.skipPenalty > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-700 dark:text-gray-300">⏭️ Penalización por saltos ({rapidFireState.skipsUsed})</span>
-                  <span className="font-bold text-blue-600 dark:text-blue-400">-{rapidFireScore.skipPenalty}</span>
-                </div>
-              )}
-
               <div className="pt-2 mt-2 border-t border-purple-300 dark:border-purple-600 flex justify-between">
                 <span className="font-bold text-purple-900 dark:text-purple-100">Total</span>
                 <span className="font-bold text-2xl text-purple-600 dark:text-purple-400">{Math.round(rapidFireScore.totalPoints)}</span>
@@ -1032,16 +987,6 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
               </div>
             )}
 
-            {/* Skips remaining */}
-            {config.skipsAllowed > 0 && (
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Saltos:</span>
-                <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
-                  {rapidFireState.skipsRemaining}/{config.skipsAllowed}
-                </span>
-              </div>
-            )}
-
             {/* Pause remaining (if applicable) */}
             {config.pauseAllowed && (
               <div className="flex items-center gap-2">
@@ -1055,17 +1000,6 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
           {/* Action Buttons */}
           <div className="flex gap-2">
-            {/* Skip Button */}
-            {config.skipsAllowed > 0 && rapidFireState.skipsRemaining > 0 && (
-              <button
-                onClick={handleSkip}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors"
-                disabled={currentQuestionIndex === quizQuestions.length - 1}
-              >
-                ⏭️ Saltar {config.skipPenaltySeconds > 0 && `(-${config.skipPenaltySeconds}s)`}
-              </button>
-            )}
-
             {/* Hint Button */}
             {config.hintsAllowed && !rapidFireState.hintsUsed.includes(currentQuestionIndex) && (
               <button
@@ -1349,7 +1283,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         {/* In rapid fire mode before submission, show message about quick nav */}
         {quizMode === 'rapidfire' && !quizSubmitted && (
           <div className="text-center text-sm text-purple-200 dark:text-purple-300 bg-purple-900/30 rounded-lg p-3">
-            💡 Usa la navegación rápida arriba para cambiar de pregunta, o el botón de Saltar si está disponible
+            💡 Usa la navegación rápida arriba para saltar entre preguntas
           </div>
         )}
 
