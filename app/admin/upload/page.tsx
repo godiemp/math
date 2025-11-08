@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { api } from '@/lib/api-client';
 import { createWorker } from 'tesseract.js';
+import * as pdfjsLib from 'pdfjs-dist';
 
 interface ExtractedQuestion {
   question: string;
@@ -49,6 +50,11 @@ export default function UploadPDFPage() {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
+  // Configure PDF.js worker
+  useEffect(() => {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+  }, []);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
@@ -74,27 +80,60 @@ export default function UploadPDFPage() {
 
   const runOCROnPDF = async (pdfFile: File) => {
     try {
-      setUploadProgress('Ejecutando OCR en el navegador (esto puede tomar un momento)...');
+      setUploadProgress('Cargando PDF...');
 
+      // Load PDF
+      const arrayBuffer = await pdfFile.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const numPages = pdf.numPages;
+
+      setUploadProgress(`Inicializando OCR...`);
+
+      // Create Tesseract worker
       const worker = await createWorker('spa', 1, {
         logger: (m: any) => {
           if (m.status === 'recognizing text') {
-            setUploadProgress(`OCR: ${Math.round(m.progress * 100)}% completado...`);
+            // Progress updates are handled per page below
           }
         }
       });
 
-      // Convert PDF to data URL
-      const arrayBuffer = await pdfFile.arrayBuffer();
-      const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
-      const dataUrl = URL.createObjectURL(blob);
+      let allText = '';
 
-      const { data: { text } } = await worker.recognize(dataUrl);
+      // Process each page
+      for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+        setUploadProgress(`Procesando página ${pageNum} de ${numPages}...`);
+
+        // Get page
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale: 2.0 });
+
+        // Create canvas
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        // Render page to canvas
+        await page.render({
+          canvasContext: context!,
+          viewport: viewport,
+        }).promise;
+
+        // Convert canvas to image data URL
+        const imageDataUrl = canvas.toDataURL('image/png');
+
+        // Run OCR on the image
+        setUploadProgress(`OCR en página ${pageNum} de ${numPages}...`);
+        const { data: { text } } = await worker.recognize(imageDataUrl);
+
+        allText += `\n\n=== PÁGINA ${pageNum} ===\n\n${text}`;
+      }
 
       await worker.terminate();
-      URL.revokeObjectURL(dataUrl);
 
-      return text;
+      setUploadProgress('');
+      return allText;
     } catch (error) {
       console.error('OCR error:', error);
       return `OCR failed: ${error}`;
