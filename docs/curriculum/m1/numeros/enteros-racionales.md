@@ -56,9 +56,7 @@ $$\frac{1}{4} = 1 \div 4 = 0.25$$
 
 ---
 
-<!-- section: operaciones-fundamentales, importance: essential, collapsible: true, defaultOpen: true -->
 ## Operaciones Fundamentales
-<!-- /section -->
 
 <!-- section: suma-fracciones, importance: essential, collapsible: true, defaultOpen: true -->
 ### Suma de Fracciones
@@ -178,9 +176,7 @@ La respuesta es $\frac{3}{2} = 1.5$ (una mitad y media).
 
 ---
 
-<!-- section: propiedades-importantes, importance: important, collapsible: true -->
 ## Propiedades Importantes
-<!-- /section -->
 
 <!-- section: orden-racionales, importance: important, collapsible: true -->
 ### Orden en $\mathbb{Q}$
@@ -300,9 +296,7 @@ $$\text{MCD}(24, 36) \times \text{MCM}(24, 36) = 12 \times 72 = 864 = 24 \times 
 
 ---
 
-<!-- section: ejemplos-paes, importance: essential, collapsible: true, defaultOpen: true -->
 ## Ejemplos Tipo PAES
-<!-- /section -->
 
 <!-- section: ejemplo-1-paes, importance: essential, collapsible: true, defaultOpen: false -->
 #### Ejemplo 1: Operaciones Básicas
