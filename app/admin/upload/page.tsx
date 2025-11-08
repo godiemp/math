@@ -38,6 +38,8 @@ export default function UploadPDFPage() {
   const [uploadProgress, setUploadProgress] = useState('');
   const [processingLogs, setProcessingLogs] = useState<string[]>([]);
   const [showLogs, setShowLogs] = useState(false);
+  const [rawText, setRawText] = useState('');
+  const [showRawText, setShowRawText] = useState(false);
   const [extractedQuestions, setExtractedQuestions] = useState<ExtractedQuestion[]>([]);
   const [enrichedQuestions, setEnrichedQuestions] = useState<QuestionToSave[]>([]);
   const [uploadResult, setUploadResult] = useState<any>(null);
@@ -101,6 +103,12 @@ export default function UploadPDFPage() {
       setUploadProgress('Analizando preguntas extraídas...');
       setUploadResult(response.data);
       setExtractedQuestions(response.data.questions || []);
+
+      // Store raw text for debugging
+      if (response.data.rawText) {
+        setRawText(response.data.rawText);
+        setShowRawText(true); // Auto-expand raw text for debugging
+      }
 
       // Store processing logs for admin viewing
       if (response.data.logs) {
@@ -278,6 +286,23 @@ export default function UploadPDFPage() {
                               {log}
                             </div>
                           ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {rawText && (
+                    <div className="mt-3">
+                      <button
+                        onClick={() => setShowRawText(!showRawText)}
+                        className="text-sm font-medium text-green-700 hover:text-green-900 underline"
+                      >
+                        {showRawText ? '▼ Ocultar texto extraído del PDF' : '▶ Ver texto extraído del PDF'}
+                      </button>
+
+                      {showRawText && (
+                        <div className="mt-2 bg-gray-900 text-gray-100 rounded p-3 text-xs font-mono overflow-x-auto max-h-96 overflow-y-auto whitespace-pre-wrap">
+                          {rawText}
                         </div>
                       )}
                     </div>
