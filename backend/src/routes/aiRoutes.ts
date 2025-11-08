@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { summarizeContent, generatePracticeProblems } from '../services/aiService';
-import { authenticateToken } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 
 const router = Router();
 
@@ -8,7 +8,7 @@ const router = Router();
  * POST /api/ai/summarize
  * Summarize educational content
  */
-router.post('/summarize', authenticateToken, async (req, res) => {
+router.post('/summarize', authenticate, async (req, res) => {
   try {
     const { content, mode = 'brief', context } = req.body;
 
@@ -39,7 +39,7 @@ router.post('/summarize', authenticateToken, async (req, res) => {
  * POST /api/ai/practice
  * Generate practice problems for a topic
  */
-router.post('/practice', authenticateToken, async (req, res) => {
+router.post('/practice', authenticate, async (req, res) => {
   try {
     const { topic, count = 3 } = req.body;
 

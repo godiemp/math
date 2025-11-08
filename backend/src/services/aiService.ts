@@ -69,7 +69,7 @@ Mantén el formato matemático usando LaTeX donde sea apropiado (usa $...$ para 
       throw new Error(`AI service error: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as { content: Array<{ text: string }> };
     const summary = data.content[0].text;
 
     return {
@@ -141,7 +141,7 @@ Usa formato matemático LaTeX donde sea apropiado.`;
       throw new Error(`AI service error: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as { content: Array<{ text: string }> };
     return data.content[0].text;
   } catch (error) {
     console.error('Error generating practice problems:', error);
