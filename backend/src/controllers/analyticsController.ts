@@ -116,14 +116,14 @@ export const getAnalyticsDashboard = async (req: Request, res: Response) => {
             u.id,
             u.created_at,
             MIN(qa.attempted_at) as first_attempt,
-            MAX(CASE WHEN qa.attempted_at >= u.created_at + (1 * 24 * 60 * 60 * 1000)
-                          AND qa.attempted_at < u.created_at + (2 * 24 * 60 * 60 * 1000)
+            MAX(CASE WHEN qa.attempted_at >= u.created_at + (1::bigint * 24 * 60 * 60 * 1000)
+                          AND qa.attempted_at < u.created_at + (2::bigint * 24 * 60 * 60 * 1000)
                      THEN 1 END) as returned_d1,
-            MAX(CASE WHEN qa.attempted_at >= u.created_at + (7 * 24 * 60 * 60 * 1000)
-                          AND qa.attempted_at < u.created_at + (14 * 24 * 60 * 60 * 1000)
+            MAX(CASE WHEN qa.attempted_at >= u.created_at + (7::bigint * 24 * 60 * 60 * 1000)
+                          AND qa.attempted_at < u.created_at + (14::bigint * 24 * 60 * 60 * 1000)
                      THEN 1 END) as returned_d7,
-            MAX(CASE WHEN qa.attempted_at >= u.created_at + (30 * 24 * 60 * 60 * 1000)
-                          AND qa.attempted_at < u.created_at + (60 * 24 * 60 * 60 * 1000)
+            MAX(CASE WHEN qa.attempted_at >= u.created_at + (30::bigint * 24 * 60 * 60 * 1000)
+                          AND qa.attempted_at < u.created_at + (60::bigint * 24 * 60 * 60 * 1000)
                      THEN 1 END) as returned_d30
           FROM users u
           LEFT JOIN question_attempts qa ON u.id = qa.user_id
@@ -188,9 +188,9 @@ export const getAnalyticsDashboard = async (req: Request, res: Response) => {
       )
       SELECT
         COUNT(DISTINCT nu.id) as new_users,
-        COUNT(DISTINCT CASE WHEN qa.attempted_at <= nu.created_at + (24 * 60 * 60 * 1000)
+        COUNT(DISTINCT CASE WHEN qa.attempted_at <= nu.created_at + (24::bigint * 60 * 60 * 1000)
                             THEN nu.id END) as activated_users,
-        ROUND((COUNT(DISTINCT CASE WHEN qa.attempted_at <= nu.created_at + (24 * 60 * 60 * 1000)
+        ROUND((COUNT(DISTINCT CASE WHEN qa.attempted_at <= nu.created_at + (24::bigint * 60 * 60 * 1000)
                                     THEN nu.id END)::decimal /
                NULLIF(COUNT(DISTINCT nu.id), 0)) * 100, 2) as activation_rate
       FROM new_users nu
