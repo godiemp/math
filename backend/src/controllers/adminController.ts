@@ -15,7 +15,7 @@ export const uploadPDF = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const userId = (req as any).user?.id;
+    const userId = (req as any).user?.userId;
     if (!userId) {
       res.status(401).json({ error: 'Unauthorized' });
       return;
@@ -84,7 +84,7 @@ export const uploadPDF = async (req: Request, res: Response): Promise<void> => {
  */
 export const saveQuestions = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = (req as any).user?.id;
+    const userId = (req as any).user?.userId;
     if (!userId) {
       res.status(401).json({ error: 'Unauthorized' });
       return;
