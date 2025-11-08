@@ -1,0 +1,402 @@
+# Función Lineal
+
+## Overview
+
+La función lineal es una de las funciones más importantes en matemáticas. Describe relaciones de cambio constante y se representa gráficamente como una línea recta.
+
+
+---
+
+## Conceptos Clave
+
+### Definición
+
+Una función lineal es de la forma:
+
+$$f(x) = mx + b$$
+
+o también:
+
+$$y = mx + b$$
+
+donde:
+- $m$ = **pendiente** (inclinación de la recta)
+- $b$ = **intercepto** o **coeficiente de posición** (punto donde cruza el eje $y$)
+
+### Función Lineal vs Función Afín
+
+**Función Lineal** (pasa por el origen):
+$$f(x) = mx \quad \text{donde } b = 0$$
+
+**Función Afín** (general):
+$$f(x) = mx + b$$
+
+En la PAES, se usa "función lineal" para ambas.
+
+---
+
+## Pendiente
+
+La pendiente $m$ indica cuánto cambia $y$ cuando $x$ aumenta en 1.
+
+$$m = \frac{\Delta y}{\Delta x} = \frac{y_2 - y_1}{x_2 - x_1}$$
+
+### Interpretación
+
+- $m > 0$ : Función **creciente** (sube de izquierda a derecha)
+- $m < 0$ : Función **decreciente** (baja de izquierda a derecha)
+- $m = 0$ : Función **constante** (horizontal)
+- $m$ no definido : Recta **vertical** (no es función)
+
+### Ejemplos
+
+**Pendiente positiva**: $y = 2x + 1$
+- Por cada unidad que aumenta $x$, $y$ aumenta 2
+
+**Pendiente negativa**: $y = -3x + 5$
+- Por cada unidad que aumenta $x$, $y$ disminuye 3
+
+**Pendiente cero**: $y = 4$
+- $y$ siempre vale 4, sin importar $x$
+
+---
+
+## Intercepto con el Eje Y
+
+El punto donde la recta cruza el eje $y$ (cuando $x = 0$).
+
+$$\text{Intercepto} = b = f(0)$$
+
+**Ejemplo**: Para $y = 3x - 2$
+$$f(0) = 3(0) - 2 = -2$$
+
+El punto es $(0, -2)$
+
+---
+
+## Intercepto con el Eje X
+
+El punto donde la recta cruza el eje $x$ (cuando $y = 0$).
+
+$$0 = mx + b \quad \Rightarrow \quad x = -\frac{b}{m}$$
+
+**Ejemplo**: Para $y = 2x - 6$
+$$0 = 2x - 6 \quad \Rightarrow \quad x = 3$$
+
+El punto es $(3, 0)$
+
+---
+
+## Formas de la Ecuación de la Recta
+
+### Forma Pendiente-Intercepto
+
+$$y = mx + b$$
+
+**Ventaja**: Se ven directamente $m$ y $b$
+
+### Forma Punto-Pendiente
+
+$$y - y_1 = m(x - x_1)$$
+
+donde $(x_1, y_1)$ es un punto conocido.
+
+**Ejemplo**: Recta con $m = 3$ que pasa por $(2, 5)$
+$$y - 5 = 3(x - 2)$$
+$$y - 5 = 3x - 6$$
+$$y = 3x - 1$$
+
+### Forma General
+
+$$Ax + By + C = 0$$
+
+**Ejemplo**: $2x - 3y + 6 = 0$
+
+Convertir a forma pendiente-intercepto:
+$$-3y = -2x - 6$$
+$$y = \frac{2}{3}x + 2$$
+
+---
+
+## Encontrar la Ecuación de una Recta
+
+### Dados: Pendiente y un Punto
+
+**Ejemplo**: $m = 4$ y punto $(1, 3)$
+
+$$y - 3 = 4(x - 1)$$
+$$y = 4x - 1$$
+
+### Dados: Dos Puntos
+
+**Ejemplo**: $(2, 3)$ y $(5, 9)$
+
+**Paso 1**: Calcular pendiente:
+$$m = \frac{9 - 3}{5 - 2} = \frac{6}{3} = 2$$
+
+**Paso 2**: Usar punto-pendiente con $(2, 3)$:
+$$y - 3 = 2(x - 2)$$
+$$y = 2x - 1$$
+
+### Dados: Pendiente e Intercepto
+
+**Ejemplo**: $m = -3$ y $b = 7$
+
+$$y = -3x + 7$$
+
+---
+
+## Rectas Paralelas y Perpendiculares
+
+### Rectas Paralelas
+
+Tienen la **misma pendiente**:
+
+$$m_1 = m_2$$
+
+**Ejemplo**:
+- $y = 2x + 3$ y $y = 2x - 5$ son paralelas (ambas tienen $m = 2$)
+
+### Rectas Perpendiculares
+
+Sus pendientes cumplen:
+
+$$m_1 \cdot m_2 = -1$$
+
+o también:
+
+$$m_2 = -\frac{1}{m_1}$$
+
+**Ejemplo**:
+- $y = 2x + 1$ tiene $m_1 = 2$
+- Una perpendicular tiene $m_2 = -\frac{1}{2}$
+- Ejemplo: $y = -\frac{1}{2}x + 3$
+
+---
+
+## Gráfica de la Función Lineal
+
+### Método 1: Tabla de Valores
+
+| $x$ | $y = 2x - 1$ |
+|-----|--------------|
+| 0   | -1           |
+| 1   | 1            |
+| 2   | 3            |
+
+Graficar los puntos y unirlos.
+
+### Método 2: Interceptos
+
+Encontrar:
+- Intercepto $y$: $(0, b)$
+- Intercepto $x$: $(-\frac{b}{m}, 0)$
+
+Graficar ambos puntos y unir.
+
+### Método 3: Pendiente-Intercepto
+
+1. Marcar el intercepto $y$: $(0, b)$
+2. Usar la pendiente $m = \frac{\Delta y}{\Delta x}$ para encontrar otro punto
+
+**Ejemplo**: $y = \frac{3}{2}x + 1$
+- Punto inicial: $(0, 1)$
+- Pendiente $\frac{3}{2}$: subir 3, derecha 2
+- Segundo punto: $(2, 4)$
+
+---
+
+## Ejemplos Tipo PAES
+
+### Ejemplo 1: Identificar Pendiente e Intercepto
+
+**Pregunta**: En la función $y = -4x + 7$, ¿cuál es la pendiente?
+
+**Opciones**:
+- A) -4
+- B) 4
+- C) 7
+- D) -7
+
+**Solución**:
+$$y = \underbrace{-4}_{m}x + \underbrace{7}_{b}$$
+
+**Respuesta**: A) -4
+
+---
+
+### Ejemplo 2: Encontrar Ecuación
+
+**Pregunta**: ¿Cuál es la ecuación de la recta con $m = 3$ que pasa por $(1, 5)$?
+
+**Opciones**:
+- A) $y = 3x + 2$
+- B) $y = 3x + 5$
+- C) $y = 3x - 2$
+- D) $y = 3x + 8$
+
+**Solución**:
+$$y - 5 = 3(x - 1)$$
+$$y - 5 = 3x - 3$$
+$$y = 3x + 2$$
+
+**Respuesta**: A) $y = 3x + 2$
+
+---
+
+### Ejemplo 3: Calcular Pendiente
+
+**Pregunta**: ¿Cuál es la pendiente de la recta que pasa por $(2, 5)$ y $(4, 9)$?
+
+**Opciones**:
+- A) 1
+- B) 2
+- C) 3
+- D) 4
+
+**Solución**:
+$$m = \frac{9 - 5}{4 - 2} = \frac{4}{2} = 2$$
+
+**Respuesta**: B) 2
+
+---
+
+### Ejemplo 4: Rectas Paralelas
+
+**Pregunta**: ¿Cuál recta es paralela a $y = 5x - 3$?
+
+**Opciones**:
+- A) $y = 5x + 7$
+- B) $y = -5x + 3$
+- C) $y = \frac{1}{5}x - 3$
+- D) $y = -\frac{1}{5}x + 7$
+
+**Solución**:
+
+Paralelas tienen la misma pendiente: $m = 5$
+
+**Respuesta**: A) $y = 5x + 7$
+
+---
+
+### Ejemplo 5: Intercepto X
+
+**Pregunta**: ¿En qué punto la recta $y = 3x - 9$ corta el eje $x$?
+
+**Opciones**:
+- A) $(0, -9)$
+- B) $(3, 0)$
+- C) $(-3, 0)$
+- D) $(9, 0)$
+
+**Solución**:
+
+Cuando $y = 0$:
+$$0 = 3x - 9$$
+$$3x = 9$$
+$$x = 3$$
+
+**Respuesta**: B) $(3, 0)$
+
+---
+
+## Aplicaciones
+
+### Costo Lineal
+
+$$\text{Costo Total} = \text{Costo Fijo} + \text{Costo Variable} \times \text{Cantidad}$$
+
+$$C(x) = 5000 + 100x$$
+
+### Conversión de Temperatura
+
+$$F = \frac{9}{5}C + 32$$
+
+### Velocidad Constante
+
+$$\text{Distancia} = \text{Velocidad} \times \text{Tiempo}$$
+
+$$d(t) = 60t$$
+
+### Depreciación Lineal
+
+Valor de un auto que se deprecia $2000 al año:
+
+$$V(t) = 20000 - 2000t$$
+
+---
+
+## Errores Comunes
+
+### ❌ Confundir pendiente con intercepto
+
+En $y = 3x + 5$:
+- $m = 3$ (NO 5)
+- $b = 5$ (NO 3)
+
+### ❌ Calcular mal la pendiente
+
+$$\text{❌} \quad m = \frac{x_2 - x_1}{y_2 - y_1}$$
+$$\text{✓} \quad m = \frac{y_2 - y_1}{x_2 - x_1}$$
+
+### ❌ Pensar que perpendiculares tienen $m_2 = -m_1$
+
+$$\text{❌} \quad m_1 = 3 \Rightarrow m_2 = -3$$
+$$\text{✓} \quad m_1 = 3 \Rightarrow m_2 = -\frac{1}{3}$$
+
+### ❌ Olvidar que rectas verticales no son funciones
+
+$x = 5$ es una recta vertical, NO una función.
+
+---
+
+## Dominio y Recorrido
+
+**Dominio**: Todos los números reales
+$$\text{Dom}(f) = \mathbb{R} = (-\infty, +\infty)$$
+
+**Recorrido**:
+- Si $m \neq 0$: $\text{Rec}(f) = \mathbb{R}$
+- Si $m = 0$: $\text{Rec}(f) = \{b\}$ (función constante)
+
+---
+
+## Skills Relacionados
+
+Este tema desarrolla las siguientes habilidades PAES:
+
+- `funciones-lineales`: Trabajar con funciones lineales
+- `funciones-graficas`: Graficar e interpretar
+- `algebra-pendiente`: Calcular e interpretar pendiente
+- `modelar-lineales`: Modelar situaciones con funciones lineales
+
+**Competencias**:
+- ✓ Representar gráficamente
+- ✓ Modelar situaciones
+- ✓ Interpretar parámetros
+- ✓ Resolver problemas contextualizados
+
+---
+
+## Recursos Adicionales
+
+### Práctica
+- [Ver preguntas de práctica](/questions/m1/algebra/funciones-lineales)
+- [Quiz interactivo](/practice/m1/funciones-lineales)
+
+### Herramientas
+- [Graficador de funciones](/calculator?mode=graph)
+- [Calculadora de pendiente](/calculator?mode=slope)
+
+### Temas Relacionados
+- ← [Sistemas de Ecuaciones](/curriculum/m1/docs/algebra/sistemas-ecuaciones)
+- [Función Cuadrática →](/curriculum/m1/docs/algebra/funciones-cuadraticas)
+
+---
+
+## Referencias
+
+- PAES Competencia M1: Álgebra y Funciones
+- Nivel de dificultad: Medio
+- Tiempo de estudio recomendado: 2 semanas
+- Número de preguntas en banco: ~15
