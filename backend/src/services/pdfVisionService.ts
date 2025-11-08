@@ -56,9 +56,9 @@ async function analyzePDFWithClaude(
     // Convert buffer to base64
     const base64PDF = pdfBuffer.toString('base64');
 
-    // Call Claude Vision API with PDF document
+    // Call Claude Vision API with PDF document (using latest Sonnet 4.5 model)
     const response = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-sonnet-4-5-20250929',
       max_tokens: 16000,
       messages: [
         {
