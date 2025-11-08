@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ReadingMode } from './ReadingModeControl';
+import { MathText } from './MathDisplay';
 
 export type SectionImportance = 'essential' | 'important' | 'advanced';
 export type CollapseControl = 'fold-all' | 'unfold-all' | 'unfold-h2' | 'unfold-h3' | 'unfold-h4' | null;
@@ -136,7 +137,7 @@ export function CollapsibleSection({
             </svg>
           </span>
           <h3 className={`${style.fontSize} ${style.fontWeight} text-slate-900 dark:text-slate-50`}>
-            {title}
+            <MathText content={title} />
           </h3>
         </div>
         {mode === 'full' && (
