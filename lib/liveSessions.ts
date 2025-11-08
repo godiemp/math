@@ -1,5 +1,5 @@
 import { LiveSession, SessionParticipant, SessionRegistration, Question, User } from './types';
-import { getRandomQuestions } from './questions';
+import { getRandomQuestions, getOfficialPAESQuestions } from './questions';
 
 const SESSIONS_STORAGE_KEY = 'paes-live-sessions';
 const LOBBY_OPEN_MINUTES = 15; // Lobby opens 15 minutes before start
@@ -37,7 +37,17 @@ export function createScheduledSession(
 ): LiveSession {
   const sessions = getAllSessions();
 
-  const questions = getRandomQuestions(level, questionCount);
+  // Use official PAES distribution for standard formats:
+  // M1: 60 questions (17 números, 17 álgebra, 14 geometría, 12 probabilidad)
+  // M2: 50 questions (12 números, 16 álgebra, 12 geometría, 10 probabilidad)
+  let questions: Question[];
+  if ((level === 'M1' && questionCount === 60) || (level === 'M2' && questionCount === 50)) {
+    questions = getOfficialPAESQuestions(level);
+  } else {
+    // For custom question counts, use random selection
+    questions = getRandomQuestions(level, questionCount);
+  }
+
   const scheduledEndTime = scheduledStartTime + (durationMinutes * 60 * 1000);
   const lobbyOpenTime = scheduledStartTime - (LOBBY_OPEN_MINUTES * 60 * 1000);
 
@@ -343,7 +353,13 @@ export function updateScheduledSession(
   if (updates.questionCount || updates.level) {
     const count = updates.questionCount || session.questions.length;
     const level = updates.level || session.level;
-    session.questions = getRandomQuestions(level, count);
+
+    // Use official PAES distribution for standard formats
+    if ((level === 'M1' && count === 60) || (level === 'M2' && count === 50)) {
+      session.questions = getOfficialPAESQuestions(level);
+    } else {
+      session.questions = getRandomQuestions(level, count);
+    }
 
     // Reset all participant answers
     session.participants.forEach(p => {
