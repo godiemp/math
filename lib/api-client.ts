@@ -48,31 +48,58 @@ function getApiBaseUrl(): string {
   return 'http://localhost:3001';
 }
 
-// Cache for API base URL - computed at runtime on first access
+// Cache for API base URL - fetched from server at runtime on first access
 let cachedApiBaseUrl: string | null = null;
+let apiUrlPromise: Promise<string> | null = null;
 let hasLoggedDebugInfo = false;
 
 /**
- * Get the API base URL, computing it at runtime on first call
+ * Fetch the backend URL from server-side config endpoint
+ * This ensures we get the PR number at REQUEST time, not BUILD time
  */
-function getApiUrl(): string {
-  if (!cachedApiBaseUrl) {
-    cachedApiBaseUrl = getApiBaseUrl();
+async function fetchBackendUrl(): Promise<string> {
+  try {
+    const response = await fetch('/api/config');
+    if (!response.ok) {
+      throw new Error('Failed to fetch backend config');
+    }
+    const data = await response.json();
 
-    // Log the API URL for debugging (helps troubleshoot connection issues)
-    // Only log once when running in browser
+    // Log debug info once
     if (typeof window !== 'undefined' && !hasLoggedDebugInfo) {
       hasLoggedDebugInfo = true;
-      console.log('🔗 API Base URL:', cachedApiBaseUrl);
-      console.log('📦 Vercel Environment:', process.env.NEXT_PUBLIC_VERCEL_ENV);
-      console.log('🌿 Git Branch:', process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF);
-      console.log('🔢 PR Number:', process.env.NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID);
-      console.log('🚂 Railway URL (env):', process.env.NEXT_PUBLIC_RAILWAY_URL);
-      console.log('🔧 API URL (env):', process.env.NEXT_PUBLIC_API_URL);
+      console.log('🔗 Backend URL (from server):', data.backendUrl);
+      console.log('📦 Vercel Environment:', data.debug.vercelEnv);
+      console.log('🔢 PR Number:', data.debug.prNumber);
+      console.log('🌿 Git Branch:', data.debug.branchName);
     }
+
+    return data.backendUrl;
+  } catch (error) {
+    console.error('Failed to fetch backend URL, using fallback:', error);
+    // Fallback to client-side detection if server config fails
+    return getApiBaseUrl();
+  }
+}
+
+/**
+ * Get the API base URL, fetching from server on first call
+ * Returns a Promise that resolves to the backend URL
+ */
+async function getApiUrl(): Promise<string> {
+  if (cachedApiBaseUrl) {
+    return cachedApiBaseUrl;
   }
 
-  return cachedApiBaseUrl;
+  // Avoid multiple concurrent fetches
+  if (!apiUrlPromise) {
+    apiUrlPromise = fetchBackendUrl().then(url => {
+      cachedApiBaseUrl = url;
+      return url;
+    });
+  }
+
+  return apiUrlPromise;
 }
 
 // Token storage keys
@@ -121,7 +148,8 @@ async function refreshAccessToken(): Promise<string | null> {
   if (!refreshToken) return null;
 
   try {
-    const response = await fetch(`${getApiUrl()}/api/auth/refresh`, {
+    const backendUrl = await getApiUrl();
+    const response = await fetch(`${backendUrl}/api/auth/refresh`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -168,7 +196,8 @@ export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
-  const url = `${getApiUrl()}${endpoint}`;
+  const backendUrl = await getApiUrl();
+  const url = `${backendUrl}${endpoint}`;
 
   // Add access token to headers if available
   let accessToken = getAccessToken();
