@@ -4,7 +4,7 @@
  * Functions to calculate user progress on individual skills based on question attempts
  */
 
-import { QuestionAttempt } from './types';
+import { QuestionAttempt, MasteryLevel } from './types';
 import { questions } from './questions';
 import { SKILLS } from './skillTaxonomy';
 import { skillsArray, EnhancedSkill } from './skillsArray';
@@ -17,7 +17,7 @@ export interface SkillProgress {
   incorrectCount: number;
   accuracy: number; // 0-100
   lastAttempted?: number; // timestamp
-  masteryLevel: 'not-started' | 'learning' | 'mastered'; // <60% learning, >=80% mastered
+  masteryLevel: MasteryLevel; // not-started | learning | mastered
 }
 
 export interface SkillProgressSummary {
@@ -112,7 +112,7 @@ export function calculateSkillProgress(
     } else {
       // Calculate accuracy and mastery level
       const accuracy = (stats.correct / stats.attempts) * 100;
-      let masteryLevel: 'not-started' | 'learning' | 'mastered';
+      let masteryLevel: MasteryLevel;
 
       if (accuracy >= 80 && stats.attempts >= 3) {
         masteryLevel = 'mastered';
