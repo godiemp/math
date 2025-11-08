@@ -28,28 +28,166 @@ Un número racional es cualquier número que puede expresarse como una fracción
 
 **Conjunto**: $\mathbb{Q} = \left\{\frac{a}{b} \mid a \in \mathbb{Z}, b \in \mathbb{Z}, b \neq 0\right\}$
 
-**Ejemplos**:
-$$\frac{1}{2}, \quad \frac{3}{4}, \quad -\frac{5}{7}, \quad 8 = \frac{8}{1}, \quad -3 = \frac{-3}{1}, \quad 0.75 = \frac{3}{4}$$
+#### Tipos de Números Racionales
 
-### 🎓 Nota Pedagógica: Visualizando Fracciones
+**1. Fracciones Propias** (numerador < denominador):
+$$\frac{1}{2}, \quad \frac{3}{4}, \quad \frac{5}{8}, \quad \frac{2}{3}$$
+
+**2. Fracciones Impropias** (numerador ≥ denominador):
+$$\frac{5}{3}, \quad \frac{7}{4}, \quad \frac{11}{5}$$
+
+**3. Números Mixtos** (combinan entero y fracción):
+$$1\frac{2}{3} = \frac{5}{3}, \quad 2\frac{1}{4} = \frac{9}{4}, \quad 3\frac{3}{5} = \frac{18}{5}$$
+
+**4. Enteros** (casos especiales con denominador 1):
+$$8 = \frac{8}{1}, \quad -3 = \frac{-3}{1}, \quad 0 = \frac{0}{1}$$
+
+**5. Decimales Finitos**:
+$$0.25 = \frac{1}{4}, \quad 0.75 = \frac{3}{4}, \quad 1.5 = \frac{3}{2}$$
+
+**6. Decimales Periódicos**:
+$$0.\overline{3} = \frac{1}{3}, \quad 0.\overline{6} = \frac{2}{3}, \quad 0.1\overline{6} = \frac{1}{6}$$
+
+#### 🎓 Nota Pedagógica: Visualizando Fracciones
 
 Una fracción representa **partes de un todo**. Piensa en una pizza:
 - $\frac{1}{4}$ significa 1 pedazo de 4 pedazos totales
 - $\frac{3}{4}$ significa 3 pedazos de 4 pedazos totales
+- $\frac{5}{4}$ significa 5 pedazos (más de una pizza completa) = $1\frac{1}{4}$ pizzas
+
+**Representación en la recta numérica:**
+
+Entre cualquier dos números racionales, siempre existe otro número racional. Esta propiedad se llama **densidad**:
+
+$$\text{Entre } \frac{1}{2} \text{ y } \frac{3}{4} \text{ está } \frac{5}{8} = \frac{1/2 + 3/4}{2}$$
 
 **Relación con decimales:**
 Toda fracción puede convertirse a decimal dividiendo el numerador por el denominador:
 $$\frac{1}{4} = 1 \div 4 = 0.25$$
+$$\frac{2}{3} = 2 \div 3 = 0.666... = 0.\overline{6}$$
 
-**¿Por qué son importantes los racionales?**
-- Permiten expresar cantidades que no son enteras (como $2.5$ kg de manzanas)
-- Son necesarios para resolver ecuaciones (como $2x = 3$, donde $x = \frac{3}{2}$)
-- Aparecen en probabilidades, porcentajes, proporciones, etc.
+#### ⚡ Estrategia Rápida: Reconocer Números Racionales
 
-**Diferencia clave con decimales:**
-- Algunos racionales tienen expansión decimal **finita**: $\frac{1}{4} = 0.25$
-- Otros tienen expansión decimal **infinita periódica**: $\frac{1}{3} = 0.333...$
-- Los números con expansión decimal infinita **no periódica** (como $\pi$ o $\sqrt{2}$) NO son racionales
+**¿Cómo identificar si un número es racional?**
+
+✓ **ES racional si:**
+- Es un entero: $5, -3, 0$
+- Se puede escribir como fracción: $\frac{2}{3}, \frac{7}{5}$
+- Tiene decimal finito: $0.25, 3.5, -1.75$
+- Tiene decimal periódico: $0.\overline{3}, 1.\overline{6}, 2.1\overline{42}$
+
+✗ **NO es racional si:**
+- Tiene decimal infinito no periódico: $\pi = 3.14159...$
+- Es raíz no exacta: $\sqrt{2} = 1.41421356...$
+- Es número irracional conocido: $e, \phi$ (número áureo)
+
+**Tip PAES**: Si te dan un decimal largo sin indicar periodicidad, asume que es racional y busca el patrón que se repite.
+
+#### 🌍 Aplicaciones Prácticas de Números Racionales
+
+**Situación 1: Recetas de cocina**
+Una receta pide $\frac{2}{3}$ de taza de azúcar. Si quieres hacer $\frac{1}{2}$ de la receta:
+$$\frac{2}{3} \times \frac{1}{2} = \frac{2}{6} = \frac{1}{3} \text{ taza}$$
+
+**Situación 2: Calificaciones**
+Respondiste correctamente $\frac{15}{20}$ preguntas de un examen:
+$$\frac{15}{20} = \frac{3}{4} = 0.75 = 75\%$$
+
+**Situación 3: Distribución de recursos**
+Tienes $\$12.000$ para repartir entre 3 amigos en partes iguales:
+$$\frac{12.000}{3} = \frac{12.000}{3} = 4.000 \text{ pesos cada uno}$$
+
+**Situación 4: Mediciones**
+Un terreno mide $2\frac{1}{2}$ hectáreas. Vendes $\frac{3}{5}$ del terreno:
+$$2\frac{1}{2} \times \frac{3}{5} = \frac{5}{2} \times \frac{3}{5} = \frac{15}{10} = \frac{3}{2} = 1\frac{1}{2} \text{ hectáreas vendidas}$$
+
+#### 🔍 Jerarquía de Conjuntos Numéricos
+
+Es importante entender cómo se relacionan los distintos conjuntos:
+
+$$\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q} \subset \mathbb{R}$$
+
+**Naturales ($\mathbb{N}$)**: $\{1, 2, 3, 4, ...\}$
+- Son para contar objetos
+
+**Enteros ($\mathbb{Z}$)**: $\{..., -2, -1, 0, 1, 2, ...\}$
+- Incluyen negativos (deudas, temperaturas bajo cero)
+
+**Racionales ($\mathbb{Q}$)**: $\left\{\frac{a}{b} \mid b \neq 0\right\}$
+- Incluyen fracciones (partes, proporciones)
+- **Todo entero es racional**: $5 = \frac{5}{1}$
+- **Todo natural es racional**: $3 = \frac{3}{1}$
+
+**Reales ($\mathbb{R}$)**: Racionales + Irracionales
+- Incluyen números como $\pi, \sqrt{2}, e$
+
+**Ejemplo de diferencia**:
+- $\frac{4}{2} = 2$ es racional (y también entero y natural)
+- $\frac{5}{2} = 2.5$ es racional (pero NO entero ni natural)
+- $\sqrt{2} \approx 1.414...$ es real (pero NO racional)
+
+#### ¿Por qué son importantes los racionales?
+
+**1. En matemáticas:**
+- Resuelven ecuaciones: $2x = 3 \Rightarrow x = \frac{3}{2}$
+- Expresan proporciones: $\frac{2}{5}$ de la población
+- Miden probabilidades: $P = \frac{1}{6}$ al lanzar un dado
+
+**2. En la vida cotidiana:**
+- Cantidades no enteras: $2.5$ kg de manzanas
+- Porcentajes: $25\% = \frac{1}{4}$
+- Medidas: $1\frac{1}{2}$ horas, $\frac{3}{4}$ de litro
+- Dinero: $\$1.500 = \frac{1500}{1}$ o $\$0.50 = \frac{1}{2}$ peso
+
+**3. En la PAES:**
+- Aparecen en geometría (razones, proporciones)
+- En álgebra (soluciones de ecuaciones)
+- En datos y azar (probabilidades, promedios)
+
+#### 🎯 Conversión entre Formas
+
+**Fracción impropia ↔ Número mixto:**
+
+$$\frac{11}{4} = 2\frac{3}{4} \quad \text{(dividir: } 11 \div 4 = 2 \text{ con resto } 3\text{)}$$
+
+$$3\frac{2}{5} = \frac{(3 \times 5) + 2}{5} = \frac{17}{5}$$
+
+**Decimal finito → Fracción:**
+
+$$0.75 = \frac{75}{100} = \frac{3}{4}$$
+
+$$2.8 = 2\frac{8}{10} = 2\frac{4}{5} = \frac{14}{5}$$
+
+**Decimal periódico → Fracción:**
+
+Para $0.\overline{3}$:
+$$x = 0.333...$$
+$$10x = 3.333...$$
+$$10x - x = 3$$
+$$9x = 3 \Rightarrow x = \frac{3}{9} = \frac{1}{3}$$
+
+Para $0.\overline{6}$:
+$$x = 0.666...$$
+$$10x = 6.666...$$
+$$9x = 6 \Rightarrow x = \frac{6}{9} = \frac{2}{3}$$
+
+#### ⚠️ Conceptos Erróneos Comunes
+
+**Error 1: "Todo decimal es racional"**
+- ✗ **Falso**: $\pi = 3.14159...$ es decimal pero NO es racional
+- ✓ **Correcto**: Solo decimales finitos o periódicos son racionales
+
+**Error 2: "Las fracciones son siempre menores que 1"**
+- ✗ **Falso**: $\frac{5}{3} = 1.666... > 1$
+- ✓ **Correcto**: Fracciones propias son < 1, impropias pueden ser ≥ 1
+
+**Error 3: "No se pueden comparar fracciones con enteros"**
+- ✗ **Falso**: Todo se puede comparar
+- ✓ **Correcto**: Convierte el entero a fracción: $3 = \frac{3}{1} = \frac{9}{3}$ y compara con $\frac{5}{3}$
+
+**Error 4: "0.999... es diferente de 1"**
+- ✗ **Falso**: $0.\overline{9} = 1$ (son exactamente iguales)
+- Demostración: $x = 0.999...$, entonces $10x = 9.999...$, luego $10x - x = 9$, por lo tanto $9x = 9$, así que $x = 1$
 
 <!-- /section -->
 
