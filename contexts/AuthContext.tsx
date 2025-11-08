@@ -3,7 +3,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '@/lib/types';
 import { getCachedUser, fetchCurrentUser } from '@/lib/auth';
-import { LoadingScreen } from '@/components/ui';
 
 interface AuthContextType {
   user: User | null;
@@ -16,8 +15,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // Initialize with cached user immediately (no loading state)
+  const [user, setUser] = useState<User | null>(() => getCachedUser());
 
   const refreshUser = async () => {
     const fetchedUser = await fetchCurrentUser();
@@ -25,14 +24,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    // Try to load user from backend if we have a token
+    // Verify user with backend in the background
     const initAuth = async () => {
-      // First check localStorage for cached user
       const cachedUser = getCachedUser();
 
       if (cachedUser) {
-        setUser(cachedUser);
-        // Verify with backend in the background
+        // Verify with backend without blocking UI
         const fetchedUser = await fetchCurrentUser();
         if (fetchedUser) {
           setUser(fetchedUser);
@@ -41,8 +38,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(null);
         }
       }
-
-      setIsLoading(false);
     };
 
     initAuth();
@@ -56,11 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refreshUser,
   };
 
-  // Show loading screen while checking auth status
-  if (isLoading) {
-    return <LoadingScreen message="Verificando autenticación..." />;
-  }
-
+  // No global loading screen - let individual pages handle their own loading states
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
