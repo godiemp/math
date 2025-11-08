@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { AdaptiveMarkdownViewer } from '@/components/AdaptiveMarkdownViewer';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { notFound } from 'next/navigation';
+import { m1DocsStructure, getAllDocSlugs } from '@/docs';
 
 interface PageProps {
   params: Promise<{
@@ -11,53 +12,8 @@ interface PageProps {
   }>;
 }
 
-// Define the docs structure for navigation
-const docsStructure = {
-  title: 'M1 - Nivel Básico',
-  sections: [
-    {
-      title: 'Números y Operaciones',
-      path: 'numeros',
-      items: [
-        { title: 'Enteros y Racionales', slug: 'numeros/enteros-racionales' },
-        { title: 'Porcentajes', slug: 'numeros/porcentaje' },
-        { title: 'Potencias y Raíces', slug: 'numeros/potencias-raices' },
-        { title: 'Proporcionalidad', slug: 'numeros/proporcionalidad' },
-      ],
-    },
-    {
-      title: 'Álgebra y Funciones',
-      path: 'algebra',
-      items: [
-        { title: 'Expresiones Algebraicas', slug: 'algebra/expresiones-algebraicas' },
-        { title: 'Ecuaciones e Inecuaciones', slug: 'algebra/ecuaciones-inecuaciones' },
-        { title: 'Sistemas de Ecuaciones', slug: 'algebra/sistemas-ecuaciones' },
-        { title: 'Función Lineal', slug: 'algebra/funciones-lineales' },
-        { title: 'Función Cuadrática', slug: 'algebra/funciones-cuadraticas' },
-      ],
-    },
-    {
-      title: 'Geometría',
-      path: 'geometria',
-      items: [
-        { title: 'Perímetro y Área', slug: 'geometria/perimetro-area' },
-        { title: 'Teorema de Pitágoras', slug: 'geometria/teorema-pitagoras' },
-        { title: 'Volumen', slug: 'geometria/volumen' },
-        { title: 'Transformaciones Isométricas', slug: 'geometria/transformaciones' },
-      ],
-    },
-    {
-      title: 'Probabilidad y Estadística',
-      path: 'probabilidad',
-      items: [
-        { title: 'Tablas y Gráficos', slug: 'probabilidad/tablas-graficos' },
-        { title: 'Medidas de Tendencia Central', slug: 'probabilidad/tendencia-central' },
-        { title: 'Medidas de Posición', slug: 'probabilidad/medidas-posicion' },
-        { title: 'Reglas de Probabilidad', slug: 'probabilidad/reglas-probabilidad' },
-      ],
-    },
-  ],
-};
+// Use the centralized docs structure
+const docsStructure = m1DocsStructure;
 
 async function getMarkdownContent(slug: string[]): Promise<string | null> {
   try {
@@ -82,18 +38,8 @@ async function getMarkdownContent(slug: string[]): Promise<string | null> {
 
 // Generate static params for all docs pages
 export async function generateStaticParams() {
-  const params: { slug?: string[] }[] = [
-    { slug: [] }, // Main index
-  ];
-
-  // Add all document paths
-  docsStructure.sections.forEach((section) => {
-    section.items.forEach((item) => {
-      params.push({ slug: item.slug.split('/') });
-    });
-  });
-
-  return params;
+  const slugs = getAllDocSlugs(m1DocsStructure);
+  return slugs.map((slug) => ({ slug }));
 }
 
 export default async function DocsPage({ params }: PageProps) {
