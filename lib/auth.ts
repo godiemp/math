@@ -20,9 +20,14 @@ export {
   isAuthenticated,
   isAdmin,
   requireAdmin,
-  // User storage (legacy name compatibility)
-  getCachedUser as getCurrentUser,
+  // User storage
+  getCachedUser,
+  setCachedUser,
+  clearCachedUser,
 } from './auth';
+
+// Legacy alias for backward compatibility
+export { getCachedUser as getCurrentUser } from './auth';
 
 // Re-export token functions from api-client for backward compatibility
 export { getAccessToken, setTokens, clearTokens } from './api-client';
