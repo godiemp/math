@@ -39,13 +39,13 @@ export async function GET() {
     if (pr) {
       backendUrl = `https://paes-math-backend-math-pr-${pr}.up.railway.app`;
     } else {
-      // No PR number found, fallback to localhost
-      backendUrl = 'http://localhost:3001';
+      // No PR number found, fallback to production
+      backendUrl = 'https://paes-math-backend-production.up.railway.app';
     }
   }
-  // Priority 4: Default localhost for development
+  // Priority 4: Default to production backend
   else {
-    backendUrl = 'http://localhost:3001';
+    backendUrl = 'https://paes-math-backend-production.up.railway.app';
   }
 
   return NextResponse.json({
