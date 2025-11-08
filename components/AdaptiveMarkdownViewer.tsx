@@ -3,7 +3,8 @@
 import { useState, useMemo } from 'react';
 import { MarkdownViewer } from './MarkdownViewer';
 import { ReadingModeControl, ReadingMode } from './ReadingModeControl';
-import { CollapsibleSection } from './CollapsibleSection';
+import { CollapsibleSection, CollapseControl } from './CollapsibleSection';
+import { CollapseControls } from './CollapseControls';
 import { parseMarkdownSections, filterSectionsByMode, stripSectionMetadata } from '@/lib/markdown-parser';
 
 interface AdaptiveMarkdownViewerProps {
@@ -12,6 +13,7 @@ interface AdaptiveMarkdownViewerProps {
 
 export function AdaptiveMarkdownViewer({ content }: AdaptiveMarkdownViewerProps) {
   const [mode, setMode] = useState<ReadingMode>('full');
+  const [collapseControl, setCollapseControl] = useState<CollapseControl>(null);
 
   // Parse sections from markdown
   const parsed = useMemo(() => parseMarkdownSections(content), [content]);
@@ -24,6 +26,9 @@ export function AdaptiveMarkdownViewer({ content }: AdaptiveMarkdownViewerProps)
 
   // Check if content has any sections with metadata
   const hasSections = parsed.sections.length > 0;
+
+  // Check if there are any collapsible sections
+  const hasCollapsibleSections = parsed.sections.some(s => s.type === 'section');
 
   // If no sections found, render as regular markdown
   if (!hasSections) {
@@ -38,6 +43,11 @@ export function AdaptiveMarkdownViewer({ content }: AdaptiveMarkdownViewerProps)
   return (
     <div>
       <ReadingModeControl onChange={setMode} className="mb-6" />
+
+      {/* Collapse controls - shown when there are collapsible sections */}
+      {hasCollapsibleSections && mode !== 'formulas' && (
+        <CollapseControls onControlChange={setCollapseControl} className="mb-4" />
+      )}
 
       {/* Render content based on mode */}
       {mode === 'formulas' ? (
@@ -89,8 +99,12 @@ export function AdaptiveMarkdownViewer({ content }: AdaptiveMarkdownViewerProps)
               );
             }
 
-            // Regular sections can be collapsible
-            if (section.collapsible) {
+            // All sections are now collapsible - determine level from title
+            if (section.type === 'section') {
+              // Extract heading level from content (## -> 2, ### -> 3, etc.)
+              const headingMatch = section.content.match(/^#{1,6}\s/);
+              const level = headingMatch ? headingMatch[0].trim().length : 2;
+
               return (
                 <CollapsibleSection
                   key={section.id}
@@ -99,13 +113,15 @@ export function AdaptiveMarkdownViewer({ content }: AdaptiveMarkdownViewerProps)
                   importance={section.importance}
                   mode={mode}
                   defaultOpen={section.defaultOpen}
+                  level={level}
+                  collapseControl={collapseControl}
                 >
                   <MarkdownViewer content={stripSectionMetadata(section.content)} />
                 </CollapsibleSection>
               );
             }
 
-            // Non-collapsible sections
+            // Fallback for non-section types
             return (
               <div key={section.id} className="my-6">
                 <MarkdownViewer content={stripSectionMetadata(section.content)} />

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { ReadingMode } from './ReadingModeControl';
 
 export type SectionImportance = 'essential' | 'important' | 'advanced';
+export type CollapseControl = 'fold-all' | 'unfold-all' | 'unfold-h2' | 'unfold-h3' | 'unfold-h4' | null;
 
 interface CollapsibleSectionProps {
   id: string;
@@ -12,6 +13,8 @@ interface CollapsibleSectionProps {
   mode: ReadingMode;
   children: React.ReactNode;
   defaultOpen?: boolean;
+  level?: number; // Heading level: 2 for ##, 3 for ###, etc.
+  collapseControl?: CollapseControl; // External control
 }
 
 // Determine if section should be visible based on mode and importance
@@ -50,6 +53,8 @@ export function CollapsibleSection({
   mode,
   children,
   defaultOpen,
+  level = 2,
+  collapseControl,
 }: CollapsibleSectionProps) {
   const visible = shouldShowSection(importance, mode);
   const autoOpen = defaultOpen !== undefined ? defaultOpen : shouldBeOpenByDefault(importance, mode);
@@ -60,6 +65,21 @@ export function CollapsibleSection({
     const shouldBeOpen = shouldBeOpenByDefault(importance, mode);
     setIsOpen(shouldBeOpen);
   }, [mode, importance]);
+
+  // Update open state when external collapse control changes
+  useEffect(() => {
+    if (collapseControl === 'fold-all') {
+      setIsOpen(false);
+    } else if (collapseControl === 'unfold-all') {
+      setIsOpen(true);
+    } else if (collapseControl === 'unfold-h2' && level <= 2) {
+      setIsOpen(true);
+    } else if (collapseControl === 'unfold-h3' && level <= 3) {
+      setIsOpen(true);
+    } else if (collapseControl === 'unfold-h4' && level <= 4) {
+      setIsOpen(true);
+    }
+  }, [collapseControl, level]);
 
   if (!visible) {
     return null;

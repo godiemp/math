@@ -7,7 +7,7 @@ Los números enteros y racionales forman la base fundamental de las matemáticas
 
 ---
 
-<!-- section: conceptos-clave, importance: essential, collapsible: false -->
+<!-- section: conceptos-clave, importance: essential, collapsible: true, defaultOpen: true -->
 ## Conceptos Clave
 
 ### Números Enteros ($\mathbb{Z}$)
@@ -56,7 +56,7 @@ $$\frac{1}{4} = 1 \div 4 = 0.25$$
 
 ---
 
-<!-- section: operaciones-fundamentales, importance: essential, collapsible: false -->
+<!-- section: operaciones-fundamentales, importance: essential, collapsible: true, defaultOpen: true -->
 ## Operaciones Fundamentales
 
 ### Suma de Fracciones
@@ -288,7 +288,7 @@ $$\text{MCD}(24, 36) \times \text{MCM}(24, 36) = 12 \times 72 = 864 = 24 \times 
 
 ---
 
-<!-- section: ejemplos-paes, importance: essential, collapsible: false -->
+<!-- section: ejemplos-paes, importance: essential, collapsible: true, defaultOpen: true -->
 ## Ejemplos Tipo PAES
 
 ### Ejemplo 1: Operaciones Básicas
