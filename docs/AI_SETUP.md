@@ -75,12 +75,13 @@ npm run dev
 
 ## Model Information
 
-- **Model**: Claude 3.5 Sonnet (`claude-3-5-sonnet-20241022`)
-- **Max tokens per response**: 2048
+- **Model**: Claude Sonnet 4.5 (`claude-sonnet-4-5-20250929`)
+- **Max tokens per response**: 2048 (chat), 1024 (single help)
 - **Features**:
   - Conversational memory (multi-turn chat)
   - Context-aware (knows the question, options, student's answer)
   - Pedagogical prompting (teaches, doesn't just give answers)
+  - Gen-z friendly tutoring persona
 
 ## Production Deployment
 
