@@ -1,6 +1,8 @@
 import { Question } from '../types';
 import { createWorker } from 'tesseract.js';
-import { createCanvas, Canvas } from 'canvas';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as os from 'os';
 
 export interface ExtractedQuestion {
   question: string;
@@ -18,7 +20,7 @@ export interface PDFExtractionResult {
 }
 
 /**
- * Extract text from PDF images using OCR (Tesseract)
+ * Extract text from PDF using OCR (Tesseract)
  */
 async function extractTextWithOCR(buffer: Buffer, logs: string[]): Promise<string> {
   const log = (message: string) => {
@@ -26,23 +28,16 @@ async function extractTextWithOCR(buffer: Buffer, logs: string[]): Promise<strin
     logs.push(message);
   };
 
+  let tempFilePath: string | null = null;
+
   try {
     log('🔍 Starting OCR extraction...');
 
-    // Dynamically import pdfjs-dist (ES Module)
-    const pdfjsLib = await import('pdfjs-dist');
-
-    // Load PDF with pdfjs-dist
-    const loadingTask = pdfjsLib.getDocument({
-      data: new Uint8Array(buffer),
-      useSystemFonts: true,
-    });
-
-    const pdfDoc = await loadingTask.promise;
-    const numPages = pdfDoc.numPages;
-    log(`📄 OCR: Processing ${numPages} pages...`);
-
-    let ocrText = '';
+    // Save PDF buffer to temporary file
+    const tempDir = os.tmpdir();
+    tempFilePath = path.join(tempDir, `pdf-ocr-${Date.now()}.pdf`);
+    fs.writeFileSync(tempFilePath, buffer);
+    log(`  Saved PDF to temp file: ${tempFilePath}`);
 
     // Create Tesseract worker
     const worker = await createWorker('spa', 1, {
@@ -53,42 +48,29 @@ async function extractTextWithOCR(buffer: Buffer, logs: string[]): Promise<strin
       }
     });
 
-    // Process each page
-    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-      log(`  OCR: Processing page ${pageNum}/${numPages}...`);
+    log(`  Running Tesseract OCR on PDF...`);
 
-      const page = await pdfDoc.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 2.0 }); // Higher scale for better OCR
-
-      // Create canvas
-      const canvas = createCanvas(viewport.width, viewport.height) as any;
-      const context = canvas.getContext('2d');
-
-      // Render PDF page to canvas
-      await page.render({
-        canvasContext: context,
-        viewport: viewport,
-        canvas: canvas,
-      } as any).promise;
-
-      // Convert canvas to image buffer
-      const imageData = canvas.toDataURL();
-
-      // Run OCR
-      const { data: { text } } = await worker.recognize(imageData);
-      ocrText += `\n\n=== PAGE ${pageNum} ===\n\n${text}`;
-
-      log(`  ✅ Page ${pageNum} OCR complete (${text.length} characters)`);
-    }
+    // Run OCR directly on the PDF file
+    const { data: { text } } = await worker.recognize(tempFilePath);
 
     await worker.terminate();
-    log(`✅ OCR extraction complete (${ocrText.length} total characters)`);
+    log(`✅ OCR extraction complete (${text.length} characters)`);
 
-    return ocrText;
+    return text;
   } catch (error) {
     const errorMsg = `❌ OCR error: ${error}`;
     log(errorMsg);
     return `OCR failed: ${error}`;
+  } finally {
+    // Clean up temp file
+    if (tempFilePath && fs.existsSync(tempFilePath)) {
+      try {
+        fs.unlinkSync(tempFilePath);
+        log(`  Cleaned up temp file`);
+      } catch (err) {
+        log(`  Warning: Could not delete temp file: ${err}`);
+      }
+    }
   }
 }
 
