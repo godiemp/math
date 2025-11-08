@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import Link from 'next/link';
-import { AdaptiveMarkdownViewer } from '@/components/AdaptiveMarkdownViewer';
+import { DocsContentWrapper } from '@/components/DocsContentWrapper';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { notFound } from 'next/navigation';
 
@@ -104,8 +104,21 @@ export default async function DocsPage({ params }: PageProps) {
     notFound();
   }
 
-  // Determine current page for sidebar highlighting
+  // Determine current page for sidebar highlighting and title
   const currentSlug = slug ? slug.join('/') : '';
+
+  // Determine page title for PDF export
+  let pageTitle = 'M1 - Documentación';
+  if (currentSlug) {
+    // Find the title from docsStructure
+    for (const section of docsStructure.sections) {
+      const item = section.items.find(i => i.slug === currentSlug);
+      if (item) {
+        pageTitle = item.title;
+        break;
+      }
+    }
+  }
 
   return (
     <ProtectedRoute>
@@ -176,11 +189,7 @@ export default async function DocsPage({ params }: PageProps) {
           </aside>
 
           {/* Main Content */}
-          <main className="flex-1 p-8 lg:p-12">
-            <div className="max-w-4xl mx-auto">
-              <AdaptiveMarkdownViewer content={content} />
-            </div>
-          </main>
+          <DocsContentWrapper content={content} title={pageTitle} />
         </div>
       </div>
     </ProtectedRoute>
