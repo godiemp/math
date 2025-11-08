@@ -28,6 +28,7 @@ Un número racional es cualquier número que puede expresarse como una fracción
 
 **Conjunto**: $\mathbb{Q} = \left\{\frac{a}{b} \mid a \in \mathbb{Z}, b \in \mathbb{Z}, b \neq 0\right\}$
 
+<!-- section: tipos-racionales, importance: essential, collapsible: true, defaultOpen: true -->
 #### Tipos de Números Racionales
 
 **1. Fracciones Propias** (numerador < denominador):
@@ -47,7 +48,9 @@ $$0.25 = \frac{1}{4}, \quad 0.75 = \frac{3}{4}, \quad 1.5 = \frac{3}{2}$$
 
 **6. Decimales Periódicos**:
 $$0.\overline{3} = \frac{1}{3}, \quad 0.\overline{6} = \frac{2}{3}, \quad 0.1\overline{6} = \frac{1}{6}$$
+<!-- /section -->
 
+<!-- section: visualizacion-fracciones, importance: essential, collapsible: true, defaultOpen: true -->
 #### 🎓 Nota Pedagógica: Visualizando Fracciones
 
 Una fracción representa **partes de un todo**. Piensa en una pizza:
@@ -65,7 +68,9 @@ $$\text{Entre } \frac{1}{2} \text{ y } \frac{3}{4} \text{ está } \frac{5}{8} = 
 Toda fracción puede convertirse a decimal dividiendo el numerador por el denominador:
 $$\frac{1}{4} = 1 \div 4 = 0.25$$
 $$\frac{2}{3} = 2 \div 3 = 0.666... = 0.\overline{6}$$
+<!-- /section -->
 
+<!-- section: reconocer-racionales, importance: important, collapsible: true, defaultOpen: false -->
 #### ⚡ Estrategia Rápida: Reconocer Números Racionales
 
 **¿Cómo identificar si un número es racional?**
@@ -82,7 +87,9 @@ $$\frac{2}{3} = 2 \div 3 = 0.666... = 0.\overline{6}$$
 - Es número irracional conocido: $e, \phi$ (número áureo)
 
 **Tip PAES**: Si te dan un decimal largo sin indicar periodicidad, asume que es racional y busca el patrón que se repite.
+<!-- /section -->
 
+<!-- section: aplicaciones-racionales, importance: important, collapsible: true, defaultOpen: false -->
 #### 🌍 Aplicaciones Prácticas de Números Racionales
 
 **Situación 1: Recetas de cocina**
@@ -100,7 +107,9 @@ $$\frac{12.000}{3} = \frac{12.000}{3} = 4.000 \text{ pesos cada uno}$$
 **Situación 4: Mediciones**
 Un terreno mide $2\frac{1}{2}$ hectáreas. Vendes $\frac{3}{5}$ del terreno:
 $$2\frac{1}{2} \times \frac{3}{5} = \frac{5}{2} \times \frac{3}{5} = \frac{15}{10} = \frac{3}{2} = 1\frac{1}{2} \text{ hectáreas vendidas}$$
+<!-- /section -->
 
+<!-- section: jerarquia-conjuntos, importance: important, collapsible: true, defaultOpen: false -->
 #### 🔍 Jerarquía de Conjuntos Numéricos
 
 Es importante entender cómo se relacionan los distintos conjuntos:
@@ -125,7 +134,9 @@ $$\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q} \subset \mathbb{R}$$
 - $\frac{4}{2} = 2$ es racional (y también entero y natural)
 - $\frac{5}{2} = 2.5$ es racional (pero NO entero ni natural)
 - $\sqrt{2} \approx 1.414...$ es real (pero NO racional)
+<!-- /section -->
 
+<!-- section: importancia-racionales, importance: important, collapsible: true, defaultOpen: false -->
 #### ¿Por qué son importantes los racionales?
 
 **1. En matemáticas:**
@@ -143,7 +154,9 @@ $$\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q} \subset \mathbb{R}$$
 - Aparecen en geometría (razones, proporciones)
 - En álgebra (soluciones de ecuaciones)
 - En datos y azar (probabilidades, promedios)
+<!-- /section -->
 
+<!-- section: conversion-formas, importance: essential, collapsible: true, defaultOpen: false -->
 #### 🎯 Conversión entre Formas
 
 **Fracción impropia ↔ Número mixto:**
@@ -170,7 +183,9 @@ Para $0.\overline{6}$:
 $$x = 0.666...$$
 $$10x = 6.666...$$
 $$9x = 6 \Rightarrow x = \frac{6}{9} = \frac{2}{3}$$
+<!-- /section -->
 
+<!-- section: conceptos-erroneos-racionales, importance: important, collapsible: true, defaultOpen: false -->
 #### ⚠️ Conceptos Erróneos Comunes
 
 **Error 1: "Todo decimal es racional"**
@@ -188,7 +203,6 @@ $$9x = 6 \Rightarrow x = \frac{6}{9} = \frac{2}{3}$$
 **Error 4: "0.999... es diferente de 1"**
 - ✗ **Falso**: $0.\overline{9} = 1$ (son exactamente iguales)
 - Demostración: $x = 0.999...$, entonces $10x = 9.999...$, luego $10x - x = 9$, por lo tanto $9x = 9$, así que $x = 1$
-
 <!-- /section -->
 
 ---
