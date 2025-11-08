@@ -479,6 +479,44 @@ export interface QuizProps {
 }
 
 /**
+ * Rapid Fire quiz state tracking
+ */
+export interface RapidFireState {
+  skipsUsed: number;
+  skipsRemaining: number;
+  hintsUsed: number[];          // Array of question indices where hints were used
+  pausesUsed: number;
+  pausesRemaining: number;
+  livesRemaining: number;       // For hard/extreme modes
+  wrongAnswerCount: number;     // Track wrong answers for lives system
+  currentStreak: number;        // Current consecutive correct answers
+  longestStreak: number;        // Longest streak in this quiz
+  timePerQuestion: number[];    // Time spent on each question
+  skippedQuestions: number[];   // Indices of skipped questions
+  isPaused: boolean;
+  pauseTimeRemaining: number;   // Time remaining in current pause
+}
+
+/**
+ * Rapid Fire scoring breakdown
+ */
+export interface RapidFireScore {
+  basePoints: number;           // Points from correct answers
+  speedBonus: number;           // Bonus from completing quickly
+  streakBonus: number;          // Bonus from consecutive correct answers
+  perfectBonus: number;         // Bonus for perfect score
+  hintPenalty: number;          // Points lost from using hints
+  skipPenalty: number;          // Points lost from using skips
+  totalPoints: number;          // Final score
+  correctAnswers: number;
+  totalQuestions: number;
+  accuracy: number;             // Percentage
+  timeUsed: number;             // Total time used in seconds
+  timeSaved: number;            // Time saved vs allocated
+  passed: boolean;              // Met passing percentage for difficulty
+}
+
+/**
  * Props for SkillsDisplay component
  */
 export interface SkillsDisplayProps {
