@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { logoutUser } from '@/lib/auth';
-import { getAllAvailableSessions, joinSession, updateSessionStatuses, registerForSession, unregisterFromSession } from '@/lib/liveSessions';
+import { getAllAvailableSessions, updateSessionStatuses, registerForSession, unregisterFromSession } from '@/lib/sessionApi';
+import { joinSession } from '@/lib/liveSessions';
 import { LiveSession } from '@/lib/types';
 import LiveSessionComponent from '@/components/LiveSession';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
@@ -17,9 +18,10 @@ function LivePracticePageContent() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const refreshSessions = () => {
-    updateSessionStatuses(); // Auto-update session statuses based on time
-    setSessions(getAllAvailableSessions());
+  const refreshSessions = async () => {
+    await updateSessionStatuses(); // Auto-update session statuses based on time
+    const allSessions = await getAllAvailableSessions();
+    setSessions(allSessions);
   };
 
   useEffect(() => {
@@ -34,25 +36,25 @@ function LivePracticePageContent() {
     router.push('/');
   };
 
-  const handleRegisterSession = (sessionId: string) => {
+  const handleRegisterSession = async (sessionId: string) => {
     if (!currentUser) return;
 
-    const result = registerForSession(sessionId, currentUser);
+    const result = await registerForSession(sessionId, currentUser);
     if (result.success) {
       setError('');
-      refreshSessions();
+      await refreshSessions();
     } else {
       setError(result.error || 'Error al registrarse');
     }
   };
 
-  const handleUnregisterSession = (sessionId: string) => {
+  const handleUnregisterSession = async (sessionId: string) => {
     if (!currentUser) return;
 
-    const result = unregisterFromSession(sessionId, currentUser.id);
+    const result = await unregisterFromSession(sessionId, currentUser.id);
     if (result.success) {
       setError('');
-      refreshSessions();
+      await refreshSessions();
     } else {
       setError(result.error || 'Error al cancelar registro');
     }
