@@ -226,11 +226,12 @@ export const getQuizHistory = async (req: AuthRequest, res: Response): Promise<v
 
     const result = await pool.query(query, queryParams);
 
-    // Parse JSON fields
+    // Parse JSON fields and convert timestamp to number
     const history = result.rows.map((row) => ({
       ...row,
       options: row.options,
       skills: row.skills,
+      timestamp: parseInt(row.timestamp, 10), // Convert BIGINT string to number
     }));
 
     res.json({
