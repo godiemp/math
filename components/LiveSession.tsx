@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import type { LiveSession } from '@/lib/types';
-import { getSessionById, submitAnswerAPI, getMyParticipationAPI } from '@/lib/sessionApi';
+import { getSession, submitAnswerAPI, getMyParticipationAPI } from '@/lib/sessionApi';
 import { getCurrentUser } from '@/lib/auth';
 import { QuestionRenderer } from './QuestionRenderer';
 
@@ -21,7 +21,7 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
   const refreshSession = async () => {
     try {
       // Fetch session from API
-      const updatedSession = await getSessionById(sessionId);
+      const updatedSession = await getSession(sessionId);
       if (updatedSession) {
         setSession(updatedSession);
 
@@ -30,8 +30,6 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
           const participationResult = await getMyParticipationAPI(sessionId);
           if (participationResult.success && participationResult.data) {
             setMyAnswers(participationResult.data.answers);
-            // Set selected answer for current question
-            setSelectedAnswer(participationResult.data.answers[currentQuestionIndex]);
           }
         }
       }
@@ -45,6 +43,13 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
     const interval = setInterval(refreshSession, 2000); // Refresh every 2 seconds
     return () => clearInterval(interval);
   }, [sessionId]);
+
+  // Sync selected answer when question index or answers change
+  useEffect(() => {
+    if (myAnswers.length > 0) {
+      setSelectedAnswer(myAnswers[currentQuestionIndex]);
+    }
+  }, [currentQuestionIndex, myAnswers]);
 
   const handleAnswerSelect = async (answerIndex: number) => {
     if (!currentUser || !session || session.status !== 'active') return;

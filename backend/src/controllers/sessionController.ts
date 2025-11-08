@@ -725,6 +725,8 @@ export const updateSessionStatuses = async (req: Request, res: Response): Promis
  * @access  Private
  */
 export const joinSession = async (req: Request, res: Response): Promise<void> => {
+  const client = await pool.connect();
+
   try {
     const { id } = req.params;
     const userId = (req as any).user?.userId;
@@ -735,7 +737,7 @@ export const joinSession = async (req: Request, res: Response): Promise<void> =>
     }
 
     // Get user info
-    const userResult = await pool.query(
+    const userResult = await client.query(
       'SELECT username, display_name FROM users WHERE id = $1',
       [userId]
     );
@@ -747,13 +749,17 @@ export const joinSession = async (req: Request, res: Response): Promise<void> =>
 
     const { username, display_name } = userResult.rows[0];
 
-    // Get session info
-    const sessionResult = await pool.query(
-      'SELECT status, max_participants, questions FROM sessions WHERE id = $1',
+    // Start transaction
+    await client.query('BEGIN');
+
+    // Get session info and lock the row to prevent race conditions
+    const sessionResult = await client.query(
+      'SELECT status, max_participants, questions FROM sessions WHERE id = $1 FOR UPDATE',
       [id]
     );
 
     if (sessionResult.rows.length === 0) {
+      await client.query('ROLLBACK');
       res.status(404).json({ error: 'Session not found' });
       return;
     }
@@ -762,29 +768,31 @@ export const joinSession = async (req: Request, res: Response): Promise<void> =>
 
     // Can only join lobby or active sessions
     if (status !== 'lobby' && status !== 'active') {
+      await client.query('ROLLBACK');
       res.status(400).json({ error: 'Session is not available to join' });
       return;
     }
 
     // Check if already a participant
-    const existingParticipant = await pool.query(
+    const existingParticipant = await client.query(
       'SELECT id FROM session_participants WHERE session_id = $1 AND user_id = $2',
       [id, userId]
     );
 
     if (existingParticipant.rows.length > 0) {
-      // Already joined, return success
+      await client.query('COMMIT');
       res.json({ success: true, message: 'Already joined' });
       return;
     }
 
-    // Check capacity
-    const countResult = await pool.query(
+    // Check capacity (atomically within transaction)
+    const countResult = await client.query(
       'SELECT COUNT(*) as count FROM session_participants WHERE session_id = $1',
       [id]
     );
 
     if (parseInt(countResult.rows[0].count) >= max_participants) {
+      await client.query('ROLLBACK');
       res.status(400).json({ error: 'Session is full' });
       return;
     }
@@ -794,22 +802,28 @@ export const joinSession = async (req: Request, res: Response): Promise<void> =>
     const initialAnswers = new Array(questionsArray.length).fill(null);
 
     // Add participant
-    await pool.query(
+    await client.query(
       `INSERT INTO session_participants (session_id, user_id, username, display_name, answers, score, joined_at)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [id, userId, username, display_name, JSON.stringify(initialAnswers), 0, Date.now()]
     );
+
+    // Commit transaction
+    await client.query('COMMIT');
 
     res.json({
       success: true,
       message: 'Successfully joined session',
     });
   } catch (error) {
+    await client.query('ROLLBACK');
     console.error('Error joining session:', error);
     res.status(500).json({
       error: 'Failed to join session',
       message: (error as Error).message,
     });
+  } finally {
+    client.release();
   }
 };
 
