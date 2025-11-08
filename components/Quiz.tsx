@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Question, QuestionAttempt } from '@/lib/types';
 import { getRandomQuestions } from '@/lib/questions';
 import { QuestionRenderer } from './QuestionRenderer';
+import { AIChatModal } from './AIChatModal';
 import { api } from '@/lib/api-client';
 import { isAuthenticated } from '@/lib/auth';
 
@@ -25,8 +26,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
   const [countdown, setCountdown] = useState(3);
   const [showZenIntro, setShowZenIntro] = useState(quizMode === 'zen');
   const [zenIntroPhase, setZenIntroPhase] = useState(0); // 0: fade in, 1: breathe, 2: fade out
-  const [aiHelpMap, setAiHelpMap] = useState<Map<number, string>>(new Map());
-  const [isLoadingAIHelp, setIsLoadingAIHelp] = useState(false);
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false);
   const [showQuickNav, setShowQuickNav] = useState(() => {
     // Load quick nav visibility from localStorage
     const saved = localStorage.getItem('quiz-show-quick-nav');
@@ -246,8 +246,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     setQuizSubmitted(false);
     setTimeRemaining(getTimeLimit()); // Reset timer based on difficulty
     setTotalTimeElapsed(0); // Reset elapsed time
-    setAiHelpMap(new Map()); // Reset AI help
-    setIsLoadingAIHelp(false);
+    setIsChatModalOpen(false); // Close chat modal
     // Reset countdown for rapidfire mode
     if (quizMode === 'rapidfire') {
       setShowCountdown(true);
@@ -260,47 +259,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     }
   };
 
-  const handleRequestAIHelp = async () => {
-    const question = currentQuestion;
-    const userAnswer = userAnswers[currentQuestionIndex];
-
-    if (userAnswer === null || userAnswer === question.correctAnswer) {
-      return; // No need for help if correct or not answered
-    }
-
-    // Check if we already have help for this question
-    if (aiHelpMap.has(currentQuestionIndex)) {
-      return;
-    }
-
-    setIsLoadingAIHelp(true);
-
-    try {
-      const response = await fetch('/api/ai-help', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          question: question.question,
-          userAnswer: userAnswer,
-          correctAnswer: question.correctAnswer,
-          explanation: question.explanation,
-          options: question.options,
-          topic: question.topic,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.success && data.help) {
-        setAiHelpMap(new Map(aiHelpMap.set(currentQuestionIndex, data.help)));
-      }
-    } catch (error) {
-      console.error('Error fetching AI help:', error);
-    } finally {
-      setIsLoadingAIHelp(false);
-    }
+  const handleRequestAIHelp = () => {
+    setIsChatModalOpen(true);
   };
 
   if (quizQuestions.length === 0) {
@@ -829,20 +789,23 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         </div>
       )}
 
-      <div className="mb-8">
-        <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4 ${
-          quizMode === 'rapidfire' || quizMode === 'zen' ? 'shadow-md' : ''
-        } ${
-          currentQuestion.difficulty === 'easy'
-            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-            : currentQuestion.difficulty === 'medium'
-            ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-        }`}>
-          {currentQuestion.difficulty === 'easy' ? '🟢 Fácil' :
-           currentQuestion.difficulty === 'medium' ? '🟡 Media' : '🔴 Difícil'}
-        </span>
-      </div>
+      {/* Difficulty badge - only show in rapidfire mode */}
+      {quizMode !== 'zen' && (
+        <div className="mb-8">
+          <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4 ${
+            quizMode === 'rapidfire' ? 'shadow-md' : ''
+          } ${
+            currentQuestion.difficulty === 'easy'
+              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+              : currentQuestion.difficulty === 'medium'
+              ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+              : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+          }`}>
+            {currentQuestion.difficulty === 'easy' ? '🟢 Fácil' :
+             currentQuestion.difficulty === 'medium' ? '🟡 Media' : '🔴 Difícil'}
+          </span>
+        </div>
+      )}
 
       {/* Use centralized QuestionRenderer */}
       <QuestionRenderer
@@ -853,9 +816,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         onAnswerSelect={handleAnswerSelect}
         disabled={quizSubmitted}
         quizMode={quizMode}
-        onRequestAIHelp={handleRequestAIHelp}
-        aiHelp={aiHelpMap.get(currentQuestionIndex) || null}
-        isLoadingAIHelp={isLoadingAIHelp}
+        onRequestAIHelp={quizSubmitted ? handleRequestAIHelp : undefined}
       />
 
       {/* Navigation and Submit buttons */}
@@ -946,13 +907,35 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
   if (quizMode === 'zen') {
     return (
-      <div className="fixed inset-0 bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500 dark:from-teal-800 dark:via-cyan-900 dark:to-blue-900 overflow-y-auto">
-        <div className="min-h-full py-6 px-4 sm:py-8 sm:px-6">
-          {questionContent}
+      <>
+        <div className="fixed inset-0 bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500 dark:from-teal-800 dark:via-cyan-900 dark:to-blue-900 overflow-y-auto">
+          <div className="min-h-full py-6 px-4 sm:py-8 sm:px-6">
+            {questionContent}
+          </div>
         </div>
-      </div>
+        <AIChatModal
+          isOpen={isChatModalOpen}
+          onClose={() => setIsChatModalOpen(false)}
+          question={currentQuestion}
+          userAnswer={userAnswers[currentQuestionIndex]}
+          quizMode={quizMode}
+        />
+      </>
     );
   }
 
-  return questionContent;
+  return (
+    <>
+      {questionContent}
+      {quizMode === 'zen' && (
+        <AIChatModal
+          isOpen={isChatModalOpen}
+          onClose={() => setIsChatModalOpen(false)}
+          question={currentQuestion}
+          userAnswer={userAnswers[currentQuestionIndex]}
+          quizMode={quizMode}
+        />
+      )}
+    </>
+  );
 }
