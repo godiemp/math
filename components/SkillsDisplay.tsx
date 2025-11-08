@@ -219,62 +219,69 @@ export function SkillsDisplay({ attempts, level, showRecommendations = true }: S
     );
   };
 
-  if (summary.totalAttempts === 0) {
-    return (
-      <Card className="p-8 text-center">
-        <div className="text-6xl mb-4">📚</div>
-        <Heading level={3} size="sm" className="mb-2">
-          Aún no has comenzado a practicar
-        </Heading>
-        <Text size="sm" variant="secondary">
-          Completa algunas preguntas para ver tu progreso en cada habilidad
-        </Text>
-      </Card>
-    );
-  }
+  const hasStarted = summary.totalAttempts > 0;
 
   return (
     <div className="space-y-6">
-      {/* Overall Statistics */}
-      <Card className="p-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center">
-            <Heading level={3} size="md" className="mb-1">
-              {summary.totalSkills}
-            </Heading>
-            <Text size="xs" variant="secondary">
-              Total Habilidades
-            </Text>
-          </div>
-          <div className="text-center">
-            <Heading level={3} size="md" className="text-[#34C759] dark:text-[#30D158] mb-1">
-              {summary.mastered.length}
-            </Heading>
-            <Text size="xs" variant="secondary">
-              Dominadas
-            </Text>
-          </div>
-          <div className="text-center">
-            <Heading level={3} size="md" className="text-[#FF9F0A] mb-1">
-              {summary.learning.length}
-            </Heading>
-            <Text size="xs" variant="secondary">
-              Aprendiendo
-            </Text>
-          </div>
-          <div className="text-center">
-            <Heading level={3} size="md" className="mb-1">
-              {summary.overallAccuracy}%
-            </Heading>
-            <Text size="xs" variant="secondary">
-              Precisión General
-            </Text>
+      {/* Not Started Message */}
+      {!hasStarted && (
+        <div className="backdrop-blur-[12px] bg-[#0A84FF]/5 dark:bg-[#0A84FF]/10 border-l-4 border-[#0A84FF] rounded-r-xl p-4">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl">💡</span>
+            <div>
+              <Text size="sm" className="text-[#0A84FF] font-semibold mb-1">
+                ¡Comienza tu viaje de aprendizaje!
+              </Text>
+              <Text size="sm" variant="secondary">
+                A continuación puedes ver todas las habilidades que puedes dominar. Comienza a practicar para rastrear tu progreso en cada una.
+              </Text>
+            </div>
           </div>
         </div>
-      </Card>
+      )}
+
+      {/* Overall Statistics */}
+      {hasStarted && (
+        <Card className="p-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center">
+              <Heading level={3} size="md" className="mb-1">
+                {summary.totalSkills}
+              </Heading>
+              <Text size="xs" variant="secondary">
+                Total Habilidades
+              </Text>
+            </div>
+            <div className="text-center">
+              <Heading level={3} size="md" className="text-[#34C759] dark:text-[#30D158] mb-1">
+                {summary.mastered.length}
+              </Heading>
+              <Text size="xs" variant="secondary">
+                Dominadas
+              </Text>
+            </div>
+            <div className="text-center">
+              <Heading level={3} size="md" className="text-[#FF9F0A] mb-1">
+                {summary.learning.length}
+              </Heading>
+              <Text size="xs" variant="secondary">
+                Aprendiendo
+              </Text>
+            </div>
+            <div className="text-center">
+              <Heading level={3} size="md" className="mb-1">
+                {summary.overallAccuracy}%
+              </Heading>
+              <Text size="xs" variant="secondary">
+                Precisión General
+              </Text>
+            </div>
+          </div>
+        </Card>
+      )}
 
       {/* Recommendations */}
-      {showRecommendations && recommended.length > 0 && (
+      {showRecommendations && hasStarted && recommended.length > 0 && (
         <Card className="p-6">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-2xl">💡</span>
