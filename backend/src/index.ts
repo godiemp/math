@@ -8,6 +8,7 @@ import adminRoutes from './routes/adminRoutes';
 import streakRoutes from './routes/streakRoutes';
 import sessionRoutes from './routes/sessionRoutes';
 import aiRoutes from './routes/aiRoutes';
+import analyticsRoutes from './routes/analyticsRoutes';
 import { serveImage } from './controllers/adminController';
 
 // Load environment variables
@@ -94,6 +95,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/streak', streakRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // Public image serving route
 app.get('/api/images/:filename', serveImage);
@@ -103,6 +105,7 @@ console.log('✅ Auth routes registered at /api/auth');
 console.log('✅ Streak routes registered at /api/streak');
 console.log('✅ Session routes registered at /api/sessions');
 console.log('✅ AI routes registered at /api/ai');
+console.log('✅ Analytics routes registered at /api/analytics');
 
 // 404 handler
 app.use((req: Request, res: Response) => {
@@ -216,6 +219,8 @@ const startServer = async () => {
 ║      POST /api/sessions/:id/register - Register for session║
 ║      POST /api/ai/summarize        - Summarize content    ║
 ║      POST /api/ai/practice         - Generate practice    ║
+║      GET  /api/analytics/dashboard - Get analytics (Admin)║
+║      GET  /api/analytics/trends    - Get trends (Admin)   ║
 ║      GET  /health                  - Health check         ║
 ║                                                            ║
 ╚════════════════════════════════════════════════════════════╝

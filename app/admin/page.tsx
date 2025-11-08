@@ -352,6 +352,9 @@ function AdminBackofficeContent() {
               <Button variant="ghost" onClick={() => router.push('/')}>
                 Inicio
               </Button>
+              <Button variant="secondary" onClick={() => router.push('/admin/analytics')}>
+                📊 Analytics
+              </Button>
               <Button variant="secondary" onClick={() => router.push('/admin/problems')}>
                 Explorar Problemas
               </Button>
@@ -361,8 +364,7 @@ function AdminBackofficeContent() {
               <Button variant="primary" onClick={() => router.push('/live-practice')}>
                 Ver Lobby
               </Button>
-            </div>
-          </div>
+            </div>          </div>
         </Card>
 
         {/* Success/Error Messages */}
