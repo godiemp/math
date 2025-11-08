@@ -543,6 +543,8 @@ export const cancelSession = async (req: Request, res: Response): Promise<void> 
  * @access  Private
  */
 export const registerForSession = async (req: Request, res: Response): Promise<void> => {
+  const client = await pool.connect();
+
   try {
     const { id } = req.params;
     const userId = (req as any).user?.userId;
@@ -553,7 +555,7 @@ export const registerForSession = async (req: Request, res: Response): Promise<v
     }
 
     // Get user info
-    const userResult = await pool.query(
+    const userResult = await client.query(
       'SELECT username, display_name FROM users WHERE id = $1',
       [userId]
     );
@@ -565,13 +567,17 @@ export const registerForSession = async (req: Request, res: Response): Promise<v
 
     const { username, display_name } = userResult.rows[0];
 
-    // Check session status
-    const sessionResult = await pool.query(
-      'SELECT status, max_participants FROM sessions WHERE id = $1',
+    // Start transaction
+    await client.query('BEGIN');
+
+    // Check session status and lock the row to prevent race conditions
+    const sessionResult = await client.query(
+      'SELECT status, max_participants FROM sessions WHERE id = $1 FOR UPDATE',
       [id]
     );
 
     if (sessionResult.rows.length === 0) {
+      await client.query('ROLLBACK');
       res.status(404).json({ error: 'Session not found' });
       return;
     }
@@ -579,49 +585,58 @@ export const registerForSession = async (req: Request, res: Response): Promise<v
     const { status, max_participants } = sessionResult.rows[0];
 
     if (status !== 'scheduled') {
+      await client.query('ROLLBACK');
       res.status(400).json({ error: 'Can only register for scheduled sessions' });
       return;
     }
 
     // Check if already registered
-    const existingReg = await pool.query(
+    const existingReg = await client.query(
       'SELECT id FROM session_registrations WHERE session_id = $1 AND user_id = $2',
       [id, userId]
     );
 
     if (existingReg.rows.length > 0) {
+      await client.query('COMMIT');
       res.json({ success: true, message: 'Already registered' });
       return;
     }
 
-    // Check capacity
-    const countResult = await pool.query(
+    // Check capacity (atomically within transaction)
+    const countResult = await client.query(
       'SELECT COUNT(*) as count FROM session_registrations WHERE session_id = $1',
       [id]
     );
 
     if (parseInt(countResult.rows[0].count) >= max_participants) {
+      await client.query('ROLLBACK');
       res.status(400).json({ error: 'Session is full' });
       return;
     }
 
     // Register user
-    await pool.query(
+    await client.query(
       `INSERT INTO session_registrations (session_id, user_id, username, display_name, registered_at)
        VALUES ($1, $2, $3, $4, $5)`,
       [id, userId, username, display_name, Date.now()]
     );
+
+    // Commit transaction
+    await client.query('COMMIT');
 
     res.json({
       success: true,
       message: 'Successfully registered',
     });
   } catch (error) {
+    await client.query('ROLLBACK');
     console.error('Error registering for session:', error);
     res.status(500).json({
       error: 'Failed to register for session',
       message: (error as Error).message,
     });
+  } finally {
+    client.release();
   }
 };
 
@@ -699,6 +714,245 @@ export const updateSessionStatuses = async (req: Request, res: Response): Promis
     console.error('Error updating session statuses:', error);
     res.status(500).json({
       error: 'Failed to update session statuses',
+      message: (error as Error).message,
+    });
+  }
+};
+
+/**
+ * Join a session as a participant
+ * @route   POST /api/sessions/:id/join
+ * @access  Private
+ */
+export const joinSession = async (req: Request, res: Response): Promise<void> => {
+  const client = await pool.connect();
+
+  try {
+    const { id } = req.params;
+    const userId = (req as any).user?.userId;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    // Get user info
+    const userResult = await client.query(
+      'SELECT username, display_name FROM users WHERE id = $1',
+      [userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    const { username, display_name } = userResult.rows[0];
+
+    // Start transaction
+    await client.query('BEGIN');
+
+    // Get session info and lock the row to prevent race conditions
+    const sessionResult = await client.query(
+      'SELECT status, max_participants, questions FROM sessions WHERE id = $1 FOR UPDATE',
+      [id]
+    );
+
+    if (sessionResult.rows.length === 0) {
+      await client.query('ROLLBACK');
+      res.status(404).json({ error: 'Session not found' });
+      return;
+    }
+
+    const { status, max_participants, questions } = sessionResult.rows[0];
+
+    // Can only join lobby or active sessions
+    if (status !== 'lobby' && status !== 'active') {
+      await client.query('ROLLBACK');
+      res.status(400).json({ error: 'Session is not available to join' });
+      return;
+    }
+
+    // Check if already a participant
+    const existingParticipant = await client.query(
+      'SELECT id FROM session_participants WHERE session_id = $1 AND user_id = $2',
+      [id, userId]
+    );
+
+    if (existingParticipant.rows.length > 0) {
+      await client.query('COMMIT');
+      res.json({ success: true, message: 'Already joined' });
+      return;
+    }
+
+    // Check capacity (atomically within transaction)
+    const countResult = await client.query(
+      'SELECT COUNT(*) as count FROM session_participants WHERE session_id = $1',
+      [id]
+    );
+
+    if (parseInt(countResult.rows[0].count) >= max_participants) {
+      await client.query('ROLLBACK');
+      res.status(400).json({ error: 'Session is full' });
+      return;
+    }
+
+    // Initialize answers array with nulls
+    const questionsArray = typeof questions === 'string' ? JSON.parse(questions) : questions;
+    const initialAnswers = new Array(questionsArray.length).fill(null);
+
+    // Add participant
+    await client.query(
+      `INSERT INTO session_participants (session_id, user_id, username, display_name, answers, score, joined_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [id, userId, username, display_name, JSON.stringify(initialAnswers), 0, Date.now()]
+    );
+
+    // Commit transaction
+    await client.query('COMMIT');
+
+    res.json({
+      success: true,
+      message: 'Successfully joined session',
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    console.error('Error joining session:', error);
+    res.status(500).json({
+      error: 'Failed to join session',
+      message: (error as Error).message,
+    });
+  } finally {
+    client.release();
+  }
+};
+
+/**
+ * Submit an answer for a question
+ * @route   POST /api/sessions/:id/answers
+ * @access  Private
+ */
+export const submitAnswer = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userId = (req as any).user?.userId;
+    const { questionIndex, answer } = req.body;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    if (questionIndex === undefined || answer === undefined) {
+      res.status(400).json({ error: 'Missing questionIndex or answer' });
+      return;
+    }
+
+    // Check session status
+    const sessionResult = await pool.query(
+      'SELECT status, questions FROM sessions WHERE id = $1',
+      [id]
+    );
+
+    if (sessionResult.rows.length === 0) {
+      res.status(404).json({ error: 'Session not found' });
+      return;
+    }
+
+    const { status, questions } = sessionResult.rows[0];
+
+    // Can only submit answers during active sessions
+    if (status !== 'active') {
+      res.status(400).json({ error: 'Session is not active' });
+      return;
+    }
+
+    // Get participant
+    const participantResult = await pool.query(
+      'SELECT answers FROM session_participants WHERE session_id = $1 AND user_id = $2',
+      [id, userId]
+    );
+
+    if (participantResult.rows.length === 0) {
+      res.status(404).json({ error: 'Not a participant of this session' });
+      return;
+    }
+
+    let answers = participantResult.rows[0].answers;
+    if (typeof answers === 'string') {
+      answers = JSON.parse(answers);
+    }
+
+    // Update answer at index
+    answers[questionIndex] = answer;
+
+    // Calculate score
+    const questionsArray = typeof questions === 'string' ? JSON.parse(questions) : questions;
+    let score = 0;
+    for (let i = 0; i < answers.length; i++) {
+      if (answers[i] !== null && answers[i] === questionsArray[i]?.correctAnswer) {
+        score++;
+      }
+    }
+
+    // Update participant
+    await pool.query(
+      'UPDATE session_participants SET answers = $1, score = $2 WHERE session_id = $3 AND user_id = $4',
+      [JSON.stringify(answers), score, id, userId]
+    );
+
+    res.json({
+      success: true,
+      message: 'Answer submitted',
+      score,
+    });
+  } catch (error) {
+    console.error('Error submitting answer:', error);
+    res.status(500).json({
+      error: 'Failed to submit answer',
+      message: (error as Error).message,
+    });
+  }
+};
+
+/**
+ * Get my participation data for a session
+ * @route   GET /api/sessions/:id/participants/me
+ * @access  Private
+ */
+export const getMyParticipation = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userId = (req as any).user?.userId;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const result = await pool.query(
+      'SELECT user_id, username, display_name, answers, score, joined_at FROM session_participants WHERE session_id = $1 AND user_id = $2',
+      [id, userId]
+    );
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ error: 'Not a participant of this session' });
+      return;
+    }
+
+    const row = result.rows[0];
+    res.json({
+      userId: row.user_id,
+      username: row.username,
+      displayName: row.display_name,
+      answers: typeof row.answers === 'string' ? JSON.parse(row.answers) : row.answers,
+      score: row.score,
+      joinedAt: row.joined_at,
+    });
+  } catch (error) {
+    console.error('Error getting participation:', error);
+    res.status(500).json({
+      error: 'Failed to get participation',
       message: (error as Error).message,
     });
   }

@@ -3,9 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { logoutUser } from '@/lib/auth';
-import { registerForSession, unregisterFromSession } from '@/lib/sessionApi';
+import { registerForSession, unregisterFromSession, joinSessionAPI } from '@/lib/sessionApi';
 import { useAvailableSessions } from '@/lib/hooks/useSessions';
-import { joinSession } from '@/lib/liveSessions';
 import { LiveSession } from '@/lib/types';
 import LiveSessionComponent from '@/components/LiveSession';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
@@ -49,12 +48,13 @@ function LivePracticePageContent() {
     }
   };
 
-  const handleJoinSession = (sessionId: string) => {
+  const handleJoinSession = async (sessionId: string) => {
     if (!currentUser) return;
 
-    const result = joinSession(sessionId, currentUser);
+    const result = await joinSessionAPI(sessionId);
     if (result.success) {
       setActiveSessionId(sessionId);
+      setError('');
     } else {
       setError(result.error || 'Error al unirse al ensayo');
     }
