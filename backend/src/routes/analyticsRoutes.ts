@@ -1,6 +1,6 @@
 import express from 'express';
 import { getAnalyticsDashboard, getWeeklyTrends } from '../controllers/analyticsController';
-import { authenticateToken, requireAdmin } from '../middleware/auth';
+import { authenticate, requireAdmin } from '../middleware/auth';
 
 const router = express.Router();
 
@@ -10,9 +10,9 @@ const router = express.Router();
  */
 
 // GET /api/analytics/dashboard - Get full analytics dashboard data
-router.get('/dashboard', authenticateToken, requireAdmin, getAnalyticsDashboard);
+router.get('/dashboard', authenticate, requireAdmin, getAnalyticsDashboard);
 
 // GET /api/analytics/trends - Get weekly trend data for charts
-router.get('/trends', authenticateToken, requireAdmin, getWeeklyTrends);
+router.get('/trends', authenticate, requireAdmin, getWeeklyTrends);
 
 export default router;
