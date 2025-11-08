@@ -8,7 +8,7 @@ export interface MarkdownSection {
   importance: SectionImportance;
   collapsible: boolean;
   defaultOpen: boolean;
-  type: 'section' | 'formula' | 'regular';
+  type: 'section' | 'formula' | 'regular' | 'full-only';
 }
 
 export interface ParsedMarkdown {
@@ -70,6 +70,22 @@ export function parseMarkdownSections(content: string): ParsedMarkdown {
     });
   }
 
+  // Match full-only sections (only shown in full mode)
+  const fullOnlyRegex = /<!--\s*full-only\s*-->([\s\S]*?)<!--\s*\/full-only\s*-->/g;
+  while ((match = fullOnlyRegex.exec(content)) !== null) {
+    const [, fullContent] = match;
+
+    sections.push({
+      id: `full-${sections.length}`,
+      title: '',
+      content: fullContent.trim(),
+      importance: 'important',
+      collapsible: false,
+      defaultOpen: true,
+      type: 'full-only',
+    });
+  }
+
   return {
     sections,
     rawContent: content,
@@ -89,9 +105,9 @@ export function filterSectionsByMode(
   }
 
   if (mode === 'summary') {
-    // Show essential and important sections, plus formulas
+    // Show essential and important sections, plus formulas (exclude full-only)
     return sections.filter(
-      s => s.type === 'formula' || s.importance === 'essential' || s.importance === 'important'
+      s => (s.type === 'formula' || s.importance === 'essential' || s.importance === 'important') && s.type !== 'full-only'
     );
   }
 
@@ -107,5 +123,7 @@ export function stripSectionMetadata(content: string): string {
     .replace(/<!--\s*section:[^>]*-->/g, '')
     .replace(/<!--\s*\/section\s*-->/g, '')
     .replace(/<!--\s*formula-only\s*-->/g, '')
-    .replace(/<!--\s*\/formula-only\s*-->/g, '');
+    .replace(/<!--\s*\/formula-only\s*-->/g, '')
+    .replace(/<!--\s*full-only\s*-->/g, '')
+    .replace(/<!--\s*\/full-only\s*-->/g, '');
 }

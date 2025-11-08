@@ -75,6 +75,20 @@ export function AdaptiveMarkdownViewer({ content }: AdaptiveMarkdownViewerProps)
               );
             }
 
+            // Full-only sections with special styling
+            if (section.type === 'full-only') {
+              return (
+                <div key={section.id} className="my-6 bg-blue-50 dark:bg-blue-900/10 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-blue-600 dark:text-blue-400 text-sm font-semibold">
+                      💡 Contenido Enriquecido
+                    </span>
+                  </div>
+                  <MarkdownViewer content={section.content} />
+                </div>
+              );
+            }
+
             // Regular sections can be collapsible
             if (section.collapsible) {
               return (
