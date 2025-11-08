@@ -19,6 +19,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
+  const [showCountdown, setShowCountdown] = useState(quizMode === 'rapidfire');
+  const [countdown, setCountdown] = useState(3);
 
   // Get time limit based on difficulty
   const getTimeLimit = () => {
@@ -63,9 +65,27 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     setTotalTimeElapsed(0);
   }, [level, subject, difficulty]);
 
+  // Countdown effect for rapidfire mode intro
+  useEffect(() => {
+    if (!showCountdown) return;
+
+    if (countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown(countdown - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else {
+      // Countdown finished, hide countdown screen after showing "GO!"
+      const timer = setTimeout(() => {
+        setShowCountdown(false);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [showCountdown, countdown]);
+
   // Timer effect for rapidfire mode
   useEffect(() => {
-    if (quizMode !== 'rapidfire' || quizSubmitted || quizQuestions.length === 0) {
+    if (quizMode !== 'rapidfire' || quizSubmitted || quizQuestions.length === 0 || showCountdown) {
       return;
     }
 
@@ -82,7 +102,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [quizMode, quizSubmitted, quizQuestions.length]);
+  }, [quizMode, quizSubmitted, quizQuestions.length, showCountdown]);
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
 
@@ -170,12 +190,79 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     setQuizSubmitted(false);
     setTimeRemaining(getTimeLimit()); // Reset timer based on difficulty
     setTotalTimeElapsed(0); // Reset elapsed time
+    // Reset countdown for rapidfire mode
+    if (quizMode === 'rapidfire') {
+      setShowCountdown(true);
+      setCountdown(3);
+    }
   };
 
   if (quizQuestions.length === 0) {
     return (
       <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
         <p className="text-center text-gray-600 dark:text-gray-400">Cargando preguntas...</p>
+      </div>
+    );
+  }
+
+  // Countdown intro screen for rapidfire mode
+  if (showCountdown) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900">
+        <div className="text-center">
+          <div className="mb-8">
+            <div className="text-6xl mb-4 animate-pulse">⚡</div>
+            <h2 className="text-3xl font-bold text-white mb-2">Rapid Fire Mode</h2>
+            <p className="text-xl text-white/90">¡Prepárate!</p>
+          </div>
+
+          <div className="relative">
+            {countdown > 0 ? (
+              <div
+                key={countdown}
+                className="text-[12rem] font-black text-white animate-[scale-in_0.5s_ease-out]"
+                style={{
+                  animation: 'scale-in 0.5s ease-out, fade-out 0.3s ease-in 0.7s',
+                  textShadow: '0 0 40px rgba(255,255,255,0.5), 0 0 80px rgba(255,255,255,0.3)'
+                }}
+              >
+                {countdown}
+              </div>
+            ) : (
+              <div
+                className="text-[8rem] font-black text-yellow-300 animate-[scale-in_0.3s_ease-out]"
+                style={{
+                  animation: 'scale-in 0.3s ease-out',
+                  textShadow: '0 0 60px rgba(253,224,71,0.8), 0 0 120px rgba(253,224,71,0.5)'
+                }}
+              >
+                ¡GO!
+              </div>
+            )}
+          </div>
+        </div>
+
+        <style jsx>{`
+          @keyframes scale-in {
+            0% {
+              transform: scale(0.5);
+              opacity: 0;
+            }
+            50% {
+              transform: scale(1.1);
+            }
+            100% {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+          @keyframes fade-out {
+            to {
+              opacity: 0;
+              transform: scale(0.8);
+            }
+          }
+        `}</style>
       </div>
     );
   }
