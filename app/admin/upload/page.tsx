@@ -40,6 +40,8 @@ export default function UploadPDFPage() {
   const [showLogs, setShowLogs] = useState(false);
   const [rawText, setRawText] = useState('');
   const [showRawText, setShowRawText] = useState(false);
+  const [ocrText, setOcrText] = useState('');
+  const [showOcrText, setShowOcrText] = useState(false);
   const [extractedQuestions, setExtractedQuestions] = useState<ExtractedQuestion[]>([]);
   const [enrichedQuestions, setEnrichedQuestions] = useState<QuestionToSave[]>([]);
   const [uploadResult, setUploadResult] = useState<any>(null);
@@ -108,6 +110,12 @@ export default function UploadPDFPage() {
       if (response.data.rawText) {
         setRawText(response.data.rawText);
         setShowRawText(true); // Auto-expand raw text for debugging
+      }
+
+      // Store OCR text for debugging
+      if (response.data.ocrText) {
+        setOcrText(response.data.ocrText);
+        setShowOcrText(true); // Auto-expand OCR text for debugging
       }
 
       // Store processing logs for admin viewing
@@ -297,12 +305,29 @@ export default function UploadPDFPage() {
                         onClick={() => setShowRawText(!showRawText)}
                         className="text-sm font-medium text-green-700 hover:text-green-900 underline"
                       >
-                        {showRawText ? '▼ Ocultar texto extraído del PDF' : '▶ Ver texto extraído del PDF'}
+                        {showRawText ? '▼ Ocultar texto extraído del PDF (pdf2json)' : '▶ Ver texto extraído del PDF (pdf2json)'}
                       </button>
 
                       {showRawText && (
                         <div className="mt-2 bg-gray-900 text-gray-100 rounded p-3 text-xs font-mono overflow-x-auto max-h-96 overflow-y-auto whitespace-pre-wrap">
                           {rawText}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {ocrText && (
+                    <div className="mt-3">
+                      <button
+                        onClick={() => setShowOcrText(!showOcrText)}
+                        className="text-sm font-medium text-green-700 hover:text-green-900 underline"
+                      >
+                        {showOcrText ? '▼ Ocultar texto OCR (Tesseract)' : '▶ Ver texto OCR (Tesseract)'}
+                      </button>
+
+                      {showOcrText && (
+                        <div className="mt-2 bg-gray-900 text-gray-100 rounded p-3 text-xs font-mono overflow-x-auto max-h-96 overflow-y-auto whitespace-pre-wrap">
+                          {ocrText}
                         </div>
                       )}
                     </div>

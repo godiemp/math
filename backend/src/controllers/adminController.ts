@@ -52,13 +52,13 @@ export const uploadPDF = async (req: Request, res: Response): Promise<void> => {
       const processingLogs: string[] = [];
       processingLogs.push(`📤 Processing PDF: ${originalname} (${(size / 1024).toFixed(1)} KB)`);
       processingLogs.push(`💾 Upload ID: ${uploadId}`);
-      processingLogs.push(`🔄 Starting PDF text extraction...`);
+      processingLogs.push(`🔄 Starting PDF text extraction and OCR...`);
 
-      // Extract text from PDF with 30 second timeout
-      const { questions, rawText, totalPages, logs } = await withTimeout(
+      // Extract text from PDF with 5 minute timeout (OCR takes longer)
+      const { questions, rawText, ocrText, totalPages, logs } = await withTimeout(
         extractTextFromPDF(buffer),
-        30000,
-        'PDF processing timed out after 30 seconds. Please try a smaller file.'
+        300000,
+        'PDF processing timed out after 5 minutes. Please try a smaller file.'
       );
       processingLogs.push(...logs);
 
@@ -88,6 +88,7 @@ export const uploadPDF = async (req: Request, res: Response): Promise<void> => {
         validQuestions: validQuestions.length,
         questions: validQuestions,
         rawText: rawText, // Full raw text for debugging
+        ocrText: ocrText, // OCR text from images
         logs: processingLogs,
       });
     } catch (error) {

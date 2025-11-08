@@ -1,4 +1,7 @@
 import { Question } from '../types';
+import * as pdfjsLib from 'pdfjs-dist';
+import { createWorker } from 'tesseract.js';
+import { createCanvas, Canvas } from 'canvas';
 
 export interface ExtractedQuestion {
   question: string;
@@ -10,24 +13,99 @@ export interface ExtractedQuestion {
 export interface PDFExtractionResult {
   questions: ExtractedQuestion[];
   rawText: string;
+  ocrText: string;
   totalPages: number;
   logs: string[];
+}
+
+/**
+ * Extract text from PDF images using OCR (Tesseract)
+ */
+async function extractTextWithOCR(buffer: Buffer, logs: string[]): Promise<string> {
+  const log = (message: string) => {
+    console.log(message);
+    logs.push(message);
+  };
+
+  try {
+    log('🔍 Starting OCR extraction...');
+
+    // Load PDF with pdfjs-dist
+    const loadingTask = pdfjsLib.getDocument({
+      data: new Uint8Array(buffer),
+      useSystemFonts: true,
+    });
+
+    const pdfDoc = await loadingTask.promise;
+    const numPages = pdfDoc.numPages;
+    log(`📄 OCR: Processing ${numPages} pages...`);
+
+    let ocrText = '';
+
+    // Create Tesseract worker
+    const worker = await createWorker('spa', 1, {
+      logger: m => {
+        if (m.status === 'recognizing text') {
+          log(`  OCR progress: ${Math.round(m.progress * 100)}%`);
+        }
+      }
+    });
+
+    // Process each page
+    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+      log(`  OCR: Processing page ${pageNum}/${numPages}...`);
+
+      const page = await pdfDoc.getPage(pageNum);
+      const viewport = page.getViewport({ scale: 2.0 }); // Higher scale for better OCR
+
+      // Create canvas
+      const canvas = createCanvas(viewport.width, viewport.height) as any;
+      const context = canvas.getContext('2d');
+
+      // Render PDF page to canvas
+      await page.render({
+        canvasContext: context,
+        viewport: viewport,
+        canvas: canvas,
+      } as any).promise;
+
+      // Convert canvas to image buffer
+      const imageData = canvas.toDataURL();
+
+      // Run OCR
+      const { data: { text } } = await worker.recognize(imageData);
+      ocrText += `\n\n=== PAGE ${pageNum} ===\n\n${text}`;
+
+      log(`  ✅ Page ${pageNum} OCR complete (${text.length} characters)`);
+    }
+
+    await worker.terminate();
+    log(`✅ OCR extraction complete (${ocrText.length} total characters)`);
+
+    return ocrText;
+  } catch (error) {
+    const errorMsg = `❌ OCR error: ${error}`;
+    log(errorMsg);
+    return `OCR failed: ${error}`;
+  }
 }
 
 /**
  * Extract text from PDF buffer using pdf2json
  */
 export async function extractTextFromPDF(buffer: Buffer): Promise<PDFExtractionResult> {
-  return new Promise((resolve, reject) => {
+  const logs: string[] = [];
+
+  const log = (message: string) => {
+    console.log(message);
+    logs.push(message);
+  };
+
+  // Extract text using pdf2json (faster, for text-based PDFs)
+  const textResult = await new Promise<{ text: string; pages: number }>((resolve, reject) => {
     try {
       const PDFParser = require('pdf2json');
       const pdfParser = new PDFParser();
-      const logs: string[] = [];
-
-      const log = (message: string) => {
-        console.log(message);
-        logs.push(message);
-      };
 
       pdfParser.on('pdfParser_dataError', (errData: any) => {
         const errorMsg = `PDF parsing error: ${errData.parserError}`;
@@ -59,18 +137,8 @@ export async function extractTextFromPDF(buffer: Buffer): Promise<PDFExtractionR
           }
 
           log(`✅ Text extraction complete (${fullText.length} characters)`);
-          log(`🔍 Parsing questions from text...`);
 
-          const questions = parseQuestionsFromText(fullText);
-
-          log(`✅ Found ${questions.length} questions`);
-
-          resolve({
-            questions,
-            rawText: fullText,
-            totalPages,
-            logs,
-          });
+          resolve({ text: fullText, pages: totalPages });
         } catch (error) {
           const errorMsg = `Error processing PDF data: ${error}`;
           console.error(errorMsg);
@@ -87,6 +155,21 @@ export async function extractTextFromPDF(buffer: Buffer): Promise<PDFExtractionR
       reject(new Error('Failed to initialize PDF parser'));
     }
   });
+
+  // Extract text using OCR (slower, for image-based content)
+  const ocrText = await extractTextWithOCR(buffer, logs);
+
+  log(`🔍 Parsing questions from extracted text...`);
+  const questions = parseQuestionsFromText(textResult.text);
+  log(`✅ Found ${questions.length} questions from text extraction`);
+
+  return {
+    questions,
+    rawText: textResult.text,
+    ocrText,
+    totalPages: textResult.pages,
+    logs,
+  };
 }
 
 /**
