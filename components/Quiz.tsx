@@ -477,6 +477,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
                       ? 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50'
                       : isCorrect
                       ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                      : quizMode === 'zen'
+                      ? 'border-amber-400 bg-amber-50 dark:bg-amber-900/20'
                       : 'border-red-500 bg-red-50 dark:bg-red-900/20'
                   }`}
                 >
@@ -493,6 +495,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
                           <span className="text-gray-500 dark:text-gray-400">Sin responder</span>
                         ) : isCorrect ? (
                           <span className="text-green-700 dark:text-green-300">✓ Correcta</span>
+                        ) : quizMode === 'zen' ? (
+                          <span className="text-amber-700 dark:text-amber-300">◆ Revisar</span>
                         ) : (
                           <span className="text-red-700 dark:text-red-300">✗ Incorrecta</span>
                         )}
@@ -634,6 +638,101 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         </div>
       </div>
 
+      {/* Quick Navigation Panel */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+            Navegación rápida:
+          </span>
+        </div>
+        <div className="grid grid-cols-10 gap-2">
+          {quizQuestions.map((q, idx) => {
+            const answer = userAnswers[idx];
+            const isAnswered = answer !== null;
+            const isCurrentQuestion = idx === currentQuestionIndex;
+            let isQuestionCorrect = false;
+
+            if (quizSubmitted && isAnswered) {
+              isQuestionCorrect = answer === q.correctAnswer;
+            }
+
+            let buttonClass = 'w-full aspect-square rounded-lg text-xs font-bold transition-all flex items-center justify-center ';
+
+            if (isCurrentQuestion) {
+              buttonClass += quizMode === 'zen'
+                ? 'ring-2 ring-teal-500 ring-offset-2 dark:ring-offset-gray-800 '
+                : quizMode === 'rapidfire'
+                ? 'ring-2 ring-purple-500 ring-offset-2 dark:ring-offset-gray-800 '
+                : 'ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-gray-800 ';
+            }
+
+            if (quizSubmitted) {
+              if (!isAnswered) {
+                buttonClass += 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400';
+              } else if (isQuestionCorrect) {
+                buttonClass += 'bg-green-500 text-white';
+              } else {
+                // Zen mode uses softer amber color
+                buttonClass += quizMode === 'zen'
+                  ? 'bg-amber-400 text-white'
+                  : 'bg-red-500 text-white';
+              }
+            } else {
+              if (isAnswered) {
+                buttonClass += quizMode === 'zen'
+                  ? 'bg-teal-500 text-white'
+                  : quizMode === 'rapidfire'
+                  ? 'bg-purple-500 text-white'
+                  : 'bg-indigo-500 text-white';
+              } else {
+                buttonClass += 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400';
+              }
+            }
+
+            buttonClass += ' hover:opacity-80 cursor-pointer';
+
+            return (
+              <button
+                key={idx}
+                onClick={() => setCurrentQuestionIndex(idx)}
+                className={buttonClass}
+                title={`Pregunta ${idx + 1}${isAnswered ? ' (respondida)' : ''}`}
+              >
+                {idx + 1}
+              </button>
+            );
+          })}
+        </div>
+        <div className="flex items-center gap-4 mt-2 text-xs text-gray-600 dark:text-gray-400">
+          <div className="flex items-center gap-1">
+            <div className={`w-3 h-3 rounded ${
+              quizMode === 'zen'
+                ? 'bg-teal-500'
+                : quizMode === 'rapidfire'
+                ? 'bg-purple-500'
+                : 'bg-indigo-500'
+            }`}></div>
+            <span>Respondida</span>
+          </div>
+          {quizSubmitted && (
+            <>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded bg-green-500"></div>
+                <span>Correcta</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className={`w-3 h-3 rounded ${quizMode === 'zen' ? 'bg-amber-400' : 'bg-red-500'}`}></div>
+                <span>Incorrecta</span>
+              </div>
+            </>
+          )}
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded bg-gray-200 dark:bg-gray-700"></div>
+            <span>Sin responder</span>
+          </div>
+        </div>
+      </div>
+
       {/* Question answered indicator */}
       {!quizSubmitted && userAnswer !== null && (
         <div className={`mb-6 p-3 rounded-lg border ${
@@ -678,6 +777,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         showFeedback={showFeedback}
         onAnswerSelect={handleAnswerSelect}
         disabled={quizSubmitted}
+        quizMode={quizMode}
       />
 
       {/* Navigation and Submit buttons */}
@@ -750,18 +850,6 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
       {!quizSubmitted && (
         <div className="mt-6 text-center text-gray-600 dark:text-gray-400">
           Preguntas respondidas: {userAnswers.filter(a => a !== null).length} / {quizQuestions.length}
-        </div>
-      )}
-
-      {quizSubmitted && (
-        <div className="mt-6 text-center">
-          <p className="text-gray-600 dark:text-gray-400 mb-2">
-            Puntaje de este quiz: {quizQuestions.filter((q, i) => userAnswers[i] === q.correctAnswer).length} / {userAnswers.filter(a => a !== null).length}
-          </p>
-          <p className="text-gray-600 dark:text-gray-400">
-            Puntaje total: {score.correct} / {score.total}
-            {score.total > 0 && ` (${Math.round((score.correct / score.total) * 100)}%)`}
-          </p>
         </div>
       )}
     </div>
