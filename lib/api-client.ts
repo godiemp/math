@@ -2,7 +2,59 @@
  * API Client for making authenticated requests to the backend
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+/**
+ * Automatically determine the backend API URL based on environment
+ * - Production: Use NEXT_PUBLIC_API_URL from env
+ * - Preview (Vercel): Use NEXT_PUBLIC_RAILWAY_URL or construct from PR
+ * - Development: localhost:3001
+ */
+function getApiBaseUrl(): string {
+  // Explicit env var takes precedence
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+
+  // Railway provides this in preview environments
+  if (process.env.NEXT_PUBLIC_RAILWAY_URL) {
+    return process.env.NEXT_PUBLIC_RAILWAY_URL;
+  }
+
+  // For Vercel preview deployments, try to construct Railway URL
+  if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview') {
+    // First, try to get PR number directly from Vercel (exposed via next.config.ts)
+    let prNumber = process.env.NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID;
+
+    // Fallback: try to extract from branch name
+    if (!prNumber) {
+      const branch = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF;
+      if (branch) {
+        const prMatch = branch.match(/pr[/-]?(\d+)|#(\d+)/i);
+        prNumber = prMatch?.[1] || prMatch?.[2];
+      }
+    }
+
+    if (prNumber) {
+      // Construct Railway PR URL for this project
+      // Pattern: https://paes-math-backend-math-pr-{number}.up.railway.app
+      return `https://paes-math-backend-math-pr-${prNumber}.up.railway.app`;
+    }
+  }
+
+  // Default to localhost for development
+  return 'http://localhost:3001';
+}
+
+const API_BASE_URL = getApiBaseUrl();
+
+// Log the API URL for debugging (helps troubleshoot connection issues)
+if (typeof window !== 'undefined') {
+  console.log('🔗 API Base URL:', API_BASE_URL);
+  console.log('📦 Vercel Environment:', process.env.NEXT_PUBLIC_VERCEL_ENV);
+  console.log('🌿 Git Branch:', process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF);
+  console.log('🔢 PR Number:', process.env.NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID);
+  console.log('🚂 Railway URL (env):', process.env.NEXT_PUBLIC_RAILWAY_URL);
+  console.log('🔧 API URL (env):', process.env.NEXT_PUBLIC_API_URL);
+}
 
 // Token storage keys
 const ACCESS_TOKEN_KEY = 'paes-access-token';
@@ -102,14 +154,29 @@ export async function apiRequest<T>(
   // Add access token to headers if available
   let accessToken = getAccessToken();
 
+  // Don't set Content-Type for FormData - browser will set it with boundary
+  const isFormData = options.body instanceof FormData;
+
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
     ...(options.headers as Record<string, string>),
   };
+
+  // Only set Content-Type for non-FormData requests
+  if (!isFormData && !headers['Content-Type']) {
+    headers['Content-Type'] = 'application/json';
+  }
 
   if (accessToken) {
     headers['Authorization'] = `Bearer ${accessToken}`;
   }
+
+  console.log('🌐 API Request:', {
+    url,
+    method: options.method || 'GET',
+    hasAccessToken: !!accessToken,
+    isFormData,
+    headers: Object.keys(headers),
+  });
 
   try {
     let response = await fetch(url, {
@@ -173,14 +240,14 @@ export const api = {
     apiRequest<T>(endpoint, {
       ...options,
       method: 'POST',
-      body: body ? JSON.stringify(body) : undefined,
+      body: body instanceof FormData ? body : (body ? JSON.stringify(body) : undefined),
     }),
 
   put: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
     apiRequest<T>(endpoint, {
       ...options,
       method: 'PUT',
-      body: body ? JSON.stringify(body) : undefined,
+      body: body instanceof FormData ? body : (body ? JSON.stringify(body) : undefined),
     }),
 
   delete: <T>(endpoint: string, options?: RequestInit) =>

@@ -1,4 +1,26 @@
-// User types
+export interface Question {
+  id: string;
+  topic: string;
+  level: 'M1' | 'M2';
+  question: string;
+  questionLatex?: string;
+  options: string[];
+  optionsLatex?: string[];
+  correctAnswer: number;
+  explanation: string;
+  explanationLatex?: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  subject: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
+  skills: string[];
+  visualData?: {
+    type: 'graph' | 'geometry' | 'table' | 'diagram';
+    data: any;
+  };
+  createdAt?: number;
+  updatedAt?: number;
+  createdBy?: string;
+}
+
 export interface User {
   id: string;
   username: string;
@@ -9,11 +31,17 @@ export interface User {
   updatedAt: number;
 }
 
-export interface UserWithPassword extends User {
-  passwordHash: string;
+export interface PDFUpload {
+  id: number;
+  filename: string;
+  fileSize: number;
+  uploadedBy: string;
+  status: 'processing' | 'completed' | 'failed';
+  questionsExtracted: number;
+  errorMessage?: string;
+  uploadedAt: number;
 }
 
-// Auth request/response types
 export interface RegisterRequest {
   username: string;
   email: string;
@@ -26,27 +54,6 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface AuthResponse {
-  user: User;
-  accessToken: string;
-  refreshToken: string;
-}
-
 export interface RefreshTokenRequest {
   refreshToken: string;
-}
-
-export interface RefreshToken {
-  id: number;
-  userId: string;
-  token: string;
-  expiresAt: number;
-  createdAt: number;
-  revoked: boolean;
-}
-
-// Express request extension for authenticated requests
-export interface AuthenticatedRequest extends Request {
-  user?: User;
-  userId?: string;
 }

@@ -353,6 +353,9 @@ function AdminBackofficeContent() {
               <Button variant="secondary" onClick={() => router.push('/admin/problems')}>
                 Explorar Problemas
               </Button>
+              <Button variant="secondary" onClick={() => router.push('/admin/upload')}>
+                📄 Cargar PDF
+              </Button>
               <Button variant="primary" onClick={() => router.push('/live-practice')}>
                 Ver Lobby
               </Button>

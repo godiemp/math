@@ -3,9 +3,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { testConnection, initializeDatabase, closeDatabase } from './config/database';
 import authRoutes from './routes/authRoutes';
+import adminRoutes from './routes/adminRoutes';
 
 // Load environment variables
 dotenv.config();
+// Force Railway redeploy - includes admin routes
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -52,7 +54,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Request logging middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  console.log(`\n🔵 ${new Date().toISOString()} - ${req.method} ${req.path}`);
+  console.log(`   Origin: ${req.get('origin') || 'none'}`);
+  console.log(`   Full URL: ${req.protocol}://${req.get('host')}${req.originalUrl}`);
   next();
 });
 
@@ -67,6 +71,10 @@ app.get('/health', (req: Request, res: Response) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
+
+console.log('✅ Admin routes registered at /api/admin');
+console.log('✅ Auth routes registered at /api/auth');
 
 // 404 handler
 app.use((req: Request, res: Response) => {
@@ -103,12 +111,16 @@ const startServer = async () => {
 ║   🗄️  Database: Connected                                  ║
 ║                                                            ║
 ║   📚 API Endpoints:                                        ║
-║      POST /api/auth/register - Register new user          ║
-║      POST /api/auth/login    - Login user                 ║
-║      POST /api/auth/refresh  - Refresh access token       ║
-║      POST /api/auth/logout   - Logout user                ║
-║      GET  /api/auth/me       - Get current user           ║
-║      GET  /health            - Health check               ║
+║      POST /api/auth/register       - Register new user    ║
+║      POST /api/auth/login          - Login user           ║
+║      POST /api/auth/refresh        - Refresh token        ║
+║      POST /api/auth/logout         - Logout user          ║
+║      GET  /api/auth/me             - Get current user     ║
+║      POST /api/admin/upload-pdf    - Upload PDF (Admin)   ║
+║      POST /api/admin/save-questions - Save questions      ║
+║      GET  /api/admin/questions     - Get questions        ║
+║      GET  /api/admin/uploads       - Get upload history   ║
+║      GET  /health                  - Health check         ║
 ║                                                            ║
 ╚════════════════════════════════════════════════════════════╝
       `);
