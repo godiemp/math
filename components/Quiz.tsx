@@ -21,6 +21,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [showCountdown, setShowCountdown] = useState(quizMode === 'rapidfire');
   const [countdown, setCountdown] = useState(3);
+  const [showZenIntro, setShowZenIntro] = useState(quizMode === 'zen');
+  const [zenIntroPhase, setZenIntroPhase] = useState(0); // 0: fade in, 1: breathe, 2: fade out
 
   // Get time limit based on difficulty
   const getTimeLimit = () => {
@@ -82,6 +84,31 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
       return () => clearTimeout(timer);
     }
   }, [showCountdown, countdown]);
+
+  // Zen intro effect
+  useEffect(() => {
+    if (!showZenIntro) return;
+
+    if (zenIntroPhase === 0) {
+      // Fade in phase - show for 1 second
+      const timer = setTimeout(() => {
+        setZenIntroPhase(1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (zenIntroPhase === 1) {
+      // Breathing phase - show for 2.5 seconds
+      const timer = setTimeout(() => {
+        setZenIntroPhase(2);
+      }, 2500);
+      return () => clearTimeout(timer);
+    } else if (zenIntroPhase === 2) {
+      // Fade out phase - hide after 0.8 seconds
+      const timer = setTimeout(() => {
+        setShowZenIntro(false);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [showZenIntro, zenIntroPhase]);
 
   // Timer effect for rapidfire mode
   useEffect(() => {
@@ -195,12 +222,139 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
       setShowCountdown(true);
       setCountdown(3);
     }
+    // Reset zen intro for zen mode
+    if (quizMode === 'zen') {
+      setShowZenIntro(true);
+      setZenIntroPhase(0);
+    }
   };
 
   if (quizQuestions.length === 0) {
     return (
       <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
         <p className="text-center text-gray-600 dark:text-gray-400">Cargando preguntas...</p>
+      </div>
+    );
+  }
+
+  // Zen intro screen for zen mode
+  if (showZenIntro) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500 dark:from-teal-800 dark:via-cyan-900 dark:to-blue-900">
+        <div className="text-center">
+          <div className="mb-8">
+            <div
+              className="text-6xl mb-6"
+              style={{
+                animation: zenIntroPhase === 2 ? 'fade-out 0.8s ease-out' : 'fade-in 1s ease-in'
+              }}
+            >
+              🧘
+            </div>
+            <h2
+              className="text-4xl font-bold text-white mb-3"
+              style={{
+                animation: zenIntroPhase === 2 ? 'fade-out 0.8s ease-out' : 'fade-in 1s ease-in 0.2s both'
+              }}
+            >
+              Modo Zen
+            </h2>
+            <p
+              className="text-xl text-white/90"
+              style={{
+                animation: zenIntroPhase === 2 ? 'fade-out 0.8s ease-out' : 'fade-in 1s ease-in 0.4s both'
+              }}
+            >
+              Respira... Concéntrate... Aprende
+            </p>
+          </div>
+
+          {/* Breathing circle animation */}
+          <div className="relative flex items-center justify-center h-48">
+            <div
+              className="absolute rounded-full bg-white/20"
+              style={{
+                width: '120px',
+                height: '120px',
+                animation: zenIntroPhase === 1
+                  ? 'breathe 4s ease-in-out infinite'
+                  : zenIntroPhase === 2
+                  ? 'fade-out 0.8s ease-out'
+                  : 'fade-in 1s ease-in 0.6s both',
+                boxShadow: '0 0 60px rgba(255,255,255,0.4), 0 0 100px rgba(255,255,255,0.2)'
+              }}
+            />
+            <div
+              className="absolute rounded-full bg-white/30"
+              style={{
+                width: '80px',
+                height: '80px',
+                animation: zenIntroPhase === 1
+                  ? 'breathe-reverse 4s ease-in-out infinite'
+                  : zenIntroPhase === 2
+                  ? 'fade-out 0.8s ease-out'
+                  : 'fade-in 1s ease-in 0.8s both',
+                boxShadow: '0 0 40px rgba(255,255,255,0.5)'
+              }}
+            />
+            <div
+              className="absolute rounded-full bg-white/40"
+              style={{
+                width: '40px',
+                height: '40px',
+                animation: zenIntroPhase === 1
+                  ? 'breathe 4s ease-in-out infinite'
+                  : zenIntroPhase === 2
+                  ? 'fade-out 0.8s ease-out'
+                  : 'fade-in 1s ease-in 1s both',
+                boxShadow: '0 0 20px rgba(255,255,255,0.6)'
+              }}
+            />
+          </div>
+        </div>
+
+        <style jsx>{`
+          @keyframes fade-in {
+            from {
+              opacity: 0;
+              transform: translateY(10px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          @keyframes fade-out {
+            from {
+              opacity: 1;
+              transform: scale(1);
+            }
+            to {
+              opacity: 0;
+              transform: scale(0.95);
+            }
+          }
+          @keyframes breathe {
+            0%, 100% {
+              transform: scale(1);
+              opacity: 0.6;
+            }
+            50% {
+              transform: scale(1.3);
+              opacity: 0.8;
+            }
+          }
+          @keyframes breathe-reverse {
+            0%, 100% {
+              transform: scale(1);
+              opacity: 0.7;
+            }
+            50% {
+              transform: scale(0.8);
+              opacity: 0.5;
+            }
+          }
+        `}</style>
       </div>
     );
   }
