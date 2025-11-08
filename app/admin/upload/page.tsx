@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { api } from '@/lib/api-client';
+import { createWorker } from 'tesseract.js';
 
 interface ExtractedQuestion {
   question: string;
@@ -71,6 +72,35 @@ export default function UploadPDFPage() {
     }
   };
 
+  const runOCROnPDF = async (pdfFile: File) => {
+    try {
+      setUploadProgress('Ejecutando OCR en el navegador (esto puede tomar un momento)...');
+
+      const worker = await createWorker('spa', 1, {
+        logger: (m: any) => {
+          if (m.status === 'recognizing text') {
+            setUploadProgress(`OCR: ${Math.round(m.progress * 100)}% completado...`);
+          }
+        }
+      });
+
+      // Convert PDF to data URL
+      const arrayBuffer = await pdfFile.arrayBuffer();
+      const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+      const dataUrl = URL.createObjectURL(blob);
+
+      const { data: { text } } = await worker.recognize(dataUrl);
+
+      await worker.terminate();
+      URL.revokeObjectURL(dataUrl);
+
+      return text;
+    } catch (error) {
+      console.error('OCR error:', error);
+      return `OCR failed: ${error}`;
+    }
+  };
+
   const handleUpload = async () => {
     if (!file) {
       setError('Por favor, selecciona un archivo PDF');
@@ -85,7 +115,7 @@ export default function UploadPDFPage() {
       const formData = new FormData();
       formData.append('pdf', file);
 
-      setUploadProgress('Extrayendo texto del PDF...');
+      setUploadProgress('Extrayendo texto del PDF (backend)...');
 
       // Don't set Content-Type header - let browser set it with boundary automatically
       const response = await api.post<any>('/api/admin/upload-pdf', formData);
@@ -112,16 +142,16 @@ export default function UploadPDFPage() {
         setShowRawText(true); // Auto-expand raw text for debugging
       }
 
-      // Store OCR text for debugging
-      if (response.data.ocrText) {
-        setOcrText(response.data.ocrText);
-        setShowOcrText(true); // Auto-expand OCR text for debugging
-      }
-
       // Store processing logs for admin viewing
       if (response.data.logs) {
         setProcessingLogs(response.data.logs);
       }
+
+      // Run OCR in the browser
+      setUploadProgress('Ejecutando OCR en el navegador...');
+      const ocrResult = await runOCROnPDF(file);
+      setOcrText(ocrResult);
+      setShowOcrText(true); // Auto-expand OCR text for debugging
 
       const enriched = (response.data.questions || []).map((q: ExtractedQuestion, index: number) => ({
         id: 'uploaded-' + new Date().getTime() + '-' + index,
