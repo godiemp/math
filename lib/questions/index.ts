@@ -50,6 +50,12 @@ export function getQuestionsBySubject(subject: 'números' | 'álgebra' | 'geomet
   });
 }
 
+export function getQuestionsByIds(questionIds: string[]): Question[] {
+  return questionIds
+    .map(id => questions.find(q => q.id === id))
+    .filter((q): q is Question => q !== undefined);
+}
+
 export function getRandomQuestions(level: 'M1' | 'M2', count: number = 10, subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad'): Question[] {
   let levelQuestions = getQuestionsByLevel(level);
 

@@ -14,9 +14,10 @@ interface QuizProps {
   subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
   quizMode?: 'zen' | 'rapidfire';
   difficulty?: 'easy' | 'medium' | 'hard' | 'extreme';
+  replayQuestions?: Question[]; // Specific questions for replaying a quiz
 }
 
-export default function Quiz({ questions: allQuestions, level, subject, quizMode = 'zen', difficulty = 'medium' }: QuizProps) {
+export default function Quiz({ questions: allQuestions, level, subject, quizMode = 'zen', difficulty = 'medium', replayQuestions }: QuizProps) {
   const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
@@ -75,13 +76,16 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
       setScore(progress);
     }
 
-    // Initialize quiz with 10 random questions
-    const randomQuestions = getRandomQuestions(level, 10, subject);
-    setQuizQuestions(randomQuestions);
-    setUserAnswers(new Array(randomQuestions.length).fill(null));
+    // Initialize quiz: use replay questions if provided, otherwise random
+    const questionsToUse = replayQuestions && replayQuestions.length > 0
+      ? replayQuestions
+      : getRandomQuestions(level, 10, subject);
+
+    setQuizQuestions(questionsToUse);
+    setUserAnswers(new Array(questionsToUse.length).fill(null));
     setTimeRemaining(getTimeLimit()); // Reset timer based on difficulty
     setTotalTimeElapsed(0);
-  }, [level, subject, difficulty]);
+  }, [level, subject, difficulty, replayQuestions]);
 
   // Countdown effect for rapidfire mode intro
   useEffect(() => {

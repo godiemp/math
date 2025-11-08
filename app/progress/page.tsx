@@ -552,13 +552,21 @@ function ProgressPageContent() {
                       {/* Action Buttons */}
                       <div className="flex gap-3">
                         <Button
-                          asChild
                           variant="primary"
                           className="flex-1"
+                          onClick={() => {
+                            // Save quiz questions to localStorage for replay
+                            const questionIds = session.attempts.map(a => a.questionId);
+                            localStorage.setItem('replay-quiz', JSON.stringify({
+                              id: session.id,
+                              level: session.level,
+                              questionIds: questionIds
+                            }));
+                            // Navigate to practice page
+                            window.location.href = `/practice/${session.level.toLowerCase()}?replay=true`;
+                          }}
                         >
-                          <Link href={`/practice/${session.level.toLowerCase()}?replay=${session.id}`}>
-                            🔄 Rejugar Quiz
-                          </Link>
+                          🔄 Rejugar Quiz
                         </Button>
                         <Button
                           variant="ghost"
