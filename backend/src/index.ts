@@ -54,7 +54,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Request logging middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  console.log(`\n🔵 ${new Date().toISOString()} - ${req.method} ${req.path}`);
+  console.log(`   Origin: ${req.get('origin') || 'none'}`);
+  console.log(`   Full URL: ${req.protocol}://${req.get('host')}${req.originalUrl}`);
   next();
 });
 
@@ -70,6 +72,28 @@ app.get('/health', (req: Request, res: Response) => {
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+
+// Debug: Log all registered routes
+console.log('\n📍 Registered Routes:');
+app._router.stack.forEach((middleware: any) => {
+  if (middleware.route) {
+    // Routes registered directly on the app
+    console.log(`  ${Object.keys(middleware.route.methods).join(', ').toUpperCase()} ${middleware.route.path}`);
+  } else if (middleware.name === 'router') {
+    // Router middleware
+    middleware.handle.stack.forEach((handler: any) => {
+      if (handler.route) {
+        const path = middleware.regexp.source
+          .replace('\\/?', '')
+          .replace('(?=\\/|$)', '')
+          .replace(/\\\//g, '/')
+          .replace('^', '');
+        console.log(`  ${Object.keys(handler.route.methods).join(', ').toUpperCase()} ${path}${handler.route.path}`);
+      }
+    });
+  }
+});
+console.log('');
 
 // 404 handler
 app.use((req: Request, res: Response) => {
