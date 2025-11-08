@@ -29,11 +29,9 @@ function getApiBaseUrl(): string {
       const prNumber = prMatch?.[1] || prMatch?.[2];
 
       if (prNumber) {
-        // Construct Railway PR URL (update this pattern to match your Railway setup)
-        // Common patterns:
-        // - https://math-backend-pr-{number}.up.railway.app
-        // - https://backend-pr-{number}.railway.app
-        return `https://math-backend-pr-${prNumber}.up.railway.app`;
+        // Construct Railway PR URL for this project
+        // Pattern: https://paes-math-backend-math-pr-{number}.up.railway.app
+        return `https://paes-math-backend-math-pr-${prNumber}.up.railway.app`;
       }
     }
   }
