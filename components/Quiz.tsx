@@ -1282,48 +1282,58 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
       {/* Navigation and Submit buttons */}
       <div className="mt-8 flex flex-col gap-4">
-        <div className="flex gap-4">
-          <button
-            onClick={handlePrevious}
-            disabled={currentQuestionIndex === 0}
-            className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
-              quizMode === 'rapidfire'
-                ? 'bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-lg hover:shadow-xl'
-                : quizMode === 'zen'
-                ? 'bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-lg hover:shadow-xl'
-                : 'bg-gray-500 text-white hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors'
-            }`}
-          >
-            ← Anterior
-          </button>
-          {currentQuestionIndex < quizQuestions.length - 1 ? (
+        {/* Only show prev/next navigation if NOT in rapid fire mode OR if quiz is submitted (for review) */}
+        {(quizMode !== 'rapidfire' || quizSubmitted) && (
+          <div className="flex gap-4">
             <button
-              onClick={handleNext}
+              onClick={handlePrevious}
+              disabled={currentQuestionIndex === 0}
               className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
                 quizMode === 'rapidfire'
-                  ? 'bg-gradient-to-r from-indigo-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl'
+                  ? 'bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-lg hover:shadow-xl'
                   : quizMode === 'zen'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl'
-                  : 'bg-gray-500 text-white hover:bg-gray-600 transition-colors'
+                  ? 'bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-lg hover:shadow-xl'
+                  : 'bg-gray-500 text-white hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors'
               }`}
             >
-              Siguiente →
+              ← Anterior
             </button>
-          ) : quizSubmitted ? (
-            <button
-              onClick={() => setCurrentQuestionIndex(quizQuestions.length)}
-              className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
-                quizMode === 'rapidfire'
-                  ? 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl'
-                  : quizMode === 'zen'
-                  ? 'bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl'
-                  : 'bg-indigo-600 text-white hover:bg-indigo-700 transition-colors'
-              }`}
-            >
-              Ver Resumen
-            </button>
-          ) : null}
-        </div>
+            {currentQuestionIndex < quizQuestions.length - 1 ? (
+              <button
+                onClick={handleNext}
+                className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
+                  quizMode === 'rapidfire'
+                    ? 'bg-gradient-to-r from-indigo-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl'
+                    : quizMode === 'zen'
+                    ? 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl'
+                    : 'bg-gray-500 text-white hover:bg-gray-600 transition-colors'
+                }`}
+              >
+                Siguiente →
+              </button>
+            ) : quizSubmitted ? (
+              <button
+                onClick={() => setCurrentQuestionIndex(quizQuestions.length)}
+                className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
+                  quizMode === 'rapidfire'
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl'
+                    : quizMode === 'zen'
+                    ? 'bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl'
+                    : 'bg-indigo-600 text-white hover:bg-indigo-700 transition-colors'
+                }`}
+              >
+                Ver Resumen
+              </button>
+            ) : null}
+          </div>
+        )}
+
+        {/* In rapid fire mode before submission, show message about quick nav */}
+        {quizMode === 'rapidfire' && !quizSubmitted && (
+          <div className="text-center text-sm text-purple-200 dark:text-purple-300 bg-purple-900/30 rounded-lg p-3">
+            💡 Usa la navegación rápida arriba para cambiar de pregunta, o el botón de Saltar si está disponible
+          </div>
+        )}
 
         {!quizSubmitted && (
           <button
