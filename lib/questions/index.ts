@@ -92,20 +92,23 @@ export const PAES_M2_DISTRIBUTION = {
 /**
  * Get questions following the official PAES format distribution
  * This function ensures that questions are selected proportionally by subject
- * according to the official PAES exam specifications
+ * according to the official PAES exam specifications.
+ * Questions are ordered by subject (números, álgebra, geometría, probabilidad)
+ * to match the real PAES format.
  */
 export function getOfficialPAESQuestions(level: 'M1' | 'M2'): Question[] {
   const distribution = level === 'M1' ? PAES_M1_DISTRIBUTION : PAES_M2_DISTRIBUTION;
   const selectedQuestions: Question[] = [];
 
   // For each subject, randomly select the specified number of questions
+  // Questions are kept in subject order (números, álgebra, geometría, probabilidad)
   Object.entries(distribution).forEach(([subject, count]) => {
     const subjectQuestions = getQuestionsBySubject(
       subject as 'números' | 'álgebra' | 'geometría' | 'probabilidad',
       level
     );
 
-    // Shuffle and select the required number of questions
+    // Shuffle and select the required number of questions within this subject
     const shuffled = [...subjectQuestions];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -114,12 +117,6 @@ export function getOfficialPAESQuestions(level: 'M1' | 'M2'): Question[] {
 
     selectedQuestions.push(...shuffled.slice(0, count));
   });
-
-  // Shuffle the final array to mix subjects (questions shouldn't be grouped by subject)
-  for (let i = selectedQuestions.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [selectedQuestions[i], selectedQuestions[j]] = [selectedQuestions[j], selectedQuestions[i]];
-  }
 
   return selectedQuestions;
 }
