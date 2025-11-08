@@ -67,11 +67,8 @@ export default function UploadPDFPage() {
       const formData = new FormData();
       formData.append('pdf', file);
 
-      const response = await api.post<any>('/api/admin/upload-pdf', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      // Don't set Content-Type header - let browser set it with boundary automatically
+      const response = await api.post<any>('/api/admin/upload-pdf', formData);
 
       if (response.error) {
         setError(response.error.error || 'Error al procesar el PDF');
