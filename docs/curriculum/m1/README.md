@@ -1,0 +1,162 @@
+# M1 - Nivel Básico
+
+## Descripción General
+
+El nivel M1 cubre los conceptos fundamentales de matemáticas necesarios para la PAES. Este nivel está diseñado para estudiantes que están construyendo sus bases matemáticas.
+
+**Duración estimada**: 8-12 semanas
+**Número de preguntas**: ~78 preguntas
+**Dificultad**: ⭐⭐ Básico a Intermedio
+
+---
+
+## Contenido
+
+### 📊 Números y Operaciones
+
+Fundamentos numéricos y operaciones esenciales.
+
+| Tema | Dificultad | Preguntas | Docs |
+|------|-----------|-----------|------|
+| **Enteros y Racionales** | ⭐⭐ | ~25 | [Ver docs](./numeros/enteros-racionales.md) |
+| **Porcentajes** | ⭐ | ~15 | [Ver docs](./numeros/porcentaje.md) |
+| **Potencias y Raíces** | ⭐⭐ | ~20 | [Ver docs](./numeros/potencias-raices.md) |
+| **Proporcionalidad** | ⭐⭐ | ~12 | [Ver docs](./numeros/proporcionalidad.md) |
+
+**Total**: ~72 preguntas | **Tiempo**: 2-3 semanas
+
+---
+
+### 🔢 Álgebra y Funciones
+
+Manipulación algebraica y comprensión de funciones.
+
+| Tema | Dificultad | Preguntas | Docs |
+|------|-----------|-----------|------|
+| **Expresiones Algebraicas** | ⭐⭐ | ~25 | [Ver docs](./algebra/expresiones-algebraicas.md) |
+| **Ecuaciones e Inecuaciones** | ⭐⭐⭐ | ~18 | [Ver docs](./algebra/ecuaciones-inecuaciones.md) |
+| **Sistemas de Ecuaciones** | ⭐⭐⭐ | ~10 | [Ver docs](./algebra/sistemas-ecuaciones.md) |
+| **Función Lineal** | ⭐⭐ | ~15 | [Ver docs](./algebra/funciones-lineales.md) |
+| **Función Cuadrática** | ⭐⭐⭐ | ~12 | [Ver docs](./algebra/funciones-cuadraticas.md) |
+
+**Total**: ~80 preguntas | **Tiempo**: 3-4 semanas
+
+---
+
+### 📐 Geometría
+
+Conceptos espaciales, medición y transformaciones.
+
+| Tema | Dificultad | Preguntas | Docs |
+|------|-----------|-----------|------|
+| **Perímetro y Área** | ⭐⭐ | ~30 | [Ver docs](./geometria/perimetro-area.md) |
+| **Teorema de Pitágoras** | ⭐⭐ | ~15 | [Ver docs](./geometria/teorema-pitagoras.md) |
+| **Volumen** | ⭐⭐ | ~8 | [Ver docs](./geometria/volumen.md) |
+| **Transformaciones Isométricas** | ⭐⭐⭐ | ~5 | [Ver docs](./geometria/transformaciones.md) |
+
+**Total**: ~58 preguntas | **Tiempo**: 2-3 semanas
+
+---
+
+### 📈 Probabilidad y Estadística
+
+Análisis de datos y conceptos probabilísticos.
+
+| Tema | Dificultad | Preguntas | Docs |
+|------|-----------|-----------|------|
+| **Tablas y Gráficos** | ⭐ | ~12 | [Ver docs](./probabilidad/tablas-graficos.md) |
+| **Medidas de Tendencia Central** | ⭐⭐ | ~18 | [Ver docs](./probabilidad/tendencia-central.md) |
+| **Medidas de Posición** | ⭐⭐⭐ | ~15 | [Ver docs](./probabilidad/medidas-posicion.md) |
+| **Reglas de Probabilidad** | ⭐⭐ | ~20 | [Ver docs](./probabilidad/reglas-probabilidad.md) |
+
+**Total**: ~65 preguntas | **Tiempo**: 2-3 semanas
+
+---
+
+## Ruta de Aprendizaje Recomendada
+
+```
+1. Números y Operaciones (Fundamento)
+   ↓
+2. Álgebra Básica (Expresiones y Ecuaciones)
+   ↓
+3. Geometría (Medición y Espacio)
+   ↓
+4. Álgebra Avanzada (Funciones)
+   ↓
+5. Probabilidad y Estadística (Análisis)
+```
+
+### Opción Acelerada (6-8 semanas)
+Si tienes buena base matemática, puedes seguir esta ruta más rápida enfocándote en temas de mayor dificultad.
+
+### Opción Estándar (10-12 semanas)
+Ruta completa con tiempo para práctica y revisión profunda de cada tema.
+
+---
+
+## Competencias PAES Desarrolladas
+
+### ✓ Resolver Problemas
+Aplicar procedimientos y técnicas para obtener soluciones.
+
+**Temas clave**: Ecuaciones, operaciones numéricas, cálculos geométricos
+
+### ✓ Modelar
+Traducir situaciones de contexto a lenguaje matemático.
+
+**Temas clave**: Proporcionalidad, funciones, probabilidad
+
+### ✓ Representar
+Usar distintas representaciones matemáticas.
+
+**Temas clave**: Gráficos, tablas, expresiones algebraicas
+
+### ✓ Argumentar
+Justificar y validar resultados matemáticos.
+
+**Temas clave**: Propiedades algebraicas, demostraciones geométricas
+
+---
+
+## Herramientas de Estudio
+
+### 🧮 Calculadora Integrada
+- Operaciones con fracciones
+- Evaluación de expresiones
+- Cálculos geométricos
+- [Abrir calculadora](/calculator)
+
+### 📝 Sistema de Práctica
+- Preguntas tipo PAES
+- Retroalimentación inmediata
+- Seguimiento de progreso
+- [Ir a práctica](/practice/m1)
+
+### 🤖 Tutor AI
+- Explicaciones paso a paso
+- Ayuda personalizada
+- Detección de errores comunes
+- [Activar tutor](/tutor)
+
+---
+
+## Recursos Adicionales
+
+- [Ver banco completo de preguntas M1](/questions?level=m1)
+- [Taxonomía de skills](/docs/skills/taxonomy)
+- [Alcance oficial PAES](/docs/paes-curriculum-scope)
+- [Próximo nivel: M2 →](/docs/curriculum/m2)
+
+---
+
+## Estado del Contenido
+
+| Área | Preguntas | Documentación | Estado |
+|------|-----------|---------------|--------|
+| Números | 72 | 1/4 ✓ | 🟡 En progreso |
+| Álgebra | 80 | 0/5 | ⚪ Pendiente |
+| Geometría | 58 | 0/4 | ⚪ Pendiente |
+| Probabilidad | 65 | 0/4 | ⚪ Pendiente |
+
+**Última actualización**: 2025-11-08
