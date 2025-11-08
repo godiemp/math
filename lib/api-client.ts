@@ -170,6 +170,14 @@ export async function apiRequest<T>(
     headers['Authorization'] = `Bearer ${accessToken}`;
   }
 
+  console.log('🌐 API Request:', {
+    url,
+    method: options.method || 'GET',
+    hasAccessToken: !!accessToken,
+    isFormData,
+    headers: Object.keys(headers),
+  });
+
   try {
     let response = await fetch(url, {
       ...options,
