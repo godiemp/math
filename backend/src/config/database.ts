@@ -58,11 +58,52 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
+    // Create questions table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS questions (
+        id VARCHAR(50) PRIMARY KEY,
+        level VARCHAR(5) NOT NULL CHECK (level IN ('M1', 'M2')),
+        topic VARCHAR(255) NOT NULL,
+        subject VARCHAR(50) NOT NULL CHECK (subject IN ('números', 'álgebra', 'geometría', 'probabilidad')),
+        question TEXT NOT NULL,
+        question_latex TEXT,
+        options JSONB NOT NULL,
+        options_latex JSONB,
+        correct_answer INTEGER NOT NULL CHECK (correct_answer >= 0 AND correct_answer <= 3),
+        explanation TEXT NOT NULL,
+        explanation_latex TEXT,
+        difficulty VARCHAR(20) NOT NULL CHECK (difficulty IN ('easy', 'medium', 'hard')),
+        skills JSONB NOT NULL,
+        visual_data JSONB,
+        created_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL,
+        created_by VARCHAR(50) REFERENCES users(id)
+      )
+    `);
+
+    // Create pdf_uploads table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS pdf_uploads (
+        id SERIAL PRIMARY KEY,
+        filename VARCHAR(255) NOT NULL,
+        file_size INTEGER NOT NULL,
+        uploaded_by VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        status VARCHAR(20) NOT NULL CHECK (status IN ('processing', 'completed', 'failed')),
+        questions_extracted INTEGER DEFAULT 0,
+        error_message TEXT,
+        uploaded_at BIGINT NOT NULL
+      )
+    `);
+
     // Create indexes
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_refresh_tokens_token ON refresh_tokens(token)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_questions_level ON questions(level)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_questions_subject ON questions(subject)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_questions_difficulty ON questions(difficulty)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_pdf_uploads_uploaded_by ON pdf_uploads(uploaded_by)');
 
     await client.query('COMMIT');
     console.log('✅ Database tables initialized successfully');

@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { testConnection, initializeDatabase, closeDatabase } from './config/database';
 import authRoutes from './routes/authRoutes';
+import adminRoutes from './routes/adminRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -67,6 +68,7 @@ app.get('/health', (req: Request, res: Response) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 
 // 404 handler
 app.use((req: Request, res: Response) => {
@@ -103,12 +105,16 @@ const startServer = async () => {
 ║   🗄️  Database: Connected                                  ║
 ║                                                            ║
 ║   📚 API Endpoints:                                        ║
-║      POST /api/auth/register - Register new user          ║
-║      POST /api/auth/login    - Login user                 ║
-║      POST /api/auth/refresh  - Refresh access token       ║
-║      POST /api/auth/logout   - Logout user                ║
-║      GET  /api/auth/me       - Get current user           ║
-║      GET  /health            - Health check               ║
+║      POST /api/auth/register       - Register new user    ║
+║      POST /api/auth/login          - Login user           ║
+║      POST /api/auth/refresh        - Refresh token        ║
+║      POST /api/auth/logout         - Logout user          ║
+║      GET  /api/auth/me             - Get current user     ║
+║      POST /api/admin/upload-pdf    - Upload PDF (Admin)   ║
+║      POST /api/admin/save-questions - Save questions      ║
+║      GET  /api/admin/questions     - Get questions        ║
+║      GET  /api/admin/uploads       - Get upload history   ║
+║      GET  /health                  - Health check         ║
 ║                                                            ║
 ╚════════════════════════════════════════════════════════════╝
       `);
