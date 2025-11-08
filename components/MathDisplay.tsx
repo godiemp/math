@@ -62,7 +62,7 @@ export default function MathDisplay({ latex, displayMode = false, className = ''
       style={{
         maxWidth: '100%',
         overflowWrap: 'break-word',
-        wordBreak: 'break-word',
+        wordBreak: 'normal',
       }}
     />
   );
