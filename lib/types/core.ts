@@ -85,6 +85,18 @@ export type QuestionRenderMode = 'question-only' | 'with-options' | 'with-explan
  */
 
 /**
+ * Question Image
+ * Represents an image embedded in a question
+ */
+export interface QuestionImage {
+  id: string;
+  url: string;
+  description: string;
+  type: 'diagram' | 'table' | 'graph' | 'formula' | 'other';
+  position?: 'question' | 'option' | 'explanation';
+}
+
+/**
  * Question entity
  * Represents a single math question with all its metadata
  */
@@ -107,6 +119,8 @@ export interface Question {
   subject: Subject;
   // Skills required to solve this problem (from skillTaxonomy.ts)
   skills: string[];
+  // Embedded images (diagrams, tables, etc.)
+  images?: QuestionImage[];
   // Additional rendering metadata
   visualData?: {
     type: VisualDataType;

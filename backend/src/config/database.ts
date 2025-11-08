@@ -96,11 +96,23 @@ export const initializeDatabase = async (): Promise<void> => {
         explanation_latex TEXT,
         difficulty VARCHAR(20) NOT NULL CHECK (difficulty IN ('easy', 'medium', 'hard')),
         skills JSONB NOT NULL,
+        images JSONB,
         visual_data JSONB,
         created_at BIGINT NOT NULL,
         updated_at BIGINT NOT NULL,
         created_by VARCHAR(50) REFERENCES users(id)
       )
+    `);
+
+    // Add images column if it doesn't exist (migration for existing tables)
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='questions' AND column_name='images') THEN
+          ALTER TABLE questions ADD COLUMN images JSONB;
+        END IF;
+      END $$;
     `);
 
     // Create pdf_uploads table

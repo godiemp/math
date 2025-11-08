@@ -1,5 +1,13 @@
 import { Request } from 'express';
 
+export interface QuestionImage {
+  id: string;
+  url: string;
+  description: string;
+  type: 'diagram' | 'table' | 'graph' | 'formula' | 'other';
+  position?: 'question' | 'option' | 'explanation';
+}
+
 export interface Question {
   id: string;
   topic: string;
@@ -14,6 +22,7 @@ export interface Question {
   difficulty: 'easy' | 'medium' | 'hard';
   subject: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
   skills: string[];
+  images?: QuestionImage[];
   visualData?: {
     type: 'graph' | 'geometry' | 'table' | 'diagram';
     data: any;

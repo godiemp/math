@@ -2,11 +2,13 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { testConnection, initializeDatabase, closeDatabase, pool } from './config/database';
+import { initImageStorage } from './services/imageStorageService';
 import authRoutes from './routes/authRoutes';
 import adminRoutes from './routes/adminRoutes';
 import streakRoutes from './routes/streakRoutes';
 import sessionRoutes from './routes/sessionRoutes';
 import aiRoutes from './routes/aiRoutes';
+import { serveImage } from './controllers/adminController';
 
 // Load environment variables
 dotenv.config();
@@ -20,8 +22,11 @@ const corsOptions = {
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     // Allow requests with no origin (like mobile apps, Postman, curl)
     if (!origin) {
+      console.log('✅ CORS: Allowing request with no origin');
       return callback(null, true);
     }
+
+    console.log(`🔍 CORS: Checking origin: ${origin}`);
 
     // List of allowed origins
     const allowedOrigins = [
@@ -32,22 +37,33 @@ const corsOptions = {
 
     // Check if origin is in allowed list
     if (allowedOrigins.includes(origin)) {
+      console.log(`✅ CORS: Allowed origin from list: ${origin}`);
       return callback(null, true);
     }
 
     // Allow all Vercel preview deployments (*.vercel.app)
     if (origin.endsWith('.vercel.app')) {
+      console.log(`✅ CORS: Allowed Vercel deployment: ${origin}`);
       return callback(null, true);
     }
 
-    // Reject other origins
-    callback(new Error('Not allowed by CORS'));
+    // Log rejected origins but still allow them in development
+    console.log(`⚠️ CORS: Origin not in allowed list: ${origin}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔧 CORS: Allowing in development mode');
+      return callback(null, true);
+    }
+
+    // Reject by returning false, not throwing an error
+    callback(null, false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['Content-Range', 'X-Content-Range'],
   maxAge: 86400, // 24 hours
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
 };
 
 // Middleware
@@ -78,6 +94,9 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/streak', streakRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/ai', aiRoutes);
+
+// Public image serving route
+app.get('/api/images/:filename', serveImage);
 
 console.log('✅ Admin routes registered at /api/admin');
 console.log('✅ Auth routes registered at /api/auth');
@@ -161,6 +180,9 @@ const startServer = async () => {
 
     // Initialize database tables
     await initializeDatabase();
+
+    // Initialize image storage directory
+    initImageStorage();
 
     // Start session status auto-updater
     startSessionStatusUpdater();
