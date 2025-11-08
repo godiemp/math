@@ -215,6 +215,132 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 └── CODEBASE_OVERVIEW.md          # Documentación técnica detallada
 ```
 
+## Exports & API de Biblioteca
+
+### Exportaciones de Preguntas (`lib/questions/index.ts`)
+
+```typescript
+// Importar todas las preguntas
+import { questions } from '@/lib/questions';
+
+// Importar arrays de preguntas por categoría
+import {
+  m1NumerosQuestions,
+  m1AlgebraQuestions,
+  m1GeometriaQuestions,
+  m1ProbabilidadQuestions,
+  m2NumerosQuestions,
+  m2AlgebraQuestions,
+  m2GeometriaQuestions,
+  m2ProbabilidadQuestions
+} from '@/lib/questions';
+
+// Funciones de utilidad
+import {
+  getQuestionsByLevel,      // Filtrar por nivel (M1/M2)
+  getQuestionsByTopic,       // Filtrar por tema
+  getQuestionsBySubject,     // Filtrar por asignatura
+  getRandomQuestions,        // Obtener preguntas aleatorias
+  getOfficialPAESQuestions,  // Obtener preguntas según distribución oficial PAES
+  PAES_M1_DISTRIBUTION,      // Distribución oficial M1
+  PAES_M2_DISTRIBUTION       // Distribución oficial M2
+} from '@/lib/questions';
+```
+
+### Exportaciones de Componentes UI (`components/ui/index.ts`)
+
+```typescript
+// Componentes de interfaz
+import { Button, Card, Badge, Modal, Spinner, LoadingScreen } from '@/components/ui';
+
+// Componentes de navegación
+import { Navbar, NavbarLink, CurriculumSidebar } from '@/components/ui';
+
+// Componentes de tipografía
+import { Heading, Text } from '@/components/ui';
+
+// Tipos de componentes UI
+import type {
+  ButtonVariant,
+  ButtonSize,
+  BadgeVariant,
+  BadgeSize,
+  HeadingLevel,
+  HeadingSize,
+  TextSize,
+  TextVariant
+} from '@/components/ui';
+```
+
+### Exportaciones de Tipos (`lib/types.ts`)
+
+```typescript
+// Tipos principales
+import type {
+  Question,
+  User,
+  UserProgress,
+  QuestionAttempt,
+  LiveSession,
+  SessionParticipant,
+  StreakData
+} from '@/lib/types';
+
+// Tipos de enumeración
+import type {
+  Level,              // 'M1' | 'M2'
+  DifficultyLevel,    // 'easy' | 'medium' | 'hard' | 'extreme'
+  Subject,            // 'números' | 'álgebra' | 'geometría' | 'probabilidad'
+  QuizMode,           // 'zen' | 'rapidfire'
+  SessionStatus,      // 'scheduled' | 'lobby' | 'active' | 'completed' | 'cancelled'
+  MasteryLevel        // 'not-started' | 'learning' | 'mastered'
+} from '@/lib/types';
+
+// Tipos de habilidades
+import type {
+  Skill,
+  EnhancedSkill,
+  SkillProgress,
+  SkillProgressSummary,
+  Competency
+} from '@/lib/types';
+
+// Tipos de geometría
+import type {
+  GeometryFigureType,
+  Triangle,
+  Rectangle,
+  Circle,
+  Point,
+  Line,
+  Polygon
+} from '@/lib/types';
+```
+
+### Ejemplo de Uso
+
+```typescript
+// Ejemplo: Obtener 10 preguntas aleatorias de álgebra M1
+import { getRandomQuestions } from '@/lib/questions';
+
+const algebraQuestions = getRandomQuestions('M1', 10, 'álgebra');
+
+// Ejemplo: Crear un ensayo PAES oficial
+import { getOfficialPAESQuestions } from '@/lib/questions';
+
+const paesM1Exam = getOfficialPAESQuestions('M1');
+// Retorna 60 preguntas distribuidas según especificaciones oficiales:
+// - 17 de números (28%)
+// - 17 de álgebra (28%)
+// - 14 de geometría (23%)
+// - 12 de probabilidad (21%)
+
+// Ejemplo: Filtrar preguntas por nivel
+import { getQuestionsByLevel } from '@/lib/questions';
+
+const m2Questions = getQuestionsByLevel('M2');
+```
+
 ## Banco de Preguntas
 
 **Total: 432 Problemas**
