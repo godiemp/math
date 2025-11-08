@@ -14,7 +14,7 @@ function ProblemsExplorerContent() {
   const router = useRouter()
   const [selectedLevel, setSelectedLevel] = useState<'all' | 'M1' | 'M2'>('all')
   const [selectedSubject, setSelectedSubject] = useState<'all' | 'números' | 'álgebra' | 'geometría' | 'probabilidad'>('all')
-  const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard'>('all')
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard' | 'extreme'>('all')
   const [selectedSkills, setSelectedSkills] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null)
@@ -61,6 +61,7 @@ function ProblemsExplorerContent() {
       easy: questions.filter(q => q.difficulty === 'easy').length,
       medium: questions.filter(q => q.difficulty === 'medium').length,
       hard: questions.filter(q => q.difficulty === 'hard').length,
+      extreme: questions.filter(q => q.difficulty === 'extreme').length,
     }
   }
 
@@ -69,6 +70,7 @@ function ProblemsExplorerContent() {
       case 'easy': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
       case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
       case 'hard': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+      case 'extreme': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
     }
   }
@@ -195,6 +197,7 @@ function ProblemsExplorerContent() {
                 <option value="easy">Fácil ({stats.byDifficulty.easy})</option>
                 <option value="medium">Media ({stats.byDifficulty.medium})</option>
                 <option value="hard">Difícil ({stats.byDifficulty.hard})</option>
+                <option value="extreme">Extremo ({stats.byDifficulty.extreme})</option>
               </select>
             </div>
           </div>
