@@ -14,20 +14,44 @@ export interface PDFExtractionResult {
 }
 
 /**
- * Extract text from PDF buffer
+ * Extract text from PDF buffer using pdfjs-dist
  */
 export async function extractTextFromPDF(buffer: Buffer): Promise<PDFExtractionResult> {
   try {
-    // Lazy load pdf-parse to avoid startup issues with canvas dependencies
-    const pdfParse = require('pdf-parse');
-    const data = await pdfParse(buffer);
+    // Dynamic import of pdfjs-dist (works in Node.js without canvas)
+    const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
 
-    const questions = parseQuestionsFromText(data.text);
+    // Load the PDF document
+    const loadingTask = pdfjsLib.getDocument({
+      data: new Uint8Array(buffer),
+      useSystemFonts: true,
+      standardFontDataUrl: 'node_modules/pdfjs-dist/standard_fonts/',
+    });
+
+    const pdfDocument = await loadingTask.promise;
+    const totalPages = pdfDocument.numPages;
+
+    // Extract text from all pages
+    let fullText = '';
+
+    for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+      const page = await pdfDocument.getPage(pageNum);
+      const textContent = await page.getTextContent();
+
+      // Combine all text items with spaces
+      const pageText = textContent.items
+        .map((item: any) => item.str)
+        .join(' ');
+
+      fullText += pageText + '\n\n';
+    }
+
+    const questions = parseQuestionsFromText(fullText);
 
     return {
       questions,
-      rawText: data.text,
-      totalPages: data.numpages,
+      rawText: fullText,
+      totalPages,
     };
   } catch (error) {
     console.error('Error parsing PDF:', error);
