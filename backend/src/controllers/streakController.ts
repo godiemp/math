@@ -39,7 +39,7 @@ const calculateStreak = (lastPracticeDate: string | null): { shouldContinue: boo
  */
 export const getStreak = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?.userId;
 
     if (!userId) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -85,7 +85,7 @@ export const getStreak = async (req: AuthRequest, res: Response): Promise<void> 
  */
 export const updateStreak = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?.userId;
 
     if (!userId) {
       res.status(401).json({ error: 'Unauthorized' });

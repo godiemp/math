@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 export interface Question {
   id: string;
   topic: string;
@@ -77,11 +79,6 @@ export interface StreakData {
   lastPracticeDate: string | null;
 }
 
-// Express request extension for authenticated requests
-export interface AuthenticatedRequest extends Request {
-  user?: User;
-  userId?: string;
-}
-
-// Alias for better semantics in some controllers
-export type AuthRequest = AuthenticatedRequest;
+// Type alias for authenticated requests
+// Note: Request.user is already typed as TokenPayload via global declaration in middleware/auth.ts
+export type AuthRequest = Request;
