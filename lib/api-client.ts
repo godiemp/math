@@ -44,8 +44,8 @@ function getApiBaseUrl(): string {
     }
   }
 
-  // Default to localhost for development
-  return 'http://localhost:3001';
+  // Default to production backend
+  return 'https://paes-math-backend-production.up.railway.app';
 }
 
 // Cache for API base URL - fetched from server at runtime on first access
