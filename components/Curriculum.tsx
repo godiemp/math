@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { CurriculumSidebar } from './ui/CurriculumSidebar';
 import { skillsArray, type EnhancedSkill } from '@/lib/skillsArray';
-import { getSkillById } from '@/lib/skillTaxonomy';
+import { getSkillById } from '@/lib/skills';
 
 interface CurriculumProps {
   level: 'M1' | 'M2';
