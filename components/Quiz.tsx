@@ -339,7 +339,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
                 animation: zenIntroPhase === 2 ? 'fade-out 0.8s ease-out' : 'fade-in 1s ease-in 0.4s both'
               }}
             >
-              Respira... Concéntrate... Aprende
+              A tu ritmo, sin presión
             </p>
           </div>
 
