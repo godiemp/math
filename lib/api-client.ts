@@ -7,6 +7,10 @@
  * - Production: Use NEXT_PUBLIC_API_URL from env
  * - Preview (Vercel): Use NEXT_PUBLIC_RAILWAY_URL or construct from PR
  * - Development: localhost:3001
+ *
+ * This function is called at RUNTIME to ensure environment variables
+ * are available, especially for PR deployments where VERCEL_GIT_PULL_REQUEST_ID
+ * might not be available at build time.
  */
 function getApiBaseUrl(): string {
   // Explicit env var takes precedence
@@ -44,16 +48,31 @@ function getApiBaseUrl(): string {
   return 'http://localhost:3001';
 }
 
-const API_BASE_URL = getApiBaseUrl();
+// Cache for API base URL - computed at runtime on first access
+let cachedApiBaseUrl: string | null = null;
+let hasLoggedDebugInfo = false;
 
-// Log the API URL for debugging (helps troubleshoot connection issues)
-if (typeof window !== 'undefined') {
-  console.log('🔗 API Base URL:', API_BASE_URL);
-  console.log('📦 Vercel Environment:', process.env.NEXT_PUBLIC_VERCEL_ENV);
-  console.log('🌿 Git Branch:', process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF);
-  console.log('🔢 PR Number:', process.env.NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID);
-  console.log('🚂 Railway URL (env):', process.env.NEXT_PUBLIC_RAILWAY_URL);
-  console.log('🔧 API URL (env):', process.env.NEXT_PUBLIC_API_URL);
+/**
+ * Get the API base URL, computing it at runtime on first call
+ */
+function getApiUrl(): string {
+  if (!cachedApiBaseUrl) {
+    cachedApiBaseUrl = getApiBaseUrl();
+
+    // Log the API URL for debugging (helps troubleshoot connection issues)
+    // Only log once when running in browser
+    if (typeof window !== 'undefined' && !hasLoggedDebugInfo) {
+      hasLoggedDebugInfo = true;
+      console.log('🔗 API Base URL:', cachedApiBaseUrl);
+      console.log('📦 Vercel Environment:', process.env.NEXT_PUBLIC_VERCEL_ENV);
+      console.log('🌿 Git Branch:', process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF);
+      console.log('🔢 PR Number:', process.env.NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID);
+      console.log('🚂 Railway URL (env):', process.env.NEXT_PUBLIC_RAILWAY_URL);
+      console.log('🔧 API URL (env):', process.env.NEXT_PUBLIC_API_URL);
+    }
+  }
+
+  return cachedApiBaseUrl;
 }
 
 // Token storage keys
@@ -102,7 +121,7 @@ async function refreshAccessToken(): Promise<string | null> {
   if (!refreshToken) return null;
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
+    const response = await fetch(`${getApiUrl()}/api/auth/refresh`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -149,7 +168,7 @@ export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
-  const url = `${API_BASE_URL}${endpoint}`;
+  const url = `${getApiUrl()}${endpoint}`;
 
   // Add access token to headers if available
   let accessToken = getAccessToken();
