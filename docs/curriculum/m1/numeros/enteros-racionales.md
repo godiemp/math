@@ -31,7 +31,6 @@ Un número racional es cualquier número que puede expresarse como una fracción
 **Ejemplos**:
 $$\frac{1}{2}, \quad \frac{3}{4}, \quad -\frac{5}{7}, \quad 8 = \frac{8}{1}, \quad -3 = \frac{-3}{1}, \quad 0.75 = \frac{3}{4}$$
 
-<!-- full-only -->
 ### 🎓 Nota Pedagógica: Visualizando Fracciones
 
 Una fracción representa **partes de un todo**. Piensa en una pizza:
@@ -51,7 +50,7 @@ $$\frac{1}{4} = 1 \div 4 = 0.25$$
 - Algunos racionales tienen expansión decimal **finita**: $\frac{1}{4} = 0.25$
 - Otros tienen expansión decimal **infinita periódica**: $\frac{1}{3} = 0.333...$
 - Los números con expansión decimal infinita **no periódica** (como $\pi$ o $\sqrt{2}$) NO son racionales
-<!-- /full-only -->
+
 <!-- /section -->
 
 ---
@@ -83,7 +82,6 @@ $$\frac{1}{3} = \frac{4}{12}, \quad \frac{1}{4} = \frac{3}{12}$$
 
 $$\frac{4}{12} + \frac{3}{12} = \frac{7}{12}$$
 
-<!-- full-only -->
 #### ⚡ Estrategia Rápida: Suma de Fracciones
 
 **¿Cuándo usar cada método?**
@@ -110,7 +108,7 @@ $$\frac{2}{7} + \frac{3}{11} = \frac{(2 \times 11) + (3 \times 7)}{7 \times 11} 
 2. $\frac{2}{5} + \frac{1}{3} = \frac{6}{15} + \frac{5}{15} = \frac{11}{15}$ (MCM = 15)
 
 3. $\frac{5}{6} - \frac{1}{4} = \frac{10}{12} - \frac{3}{12} = \frac{7}{12}$ (resta igual que suma)
-<!-- /full-only -->
+
 <!-- /section -->
 
 <!-- section: multiplicacion-fracciones, importance: essential, collapsible: true, defaultOpen: true -->
@@ -139,7 +137,6 @@ $$\frac{a}{b} \div \frac{c}{d} = \frac{a}{b} \times \frac{d}{c}$$
 **Ejemplo**:
 $$\frac{3}{4} \div \frac{2}{5} = \frac{3}{4} \times \frac{5}{2} = \frac{15}{8}$$
 
-<!-- full-only -->
 #### 🌍 Aplicaciones Prácticas
 
 **Situación 1: Repartir pizza**
@@ -171,7 +168,7 @@ $$\frac{3}{4} \div \frac{1}{2} = \text{¿Cuántas mitades hay en } \frac{3}{4}\t
 La respuesta es $\frac{3}{2} = 1.5$ (una mitad y media).
 
 **Tip de verificación**: El resultado de dividir $\frac{a}{b} \div \frac{c}{d}$ siempre es mayor que $\frac{a}{b}$ si $\frac{c}{d} < 1$, y menor si $\frac{c}{d} > 1$.
-<!-- /full-only -->
+
 <!-- /section -->
 
 ---
@@ -244,7 +241,6 @@ $$\text{MCM}(4, 6) = 12$$
 $$\text{MCM}(a, b) = \frac{a \times b}{\text{MCD}(a, b)}$$
 <!-- /formula-only -->
 
-<!-- full-only -->
 ### 🔍 Estrategias Avanzadas: MCD y MCM
 
 **Método alternativo: Factorización prima**
@@ -291,7 +287,7 @@ $$\text{MCD}(24, 36) \times \text{MCM}(24, 36) = 12 \times 72 = 864 = 24 \times 
 - MCM(5, 10) = 10
 
 ¡Memoriza estos para resolver más rápido en la PAES!
-<!-- /full-only -->
+
 <!-- /section -->
 
 ---
@@ -356,9 +352,7 @@ $$\frac{1}{2} = \frac{10}{20}, \quad \frac{2}{5} = \frac{8}{20}, \quad \frac{3}{
 $$\frac{8}{20} < \frac{10}{20} < \frac{15}{20}$$
 
 **Respuesta**: $\frac{2}{5} < \frac{1}{2} < \frac{3}{4}$
-<!-- /section -->
 
-<!-- full-only -->
 #### 🎯 Análisis de Distractores (Trampas Comunes en PAES)
 
 **¿Por qué las otras opciones están mal?**
@@ -408,7 +402,7 @@ $$\frac{9}{15} - \frac{5}{15} = \frac{4}{15}$$
 1. ¿Calculaste bien el MCM?
 2. ¿Amplificaste ambas fracciones?
 3. ¿Simplificaste correctamente?
-<!-- /full-only -->
+
 <!-- /section -->
 
 ---
@@ -428,7 +422,6 @@ $$\text{✓} \quad \frac{6}{12} = \frac{1}{2} \quad \text{(CORRECTO)}$$
 $$\text{Para sumar fracciones} \rightarrow \text{Usar MCM}$$
 $$\text{Para simplificar} \rightarrow \text{Usar MCD}$$
 
-<!-- full-only -->
 ### 🔬 ¿Por qué ocurren estos errores?
 
 **Error 1: Sumar numeradores y denominadores**
@@ -493,7 +486,7 @@ $$\frac{3}{4} \div 2 = \frac{3}{4} \times \frac{1}{2} = \frac{3}{8}$$
 
 **Recuerda**: Dividir entre un número es lo mismo que multiplicar por su inverso:
 $$\div 2 = \times \frac{1}{2}$$
-<!-- /full-only -->
+
 <!-- /section -->
 
 ---

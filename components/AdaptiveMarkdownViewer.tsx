@@ -87,20 +87,6 @@ export function AdaptiveMarkdownViewer({ content }: AdaptiveMarkdownViewerProps)
               );
             }
 
-            // Full-only sections with special styling
-            if (section.type === 'full-only') {
-              return (
-                <div key={section.id} className="my-4 bg-blue-50/50 dark:bg-blue-900/10 border-l-2 border-blue-400 dark:border-blue-600 pl-4 py-2">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-blue-600 dark:text-blue-400 text-xs font-medium">
-                      💡 Contenido Enriquecido
-                    </span>
-                  </div>
-                  <MarkdownViewer content={section.content} />
-                </div>
-              );
-            }
-
             // All sections are now collapsible - determine level from title
             if (section.type === 'section') {
               // Extract heading level from content (## -> 2, ### -> 3, etc.)
