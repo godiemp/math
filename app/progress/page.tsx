@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { QuestionAttempt } from '@/lib/types';
+import { QuestionAttempt, QuizHistoryResponse } from '@/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Button, Card, Badge, Heading, Text, Modal, Navbar, NavbarLink } from '@/components/ui';
 import { MathText } from '@/components/MathDisplay';
@@ -33,8 +33,8 @@ function ProgressPageContent() {
         try {
           // Fetch history from backend for both levels
           const [m1Response, m2Response] = await Promise.all([
-            api.get('/api/quiz/history?level=M1'),
-            api.get('/api/quiz/history?level=M2'),
+            api.get<QuizHistoryResponse>('/api/quiz/history?level=M1'),
+            api.get<QuizHistoryResponse>('/api/quiz/history?level=M2'),
           ]);
 
           if (m1Response.data?.history) {

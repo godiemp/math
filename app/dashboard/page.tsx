@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
 import { getUserRegisteredSessions, updateSessionStatuses, getAllAvailableSessions } from "@/lib/liveSessions";
 import { useEffect, useState } from "react";
-import { LiveSession, QuestionAttempt } from "@/lib/types";
+import { LiveSession, QuestionAttempt, QuizHistoryResponse } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen } from "@/components/ui";
 import { Streak } from "@/components/Streak";
 import { api } from "@/lib/api-client";
@@ -50,7 +50,7 @@ function DashboardContent() {
         // Load recent quiz attempts if user is authenticated
         if (isAuthenticated()) {
           try {
-            const response = await api.get('/api/quiz/history?limit=5');
+            const response = await api.get<QuizHistoryResponse>('/api/quiz/history?limit=5');
             if (response.data?.history) {
               setRecentAttempts(response.data.history);
             }

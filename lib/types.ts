@@ -343,6 +343,48 @@ export interface MessageResponse {
 }
 
 /**
+ * Quiz API - Get history response
+ */
+export interface QuizHistoryResponse {
+  history: QuestionAttempt[];
+  count: number;
+}
+
+/**
+ * Quiz API - Save attempt(s) response
+ */
+export interface SaveQuizAttemptResponse {
+  message: string;
+  attemptId?: number;
+  attemptIds?: number[];
+  count?: number;
+}
+
+/**
+ * Quiz API - Get statistics response
+ */
+export interface QuizStatsResponse {
+  overall: Array<{
+    level: Level;
+    total: number;
+    correct: number;
+    percentage: number;
+  }>;
+  byDifficulty: Array<{
+    difficulty: DifficultyLevel;
+    total: number;
+    correct: number;
+    percentage: number;
+  }>;
+  bySubject: Array<{
+    subject: string;
+    total: number;
+    correct: number;
+    percentage: number;
+  }>;
+}
+
+/**
  * ============================================================================
  * AUTHENTICATION TYPES
  * ============================================================================
