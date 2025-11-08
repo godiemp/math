@@ -102,81 +102,27 @@ async function getApiUrl(): Promise<string> {
   return apiUrlPromise;
 }
 
-// Token storage keys
-const ACCESS_TOKEN_KEY = 'paes-access-token';
-const REFRESH_TOKEN_KEY = 'paes-refresh-token';
+// Re-export token functions from the auth module for backward compatibility
+export {
+  getAccessToken,
+  getRefreshToken,
+  setTokens,
+  clearTokens,
+} from './auth/tokenService';
 
-/**
- * Get stored access token
- */
-export function getAccessToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem(ACCESS_TOKEN_KEY);
-}
-
-/**
- * Get stored refresh token
- */
-export function getRefreshToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem(REFRESH_TOKEN_KEY);
-}
-
-/**
- * Store authentication tokens
- */
-export function setTokens(accessToken: string, refreshToken: string): void {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-}
-
-/**
- * Clear stored tokens
- */
-export function clearTokens(): void {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem(ACCESS_TOKEN_KEY);
-  localStorage.removeItem(REFRESH_TOKEN_KEY);
-}
+import {
+  getAccessToken as getToken,
+  getRefreshToken as getRefresh,
+  refreshAccessToken as refreshToken,
+} from './auth/tokenService';
 
 /**
  * Refresh the access token using the refresh token
+ * Internal wrapper that provides the backend URL to the token service
  */
 async function refreshAccessToken(): Promise<string | null> {
-  const refreshToken = getRefreshToken();
-  if (!refreshToken) return null;
-
-  try {
-    const backendUrl = await getApiUrl();
-    const response = await fetch(`${backendUrl}/api/auth/refresh`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ refreshToken }),
-    });
-
-    if (!response.ok) {
-      // Refresh token is invalid or expired
-      clearTokens();
-      return null;
-    }
-
-    const data = await response.json();
-
-    // Update stored access token
-    if (data.accessToken) {
-      localStorage.setItem(ACCESS_TOKEN_KEY, data.accessToken);
-      return data.accessToken;
-    }
-
-    return null;
-  } catch (error) {
-    console.error('Token refresh failed:', error);
-    clearTokens();
-    return null;
-  }
+  const backendUrl = await getApiUrl();
+  return refreshToken(backendUrl);
 }
 
 export interface ApiError {
@@ -200,7 +146,7 @@ export async function apiRequest<T>(
   const url = `${backendUrl}${endpoint}`;
 
   // Add access token to headers if available
-  let accessToken = getAccessToken();
+  let accessToken = getToken();
 
   // Don't set Content-Type for FormData - browser will set it with boundary
   const isFormData = options.body instanceof FormData;
@@ -233,7 +179,7 @@ export async function apiRequest<T>(
     });
 
     // If unauthorized and we have a refresh token, try to refresh
-    if (response.status === 401 && getRefreshToken()) {
+    if (response.status === 401 && getRefresh()) {
       const newAccessToken = await refreshAccessToken();
 
       if (newAccessToken) {

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '@/lib/types';
-import { getCurrentUser, fetchCurrentUser } from '@/lib/auth';
+import { getCachedUser, fetchCurrentUser } from '@/lib/auth';
 import { LoadingScreen } from '@/components/ui';
 
 interface AuthContextType {
@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Try to load user from backend if we have a token
     const initAuth = async () => {
       // First check localStorage for cached user
-      const cachedUser = getCurrentUser();
+      const cachedUser = getCachedUser();
 
       if (cachedUser) {
         setUser(cachedUser);
