@@ -288,11 +288,9 @@ export const m1SkillsArray: EnhancedSkill[] = allEnhancedSkills.filter(
 
 /**
  * M2 Skills Array - Skills for Competencia Matemática M2
- * Includes skills marked as 'M2' or 'Both'
+ * M2 includes ALL M1 skills plus additional advanced M2 topics
  */
-export const m2SkillsArray: EnhancedSkill[] = allEnhancedSkills.filter(
-  skill => skill.level === 'M2' || skill.level === 'Both'
-);
+export const m2SkillsArray: EnhancedSkill[] = allEnhancedSkills;
 
 /**
  * All skills combined (for backward compatibility)
