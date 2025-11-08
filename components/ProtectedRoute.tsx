@@ -31,45 +31,42 @@ const getLoadingMessage = (pathname: string): string => {
   return 'Cargando...';
 };
 
+const LOADING_THRESHOLD_MS = 200; // Only show loading if it takes longer than this
+
 export function ProtectedRoute({ children, requireAdmin = false, loadingMessage }: ProtectedRouteProps) {
   const { user, isAuthenticated, isAdmin } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const [isChecking, setIsChecking] = useState(true);
+  const [shouldShowLoading, setShouldShowLoading] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
-    // Small delay to check authentication state
-    const timer = setTimeout(() => {
-      setIsChecking(false);
-    }, 100);
+    // Start a timer to show loading only if check takes longer than threshold
+    const loadingTimer = setTimeout(() => {
+      setShouldShowLoading(true);
+    }, LOADING_THRESHOLD_MS);
 
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (isChecking) return;
-
+    // Check authentication
     if (!isAuthenticated) {
+      clearTimeout(loadingTimer);
       setIsRedirecting(true);
       router.push('/');
       return;
     }
 
     if (requireAdmin && !isAdmin) {
+      clearTimeout(loadingTimer);
       setIsRedirecting(true);
       router.push('/');
       return;
     }
-  }, [isAuthenticated, isAdmin, requireAdmin, router, isChecking]);
+
+    // If we're authenticated, cancel the loading timer
+    return () => clearTimeout(loadingTimer);
+  }, [isAuthenticated, isAdmin, requireAdmin, router]);
 
   // Get the appropriate message based on route or use custom message
   const currentLoadingMessage = loadingMessage || getLoadingMessage(pathname);
-
-  // Show route-specific loading while checking authentication
-  if (isChecking) {
-    return <LoadingScreen message={currentLoadingMessage} />;
-  }
 
   // Show redirect message if redirecting due to lack of authentication
   if (!isAuthenticated && isRedirecting) {
@@ -85,5 +82,7 @@ export function ProtectedRoute({ children, requireAdmin = false, loadingMessage 
     return null;
   }
 
+  // Don't show loading - with cached user, authentication is instant
+  // The threshold prevents unnecessary loading flashes
   return <>{children}</>;
 }
