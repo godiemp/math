@@ -4,9 +4,6 @@
 
 La función cuadrática es una función polinomial de grado 2 que se representa gráficamente como una parábola. Es fundamental para modelar situaciones con aceleración, áreas, trayectorias y optimización.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐⭐ Medio-Alto
-**Tiempo estimado**: 2-3 semanas
 
 ---
 

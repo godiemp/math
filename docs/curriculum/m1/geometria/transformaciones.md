@@ -4,9 +4,6 @@
 
 Las transformaciones isométricas son movimientos de figuras en el plano que preservan la forma y el tamaño. Son fundamentales para comprender simetría, patrones y geometría analítica.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐⭐ Medio-Alto
-**Tiempo estimado**: 1 semana
 
 ---
 

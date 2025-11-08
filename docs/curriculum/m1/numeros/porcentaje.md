@@ -4,9 +4,6 @@
 
 Los porcentajes son una forma de expresar números como fracciones de 100. Son fundamentales para resolver problemas de la vida cotidiana y aparecen frecuentemente en la PAES.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐ Fácil
-**Tiempo estimado**: 1-2 semanas
 
 ---
 

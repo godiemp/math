@@ -4,9 +4,6 @@
 
 El Teorema de Pitágoras es una de las relaciones más importantes en geometría. Relaciona los lados de un triángulo rectángulo y es fundamental para calcular distancias y resolver problemas geométricos.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐ Medio
-**Tiempo estimado**: 1-2 semanas
 
 ---
 

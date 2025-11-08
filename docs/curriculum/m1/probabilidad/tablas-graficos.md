@@ -4,9 +4,6 @@
 
 Las tablas y gráficos son herramientas fundamentales para organizar, presentar y analizar datos. Permiten visualizar información de manera clara y facilitan la toma de decisiones.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐ Fácil
-**Tiempo estimado**: 1 semana
 
 ---
 

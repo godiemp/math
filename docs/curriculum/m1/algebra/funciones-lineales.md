@@ -4,9 +4,6 @@
 
 La función lineal es una de las funciones más importantes en matemáticas. Describe relaciones de cambio constante y se representa gráficamente como una línea recta.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐ Medio
-**Tiempo estimado**: 2 semanas
 
 ---
 

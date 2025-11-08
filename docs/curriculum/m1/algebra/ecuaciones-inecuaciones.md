@@ -4,9 +4,6 @@
 
 Las ecuaciones e inecuaciones son herramientas fundamentales para resolver problemas matemáticos. Una ecuación busca valores que hacen verdadera una igualdad, mientras que una inecuación busca rangos de valores.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐⭐ Medio-Alto
-**Tiempo estimado**: 2-3 semanas
 
 ---
 

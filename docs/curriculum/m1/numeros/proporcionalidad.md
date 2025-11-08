@@ -4,9 +4,6 @@
 
 La proporcionalidad describe la relación entre dos o más cantidades que varían de manera dependiente. Es fundamental para resolver problemas de la vida real que involucran razones, tasas y escalas.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐ Medio
-**Tiempo estimado**: 1-2 semanas
 
 ---
 

@@ -4,9 +4,6 @@
 
 Las potencias y raíces son operaciones fundamentales que extienden la multiplicación y división. Estas herramientas son esenciales para trabajar con números grandes, pequeños y en notación científica.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐ Medio
-**Tiempo estimado**: 2-3 semanas
 
 ---
 

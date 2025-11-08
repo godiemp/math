@@ -4,9 +4,6 @@
 
 Un sistema de ecuaciones es un conjunto de dos o más ecuaciones con dos o más incógnitas. Resolver un sistema significa encontrar los valores que satisfacen todas las ecuaciones simultáneamente.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐⭐ Medio-Alto
-**Tiempo estimado**: 1-2 semanas
 
 ---
 

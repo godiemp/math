@@ -4,9 +4,6 @@
 
 El perímetro y el área son medidas fundamentales de figuras geométricas. El perímetro mide el contorno de una figura, mientras que el área mide el espacio que ocupa.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐ Medio
-**Tiempo estimado**: 2-3 semanas
 
 ---
 

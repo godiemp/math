@@ -4,9 +4,6 @@
 
 Las medidas de tendencia central son valores que representan el "centro" o valor típico de un conjunto de datos. Las tres principales son la media, la mediana y la moda.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐ Medio
-**Tiempo estimado**: 1-2 semanas
 
 ---
 

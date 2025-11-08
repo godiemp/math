@@ -4,9 +4,6 @@
 
 Los números enteros y racionales forman la base fundamental de las matemáticas. Este módulo cubre las operaciones, propiedades y aplicaciones de estos conjuntos numéricos.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐ Fácil a Medio
-**Tiempo estimado**: 2-3 semanas
 
 ---
 

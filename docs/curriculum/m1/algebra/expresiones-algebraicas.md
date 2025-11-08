@@ -4,9 +4,6 @@
 
 Las expresiones algebraicas son combinaciones de números, letras (variables) y operaciones matemáticas. Son el lenguaje fundamental del álgebra y permiten generalizar patrones y resolver problemas.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐ Medio
-**Tiempo estimado**: 2-3 semanas
 
 ---
 

@@ -4,9 +4,6 @@
 
 El volumen es la medida del espacio tridimensional ocupado por un cuerpo geométrico. Es fundamental para resolver problemas de capacidad, almacenamiento y cálculos prácticos.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐ Medio
-**Tiempo estimado**: 1 semana
 
 ---
 

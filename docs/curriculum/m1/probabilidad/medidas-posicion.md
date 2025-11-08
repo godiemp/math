@@ -4,9 +4,6 @@
 
 Las medidas de posición dividen un conjunto de datos ordenados en partes iguales, permitiendo ubicar valores específicos dentro de la distribución. Las más importantes son los cuartiles, deciles y percentiles.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐⭐ Medio-Alto
-**Tiempo estimado**: 1 semana
 
 ---
 

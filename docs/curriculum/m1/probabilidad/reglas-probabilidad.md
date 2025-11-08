@@ -4,9 +4,6 @@
 
 La probabilidad mide la posibilidad de que ocurra un evento. Las reglas de probabilidad permiten calcular probabilidades en situaciones simples y compuestas, fundamentales para la toma de decisiones bajo incertidumbre.
 
-**Nivel**: M1 (Básico)
-**Dificultad**: ⭐⭐ Medio
-**Tiempo estimado**: 2 semanas
 
 ---
 
