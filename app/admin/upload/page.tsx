@@ -67,7 +67,7 @@ export default function UploadPDFPage() {
       const formData = new FormData();
       formData.append('pdf', file);
 
-      const response = await api.post<any>('/admin/upload-pdf', formData, {
+      const response = await api.post<any>('/api/admin/upload-pdf', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -121,7 +121,7 @@ export default function UploadPDFPage() {
     setError('');
 
     try {
-      const response = await api.post<any>('/admin/save-questions', {
+      const response = await api.post<any>('/api/admin/save-questions', {
         questions: enrichedQuestions,
       });
 
