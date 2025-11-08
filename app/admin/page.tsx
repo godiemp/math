@@ -1,15 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  getAllAvailableSessions,
   createScheduledSession,
   updateScheduledSession,
   deleteSession,
   cancelSession,
-  updateSessionStatuses,
 } from '@/lib/sessionApi';
+import { useAvailableSessions } from '@/lib/hooks/useSessions';
 import { getRandomQuestions, getOfficialPAESQuestions } from '@/lib/questions';
 import { LiveSession, Question } from '@/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
@@ -19,7 +18,7 @@ import { MathText } from '@/components/MathDisplay';
 
 function AdminBackofficeContent() {
   const { user: currentUser } = useAuth();
-  const [sessions, setSessions] = useState<LiveSession[]>([]);
+  const { sessions, isLoading, refresh } = useAvailableSessions();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingSession, setEditingSession] = useState<LiveSession | null>(null);
   const [viewingQuestionsSession, setViewingQuestionsSession] = useState<LiveSession | null>(null);
@@ -37,19 +36,6 @@ function AdminBackofficeContent() {
     durationMinutes: 60,
     questionCount: 10,
   });
-
-  useEffect(() => {
-    refreshSessions();
-    const interval = setInterval(refreshSessions, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const refreshSessions = async () => {
-    await updateSessionStatuses(); // Auto-update session statuses based on time
-    // Show scheduled, lobby, and active sessions
-    const allSessions = await getAllAvailableSessions();
-    setSessions(allSessions);
-  };
 
   const resetForm = () => {
     setFormData({
@@ -169,7 +155,7 @@ function AdminBackofficeContent() {
         setSuccess('Ensayo actualizado exitosamente');
         setShowCreateModal(false);
         resetForm();
-        await refreshSessions();
+        await refresh();
       } else {
         setError(result.error || 'Error al actualizar el ensayo');
       }
@@ -190,7 +176,7 @@ function AdminBackofficeContent() {
         setSuccess('Ensayo programado exitosamente');
         setShowCreateModal(false);
         resetForm();
-        await refreshSessions();
+        await refresh();
       } else {
         setError(result.error || 'Error al crear el ensayo');
       }
@@ -202,7 +188,7 @@ function AdminBackofficeContent() {
       const result = await deleteSession(sessionId);
       if (result.success) {
         setSuccess('Ensayo eliminado exitosamente');
-        await refreshSessions();
+        await refresh();
       } else {
         setError(result.error || 'Error al eliminar el ensayo');
       }
@@ -214,7 +200,7 @@ function AdminBackofficeContent() {
       const result = await cancelSession(sessionId);
       if (result.success) {
         setSuccess('Ensayo cancelado exitosamente');
-        await refreshSessions();
+        await refresh();
       } else {
         setError(result.error || 'Error al cancelar el ensayo');
       }

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { logoutUser } from '@/lib/auth';
-import { getAllAvailableSessions, updateSessionStatuses, registerForSession, unregisterFromSession } from '@/lib/sessionApi';
+import { registerForSession, unregisterFromSession } from '@/lib/sessionApi';
+import { useAvailableSessions } from '@/lib/hooks/useSessions';
 import { joinSession } from '@/lib/liveSessions';
 import { LiveSession } from '@/lib/types';
 import LiveSessionComponent from '@/components/LiveSession';
@@ -13,22 +14,10 @@ import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 
 function LivePracticePageContent() {
   const { user: currentUser, setUser, isAdmin } = useAuth();
-  const [sessions, setSessions] = useState<LiveSession[]>([]);
+  const { sessions, isLoading, refresh } = useAvailableSessions();
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [error, setError] = useState('');
   const router = useRouter();
-
-  const refreshSessions = async () => {
-    await updateSessionStatuses(); // Auto-update session statuses based on time
-    const allSessions = await getAllAvailableSessions();
-    setSessions(allSessions);
-  };
-
-  useEffect(() => {
-    refreshSessions();
-    const interval = setInterval(refreshSessions, 3000); // Refresh every 3 seconds
-    return () => clearInterval(interval);
-  }, []);
 
   const handleLogout = async () => {
     await logoutUser();
@@ -42,7 +31,7 @@ function LivePracticePageContent() {
     const result = await registerForSession(sessionId, currentUser);
     if (result.success) {
       setError('');
-      await refreshSessions();
+      await refresh();
     } else {
       setError(result.error || 'Error al registrarse');
     }
@@ -54,7 +43,7 @@ function LivePracticePageContent() {
     const result = await unregisterFromSession(sessionId, currentUser.id);
     if (result.success) {
       setError('');
-      await refreshSessions();
+      await refresh();
     } else {
       setError(result.error || 'Error al cancelar registro');
     }
@@ -73,7 +62,7 @@ function LivePracticePageContent() {
 
   const handleExitSession = () => {
     setActiveSessionId(null);
-    refreshSessions();
+    refresh();
   };
 
   const isUserRegistered = (session: LiveSession) => {
