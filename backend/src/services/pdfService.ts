@@ -1,6 +1,7 @@
 import { Question } from '../types';
 import { createWorker } from 'tesseract.js';
 import { pdf } from 'pdf-to-img';
+import sharp from 'sharp';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
@@ -22,7 +23,7 @@ export interface PDFExtractionResult {
 
 /**
  * Extract text from PDF using OCR (Tesseract)
- * Converts PDF pages to images first, then runs OCR
+ * Converts PDF pages to high-quality images (captures all content including embedded images)
  */
 async function extractTextWithOCR(buffer: Buffer, logs: string[]): Promise<string> {
   const log = (message: string) => {
@@ -42,9 +43,9 @@ async function extractTextWithOCR(buffer: Buffer, logs: string[]): Promise<strin
     fs.writeFileSync(tempFilePath, buffer);
     log(`  Saved PDF to temp file`);
 
-    // Convert PDF to images
-    log(`  Converting PDF to images...`);
-    const document = await pdf(tempFilePath, { scale: 2.0 });
+    // Convert PDF to high-resolution images (3x scale for better quality)
+    log(`  Converting PDF to high-resolution images...`);
+    const document = await pdf(tempFilePath, { scale: 3.0 });
 
     let pageNum = 0;
     let ocrText = '';
@@ -64,13 +65,29 @@ async function extractTextWithOCR(buffer: Buffer, logs: string[]): Promise<strin
       pageNum++;
       log(`  Processing page ${pageNum}...`);
 
-      // Save image to temp file
-      const imagePath = path.join(tempDir, `pdf-page-${Date.now()}-${pageNum}.png`);
-      fs.writeFileSync(imagePath, image);
-      imageFiles.push(imagePath);
+      // Save raw image to temp file
+      const rawImagePath = path.join(tempDir, `pdf-page-raw-${Date.now()}-${pageNum}.png`);
+      fs.writeFileSync(rawImagePath, image);
+      imageFiles.push(rawImagePath);
 
-      // Run OCR on the image
-      const { data: { text } } = await worker.recognize(imagePath);
+      // Preprocess image for better OCR
+      // - Convert to grayscale
+      // - Increase contrast
+      // - Sharpen the image
+      // - Normalize lighting
+      log(`    Enhancing image quality for OCR...`);
+      const enhancedImagePath = path.join(tempDir, `pdf-page-enhanced-${Date.now()}-${pageNum}.png`);
+      await sharp(rawImagePath)
+        .grayscale()                    // Convert to grayscale
+        .normalize()                    // Normalize histogram (improve contrast)
+        .sharpen()                      // Sharpen edges
+        .threshold(128)                 // Binary threshold for clearer text
+        .toFile(enhancedImagePath);
+      imageFiles.push(enhancedImagePath);
+
+      // Run OCR on the enhanced image
+      log(`    Running OCR on enhanced image...`);
+      const { data: { text } } = await worker.recognize(enhancedImagePath);
       ocrText += `\n\n=== PAGE ${pageNum} ===\n\n${text}`;
 
       log(`  ✅ Page ${pageNum} complete (${text.length} characters)`);
