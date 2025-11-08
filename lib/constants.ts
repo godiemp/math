@@ -74,11 +74,11 @@ export const RAPIDFIRE_CONFIG = {
     skipPenaltySeconds: 20,        // -20 seconds per skip
     hintsAllowed: false,           // No hints
     hintPenaltyPercent: 0,
-    immediateFeedback: false,      // Only see results at end
+    immediateFeedback: true,       // Must show feedback for lives system to work
     pauseAllowed: false,           // No pause
     pauseMaxSeconds: 0,
     livesSystem: true,             // Lives system enabled
-    maxWrongAnswers: 2,            // 2 wrong answers allowed, 3rd ends quiz
+    maxWrongAnswers: 2,            // 2 wrong answers allowed, 3rd ends quiz immediately
     pointsPerCorrect: 20,          // 20 points per correct answer
     speedBonusPerTenSeconds: 3,    // +3 points per 10 seconds saved
     streakBonusEnabled: true,      // Streak bonus enabled
@@ -95,11 +95,11 @@ export const RAPIDFIRE_CONFIG = {
     skipPenaltySeconds: 0,
     hintsAllowed: false,           // No hints
     hintPenaltyPercent: 0,
-    immediateFeedback: false,      // Only see results at end
+    immediateFeedback: true,       // Must show feedback for lives system to work
     pauseAllowed: false,           // No pause
     pauseMaxSeconds: 0,
     livesSystem: true,             // Lives system enabled
-    maxWrongAnswers: 1,            // 1 wrong answer allowed, 2nd ends quiz
+    maxWrongAnswers: 1,            // 1 wrong answer allowed, 2nd ends quiz immediately
     pointsPerCorrect: 30,          // 30 points per correct answer
     speedBonusPerTenSeconds: 5,    // +5 points per 10 seconds saved
     streakBonusEnabled: true,      // Streak bonus enabled

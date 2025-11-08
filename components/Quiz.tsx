@@ -255,23 +255,41 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
             newState.currentStreak = 0;
             newState.wrongAnswerCount = prev.wrongAnswerCount + 1;
 
-            // Check lives system
+            // Check lives system - GAME OVER
             if (config.livesSystem && newState.wrongAnswerCount >= config.maxWrongAnswers) {
-              // Out of lives, auto-submit
-              setTimeout(() => handleSubmitQuiz(), 100);
+              // Out of lives, auto-submit after showing the wrong answer
+              setTimeout(() => {
+                handleSubmitQuiz();
+              }, 2000); // Wait 2 seconds to see the game over state
+              return newState; // Return early to prevent auto-advance
             }
           }
 
           return newState;
         });
 
-        // For easy mode with immediate feedback, automatically move to next question after a short delay
-        if (config.immediateFeedback) {
+        // For modes with immediate feedback, automatically move to next question after a short delay
+        // BUT only if we didn't just lose our last life
+        if (config.immediateFeedback && !isCorrect) {
+          // Check if this wrong answer causes game over
+          const willBeGameOver = config.livesSystem &&
+                                 rapidFireState.wrongAnswerCount + 1 >= config.maxWrongAnswers;
+
+          if (!willBeGameOver) {
+            // Safe to auto-advance
+            setTimeout(() => {
+              if (currentQuestionIndex < quizQuestions.length - 1) {
+                handleNext();
+              }
+            }, 1500);
+          }
+        } else if (config.immediateFeedback && isCorrect) {
+          // Correct answer, auto-advance
           setTimeout(() => {
             if (currentQuestionIndex < quizQuestions.length - 1) {
               handleNext();
             }
-          }, 1500); // Wait 1.5 seconds to show feedback
+          }, 1500);
         }
       }
     }
@@ -1400,6 +1418,38 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
                   La pausa terminará automáticamente cuando se acabe el tiempo
                 </p>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Game Over Overlay - when lives run out */}
+        {config?.livesSystem && rapidFireState.livesRemaining === 0 && !quizSubmitted && (
+          <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 animate-fadeIn">
+            <div className="text-center px-4">
+              <div
+                className="text-9xl mb-6 animate-pulse"
+                style={{
+                  animation: 'pulse 1s ease-in-out infinite',
+                  textShadow: '0 0 40px rgba(239, 68, 68, 0.8)'
+                }}
+              >
+                💀
+              </div>
+              <h2
+                className="text-7xl font-black text-red-500 mb-4"
+                style={{
+                  textShadow: '0 0 30px rgba(239, 68, 68, 0.6), 0 0 60px rgba(239, 68, 68, 0.4)',
+                  animation: 'pulse 1.5s ease-in-out infinite'
+                }}
+              >
+                GAME OVER
+              </h2>
+              <p className="text-3xl text-white/90 mb-2">
+                Te quedaste sin vidas
+              </p>
+              <p className="text-xl text-white/60">
+                Enviando resultados...
+              </p>
             </div>
           </div>
         )}
