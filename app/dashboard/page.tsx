@@ -22,10 +22,6 @@ function DashboardContent() {
 
   useEffect(() => {
     if (user) {
-      // Track start time for minimum loader display
-      const startTime = Date.now();
-      const MIN_LOADING_TIME = 2000; // 2 seconds minimum
-
       // Update session statuses
       updateSessionStatuses();
 
@@ -60,13 +56,8 @@ function DashboardContent() {
       // Show skills section if user has attempted questions
       setShowSkillsSection(combinedHistory.length > 0);
 
-      // Ensure minimum loading time before hiding loader
-      const elapsedTime = Date.now() - startTime;
-      const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
-
-      setTimeout(() => {
-        setIsLoading(false);
-      }, remainingTime);
+      // Mark loading as complete
+      setIsLoading(false);
     }
   }, [user]);
 

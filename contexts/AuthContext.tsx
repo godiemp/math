@@ -27,9 +27,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Try to load user from backend if we have a token
     const initAuth = async () => {
-      const startTime = Date.now();
-      const MIN_LOADING_TIME = 2000; // 2 seconds minimum
-
       // First check localStorage for cached user
       const cachedUser = getCurrentUser();
 
@@ -45,13 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      // Ensure minimum loading time before hiding loader
-      const elapsedTime = Date.now() - startTime;
-      const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
-
-      setTimeout(() => {
-        setIsLoading(false);
-      }, remainingTime);
+      setIsLoading(false);
     };
 
     initAuth();
