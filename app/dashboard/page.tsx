@@ -166,17 +166,43 @@ function DashboardContent() {
               <Text size="sm" variant="secondary" className="mb-6">
                 Revisa los contenidos oficiales evaluados en la PAES de Matemática. Navega entre M1 y M2 para conocer todos los temas.
               </Text>
-              <div className="flex gap-3 justify-center flex-wrap">
-                <Button asChild variant="primary">
-                  <Link href="/curriculum/m1">
-                    Ver Currículo M1
-                  </Link>
-                </Button>
-                <Button asChild variant="secondary">
-                  <Link href="/curriculum/m2">
-                    Ver Currículo M2
-                  </Link>
-                </Button>
+
+              {/* Curriculum Buttons */}
+              <div className="mb-4">
+                <Text size="xs" variant="secondary" className="mb-2 font-semibold">
+                  📋 Currículo Oficial
+                </Text>
+                <div className="flex gap-3 justify-center flex-wrap">
+                  <Button asChild variant="primary">
+                    <Link href="/curriculum/m1">
+                      Ver Currículo M1
+                    </Link>
+                  </Button>
+                  <Button asChild variant="secondary">
+                    <Link href="/curriculum/m2">
+                      Ver Currículo M2
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Documentation Buttons */}
+              <div>
+                <Text size="xs" variant="secondary" className="mb-2 font-semibold">
+                  📖 Documentación Completa
+                </Text>
+                <div className="flex gap-3 justify-center flex-wrap">
+                  <Button asChild variant="primary">
+                    <Link href="/curriculum/m1/docs">
+                      Docs M1
+                    </Link>
+                  </Button>
+                  <Button asChild variant="secondary">
+                    <Link href="/curriculum/m2/docs">
+                      Docs M2
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </Card>

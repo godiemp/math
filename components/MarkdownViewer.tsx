@@ -36,7 +36,7 @@ export function MarkdownViewer({ content }: MarkdownViewerProps) {
     ">
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkMath]}
-        rehypePlugins={[rehypeRaw, rehypeSanitize, rehypeKatex]}
+        rehypePlugins={[rehypeKatex, rehypeRaw]}
         components={{
           // Customize checkbox rendering
           input: ({ node, ...props }) => {

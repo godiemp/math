@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes';
 import adminRoutes from './routes/adminRoutes';
 import streakRoutes from './routes/streakRoutes';
 import sessionRoutes from './routes/sessionRoutes';
+import aiRoutes from './routes/aiRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -76,11 +77,13 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/streak', streakRoutes);
 app.use('/api/sessions', sessionRoutes);
+app.use('/api/ai', aiRoutes);
 
 console.log('✅ Admin routes registered at /api/admin');
 console.log('✅ Auth routes registered at /api/auth');
 console.log('✅ Streak routes registered at /api/streak');
 console.log('✅ Session routes registered at /api/sessions');
+console.log('✅ AI routes registered at /api/ai');
 
 // 404 handler
 app.use((req: Request, res: Response) => {
@@ -189,6 +192,8 @@ const startServer = async () => {
 ║      POST /api/sessions            - Create session (Admin)║
 ║      GET  /api/sessions/:id        - Get session details  ║
 ║      POST /api/sessions/:id/register - Register for session║
+║      POST /api/ai/summarize        - Summarize content    ║
+║      POST /api/ai/practice         - Generate practice    ║
 ║      GET  /health                  - Health check         ║
 ║                                                            ║
 ╚════════════════════════════════════════════════════════════╝
