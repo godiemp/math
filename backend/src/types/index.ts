@@ -29,6 +29,9 @@ export interface User {
   role: 'student' | 'admin';
   createdAt: number;
   updatedAt: number;
+  currentStreak?: number;
+  longestStreak?: number;
+  lastPracticeDate?: string | null;
 }
 
 export interface PDFUpload {
@@ -57,3 +60,28 @@ export interface LoginRequest {
 export interface RefreshTokenRequest {
   refreshToken: string;
 }
+
+export interface RefreshToken {
+  id: number;
+  userId: string;
+  token: string;
+  expiresAt: number;
+  createdAt: number;
+  revoked: boolean;
+}
+
+// Streak types
+export interface StreakData {
+  currentStreak: number;
+  longestStreak: number;
+  lastPracticeDate: string | null;
+}
+
+// Express request extension for authenticated requests
+export interface AuthenticatedRequest extends Request {
+  user?: User;
+  userId?: string;
+}
+
+// Alias for better semantics in some controllers
+export type AuthRequest = AuthenticatedRequest;

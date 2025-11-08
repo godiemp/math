@@ -49,7 +49,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const result = await pool.query(
       `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-       RETURNING id, username, email, display_name, role, created_at, updated_at`,
+       RETURNING id, username, email, display_name, role, created_at, updated_at, current_streak, longest_streak, last_practice_date`,
       [userId, username, email, passwordHash, displayName, 'student', now, now]
     );
 
@@ -81,6 +81,9 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         role: user.role,
         createdAt: user.created_at,
         updatedAt: user.updated_at,
+        currentStreak: user.current_streak,
+        longestStreak: user.longest_streak,
+        lastPracticeDate: user.last_practice_date,
       },
       accessToken,
       refreshToken,
@@ -105,7 +108,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     // Find user by username or email
     const result = await pool.query(
-      `SELECT id, username, email, password_hash, display_name, role, created_at, updated_at
+      `SELECT id, username, email, password_hash, display_name, role, created_at, updated_at,
+              current_streak, longest_streak, last_practice_date
        FROM users
        WHERE username = $1 OR email = $1`,
       [usernameOrEmail]
@@ -153,6 +157,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         role: user.role,
         createdAt: user.created_at,
         updatedAt: user.updated_at,
+        currentStreak: user.current_streak,
+        longestStreak: user.longest_streak,
+        lastPracticeDate: user.last_practice_date,
       },
       accessToken,
       refreshToken,
@@ -251,7 +258,8 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
 
     // Fetch fresh user data from database
     const result = await pool.query(
-      `SELECT id, username, email, display_name, role, created_at, updated_at
+      `SELECT id, username, email, display_name, role, created_at, updated_at,
+              current_streak, longest_streak, last_practice_date
        FROM users
        WHERE id = $1`,
       [req.user.userId]
@@ -272,6 +280,9 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
       role: user.role,
       createdAt: user.created_at,
       updatedAt: user.updated_at,
+      currentStreak: user.current_streak,
+      longestStreak: user.longest_streak,
+      lastPracticeDate: user.last_practice_date,
     });
   } catch (error) {
     console.error('Get current user error:', error);

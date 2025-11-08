@@ -52,6 +52,16 @@ export interface User {
   displayName: string;
   role: 'student' | 'admin';
   createdAt: number;
+  currentStreak?: number;
+  longestStreak?: number;
+  lastPracticeDate?: string | null;
+}
+
+// Streak data type
+export interface StreakData {
+  currentStreak: number;
+  longestStreak: number;
+  lastPracticeDate: string | null;
 }
 
 // Registration for scheduled ensayos

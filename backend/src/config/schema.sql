@@ -13,7 +13,10 @@ CREATE TABLE IF NOT EXISTS users (
   display_name VARCHAR(255) NOT NULL,
   role VARCHAR(20) DEFAULT 'student' CHECK (role IN ('student', 'admin')),
   created_at BIGINT NOT NULL,
-  updated_at BIGINT NOT NULL
+  updated_at BIGINT NOT NULL,
+  current_streak INTEGER DEFAULT 0 NOT NULL,
+  longest_streak INTEGER DEFAULT 0 NOT NULL,
+  last_practice_date VARCHAR(10) -- Format: YYYY-MM-DD
 );
 
 -- Refresh tokens table (for JWT refresh token rotation)
@@ -37,4 +40,7 @@ CREATE INDEX IF NOT EXISTS idx_refresh_tokens_expires_at ON refresh_tokens(expir
 COMMENT ON TABLE users IS 'Stores user account information and authentication data';
 COMMENT ON TABLE refresh_tokens IS 'Stores JWT refresh tokens for secure token rotation';
 COMMENT ON COLUMN users.password_hash IS 'bcrypt hashed password (never store plaintext)';
+COMMENT ON COLUMN users.current_streak IS 'Current consecutive days of practice';
+COMMENT ON COLUMN users.longest_streak IS 'Longest streak the user has achieved';
+COMMENT ON COLUMN users.last_practice_date IS 'Last date user completed practice (YYYY-MM-DD format)';
 COMMENT ON COLUMN refresh_tokens.revoked IS 'Flag to invalidate token (logout, security breach, etc.)';

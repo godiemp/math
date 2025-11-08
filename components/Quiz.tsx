@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { Question, QuestionAttempt } from '@/lib/types';
 import { getRandomQuestions } from '@/lib/questions';
 import { QuestionRenderer } from './QuestionRenderer';
+import { api } from '@/lib/api-client';
+import { isAuthenticated } from '@/lib/auth';
 
 interface QuizProps {
   questions: Question[];
@@ -204,6 +206,19 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
     // Save updated history
     localStorage.setItem(historyKey, JSON.stringify(history));
+
+    // Update streak if user is authenticated
+    const updateStreak = async () => {
+      if (isAuthenticated()) {
+        try {
+          await api.post('/api/streak/update');
+        } catch (error) {
+          console.error('Failed to update streak:', error);
+          // Don't block the quiz submission if streak update fails
+        }
+      }
+    };
+    updateStreak();
 
     setQuizSubmitted(true);
     setCurrentQuestionIndex(0); // Go back to first question to review
