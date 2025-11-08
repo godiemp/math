@@ -52,7 +52,8 @@ export default function UploadPDFPage() {
 
   // Configure PDF.js worker
   useEffect(() => {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+    // Use unpkg.com instead of cdnjs for better reliability
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
   }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
