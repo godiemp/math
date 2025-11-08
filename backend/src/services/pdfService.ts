@@ -1,8 +1,5 @@
 import { Question } from '../types';
 
-// Use require for pdf-parse due to CommonJS compatibility issues
-const pdfParse = require('pdf-parse');
-
 export interface ExtractedQuestion {
   question: string;
   options: string[];
@@ -21,6 +18,8 @@ export interface PDFExtractionResult {
  */
 export async function extractTextFromPDF(buffer: Buffer): Promise<PDFExtractionResult> {
   try {
+    // Lazy load pdf-parse to avoid startup issues with canvas dependencies
+    const pdfParse = require('pdf-parse');
     const data = await pdfParse(buffer);
 
     const questions = parseQuestionsFromText(data.text);
