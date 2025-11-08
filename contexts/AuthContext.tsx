@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '@/lib/types';
 import { getCurrentUser, fetchCurrentUser } from '@/lib/auth';
+import { LoadingScreen } from '@/components/ui';
 
 interface AuthContextType {
   user: User | null;
@@ -55,9 +56,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refreshUser,
   };
 
-  // Don't render children until we've checked auth status
+  // Show loading screen while checking auth status
   if (isLoading) {
-    return null;
+    return <LoadingScreen message="Verificando autenticación..." />;
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
