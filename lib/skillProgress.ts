@@ -6,7 +6,7 @@
 
 import { QuestionAttempt, MasteryLevel } from './types';
 import { questions } from './questions';
-import { SKILLS } from './skillTaxonomy';
+import { SKILLS } from './skills';
 import { skillsArray, EnhancedSkill } from './skillsArray';
 
 export interface SkillProgress {

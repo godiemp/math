@@ -9,7 +9,7 @@
  * - Learning paths and prerequisites
  */
 
-import { SKILLS, Skill } from './skillTaxonomy';
+import { SKILLS, Skill } from './skills';
 import { questions } from './questions';
 
 // Define the four core PAES competencies
@@ -404,4 +404,4 @@ export function getSkillsSummary(level: 'M1' | 'M2') {
 /**
  * Export for backward compatibility
  */
-export { SKILLS } from './skillTaxonomy';
+export { SKILLS } from './skills';
