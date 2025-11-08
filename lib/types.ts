@@ -188,3 +188,383 @@ export interface LiveSessionAnswer {
   answer: number;
   timestamp: number;
 }
+
+/**
+ * ============================================================================
+ * SKILL TAXONOMY & PROGRESS TYPES
+ * ============================================================================
+ */
+
+/**
+ * PAES mathematical competencies
+ * These are the four core competencies evaluated in the PAES exam
+ */
+export type Competency = 'Resolver' | 'Modelar' | 'Representar' | 'Argumentar';
+
+/**
+ * Base skill from skill taxonomy
+ */
+export interface Skill {
+  id: string;
+  name: string;
+  description: string;
+  topic: Subject;
+  parentSkill?: string;
+}
+
+/**
+ * Enhanced skill with metadata and statistics
+ * Extends the base Skill with question counts, difficulty analysis, and learning paths
+ */
+export interface EnhancedSkill extends Skill {
+  // Statistics from question analysis
+  questionCount: number;
+  m1QuestionCount: number;
+  m2QuestionCount: number;
+
+  // Difficulty distribution
+  easyCount: number;
+  mediumCount: number;
+  hardCount: number;
+  averageDifficulty: number; // 1 = easy, 2 = medium, 3 = hard
+
+  // Competencies this skill supports
+  competencies: Competency[];
+
+  // Learning metadata
+  prerequisites: string[]; // Skills that should be learned first
+  relatedSkills: string[]; // Skills commonly used together
+
+  // Curriculum integration
+  isCore: boolean; // Is this a fundamental skill?
+  level: 'M1' | 'M2' | 'Both'; // Which level primarily uses this skill
+}
+
+/**
+ * User's progress on a specific skill
+ */
+export interface SkillProgress {
+  skillId: string;
+  skill: EnhancedSkill;
+  attemptsCount: number;
+  correctCount: number;
+  incorrectCount: number;
+  accuracy: number; // 0-100
+  lastAttempted?: number; // timestamp
+  masteryLevel: MasteryLevel;
+}
+
+/**
+ * Summary of user's progress across all skills
+ */
+export interface SkillProgressSummary {
+  mastered: SkillProgress[];
+  learning: SkillProgress[];
+  notStarted: SkillProgress[];
+  totalSkills: number;
+  totalAttempts: number;
+  overallAccuracy: number;
+}
+
+/**
+ * ============================================================================
+ * API REQUEST & RESPONSE TYPES
+ * ============================================================================
+ */
+
+/**
+ * Generic API error structure
+ */
+export interface ApiError {
+  error: string;
+  statusCode: number;
+}
+
+/**
+ * Generic API response wrapper
+ */
+export interface ApiResponse<T> {
+  data?: T;
+  error?: ApiError;
+}
+
+/**
+ * Session API - Create session request
+ */
+export interface CreateSessionData {
+  name: string;
+  description?: string;
+  level: Level;
+  scheduledStartTime: number;
+  durationMinutes: number;
+  questions: Question[];
+  maxParticipants?: number;
+}
+
+/**
+ * Session API - Update session request
+ */
+export interface UpdateSessionData {
+  name?: string;
+  description?: string;
+  level?: Level;
+  scheduledStartTime?: number;
+  durationMinutes?: number;
+  questionCount?: number;
+  maxParticipants?: number;
+  questions?: Question[];
+}
+
+/**
+ * Session API - Get all sessions response
+ */
+export interface SessionsResponse {
+  success: boolean;
+  count: number;
+  sessions: LiveSession[];
+}
+
+/**
+ * Session API - Get single session response
+ */
+export interface SessionResponse {
+  success: boolean;
+  session: LiveSession;
+}
+
+/**
+ * Session API - Generic message response
+ */
+export interface MessageResponse {
+  success: boolean;
+  message?: string;
+}
+
+/**
+ * ============================================================================
+ * AUTHENTICATION TYPES
+ * ============================================================================
+ */
+
+/**
+ * User registration request
+ */
+export interface RegisterRequest {
+  username: string;
+  email: string;
+  password: string;
+  displayName: string;
+}
+
+/**
+ * User login request
+ */
+export interface LoginRequest {
+  usernameOrEmail: string;
+  password: string;
+}
+
+/**
+ * Refresh token request
+ */
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
+/**
+ * Stored refresh token in database
+ */
+export interface RefreshToken {
+  id: number;
+  userId: string;
+  token: string;
+  expiresAt: number;
+  createdAt: number;
+  revoked: boolean;
+}
+
+/**
+ * Authentication response with tokens
+ */
+export interface AuthResponse {
+  user: User;
+  accessToken: string;
+  refreshToken: string;
+}
+
+/**
+ * ============================================================================
+ * PDF UPLOAD TYPES
+ * ============================================================================
+ */
+
+/**
+ * PDF upload processing status
+ */
+export type PDFUploadStatus = 'processing' | 'completed' | 'failed';
+
+/**
+ * PDF upload record
+ */
+export interface PDFUpload {
+  id: number;
+  filename: string;
+  fileSize: number;
+  uploadedBy: string;
+  status: PDFUploadStatus;
+  questionsExtracted: number;
+  errorMessage?: string;
+  uploadedAt: number;
+}
+
+/**
+ * ============================================================================
+ * COMPONENT PROP TYPES
+ * ============================================================================
+ */
+
+/**
+ * Props for Quiz component
+ */
+export interface QuizProps {
+  questions: Question[];
+  level: Level;
+  subject?: Subject;
+  quizMode?: QuizMode;
+  difficulty?: DifficultyLevel;
+}
+
+/**
+ * Props for SkillsDisplay component
+ */
+export interface SkillsDisplayProps {
+  attempts: QuestionAttempt[];
+  level?: Level;
+  showRecommendations?: boolean;
+}
+
+/**
+ * Props for QuestionRenderer component
+ */
+export interface QuestionRendererProps {
+  question: Question;
+  mode: QuestionRenderMode;
+  selectedAnswer?: number | null;
+  showFeedback?: boolean;
+  onAnswerSelect?: (answerIndex: number) => void;
+  disabled?: boolean;
+}
+
+/**
+ * ============================================================================
+ * BACKEND-SPECIFIC TYPES
+ * ============================================================================
+ */
+
+/**
+ * Question with backend metadata (for database storage)
+ */
+export interface QuestionWithMetadata extends Question {
+  createdAt?: number;
+  updatedAt?: number;
+  createdBy?: string;
+}
+
+/**
+ * User with backend metadata (for database storage)
+ */
+export interface UserWithMetadata extends User {
+  updatedAt: number;
+}
+
+/**
+ * ============================================================================
+ * GEOMETRY CANVAS TYPES
+ * ============================================================================
+ */
+
+/**
+ * Geometry figure types for canvas rendering
+ */
+export type GeometryFigureType = 'triangle' | 'rectangle' | 'circle' | 'line' | 'point' | 'polygon';
+
+/**
+ * Base geometry figure
+ */
+export interface GeometryFigure {
+  type: GeometryFigureType;
+  label?: string;
+  color?: string;
+}
+
+/**
+ * Triangle figure
+ */
+export interface Triangle extends GeometryFigure {
+  type: 'triangle';
+  points: [number, number, number, number, number, number]; // x1,y1, x2,y2, x3,y3
+  sideLabels?: [string?, string?, string?];
+  angleLabels?: [string?, string?, string?];
+}
+
+/**
+ * Rectangle figure
+ */
+export interface Rectangle extends GeometryFigure {
+  type: 'rectangle';
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  labels?: {
+    width?: string;
+    height?: string;
+  };
+}
+
+/**
+ * Circle figure
+ */
+export interface Circle extends GeometryFigure {
+  type: 'circle';
+  cx: number;
+  cy: number;
+  radius: number;
+  radiusLabel?: string;
+}
+
+/**
+ * Point figure
+ */
+export interface Point extends GeometryFigure {
+  type: 'point';
+  x: number;
+  y: number;
+  label: string;
+}
+
+/**
+ * Line figure
+ */
+export interface Line extends GeometryFigure {
+  type: 'line';
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  label?: string;
+}
+
+/**
+ * Polygon figure
+ */
+export interface Polygon extends GeometryFigure {
+  type: 'polygon';
+  points: number[]; // Flat array [x1, y1, x2, y2, ...]
+  vertexLabels?: string[];
+}
+
+/**
+ * Union of all geometry figure types
+ */
+export type GeometryFigureUnion = Triangle | Rectangle | Circle | Point | Line | Polygon;
