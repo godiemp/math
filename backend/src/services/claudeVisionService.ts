@@ -73,8 +73,10 @@ export async function extractQuestionsWithClaude(
       const base64Pdf = Buffer.from(pdfBytes).toString('base64');
 
       // Call Claude Vision API
+      // Using claude-3-5-sonnet-20240620 (more widely available)
+      // Alternative: claude-sonnet-4-5 for newer model
       const message = await anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20240620',
         max_tokens: 4096,
         messages: [
           {
