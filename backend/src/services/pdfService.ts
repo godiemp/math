@@ -1,5 +1,6 @@
 import { Question } from '../types';
 import { createWorker } from 'tesseract.js';
+import { pdf } from 'pdf-to-img';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
@@ -21,6 +22,7 @@ export interface PDFExtractionResult {
 
 /**
  * Extract text from PDF using OCR (Tesseract)
+ * Converts PDF pages to images first, then runs OCR
  */
 async function extractTextWithOCR(buffer: Buffer, logs: string[]): Promise<string> {
   const log = (message: string) => {
@@ -29,6 +31,7 @@ async function extractTextWithOCR(buffer: Buffer, logs: string[]): Promise<strin
   };
 
   let tempFilePath: string | null = null;
+  const imageFiles: string[] = [];
 
   try {
     log('🔍 Starting OCR extraction...');
@@ -37,39 +40,74 @@ async function extractTextWithOCR(buffer: Buffer, logs: string[]): Promise<strin
     const tempDir = os.tmpdir();
     tempFilePath = path.join(tempDir, `pdf-ocr-${Date.now()}.pdf`);
     fs.writeFileSync(tempFilePath, buffer);
-    log(`  Saved PDF to temp file: ${tempFilePath}`);
+    log(`  Saved PDF to temp file`);
+
+    // Convert PDF to images
+    log(`  Converting PDF to images...`);
+    const document = await pdf(tempFilePath, { scale: 2.0 });
+
+    let pageNum = 0;
+    let ocrText = '';
 
     // Create Tesseract worker
+    log(`  Initializing Tesseract OCR (Spanish)...`);
     const worker = await createWorker('spa', 1, {
       logger: m => {
         if (m.status === 'recognizing text') {
-          log(`  OCR progress: ${Math.round(m.progress * 100)}%`);
+          log(`    Page ${pageNum + 1} OCR progress: ${Math.round(m.progress * 100)}%`);
         }
       }
     });
 
-    log(`  Running Tesseract OCR on PDF...`);
+    // Process each page image
+    for await (const image of document) {
+      pageNum++;
+      log(`  Processing page ${pageNum}...`);
 
-    // Run OCR directly on the PDF file
-    const { data: { text } } = await worker.recognize(tempFilePath);
+      // Save image to temp file
+      const imagePath = path.join(tempDir, `pdf-page-${Date.now()}-${pageNum}.png`);
+      fs.writeFileSync(imagePath, image);
+      imageFiles.push(imagePath);
+
+      // Run OCR on the image
+      const { data: { text } } = await worker.recognize(imagePath);
+      ocrText += `\n\n=== PAGE ${pageNum} ===\n\n${text}`;
+
+      log(`  ✅ Page ${pageNum} complete (${text.length} characters)`);
+    }
 
     await worker.terminate();
-    log(`✅ OCR extraction complete (${text.length} characters)`);
+    log(`✅ OCR extraction complete - ${pageNum} pages, ${ocrText.length} total characters`);
 
-    return text;
+    return ocrText;
   } catch (error) {
     const errorMsg = `❌ OCR error: ${error}`;
     log(errorMsg);
+    console.error('OCR error details:', error);
     return `OCR failed: ${error}`;
   } finally {
-    // Clean up temp file
+    // Clean up temp files
     if (tempFilePath && fs.existsSync(tempFilePath)) {
       try {
         fs.unlinkSync(tempFilePath);
-        log(`  Cleaned up temp file`);
+        log(`  Cleaned up temp PDF file`);
       } catch (err) {
-        log(`  Warning: Could not delete temp file: ${err}`);
+        log(`  Warning: Could not delete temp PDF: ${err}`);
       }
+    }
+
+    // Clean up image files
+    for (const imageFile of imageFiles) {
+      try {
+        if (fs.existsSync(imageFile)) {
+          fs.unlinkSync(imageFile);
+        }
+      } catch (err) {
+        log(`  Warning: Could not delete temp image: ${err}`);
+      }
+    }
+    if (imageFiles.length > 0) {
+      log(`  Cleaned up ${imageFiles.length} temp image files`);
     }
   }
 }
