@@ -12,6 +12,7 @@ import { Button, Card, Badge, Heading, Text, LoadingScreen } from "@/components/
 import { Streak } from "@/components/Streak";
 import { api } from "@/lib/api-client";
 import { isAuthenticated } from "@/lib/auth";
+import { MathText } from "@/components/MathDisplay";
 
 function DashboardContent() {
   const { user, setUser, isAdmin } = useAuth();
@@ -314,46 +315,44 @@ function DashboardContent() {
           <div className="mb-12">
             <div className="flex justify-between items-center mb-6">
               <Heading level={3} size="sm">
-                Actividad Reciente
+                📚 Mis Últimas Preguntas
               </Heading>
               <Button asChild variant="ghost">
                 <Link href="/progress">
-                  Ver Todo →
+                  Ver Historial Completo →
                 </Link>
               </Button>
             </div>
-            <div className="grid gap-3">
+            <div className="grid gap-4">
               {recentAttempts.map((attempt, index) => (
-                <Card key={`${attempt.questionId}-${attempt.timestamp}`} hover className="p-4">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2 flex-wrap">
-                        <Badge size="sm" variant={attempt.level === 'M1' ? 'info' : 'secondary'}>
-                          {attempt.level}
-                        </Badge>
-                        <Badge
-                          size="sm"
-                          variant={
-                            attempt.difficulty === 'easy' ? 'success' :
-                            attempt.difficulty === 'medium' ? 'warning' :
-                            'danger'
-                          }
-                        >
-                          {attempt.difficulty === 'easy' ? 'Fácil' :
-                           attempt.difficulty === 'medium' ? 'Media' :
-                           'Difícil'}
-                        </Badge>
-                        <Text size="xs" variant="secondary" className="truncate">
-                          {attempt.topic}
-                        </Text>
-                      </div>
+                <Card
+                  key={`${attempt.questionId}-${attempt.timestamp}`}
+                  className={`p-5 border-2 transition-all cursor-pointer ${
+                    attempt.isCorrect
+                      ? 'border-[#34C759]/30 bg-[#34C759]/5 dark:border-[#30D158]/30 dark:bg-[#30D158]/5 hover:border-[#34C759]/50 dark:hover:border-[#30D158]/50'
+                      : 'border-[#FF453A]/30 bg-[#FF453A]/5 dark:border-[#FF453A]/30 dark:bg-[#FF453A]/5 hover:border-[#FF453A]/50 dark:hover:border-[#FF453A]/50'
+                  }`}
+                  onClick={() => router.push('/progress')}
+                >
+                  <div className="flex items-start justify-between gap-4 mb-3">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Badge size="sm" variant={attempt.level === 'M1' ? 'info' : 'secondary'}>
+                        {attempt.level}
+                      </Badge>
+                      <Badge
+                        size="sm"
+                        variant={
+                          attempt.difficulty === 'easy' ? 'success' :
+                          attempt.difficulty === 'medium' ? 'warning' :
+                          'danger'
+                        }
+                      >
+                        {attempt.difficulty === 'easy' ? 'Fácil' :
+                         attempt.difficulty === 'medium' ? 'Media' :
+                         'Difícil'}
+                      </Badge>
                       <Text size="xs" variant="secondary">
-                        {new Date(attempt.timestamp).toLocaleDateString('es-ES', {
-                          day: '2-digit',
-                          month: 'short',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
+                        {attempt.topic}
                       </Text>
                     </div>
                     <div className="flex-shrink-0">
@@ -364,8 +363,44 @@ function DashboardContent() {
                       )}
                     </div>
                   </div>
+
+                  {/* Question Preview */}
+                  <div className="mb-3">
+                    <Text size="sm" className="font-medium line-clamp-2">
+                      <MathText content={attempt.question} />
+                    </Text>
+                  </div>
+
+                  {/* Answer Info */}
+                  <div className="flex items-center gap-4 text-xs">
+                    <Text size="xs" variant="secondary">
+                      Tu respuesta: <span className="font-semibold">{String.fromCharCode(65 + attempt.userAnswer)}</span>
+                    </Text>
+                    {!attempt.isCorrect && (
+                      <Text size="xs" variant="secondary">
+                        Correcta: <span className="font-semibold text-[#34C759] dark:text-[#30D158]">
+                          {String.fromCharCode(65 + attempt.correctAnswer)}
+                        </span>
+                      </Text>
+                    )}
+                    <Text size="xs" variant="secondary" className="ml-auto">
+                      {new Date(attempt.timestamp).toLocaleDateString('es-ES', {
+                        day: '2-digit',
+                        month: 'short',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </Text>
+                  </div>
                 </Card>
               ))}
+            </div>
+
+            {/* Help text */}
+            <div className="mt-4 text-center">
+              <Text size="xs" variant="secondary">
+                💡 Haz clic en cualquier pregunta para ver el historial completo con explicaciones
+              </Text>
             </div>
           </div>
         )}
