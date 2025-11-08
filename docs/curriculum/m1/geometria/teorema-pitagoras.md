@@ -1,0 +1,346 @@
+# Teorema de Pitágoras
+
+## Overview
+
+El Teorema de Pitágoras es una de las relaciones más importantes en geometría. Relaciona los lados de un triángulo rectángulo y es fundamental para calcular distancias y resolver problemas geométricos.
+
+**Nivel**: M1 (Básico)
+**Dificultad**: ⭐⭐ Medio
+**Tiempo estimado**: 1-2 semanas
+
+---
+
+## Conceptos Clave
+
+### Triángulo Rectángulo
+
+Un triángulo con un ángulo de 90° (ángulo recto).
+
+**Componentes**:
+- **Catetos** ($a$ y $b$): Los dos lados que forman el ángulo recto
+- **Hipotenusa** ($c$): El lado opuesto al ángulo recto (el más largo)
+
+```
+    |\
+  a |  \  c (hipotenusa)
+    |    \
+    |_____\
+       b
+```
+
+---
+
+## El Teorema de Pitágoras
+
+En todo triángulo rectángulo:
+
+$$a^2 + b^2 = c^2$$
+
+o también:
+
+$$(\text{cateto}_1)^2 + (\text{cateto}_2)^2 = (\text{hipotenusa})^2$$
+
+### Interpretación Geométrica
+
+La suma de las áreas de los cuadrados construidos sobre los catetos es igual al área del cuadrado construido sobre la hipotenusa.
+
+---
+
+## Uso del Teorema
+
+### Encontrar la Hipotenusa
+
+Si conoces los catetos:
+
+$$c = \sqrt{a^2 + b^2}$$
+
+**Ejemplo**: Catetos de 3 y 4
+$$c = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = \sqrt{25} = 5$$
+
+### Encontrar un Cateto
+
+Si conoces la hipotenusa y un cateto:
+
+$$a = \sqrt{c^2 - b^2}$$
+
+**Ejemplo**: Hipotenusa 13, cateto 5
+$$a = \sqrt{13^2 - 5^2} = \sqrt{169 - 25} = \sqrt{144} = 12$$
+
+---
+
+## Ternas Pitagóricas
+
+Conjuntos de tres números enteros que satisfacen el Teorema de Pitágoras.
+
+### Ternas Comunes
+
+$$\begin{align}
+(3, 4, 5) &\quad \text{porque } 3^2 + 4^2 = 9 + 16 = 25 = 5^2\\
+(5, 12, 13) &\quad \text{porque } 5^2 + 12^2 = 25 + 144 = 169 = 13^2\\
+(8, 15, 17) &\quad \text{porque } 8^2 + 15^2 = 64 + 225 = 289 = 17^2\\
+(7, 24, 25) &\quad \text{porque } 7^2 + 24^2 = 49 + 576 = 625 = 25^2\\
+(9, 40, 41) &\\
+(11, 60, 61) &
+\end{align}$$
+
+### Múltiplos de Ternas
+
+Si $(a, b, c)$ es una terna pitagórica, entonces $(ka, kb, kc)$ también lo es.
+
+**Ejemplo**: $(3, 4, 5)$ es terna pitagórica
+- $(6, 8, 10)$ también lo es (multiplicar por 2)
+- $(9, 12, 15)$ también lo es (multiplicar por 3)
+- $(30, 40, 50)$ también lo es (multiplicar por 10)
+
+---
+
+## Aplicaciones
+
+### Distancia entre Dos Puntos
+
+En el plano cartesiano, la distancia entre $(x_1, y_1)$ y $(x_2, y_2)$ es:
+
+$$d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$$
+
+**Ejemplo**: Distancia entre $(1, 2)$ y $(4, 6)$
+$$d = \sqrt{(4-1)^2 + (6-2)^2} = \sqrt{9 + 16} = \sqrt{25} = 5$$
+
+### Diagonal de un Rectángulo
+
+La diagonal $d$ de un rectángulo de lados $a$ y $b$:
+
+$$d = \sqrt{a^2 + b^2}$$
+
+**Ejemplo**: Rectángulo 6 × 8
+$$d = \sqrt{6^2 + 8^2} = \sqrt{36 + 64} = \sqrt{100} = 10$$
+
+### Altura de un Triángulo Isósceles
+
+En un triángulo isósceles, la altura divide la base en dos partes iguales, formando dos triángulos rectángulos.
+
+**Ejemplo**: Triángulo isósceles con lados iguales de 5 y base de 6
+
+La altura $h$ cumple:
+$$h^2 + 3^2 = 5^2$$
+$$h = \sqrt{25 - 9} = \sqrt{16} = 4$$
+
+---
+
+## Verificar si un Triángulo es Rectángulo
+
+Dado un triángulo con lados $a$, $b$, $c$ (donde $c$ es el mayor):
+
+**Es rectángulo SI**:
+$$a^2 + b^2 = c^2$$
+
+**Ejemplo**: ¿Es rectángulo un triángulo con lados 5, 6, 7?
+
+Verificar: $5^2 + 6^2 = 7^2$?
+$$25 + 36 = 49 + 12 = 61 \neq 49$$
+
+NO es rectángulo.
+
+**Ejemplo 2**: ¿Es rectángulo un triángulo con lados 6, 8, 10?
+
+$$6^2 + 8^2 = 10^2$$
+$$36 + 64 = 100 \,\checkmark$$
+
+SÍ es rectángulo.
+
+---
+
+## Ejemplos Tipo PAES
+
+### Ejemplo 1: Calcular Hipotenusa
+
+**Pregunta**: Un triángulo rectángulo tiene catetos de 6 y 8. ¿Cuál es la hipotenusa?
+
+**Opciones**:
+- A) 7
+- B) 10
+- C) 12
+- D) 14
+
+**Solución**:
+$$c = \sqrt{6^2 + 8^2} = \sqrt{36 + 64} = \sqrt{100} = 10$$
+
+**Respuesta**: B) 10
+
+---
+
+### Ejemplo 2: Calcular Cateto
+
+**Pregunta**: Un triángulo rectángulo tiene hipotenusa 25 y un cateto 7. ¿Cuál es el otro cateto?
+
+**Opciones**:
+- A) 18
+- B) 20
+- C) 24
+- D) 32
+
+**Solución**:
+$$a = \sqrt{25^2 - 7^2} = \sqrt{625 - 49} = \sqrt{576} = 24$$
+
+**Respuesta**: C) 24
+
+---
+
+### Ejemplo 3: Diagonal de Rectángulo
+
+**Pregunta**: ¿Cuál es la diagonal de un rectángulo de 9 cm por 12 cm?
+
+**Opciones**:
+- A) 13 cm
+- B) 15 cm
+- C) 17 cm
+- D) 21 cm
+
+**Solución**:
+$$d = \sqrt{9^2 + 12^2} = \sqrt{81 + 144} = \sqrt{225} = 15$$
+
+**Respuesta**: B) 15 cm
+
+---
+
+### Ejemplo 4: Verificar Triángulo Rectángulo
+
+**Pregunta**: ¿Cuál de estos triángulos es rectángulo?
+
+**Opciones**:
+- A) Lados 2, 3, 4
+- B) Lados 5, 12, 13
+- C) Lados 4, 5, 6
+- D) Lados 7, 8, 9
+
+**Solución**:
+
+Verificar B: $5^2 + 12^2 = 13^2$?
+$$25 + 144 = 169 \,\checkmark$$
+
+**Respuesta**: B) Lados 5, 12, 13
+
+---
+
+### Ejemplo 5: Distancia entre Puntos
+
+**Pregunta**: ¿Cuál es la distancia entre los puntos $(0, 0)$ y $(3, 4)$?
+
+**Opciones**:
+- A) 3
+- B) 4
+- C) 5
+- D) 7
+
+**Solución**:
+$$d = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = \sqrt{25} = 5$$
+
+**Respuesta**: C) 5
+
+---
+
+## Teorema de Pitágoras en 3D
+
+Para calcular la diagonal de un paralelepípedo (caja rectangular):
+
+$$d = \sqrt{a^2 + b^2 + c^2}$$
+
+**Ejemplo**: Caja de dimensiones 2 × 3 × 6
+$$d = \sqrt{2^2 + 3^2 + 6^2} = \sqrt{4 + 9 + 36} = \sqrt{49} = 7$$
+
+---
+
+## Problemas con Escaleras
+
+**Problema típico**: Una escalera de 5 m se apoya contra una pared. Si la base está a 3 m de la pared, ¿a qué altura llega?
+
+```
+    |\ 5m
+  h |  \
+    |    \
+    |_____\
+      3m
+```
+
+$$h = \sqrt{5^2 - 3^2} = \sqrt{25 - 9} = \sqrt{16} = 4 \text{ m}$$
+
+---
+
+## Errores Comunes
+
+### ❌ Confundir hipotenusa con cateto
+
+La hipotenusa es SIEMPRE el lado más largo, opuesto al ángulo recto.
+
+### ❌ Olvidar la raíz cuadrada
+
+$$\text{❌} \quad c^2 = 25 \Rightarrow c = 25$$
+$$\text{✓} \quad c^2 = 25 \Rightarrow c = 5$$
+
+### ❌ Sumar en lugar de restar
+
+Para encontrar un cateto:
+$$\text{❌} \quad a = \sqrt{c^2 + b^2}$$
+$$\text{✓} \quad a = \sqrt{c^2 - b^2}$$
+
+### ❌ No verificar que el triángulo es rectángulo
+
+El Teorema de Pitágoras SOLO aplica a triángulos rectángulos.
+
+---
+
+## Demostración Visual
+
+Existen más de 350 demostraciones del Teorema de Pitágoras. Una de las más conocidas es mediante la reorganización de cuadrados:
+
+Dos cuadrados del mismo tamaño pueden reorganizarse para mostrar que:
+$$a^2 + b^2 = c^2$$
+
+---
+
+## Recíproco del Teorema
+
+**Si** $a^2 + b^2 = c^2$, **entonces** el triángulo es rectángulo.
+
+Esto permite verificar si un triángulo es rectángulo conociendo sus lados.
+
+---
+
+## Skills Relacionados
+
+Este tema desarrolla las siguientes habilidades PAES:
+
+- `geometria-pitagoras`: Aplicar Teorema de Pitágoras
+- `geometria-triangulos`: Propiedades de triángulos
+- `geometria-distancia`: Calcular distancias
+- `resolver-geometria`: Resolver problemas geométricos
+
+**Competencias**:
+- ✓ Aplicar teoremas geométricos
+- ✓ Resolver problemas prácticos
+- ✓ Calcular distancias
+- ✓ Verificar propiedades
+
+---
+
+## Recursos Adicionales
+
+### Práctica
+- [Ver preguntas de práctica](/questions/m1/geometria/teorema-pitagoras)
+- [Quiz interactivo](/practice/m1/pitagoras)
+
+### Herramientas
+- [Calculadora de Pitágoras](/calculator?mode=pythagoras)
+- [Visualizador interactivo](/tools/pythagoras-visual)
+
+### Temas Relacionados
+- ← [Perímetro y Área](/curriculum/m1/docs/geometria/perimetro-area)
+- [Volumen →](/curriculum/m1/docs/geometria/volumen)
+
+---
+
+## Referencias
+
+- PAES Competencia M1: Geometría
+- Nivel de dificultad: Medio
+- Tiempo de estudio recomendado: 1-2 semanas
+- Número de preguntas en banco: ~15

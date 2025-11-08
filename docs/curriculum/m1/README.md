@@ -154,9 +154,9 @@ Justificar y validar resultados matemáticos.
 
 | Área | Preguntas | Documentación | Estado |
 |------|-----------|---------------|--------|
-| Números | 72 | 1/4 ✓ | 🟡 En progreso |
-| Álgebra | 80 | 0/5 | ⚪ Pendiente |
-| Geometría | 58 | 0/4 | ⚪ Pendiente |
-| Probabilidad | 65 | 0/4 | ⚪ Pendiente |
+| Números | 72 | 4/4 ✓ | 🟢 Completo |
+| Álgebra | 80 | 5/5 ✓ | 🟢 Completo |
+| Geometría | 58 | 4/4 ✓ | 🟢 Completo |
+| Probabilidad | 65 | 4/4 ✓ | 🟢 Completo |
 
 **Última actualización**: 2025-11-08
