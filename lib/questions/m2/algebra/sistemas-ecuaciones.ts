@@ -14,5 +14,33 @@ export const m2AlgebraSistemasEcuacionesQuestions: Question[] = [
     explanationLatex: '3x = 9 \\rightarrow x = 3. \\quad \\text{Sustituyendo: } 3 - y = 1 \\rightarrow y = 2',
     difficulty: 'medium',
     skills: ['algebra-sistemas-ecuaciones', 'algebra-metodo-eliminacion', 'algebra-metodo-sustitucion', 'algebra-despeje', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-alg-sist-1',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Resuelve el sistema: $3x + 2y = 12$ y $5x - y = 11$',
+    questionLatex: '\\text{Resuelve el sistema: } 3x + 2y = 12 \\text{ y } 5x - y = 11',
+    options: ['$x = 2, y = 3$', '$x = 3, y = 2$', '$x = 1, y = 6$', '$x = 4, y = 0$'],
+    correctAnswer: 0,
+    explanation: 'Multiplicamos la segunda ecuación por 2 y sumamos:',
+    explanationLatex: '3x + 2y = 12 \\text{ y } 10x - 2y = 22 \\rightarrow 13x = 34 \\rightarrow x = 2, y = 3',
+    difficulty: 'hard',
+    skills: ['algebra-sistemas-ecuaciones', 'algebra-metodo-eliminacion', 'algebra-despeje', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-alg-sist-2',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Un sistema de ecuaciones tiene solución única cuando sus rectas:',
+    questionLatex: '\\text{Un sistema de ecuaciones tiene solución única cuando sus rectas:}',
+    options: ['Son paralelas', 'Se intersectan en un punto', 'Son coincidentes', 'Son perpendiculares'],
+    correctAnswer: 1,
+    explanation: 'Un sistema tiene solución única cuando las rectas se intersectan en exactamente un punto',
+    explanationLatex: '\\text{Las rectas se intersectan en un punto único} \\rightarrow \\text{una solución}',
+    difficulty: 'medium',
+    skills: ['algebra-sistemas-ecuaciones', 'algebra-interpretacion-geometrica', 'geometria-rectas', 'algebra-solucion-sistemas']
   }
 ];

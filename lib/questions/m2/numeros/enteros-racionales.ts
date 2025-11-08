@@ -15,5 +15,20 @@ export const m2NumerosEnterosRacionalesQuestions: Question[] = [
     explanationLatex: '\\frac{8}{12} - \\frac{9}{12} + \\frac{2}{12} = \\frac{8 - 9 + 2}{12} = \\frac{1}{12}',
     difficulty: 'medium',
     skills: ['numeros-fracciones', 'numeros-fracciones-comun-denominador', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-ent-2',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'El resultado de $(-3) \\times (-2) \\times 5 \\times (-1)$ es:',
+    questionLatex: '\\text{El resultado de } (-3) \\times (-2) \\times 5 \\times (-1) \\text{ es:}',
+    options: ['$-30$', '$30$', '$-15$', '$15$'],
+    optionsLatex: ['-30', '30', '-15', '15'],
+    correctAnswer: 0,
+    explanation: 'Multiplicamos: (-3) × (-2) = 6, luego 6 × 5 = 30, finalmente 30 × (-1) = -30',
+    explanationLatex: '(-3) \\times (-2) \\times 5 \\times (-1) = 6 \\times 5 \\times (-1) = 30 \\times (-1) = -30',
+    difficulty: 'medium',
+    skills: ['numeros-enteros', 'numeros-multiplicacion-enteros', 'numeros-signos', 'numeros-operaciones-basicas']
   }
 ];

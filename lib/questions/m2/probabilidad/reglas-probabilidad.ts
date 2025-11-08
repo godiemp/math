@@ -15,5 +15,34 @@ export const m2ProbabilidadReglasProbabilidadQuestions: Question[] = [
     explanationLatex: 'P(\\text{suma} = 7) = \\frac{6}{36} = \\frac{1}{6}',
     difficulty: 'medium',
     skills: ['probabilidad-eventos', 'probabilidad-reglas-basicas', 'probabilidad-eventos-equiprobables', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-prob-rp-2',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    question: 'Si P(A) = 0.6 y P(B) = 0.4, y A y B son eventos independientes, ¿cuál es P(A ∩ B)?',
+    questionLatex: '\\text{Si } P(A) = 0.6 \\text{ y } P(B) = 0.4\\text{, y A y B son independientes, ¿cuál es } P(A \\cap B)?',
+    options: ['0.24', '0.3', '0.5', '1.0'],
+    correctAnswer: 0,
+    explanation: 'Para eventos independientes, P(A ∩ B) = P(A) × P(B):',
+    explanationLatex: 'P(A \\cap B) = P(A) \\times P(B) = 0.6 \\times 0.4 = 0.24',
+    difficulty: 'hard',
+    skills: ['probabilidad-eventos-independientes', 'probabilidad-interseccion', 'probabilidad-reglas-multiplicacion', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-prob-rp-3',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    question: 'En una urna hay 5 bolas rojas y 3 azules. Si se extraen dos bolas sin reposición, ¿cuál es la probabilidad de que ambas sean rojas?',
+    questionLatex: '\\text{Urna: 5 rojas, 3 azules. Extraer 2 sin reposición. ¿P(ambas rojas)?}',
+    options: ['$\\frac{5}{14}$', '$\\frac{10}{28}$', '$\\frac{20}{56}$', '$\\frac{25}{64}$'],
+    optionsLatex: ['\\frac{5}{14}', '\\frac{10}{28}', '\\frac{20}{56}', '\\frac{25}{64}'],
+    correctAnswer: 0,
+    explanation: 'P(primera roja) = 5/8, P(segunda roja|primera roja) = 4/7:',
+    explanationLatex: 'P = \\frac{5}{8} \\times \\frac{4}{7} = \\frac{20}{56} = \\frac{5}{14}',
+    difficulty: 'hard',
+    skills: ['probabilidad-condicional', 'probabilidad-sin-reposicion', 'probabilidad-reglas-multiplicacion', 'numeros-fracciones', 'numeros-operaciones-basicas']
   }
 ];
