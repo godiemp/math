@@ -22,18 +22,25 @@ const router = Router();
 router.get('/', getSessions);
 
 /**
- * @route   GET /api/sessions/:id
- * @desc    Get a single session by ID
- * @access  Public
- */
-router.get('/:id', getSession);
-
-/**
  * @route   POST /api/sessions
  * @desc    Create a new session
  * @access  Private (Admin only)
  */
 router.post('/', authenticate, requireAdmin, createSession);
+
+/**
+ * @route   POST /api/sessions/update-statuses
+ * @desc    Update session statuses based on time
+ * @access  Public
+ */
+router.post('/update-statuses', updateSessionStatuses);
+
+/**
+ * @route   GET /api/sessions/:id
+ * @desc    Get a single session by ID
+ * @access  Public
+ */
+router.get('/:id', getSession);
 
 /**
  * @route   PATCH /api/sessions/:id
@@ -69,12 +76,5 @@ router.post('/:id/register', authenticate, registerForSession);
  * @access  Private
  */
 router.post('/:id/unregister', authenticate, unregisterFromSession);
-
-/**
- * @route   POST /api/sessions/update-statuses
- * @desc    Update session statuses based on time
- * @access  Public
- */
-router.post('/update-statuses', updateSessionStatuses);
 
 export default router;
