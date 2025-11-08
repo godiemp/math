@@ -97,11 +97,41 @@ export function CollapsibleSection({
     advanced: 'Avanzado',
   };
 
+  // Visual hierarchy based on level
+  const levelStyles = {
+    2: {
+      margin: 'my-6',
+      indent: 'ml-0',
+      fontSize: 'text-base',
+      fontWeight: 'font-bold',
+      borderWidth: 'border-2',
+      paddingY: 'py-3',
+    },
+    3: {
+      margin: 'my-4',
+      indent: 'ml-6',
+      fontSize: 'text-base',
+      fontWeight: 'font-semibold',
+      borderWidth: 'border',
+      paddingY: 'py-2.5',
+    },
+    4: {
+      margin: 'my-3',
+      indent: 'ml-12',
+      fontSize: 'text-sm',
+      fontWeight: 'font-medium',
+      borderWidth: 'border',
+      paddingY: 'py-2',
+    },
+  };
+
+  const style = levelStyles[level as keyof typeof levelStyles] || levelStyles[2];
+
   return (
-    <div className="my-6 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+    <div className={`${style.margin} ${style.indent} ${style.borderWidth} border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center justify-between gap-3"
+        className={`w-full px-4 ${style.paddingY} bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center justify-between gap-3`}
       >
         <div className="flex items-center gap-3">
           <span className="text-gray-500 dark:text-gray-400 transition-transform" style={{
@@ -109,7 +139,7 @@ export function CollapsibleSection({
           }}>
             ▶
           </span>
-          <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-left">
+          <h3 className={`${style.fontSize} ${style.fontWeight} text-gray-900 dark:text-gray-100 text-left`}>
             {title}
           </h3>
         </div>
