@@ -73,27 +73,8 @@ app.get('/health', (req: Request, res: Response) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 
-// Debug: Log all registered routes
-console.log('\n📍 Registered Routes:');
-app._router.stack.forEach((middleware: any) => {
-  if (middleware.route) {
-    // Routes registered directly on the app
-    console.log(`  ${Object.keys(middleware.route.methods).join(', ').toUpperCase()} ${middleware.route.path}`);
-  } else if (middleware.name === 'router') {
-    // Router middleware
-    middleware.handle.stack.forEach((handler: any) => {
-      if (handler.route) {
-        const path = middleware.regexp.source
-          .replace('\\/?', '')
-          .replace('(?=\\/|$)', '')
-          .replace(/\\\//g, '/')
-          .replace('^', '');
-        console.log(`  ${Object.keys(handler.route.methods).join(', ').toUpperCase()} ${path}${handler.route.path}`);
-      }
-    });
-  }
-});
-console.log('');
+console.log('✅ Admin routes registered at /api/admin');
+console.log('✅ Auth routes registered at /api/auth');
 
 // 404 handler
 app.use((req: Request, res: Response) => {
