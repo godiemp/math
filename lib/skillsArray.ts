@@ -9,7 +9,7 @@
  * - Learning paths and prerequisites
  */
 
-import { SKILLS, Skill, getSkillsByTopic } from './skillTaxonomy';
+import { SKILLS, Skill } from './skillTaxonomy';
 import { questions } from './questions';
 
 // Define the four core PAES competencies
