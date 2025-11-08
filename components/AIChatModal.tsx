@@ -95,7 +95,8 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
         };
         setMessages(prev => [...prev, assistantMessage]);
       } else {
-        throw new Error('Error en la respuesta');
+        console.error('API error response:', data);
+        throw new Error(data.error || data.details || 'Error en la respuesta');
       }
     } catch (error) {
       console.error('Error fetching AI response:', error);

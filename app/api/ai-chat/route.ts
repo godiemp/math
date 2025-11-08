@@ -56,15 +56,22 @@ ${options.map((opt: string, idx: number) => `${String.fromCharCode(65 + idx)}. $
     // Build conversation history for Claude
     const conversationMessages: Anthropic.MessageParam[] = [];
 
-    // System context as first user message
-    conversationMessages.push({
-      role: 'user',
-      content: contextInfo
-    });
+    // If this is the first message (no history), include context
+    if (!messages || messages.length === 0) {
+      conversationMessages.push({
+        role: 'user',
+        content: `${contextInfo}\n\n**Mi pregunta:** ${userMessage}`
+      });
+    } else {
+      // For subsequent messages, use conversation history
+      // Skip the first assistant message (welcome) and rebuild with context on first user message
+      let isFirstUserMessage = true;
+      messages.forEach((msg: any, index: number) => {
+        if (msg.role === 'assistant' && index === 0) {
+          // Skip welcome message from history
+          return;
+        }
 
-    // Add conversation history
-    if (messages && messages.length > 0) {
-      messages.forEach((msg: any) => {
         if (msg.role === 'user' || msg.role === 'assistant') {
           conversationMessages.push({
             role: msg.role,
@@ -72,13 +79,13 @@ ${options.map((opt: string, idx: number) => `${String.fromCharCode(65 + idx)}. $
           });
         }
       });
-    }
 
-    // Add current user message
-    conversationMessages.push({
-      role: 'user',
-      content: userMessage
-    });
+      // Add current user message
+      conversationMessages.push({
+        role: 'user',
+        content: userMessage
+      });
+    }
 
     const systemPrompt = `Eres un tutor de matemáticas empático, paciente y muy educativo para estudiantes chilenos preparándose para la PAES.
 
