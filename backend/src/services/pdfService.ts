@@ -14,49 +14,57 @@ export interface PDFExtractionResult {
 }
 
 /**
- * Extract text from PDF buffer using pdfjs-dist
+ * Extract text from PDF buffer using pdf2json
  */
 export async function extractTextFromPDF(buffer: Buffer): Promise<PDFExtractionResult> {
-  try {
-    // Dynamic import of pdfjs-dist (works in Node.js without canvas)
-    const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
+  return new Promise((resolve, reject) => {
+    try {
+      const PDFParser = require('pdf2json');
+      const pdfParser = new PDFParser();
 
-    // Load the PDF document
-    const loadingTask = pdfjsLib.getDocument({
-      data: new Uint8Array(buffer),
-      useSystemFonts: true,
-      standardFontDataUrl: 'node_modules/pdfjs-dist/standard_fonts/',
-    });
+      pdfParser.on('pdfParser_dataError', (errData: any) => {
+        console.error('PDF parsing error:', errData.parserError);
+        reject(new Error('Failed to parse PDF file'));
+      });
 
-    const pdfDocument = await loadingTask.promise;
-    const totalPages = pdfDocument.numPages;
+      pdfParser.on('pdfParser_dataReady', (pdfData: any) => {
+        try {
+          // Extract text from all pages
+          let fullText = '';
+          const totalPages = pdfData.Pages.length;
 
-    // Extract text from all pages
-    let fullText = '';
+          for (const page of pdfData.Pages) {
+            // Extract text from each text block in the page
+            for (const textBlock of page.Texts) {
+              for (const textItem of textBlock.R) {
+                // Decode URI-encoded text
+                const decodedText = decodeURIComponent(textItem.T);
+                fullText += decodedText + ' ';
+              }
+            }
+            fullText += '\n\n';
+          }
 
-    for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
-      const page = await pdfDocument.getPage(pageNum);
-      const textContent = await page.getTextContent();
+          const questions = parseQuestionsFromText(fullText);
 
-      // Combine all text items with spaces
-      const pageText = textContent.items
-        .map((item: any) => item.str)
-        .join(' ');
+          resolve({
+            questions,
+            rawText: fullText,
+            totalPages,
+          });
+        } catch (error) {
+          console.error('Error processing PDF data:', error);
+          reject(new Error('Failed to process PDF content'));
+        }
+      });
 
-      fullText += pageText + '\n\n';
+      // Parse the PDF buffer
+      pdfParser.parseBuffer(buffer);
+    } catch (error) {
+      console.error('Error initializing PDF parser:', error);
+      reject(new Error('Failed to initialize PDF parser'));
     }
-
-    const questions = parseQuestionsFromText(fullText);
-
-    return {
-      questions,
-      rawText: fullText,
-      totalPages,
-    };
-  } catch (error) {
-    console.error('Error parsing PDF:', error);
-    throw new Error('Failed to parse PDF file');
-  }
+  });
 }
 
 /**
