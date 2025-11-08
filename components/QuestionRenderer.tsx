@@ -1,7 +1,7 @@
 'use client';
 
 import { Question } from '@/lib/types';
-import { MathText, BlockMath, InlineMath } from './MathDisplay';
+import { MathText, BlockMath, InlineMath, SmartLatexRenderer } from './MathDisplay';
 import { GeometryCanvas, GeometryFigure } from './GeometryCanvas';
 
 export interface QuestionRendererProps {
@@ -38,7 +38,7 @@ export function QuestionRenderer({
       {/* Question Text */}
       <div className={compact ? 'text-base' : 'text-xl font-semibold text-gray-900 dark:text-white'}>
         {question.questionLatex ? (
-          <BlockMath latex={question.questionLatex} />
+          <SmartLatexRenderer latex={question.questionLatex} displayMode={false} />
         ) : (
           <MathText content={question.question} />
         )}
@@ -90,7 +90,7 @@ export function QuestionRenderer({
                 <span className="font-semibold shrink-0">{String.fromCharCode(65 + index)}.</span>
                 <span className="flex-1 min-w-0 break-words">
                   {question.optionsLatex && question.optionsLatex[index] ? (
-                    <InlineMath latex={question.optionsLatex[index]} />
+                    <SmartLatexRenderer latex={question.optionsLatex[index]} displayMode={false} />
                   ) : (
                     <MathText content={option} />
                   )}
@@ -128,7 +128,7 @@ export function QuestionRenderer({
             <MathText content={question.explanation} />
             {question.explanationLatex && (
               <div className={compact ? 'mt-1' : 'mt-2'}>
-                <BlockMath latex={question.explanationLatex} />
+                <SmartLatexRenderer latex={question.explanationLatex} displayMode={false} />
               </div>
             )}
           </div>
