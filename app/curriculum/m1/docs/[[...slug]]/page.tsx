@@ -82,7 +82,7 @@ async function getMarkdownContent(slug: string[]): Promise<string | null> {
 
 // Generate static params for all docs pages
 export async function generateStaticParams() {
-  const params = [
+  const params: { slug?: string[] }[] = [
     { slug: [] }, // Main index
   ];
 
