@@ -1,5 +1,7 @@
-import pdf from 'pdf-parse';
 import { Question } from '../types';
+
+// Use require for pdf-parse due to CommonJS compatibility issues
+const pdfParse = require('pdf-parse');
 
 export interface ExtractedQuestion {
   question: string;
@@ -19,7 +21,7 @@ export interface PDFExtractionResult {
  */
 export async function extractTextFromPDF(buffer: Buffer): Promise<PDFExtractionResult> {
   try {
-    const data = await pdf(buffer);
+    const data = await pdfParse(buffer);
 
     const questions = parseQuestionsFromText(data.text);
 

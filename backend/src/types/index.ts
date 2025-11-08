@@ -41,3 +41,19 @@ export interface PDFUpload {
   errorMessage?: string;
   uploadedAt: number;
 }
+
+export interface RegisterRequest {
+  username: string;
+  email: string;
+  password: string;
+  displayName: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
