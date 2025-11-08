@@ -10,6 +10,7 @@
  */
 
 // Re-export everything from the new auth module
+// Note: Using './auth/index' to avoid circular reference with this file
 export {
   // API functions
   registerUser,
@@ -24,10 +25,10 @@ export {
   getCachedUser,
   setCachedUser,
   clearCachedUser,
-} from './auth';
+} from './auth/index';
 
 // Legacy alias for backward compatibility
-export { getCachedUser as getCurrentUser } from './auth';
+export { getCachedUser as getCurrentUser } from './auth/index';
 
 // Re-export token functions from api-client for backward compatibility
 export { getAccessToken, setTokens, clearTokens } from './api-client';
