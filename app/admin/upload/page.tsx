@@ -73,10 +73,20 @@ export default function UploadPDFPage() {
         },
       });
 
-      setUploadResult(response);
-      setExtractedQuestions(response.questions || []);
-      
-      const enriched = response.questions.map((q: ExtractedQuestion, index: number) => ({
+      if (response.error) {
+        setError(response.error.error || 'Error al procesar el PDF');
+        return;
+      }
+
+      if (!response.data) {
+        setError('No se recibió respuesta del servidor');
+        return;
+      }
+
+      setUploadResult(response.data);
+      setExtractedQuestions(response.data.questions || []);
+
+      const enriched = (response.data.questions || []).map((q: ExtractedQuestion, index: number) => ({
         id: 'uploaded-' + new Date().getTime() + '-' + index,
         level: 'M1' as const,
         topic: 'Tema por definir',
@@ -91,7 +101,7 @@ export default function UploadPDFPage() {
         difficulty: 'medium' as const,
         skills: [],
       }));
-      
+
       setEnrichedQuestions(enriched);
     } catch (err: any) {
       setError(err.message || 'Error al procesar el PDF');
@@ -115,8 +125,18 @@ export default function UploadPDFPage() {
         questions: enrichedQuestions,
       });
 
-      alert('✅ ' + response.saved + ' preguntas guardadas exitosamente');
-      
+      if (response.error) {
+        setError(response.error.error || 'Error al guardar las preguntas');
+        return;
+      }
+
+      if (!response.data) {
+        setError('No se recibió respuesta del servidor');
+        return;
+      }
+
+      alert('✅ ' + response.data.saved + ' preguntas guardadas exitosamente');
+
       setFile(null);
       setExtractedQuestions([]);
       setEnrichedQuestions([]);
