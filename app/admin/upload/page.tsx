@@ -3,12 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Heading } from '@/components/ui/Heading';
-import { Text } from '@/components/ui/Text';
-import { Badge } from '@/components/ui/Badge';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import { Card, Button, Heading, Text, Badge } from '@/components/ui';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
 import api from '@/lib/api-client';
 
 interface ExtractedQuestion {
