@@ -12,28 +12,26 @@ Los números enteros y racionales forman la base fundamental de las matemáticas
 
 ## Conceptos Clave
 
-### Números Enteros (ℤ)
+### Números Enteros ($\mathbb{Z}$)
 
 Los números enteros incluyen:
-- Números positivos: 1, 2, 3, ...
-- Números negativos: -1, -2, -3, ...
-- El cero: 0
+- Números positivos: $1, 2, 3, \ldots$
+- Números negativos: $-1, -2, -3, \ldots$
+- El cero: $0$
 
-**Conjunto**: ℤ = {..., -3, -2, -1, 0, 1, 2, 3, ...}
+**Conjunto**: $\mathbb{Z} = \{\ldots, -3, -2, -1, 0, 1, 2, 3, \ldots\}$
 
-### Números Racionales (ℚ)
+### Números Racionales ($\mathbb{Q}$)
 
-Un número racional es cualquier número que puede expresarse como una fracción `a/b` donde:
-- `a` es un entero (numerador)
-- `b` es un entero distinto de cero (denominador)
+Un número racional es cualquier número que puede expresarse como una fracción $\frac{a}{b}$ donde:
+- $a$ es un entero (numerador)
+- $b$ es un entero distinto de cero (denominador)
 - La fracción puede ser propia, impropia o un número entero
 
-**Conjunto**: ℚ = {a/b | a ∈ ℤ, b ∈ ℤ, b ≠ 0}
+**Conjunto**: $\mathbb{Q} = \left\{\frac{a}{b} \mid a \in \mathbb{Z}, b \in \mathbb{Z}, b \neq 0\right\}$
 
 **Ejemplos**:
-```
-1/2, 3/4, -5/7, 8 (= 8/1), -3 (= -3/1), 0.75 (= 3/4)
-```
+$$\frac{1}{2}, \quad \frac{3}{4}, \quad -\frac{5}{7}, \quad 8 = \frac{8}{1}, \quad -3 = \frac{-3}{1}, \quad 0.75 = \frac{3}{4}$$
 
 ---
 
@@ -42,14 +40,10 @@ Un número racional es cualquier número que puede expresarse como una fracción
 ### Suma de Fracciones
 
 #### Mismo Denominador
-```
-a/c + b/c = (a + b)/c
-```
+$$\frac{a}{c} + \frac{b}{c} = \frac{a + b}{c}$$
 
 **Ejemplo**:
-```
-2/5 + 1/5 = (2 + 1)/5 = 3/5
-```
+$$\frac{2}{5} + \frac{1}{5} = \frac{2 + 1}{5} = \frac{3}{5}$$
 
 #### Diferente Denominador
 1. Encontrar el mínimo común múltiplo (MCM)
@@ -57,73 +51,54 @@ a/c + b/c = (a + b)/c
 3. Sumar numeradores
 
 **Ejemplo**:
-```
-1/3 + 1/4 = ?
+$$\frac{1}{3} + \frac{1}{4} = \,?$$
 
-MCM(3, 4) = 12
+$$\text{MCM}(3, 4) = 12$$
 
-1/3 = 4/12
-1/4 = 3/12
+$$\frac{1}{3} = \frac{4}{12}, \quad \frac{1}{4} = \frac{3}{12}$$
 
-4/12 + 3/12 = 7/12
-```
+$$\frac{4}{12} + \frac{3}{12} = \frac{7}{12}$$
 
 ### Multiplicación de Fracciones
 
-```
-a/b × c/d = (a × c)/(b × d)
-```
+$$\frac{a}{b} \times \frac{c}{d} = \frac{a \times c}{b \times d}$$
 
 **Ejemplo**:
-```
-2/3 × 3/5 = (2 × 3)/(3 × 5) = 6/15 = 2/5
-```
+$$\frac{2}{3} \times \frac{3}{5} = \frac{2 \times 3}{3 \times 5} = \frac{6}{15} = \frac{2}{5}$$
 
 **Tip**: Simplifica antes de multiplicar cuando sea posible:
-```
-2/3 × 3/5 = (2 × 3̶)/(3̶ × 5) = 2/5
-```
+$$\frac{2}{3} \times \frac{3}{5} = \frac{2 \times \cancel{3}}{\cancel{3} \times 5} = \frac{2}{5}$$
 
 ### División de Fracciones
 
-```
-a/b ÷ c/d = a/b × d/c
-```
+$$\frac{a}{b} \div \frac{c}{d} = \frac{a}{b} \times \frac{d}{c}$$
 
 **Regla**: "Multiplica por el recíproco"
 
 **Ejemplo**:
-```
-3/4 ÷ 2/5 = 3/4 × 5/2 = 15/8
-```
+$$\frac{3}{4} \div \frac{2}{5} = \frac{3}{4} \times \frac{5}{2} = \frac{15}{8}$$
 
 ---
 
 ## Propiedades Importantes
 
-### Orden en ℚ
+### Orden en $\mathbb{Q}$
 
 Para comparar fracciones:
 
 **Método 1**: Mismo denominador
-```
-3/7 < 5/7  (porque 3 < 5)
-```
+$$\frac{3}{7} < \frac{5}{7} \quad \text{(porque } 3 < 5\text{)}$$
 
 **Método 2**: Producto cruzado
-```
-¿Es 2/3 < 3/4?
-2 × 4 = 8
-3 × 3 = 9
-8 < 9 ✓ Entonces 2/3 < 3/4
-```
+$$\text{¿Es } \frac{2}{3} < \frac{3}{4}\text{?}$$
+$$2 \times 4 = 8$$
+$$3 \times 3 = 9$$
+$$8 < 9 \,\checkmark \quad \text{Entonces } \frac{2}{3} < \frac{3}{4}$$
 
 **Método 3**: Convertir a decimal
-```
-2/3 ≈ 0.667
-3/4 = 0.75
-0.667 < 0.75 ✓
-```
+$$\frac{2}{3} \approx 0.667$$
+$$\frac{3}{4} = 0.75$$
+$$0.667 < 0.75 \,\checkmark$$
 
 ### Máximo Común Divisor (MCD)
 
@@ -132,22 +107,20 @@ El MCD de dos números es el mayor número que divide a ambos.
 **Uso**: Simplificar fracciones
 
 **Ejemplo**:
-```
-Simplificar 12/18
+$$\text{Simplificar } \frac{12}{18}$$
 
-MCD(12, 18) = 6
+$$\text{MCD}(12, 18) = 6$$
 
-12/18 = (12 ÷ 6)/(18 ÷ 6) = 2/3
-```
+$$\frac{12}{18} = \frac{12 \div 6}{18 \div 6} = \frac{2}{3}$$
 
 **Método de Euclides**:
-```
-MCD(48, 18)
-48 = 18 × 2 + 12
-18 = 12 × 1 + 6
-12 = 6 × 2 + 0
-→ MCD = 6
-```
+$$\text{MCD}(48, 18)$$
+$$\begin{align}
+48 &= 18 \times 2 + 12\\
+18 &= 12 \times 1 + 6\\
+12 &= 6 \times 2 + 0
+\end{align}$$
+$$\Rightarrow \text{MCD} = 6$$
 
 ### Mínimo Común Múltiplo (MCM)
 
@@ -156,19 +129,17 @@ El MCM de dos números es el menor múltiplo común.
 **Uso**: Sumar/restar fracciones con diferente denominador
 
 **Ejemplo**:
-```
-MCM(4, 6) = ?
+$$\text{MCM}(4, 6) = \,?$$
 
-Múltiplos de 4: 4, 8, 12, 16, 20...
-Múltiplos de 6: 6, 12, 18, 24...
+$$\begin{align}
+\text{Múltiplos de 4:} &\quad 4, 8, 12, 16, 20, \ldots\\
+\text{Múltiplos de 6:} &\quad 6, 12, 18, 24, \ldots
+\end{align}$$
 
-MCM(4, 6) = 12
-```
+$$\text{MCM}(4, 6) = 12$$
 
 **Fórmula**:
-```
-MCM(a, b) = (a × b) / MCD(a, b)
-```
+$$\text{MCM}(a, b) = \frac{a \times b}{\text{MCD}(a, b)}$$
 
 ---
 
@@ -176,25 +147,22 @@ MCM(a, b) = (a × b) / MCD(a, b)
 
 ### Ejemplo 1: Operaciones Básicas
 
-**Pregunta**: ¿Cuál es el resultado de 2/3 + 1/4?
+**Pregunta**: ¿Cuál es el resultado de $\frac{2}{3} + \frac{1}{4}$?
 
 **Opciones**:
-- A) 3/7
-- B) 11/12
-- C) 5/12
-- D) 3/12
+- A) $\frac{3}{7}$
+- B) $\frac{11}{12}$
+- C) $\frac{5}{12}$
+- D) $\frac{3}{12}$
 
 **Solución**:
-```
-MCM(3, 4) = 12
+$$\text{MCM}(3, 4) = 12$$
 
-2/3 = 8/12
-1/4 = 3/12
+$$\frac{2}{3} = \frac{8}{12}, \quad \frac{1}{4} = \frac{3}{12}$$
 
-8/12 + 3/12 = 11/12
-```
+$$\frac{8}{12} + \frac{3}{12} = \frac{11}{12}$$
 
-**Respuesta**: B) 11/12
+**Respuesta**: B) $\frac{11}{12}$
 
 ---
 
@@ -203,62 +171,53 @@ MCM(3, 4) = 12
 **Pregunta**: ¿Cuál es el MCD de 12 y 18?
 
 **Opciones**:
-- A) 2
-- B) 3
-- C) 6
-- D) 36
+- A) $2$
+- B) $3$
+- C) $6$
+- D) $36$
 
 **Solución**:
-```
-Factores de 12: 1, 2, 3, 4, 6, 12
-Factores de 18: 1, 2, 3, 6, 9, 18
+$$\begin{align}
+\text{Factores de 12:} &\quad 1, 2, 3, 4, 6, 12\\
+\text{Factores de 18:} &\quad 1, 2, 3, 6, 9, 18
+\end{align}$$
 
-Factores comunes: 1, 2, 3, 6
-Mayor: 6
-```
+$$\text{Factores comunes: } 1, 2, 3, 6$$
+$$\text{Mayor: } 6$$
 
-**Respuesta**: C) 6
+**Respuesta**: C) $6$
 
 ---
 
 ### Ejemplo 3: Comparación
 
-**Pregunta**: Ordena de menor a mayor: 1/2, 2/5, 3/4
+**Pregunta**: Ordena de menor a mayor: $\frac{1}{2}$, $\frac{2}{5}$, $\frac{3}{4}$
 
 **Solución**:
-```
-Convertir a mismo denominador (MCM = 20):
 
-1/2 = 10/20
-2/5 = 8/20
-3/4 = 15/20
+Convertir a mismo denominador $(\text{MCM} = 20)$:
 
-8/20 < 10/20 < 15/20
-```
+$$\frac{1}{2} = \frac{10}{20}, \quad \frac{2}{5} = \frac{8}{20}, \quad \frac{3}{4} = \frac{15}{20}$$
 
-**Respuesta**: 2/5 < 1/2 < 3/4
+$$\frac{8}{20} < \frac{10}{20} < \frac{15}{20}$$
+
+**Respuesta**: $\frac{2}{5} < \frac{1}{2} < \frac{3}{4}$
 
 ---
 
 ## Errores Comunes
 
 ### ❌ Sumar numeradores y denominadores
-```
-❌ 1/2 + 1/3 = 2/5  (INCORRECTO)
-✓ 1/2 + 1/3 = 3/6 + 2/6 = 5/6  (CORRECTO)
-```
+$$\text{❌} \quad \frac{1}{2} + \frac{1}{3} = \frac{2}{5} \quad \text{(INCORRECTO)}$$
+$$\text{✓} \quad \frac{1}{2} + \frac{1}{3} = \frac{3}{6} + \frac{2}{6} = \frac{5}{6} \quad \text{(CORRECTO)}$$
 
 ### ❌ Olvidar simplificar
-```
-❌ 6/12  (puede simplificarse)
-✓ 6/12 = 1/2  (CORRECTO)
-```
+$$\text{❌} \quad \frac{6}{12} \quad \text{(puede simplificarse)}$$
+$$\text{✓} \quad \frac{6}{12} = \frac{1}{2} \quad \text{(CORRECTO)}$$
 
 ### ❌ Confundir MCM y MCD
-```
-Para sumar fracciones → Usar MCM
-Para simplificar → Usar MCD
-```
+$$\text{Para sumar fracciones} \rightarrow \text{Usar MCM}$$
+$$\text{Para simplificar} \rightarrow \text{Usar MCD}$$
 
 ---
 
