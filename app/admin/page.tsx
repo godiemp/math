@@ -518,7 +518,7 @@ function AdminBackofficeContent() {
 
       {/* Create/Edit Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
           <Card className="max-w-2xl w-full my-8 shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)]" padding="lg">
             <Heading level={2} size="sm" className="mb-4">
               {editingSession ? 'Editar Ensayo' : 'Programar Nuevo Ensayo'}
@@ -664,7 +664,7 @@ function AdminBackofficeContent() {
                     }
                     min="15"
                     max="240"
-                    step="15"
+                    step="1"
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                   />
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
