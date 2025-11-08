@@ -122,9 +122,9 @@ export default async function DocsPage({ params }: PageProps) {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-white dark:bg-slate-950">
+      <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] print:bg-white">
         {/* Navbar */}
-        <nav className="sticky top-0 z-30 h-14 backdrop-blur-xl bg-white/90 dark:bg-slate-950/90 border-b border-slate-200 dark:border-slate-800">
+        <nav className="sticky top-0 z-30 h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] print:hidden">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 h-full flex justify-between items-center">
             <div className="flex items-center gap-4">
               <Link
@@ -149,17 +149,24 @@ export default async function DocsPage({ params }: PageProps) {
         {/* Main layout */}
         <div className="flex">
           {/* Sidebar Navigation */}
-          <aside className="hidden lg:block w-64 bg-slate-50/50 dark:bg-slate-900/30 border-r border-slate-200 dark:border-slate-800 h-[calc(100vh-3.5rem)] sticky top-14 overflow-y-auto">
+          <aside className="hidden lg:block w-64 bg-white dark:bg-[#121212] border-r border-black/[0.12] dark:border-white/[0.16] h-[calc(100vh-3.5rem)] sticky top-14 overflow-y-auto print:hidden">
             <div className="p-6">
               <Link
                 href="/curriculum/m1/docs"
-                className={`block mb-6 text-sm font-semibold ${
+                className={`block mb-3 text-sm font-semibold ${
                   currentSlug === ''
                     ? 'text-indigo-600 dark:text-indigo-400'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
                 }`}
               >
                 📚 Inicio
+              </Link>
+
+              <Link
+                href="/curriculum/m1/docs-export-all"
+                className="block mb-6 text-sm font-semibold text-[#0A84FF] hover:text-[#0A84FF]/80 transition-colors"
+              >
+                📥 Exportar Todo
               </Link>
 
               {docsStructure.sections.map((section) => (
