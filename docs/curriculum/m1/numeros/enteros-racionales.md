@@ -7,6 +7,7 @@ Los números enteros y racionales forman la base fundamental de las matemáticas
 
 ---
 
+<!-- section: conceptos-clave, importance: essential, collapsible: false -->
 ## Conceptos Clave
 
 ### Números Enteros ($\mathbb{Z}$)
@@ -29,15 +30,19 @@ Un número racional es cualquier número que puede expresarse como una fracción
 
 **Ejemplos**:
 $$\frac{1}{2}, \quad \frac{3}{4}, \quad -\frac{5}{7}, \quad 8 = \frac{8}{1}, \quad -3 = \frac{-3}{1}, \quad 0.75 = \frac{3}{4}$$
+<!-- /section -->
 
 ---
 
+<!-- section: operaciones-fundamentales, importance: essential, collapsible: false -->
 ## Operaciones Fundamentales
 
 ### Suma de Fracciones
 
 #### Mismo Denominador
+<!-- formula-only -->
 $$\frac{a}{c} + \frac{b}{c} = \frac{a + b}{c}$$
+<!-- /formula-only -->
 
 **Ejemplo**:
 $$\frac{2}{5} + \frac{1}{5} = \frac{2 + 1}{5} = \frac{3}{5}$$
@@ -58,7 +63,9 @@ $$\frac{4}{12} + \frac{3}{12} = \frac{7}{12}$$
 
 ### Multiplicación de Fracciones
 
+<!-- formula-only -->
 $$\frac{a}{b} \times \frac{c}{d} = \frac{a \times c}{b \times d}$$
+<!-- /formula-only -->
 
 **Ejemplo**:
 $$\frac{2}{3} \times \frac{3}{5} = \frac{2 \times 3}{3 \times 5} = \frac{6}{15} = \frac{2}{5}$$
@@ -68,15 +75,19 @@ $$\frac{2}{3} \times \frac{3}{5} = \frac{2 \times \cancel{3}}{\cancel{3} \times 
 
 ### División de Fracciones
 
+<!-- formula-only -->
 $$\frac{a}{b} \div \frac{c}{d} = \frac{a}{b} \times \frac{d}{c}$$
+<!-- /formula-only -->
 
 **Regla**: "Multiplica por el recíproco"
 
 **Ejemplo**:
 $$\frac{3}{4} \div \frac{2}{5} = \frac{3}{4} \times \frac{5}{2} = \frac{15}{8}$$
+<!-- /section -->
 
 ---
 
+<!-- section: propiedades-importantes, importance: important, collapsible: true -->
 ## Propiedades Importantes
 
 ### Orden en $\mathbb{Q}$
@@ -135,11 +146,15 @@ $$\begin{align}
 
 $$\text{MCM}(4, 6) = 12$$
 
+<!-- formula-only -->
 **Fórmula**:
 $$\text{MCM}(a, b) = \frac{a \times b}{\text{MCD}(a, b)}$$
+<!-- /formula-only -->
+<!-- /section -->
 
 ---
 
+<!-- section: ejemplos-paes, importance: essential, collapsible: false -->
 ## Ejemplos Tipo PAES
 
 ### Ejemplo 1: Operaciones Básicas
@@ -199,9 +214,11 @@ $$\frac{1}{2} = \frac{10}{20}, \quad \frac{2}{5} = \frac{8}{20}, \quad \frac{3}{
 $$\frac{8}{20} < \frac{10}{20} < \frac{15}{20}$$
 
 **Respuesta**: $\frac{2}{5} < \frac{1}{2} < \frac{3}{4}$
+<!-- /section -->
 
 ---
 
+<!-- section: errores-comunes, importance: important, collapsible: true -->
 ## Errores Comunes
 
 ### ❌ Sumar numeradores y denominadores
@@ -215,9 +232,11 @@ $$\text{✓} \quad \frac{6}{12} = \frac{1}{2} \quad \text{(CORRECTO)}$$
 ### ❌ Confundir MCM y MCD
 $$\text{Para sumar fracciones} \rightarrow \text{Usar MCM}$$
 $$\text{Para simplificar} \rightarrow \text{Usar MCD}$$
+<!-- /section -->
 
 ---
 
+<!-- section: skills-relacionados, importance: advanced, collapsible: true -->
 ## Skills Relacionados
 
 Este tema desarrolla las siguientes habilidades PAES:
@@ -231,9 +250,11 @@ Este tema desarrolla las siguientes habilidades PAES:
 - ✓ Resolver problemas numéricos
 - ✓ Argumentar resultados
 - ✓ Representar en distintas formas
+<!-- /section -->
 
 ---
 
+<!-- section: recursos-adicionales, importance: advanced, collapsible: true -->
 ## Recursos Adicionales
 
 ### Práctica
@@ -249,6 +270,7 @@ Este tema desarrolla las siguientes habilidades PAES:
 
 ### Siguiente Tema
 - [Porcentajes →](/docs/curriculum/m1/numeros/porcentaje)
+<!-- /section -->
 
 ---
 

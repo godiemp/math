@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import Link from 'next/link';
-import { MarkdownViewer } from '@/components/MarkdownViewer';
+import { AdaptiveMarkdownViewer } from '@/components/AdaptiveMarkdownViewer';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { notFound } from 'next/navigation';
 
@@ -178,7 +178,7 @@ export default async function DocsPage({ params }: PageProps) {
           {/* Main Content */}
           <main className="flex-1 p-8 lg:p-12">
             <div className="max-w-4xl mx-auto">
-              <MarkdownViewer content={content} />
+              <AdaptiveMarkdownViewer content={content} />
             </div>
           </main>
         </div>
