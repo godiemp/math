@@ -2,8 +2,11 @@
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
 
 interface MarkdownViewerProps {
   content: string;
@@ -32,8 +35,8 @@ export function MarkdownViewer({ content }: MarkdownViewerProps) {
       prose-hr:border-gray-300 dark:prose-hr:border-gray-700 prose-hr:my-8
     ">
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw, rehypeSanitize]}
+        remarkPlugins={[remarkGfm, remarkMath]}
+        rehypePlugins={[rehypeRaw, rehypeSanitize, rehypeKatex]}
         components={{
           // Customize checkbox rendering
           input: ({ node, ...props }) => {
