@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { pool } from '../config/database';
 import { extractTextFromPDF, validateQuestion, convertToQuestionFormat } from '../services/pdfService';
+import { extractQuestionsWithClaude } from '../services/claudeVisionService';
 import { Question } from '../types';
 
 /**
@@ -105,6 +106,93 @@ export const uploadPDF = async (req: Request, res: Response): Promise<void> => {
     console.error('Error uploading PDF:', error);
     res.status(500).json({
       error: 'Failed to process PDF',
+      message: (error as Error).message,
+    });
+  }
+};
+
+/**
+ * Upload and process PDF using Claude Vision API
+ * @route   POST /api/admin/upload-pdf-claude
+ * @access  Private (Admin only)
+ */
+export const uploadPDFWithClaude = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (!req.file) {
+      res.status(400).json({ error: 'No file uploaded' });
+      return;
+    }
+
+    const userId = (req as any).user?.userId;
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { buffer, originalname, size } = req.file;
+
+    console.log(`📤 Processing PDF with Claude Vision: ${originalname} (${(size / 1024).toFixed(1)} KB)`);
+
+    // Record upload in database
+    const uploadResult = await pool.query(
+      `INSERT INTO pdf_uploads (filename, file_size, uploaded_by, status, uploaded_at)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id`,
+      [originalname, size, userId, 'processing', Date.now()]
+    );
+
+    const uploadId = uploadResult.rows[0].id;
+    console.log(`💾 Created upload record with ID: ${uploadId}`);
+
+    try {
+      const processingLogs: string[] = [];
+      processingLogs.push(`📤 Processing PDF: ${originalname} (${(size / 1024).toFixed(1)} KB)`);
+      processingLogs.push(`💾 Upload ID: ${uploadId}`);
+      processingLogs.push(`🤖 Using Claude Vision API for extraction...`);
+
+      // Extract questions with Claude Vision (5 minute timeout)
+      const { questions, totalPages, logs } = await withTimeout(
+        extractQuestionsWithClaude(buffer),
+        300000,
+        'Claude Vision processing timed out after 5 minutes. Please try a smaller file.'
+      );
+      processingLogs.push(...logs);
+
+      // Update upload status
+      await pool.query(
+        `UPDATE pdf_uploads
+         SET status = $1, questions_extracted = $2
+         WHERE id = $3`,
+        ['completed', questions.length, uploadId]
+      );
+
+      const completeLog = `🎉 Claude Vision processing complete! Found ${questions.length} questions`;
+      console.log(completeLog);
+      processingLogs.push(completeLog);
+
+      res.json({
+        success: true,
+        uploadId,
+        totalPages,
+        questionsFound: questions.length,
+        questions: questions,
+        logs: processingLogs,
+      });
+    } catch (error) {
+      // Update upload status to failed
+      await pool.query(
+        `UPDATE pdf_uploads
+         SET status = $1, error_message = $2
+         WHERE id = $3`,
+        ['failed', (error as Error).message, uploadId]
+      );
+
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error processing PDF with Claude:', error);
+    res.status(500).json({
+      error: 'Failed to process PDF with Claude Vision',
       message: (error as Error).message,
     });
   }

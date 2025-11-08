@@ -49,6 +49,7 @@ export default function UploadPDFPage() {
   const [uploadResult, setUploadResult] = useState<any>(null);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [useClaude, setUseClaude] = useState(true); // Default to Claude Vision
 
   // Configure PDF.js worker
   useEffect(() => {
@@ -156,10 +157,11 @@ export default function UploadPDFPage() {
       const formData = new FormData();
       formData.append('pdf', file);
 
-      setUploadProgress('Extrayendo texto del PDF (backend)...');
+      // Choose endpoint based on extraction method
+      const endpoint = useClaude ? '/api/admin/upload-pdf-claude' : '/api/admin/upload-pdf';
+      setUploadProgress(useClaude ? 'Procesando con Claude Vision API...' : 'Extrayendo texto del PDF (backend)...');
 
-      // Don't set Content-Type header - let browser set it with boundary automatically
-      const response = await api.post<any>('/api/admin/upload-pdf', formData);
+      const response = await api.post<any>(endpoint, formData);
 
       if (response.error) {
         setError(response.error.error || 'Error al procesar el PDF');
@@ -177,35 +179,38 @@ export default function UploadPDFPage() {
       setUploadResult(response.data);
       setExtractedQuestions(response.data.questions || []);
 
-      // Store raw text for debugging
+      // Store raw text for debugging (only available from basic extraction)
       if (response.data.rawText) {
         setRawText(response.data.rawText);
-        setShowRawText(true); // Auto-expand raw text for debugging
+        setShowRawText(true);
       }
 
-      // Store processing logs for admin viewing
+      // Store processing logs
       if (response.data.logs) {
         setProcessingLogs(response.data.logs);
       }
 
-      // Run OCR in the browser
-      setUploadProgress('Ejecutando OCR en el navegador...');
-      const ocrResult = await runOCROnPDF(file);
-      setOcrText(ocrResult);
-      setShowOcrText(true); // Auto-expand OCR text for debugging
+      // Run browser OCR only if NOT using Claude
+      if (!useClaude) {
+        setUploadProgress('Ejecutando OCR en el navegador...');
+        const ocrResult = await runOCROnPDF(file);
+        setOcrText(ocrResult);
+        setShowOcrText(true);
+      }
 
-      const enriched = (response.data.questions || []).map((q: ExtractedQuestion, index: number) => ({
+      // Map questions to enriched format
+      const enriched = (response.data.questions || []).map((q: any, index: number) => ({
         id: 'uploaded-' + new Date().getTime() + '-' + index,
         level: 'M1' as const,
         topic: 'Tema por definir',
         subject: 'números' as const,
-        question: q.question,
-        questionLatex: q.question,
-        options: q.options,
-        optionsLatex: q.options,
+        question: q.questionText || q.question,
+        questionLatex: q.questionLatex || q.question,
+        options: q.options?.map((opt: any) => opt.text || opt) || [],
+        optionsLatex: q.options?.map((opt: any) => opt.latex || opt.text || opt) || [],
         correctAnswer: q.correctAnswer ?? 0,
         explanation: q.explanation || 'Sin explicación',
-        explanationLatex: q.explanation || 'Sin explicación',
+        explanationLatex: q.explanationLatex || q.explanation || 'Sin explicación',
         difficulty: 'medium' as const,
         skills: [],
       }));
@@ -293,6 +298,39 @@ export default function UploadPDFPage() {
             </Text>
 
             <div className="space-y-4">
+              {/* Extraction Method Selector */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <Text className="font-medium mb-3">Método de extracción:</Text>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={useClaude}
+                      onChange={() => setUseClaude(true)}
+                      className="w-4 h-4 text-blue-600"
+                      disabled={uploading}
+                    />
+                    <div>
+                      <Text className="font-medium">🤖 Claude Vision AI</Text>
+                      <Text variant="secondary" size="sm">Extrae texto, LaTeX y detecta imágenes automáticamente</Text>
+                    </div>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={!useClaude}
+                      onChange={() => setUseClaude(false)}
+                      className="w-4 h-4 text-blue-600"
+                      disabled={uploading}
+                    />
+                    <div>
+                      <Text className="font-medium">📄 Básico (pdf2json + OCR)</Text>
+                      <Text variant="secondary" size="sm">Extracción simple sin LaTeX automático</Text>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
               <div>
                 <input
                   type="file"
@@ -317,7 +355,7 @@ export default function UploadPDFPage() {
                 onClick={handleUpload}
                 disabled={!file || uploading}
               >
-                {uploading ? 'Procesando...' : 'Extraer Preguntas del PDF'}
+                {uploading ? 'Procesando...' : useClaude ? '🤖 Extraer con Claude AI' : '📄 Extraer con Método Básico'}
               </Button>
 
               {uploadProgress && (
