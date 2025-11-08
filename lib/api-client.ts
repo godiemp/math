@@ -42,9 +42,13 @@ function getApiBaseUrl(): string {
 
 const API_BASE_URL = getApiBaseUrl();
 
-// Log the API URL in development for debugging
-if (process.env.NODE_ENV === 'development') {
-  console.log('API Base URL:', API_BASE_URL);
+// Log the API URL for debugging (helps troubleshoot connection issues)
+if (typeof window !== 'undefined') {
+  console.log('🔗 API Base URL:', API_BASE_URL);
+  console.log('📦 Vercel Environment:', process.env.NEXT_PUBLIC_VERCEL_ENV);
+  console.log('🌿 Git Branch:', process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF);
+  console.log('🚂 Railway URL (env):', process.env.NEXT_PUBLIC_RAILWAY_URL);
+  console.log('🔧 API URL (env):', process.env.NEXT_PUBLIC_API_URL);
 }
 
 // Token storage keys
