@@ -58,7 +58,9 @@ $$\frac{1}{4} = 1 \div 4 = 0.25$$
 
 <!-- section: operaciones-fundamentales, importance: essential, collapsible: true, defaultOpen: true -->
 ## Operaciones Fundamentales
+<!-- /section -->
 
+<!-- section: suma-fracciones, importance: essential, collapsible: true, defaultOpen: true -->
 ### Suma de Fracciones
 
 #### Mismo Denominador
@@ -84,7 +86,7 @@ $$\frac{1}{3} = \frac{4}{12}, \quad \frac{1}{4} = \frac{3}{12}$$
 $$\frac{4}{12} + \frac{3}{12} = \frac{7}{12}$$
 
 <!-- full-only -->
-### ⚡ Estrategia Rápida: Suma de Fracciones
+#### ⚡ Estrategia Rápida: Suma de Fracciones
 
 **¿Cuándo usar cada método?**
 
@@ -111,7 +113,9 @@ $$\frac{2}{7} + \frac{3}{11} = \frac{(2 \times 11) + (3 \times 7)}{7 \times 11} 
 
 3. $\frac{5}{6} - \frac{1}{4} = \frac{10}{12} - \frac{3}{12} = \frac{7}{12}$ (resta igual que suma)
 <!-- /full-only -->
+<!-- /section -->
 
+<!-- section: multiplicacion-fracciones, importance: essential, collapsible: true, defaultOpen: true -->
 ### Multiplicación de Fracciones
 
 <!-- formula-only -->
@@ -123,7 +127,9 @@ $$\frac{2}{3} \times \frac{3}{5} = \frac{2 \times 3}{3 \times 5} = \frac{6}{15} 
 
 **Tip**: Simplifica antes de multiplicar cuando sea posible:
 $$\frac{2}{3} \times \frac{3}{5} = \frac{2 \times \cancel{3}}{\cancel{3} \times 5} = \frac{2}{5}$$
+<!-- /section -->
 
+<!-- section: division-fracciones, importance: essential, collapsible: true, defaultOpen: true -->
 ### División de Fracciones
 
 <!-- formula-only -->
@@ -136,7 +142,7 @@ $$\frac{a}{b} \div \frac{c}{d} = \frac{a}{b} \times \frac{d}{c}$$
 $$\frac{3}{4} \div \frac{2}{5} = \frac{3}{4} \times \frac{5}{2} = \frac{15}{8}$$
 
 <!-- full-only -->
-### 🌍 Aplicaciones Prácticas
+#### 🌍 Aplicaciones Prácticas
 
 **Situación 1: Repartir pizza**
 Tienes $\frac{3}{4}$ de una pizza y quieres repartirla entre 3 amigos. ¿Cuánto recibe cada uno?
@@ -174,7 +180,9 @@ La respuesta es $\frac{3}{2} = 1.5$ (una mitad y media).
 
 <!-- section: propiedades-importantes, importance: important, collapsible: true -->
 ## Propiedades Importantes
+<!-- /section -->
 
+<!-- section: orden-racionales, importance: important, collapsible: true -->
 ### Orden en $\mathbb{Q}$
 
 Para comparar fracciones:
@@ -192,7 +200,9 @@ $$8 < 9 \,\checkmark \quad \text{Entonces } \frac{2}{3} < \frac{3}{4}$$
 $$\frac{2}{3} \approx 0.667$$
 $$\frac{3}{4} = 0.75$$
 $$0.667 < 0.75 \,\checkmark$$
+<!-- /section -->
 
+<!-- section: mcd, importance: important, collapsible: true -->
 ### Máximo Común Divisor (MCD)
 
 El MCD de dos números es el mayor número que divide a ambos.
@@ -214,7 +224,9 @@ $$\begin{align}
 12 &= 6 \times 2 + 0
 \end{align}$$
 $$\Rightarrow \text{MCD} = 6$$
+<!-- /section -->
 
+<!-- section: mcm, importance: important, collapsible: true -->
 ### Mínimo Común Múltiplo (MCM)
 
 El MCM de dos números es el menor múltiplo común.
@@ -290,8 +302,10 @@ $$\text{MCD}(24, 36) \times \text{MCM}(24, 36) = 12 \times 72 = 864 = 24 \times 
 
 <!-- section: ejemplos-paes, importance: essential, collapsible: true, defaultOpen: true -->
 ## Ejemplos Tipo PAES
+<!-- /section -->
 
-### Ejemplo 1: Operaciones Básicas
+<!-- section: ejemplo-1-paes, importance: essential, collapsible: true, defaultOpen: false -->
+#### Ejemplo 1: Operaciones Básicas
 
 **Pregunta**: ¿Cuál es el resultado de $\frac{2}{3} + \frac{1}{4}$?
 
@@ -309,10 +323,10 @@ $$\frac{2}{3} = \frac{8}{12}, \quad \frac{1}{4} = \frac{3}{12}$$
 $$\frac{8}{12} + \frac{3}{12} = \frac{11}{12}$$
 
 **Respuesta**: B) $\frac{11}{12}$
+<!-- /section -->
 
----
-
-### Ejemplo 2: MCD
+<!-- section: ejemplo-2-paes, importance: essential, collapsible: true, defaultOpen: false -->
+#### Ejemplo 2: MCD
 
 **Pregunta**: ¿Cuál es el MCD de 12 y 18?
 
@@ -332,10 +346,10 @@ $$\text{Factores comunes: } 1, 2, 3, 6$$
 $$\text{Mayor: } 6$$
 
 **Respuesta**: C) $6$
+<!-- /section -->
 
----
-
-### Ejemplo 3: Comparación
+<!-- section: ejemplo-3-paes, importance: essential, collapsible: true, defaultOpen: false -->
+#### Ejemplo 3: Comparación
 
 **Pregunta**: Ordena de menor a mayor: $\frac{1}{2}$, $\frac{2}{5}$, $\frac{3}{4}$
 
@@ -348,9 +362,10 @@ $$\frac{1}{2} = \frac{10}{20}, \quad \frac{2}{5} = \frac{8}{20}, \quad \frac{3}{
 $$\frac{8}{20} < \frac{10}{20} < \frac{15}{20}$$
 
 **Respuesta**: $\frac{2}{5} < \frac{1}{2} < \frac{3}{4}$
+<!-- /section -->
 
 <!-- full-only -->
-### 🎯 Análisis de Distractores (Trampas Comunes en PAES)
+#### 🎯 Análisis de Distractores (Trampas Comunes en PAES)
 
 **¿Por qué las otras opciones están mal?**
 
