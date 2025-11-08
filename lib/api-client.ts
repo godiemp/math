@@ -21,18 +21,22 @@ function getApiBaseUrl(): string {
 
   // For Vercel preview deployments, try to construct Railway URL
   if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview') {
-    const branch = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF;
+    // First, try to get PR number directly from Vercel (exposed via next.config.ts)
+    let prNumber = process.env.NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID;
 
-    if (branch) {
-      // Extract PR number from branch name (e.g., "pr-123" or "feature-pr-123")
-      const prMatch = branch.match(/pr[/-]?(\d+)|#(\d+)/i);
-      const prNumber = prMatch?.[1] || prMatch?.[2];
-
-      if (prNumber) {
-        // Construct Railway PR URL for this project
-        // Pattern: https://paes-math-backend-math-pr-{number}.up.railway.app
-        return `https://paes-math-backend-math-pr-${prNumber}.up.railway.app`;
+    // Fallback: try to extract from branch name
+    if (!prNumber) {
+      const branch = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF;
+      if (branch) {
+        const prMatch = branch.match(/pr[/-]?(\d+)|#(\d+)/i);
+        prNumber = prMatch?.[1] || prMatch?.[2];
       }
+    }
+
+    if (prNumber) {
+      // Construct Railway PR URL for this project
+      // Pattern: https://paes-math-backend-math-pr-{number}.up.railway.app
+      return `https://paes-math-backend-math-pr-${prNumber}.up.railway.app`;
     }
   }
 
@@ -47,6 +51,7 @@ if (typeof window !== 'undefined') {
   console.log('🔗 API Base URL:', API_BASE_URL);
   console.log('📦 Vercel Environment:', process.env.NEXT_PUBLIC_VERCEL_ENV);
   console.log('🌿 Git Branch:', process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF);
+  console.log('🔢 PR Number:', process.env.NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID);
   console.log('🚂 Railway URL (env):', process.env.NEXT_PUBLIC_RAILWAY_URL);
   console.log('🔧 API URL (env):', process.env.NEXT_PUBLIC_API_URL);
 }
