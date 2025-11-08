@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { LiveSession, QuestionAttempt } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen } from "@/components/ui";
 import { getRecommendedSkills, summarizeSkillProgress } from "@/lib/skillProgress";
+import { Streak } from "@/components/Streak";
 
 function DashboardContent() {
   const { user, setUser, isAdmin } = useAuth();
@@ -121,14 +122,13 @@ function DashboardContent() {
       </nav>
 
       <main className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <Heading level={2} size="lg" className="mb-4">
-            Prepárate para la PAES
-          </Heading>
-          <Text size="md" variant="secondary" className="mb-8 max-w-3xl mx-auto">
-            Practica para la Prueba de Acceso a la Educación Superior con ejercicios organizados por tema
-          </Text>
+        {/* Streak Section */}
+        <div className="mb-8">
+          <Streak initialStreak={user ? {
+            currentStreak: user.currentStreak || 0,
+            longestStreak: user.longestStreak || 0,
+            lastPracticeDate: user.lastPracticeDate || null
+          } : undefined} />
         </div>
 
         {/* Practice and Temario Cards */}

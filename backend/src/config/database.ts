@@ -42,8 +42,30 @@ export const initializeDatabase = async (): Promise<void> => {
         display_name VARCHAR(255) NOT NULL,
         role VARCHAR(20) DEFAULT 'student' CHECK (role IN ('student', 'admin')),
         created_at BIGINT NOT NULL,
-        updated_at BIGINT NOT NULL
+        updated_at BIGINT NOT NULL,
+        current_streak INTEGER DEFAULT 0 NOT NULL,
+        longest_streak INTEGER DEFAULT 0 NOT NULL,
+        last_practice_date VARCHAR(10)
       )
+    `);
+
+    // Add streak columns if they don't exist (migration for existing tables)
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='current_streak') THEN
+          ALTER TABLE users ADD COLUMN current_streak INTEGER DEFAULT 0 NOT NULL;
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='longest_streak') THEN
+          ALTER TABLE users ADD COLUMN longest_streak INTEGER DEFAULT 0 NOT NULL;
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='last_practice_date') THEN
+          ALTER TABLE users ADD COLUMN last_practice_date VARCHAR(10);
+        END IF;
+      END $$;
     `);
 
     // Create refresh_tokens table

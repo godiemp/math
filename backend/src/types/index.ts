@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 export interface Question {
   id: string;
   topic: string;
@@ -29,6 +31,9 @@ export interface User {
   role: 'student' | 'admin';
   createdAt: number;
   updatedAt: number;
+  currentStreak?: number;
+  longestStreak?: number;
+  lastPracticeDate?: string | null;
 }
 
 export interface PDFUpload {
@@ -57,3 +62,23 @@ export interface LoginRequest {
 export interface RefreshTokenRequest {
   refreshToken: string;
 }
+
+export interface RefreshToken {
+  id: number;
+  userId: string;
+  token: string;
+  expiresAt: number;
+  createdAt: number;
+  revoked: boolean;
+}
+
+// Streak types
+export interface StreakData {
+  currentStreak: number;
+  longestStreak: number;
+  lastPracticeDate: string | null;
+}
+
+// Type alias for authenticated requests
+// Note: Request.user is already typed as TokenPayload via global declaration in middleware/auth.ts
+export type AuthRequest = Request;

@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { testConnection, initializeDatabase, closeDatabase } from './config/database';
 import authRoutes from './routes/authRoutes';
 import adminRoutes from './routes/adminRoutes';
+import streakRoutes from './routes/streakRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -72,9 +73,11 @@ app.get('/health', (req: Request, res: Response) => {
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/streak', streakRoutes);
 
 console.log('✅ Admin routes registered at /api/admin');
 console.log('✅ Auth routes registered at /api/auth');
+console.log('✅ Streak routes registered at /api/streak');
 
 // 404 handler
 app.use((req: Request, res: Response) => {
@@ -120,6 +123,8 @@ const startServer = async () => {
 ║      POST /api/admin/save-questions - Save questions      ║
 ║      GET  /api/admin/questions     - Get questions        ║
 ║      GET  /api/admin/uploads       - Get upload history   ║
+║      GET  /api/streak              - Get user streak data ║
+║      POST /api/streak/update       - Update daily streak  ║
 ║      GET  /health                  - Health check         ║
 ║                                                            ║
 ╚════════════════════════════════════════════════════════════╝
