@@ -118,7 +118,8 @@ export default function UploadPDFPage() {
         await page.render({
           canvasContext: context!,
           viewport: viewport,
-        }).promise;
+          canvas: canvas,
+        } as any).promise;
 
         // Convert canvas to image data URL
         const imageDataUrl = canvas.toDataURL('image/png');
