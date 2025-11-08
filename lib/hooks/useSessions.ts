@@ -89,13 +89,22 @@ export function useAvailableSessions() {
   const { data, error, isLoading, mutate } = useSWR<LiveSession[]>(
     '/api/sessions/available',
     async () => {
+      console.log('🔄 SWR: Fetching available sessions...');
       await updateSessionStatuses();
-      return getAllAvailableSessions();
+      const sessions = await getAllAvailableSessions();
+      console.log('✅ SWR: Fetched sessions:', sessions.length);
+      return sessions;
     },
     {
       dedupingInterval: 30000,
       revalidateOnFocus: true,
       keepPreviousData: true,
+      onError: (err) => {
+        console.error('❌ SWR Error fetching sessions:', err);
+      },
+      onSuccess: (data) => {
+        console.log('✅ SWR Success:', data?.length, 'sessions');
+      },
 
       // Smart polling based on session states
       refreshInterval: (latestData) => {
@@ -119,6 +128,10 @@ export function useAvailableSessions() {
       },
     }
   );
+
+  if (error) {
+    console.error('❌ useAvailableSessions error:', error);
+  }
 
   return {
     sessions: data || [],

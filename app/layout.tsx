@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { SWRProvider } from "@/lib/swr-config";
 
 export const metadata: Metadata = {
   title: "PAES Chile - Preparación Matemática",
@@ -15,9 +16,11 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="antialiased">
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <SWRProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </SWRProvider>
       </body>
     </html>
   );
