@@ -72,3 +72,54 @@ export function getRandomQuestions(level: 'M1' | 'M2', count: number = 10, subje
 
   return shuffled.slice(0, count);
 }
+
+// Official PAES M1 distribution (based on 60 questions format)
+export const PAES_M1_DISTRIBUTION = {
+  números: 17,        // 28% - Números y proporcionalidad
+  álgebra: 17,        // 28% - Álgebra y funciones
+  geometría: 14,      // 23% - Geometría
+  probabilidad: 12    // 21% - Probabilidad y estadística
+};
+
+// Official PAES M2 distribution (based on 50 questions format)
+export const PAES_M2_DISTRIBUTION = {
+  números: 12,        // 24% - Números complejos y avanzados
+  álgebra: 16,        // 32% - Funciones, límites y derivadas
+  geometría: 12,      // 24% - Geometría analítica avanzada
+  probabilidad: 10    // 20% - Estadística inferencial
+};
+
+/**
+ * Get questions following the official PAES format distribution
+ * This function ensures that questions are selected proportionally by subject
+ * according to the official PAES exam specifications
+ */
+export function getOfficialPAESQuestions(level: 'M1' | 'M2'): Question[] {
+  const distribution = level === 'M1' ? PAES_M1_DISTRIBUTION : PAES_M2_DISTRIBUTION;
+  const selectedQuestions: Question[] = [];
+
+  // For each subject, randomly select the specified number of questions
+  Object.entries(distribution).forEach(([subject, count]) => {
+    const subjectQuestions = getQuestionsBySubject(
+      subject as 'números' | 'álgebra' | 'geometría' | 'probabilidad',
+      level
+    );
+
+    // Shuffle and select the required number of questions
+    const shuffled = [...subjectQuestions];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    selectedQuestions.push(...shuffled.slice(0, count));
+  });
+
+  // Shuffle the final array to mix subjects (questions shouldn't be grouped by subject)
+  for (let i = selectedQuestions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [selectedQuestions[i], selectedQuestions[j]] = [selectedQuestions[j], selectedQuestions[i]];
+  }
+
+  return selectedQuestions;
+}
