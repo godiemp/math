@@ -23,6 +23,8 @@ export const uploadPDF = async (req: Request, res: Response): Promise<void> => {
 
     const { buffer, originalname, size } = req.file;
 
+    console.log(`📤 Processing PDF upload: ${originalname} (${(size / 1024).toFixed(1)} KB)`);
+
     // Record upload in database
     const uploadResult = await pool.query(
       `INSERT INTO pdf_uploads (filename, file_size, uploaded_by, status, uploaded_at)
@@ -32,21 +34,26 @@ export const uploadPDF = async (req: Request, res: Response): Promise<void> => {
     );
 
     const uploadId = uploadResult.rows[0].id;
+    console.log(`💾 Created upload record with ID: ${uploadId}`);
 
     try {
+      console.log(`🔄 Starting PDF text extraction...`);
       // Extract text from PDF
       const { questions, rawText, totalPages } = await extractTextFromPDF(buffer);
 
       // Filter valid questions
       const validQuestions = questions.filter(validateQuestion);
+      console.log(`✅ Validation complete: ${validQuestions.length}/${questions.length} questions are valid`);
 
       // Update upload status
       await pool.query(
-        `UPDATE pdf_uploads 
+        `UPDATE pdf_uploads
          SET status = $1, questions_extracted = $2
          WHERE id = $3`,
         ['completed', validQuestions.length, uploadId]
       );
+
+      console.log(`🎉 PDF processing complete! Returning ${validQuestions.length} questions to client`);
 
       res.json({
         success: true,

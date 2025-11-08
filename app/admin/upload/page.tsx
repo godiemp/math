@@ -35,6 +35,7 @@ export default function UploadPDFPage() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState('');
   const [extractedQuestions, setExtractedQuestions] = useState<ExtractedQuestion[]>([]);
   const [enrichedQuestions, setEnrichedQuestions] = useState<QuestionToSave[]>([]);
   const [uploadResult, setUploadResult] = useState<any>(null);
@@ -62,24 +63,30 @@ export default function UploadPDFPage() {
 
     setUploading(true);
     setError('');
+    setUploadProgress('Subiendo archivo PDF...');
 
     try {
       const formData = new FormData();
       formData.append('pdf', file);
+
+      setUploadProgress('Extrayendo texto del PDF...');
 
       // Don't set Content-Type header - let browser set it with boundary automatically
       const response = await api.post<any>('/api/admin/upload-pdf', formData);
 
       if (response.error) {
         setError(response.error.error || 'Error al procesar el PDF');
+        setUploadProgress('');
         return;
       }
 
       if (!response.data) {
         setError('No se recibió respuesta del servidor');
+        setUploadProgress('');
         return;
       }
 
+      setUploadProgress('Analizando preguntas extraídas...');
       setUploadResult(response.data);
       setExtractedQuestions(response.data.questions || []);
 
@@ -100,9 +107,11 @@ export default function UploadPDFPage() {
       }));
 
       setEnrichedQuestions(enriched);
+      setUploadProgress('');
     } catch (err: any) {
       setError(err.message || 'Error al procesar el PDF');
       console.error('Upload error:', err);
+      setUploadProgress('');
     } finally {
       setUploading(false);
     }
@@ -203,6 +212,20 @@ export default function UploadPDFPage() {
               >
                 {uploading ? 'Procesando...' : 'Extraer Preguntas del PDF'}
               </Button>
+
+              {uploadProgress && (
+                <div className="bg-blue-50 border border-blue-200 text-blue-800 rounded-lg p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-800"></div>
+                    <div>
+                      <p className="font-medium">{uploadProgress}</p>
+                      <p className="text-sm text-blue-600 mt-1">
+                        Esto puede tomar varios segundos para PDFs grandes...
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4">
