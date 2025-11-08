@@ -5,6 +5,7 @@ import { testConnection, initializeDatabase, closeDatabase } from './config/data
 import authRoutes from './routes/authRoutes';
 import adminRoutes from './routes/adminRoutes';
 import streakRoutes from './routes/streakRoutes';
+import sessionRoutes from './routes/sessionRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -42,7 +43,7 @@ const corsOptions = {
     callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['Content-Range', 'X-Content-Range'],
   maxAge: 86400, // 24 hours
@@ -74,10 +75,12 @@ app.get('/health', (req: Request, res: Response) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/streak', streakRoutes);
+app.use('/api/sessions', sessionRoutes);
 
 console.log('✅ Admin routes registered at /api/admin');
 console.log('✅ Auth routes registered at /api/auth');
 console.log('✅ Streak routes registered at /api/streak');
+console.log('✅ Session routes registered at /api/sessions');
 
 // 404 handler
 app.use((req: Request, res: Response) => {
@@ -125,6 +128,10 @@ const startServer = async () => {
 ║      GET  /api/admin/uploads       - Get upload history   ║
 ║      GET  /api/streak              - Get user streak data ║
 ║      POST /api/streak/update       - Update daily streak  ║
+║      GET  /api/sessions            - Get all sessions     ║
+║      POST /api/sessions            - Create session (Admin)║
+║      GET  /api/sessions/:id        - Get session details  ║
+║      POST /api/sessions/:id/register - Register for session║
 ║      GET  /health                  - Health check         ║
 ║                                                            ║
 ╚════════════════════════════════════════════════════════════╝
