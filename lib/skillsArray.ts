@@ -274,51 +274,75 @@ function buildEnhancedSkills(): EnhancedSkill[] {
 }
 
 /**
- * Main export: Enhanced skills array
+ * Build all enhanced skills
  */
-export const skillsArray: EnhancedSkill[] = buildEnhancedSkills();
+const allEnhancedSkills = buildEnhancedSkills();
 
 /**
- * Helper function to get skills by topic
+ * M1 Skills Array - Skills for Competencia Matemática M1
+ * Includes skills marked as 'M1' or 'Both'
  */
-export function getEnhancedSkillsByTopic(topic: 'números' | 'álgebra' | 'geometría' | 'probabilidad'): EnhancedSkill[] {
-  return skillsArray.filter(skill => skill.topic === topic);
+export const m1SkillsArray: EnhancedSkill[] = allEnhancedSkills.filter(
+  skill => skill.level === 'M1' || skill.level === 'Both'
+);
+
+/**
+ * M2 Skills Array - Skills for Competencia Matemática M2
+ * Includes skills marked as 'M2' or 'Both'
+ */
+export const m2SkillsArray: EnhancedSkill[] = allEnhancedSkills.filter(
+  skill => skill.level === 'M2' || skill.level === 'Both'
+);
+
+/**
+ * All skills combined (for backward compatibility)
+ */
+export const skillsArray: EnhancedSkill[] = allEnhancedSkills;
+
+/**
+ * Get skills by topic for a specific level
+ */
+export function getSkillsByTopic(
+  topic: 'números' | 'álgebra' | 'geometría' | 'probabilidad',
+  level: 'M1' | 'M2'
+): EnhancedSkill[] {
+  const skills = level === 'M1' ? m1SkillsArray : m2SkillsArray;
+  return skills.filter(skill => skill.topic === topic);
 }
 
 /**
- * Helper function to get skills by level
+ * Get core skills for a specific level
  */
-export function getEnhancedSkillsByLevel(level: 'M1' | 'M2' | 'Both'): EnhancedSkill[] {
-  return skillsArray.filter(skill => skill.level === level);
+export function getCoreSkills(level: 'M1' | 'M2'): EnhancedSkill[] {
+  const skills = level === 'M1' ? m1SkillsArray : m2SkillsArray;
+  return skills.filter(skill => skill.isCore);
 }
 
 /**
- * Helper function to get core skills only
+ * Get skills by competency for a specific level
  */
-export function getCoreSkills(): EnhancedSkill[] {
-  return skillsArray.filter(skill => skill.isCore);
+export function getSkillsByCompetency(
+  competency: Competency,
+  level: 'M1' | 'M2'
+): EnhancedSkill[] {
+  const skills = level === 'M1' ? m1SkillsArray : m2SkillsArray;
+  return skills.filter(skill => skill.competencies.includes(competency));
 }
 
 /**
- * Helper function to get skills by competency
- */
-export function getSkillsByCompetency(competency: Competency): EnhancedSkill[] {
-  return skillsArray.filter(skill => skill.competencies.includes(competency));
-}
-
-/**
- * Helper function to get skill learning path
+ * Get skill learning path
  * Returns skills in order they should be learned (prerequisites first)
  */
-export function getSkillLearningPath(skillId: string): EnhancedSkill[] {
+export function getSkillLearningPath(skillId: string, level: 'M1' | 'M2'): EnhancedSkill[] {
   const visited = new Set<string>();
   const path: EnhancedSkill[] = [];
+  const skills = level === 'M1' ? m1SkillsArray : m2SkillsArray;
 
   function addSkillAndPrereqs(id: string) {
     if (visited.has(id)) return;
     visited.add(id);
 
-    const skill = skillsArray.find(s => s.id === id);
+    const skill = skills.find(s => s.id === id);
     if (!skill) return;
 
     // Add prerequisites first
@@ -335,16 +359,16 @@ export function getSkillLearningPath(skillId: string): EnhancedSkill[] {
 }
 
 /**
- * Get skills grouped by topic and sorted by difficulty
+ * Get skills grouped by topic and sorted by difficulty for a specific level
  */
-export function getSkillsByTopicSorted(): Record<string, EnhancedSkill[]> {
+export function getSkillsByTopicSorted(level: 'M1' | 'M2'): Record<string, EnhancedSkill[]> {
   const topics: ('números' | 'álgebra' | 'geometría' | 'probabilidad')[] =
     ['números', 'álgebra', 'geometría', 'probabilidad'];
 
   const grouped: Record<string, EnhancedSkill[]> = {};
 
   topics.forEach(topic => {
-    grouped[topic] = getEnhancedSkillsByTopic(topic)
+    grouped[topic] = getSkillsByTopic(topic, level)
       .sort((a, b) => a.averageDifficulty - b.averageDifficulty);
   });
 
@@ -352,33 +376,28 @@ export function getSkillsByTopicSorted(): Record<string, EnhancedSkill[]> {
 }
 
 /**
- * Get summary statistics
+ * Get summary statistics for a specific level
  */
-export function getSkillsSummary() {
-  const totalSkills = skillsArray.length;
-  const m1Skills = skillsArray.filter(s => s.level === 'M1' || s.level === 'Both').length;
-  const m2Skills = skillsArray.filter(s => s.level === 'M2' || s.level === 'Both').length;
-  const coreSkills = skillsArray.filter(s => s.isCore).length;
+export function getSkillsSummary(level: 'M1' | 'M2') {
+  const skills = level === 'M1' ? m1SkillsArray : m2SkillsArray;
 
   const byTopic = {
-    números: getEnhancedSkillsByTopic('números').length,
-    álgebra: getEnhancedSkillsByTopic('álgebra').length,
-    geometría: getEnhancedSkillsByTopic('geometría').length,
-    probabilidad: getEnhancedSkillsByTopic('probabilidad').length
+    números: skills.filter(s => s.topic === 'números').length,
+    álgebra: skills.filter(s => s.topic === 'álgebra').length,
+    geometría: skills.filter(s => s.topic === 'geometría').length,
+    probabilidad: skills.filter(s => s.topic === 'probabilidad').length
   };
 
   const byCompetency = {
-    Resolver: getSkillsByCompetency('Resolver').length,
-    Modelar: getSkillsByCompetency('Modelar').length,
-    Representar: getSkillsByCompetency('Representar').length,
-    Argumentar: getSkillsByCompetency('Argumentar').length
+    Resolver: skills.filter(s => s.competencies.includes('Resolver')).length,
+    Modelar: skills.filter(s => s.competencies.includes('Modelar')).length,
+    Representar: skills.filter(s => s.competencies.includes('Representar')).length,
+    Argumentar: skills.filter(s => s.competencies.includes('Argumentar')).length
   };
 
   return {
-    totalSkills,
-    m1Skills,
-    m2Skills,
-    coreSkills,
+    totalSkills: skills.length,
+    coreSkills: skills.filter(s => s.isCore).length,
     byTopic,
     byCompetency
   };
