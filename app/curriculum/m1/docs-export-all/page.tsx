@@ -66,21 +66,35 @@ async function getMarkdownContent(slug: string): Promise<string | null> {
 }
 
 export default async function DocsExportAllPage() {
-  // Load all documentation content
-  const allContent: { section: string; title: string; content: string }[] = [];
+  // Load all documentation content organized by sections
+  const sections: {
+    title: string;
+    items: { title: string; content: string }[];
+  }[] = [];
 
   for (const section of docsStructure.sections) {
+    const sectionContent: { title: string; content: string }[] = [];
+
     for (const item of section.items) {
       const content = await getMarkdownContent(item.slug);
       if (content) {
-        allContent.push({
-          section: section.title,
+        sectionContent.push({
           title: item.title,
           content,
         });
       }
     }
+
+    if (sectionContent.length > 0) {
+      sections.push({
+        title: section.title,
+        items: sectionContent,
+      });
+    }
   }
+
+  // Count total topics
+  const totalTopics = sections.reduce((sum, section) => sum + section.items.length, 0);
 
   return (
     <ProtectedRoute>
@@ -117,31 +131,42 @@ export default async function DocsExportAllPage() {
                 Documentación Completa M1
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                {allContent.length} temas disponibles para exportar
+                {totalTopics} temas disponibles para exportar
               </p>
             </div>
             <DocsExportButton title="M1-Documentacion-Completa" />
           </div>
 
-          {/* All content sections */}
-          <div className="space-y-12">
-            {allContent.map((item, index) => (
-              <div
-                key={index}
-                className="bg-white dark:bg-[#121212] p-8 rounded-lg shadow-sm print:shadow-none print:break-after-page print:p-0 print:bg-white"
-              >
-                {/* Section header */}
-                <div className="mb-6 pb-4 border-b border-gray-200 dark:border-gray-800 print:border-black">
-                  <p className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    {item.section}
-                  </p>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
-                    {item.title}
-                  </h2>
+          {/* Cover page for print */}
+          <div className="hidden print:block mb-12 text-center print:break-after-page">
+            <h1 className="text-4xl font-bold mb-4">M1 - Nivel Básico</h1>
+            <h2 className="text-2xl text-gray-600">Documentación Completa</h2>
+            <p className="mt-8 text-gray-500">{totalTopics} temas</p>
+          </div>
+
+          {/* All content organized by sections */}
+          <div className="bg-white dark:bg-[#121212] p-8 rounded-lg shadow-sm print:shadow-none print:p-0 print:bg-white">
+            {sections.map((section, sectionIndex) => (
+              <div key={sectionIndex} className={sectionIndex > 0 ? 'print:break-before-page mt-12 print:mt-0' : ''}>
+                {/* Section title */}
+                <div className="mb-8 pb-4 border-b-2 border-indigo-600 dark:border-indigo-400 print:border-black">
+                  <h1 className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 print:text-black uppercase tracking-wide">
+                    {section.title}
+                  </h1>
                 </div>
 
-                {/* Content */}
-                <AdaptiveMarkdownViewer content={item.content} />
+                {/* Section items */}
+                <div className="space-y-8">
+                  {section.items.map((item, itemIndex) => (
+                    <div key={itemIndex}>
+                      <AdaptiveMarkdownViewer content={item.content} />
+                      {/* Add spacing between topics within same section */}
+                      {itemIndex < section.items.length - 1 && (
+                        <div className="my-8 border-t border-gray-200 dark:border-gray-700 print:border-gray-400" />
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
