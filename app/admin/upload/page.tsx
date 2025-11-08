@@ -36,6 +36,8 @@ export default function UploadPDFPage() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState('');
+  const [processingLogs, setProcessingLogs] = useState<string[]>([]);
+  const [showLogs, setShowLogs] = useState(false);
   const [extractedQuestions, setExtractedQuestions] = useState<ExtractedQuestion[]>([]);
   const [enrichedQuestions, setEnrichedQuestions] = useState<QuestionToSave[]>([]);
   const [uploadResult, setUploadResult] = useState<any>(null);
@@ -89,6 +91,11 @@ export default function UploadPDFPage() {
       setUploadProgress('Analizando preguntas extraídas...');
       setUploadResult(response.data);
       setExtractedQuestions(response.data.questions || []);
+
+      // Store processing logs for admin viewing
+      if (response.data.logs) {
+        setProcessingLogs(response.data.logs);
+      }
 
       const enriched = (response.data.questions || []).map((q: ExtractedQuestion, index: number) => ({
         id: 'uploaded-' + new Date().getTime() + '-' + index,
@@ -237,10 +244,31 @@ export default function UploadPDFPage() {
                 <div className="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4">
                   <p>✅ PDF procesado exitosamente</p>
                   <p className="text-sm mt-1">
-                    Páginas: {uploadResult.totalPages} | 
-                    Preguntas encontradas: {uploadResult.questionsFound} | 
+                    Páginas: {uploadResult.totalPages} |
+                    Preguntas encontradas: {uploadResult.questionsFound} |
                     Preguntas válidas: {uploadResult.validQuestions}
                   </p>
+
+                  {processingLogs.length > 0 && (
+                    <div className="mt-3">
+                      <button
+                        onClick={() => setShowLogs(!showLogs)}
+                        className="text-sm font-medium text-green-700 hover:text-green-900 underline"
+                      >
+                        {showLogs ? '▼ Ocultar logs del servidor' : '▶ Ver logs del servidor'}
+                      </button>
+
+                      {showLogs && (
+                        <div className="mt-2 bg-gray-900 text-gray-100 rounded p-3 text-xs font-mono overflow-x-auto max-h-64 overflow-y-auto">
+                          {processingLogs.map((log, index) => (
+                            <div key={index} className="py-1">
+                              {log}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

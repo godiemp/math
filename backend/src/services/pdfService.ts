@@ -11,6 +11,7 @@ export interface PDFExtractionResult {
   questions: ExtractedQuestion[];
   rawText: string;
   totalPages: number;
+  logs: string[];
 }
 
 /**
@@ -21,9 +22,17 @@ export async function extractTextFromPDF(buffer: Buffer): Promise<PDFExtractionR
     try {
       const PDFParser = require('pdf2json');
       const pdfParser = new PDFParser();
+      const logs: string[] = [];
+
+      const log = (message: string) => {
+        console.log(message);
+        logs.push(message);
+      };
 
       pdfParser.on('pdfParser_dataError', (errData: any) => {
-        console.error('PDF parsing error:', errData.parserError);
+        const errorMsg = `PDF parsing error: ${errData.parserError}`;
+        console.error(errorMsg);
+        logs.push(`❌ ${errorMsg}`);
         reject(new Error('Failed to parse PDF file'));
       });
 
@@ -32,8 +41,12 @@ export async function extractTextFromPDF(buffer: Buffer): Promise<PDFExtractionR
           // Extract text from all pages
           let fullText = '';
           const totalPages = pdfData.Pages.length;
+          log(`📄 PDF has ${totalPages} pages, extracting text...`);
 
-          for (const page of pdfData.Pages) {
+          for (let i = 0; i < pdfData.Pages.length; i++) {
+            const page = pdfData.Pages[i];
+            log(`  Processing page ${i + 1}/${totalPages}...`);
+
             // Extract text from each text block in the page
             for (const textBlock of page.Texts) {
               for (const textItem of textBlock.R) {
@@ -45,15 +58,23 @@ export async function extractTextFromPDF(buffer: Buffer): Promise<PDFExtractionR
             fullText += '\n\n';
           }
 
+          log(`✅ Text extraction complete (${fullText.length} characters)`);
+          log(`🔍 Parsing questions from text...`);
+
           const questions = parseQuestionsFromText(fullText);
+
+          log(`✅ Found ${questions.length} questions`);
 
           resolve({
             questions,
             rawText: fullText,
             totalPages,
+            logs,
           });
         } catch (error) {
-          console.error('Error processing PDF data:', error);
+          const errorMsg = `Error processing PDF data: ${error}`;
+          console.error(errorMsg);
+          logs.push(`❌ ${errorMsg}`);
           reject(new Error('Failed to process PDF content'));
         }
       });
@@ -61,7 +82,8 @@ export async function extractTextFromPDF(buffer: Buffer): Promise<PDFExtractionR
       // Parse the PDF buffer
       pdfParser.parseBuffer(buffer);
     } catch (error) {
-      console.error('Error initializing PDF parser:', error);
+      const errorMsg = `Error initializing PDF parser: ${error}`;
+      console.error(errorMsg);
       reject(new Error('Failed to initialize PDF parser'));
     }
   });

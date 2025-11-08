@@ -37,13 +37,20 @@ export const uploadPDF = async (req: Request, res: Response): Promise<void> => {
     console.log(`💾 Created upload record with ID: ${uploadId}`);
 
     try {
-      console.log(`🔄 Starting PDF text extraction...`);
+      const processingLogs: string[] = [];
+      processingLogs.push(`📤 Processing PDF: ${originalname} (${(size / 1024).toFixed(1)} KB)`);
+      processingLogs.push(`💾 Upload ID: ${uploadId}`);
+      processingLogs.push(`🔄 Starting PDF text extraction...`);
+
       // Extract text from PDF
-      const { questions, rawText, totalPages } = await extractTextFromPDF(buffer);
+      const { questions, rawText, totalPages, logs } = await extractTextFromPDF(buffer);
+      processingLogs.push(...logs);
 
       // Filter valid questions
       const validQuestions = questions.filter(validateQuestion);
-      console.log(`✅ Validation complete: ${validQuestions.length}/${questions.length} questions are valid`);
+      const validationLog = `✅ Validation complete: ${validQuestions.length}/${questions.length} questions are valid`;
+      console.log(validationLog);
+      processingLogs.push(validationLog);
 
       // Update upload status
       await pool.query(
@@ -53,7 +60,9 @@ export const uploadPDF = async (req: Request, res: Response): Promise<void> => {
         ['completed', validQuestions.length, uploadId]
       );
 
-      console.log(`🎉 PDF processing complete! Returning ${validQuestions.length} questions to client`);
+      const completeLog = `🎉 PDF processing complete! Returning ${validQuestions.length} questions to client`;
+      console.log(completeLog);
+      processingLogs.push(completeLog);
 
       res.json({
         success: true,
@@ -63,6 +72,7 @@ export const uploadPDF = async (req: Request, res: Response): Promise<void> => {
         validQuestions: validQuestions.length,
         questions: validQuestions,
         rawText: rawText.substring(0, 500), // First 500 chars for preview
+        logs: processingLogs,
       });
     } catch (error) {
       // Update upload status to failed
