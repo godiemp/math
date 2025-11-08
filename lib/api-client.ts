@@ -2,7 +2,52 @@
  * API Client for making authenticated requests to the backend
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+/**
+ * Automatically determine the backend API URL based on environment
+ * - Production: Use NEXT_PUBLIC_API_URL from env
+ * - Preview (Vercel): Use NEXT_PUBLIC_RAILWAY_URL or construct from PR
+ * - Development: localhost:3001
+ */
+function getApiBaseUrl(): string {
+  // Explicit env var takes precedence
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+
+  // Railway provides this in preview environments
+  if (process.env.NEXT_PUBLIC_RAILWAY_URL) {
+    return process.env.NEXT_PUBLIC_RAILWAY_URL;
+  }
+
+  // For Vercel preview deployments, try to construct Railway URL
+  if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview') {
+    const branch = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF;
+
+    if (branch) {
+      // Extract PR number from branch name (e.g., "pr-123" or "feature-pr-123")
+      const prMatch = branch.match(/pr[/-]?(\d+)|#(\d+)/i);
+      const prNumber = prMatch?.[1] || prMatch?.[2];
+
+      if (prNumber) {
+        // Construct Railway PR URL (update this pattern to match your Railway setup)
+        // Common patterns:
+        // - https://math-backend-pr-{number}.up.railway.app
+        // - https://backend-pr-{number}.railway.app
+        return `https://math-backend-pr-${prNumber}.up.railway.app`;
+      }
+    }
+  }
+
+  // Default to localhost for development
+  return 'http://localhost:3001';
+}
+
+const API_BASE_URL = getApiBaseUrl();
+
+// Log the API URL in development for debugging
+if (process.env.NODE_ENV === 'development') {
+  console.log('API Base URL:', API_BASE_URL);
+}
 
 // Token storage keys
 const ACCESS_TOKEN_KEY = 'paes-access-token';
