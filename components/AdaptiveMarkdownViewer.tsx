@@ -75,7 +75,9 @@ export function AdaptiveMarkdownViewer({ content }: AdaptiveMarkdownViewerProps)
             </div>
           )}
 
-          {visibleSections.map((section) => {
+          {/* Main content container - one clean box */}
+          <div className="bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-xl p-6 shadow-sm">
+            {visibleSections.map((section) => {
             // Formula sections are always shown directly
             if (section.type === 'formula') {
               return (
@@ -88,9 +90,9 @@ export function AdaptiveMarkdownViewer({ content }: AdaptiveMarkdownViewerProps)
             // Full-only sections with special styling
             if (section.type === 'full-only') {
               return (
-                <div key={section.id} className="my-6 bg-blue-50 dark:bg-blue-900/10 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                <div key={section.id} className="my-4 bg-blue-50/50 dark:bg-blue-900/10 border-l-2 border-blue-400 dark:border-blue-600 pl-4 py-2">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-blue-600 dark:text-blue-400 text-sm font-semibold">
+                    <span className="text-blue-600 dark:text-blue-400 text-xs font-medium">
                       💡 Contenido Enriquecido
                     </span>
                   </div>
@@ -127,7 +129,8 @@ export function AdaptiveMarkdownViewer({ content }: AdaptiveMarkdownViewerProps)
                 <MarkdownViewer content={stripSectionMetadata(section.content)} />
               </div>
             );
-          })}
+            })}
+          </div>
 
           {/* Render any content outside of sections */}
           {parsed.sections.length > 0 && (

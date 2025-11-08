@@ -97,62 +97,61 @@ export function CollapsibleSection({
     advanced: 'Avanzado',
   };
 
-  // Visual hierarchy based on level
+  // Visual hierarchy based on level - minimal and clean
   const levelStyles = {
     2: {
-      margin: 'my-6',
-      indent: 'ml-0',
-      fontSize: 'text-base',
+      margin: 'mt-6 mb-4',
+      indent: 'pl-0',
+      fontSize: 'text-lg',
       fontWeight: 'font-bold',
-      borderWidth: 'border-2',
-      paddingY: 'py-3',
     },
     3: {
-      margin: 'my-4',
-      indent: 'ml-6',
+      margin: 'mt-4 mb-3',
+      indent: 'pl-4',
       fontSize: 'text-base',
       fontWeight: 'font-semibold',
-      borderWidth: 'border',
-      paddingY: 'py-2.5',
     },
     4: {
-      margin: 'my-3',
-      indent: 'ml-12',
+      margin: 'mt-3 mb-2',
+      indent: 'pl-8',
       fontSize: 'text-sm',
       fontWeight: 'font-medium',
-      borderWidth: 'border',
-      paddingY: 'py-2',
     },
   };
 
   const style = levelStyles[level as keyof typeof levelStyles] || levelStyles[2];
 
   return (
-    <div className={`${style.margin} ${style.indent} ${style.borderWidth} border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden`}>
+    <div className={`${style.margin}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full px-4 ${style.paddingY} bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center justify-between gap-3`}
+        className={`w-full ${style.indent} py-2 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors flex items-center justify-between gap-3 text-left group`}
       >
-        <div className="flex items-center gap-3">
-          <span className="text-gray-500 dark:text-gray-400 transition-transform" style={{
+        <div className="flex items-center gap-2">
+          <span className="text-gray-400 dark:text-gray-500 transition-transform text-xs" style={{
             transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)',
           }}>
             ▶
           </span>
-          <h3 className={`${style.fontSize} ${style.fontWeight} text-gray-900 dark:text-gray-100 text-left`}>
+          <h3 className={`${style.fontSize} ${style.fontWeight} text-gray-900 dark:text-gray-100`}>
             {title}
           </h3>
+          {mode === 'full' && (
+            <span className={`text-[10px] px-1.5 py-0.5 rounded ${importanceColors[importance]} opacity-60 group-hover:opacity-100 transition-opacity`}>
+              {importanceLabels[importance]}
+            </span>
+          )}
         </div>
-        <span className={`text-xs px-2 py-1 rounded-full border ${importanceColors[importance]}`}>
-          {importanceLabels[importance]}
-        </span>
       </button>
 
       {isOpen && (
-        <div className="px-4 py-4 bg-white dark:bg-transparent">
+        <div className={`${style.indent} pl-6 pt-2 pb-4`}>
           {children}
         </div>
       )}
+
+      {/* Subtle separator */}
+      <div className={`${style.indent} border-b border-gray-100 dark:border-gray-800`}></div>
     </div>
   );
 }
