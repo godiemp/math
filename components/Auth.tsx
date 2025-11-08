@@ -9,9 +9,11 @@ interface AuthProps {
 
 export default function Auth({ onSuccess }: AuthProps) {
   const [isLogin, setIsLogin] = useState(true);
-  const [username, setUsername] = useState('');
+  // Auto-fill credentials in Vercel preview for faster testing
+  const isPreview = process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
+  const [username, setUsername] = useState(isPreview ? 'admin' : '');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState(isPreview ? 'admin123' : '');
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -140,6 +142,7 @@ export default function Auth({ onSuccess }: AuthProps) {
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
               className="spring-motion"
               style={{
                 width: '100%',
@@ -188,6 +191,7 @@ export default function Auth({ onSuccess }: AuthProps) {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete={isLogin ? "current-password" : "new-password"}
               className="spring-motion"
               style={{
                 width: '100%',
@@ -237,6 +241,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
                 className="spring-motion"
                 style={{
                   width: '100%',
@@ -287,6 +292,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                 required
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
+                autoComplete="name"
                 className="spring-motion"
                 style={{
                   width: '100%',
