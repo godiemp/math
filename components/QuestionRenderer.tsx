@@ -158,7 +158,7 @@ export function QuestionRenderer({
           </div>
 
           {/* AI Help Button - Always available in zen mode after quiz submission */}
-          {isZenMode && selectedAnswer !== null && onRequestAIHelp && (
+          {isZenMode && showFeedback && onRequestAIHelp && (
             <div className="mt-4 pt-4 border-t border-teal-300 dark:border-teal-700">
               <button
                 onClick={onRequestAIHelp}
