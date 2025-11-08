@@ -7,6 +7,7 @@ import adminRoutes from './routes/adminRoutes';
 
 // Load environment variables
 dotenv.config();
+// Force Railway redeploy - includes admin routes
 
 const app = express();
 const PORT = process.env.PORT || 3001;
