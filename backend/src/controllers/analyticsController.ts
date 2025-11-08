@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { pool } from '../config/database';
+import { subDays, subHours } from 'date-fns';
 
 /**
  * Analytics Controller
@@ -9,9 +10,17 @@ import { pool } from '../config/database';
 export const getAnalyticsDashboard = async (req: Request, res: Response) => {
   try {
     const now = Date.now();
-    const oneDayAgo = now - (24 * 60 * 60 * 1000);
-    const sevenDaysAgo = now - (7 * 24 * 60 * 60 * 1000);
-    const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000);
+    const oneDayAgo = subDays(now, 1).getTime();
+    const sevenDaysAgo = subDays(now, 7).getTime();
+    const thirtyDaysAgo = subDays(now, 30).getTime();
+
+    // Pre-calculate retention window offsets
+    const oneDayMs = 24 * 60 * 60 * 1000;
+    const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+    const fourteenDaysMs = 14 * 24 * 60 * 60 * 1000;
+    const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+    const sixtyDaysMs = 60 * 24 * 60 * 60 * 1000;
+    const twentyFourHoursMs = 24 * 60 * 60 * 1000;
 
     // Parallel queries for better performance
     const [
@@ -116,14 +125,14 @@ export const getAnalyticsDashboard = async (req: Request, res: Response) => {
             u.id,
             u.created_at,
             MIN(qa.attempted_at) as first_attempt,
-            MAX(CASE WHEN qa.attempted_at >= u.created_at + (1::bigint * 24 * 60 * 60 * 1000)
-                          AND qa.attempted_at < u.created_at + (2::bigint * 24 * 60 * 60 * 1000)
+            MAX(CASE WHEN qa.attempted_at >= u.created_at + $2
+                          AND qa.attempted_at < u.created_at + $3
                      THEN 1 END) as returned_d1,
-            MAX(CASE WHEN qa.attempted_at >= u.created_at + (7::bigint * 24 * 60 * 60 * 1000)
-                          AND qa.attempted_at < u.created_at + (14::bigint * 24 * 60 * 60 * 1000)
+            MAX(CASE WHEN qa.attempted_at >= u.created_at + $4
+                          AND qa.attempted_at < u.created_at + $5
                      THEN 1 END) as returned_d7,
-            MAX(CASE WHEN qa.attempted_at >= u.created_at + (30::bigint * 24 * 60 * 60 * 1000)
-                          AND qa.attempted_at < u.created_at + (60::bigint * 24 * 60 * 60 * 1000)
+            MAX(CASE WHEN qa.attempted_at >= u.created_at + $6
+                          AND qa.attempted_at < u.created_at + $7
                      THEN 1 END) as returned_d30
           FROM users u
           LEFT JOIN question_attempts qa ON u.id = qa.user_id
@@ -139,7 +148,7 @@ export const getAnalyticsDashboard = async (req: Request, res: Response) => {
           ROUND((SUM(CASE WHEN returned_d7 = 1 THEN 1 ELSE 0 END)::decimal / NULLIF(COUNT(*), 0)) * 100, 2) as d7_retention_rate,
           ROUND((SUM(CASE WHEN returned_d30 = 1 THEN 1 ELSE 0 END)::decimal / NULLIF(COUNT(*), 0)) * 100, 2) as d30_retention_rate
         FROM user_cohorts
-      `, [thirtyDaysAgo]),
+      `, [thirtyDaysAgo, oneDayMs, oneDayMs * 2, sevenDaysMs, fourteenDaysMs, thirtyDaysMs, sixtyDaysMs]),
 
       // Ensayo (live session) statistics
       pool.query(`
@@ -188,14 +197,14 @@ export const getAnalyticsDashboard = async (req: Request, res: Response) => {
       )
       SELECT
         COUNT(DISTINCT nu.id) as new_users,
-        COUNT(DISTINCT CASE WHEN qa.attempted_at <= nu.created_at + (24::bigint * 60 * 60 * 1000)
+        COUNT(DISTINCT CASE WHEN qa.attempted_at <= nu.created_at + $2
                             THEN nu.id END) as activated_users,
-        ROUND((COUNT(DISTINCT CASE WHEN qa.attempted_at <= nu.created_at + (24::bigint * 60 * 60 * 1000)
+        ROUND((COUNT(DISTINCT CASE WHEN qa.attempted_at <= nu.created_at + $2
                                     THEN nu.id END)::decimal /
                NULLIF(COUNT(DISTINCT nu.id), 0)) * 100, 2) as activation_rate
       FROM new_users nu
       LEFT JOIN question_attempts qa ON nu.id = qa.user_id
-    `, [sevenDaysAgo]);
+    `, [sevenDaysAgo, twentyFourHoursMs]);
 
     // Practice mode distribution
     const modeDistributionResult = await pool.query(`
@@ -345,7 +354,7 @@ export const getAnalyticsDashboard = async (req: Request, res: Response) => {
 export const getWeeklyTrends = async (req: Request, res: Response) => {
   try {
     const now = Date.now();
-    const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000);
+    const thirtyDaysAgo = subDays(now, 30).getTime();
 
     const trendsResult = await pool.query(`
       WITH daily_stats AS (
