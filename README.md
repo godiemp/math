@@ -1,206 +1,312 @@
 # PAES Chile - Plataforma de Preparación Matemática
 
-A full-stack web application designed to help Chilean students prepare for the PAES (Prueba de Acceso a la Educación Superior) math exam.
+Una aplicación web completa diseñada para ayudar a estudiantes chilenos a prepararse para el examen de matemáticas PAES (Prueba de Acceso a la Educación Superior).
 
-## Overview
+## Descripción General
 
-PAES Chile is a complete practice platform featuring:
+PAES Chile es una plataforma de práctica completa que incluye:
 
-- **Interactive Practice Quizzes** - Study at your own pace or challenge yourself with timed tests
-- **Live Practice Sessions (Ensayos)** - Join scheduled PAES simulations with other students
-- **Progress Tracking** - Monitor your performance across topics and difficulty levels
-- **Two Competency Levels** - M1 (basic) and M2 (advanced) aligned with PAES standards
-- **Admin Dashboard** - Manage live sessions and view the problem bank
+- **Quizzes de Práctica Interactivos** - Estudia a tu ritmo o desafíate con pruebas cronometradas
+- **Sesiones de Práctica en Vivo (Ensayos)** - Únete a simulaciones PAES programadas con otros estudiantes
+- **Tutor con IA** - Asistente personalizado con metodología Socrática que te ayuda a entender cada problema
+- **Seguimiento de Progreso** - Monitorea tu desempeño por temas y niveles de dificultad
+- **Sistema de Rachas** - Mantén tu motivación con streaks diarios
+- **Dos Niveles de Competencia** - M1 (básico) y M2 (avanzado) alineados con estándares PAES
+- **Panel de Administración** - Gestiona sesiones en vivo y el banco de preguntas
+- **Sistema de Documentación** - Accede a material de estudio completo con LaTeX
 
-## Features
+## Características Principales
 
-### 🎯 Practice Modes
+### 🎯 Modos de Práctica
 
-**Zen Mode** - Study without time pressure
-- Take as long as you need per question
-- Review explanations immediately
-- Focus on learning and understanding
+**Modo Zen** - Estudia sin presión de tiempo
+- Tómate el tiempo que necesites por pregunta
+- Revisa explicaciones inmediatamente
+- Consulta al tutor IA cuando necesites ayuda adicional
+- Enfócate en aprender y entender
+- Animación de respiración al inicio para concentrarte
 
-**Rapid Fire Mode** - Timed practice challenges
-- Choose your difficulty: Easy (25 min), Medium (20 min), Hard (15 min), Extreme (10 min)
-- 10 questions per session
-- Simulates exam pressure
+**Modo Rapid Fire** - Desafíos de práctica cronometrados
+- Elige tu dificultad: Fácil (25 min), Medio (20 min), Difícil (15 min), Extremo (10 min)
+- 10 preguntas por sesión
+- Simula la presión del examen
+- Panel de navegación rápida para saltar entre preguntas
 
-### 📝 Live Practice Sessions (Ensayos PAES)
+### 🤖 Tutor con Inteligencia Artificial
 
-- **Schedule & Register** - Sign up for upcoming ensayos
-- **Lobby System** - Join before the session starts
-- **Real-time Practice** - Compete with other students
-- **Instant Results** - See your score and compare with peers
+**Sistema de Tutoría Socrática** - Implementado con Claude Sonnet 4.5
 
-### 📊 Comprehensive Content Coverage
+- **Metodología Socrática**: El tutor investiga tu razonamiento antes de explicar
+- **Conversaciones interactivas**: Chat multi-turno sobre cada pregunta
+- **Contexto completo**: El tutor conoce la pregunta, opciones y explicaciones
+- **Tono empático**: Comunicación amigable y motivacional
+- **Disponible en Modo Zen**: Botón de chat en cada pregunta
+- **Ayuda instantánea**: Explicaciones personalizadas cuando respondes incorrectamente
 
-The platform covers all four PAES math areas:
+### 📝 Sesiones de Práctica en Vivo (Ensayos PAES)
 
-1. **Números** - Fractions, percentages, powers, roots, proportions, divisibility
-2. **Álgebra y Funciones** - Equations, functions, systems, factoring, quadratics
-3. **Geometría** - Area, perimeter, volume, coordinate geometry, Pythagorean theorem
-4. **Probabilidad y Estadística** - Mean, median, mode, probability, combinations
+- **Programar & Registrarse** - Inscríbete en ensayos próximos
+- **Sistema de Lobby** - Únete antes de que comience la sesión
+- **Práctica en Tiempo Real** - Compite con otros estudiantes
+- **Resultados Instantáneos** - Ve tu puntaje y compara con tus compañeros
+- **Auto-actualización** - El sistema actualiza estados cada 30 segundos
 
-### 🎓 Two Competency Levels
+### 📊 Cobertura Completa de Contenido
 
-- **M1 (Competencia Matemática 1)** - 46 problems covering basic math concepts for all university programs
-- **M2 (Competencia Matemática 2)** - 13 advanced problems for science and engineering careers
+La plataforma cubre las cuatro áreas de matemáticas PAES:
 
-### 👨‍💼 Admin Features
+1. **Números** - Fracciones, porcentajes, potencias, raíces, proporciones, divisibilidad
+2. **Álgebra y Funciones** - Ecuaciones, funciones, sistemas, factorización, cuadráticas
+3. **Geometría** - Área, perímetro, volumen, geometría de coordenadas, teorema de Pitágoras
+4. **Probabilidad y Estadística** - Media, mediana, moda, probabilidad, combinaciones
 
-- Create and schedule live practice sessions
-- View all problems in the question bank
-- Filter by level, subject, and difficulty
-- Monitor registered users and session participation
+### 🎓 Dos Niveles de Competencia
 
-## Technology Stack
+- **M1 (Competencia Matemática 1)** - 406 problemas cubriendo conceptos matemáticos básicos para todos los programas universitarios
+- **M2 (Competencia Matemática 2)** - 26 problemas avanzados para carreras de ciencia e ingeniería
+
+### 📚 Sistema de Documentación Completo
+
+- **Documentación M1 y M2**: Material de estudio completo con ejemplos
+- **Renderizado LaTeX**: Fórmulas matemáticas profesionales
+- **Navegación por temas**: Sidebar interactivo
+- **Modo de lectura**: Enfoque sin distracciones
+- **Markdown adaptativo**: Contenido estructurado y fácil de leer
+
+### 🎮 Sistema de Gamificación
+
+**Rachas Diarias** - Mantén tu motivación
+- Contador de días consecutivos de práctica
+- Tracking de racha más larga
+- Emojis indicadores (🎯 🔥 ⚡ 🏆) según longitud de racha
+- Almacenado en base de datos PostgreSQL
+- Actualización automática al completar práctica
+
+**Seguimiento de Habilidades** - 500+ skills definidos
+- Taxonomía completa de habilidades PAES
+- Niveles de maestría: No Iniciado / Aprendiendo / Dominado
+- Indicadores visuales de progreso
+- Filtrado por nivel de maestría
+- Vinculado a documentación del currículum
+
+### 👨‍💼 Características de Administración
+
+- **Crear y programar** sesiones de práctica en vivo
+- **Ver todos los problemas** en el banco de preguntas
+- **Filtrar** por nivel, tema y dificultad
+- **Monitorear** usuarios registrados y participación en sesiones
+- **Upload de PDFs** - Extrae preguntas automáticamente con IA
+- **Gestión de sesiones** - Editar, cancelar, eliminar ensayos
+- **Plantillas rápidas** - Templates para sesiones M1/M2
+
+## Stack Tecnológico
 
 ### Frontend
-- **Framework**: Next.js 15.0.0 with React 19
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS with custom design system
-- **Math Rendering**: KaTeX for LaTeX expressions
-- **State Management**: React Context API
+- **Framework**: Next.js 15.0.0 con React 19
+- **Lenguaje**: TypeScript
+- **Estilos**: Tailwind CSS con sistema de diseño personalizado (inspirado en Apple)
+- **Renderizado Matemático**: KaTeX para expresiones LaTeX
+- **Gestión de Estado**: React Context API
+- **IA**: Anthropic SDK (Claude Sonnet 4.5)
 
 ### Backend
-- **Runtime**: Node.js with Express
-- **Database**: PostgreSQL
-- **Authentication**: JWT (JSON Web Tokens) with bcrypt
-- **API**: RESTful endpoints
+- **Runtime**: Node.js con Express
+- **Base de Datos**: PostgreSQL con connection pooling
+- **Autenticación**: JWT (JSON Web Tokens) con bcrypt
+- **API**: Endpoints RESTful
+- **CORS**: Configurado para deployments en Vercel
+- **Sistema de Auto-actualización**: Actualiza estados de sesiones cada 30 segundos
 
-### Key Libraries
-- `react-katex` - Math expression rendering
-- `clsx` & `tailwind-merge` - Utility-first styling
-- `jsonwebtoken` - Secure authentication
-- `pg` - PostgreSQL client
+### Bibliotecas Clave
+- `react-katex` - Renderizado de expresiones matemáticas
+- `clsx` & `tailwind-merge` - Estilos utility-first
+- `jsonwebtoken` - Autenticación segura
+- `pg` - Cliente PostgreSQL
+- `@anthropic-ai/sdk` - Integración con Claude AI
+- `bcrypt` - Hashing de contraseñas
 
-## Project Structure
+## Estructura del Proyecto
 
 ```
 /home/user/math/
-├── app/                          # Next.js App Router pages
-│   ├── page.tsx                  # Landing page with authentication
-│   ├── dashboard/                # Main student dashboard
-│   ├── practice/                 # Practice quiz pages (M1/M2)
-│   ├── curriculum/               # Curriculum overview pages
-│   ├── live-practice/            # Live session interface
-│   ├── progress/                 # Progress tracking page
-│   └── admin/                    # Admin dashboard and tools
-├── backend/                      # Express.js backend
+├── app/                          # Páginas Next.js App Router
+│   ├── page.tsx                  # Landing page con autenticación
+│   ├── dashboard/                # Dashboard principal del estudiante
+│   ├── practice/                 # Páginas de práctica (M1/M2)
+│   ├── curriculum/               # Páginas de curriculum overview
+│   │   ├── m1/                   # Curriculum M1
+│   │   │   └── docs/[[...slug]]  # Sistema de documentación M1
+│   │   └── m2/                   # Curriculum M2
+│   │       └── docs/[[...slug]]  # Sistema de documentación M2
+│   ├── live-practice/            # Interfaz de sesiones en vivo
+│   ├── progress/                 # Página de seguimiento de progreso
+│   ├── admin/                    # Dashboard y herramientas de admin
+│   │   ├── problems/             # Navegador de banco de preguntas
+│   │   └── upload/               # Upload y extracción de PDFs
+│   └── api/                      # Next.js Route Handlers
+│       ├── ai-chat/              # API del tutor IA
+│       ├── ai-help/              # API de ayuda IA
+│       └── config/               # Configuración
+├── backend/                      # Backend Express.js
 │   ├── src/
-│   │   ├── index.ts              # Server entry point
-│   │   ├── controllers/          # Route controllers
+│   │   ├── index.ts              # Entry point del servidor
+│   │   ├── auth/                 # Autenticación y controladores
+│   │   ├── config/               # Configuración de base de datos
 │   │   ├── middleware/           # Auth middleware
-│   │   ├── routes/               # API routes
-│   │   ├── config/               # Database config
-│   │   └── utils/                # JWT utilities
+│   │   ├── routes/               # Rutas de API
+│   │   │   ├── authRoutes.ts     # Autenticación
+│   │   │   ├── sessionRoutes.ts  # Sesiones en vivo
+│   │   │   ├── streakRoutes.ts   # Sistema de rachas
+│   │   │   ├── adminRoutes.ts    # Admin endpoints
+│   │   │   └── aiRoutes.ts       # Servicios de IA
+│   │   ├── scripts/              # Scripts de utilidad
+│   │   └── services/             # Servicios de negocio
 │   └── package.json
-├── components/                   # React components
-│   ├── Quiz.tsx                  # Main quiz component
-│   ├── LiveSession.tsx           # Live practice session
-│   ├── Curriculum.tsx            # Curriculum display
-│   ├── MathDisplay.tsx           # KaTeX math rendering
-│   ├── GeometryCanvas.tsx        # Visual geometry problems
-│   ├── Auth.tsx                  # Login/register forms
-│   ├── ProtectedRoute.tsx        # Route protection
-│   └── ui/                       # Reusable UI components
-├── contexts/                     # React Context providers
-│   └── AuthContext.tsx           # Authentication state
-├── lib/                          # Core logic and data
-│   ├── questions/                # Question bank by module
-│   │   ├── m1-numeros.ts
-│   │   ├── m1-algebra.ts
-│   │   ├── m1-geometria.ts
-│   │   ├── m1-probabilidad.ts
-│   │   ├── m2-numeros.ts
-│   │   ├── m2-algebra.ts
-│   │   ├── m2-geometria.ts
-│   │   └── m2-probabilidad.ts
-│   ├── questions.ts              # Question aggregation and utilities
-│   ├── types.ts                  # TypeScript interfaces
-│   ├── auth.ts                   # Client-side auth logic
-│   ├── liveSessions.ts           # Live session management
-│   └── skillTaxonomy.ts          # Skill definitions (500+ skills)
-└── docs/                         # Original planning documentation
+├── components/                   # Componentes React
+│   ├── Quiz.tsx                  # Componente principal de quiz
+│   ├── AIChatModal.tsx           # Interfaz de chat con tutor IA
+│   ├── LiveSession.tsx           # Sesión de práctica en vivo
+│   ├── Curriculum.tsx            # Display de currículum
+│   ├── QuestionRenderer.tsx      # Renderizador de preguntas
+│   ├── MathDisplay.tsx           # Renderizado KaTeX
+│   ├── GeometryCanvas.tsx        # Problemas visuales de geometría
+│   ├── SkillsDisplay.tsx         # Tracking de maestría de skills
+│   ├── Streak.tsx                # Display de racha diaria
+│   ├── Auth.tsx                  # Formularios login/registro
+│   ├── ProtectedRoute.tsx        # Protección de rutas
+│   ├── AdaptiveMarkdownViewer.tsx # Renderizador de docs markdown
+│   ├── ReadingModeControl.tsx    # Control de modo lectura
+│   └── ui/                       # Componentes UI reutilizables
+│       ├── Button.tsx
+│       ├── Card.tsx
+│       ├── Badge.tsx
+│       ├── Typography.tsx
+│       ├── Navbar.tsx
+│       ├── Modal.tsx
+│       ├── Spinner.tsx
+│       └── CurriculumSidebar.tsx
+├── contexts/                     # Proveedores de React Context
+│   └── AuthContext.tsx           # Estado de autenticación
+├── lib/                          # Lógica core y datos
+│   ├── questions/                # Banco de preguntas por módulo
+│   │   ├── m1/                   # 406 preguntas M1
+│   │   │   ├── numeros/          # 91 preguntas
+│   │   │   ├── algebra/          # 109 preguntas
+│   │   │   ├── geometria/        # 106 preguntas
+│   │   │   └── probabilidad/     # 100 preguntas
+│   │   ├── m2/                   # 26 preguntas M2
+│   │   │   ├── numeros/          # 6 preguntas
+│   │   │   ├── algebra/          # 6 preguntas
+│   │   │   ├── geometria/        # 7 preguntas
+│   │   │   └── probabilidad/     # 7 preguntas
+│   │   └── index.ts              # Agregación de preguntas
+│   ├── questions.ts              # Utilidades de preguntas
+│   ├── types.ts                  # Interfaces TypeScript
+│   ├── auth.ts                   # Lógica de auth del cliente
+│   ├── liveSessions.ts           # Gestión de sesiones en vivo
+│   ├── skillTaxonomy.ts          # Definiciones de skills (500+)
+│   ├── skillsArray.ts            # Array de skills
+│   └── utils.ts                  # Utilidades generales
+├── docs/                         # Documentación
+│   ├── curriculum/               # Docs de currículum completo
+│   │   ├── m1/                   # Material de estudio M1
+│   │   └── m2/                   # Material de estudio M2
+│   └── architecture/             # Documentación de arquitectura
+└── CODEBASE_OVERVIEW.md          # Documentación técnica detallada
 ```
 
-## Question Bank
+## Banco de Preguntas
 
-**Total: 59 Problems**
+**Total: 432 Problemas**
 
-| Level | Count | Coverage |
-|-------|-------|----------|
-| M1 | 46 | Números, Álgebra, Geometría, Probabilidad |
-| M2 | 13 | Advanced Algebra, Geometry, Statistics |
+| Nivel | Cantidad | Cobertura |
+|-------|----------|-----------|
+| M1 | 406 | Números (91), Álgebra (109), Geometría (106), Probabilidad (100) |
+| M2 | 26 | Números (6), Álgebra (6), Geometría (7), Probabilidad (7) |
 
-### Question Format
+### Formato de Preguntas
 
-Each question includes:
-- Plain text and LaTeX versions
-- 4 multiple-choice options
-- Detailed explanations with step-by-step solutions
-- Difficulty rating (easy/medium/hard)
-- Subject and topic classification
-- Skills taxonomy tags
-- Optional visual data for geometry problems
+Cada pregunta incluye:
+- Versiones en texto plano y LaTeX
+- 4 opciones de respuesta múltiple
+- Explicaciones detalladas con soluciones paso a paso
+- Calificación de dificultad (fácil/medio/difícil)
+- Clasificación por tema y asignatura
+- Tags de taxonomía de habilidades
+- Datos visuales opcionales para problemas de geometría
 
-### Sample Question Structure
+### Estructura de Pregunta de Ejemplo
 
 ```typescript
 {
-  id: 'm1-1',
+  id: 'm1-num-ent-1',
   level: 'M1',
   topic: 'Números y Proporcionalidad',
   subject: 'números',
+  subtopic: 'Proporcionalidad inversa',
   question: 'Si 3 obreros construyen un muro en 12 días, ¿cuántos días tardarán 4 obreros?',
-  questionLatex: '\\text{Si 3 obreros construyen...}',
+  questionLatex: '\\text{Si 3 obreros construyen un muro en 12 días, ¿cuántos días tardarán 4 obreros?}',
   options: ['8 días', '9 días', '10 días', '16 días'],
   correctAnswer: 1,
-  explanation: 'Es una proporción inversa. Si aumentan los obreros, disminuyen los días.',
-  explanationLatex: '3 \\times 12 = 4 \\times x \\text{, entonces } x = \\frac{36}{4} = 9',
+  explanation: 'Es una proporción inversa. Si aumentan los obreros, disminuyen los días necesarios.',
+  explanationLatex: '3 \\times 12 = 4 \\times x \\implies x = \\frac{36}{4} = 9',
   difficulty: 'easy',
-  skills: ['numeros-proporcionalidad-inversa']
+  skills: ['numeros-proporcionalidad-inversa', 'numeros-razonamiento-proporcional']
 }
 ```
 
-## Getting Started
+## Empezando
 
-### Prerequisites
+### Prerrequisitos
 
 - Node.js 20+
-- PostgreSQL database
-- npm or yarn
+- Base de datos PostgreSQL
+- npm o yarn
+- Cuenta de Anthropic API (para funciones de IA)
 
-### Installation
+### Instalación
 
-1. **Clone the repository**
+1. **Clonar el repositorio**
 ```bash
 git clone https://github.com/godiemp/math.git
 cd math
 ```
 
-2. **Install frontend dependencies**
+2. **Instalar dependencias del frontend**
 ```bash
 npm install
 ```
 
-3. **Set up backend**
+3. **Configurar backend**
 ```bash
 cd backend
 npm install
 ```
 
-4. **Configure environment variables**
+4. **Configurar variables de entorno**
 
-Create `.env` in the backend directory:
+Crear `.env` en el directorio raíz:
 ```env
-DATABASE_URL=postgresql://user:password@localhost:5432/paes_chile
-JWT_SECRET=your-secret-key
-PORT=3001
+ANTHROPIC_API_KEY=tu-api-key-de-anthropic
 ```
 
-5. **Start the development servers**
+Crear `.env` en el directorio backend:
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/paes_chile
+JWT_SECRET=tu-secret-key
+PORT=3001
+ANTHROPIC_API_KEY=tu-api-key-de-anthropic
+```
+
+5. **Configurar base de datos**
+
+Ejecutar el script de seed para crear usuario admin:
+```bash
+cd backend
+npm run seed:admin
+```
+
+6. **Iniciar los servidores de desarrollo**
 
 Terminal 1 - Frontend:
 ```bash
@@ -213,83 +319,152 @@ cd backend
 npm run dev
 ```
 
-6. **Access the application**
+7. **Acceder a la aplicación**
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:3001
 
-## Usage
+## Uso
 
-### For Students
+### Para Estudiantes
 
-1. **Register/Login** - Create an account on the landing page
-2. **Choose Your Level** - Select M1 or M2 from the dashboard
-3. **Practice** - Start a Zen Mode or Rapid Fire quiz
-4. **Join Live Sessions** - Register for upcoming ensayos
-5. **Track Progress** - View your statistics and improvement
+1. **Registrarse/Iniciar Sesión** - Crea una cuenta en la landing page
+2. **Elegir Nivel** - Selecciona M1 o M2 desde el dashboard
+3. **Practicar** - Inicia un quiz en Modo Zen o Rapid Fire
+4. **Usar el Tutor IA** - Haz clic en el botón de chat cuando necesites ayuda
+5. **Unirse a Sesiones en Vivo** - Regístrate en ensayos próximos
+6. **Seguir Progreso** - Ve tus estadísticas y mejoras
+7. **Mantener Racha** - Practica diariamente para aumentar tu streak
+8. **Estudiar Documentación** - Accede al material de estudio completo
 
-### For Admins
+### Para Administradores
 
-1. **Access Admin Panel** - Navigate to `/admin` (requires admin role)
-2. **Create Sessions** - Schedule new live practice ensayos
-3. **Browse Problems** - View and filter the question bank
-4. **Monitor Activity** - See registered users and participation
+1. **Acceder al Panel Admin** - Navega a `/admin` (requiere rol admin)
+2. **Crear Sesiones** - Programa nuevos ensayos de práctica
+3. **Navegar Problemas** - Ve y filtra el banco de preguntas
+4. **Upload PDFs** - Sube PDFs y extrae preguntas automáticamente con IA
+5. **Monitorear Actividad** - Ve usuarios registrados y participación
 
-## Current Limitations
+## API Endpoints
 
-- **Question Bank Size**: Only 59 problems (PAES exams have 60-65 questions)
-- **M2 Coverage**: Limited to 13 problems (needs expansion)
-- **No Database for Problems**: Questions are hardcoded in TypeScript files
-- **Progress Persistence**: User progress stored in localStorage (not cloud-synced)
-- **No Adaptive Learning**: Quiz generation is random, not difficulty-adjusted
-- **Admin Tools**: Read-only problem viewer (no CRUD operations)
+### Autenticación
+- `POST /api/auth/register` - Registrar nuevo usuario
+- `POST /api/auth/login` - Iniciar sesión
+- `POST /api/auth/refresh` - Refrescar token JWT
+- `GET /api/auth/me` - Obtener perfil del usuario actual
 
-## Future Improvements
+### Rachas
+- `GET /api/streak` - Obtener datos de racha del usuario
+- `POST /api/streak/update` - Actualizar racha después de práctica
 
-### High Priority
-- [ ] Migrate questions to PostgreSQL database
-- [ ] Build admin CRUD interface for problem management
-- [ ] Expand problem bank to 200+ questions
-- [ ] Add cloud-based progress tracking
-- [ ] Implement spaced repetition algorithm
+### Sesiones en Vivo
+- `GET /api/sessions` - Obtener todas las sesiones disponibles
+- `POST /api/sessions` - Crear nueva sesión (Admin)
+- `GET /api/sessions/:id` - Obtener detalles de sesión
+- `POST /api/sessions/:id/register` - Registrarse en sesión
+- `POST /api/sessions/:id/join` - Unirse a sesión activa
+- `POST /api/sessions/:id/answers` - Enviar respuesta en sesión
 
-### Medium Priority
-- [ ] Add AI tutor module for personalized hints
-- [ ] Implement step-by-step solution renderer
-- [ ] Create problem difficulty calibration system
-- [ ] Add detailed analytics dashboard
-- [ ] Support for importing/exporting problems
+### Admin
+- `POST /api/admin/upload-pdf` - Upload y extracción de preguntas desde PDF
+- `POST /api/admin/save-questions` - Guardar preguntas extraídas
+- `GET /api/admin/questions` - Obtener preguntas desde base de datos
 
-### Low Priority
-- [ ] Mobile app (React Native)
-- [ ] Collaborative study rooms
-- [ ] Gamification and achievements
-- [ ] Video explanations for problems
-- [ ] Practice test generator
+### IA
+- `POST /api/ai-chat` - Chat con tutor IA (metodología Socrática)
+- `POST /api/ai-help` - Obtener ayuda IA para respuestas incorrectas
+- `POST /api/ai/summarize` - Resumir contenido educativo
+- `POST /api/ai/practice` - Generar problemas de práctica
 
-## Documentation
+## Características Actuales
 
-For more detailed information, see:
-- [Codebase Overview](./CODEBASE_OVERVIEW.md) - Detailed technical documentation
-- [Backend Setup](./backend/README.md) - Backend-specific instructions
-- [Original Architecture Docs](./docs/) - Initial planning documents
+### ✅ Completamente Implementado
 
-## Contributing
+- Sistema completo de práctica con dos modos (Zen y Rapid Fire)
+- 432 preguntas en el banco (406 M1 + 26 M2)
+- Tutor IA con metodología Socrática (Claude Sonnet 4.5)
+- Sistema de rachas diarias con persistencia en base de datos
+- Sesiones de práctica en vivo con sistema de lobby
+- Tracking de progreso con análisis de habilidades (500+ skills)
+- Sistema completo de documentación con markdown y LaTeX
+- Herramienta de upload y extracción de PDFs con IA
+- Autenticación JWT con roles de usuario
+- Panel de administración completo
+- Renderizado matemático profesional con KaTeX
+- Sistema de diseño personalizado inspirado en Apple
+- Modo de lectura para documentación
+- Mensajes de carga personalizados por ruta
+- Auto-actualización de estados de sesiones
 
-Contributions are welcome! Areas that need help:
+### 🚧 Limitaciones Actuales
 
-1. **Content Creation** - Adding more PAES math problems
-2. **Feature Development** - Building new features from the roadmap
-3. **Testing** - Writing unit and integration tests
-4. **Documentation** - Improving guides and tutorials
+- **Cobertura M2**: Solo 26 problemas (necesita expansión)
+- **Progreso de Quiz**: Historial almacenado en localStorage (no sincronizado en la nube)
+- **Sin Aprendizaje Adaptativo**: Generación de quiz es aleatoria, no ajustada por dificultad
+- **Sin Tests**: No hay tests unitarios o de integración
+- **Herramientas Admin**: No hay CRUD completo para preguntas en base de datos
 
-## License
+## Mejoras Futuras
+
+### Alta Prioridad
+- [ ] Expandir banco de preguntas M2 a 200+ problemas
+- [ ] Migrar historial de progreso de quiz a PostgreSQL
+- [ ] Implementar algoritmo de repetición espaciada
+- [ ] Agregar tests unitarios e integración
+- [ ] Construir interfaz CRUD completa para gestión de preguntas
+
+### Prioridad Media
+- [ ] Implementar sistema de calibración de dificultad de problemas
+- [ ] Agregar dashboard de analytics detallado
+- [ ] Renderizador de soluciones paso a paso mejorado
+- [ ] Soporte para importar/exportar problemas en batch
+- [ ] Sistema de recomendaciones personalizado basado en desempeño
+
+### Prioridad Baja
+- [ ] Aplicación móvil (React Native)
+- [ ] Salas de estudio colaborativo
+- [ ] Gamificación y logros adicionales
+- [ ] Explicaciones en video para problemas
+- [ ] Generador de tests de práctica personalizados
+
+## Documentación
+
+Para más información detallada, ver:
+- [Visión General del Código](./CODEBASE_OVERVIEW.md) - Documentación técnica detallada
+- [Setup del Backend](./backend/README.md) - Instrucciones específicas del backend
+- [Documentación de Arquitectura Original](./docs/) - Documentos de planificación inicial
+
+## Commits Recientes
+
+Los últimos 20 commits incluyen mejoras significativas:
+- Implementación de metodología Socrática en tutor IA
+- Optimizaciones de estados de carga
+- Modularización del sistema de autenticación
+- Upgrade a modelo Claude Sonnet 4.5
+- Mejoras en Modo Zen
+- Fixes de persistencia de contexto en IA
+- Threshold de carga para prevenir flashes
+- Mensajes de carga personalizados por ruta
+
+## Contribuir
+
+¡Las contribuciones son bienvenidas! Áreas que necesitan ayuda:
+
+1. **Creación de Contenido** - Agregar más problemas de matemáticas PAES
+2. **Desarrollo de Características** - Construir nuevas features del roadmap
+3. **Testing** - Escribir tests unitarios e integración
+4. **Documentación** - Mejorar guías y tutoriales
+5. **Expansión M2** - Crear más problemas avanzados
+
+## Licencia
 
 TBD
 
-## Contact
+## Contacto
 
-For questions or support, please open an issue on GitHub.
+Para preguntas o soporte, por favor abre un issue en GitHub.
 
 ---
 
-**Note**: This README reflects the current state of the application. The `/docs` folder contains original planning documents for a more ambitious modular architecture (Math Renderer, Calculator, AI Module) which has not yet been implemented. The current version focuses on a solid practice platform foundation.
+**Última actualización**: Noviembre 2024
+
+**Estado del Proyecto**: En desarrollo activo con features principales implementadas y funcionando.
