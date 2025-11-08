@@ -180,6 +180,26 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
+    // Create question_attempts table for tracking individual practice
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS question_attempts (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        question_id VARCHAR(50) NOT NULL,
+        level VARCHAR(5) NOT NULL CHECK (level IN ('M1', 'M2')),
+        subject VARCHAR(50) NOT NULL CHECK (subject IN ('números', 'álgebra', 'geometría', 'probabilidad')),
+        difficulty VARCHAR(20) NOT NULL CHECK (difficulty IN ('easy', 'medium', 'hard', 'extreme')),
+        user_answer INTEGER NOT NULL CHECK (user_answer >= 0 AND user_answer <= 3),
+        correct_answer INTEGER NOT NULL CHECK (correct_answer >= 0 AND correct_answer <= 3),
+        is_correct BOOLEAN NOT NULL,
+        quiz_mode VARCHAR(20) CHECK (quiz_mode IN ('zen', 'rapidfire')),
+        time_spent_seconds INTEGER,
+        session_id VARCHAR(100),
+        attempted_at BIGINT NOT NULL,
+        created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW()) * 1000
+      )
+    `);
+
     // Create indexes
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)');
@@ -195,6 +215,11 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_session_registrations_user_id ON session_registrations(user_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_session_participants_session_id ON session_participants(session_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_session_participants_user_id ON session_participants(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_user_id ON question_attempts(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_question_id ON question_attempts(question_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_attempted_at ON question_attempts(attempted_at)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_level ON question_attempts(level)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_subject ON question_attempts(subject)');
 
     await client.query('COMMIT');
     console.log('✅ Database tables initialized successfully');
