@@ -1,7 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { PDFDocument } from 'pdf-lib';
 import { saveImage, StoredImage } from './imageStorageService';
-import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { createCanvas } from 'canvas';
 
 // Initialize Anthropic client
@@ -46,6 +45,9 @@ export interface PDFVisionExtractionResult {
  */
 async function pdfToImages(buffer: Buffer): Promise<Buffer[]> {
   const images: Buffer[] = [];
+
+  // Dynamically import pdfjs-dist (ESM module)
+  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
 
   // Load PDF
   const loadingTask = pdfjs.getDocument({ data: new Uint8Array(buffer) });
