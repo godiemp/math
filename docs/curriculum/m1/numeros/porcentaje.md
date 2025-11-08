@@ -97,7 +97,6 @@ $$\frac{2}{3} = 0.666... = 66.\overline{6}\%$$
 ### Calcular el Porcentaje de una Cantidad
 
 <!-- formula-only -->
-**Fórmula**:
 $$\text{Resultado} = \frac{\text{Porcentaje}}{100} \times \text{Cantidad Total}$$
 <!-- /formula-only -->
 
@@ -134,7 +133,6 @@ $$30\% \text{ de } 200 = \frac{30}{100} \times 200 = \frac{6000}{100} = 60$$
 ### Encontrar qué Porcentaje es una Cantidad de Otra
 
 <!-- formula-only -->
-**Fórmula**:
 $$\text{Porcentaje} = \frac{\text{Parte}}{\text{Total}} \times 100\%$$
 <!-- /formula-only -->
 
@@ -154,7 +152,6 @@ $$\frac{45}{60} \times 100\% = 0.75 \times 100\% = 75\%$$
 ### Aumentos Porcentuales
 
 <!-- formula-only -->
-**Fórmula**:
 $$\text{Valor Final} = \text{Valor Inicial} \times \left(1 + \frac{\text{Aumento}\%}{100}\right)$$
 <!-- /formula-only -->
 
@@ -179,7 +176,6 @@ $$\text{Nuevo salario} = 800.000 + 64.000 = 864.000$$
 ### Disminuciones Porcentuales (Descuentos)
 
 <!-- formula-only -->
-**Fórmula**:
 $$\text{Valor Final} = \text{Valor Inicial} \times \left(1 - \frac{\text{Descuento}\%}{100}\right)$$
 <!-- /formula-only -->
 
@@ -221,11 +217,10 @@ El aumento total es del **21%**, no del 20%.
 **¿Por qué?** Porque el segundo aumento se calcula sobre el nuevo precio (110), no sobre el original (100).
 
 <!-- formula-only -->
-**Fórmula general**:
 $$\text{Valor Final} = \text{Valor Inicial} \times (1 + r_1) \times (1 + r_2)$$
 <!-- /formula-only -->
 
-donde $r_1$ y $r_2$ son las tasas en forma decimal.
+Donde $r_1$ y $r_2$ son las tasas en forma decimal.
 
 #### Ejemplos Tipo PAES
 
