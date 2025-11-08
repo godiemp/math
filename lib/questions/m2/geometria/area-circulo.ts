@@ -43,5 +43,19 @@ export const m2GeometriaAreaCirculoQuestions: Question[] = [
         }
       ]
     }
+  },
+  {
+    id: 'm2-geo-circ-1',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'Un sector circular tiene ángulo central de 60° y radio 12 cm. Su área es (usar π ≈ 3.14):',
+    questionLatex: '\\text{Un sector circular tiene ángulo central de } 60^\\circ \\text{ y radio 12 cm. Su área es (usar } \\pi \\approx 3.14):',
+    options: ['37.68 cm²', '75.36 cm²', '113.04 cm²', '150.72 cm²'],
+    correctAnswer: 1,
+    explanation: 'Área del sector = (θ/360°) × πr² donde θ es el ángulo en grados:',
+    explanationLatex: 'A = \\frac{60}{360} \\times \\pi r^2 = \\frac{1}{6} \\times 3.14 \\times 12^2 = \\frac{1}{6} \\times 3.14 \\times 144 \\approx 75.36 \\text{ cm}^2',
+    difficulty: 'hard',
+    skills: ['geometria-sector-circular', 'geometria-area-circulo', 'geometria-circulos', 'numeros-angulos', 'numeros-fracciones', 'numeros-potencias', 'numeros-operaciones-basicas']
   }
 ];

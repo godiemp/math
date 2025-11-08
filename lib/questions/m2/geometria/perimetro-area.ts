@@ -14,5 +14,19 @@ export const m2GeometriaPerimetroAreaQuestions: Question[] = [
     explanationLatex: 'A = \\frac{(12 + 8) \\times 5}{2} = \\frac{20 \\times 5}{2} = \\frac{100}{2} = 50 \\text{ cm}^2',
     difficulty: 'medium',
     skills: ['geometria-area', 'geometria-area-trapecio', 'geometria-trapecio', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-geo-per-2',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'El área de un rombo con diagonales de 12 cm y 16 cm es:',
+    questionLatex: '\\text{El área de un rombo con diagonales de 12 cm y 16 cm es:}',
+    options: ['48 cm²', '96 cm²', '192 cm²', '144 cm²'],
+    correctAnswer: 1,
+    explanation: 'El área de un rombo es (diagonal mayor × diagonal menor) / 2:',
+    explanationLatex: 'A = \\frac{D \\times d}{2} = \\frac{16 \\times 12}{2} = \\frac{192}{2} = 96 \\text{ cm}^2',
+    difficulty: 'hard',
+    skills: ['geometria-area', 'geometria-area-rombo', 'geometria-rombo', 'numeros-operaciones-basicas']
   }
 ];

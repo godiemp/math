@@ -29,5 +29,34 @@ export const m2GeometriaPlanoCartesianoQuestions: Question[] = [
     explanationLatex: 'm_1 \\times m_2 = -1 \\quad \\Rightarrow \\quad 2 \\times m_2 = -1 \\quad \\Rightarrow \\quad m_2 = -\\frac{1}{2}',
     difficulty: 'medium',
     skills: ['geometria-rectas-perpendiculares', 'geometria-pendiente-perpendicular', 'algebra-funciones-lineales', 'algebra-pendiente', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-geo-plano-1',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'El punto medio entre A(-2, 5) y B(6, -1) es:',
+    questionLatex: '\\text{El punto medio entre } A(-2, 5) \\text{ y } B(6, -1) \\text{ es:}',
+    options: ['$(2, 2)$', '$(4, 4)$', '$(2, 3)$', '$(4, 2)$'],
+    optionsLatex: ['(2, 2)', '(4, 4)', '(2, 3)', '(4, 2)'],
+    correctAnswer: 0,
+    explanation: 'El punto medio se calcula promediando las coordenadas:',
+    explanationLatex: 'M = \\left(\\frac{-2+6}{2}, \\frac{5+(-1)}{2}\\right) = \\left(\\frac{4}{2}, \\frac{4}{2}\\right) = (2, 2)',
+    difficulty: 'medium',
+    skills: ['geometria-punto-medio', 'geometria-plano-cartesiano', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-geo-plano-2',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'Encuentra el área del triángulo con vértices en A(0, 0), B(6, 0) y C(3, 4)',
+    questionLatex: '\\text{Área del triángulo con vértices en } A(0, 0), B(6, 0) \\text{ y } C(3, 4)',
+    options: ['8', '10', '12', '16'],
+    correctAnswer: 2,
+    explanation: 'Área = ½|x₁(y₂-y₃) + x₂(y₃-y₁) + x₃(y₁-y₂)| = ½|0(0-4) + 6(4-0) + 3(0-0)| = ½|24| = 12',
+    explanationLatex: 'A = \\frac{1}{2}|x_1(y_2-y_3) + x_2(y_3-y_1) + x_3(y_1-y_2)| = \\frac{1}{2}|24| = 12',
+    difficulty: 'extreme',
+    skills: ['geometria-area-triangulo', 'geometria-plano-cartesiano', 'geometria-formula-determinante', 'numeros-valor-absoluto', 'numeros-operaciones-basicas']
   }
 ];

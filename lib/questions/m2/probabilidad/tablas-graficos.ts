@@ -14,5 +14,19 @@ export const m2ProbabilidadTablasGraficosQuestions: Question[] = [
     explanationLatex: 'f_r = \\frac{5}{3 + 5 + 2} = \\frac{5}{10} = 0.5',
     difficulty: 'medium',
     skills: ['estadistica-frecuencia', 'estadistica-frecuencia-relativa', 'estadistica-tablas', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-prob-tg-2',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    question: 'En un histograma, el eje vertical generalmente representa:',
+    questionLatex: '\\text{En un histograma, el eje vertical generalmente representa:}',
+    options: ['La frecuencia de los datos', 'El tiempo', 'La variable categórica', 'El error estándar'],
+    correctAnswer: 0,
+    explanation: 'En un histograma, el eje vertical (Y) representa la frecuencia o cantidad de datos en cada intervalo',
+    explanationLatex: '\\text{Eje vertical} = \\text{Frecuencia}',
+    difficulty: 'medium',
+    skills: ['estadistica-graficos', 'estadistica-histogramas', 'estadistica-interpretacion-graficos']
   }
 ];

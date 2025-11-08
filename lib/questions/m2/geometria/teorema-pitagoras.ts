@@ -77,5 +77,19 @@ export const m2GeometriaTeoremaDepitagorasQuestions: Question[] = [
         }
       ]
     }
+  },
+  {
+    id: 'm2-geo-pit-1',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'Una escalera de 10 m se apoya contra una pared. Si la base está a 6 m de la pared, ¿a qué altura llega la escalera?',
+    questionLatex: '\\text{Una escalera de 10 m se apoya contra una pared. Si la base está a 6 m de la pared, ¿a qué altura llega la escalera?}',
+    options: ['6 m', '7 m', '8 m', '9 m'],
+    correctAnswer: 2,
+    explanation: 'Usando el teorema de Pitágoras: h² + 6² = 10²',
+    explanationLatex: 'h^2 + 6^2 = 10^2 \\rightarrow h^2 + 36 = 100 \\rightarrow h^2 = 64 \\rightarrow h = 8 \\text{ m}',
+    difficulty: 'medium',
+    skills: ['geometria-pitagoras', 'geometria-triangulos', 'geometria-aplicaciones', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas']
   }
 ];

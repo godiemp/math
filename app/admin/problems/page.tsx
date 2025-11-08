@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { questions } from '@/lib/questions'
 import { Question } from '@/lib/types'
@@ -14,11 +14,13 @@ function ProblemsExplorerContent() {
   const router = useRouter()
   const [selectedLevel, setSelectedLevel] = useState<'all' | 'M1' | 'M2'>('all')
   const [selectedSubject, setSelectedSubject] = useState<'all' | 'números' | 'álgebra' | 'geometría' | 'probabilidad'>('all')
-  const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard'>('all')
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard' | 'extreme'>('all')
   const [selectedSkills, setSelectedSkills] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null)
   const [showSkillsFilter, setShowSkillsFilter] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(20)
 
   // Get all unique skills from questions
   const allSkills = useMemo(() => {
@@ -32,16 +34,61 @@ function ProblemsExplorerContent() {
   }, [])
 
   // Filter questions based on selected filters
-  const filteredQuestions = questions.filter((q) => {
-    if (selectedLevel !== 'all' && q.level !== selectedLevel) return false
-    if (selectedSubject !== 'all' && q.subject !== selectedSubject) return false
-    if (selectedDifficulty !== 'all' && q.difficulty !== selectedDifficulty) return false
-    if (selectedSkills.length > 0 && !selectedSkills.every(skill => q.skills?.includes(skill))) return false
-    if (searchQuery && !q.question.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !q.topic.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !q.id.toLowerCase().includes(searchQuery.toLowerCase())) return false
-    return true
-  })
+  const filteredQuestions = useMemo(() => {
+    return questions.filter((q) => {
+      if (selectedLevel !== 'all' && q.level !== selectedLevel) return false
+      if (selectedSubject !== 'all' && q.subject !== selectedSubject) return false
+      if (selectedDifficulty !== 'all' && q.difficulty !== selectedDifficulty) return false
+      if (selectedSkills.length > 0 && !selectedSkills.every(skill => q.skills?.includes(skill))) return false
+      if (searchQuery && !q.question.toLowerCase().includes(searchQuery.toLowerCase()) &&
+          !q.topic.toLowerCase().includes(searchQuery.toLowerCase()) &&
+          !q.id.toLowerCase().includes(searchQuery.toLowerCase())) return false
+      return true
+    })
+  }, [selectedLevel, selectedSubject, selectedDifficulty, selectedSkills, searchQuery])
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [selectedLevel, selectedSubject, selectedDifficulty, selectedSkills, searchQuery])
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredQuestions.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedQuestions = filteredQuestions.slice(startIndex, endIndex)
+
+  // Page numbers to display
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = []
+    const maxVisible = 5
+
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i)
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) pages.push(i)
+        pages.push('...')
+        pages.push(totalPages)
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1)
+        pages.push('...')
+        for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i)
+      } else {
+        pages.push(1)
+        pages.push('...')
+        pages.push(currentPage - 1)
+        pages.push(currentPage)
+        pages.push(currentPage + 1)
+        pages.push('...')
+        pages.push(totalPages)
+      }
+    }
+
+    return pages
+  }
 
   // Statistics
   const stats = {
@@ -61,6 +108,7 @@ function ProblemsExplorerContent() {
       easy: questions.filter(q => q.difficulty === 'easy').length,
       medium: questions.filter(q => q.difficulty === 'medium').length,
       hard: questions.filter(q => q.difficulty === 'hard').length,
+      extreme: questions.filter(q => q.difficulty === 'extreme').length,
     }
   }
 
@@ -69,6 +117,7 @@ function ProblemsExplorerContent() {
       case 'easy': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
       case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
       case 'hard': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+      case 'extreme': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
     }
   }
@@ -195,6 +244,7 @@ function ProblemsExplorerContent() {
                 <option value="easy">Fácil ({stats.byDifficulty.easy})</option>
                 <option value="medium">Media ({stats.byDifficulty.medium})</option>
                 <option value="hard">Difícil ({stats.byDifficulty.hard})</option>
+                <option value="extreme">Extremo ({stats.byDifficulty.extreme})</option>
               </select>
             </div>
           </div>
@@ -288,6 +338,31 @@ function ProblemsExplorerContent() {
 
         {/* Questions List */}
         <Card padding="lg" className="overflow-hidden">
+          {/* Pagination Info and Items Per Page */}
+          <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Mostrando {filteredQuestions.length === 0 ? 0 : startIndex + 1} a {Math.min(endIndex, filteredQuestions.length)} de {filteredQuestions.length} resultados
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-gray-600 dark:text-gray-400">
+                Por página:
+              </label>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value))
+                  setCurrentPage(1)
+                }}
+                className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white text-sm"
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+            </div>
+          </div>
+
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-700">
@@ -326,7 +401,7 @@ function ProblemsExplorerContent() {
                     </td>
                   </tr>
                 ) : (
-                  filteredQuestions.map((question) => (
+                  paginatedQuestions.map((question) => (
                     <tr key={question.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                         {question.id}
@@ -377,6 +452,62 @@ function ProblemsExplorerContent() {
               </tbody>
             </table>
           </div>
+
+          {/* Pagination Controls */}
+          {filteredQuestions.length > 0 && totalPages > 1 && (
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-center gap-2">
+                {/* Previous Button */}
+                <button
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className={`px-3 py-1 rounded-lg text-sm font-medium ${
+                    currentPage === 1
+                      ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                      : 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-800'
+                  }`}
+                >
+                  ← Anterior
+                </button>
+
+                {/* Page Numbers */}
+                <div className="flex gap-1">
+                  {getPageNumbers().map((page, idx) => (
+                    page === '...' ? (
+                      <span key={`ellipsis-${idx}`} className="px-3 py-1 text-gray-500 dark:text-gray-400">
+                        ...
+                      </span>
+                    ) : (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(Number(page))}
+                        className={`px-3 py-1 rounded-lg text-sm font-medium ${
+                          currentPage === page
+                            ? 'bg-indigo-600 text-white'
+                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    )
+                  ))}
+                </div>
+
+                {/* Next Button */}
+                <button
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className={`px-3 py-1 rounded-lg text-sm font-medium ${
+                    currentPage === totalPages
+                      ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                      : 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-800'
+                  }`}
+                >
+                  Siguiente →
+                </button>
+              </div>
+            </div>
+          )}
         </Card>
 
         {/* Question Detail Modal */}

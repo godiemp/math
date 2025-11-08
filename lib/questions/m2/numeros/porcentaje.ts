@@ -14,5 +14,19 @@ export const m2NumerosPorcentajeQuestions: Question[] = [
     explanationLatex: '80{,}000 \\times 0.75 = 60{,}000 \\quad \\Rightarrow \\quad 60{,}000 \\times 1.19 = 71{,}400',
     difficulty: 'medium',
     skills: ['numeros-porcentaje', 'numeros-porcentaje-descuento', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-porc-2',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'Una población aumentó de 40.000 a 52.000 habitantes. ¿Cuál fue el porcentaje de aumento?',
+    questionLatex: '\\text{Una población aumentó de 40.000 a 52.000 habitantes. ¿Porcentaje de aumento?}',
+    options: ['20%', '25%', '30%', '35%'],
+    correctAnswer: 2,
+    explanation: 'Aumento: 52.000 - 40.000 = 12.000. Porcentaje: (12.000/40.000) × 100 = 30%',
+    explanationLatex: '\\frac{52{,}000 - 40{,}000}{40{,}000} \\times 100 = \\frac{12{,}000}{40{,}000} \\times 100 = 30\\%',
+    difficulty: 'hard',
+    skills: ['numeros-porcentaje', 'numeros-porcentaje-variacion', 'numeros-fracciones', 'numeros-operaciones-basicas']
   }
 ];

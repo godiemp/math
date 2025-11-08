@@ -14,5 +14,20 @@ export const m2GeometriaTransformacionesQuestions: Question[] = [
     explanationLatex: 'A(3, 4) \\xrightarrow{\\text{reflejo eje } x} A\'(3, -4)',
     difficulty: 'medium',
     skills: ['geometria-transformaciones', 'geometria-reflexion', 'geometria-plano-cartesiano']
+  },
+  {
+    id: 'm2-geo-trans-2',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'Si un punto (x, y) se rota 90° en sentido antihorario respecto al origen, las nuevas coordenadas son:',
+    questionLatex: '\\text{Si un punto } (x, y) \\text{ se rota } 90^\\circ \\text{ en sentido antihorario respecto al origen, las nuevas coordenadas son:}',
+    options: ['$(-y, x)$', '$(y, -x)$', '$(-x, -y)$', '$(x, -y)$'],
+    optionsLatex: ['(-y, x)', '(y, -x)', '(-x, -y)', '(x, -y)'],
+    correctAnswer: 0,
+    explanation: 'Una rotación de 90° antihoraria transforma (x, y) en (-y, x)',
+    explanationLatex: '(x, y) \\xrightarrow{90^\\circ} (-y, x)',
+    difficulty: 'hard',
+    skills: ['geometria-transformaciones', 'geometria-rotacion', 'geometria-plano-cartesiano']
   }
 ];
