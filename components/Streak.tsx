@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { Card } from './ui/Card';
-import { Typography } from './ui/Typography';
+import { Heading } from './ui/Typography';
+import { Text } from './ui/Typography';
 import { Badge } from './ui/Badge';
 import { StreakData } from '@/lib/types';
 import { api } from '@/lib/api-client';
@@ -26,8 +27,12 @@ export const Streak: React.FC<StreakProps> = ({ initialStreak }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get('/api/streak');
-      setStreak(response);
+      const response = await api.get<StreakData>('/api/streak');
+      if (response.error) {
+        setError(response.error.error);
+      } else if (response.data) {
+        setStreak(response.data);
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to fetch streak data');
     } finally {
@@ -46,9 +51,9 @@ export const Streak: React.FC<StreakProps> = ({ initialStreak }) => {
   if (error) {
     return (
       <Card>
-        <Typography variant="body" className="text-red-500">
+        <Text size="sm" className="text-red-500">
           {error}
-        </Typography>
+        </Text>
       </Card>
     );
   }
@@ -86,9 +91,9 @@ export const Streak: React.FC<StreakProps> = ({ initialStreak }) => {
       <div className="relative space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <Typography variant="h3" className="font-bold text-gray-900 dark:text-white">
+          <Heading level={3} size="xs" className="font-bold text-gray-900 dark:text-white">
             Daily Streak
-          </Typography>
+          </Heading>
           <span className="text-3xl" role="img" aria-label="streak">
             {getStreakEmoji(streak.currentStreak)}
           </span>
@@ -96,59 +101,60 @@ export const Streak: React.FC<StreakProps> = ({ initialStreak }) => {
 
         {/* Current Streak */}
         <div className="flex items-end gap-2">
-          <Typography
-            variant="display"
+          <Heading
+            level={2}
+            size="xl"
             className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500"
           >
             {streak.currentStreak}
-          </Typography>
-          <Typography variant="body" className="text-gray-600 dark:text-gray-400 pb-3">
+          </Heading>
+          <Text size="sm" className="text-gray-600 dark:text-gray-400 pb-3">
             {streak.currentStreak === 1 ? 'day' : 'days'}
-          </Typography>
+          </Text>
         </div>
 
         {/* Motivational Message */}
-        <Typography variant="body" className="text-gray-700 dark:text-gray-300 font-medium">
+        <Text size="sm" className="text-gray-700 dark:text-gray-300 font-medium">
           {getStreakMessage(streak.currentStreak)}
-        </Typography>
+        </Text>
 
         {/* Stats Row */}
         <div className="flex gap-4 pt-2">
           {/* Longest Streak */}
           <div className="flex-1 bg-white/40 dark:bg-black/20 rounded-xl p-3 backdrop-blur-sm">
-            <Typography variant="caption" className="text-gray-600 dark:text-gray-400 mb-1">
+            <Text size="xs" className="text-gray-600 dark:text-gray-400 mb-1">
               Best Streak
-            </Typography>
+            </Text>
             <div className="flex items-baseline gap-1">
-              <Typography variant="h3" className="font-bold text-gray-900 dark:text-white">
+              <Heading level={3} size="xs" className="font-bold text-gray-900 dark:text-white">
                 {streak.longestStreak}
-              </Typography>
-              <Typography variant="caption" className="text-gray-600 dark:text-gray-400">
+              </Heading>
+              <Text size="xs" className="text-gray-600 dark:text-gray-400">
                 days
-              </Typography>
+              </Text>
             </div>
           </div>
 
           {/* Last Practice */}
           <div className="flex-1 bg-white/40 dark:bg-black/20 rounded-xl p-3 backdrop-blur-sm">
-            <Typography variant="caption" className="text-gray-600 dark:text-gray-400 mb-1">
+            <Text size="xs" className="text-gray-600 dark:text-gray-400 mb-1">
               Last Practice
-            </Typography>
-            <Typography variant="body" className="font-medium text-gray-900 dark:text-white">
+            </Text>
+            <Text size="sm" className="font-medium text-gray-900 dark:text-white">
               {streak.lastPracticeDate
                 ? new Date(streak.lastPracticeDate).toLocaleDateString('es-CL', {
                     month: 'short',
                     day: 'numeric',
                   })
                 : 'Never'}
-            </Typography>
+            </Text>
           </div>
         </div>
 
         {/* Action Hint */}
         {streak.currentStreak === 0 && (
           <div className="pt-2">
-            <Badge variant="default" className="bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/20">
+            <Badge variant="info">
               Complete a practice session to start your streak!
             </Badge>
           </div>
