@@ -46,8 +46,10 @@ export interface PDFVisionExtractionResult {
 async function pdfToImages(buffer: Buffer): Promise<Buffer[]> {
   const images: Buffer[] = [];
 
-  // Dynamically import pdfjs-dist (ESM module)
-  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+  // Use eval to ensure dynamic import stays dynamic (not transformed by TypeScript)
+  // This is necessary because TypeScript with "module": "commonjs" transforms dynamic imports
+  const pdfjsImport = new Function('specifier', 'return import(specifier)');
+  const pdfjs = await pdfjsImport('pdfjs-dist/legacy/build/pdf.mjs');
 
   // Load PDF
   const loadingTask = pdfjs.getDocument({ data: new Uint8Array(buffer) });
