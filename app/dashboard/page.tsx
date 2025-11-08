@@ -8,12 +8,13 @@ import { logoutUser } from "@/lib/auth";
 import { getUserRegisteredSessions, updateSessionStatuses, getAllAvailableSessions } from "@/lib/liveSessions";
 import { useEffect, useState } from "react";
 import { LiveSession, QuestionAttempt } from "@/lib/types";
-import { Button, Card, Badge, Heading, Text } from "@/components/ui";
+import { Button, Card, Badge, Heading, Text, LoadingScreen } from "@/components/ui";
 import { getRecommendedSkills, summarizeSkillProgress } from "@/lib/skillProgress";
 
 function DashboardContent() {
   const { user, setUser, isAdmin } = useAuth();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
   const [nextSession, setNextSession] = useState<LiveSession | null>(null);
   const [allHistory, setAllHistory] = useState<QuestionAttempt[]>([]);
@@ -54,6 +55,9 @@ function DashboardContent() {
 
       // Show skills section if user has attempted questions
       setShowSkillsSection(combinedHistory.length > 0);
+
+      // Mark loading as complete
+      setIsLoading(false);
     }
   }, [user]);
 
@@ -86,6 +90,11 @@ function DashboardContent() {
         return null;
     }
   };
+
+  // Show loading screen while data is being fetched
+  if (isLoading) {
+    return <LoadingScreen message="Preparando tu panel..." />;
+  }
 
   return (
     <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">

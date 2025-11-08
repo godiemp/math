@@ -14,3 +14,5 @@ export type { HeadingLevel, HeadingSize, TextSize, TextVariant } from './Typogra
 export { Navbar, NavbarLink } from './Navbar';
 
 export { CurriculumSidebar } from './CurriculumSidebar';
+
+export { Spinner, LoadingScreen } from './Spinner';
