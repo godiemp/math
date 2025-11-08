@@ -556,22 +556,30 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     return Math.floor(totalTimeElapsed / questionsAnswered);
   };
 
-  return (
-    <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+  // Wrap content with special styling for rapidfire and zen modes
+  const questionContent = (
+    <div className={`max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg ${
+      quizMode === 'rapidfire' || quizMode === 'zen' ? 'p-6 sm:p-8 animate-fadeIn' : 'p-8'
+    }`}
+    style={quizMode === 'rapidfire' ? {
+      boxShadow: '0 0 60px rgba(139, 92, 246, 0.3), 0 20px 40px rgba(0, 0, 0, 0.2)',
+    } : quizMode === 'zen' ? {
+      boxShadow: '0 0 60px rgba(20, 184, 166, 0.3), 0 20px 40px rgba(0, 0, 0, 0.2)',
+    } : undefined}>
       {/* Simplified Timer Display - Only show in rapidfire mode and when quiz is not submitted */}
       {quizMode === 'rapidfire' && !quizSubmitted && (
-        <div className="mb-4">
+        <div className="mb-6">
           {showTimer ? (
-            <div className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700/30 rounded border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-lg border border-purple-200 dark:border-purple-700">
               <div className="flex items-center gap-2">
-                <span className="text-sm">⏱️</span>
-                <span className={`text-sm font-medium ${getTimerColor()}`}>
+                <span className="text-base">⚡</span>
+                <span className={`text-base font-bold ${getTimerColor()}`}>
                   {formatTime(timeRemaining)}
                 </span>
               </div>
               <button
                 onClick={toggleTimer}
-                className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                className="text-xs text-purple-500 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-semibold"
                 title="Ocultar timer"
               >
                 ✕
@@ -580,10 +588,10 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
           ) : (
             <button
               onClick={toggleTimer}
-              className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 underline"
+              className="text-sm text-purple-500 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 underline font-semibold"
               title="Mostrar timer"
             >
-              Mostrar tiempo
+              ⚡ Mostrar tiempo
             </button>
           )}
         </div>
@@ -591,40 +599,74 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
       <div className="mb-6">
         <div className="flex justify-between items-center mb-4">
-          <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
+          <span className={`text-sm font-semibold ${
+            quizMode === 'rapidfire'
+              ? 'text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400'
+              : quizMode === 'zen'
+              ? 'text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-cyan-600 dark:from-teal-400 dark:to-cyan-400'
+              : 'text-indigo-600 dark:text-indigo-400'
+          }`}>
             {currentQuestion.topic}
           </span>
           <span className="text-sm text-gray-600 dark:text-gray-400">
             Pregunta {currentQuestionIndex + 1} de {quizQuestions.length}
           </span>
         </div>
-        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+        <div className={`w-full rounded-full h-2 ${
+          quizMode === 'rapidfire' || quizMode === 'zen'
+            ? 'bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600'
+            : 'bg-gray-200 dark:bg-gray-700'
+        }`}>
           <div
-            className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
-            style={{ width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%` }}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              quizMode === 'rapidfire'
+                ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600'
+                : quizMode === 'zen'
+                ? 'bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500'
+                : 'bg-indigo-600'
+            }`}
+            style={{
+              width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`,
+              ...(quizMode === 'rapidfire' ? { boxShadow: '0 0 10px rgba(139, 92, 246, 0.5)' } :
+                  quizMode === 'zen' ? { boxShadow: '0 0 10px rgba(20, 184, 166, 0.5)' } : {})
+            }}
           />
         </div>
       </div>
 
       {/* Question answered indicator */}
       {!quizSubmitted && userAnswer !== null && (
-        <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
-          <p className="text-sm text-blue-700 dark:text-blue-300 text-center">
-            Respuesta seleccionada. Puedes cambiarla antes de enviar el quiz.
+        <div className={`mb-6 p-3 rounded-lg border ${
+          quizMode === 'rapidfire'
+            ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-300 dark:border-green-700 shadow-md'
+            : quizMode === 'zen'
+            ? 'bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 border-teal-300 dark:border-teal-700 shadow-md'
+            : 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700'
+        }`}>
+          <p className={`text-sm text-center font-semibold ${
+            quizMode === 'rapidfire'
+              ? 'text-green-700 dark:text-green-300'
+              : quizMode === 'zen'
+              ? 'text-teal-700 dark:text-teal-300'
+              : 'text-blue-700 dark:text-blue-300'
+          }`}>
+            {quizMode === 'rapidfire' ? '✓ ' : quizMode === 'zen' ? '🧘 ' : ''}Respuesta seleccionada. Puedes cambiarla antes de enviar el quiz.
           </p>
         </div>
       )}
 
-      <div className="mb-6">
+      <div className="mb-8">
         <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4 ${
+          quizMode === 'rapidfire' || quizMode === 'zen' ? 'shadow-md' : ''
+        } ${
           currentQuestion.difficulty === 'easy'
             ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
             : currentQuestion.difficulty === 'medium'
             ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
             : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
         }`}>
-          {currentQuestion.difficulty === 'easy' ? 'Fácil' :
-           currentQuestion.difficulty === 'medium' ? 'Media' : 'Difícil'}
+          {currentQuestion.difficulty === 'easy' ? '🟢 Fácil' :
+           currentQuestion.difficulty === 'medium' ? '🟡 Media' : '🔴 Difícil'}
         </span>
       </div>
 
@@ -639,26 +681,44 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
       />
 
       {/* Navigation and Submit buttons */}
-      <div className="flex flex-col gap-4">
+      <div className="mt-8 flex flex-col gap-4">
         <div className="flex gap-4">
           <button
             onClick={handlePrevious}
             disabled={currentQuestionIndex === 0}
-            className="flex-1 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-semibold"
+            className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
+              quizMode === 'rapidfire'
+                ? 'bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-lg hover:shadow-xl'
+                : quizMode === 'zen'
+                ? 'bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-lg hover:shadow-xl'
+                : 'bg-gray-500 text-white hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors'
+            }`}
           >
             ← Anterior
           </button>
           {currentQuestionIndex < quizQuestions.length - 1 ? (
             <button
               onClick={handleNext}
-              className="flex-1 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors font-semibold"
+              className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
+                quizMode === 'rapidfire'
+                  ? 'bg-gradient-to-r from-indigo-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl'
+                  : quizMode === 'zen'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl'
+                  : 'bg-gray-500 text-white hover:bg-gray-600 transition-colors'
+              }`}
             >
               Siguiente →
             </button>
           ) : quizSubmitted ? (
             <button
               onClick={() => setCurrentQuestionIndex(quizQuestions.length)}
-              className="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-semibold"
+              className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
+                quizMode === 'rapidfire'
+                  ? 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl'
+                  : quizMode === 'zen'
+                  ? 'bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl'
+                  : 'bg-indigo-600 text-white hover:bg-indigo-700 transition-colors'
+              }`}
             >
               Ver Resumen
             </button>
@@ -669,9 +729,20 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
           <button
             onClick={handleSubmitQuiz}
             disabled={userAnswers.filter(a => a !== null).length === 0}
-            className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-semibold text-lg"
+            className={`w-full px-6 py-3 rounded-lg font-semibold text-lg transition-all ${
+              quizMode === 'rapidfire'
+                ? 'bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 hover:from-yellow-500 hover:via-pink-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-xl hover:shadow-2xl hover:scale-[1.02]'
+                : quizMode === 'zen'
+                ? 'bg-gradient-to-r from-teal-400 via-cyan-500 to-blue-600 hover:from-teal-500 hover:via-cyan-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-xl hover:shadow-2xl hover:scale-[1.02]'
+                : 'bg-indigo-600 text-white hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors'
+            }`}
+            style={quizMode === 'rapidfire' && userAnswers.filter(a => a !== null).length > 0 ? {
+              boxShadow: '0 0 30px rgba(236, 72, 153, 0.5), 0 10px 25px rgba(0, 0, 0, 0.3)'
+            } : quizMode === 'zen' && userAnswers.filter(a => a !== null).length > 0 ? {
+              boxShadow: '0 0 30px rgba(20, 184, 166, 0.5), 0 10px 25px rgba(0, 0, 0, 0.3)'
+            } : undefined}
           >
-            Enviar Quiz ({userAnswers.filter(a => a !== null).length} de {quizQuestions.length} respondidas)
+            {quizMode === 'rapidfire' ? '⚡ ' : quizMode === 'zen' ? '🧘 ' : ''}Enviar Quiz ({userAnswers.filter(a => a !== null).length} de {quizQuestions.length} respondidas)
           </button>
         )}
       </div>
@@ -695,4 +766,27 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
       )}
     </div>
   );
+
+  // Return with gradient background for both modes - use fixed positioning to break out of parent containers
+  if (quizMode === 'rapidfire') {
+    return (
+      <div className="fixed inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 overflow-y-auto">
+        <div className="min-h-full py-6 px-4 sm:py-8 sm:px-6">
+          {questionContent}
+        </div>
+      </div>
+    );
+  }
+
+  if (quizMode === 'zen') {
+    return (
+      <div className="fixed inset-0 bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500 dark:from-teal-800 dark:via-cyan-900 dark:to-blue-900 overflow-y-auto">
+        <div className="min-h-full py-6 px-4 sm:py-8 sm:px-6">
+          {questionContent}
+        </div>
+      </div>
+    );
+  }
+
+  return questionContent;
 }
