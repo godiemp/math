@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import multer from 'multer';
-import { uploadPDF, saveQuestions, getQuestions, getUploads } from '../controllers/adminController';
+import { uploadPDF, uploadPDFWithVision, saveQuestions, getQuestions, getUploads, serveImage } from '../controllers/adminController';
 import { authenticate, requireAdmin } from '../middleware/auth';
 
 const router = Router();
@@ -22,10 +22,17 @@ const upload = multer({
 
 /**
  * @route   POST /api/admin/upload-pdf
- * @desc    Upload and extract questions from PDF
+ * @desc    Upload and extract questions from PDF (text-based)
  * @access  Private (Admin only)
  */
 router.post('/upload-pdf', authenticate, requireAdmin, upload.single('pdf'), uploadPDF);
+
+/**
+ * @route   POST /api/admin/upload-pdf-vision
+ * @desc    Upload and extract questions from PDF using Claude Vision API
+ * @access  Private (Admin only)
+ */
+router.post('/upload-pdf-vision', authenticate, requireAdmin, upload.single('pdf'), uploadPDFWithVision);
 
 /**
  * @route   POST /api/admin/save-questions
