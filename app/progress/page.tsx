@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { QuestionAttempt } from '@/lib/types';
+import { QuestionAttempt, QuizHistoryResponse } from '@/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Button, Card, Badge, Heading, Text, Modal, Navbar, NavbarLink } from '@/components/ui';
 import { MathText } from '@/components/MathDisplay';
 import { SkillsDisplay } from '@/components/SkillsDisplay';
+import { api } from '@/lib/api-client';
+import { isAuthenticated } from '@/lib/auth';
 
 interface Progress {
   correct: number;
@@ -21,31 +23,73 @@ function ProgressPageContent() {
   const [recentQuestionsCount, setRecentQuestionsCount] = useState<number>(10);
   const [selectedAttempt, setSelectedAttempt] = useState<QuestionAttempt | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [viewMode, setViewMode] = useState<'overview' | 'skills-m1' | 'skills-m2'>('overview');
+  const [viewMode, setViewMode] = useState<'overview' | 'quizzes' | 'skills-m1' | 'skills-m2'>('overview');
   const itemsPerPage = 10;
 
   useEffect(() => {
-    // Load progress from localStorage
-    const m1Data = localStorage.getItem('paes-progress-M1');
-    const m2Data = localStorage.getItem('paes-progress-M2');
+    const loadProgressAndHistory = async () => {
+      // Try to load from backend if user is authenticated
+      if (isAuthenticated()) {
+        try {
+          // Fetch history from backend for both levels
+          const [m1Response, m2Response] = await Promise.all([
+            api.get<QuizHistoryResponse>('/api/quiz/history?level=M1'),
+            api.get<QuizHistoryResponse>('/api/quiz/history?level=M2'),
+          ]);
 
-    if (m1Data) {
-      setM1Progress(JSON.parse(m1Data));
-    }
-    if (m2Data) {
-      setM2Progress(JSON.parse(m2Data));
-    }
+          if (m1Response.data?.history) {
+            const m1Data = m1Response.data.history;
+            setM1History(m1Data);
 
-    // Load question history
-    const m1HistoryData = localStorage.getItem('paes-history-M1');
-    const m2HistoryData = localStorage.getItem('paes-history-M2');
+            // Calculate progress from history
+            const m1Correct = m1Data.filter((a: QuestionAttempt) => a.isCorrect).length;
+            setM1Progress({ correct: m1Correct, total: m1Data.length });
+          }
 
-    if (m1HistoryData) {
-      setM1History(JSON.parse(m1HistoryData));
-    }
-    if (m2HistoryData) {
-      setM2History(JSON.parse(m2HistoryData));
-    }
+          if (m2Response.data?.history) {
+            const m2Data = m2Response.data.history;
+            setM2History(m2Data);
+
+            // Calculate progress from history
+            const m2Correct = m2Data.filter((a: QuestionAttempt) => a.isCorrect).length;
+            setM2Progress({ correct: m2Correct, total: m2Data.length });
+          }
+        } catch (error) {
+          console.error('Failed to load quiz history from backend:', error);
+          // Fall back to localStorage
+          loadFromLocalStorage();
+        }
+      } else {
+        // User not authenticated, use localStorage
+        loadFromLocalStorage();
+      }
+    };
+
+    const loadFromLocalStorage = () => {
+      // Load progress from localStorage
+      const m1Data = localStorage.getItem('paes-progress-M1');
+      const m2Data = localStorage.getItem('paes-progress-M2');
+
+      if (m1Data) {
+        setM1Progress(JSON.parse(m1Data));
+      }
+      if (m2Data) {
+        setM2Progress(JSON.parse(m2Data));
+      }
+
+      // Load question history
+      const m1HistoryData = localStorage.getItem('paes-history-M1');
+      const m2HistoryData = localStorage.getItem('paes-history-M2');
+
+      if (m1HistoryData) {
+        setM1History(JSON.parse(m1HistoryData));
+      }
+      if (m2HistoryData) {
+        setM2History(JSON.parse(m2HistoryData));
+      }
+    };
+
+    loadProgressAndHistory();
   }, []);
 
   const calculatePercentage = (progress: Progress) => {
@@ -101,6 +145,65 @@ function ProgressPageContent() {
     }
   };
 
+  // Group attempts into quiz sessions (attempts within 2 minutes = same quiz)
+  const groupIntoQuizSessions = (attempts: QuestionAttempt[]) => {
+    if (attempts.length === 0) return [];
+
+    // Sort by timestamp descending (most recent first)
+    const sorted = [...attempts].sort((a, b) => b.timestamp - a.timestamp);
+
+    const sessions: Array<{
+      id: string;
+      attempts: QuestionAttempt[];
+      startTime: number;
+      level: 'M1' | 'M2';
+      correctCount: number;
+      totalCount: number;
+    }> = [];
+
+    let currentSession: QuestionAttempt[] = [sorted[0]];
+
+    for (let i = 1; i < sorted.length; i++) {
+      const timeDiff = Math.abs(sorted[i].timestamp - sorted[i - 1].timestamp);
+
+      // If within 2 minutes and same level, add to current session
+      if (timeDiff < 120000 && sorted[i].level === sorted[i - 1].level) {
+        currentSession.push(sorted[i]);
+      } else {
+        // Start new session
+        if (currentSession.length > 0) {
+          const correct = currentSession.filter(a => a.isCorrect).length;
+          sessions.push({
+            id: `quiz-${currentSession[0].timestamp}`,
+            attempts: currentSession,
+            startTime: currentSession[currentSession.length - 1].timestamp, // Earliest in session
+            level: currentSession[0].level,
+            correctCount: correct,
+            totalCount: currentSession.length,
+          });
+        }
+        currentSession = [sorted[i]];
+      }
+    }
+
+    // Add last session
+    if (currentSession.length > 0) {
+      const correct = currentSession.filter(a => a.isCorrect).length;
+      sessions.push({
+        id: `quiz-${currentSession[0].timestamp}`,
+        attempts: currentSession,
+        startTime: currentSession[currentSession.length - 1].timestamp,
+        level: currentSession[0].level,
+        correctCount: correct,
+        totalCount: currentSession.length,
+      });
+    }
+
+    return sessions;
+  };
+
+  const allQuizSessions = groupIntoQuizSessions(allHistory);
+
   return (
     <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">
       {/* Navbar with variableBlur material */}
@@ -147,6 +250,16 @@ function ProgressPageContent() {
             }`}
           >
             📊 Resumen General
+          </button>
+          <button
+            onClick={() => setViewMode('quizzes')}
+            className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-[180ms] ${
+              viewMode === 'quizzes'
+                ? 'bg-[#0A84FF] text-white'
+                : 'bg-white dark:bg-[#1C1C1E] text-black/60 dark:text-white/70 border border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50'
+            }`}
+          >
+            🎯 Mis Quizzes
           </button>
           <button
             onClick={() => setViewMode('skills-m1')}
@@ -352,6 +465,145 @@ function ProgressPageContent() {
             </Text>
           </div>
         )}
+          </>
+        )}
+
+        {/* Quizzes View */}
+        {viewMode === 'quizzes' && (
+          <>
+            {allQuizSessions.length > 0 ? (
+              <div className="grid gap-4">
+                {allQuizSessions.map((session, index) => {
+                  const percentage = Math.round((session.correctCount / session.totalCount) * 100);
+                  const isPerfect = percentage === 100;
+                  const isGood = percentage >= 70;
+
+                  return (
+                    <Card
+                      key={session.id}
+                      className={`p-6 border-2 ${
+                        isPerfect
+                          ? 'border-[#34C759]/30 bg-[#34C759]/5'
+                          : isGood
+                          ? 'border-[#FF9F0A]/30 bg-[#FF9F0A]/5'
+                          : 'border-[#FF453A]/30 bg-[#FF453A]/5'
+                      }`}
+                    >
+                      <div className="flex justify-between items-start gap-4 mb-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <Heading level={3} size="xs">
+                              Quiz #{allQuizSessions.length - index}
+                            </Heading>
+                            <Badge variant={session.level === 'M1' ? 'info' : 'secondary'}>
+                              {session.level}
+                            </Badge>
+                          </div>
+                          <Text size="xs" variant="secondary">
+                            {new Date(session.startTime).toLocaleDateString('es-ES', {
+                              weekday: 'long',
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </Text>
+                        </div>
+
+                        {/* Score Badge */}
+                        <div className={`px-4 py-2 rounded-xl ${
+                          isPerfect
+                            ? 'bg-[#34C759]/20 text-[#34C759]'
+                            : isGood
+                            ? 'bg-[#FF9F0A]/20 text-[#FF9F0A]'
+                            : 'bg-[#FF453A]/20 text-[#FF453A]'
+                        }`}>
+                          <Text size="lg" className="font-bold">
+                            {session.correctCount}/{session.totalCount}
+                          </Text>
+                          <Text size="xs" className="text-center">
+                            {percentage}%
+                          </Text>
+                        </div>
+                      </div>
+
+                      {/* Questions Summary */}
+                      <div className="mb-4 space-y-2">
+                        <Text size="sm" className="font-medium mb-2">
+                          Preguntas en este quiz:
+                        </Text>
+                        <div className="flex flex-wrap gap-2">
+                          {session.attempts.slice().reverse().map((attempt, idx) => (
+                            <div
+                              key={`${attempt.questionId}-${idx}`}
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${
+                                attempt.isCorrect
+                                  ? 'bg-[#34C759] text-white'
+                                  : 'bg-[#FF453A] text-white'
+                              }`}
+                            >
+                              {idx + 1}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3">
+                        <Button
+                          variant="primary"
+                          className="flex-1"
+                          onClick={() => {
+                            // Save quiz questions to localStorage for replay
+                            const questionIds = session.attempts.map(a => a.questionId);
+                            localStorage.setItem('replay-quiz', JSON.stringify({
+                              id: session.id,
+                              level: session.level,
+                              questionIds: questionIds
+                            }));
+                            // Navigate to practice page
+                            window.location.href = `/practice/${session.level.toLowerCase()}?replay=true`;
+                          }}
+                        >
+                          🔄 Rejugar Quiz
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          onClick={() => {
+                            // Show first question in modal
+                            setSelectedAttempt(session.attempts[0]);
+                          }}
+                        >
+                          👁️ Ver Detalles
+                        </Button>
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Text size="lg" className="mb-4">
+                  🎯 No has completado ningún quiz todavía
+                </Text>
+                <Text size="sm" variant="secondary" className="mb-6">
+                  Completa tu primer quiz en M1 o M2 para verlo aquí
+                </Text>
+                <div className="flex gap-3 justify-center">
+                  <Button asChild>
+                    <Link href="/practice/m1">
+                      Practicar M1
+                    </Link>
+                  </Button>
+                  <Button asChild variant="secondary">
+                    <Link href="/practice/m2">
+                      Practicar M2
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            )}
           </>
         )}
 

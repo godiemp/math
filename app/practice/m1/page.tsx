@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Quiz from '@/components/Quiz';
-import { getQuestionsByLevel } from '@/lib/questions';
+import { getQuestionsByLevel, getQuestionsByIds } from '@/lib/questions';
+import { Question } from '@/lib/types';
 import Link from 'next/link';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Card, Button, Heading, Text } from '@/components/ui';
@@ -18,7 +19,33 @@ function M1PracticeContent() {
   const [quizMode, setQuizMode] = useState<QuizMode | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [quizStarted, setQuizStarted] = useState(false);
+  const [replayQuestions, setReplayQuestions] = useState<Question[] | undefined>(undefined);
   const questions = getQuestionsByLevel('M1');
+
+  // Check for replay parameter and load questions
+  useEffect(() => {
+    const isReplay = searchParams.get('replay') === 'true';
+    if (isReplay) {
+      try {
+        const replayData = localStorage.getItem('replay-quiz');
+        if (replayData) {
+          const { questionIds, level } = JSON.parse(replayData);
+          if (level === 'M1') {
+            const questionsToReplay = getQuestionsByIds(questionIds);
+            setReplayQuestions(questionsToReplay);
+            // Auto-start the quiz in zen mode
+            setSelectedSubject(null);
+            setQuizMode('zen');
+            setQuizStarted(true);
+            // Clear the replay data
+            localStorage.removeItem('replay-quiz');
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load replay quiz:', error);
+      }
+    }
+  }, [searchParams]);
 
   // Pre-select subject from URL parameter
   useEffect(() => {
@@ -295,6 +322,7 @@ function M1PracticeContent() {
             subject={selectedSubject === null ? undefined : selectedSubject}
             quizMode={quizMode || 'zen'}
             difficulty={difficulty || undefined}
+            replayQuestions={replayQuestions}
           />
         </div>
       </div>

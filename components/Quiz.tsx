@@ -14,9 +14,10 @@ interface QuizProps {
   subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
   quizMode?: 'zen' | 'rapidfire';
   difficulty?: 'easy' | 'medium' | 'hard' | 'extreme';
+  replayQuestions?: Question[]; // Specific questions for replaying a quiz
 }
 
-export default function Quiz({ questions: allQuestions, level, subject, quizMode = 'zen', difficulty = 'medium' }: QuizProps) {
+export default function Quiz({ questions: allQuestions, level, subject, quizMode = 'zen', difficulty = 'medium', replayQuestions }: QuizProps) {
   const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
@@ -32,6 +33,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     const saved = localStorage.getItem('quiz-show-quick-nav');
     return saved !== null ? saved === 'true' : true; // Default to showing
   });
+  const [quizSessionId] = useState(() => `quiz-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
+  const [aiConversation] = useState<Array<{role: string; message: string; timestamp: number}>>([]);
 
   // Get time limit based on difficulty
   const getTimeLimit = () => {
@@ -75,13 +78,16 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
       setScore(progress);
     }
 
-    // Initialize quiz with 10 random questions
-    const randomQuestions = getRandomQuestions(level, 10, subject);
-    setQuizQuestions(randomQuestions);
-    setUserAnswers(new Array(randomQuestions.length).fill(null));
+    // Initialize quiz: use replay questions if provided, otherwise random
+    const questionsToUse = replayQuestions && replayQuestions.length > 0
+      ? replayQuestions
+      : getRandomQuestions(level, 10, subject);
+
+    setQuizQuestions(questionsToUse);
+    setUserAnswers(new Array(questionsToUse.length).fill(null));
     setTimeRemaining(getTimeLimit()); // Reset timer based on difficulty
     setTotalTimeElapsed(0);
-  }, [level, subject, difficulty]);
+  }, [level, subject, difficulty, replayQuestions]);
 
   // Countdown effect for rapidfire mode intro
   useEffect(() => {
@@ -175,28 +181,29 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
     quizQuestions.forEach((question, index) => {
       const userAnswer = userAnswers[index];
-      const isCorrect = userAnswer === question.correctAnswer;
+      const isCorrect = userAnswer !== null && userAnswer === question.correctAnswer;
 
       if (isCorrect) {
         correctCount++;
       }
 
-      if (userAnswer !== null) {
-        const attempt: QuestionAttempt = {
-          questionId: question.id,
-          question: question.question,
-          topic: question.topic,
-          level: level,
-          userAnswer: userAnswer,
-          correctAnswer: question.correctAnswer,
-          isCorrect: isCorrect,
-          timestamp: Date.now(),
-          options: question.options,
-          explanation: question.explanation,
-          difficulty: question.difficulty,
-        };
-        attempts.push(attempt);
-      }
+      // Save ALL questions, including unanswered ones (use -1 for unanswered)
+      const attempt: QuestionAttempt = {
+        questionId: question.id,
+        question: question.question,
+        topic: question.topic,
+        level: level,
+        userAnswer: userAnswer !== null ? userAnswer : -1,
+        correctAnswer: question.correctAnswer,
+        isCorrect: isCorrect,
+        timestamp: Date.now(),
+        options: question.options,
+        explanation: question.explanation,
+        difficulty: question.difficulty,
+        subject: question.subject,
+        skills: question.skills,
+      };
+      attempts.push(attempt);
     });
 
     const newScore = {
@@ -221,18 +228,29 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     // Save updated history
     localStorage.setItem(historyKey, JSON.stringify(history));
 
-    // Update streak if user is authenticated
-    const updateStreak = async () => {
+    // Save quiz attempts to backend and update streak if user is authenticated
+    const saveToBackend = async () => {
       if (isAuthenticated()) {
         try {
+          // Save quiz attempts to backend with session ID and AI conversation
+          if (attempts.length > 0) {
+            await api.post('/api/quiz/attempts', {
+              attempts,
+              quizSessionId,
+              aiConversation
+            });
+          }
+
+          // Update streak
           await api.post('/api/streak/update');
         } catch (error) {
-          console.error('Failed to update streak:', error);
-          // Don't block the quiz submission if streak update fails
+          console.error('Failed to save quiz attempts or update streak:', error);
+          // Don't block the quiz submission if backend save fails
+          // Data is already saved in localStorage as fallback
         }
       }
     };
-    updateStreak();
+    saveToBackend();
 
     setQuizSubmitted(true);
     setCurrentQuestionIndex(0); // Go back to first question to review
