@@ -538,18 +538,24 @@ function ProgressPageContent() {
                           Preguntas en este quiz:
                         </Text>
                         <div className="flex flex-wrap gap-2">
-                          {session.attempts.slice().reverse().map((attempt, idx) => (
-                            <div
-                              key={`${attempt.questionId}-${idx}`}
-                              className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${
-                                attempt.isCorrect
-                                  ? 'bg-[#34C759] text-white'
-                                  : 'bg-[#FF453A] text-white'
-                              }`}
-                            >
-                              {idx + 1}
-                            </div>
-                          ))}
+                          {session.attempts.slice().reverse().map((attempt, idx) => {
+                            const isUnanswered = attempt.userAnswer === -1;
+                            return (
+                              <div
+                                key={`${attempt.questionId}-${idx}`}
+                                className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${
+                                  isUnanswered
+                                    ? 'bg-gray-400 dark:bg-gray-600 text-white'
+                                    : attempt.isCorrect
+                                    ? 'bg-[#34C759] text-white'
+                                    : 'bg-[#FF453A] text-white'
+                                }`}
+                                title={isUnanswered ? 'No respondida' : attempt.isCorrect ? 'Correcta' : 'Incorrecta'}
+                              >
+                                {idx + 1}
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
 
@@ -575,9 +581,9 @@ function ProgressPageContent() {
                         <Button
                           variant="ghost"
                           onClick={() => {
-                            // Show quiz session with all questions
+                            // Show quiz session with all questions in original order
                             setSelectedQuizSession({
-                              attempts: session.attempts.slice().reverse(), // Reverse to show in order
+                              attempts: session.attempts,
                               currentIndex: 0
                             });
                           }}
@@ -662,7 +668,8 @@ function ProgressPageContent() {
                   </div>
                   <div className="space-y-3">
                     {attempt.options.map((option, index) => {
-                      const isUserAnswer = index === attempt.userAnswer;
+                      const isUnanswered = attempt.userAnswer === -1;
+                      const isUserAnswer = !isUnanswered && index === attempt.userAnswer;
                       const isCorrectAnswer = index === attempt.correctAnswer;
 
                       let className = 'p-4 rounded-xl border-2 transition-all duration-[180ms] ';
@@ -698,17 +705,23 @@ function ProgressPageContent() {
                 </div>
 
                 <div className={`p-4 rounded-xl ${
-                  attempt.isCorrect
+                  attempt.userAnswer === -1
+                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                    : attempt.isCorrect
                     ? 'bg-[#34C759]/10 dark:bg-[#30D158]/20 text-[#34C759] dark:text-[#5DE38D]'
                     : 'bg-[#FF453A]/10 dark:bg-[#FF453A]/20 text-[#FF453A] dark:text-[#FF7A72]'
                 }`}>
                   <Text size="md" className="font-semibold text-center">
-                    {attempt.isCorrect
+                    {attempt.userAnswer === -1
+                      ? 'No Respondida'
+                      : attempt.isCorrect
                       ? '¡Respuesta Correcta! 🎉'
                       : 'Respuesta Incorrecta'}
                   </Text>
                   <Text size="xs" className="text-center mt-1 opacity-80">
-                    Respondida el {formatDate(attempt.timestamp)}
+                    {attempt.userAnswer === -1
+                      ? `Pregunta del ${formatDate(attempt.timestamp)}`
+                      : `Respondida el ${formatDate(attempt.timestamp)}`}
                   </Text>
                 </div>
 
