@@ -101,7 +101,7 @@ export default function Home() {
               textDecoration: 'underline',
             }}
           >
-            ¿Qué es esto?
+            cómo funciona
           </button>
         </div>
 
@@ -155,7 +155,7 @@ export default function Home() {
                   color: 'var(--color-label-primary)',
                 }}
               >
-                Sobre esta plataforma
+                cómo funciona esto
               </h2>
               <button
                 onClick={() => setShowInfoModal(false)}
@@ -174,17 +174,17 @@ export default function Home() {
             </div>
 
             {/* Content */}
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
                 <h3
                   style={{
-                    fontSize: '16px',
+                    fontSize: '17px',
                     fontWeight: 600,
                     color: 'var(--color-label-primary)',
                     marginBottom: '8px',
                   }}
                 >
-                  ¿Qué es PAES Chile?
+                  la idea
                 </h3>
                 <p
                   style={{
@@ -193,30 +193,30 @@ export default function Home() {
                     color: 'var(--color-label-secondary)',
                   }}
                 >
-                  Una plataforma para practicar matemáticas de la PAES. Ejercicios alineados con el temario oficial, retroalimentación inmediata y seguimiento de tu progreso.
+                  práctica gratis de mate para la PAES. ejercicios reales del temario, feedback al tiro, y ves tu progreso en tiempo real. sin pagar, sin ads, sin webeo.
                 </p>
               </div>
 
               <div>
                 <h3
                   style={{
-                    fontSize: '16px',
+                    fontSize: '17px',
                     fontWeight: 600,
                     color: 'var(--color-label-primary)',
                     marginBottom: '8px',
                   }}
                 >
-                  ¿Qué puedes hacer aquí?
+                  qué puedes hacer
                 </h3>
                 <div className="space-y-2">
                   {[
-                    'Practicar con ejercicios del temario PAES',
-                    'Ver explicaciones detalladas de cada problema',
-                    'Seguir tu progreso en tiempo real',
-                    'Practicar en vivo con otros estudiantes',
+                    'practicar con problemas del temario oficial',
+                    'ver explicaciones cuando te equivocas',
+                    'seguir tu progreso (ves dónde estás mejorando)',
+                    'practicar en vivo con otros estudiantes',
                   ].map((item, i) => (
                     <div key={i} className="flex items-start gap-2">
-                      <span style={{ color: 'var(--color-tint)', marginTop: '2px' }}>•</span>
+                      <span style={{ color: 'var(--color-tint)', marginTop: '4px', fontSize: '18px' }}>•</span>
                       <p
                         style={{
                           fontSize: '15px',
@@ -235,13 +235,13 @@ export default function Home() {
               <div>
                 <h3
                   style={{
-                    fontSize: '16px',
+                    fontSize: '17px',
                     fontWeight: 600,
                     color: 'var(--color-label-primary)',
                     marginBottom: '8px',
                   }}
                 >
-                  ¿Por qué usar esto?
+                  por qué gratis
                 </h3>
                 <p
                   style={{
@@ -250,7 +250,7 @@ export default function Home() {
                     color: 'var(--color-label-secondary)',
                   }}
                 >
-                  Porque la práctica constante es clave. Esta plataforma te ayuda a identificar tus debilidades y mejorar específicamente en esas áreas. Todo gratis, sin trampas.
+                  porque entrar a la u no debería depender de si puedes pagar un preu. esto es una herramienta hecha por y para estudiantes. no hay trampa.
                 </p>
               </div>
 
@@ -270,7 +270,7 @@ export default function Home() {
                     textAlign: 'center',
                   }}
                 >
-                  <strong>100% gratis</strong> • Sin publicidad • Hecho para estudiantes
+                  <strong>100% gratis</strong> • 0 publicidad • hecho para estudiantes
                 </p>
               </div>
             </div>
@@ -291,7 +291,7 @@ export default function Home() {
                 cursor: 'pointer',
               }}
             >
-              Entendido
+              ok, entendido
             </button>
           </div>
         </div>
