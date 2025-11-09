@@ -3,11 +3,14 @@
 import { useEffect, useState } from 'react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import Link from 'next/link';
+import { api } from '@/lib/api-client';
 import {
   UserWithSubscription,
   Plan,
   CreateSubscriptionRequest,
   UpdateSubscriptionRequest,
+  GetUsersResponse,
+  GetPlansResponse,
 } from '@/lib/types';
 
 /**
@@ -46,42 +49,22 @@ function UserManagementContent() {
       setLoading(true);
       setError(null);
 
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        throw new Error('No access token found');
+      // Fetch users using api client
+      const usersResponse = await api.get<GetUsersResponse>('/api/admin/users');
+
+      if (usersResponse.error) {
+        throw new Error(usersResponse.error.error || 'Error al obtener usuarios');
       }
 
-      // Fetch users
-      const usersResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/users`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // Fetch plans using api client
+      const plansResponse = await api.get<GetPlansResponse>('/api/admin/plans?active=true');
 
-      if (!usersResponse.ok) {
-        throw new Error('Error al obtener usuarios');
+      if (plansResponse.error) {
+        throw new Error(plansResponse.error.error || 'Error al obtener planes');
       }
 
-      const usersData = await usersResponse.json();
-
-      // Fetch plans
-      const plansResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/plans?active=true`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!plansResponse.ok) {
-        throw new Error('Error al obtener planes');
-      }
-
-      const plansData = await plansResponse.json();
-
-      setUsers(usersData.users || []);
-      setPlans(plansData.plans || []);
+      setUsers(usersResponse.data?.users || []);
+      setPlans(plansResponse.data?.plans || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar datos');
       console.error('Error fetching data:', err);
@@ -148,31 +131,16 @@ function UserManagementContent() {
     if (!selectedUser) return;
 
     try {
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        throw new Error('No access token found');
-      }
-
       const request: CreateSubscriptionRequest = {
         userId: selectedUser.id,
         planId,
         startTrial,
       };
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/subscriptions`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(request),
-        }
-      );
+      const response = await api.post('/api/admin/subscriptions', request);
 
-      if (!response.ok) {
-        throw new Error('Error al asignar suscripción');
+      if (response.error) {
+        throw new Error(response.error.error || 'Error al asignar suscripción');
       }
 
       // Refresh data
@@ -181,7 +149,7 @@ function UserManagementContent() {
       setSelectedUser(null);
     } catch (err) {
       console.error('Error assigning subscription:', err);
-      alert('Error al asignar suscripción');
+      alert(err instanceof Error ? err.message : 'Error al asignar suscripción');
     }
   };
 
@@ -189,30 +157,17 @@ function UserManagementContent() {
     if (!confirm('¿Estás seguro de que quieres cancelar esta suscripción?')) return;
 
     try {
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        throw new Error('No access token found');
-      }
+      const response = await api.post(`/api/admin/subscriptions/${subscriptionId}/cancel`);
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/subscriptions/${subscriptionId}/cancel`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Error al cancelar suscripción');
+      if (response.error) {
+        throw new Error(response.error.error || 'Error al cancelar suscripción');
       }
 
       // Refresh data
       await fetchData();
     } catch (err) {
       console.error('Error cancelling subscription:', err);
-      alert('Error al cancelar suscripción');
+      alert(err instanceof Error ? err.message : 'Error al cancelar suscripción');
     }
   };
 
