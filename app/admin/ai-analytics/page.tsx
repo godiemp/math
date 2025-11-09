@@ -342,8 +342,8 @@ function AIAnalyticsContent() {
                         </Badge>
                         <Badge variant="secondary">{q.topic}</Badge>
                         <Badge variant={
-                          q.difficulty === 'easy' ? 'default' :
-                          q.difficulty === 'medium' ? 'default' : 'destructive'
+                          q.difficulty === 'easy' ? 'success' :
+                          q.difficulty === 'medium' ? 'warning' : 'danger'
                         }>
                           {q.difficulty}
                         </Badge>
@@ -399,7 +399,7 @@ function AIAnalyticsContent() {
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <Badge variant={interaction.interactionType === 'chat' ? 'default' : 'secondary'}>
+                        <Badge variant={interaction.interactionType === 'chat' ? 'info' : 'secondary'}>
                           {interaction.interactionType}
                         </Badge>
                         <Text className="text-xs text-gray-500">
