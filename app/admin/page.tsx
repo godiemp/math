@@ -383,6 +383,9 @@ function AdminBackofficeContent() {
               <Button variant="ghost" onClick={() => router.push('/')}>
                 Inicio
               </Button>
+              <Button variant="secondary" onClick={() => router.push('/admin/users')}>
+                👥 Usuarios
+              </Button>
               <Button variant="secondary" onClick={() => router.push('/admin/qgen')}>
                 🎲 QGen
               </Button>

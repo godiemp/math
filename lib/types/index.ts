@@ -121,3 +121,22 @@ export type {
   GeometryFigureUnion,
   QuestionRendererProps,
 } from './geometry';
+
+// ============================================================================
+// SUBSCRIPTION & PLAN TYPES
+// ============================================================================
+export type {
+  Plan,
+  SubscriptionStatus,
+  Subscription,
+  UserWithSubscription,
+  CreatePlanRequest,
+  UpdatePlanRequest,
+  CreateSubscriptionRequest,
+  UpdateSubscriptionRequest,
+  GetUsersResponse,
+  GetPlansResponse,
+  GetUserSubscriptionsResponse,
+  PlanResponse,
+  SubscriptionResponse,
+} from './subscription';

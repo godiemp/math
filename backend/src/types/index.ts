@@ -94,6 +94,82 @@ export interface StreakData {
   lastPracticeDate: string | null;
 }
 
+// Subscription and plan types
+export interface Plan {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+  currency: string;
+  durationDays: number;
+  trialDurationDays: number;
+  features: string[];
+  isActive: boolean;
+  displayOrder: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export type SubscriptionStatus = 'trial' | 'active' | 'expired' | 'cancelled';
+
+export interface Subscription {
+  id: number;
+  userId: string;
+  planId: string;
+  status: SubscriptionStatus;
+  startedAt: number;
+  expiresAt?: number;
+  trialEndsAt?: number;
+  cancelledAt?: number;
+  autoRenew: boolean;
+  paymentMethod?: string;
+  lastPaymentAt?: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface UserWithSubscription extends User {
+  subscription?: Subscription;
+  plan?: Plan;
+}
+
+export interface CreatePlanRequest {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+  currency?: string;
+  durationDays: number;
+  trialDurationDays?: number;
+  features: string[];
+  displayOrder?: number;
+}
+
+export interface UpdatePlanRequest {
+  name?: string;
+  description?: string;
+  price?: number;
+  durationDays?: number;
+  trialDurationDays?: number;
+  features?: string[];
+  isActive?: boolean;
+  displayOrder?: number;
+}
+
+export interface CreateSubscriptionRequest {
+  userId: string;
+  planId: string;
+  startTrial?: boolean;
+  paymentMethod?: string;
+}
+
+export interface UpdateSubscriptionRequest {
+  status?: SubscriptionStatus;
+  expiresAt?: number;
+  autoRenew?: boolean;
+  paymentMethod?: string;
+}
+
 // Backend metadata types
 // Question already has metadata fields, so this is just an alias
 export type QuestionWithMetadata = Question;

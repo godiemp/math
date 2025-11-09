@@ -283,6 +283,48 @@ export const initializeDatabase = async (): Promise<void> => {
     `);
 
     // ========================================
+    // SUBSCRIPTION SYSTEM TABLES
+    // ========================================
+
+    // Create plans table - defines available subscription plans
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS plans (
+        id VARCHAR(50) PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        description TEXT,
+        price DECIMAL(10, 2) NOT NULL DEFAULT 0,
+        currency VARCHAR(3) NOT NULL DEFAULT 'CLP',
+        duration_days INTEGER NOT NULL,
+        trial_duration_days INTEGER DEFAULT 0,
+        features JSONB NOT NULL DEFAULT '[]',
+        is_active BOOLEAN DEFAULT TRUE,
+        display_order INTEGER DEFAULT 0,
+        created_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL
+      )
+    `);
+
+    // Create subscriptions table - tracks user subscriptions
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS subscriptions (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        plan_id VARCHAR(50) NOT NULL REFERENCES plans(id),
+        status VARCHAR(20) NOT NULL CHECK (status IN ('trial', 'active', 'expired', 'cancelled')),
+        started_at BIGINT NOT NULL,
+        expires_at BIGINT,
+        trial_ends_at BIGINT,
+        cancelled_at BIGINT,
+        auto_renew BOOLEAN DEFAULT TRUE,
+        payment_method VARCHAR(50),
+        last_payment_at BIGINT,
+        created_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL,
+        UNIQUE(user_id, plan_id)
+      )
+    `);
+
+    // ========================================
     // QGEN SYSTEM TABLES
     // ========================================
 
@@ -433,6 +475,13 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_ai_interactions_type ON ai_interactions(interaction_type)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_ai_interactions_created_at ON ai_interactions(created_at)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_ai_interactions_quiz_session_id ON ai_interactions(quiz_session_id)');
+
+    // Subscription system indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_plans_is_active ON plans(is_active)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id ON subscriptions(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_subscriptions_plan_id ON subscriptions(plan_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_subscriptions_status ON subscriptions(status)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_subscriptions_expires_at ON subscriptions(expires_at)');
 
     // QGen system indexes
     await client.query('CREATE INDEX IF NOT EXISTS idx_contexts_category ON contexts(category)');
