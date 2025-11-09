@@ -63,11 +63,48 @@ GitHub Actions will:
 
 ```
 e2e/
-├── auth.spec.ts          # Authentication tests
+├── auth.spec.ts          # Authentication tests (2 tests)
+├── live-practice.spec.ts # Live practice registration tests (6 tests)
+├── practice.spec.ts      # Practice mode & progress tracking tests (16 tests)
 ├── global-setup.ts       # Database seeding before tests
 └── helpers/
     └── db-setup.ts       # Database utilities
 ```
+
+## Test Coverage
+
+### Authentication Tests (auth.spec.ts)
+- Login page display
+- Login with student credentials
+
+### Live Practice Tests (live-practice.spec.ts)
+- Display available sessions
+- Register for a session
+- Unregister from a session
+- Session details display
+- User welcome message
+- Navigation to dashboard
+
+### Practice Mode Tests (practice.spec.ts)
+**M1 Quiz Flow (11 tests):**
+- Subject selection display
+- Subject and mode selection flow
+- Zen mode quiz completion
+- Rapid Fire difficulty selection
+- Starting Rapid Fire quiz with difficulty
+- Changing selection before quiz start
+- Repeat last configuration feature
+- Navigation back to dashboard
+- Curriculum link display
+- Accessing practice from dashboard
+- Quiz completion and results
+
+**Progress Tracking (5 tests):**
+- Progress tracking after completing questions
+- M1 and M2 progress sections display
+- View mode tabs (Overview, Quizzes, Skills)
+- Switching between view modes
+- Navigation to dashboard
 
 ## Writing Tests
 
