@@ -11,7 +11,7 @@ interface DocsContentWrapperProps {
 export function DocsContentWrapper({ content, title }: DocsContentWrapperProps) {
   return (
     <div className="flex-1 p-8 lg:p-12">
-      <div className="max-w-4xl mx-auto">
+      <div>
         {/* Export Button */}
         <div className="flex justify-end mb-6 print:hidden">
           <DocsExportButton title={title} />
