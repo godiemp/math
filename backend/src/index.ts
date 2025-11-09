@@ -9,6 +9,7 @@ import streakRoutes from './routes/streakRoutes';
 import sessionRoutes from './routes/sessionRoutes';
 import aiRoutes from './routes/aiRoutes';
 import analyticsRoutes from './routes/analyticsRoutes';
+import aiAnalyticsRoutes from './routes/aiAnalyticsRoutes';
 import quizRoutes from './routes/quizRoutes';
 import qgenRoutes from './routes/qgenRoutes';
 import { serveImage } from './controllers/adminController';
@@ -98,6 +99,7 @@ app.use('/api/streak', streakRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/ai-analytics', aiAnalyticsRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/qgen', qgenRoutes);
 
@@ -110,6 +112,7 @@ console.log('✅ Streak routes registered at /api/streak');
 console.log('✅ Session routes registered at /api/sessions');
 console.log('✅ AI routes registered at /api/ai');
 console.log('✅ Analytics routes registered at /api/analytics');
+console.log('✅ AI Analytics routes registered at /api/ai-analytics');
 console.log('✅ Quiz routes registered at /api/quiz');
 
 // 404 handler
