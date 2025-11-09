@@ -31,6 +31,7 @@ export type {
   MasteryLevel,
   VisualDataType,
   QuestionRenderMode,
+  OnboardingStage,
   // Core entities
   Question,
   User,

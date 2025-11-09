@@ -10,6 +10,7 @@ import sessionRoutes from './routes/sessionRoutes';
 import aiRoutes from './routes/aiRoutes';
 import analyticsRoutes from './routes/analyticsRoutes';
 import quizRoutes from './routes/quizRoutes';
+import onboardingRoutes from './routes/onboardingRoutes';
 import { serveImage } from './controllers/adminController';
 
 // Load environment variables
@@ -98,6 +99,7 @@ app.use('/api/sessions', sessionRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/quiz', quizRoutes);
+app.use('/api/onboarding', onboardingRoutes);
 
 // Public image serving route
 app.get('/api/images/:filename', serveImage);
@@ -109,6 +111,7 @@ console.log('✅ Session routes registered at /api/sessions');
 console.log('✅ AI routes registered at /api/ai');
 console.log('✅ Analytics routes registered at /api/analytics');
 console.log('✅ Quiz routes registered at /api/quiz');
+console.log('✅ Onboarding routes registered at /api/onboarding');
 
 // 404 handler
 app.use((req: Request, res: Response) => {
