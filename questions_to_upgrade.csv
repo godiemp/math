@@ -1,0 +1,330 @@
+level,subject,question_id,current_difficulty,target_difficulty,topic
+M1,números,m1-10,easy,hard,Números y Operaciones
+M1,números,m1-12,easy,hard,Números y Operaciones
+M1,números,m1-29,medium,hard,Números y Operaciones
+M1,números,m1-69,medium,hard,Números y Operaciones
+M1,números,m1-70,medium,hard,Números y Operaciones
+M1,números,m1-72,easy,hard,Números y Operaciones
+M1,números,m1-73,medium,hard,Números y Operaciones
+M1,números,m1-75,easy,hard,Números y Operaciones
+M1,números,m1-76,medium,hard,Números y Operaciones
+M1,números,m1-77,medium,hard,Números y Operaciones
+M1,números,m1-78,medium,hard,Números y Operaciones
+M1,números,m1-79,medium,hard,Números y Operaciones
+M1,números,m1-81,easy,hard,Números y Operaciones
+M1,números,m1-82,easy,hard,Números y Operaciones
+M1,números,m1-9,easy,hard,Números y Operaciones
+M1,números,m1-11,medium,hard,Números y Operaciones
+M1,números,m1-26,easy,hard,Números y Operaciones
+M1,números,m1-28,medium,hard,Números y Operaciones
+M1,números,m1-42,easy,hard,Números y Operaciones
+M1,números,m1-43,medium,hard,Números y Operaciones
+M1,números,m1-44,medium,hard,Números y Operaciones
+M1,números,m1-45,easy,hard,Números y Operaciones
+M1,números,m1-46,easy,hard,Números y Operaciones
+M1,números,m1-47,medium,hard,Números y Operaciones
+M1,números,m1-48,medium,hard,Números y Operaciones
+M1,números,m1-49,medium,hard,Números y Operaciones
+M1,números,m1-50,easy,hard,Números y Operaciones
+M1,números,m1-51,easy,hard,Números y Operaciones
+M1,números,m1-52,easy,hard,Números y Operaciones
+M1,números,m1-53,medium,hard,Números y Operaciones
+M1,números,m1-54,medium,hard,Números y Operaciones
+M1,números,m1-56,medium,hard,Números y Operaciones
+M1,números,m1-57,easy,hard,Números y Operaciones
+M1,números,m1-58,easy,hard,Números y Operaciones
+M1,números,m1-59,medium,hard,Números y Operaciones
+M1,números,m1-60,easy,hard,Números y Operaciones
+M1,números,m1-61,medium,hard,Números y Operaciones
+M1,números,m1-62,medium,hard,Números y Operaciones
+M1,números,m1-63,easy,hard,Números y Operaciones
+M1,números,m1-65,medium,hard,Números y Proporcionalidad
+M1,números,m1-66,easy,hard,Números y Operaciones
+M1,números,m1-67,medium,hard,Números y Operaciones
+M1,números,m1-108,easy,hard,Números y Operaciones
+M1,números,m1-109,medium,hard,Números y Operaciones
+M1,números,m1-110,medium,hard,Números y Operaciones
+M1,números,m1-111,easy,hard,Números y Operaciones
+M1,números,m1-112,medium,hard,Números y Operaciones
+M1,números,m1-114,medium,hard,Números y Operaciones
+M1,números,m1-115,easy,hard,Números y Operaciones
+M1,números,m1-117,easy,hard,Números y Operaciones
+M1,números,m1-118,medium,hard,Números y Operaciones
+M1,números,m1-119,medium,hard,Números y Operaciones
+M1,números,m1-120,easy,hard,Números y Operaciones
+M1,números,m1-121,easy,hard,Números y Operaciones
+M1,números,m1-122,medium,hard,Números y Operaciones
+M1,números,m1-1,easy,hard,Números y Proporcionalidad
+M1,números,m1-84,easy,hard,Números y Proporcionalidad
+M1,números,m1-85,medium,hard,Números y Proporcionalidad
+M1,números,m1-86,medium,hard,Números y Proporcionalidad
+M1,números,m1-87,medium,hard,Números y Proporcionalidad
+M1,números,m1-88,medium,hard,Números y Proporcionalidad
+M1,números,m1-90,medium,hard,Números y Proporcionalidad
+M1,números,m1-91,medium,hard,Números y Proporcionalidad
+M1,números,m1-93,easy,hard,Números y Proporcionalidad
+M1,números,m1-7,easy,hard,Números y Proporcionalidad
+M1,números,m1-27,easy,hard,Números y Proporcionalidad
+M1,números,m1-94,easy,hard,Números y Proporcionalidad
+M1,números,m1-96,medium,hard,Números y Proporcionalidad
+M1,números,m1-97,medium,hard,Números y Proporcionalidad
+M1,números,m1-99,easy,hard,Números y Proporcionalidad
+M1,números,m1-100,medium,hard,Números y Proporcionalidad
+M1,números,m1-101,medium,hard,Números y Proporcionalidad
+M1,números,m1-102,easy,hard,Números y Proporcionalidad
+M1,números,m1-104,medium,hard,Números y Proporcionalidad
+M1,números,m1-105,medium,hard,Números y Proporcionalidad
+M1,números,m1-106,medium,hard,Números y Proporcionalidad
+M1,álgebra,m1-183,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-184,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-185,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-186,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-187,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-189,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-190,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-2,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-15,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-168,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-169,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-171,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-172,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-174,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-177,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-178,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-179,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-180,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-181,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-5,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-16,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-30,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-33,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-141,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-142,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-144,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-147,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-148,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-201,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-202,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-203,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-204,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-32,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-170,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-173,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-192,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-193,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-194,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-195,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-196,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-198,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-13,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-14,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-31,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-123,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-124,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-125,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-126,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-127,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-128,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-129,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-132,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-133,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-134,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-135,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-137,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-138,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-139,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-150,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-151,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-153,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-154,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-156,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-157,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-159,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-160,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-162,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-163,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-165,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-166,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-207,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-208,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-210,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-213,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-214,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-216,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-217,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-219,easy,hard,Álgebra y Funciones
+M1,álgebra,m1-220,medium,hard,Álgebra y Funciones
+M1,álgebra,m1-221,easy,hard,Álgebra y Funciones
+M1,geometría,m1-6,medium,hard,Geometría
+M1,geometría,m1-17,easy,hard,Geometría
+M1,geometría,m1-18,easy,hard,Geometría
+M1,geometría,m1-21,medium,hard,Geometría
+M1,geometría,m1-34,easy,hard,Geometría
+M1,geometría,m1-35,easy,hard,Geometría
+M1,geometría,m1-36,easy,hard,Geometría
+M1,geometría,m1-37,easy,hard,Geometría
+M1,geometría,m1-132,easy,hard,Geometría
+M1,geometría,m1-133,easy,hard,Geometría
+M1,geometría,m1-134,easy,hard,Geometría
+M1,geometría,m1-135,medium,hard,Geometría
+M1,geometría,m1-136,medium,hard,Geometría
+M1,geometría,m1-137,easy,hard,Geometría
+M1,geometría,m1-138,medium,hard,Geometría
+M1,geometría,m1-139,medium,hard,Geometría
+M1,geometría,m1-141,easy,hard,Geometría
+M1,geometría,m1-143,medium,hard,Geometría
+M1,geometría,m1-144,easy,hard,Geometría
+M1,geometría,m1-145,easy,hard,Geometría
+M1,geometría,m1-146,easy,hard,Geometría
+M1,geometría,m1-147,easy,hard,Geometría
+M1,geometría,m1-148,easy,hard,Geometría
+M1,geometría,m1-149,easy,hard,Geometría
+M1,geometría,m1-150,easy,hard,Geometría
+M1,geometría,m1-151,easy,hard,Geometría
+M1,geometría,m1-152,medium,hard,Geometría
+M1,geometría,m1-153,easy,hard,Geometría
+M1,geometría,m1-154,easy,hard,Geometría
+M1,geometría,m1-155,easy,hard,Geometría
+M1,geometría,m1-156,easy,hard,Geometría
+M1,geometría,m1-157,medium,hard,Geometría
+M1,geometría,m1-158,medium,hard,Geometría
+M1,geometría,m1-159,medium,hard,Geometría
+M1,geometría,m1-162,easy,hard,Geometría
+M1,geometría,m1-163,easy,hard,Geometría
+M1,geometría,m1-164,easy,hard,Geometría
+M1,geometría,m1-165,easy,hard,Geometría
+M1,geometría,m1-166,easy,hard,Geometría
+M1,geometría,m1-167,medium,hard,Geometría
+M1,geometría,m1-168,easy,hard,Geometría
+M1,geometría,m1-169,medium,hard,Geometría
+M1,geometría,m1-170,medium,hard,Geometría
+M1,geometría,m1-171,medium,hard,Geometría
+M1,geometría,m1-173,easy,hard,Geometría
+M1,geometría,m1-174,easy,hard,Geometría
+M1,geometría,m1-175,medium,hard,Geometría
+M1,geometría,m1-176,easy,hard,Geometría
+M1,geometría,m1-177,easy,hard,Geometría
+M1,geometría,m1-178,easy,hard,Geometría
+M1,geometría,m1-179,medium,hard,Geometría
+M1,geometría,m1-180,easy,hard,Geometría
+M1,geometría,m1-181,medium,hard,Geometría
+M1,geometría,m1-182,easy,hard,Geometría
+M1,geometría,m1-183,medium,hard,Geometría
+M1,geometría,m1-184,medium,hard,Geometría
+M1,geometría,m1-186,medium,hard,Geometría
+M1,geometría,m1-189,medium,hard,Geometría
+M1,geometría,m1-190,medium,hard,Geometría
+M1,geometría,m1-191,easy,hard,Geometría
+M1,geometría,m1-192,easy,hard,Geometría
+M1,geometría,m1-193,easy,hard,Geometría
+M1,geometría,m1-194,medium,hard,Geometría
+M1,geometría,m1-195,easy,hard,Geometría
+M1,geometría,m1-196,medium,hard,Geometría
+M1,geometría,m1-199,medium,hard,Geometría
+M1,geometría,m1-200,medium,hard,Geometría
+M1,geometría,m1-201,easy,hard,Geometría
+M1,geometría,m1-203,medium,hard,Geometría
+M1,geometría,m1-204,easy,hard,Geometría
+M1,geometría,m1-206,medium,hard,Geometría
+M1,geometría,m1-3,easy,hard,Geometría
+M1,geometría,m1-20,medium,hard,Geometría
+M1,geometría,m1-207,easy,hard,Geometría
+M1,geometría,m1-208,easy,hard,Geometría
+M1,geometría,m1-209,medium,hard,Geometría
+M1,geometría,m1-210,easy,hard,Geometría
+M1,geometría,m1-211,medium,hard,Geometría
+M1,geometría,m1-212,easy,hard,Geometría
+M1,geometría,m1-213,easy,hard,Geometría
+M1,geometría,m1-214,medium,hard,Geometría
+M1,geometría,m1-215,medium,hard,Geometría
+M1,geometría,m1-216,easy,hard,Geometría
+M1,geometría,m1-217,medium,hard,Geometría
+M1,geometría,m1-218,easy,hard,Geometría
+M1,geometría,m1-219,medium,hard,Geometría
+M1,geometría,m1-220,medium,hard,Geometría
+M1,geometría,m1-19,easy,hard,Geometría
+M1,probabilidad,m1-4,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-24,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-38,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-41,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-42,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-43,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-44,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-45,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-46,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-47,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-48,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-49,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-50,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-51,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-52,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-53,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-54,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-55,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-56,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-57,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-58,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-59,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-60,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-61,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-62,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-63,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-64,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-66,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-67,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-68,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-72,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-74,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-77,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-79,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-80,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-81,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-82,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-83,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-84,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-85,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-8,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-22,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-23,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-25,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-39,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-99,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-100,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-101,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-102,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-103,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-105,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-106,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-108,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-109,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-110,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-111,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-112,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-114,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-115,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-116,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-117,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-118,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-119,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-120,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-121,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-123,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-124,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-125,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-126,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-127,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-128,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-129,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-40,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-87,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-88,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-89,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-90,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-91,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-92,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-93,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-94,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-95,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-96,easy,hard,Probabilidad y Estadística
+M1,probabilidad,m1-97,medium,hard,Probabilidad y Estadística
+M1,probabilidad,m1-98,easy,hard,Probabilidad y Estadística
