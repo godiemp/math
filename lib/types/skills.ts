@@ -23,6 +23,17 @@ import type { Subject, MasteryLevel, Level, QuestionAttempt } from './core';
 export type Competency = 'Resolver' | 'Modelar' | 'Representar' | 'Argumentar';
 
 /**
+ * Skill categories for atomic skills organization
+ */
+export type SkillCategory =
+  | 'comprension-conceptual'      // A. Comprensión conceptual
+  | 'operaciones-basicas'         // B. Operaciones básicas
+  | 'comparacion-orden'           // C. Comparación y orden
+  | 'propiedades-relaciones'      // D. Propiedades y relaciones
+  | 'problemas-modelamiento'      // E. Problemas y modelamiento contextual
+  | 'razonamiento-metacognicion'; // F. Razonamiento y metacognición
+
+/**
  * Base skill from skill taxonomy
  */
 export interface Skill {
@@ -31,6 +42,7 @@ export interface Skill {
   description: string;
   topic: Subject;
   parentSkill?: string;
+  category?: SkillCategory; // Optional category for atomic skills
 }
 
 /**
