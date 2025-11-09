@@ -11,34 +11,10 @@
 
 import { SKILLS, Skill } from './skillTaxonomy';
 import { questions } from './questions';
+import type { Competency, EnhancedSkill } from './types';
 
-// Define the four core PAES competencies
-export type Competency = 'Resolver' | 'Modelar' | 'Representar' | 'Argumentar';
-
-// Enhanced skill interface with additional metadata
-export interface EnhancedSkill extends Skill {
-  // Statistics from question analysis
-  questionCount: number;
-  m1QuestionCount: number;
-  m2QuestionCount: number;
-
-  // Difficulty distribution
-  easyCount: number;
-  mediumCount: number;
-  hardCount: number;
-  averageDifficulty: number; // 1 = easy, 2 = medium, 3 = hard
-
-  // Competencies this skill supports
-  competencies: Competency[];
-
-  // Learning metadata
-  prerequisites: string[]; // Skills that should be learned first
-  relatedSkills: string[]; // Skills commonly used together
-
-  // Curriculum integration
-  isCore: boolean; // Is this a fundamental skill?
-  level: 'M1' | 'M2' | 'Both'; // Which level primarily uses this skill
-}
+// Re-export types for convenience
+export type { Competency, EnhancedSkill };
 
 /**
  * Analyzes all questions to build skill statistics

@@ -1,22 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Question, QuestionAttempt, RapidFireState, RapidFireScore } from '@/lib/types';
+import type { Question, QuestionAttempt, QuizProps, RapidFireState, RapidFireScore } from '@/lib/types';
 import { getRandomQuestions } from '@/lib/questions';
 import { QuestionRenderer } from './QuestionRenderer';
 import { AIChatModal } from './AIChatModal';
 import { api } from '@/lib/api-client';
 import { isAuthenticated } from '@/lib/auth';
 import { RAPIDFIRE_CONFIG } from '@/lib/constants';
-
-interface QuizProps {
-  questions: Question[];
-  level: 'M1' | 'M2';
-  subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
-  quizMode?: 'zen' | 'rapidfire';
-  difficulty?: 'easy' | 'medium' | 'hard' | 'extreme';
-  replayQuestions?: Question[]; // Specific questions for replaying a quiz
-}
 
 export default function Quiz({ questions: allQuestions, level, subject, quizMode = 'zen', difficulty = 'medium', replayQuestions }: QuizProps) {
   // Get configuration for the current difficulty

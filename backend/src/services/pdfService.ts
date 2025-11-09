@@ -1,4 +1,4 @@
-import { Question } from '../types';
+import { QuestionWithMetadata } from '../types';
 
 export interface ExtractedQuestion {
   question: string;
@@ -149,7 +149,7 @@ export function convertToQuestionFormat(
     skills: string[];
     createdBy: string;
   }
-): Question {
+): QuestionWithMetadata {
   const now = Date.now();
 
   return {

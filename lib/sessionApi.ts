@@ -4,44 +4,25 @@
  */
 
 import { api } from './api-client';
-import { LiveSession, User, Question } from './types';
+import type {
+  LiveSession,
+  User,
+  Question,
+  CreateSessionData,
+  UpdateSessionData,
+  SessionsResponse,
+  SessionResponse,
+  MessageResponse
+} from './types';
 
-export interface CreateSessionData {
-  name: string;
-  description?: string;
-  level: 'M1' | 'M2';
-  scheduledStartTime: number;
-  durationMinutes: number;
-  questions: Question[];
-  maxParticipants?: number;
-}
-
-export interface UpdateSessionData {
-  name?: string;
-  description?: string;
-  level?: 'M1' | 'M2';
-  scheduledStartTime?: number;
-  durationMinutes?: number;
-  questionCount?: number;
-  maxParticipants?: number;
-  questions?: Question[];
-}
-
-export interface SessionsResponse {
-  success: boolean;
-  count: number;
-  sessions: LiveSession[];
-}
-
-export interface SessionResponse {
-  success: boolean;
-  session: LiveSession;
-}
-
-export interface MessageResponse {
-  success: boolean;
-  message?: string;
-}
+// Re-export types for convenience
+export type {
+  CreateSessionData,
+  UpdateSessionData,
+  SessionsResponse,
+  SessionResponse,
+  MessageResponse
+};
 
 /**
  * Get all sessions with optional filters

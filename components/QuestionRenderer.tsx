@@ -1,20 +1,11 @@
 'use client';
 
-import { Question } from '@/lib/types';
+import type { Question, QuestionRendererProps } from '@/lib/types';
 import { MathText, BlockMath, InlineMath, SmartLatexRenderer } from './MathDisplay';
 import { GeometryCanvas, GeometryFigure } from './GeometryCanvas';
 
-export interface QuestionRendererProps {
-  question: Question;
-  mode?: 'question-only' | 'with-options' | 'with-explanation' | 'full';
-  selectedAnswer?: number | null;
-  showFeedback?: boolean;
-  onAnswerSelect?: (answerIndex: number) => void;
-  disabled?: boolean;
-  compact?: boolean;
-  quizMode?: 'zen' | 'rapidfire';
-  onRequestAIHelp?: () => void;
-}
+// Re-export for convenience
+export type { QuestionRendererProps };
 
 /**
  * Centralized component for rendering math problems with support for:

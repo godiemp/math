@@ -117,9 +117,12 @@ export type GeometryFigureUnion = Triangle | Rectangle | Circle | Point | Line |
  */
 export interface QuestionRendererProps {
   question: Question;
-  mode: QuestionRenderMode;
+  mode?: QuestionRenderMode;
   selectedAnswer?: number | null;
   showFeedback?: boolean;
   onAnswerSelect?: (answerIndex: number) => void;
   disabled?: boolean;
+  compact?: boolean;
+  quizMode?: 'zen' | 'rapidfire';
+  onRequestAIHelp?: () => void;
 }

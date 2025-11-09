@@ -1,5 +1,11 @@
 import { Request } from 'express';
 
+/**
+ * Backend type definitions
+ * Note: These are duplicated from frontend /lib/types for Docker build isolation.
+ * Keep in sync with frontend types manually.
+ */
+
 export interface QuestionImage {
   id: string;
   url: string;
@@ -19,7 +25,7 @@ export interface Question {
   correctAnswer: number;
   explanation: string;
   explanationLatex?: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: 'easy' | 'medium' | 'hard' | 'extreme';
   subject: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
   skills: string[];
   images?: QuestionImage[];
@@ -86,6 +92,14 @@ export interface StreakData {
   currentStreak: number;
   longestStreak: number;
   lastPracticeDate: string | null;
+}
+
+// Backend metadata types
+// Question already has metadata fields, so this is just an alias
+export type QuestionWithMetadata = Question;
+
+export interface UserWithMetadata extends User {
+  updatedAt: number;
 }
 
 // Type alias for authenticated requests

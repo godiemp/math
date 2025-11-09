@@ -4,30 +4,13 @@
  * Functions to calculate user progress on individual skills based on question attempts
  */
 
-import { QuestionAttempt, MasteryLevel } from './types';
+import { QuestionAttempt, MasteryLevel, SkillProgress, SkillProgressSummary, EnhancedSkill } from './types';
 import { questions } from './questions';
 import { SKILLS } from './skillTaxonomy';
-import { skillsArray, EnhancedSkill } from './skillsArray';
+import { skillsArray } from './skillsArray';
 
-export interface SkillProgress {
-  skillId: string;
-  skill: EnhancedSkill;
-  attemptsCount: number;
-  correctCount: number;
-  incorrectCount: number;
-  accuracy: number; // 0-100
-  lastAttempted?: number; // timestamp
-  masteryLevel: MasteryLevel; // not-started | learning | mastered
-}
-
-export interface SkillProgressSummary {
-  mastered: SkillProgress[];
-  learning: SkillProgress[];
-  notStarted: SkillProgress[];
-  totalSkills: number;
-  totalAttempts: number;
-  overallAccuracy: number;
-}
+// Re-export types for convenience
+export type { SkillProgress, SkillProgressSummary };
 
 /**
  * Maps question IDs to their skills

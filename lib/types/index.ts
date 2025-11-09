@@ -44,6 +44,9 @@ export type {
 // ============================================================================
 export type {
   QuizProps,
+  QuizHistoryResponse,
+  RapidFireState,
+  RapidFireScore,
 } from './practice';
 
 // ============================================================================
@@ -100,6 +103,7 @@ export type {
   RefreshTokenRequest,
   RefreshToken,
   AuthResponse,
+  AuthResult,
 } from './auth';
 
 // ============================================================================

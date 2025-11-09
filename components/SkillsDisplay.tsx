@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { QuestionAttempt } from '@/lib/types';
+import type { QuestionAttempt, SkillsDisplayProps } from '@/lib/types';
 import {
   summarizeSkillProgress,
   getRecommendedSkills,
@@ -9,12 +9,6 @@ import {
   SkillProgress
 } from '@/lib/skillProgress';
 import { Card, Badge, Heading, Text } from '@/components/ui';
-
-interface SkillsDisplayProps {
-  attempts: QuestionAttempt[];
-  level?: 'M1' | 'M2';
-  showRecommendations?: boolean;
-}
 
 export function SkillsDisplay({ attempts, level, showRecommendations = true }: SkillsDisplayProps) {
   const [viewMode, setViewMode] = useState<'status' | 'topic'>('status');

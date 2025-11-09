@@ -160,6 +160,8 @@ export interface QuestionAttempt {
   options: string[];
   explanation: string;
   difficulty: DifficultyLevel;
+  subject: Subject;
+  skills: string[];
 }
 
 /**
