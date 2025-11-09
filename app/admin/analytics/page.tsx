@@ -134,30 +134,24 @@ function AnalyticsDashboardContent() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
-          <Card padding="lg">
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-            </div>
-          </Card>
+      <AdminLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
-      </div>
+      </AdminLayout>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
-          <Card padding="lg" className="border-red-500">
-            <Text className="text-red-600 dark:text-red-400">{error}</Text>
-            <Button variant="primary" onClick={fetchAnalytics} className="mt-4">
-              Retry
-            </Button>
-          </Card>
-        </div>
-      </div>
+      <AdminLayout>
+        <Card padding="lg" className="border-red-200 dark:border-red-800">
+          <Text className="text-red-600 dark:text-red-400 mb-4">{error}</Text>
+          <Button variant="primary" onClick={fetchAnalytics}>
+            Retry
+          </Button>
+        </Card>
+      </AdminLayout>
     );
   }
 
