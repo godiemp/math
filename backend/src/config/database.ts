@@ -68,6 +68,27 @@ export const initializeDatabase = async (): Promise<void> => {
       END $$;
     `);
 
+    // Add onboarding columns if they don't exist (migration for existing tables)
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='has_completed_onboarding') THEN
+          ALTER TABLE users ADD COLUMN has_completed_onboarding BOOLEAN DEFAULT FALSE;
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='onboarding_stage') THEN
+          ALTER TABLE users ADD COLUMN onboarding_stage VARCHAR(50) DEFAULT 'welcome'
+            CHECK (onboarding_stage IN ('welcome', 'goal-selection', 'dashboard-tour', 'first-quiz', 'completed'));
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='preferred_subject') THEN
+          ALTER TABLE users ADD COLUMN preferred_subject VARCHAR(10)
+            CHECK (preferred_subject IN ('M1', 'M2', 'both'));
+        END IF;
+      END $$;
+    `);
+
     // Create refresh_tokens table
     await client.query(`
       CREATE TABLE IF NOT EXISTS refresh_tokens (

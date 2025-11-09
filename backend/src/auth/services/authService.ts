@@ -39,6 +39,9 @@ function formatUserResponse(user: UserRecord): UserResponse {
     currentStreak: user.current_streak,
     longestStreak: user.longest_streak,
     lastPracticeDate: user.last_practice_date,
+    hasCompletedOnboarding: user.has_completed_onboarding,
+    onboardingStage: user.onboarding_stage,
+    preferredSubject: user.preferred_subject,
   };
 }
 
@@ -76,12 +79,12 @@ export async function registerUser(
   const userId = `user-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
   const now = Date.now();
 
-  // Insert user
+  // Insert user with onboarding fields
   const result = await pool.query<UserRecord>(
-    `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-     RETURNING id, username, email, password_hash, display_name, role, created_at, updated_at, current_streak, longest_streak, last_practice_date`,
-    [userId, username, email, passwordHash, displayName, 'student', now, now]
+    `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at, has_completed_onboarding, onboarding_stage)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+     RETURNING id, username, email, password_hash, display_name, role, created_at, updated_at, current_streak, longest_streak, last_practice_date, has_completed_onboarding, onboarding_stage, preferred_subject`,
+    [userId, username, email, passwordHash, displayName, 'student', now, now, false, 'welcome']
   );
 
   const user = result.rows[0];
@@ -117,7 +120,7 @@ export async function loginUser(data: LoginRequest): Promise<AuthResponse> {
   // Find user by username or email
   const result = await pool.query<UserRecord>(
     `SELECT id, username, email, password_hash, display_name, role, created_at, updated_at,
-            current_streak, longest_streak, last_practice_date
+            current_streak, longest_streak, last_practice_date, has_completed_onboarding, onboarding_stage, preferred_subject
      FROM users
      WHERE username = $1 OR email = $1`,
     [usernameOrEmail]
@@ -217,7 +220,7 @@ export async function logoutUser(refreshToken: string): Promise<void> {
 export async function getUserById(userId: string): Promise<UserResponse | null> {
   const result = await pool.query<UserRecord>(
     `SELECT id, username, email, password_hash, display_name, role, created_at, updated_at,
-            current_streak, longest_streak, last_practice_date
+            current_streak, longest_streak, last_practice_date, has_completed_onboarding, onboarding_stage, preferred_subject
      FROM users
      WHERE id = $1`,
     [userId]

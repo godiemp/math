@@ -129,6 +129,16 @@ export interface Question {
 }
 
 /**
+ * User onboarding stage
+ * - welcome: Initial welcome screen
+ * - goal-selection: User selects their practice goal
+ * - dashboard-tour: Dashboard feature tour
+ * - first-quiz: Guided first quiz experience
+ * - completed: Onboarding finished
+ */
+export type OnboardingStage = 'welcome' | 'goal-selection' | 'dashboard-tour' | 'first-quiz' | 'completed';
+
+/**
  * User entity
  * Represents a registered user in the system
  */
@@ -142,6 +152,10 @@ export interface User {
   currentStreak?: number;
   longestStreak?: number;
   lastPracticeDate?: string | null;
+  // Onboarding fields
+  hasCompletedOnboarding?: boolean;
+  onboardingStage?: OnboardingStage;
+  preferredSubject?: 'M1' | 'M2' | 'both';
 }
 
 /**

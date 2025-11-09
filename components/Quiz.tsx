@@ -5,11 +5,14 @@ import type { Question, QuestionAttempt, QuizProps, RapidFireState, RapidFireSco
 import { getRandomQuestions } from '@/lib/questions';
 import { QuestionRenderer } from './QuestionRenderer';
 import { AIChatModal } from './AIChatModal';
+import { CelebrationModal } from './CelebrationModal';
 import { api } from '@/lib/api-client';
 import { isAuthenticated } from '@/lib/auth';
+import { useAuth } from '@/contexts/AuthContext';
 import { RAPIDFIRE_CONFIG } from '@/lib/constants';
 
 export default function Quiz({ questions: allQuestions, level, subject, quizMode = 'zen', difficulty = 'medium', replayQuestions }: QuizProps) {
+  const { user, setUser } = useAuth();
   // Get configuration for the current difficulty
   const config = quizMode === 'rapidfire' ? RAPIDFIRE_CONFIG[difficulty] : null;
   const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
@@ -22,6 +25,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
   const [showZenIntro, setShowZenIntro] = useState(quizMode === 'zen');
   const [zenIntroPhase, setZenIntroPhase] = useState(0); // 0: fade in, 1: breathe, 2: fade out
   const [isChatModalOpen, setIsChatModalOpen] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [celebrationScore, setCelebrationScore] = useState({ score: 0, total: 0 });
   const [showQuickNav, setShowQuickNav] = useState(() => {
     // Load quick nav visibility from localStorage
     const saved = localStorage.getItem('quiz-show-quick-nav');
@@ -472,6 +477,9 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     const saveToBackend = async () => {
       if (isAuthenticated()) {
         try {
+          // Check if this is the user's first quiz completion
+          const isFirstQuiz = user && !user.hasCompletedOnboarding && user.onboardingStage !== 'completed';
+
           // Save quiz attempts to backend with session ID and AI conversation
           if (attempts.length > 0) {
             await api.post('/api/quiz/attempts', {
@@ -483,6 +491,27 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
           // Update streak
           await api.post('/api/streak/update');
+
+          // If this is the first quiz, show celebration modal and update onboarding status
+          if (isFirstQuiz) {
+            setCelebrationScore({ score: correctCount, total: answeredCount });
+            setShowCelebration(true);
+
+            // Update onboarding status
+            await api.patch('/api/onboarding/progress', {
+              hasCompletedOnboarding: true,
+              onboardingStage: 'completed',
+            });
+
+            // Update local user state
+            if (user && setUser) {
+              setUser({
+                ...user,
+                hasCompletedOnboarding: true,
+                onboardingStage: 'completed',
+              });
+            }
+          }
         } catch (error) {
           console.error('Failed to save quiz attempts or update streak:', error);
           // Don't block the quiz submission if backend save fails
@@ -534,6 +563,12 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
   const handleRequestAIHelp = () => {
     setIsChatModalOpen(true);
+  };
+
+  const handleCelebrationContinue = () => {
+    setShowCelebration(false);
+    // Navigate to the summary screen
+    setCurrentQuestionIndex(quizQuestions.length);
   };
 
   if (quizQuestions.length === 0) {
@@ -1421,6 +1456,13 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
           question={currentQuestion}
           userAnswer={userAnswers[currentQuestionIndex]}
           quizMode={quizMode}
+        />
+      )}
+      {showCelebration && (
+        <CelebrationModal
+          score={celebrationScore.score}
+          totalQuestions={celebrationScore.total}
+          onContinue={handleCelebrationContinue}
         />
       )}
     </>

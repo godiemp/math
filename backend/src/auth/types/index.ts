@@ -50,6 +50,9 @@ export interface UserRecord {
   current_streak: number;
   longest_streak: number;
   last_practice_date: string | null;
+  has_completed_onboarding: boolean;
+  onboarding_stage: 'welcome' | 'goal-selection' | 'dashboard-tour' | 'first-quiz' | 'completed';
+  preferred_subject: 'M1' | 'M2' | 'both' | null;
 }
 
 /**
@@ -66,6 +69,9 @@ export interface UserResponse {
   currentStreak?: number;
   longestStreak?: number;
   lastPracticeDate?: string | null;
+  hasCompletedOnboarding?: boolean;
+  onboardingStage?: 'welcome' | 'goal-selection' | 'dashboard-tour' | 'first-quiz' | 'completed';
+  preferredSubject?: 'M1' | 'M2' | 'both' | null;
 }
 
 /**

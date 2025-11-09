@@ -13,6 +13,7 @@ import { Streak } from "@/components/Streak";
 import { api } from "@/lib/api-client";
 import { isAuthenticated } from "@/lib/auth";
 import { MathText } from "@/components/MathDisplay";
+import { OnboardingModal } from "@/components/OnboardingModal";
 
 function DashboardContent() {
   const { user, setUser, isAdmin } = useAuth();
@@ -21,10 +22,16 @@ function DashboardContent() {
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
   const [nextSession, setNextSession] = useState<LiveSession | null>(null);
   const [recentAttempts, setRecentAttempts] = useState<QuestionAttempt[]>([]);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     const loadDashboardData = async () => {
       if (user) {
+        // Check if user needs onboarding
+        if (!user.hasCompletedOnboarding && user.onboardingStage !== 'completed') {
+          setShowOnboarding(true);
+        }
+
         // Update session statuses
         await updateSessionStatuses();
 
@@ -80,6 +87,61 @@ function DashboardContent() {
     router.push('/');
   };
 
+  const handleOnboardingComplete = async (preferredSubject: 'M1' | 'M2' | 'both') => {
+    try {
+      // Update onboarding status
+      await api.patch('/api/onboarding/progress', {
+        hasCompletedOnboarding: true,
+        onboardingStage: 'completed',
+        preferredSubject,
+      });
+
+      // Update local user state
+      if (user) {
+        setUser({
+          ...user,
+          hasCompletedOnboarding: true,
+          onboardingStage: 'completed',
+          preferredSubject,
+        });
+      }
+
+      setShowOnboarding(false);
+
+      // Redirect to practice page based on preference
+      if (preferredSubject === 'M1') {
+        router.push('/practice/m1');
+      } else if (preferredSubject === 'M2') {
+        router.push('/practice/m2');
+      }
+    } catch (error) {
+      console.error('Failed to complete onboarding:', error);
+    }
+  };
+
+  const handleOnboardingSkip = async () => {
+    try {
+      // Mark onboarding as completed but skipped
+      await api.patch('/api/onboarding/progress', {
+        hasCompletedOnboarding: true,
+        onboardingStage: 'completed',
+      });
+
+      // Update local user state
+      if (user) {
+        setUser({
+          ...user,
+          hasCompletedOnboarding: true,
+          onboardingStage: 'completed',
+        });
+      }
+
+      setShowOnboarding(false);
+    } catch (error) {
+      console.error('Failed to skip onboarding:', error);
+    }
+  };
+
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString('es-CL', {
@@ -111,6 +173,15 @@ function DashboardContent() {
 
   return (
     <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">
+      {/* Onboarding Modal */}
+      {showOnboarding && user && (
+        <OnboardingModal
+          userName={user.displayName}
+          onComplete={handleOnboardingComplete}
+          onSkip={handleOnboardingSkip}
+        />
+      )}
+
       {/* Navbar with variableBlur material */}
       <nav className="sticky top-0 z-30 h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] saturate-[1.2]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 h-full flex justify-between items-center">
