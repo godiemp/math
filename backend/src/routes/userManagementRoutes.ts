@@ -1,13 +1,13 @@
 import express from 'express';
 import { authenticate } from '../auth/middleware/authenticate';
-import { authorize } from '../auth/middleware/authorize';
+import { requireAdmin } from '../auth/middleware/authorize';
 import * as userManagementController from '../controllers/userManagementController';
 
 const router = express.Router();
 
 // All routes require authentication and admin role
 router.use(authenticate);
-router.use(authorize);
+router.use(requireAdmin);
 
 // ========================================
 // PLAN ROUTES
