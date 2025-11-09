@@ -249,6 +249,20 @@ export const initializeDatabase = async (): Promise<void> => {
       END $$;
     `);
 
+    // Create last_quiz_config table for storing user's last quiz configuration
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS last_quiz_config (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        level VARCHAR(5) NOT NULL CHECK (level IN ('M1', 'M2')),
+        subject VARCHAR(50) CHECK (subject IN ('números', 'álgebra', 'geometría', 'probabilidad')),
+        mode VARCHAR(20) NOT NULL CHECK (mode IN ('zen', 'rapidfire')),
+        difficulty VARCHAR(20) CHECK (difficulty IN ('easy', 'medium', 'hard', 'extreme')),
+        updated_at BIGINT NOT NULL,
+        UNIQUE(user_id, level)
+      )
+    `);
+
     // Create indexes
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)');
@@ -274,6 +288,8 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_quiz_attempts_user_id ON quiz_attempts(user_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_quiz_attempts_quiz_session_id ON quiz_attempts(quiz_session_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_quiz_attempts_attempted_at ON quiz_attempts(attempted_at)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_last_quiz_config_user_id ON last_quiz_config(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_last_quiz_config_level ON last_quiz_config(level)');
 
     await client.query('COMMIT');
     console.log('✅ Database tables initialized successfully');

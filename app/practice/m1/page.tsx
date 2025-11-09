@@ -8,10 +8,18 @@ import { Question } from '@/lib/types';
 import Link from 'next/link';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Card, Button, Heading, Text } from '@/components/ui';
+import { getLastConfigKey } from '@/lib/constants';
+import { api } from '@/lib/api-client';
 
 type Subject = 'números' | 'álgebra' | 'geometría' | 'probabilidad';
 type QuizMode = 'zen' | 'rapidfire';
 type Difficulty = 'easy' | 'medium' | 'hard' | 'extreme';
+
+interface LastConfig {
+  subject: Subject | null;
+  mode: QuizMode;
+  difficulty?: Difficulty;
+}
 
 function M1PracticeContent() {
   const searchParams = useSearchParams();
@@ -20,7 +28,43 @@ function M1PracticeContent() {
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [quizStarted, setQuizStarted] = useState(false);
   const [replayQuestions, setReplayQuestions] = useState<Question[] | undefined>(undefined);
+  const [lastConfig, setLastConfig] = useState<LastConfig | null>(null);
   const questions = getQuestionsByLevel('M1');
+
+  // Load last config from backend (with localStorage fallback)
+  useEffect(() => {
+    const loadLastConfig = async () => {
+      try {
+        // Try to fetch from backend first
+        const response = await api.get<{ config: LastConfig }>('/api/quiz/last-config?level=M1');
+
+        if (response.data?.config) {
+          setLastConfig(response.data.config);
+          // Update localStorage for offline access
+          localStorage.setItem(getLastConfigKey('M1'), JSON.stringify(response.data.config));
+        } else {
+          // Backend has no config, try localStorage
+          const savedConfig = localStorage.getItem(getLastConfigKey('M1'));
+          if (savedConfig) {
+            setLastConfig(JSON.parse(savedConfig));
+          }
+        }
+      } catch (error) {
+        // If backend fails, fall back to localStorage
+        console.error('Failed to load last config from backend, using localStorage:', error);
+        try {
+          const savedConfig = localStorage.getItem(getLastConfigKey('M1'));
+          if (savedConfig) {
+            setLastConfig(JSON.parse(savedConfig));
+          }
+        } catch (localError) {
+          console.error('Failed to load last config from localStorage:', localError);
+        }
+      }
+    };
+
+    loadLastConfig();
+  }, []);
 
   // Check for replay parameter and load questions
   useEffect(() => {
@@ -111,8 +155,42 @@ function M1PracticeContent() {
     }
   ];
 
-  const handleStartQuiz = () => {
+  const handleStartQuiz = async () => {
     if (quizMode === 'zen' || (quizMode === 'rapidfire' && difficulty)) {
+      // Save config to backend and localStorage
+      const config: LastConfig = {
+        subject: selectedSubject === undefined ? null : selectedSubject,
+        mode: quizMode,
+        difficulty: difficulty || undefined,
+      };
+
+      try {
+        // Save to localStorage immediately for quick access
+        localStorage.setItem(getLastConfigKey('M1'), JSON.stringify(config));
+        setLastConfig(config);
+
+        // Save to backend for cross-device sync (async, don't block quiz start)
+        api.post('/api/quiz/last-config', {
+          level: 'M1',
+          subject: config.subject,
+          mode: config.mode,
+          difficulty: config.difficulty,
+        }).catch(error => {
+          console.error('Failed to save last config to backend:', error);
+        });
+      } catch (error) {
+        console.error('Failed to save last config:', error);
+      }
+
+      setQuizStarted(true);
+    }
+  };
+
+  const handleRepeatLastQuiz = () => {
+    if (lastConfig) {
+      setSelectedSubject(lastConfig.subject);
+      setQuizMode(lastConfig.mode);
+      setDifficulty(lastConfig.difficulty || null);
       setQuizStarted(true);
     }
   };
@@ -128,6 +206,47 @@ function M1PracticeContent() {
     if (quizMode === 'zen') return true;
     if (quizMode === 'rapidfire' && difficulty) return true;
     return false;
+  };
+
+  const getConfigDisplayText = (config: LastConfig) => {
+    const subjectLabel = config.subject
+      ? subjects.find(s => s.value === config.subject)?.label
+      : 'Todas las Materias';
+    const modeLabel = modes.find(m => m.value === config.mode)?.label;
+    const difficultyLabel = config.difficulty
+      ? difficulties.find(d => d.value === config.difficulty)?.label
+      : null;
+
+    if (difficultyLabel) {
+      return `${subjectLabel} • ${modeLabel} • ${difficultyLabel}`;
+    }
+    return `${subjectLabel} • ${modeLabel}`;
+  };
+
+  // Repeat Last Quiz Card
+  const renderRepeatLastQuiz = () => {
+    if (!lastConfig) return null;
+
+    return (
+      <Card className="mb-6" padding="lg">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-2xl">🔄</span>
+              <Heading level={2} size="sm">
+                Repetir Última Configuración
+              </Heading>
+            </div>
+            <Text variant="secondary" size="md">
+              {getConfigDisplayText(lastConfig)}
+            </Text>
+          </div>
+          <Button variant="primary" onClick={handleRepeatLastQuiz}>
+            Comenzar →
+          </Button>
+        </div>
+      </Card>
+    );
   };
 
   // Step 1: Subject Selection
@@ -356,6 +475,7 @@ function M1PracticeContent() {
           </Text>
         </div>
 
+        {renderRepeatLastQuiz()}
         {renderSubjectSelection()}
         {renderModeSelection()}
         {renderDifficultySelection()}

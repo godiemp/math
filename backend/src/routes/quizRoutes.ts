@@ -4,6 +4,8 @@ import {
   saveQuizAttempts,
   getQuizHistory,
   getQuizStats,
+  saveLastQuizConfig,
+  getLastQuizConfig,
 } from '../controllers/quizController';
 import { authenticate } from '../auth/middleware/authenticate';
 
@@ -40,5 +42,21 @@ router.get('/history', authenticate, getQuizHistory);
  * @access  Private
  */
 router.get('/stats', authenticate, getQuizStats);
+
+/**
+ * @route   POST /api/quiz/last-config
+ * @desc    Save last quiz configuration for current user
+ * @body    level: M1 or M2, subject, mode: zen or rapidfire, difficulty
+ * @access  Private
+ */
+router.post('/last-config', authenticate, saveLastQuizConfig);
+
+/**
+ * @route   GET /api/quiz/last-config
+ * @desc    Get last quiz configuration for current user
+ * @query   level (optional): M1 or M2
+ * @access  Private
+ */
+router.get('/last-config', authenticate, getLastQuizConfig);
 
 export default router;
