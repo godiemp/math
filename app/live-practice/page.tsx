@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { logoutUser } from '@/lib/auth';
 import { registerForSession, unregisterFromSession, joinSessionAPI } from '@/lib/sessionApi';
 import { useAvailableSessions } from '@/lib/hooks/useSessions';
@@ -27,37 +28,73 @@ function LivePracticePageContent() {
   const handleRegisterSession = async (sessionId: string) => {
     if (!currentUser) return;
 
-    const result = await registerForSession(sessionId, currentUser);
-    if (result.success) {
-      setError('');
-      await refresh();
-    } else {
-      setError(result.error || 'Error al registrarse');
-    }
+    toast.promise(
+      registerForSession(sessionId, currentUser).then(async (result) => {
+        if (result.success) {
+          setError('');
+          await refresh();
+          return result;
+        } else {
+          throw new Error(result.error || 'Error al registrarse');
+        }
+      }),
+      {
+        loading: 'Registrando...',
+        success: 'Te has registrado al ensayo exitosamente',
+        error: (err) => {
+          setError(err.message);
+          return err.message || 'Error al registrarse';
+        },
+      }
+    );
   };
 
   const handleUnregisterSession = async (sessionId: string) => {
     if (!currentUser) return;
 
-    const result = await unregisterFromSession(sessionId, currentUser.id);
-    if (result.success) {
-      setError('');
-      await refresh();
-    } else {
-      setError(result.error || 'Error al cancelar registro');
-    }
+    toast.promise(
+      unregisterFromSession(sessionId, currentUser.id).then(async (result) => {
+        if (result.success) {
+          setError('');
+          await refresh();
+          return result;
+        } else {
+          throw new Error(result.error || 'Error al cancelar registro');
+        }
+      }),
+      {
+        loading: 'Cancelando registro...',
+        success: 'Registro cancelado exitosamente',
+        error: (err) => {
+          setError(err.message);
+          return err.message || 'Error al cancelar registro';
+        },
+      }
+    );
   };
 
   const handleJoinSession = async (sessionId: string) => {
     if (!currentUser) return;
 
-    const result = await joinSessionAPI(sessionId);
-    if (result.success) {
-      setActiveSessionId(sessionId);
-      setError('');
-    } else {
-      setError(result.error || 'Error al unirse al ensayo');
-    }
+    toast.promise(
+      joinSessionAPI(sessionId).then((result) => {
+        if (result.success) {
+          setActiveSessionId(sessionId);
+          setError('');
+          return result;
+        } else {
+          throw new Error(result.error || 'Error al unirse al ensayo');
+        }
+      }),
+      {
+        loading: 'Uniéndote al ensayo...',
+        success: 'Te has unido al ensayo exitosamente',
+        error: (err) => {
+          setError(err.message);
+          return err.message || 'Error al unirse al ensayo';
+        },
+      }
+    );
   };
 
   const handleExitSession = () => {
