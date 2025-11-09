@@ -19,9 +19,10 @@ interface AIChatModalProps {
   question: Question;
   userAnswer: number | null;
   quizMode?: 'zen' | 'rapidfire';
+  quizSessionId?: string;
 }
 
-export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 'zen' }: AIChatModalProps) {
+export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 'zen', quizSessionId }: AIChatModalProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -80,6 +81,8 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
         visualData: question.visualData,
         messages: messages.map(m => ({ role: m.role, content: m.content })),
         userMessage: inputValue,
+        quizSessionId: quizSessionId,
+        questionId: question.id,
       });
 
       if (response.error) {

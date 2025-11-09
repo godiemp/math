@@ -3,6 +3,8 @@
  * Uses Anthropic Claude API for high-quality educational content processing
  */
 
+import { pool } from '../config/database';
+
 interface SummarizeOptions {
   content: string;
   mode: 'brief' | 'detailed';
@@ -31,6 +33,9 @@ interface AIChatOptions {
   visualData?: any;
   messages: AIChatMessage[];
   userMessage: string;
+  userId?: string;
+  quizSessionId?: string;
+  questionId?: string;
 }
 
 interface AIChatResponse {
@@ -45,6 +50,9 @@ interface AIHelpOptions {
   explanation: string;
   options: string[];
   topic?: string;
+  userId?: string;
+  quizSessionId?: string;
+  questionId?: string;
 }
 
 interface AIHelpResponse {
@@ -318,6 +326,7 @@ IMPORTANTE:
  * AI Chat - Socratic tutoring for student questions
  */
 export async function aiChat(options: AIChatOptions): Promise<AIChatResponse> {
+  const startTime = Date.now();
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
   if (!apiKey) {
@@ -335,7 +344,10 @@ export async function aiChat(options: AIChatOptions): Promise<AIChatResponse> {
     difficulty,
     visualData,
     messages,
-    userMessage
+    userMessage,
+    userId,
+    quizSessionId,
+    questionId
   } = options;
 
   const isCorrect = userAnswer === correctAnswer;
@@ -475,6 +487,51 @@ Responde como si estuvieras chateando con un amigo que quiere aprender.`;
 
     const data = await response.json() as { content: Array<{ type: string; text: string }> };
     const aiResponse = data.content[0].type === 'text' ? data.content[0].text : '';
+    const responseTime = Date.now() - startTime;
+
+    // Save interaction to database if userId is provided
+    if (userId) {
+      try {
+        const turnNumber = messages ? messages.length + 1 : 1;
+        const requestContext = {
+          question,
+          questionLatex,
+          userAnswer,
+          correctAnswer,
+          explanation,
+          options: answerOptions,
+          topic,
+          difficulty,
+          visualData
+        };
+
+        await pool.query(`
+          INSERT INTO ai_interactions (
+            user_id, quiz_session_id, question_id,
+            interaction_type, user_message, ai_response,
+            ai_model, turn_number, response_time_ms,
+            request_context, created_at
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        `, [
+          userId,
+          quizSessionId || null,
+          questionId || null,
+          'chat',
+          userMessage,
+          aiResponse,
+          'claude-sonnet-4-5-20250929',
+          turnNumber,
+          responseTime,
+          JSON.stringify(requestContext),
+          Date.now()
+        ]);
+
+        console.log(`✅ Saved AI chat interaction for user ${userId}, turn ${turnNumber}`);
+      } catch (dbError) {
+        // Log error but don't fail the request - interaction data is important but not critical
+        console.error('❌ Failed to save AI interaction to database:', dbError);
+      }
+    }
 
     return {
       response: aiResponse,
@@ -490,13 +547,24 @@ Responde como si estuvieras chateando con un amigo que quiere aprender.`;
  * AI Help - Provides explanations when students answer incorrectly
  */
 export async function aiHelp(options: AIHelpOptions): Promise<AIHelpResponse> {
+  const startTime = Date.now();
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
   if (!apiKey) {
     throw new Error('ANTHROPIC_API_KEY not configured');
   }
 
-  const { question, userAnswer, correctAnswer, explanation, options: answerOptions, topic } = options;
+  const {
+    question,
+    userAnswer,
+    correctAnswer,
+    explanation,
+    options: answerOptions,
+    topic,
+    userId,
+    quizSessionId,
+    questionId
+  } = options;
 
   const prompt = `Eres un tutor de matemáticas empático y paciente que ayuda a estudiantes chilenos que se preparan para la PAES (Prueba de Acceso a la Educación Superior).
 
@@ -551,6 +619,47 @@ Usa emojis sutiles para mantener un tono amigable pero no exagerado.`;
 
     const data = await response.json() as { content: Array<{ type: string; text: string }> };
     const aiResponse = data.content[0].type === 'text' ? data.content[0].text : '';
+    const responseTime = Date.now() - startTime;
+
+    // Save interaction to database if userId is provided
+    if (userId) {
+      try {
+        const requestContext = {
+          question,
+          userAnswer,
+          correctAnswer,
+          explanation,
+          options: answerOptions,
+          topic
+        };
+
+        await pool.query(`
+          INSERT INTO ai_interactions (
+            user_id, quiz_session_id, question_id,
+            interaction_type, user_message, ai_response,
+            ai_model, turn_number, response_time_ms,
+            request_context, created_at
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        `, [
+          userId,
+          quizSessionId || null,
+          questionId || null,
+          'help',
+          'Incorrect answer - automatic AI help requested',
+          aiResponse,
+          'claude-sonnet-4-5-20250929',
+          1,
+          responseTime,
+          JSON.stringify(requestContext),
+          Date.now()
+        ]);
+
+        console.log(`✅ Saved AI help interaction for user ${userId}`);
+      } catch (dbError) {
+        // Log error but don't fail the request
+        console.error('❌ Failed to save AI interaction to database:', dbError);
+      }
+    }
 
     return {
       help: aiResponse,

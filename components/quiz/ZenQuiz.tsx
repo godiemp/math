@@ -518,6 +518,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
         question={currentQuestion}
         userAnswer={userAnswers[currentQuestionIndex]}
         quizMode="zen"
+        quizSessionId={quizSessionId}
       />
     </>
   );

@@ -263,6 +263,25 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
+    // Create ai_interactions table for tracking all user-AI conversations
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS ai_interactions (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        quiz_session_id VARCHAR(100) REFERENCES quiz_sessions(id) ON DELETE SET NULL,
+        question_id VARCHAR(50),
+        interaction_type VARCHAR(20) NOT NULL CHECK (interaction_type IN ('chat', 'help', 'summarize', 'practice')),
+        user_message TEXT,
+        ai_response TEXT,
+        ai_model VARCHAR(100) DEFAULT 'claude-sonnet-4-5-20250929',
+        request_context JSONB,
+        turn_number INTEGER DEFAULT 1,
+        response_time_ms INTEGER,
+        tokens_used INTEGER,
+        created_at BIGINT NOT NULL
+      )
+    `);
+
     // ========================================
     // QGEN SYSTEM TABLES
     // ========================================
@@ -407,6 +426,13 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_quiz_attempts_attempted_at ON quiz_attempts(attempted_at)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_last_quiz_config_user_id ON last_quiz_config(user_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_last_quiz_config_level ON last_quiz_config(level)');
+
+    // AI interactions indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_ai_interactions_user_id ON ai_interactions(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_ai_interactions_question_id ON ai_interactions(question_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_ai_interactions_type ON ai_interactions(interaction_type)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_ai_interactions_created_at ON ai_interactions(created_at)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_ai_interactions_quiz_session_id ON ai_interactions(quiz_session_id)');
 
     // QGen system indexes
     await client.query('CREATE INDEX IF NOT EXISTS idx_contexts_category ON contexts(category)');

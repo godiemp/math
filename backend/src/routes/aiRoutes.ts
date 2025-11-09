@@ -79,7 +79,9 @@ router.post('/chat', authenticate, async (req, res) => {
       difficulty,
       visualData,
       messages,
-      userMessage
+      userMessage,
+      quizSessionId,
+      questionId
     } = req.body;
 
     if (!question || userAnswer === undefined || correctAnswer === undefined || !userMessage) {
@@ -97,7 +99,10 @@ router.post('/chat', authenticate, async (req, res) => {
       difficulty,
       visualData,
       messages,
-      userMessage
+      userMessage,
+      userId: req.user?.userId,
+      quizSessionId,
+      questionId
     });
 
     res.json(result);
@@ -115,7 +120,16 @@ router.post('/chat', authenticate, async (req, res) => {
  */
 router.post('/help', authenticate, async (req, res) => {
   try {
-    const { question, userAnswer, correctAnswer, explanation, options, topic } = req.body;
+    const {
+      question,
+      userAnswer,
+      correctAnswer,
+      explanation,
+      options,
+      topic,
+      quizSessionId,
+      questionId
+    } = req.body;
 
     if (!question || userAnswer === undefined || correctAnswer === undefined) {
       return res.status(400).json({ error: 'Faltan parámetros requeridos' });
@@ -127,7 +141,10 @@ router.post('/help', authenticate, async (req, res) => {
       correctAnswer,
       explanation,
       options,
-      topic
+      topic,
+      userId: req.user?.userId,
+      quizSessionId,
+      questionId
     });
 
     res.json(result);
