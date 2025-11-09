@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Auth from "@/components/Auth";
@@ -8,6 +8,7 @@ import Auth from "@/components/Auth";
 export default function Home() {
   const { isAuthenticated, setUser } = useAuth();
   const router = useRouter();
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -86,6 +87,22 @@ export default function Home() {
           >
             Plataforma de Preparación Matemática
           </p>
+
+          {/* Info Button */}
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="spring-motion mt-4"
+            style={{
+              fontSize: '14px',
+              color: 'var(--color-tint)',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              textDecoration: 'underline',
+            }}
+          >
+            cómo funciona
+          </button>
         </div>
 
         {/* Auth Component */}
@@ -107,6 +124,178 @@ export default function Home() {
           <p>Preparación para la Prueba de Acceso a la Educación Superior</p>
         </div>
       </div>
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{
+            background: 'rgba(0, 0, 0, 0.5)',
+          }}
+          onClick={() => setShowInfoModal(false)}
+        >
+          <div
+            className="translucent spring-motion max-w-lg w-full"
+            style={{
+              borderRadius: 'var(--radius-xl)',
+              padding: 'var(--spacing-16)',
+              boxShadow: 'var(--shadow-raised)',
+              maxHeight: '80vh',
+              overflowY: 'auto',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex justify-between items-start mb-6">
+              <h2
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '24px',
+                  fontWeight: 600,
+                  color: 'var(--color-label-primary)',
+                }}
+              >
+                cómo funciona esto
+              </h2>
+              <button
+                onClick={() => setShowInfoModal(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '24px',
+                  color: 'var(--color-label-secondary)',
+                  cursor: 'pointer',
+                  padding: 0,
+                  lineHeight: 1,
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="space-y-5">
+              <div>
+                <h3
+                  style={{
+                    fontSize: '17px',
+                    fontWeight: 600,
+                    color: 'var(--color-label-primary)',
+                    marginBottom: '8px',
+                  }}
+                >
+                  qué es esto
+                </h3>
+                <p
+                  style={{
+                    fontSize: '15px',
+                    lineHeight: '1.6',
+                    color: 'var(--color-label-secondary)',
+                  }}
+                >
+                  una plataforma donde practicas mate para la PAES. tienes ejercicios del temario oficial, feedback cuando te equivocas, y ves tu progreso en tiempo real. sin publicidad.
+                </p>
+              </div>
+
+              <div>
+                <h3
+                  style={{
+                    fontSize: '17px',
+                    fontWeight: 600,
+                    color: 'var(--color-label-primary)',
+                    marginBottom: '8px',
+                  }}
+                >
+                  qué incluye
+                </h3>
+                <div className="space-y-2">
+                  {[
+                    'problemas del temario oficial PAES',
+                    'explicaciones cuando te equivocas',
+                    'seguimiento de tu progreso',
+                    'sesiones de práctica en vivo',
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-start gap-2">
+                      <span style={{ color: 'var(--color-tint)', marginTop: '4px', fontSize: '18px' }}>•</span>
+                      <p
+                        style={{
+                          fontSize: '15px',
+                          lineHeight: '1.6',
+                          color: 'var(--color-label-secondary)',
+                          margin: 0,
+                        }}
+                      >
+                        {item}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3
+                  style={{
+                    fontSize: '17px',
+                    fontWeight: 600,
+                    color: 'var(--color-label-primary)',
+                    marginBottom: '8px',
+                  }}
+                >
+                  el precio
+                </h3>
+                <p
+                  style={{
+                    fontSize: '15px',
+                    lineHeight: '1.6',
+                    color: 'var(--color-label-secondary)',
+                  }}
+                >
+                  8.000 al mes. es menos que un preu, menos que una salida al cine. cuando pagas, te comprometes de verdad. y puede ser la diferencia para entrar a la u que quieres.
+                </p>
+              </div>
+
+              <div
+                className="mt-6 p-4"
+                style={{
+                  borderRadius: 'var(--radius-sm)',
+                  background: 'var(--color-fill)',
+                  border: '1px solid var(--color-separator)',
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: '14px',
+                    lineHeight: '1.5',
+                    color: 'var(--color-label-secondary)',
+                    textAlign: 'center',
+                  }}
+                >
+                  <strong>8.000 CLP/mes</strong> • cancela cuando quieras • sin permanencia
+                </p>
+              </div>
+            </div>
+
+            {/* Close Button */}
+            <button
+              onClick={() => setShowInfoModal(false)}
+              className="spring-emphasized w-full mt-6"
+              style={{
+                height: '44px',
+                padding: '0 var(--spacing-8)',
+                fontSize: '16px',
+                fontWeight: 600,
+                color: 'white',
+                background: 'var(--color-tint)',
+                border: 'none',
+                borderRadius: 'var(--radius-sm)',
+                cursor: 'pointer',
+              }}
+            >
+              ok, entendido
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
