@@ -432,7 +432,7 @@ function AIAnalyticsContent() {
 
 export default function AIAnalyticsPage() {
   return (
-    <ProtectedRoute adminOnly>
+    <ProtectedRoute requireAdmin>
       <AIAnalyticsContent />
     </ProtectedRoute>
   );
