@@ -13,7 +13,8 @@ import { Streak } from "@/components/Streak";
 import { api } from "@/lib/api-client";
 import { isAuthenticated } from "@/lib/auth";
 import { MathText } from "@/components/MathDisplay";
-import { ShareButton } from "@/components/ShareButton";
+import { ShareModal } from "@/components/ShareModal";
+import { Share2 } from "lucide-react";
 
 function DashboardContent() {
   const { user, setUser, isAdmin } = useAuth();
@@ -22,6 +23,7 @@ function DashboardContent() {
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
   const [nextSession, setNextSession] = useState<LiveSession | null>(null);
   const [recentAttempts, setRecentAttempts] = useState<QuestionAttempt[]>([]);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -281,24 +283,14 @@ function DashboardContent() {
                 </Link>
               </Button>
               {nextSession && (
-                <ShareButton
-                  shareData={{
-                    text: `¡Únete al Ensayo PAES en Vivo! 📝\n${nextSession.name} - ${nextSession.level}\n📅 ${new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', {
-                      weekday: 'long',
-                      day: 'numeric',
-                      month: 'long'
-                    })} a las ${new Date(nextSession.scheduledStartTime).toLocaleTimeString('es-CL', {
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })} hrs`,
-                    url: typeof window !== 'undefined' ? window.location.origin + '/live-practice' : '/live-practice',
-                    hashtags: ['PAESChile', 'Ensayo', 'Matemáticas']
-                  }}
-                  buttonText="Invitar amigos"
-                  buttonVariant="ghost"
-                  className="bg-white/20 hover:bg-white/30 text-white border border-white/40"
-                  platforms={['whatsapp', 'copy']}
-                />
+                <Button
+                  onClick={() => setIsShareModalOpen(true)}
+                  variant="ghost"
+                  className="bg-white/20 hover:bg-white/30 text-white border border-white/40 gap-2"
+                >
+                  <Share2 className="w-4 h-4" />
+                  Invitar amigos
+                </Button>
               )}
             </div>
           </div>
@@ -451,6 +443,33 @@ function DashboardContent() {
           </Card>
         </div>
       </main>
+
+      {/* Share Modal */}
+      {nextSession && (
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          data={{
+            title: 'Invita amigos al Ensayo PAES',
+            message: `¡Únete al Ensayo PAES en Vivo! 📝\n\n${nextSession.name} - ${nextSession.level}\n\nPractica en tiempo real y compite con otros estudiantes.`,
+            url: typeof window !== 'undefined' ? `${window.location.origin}/live-practice` : '/live-practice',
+            hashtags: ['PAESChile', 'Ensayo', 'Matemáticas'],
+            sessionName: nextSession.name,
+            sessionLevel: nextSession.level,
+            sessionDate: new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long'
+            }),
+            sessionTime: new Date(nextSession.scheduledStartTime).toLocaleTimeString('es-CL', {
+              hour: '2-digit',
+              minute: '2-digit'
+            }),
+            registeredCount: nextSession.registeredUsers?.length || 0
+          }}
+          platforms={['whatsapp', 'twitter', 'facebook', 'copy']}
+        />
+      )}
 
       {/* Footer with hairline border */}
       <footer className="backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-t border-black/[0.12] dark:border-white/[0.16] mt-12">
