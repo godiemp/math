@@ -35,7 +35,6 @@ jobs:
       JWT_REFRESH_SECRET: test-refresh-secret-key-12345
       FRONTEND_URL: http://localhost:3000
       NEXT_PUBLIC_API_URL: http://localhost:3002
-      PORT: 3002
 
     steps:
       - name: Checkout code
@@ -63,6 +62,8 @@ jobs:
 
       - name: Start backend server
         working-directory: ./backend
+        env:
+          PORT: 3002
         run: |
           npm start &
           echo $! > backend.pid
@@ -73,6 +74,8 @@ jobs:
         run: npm run build
 
       - name: Start frontend server
+        env:
+          PORT: 3000
         run: |
           npm start &
           echo $! > frontend.pid
