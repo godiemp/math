@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { api } from '@/lib/api-client';
+import { SkillsAnalytics } from '@/components/SkillsAnalytics';
 
 interface AnalyticsData {
   northStar: {
@@ -498,6 +499,9 @@ function AnalyticsDashboardContent() {
             </div>
           </div>
         </Card>
+
+        {/* Skills Analytics */}
+        <SkillsAnalytics />
 
         {/* Footer Info */}
         <Card padding="md" className="bg-gray-50 dark:bg-gray-800/50">

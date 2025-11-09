@@ -11,7 +11,6 @@ import { LiveSession } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen } from "@/components/ui";
 import { Streak } from "@/components/Streak";
 import { ShareModal } from "@/components/ShareModal";
-import { SkillsAnalytics } from "@/components/SkillsAnalytics";
 import { Share2 } from "lucide-react";
 
 function DashboardContent() {
@@ -313,11 +312,6 @@ function DashboardContent() {
             </div>
           </div>
         )}
-
-        {/* Skills Analytics Section */}
-        <div className="mb-12">
-          <SkillsAnalytics />
-        </div>
 
         {/* Progress Tracking Card */}
         <div className="mt-12 text-center">
