@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Question } from '@/lib/types';
 import { MathText, SmartLatexRenderer } from './MathDisplay';
 import { GeometryCanvas, GeometryFigure } from './GeometryCanvas';
+import { MarkdownViewer } from './MarkdownViewer';
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -23,6 +24,7 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isContextExpanded, setIsContextExpanded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -156,6 +158,43 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
           .animate-slideUp {
             animation: slideUp 0.3s ease-out;
           }
+          /* Markdown chat message styles */
+          .markdown-chat-message :global(.prose) {
+            max-width: none;
+            color: inherit;
+          }
+          .markdown-chat-message :global(p) {
+            margin-bottom: 0.5rem;
+          }
+          .markdown-chat-message :global(p:last-child) {
+            margin-bottom: 0;
+          }
+          .markdown-chat-message :global(strong) {
+            font-weight: 600;
+          }
+          .markdown-chat-message :global(ul),
+          .markdown-chat-message :global(ol) {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+          }
+          .markdown-chat-message :global(li) {
+            margin: 0.25rem 0;
+          }
+          .markdown-chat-message :global(code) {
+            background-color: rgba(0, 0, 0, 0.1);
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+          }
+          :global(.dark) .markdown-chat-message :global(code) {
+            background-color: rgba(255, 255, 255, 0.1);
+          }
+          .markdown-chat-message :global(.katex) {
+            font-size: 1em;
+          }
+          .markdown-chat-message :global(.katex-display) {
+            margin: 0.5rem 0;
+          }
         `}</style>
         {/* Header */}
         <div className="bg-gradient-to-r from-teal-500 to-cyan-500 p-6 text-white">
@@ -179,17 +218,31 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
         </div>
 
         {/* Question Context Card */}
-        <div className="p-4 bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 border-b-2 border-teal-200 dark:border-teal-700">
-          {/* AI Context Indicator */}
-          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-teal-200 dark:border-teal-700">
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-teal-500 text-white rounded-full text-xs font-semibold shadow-sm">
-              <span>🧠</span>
-              <span>Contexto completo cargado</span>
+        <div className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 border-b-2 border-teal-200 dark:border-teal-700">
+          {/* AI Context Indicator - Always Visible */}
+          <button
+            onClick={() => setIsContextExpanded(!isContextExpanded)}
+            className="w-full p-4 flex items-center justify-between gap-2 hover:bg-teal-100/50 dark:hover:bg-teal-800/30 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-teal-500 text-white rounded-full text-xs font-semibold shadow-sm">
+                <span>🧠</span>
+                <span>Contexto de la pregunta</span>
+              </div>
+              <span className="text-xs text-teal-700 dark:text-teal-300">
+                {isContextExpanded ? 'Haz clic para ocultar detalles' : 'Haz clic para ver detalles'}
+              </span>
             </div>
-            <span className="text-xs text-teal-700 dark:text-teal-300">
-              Tengo toda la información de esta pregunta
-            </span>
-          </div>
+            <div className="text-teal-700 dark:text-teal-300 text-xl transition-transform duration-200" style={{
+              transform: isContextExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+            }}>
+              ▼
+            </div>
+          </button>
+
+          {/* Collapsible Context Details */}
+          {isContextExpanded && (
+            <div className="px-4 pb-4 space-y-3">
 
           {/* Question */}
           <div className="mb-3">
@@ -283,6 +336,8 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
               </>
             )}
           </div>
+            </div>
+          )}
         </div>
 
         {/* Messages Area */}
@@ -300,14 +355,20 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
                 }`}
               >
                 {message.role === 'assistant' && (
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className="flex items-center gap-2 mb-2">
                     <span className="text-lg">🤖</span>
                     <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">Tutor IA</span>
                   </div>
                 )}
-                <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                  {message.content}
-                </div>
+                {message.role === 'assistant' ? (
+                  <div className="text-sm leading-relaxed markdown-chat-message">
+                    <MarkdownViewer content={message.content} />
+                  </div>
+                ) : (
+                  <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                    {message.content}
+                  </div>
+                )}
               </div>
             </div>
           ))}
