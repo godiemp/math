@@ -1076,7 +1076,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         </div>
       </div>
 
-      {/* Quick Navigation Panel */}
+      {/* Quick Navigation Panel - only show in zen mode or after quiz submission */}
+      {(quizMode === 'zen' || quizSubmitted) && (
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -1207,6 +1208,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
           </div>
         )}
       </div>
+      )}
 
       {/* Question answered indicator - only show in zen mode */}
       {!quizSubmitted && userAnswer !== null && quizMode === 'zen' && (
