@@ -241,7 +241,7 @@ export default function Home() {
                     marginBottom: '8px',
                   }}
                 >
-                  por qué gratis
+                  vale la pena
                 </h3>
                 <p
                   style={{
@@ -250,7 +250,7 @@ export default function Home() {
                     color: 'var(--color-label-secondary)',
                   }}
                 >
-                  porque entrar a la u no debería depender de si puedes pagar un preu. esto es una herramienta hecha por y para estudiantes. no hay trampa.
+                  cuando pagas por algo, lo usas de verdad. 8.000 al mes es menos que una salida al cine, pero puede ser la diferencia entre entrar o no entrar a la u que quieres.
                 </p>
               </div>
 
@@ -270,7 +270,7 @@ export default function Home() {
                     textAlign: 'center',
                   }}
                 >
-                  <strong>100% gratis</strong> • 0 publicidad • hecho para estudiantes
+                  <strong>8.000 CLP/mes</strong> • 0 publicidad • cancelas cuando quieras
                 </p>
               </div>
             </div>
