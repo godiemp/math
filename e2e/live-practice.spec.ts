@@ -27,11 +27,22 @@ test.describe('Live Practice Registration', () => {
     await page.goto('/live-practice');
     await page.waitForTimeout(1000);
 
-    // Find the test session card
-    const sessionCard = page.locator('text=Test PAES Session').locator('..');
+    const registerButton = page.getByRole('button', { name: /^Registrarse$/i });
+    const unregisterButton = page.getByRole('button', { name: /Cancelar Registro/i });
+
+    // Check if already registered, if so, unregister first
+    const unregisterCount = await unregisterButton.count();
+
+    if (unregisterCount > 0) {
+      // Already registered, unregister first to test registration
+      await unregisterButton.click();
+      await page.waitForTimeout(2000);
+      // Wait for unregistration to complete
+      await expect(registerButton).toBeVisible({ timeout: 5000 });
+    }
 
     // Click the register button
-    await page.getByRole('button', { name: /Registrarse/i }).click();
+    await registerButton.click();
 
     // Wait for the toast notification
     await page.waitForTimeout(2000);
@@ -40,7 +51,7 @@ test.describe('Live Practice Registration', () => {
     await expect(page.getByText(/registrado.*exitosamente/i)).toBeVisible({ timeout: 5000 });
 
     // After registration, the button should change to "Cancelar Registro"
-    await expect(page.getByRole('button', { name: /Cancelar Registro/i })).toBeVisible({ timeout: 5000 });
+    await expect(unregisterButton).toBeVisible({ timeout: 5000 });
   });
 
   test('should unregister from a scheduled session', async ({ page }) => {
@@ -48,22 +59,34 @@ test.describe('Live Practice Registration', () => {
     await page.goto('/live-practice');
     await page.waitForTimeout(1000);
 
-    // First, register for the session
-    await page.getByRole('button', { name: /Registrarse/i }).click();
-    await page.waitForTimeout(2000);
+    // Check if already registered, if not, register first
+    const registerButton = page.getByRole('button', { name: /^Registrarse$/i });
+    const unregisterButton = page.getByRole('button', { name: /Cancelar Registro/i });
 
-    // Wait for registration to complete
-    await expect(page.getByRole('button', { name: /Cancelar Registro/i })).toBeVisible({ timeout: 5000 });
+    // Wait briefly and check which button is visible
+    const registerCount = await registerButton.count();
+    const unregisterCount = await unregisterButton.count();
+
+    if (registerCount > 0) {
+      // Not registered yet, need to register first
+      await registerButton.click();
+      await page.waitForTimeout(2000);
+      // Wait for registration to complete
+      await expect(unregisterButton).toBeVisible({ timeout: 5000 });
+    } else if (unregisterCount === 0) {
+      // Neither button found, fail the test
+      throw new Error('Could not find registration or unregistration button');
+    }
 
     // Now unregister
-    await page.getByRole('button', { name: /Cancelar Registro/i }).click();
+    await unregisterButton.click();
     await page.waitForTimeout(2000);
 
     // Check for success toast message
     await expect(page.getByText(/cancelado.*exitosamente/i)).toBeVisible({ timeout: 5000 });
 
     // After unregistering, the button should change back to "Registrarse"
-    await expect(page.getByRole('button', { name: /^Registrarse$/i })).toBeVisible({ timeout: 5000 });
+    await expect(registerButton).toBeVisible({ timeout: 5000 });
   });
 
   test('should display session details correctly', async ({ page }) => {
