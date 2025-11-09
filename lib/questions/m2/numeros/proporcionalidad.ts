@@ -28,5 +28,47 @@ export const m2NumerosProporcionalidadQuestions: Question[] = [
     explanationLatex: '8 \\text{ cm} \\times 50{,}000 = 400{,}000 \\text{ cm} = 4000 \\text{ m} = 4 \\text{ km}',
     difficulty: 'hard',
     skills: ['numeros-proporcionalidad', 'numeros-escala', 'numeros-conversion-unidades', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-prop-3',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'Si 3 kg de manzanas cuestan $4.500, ¿cuánto costarán 5 kg?',
+    questionLatex: '\\text{Si 3 kg de manzanas cuestan \\$4.500, ¿cuánto costarán 5 kg?}',
+    options: ['$7.500', '$6.750', '$8.000', '$6.000'],
+    correctAnswer: 0,
+    explanation: 'Es proporcionalidad directa. Más kilos, más costo:',
+    explanationLatex: '\\frac{3}{4500} = \\frac{5}{x} \\quad \\Rightarrow \\quad x = \\frac{5 \\times 4500}{3} = 7500',
+    difficulty: 'medium',
+    skills: ['numeros-proporcionalidad', 'numeros-proporcionalidad-directa', 'numeros-regla-tres', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-prop-4',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'Una llave llena un tanque en 6 horas. ¿En cuánto tiempo llenarán el tanque 3 llaves iguales trabajando simultáneamente?',
+    questionLatex: '\\text{Una llave llena un tanque en 6 horas. ¿Cuánto tardan 3 llaves simultáneamente?}',
+    options: ['2 horas', '3 horas', '4 horas', '18 horas'],
+    correctAnswer: 0,
+    explanation: 'Es proporcionalidad inversa. Más llaves, menos tiempo:',
+    explanationLatex: '1 \\times 6 = 3 \\times x \\quad \\Rightarrow \\quad x = \\frac{6}{3} = 2 \\text{ horas}',
+    difficulty: 'hard',
+    skills: ['numeros-proporcionalidad', 'numeros-proporcionalidad-inversa', 'numeros-regla-tres', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-prop-5',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'Una maqueta de un edificio tiene una altura de 40 cm y está a escala 1:250. ¿Cuál es la altura real del edificio?',
+    questionLatex: '\\text{Maqueta: 40 cm a escala 1:250. ¿Altura real del edificio?}',
+    options: ['100 m', '50 m', '200 m', '25 m'],
+    correctAnswer: 0,
+    explanation: 'Altura real = 40 cm × 250 = 10.000 cm = 100 m',
+    explanationLatex: '40 \\text{ cm} \\times 250 = 10{,}000 \\text{ cm} = 100 \\text{ m}',
+    difficulty: 'hard',
+    skills: ['numeros-proporcionalidad', 'numeros-escala', 'numeros-conversion-unidades', 'numeros-operaciones-basicas']
   }
 ];

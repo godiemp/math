@@ -57,5 +57,49 @@ export const m2AlgebraSistemasEcuacionesQuestions: Question[] = [
     explanationLatex: '\\text{Sistema 3×3: eliminación gaussiana} \\rightarrow x = 2, y = 1, z = 1',
     difficulty: 'extreme',
     skills: ['algebra-sistemas-ecuaciones', 'algebra-sistemas-3x3', 'algebra-eliminacion-gaussiana', 'algebra-despeje', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-alg-sist-4',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Resuelve el sistema usando método de sustitución: $y = 2x - 1$ y $3x + 4y = 20$',
+    questionLatex: '\\text{Resuelve el sistema usando método de sustitución: } y = 2x - 1 \\text{ y } 3x + 4y = 20',
+    options: ['$x = 2, y = 3$', '$x = 3, y = 5$', '$x = 1, y = 1$', '$x = 4, y = 7$'],
+    optionsLatex: ['x = 2, y = 3', 'x = 3, y = 5', 'x = 1, y = 1', 'x = 4, y = 7'],
+    correctAnswer: 0,
+    explanation: 'Sustituimos y = 2x - 1 en la segunda ecuación:',
+    explanationLatex: '3x + 4(2x - 1) = 20 \\rightarrow 3x + 8x - 4 = 20 \\rightarrow 11x = 24 \\rightarrow x = 2, y = 3',
+    difficulty: 'medium',
+    skills: ['algebra-sistemas-ecuaciones', 'algebra-metodo-sustitucion', 'algebra-despeje', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-alg-sist-5',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'El sistema $2x + 3y = 6$ y $4x + 6y = k$ tiene infinitas soluciones si:',
+    questionLatex: '\\text{El sistema } 2x + 3y = 6 \\text{ y } 4x + 6y = k \\text{ tiene infinitas soluciones si:}',
+    options: ['$k = 6$', '$k = 12$', '$k = 3$', '$k = 0$'],
+    optionsLatex: ['k = 6', 'k = 12', 'k = 3', 'k = 0'],
+    correctAnswer: 1,
+    explanation: 'Para infinitas soluciones, la segunda ecuación debe ser múltiplo de la primera:',
+    explanationLatex: '4x + 6y = 2(2x + 3y) = 2(6) = 12 \\rightarrow k = 12',
+    difficulty: 'hard',
+    skills: ['algebra-sistemas-ecuaciones', 'algebra-solucion-sistemas', 'algebra-ecuaciones-parametricas', 'algebra-interpretacion-geometrica']
+  },
+  {
+    id: 'm2-alg-sist-6',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'La suma de dos números es 15 y su diferencia es 3. ¿Cuáles son los números?',
+    questionLatex: '\\text{La suma de dos números es 15 y su diferencia es 3. ¿Cuáles son los números?}',
+    options: ['9 y 6', '10 y 5', '8 y 7', '12 y 3'],
+    correctAnswer: 0,
+    explanation: 'Planteamos x + y = 15 y x - y = 3. Sumando: 2x = 18, x = 9. Entonces y = 6',
+    explanationLatex: 'x + y = 15, \\; x - y = 3 \\rightarrow 2x = 18 \\rightarrow x = 9, y = 6',
+    difficulty: 'medium',
+    skills: ['algebra-sistemas-ecuaciones', 'algebra-problemas-aplicados', 'algebra-planteamiento-ecuaciones', 'numeros-operaciones-basicas']
   }
 ];

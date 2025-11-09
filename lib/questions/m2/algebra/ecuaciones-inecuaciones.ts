@@ -45,5 +45,50 @@ export const m2AlgebraEcuacionesInecuacionesQuestions: Question[] = [
     explanationLatex: '2x - 3 = 7 \\rightarrow x = 5 \\quad \\text{o} \\quad 2x - 3 = -7 \\rightarrow x = -2',
     difficulty: 'hard',
     skills: ['algebra-valor-absoluto', 'algebra-ecuaciones-lineales', 'algebra-despeje', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-alg-ec-4',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Resolver la inecuación: $-2x + 6 \\leq 10$',
+    questionLatex: '\\text{Resolver la inecuación: } -2x + 6 \\leq 10',
+    options: ['$x \\geq -2$', '$x \\leq -2$', '$x \\geq 2$', '$x \\leq 2$'],
+    optionsLatex: ['x \\geq -2', 'x \\leq -2', 'x \\geq 2', 'x \\leq 2'],
+    correctAnswer: 0,
+    explanation: 'Despejamos x. Al dividir por -2, invertimos el sentido de la desigualdad:',
+    explanationLatex: '-2x \\leq 4 \\rightarrow x \\geq -2',
+    difficulty: 'hard',
+    skills: ['algebra-inecuaciones', 'algebra-desigualdades', 'algebra-despeje', 'algebra-cambio-signo', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-alg-ec-5',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Resolver: $|x - 4| < 3$',
+    questionLatex: '\\text{Resolver: } |x - 4| < 3',
+    options: ['$1 < x < 7$', '$-7 < x < -1$', '$x < 1$ o $x > 7$', '$x < -1$ o $x > 1$'],
+    optionsLatex: ['1 < x < 7', '-7 < x < -1', 'x < 1 \\text{ o } x > 7', 'x < -1 \\text{ o } x > 1'],
+    correctAnswer: 0,
+    explanation: 'Para |a| < b, tenemos -b < a < b:',
+    explanationLatex: '-3 < x - 4 < 3 \\rightarrow 1 < x < 7',
+    difficulty: 'extreme',
+    skills: ['algebra-valor-absoluto', 'algebra-inecuaciones', 'algebra-desigualdades', 'algebra-despeje', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-alg-ec-6',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Resolver: $\\frac{x + 3}{x - 2} = 4$, para $x \\neq 2$',
+    questionLatex: '\\text{Resolver: } \\frac{x + 3}{x - 2} = 4, \\text{ para } x \\neq 2',
+    options: ['$x = \\frac{11}{3}$', '$x = 11$', '$x = 3$', '$x = \\frac{3}{11}$'],
+    optionsLatex: ['x = \\frac{11}{3}', 'x = 11', 'x = 3', 'x = \\frac{3}{11}'],
+    correctAnswer: 0,
+    explanation: 'Multiplicamos por (x - 2):',
+    explanationLatex: 'x + 3 = 4(x - 2) \\rightarrow x + 3 = 4x - 8 \\rightarrow 11 = 3x \\rightarrow x = \\frac{11}{3}',
+    difficulty: 'hard',
+    skills: ['algebra-ecuaciones-racionales', 'algebra-fracciones-algebraicas', 'algebra-despeje', 'numeros-fracciones', 'numeros-operaciones-basicas']
   }
 ];
