@@ -1103,9 +1103,14 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
             const isCurrentQuestion = idx === currentQuestionIndex;
             let isQuestionCorrect = false;
 
-            if (quizSubmitted && isAnswered) {
+            // For immediate feedback modes, check correctness immediately when answered
+            // For other modes, only check when quiz is submitted
+            if (isAnswered) {
               isQuestionCorrect = answer === q.correctAnswer;
             }
+
+            // Disable navigation to answered questions in immediate feedback modes
+            const isDisabled = quizMode === 'rapidfire' && config?.immediateFeedback && isAnswered && !quizSubmitted;
 
             let buttonClass = 'w-full aspect-square rounded-lg text-xs font-bold transition-all flex items-center justify-center ';
 
@@ -1130,24 +1135,44 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
               }
             } else {
               if (isAnswered) {
-                buttonClass += quizMode === 'zen'
-                  ? 'bg-teal-500 text-white'
-                  : quizMode === 'rapidfire'
-                  ? 'bg-purple-500 text-white'
-                  : 'bg-indigo-500 text-white';
+                // For immediate feedback modes, show green/red immediately
+                if (quizMode === 'rapidfire' && config?.immediateFeedback) {
+                  if (isQuestionCorrect) {
+                    buttonClass += 'bg-green-500 text-white opacity-80';
+                  } else {
+                    buttonClass += 'bg-red-500 text-white opacity-80';
+                  }
+                } else {
+                  // For non-immediate modes, show mode color
+                  buttonClass += quizMode === 'zen'
+                    ? 'bg-teal-500 text-white'
+                    : quizMode === 'rapidfire'
+                    ? 'bg-purple-500 text-white'
+                    : 'bg-indigo-500 text-white';
+                }
               } else {
                 buttonClass += 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400';
               }
             }
 
-            buttonClass += ' hover:opacity-80 cursor-pointer';
+            // Add hover and cursor styles
+            if (isDisabled) {
+              buttonClass += ' cursor-not-allowed';
+            } else {
+              buttonClass += ' hover:opacity-80 cursor-pointer';
+            }
 
             return (
               <button
                 key={idx}
-                onClick={() => setCurrentQuestionIndex(idx)}
+                onClick={() => !isDisabled && setCurrentQuestionIndex(idx)}
                 className={buttonClass}
-                title={`Pregunta ${idx + 1}${isAnswered ? ' (respondida)' : ''}`}
+                disabled={isDisabled}
+                title={
+                  isDisabled
+                    ? `Pregunta ${idx + 1} (respuesta final: ${isQuestionCorrect ? 'correcta' : 'incorrecta'})`
+                    : `Pregunta ${idx + 1}${isAnswered ? ' (respondida)' : ''}`
+                }
               >
                 {idx + 1}
               </button>
@@ -1157,17 +1182,21 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         )}
         {showQuickNav && (
           <div className="flex items-center gap-4 mt-2 text-xs text-gray-600 dark:text-gray-400">
-            <div className="flex items-center gap-1">
-              <div className={`w-3 h-3 rounded ${
-                quizMode === 'zen'
-                  ? 'bg-teal-500'
-                  : quizMode === 'rapidfire'
-                  ? 'bg-purple-500'
-                  : 'bg-indigo-500'
-              }`}></div>
-              <span>Respondida</span>
-            </div>
-            {quizSubmitted && (
+            {/* Show answered indicator only for non-immediate feedback modes */}
+            {!(quizMode === 'rapidfire' && config?.immediateFeedback && !quizSubmitted) && (
+              <div className="flex items-center gap-1">
+                <div className={`w-3 h-3 rounded ${
+                  quizMode === 'zen'
+                    ? 'bg-teal-500'
+                    : quizMode === 'rapidfire'
+                    ? 'bg-purple-500'
+                    : 'bg-indigo-500'
+                }`}></div>
+                <span>Respondida</span>
+              </div>
+            )}
+            {/* Show correct/incorrect for immediate feedback modes OR when quiz is submitted */}
+            {((quizMode === 'rapidfire' && config?.immediateFeedback && !quizSubmitted) || quizSubmitted) && (
               <>
                 <div className="flex items-center gap-1">
                   <div className="w-3 h-3 rounded bg-green-500"></div>
@@ -1188,7 +1217,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
       </div>
 
       {/* Question answered indicator */}
-      {!quizSubmitted && userAnswer !== null && (
+      {!quizSubmitted && userAnswer !== null && !(quizMode === 'rapidfire' && config?.immediateFeedback) && (
         <div className={`mb-6 p-3 rounded-lg border ${
           quizMode === 'rapidfire'
             ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-300 dark:border-green-700 shadow-md'
