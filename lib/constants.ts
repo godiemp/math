@@ -19,9 +19,84 @@ export const DEFAULT_QUESTION_COUNT = 10;
  */
 export const RAPIDFIRE_TIME_LIMITS = {
   easy: 25 * 60,      // 25 minutes = 1500 seconds
-  medium: 20 * 60,    // 20 minutes = 1200 seconds
-  hard: 15 * 60,      // 15 minutes = 900 seconds
+  medium: 18 * 60,    // 18 minutes = 1080 seconds
+  hard: 12 * 60,      // 12 minutes = 720 seconds
   extreme: 10 * 60,   // 10 minutes = 600 seconds
+} as const;
+
+/**
+ * Comprehensive configuration for each rapid fire difficulty level
+ */
+export const RAPIDFIRE_CONFIG = {
+  easy: {
+    timeLimit: 25 * 60,           // 25 minutes
+    questionCount: 10,             // 10 questions
+    hintsAllowed: true,            // Hints available
+    hintPenaltyPercent: 10,        // -10% points for using hint
+    pauseAllowed: true,            // Can pause once
+    pauseMaxSeconds: 30,           // Max 30 second pause
+    livesSystem: false,            // No lives limit
+    maxWrongAnswers: Infinity,     // Unlimited wrong answers
+    pointsPerCorrect: 10,          // 10 points per correct answer
+    speedBonusPerTenSeconds: 1,    // +1 point per 10 seconds saved
+    streakBonusEnabled: false,     // No streak bonus
+    perfectBonus: 0,               // No perfect bonus
+    passingPercentage: 60,         // 60% to pass
+  },
+  medium: {
+    timeLimit: 18 * 60,           // 18 minutes
+    questionCount: 10,             // 10 questions
+    hintsAllowed: false,           // No hints
+    hintPenaltyPercent: 0,
+    pauseAllowed: false,           // No pause
+    pauseMaxSeconds: 0,
+    livesSystem: false,            // No lives limit
+    maxWrongAnswers: Infinity,     // Unlimited wrong answers
+    pointsPerCorrect: 15,          // 15 points per correct answer
+    speedBonusPerTenSeconds: 2,    // +2 points per 10 seconds saved
+    streakBonusEnabled: true,      // Streak bonus enabled
+    streakBonusThreshold: 3,       // 3+ consecutive correct
+    streakBonusPoints: 5,          // +5 points for streak
+    perfectBonus: 0,               // No perfect bonus
+    passingPercentage: 70,         // 70% to pass
+  },
+  hard: {
+    timeLimit: 12 * 60,           // 12 minutes
+    questionCount: 12,             // 12 questions
+    hintsAllowed: false,           // No hints
+    hintPenaltyPercent: 0,
+    pauseAllowed: false,           // No pause
+    pauseMaxSeconds: 0,
+    livesSystem: true,             // Lives system enabled
+    maxWrongAnswers: 2,            // 2 wrong answers allowed, 3rd ends quiz immediately
+    pointsPerCorrect: 20,          // 20 points per correct answer
+    speedBonusPerTenSeconds: 3,    // +3 points per 10 seconds saved
+    streakBonusEnabled: true,      // Streak bonus enabled
+    streakBonusThreshold: 5,       // 5+ consecutive correct
+    streakBonusPoints: 10,         // +10 points for 5+ streak
+    perfectBonus: 50,              // +50 points if all correct
+    passingPercentage: 75,         // 75% to pass
+  },
+  extreme: {
+    timeLimit: 10 * 60,           // 10 minutes
+    questionCount: 15,             // 15 questions
+    hintsAllowed: false,           // No hints
+    hintPenaltyPercent: 0,
+    pauseAllowed: false,           // No pause
+    pauseMaxSeconds: 0,
+    livesSystem: true,             // Lives system enabled
+    maxWrongAnswers: 1,            // 1 wrong answer allowed, 2nd ends quiz immediately
+    pointsPerCorrect: 30,          // 30 points per correct answer
+    speedBonusPerTenSeconds: 5,    // +5 points per 10 seconds saved
+    streakBonusEnabled: true,      // Streak bonus enabled
+    streakBonusThresholds: [       // Multiple streak thresholds
+      { threshold: 5, points: 15 },
+      { threshold: 10, points: 30 },
+    ],
+    perfectBonus: 100,             // +100 points if all correct
+    passingPercentage: 80,         // 80% to pass
+    timeBackPerCorrect: 5,         // +5 seconds back per correct answer
+  },
 } as const;
 
 /**

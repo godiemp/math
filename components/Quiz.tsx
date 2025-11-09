@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Question, QuestionAttempt } from '@/lib/types';
+import { Question, QuestionAttempt, RapidFireState, RapidFireScore } from '@/lib/types';
 import { getRandomQuestions } from '@/lib/questions';
 import { QuestionRenderer } from './QuestionRenderer';
 import { AIChatModal } from './AIChatModal';
 import { api } from '@/lib/api-client';
 import { isAuthenticated } from '@/lib/auth';
+import { RAPIDFIRE_CONFIG } from '@/lib/constants';
 
 interface QuizProps {
   questions: Question[];
@@ -18,6 +19,8 @@ interface QuizProps {
 }
 
 export default function Quiz({ questions: allQuestions, level, subject, quizMode = 'zen', difficulty = 'medium', replayQuestions }: QuizProps) {
+  // Get configuration for the current difficulty
+  const config = quizMode === 'rapidfire' ? RAPIDFIRE_CONFIG[difficulty] : null;
   const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
@@ -38,22 +41,31 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
   // Get time limit based on difficulty
   const getTimeLimit = () => {
-    if (quizMode !== 'rapidfire') return 0;
-    switch (difficulty) {
-      case 'easy': return 25 * 60; // 25 minutes = 1500 seconds
-      case 'medium': return 20 * 60; // 20 minutes = 1200 seconds
-      case 'hard': return 15 * 60; // 15 minutes = 900 seconds
-      case 'extreme': return 10 * 60; // 10 minutes = 600 seconds
-      default: return 20 * 60;
-    }
+    if (quizMode !== 'rapidfire' || !config) return 0;
+    return config.timeLimit;
   };
 
   const [timeRemaining, setTimeRemaining] = useState(getTimeLimit());
   const [totalTimeElapsed, setTotalTimeElapsed] = useState(0);
+  const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [showTimer, setShowTimer] = useState(() => {
     // Load timer visibility preference from localStorage
     const saved = localStorage.getItem('quiz-show-timer');
     return saved !== null ? saved === 'true' : true; // Default to showing timer
+  });
+
+  // Rapid Fire state
+  const [rapidFireState, setRapidFireState] = useState<RapidFireState>({
+    hintsUsed: [],
+    pausesUsed: 0,
+    pausesRemaining: config?.pauseAllowed ? 1 : 0,
+    livesRemaining: config?.livesSystem ? config.maxWrongAnswers : Infinity,
+    wrongAnswerCount: 0,
+    currentStreak: 0,
+    longestStreak: 0,
+    timePerQuestion: [],
+    isPaused: false,
+    pauseTimeRemaining: 0,
   });
 
   // Toggle timer visibility and save preference
@@ -78,15 +90,33 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
       setScore(progress);
     }
 
-    // Initialize quiz: use replay questions if provided, otherwise random
+    // Initialize quiz: use replay questions if provided, otherwise random with appropriate question count for difficulty
+    const questionCount = config?.questionCount || 10;
     const questionsToUse = replayQuestions && replayQuestions.length > 0
       ? replayQuestions
-      : getRandomQuestions(level, 10, subject);
+      : getRandomQuestions(level, questionCount, subject);
 
     setQuizQuestions(questionsToUse);
     setUserAnswers(new Array(questionsToUse.length).fill(null));
     setTimeRemaining(getTimeLimit()); // Reset timer based on difficulty
     setTotalTimeElapsed(0);
+    setQuestionStartTime(Date.now());
+
+    // Reset rapid fire state
+    if (quizMode === 'rapidfire' && config) {
+      setRapidFireState({
+        hintsUsed: [],
+        pausesUsed: 0,
+        pausesRemaining: config.pauseAllowed ? 1 : 0,
+        livesRemaining: config.livesSystem ? config.maxWrongAnswers : Infinity,
+        wrongAnswerCount: 0,
+        currentStreak: 0,
+        longestStreak: 0,
+        timePerQuestion: new Array(questionsToUse.length).fill(0),
+        isPaused: false,
+        pauseTimeRemaining: 0,
+      });
+    }
   }, [level, subject, difficulty, replayQuestions]);
 
   // Countdown effect for rapidfire mode intro
@@ -134,7 +164,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
   // Timer effect for rapidfire mode
   useEffect(() => {
-    if (quizMode !== 'rapidfire' || quizSubmitted || quizQuestions.length === 0 || showCountdown) {
+    if (quizMode !== 'rapidfire' || quizSubmitted || quizQuestions.length === 0 || showCountdown || rapidFireState.isPaused) {
       return;
     }
 
@@ -148,10 +178,46 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         return prev - 1;
       });
       setTotalTimeElapsed((prev) => prev + 1);
+
+      // Track time per question
+      setRapidFireState(prev => {
+        const newTimePerQuestion = [...prev.timePerQuestion];
+        newTimePerQuestion[currentQuestionIndex] = (newTimePerQuestion[currentQuestionIndex] || 0) + 1;
+        return {
+          ...prev,
+          timePerQuestion: newTimePerQuestion,
+        };
+      });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [quizMode, quizSubmitted, quizQuestions.length, showCountdown]);
+  }, [quizMode, quizSubmitted, quizQuestions.length, showCountdown, rapidFireState.isPaused, currentQuestionIndex]);
+
+  // Pause timer effect
+  useEffect(() => {
+    if (!rapidFireState.isPaused || rapidFireState.pauseTimeRemaining <= 0) {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setRapidFireState(prev => {
+        if (prev.pauseTimeRemaining <= 1) {
+          // Pause time's up, unpause
+          return {
+            ...prev,
+            isPaused: false,
+            pauseTimeRemaining: 0,
+          };
+        }
+        return {
+          ...prev,
+          pauseTimeRemaining: prev.pauseTimeRemaining - 1,
+        };
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [rapidFireState.isPaused, rapidFireState.pauseTimeRemaining]);
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
 
@@ -160,6 +226,72 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
       const newAnswers = [...userAnswers];
       newAnswers[currentQuestionIndex] = answerIndex;
       setUserAnswers(newAnswers);
+
+      // For rapid fire mode, update state based on correctness
+      if (quizMode === 'rapidfire' && config) {
+        const isCorrect = answerIndex === currentQuestion.correctAnswer;
+
+        // Update rapid fire state
+        setRapidFireState(prev => {
+          const newState = { ...prev };
+
+          if (isCorrect) {
+            // Update streak
+            newState.currentStreak = prev.currentStreak + 1;
+            newState.longestStreak = Math.max(prev.longestStreak, newState.currentStreak);
+
+            // Extreme mode: add time back
+            if (difficulty === 'extreme' && 'timeBackPerCorrect' in config && config.timeBackPerCorrect) {
+              setTimeRemaining(time => time + config.timeBackPerCorrect);
+            }
+          } else {
+            // Reset streak
+            newState.currentStreak = 0;
+            newState.wrongAnswerCount = prev.wrongAnswerCount + 1;
+
+            // Check lives system - GAME OVER
+            if (config.livesSystem && newState.wrongAnswerCount >= config.maxWrongAnswers) {
+              // Out of lives, auto-submit after showing the wrong answer
+              setTimeout(() => {
+                handleSubmitQuiz();
+              }, 2000); // Wait 2 seconds to see the game over state
+              return newState; // Return early to prevent auto-advance
+            }
+          }
+
+          return newState;
+        });
+
+        // Auto-advance to next question after showing feedback
+        // BUT only if we didn't just lose our last life
+        if (!isCorrect) {
+          // Check if this wrong answer causes game over
+          const willBeGameOver = config.livesSystem &&
+                                 rapidFireState.wrongAnswerCount + 1 >= config.maxWrongAnswers;
+
+          if (!willBeGameOver) {
+            // Safe to auto-advance or auto-submit if last question
+            setTimeout(() => {
+              if (currentQuestionIndex < quizQuestions.length - 1) {
+                handleNext();
+              } else {
+                // Last question, auto-submit
+                handleSubmitQuiz();
+              }
+            }, 1500);
+          }
+        } else {
+          // Correct answer, auto-advance or auto-submit if last question
+          setTimeout(() => {
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+              handleNext();
+            } else {
+              // Last question, auto-submit
+              handleSubmitQuiz();
+            }
+          }, 1500);
+        }
+      }
     }
   };
 
@@ -173,6 +305,123 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     if (currentQuestionIndex < quizQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
+  };
+
+  // Use hint for current question (easy mode only)
+  const handleHint = () => {
+    if (quizMode !== 'rapidfire' || !config || !config.hintsAllowed) return;
+    if (rapidFireState.hintsUsed.includes(currentQuestionIndex)) return;
+
+    setRapidFireState(prev => ({
+      ...prev,
+      hintsUsed: [...prev.hintsUsed, currentQuestionIndex],
+    }));
+  };
+
+  // Pause the quiz (easy mode only)
+  const handlePause = () => {
+    if (quizMode !== 'rapidfire' || !config || !config.pauseAllowed || rapidFireState.pausesRemaining <= 0) return;
+
+    setRapidFireState(prev => ({
+      ...prev,
+      isPaused: true,
+      pausesUsed: prev.pausesUsed + 1,
+      pausesRemaining: prev.pausesRemaining - 1,
+      pauseTimeRemaining: config.pauseMaxSeconds,
+    }));
+  };
+
+  // Unpause the quiz
+  const handleUnpause = () => {
+    setRapidFireState(prev => ({
+      ...prev,
+      isPaused: false,
+      pauseTimeRemaining: 0,
+    }));
+  };
+
+  // Calculate rapid fire score with all bonuses and penalties
+  const calculateRapidFireScore = (): RapidFireScore => {
+    if (!config) {
+      return {
+        basePoints: 0,
+        speedBonus: 0,
+        streakBonus: 0,
+        perfectBonus: 0,
+        hintPenalty: 0,
+        totalPoints: 0,
+        correctAnswers: 0,
+        totalQuestions: quizQuestions.length,
+        accuracy: 0,
+        timeUsed: totalTimeElapsed,
+        timeSaved: 0,
+        passed: false,
+      };
+    }
+
+    let correctCount = 0;
+    quizQuestions.forEach((question, index) => {
+      if (userAnswers[index] === question.correctAnswer) {
+        correctCount++;
+      }
+    });
+
+    // Base points
+    const basePoints = correctCount * config.pointsPerCorrect;
+
+    // Speed bonus (time saved)
+    const timeAllocated = config.timeLimit;
+    const timeSaved = Math.max(0, timeAllocated - totalTimeElapsed);
+    const speedBonus = Math.floor(timeSaved / 10) * config.speedBonusPerTenSeconds;
+
+    // Streak bonus
+    let streakBonus = 0;
+    if (config.streakBonusEnabled) {
+      if (difficulty === 'extreme' && 'streakBonusThresholds' in config) {
+        // Extreme mode has multiple thresholds
+        config.streakBonusThresholds.forEach(({ threshold, points }) => {
+          if (rapidFireState.longestStreak >= threshold) {
+            streakBonus = Math.max(streakBonus, points);
+          }
+        });
+      } else if ('streakBonusThreshold' in config && 'streakBonusPoints' in config) {
+        // Other modes have single threshold
+        if (rapidFireState.longestStreak >= config.streakBonusThreshold) {
+          streakBonus = config.streakBonusPoints;
+        }
+      }
+    }
+
+    // Perfect bonus
+    const isPerfect = correctCount === quizQuestions.length;
+    const perfectBonus = isPerfect ? config.perfectBonus : 0;
+
+    // Hint penalty
+    const hintPenalty = config.hintsAllowed
+      ? rapidFireState.hintsUsed.length * (config.pointsPerCorrect * config.hintPenaltyPercent / 100)
+      : 0;
+
+    // Total
+    const totalPoints = Math.max(0, basePoints + speedBonus + streakBonus + perfectBonus - hintPenalty);
+
+    // Check if passed
+    const accuracy = (correctCount / quizQuestions.length) * 100;
+    const passed = accuracy >= config.passingPercentage;
+
+    return {
+      basePoints,
+      speedBonus,
+      streakBonus,
+      perfectBonus,
+      hintPenalty,
+      totalPoints,
+      correctAnswers: correctCount,
+      totalQuestions: quizQuestions.length,
+      accuracy,
+      timeUsed: totalTimeElapsed,
+      timeSaved,
+      passed,
+    };
   };
 
   const handleSubmitQuiz = () => {
@@ -257,16 +506,31 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
   };
 
   const handleRestart = () => {
-    const randomQuestions = getRandomQuestions(level, 10, subject);
+    const questionCount = config?.questionCount || 10;
+    const randomQuestions = getRandomQuestions(level, questionCount, subject);
     setQuizQuestions(randomQuestions);
     setUserAnswers(new Array(randomQuestions.length).fill(null));
     setCurrentQuestionIndex(0);
     setQuizSubmitted(false);
     setTimeRemaining(getTimeLimit()); // Reset timer based on difficulty
     setTotalTimeElapsed(0); // Reset elapsed time
+    setQuestionStartTime(Date.now());
     setIsChatModalOpen(false); // Close chat modal
-    // Reset countdown for rapidfire mode
-    if (quizMode === 'rapidfire') {
+
+    // Reset rapid fire state
+    if (quizMode === 'rapidfire' && config) {
+      setRapidFireState({
+        hintsUsed: [],
+        pausesUsed: 0,
+        pausesRemaining: config.pauseAllowed ? 1 : 0,
+        livesRemaining: config.livesSystem ? config.maxWrongAnswers : Infinity,
+        wrongAnswerCount: 0,
+        currentStreak: 0,
+        longestStreak: 0,
+        timePerQuestion: new Array(questionCount).fill(0),
+        isPaused: false,
+        pauseTimeRemaining: 0,
+      });
       setShowCountdown(true);
       setCountdown(3);
     }
@@ -473,30 +737,102 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     );
   }
 
+  // Format time as MM:SS
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   // Completion screen after submission
   if (quizSubmitted && currentQuestionIndex === quizQuestions.length) {
     const answeredCount = userAnswers.filter(a => a !== null).length;
     const correctCount = quizQuestions.filter((q, i) => userAnswers[i] === q.correctAnswer).length;
     const percentage = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+    const rapidFireScore = quizMode === 'rapidfire' ? calculateRapidFireScore() : null;
 
     return (
       <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
         <h2 className="text-3xl font-bold text-center mb-6 text-gray-900 dark:text-white">
           ¡Quiz Completado!
         </h2>
-        <div className="text-center mb-8">
-          <div className="text-6xl font-bold text-indigo-600 dark:text-indigo-400 mb-4">
-            {percentage}%
+
+        {/* Rapid Fire Scoring */}
+        {quizMode === 'rapidfire' && rapidFireScore && (
+          <div className="mb-8">
+            <div className="text-center mb-6">
+              <div className={`text-7xl font-black mb-4 ${rapidFireScore.passed ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                {Math.round(rapidFireScore.totalPoints)}
+              </div>
+              <p className="text-2xl font-bold text-gray-700 dark:text-gray-300">
+                {rapidFireScore.passed ? '✅ ¡Aprobado!' : '❌ No Aprobado'}
+              </p>
+              <p className="text-lg text-gray-600 dark:text-gray-400 mt-2">
+                {rapidFireScore.accuracy.toFixed(1)}% precisión • {formatTime(rapidFireScore.timeUsed)} usado
+              </p>
+            </div>
+
+            {/* Score Breakdown */}
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-lg p-4 border border-purple-200 dark:border-purple-700 space-y-2">
+              <h3 className="font-bold text-lg text-purple-900 dark:text-purple-100 mb-3">📊 Desglose de Puntuación</h3>
+
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-700 dark:text-gray-300">Puntos base ({rapidFireScore.correctAnswers}/{rapidFireScore.totalQuestions} correctas)</span>
+                <span className="font-bold text-green-600 dark:text-green-400">+{rapidFireScore.basePoints}</span>
+              </div>
+
+              {rapidFireScore.speedBonus > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-700 dark:text-gray-300">⚡ Bonus de velocidad ({formatTime(rapidFireScore.timeSaved)} ahorrado)</span>
+                  <span className="font-bold text-blue-600 dark:text-blue-400">+{rapidFireScore.speedBonus}</span>
+                </div>
+              )}
+
+              {rapidFireScore.streakBonus > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-700 dark:text-gray-300">🔥 Bonus de racha (mejor: {rapidFireState.longestStreak})</span>
+                  <span className="font-bold text-orange-600 dark:text-orange-400">+{rapidFireScore.streakBonus}</span>
+                </div>
+              )}
+
+              {rapidFireScore.perfectBonus > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-700 dark:text-gray-300">⭐ Bonus perfecto</span>
+                  <span className="font-bold text-yellow-600 dark:text-yellow-400">+{rapidFireScore.perfectBonus}</span>
+                </div>
+              )}
+
+              {rapidFireScore.hintPenalty > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-700 dark:text-gray-300">💡 Penalización por pistas ({rapidFireState.hintsUsed.length})</span>
+                  <span className="font-bold text-amber-600 dark:text-amber-400">-{rapidFireScore.hintPenalty.toFixed(0)}</span>
+                </div>
+              )}
+
+              <div className="pt-2 mt-2 border-t border-purple-300 dark:border-purple-600 flex justify-between">
+                <span className="font-bold text-purple-900 dark:text-purple-100">Total</span>
+                <span className="font-bold text-2xl text-purple-600 dark:text-purple-400">{Math.round(rapidFireScore.totalPoints)}</span>
+              </div>
+            </div>
           </div>
-          <p className="text-xl text-gray-700 dark:text-gray-300">
-            {correctCount} de {answeredCount} respuestas correctas
-          </p>
-          {answeredCount < quizQuestions.length && (
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-              ({quizQuestions.length - answeredCount} preguntas sin responder)
+        )}
+
+        {/* Standard scoring for non-rapid fire */}
+        {quizMode !== 'rapidfire' && (
+          <div className="text-center mb-8">
+            <div className="text-6xl font-bold text-indigo-600 dark:text-indigo-400 mb-4">
+              {percentage}%
+            </div>
+            <p className="text-xl text-gray-700 dark:text-gray-300">
+              {correctCount} de {answeredCount} respuestas correctas
             </p>
-          )}
-        </div>
+            {answeredCount < quizQuestions.length && (
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                ({quizQuestions.length - answeredCount} preguntas sin responder)
+              </p>
+            )}
+          </div>
+        )}
 
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Resumen de respuestas:</h3>
@@ -573,14 +909,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
   // Question view (before or after submission)
   const userAnswer = userAnswers[currentQuestionIndex];
   const isCorrect = userAnswer === currentQuestion.correctAnswer;
-  const showFeedback = quizSubmitted;
-
-  // Format time as MM:SS
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
+  // Show feedback immediately in rapid fire mode if an answer is selected, or after submission for all modes
+  const showFeedback = quizSubmitted || (quizMode === 'rapidfire' && userAnswer !== null);
 
   // Determine timer color based on time remaining
   const getTimerColor = () => {
@@ -607,9 +937,10 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
     } : quizMode === 'zen' ? {
       boxShadow: '0 0 60px rgba(20, 184, 166, 0.3), 0 20px 40px rgba(0, 0, 0, 0.2)',
     } : undefined}>
-      {/* Simplified Timer Display - Only show in rapidfire mode and when quiz is not submitted */}
-      {quizMode === 'rapidfire' && !quizSubmitted && (
-        <div className="mb-6">
+      {/* Rapid Fire Stats and Timer - Only show in rapidfire mode and when quiz is not submitted */}
+      {quizMode === 'rapidfire' && !quizSubmitted && config && (
+        <div className="mb-6 space-y-3">
+          {/* Timer */}
           {showTimer ? (
             <div className="flex items-center justify-between p-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-lg border border-purple-200 dark:border-purple-700">
               <div className="flex items-center gap-2">
@@ -634,6 +965,76 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
             >
               ⚡ Mostrar tiempo
             </button>
+          )}
+
+          {/* Rapid Fire Stats Bar */}
+          <div className="flex items-center justify-between gap-4 p-3 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 rounded-lg border border-indigo-200 dark:border-indigo-700">
+            {/* Lives (if applicable) */}
+            {config.livesSystem && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Vidas:</span>
+                <div className="flex gap-1">
+                  {Array.from({ length: config.maxWrongAnswers }).map((_, i) => (
+                    <span key={i} className={`text-lg ${i < rapidFireState.livesRemaining ? 'text-red-500' : 'text-gray-300 dark:text-gray-600'}`}>
+                      ❤️
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Streak */}
+            {rapidFireState.currentStreak > 0 && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Racha:</span>
+                <span className="text-sm font-bold text-orange-600 dark:text-orange-400">
+                  🔥 {rapidFireState.currentStreak}
+                </span>
+              </div>
+            )}
+
+            {/* Pause remaining (if applicable) */}
+            {config.pauseAllowed && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Pausas:</span>
+                <span className="text-sm font-bold text-teal-600 dark:text-teal-400">
+                  {rapidFireState.pausesRemaining}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-2">
+            {/* Hint Button */}
+            {config.hintsAllowed && !rapidFireState.hintsUsed.includes(currentQuestionIndex) && (
+              <button
+                onClick={handleHint}
+                className="flex-1 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors"
+              >
+                💡 Pista (-{config.hintPenaltyPercent}%)
+              </button>
+            )}
+
+            {/* Pause Button */}
+            {config.pauseAllowed && rapidFireState.pausesRemaining > 0 && !rapidFireState.isPaused && (
+              <button
+                onClick={handlePause}
+                className="flex-1 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors"
+              >
+                ⏸️ Pausar ({config.pauseMaxSeconds}s)
+              </button>
+            )}
+          </div>
+
+          {/* Hint Display */}
+          {config.hintsAllowed && rapidFireState.hintsUsed.includes(currentQuestionIndex) && (
+            <div className="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 rounded-lg">
+              <p className="text-sm font-medium text-amber-900 dark:text-amber-100 mb-1">💡 Pista:</p>
+              <p className="text-sm text-amber-800 dark:text-amber-200">
+                {currentQuestion.explanation.split('.')[0]}.
+              </p>
+            </div>
           )}
         </div>
       )}
@@ -675,7 +1076,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         </div>
       </div>
 
-      {/* Quick Navigation Panel */}
+      {/* Quick Navigation Panel - only show in zen mode or after quiz submission */}
+      {(quizMode === 'zen' || quizSubmitted) && (
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -702,9 +1104,14 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
             const isCurrentQuestion = idx === currentQuestionIndex;
             let isQuestionCorrect = false;
 
-            if (quizSubmitted && isAnswered) {
+            // For immediate feedback modes, check correctness immediately when answered
+            // For other modes, only check when quiz is submitted
+            if (isAnswered) {
               isQuestionCorrect = answer === q.correctAnswer;
             }
+
+            // Disable navigation to answered questions in rapid fire mode
+            const isDisabled = quizMode === 'rapidfire' && isAnswered && !quizSubmitted;
 
             let buttonClass = 'w-full aspect-square rounded-lg text-xs font-bold transition-all flex items-center justify-center ';
 
@@ -729,24 +1136,42 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
               }
             } else {
               if (isAnswered) {
-                buttonClass += quizMode === 'zen'
-                  ? 'bg-teal-500 text-white'
-                  : quizMode === 'rapidfire'
-                  ? 'bg-purple-500 text-white'
-                  : 'bg-indigo-500 text-white';
+                // For rapid fire mode, show green/red immediately
+                if (quizMode === 'rapidfire') {
+                  if (isQuestionCorrect) {
+                    buttonClass += 'bg-green-500 text-white opacity-80';
+                  } else {
+                    buttonClass += 'bg-red-500 text-white opacity-80';
+                  }
+                } else {
+                  // For zen and other modes, show mode color
+                  buttonClass += quizMode === 'zen'
+                    ? 'bg-teal-500 text-white'
+                    : 'bg-indigo-500 text-white';
+                }
               } else {
                 buttonClass += 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400';
               }
             }
 
-            buttonClass += ' hover:opacity-80 cursor-pointer';
+            // Add hover and cursor styles
+            if (isDisabled) {
+              buttonClass += ' cursor-not-allowed';
+            } else {
+              buttonClass += ' hover:opacity-80 cursor-pointer';
+            }
 
             return (
               <button
                 key={idx}
-                onClick={() => setCurrentQuestionIndex(idx)}
+                onClick={() => !isDisabled && setCurrentQuestionIndex(idx)}
                 className={buttonClass}
-                title={`Pregunta ${idx + 1}${isAnswered ? ' (respondida)' : ''}`}
+                disabled={isDisabled}
+                title={
+                  isDisabled
+                    ? `Pregunta ${idx + 1} (respuesta final: ${isQuestionCorrect ? 'correcta' : 'incorrecta'})`
+                    : `Pregunta ${idx + 1}${isAnswered ? ' (respondida)' : ''}`
+                }
               >
                 {idx + 1}
               </button>
@@ -756,17 +1181,15 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         )}
         {showQuickNav && (
           <div className="flex items-center gap-4 mt-2 text-xs text-gray-600 dark:text-gray-400">
-            <div className="flex items-center gap-1">
-              <div className={`w-3 h-3 rounded ${
-                quizMode === 'zen'
-                  ? 'bg-teal-500'
-                  : quizMode === 'rapidfire'
-                  ? 'bg-purple-500'
-                  : 'bg-indigo-500'
-              }`}></div>
-              <span>Respondida</span>
-            </div>
-            {quizSubmitted && (
+            {/* Show answered indicator only for zen mode */}
+            {quizMode === 'zen' && !quizSubmitted && (
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded bg-teal-500"></div>
+                <span>Respondida</span>
+              </div>
+            )}
+            {/* Show correct/incorrect for rapid fire mode OR when quiz is submitted */}
+            {(quizMode === 'rapidfire' && !quizSubmitted) || quizSubmitted ? (
               <>
                 <div className="flex items-center gap-1">
                   <div className="w-3 h-3 rounded bg-green-500"></div>
@@ -777,7 +1200,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
                   <span>Incorrecta</span>
                 </div>
               </>
-            )}
+            ) : null}
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 rounded bg-gray-200 dark:bg-gray-700"></div>
               <span>Sin responder</span>
@@ -785,24 +1208,13 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
           </div>
         )}
       </div>
+      )}
 
-      {/* Question answered indicator */}
-      {!quizSubmitted && userAnswer !== null && (
-        <div className={`mb-6 p-3 rounded-lg border ${
-          quizMode === 'rapidfire'
-            ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-300 dark:border-green-700 shadow-md'
-            : quizMode === 'zen'
-            ? 'bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 border-teal-300 dark:border-teal-700 shadow-md'
-            : 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700'
-        }`}>
-          <p className={`text-sm text-center font-semibold ${
-            quizMode === 'rapidfire'
-              ? 'text-green-700 dark:text-green-300'
-              : quizMode === 'zen'
-              ? 'text-teal-700 dark:text-teal-300'
-              : 'text-blue-700 dark:text-blue-300'
-          }`}>
-            {quizMode === 'rapidfire' ? '✓ ' : quizMode === 'zen' ? '🧘 ' : ''}Respuesta seleccionada. Puedes cambiarla antes de enviar el quiz.
+      {/* Question answered indicator - only show in zen mode */}
+      {!quizSubmitted && userAnswer !== null && quizMode === 'zen' && (
+        <div className="mb-6 p-3 rounded-lg border bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 border-teal-300 dark:border-teal-700 shadow-md">
+          <p className="text-sm text-center font-semibold text-teal-700 dark:text-teal-300">
+            🧘 Respuesta seleccionada. Puedes cambiarla antes de enviar el quiz.
           </p>
         </div>
       )}
@@ -839,67 +1251,70 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
       {/* Navigation and Submit buttons */}
       <div className="mt-8 flex flex-col gap-4">
-        <div className="flex gap-4">
-          <button
-            onClick={handlePrevious}
-            disabled={currentQuestionIndex === 0}
-            className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
-              quizMode === 'rapidfire'
-                ? 'bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-lg hover:shadow-xl'
-                : quizMode === 'zen'
-                ? 'bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-lg hover:shadow-xl'
-                : 'bg-gray-500 text-white hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors'
-            }`}
-          >
-            ← Anterior
-          </button>
-          {currentQuestionIndex < quizQuestions.length - 1 ? (
+        {/* Only show prev/next navigation if NOT in rapid fire mode OR if quiz is submitted (for review) */}
+        {(quizMode !== 'rapidfire' || quizSubmitted) && (
+          <div className="flex gap-4">
             <button
-              onClick={handleNext}
+              onClick={handlePrevious}
+              disabled={currentQuestionIndex === 0}
               className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
                 quizMode === 'rapidfire'
-                  ? 'bg-gradient-to-r from-indigo-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl'
+                  ? 'bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-lg hover:shadow-xl'
                   : quizMode === 'zen'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl'
-                  : 'bg-gray-500 text-white hover:bg-gray-600 transition-colors'
+                  ? 'bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-lg hover:shadow-xl'
+                  : 'bg-gray-500 text-white hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors'
               }`}
             >
-              Siguiente →
+              ← Anterior
             </button>
-          ) : quizSubmitted ? (
-            <button
-              onClick={() => setCurrentQuestionIndex(quizQuestions.length)}
-              className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
-                quizMode === 'rapidfire'
-                  ? 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl'
-                  : quizMode === 'zen'
-                  ? 'bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl'
-                  : 'bg-indigo-600 text-white hover:bg-indigo-700 transition-colors'
-              }`}
-            >
-              Ver Resumen
-            </button>
-          ) : null}
-        </div>
+            {currentQuestionIndex < quizQuestions.length - 1 ? (
+              <button
+                onClick={handleNext}
+                className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
+                  quizMode === 'rapidfire'
+                    ? 'bg-gradient-to-r from-indigo-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl'
+                    : quizMode === 'zen'
+                    ? 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl'
+                    : 'bg-gray-500 text-white hover:bg-gray-600 transition-colors'
+                }`}
+              >
+                Siguiente →
+              </button>
+            ) : quizSubmitted ? (
+              <button
+                onClick={() => setCurrentQuestionIndex(quizQuestions.length)}
+                className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
+                  quizMode === 'rapidfire'
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl'
+                    : quizMode === 'zen'
+                    ? 'bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl'
+                    : 'bg-indigo-600 text-white hover:bg-indigo-700 transition-colors'
+                }`}
+              >
+                Ver Resumen
+              </button>
+            ) : null}
+          </div>
+        )}
 
-        {!quizSubmitted && (
+        {/* In rapid fire mode before submission, show appropriate message */}
+        {quizMode === 'rapidfire' && !quizSubmitted && (
+          <div className="text-center text-sm text-purple-200 dark:text-purple-300 bg-purple-900/30 rounded-lg p-3">
+            💡 Responde cada pregunta y avanza automáticamente. El quiz se enviará al terminar.
+          </div>
+        )}
+
+        {/* Only show submit button in zen mode */}
+        {!quizSubmitted && quizMode === 'zen' && (
           <button
             onClick={handleSubmitQuiz}
             disabled={userAnswers.filter(a => a !== null).length === 0}
-            className={`w-full px-6 py-3 rounded-lg font-semibold text-lg transition-all ${
-              quizMode === 'rapidfire'
-                ? 'bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 hover:from-yellow-500 hover:via-pink-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-xl hover:shadow-2xl hover:scale-[1.02]'
-                : quizMode === 'zen'
-                ? 'bg-gradient-to-r from-teal-400 via-cyan-500 to-blue-600 hover:from-teal-500 hover:via-cyan-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-xl hover:shadow-2xl hover:scale-[1.02]'
-                : 'bg-indigo-600 text-white hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors'
-            }`}
-            style={quizMode === 'rapidfire' && userAnswers.filter(a => a !== null).length > 0 ? {
-              boxShadow: '0 0 30px rgba(236, 72, 153, 0.5), 0 10px 25px rgba(0, 0, 0, 0.3)'
-            } : quizMode === 'zen' && userAnswers.filter(a => a !== null).length > 0 ? {
+            className="w-full px-6 py-3 rounded-lg font-semibold text-lg transition-all bg-gradient-to-r from-teal-400 via-cyan-500 to-blue-600 hover:from-teal-500 hover:via-cyan-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-xl hover:shadow-2xl hover:scale-[1.02]"
+            style={userAnswers.filter(a => a !== null).length > 0 ? {
               boxShadow: '0 0 30px rgba(20, 184, 166, 0.5), 0 10px 25px rgba(0, 0, 0, 0.3)'
             } : undefined}
           >
-            {quizMode === 'rapidfire' ? '⚡ ' : quizMode === 'zen' ? '🧘 ' : ''}Enviar Quiz ({userAnswers.filter(a => a !== null).length} de {quizQuestions.length} respondidas)
+            🧘 Enviar Quiz ({userAnswers.filter(a => a !== null).length} de {quizQuestions.length} respondidas)
           </button>
         )}
       </div>
@@ -915,11 +1330,74 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
   // Return with gradient background for both modes - use fixed positioning to break out of parent containers
   if (quizMode === 'rapidfire') {
     return (
-      <div className="fixed inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 overflow-y-auto">
-        <div className="min-h-full py-6 px-4 sm:py-8 sm:px-6">
-          {questionContent}
+      <>
+        <div className="fixed inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 overflow-y-auto">
+          <div className="min-h-full py-6 px-4 sm:py-8 sm:px-6">
+            {questionContent}
+          </div>
         </div>
-      </div>
+
+        {/* Pause Overlay */}
+        {rapidFireState.isPaused && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
+              <div className="text-center">
+                <div className="text-6xl mb-4">⏸️</div>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
+                  Quiz Pausado
+                </h2>
+                <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
+                  Tiempo de pausa restante:
+                </p>
+                <div className="text-5xl font-black text-teal-600 dark:text-teal-400 mb-8">
+                  {formatTime(rapidFireState.pauseTimeRemaining)}
+                </div>
+                <button
+                  onClick={handleUnpause}
+                  className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  ▶️ Continuar Ahora
+                </button>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
+                  La pausa terminará automáticamente cuando se acabe el tiempo
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Game Over Overlay - when lives run out */}
+        {config?.livesSystem && rapidFireState.livesRemaining === 0 && !quizSubmitted && (
+          <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 animate-fadeIn">
+            <div className="text-center px-4">
+              <div
+                className="text-9xl mb-6 animate-pulse"
+                style={{
+                  animation: 'pulse 1s ease-in-out infinite',
+                  textShadow: '0 0 40px rgba(239, 68, 68, 0.8)'
+                }}
+              >
+                💀
+              </div>
+              <h2
+                className="text-7xl font-black text-red-500 mb-4"
+                style={{
+                  textShadow: '0 0 30px rgba(239, 68, 68, 0.6), 0 0 60px rgba(239, 68, 68, 0.4)',
+                  animation: 'pulse 1.5s ease-in-out infinite'
+                }}
+              >
+                GAME OVER
+              </h2>
+              <p className="text-3xl text-white/90 mb-2">
+                Te quedaste sin vidas
+              </p>
+              <p className="text-xl text-white/60">
+                Enviando resultados...
+              </p>
+            </div>
+          </div>
+        )}
+      </>
     );
   }
 
