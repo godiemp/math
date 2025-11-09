@@ -15,6 +15,7 @@ import {
   getUserById,
 } from '../services/authService';
 import { RegisterRequest, LoginRequest, RefreshTokenRequest } from '../types';
+import { SubscriptionService } from '../../services/subscriptionService';
 
 /**
  * Register a new user
@@ -95,7 +96,7 @@ export async function logout(req: Request, res: Response): Promise<void> {
 }
 
 /**
- * Get current user info
+ * Get current user info (with subscription status)
  */
 export async function getCurrentUser(req: Request, res: Response): Promise<void> {
   try {
@@ -111,7 +112,16 @@ export async function getCurrentUser(req: Request, res: Response): Promise<void>
       return;
     }
 
-    res.json(user);
+    // Fetch subscription status for non-admin users
+    // Admins always have full access regardless of subscription
+    const subscription = user.role !== 'admin'
+      ? await SubscriptionService.getUserSubscription(req.user.userId)
+      : null;
+
+    res.json({
+      ...user,
+      subscription,
+    });
   } catch (error) {
     console.error('Get current user error:', error);
     res.status(500).json({ error: 'Failed to get user info' });

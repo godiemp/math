@@ -14,7 +14,7 @@ import { ShareModal } from "@/components/ShareModal";
 import { Share2 } from "lucide-react";
 
 function DashboardContent() {
-  const { user, setUser, isAdmin } = useAuth();
+  const { user, setUser, isAdmin, isPaidUser } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
@@ -132,7 +132,15 @@ function DashboardContent() {
         {/* Practice and Temario Cards */}
         <div className="grid md:grid-cols-2 gap-6 mb-12">
           {/* Practice Card */}
-          <Card hover className="p-6">
+          <Card hover className="p-6 relative">
+            {!isPaidUser && (
+              <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+                Premium
+              </div>
+            )}
             <div className="space-y-6">
               {/* M1 Section */}
               <div className="text-center">
@@ -143,11 +151,20 @@ function DashboardContent() {
                 <Text size="sm" variant="secondary" className="mb-4">
                   Contenidos básicos: números, álgebra, geometría y probabilidades
                 </Text>
-                <Button asChild className="w-full">
-                  <Link href="/practice/m1">
+                {isPaidUser ? (
+                  <Button asChild className="w-full">
+                    <Link href="/practice/m1">
+                      Practicar M1
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button disabled className="w-full opacity-60">
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                    </svg>
                     Practicar M1
-                  </Link>
-                </Button>
+                  </Button>
+                )}
               </div>
 
               {/* M2 Section */}
@@ -159,17 +176,34 @@ function DashboardContent() {
                 <Text size="sm" variant="secondary" className="mb-4">
                   Contenidos avanzados para carreras científicas y de ingeniería
                 </Text>
-                <Button asChild className="w-full">
-                  <Link href="/practice/m2">
+                {isPaidUser ? (
+                  <Button asChild className="w-full">
+                    <Link href="/practice/m2">
+                      Practicar M2
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button disabled className="w-full opacity-60">
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                    </svg>
                     Practicar M2
-                  </Link>
-                </Button>
+                  </Button>
+                )}
               </div>
             </div>
           </Card>
 
           {/* Temario Card */}
-          <Card hover className="p-6">
+          <Card hover className="p-6 relative">
+            {!isPaidUser && (
+              <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+                Premium
+              </div>
+            )}
             <div className="text-center h-full flex flex-col justify-center">
               <div className="text-5xl mb-4">📚</div>
               <Heading level={3} size="sm" className="mb-3">
@@ -185,16 +219,35 @@ function DashboardContent() {
                   📋 Currículo Oficial
                 </Text>
                 <div className="flex gap-3 justify-center flex-wrap">
-                  <Button asChild variant="primary">
-                    <Link href="/curriculum/m1">
-                      Ver Currículo M1
-                    </Link>
-                  </Button>
-                  <Button asChild variant="secondary">
-                    <Link href="/curriculum/m2">
-                      Ver Currículo M2
-                    </Link>
-                  </Button>
+                  {isPaidUser ? (
+                    <>
+                      <Button asChild variant="primary">
+                        <Link href="/curriculum/m1">
+                          Ver Currículo M1
+                        </Link>
+                      </Button>
+                      <Button asChild variant="secondary">
+                        <Link href="/curriculum/m2">
+                          Ver Currículo M2
+                        </Link>
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button disabled variant="primary" className="opacity-60">
+                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                        </svg>
+                        Currículo M1
+                      </Button>
+                      <Button disabled variant="secondary" className="opacity-60">
+                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                        </svg>
+                        Currículo M2
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -204,16 +257,35 @@ function DashboardContent() {
                   📖 Documentación Completa
                 </Text>
                 <div className="flex gap-3 justify-center flex-wrap">
-                  <Button asChild variant="primary">
-                    <Link href="/curriculum/m1/docs">
-                      Docs M1
-                    </Link>
-                  </Button>
-                  <Button asChild variant="secondary">
-                    <Link href="/curriculum/m2/docs">
-                      Docs M2
-                    </Link>
-                  </Button>
+                  {isPaidUser ? (
+                    <>
+                      <Button asChild variant="primary">
+                        <Link href="/curriculum/m1/docs">
+                          Docs M1
+                        </Link>
+                      </Button>
+                      <Button asChild variant="secondary">
+                        <Link href="/curriculum/m2/docs">
+                          Docs M2
+                        </Link>
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button disabled variant="primary" className="opacity-60">
+                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                        </svg>
+                        Docs M1
+                      </Button>
+                      <Button disabled variant="secondary" className="opacity-60">
+                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                        </svg>
+                        Docs M2
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -315,7 +387,15 @@ function DashboardContent() {
 
         {/* Progress Tracking Card */}
         <div className="mt-12 text-center">
-          <Card hover className="p-8 max-w-md mx-auto rounded-3xl">
+          <Card hover className="p-8 max-w-md mx-auto rounded-3xl relative">
+            {!isPaidUser && (
+              <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+                Premium
+              </div>
+            )}
             <div className="text-4xl mb-4">📊</div>
             <Heading level={3} size="sm" className="mb-3">
               Seguimiento de Progreso
@@ -323,11 +403,20 @@ function DashboardContent() {
             <Text size="sm" variant="secondary" className="mb-6">
               Revisa tu desempeño, estadísticas y mejora continua
             </Text>
-            <Button asChild>
-              <Link href="/progress">
+            {isPaidUser ? (
+              <Button asChild>
+                <Link href="/progress">
+                  Ver Mi Progreso →
+                </Link>
+              </Button>
+            ) : (
+              <Button disabled className="opacity-60">
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
                 Ver Mi Progreso →
-              </Link>
-            </Button>
+              </Button>
+            )}
           </Card>
         </div>
       </main>

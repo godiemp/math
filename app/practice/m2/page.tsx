@@ -7,6 +7,7 @@ import { getQuestionsByLevel, getQuestionsByIds } from '@/lib/questions';
 import { Question } from '@/lib/types';
 import Link from 'next/link';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ModuleAccessGuard } from '@/components/ModuleAccessGuard';
 import { Card, Button, Heading, Text } from '@/components/ui';
 import { getLastConfigKey } from '@/lib/constants';
 import { api } from '@/lib/api-client';
@@ -514,7 +515,9 @@ function M2PracticeContent() {
 export default function M2Practice() {
   return (
     <ProtectedRoute>
-      <M2PracticeContent />
+      <ModuleAccessGuard moduleName="Ejercicios M2">
+        <M2PracticeContent />
+      </ModuleAccessGuard>
     </ProtectedRoute>
   );
 }
