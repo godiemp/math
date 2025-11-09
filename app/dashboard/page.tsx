@@ -110,12 +110,8 @@ function DashboardContent() {
 
       setShowOnboarding(false);
 
-      // Redirect to practice page based on preference
-      if (preferredSubject === 'M1') {
-        router.push('/practice/m1');
-      } else if (preferredSubject === 'M2') {
-        router.push('/practice/m2');
-      }
+      // Don't redirect - let user see the personalized dashboard with recommendations
+      // They can click the highlighted practice card when ready
     } catch (error) {
       console.error('Failed to complete onboarding:', error);
     }
