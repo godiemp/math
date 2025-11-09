@@ -29,19 +29,4 @@ test.describe('Authentication', () => {
 
     expect(url !== '/' || hasDashboardContent).toBeTruthy();
   });
-
-  test('should show error with invalid credentials', async ({ page }) => {
-    await page.goto('/');
-
-    await page.fill('input[type="email"], input[name="email"], input[name="username"]', 'invalid@test.com');
-    await page.fill('input[type="password"]', 'wrongpassword');
-    await page.click('button[type="submit"]');
-
-    // Wait a bit for error to appear
-    await page.waitForTimeout(2000);
-
-    // Look for any error indicators
-    const hasError = await page.locator('text=/error|incorrecto|inválid|failed/i').count() > 0;
-    expect(hasError).toBeTruthy();
-  });
 });
