@@ -4,13 +4,13 @@
  */
 
 import express from 'express';
-import { authenticate, requireAdmin } from '../middleware/auth.js';
+import { authenticate, requireAdmin } from '../middleware/auth';
 import {
   generateQGenQuestions,
   generateSingleQuestion,
   getContexts,
   getTemplates,
-} from '../controllers/qgenController.js';
+} from '../controllers/qgenController';
 
 const router = express.Router();
 

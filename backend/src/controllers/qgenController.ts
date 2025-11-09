@@ -4,14 +4,14 @@
  */
 
 import { Request, Response } from 'express';
-import { generateQuestions } from '../lib/qgen/qgenAlgorithm.js';
-import { contextLibrary } from '../lib/qgen/contextLibrary.js';
-import { templateLibrary } from '../lib/qgen/templateLibrary.js';
-import { goalSkillMappings } from '../lib/qgen/goalSkillMappings.js';
-import { QGenInput, Level, Subject } from '../lib/types/core.js';
-import { generateQuestionAnswer } from '../services/aiService.js';
-import { ValueGenerator } from '../lib/qgen/valueGenerator.js';
-import { getCompatibleGoals } from '../lib/qgen/goalSkillMappings.js';
+import { generateQuestions } from '../lib/qgen/qgenAlgorithm';
+import { contextLibrary } from '../lib/qgen/contextLibrary';
+import { templateLibrary } from '../lib/qgen/templateLibrary';
+import { goalSkillMappings } from '../lib/qgen/goalSkillMappings';
+import { QGenInput, Level, Subject } from '../lib/types/core';
+import { generateQuestionAnswer } from '../services/aiService';
+import { ValueGenerator } from '../lib/qgen/valueGenerator';
+import { getCompatibleGoals } from '../lib/qgen/goalSkillMappings';
 
 /**
  * Generate questions using QGen algorithm
