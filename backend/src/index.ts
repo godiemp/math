@@ -116,9 +116,15 @@ console.log('✅ AI routes registered at /api/ai');
 console.log('✅ Analytics routes registered at /api/analytics');
 console.log('✅ AI Analytics routes registered at /api/ai-analytics');
 console.log('✅ Quiz routes registered at /api/quiz');
+console.log('✅ QGen routes registered at /api/qgen');
 
 // 404 handler
 app.use((req: Request, res: Response) => {
+  console.log('\n⚠️  404 - Route not found');
+  console.log(`   Method: ${req.method}`);
+  console.log(`   URL: ${req.url}`);
+  console.log(`   Path: ${req.path}`);
+  console.log(`   Original URL: ${req.originalUrl}`);
   res.status(404).json({ error: 'Route not found' });
 });
 
