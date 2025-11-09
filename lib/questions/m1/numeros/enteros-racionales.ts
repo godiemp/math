@@ -14,7 +14,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Para sumar fracciones, necesitamos un denominador común:',
     explanationLatex: '\\frac{2}{3} + \\frac{1}{4} = \\frac{8}{12} + \\frac{3}{12} = \\frac{11}{12}',
     difficulty: 'easy',
-    skills: ['numeros-fracciones', 'numeros-fracciones-suma', 'numeros-fracciones-comun-denominador', 'numeros-operaciones-basicas']
+    skills: ['numeros-fracciones-sumar-restar-distinto-denominador', 'numeros-simplificar-fracciones', 'numeros-jerarquia-operaciones']
   },
   {
     id: 'm1-11',
@@ -28,7 +28,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Factorizamos ambos números y encontramos los factores comunes:',
     explanationLatex: '12 = 2^2 \\times 3, \\quad 18 = 2 \\times 3^2 \\quad \\Rightarrow \\quad \\text{MCD} = 2 \\times 3 = 6',
     difficulty: 'medium',
-    skills: ['numeros-mcd-mcm', 'numeros-operaciones-basicas']
+    skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima']
   },
   {
     id: 'm1-26',
@@ -42,7 +42,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'El producto de dos números negativos es positivo:',
     explanationLatex: '(-3) \\times (-5) = 15',
     difficulty: 'easy',
-    skills: ['numeros-enteros', 'numeros-operaciones-basicas']
+    skills: ['numeros-enteros-multiplicar-dividir', 'numeros-patrones-signos', 'numeros-enteros-comprender-significado']
   },
   {
     id: 'm1-28',
@@ -56,7 +56,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Planteamos la ecuación y despejamos:',
     explanationLatex: '\\frac{3}{4}x = 15 \\quad \\Rightarrow \\quad x = 15 \\times \\frac{4}{3} = 20',
     difficulty: 'medium',
-    skills: ['numeros-fracciones', 'algebra-ecuaciones-lineales', 'algebra-despeje', 'numeros-operaciones-basicas']
+    skills: ['numeros-fracciones-multiplicar-dividir', 'numeros-inverso-aditivo-multiplicativo', 'algebra-ecuaciones-lineales', 'algebra-despeje']
   },
   {
     id: 'm1-42',
@@ -71,7 +71,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Para multiplicar fracciones, multiplicamos numerador por numerador y denominador por denominador:',
     explanationLatex: '\\frac{2}{3} \\times \\frac{5}{4} = \\frac{2 \\times 5}{3 \\times 4} = \\frac{10}{12} = \\frac{5}{6}',
     difficulty: 'easy',
-    skills: ['numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-fracciones-multiplicar-dividir', 'numeros-simplificar-fracciones']
   },
   {
     id: 'm1-43',
@@ -86,7 +86,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Para dividir fracciones, multiplicamos por el recíproco (invertimos la segunda fracción):',
     explanationLatex: '\\frac{3}{4} \\div \\frac{2}{5} = \\frac{3}{4} \\times \\frac{5}{2} = \\frac{15}{8}',
     difficulty: 'medium',
-    skills: ['numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-fracciones-multiplicar-dividir', 'numeros-inverso-aditivo-multiplicativo']
   },
   {
     id: 'm1-44',
@@ -101,7 +101,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Dividir una fracción entre un número entero es multiplicar por su recíproco:',
     explanationLatex: '\\frac{2}{3} \\div 4 = \\frac{2}{3} \\times \\frac{1}{4} = \\frac{2}{12} = \\frac{1}{6}',
     difficulty: 'medium',
-    skills: ['numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-fracciones-multiplicar-dividir', 'numeros-modelar-proporciones-repartos', 'numeros-interpretar-resultados-razonabilidad']
   },
   {
     id: 'm1-45',
@@ -116,7 +116,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Multiplicamos el entero por el denominador y sumamos el numerador:',
     explanationLatex: '2\\frac{3}{5} = \\frac{(2 \\times 5) + 3}{5} = \\frac{10 + 3}{5} = \\frac{13}{5}',
     difficulty: 'easy',
-    skills: ['numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-fracciones-impropias-mixtos', 'numeros-jerarquia-operaciones']
   },
   {
     id: 'm1-46',
@@ -131,7 +131,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Dividimos el numerador entre el denominador:',
     explanationLatex: '17 \\div 4 = 4 \\text{ con resto } 1 \\quad \\Rightarrow \\quad \\frac{17}{4} = 4\\frac{1}{4}',
     difficulty: 'easy',
-    skills: ['numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-fracciones-impropias-mixtos']
   },
   {
     id: 'm1-47',
@@ -146,7 +146,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Sumamos los enteros y las fracciones por separado:',
     explanationLatex: '(1 + 2) + \\left(\\frac{2}{3} + \\frac{1}{4}\\right) = 3 + \\frac{8}{12} + \\frac{3}{12} = 3\\frac{11}{12}',
     difficulty: 'medium',
-    skills: ['numeros-fracciones', 'numeros-fracciones-suma', 'numeros-fracciones-comun-denominador', 'numeros-operaciones-basicas']
+    skills: ['numeros-fracciones-impropias-mixtos', 'numeros-fracciones-sumar-restar-distinto-denominador', 'numeros-jerarquia-operaciones']
   },
   {
     id: 'm1-48',
@@ -161,7 +161,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Buscamos un denominador común (12) y comparamos:',
     explanationLatex: '\\frac{3}{4} = \\frac{9}{12}, \\quad \\frac{5}{6} = \\frac{10}{12}, \\quad \\frac{2}{3} = \\frac{8}{12}, \\quad \\frac{7}{12} = \\frac{7}{12} \\quad \\Rightarrow \\quad \\frac{5}{6} \\text{ es mayor}',
     difficulty: 'medium',
-    skills: ['numeros-fracciones', 'numeros-fracciones-comun-denominador', 'numeros-operaciones-basicas']
+    skills: ['numeros-fracciones-comparar-distinto-denominador', 'numeros-identificar-mayor-menor-mixtos']
   },
   {
     id: 'm1-49',
@@ -176,7 +176,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Convertimos a denominador común (30):',
     explanationLatex: '\\frac{1}{2} = \\frac{15}{30}, \\quad \\frac{3}{5} = \\frac{18}{30}, \\quad \\frac{2}{3} = \\frac{20}{30} \\quad \\Rightarrow \\quad \\frac{1}{2} < \\frac{3}{5} < \\frac{2}{3}',
     difficulty: 'medium',
-    skills: ['numeros-fracciones', 'numeros-fracciones-comun-denominador', 'numeros-operaciones-basicas']
+    skills: ['numeros-fracciones-comparar-distinto-denominador', 'numeros-enteros-ordenar-recta']
   },
   {
     id: 'm1-50',
@@ -191,7 +191,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Simplificamos dividiendo numerador y denominador por su MCD (2):',
     explanationLatex: '\\frac{4}{6} = \\frac{4 \\div 2}{6 \\div 2} = \\frac{2}{3}',
     difficulty: 'easy',
-    skills: ['numeros-fracciones', 'numeros-mcd-mcm', 'numeros-operaciones-basicas']
+    skills: ['numeros-equivalencia-fracciones', 'numeros-simplificar-fracciones', 'numeros-mcd-mcm']
   },
   {
     id: 'm1-51',
@@ -206,7 +206,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Escribimos el decimal como fracción y simplificamos:',
     explanationLatex: '0.75 = \\frac{75}{100} = \\frac{75 \\div 25}{100 \\div 25} = \\frac{3}{4}',
     difficulty: 'easy',
-    skills: ['numeros-decimales', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-relacionar-fraccion-decimal-porcentaje', 'numeros-simplificar-fracciones']
   },
   {
     id: 'm1-52',
@@ -220,7 +220,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Dividimos el numerador entre el denominador:',
     explanationLatex: '\\frac{7}{8} = 7 \\div 8 = 0.875',
     difficulty: 'easy',
-    skills: ['numeros-decimales', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-relacionar-fraccion-decimal-porcentaje', 'numeros-decimales-multiplicar-dividir']
   },
   {
     id: 'm1-53',
@@ -235,7 +235,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Convertimos y simplificamos:',
     explanationLatex: '0.625 = \\frac{625}{1000} = \\frac{625 \\div 125}{1000 \\div 125} = \\frac{5}{8}',
     difficulty: 'medium',
-    skills: ['numeros-decimales', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-relacionar-fraccion-decimal-porcentaje', 'numeros-simplificar-fracciones']
   },
   {
     id: 'm1-54',
@@ -250,7 +250,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'El decimal periódico 0.333... es la fracción:',
     explanationLatex: '0.\\overline{3} = \\frac{1}{3}',
     difficulty: 'medium',
-    skills: ['numeros-decimales', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-fracciones-periodicas', 'numeros-convertir-decimal-periodico', 'numeros-densidad-racionales']
   },
   {
     id: 'm1-55',
@@ -265,7 +265,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Un decimal es periódico cuando el denominador tiene factores primos diferentes de 2 y 5:',
     explanationLatex: '\\frac{1}{3} = 0.\\overline{3} \\text{ (periódico). Las otras: } \\frac{1}{4}=0.25, \\frac{1}{5}=0.2, \\frac{1}{8}=0.125',
     difficulty: 'hard',
-    skills: ['numeros-decimales', 'numeros-fracciones', 'numeros-factorizacion-prima', 'numeros-operaciones-basicas']
+    skills: ['numeros-fracciones-periodicas', 'numeros-factorizacion-prima', 'numeros-argumentar-sentido-resultado']
   },
   {
     id: 'm1-56',
@@ -280,7 +280,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'El decimal periódico se convierte:',
     explanationLatex: '0.\\overline{6} = \\frac{6}{9} = \\frac{2}{3}',
     difficulty: 'medium',
-    skills: ['numeros-decimales', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-fracciones-periodicas', 'numeros-convertir-decimal-periodico', 'numeros-simplificar-fracciones']
   },
   {
     id: 'm1-57',
@@ -294,7 +294,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Un número primo solo es divisible por 1 y por sí mismo:',
     explanationLatex: '17 \\text{ es primo. } 15=3\\times5, \\quad 21=3\\times7, \\quad 25=5\\times5',
     difficulty: 'easy',
-    skills: ['numeros-factorizacion-prima', 'numeros-operaciones-basicas']
+    skills: ['numeros-factorizacion-prima']
   },
   {
     id: 'm1-58',
@@ -308,7 +308,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Los números primos entre 1 y 10 son:',
     explanationLatex: '2, 3, 5, 7 \\quad \\Rightarrow \\quad 4 \\text{ números primos}',
     difficulty: 'easy',
-    skills: ['numeros-factorizacion-prima', 'numeros-operaciones-basicas']
+    skills: ['numeros-factorizacion-prima']
   },
   {
     id: 'm1-59',
@@ -322,7 +322,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Verificamos cada número:',
     explanationLatex: '21=3\\times7, \\quad 22=2\\times11, \\quad 23 \\text{ es primo}, \\quad 25=5\\times5',
     difficulty: 'medium',
-    skills: ['numeros-factorizacion-prima', 'numeros-operaciones-basicas']
+    skills: ['numeros-factorizacion-prima']
   },
   {
     id: 'm1-60',
@@ -337,7 +337,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Descomponemos 24 en sus factores primos:',
     explanationLatex: '24 = 2 \\times 12 = 2 \\times 2 \\times 6 = 2 \\times 2 \\times 2 \\times 3 = 2^3 \\times 3',
     difficulty: 'easy',
-    skills: ['numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['numeros-factorizacion-prima', 'numeros-potencias']
   },
   {
     id: 'm1-61',
@@ -352,7 +352,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: '30 es la mitad de 60, entonces quitamos un factor de 2:',
     explanationLatex: '30 = \\frac{60}{2} = \\frac{2^2 \\times 3 \\times 5}{2} = 2 \\times 3 \\times 5',
     difficulty: 'medium',
-    skills: ['numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['numeros-factorizacion-prima', 'numeros-potencias', 'numeros-argumentar-sentido-resultado']
   },
   {
     id: 'm1-62',
@@ -367,7 +367,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Descomponemos completamente en factores primos:',
     explanationLatex: '72 = 8 \\times 9 = (2^3) \\times (3^2) = 2^3 \\times 3^2',
     difficulty: 'medium',
-    skills: ['numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['numeros-factorizacion-prima', 'numeros-potencias']
   },
   {
     id: 'm1-63',
@@ -381,7 +381,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Encontramos el múltiplo común más pequeño:',
     explanationLatex: '\\text{Múltiplos de 4: } 4, 8, 12, 16... \\quad \\text{Múltiplos de 6: } 6, 12, 18... \\quad \\Rightarrow \\quad \\text{MCM} = 12',
     difficulty: 'easy',
-    skills: ['numeros-mcd-mcm', 'numeros-operaciones-basicas']
+    skills: ['numeros-mcd-mcm']
   },
   {
     id: 'm1-64',
@@ -395,7 +395,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Factorizamos y tomamos los factores con mayor exponente:',
     explanationLatex: '8=2^3, \\quad 12=2^2\\times3, \\quad 18=2\\times3^2 \\quad \\Rightarrow \\quad \\text{MCM} = 2^3\\times3^2 = 72',
     difficulty: 'hard',
-    skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-operaciones-basicas']
+    skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima']
   },
   {
     id: 'm1-65',
@@ -409,7 +409,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Necesitamos el MCM de 15 y 20:',
     explanationLatex: '15 = 3 \\times 5, \\quad 20 = 2^2 \\times 5 \\quad \\Rightarrow \\quad \\text{MCM} = 2^2 \\times 3 \\times 5 = 60',
     difficulty: 'medium',
-    skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-operaciones-basicas']
+    skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-problemas-unidades-conversiones']
   },
   {
     id: 'm1-66',
@@ -423,7 +423,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Un número es divisible por 3 si la suma de sus dígitos es divisible por 3:',
     explanationLatex: '342: \\quad 3+4+2 = 9 \\text{ (divisible por 3)} \\quad \\Rightarrow \\quad 342 \\text{ es divisible por 3}',
     difficulty: 'easy',
-    skills: ['numeros-operaciones-basicas']
+    skills: ['numeros-patrones-signos', 'numeros-argumentar-sentido-resultado']
   },
   {
     id: 'm1-67',
@@ -437,7 +437,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Un número es divisible por 9 si la suma de sus dígitos es divisible por 9:',
     explanationLatex: '729: \\quad 7+2+9 = 18 \\text{ (divisible por 9)} \\quad \\Rightarrow \\quad 729 \\text{ es divisible por 9}',
     difficulty: 'medium',
-    skills: ['numeros-operaciones-basicas']
+    skills: ['numeros-patrones-signos', 'numeros-argumentar-sentido-resultado']
   },
   {
     id: 'm1-68',
@@ -451,7 +451,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Regla de divisibilidad por 11:',
     explanationLatex: '\\text{Ejemplo: } 121 \\rightarrow (1+1)-2 = 0 \\text{ (divisible por 11)}',
     difficulty: 'hard',
-    skills: ['numeros-operaciones-basicas']
+    skills: ['numeros-patrones-signos', 'numeros-argumentar-sentido-resultado']
   },
   {
     id: 'm1-108',
@@ -465,7 +465,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Primero multiplicación, luego suma:',
     explanationLatex: '8 + 2 \\times 5 = 8 + 10 = 18',
     difficulty: 'easy',
-    skills: ['numeros-orden-operaciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-jerarquia-operaciones']
   },
   {
     id: 'm1-109',
@@ -479,7 +479,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Multiplicación primero, luego operaciones de izquierda a derecha:',
     explanationLatex: '20 - 3 \\times 4 + 6 = 20 - 12 + 6 = 14',
     difficulty: 'medium',
-    skills: ['numeros-orden-operaciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-jerarquia-operaciones', 'numeros-enteros-sumar-restar']
   },
   {
     id: 'm1-110',
@@ -493,7 +493,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Orden: exponentes, multiplicación, luego suma y resta:',
     explanationLatex: '2^3 + 4 \\times 3 - 5 = 8 + 12 - 5 = 15',
     difficulty: 'medium',
-    skills: ['numeros-orden-operaciones', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['numeros-jerarquia-operaciones', 'numeros-potencias']
   },
   {
     id: 'm1-111',
@@ -507,7 +507,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Primero resolvemos el paréntesis:',
     explanationLatex: '(8 + 2) \\times 5 = 10 \\times 5 = 50',
     difficulty: 'easy',
-    skills: ['numeros-orden-operaciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-jerarquia-operaciones']
   },
   {
     id: 'm1-112',
@@ -521,7 +521,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Paréntesis primero, luego multiplicación y suma:',
     explanationLatex: '3 \\times (12 - 4) + 8 = 3 \\times 8 + 8 = 24 + 8 = 32',
     difficulty: 'medium',
-    skills: ['numeros-orden-operaciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-jerarquia-operaciones']
   },
   {
     id: 'm1-113',
@@ -535,7 +535,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Resolvemos de adentro hacia afuera:',
     explanationLatex: '[(15 - 3) \\div 4 + 2] \\times 3 = [12 \\div 4 + 2] \\times 3 = [3 + 2] \\times 3 = 5 \\times 3 = 15',
     difficulty: 'hard',
-    skills: ['numeros-orden-operaciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-jerarquia-operaciones']
   },
   {
     id: 'm1-114',
@@ -550,7 +550,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Un número irracional no puede expresarse como fracción:',
     explanationLatex: '\\pi \\text{ es irracional. } \\frac{22}{7} \\text{ y } 0.\\overline{3} \\text{ son racionales, } \\sqrt{16}=4',
     difficulty: 'medium',
-    skills: ['numeros-operaciones-basicas']
+    skills: ['numeros-racionales-comprender-significado', 'numeros-argumentar-sentido-resultado']
   },
   {
     id: 'm1-115',
@@ -565,7 +565,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Un número racional puede expresarse como fracción:',
     explanationLatex: '\\sqrt{9} = 3 \\text{ (racional). Los demás son irracionales.}',
     difficulty: 'easy',
-    skills: ['numeros-raices', 'numeros-operaciones-basicas']
+    skills: ['numeros-racionales-comprender-significado', 'numeros-raices']
   },
   {
     id: 'm1-117',
@@ -579,7 +579,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'El punto medio es el promedio de los dos números:',
     explanationLatex: '\\frac{-3 + 5}{2} = \\frac{2}{2} = 1',
     difficulty: 'easy',
-    skills: ['numeros-enteros', 'numeros-operaciones-basicas']
+    skills: ['numeros-representar-recta-numerica', 'numeros-enteros-ordenar-recta', 'numeros-calcular-promedios-racionales']
   },
   {
     id: 'm1-118',
@@ -593,7 +593,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'El número más cercano a 0 es el de menor valor absoluto:',
     explanationLatex: '|-0.5| = 0.5 \\text{ es el menor}',
     difficulty: 'medium',
-    skills: ['numeros-decimales', 'numeros-operaciones-basicas']
+    skills: ['numeros-valor-absoluto', 'numeros-comparar-distancia-cero', 'numeros-decimales-comparar']
   },
   {
     id: 'm1-119',
@@ -607,7 +607,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'La distancia es el valor absoluto de la diferencia:',
     explanationLatex: '|7 - (-4)| = |7 + 4| = 11',
     difficulty: 'medium',
-    skills: ['numeros-enteros', 'numeros-operaciones-basicas']
+    skills: ['numeros-representar-recta-numerica', 'numeros-valor-absoluto']
   },
   {
     id: 'm1-120',
@@ -621,7 +621,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'El valor absoluto es la distancia al cero (siempre positivo):',
     explanationLatex: '|-8| = 8',
     difficulty: 'easy',
-    skills: ['numeros-enteros', 'numeros-operaciones-basicas']
+    skills: ['numeros-valor-absoluto', 'numeros-enteros-comprender-significado']
   },
   {
     id: 'm1-121',
@@ -635,7 +635,7 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Primero restamos, luego tomamos el valor absoluto:',
     explanationLatex: '|5 - 9| = |-4| = 4',
     difficulty: 'easy',
-    skills: ['numeros-enteros', 'numeros-operaciones-basicas']
+    skills: ['numeros-valor-absoluto', 'numeros-enteros-sumar-restar']
   },
   {
     id: 'm1-122',
@@ -649,6 +649,6 @@ export const m1NumerosEnterosRacionalesQuestions: Question[] = [
     explanation: 'Calculamos cada valor absoluto y luego operamos:',
     explanationLatex: '|-3| + |2| - |-5| = 3 + 2 - 5 = 0',
     difficulty: 'medium',
-    skills: ['numeros-enteros', 'numeros-operaciones-basicas']
+    skills: ['numeros-valor-absoluto', 'numeros-jerarquia-operaciones']
   }
 ];

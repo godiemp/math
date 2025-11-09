@@ -467,38 +467,6 @@ export const SKILLS: Record<string, Skill> = {
   // ============================================================================
   // LEGACY SKILLS (keeping for backward compatibility with existing questions)
   // ============================================================================
-  'numeros-operaciones-basicas': {
-    id: 'numeros-operaciones-basicas',
-    name: 'Operaciones básicas',
-    description: 'Suma, resta, multiplicación y división con números enteros',
-    topic: 'números'
-  },
-  'numeros-fracciones': {
-    id: 'numeros-fracciones',
-    name: 'Fracciones',
-    description: 'Operaciones con fracciones',
-    topic: 'números'
-  },
-  'numeros-fracciones-suma': {
-    id: 'numeros-fracciones-suma',
-    name: 'Suma de fracciones',
-    description: 'Sumar fracciones con común denominador',
-    topic: 'números',
-    parentSkill: 'numeros-fracciones'
-  },
-  'numeros-fracciones-comun-denominador': {
-    id: 'numeros-fracciones-comun-denominador',
-    name: 'Común denominador',
-    description: 'Encontrar el común denominador para sumar/restar fracciones',
-    topic: 'números',
-    parentSkill: 'numeros-fracciones'
-  },
-  'numeros-decimales': {
-    id: 'numeros-decimales',
-    name: 'Números decimales',
-    description: 'Operaciones con números decimales',
-    topic: 'números'
-  },
   'numeros-porcentajes': {
     id: 'numeros-porcentajes',
     name: 'Porcentajes',
@@ -555,18 +523,6 @@ export const SKILLS: Record<string, Skill> = {
     id: 'numeros-mcd-mcm',
     name: 'MCD y MCM',
     description: 'Máximo común divisor y mínimo común múltiplo',
-    topic: 'números'
-  },
-  'numeros-enteros': {
-    id: 'numeros-enteros',
-    name: 'Números enteros',
-    description: 'Operaciones con números positivos y negativos',
-    topic: 'números'
-  },
-  'numeros-orden-operaciones': {
-    id: 'numeros-orden-operaciones',
-    name: 'Orden de operaciones',
-    description: 'Aplicar el orden correcto de operaciones',
     topic: 'números'
   },
 
