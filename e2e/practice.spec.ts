@@ -23,10 +23,10 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
     // Check that all subjects are displayed (use button role for specificity)
     await expect(page.getByRole('button', { name: /Todas las Materias/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /^Números/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /^Álgebra/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /^Geometría/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /^Probabilidad/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Números/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Álgebra/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Geometría/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Probabilidad/i })).toBeVisible();
   });
 
   test('should allow subject and mode selection flow', async ({ page }) => {
@@ -50,7 +50,7 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(1000);
 
     // Select subject - Números
-    await page.getByRole('button', { name: /^Números/i }).click();
+    await page.getByRole('button', { name: /Números/i }).click();
     await page.waitForTimeout(500);
 
     // Select Zen mode
@@ -100,10 +100,10 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await expect(page.getByText(/Paso 3.*Selecciona la dificultad/i)).toBeVisible();
 
     // Check that all difficulties are displayed
-    await expect(page.getByRole('button', { name: /^Fácil/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /^Normal/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /^Difícil/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /^Extremo/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Fácil/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Normal/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Difícil/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Extremo/i })).toBeVisible();
   });
 
   test('should start Rapid Fire quiz with selected difficulty', async ({ page }) => {
@@ -138,7 +138,7 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(1000);
 
     // Select subject
-    await page.getByRole('button', { name: /^Números/i }).click();
+    await page.getByRole('button', { name: /Números/i }).click();
     await page.waitForTimeout(500);
 
     // Select Zen mode
@@ -164,7 +164,7 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(1000);
 
     // Select and start a quiz
-    await page.getByRole('button', { name: /^Álgebra/i }).click();
+    await page.getByRole('button', { name: /Álgebra/i }).click();
     await page.waitForTimeout(500);
 
     await page.getByRole('button', { name: /Modo Zen/i }).click();
@@ -334,9 +334,9 @@ test.describe('Practice Mode - Progress Tracking', () => {
     // Check for M2 section
     await expect(page.getByText(/Competencia Matemática M2/i)).toBeVisible();
 
-    // Check for continue practice buttons
-    const continueButtons = page.getByRole('button', { name: /Continuar Práctica/i });
-    expect(await continueButtons.count()).toBeGreaterThanOrEqual(2);
+    // Check for continue practice links (rendered as links via Button asChild)
+    const continueLinks = page.getByRole('link', { name: /Continuar Práctica/i });
+    expect(await continueLinks.count()).toBeGreaterThanOrEqual(2);
   });
 
   test('should show view mode tabs on progress page', async ({ page }) => {
