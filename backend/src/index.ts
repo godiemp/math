@@ -5,6 +5,7 @@ import { testConnection, initializeDatabase, closeDatabase, pool } from './confi
 import { initImageStorage } from './services/imageStorageService';
 import authRoutes from './routes/authRoutes';
 import adminRoutes from './routes/adminRoutes';
+import userManagementRoutes from './routes/userManagementRoutes';
 import streakRoutes from './routes/streakRoutes';
 import sessionRoutes from './routes/sessionRoutes';
 import aiRoutes from './routes/aiRoutes';
@@ -95,6 +96,7 @@ app.get('/health', (req: Request, res: Response) => {
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/admin', userManagementRoutes); // User & subscription management
 app.use('/api/streak', streakRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/ai', aiRoutes);
