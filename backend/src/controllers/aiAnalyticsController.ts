@@ -241,6 +241,49 @@ export const getConversationDetails = async (req: Request, res: Response) => {
 };
 
 /**
+ * Get all conversations (list of all quiz sessions with AI interactions)
+ */
+export const getAllConversations = async (req: Request, res: Response) => {
+  try {
+    const { limit = 100, offset = 0 } = req.query;
+
+    const result = await pool.query(`
+      SELECT
+        quiz_session_id,
+        user_id,
+        COUNT(*) as message_count,
+        MIN(created_at) as started_at,
+        MAX(created_at) as last_message_at,
+        MAX(created_at) - MIN(created_at) as duration_ms,
+        array_agg(DISTINCT interaction_type) as interaction_types
+      FROM ai_interactions
+      WHERE quiz_session_id IS NOT NULL
+      GROUP BY quiz_session_id, user_id
+      ORDER BY last_message_at DESC
+      LIMIT $1 OFFSET $2
+    `, [limit, offset]);
+
+    res.json({
+      conversations: result.rows.map(row => ({
+        sessionId: row.quiz_session_id,
+        userId: row.user_id,
+        messageCount: parseInt(row.message_count),
+        startedAt: row.started_at,
+        lastMessageAt: row.last_message_at,
+        durationMs: parseInt(row.duration_ms),
+        interactionTypes: row.interaction_types
+      }))
+    });
+  } catch (error) {
+    console.error('Error fetching conversations:', error);
+    res.status(500).json({
+      error: 'Failed to fetch conversations',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+/**
  * Get common student questions and patterns
  */
 export const getCommonQuestions = async (req: Request, res: Response) => {

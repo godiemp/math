@@ -74,12 +74,41 @@ interface CommonQuestions {
   }>;
 }
 
+interface Conversation {
+  sessionId: string;
+  userId: string;
+  messageCount: number;
+  startedAt: string;
+  lastMessageAt: string;
+  durationMs: number;
+  interactionTypes: string[];
+}
+
+interface ConversationDetails {
+  sessionId: string;
+  interactions: Array<{
+    id: number;
+    user_id: string;
+    question_id: string;
+    interaction_type: string;
+    user_message: string;
+    ai_response: string;
+    turn_number: number;
+    response_time_ms: number;
+    request_context: any;
+    created_at: string;
+  }>;
+}
+
 function AIAnalyticsContent() {
   const [analytics, setAnalytics] = useState<AIAnalytics | null>(null);
   const [commonQuestions, setCommonQuestions] = useState<CommonQuestions | null>(null);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [selectedConversation, setSelectedConversation] = useState<ConversationDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingConversation, setIsLoadingConversation] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedTab, setSelectedTab] = useState<'overview' | 'questions' | 'users' | 'recent'>('overview');
+  const [selectedTab, setSelectedTab] = useState<'overview' | 'questions' | 'users' | 'recent' | 'conversations'>('overview');
 
   useEffect(() => {
     loadAnalytics();
@@ -115,6 +144,37 @@ function AIAnalyticsContent() {
       console.error('Error loading common questions:', err);
     }
   };
+
+  const loadConversations = async () => {
+    try {
+      const response = await api.get<{ conversations: Conversation[] }>('/api/ai-analytics/conversations?limit=100');
+      if (!response.error) {
+        setConversations(response.data!.conversations);
+      }
+    } catch (err) {
+      console.error('Error loading conversations:', err);
+    }
+  };
+
+  const loadConversationDetails = async (sessionId: string) => {
+    try {
+      setIsLoadingConversation(true);
+      const response = await api.get<ConversationDetails>(`/api/ai-analytics/conversations/${sessionId}`);
+      if (!response.error) {
+        setSelectedConversation(response.data!);
+      }
+    } catch (err) {
+      console.error('Error loading conversation details:', err);
+    } finally {
+      setIsLoadingConversation(false);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedTab === 'conversations' && conversations.length === 0) {
+      loadConversations();
+    }
+  }, [selectedTab]);
 
   const formatNumber = (num: string | number) => {
     return typeof num === 'string' ? parseInt(num).toLocaleString() : num.toLocaleString();
@@ -243,6 +303,16 @@ function AIAnalyticsContent() {
             }`}
           >
             Usuarios
+          </button>
+          <button
+            onClick={() => setSelectedTab('conversations')}
+            className={`pb-3 px-4 font-medium transition-colors ${
+              selectedTab === 'conversations'
+                ? 'border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+            }`}
+          >
+            Conversaciones
           </button>
           <button
             onClick={() => setSelectedTab('recent')}
@@ -387,6 +457,136 @@ function AIAnalyticsContent() {
               ))}
             </div>
           </Card>
+        )}
+
+        {/* Conversations Tab */}
+        {selectedTab === 'conversations' && (
+          <div>
+            {selectedConversation ? (
+              <Card className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <Heading className="text-xl font-bold">
+                    Conversación: {selectedConversation.sessionId}
+                  </Heading>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setSelectedConversation(null)}
+                  >
+                    ← Volver a la lista
+                  </Button>
+                </div>
+
+                {isLoadingConversation ? (
+                  <Text>Cargando conversación...</Text>
+                ) : (
+                  <div className="space-y-4">
+                    {selectedConversation.interactions.map((interaction, idx) => (
+                      <div key={interaction.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Badge variant={interaction.interaction_type === 'chat' ? 'info' : 'secondary'}>
+                            {interaction.interaction_type}
+                          </Badge>
+                          <Badge variant="neutral" size="sm">
+                            Turno {interaction.turn_number}
+                          </Badge>
+                          <Text className="text-xs text-gray-500">
+                            {formatDate(interaction.created_at)}
+                          </Text>
+                          <Text className="text-xs text-gray-500">
+                            {(interaction.response_time_ms / 1000).toFixed(2)}s
+                          </Text>
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                            <Text className="text-xs text-gray-600 dark:text-gray-400 mb-1 font-semibold">
+                              👤 Usuario:
+                            </Text>
+                            <Text className="text-sm whitespace-pre-wrap">
+                              {interaction.user_message}
+                            </Text>
+                          </div>
+
+                          <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
+                            <Text className="text-xs text-gray-600 dark:text-gray-400 mb-1 font-semibold">
+                              🤖 AI:
+                            </Text>
+                            <Text className="text-sm whitespace-pre-wrap">
+                              {interaction.ai_response}
+                            </Text>
+                          </div>
+                        </div>
+
+                        {interaction.request_context && (
+                          <details className="mt-2">
+                            <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300">
+                              Ver contexto
+                            </summary>
+                            <pre className="text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded mt-1 overflow-x-auto">
+                              {JSON.stringify(interaction.request_context, null, 2)}
+                            </pre>
+                          </details>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </Card>
+            ) : (
+              <Card className="p-6">
+                <Heading className="text-xl font-bold mb-4">
+                  Todas las Conversaciones ({conversations.length})
+                </Heading>
+                <div className="space-y-3">
+                  {conversations.map((conv) => (
+                    <div
+                      key={`${conv.sessionId}-${conv.userId}`}
+                      className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-indigo-500 dark:hover:border-indigo-400 cursor-pointer transition-colors"
+                      onClick={() => loadConversationDetails(conv.sessionId)}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Text className="font-semibold">Sesión: {conv.sessionId.substring(0, 12)}...</Text>
+                            {conv.interactionTypes.map(type => (
+                              <Badge key={type} variant="info" size="sm">{type}</Badge>
+                            ))}
+                          </div>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                            <div>
+                              <Text className="text-xs text-gray-500">Usuario</Text>
+                              <Text className="text-xs font-medium">{conv.userId.substring(0, 8)}...</Text>
+                            </div>
+                            <div>
+                              <Text className="text-xs text-gray-500">Mensajes</Text>
+                              <Text className="text-xs font-medium">{conv.messageCount}</Text>
+                            </div>
+                            <div>
+                              <Text className="text-xs text-gray-500">Duración</Text>
+                              <Text className="text-xs font-medium">{formatDuration(conv.durationMs)}</Text>
+                            </div>
+                            <div>
+                              <Text className="text-xs text-gray-500">Último mensaje</Text>
+                              <Text className="text-xs font-medium">{formatDate(conv.lastMessageAt)}</Text>
+                            </div>
+                          </div>
+                        </div>
+                        <Button variant="ghost" size="sm">
+                          Ver →
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+
+                  {conversations.length === 0 && (
+                    <div className="text-center py-12">
+                      <Text variant="secondary">No hay conversaciones registradas</Text>
+                    </div>
+                  )}
+                </div>
+              </Card>
+            )}
+          </div>
         )}
 
         {/* Recent Tab */}

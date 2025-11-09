@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   getAIAnalyticsDashboard,
   getConversationDetails,
+  getAllConversations,
   getCommonQuestions
 } from '../controllers/aiAnalyticsController';
 import { authenticate } from '../middleware/auth';
@@ -18,6 +19,12 @@ const router = Router();
  * Get comprehensive AI analytics dashboard data
  */
 router.get('/dashboard', authenticate, requireAdmin, getAIAnalyticsDashboard);
+
+/**
+ * GET /api/ai-analytics/conversations
+ * Get list of all conversations
+ */
+router.get('/conversations', authenticate, requireAdmin, getAllConversations);
 
 /**
  * GET /api/ai-analytics/conversations/:sessionId
