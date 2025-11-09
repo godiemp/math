@@ -9,6 +9,7 @@ import { M1_SKILLS, getSkillNames } from '@/lib/skillTaxonomy'
 import { Card, Button, Heading, Text, Badge } from '@/components/ui'
 import { QuestionPreview, QuestionRenderer } from '@/components/QuestionRenderer'
 import { MathText } from '@/components/MathDisplay'
+import AdminLayout from '@/components/AdminLayout'
 
 function ProblemsExplorerContent() {
   const router = useRouter()
@@ -144,23 +145,16 @@ function ProblemsExplorerContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="container mx-auto px-4 py-8">
+    <AdminLayout>
+      <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <Heading level={1} size="lg" className="mb-2">
-                Explorador de Problemas
-              </Heading>
-              <Text variant="secondary">
-                Explora y gestiona todos los problemas de práctica
-              </Text>
-            </div>
-            <Button variant="link" onClick={() => router.push('/admin')}>
-              ← Volver al Admin
-            </Button>
-          </div>
+          <Heading level={1} size="lg" className="mb-2">
+            Explorador de Problemas
+          </Heading>
+          <Text variant="secondary">
+            Explora y gestiona todos los problemas de práctica
+          </Text>
 
           {/* Statistics Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -626,7 +620,7 @@ function ProblemsExplorerContent() {
           </div>
         )}
       </div>
-    </div>
+    </AdminLayout>
   )
 }
 

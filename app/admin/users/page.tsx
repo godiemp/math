@@ -12,6 +12,8 @@ import {
   GetUsersResponse,
   GetPlansResponse,
 } from '@/lib/types';
+import AdminLayout from '@/components/AdminLayout';
+import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 
 /**
  * Admin User Management Page
@@ -181,104 +183,124 @@ function UserManagementContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
+      <AdminLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-gray-600 dark:text-gray-400">Cargando usuarios...</div>
+          <Text variant="secondary">Loading users...</Text>
         </div>
-      </div>
+      </AdminLayout>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-red-600 dark:text-red-400">Error: {error}</div>
-        </div>
-      </div>
+      <AdminLayout>
+        <Card padding="lg" className="border-red-200 dark:border-red-800">
+          <Text className="text-red-600 dark:text-red-400">Error: {error}</Text>
+        </Card>
+      </AdminLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                Gestión de Usuarios
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400 mt-1">
-                Administra usuarios, planes y suscripciones
-              </p>
+    <AdminLayout>
+      <div className="space-y-6">
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <Card className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50" padding="lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <Text size="xs" variant="secondary" className="mb-1">Total Users</Text>
+                <Heading level={2} size="lg">{users.length}</Heading>
+              </div>
+              <div className="w-10 h-10 bg-gray-500/10 rounded-lg flex items-center justify-center">
+                <span className="text-xl">👥</span>
+              </div>
             </div>
-            <Link
-              href="/admin"
-              className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-            >
-              ← Volver al Admin
-            </Link>
-          </div>
+          </Card>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6">
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {users.length}
+          <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border-purple-200 dark:border-purple-800" padding="lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <Text size="xs" variant="secondary" className="mb-1">Admins</Text>
+                <Heading level={2} size="lg" className="text-purple-600 dark:text-purple-400">
+                  {users.filter((u) => u.role === 'admin').length}
+                </Heading>
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Total Usuarios</div>
-            </div>
-            <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800">
-              <div className="text-2xl font-bold text-purple-900 dark:text-purple-200">
-                {users.filter((u) => u.role === 'admin').length}
+              <div className="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center">
+                <span className="text-xl">👑</span>
               </div>
-              <div className="text-sm text-purple-600 dark:text-purple-400">Admins</div>
             </div>
-            <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
-              <div className="text-2xl font-bold text-green-900 dark:text-green-200">
-                {users.filter((u) => getUserType(u) === 'Pagado').length}
+          </Card>
+
+          <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-green-200 dark:border-green-800" padding="lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <Text size="xs" variant="secondary" className="mb-1">Paid</Text>
+                <Heading level={2} size="lg" className="text-green-600 dark:text-green-400">
+                  {users.filter((u) => getUserType(u) === 'Pagado').length}
+                </Heading>
               </div>
-              <div className="text-sm text-green-600 dark:text-green-400">Pagados</div>
-            </div>
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-              <div className="text-2xl font-bold text-blue-900 dark:text-blue-200">
-                {users.filter((u) => getUserType(u) === 'Trial').length}
+              <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
+                <span className="text-xl">💳</span>
               </div>
-              <div className="text-sm text-blue-600 dark:text-blue-400">En Prueba</div>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-700/20 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-              <div className="text-2xl font-bold text-gray-900 dark:text-gray-200">
-                {users.filter((u) => getUserType(u) === 'Free').length}
+          </Card>
+
+          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-800" padding="lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <Text size="xs" variant="secondary" className="mb-1">Trial</Text>
+                <Heading level={2} size="lg" className="text-blue-600 dark:text-blue-400">
+                  {users.filter((u) => getUserType(u) === 'Trial').length}
+                </Heading>
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Free</div>
+              <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
+                <span className="text-xl">⏱️</span>
+              </div>
             </div>
-          </div>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/20 dark:to-gray-600/20 border-gray-200 dark:border-gray-700" padding="lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <Text size="xs" variant="secondary" className="mb-1">Free</Text>
+                <Heading level={2} size="lg" className="text-gray-600 dark:text-gray-400">
+                  {users.filter((u) => getUserType(u) === 'Free').length}
+                </Heading>
+              </div>
+              <div className="w-10 h-10 bg-gray-500/10 rounded-lg flex items-center justify-center">
+                <span className="text-xl">🆓</span>
+              </div>
+            </div>
+          </Card>
         </div>
 
         {/* Filters */}
-        <div className="mb-6 flex gap-2">
-          {(['all', 'admin', 'paid', 'trial', 'free'] as const).map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-4 py-2 rounded-lg transition ${
-                filter === f
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
-              }`}
-            >
-              {f === 'all' && 'Todos'}
-              {f === 'admin' && 'Admins'}
-              {f === 'paid' && 'Pagados'}
-              {f === 'trial' && 'En Prueba'}
-              {f === 'free' && 'Free'}
-            </button>
-          ))}
+        <div className="flex items-center gap-3">
+          <Text size="sm" className="font-medium">Filter:</Text>
+          <div className="flex gap-2">
+            {(['all', 'admin', 'paid', 'trial', 'free'] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-4 py-2 rounded-lg transition-all text-sm font-medium ${
+                  filter === f
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+                }`}
+              >
+                {f === 'all' && 'All'}
+                {f === 'admin' && 'Admins'}
+                {f === 'paid' && 'Paid'}
+                {f === 'trial' && 'Trial'}
+                {f === 'free' && 'Free'}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Users Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <Card className="overflow-hidden" padding="sm">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-700">
@@ -309,7 +331,7 @@ function UserManagementContent() {
                   return (
                     <tr
                       key={user.id}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition"
+                      className="hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0"
                     >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div>
@@ -348,18 +370,18 @@ function UserManagementContent() {
                               setSelectedUser(user);
                               setShowAssignModal(true);
                             }}
-                            className="text-blue-600 dark:text-blue-400 hover:underline"
+                            className="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors font-medium"
                           >
-                            Asignar Plan
+                            Assign Plan
                           </button>
                           {user.subscription &&
                             (user.subscription.status === 'active' ||
                               user.subscription.status === 'trial') && (
                               <button
                                 onClick={() => handleCancelSubscription(user.subscription!.id)}
-                                className="text-red-600 dark:text-red-400 hover:underline"
+                                className="px-3 py-1.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-md hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors font-medium"
                               >
-                                Cancelar
+                                Cancel
                               </button>
                             )}
                         </div>
@@ -370,57 +392,69 @@ function UserManagementContent() {
               </tbody>
             </table>
           </div>
-        </div>
 
-        {filteredUsers.length === 0 && (
-          <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-            No se encontraron usuarios con este filtro
-          </div>
-        )}
+          {filteredUsers.length === 0 && (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span className="text-3xl">🔍</span>
+              </div>
+              <Text variant="secondary">No users found with this filter</Text>
+            </div>
+          )}
+        </Card>
       </div>
 
       {/* Assign Plan Modal */}
       {showAssignModal && selectedUser && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              Asignar Plan a {selectedUser.displayName}
-            </h2>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="absolute inset-0" onClick={() => setShowAssignModal(false)} />
+          <div onClick={(e) => e.stopPropagation()}>
+            <Card className="max-w-md w-full shadow-2xl relative z-10" padding="lg">
+              <Heading level={2} size="sm" className="mb-1">
+                Assign Plan
+              </Heading>
+              <Text size="sm" variant="secondary" className="mb-6">
+                Assign a plan to {selectedUser.displayName}
+              </Text>
 
-            <div className="space-y-3 mb-6">
-              {plans.map((plan) => (
-                <button
-                  key={plan.id}
-                  onClick={() => handleAssignSubscription(plan.id, plan.trialDurationDays > 0)}
-                  className="w-full p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition text-left"
-                >
-                  <div className="font-medium text-gray-900 dark:text-white">{plan.name}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {plan.price > 0
-                      ? `${plan.price} ${plan.currency} / ${plan.durationDays} días`
-                      : 'Gratis'}
-                  </div>
-                  {plan.trialDurationDays > 0 && (
-                    <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                      Incluye {plan.trialDurationDays} días de prueba
+              <div className="space-y-3 mb-6">
+                {plans.map((plan) => (
+                  <button
+                    key={plan.id}
+                    onClick={() => handleAssignSubscription(plan.id, plan.trialDurationDays > 0)}
+                    className="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all text-left group"
+                  >
+                    <div className="font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                      {plan.name}
                     </div>
-                  )}
-                </button>
-              ))}
-            </div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      {plan.price > 0
+                        ? `${plan.price} ${plan.currency} / ${plan.durationDays} days`
+                        : 'Free'}
+                    </div>
+                    {plan.trialDurationDays > 0 && (
+                      <Badge variant="info" size="sm" className="mt-2">
+                        {plan.trialDurationDays} days trial included
+                      </Badge>
+                    )}
+                  </button>
+                ))}
+              </div>
 
-            <button
-              onClick={() => {
-                setShowAssignModal(false);
-                setSelectedUser(null);
-              }}
-              className="w-full px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-            >
-              Cancelar
-            </button>
+              <Button
+                variant="ghost"
+                fullWidth
+                onClick={() => {
+                  setShowAssignModal(false);
+                  setSelectedUser(null);
+                }}
+              >
+                Cancel
+              </Button>
+            </Card>
           </div>
         </div>
       )}
-    </div>
+    </AdminLayout>
   );
 }

@@ -6,6 +6,7 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { api } from '@/lib/api-client';
 import { SkillsAnalytics } from '@/components/SkillsAnalytics';
+import AdminLayout from '@/components/AdminLayout';
 
 interface AnalyticsData {
   northStar: {
@@ -165,29 +166,22 @@ function AnalyticsDashboardContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <AdminLayout>
+      <div className="space-y-6">
         {/* Header */}
-        <Card padding="lg">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
-            <div>
-              <Heading level={1} size="md" className="mb-2">
-                📊 Analytics Dashboard
-              </Heading>
-              <Text variant="secondary">
-                Platform performance and user metrics
-              </Text>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" onClick={() => router.push('/admin')}>
-                ← Back to Admin
-              </Button>
-              <Button variant="secondary" onClick={fetchAnalytics}>
-                🔄 Refresh
-              </Button>
-            </div>
+        <div className="flex items-center justify-between">
+          <div>
+            <Heading level={1} size="md" className="mb-1">
+              Analytics Dashboard
+            </Heading>
+            <Text variant="secondary">
+              Platform performance and user metrics
+            </Text>
           </div>
-        </Card>
+          <Button variant="primary" onClick={fetchAnalytics}>
+            🔄 Refresh
+          </Button>
+        </div>
 
         {/* North Star Metrics */}
         <Card padding="lg">
@@ -510,7 +504,7 @@ function AnalyticsDashboardContent() {
           </Text>
         </Card>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
 

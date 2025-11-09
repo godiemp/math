@@ -16,6 +16,7 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { MathText } from '@/components/MathDisplay';
+import AdminLayout from '@/components/AdminLayout';
 
 function AdminBackofficeContent() {
   const { user: currentUser } = useAuth();
@@ -258,32 +259,30 @@ function AdminBackofficeContent() {
     }, {} as Record<string, number>);
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
+      <AdminLayout>
+        <div className="space-y-6">
           {/* Header */}
-          <Card className="mb-6" padding="lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <Heading level={1} size="md" className="mb-2">
-                  Preguntas del Ensayo
-                </Heading>
-                <Text variant="secondary" className="mb-2">
-                  {viewingQuestionsSession.name}
-                </Text>
-                <div className="flex gap-2 flex-wrap">
-                  <Badge variant="info" size="sm">
-                    {viewingQuestionsSession.level}
-                  </Badge>
-                  <Badge variant="neutral" size="sm">
-                    {viewingQuestionsSession.questions.length} preguntas
-                  </Badge>
-                </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <Heading level={1} size="md" className="mb-2">
+                Session Questions
+              </Heading>
+              <Text variant="secondary" className="mb-2">
+                {viewingQuestionsSession.name}
+              </Text>
+              <div className="flex gap-2 flex-wrap">
+                <Badge variant="info" size="sm">
+                  {viewingQuestionsSession.level}
+                </Badge>
+                <Badge variant="neutral" size="sm">
+                  {viewingQuestionsSession.questions.length} questions
+                </Badge>
               </div>
-              <Button variant="ghost" onClick={() => setViewingQuestionsSession(null)}>
-                ← Volver al Admin
-              </Button>
             </div>
-          </Card>
+            <Button variant="ghost" onClick={() => setViewingQuestionsSession(null)}>
+              ← Back to Dashboard
+            </Button>
+          </div>
 
           {/* Distribution Statistics */}
           <Card className="mb-6" padding="lg">
@@ -361,70 +360,78 @@ function AdminBackofficeContent() {
             </div>
           </Card>
         </div>
-      </div>
+      </AdminLayout>
     );
   }
 
+  // Calculate stats
+  const totalSessions = sessions.length;
+  const activeSessions = sessions.filter(s => s.status === 'active').length;
+  const scheduledSessions = sessions.filter(s => s.status === 'scheduled').length;
+  const totalRegistrations = sessions.reduce((sum, s) => sum + (s.registeredUsers?.length || 0), 0);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <Card className="mb-6" padding="lg">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
-            <div>
-              <Heading level={1} size="md" className="mb-2">
-                Panel de Administración
-              </Heading>
-              <Text variant="secondary">
-                Gestiona ensayos PAES en vivo
-              </Text>
+    <AdminLayout>
+      <div className="space-y-6">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-800" padding="lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <Text size="xs" variant="secondary" className="mb-1">Total Sessions</Text>
+                <Heading level={2} size="lg" className="text-blue-600 dark:text-blue-400">{totalSessions}</Heading>
+              </div>
+              <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center">
+                <span className="text-2xl">📊</span>
+              </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" onClick={() => router.push('/')}>
-                Inicio
-              </Button>
-              <Button variant="secondary" onClick={() => router.push('/admin/users')}>
-                👥 Usuarios
-              </Button>
-              <Button variant="secondary" onClick={() => router.push('/admin/qgen')}>
-                🎲 QGen
-              </Button>
-              <Button variant="secondary" onClick={() => router.push('/admin/analytics')}>
-                📊 Analytics
-              </Button>
-              <Button variant="secondary" onClick={() => router.push('/admin/ai-analytics')}>
-                🤖 AI Analytics
-              </Button>
-              <Button variant="secondary" onClick={() => router.push('/admin/problems')}>
-                Explorar Problemas
-              </Button>
-              <Button variant="secondary" onClick={() => router.push('/admin/upload')}>
-                📄 Cargar PDF
-              </Button>
-              <Button variant="primary" onClick={() => router.push('/live-practice')}>
-                Ver Lobby
-              </Button>
-            </div>          </div>
-        </Card>
-
-        {/* Success/Error Messages */}
-        {success && (
-          <Card className="mb-6 border-[#34C759] dark:border-[#5DE38D]" padding="md">
-            <Text className="text-[#34C759] dark:text-[#5DE38D]">{success}</Text>
           </Card>
-        )}
 
-        {error && (
-          <Card className="mb-6 border-[#FF453A] dark:border-[#FF7A72]" padding="md">
-            <Text className="text-[#FF453A] dark:text-[#FF7A72]">{error}</Text>
+          <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-green-200 dark:border-green-800" padding="lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <Text size="xs" variant="secondary" className="mb-1">Active Now</Text>
+                <Heading level={2} size="lg" className="text-green-600 dark:text-green-400">{activeSessions}</Heading>
+              </div>
+              <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center">
+                <span className="text-2xl">🟢</span>
+              </div>
+            </div>
           </Card>
-        )}
 
-        {/* Create Session Button */}
-        <div className="mb-6">
+          <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border-purple-200 dark:border-purple-800" padding="lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <Text size="xs" variant="secondary" className="mb-1">Scheduled</Text>
+                <Heading level={2} size="lg" className="text-purple-600 dark:text-purple-400">{scheduledSessions}</Heading>
+              </div>
+              <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center">
+                <span className="text-2xl">📅</span>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border-orange-200 dark:border-orange-800" padding="lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <Text size="xs" variant="secondary" className="mb-1">Total Registrations</Text>
+                <Heading level={2} size="lg" className="text-orange-600 dark:text-orange-400">{totalRegistrations}</Heading>
+              </div>
+              <div className="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center">
+                <span className="text-2xl">👥</span>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Actions Bar */}
+        <div className="flex items-center justify-between">
+          <div>
+            <Heading level={2} size="sm" className="mb-1">Live Sessions</Heading>
+            <Text size="xs" variant="secondary">Manage scheduled and active practice sessions</Text>
+          </div>
           <Button
             variant="primary"
-            size="lg"
             onClick={() => {
               resetForm();
               setShowCreateModal(true);
@@ -432,31 +439,40 @@ function AdminBackofficeContent() {
               setSuccess('');
             }}
           >
-            + Programar Nuevo Ensayo
+            + New Session
           </Button>
         </div>
 
         {/* Sessions List */}
-        <Card padding="lg">
-          <Heading level={2} size="xs" className="mb-4">
-            Ensayos Activos ({sessions.length})
-          </Heading>
+        <Card className="shadow-sm" padding="lg">
 
           {sessions.length === 0 ? (
-            <div className="text-center py-12">
+            <div className="text-center py-16">
+              <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-4xl">📅</span>
+              </div>
+              <Heading level={3} size="xs" className="mb-2">No sessions yet</Heading>
               <Text variant="secondary" className="mb-4">
-                No hay ensayos programados
+                Get started by creating your first practice session
               </Text>
-              <Text size="xs" variant="secondary">
-                Crea un nuevo ensayo para comenzar
-              </Text>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  resetForm();
+                  setShowCreateModal(true);
+                  setError('');
+                  setSuccess('');
+                }}
+              >
+                + Create Session
+              </Button>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {sessions.map((session) => (
                 <div
                   key={session.id}
-                  className="border border-black/[0.12] dark:border-white/[0.16] rounded-xl p-4 hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-all duration-[180ms]"
+                  className="group bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-5 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-200"
                 >
                   <div className="flex flex-col md:flex-row justify-between md:items-start space-y-4 md:space-y-0">
                     <div className="flex-1">
@@ -560,11 +576,13 @@ function AdminBackofficeContent() {
 
       {/* Create/Edit Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <Card className="max-w-2xl w-full my-8 shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)]" padding="lg">
-            <Heading level={2} size="sm" className="mb-4">
-              {editingSession ? 'Editar Ensayo' : 'Programar Nuevo Ensayo'}
-            </Heading>
+        <div className="fixed inset-0 flex items-center justify-center p-4 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm">
+          <div className="absolute inset-0" onClick={() => setShowCreateModal(false)} />
+          <div onClick={(e) => e.stopPropagation()}>
+            <Card className="max-w-2xl w-full my-8 shadow-2xl relative z-10" padding="lg">
+              <Heading level={2} size="sm" className="mb-4">
+                {editingSession ? 'Editar Ensayo' : 'Programar Nuevo Ensayo'}
+              </Heading>
 
             {!editingSession && (
               <div className="mb-6">
@@ -737,10 +755,11 @@ function AdminBackofficeContent() {
                 </Button>
               </div>
             </form>
-          </Card>
+            </Card>
+          </div>
         </div>
       )}
-    </div>
+    </AdminLayout>
   );
 }
 
