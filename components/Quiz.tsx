@@ -494,7 +494,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
 
           // If this is the first quiz, show celebration modal and update onboarding status
           if (isFirstQuiz) {
-            setCelebrationScore({ score: correctCount, total: answeredCount });
+            setCelebrationScore({ score: correctCount, total: quizQuestions.length });
             setShowCelebration(true);
 
             // Update onboarding status
