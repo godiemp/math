@@ -193,7 +193,7 @@ export default function Home() {
                     color: 'var(--color-label-secondary)',
                   }}
                 >
-                  una plataforma donde practicas mate para la PAES. tienes ejercicios del temario oficial, feedback cuando te equivocas, y ves tu progreso en tiempo real. sin publicidad ni webeo.
+                  una plataforma donde practicas mate para la PAES. tienes ejercicios del temario oficial, feedback cuando te equivocas, y ves tu progreso en tiempo real. sin publicidad.
                 </p>
               </div>
 
@@ -250,7 +250,7 @@ export default function Home() {
                     color: 'var(--color-label-secondary)',
                   }}
                 >
-                  8.000 al mes. es menos que un preu, menos que salir el fin de semana. cuando pagas, te comprometes de verdad. y puede ser la diferencia para entrar a la u que quieres.
+                  8.000 al mes. es menos que un preu, menos que una salida al cine. cuando pagas, te comprometes de verdad. y puede ser la diferencia para entrar a la u que quieres.
                 </p>
               </div>
 
