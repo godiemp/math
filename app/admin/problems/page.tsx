@@ -7,7 +7,7 @@ import { Question } from '@/lib/types'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { M1_SKILLS, getSkillNames } from '@/lib/skillTaxonomy'
 import { Card, Button, Heading, Text, Badge } from '@/components/ui'
-import { QuestionPreview } from '@/components/QuestionRenderer'
+import { QuestionPreview, QuestionRenderer } from '@/components/QuestionRenderer'
 import { MathText } from '@/components/MathDisplay'
 
 function ProblemsExplorerContent() {
@@ -17,6 +17,7 @@ function ProblemsExplorerContent() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard' | 'extreme'>('all')
   const [selectedSkills, setSelectedSkills] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState('')
+  const [showOnlyWithImages, setShowOnlyWithImages] = useState(false)
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null)
   const [showSkillsFilter, setShowSkillsFilter] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
@@ -40,17 +41,18 @@ function ProblemsExplorerContent() {
       if (selectedSubject !== 'all' && q.subject !== selectedSubject) return false
       if (selectedDifficulty !== 'all' && q.difficulty !== selectedDifficulty) return false
       if (selectedSkills.length > 0 && !selectedSkills.every(skill => q.skills?.includes(skill))) return false
+      if (showOnlyWithImages && !q.visualData) return false
       if (searchQuery && !q.question.toLowerCase().includes(searchQuery.toLowerCase()) &&
           !q.topic.toLowerCase().includes(searchQuery.toLowerCase()) &&
           !q.id.toLowerCase().includes(searchQuery.toLowerCase())) return false
       return true
     })
-  }, [selectedLevel, selectedSubject, selectedDifficulty, selectedSkills, searchQuery])
+  }, [selectedLevel, selectedSubject, selectedDifficulty, selectedSkills, searchQuery, showOnlyWithImages])
 
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1)
-  }, [selectedLevel, selectedSubject, selectedDifficulty, selectedSkills, searchQuery])
+  }, [selectedLevel, selectedSubject, selectedDifficulty, selectedSkills, searchQuery, showOnlyWithImages])
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredQuestions.length / itemsPerPage)
@@ -94,6 +96,7 @@ function ProblemsExplorerContent() {
   const stats = {
     total: questions.length,
     filtered: filteredQuestions.length,
+    withImages: questions.filter(q => q.visualData).length,
     byLevel: {
       M1: questions.filter(q => q.level === 'M1').length,
       M2: questions.filter(q => q.level === 'M2').length,
@@ -249,6 +252,21 @@ function ProblemsExplorerContent() {
             </div>
           </div>
 
+          {/* Image Filter Checkbox */}
+          <div className="mt-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showOnlyWithImages}
+                onChange={(e) => setShowOnlyWithImages(e.target.checked)}
+                className="rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500"
+              />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Solo problemas con imágenes ({stats.withImages} problemas)
+              </span>
+            </label>
+          </div>
+
           {/* Skills Filter */}
           <div className="mt-4">
             <div className="flex items-center justify-between mb-2">
@@ -320,7 +338,7 @@ function ProblemsExplorerContent() {
           </div>
 
           {/* Clear Filters */}
-          {(selectedLevel !== 'all' || selectedSubject !== 'all' || selectedDifficulty !== 'all' || selectedSkills.length > 0 || searchQuery) && (
+          {(selectedLevel !== 'all' || selectedSubject !== 'all' || selectedDifficulty !== 'all' || selectedSkills.length > 0 || searchQuery || showOnlyWithImages) && (
             <button
               onClick={() => {
                 setSelectedLevel('all')
@@ -328,6 +346,7 @@ function ProblemsExplorerContent() {
                 setSelectedDifficulty('all')
                 setSelectedSkills([])
                 setSearchQuery('')
+                setShowOnlyWithImages(false)
               }}
               className="mt-4 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
             >
@@ -555,50 +574,19 @@ function ProblemsExplorerContent() {
                     <p className="text-gray-900 dark:text-white">{selectedQuestion.topic}</p>
                   </div>
 
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pregunta</h3>
-                    <div className="text-gray-900 dark:text-white">
-                      <MathText content={selectedQuestion.question} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Opciones</h3>
-                    <div className="space-y-2">
-                      {selectedQuestion.options.map((option, index) => (
-                        <div
-                          key={index}
-                          className={`p-3 rounded-lg ${
-                            index === selectedQuestion.correctAnswer
-                              ? 'bg-green-100 dark:bg-green-900 border-2 border-green-500'
-                              : 'bg-gray-100 dark:bg-gray-700'
-                          }`}
-                        >
-                          <div className="flex items-start gap-2">
-                            <span className="font-semibold text-gray-900 dark:text-white">
-                              {String.fromCharCode(65 + index)}.
-                            </span>
-                            <span className="text-gray-900 dark:text-white flex-1">
-                              <MathText content={option} />
-                            </span>
-                            {index === selectedQuestion.correctAnswer && (
-                              <span className="ml-auto text-green-600 dark:text-green-400 font-semibold">✓ Correcta</span>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Explicación</h3>
-                    <div className="text-gray-900 dark:text-white bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                      <MathText content={selectedQuestion.explanation} />
-                    </div>
+                  {/* Question Renderer - Same as zen/rapidfire */}
+                  <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                    <QuestionRenderer
+                      question={selectedQuestion}
+                      mode="full"
+                      selectedAnswer={selectedQuestion.correctAnswer}
+                      showFeedback={true}
+                      disabled={true}
+                    />
                   </div>
 
                   {selectedQuestion.skills && selectedQuestion.skills.length > 0 && (
-                    <div>
+                    <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
                       <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Habilidades Requeridas ({selectedQuestion.skills.length})
                       </h3>
@@ -622,17 +610,6 @@ function ProblemsExplorerContent() {
                             )
                           })}
                         </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {selectedQuestion.visualData && (
-                    <div>
-                      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Datos Visuales</h3>
-                      <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Tipo: {selectedQuestion.visualData.type}
-                        </p>
                       </div>
                     </div>
                   )}
