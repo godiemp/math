@@ -134,13 +134,13 @@ export class ValueGenerator {
           if (value === constraint.value) return false;
           break;
         case 'greater-than':
-          if (!(value > constraint.value)) return false;
+          if (typeof constraint.value === 'number' && !(value > constraint.value)) return false;
           break;
         case 'less-than':
-          if (!(value < constraint.value)) return false;
+          if (typeof constraint.value === 'number' && !(value < constraint.value)) return false;
           break;
         case 'divisible-by':
-          if (value % constraint.value !== 0) return false;
+          if (typeof constraint.value === 'number' && value % constraint.value !== 0) return false;
           break;
         case 'prime':
           if (!this.isPrime(value)) return false;
