@@ -4,7 +4,7 @@
  */
 
 import express from 'express';
-import { authenticateToken, requireAdmin } from '../middleware/auth.js';
+import { authenticate, requireAdmin } from '../middleware/auth.js';
 import {
   generateQGenQuestions,
   getContexts,
@@ -14,7 +14,7 @@ import {
 const router = express.Router();
 
 // All routes require authentication and admin privileges
-router.use(authenticateToken);
+router.use(authenticate);
 router.use(requireAdmin);
 
 /**

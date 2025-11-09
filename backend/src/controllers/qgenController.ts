@@ -4,11 +4,11 @@
  */
 
 import { Request, Response } from 'express';
-import { generateQuestions } from '../../lib/qgen/qgenAlgorithm.js';
-import { contextLibrary } from '../../lib/qgen/contextLibrary.js';
-import { templateLibrary } from '../../lib/qgen/templateLibrary.js';
-import { goalSkillMappings } from '../../lib/qgen/goalSkillMappings.js';
-import { QGenInput, Level, Subject } from '../../lib/types/core.js';
+import { generateQuestions } from '../lib/qgen/qgenAlgorithm.js';
+import { contextLibrary } from '../lib/qgen/contextLibrary.js';
+import { templateLibrary } from '../lib/qgen/templateLibrary.js';
+import { goalSkillMappings } from '../lib/qgen/goalSkillMappings.js';
+import { QGenInput, Level, Subject } from '../lib/types/core.js';
 
 /**
  * Generate questions using QGen algorithm
