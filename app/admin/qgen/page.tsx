@@ -44,9 +44,29 @@ const SKILLS_BY_SUBJECT = {
 };
 
 interface QGenResult {
-  problem: any;
-  situation: any;
-  questions: any[];
+  id: string;
+  level: Level;
+  subject: Subject;
+  topic: string;
+  question: string;
+  questionLatex?: string;
+  options: string[];
+  optionsLatex?: string[];
+  correctAnswer: number;
+  explanation: string;
+  explanationLatex?: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  skills: string[];
+  context: {
+    id: string;
+    description: string;
+  };
+  template: {
+    id: string;
+    name: string;
+  };
+  variables: Record<string, any>;
+  createdAt: number;
 }
 
 function QGenAdminContent() {
@@ -54,7 +74,6 @@ function QGenAdminContent() {
   const [level, setLevel] = useState<Level>('M1');
   const [subject, setSubject] = useState<Subject>('números');
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [numberOfQuestions, setNumberOfQuestions] = useState(3);
   const [result, setResult] = useState<QGenResult | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
