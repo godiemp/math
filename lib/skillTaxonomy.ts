@@ -3,13 +3,10 @@
  * Organized by topic with hierarchical skill definitions
  */
 
-export interface Skill {
-  id: string;
-  name: string;
-  description: string;
-  topic: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
-  parentSkill?: string; // For hierarchical relationships
-}
+import type { Skill } from './types';
+
+// Re-export for convenience
+export type { Skill };
 
 export const SKILLS: Record<string, Skill> = {
   // ============================================================================

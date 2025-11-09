@@ -116,6 +116,11 @@ import {
   refreshAccessToken as refreshToken,
 } from './auth/tokenService';
 
+import type { ApiError, ApiResponse } from './types';
+
+// Re-export types for convenience
+export type { ApiError, ApiResponse };
+
 /**
  * Refresh the access token using the refresh token
  * Internal wrapper that provides the backend URL to the token service
@@ -123,16 +128,6 @@ import {
 async function refreshAccessToken(): Promise<string | null> {
   const backendUrl = await getApiUrl();
   return refreshToken(backendUrl);
-}
-
-export interface ApiError {
-  error: string;
-  statusCode: number;
-}
-
-export interface ApiResponse<T> {
-  data?: T;
-  error?: ApiError;
 }
 
 /**

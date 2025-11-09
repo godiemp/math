@@ -74,3 +74,12 @@ export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
 }
+
+/**
+ * Auth operation result
+ */
+export interface AuthResult {
+  success: boolean;
+  error?: string;
+  user?: User;
+}

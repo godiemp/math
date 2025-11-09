@@ -100,6 +100,7 @@ export type {
   RefreshTokenRequest,
   RefreshToken,
   AuthResponse,
+  AuthResult,
 } from './auth';
 
 // ============================================================================

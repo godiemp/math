@@ -5,6 +5,19 @@
  */
 
 /**
+ * Import shared auth request types from frontend
+ */
+export type {
+  RegisterRequest,
+  LoginRequest,
+  RefreshTokenRequest,
+} from '../../../../lib/types';
+
+/**
+ * Backend-specific auth types
+ */
+
+/**
  * JWT token payload
  */
 export interface TokenPayload {
@@ -12,25 +25,6 @@ export interface TokenPayload {
   username: string;
   email: string;
   role: 'student' | 'admin';
-}
-
-/**
- * Auth request types
- */
-export interface RegisterRequest {
-  username: string;
-  email: string;
-  password: string;
-  displayName: string;
-}
-
-export interface LoginRequest {
-  usernameOrEmail: string;
-  password: string;
-}
-
-export interface RefreshTokenRequest {
-  refreshToken: string;
 }
 
 /**

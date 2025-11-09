@@ -437,6 +437,15 @@ export interface AuthResponse {
 }
 
 /**
+ * Auth operation result
+ */
+export interface AuthResult {
+  success: boolean;
+  error?: string;
+  user?: User;
+}
+
+/**
  * ============================================================================
  * PDF UPLOAD TYPES
  * ============================================================================
@@ -526,11 +535,14 @@ export interface SkillsDisplayProps {
  */
 export interface QuestionRendererProps {
   question: Question;
-  mode: QuestionRenderMode;
+  mode?: QuestionRenderMode;
   selectedAnswer?: number | null;
   showFeedback?: boolean;
   onAnswerSelect?: (answerIndex: number) => void;
   disabled?: boolean;
+  compact?: boolean;
+  quizMode?: 'zen' | 'rapidfire';
+  onRequestAIHelp?: () => void;
 }
 
 /**
