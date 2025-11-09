@@ -131,8 +131,31 @@ export async function seedTestData() {
       );
     }
 
+    // Create a test live session
+    const sessionId = 'test-session-1';
+    const scheduledStartTime = new Date(Date.now() + 24 * 60 * 60 * 1000); // Tomorrow
+
+    await client.query(
+      `INSERT INTO sessions
+       (id, name, description, host_id, host_name, status, level, scheduled_start_time, questions, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+      [
+        sessionId,
+        'Test PAES Session',
+        'Session for e2e testing',
+        adminId,
+        'Test Admin',
+        'scheduled',
+        'M1',
+        scheduledStartTime.toISOString(),
+        JSON.stringify(['test-q1', 'test-q2']),
+        now,
+        now,
+      ]
+    );
+
     await client.query('COMMIT');
-    return { adminId, studentId };
+    return { adminId, studentId, sessionId };
   } catch (error) {
     await client.query('ROLLBACK');
     throw error;
