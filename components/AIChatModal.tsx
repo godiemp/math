@@ -5,6 +5,7 @@ import { Question } from '@/lib/types';
 import { MathText, SmartLatexRenderer } from './MathDisplay';
 import { GeometryCanvas, GeometryFigure } from './GeometryCanvas';
 import { MarkdownViewer } from './MarkdownViewer';
+import { api } from '@/lib/api-client';
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -67,38 +68,34 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/ai-chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          question: question.question,
-          questionLatex: question.questionLatex,
-          userAnswer: userAnswer,
-          correctAnswer: question.correctAnswer,
-          explanation: question.explanation,
-          options: question.options,
-          topic: question.topic,
-          difficulty: question.difficulty,
-          visualData: question.visualData,
-          messages: messages.map(m => ({ role: m.role, content: m.content })),
-          userMessage: inputValue,
-        }),
+      const response = await api.post<{ response: string; success: boolean }>('/api/ai/chat', {
+        question: question.question,
+        questionLatex: question.questionLatex,
+        userAnswer: userAnswer,
+        correctAnswer: question.correctAnswer,
+        explanation: question.explanation,
+        options: question.options,
+        topic: question.topic,
+        difficulty: question.difficulty,
+        visualData: question.visualData,
+        messages: messages.map(m => ({ role: m.role, content: m.content })),
+        userMessage: inputValue,
       });
 
-      const data = await response.json();
+      if (response.error) {
+        console.error('API error response:', response.error);
+        throw new Error(response.error.error || 'Error en la respuesta');
+      }
 
-      if (data.success && data.response) {
+      if (response.data && response.data.success && response.data.response) {
         const assistantMessage: Message = {
           role: 'assistant',
-          content: data.response,
+          content: response.data.response,
           timestamp: Date.now()
         };
         setMessages(prev => [...prev, assistantMessage]);
       } else {
-        console.error('API error response:', data);
-        throw new Error(data.error || data.details || 'Error en la respuesta');
+        throw new Error('Respuesta inválida del servidor');
       }
     } catch (error) {
       console.error('Error fetching AI response:', error);
