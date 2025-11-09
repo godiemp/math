@@ -49,27 +49,30 @@ export async function seedTestData() {
     // Create test admin user
     const bcrypt = require('bcryptjs');
     const adminPassword = await bcrypt.hash('admin123', 10);
-    const adminResult = await client.query(
-      `INSERT INTO users (username, email, password_hash, display_name, role, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
-       RETURNING id`,
-      ['testadmin', 'admin@test.com', adminPassword, 'Test Admin', 'admin', Date.now(), Date.now()]
+    const adminId = 'test-admin';
+    const now = Date.now();
+
+    await client.query(
+      `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [adminId, 'testadmin', 'admin@test.com', adminPassword, 'Test Admin', 'admin', now, now]
     );
-    const adminId = adminResult.rows[0].id;
 
     // Create test student user
     const studentPassword = await bcrypt.hash('student123', 10);
-    const studentResult = await client.query(
-      `INSERT INTO users (username, email, password_hash, display_name, role, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
-       RETURNING id`,
-      ['teststudent', 'student@test.com', studentPassword, 'Test Student', 'student', Date.now(), Date.now()]
+    const studentId = 'test-student';
+
+    await client.query(
+      `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [studentId, 'teststudent', 'student@test.com', studentPassword, 'Test Student', 'student', now, now]
     );
-    const studentId = studentResult.rows[0].id;
+
 
     // Create sample questions
     const questions = [
       {
+        id: 'test-q1',
         level: 'M1',
         subject: 'números',
         topic: 'Operaciones básicas',
@@ -78,8 +81,10 @@ export async function seedTestData() {
         correct_answer: 1,
         difficulty: 'easy',
         skills: ['suma-basica'],
+        explanation: 'La suma de 15 + 27 es 42.',
       },
       {
+        id: 'test-q2',
         level: 'M1',
         subject: 'álgebra',
         topic: 'Ecuaciones lineales',
@@ -88,8 +93,10 @@ export async function seedTestData() {
         correct_answer: 1,
         difficulty: 'medium',
         skills: ['ecuaciones-lineales'],
+        explanation: '2x + 5 = 15, entonces 2x = 10, x = 5',
       },
       {
+        id: 'test-q3',
         level: 'M2',
         subject: 'geometría',
         topic: 'Área de figuras',
@@ -98,15 +105,17 @@ export async function seedTestData() {
         correct_answer: 0,
         difficulty: 'medium',
         skills: ['area-circulo'],
+        explanation: 'El área de un círculo es πr², entonces π(5)² = 25π',
       },
     ];
 
     for (const q of questions) {
       await client.query(
         `INSERT INTO questions
-         (level, subject, topic, question, options, correct_answer, difficulty, skills, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+         (id, level, subject, topic, question, options, correct_answer, difficulty, skills, explanation, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
         [
+          q.id,
           q.level,
           q.subject,
           q.topic,
@@ -115,8 +124,9 @@ export async function seedTestData() {
           q.correct_answer,
           q.difficulty,
           JSON.stringify(q.skills),
-          Date.now(),
-          Date.now(),
+          q.explanation,
+          now,
+          now,
         ]
       );
     }
