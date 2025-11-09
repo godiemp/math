@@ -184,7 +184,7 @@ export default function Home() {
                     marginBottom: '8px',
                   }}
                 >
-                  la idea
+                  qué es esto
                 </h3>
                 <p
                   style={{
@@ -193,7 +193,7 @@ export default function Home() {
                     color: 'var(--color-label-secondary)',
                   }}
                 >
-                  práctica gratis de mate para la PAES. ejercicios reales del temario, feedback al tiro, y ves tu progreso en tiempo real. sin pagar, sin ads, sin webeo.
+                  una plataforma donde practicas mate para la PAES. tienes ejercicios del temario oficial, feedback cuando te equivocas, y ves tu progreso en tiempo real. sin publicidad ni webeo.
                 </p>
               </div>
 
@@ -206,14 +206,14 @@ export default function Home() {
                     marginBottom: '8px',
                   }}
                 >
-                  qué puedes hacer
+                  qué incluye
                 </h3>
                 <div className="space-y-2">
                   {[
-                    'practicar con problemas del temario oficial',
-                    'ver explicaciones cuando te equivocas',
-                    'seguir tu progreso (ves dónde estás mejorando)',
-                    'practicar en vivo con otros estudiantes',
+                    'problemas del temario oficial PAES',
+                    'explicaciones cuando te equivocas',
+                    'seguimiento de tu progreso',
+                    'sesiones de práctica en vivo',
                   ].map((item, i) => (
                     <div key={i} className="flex items-start gap-2">
                       <span style={{ color: 'var(--color-tint)', marginTop: '4px', fontSize: '18px' }}>•</span>
@@ -241,7 +241,7 @@ export default function Home() {
                     marginBottom: '8px',
                   }}
                 >
-                  vale la pena
+                  el precio
                 </h3>
                 <p
                   style={{
@@ -250,7 +250,7 @@ export default function Home() {
                     color: 'var(--color-label-secondary)',
                   }}
                 >
-                  cuando pagas por algo, lo usas de verdad. 8.000 al mes es menos que una salida al cine, pero puede ser la diferencia entre entrar o no entrar a la u que quieres.
+                  8.000 al mes. es menos que un preu, menos que salir el fin de semana. cuando pagas, te comprometes de verdad. y puede ser la diferencia para entrar a la u que quieres.
                 </p>
               </div>
 
@@ -270,7 +270,7 @@ export default function Home() {
                     textAlign: 'center',
                   }}
                 >
-                  <strong>8.000 CLP/mes</strong> • 0 publicidad • cancelas cuando quieras
+                  <strong>8.000 CLP/mes</strong> • cancela cuando quieras • sin permanencia
                 </p>
               </div>
             </div>
