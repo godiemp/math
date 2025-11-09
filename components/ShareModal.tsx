@@ -30,7 +30,14 @@ interface ShareModalProps {
   platforms?: SharePlatform[];
 }
 
-const platformConfig = {
+const platformConfig: Record<SharePlatform, {
+  name: string;
+  subtext?: string;
+  icon: React.ComponentType<{ className?: string }>;
+  bgColor: string;
+  textColor: string;
+  generateUrl: (data: ShareModalData) => string;
+}> = {
   whatsapp: {
     name: 'WhatsApp',
     icon: MessageCircle,
@@ -42,7 +49,8 @@ const platformConfig = {
     }
   },
   copy: {
-    name: 'Copiar',
+    name: 'Copiar link',
+    subtext: 'Para Instagram, Discord, Telegram',
     icon: LinkIcon,
     bgColor: 'bg-black/[0.08] dark:bg-white/[0.12] hover:bg-black/[0.12] dark:hover:bg-white/[0.16]',
     textColor: 'text-black dark:text-white',
@@ -116,7 +124,7 @@ export function ShareModal({
               key={platform}
               onClick={() => handleShare(platform)}
               className={cn(
-                'w-full flex items-center justify-center gap-3 p-4 rounded-2xl font-semibold transition-all duration-200',
+                'w-full flex flex-col items-center justify-center gap-1 p-4 rounded-2xl font-semibold transition-all duration-200',
                 'active:scale-98',
                 config.bgColor,
                 config.textColor,
@@ -125,13 +133,22 @@ export function ShareModal({
             >
               {isCopy && copied ? (
                 <>
-                  <Check className="w-5 h-5" />
-                  <span>Copiado</span>
+                  <div className="flex items-center gap-2">
+                    <Check className="w-5 h-5" />
+                    <span>Copiado</span>
+                  </div>
                 </>
               ) : (
                 <>
-                  <Icon className="w-5 h-5" />
-                  <span>{config.name}</span>
+                  <div className="flex items-center gap-3">
+                    <Icon className="w-5 h-5" />
+                    <span>{config.name}</span>
+                  </div>
+                  {config.subtext && (
+                    <Text size="xs" variant="secondary" className="opacity-70">
+                      {config.subtext}
+                    </Text>
+                  )}
                 </>
               )}
             </button>
