@@ -5,7 +5,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
-import { getUserRegisteredSessions, updateSessionStatuses, getAllAvailableSessions } from "@/lib/liveSessions";
+import { getAllAvailableSessions, updateSessionStatuses } from "@/lib/sessionApi";
 import { useEffect, useState } from "react";
 import { LiveSession, QuestionAttempt, QuizHistoryResponse } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen } from "@/components/ui";
@@ -26,13 +26,18 @@ function DashboardContent() {
     const loadDashboardData = async () => {
       if (user) {
         // Update session statuses
-        updateSessionStatuses();
+        await updateSessionStatuses();
 
-        // Get user's registered sessions
-        const sessions = getUserRegisteredSessions(user.id);
+        // Get all available sessions from API
+        const allAvailableSessions = await getAllAvailableSessions();
+
+        // Filter for user's registered sessions
+        const userRegisteredSessions = allAvailableSessions.filter(s =>
+          s.registeredUsers?.some(r => r.userId === user.id)
+        );
 
         // Filter for upcoming sessions only (scheduled, lobby, active)
-        const upcomingSessions = sessions.filter(s =>
+        const upcomingSessions = userRegisteredSessions.filter(s =>
           s.status === 'scheduled' || s.status === 'lobby' || s.status === 'active'
         );
 
@@ -42,7 +47,7 @@ function DashboardContent() {
         setRegisteredSessions(upcomingSessions);
 
         // Get the next scheduled session (for all users, not just registered)
-        const allUpcoming = getAllAvailableSessions()
+        const allUpcoming = allAvailableSessions
           .filter(s => s.status === 'scheduled' || s.status === 'lobby')
           .sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
 

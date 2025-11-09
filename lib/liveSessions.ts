@@ -1,3 +1,20 @@
+/**
+ * @deprecated This file is DEPRECATED and should NOT be used.
+ *
+ * ⚠️ WARNING: This localStorage-based session management is obsolete.
+ *
+ * Issues with this approach:
+ * - Data only stored in browser localStorage (lost on clear/refresh)
+ * - No synchronization with backend database
+ * - Multi-device sync impossible
+ * - Conflicts with PostgreSQL-based session system
+ *
+ * ✅ Use instead: lib/sessionApi.ts (which uses backend API endpoints)
+ *
+ * This file is kept for reference only. All live session functionality
+ * now uses the backend API at /api/sessions.
+ */
+
 import { LiveSession, SessionParticipant, SessionRegistration, Question, User } from './types';
 import { getRandomQuestions, getOfficialPAESQuestions } from './questions';
 
