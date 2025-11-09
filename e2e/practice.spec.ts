@@ -174,15 +174,9 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await startButton.click();
     await page.waitForTimeout(2000);
 
-    // Go back to practice page
-    const newPracticeButton = page.getByText(/Nueva Práctica|← Nueva/i);
-    if (await newPracticeButton.isVisible()) {
-      await newPracticeButton.click();
-      await page.waitForTimeout(1000);
-    } else {
-      await page.goto('/practice/m1');
-      await page.waitForTimeout(1000);
-    }
+    // Go back to practice page (navigate directly to avoid animation overlay issues)
+    await page.goto('/practice/m1');
+    await page.waitForTimeout(1000);
 
     // Check for "Repetir Última Configuración" card
     const repeatCard = page.getByText(/Repetir Última Configuración/i);
