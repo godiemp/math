@@ -120,8 +120,19 @@ export const getTemplates = async (req: Request, res: Response) => {
  * POST /api/qgen/generate-single
  */
 export const generateSingleQuestion = async (req: Request, res: Response) => {
+  console.log('\n====================================');
+  console.log('📝 GENERATE SINGLE QUESTION HANDLER CALLED');
+  console.log(`   Method: ${req.method}`);
+  console.log(`   URL: ${req.url}`);
+  console.log(`   Body:`, JSON.stringify(req.body, null, 2));
+  console.log('====================================\n');
+
   try {
     const { targetSkills, level, subject } = req.body;
+    console.log('✅ Handler: Parsing request body...');
+    console.log(`   targetSkills: ${targetSkills}`);
+    console.log(`   level: ${level}`);
+    console.log(`   subject: ${subject}`);
 
     // Validate input
     if (!targetSkills || !Array.isArray(targetSkills) || targetSkills.length === 0) {
