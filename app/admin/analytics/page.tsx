@@ -6,6 +6,7 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { api } from '@/lib/api-client';
 import { SkillsAnalytics } from '@/components/SkillsAnalytics';
+import AdminLayout from '@/components/AdminLayout';
 
 interface AnalyticsData {
   northStar: {
@@ -133,30 +134,24 @@ function AnalyticsDashboardContent() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
-          <Card padding="lg">
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-            </div>
-          </Card>
+      <AdminLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
-      </div>
+      </AdminLayout>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
-          <Card padding="lg" className="border-red-500">
-            <Text className="text-red-600 dark:text-red-400">{error}</Text>
-            <Button variant="primary" onClick={fetchAnalytics} className="mt-4">
-              Retry
-            </Button>
-          </Card>
-        </div>
-      </div>
+      <AdminLayout>
+        <Card padding="lg" className="border-red-200 dark:border-red-800">
+          <Text className="text-red-600 dark:text-red-400 mb-4">{error}</Text>
+          <Button variant="primary" onClick={fetchAnalytics}>
+            Retry
+          </Button>
+        </Card>
+      </AdminLayout>
     );
   }
 
@@ -165,29 +160,22 @@ function AnalyticsDashboardContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <AdminLayout>
+      <div className="space-y-6">
         {/* Header */}
-        <Card padding="lg">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
-            <div>
-              <Heading level={1} size="md" className="mb-2">
-                📊 Analytics Dashboard
-              </Heading>
-              <Text variant="secondary">
-                Platform performance and user metrics
-              </Text>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" onClick={() => router.push('/admin')}>
-                ← Back to Admin
-              </Button>
-              <Button variant="secondary" onClick={fetchAnalytics}>
-                🔄 Refresh
-              </Button>
-            </div>
+        <div className="flex items-center justify-between">
+          <div>
+            <Heading level={1} size="md" className="mb-1">
+              Analytics Dashboard
+            </Heading>
+            <Text variant="secondary">
+              Platform performance and user metrics
+            </Text>
           </div>
-        </Card>
+          <Button variant="primary" onClick={fetchAnalytics}>
+            🔄 Refresh
+          </Button>
+        </div>
 
         {/* North Star Metrics */}
         <Card padding="lg">
@@ -510,7 +498,7 @@ function AnalyticsDashboardContent() {
           </Text>
         </Card>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
 

@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { api } from '@/lib/api-client';
+import AdminLayout from '@/components/AdminLayout';
 
 interface QuestionImage {
   id: string;
@@ -205,17 +206,8 @@ export default function UploadPDFPage() {
 
   return (
     <ProtectedRoute requireAdmin>
-      <div className="min-h-screen bg-gray-50 py-8">
+      <AdminLayout>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-6">
-            <Button
-              variant="secondary"
-              onClick={() => router.push('/admin')}
-            >
-              ← Volver al Admin
-            </Button>
-          </div>
-
           <Heading level={1} size="lg" className="mb-8">
             Cargar Preguntas desde PDF
           </Heading>
@@ -547,7 +539,7 @@ export default function UploadPDFPage() {
             </>
           )}
         </div>
-      </div>
+      </AdminLayout>
     </ProtectedRoute>
   );
 }

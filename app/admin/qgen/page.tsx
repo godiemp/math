@@ -7,6 +7,7 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { MathText } from '@/components/MathDisplay';
 import type { Level, Subject } from '@/lib/types/core';
+import AdminLayout from '@/components/AdminLayout';
 
 // Available skills organized by subject
 const SKILLS_BY_SUBJECT = {
@@ -129,24 +130,17 @@ function QGenAdminContent() {
   const availableSkills = SKILLS_BY_SUBJECT[subject] || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
+    <AdminLayout>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <Card className="mb-6" padding="lg">
-          <div className="flex items-center justify-between">
-            <div>
-              <Heading level={1} size="md" className="mb-2">
-                QGen - Generador de Preguntas con AI
-              </Heading>
-              <Text variant="secondary">
-                Genera preguntas completas con Claude AI: respuestas, distractores y explicaciones
-              </Text>
-            </div>
-            <Button variant="ghost" onClick={() => router.push('/admin')}>
-              ← Volver al Admin
-            </Button>
-          </div>
-        </Card>
+        <div className="mb-6">
+          <Heading level={1} size="md" className="mb-2">
+            QGen - Generador de Preguntas con AI
+          </Heading>
+          <Text variant="secondary">
+            Genera preguntas completas con Claude AI: respuestas, distractores y explicaciones
+          </Text>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* Configuration Panel */}
@@ -374,7 +368,7 @@ function QGenAdminContent() {
           </Card>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
 

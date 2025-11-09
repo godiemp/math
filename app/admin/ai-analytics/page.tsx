@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { api } from '@/lib/api-client';
+import AdminLayout from '@/components/AdminLayout';
 
 interface AIAnalytics {
   overview: {
@@ -196,28 +197,26 @@ function AIAnalyticsContent() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-        <div className="max-w-7xl mx-auto">
-          <Heading>Cargando analytics...</Heading>
+      <AdminLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
-      </div>
+      </AdminLayout>
     );
   }
 
   if (error || !analytics) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-        <div className="max-w-7xl mx-auto">
-          <Card className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 p-6">
-            <Text className="text-red-600 dark:text-red-400">{error || 'Error desconocido'}</Text>
-          </Card>
-        </div>
-      </div>
+      <AdminLayout>
+        <Card padding="lg" className="border-red-200 dark:border-red-800">
+          <Text className="text-red-600 dark:text-red-400">{error || 'Unknown error'}</Text>
+        </Card>
+      </AdminLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+    <AdminLayout>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -626,7 +625,7 @@ function AIAnalyticsContent() {
           </Card>
         )}
       </div>
-    </div>
+    </AdminLayout>
   );
 }
 
