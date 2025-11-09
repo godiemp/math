@@ -13,6 +13,8 @@ import { Streak } from "@/components/Streak";
 import { api } from "@/lib/api-client";
 import { isAuthenticated } from "@/lib/auth";
 import { MathText } from "@/components/MathDisplay";
+import { ShareModal } from "@/components/ShareModal";
+import { Share2 } from "lucide-react";
 
 function DashboardContent() {
   const { user, setUser, isAdmin } = useAuth();
@@ -21,6 +23,7 @@ function DashboardContent() {
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
   const [nextSession, setNextSession] = useState<LiveSession | null>(null);
   const [recentAttempts, setRecentAttempts] = useState<QuestionAttempt[]>([]);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -273,11 +276,23 @@ function DashboardContent() {
                 ¡Nuevo! Practica con ensayos PAES en tiempo real. Regístrate, únete al lobby antes de comenzar y compite con otros estudiantes.
               </Text>
             )}
-            <Button asChild className="bg-white text-[#5E5CE6] hover:bg-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]">
-              <Link href="/live-practice">
-                {nextSession ? '¡Regístrate Ahora! →' : 'Ver Ensayos Disponibles →'}
-              </Link>
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
+              <Button asChild className="bg-white text-[#5E5CE6] hover:bg-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]">
+                <Link href="/live-practice">
+                  {nextSession ? '¡Regístrate Ahora! →' : 'Ver Ensayos Disponibles →'}
+                </Link>
+              </Button>
+              {nextSession && (
+                <Button
+                  onClick={() => setIsShareModalOpen(true)}
+                  variant="ghost"
+                  className="bg-white/20 hover:bg-white/30 text-white border border-white/40 gap-2"
+                >
+                  <Share2 className="w-4 h-4" />
+                  Invitar amigos
+                </Button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -428,6 +443,32 @@ function DashboardContent() {
           </Card>
         </div>
       </main>
+
+      {/* Share Modal */}
+      {nextSession && (
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          data={{
+            title: '',
+            message: `Ensayo PAES ${nextSession.level}\n${new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })} • ${new Date(nextSession.scheduledStartTime).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}\n\nVamos juntos 📝`,
+            url: typeof window !== 'undefined' ? `${window.location.origin}/live-practice` : '/live-practice',
+            sessionName: nextSession.name,
+            sessionLevel: nextSession.level,
+            sessionDate: new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long'
+            }),
+            sessionTime: new Date(nextSession.scheduledStartTime).toLocaleTimeString('es-CL', {
+              hour: '2-digit',
+              minute: '2-digit'
+            }),
+            registeredCount: nextSession.registeredUsers?.length || 0
+          }}
+          platforms={['whatsapp', 'copy']}
+        />
+      )}
 
       {/* Footer with hairline border */}
       <footer className="backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-t border-black/[0.12] dark:border-white/[0.16] mt-12">
