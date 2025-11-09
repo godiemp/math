@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { registerUser, loginUser } from '@/lib/auth';
 
 interface AuthProps {
@@ -28,39 +29,47 @@ export default function Auth({ onSuccess }: AuthProps) {
         // Login
         if (!username || !password) {
           setError('Por favor completa todos los campos');
+          toast.error('Por favor completa todos los campos');
           setIsLoading(false);
           return;
         }
 
         const result = await loginUser(username, password);
         if (result.success) {
+          toast.success('Sesión iniciada correctamente');
           onSuccess();
         } else {
           setError(result.error || 'Error al iniciar sesión');
+          toast.error(result.error || 'Error al iniciar sesión');
         }
       } else {
         // Register
         if (!username || !email || !password || !displayName) {
           setError('Por favor completa todos los campos');
+          toast.error('Por favor completa todos los campos');
           setIsLoading(false);
           return;
         }
 
         if (password.length < 6) {
           setError('La contraseña debe tener al menos 6 caracteres');
+          toast.error('La contraseña debe tener al menos 6 caracteres');
           setIsLoading(false);
           return;
         }
 
         const result = await registerUser(username, email, password, displayName);
         if (result.success) {
+          toast.success('Cuenta creada exitosamente');
           onSuccess();
         } else {
           setError(result.error || 'Error al registrarse');
+          toast.error(result.error || 'Error al registrarse');
         }
       }
     } catch (err) {
       setError('Error de conexión. Por favor intenta de nuevo.');
+      toast.error('Error de conexión. Por favor intenta de nuevo.');
     } finally {
       setIsLoading(false);
     }

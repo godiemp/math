@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SWRProvider } from "@/lib/swr-config";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "PAES Chile - Preparación Matemática",
@@ -21,6 +22,7 @@ export default function RootLayout({
             {children}
           </AuthProvider>
         </SWRProvider>
+        <Toaster position="top-right" richColors />
       </body>
     </html>
   );

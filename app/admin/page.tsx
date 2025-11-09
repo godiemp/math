@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import {
   createScheduledSession,
   updateScheduledSession,
@@ -141,69 +142,99 @@ function AdminBackofficeContent() {
 
     if (editingSession) {
       // Update existing session
-      const result = await updateScheduledSession(editingSession.id, {
-        name: formData.name.trim(),
-        description: formData.description.trim(),
-        level: formData.level,
-        scheduledStartTime: scheduledTimestamp,
-        durationMinutes: formData.durationMinutes,
-        questionCount: formData.questionCount,
-        questions,
-      });
-
-      if (result.success) {
-        setSuccess('Ensayo actualizado exitosamente');
-        setShowCreateModal(false);
-        resetForm();
-        await refresh();
-      } else {
-        setError(result.error || 'Error al actualizar el ensayo');
-      }
+      toast.promise(
+        updateScheduledSession(editingSession.id, {
+          name: formData.name.trim(),
+          description: formData.description.trim(),
+          level: formData.level,
+          scheduledStartTime: scheduledTimestamp,
+          durationMinutes: formData.durationMinutes,
+          questionCount: formData.questionCount,
+          questions,
+        }).then(async (result) => {
+          if (result.success) {
+            setShowCreateModal(false);
+            resetForm();
+            await refresh();
+            return result;
+          } else {
+            throw new Error(result.error || 'Error al actualizar el ensayo');
+          }
+        }),
+        {
+          loading: 'Actualizando ensayo...',
+          success: 'Ensayo actualizado exitosamente',
+          error: (err) => err.message || 'Error al actualizar el ensayo',
+        }
+      );
     } else {
       // Create new session
-      const result = await createScheduledSession(
-        formData.name.trim(),
-        formData.description.trim(),
-        formData.level,
-        currentUser,
-        scheduledTimestamp,
-        formData.durationMinutes,
-        formData.questionCount,
-        questions
+      toast.promise(
+        createScheduledSession(
+          formData.name.trim(),
+          formData.description.trim(),
+          formData.level,
+          currentUser,
+          scheduledTimestamp,
+          formData.durationMinutes,
+          formData.questionCount,
+          questions
+        ).then(async (result) => {
+          if (result.success) {
+            setShowCreateModal(false);
+            resetForm();
+            await refresh();
+            return result;
+          } else {
+            throw new Error(result.error || 'Error al crear el ensayo');
+          }
+        }),
+        {
+          loading: 'Creando ensayo...',
+          success: 'Ensayo programado exitosamente',
+          error: (err) => err.message || 'Error al crear el ensayo',
+        }
       );
-
-      if (result.success) {
-        setSuccess('Ensayo programado exitosamente');
-        setShowCreateModal(false);
-        resetForm();
-        await refresh();
-      } else {
-        setError(result.error || 'Error al crear el ensayo');
-      }
     }
   };
 
   const handleDelete = async (sessionId: string) => {
     if (confirm('¿Estás seguro de que deseas eliminar este ensayo?')) {
-      const result = await deleteSession(sessionId);
-      if (result.success) {
-        setSuccess('Ensayo eliminado exitosamente');
-        await refresh();
-      } else {
-        setError(result.error || 'Error al eliminar el ensayo');
-      }
+      toast.promise(
+        deleteSession(sessionId).then(async (result) => {
+          if (result.success) {
+            await refresh();
+            return result;
+          } else {
+            throw new Error(result.error || 'Error al eliminar el ensayo');
+          }
+        }),
+        {
+          loading: 'Eliminando ensayo...',
+          success: 'Ensayo eliminado exitosamente',
+          error: (err) => err.message || 'Error al eliminar el ensayo',
+        }
+      );
     }
   };
 
   const handleCancel = async (sessionId: string) => {
     if (confirm('¿Estás seguro de que deseas cancelar este ensayo?')) {
-      const result = await cancelSession(sessionId);
-      if (result.success) {
-        setSuccess('Ensayo cancelado exitosamente');
-        await refresh();
-      } else {
-        setError(result.error || 'Error al cancelar el ensayo');
-      }
+      toast.promise(
+        cancelSession(sessionId).then(async (result) => {
+          if (result.success) {
+            await refresh();
+            return result;
+          } else {
+            throw new Error(result.error || 'Error al cancelar el ensayo');
+          }
+        }),
+        {
+          loading: 'Cancelando ensayo...',
+          success: 'Ensayo cancelado exitosamente',
+          error: (err) => err.message || 'Error al cancelar el ensayo',
+        }
+      );
     }
   };
 

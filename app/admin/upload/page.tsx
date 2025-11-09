@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
@@ -141,8 +142,10 @@ export default function UploadPDFPage() {
 
       setEnrichedQuestions(enriched);
       setUploadProgress('');
+      toast.success(`PDF procesado exitosamente: ${response.data.validQuestions} preguntas encontradas`);
     } catch (err: any) {
       setError(err.message || 'Error al procesar el PDF');
+      toast.error(err.message || 'Error al procesar el PDF');
       console.error('Upload error:', err);
       setUploadProgress('');
     } finally {
@@ -152,6 +155,7 @@ export default function UploadPDFPage() {
 
   const handleSaveQuestions = async () => {
     if (enrichedQuestions.length === 0) {
+      toast.error('No hay preguntas para guardar');
       setError('No hay preguntas para guardar');
       return;
     }
@@ -159,33 +163,36 @@ export default function UploadPDFPage() {
     setSaving(true);
     setError('');
 
-    try {
-      const response = await api.post<any>('/api/admin/save-questions', {
+    toast.promise(
+      api.post<any>('/api/admin/save-questions', {
         questions: enrichedQuestions,
-      });
+      }).then(async (response) => {
+        if (response.error) {
+          throw new Error(response.error.error || 'Error al guardar las preguntas');
+        }
 
-      if (response.error) {
-        setError(response.error.error || 'Error al guardar las preguntas');
-        return;
+        if (!response.data) {
+          throw new Error('No se recibió respuesta del servidor');
+        }
+
+        setFile(null);
+        setExtractedQuestions([]);
+        setEnrichedQuestions([]);
+        setUploadResult(null);
+        setSaving(false);
+
+        return response.data;
+      }).catch((err) => {
+        setError(err.message || 'Error al guardar las preguntas');
+        setSaving(false);
+        throw err;
+      }),
+      {
+        loading: 'Guardando preguntas...',
+        success: (data) => `${data.saved} preguntas guardadas exitosamente`,
+        error: (err) => err.message || 'Error al guardar las preguntas',
       }
-
-      if (!response.data) {
-        setError('No se recibió respuesta del servidor');
-        return;
-      }
-
-      alert('✅ ' + response.data.saved + ' preguntas guardadas exitosamente');
-
-      setFile(null);
-      setExtractedQuestions([]);
-      setEnrichedQuestions([]);
-      setUploadResult(null);
-    } catch (err: any) {
-      setError(err.message || 'Error al guardar las preguntas');
-      console.error('Save error:', err);
-    } finally {
-      setSaving(false);
-    }
+    );
   };
 
   const updateQuestion = (index: number, field: string, value: any) => {
