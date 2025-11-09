@@ -72,6 +72,13 @@ jobs:
       - name: Build frontend
         run: npm run build
 
+      - name: Start frontend server
+        run: |
+          npm start &
+          echo $! > frontend.pid
+          # Wait for frontend to be ready
+          timeout 60 bash -c 'until curl -f http://localhost:3000; do sleep 2; done'
+
       - name: Run E2E tests
         run: npm run test:e2e
 
@@ -119,6 +126,9 @@ jobs:
       - name: Cleanup
         if: always()
         run: |
+          if [ -f frontend.pid ]; then
+            kill $(cat frontend.pid) || true
+          fi
           if [ -f backend/backend.pid ]; then
             kill $(cat backend/backend.pid) || true
           fi
