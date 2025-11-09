@@ -450,10 +450,9 @@ function DashboardContent() {
           isOpen={isShareModalOpen}
           onClose={() => setIsShareModalOpen(false)}
           data={{
-            title: 'Invita amigos al Ensayo PAES',
-            message: `¡Únete al Ensayo PAES en Vivo! 📝\n\n${nextSession.name} - ${nextSession.level}\n\nPractica en tiempo real y compite con otros estudiantes.`,
+            title: '',
+            message: `Ensayo PAES ${nextSession.level}\n${new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })} • ${new Date(nextSession.scheduledStartTime).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}\n\nVamos juntos 📝`,
             url: typeof window !== 'undefined' ? `${window.location.origin}/live-practice` : '/live-practice',
-            hashtags: ['PAESChile', 'Ensayo', 'Matemáticas'],
             sessionName: nextSession.name,
             sessionLevel: nextSession.level,
             sessionDate: new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', {
@@ -467,7 +466,7 @@ function DashboardContent() {
             }),
             registeredCount: nextSession.registeredUsers?.length || 0
           }}
-          platforms={['whatsapp', 'twitter', 'facebook', 'copy']}
+          platforms={['whatsapp', 'copy']}
         />
       )}
 
