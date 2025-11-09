@@ -14,7 +14,6 @@ import { api } from "@/lib/api-client";
 import { isAuthenticated } from "@/lib/auth";
 import { MathText } from "@/components/MathDisplay";
 import { OnboardingModal } from "@/components/OnboardingModal";
-import { PreferenceSettings } from "@/components/PreferenceSettings";
 
 function DashboardContent() {
   const { user, setUser, isAdmin } = useAuth();
@@ -24,7 +23,6 @@ function DashboardContent() {
   const [nextSession, setNextSession] = useState<LiveSession | null>(null);
   const [recentAttempts, setRecentAttempts] = useState<QuestionAttempt[]>([]);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [showPreferenceSettings, setShowPreferenceSettings] = useState(false);
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -180,15 +178,6 @@ function DashboardContent() {
         />
       )}
 
-      {/* Preference Settings Modal */}
-      {showPreferenceSettings && user && (
-        <PreferenceSettings
-          user={user}
-          onUpdate={setUser}
-          onClose={() => setShowPreferenceSettings(false)}
-        />
-      )}
-
       {/* Navbar with variableBlur material */}
       <nav className="sticky top-0 z-30 h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] saturate-[1.2]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 h-full flex justify-between items-center">
@@ -212,41 +201,6 @@ function DashboardContent() {
       </nav>
 
       <main className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-12">
-        {/* Personalized Welcome Message */}
-        {user?.preferredSubject && user.hasCompletedOnboarding && (
-          <div className="mb-8 bg-gradient-to-r from-[#0A84FF]/10 to-[#5E5CE6]/10 dark:from-[#0A84FF]/20 dark:to-[#5E5CE6]/20 rounded-2xl p-6 border border-[#0A84FF]/20">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">
-                  {user.preferredSubject === 'M1' ? '📐' : user.preferredSubject === 'M2' ? '🎓' : '🚀'}
-                </span>
-                <div>
-                  <Heading level={4} size="xs" className="mb-1">
-                    {user.preferredSubject === 'M1'
-                      ? '¡Sigue practicando M1!'
-                      : user.preferredSubject === 'M2'
-                      ? '¡Sigue practicando M2!'
-                      : '¡Sigue practicando M1 y M2!'}
-                  </Heading>
-                  <Text size="sm" variant="secondary">
-                    {user.preferredSubject === 'both'
-                      ? 'Continúa tu preparación completa para ambas competencias'
-                      : `Tu enfoque está en ${user.preferredSubject}. ¡Mantén el ritmo!`}
-                  </Text>
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowPreferenceSettings(true)}
-                className="flex-shrink-0"
-              >
-                ⚙️ Cambiar
-              </Button>
-            </div>
-          </div>
-        )}
-
         {/* Streak Section */}
         <div className="mb-8">
           <Streak initialStreak={user ? {
@@ -262,16 +216,7 @@ function DashboardContent() {
           <Card hover className="p-6">
             <div className="space-y-6">
               {/* M1 Section */}
-              <div className={`text-center relative ${
-                user?.preferredSubject === 'M1' || user?.preferredSubject === 'both'
-                  ? 'p-4 rounded-xl bg-[#0A84FF]/5 dark:bg-[#0A84FF]/10 border-2 border-[#0A84FF]/30'
-                  : ''
-              }`}>
-                {(user?.preferredSubject === 'M1' || user?.preferredSubject === 'both') && (
-                  <div className="absolute top-2 right-2">
-                    <Badge variant="info" size="sm">⭐ Recomendado</Badge>
-                  </div>
-                )}
+              <div className="text-center">
                 <div className="text-3xl mb-3">📐</div>
                 <Heading level={3} size="xs" className="mb-2">
                   Competencia Matemática M1
@@ -287,16 +232,7 @@ function DashboardContent() {
               </div>
 
               {/* M2 Section */}
-              <div className={`text-center relative ${
-                user?.preferredSubject === 'M2' || user?.preferredSubject === 'both'
-                  ? 'p-4 rounded-xl bg-[#0A84FF]/5 dark:bg-[#0A84FF]/10 border-2 border-[#0A84FF]/30'
-                  : ''
-              }`}>
-                {(user?.preferredSubject === 'M2' || user?.preferredSubject === 'both') && (
-                  <div className="absolute top-2 right-2">
-                    <Badge variant="info" size="sm">⭐ Recomendado</Badge>
-                  </div>
-                )}
+              <div className="text-center">
                 <div className="text-3xl mb-3">🎓</div>
                 <Heading level={3} size="xs" className="mb-2">
                   Competencia Matemática M2
