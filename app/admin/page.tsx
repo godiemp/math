@@ -389,6 +389,9 @@ function AdminBackofficeContent() {
               <Button variant="secondary" onClick={() => router.push('/admin/analytics')}>
                 📊 Analytics
               </Button>
+              <Button variant="secondary" onClick={() => router.push('/admin/ai-analytics')}>
+                🤖 AI Analytics
+              </Button>
               <Button variant="secondary" onClick={() => router.push('/admin/problems')}>
                 Explorar Problemas
               </Button>
