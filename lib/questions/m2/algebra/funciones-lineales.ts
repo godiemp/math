@@ -45,5 +45,35 @@ export const m2AlgebraFuncionesLinealesQuestions: Question[] = [
     explanationLatex: '\\text{Si } m_1 \\cdot m_2 = -1 \\text{, las rectas son perpendiculares}',
     difficulty: 'medium',
     skills: ['algebra-funciones-lineales', 'geometria-rectas-perpendiculares', 'algebra-pendiente', 'geometria-plano-cartesiano']
+  },
+  {
+    id: 'm2-alg-func-4',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'La ecuación $3x - 4y = 12$ en forma pendiente-intersección es:',
+    questionLatex: '\\text{La ecuación } 3x - 4y = 12 \\text{ en forma pendiente-intersección es:}',
+    options: ['$y = \\frac{3}{4}x - 3$', '$y = -\\frac{3}{4}x + 3$', '$y = \\frac{4}{3}x - 4$', '$y = 3x - 12$'],
+    optionsLatex: ['y = \\frac{3}{4}x - 3', 'y = -\\frac{3}{4}x + 3', 'y = \\frac{4}{3}x - 4', 'y = 3x - 12'],
+    correctAnswer: 0,
+    explanation: 'Despejamos y de la ecuación:',
+    explanationLatex: '-4y = -3x + 12 \\rightarrow y = \\frac{3}{4}x - 3',
+    difficulty: 'medium',
+    skills: ['algebra-funciones-lineales', 'algebra-forma-pendiente-interseccion', 'algebra-despeje', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-alg-func-5',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Una recta paralela a $y = 2x + 5$ que pasa por el origen tiene ecuación:',
+    questionLatex: '\\text{Una recta paralela a } y = 2x + 5 \\text{ que pasa por el origen tiene ecuación:}',
+    options: ['$y = 2x$', '$y = -\\frac{1}{2}x$', '$y = 2x + 5$', '$y = 5x$'],
+    optionsLatex: ['y = 2x', 'y = -\\frac{1}{2}x', 'y = 2x + 5', 'y = 5x'],
+    correctAnswer: 0,
+    explanation: 'Rectas paralelas tienen la misma pendiente. La que pasa por el origen tiene b = 0',
+    explanationLatex: '\\text{Misma pendiente } m = 2, \\text{ intersección } b = 0 \\rightarrow y = 2x',
+    difficulty: 'medium',
+    skills: ['algebra-funciones-lineales', 'geometria-rectas-paralelas', 'algebra-pendiente', 'algebra-ecuacion-recta']
   }
 ];

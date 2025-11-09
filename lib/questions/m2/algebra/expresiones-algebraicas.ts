@@ -60,5 +60,50 @@ export const m2AlgebraExpresionesAlgebraicasQuestions: Question[] = [
     explanationLatex: '\\frac{x+1}{x^2-1} - \\frac{2}{x^2-1} + \\frac{x-1}{x^2-1} = \\frac{x+1-2+x-1}{x^2-1} = \\frac{2x}{x^2-1}',
     difficulty: 'extreme',
     skills: ['algebra-fracciones-algebraicas', 'algebra-factorizacion', 'algebra-simplificacion', 'algebra-comun-denominador', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-alg-expr-5',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Expande y simplifica: $(2x + 3)^2 - (x - 1)^2$',
+    questionLatex: '\\text{Expande y simplifica: } (2x + 3)^2 - (x - 1)^2',
+    options: ['$3x^2 + 14x + 8$', '$3x^2 + 10x + 10$', '$4x^2 + 14x + 8$', '$3x^2 + 8x + 10$'],
+    optionsLatex: ['3x^2 + 14x + 8', '3x^2 + 10x + 10', '4x^2 + 14x + 8', '3x^2 + 8x + 10'],
+    correctAnswer: 0,
+    explanation: 'Expandimos ambos cuadrados:',
+    explanationLatex: '(4x^2 + 12x + 9) - (x^2 - 2x + 1) = 4x^2 + 12x + 9 - x^2 + 2x - 1 = 3x^2 + 14x + 8',
+    difficulty: 'hard',
+    skills: ['algebra-productos-notables', 'algebra-cuadrado-binomio', 'algebra-terminos-semejantes', 'algebra-expresiones-algebraicas', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-alg-expr-6',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Factoriza: $x^3 - 8$',
+    questionLatex: '\\text{Factoriza: } x^3 - 8',
+    options: ['$(x - 2)(x^2 + 2x + 4)$', '$(x - 2)(x^2 - 2x + 4)$', '$(x + 2)(x^2 - 2x + 4)$', '$(x - 2)^3$'],
+    optionsLatex: ['(x - 2)(x^2 + 2x + 4)', '(x - 2)(x^2 - 2x + 4)', '(x + 2)(x^2 - 2x + 4)', '(x - 2)^3'],
+    correctAnswer: 0,
+    explanation: 'Es una diferencia de cubos: a³ - b³ = (a - b)(a² + ab + b²)',
+    explanationLatex: 'x^3 - 8 = x^3 - 2^3 = (x - 2)(x^2 + 2x + 4)',
+    difficulty: 'hard',
+    skills: ['algebra-factorizacion', 'algebra-diferencia-cubos', 'algebra-productos-notables', 'algebra-expresiones-algebraicas']
+  },
+  {
+    id: 'm2-alg-expr-7',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'Simplifica: $\\frac{x^3 - x}{x^2 + 2x + 1}$',
+    questionLatex: '\\text{Simplifica: } \\frac{x^3 - x}{x^2 + 2x + 1}',
+    options: ['$\\frac{x(x-1)}{x+1}$', '$\\frac{x(x+1)}{x-1}$', '$\\frac{x^2-1}{x+1}$', '$\\frac{x(x-1)(x+1)}{(x+1)^2}$'],
+    optionsLatex: ['\\frac{x(x-1)}{x+1}', '\\frac{x(x+1)}{x-1}', '\\frac{x^2-1}{x+1}', '\\frac{x(x-1)(x+1)}{(x+1)^2}'],
+    correctAnswer: 3,
+    explanation: 'Factorizamos numerador y denominador:',
+    explanationLatex: '\\frac{x(x^2-1)}{(x+1)^2} = \\frac{x(x-1)(x+1)}{(x+1)^2}',
+    difficulty: 'extreme',
+    skills: ['algebra-fracciones-algebraicas', 'algebra-factorizacion', 'algebra-simplificacion', 'algebra-productos-notables']
   }
 ];
