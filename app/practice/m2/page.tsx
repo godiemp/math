@@ -124,34 +124,42 @@ function M2PracticeContent() {
     }
   ];
 
-  const difficulties: { value: Difficulty; label: string; emoji: string; time: number; description: string }[] = [
+  const difficulties: { value: Difficulty; label: string; emoji: string; time: number; description: string; details: string; features: string[] }[] = [
     {
       value: 'easy',
       label: 'Fácil',
       emoji: '🟢',
       time: 25,
-      description: '25 minutos - 2:30 por pregunta'
+      description: '10 preguntas - 2:30 por pregunta',
+      details: 'Modo de práctica con retroalimentación inmediata',
+      features: ['✓ Ves si acertaste inmediatamente', '💡 Pistas disponibles (-10% puntos)', '⏸️ Puedes pausar 1 vez (30s)', '🎯 60% para aprobar']
     },
     {
       value: 'medium',
       label: 'Normal',
       emoji: '🟡',
-      time: 20,
-      description: '20 minutos - 2:00 por pregunta'
+      time: 18,
+      description: '10 preguntas - 1:48 por pregunta',
+      details: 'Responde todas y luego ve los resultados',
+      features: ['⚡ Sin retroalimentación inmediata', '🔥 Bonus por rachas (3+)', '📊 Solo ves resultados al final', '🎯 70% para aprobar']
     },
     {
       value: 'hard',
       label: 'Difícil',
-      emoji: '🔴',
-      time: 15,
-      description: '15 minutos - 1:30 por pregunta'
+      emoji: '🟠',
+      time: 12,
+      description: '12 preguntas - 1:12 por pregunta',
+      details: 'Sistema de vidas: 2 errores permitidos',
+      features: ['💀 2 vidas (3er error = Game Over)', '✓ Retroalimentación inmediata', '🔥 Bonus por rachas (5+)', '🎯 75% para aprobar']
     },
     {
       value: 'extreme',
       label: 'Extremo',
-      emoji: '🟣',
+      emoji: '🔴',
       time: 10,
-      description: '10 minutos - 1:00 por pregunta'
+      description: '15 preguntas - 40s por pregunta',
+      details: 'Máximo desafío: 1 vida + tiempo extra por acierto',
+      features: ['💀 1 vida (2do error = Game Over)', '⏱️ +5s por respuesta correcta', '✓ Retroalimentación inmediata', '🎯 80% para aprobar']
     }
   ];
 
@@ -353,31 +361,49 @@ function M2PracticeContent() {
           Paso 3: Selecciona la dificultad
         </Heading>
         <Text variant="secondary" className="mb-6">
-          ¿Cuánto tiempo necesitas para completar 10 preguntas?
+          Cada dificultad tiene mecánicas únicas
         </Text>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           {difficulties.map((diff) => (
             <button
               key={diff.value}
               onClick={() => setDifficulty(diff.value)}
-              className={`p-4 rounded-xl border transition-all duration-[180ms] text-center ${
+              className={`p-5 rounded-xl border transition-all duration-[180ms] text-left ${
                 difficulty === diff.value
-                  ? 'border-[#0A84FF] bg-[#0A84FF]/[0.06] dark:bg-[#0A84FF]/[0.12] shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)] transform scale-105'
-                  : 'border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50 dark:hover:border-[#0A84FF] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:scale-[1.02]'
+                  ? 'border-[#0A84FF] bg-[#0A84FF]/[0.06] dark:bg-[#0A84FF]/[0.12] shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)] transform scale-[1.02]'
+                  : 'border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50 dark:hover:border-[#0A84FF] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:scale-[1.01]'
               }`}
             >
-              <div className="text-5xl mb-3">{diff.emoji}</div>
-              <Text size="lg" className="font-semibold mb-2">
-                {diff.label}
-              </Text>
-              <Text size="md" className="font-medium mb-1">
-                {diff.time} minutos
-              </Text>
-              <Text size="xs" variant="secondary">
-                {diff.description}
-              </Text>
+              <div className="flex items-start gap-3 mb-3">
+                <div className="text-4xl">{diff.emoji}</div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Text size="lg" className="font-bold">
+                      {diff.label}
+                    </Text>
+                    <Text size="sm" className="font-semibold text-[#0A84FF] dark:text-[#66B2FF]">
+                      {diff.time} min
+                    </Text>
+                  </div>
+                  <Text size="xs" variant="secondary" className="mb-1">
+                    {diff.description}
+                  </Text>
+                  <Text size="xs" className="font-medium mb-2">
+                    {diff.details}
+                  </Text>
+                </div>
+              </div>
+
+              <div className="space-y-1 pl-1">
+                {diff.features.map((feature, idx) => (
+                  <Text key={idx} size="xs" variant="secondary" className="leading-relaxed">
+                    {feature}
+                  </Text>
+                ))}
+              </div>
+
               {difficulty === diff.value && (
-                <div className="text-[#0A84FF] text-2xl mt-2">✓</div>
+                <div className="text-[#0A84FF] text-2xl mt-3 text-center">✓ Seleccionado</div>
               )}
             </button>
           ))}

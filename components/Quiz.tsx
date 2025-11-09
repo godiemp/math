@@ -270,18 +270,24 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
                                  rapidFireState.wrongAnswerCount + 1 >= config.maxWrongAnswers;
 
           if (!willBeGameOver) {
-            // Safe to auto-advance
+            // Safe to auto-advance or auto-submit if last question
             setTimeout(() => {
               if (currentQuestionIndex < quizQuestions.length - 1) {
                 handleNext();
+              } else {
+                // Last question, auto-submit
+                handleSubmitQuiz();
               }
             }, 1500);
           }
         } else if (config.immediateFeedback && isCorrect) {
-          // Correct answer, auto-advance
+          // Correct answer, auto-advance or auto-submit if last question
           setTimeout(() => {
             if (currentQuestionIndex < quizQuestions.length - 1) {
               handleNext();
+            } else {
+              // Last question, auto-submit
+              handleSubmitQuiz();
             }
           }, 1500);
         }
@@ -1280,14 +1286,19 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
           </div>
         )}
 
-        {/* In rapid fire mode before submission, show message about quick nav */}
+        {/* In rapid fire mode before submission, show appropriate message */}
         {quizMode === 'rapidfire' && !quizSubmitted && (
           <div className="text-center text-sm text-purple-200 dark:text-purple-300 bg-purple-900/30 rounded-lg p-3">
-            💡 Usa la navegación rápida arriba para saltar entre preguntas
+            {config?.immediateFeedback ? (
+              <>💡 Usa la navegación rápida arriba para saltar entre preguntas. El quiz se enviará automáticamente al terminar.</>
+            ) : (
+              <>💡 Usa la navegación rápida arriba para saltar entre preguntas. Presiona "Enviar Quiz" cuando termines.</>
+            )}
           </div>
         )}
 
-        {!quizSubmitted && (
+        {/* Only show submit button if NOT rapid fire with immediate feedback */}
+        {!quizSubmitted && !(quizMode === 'rapidfire' && config?.immediateFeedback) && (
           <button
             onClick={handleSubmitQuiz}
             disabled={userAnswers.filter(a => a !== null).length === 0}
