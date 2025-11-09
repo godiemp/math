@@ -142,6 +142,7 @@ export const STORAGE_KEYS = {
   // Progress tracking
   progressPrefix: 'paes-progress-',      // Suffix: M1 or M2
   historyPrefix: 'paes-history-',        // Suffix: M1 or M2
+  lastConfigPrefix: 'paes-last-config-', // Suffix: M1 or M2
 
   // Quiz preferences
   showTimer: 'quiz-show-timer',
@@ -160,6 +161,7 @@ export const STORAGE_KEYS = {
  */
 export const getProgressKey = (level: 'M1' | 'M2') => `${STORAGE_KEYS.progressPrefix}${level}`;
 export const getHistoryKey = (level: 'M1' | 'M2') => `${STORAGE_KEYS.historyPrefix}${level}`;
+export const getLastConfigKey = (level: 'M1' | 'M2') => `${STORAGE_KEYS.lastConfigPrefix}${level}`;
 
 // ============================================================================
 // API ENDPOINTS
