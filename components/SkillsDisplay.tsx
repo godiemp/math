@@ -11,7 +11,7 @@ import {
 import { Card, Badge, Heading, Text } from '@/components/ui';
 
 export function SkillsDisplay({ attempts, level, showRecommendations = true }: SkillsDisplayProps) {
-  const [viewMode, setViewMode] = useState<'status' | 'topic'>('status');
+  const [viewMode, setViewMode] = useState<'status' | 'topic' | 'category'>('status');
   const [expandedCategory, setExpandedCategory] = useState<'mastered' | 'learning' | 'notStarted' | null>('learning');
 
   const summary = useMemo(() => {
@@ -55,6 +55,64 @@ export function SkillsDisplay({ attempts, level, showRecommendations = true }: S
       default: return '📚';
     }
   };
+
+  const getCategoryLabel = (category: string): string => {
+    switch (category) {
+      case 'comprension-conceptual': return 'A. Comprensión conceptual';
+      case 'operaciones-basicas': return 'B. Operaciones básicas';
+      case 'comparacion-orden': return 'C. Comparación y orden';
+      case 'propiedades-relaciones': return 'D. Propiedades y relaciones';
+      case 'problemas-modelamiento': return 'E. Problemas y modelamiento contextual';
+      case 'razonamiento-metacognicion': return 'F. Razonamiento y metacognición';
+      default: return 'Sin categoría';
+    }
+  };
+
+  const getCategoryEmoji = (category: string): string => {
+    switch (category) {
+      case 'comprension-conceptual': return '💡';
+      case 'operaciones-basicas': return '🔢';
+      case 'comparacion-orden': return '⚖️';
+      case 'propiedades-relaciones': return '🔗';
+      case 'problemas-modelamiento': return '🌍';
+      case 'razonamiento-metacognicion': return '🧠';
+      default: return '📚';
+    }
+  };
+
+  const byCategory = useMemo(() => {
+    const allSkills = [...summary.mastered, ...summary.learning, ...summary.notStarted];
+    const categoryMap = new Map<string, SkillProgress[]>();
+
+    // Group skills by category
+    allSkills.forEach(skillProgress => {
+      const category = skillProgress.skill.category || 'sin-categoria';
+      if (!categoryMap.has(category)) {
+        categoryMap.set(category, []);
+      }
+      categoryMap.get(category)!.push(skillProgress);
+    });
+
+    // Sort categories in A-F order
+    const orderedCategories = [
+      'comprension-conceptual',
+      'operaciones-basicas',
+      'comparacion-orden',
+      'propiedades-relaciones',
+      'problemas-modelamiento',
+      'razonamiento-metacognicion',
+      'sin-categoria'
+    ];
+
+    const sortedMap = new Map<string, SkillProgress[]>();
+    orderedCategories.forEach(cat => {
+      if (categoryMap.has(cat)) {
+        sortedMap.set(cat, categoryMap.get(cat)!);
+      }
+    });
+
+    return sortedMap;
+  }, [summary.mastered, summary.learning, summary.notStarted]);
 
   const renderSkillCard = (skillProgress: SkillProgress) => {
     const { skill, accuracy, attemptsCount, correctCount, incorrectCount, masteryLevel } = skillProgress;
@@ -293,7 +351,7 @@ export function SkillsDisplay({ attempts, level, showRecommendations = true }: S
       )}
 
       {/* View Mode Toggle */}
-      <div className="flex justify-center gap-2">
+      <div className="flex justify-center gap-2 flex-wrap">
         <button
           onClick={() => setViewMode('status')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-[180ms] ${
@@ -303,6 +361,16 @@ export function SkillsDisplay({ attempts, level, showRecommendations = true }: S
           }`}
         >
           Por Estado
+        </button>
+        <button
+          onClick={() => setViewMode('category')}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-[180ms] ${
+            viewMode === 'category'
+              ? 'bg-[#0A84FF] text-white'
+              : 'bg-white dark:bg-[#1C1C1E] text-black/60 dark:text-white/70 border border-black/[0.12] dark:border-white/[0.16]'
+          }`}
+        >
+          Por Categoría
         </button>
         <button
           onClick={() => setViewMode('topic')}
@@ -343,6 +411,48 @@ export function SkillsDisplay({ attempts, level, showRecommendations = true }: S
             '◯',
             'bg-black/[0.04] dark:bg-white/[0.06] text-black/60 dark:text-white/70'
           )}
+        </div>
+      )}
+
+      {/* Skills by Category */}
+      {viewMode === 'category' && (
+        <div className="space-y-4">
+          {Array.from(byCategory.entries()).map(([category, skills]) => {
+            const masteredCount = skills.filter(s => s.masteryLevel === 'mastered').length;
+            const learningCount = skills.filter(s => s.masteryLevel === 'learning').length;
+            const notStartedCount = skills.filter(s => s.masteryLevel === 'not-started').length;
+
+            return (
+              <Card key={category} className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">{getCategoryEmoji(category)}</span>
+                    <Heading level={3} size="sm">
+                      {getCategoryLabel(category)}
+                    </Heading>
+                  </div>
+                  <div className="flex gap-2 flex-wrap justify-end">
+                    <Badge size="sm" variant="neutral">
+                      {skills.length} habilidades
+                    </Badge>
+                    {masteredCount > 0 && (
+                      <Badge size="sm" variant="success">
+                        {masteredCount} dominadas
+                      </Badge>
+                    )}
+                    {learningCount > 0 && (
+                      <Badge size="sm" variant="warning">
+                        {learningCount} aprendiendo
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+                <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                  {skills.map(renderSkillCard)}
+                </div>
+              </Card>
+            );
+          })}
         </div>
       )}
 

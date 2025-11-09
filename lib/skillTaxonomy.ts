@@ -10,7 +10,462 @@ export type { Skill };
 
 export const SKILLS: Record<string, Skill> = {
   // ============================================================================
-  // NÚMEROS Y OPERACIONES
+  // NÚMEROS Y OPERACIONES - ENTEROS Y RACIONALES (ATOMIC SKILLS)
+  // ============================================================================
+
+  // ============================================================================
+  // A. COMPRENSIÓN CONCEPTUAL
+  // ============================================================================
+  'numeros-enteros-comprender-significado': {
+    id: 'numeros-enteros-comprender-significado',
+    name: 'Comprender el significado de número entero',
+    description: 'Entender qué es un número entero y su representación',
+    topic: 'números',
+    category: 'comprension-conceptual'
+  },
+  'numeros-racionales-comprender-significado': {
+    id: 'numeros-racionales-comprender-significado',
+    name: 'Comprender el significado de número racional',
+    description: 'Entender qué es un número racional y sus formas de representación',
+    topic: 'números',
+    category: 'comprension-conceptual'
+  },
+  'numeros-identificar-contextos': {
+    id: 'numeros-identificar-contextos',
+    name: 'Identificar números enteros y racionales en contextos',
+    description: 'Reconocer números enteros y racionales en situaciones reales',
+    topic: 'números',
+    category: 'comprension-conceptual'
+  },
+  'numeros-representar-recta-numerica': {
+    id: 'numeros-representar-recta-numerica',
+    name: 'Representar enteros y fracciones en la recta numérica',
+    description: 'Ubicar números enteros y fracciones en la recta numérica',
+    topic: 'números',
+    category: 'comprension-conceptual'
+  },
+  'numeros-valor-absoluto': {
+    id: 'numeros-valor-absoluto',
+    name: 'Comprender valor absoluto y distancia al cero',
+    description: 'Entender el concepto de valor absoluto como distancia al origen',
+    topic: 'números',
+    category: 'comprension-conceptual'
+  },
+  'numeros-equivalencia-fracciones': {
+    id: 'numeros-equivalencia-fracciones',
+    name: 'Reconocer equivalencia de fracciones',
+    description: 'Identificar fracciones equivalentes (simplificar o ampliar)',
+    topic: 'números',
+    category: 'comprension-conceptual'
+  },
+  'numeros-relacionar-fraccion-decimal-porcentaje': {
+    id: 'numeros-relacionar-fraccion-decimal-porcentaje',
+    name: 'Relacionar fracción, decimal y porcentaje',
+    description: 'Convertir y relacionar fracciones, decimales y porcentajes',
+    topic: 'números',
+    category: 'comprension-conceptual'
+  },
+  'numeros-signo-direccion': {
+    id: 'numeros-signo-direccion',
+    name: 'Reconocer el signo como dirección o sentido',
+    description: 'Interpretar el signo como ganancia/pérdida, arriba/abajo',
+    topic: 'números',
+    category: 'comprension-conceptual'
+  },
+  'numeros-diferenciar-magnitudes': {
+    id: 'numeros-diferenciar-magnitudes',
+    name: 'Diferenciar magnitudes negativas y positivas',
+    description: 'Distinguir entre magnitudes positivas y negativas en contexto',
+    topic: 'números',
+    category: 'comprension-conceptual'
+  },
+  'numeros-densidad-racionales': {
+    id: 'numeros-densidad-racionales',
+    name: 'Comprender la densidad de los racionales',
+    description: 'Entender que entre dos números racionales siempre hay otro',
+    topic: 'números',
+    category: 'comprension-conceptual'
+  },
+  'numeros-fracciones-periodicas': {
+    id: 'numeros-fracciones-periodicas',
+    name: 'Reconocer fracciones periódicas',
+    description: 'Identificar fracciones periódicas y su patrón repetitivo',
+    topic: 'números',
+    category: 'comprension-conceptual'
+  },
+  'numeros-convertir-decimal-periodico': {
+    id: 'numeros-convertir-decimal-periodico',
+    name: 'Convertir de decimal periódico a fracción',
+    description: 'Convertir decimales periódicos a fracción y viceversa',
+    topic: 'números',
+    category: 'comprension-conceptual'
+  },
+  'numeros-fracciones-impropias-mixtos': {
+    id: 'numeros-fracciones-impropias-mixtos',
+    name: 'Reconocer fracciones impropias y números mixtos',
+    description: 'Identificar y convertir entre fracciones impropias y números mixtos',
+    topic: 'números',
+    category: 'comprension-conceptual'
+  },
+
+  // ============================================================================
+  // B. OPERACIONES BÁSICAS
+  // ============================================================================
+  'numeros-enteros-sumar-restar': {
+    id: 'numeros-enteros-sumar-restar',
+    name: 'Sumar y restar enteros con signo',
+    description: 'Realizar sumas y restas con números enteros positivos y negativos',
+    topic: 'números',
+    category: 'operaciones-basicas'
+  },
+  'numeros-enteros-multiplicar-dividir': {
+    id: 'numeros-enteros-multiplicar-dividir',
+    name: 'Multiplicar y dividir enteros con signo',
+    description: 'Realizar multiplicaciones y divisiones con números enteros',
+    topic: 'números',
+    category: 'operaciones-basicas'
+  },
+  'numeros-fracciones-sumar-restar-mismo-denominador': {
+    id: 'numeros-fracciones-sumar-restar-mismo-denominador',
+    name: 'Sumar y restar fracciones con igual denominador',
+    description: 'Operar fracciones que tienen el mismo denominador',
+    topic: 'números',
+    category: 'operaciones-basicas'
+  },
+  'numeros-fracciones-sumar-restar-distinto-denominador': {
+    id: 'numeros-fracciones-sumar-restar-distinto-denominador',
+    name: 'Sumar y restar fracciones con distinto denominador',
+    description: 'Operar fracciones con diferentes denominadores',
+    topic: 'números',
+    category: 'operaciones-basicas'
+  },
+  'numeros-fracciones-multiplicar-dividir': {
+    id: 'numeros-fracciones-multiplicar-dividir',
+    name: 'Multiplicar y dividir fracciones',
+    description: 'Realizar multiplicaciones y divisiones de fracciones',
+    topic: 'números',
+    category: 'operaciones-basicas'
+  },
+  'numeros-decimales-sumar-restar': {
+    id: 'numeros-decimales-sumar-restar',
+    name: 'Sumar y restar decimales',
+    description: 'Realizar sumas y restas con números decimales',
+    topic: 'números',
+    category: 'operaciones-basicas'
+  },
+  'numeros-decimales-multiplicar-dividir': {
+    id: 'numeros-decimales-multiplicar-dividir',
+    name: 'Multiplicar y dividir decimales',
+    description: 'Realizar multiplicaciones y divisiones con decimales',
+    topic: 'números',
+    category: 'operaciones-basicas'
+  },
+  'numeros-jerarquia-operaciones': {
+    id: 'numeros-jerarquia-operaciones',
+    name: 'Aplicar la jerarquía de operaciones con paréntesis',
+    description: 'Resolver operaciones respetando la precedencia y paréntesis',
+    topic: 'números',
+    category: 'operaciones-basicas'
+  },
+  'numeros-inverso-aditivo-multiplicativo': {
+    id: 'numeros-inverso-aditivo-multiplicativo',
+    name: 'Identificar y usar inverso aditivo y multiplicativo',
+    description: 'Trabajar con inversos aditivos (opuesto) y multiplicativos (recíproco)',
+    topic: 'números',
+    category: 'operaciones-basicas'
+  },
+  'numeros-simplificar-fracciones': {
+    id: 'numeros-simplificar-fracciones',
+    name: 'Simplificar fracciones y resultados',
+    description: 'Reducir fracciones a su forma más simple',
+    topic: 'números',
+    category: 'operaciones-basicas'
+  },
+  'numeros-potencias-raices-racionales': {
+    id: 'numeros-potencias-raices-racionales',
+    name: 'Calcular potencias y raíces con exponentes racionales',
+    description: 'Operar con potencias y raíces de exponentes racionales simples',
+    topic: 'números',
+    category: 'operaciones-basicas'
+  },
+  'numeros-decimales-orden-magnitud': {
+    id: 'numeros-decimales-orden-magnitud',
+    name: 'Controlar orden de magnitud con decimales',
+    description: 'Dividir o multiplicar por decimales controlando la magnitud',
+    topic: 'números',
+    category: 'operaciones-basicas'
+  },
+  'numeros-estimar-resultados': {
+    id: 'numeros-estimar-resultados',
+    name: 'Estimar resultados antes del cálculo',
+    description: 'Hacer estimaciones para controlar errores de cálculo',
+    topic: 'números',
+    category: 'operaciones-basicas'
+  },
+
+  // ============================================================================
+  // C. COMPARACIÓN Y ORDEN
+  // ============================================================================
+  'numeros-enteros-ordenar-recta': {
+    id: 'numeros-enteros-ordenar-recta',
+    name: 'Ordenar números enteros en la recta numérica',
+    description: 'Ubicar y ordenar enteros en la recta numérica',
+    topic: 'números',
+    category: 'comparacion-orden'
+  },
+  'numeros-fracciones-comparar-mismo-denominador': {
+    id: 'numeros-fracciones-comparar-mismo-denominador',
+    name: 'Comparar fracciones con igual denominador',
+    description: 'Determinar cuál fracción es mayor cuando tienen igual denominador',
+    topic: 'números',
+    category: 'comparacion-orden'
+  },
+  'numeros-fracciones-comparar-distinto-denominador': {
+    id: 'numeros-fracciones-comparar-distinto-denominador',
+    name: 'Comparar fracciones con distinto denominador',
+    description: 'Comparar fracciones con diferentes denominadores',
+    topic: 'números',
+    category: 'comparacion-orden'
+  },
+  'numeros-decimales-comparar': {
+    id: 'numeros-decimales-comparar',
+    name: 'Comparar decimales con distinto número de cifras',
+    description: 'Comparar números decimales con diferente cantidad de decimales',
+    topic: 'números',
+    category: 'comparacion-orden'
+  },
+  'numeros-convertir-para-comparar': {
+    id: 'numeros-convertir-para-comparar',
+    name: 'Convertir entre fracciones y decimales para comparar',
+    description: 'Cambiar representación para facilitar comparaciones',
+    topic: 'números',
+    category: 'comparacion-orden'
+  },
+  'numeros-identificar-mayor-menor-mixtos': {
+    id: 'numeros-identificar-mayor-menor-mixtos',
+    name: 'Identificar el número mayor o menor en conjuntos mixtos',
+    description: 'Comparar números en diferentes representaciones',
+    topic: 'números',
+    category: 'comparacion-orden'
+  },
+  'numeros-estimar-magnitudes-comparar': {
+    id: 'numeros-estimar-magnitudes-comparar',
+    name: 'Estimar magnitudes antes de comparar',
+    description: 'Hacer estimaciones para facilitar comparaciones',
+    topic: 'números',
+    category: 'comparacion-orden'
+  },
+  'numeros-comparar-distancia-cero': {
+    id: 'numeros-comparar-distancia-cero',
+    name: 'Comparar por distancia al cero (magnitud absoluta)',
+    description: 'Comparar números usando su valor absoluto',
+    topic: 'números',
+    category: 'comparacion-orden'
+  },
+  'numeros-interpretar-mayor-negativos': {
+    id: 'numeros-interpretar-mayor-negativos',
+    name: 'Interpretar "mayor que" en contextos negativos',
+    description: 'Entender comparaciones con números negativos o pérdidas',
+    topic: 'números',
+    category: 'comparacion-orden'
+  },
+  'numeros-racionales-efecto-multiplicativo': {
+    id: 'numeros-racionales-efecto-multiplicativo',
+    name: 'Analizar efecto multiplicativo de racionales',
+    description: 'Determinar si un racional es mayor/menor que 1 y su efecto al multiplicar',
+    topic: 'números',
+    category: 'comparacion-orden'
+  },
+
+  // ============================================================================
+  // D. PROPIEDADES Y RELACIONES
+  // ============================================================================
+  'numeros-propiedades-conmutativa-asociativa-distributiva': {
+    id: 'numeros-propiedades-conmutativa-asociativa-distributiva',
+    name: 'Aplicar propiedades conmutativa, asociativa y distributiva',
+    description: 'Usar propiedades de las operaciones para simplificar cálculos',
+    topic: 'números',
+    category: 'propiedades-relaciones'
+  },
+  'numeros-equivalencias-fraccionales': {
+    id: 'numeros-equivalencias-fraccionales',
+    name: 'Usar equivalencias fraccionales para simplificar',
+    description: 'Aplicar fracciones equivalentes en expresiones',
+    topic: 'números',
+    category: 'propiedades-relaciones'
+  },
+  'numeros-patrones-signos': {
+    id: 'numeros-patrones-signos',
+    name: 'Detectar patrones de signos',
+    description: 'Reconocer patrones como −×−=+',
+    topic: 'números',
+    category: 'propiedades-relaciones'
+  },
+  'numeros-neutralidad-cero-uno': {
+    id: 'numeros-neutralidad-cero-uno',
+    name: 'Reconocer neutralidad de 0 y 1',
+    description: 'Entender el rol neutro del 0 en suma y del 1 en multiplicación',
+    topic: 'números',
+    category: 'propiedades-relaciones'
+  },
+  'numeros-efecto-multiplicar-dividir-fracciones': {
+    id: 'numeros-efecto-multiplicar-dividir-fracciones',
+    name: 'Evaluar efecto de multiplicar/dividir por fracciones',
+    description: 'Analizar el resultado al multiplicar/dividir por fracciones >1 o <1',
+    topic: 'números',
+    category: 'propiedades-relaciones'
+  },
+  'numeros-patrones-equivalencia-simbolica': {
+    id: 'numeros-patrones-equivalencia-simbolica',
+    name: 'Reconocer patrones de equivalencia simbólica',
+    description: 'Identificar equivalencias como 2x/4 = x/2',
+    topic: 'números',
+    category: 'propiedades-relaciones'
+  },
+  'numeros-justificar-con-propiedades': {
+    id: 'numeros-justificar-con-propiedades',
+    name: 'Justificar resultados usando propiedades',
+    description: 'Argumentar resultados con propiedades, no solo cálculo',
+    topic: 'números',
+    category: 'propiedades-relaciones'
+  },
+
+  // ============================================================================
+  // E. PROBLEMAS Y MODELAMIENTO CONTEXTUAL
+  // ============================================================================
+  'numeros-representar-ganancias-perdidas': {
+    id: 'numeros-representar-ganancias-perdidas',
+    name: 'Representar ganancias/pérdidas con signo',
+    description: 'Modelar temperaturas, desplazamientos, ganancias/pérdidas con números con signo',
+    topic: 'números',
+    category: 'problemas-modelamiento'
+  },
+  'numeros-modelar-proporciones-repartos': {
+    id: 'numeros-modelar-proporciones-repartos',
+    name: 'Modelar proporciones o repartos equitativos',
+    description: 'Usar fracciones para representar repartos y proporciones',
+    topic: 'números',
+    category: 'problemas-modelamiento'
+  },
+  'numeros-problemas-mezcla-concentracion': {
+    id: 'numeros-problemas-mezcla-concentracion',
+    name: 'Resolver problemas de mezcla o concentración',
+    description: 'Aplicar racionales en problemas de mezclas y concentraciones',
+    topic: 'números',
+    category: 'problemas-modelamiento'
+  },
+  'numeros-problemas-comparacion-relativa': {
+    id: 'numeros-problemas-comparacion-relativa',
+    name: 'Resolver problemas de comparación relativa',
+    description: 'Problemas de "más/menos que", diferencias relativas',
+    topic: 'números',
+    category: 'problemas-modelamiento'
+  },
+  'numeros-problemas-unidades-conversiones': {
+    id: 'numeros-problemas-unidades-conversiones',
+    name: 'Resolver problemas con unidades o conversiones',
+    description: 'Problemas con unidades y conversiones racionales',
+    topic: 'números',
+    category: 'problemas-modelamiento'
+  },
+  'numeros-problemas-crecimiento-reduccion': {
+    id: 'numeros-problemas-crecimiento-reduccion',
+    name: 'Plantear problemas de crecimiento o reducción iterada',
+    description: 'Modelar y resolver situaciones de crecimiento/reducción repetida',
+    topic: 'números',
+    category: 'problemas-modelamiento'
+  },
+  'numeros-interpretar-resultados-razonabilidad': {
+    id: 'numeros-interpretar-resultados-razonabilidad',
+    name: 'Interpretar resultados y justificar razonabilidad',
+    description: 'Verificar que los resultados tengan sentido en el contexto',
+    topic: 'números',
+    category: 'problemas-modelamiento'
+  },
+  'numeros-aplicar-restricciones': {
+    id: 'numeros-aplicar-restricciones',
+    name: 'Aplicar restricciones en problemas',
+    description: 'Trabajar con condiciones como "sin pasarse", "mínimo posible"',
+    topic: 'números',
+    category: 'problemas-modelamiento'
+  },
+  'numeros-analizar-magnitudes-relativas': {
+    id: 'numeros-analizar-magnitudes-relativas',
+    name: 'Analizar magnitudes relativas',
+    description: 'Interpretar "el doble", "la mitad", "dos tercios más que"',
+    topic: 'números',
+    category: 'problemas-modelamiento'
+  },
+  'numeros-calcular-promedios-racionales': {
+    id: 'numeros-calcular-promedios-racionales',
+    name: 'Calcular promedios racionales',
+    description: 'Calcular media de fracciones o decimales',
+    topic: 'números',
+    category: 'problemas-modelamiento'
+  },
+  'numeros-interpretar-razones-tasas': {
+    id: 'numeros-interpretar-razones-tasas',
+    name: 'Interpretar razones y tasas como cocientes',
+    description: 'Trabajar con velocidad, densidad, costo unitario como razones',
+    topic: 'números',
+    category: 'problemas-modelamiento'
+  },
+
+  // ============================================================================
+  // F. RAZONAMIENTO Y METACOGNICIÓN
+  // ============================================================================
+  'numeros-traducir-verbal-simbolico': {
+    id: 'numeros-traducir-verbal-simbolico',
+    name: 'Traducir entre lenguaje verbal y simbólico',
+    description: 'Convertir problemas verbales a expresiones matemáticas y viceversa',
+    topic: 'números',
+    category: 'razonamiento-metacognicion'
+  },
+  'numeros-argumentar-sentido-resultado': {
+    id: 'numeros-argumentar-sentido-resultado',
+    name: 'Argumentar por qué un resultado tiene sentido',
+    description: 'Justificar resultados por signo, magnitud, proporción',
+    topic: 'números',
+    category: 'razonamiento-metacognicion'
+  },
+  'numeros-detectar-corregir-errores': {
+    id: 'numeros-detectar-corregir-errores',
+    name: 'Detectar y corregir errores',
+    description: 'Identificar errores de cálculo o interpretación y corregirlos',
+    topic: 'números',
+    category: 'razonamiento-metacognicion'
+  },
+  'numeros-evaluar-coherencia-contexto': {
+    id: 'numeros-evaluar-coherencia-contexto',
+    name: 'Evaluar coherencia con el contexto',
+    description: 'Verificar si una respuesta es coherente con el problema planteado',
+    topic: 'números',
+    category: 'razonamiento-metacognicion'
+  },
+  'numeros-generalizar-patrones': {
+    id: 'numeros-generalizar-patrones',
+    name: 'Generalizar patrones de operaciones',
+    description: 'Identificar patrones generales en operaciones con enteros y racionales',
+    topic: 'números',
+    category: 'razonamiento-metacognicion'
+  },
+  'numeros-verificar-aproximaciones': {
+    id: 'numeros-verificar-aproximaciones',
+    name: 'Verificar coherencia entre aproximaciones y resultados',
+    description: 'Comprobar que aproximaciones y resultados exactos sean consistentes',
+    topic: 'números',
+    category: 'razonamiento-metacognicion'
+  },
+  'numeros-redondear-precision': {
+    id: 'numeros-redondear-precision',
+    name: 'Redondear racionales según precisión requerida',
+    description: 'Ajustar la precisión de números racionales según el contexto',
+    topic: 'números',
+    category: 'razonamiento-metacognicion'
+  },
+
+  // ============================================================================
+  // LEGACY SKILLS (keeping for backward compatibility with existing questions)
   // ============================================================================
   'numeros-operaciones-basicas': {
     id: 'numeros-operaciones-basicas',
