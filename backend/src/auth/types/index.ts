@@ -2,19 +2,8 @@
  * ============================================================================
  * AUTH MODULE TYPES
  * ============================================================================
- */
-
-/**
- * Import shared auth request types from frontend
- */
-export type {
-  RegisterRequest,
-  LoginRequest,
-  RefreshTokenRequest,
-} from '../../../../lib/types';
-
-/**
- * Backend-specific auth types
+ *
+ * Backend auth types - duplicated from frontend for Docker build isolation
  */
 
 /**
@@ -25,6 +14,25 @@ export interface TokenPayload {
   username: string;
   email: string;
   role: 'student' | 'admin';
+}
+
+/**
+ * Auth request types
+ */
+export interface RegisterRequest {
+  username: string;
+  email: string;
+  password: string;
+  displayName: string;
+}
+
+export interface LoginRequest {
+  usernameOrEmail: string;
+  password: string;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
 }
 
 /**
