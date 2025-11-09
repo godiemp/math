@@ -5,7 +5,7 @@ import {
   getCommonQuestions
 } from '../controllers/aiAnalyticsController';
 import { authenticate } from '../middleware/auth';
-import { authorize } from '../middleware/authorize';
+import { requireAdmin } from '../auth/middleware/authorize';
 
 const router = Router();
 
@@ -17,18 +17,18 @@ const router = Router();
  * GET /api/ai-analytics/dashboard
  * Get comprehensive AI analytics dashboard data
  */
-router.get('/dashboard', authenticate, authorize('admin'), getAIAnalyticsDashboard);
+router.get('/dashboard', authenticate, requireAdmin, getAIAnalyticsDashboard);
 
 /**
  * GET /api/ai-analytics/conversations/:sessionId
  * Get detailed conversation history for a specific quiz session
  */
-router.get('/conversations/:sessionId', authenticate, authorize('admin'), getConversationDetails);
+router.get('/conversations/:sessionId', authenticate, requireAdmin, getConversationDetails);
 
 /**
  * GET /api/ai-analytics/common-questions
  * Get most common student questions and patterns
  */
-router.get('/common-questions', authenticate, authorize('admin'), getCommonQuestions);
+router.get('/common-questions', authenticate, requireAdmin, getCommonQuestions);
 
 export default router;
