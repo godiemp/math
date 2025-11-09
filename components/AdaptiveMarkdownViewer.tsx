@@ -9,9 +9,10 @@ import { parseMarkdownSections, filterSectionsByMode, stripSectionMetadata } fro
 
 interface AdaptiveMarkdownViewerProps {
   content: string;
+  hideReadingModeControl?: boolean;
 }
 
-export function AdaptiveMarkdownViewer({ content }: AdaptiveMarkdownViewerProps) {
+export function AdaptiveMarkdownViewer({ content, hideReadingModeControl = false }: AdaptiveMarkdownViewerProps) {
   const [mode, setMode] = useState<ReadingMode>('full');
   const [collapseControl, setCollapseControl] = useState<CollapseControl>(null);
 
@@ -34,7 +35,7 @@ export function AdaptiveMarkdownViewer({ content }: AdaptiveMarkdownViewerProps)
   if (!hasSections) {
     return (
       <div>
-        <ReadingModeControl onChange={setMode} className="mb-6" />
+        {!hideReadingModeControl && <ReadingModeControl onChange={setMode} className="mb-6" />}
         <MarkdownViewer content={content} />
       </div>
     );
@@ -42,7 +43,7 @@ export function AdaptiveMarkdownViewer({ content }: AdaptiveMarkdownViewerProps)
 
   return (
     <div>
-      <ReadingModeControl onChange={setMode} className="mb-6" />
+      {!hideReadingModeControl && <ReadingModeControl onChange={setMode} className="mb-6" />}
 
       {/* Collapse controls - shown when there are collapsible sections */}
       {hasCollapsibleSections && mode !== 'formulas' && (
