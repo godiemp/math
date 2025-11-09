@@ -183,3 +183,222 @@ export interface StreakData {
   longestStreak: number;
   lastPracticeDate: string | null;
 }
+
+/**
+ * ============================================================================
+ * QGEN SYSTEM TYPES
+ * ============================================================================
+ * Types for the Question Generation (QGen) algorithm that creates progressive
+ * learning sequences based on atomic skills, contexts, and templates.
+ */
+
+/**
+ * Question goal type - the type of reasoning required
+ * - compute: Perform a calculation
+ * - compare: Compare two or more values
+ * - justify: Explain or prove something
+ * - model: Create a mathematical model
+ * - interpret: Interpret a result or representation
+ * - analyze: Break down a complex problem
+ */
+export type QuestionGoalType = 'compute' | 'compare' | 'justify' | 'model' | 'interpret' | 'analyze';
+
+/**
+ * Cognitive level for Bloom's taxonomy
+ */
+export type CognitiveLevel = 'remember' | 'understand' | 'apply' | 'analyze' | 'evaluate' | 'create';
+
+/**
+ * Context category
+ */
+export type ContextCategory =
+  | 'cooking'
+  | 'geometry'
+  | 'motion'
+  | 'finance'
+  | 'sports'
+  | 'construction'
+  | 'shopping'
+  | 'travel'
+  | 'science'
+  | 'abstract';
+
+/**
+ * Variable type for template placeholders
+ */
+export type VariableType = 'number' | 'integer' | 'decimal' | 'fraction' | 'name' | 'object' | 'unit';
+
+/**
+ * Variable definition for contexts and templates
+ */
+export interface VariableDefinition {
+  name: string;
+  type: VariableType;
+  min?: number;
+  max?: number;
+  step?: number;
+  options?: string[]; // For categorical variables (names, objects)
+  unit?: string;
+  description?: string;
+}
+
+/**
+ * Context - a real-life situation for problems
+ */
+export interface Context {
+  id: string;
+  name: string;
+  description: string;
+  category: ContextCategory;
+  compatibleSkills: string[]; // Skill IDs that work with this context
+  variables: VariableDefinition[]; // Available variables in this context
+  createdAt: number;
+  updatedAt: number;
+  createdBy?: string;
+}
+
+/**
+ * Goal - type of reasoning/question goal
+ */
+export interface Goal {
+  id: string;
+  name: string;
+  description: string;
+  type: QuestionGoalType;
+  cognitiveLevel: CognitiveLevel;
+  createdAt: number;
+}
+
+/**
+ * Template constraint for value generation
+ */
+export interface TemplateConstraint {
+  variable: string;
+  condition: 'equals' | 'not-equals' | 'greater-than' | 'less-than' | 'divisible-by' | 'prime';
+  value: number | string;
+}
+
+/**
+ * Question template
+ */
+export interface Template {
+  id: string;
+  name: string;
+  templateText: string; // Text with {{variable}} placeholders
+  templateLatex?: string; // LaTeX version with placeholders
+  goalId: string;
+  requiredSkills: string[]; // Skills needed to answer this question
+  compatibleContexts: string[]; // Context IDs this template works with
+  variables: VariableDefinition[]; // Variables used in this template
+  constraints?: TemplateConstraint[]; // Constraints on variable values
+  difficultyLevel: DifficultyLevel;
+  createdAt: number;
+  updatedAt: number;
+  createdBy?: string;
+}
+
+/**
+ * Goal-Skill mapping
+ * Defines which goals fit which skill combinations
+ */
+export interface GoalSkillMapping {
+  id: number;
+  goalId: string;
+  skillCombination: string[]; // Array of skill IDs
+  minSkills: number; // Minimum skills needed
+  maxSkills?: number; // Maximum skills allowed
+  createdAt: number;
+}
+
+/**
+ * Problem - combines multiple atomic skills
+ */
+export interface Problem {
+  id: string;
+  level: Level;
+  subject: Subject;
+  topic: string;
+  skillIds: string[]; // Atomic skills combined in this problem
+  title?: string;
+  contextId?: string;
+  generatedBy: 'qgen' | 'manual';
+  createdAt: number;
+  updatedAt: number;
+  createdBy?: string;
+  // Populated fields
+  situations?: Situation[];
+}
+
+/**
+ * Situation - specific instance within a problem with concrete values
+ */
+export interface Situation {
+  id: string;
+  problemId: string;
+  contextId?: string;
+  contextText: string; // The actual situation description
+  contextLatex?: string;
+  variableValues?: Record<string, any>; // Concrete values for variables
+  visualData?: {
+    type: VisualDataType;
+    data: any;
+  };
+  images?: QuestionImage[];
+  situationOrder: number; // Order within the problem
+  createdAt: number;
+  // Populated fields
+  questions?: ProgressiveQuestion[];
+}
+
+/**
+ * Progressive Question - individual question within a situation (n₁, n₂, n₃, etc.)
+ */
+export interface ProgressiveQuestion {
+  id: string;
+  situationId: string;
+  templateId?: string;
+  goalId?: string;
+  questionIndex: number; // 1, 2, 3, ... for n₁, n₂, n₃
+  question: string;
+  questionLatex?: string;
+  options: string[];
+  optionsLatex?: string[];
+  correctAnswer: number;
+  explanation?: string;
+  explanationLatex?: string;
+  difficulty?: DifficultyLevel;
+  skillsTested: string[]; // Skills this specific question tests
+  buildsOn?: string; // ID of previous question this builds upon
+  createdAt: number;
+}
+
+/**
+ * QGen Input - inputs for the question generation algorithm
+ */
+export interface QGenInput {
+  targetSkills: string[]; // Atomic skills to practice
+  contextLibrary: Context[]; // Available contexts
+  templateLibrary: Template[]; // Available templates
+  goalMap: GoalSkillMapping[]; // Goal-skill mappings
+  numberOfQuestions: number; // How many questions to generate
+  level: Level; // M1 or M2
+  subject: Subject; // números, álgebra, geometría, probabilidad
+}
+
+/**
+ * QGen Output - result of question generation
+ */
+export interface QGenOutput {
+  problem: Problem;
+  situation: Situation;
+  questions: ProgressiveQuestion[]; // Ordered from n₁ to nₙ
+}
+
+/**
+ * Value generator configuration
+ */
+export interface ValueGeneratorConfig {
+  seed?: number; // For reproducible random generation
+  avoidDuplicates?: boolean;
+  preferSimpleValues?: boolean; // Prefer nice numbers (multiples of 5, 10, etc.)
+}
