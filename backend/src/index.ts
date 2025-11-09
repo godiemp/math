@@ -10,6 +10,7 @@ import sessionRoutes from './routes/sessionRoutes';
 import aiRoutes from './routes/aiRoutes';
 import analyticsRoutes from './routes/analyticsRoutes';
 import quizRoutes from './routes/quizRoutes';
+import qgenRoutes from './routes/qgenRoutes';
 import { serveImage } from './controllers/adminController';
 
 // Load environment variables
@@ -98,6 +99,7 @@ app.use('/api/sessions', sessionRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/quiz', quizRoutes);
+app.use('/api/qgen', qgenRoutes);
 
 // Public image serving route
 app.get('/api/images/:filename', serveImage);

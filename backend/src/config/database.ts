@@ -263,6 +263,123 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
+    // ========================================
+    // QGEN SYSTEM TABLES
+    // ========================================
+
+    // Create contexts table - real-life situations for problems
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS contexts (
+        id VARCHAR(50) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        description TEXT NOT NULL,
+        category VARCHAR(100),
+        compatible_skills JSONB NOT NULL,
+        variables JSONB,
+        created_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL,
+        created_by VARCHAR(50) REFERENCES users(id)
+      )
+    `);
+
+    // Create goals table - types of reasoning/question goals
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS goals (
+        id VARCHAR(50) PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        description TEXT NOT NULL,
+        cognitive_level VARCHAR(50),
+        created_at BIGINT NOT NULL
+      )
+    `);
+
+    // Create templates table - question templates
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS templates (
+        id VARCHAR(50) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        template_text TEXT NOT NULL,
+        template_latex TEXT,
+        goal_id VARCHAR(50) NOT NULL REFERENCES goals(id),
+        required_skills JSONB NOT NULL,
+        compatible_contexts JSONB NOT NULL,
+        variables JSONB NOT NULL,
+        constraints JSONB,
+        difficulty_level VARCHAR(20) CHECK (difficulty_level IN ('easy', 'medium', 'hard')),
+        created_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL,
+        created_by VARCHAR(50) REFERENCES users(id)
+      )
+    `);
+
+    // Create goal_skill_mappings table - defines which goals fit skill combinations
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS goal_skill_mappings (
+        id SERIAL PRIMARY KEY,
+        goal_id VARCHAR(50) NOT NULL REFERENCES goals(id) ON DELETE CASCADE,
+        skill_combination JSONB NOT NULL,
+        min_skills INTEGER DEFAULT 1,
+        max_skills INTEGER,
+        created_at BIGINT NOT NULL
+      )
+    `);
+
+    // Create problems table - combines multiple atomic skills
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS problems (
+        id VARCHAR(50) PRIMARY KEY,
+        level VARCHAR(5) NOT NULL CHECK (level IN ('M1', 'M2')),
+        subject VARCHAR(50) NOT NULL CHECK (subject IN ('números', 'álgebra', 'geometría', 'probabilidad')),
+        topic VARCHAR(255) NOT NULL,
+        skill_ids JSONB NOT NULL,
+        title VARCHAR(255),
+        context_id VARCHAR(50) REFERENCES contexts(id),
+        generated_by VARCHAR(10) DEFAULT 'qgen',
+        created_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL,
+        created_by VARCHAR(50) REFERENCES users(id)
+      )
+    `);
+
+    // Create situations table - specific instances within a problem
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS situations (
+        id VARCHAR(50) PRIMARY KEY,
+        problem_id VARCHAR(50) NOT NULL REFERENCES problems(id) ON DELETE CASCADE,
+        context_id VARCHAR(50) REFERENCES contexts(id),
+        context_text TEXT NOT NULL,
+        context_latex TEXT,
+        variable_values JSONB,
+        visual_data JSONB,
+        images JSONB,
+        situation_order INTEGER DEFAULT 1,
+        created_at BIGINT NOT NULL
+      )
+    `);
+
+    // Create progressive_questions table - ordered questions (n₁, n₂, n₃, ...)
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS progressive_questions (
+        id VARCHAR(50) PRIMARY KEY,
+        situation_id VARCHAR(50) NOT NULL REFERENCES situations(id) ON DELETE CASCADE,
+        template_id VARCHAR(50) REFERENCES templates(id),
+        goal_id VARCHAR(50) REFERENCES goals(id),
+        question_index INTEGER NOT NULL,
+        question TEXT NOT NULL,
+        question_latex TEXT,
+        options JSONB NOT NULL,
+        options_latex JSONB,
+        correct_answer INTEGER NOT NULL CHECK (correct_answer >= 0 AND correct_answer <= 3),
+        explanation TEXT,
+        explanation_latex TEXT,
+        difficulty VARCHAR(20) CHECK (difficulty IN ('easy', 'medium', 'hard')),
+        skills_tested JSONB NOT NULL,
+        builds_on VARCHAR(50) REFERENCES progressive_questions(id),
+        created_at BIGINT NOT NULL,
+        UNIQUE(situation_id, question_index)
+      )
+    `);
+
     // Create indexes
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)');
@@ -290,6 +407,20 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_quiz_attempts_attempted_at ON quiz_attempts(attempted_at)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_last_quiz_config_user_id ON last_quiz_config(user_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_last_quiz_config_level ON last_quiz_config(level)');
+
+    // QGen system indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_contexts_category ON contexts(category)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_templates_goal_id ON templates(goal_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_templates_difficulty ON templates(difficulty_level)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_goal_skill_mappings_goal_id ON goal_skill_mappings(goal_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_problems_level ON problems(level)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_problems_subject ON problems(subject)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_problems_context_id ON problems(context_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_situations_problem_id ON situations(problem_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_situations_context_id ON situations(context_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_progressive_questions_situation_id ON progressive_questions(situation_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_progressive_questions_template_id ON progressive_questions(template_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_progressive_questions_builds_on ON progressive_questions(builds_on)');
 
     await client.query('COMMIT');
     console.log('✅ Database tables initialized successfully');
