@@ -1,8 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
+import { requireAuth } from '@/lib/auth/apiAuth';
 
 export async function POST(request: NextRequest) {
   try {
+    // 🔒 AUTHENTICATION REQUIRED
+    // Verify JWT token and get user information
+    try {
+      requireAuth(request);
+    } catch (authError) {
+      return NextResponse.json(
+        { error: 'No autenticado. Por favor inicia sesión.' },
+        { status: 401 }
+      );
+    }
+
     // Check if API key is available
     if (!process.env.ANTHROPIC_API_KEY) {
       console.error('ANTHROPIC_API_KEY is not set');
