@@ -35,306 +35,186 @@ export default function Home() {
       />
 
       {/* Content Container */}
-      <div className="w-full max-w-6xl mx-auto px-4 py-12 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+      <div className="w-full max-w-5xl mx-auto px-4 py-8 relative z-10">
+        <div className="max-w-2xl mx-auto">
 
-          {/* Left Column: Value Proposition & Trust Signals */}
-          <div className="space-y-8 lg:sticky lg:top-12">
-
-            {/* Hero Section */}
-            <div className="spring-motion">
-              <div className="mb-6">
-                <div
-                  className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 spring-emphasized"
-                  style={{
-                    background: 'var(--color-tint)',
-                    boxShadow: 'var(--shadow-raised)',
-                  }}
-                >
-                  <svg
-                    className="w-8 h-8"
-                    fill="none"
-                    stroke="white"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                    <path d="M2 17l10 5 10-5"/>
-                    <path d="M2 12l10 5 10-5"/>
-                  </svg>
-                </div>
-              </div>
-
-              <h1
-                className="font-semibold mb-4 spring-motion"
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '48px',
-                  lineHeight: '1.1',
-                  letterSpacing: '-1.5px',
-                  color: 'var(--color-label-primary)',
-                }}
-              >
-                Prepara tu PAES Matemática con Confianza
-              </h1>
-
-              <p
-                className="spring-motion mb-6"
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '20px',
-                  lineHeight: '1.5',
-                  color: 'var(--color-label-secondary)',
-                }}
-              >
-                Tu camino hacia la universidad empieza aquí. Practica con ejercicios reales, recibe retroalimentación inmediata y mejora tus resultados paso a paso.
-              </p>
-
-              {/* Value Props */}
-              <div className="space-y-3">
-                {[
-                  { icon: '✓', text: 'Ejercicios alineados 100% con el temario PAES' },
-                  { icon: '✓', text: 'Retroalimentación detallada en cada pregunta' },
-                  { icon: '✓', text: 'Seguimiento de tu progreso en tiempo real' },
-                  { icon: '✓', text: 'Sesiones de práctica en vivo con otros estudiantes' }
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3 spring-motion">
-                    <span
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: '24px',
-                        height: '24px',
-                        borderRadius: '50%',
-                        background: 'var(--color-tint)',
-                        color: 'white',
-                        fontSize: '14px',
-                        fontWeight: 600,
-                        flexShrink: 0,
-                      }}
-                    >
-                      {item.icon}
-                    </span>
-                    <p
-                      style={{
-                        fontSize: '16px',
-                        lineHeight: '1.5',
-                        color: 'var(--color-label-primary)',
-                        margin: 0,
-                      }}
-                    >
-                      {item.text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Trust Signals */}
-            <div
-              className="translucent spring-motion p-6"
-              style={{
-                borderRadius: 'var(--radius-lg)',
-                border: '1px solid var(--color-separator)',
-              }}
-            >
-              <p
-                className="mb-4"
-                style={{
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  color: 'var(--color-label-secondary)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                }}
-              >
-                Confían en Nosotros
-              </p>
-              <div className="grid grid-cols-3 gap-6">
-                {[
-                  { value: '500+', label: 'Estudiantes activos' },
-                  { value: '10K+', label: 'Ejercicios resueltos' },
-                  { value: '85%', label: 'Mejora promedio' }
-                ].map((stat, i) => (
-                  <div key={i}>
-                    <div
-                      style={{
-                        fontSize: '28px',
-                        fontWeight: 700,
-                        color: 'var(--color-tint)',
-                        fontFamily: 'var(--font-heading)',
-                        lineHeight: '1.2',
-                      }}
-                    >
-                      {stat.value}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: '13px',
-                        color: 'var(--color-label-secondary)',
-                        marginTop: '4px',
-                      }}
-                    >
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Testimonial */}
-            <div
-              className="translucent spring-motion p-6"
-              style={{
-                borderRadius: 'var(--radius-lg)',
-                border: '1px solid var(--color-separator)',
-              }}
-            >
-              <div className="flex items-start gap-1 mb-2">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} style={{ color: 'var(--color-tint)', fontSize: '16px' }}>★</span>
-                ))}
-              </div>
-              <p
-                style={{
-                  fontSize: '15px',
-                  lineHeight: '1.6',
-                  color: 'var(--color-label-primary)',
-                  marginBottom: '12px',
-                }}
-              >
-                "Esta plataforma me ayudó a entender conceptos que nunca pude dominar en clases. La práctica constante y la retroalimentación clara marcaron la diferencia en mi puntaje."
-              </p>
+          {/* Hero Section */}
+          <div className="text-center mb-12 spring-motion">
+            <div className="mb-6">
               <div
+                className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 spring-emphasized"
                 style={{
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  color: 'var(--color-label-secondary)',
+                  background: 'var(--color-tint)',
+                  boxShadow: 'var(--shadow-raised)',
                 }}
               >
-                — María González, estudiante PAES 2024
+                <svg
+                  className="w-8 h-8"
+                  fill="none"
+                  stroke="white"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                  <path d="M2 17l10 5 10-5"/>
+                  <path d="M2 12l10 5 10-5"/>
+                </svg>
               </div>
             </div>
 
-            {/* Security Badge */}
-            <div className="flex items-center gap-2 spring-motion">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--color-label-secondary)"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              </svg>
-              <p
-                style={{
-                  fontSize: '13px',
-                  color: 'var(--color-label-secondary)',
-                }}
-              >
-                Tus datos están protegidos y seguros
-              </p>
+            <h1
+              className="font-bold mb-4 spring-motion"
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '56px',
+                lineHeight: '1.05',
+                letterSpacing: '-2px',
+                color: 'var(--color-label-primary)',
+              }}
+            >
+              deja de estresarte
+              <br />
+              con la PAES
+            </h1>
+
+            <p
+              className="spring-motion mb-8"
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '22px',
+                lineHeight: '1.4',
+                color: 'var(--color-label-secondary)',
+                maxWidth: '500px',
+                margin: '0 auto 32px',
+              }}
+            >
+              practica mate, ve tu progreso, aprende de tus errores. sin dramas, sin precios raros.
+            </p>
+
+            {/* Quick Stats - Minimal */}
+            <div className="flex justify-center gap-8 mb-8">
+              {[
+                { value: '500+', label: 'users' },
+                { value: '10k+', label: 'ejercicios' }
+              ].map((stat, i) => (
+                <div key={i}>
+                  <div
+                    style={{
+                      fontSize: '24px',
+                      fontWeight: 700,
+                      color: 'var(--color-label-primary)',
+                      fontFamily: 'var(--font-heading)',
+                    }}
+                  >
+                    {stat.value}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '13px',
+                      color: 'var(--color-label-secondary)',
+                    }}
+                  >
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Right Column: Auth Form */}
-          <div className="lg:pt-8">
+          {/* Auth Component */}
+          <div className="max-w-md mx-auto">
             <Auth
               onSuccess={() => {
                 setUser(require('@/lib/auth').getCurrentUser());
                 router.push('/dashboard');
               }}
             />
+          </div>
 
-            {/* Additional Info */}
-            <div
-              className="text-center mt-6 spring-motion"
+          {/* What You Get - Simple */}
+          <div
+            className="mt-12 p-6 translucent spring-motion"
+            style={{
+              borderRadius: 'var(--radius-lg)',
+              border: '1px solid var(--color-separator)',
+            }}
+          >
+            <h3
+              className="text-center mb-6"
               style={{
-                fontSize: '13px',
+                fontSize: '18px',
+                fontWeight: 600,
+                color: 'var(--color-label-primary)',
+              }}
+            >
+              esto es lo que hay
+            </h3>
+
+            <div className="space-y-3">
+              {[
+                { emoji: '📝', text: 'ejercicios del temario real de PAES' },
+                { emoji: '📊', text: 'ves tu progreso en tiempo real' },
+                { emoji: '💡', text: 'explicaciones cuando te equivocas' },
+                { emoji: '👥', text: 'practica con otros (en vivo)' }
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-3 spring-motion">
+                  <span style={{ fontSize: '20px', flexShrink: 0 }}>
+                    {item.emoji}
+                  </span>
+                  <p
+                    style={{
+                      fontSize: '16px',
+                      color: 'var(--color-label-primary)',
+                      margin: 0,
+                    }}
+                  >
+                    {item.text}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Real Talk - Testimonial */}
+          <div
+            className="mt-8 p-6 translucent spring-motion"
+            style={{
+              borderRadius: 'var(--radius-lg)',
+              border: '1px solid var(--color-separator)',
+            }}
+          >
+            <p
+              style={{
+                fontSize: '16px',
+                lineHeight: '1.5',
+                color: 'var(--color-label-primary)',
+                marginBottom: '12px',
+                fontStyle: 'italic',
+              }}
+            >
+              "honestamente me salvó. entendí cosas que ni en clases ni con preu pude cachar. lo mejor es que ves al tiro donde estás fallando"
+            </p>
+            <div
+              style={{
+                fontSize: '14px',
                 color: 'var(--color-label-secondary)',
               }}
             >
-              <p>
-                Preparación oficial para la Prueba de Acceso a la Educación Superior (PAES) de Chile
-              </p>
+              — maría, 750pts en mate (2024)
             </div>
           </div>
-        </div>
 
-        {/* How It Works Section */}
-        <div className="mt-20 pt-12 border-t" style={{ borderColor: 'var(--color-separator)' }}>
-          <h2
-            className="text-center mb-12 spring-motion"
+          {/* Footer - Simple */}
+          <div
+            className="text-center mt-8 spring-motion"
             style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '32px',
-              fontWeight: 600,
-              letterSpacing: '-0.5px',
-              color: 'var(--color-label-primary)',
+              fontSize: '13px',
+              color: 'var(--color-label-secondary)',
             }}
           >
-            Cómo Funciona
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                step: '1',
-                title: 'Crea tu cuenta gratis',
-                description: 'Regístrate en segundos y accede inmediatamente a todos los ejercicios y recursos.'
-              },
-              {
-                step: '2',
-                title: 'Practica a tu ritmo',
-                description: 'Resuelve ejercicios del temario oficial, recibe feedback detallado y aprende de cada error.'
-              },
-              {
-                step: '3',
-                title: 'Mejora continuamente',
-                description: 'Sigue tu progreso, identifica áreas débiles y observa cómo tus habilidades crecen día a día.'
-              }
-            ].map((step, i) => (
-              <div key={i} className="text-center spring-motion">
-                <div
-                  className="inline-flex items-center justify-center w-14 h-14 rounded-xl mb-4"
-                  style={{
-                    background: 'var(--color-tint)',
-                    color: 'white',
-                    fontSize: '24px',
-                    fontWeight: 700,
-                    fontFamily: 'var(--font-heading)',
-                  }}
-                >
-                  {step.step}
-                </div>
-                <h3
-                  style={{
-                    fontSize: '18px',
-                    fontWeight: 600,
-                    color: 'var(--color-label-primary)',
-                    marginBottom: '8px',
-                  }}
-                >
-                  {step.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: '15px',
-                    lineHeight: '1.6',
-                    color: 'var(--color-label-secondary)',
-                  }}
-                >
-                  {step.description}
-                </p>
-              </div>
-            ))}
+            <p>gratis • sin webeo • hecho para estudiantes que quieren entrar a la u</p>
           </div>
         </div>
       </div>
