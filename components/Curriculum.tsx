@@ -642,7 +642,7 @@ export default function Curriculum({ level }: CurriculumProps) {
                           <li key={idx} className="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
                             <button
                               onClick={() => toggleTopic(topicId)}
-                              className="flex items-start justify-between w-full text-left hover:opacity-80 transition-opacity"
+                              className="flex items-start justify-between w-full text-left hover:opacity-80 transition-opacity select-text cursor-text"
                             >
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1 flex-wrap">
@@ -725,7 +725,7 @@ export default function Curriculum({ level }: CurriculumProps) {
                             <li key={idx} className="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
                               <button
                                 onClick={() => toggleTopic(topicId)}
-                                className="flex items-start justify-between w-full text-left hover:opacity-80 transition-opacity"
+                                className="flex items-start justify-between w-full text-left hover:opacity-80 transition-opacity select-text cursor-text"
                               >
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-1 flex-wrap">
