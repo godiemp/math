@@ -7,6 +7,7 @@ import express from 'express';
 import { authenticate, requireAdmin } from '../middleware/auth.js';
 import {
   generateQGenQuestions,
+  generateSingleQuestion,
   getContexts,
   getTemplates,
 } from '../controllers/qgenController.js';
@@ -22,6 +23,12 @@ router.use(requireAdmin);
  * Generate questions using QGen algorithm
  */
 router.post('/generate', generateQGenQuestions);
+
+/**
+ * POST /api/qgen/generate-single
+ * Generate a single complete question with AI
+ */
+router.post('/generate-single', generateSingleQuestion);
 
 /**
  * GET /api/qgen/contexts

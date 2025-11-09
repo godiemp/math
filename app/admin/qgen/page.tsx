@@ -77,7 +77,7 @@ function QGenAdminContent() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/qgen/generate`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/qgen/generate-single`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +85,6 @@ function QGenAdminContent() {
         },
         body: JSON.stringify({
           targetSkills: selectedSkills,
-          numberOfQuestions,
           level,
           subject,
         }),
@@ -95,13 +94,13 @@ function QGenAdminContent() {
 
       if (data.success) {
         setResult(data.data);
-        toast.success('¡Preguntas generadas exitosamente!');
+        toast.success('¡Pregunta generada con AI exitosamente!');
       } else {
-        toast.error(data.error || 'Error al generar preguntas');
+        toast.error(data.error || 'Error al generar pregunta');
       }
     } catch (error: any) {
-      console.error('Error generating questions:', error);
-      toast.error('Error al generar preguntas');
+      console.error('Error generating question:', error);
+      toast.error('Error al generar pregunta: ' + error.message);
     } finally {
       setIsGenerating(false);
     }
@@ -117,10 +116,10 @@ function QGenAdminContent() {
           <div className="flex items-center justify-between">
             <div>
               <Heading level={1} size="md" className="mb-2">
-                QGen - Generador de Preguntas Progresivas
+                QGen - Generador de Preguntas con AI
               </Heading>
               <Text variant="secondary">
-                Genera secuencias progresivas de preguntas (n₁ → n₂ → n₃)
+                Genera preguntas completas con Claude AI: respuestas, distractores y explicaciones
               </Text>
             </div>
             <Button variant="ghost" onClick={() => router.push('/admin')}>
@@ -182,24 +181,6 @@ function QGenAdminContent() {
                 </div>
               </div>
 
-              {/* Number of Questions */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Cantidad de Preguntas: {numberOfQuestions}
-                </label>
-                <input
-                  type="range"
-                  min="1"
-                  max="5"
-                  value={numberOfQuestions}
-                  onChange={(e) => setNumberOfQuestions(Number(e.target.value))}
-                  className="w-full"
-                />
-                <Text size="xs" variant="secondary">
-                  n₁ hasta n₅
-                </Text>
-              </div>
-
               {/* Skills Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -237,7 +218,7 @@ function QGenAdminContent() {
                 disabled={isGenerating || selectedSkills.length === 0}
                 fullWidth
               >
-                {isGenerating ? 'Generando...' : '🎲 Generar Preguntas'}
+                {isGenerating ? 'Generando con AI...' : '🤖 Generar Pregunta con AI'}
               </Button>
             </div>
           </Card>
@@ -251,90 +232,123 @@ function QGenAdminContent() {
             {!result ? (
               <div className="flex items-center justify-center h-64">
                 <Text variant="secondary" className="text-center">
-                  Configura las opciones y haz clic en "Generar Preguntas" para ver el resultado
+                  Selecciona habilidades y haz clic en "Generar Pregunta con AI"
                 </Text>
               </div>
             ) : (
               <div className="space-y-4">
-                {/* Problem Info */}
+                {/* Question Info */}
                 <Card padding="md" className="bg-indigo-50 dark:bg-indigo-900/20">
-                  <Heading level={3} size="xs" className="mb-2">
-                    Problema
-                  </Heading>
-                  <Text size="xs" variant="secondary" className="font-mono mb-1">
-                    {result.problem.id}
-                  </Text>
-                  <div className="flex gap-2 flex-wrap">
+                  <div className="flex items-center gap-2 mb-2">
                     <Badge variant="info" size="sm">
-                      {result.problem.level}
+                      {result.level}
                     </Badge>
                     <Badge variant="neutral" size="sm">
-                      {result.problem.subject}
+                      {result.subject}
+                    </Badge>
+                    <Badge
+                      variant={
+                        result.difficulty === 'easy'
+                          ? 'success'
+                          : result.difficulty === 'medium'
+                          ? 'warning'
+                          : 'danger'
+                      }
+                      size="sm"
+                    >
+                      {result.difficulty}
                     </Badge>
                   </div>
-                  <Text size="xs" variant="secondary" className="mt-2">
-                    Habilidades: {result.problem.skillIds.join(', ')}
+                  <Text size="xs" variant="secondary" className="mb-1">
+                    ID: {result.id}
+                  </Text>
+                  <Text size="xs" variant="secondary">
+                    Habilidades: {result.skills.join(', ')}
                   </Text>
                 </Card>
 
-                {/* Situation */}
+                {/* Context */}
                 <Card padding="md" className="bg-teal-50 dark:bg-teal-900/20">
                   <Heading level={3} size="xs" className="mb-2">
-                    Situación / Contexto
+                    📚 Contexto
                   </Heading>
-                  <Text size="sm">{result.situation.contextText}</Text>
+                  <Text size="sm">{result.context.description}</Text>
+                  <Text size="xs" variant="secondary" className="mt-2">
+                    Template: {result.template.name}
+                  </Text>
                 </Card>
 
-                {/* Progressive Questions */}
-                <div>
+                {/* Question */}
+                <Card padding="md" className="border-l-4 border-indigo-500">
                   <Heading level={3} size="xs" className="mb-3">
-                    Preguntas Progresivas
+                    ❓ Pregunta
                   </Heading>
-                  <div className="space-y-3">
-                    {result.questions.map((question, index) => (
-                      <Card
-                        key={question.id}
-                        padding="md"
-                        className={`border-l-4 ${
-                          question.difficulty === 'easy'
-                            ? 'border-green-500'
-                            : question.difficulty === 'medium'
-                            ? 'border-yellow-500'
-                            : 'border-red-500'
+                  <div className="mb-4 text-base">
+                    <MathText content={result.question} />
+                  </div>
+
+                  {/* Options */}
+                  <div className="space-y-2 mb-4">
+                    {result.options.map((option, index) => (
+                      <div
+                        key={index}
+                        className={`p-3 rounded-lg border-2 ${
+                          index === result.correctAnswer
+                            ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                            : 'border-gray-200 dark:border-gray-700'
                         }`}
                       >
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge variant="neutral" size="sm">
-                            n₁{index + 1}
-                          </Badge>
+                        <div className="flex items-start gap-2">
                           <Badge
-                            variant={
-                              question.difficulty === 'easy'
-                                ? 'success'
-                                : question.difficulty === 'medium'
-                                ? 'warning'
-                                : 'danger'
-                            }
+                            variant={index === result.correctAnswer ? 'success' : 'neutral'}
                             size="sm"
                           >
-                            {question.difficulty}
+                            {String.fromCharCode(65 + index)}
                           </Badge>
+                          <div className="flex-1">
+                            <MathText
+                              content={result.optionsLatex?.[index] || option}
+                            />
+                          </div>
+                          {index === result.correctAnswer && (
+                            <span className="text-green-600 dark:text-green-400">✓</span>
+                          )}
                         </div>
-                        <div className="mb-2">
-                          <MathText content={question.question} />
-                        </div>
-                        <Text size="xs" variant="secondary" className="mb-1">
-                          Habilidades: {question.skillsTested.join(', ')}
-                        </Text>
-                        {question.buildsOn && (
-                          <Text size="xs" variant="secondary">
-                            ↳ Construye sobre: {question.buildsOn}
-                          </Text>
-                        )}
-                      </Card>
+                      </div>
                     ))}
                   </div>
-                </div>
+
+                  {/* Explanation */}
+                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <Heading level={4} size="xs" className="mb-2">
+                      💡 Explicación
+                    </Heading>
+                    <div className="text-sm">
+                      <MathText
+                        content={result.explanationLatex || result.explanation}
+                      />
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Variables Used */}
+                {result.variables && Object.keys(result.variables).length > 0 && (
+                  <Card padding="md" className="bg-gray-50 dark:bg-gray-800/50">
+                    <Heading level={3} size="xs" className="mb-2">
+                      🔢 Variables Generadas
+                    </Heading>
+                    <div className="grid grid-cols-2 gap-2">
+                      {Object.entries(result.variables).map(([key, value]) => (
+                        <div key={key} className="text-xs">
+                          <Text variant="secondary" className="inline">
+                            {key}:{' '}
+                          </Text>
+                          <Text className="inline font-mono">{String(value)}</Text>
+                        </div>
+                      ))}
+                    </div>
+                  </Card>
+                )}
               </div>
             )}
           </Card>
