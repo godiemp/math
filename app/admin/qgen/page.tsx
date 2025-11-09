@@ -96,7 +96,8 @@ function QGenAdminContent() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/qgen/generate-single`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+      const response = await fetch(`${apiUrl}/api/qgen/generate-single`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
