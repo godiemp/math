@@ -44,6 +44,9 @@ export type {
 // ============================================================================
 export type {
   QuizProps,
+  QuizHistoryResponse,
+  RapidFireState,
+  RapidFireScore,
 } from './practice';
 
 // ============================================================================

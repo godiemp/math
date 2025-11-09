@@ -5,9 +5,10 @@ import { useState } from 'react';
 import { CurriculumSidebar } from './ui/CurriculumSidebar';
 import { skillsArray, type EnhancedSkill } from '@/lib/skillsArray';
 import { getSkillById } from '@/lib/skillTaxonomy';
+import type { Level } from '@/lib/types';
 
 interface CurriculumProps {
-  level: 'M1' | 'M2';
+  level: Level;
 }
 
 // Map curriculum subject names to practice page subject keys
