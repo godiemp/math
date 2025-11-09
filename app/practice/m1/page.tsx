@@ -231,12 +231,49 @@ function M1PracticeContent() {
     return `${subjectLabel} • ${modeLabel}`;
   };
 
+  // Get theme colors based on selected mode
+  const getThemeColors = () => {
+    if (quizMode === 'zen') {
+      return {
+        background: 'bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500 dark:from-teal-800 dark:via-cyan-900 dark:to-blue-900',
+        selectedBorder: 'border-teal-500 dark:border-teal-400',
+        selectedBg: 'bg-teal-500/10 dark:bg-teal-500/20',
+        selectedShadow: 'shadow-[0_0_30px_rgba(20,184,166,0.3)]',
+        hoverBorder: 'hover:border-teal-400/70 dark:hover:border-teal-400',
+        checkmark: 'text-teal-500 dark:text-teal-400',
+        gradient: 'from-teal-500 via-cyan-500 to-blue-500',
+      };
+    } else if (quizMode === 'rapidfire') {
+      return {
+        background: 'bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900',
+        selectedBorder: 'border-purple-500 dark:border-purple-400',
+        selectedBg: 'bg-purple-500/10 dark:bg-purple-500/20',
+        selectedShadow: 'shadow-[0_0_30px_rgba(168,85,247,0.4)]',
+        hoverBorder: 'hover:border-purple-400/70 dark:hover:border-purple-400',
+        checkmark: 'text-purple-500 dark:text-purple-400',
+        gradient: 'from-indigo-600 via-purple-600 to-pink-600',
+      };
+    }
+    // Default neutral theme
+    return {
+      background: 'bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800',
+      selectedBorder: 'border-[#0A84FF]',
+      selectedBg: 'bg-[#0A84FF]/[0.06] dark:bg-[#0A84FF]/[0.12]',
+      selectedShadow: 'shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)]',
+      hoverBorder: 'hover:border-[#0A84FF]/50 dark:hover:border-[#0A84FF]',
+      checkmark: 'text-[#0A84FF]',
+      gradient: 'from-blue-500 to-indigo-500',
+    };
+  };
+
+  const themeColors = getThemeColors();
+
   // Repeat Last Quiz Card
   const renderRepeatLastQuiz = () => {
     if (!lastConfig) return null;
 
     return (
-      <Card className="mb-6" padding="lg">
+      <Card className="mb-6 backdrop-blur-sm bg-white/90 dark:bg-gray-800/90" padding="lg">
         <div className="flex items-center justify-between gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
@@ -259,7 +296,7 @@ function M1PracticeContent() {
 
   // Step 1: Subject Selection
   const renderSubjectSelection = () => (
-    <Card className="mb-6" padding="lg">
+    <Card className="mb-6 backdrop-blur-sm bg-white/90 dark:bg-gray-800/90" padding="lg">
       <Heading level={2} size="sm" className="mb-1">
         Paso 1: Selecciona una materia
       </Heading>
@@ -275,10 +312,10 @@ function M1PracticeContent() {
               setQuizMode(null);
               setDifficulty(null);
             }}
-            className={`p-4 rounded-xl border transition-all duration-[180ms] text-left ${
+            className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${
               selectedSubject === subject.value
-                ? 'border-[#0A84FF] bg-[#0A84FF]/[0.06] dark:bg-[#0A84FF]/[0.12] shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)] transform scale-105'
-                : 'border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50 dark:hover:border-[#0A84FF] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:scale-[1.02]'
+                ? `${themeColors.selectedBorder} ${themeColors.selectedBg} ${themeColors.selectedShadow} transform scale-105`
+                : `border-black/[0.12] dark:border-white/[0.16] ${themeColors.hoverBorder} hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:scale-[1.02]`
             }`}
           >
             <div className="flex items-start gap-3">
@@ -292,7 +329,7 @@ function M1PracticeContent() {
                 </Text>
               </div>
               {selectedSubject === subject.value && (
-                <div className="text-[#0A84FF] text-2xl">✓</div>
+                <div className={`${themeColors.checkmark} text-2xl`}>✓</div>
               )}
             </div>
           </button>
@@ -306,7 +343,7 @@ function M1PracticeContent() {
     if (selectedSubject === undefined) return null;
 
     return (
-      <Card className="mb-6" padding="lg">
+      <Card className="mb-6 backdrop-blur-sm bg-white/90 dark:bg-gray-800/90" padding="lg">
         <Heading level={2} size="sm" className="mb-1">
           Paso 2: Selecciona el modo de práctica
         </Heading>
@@ -314,38 +351,60 @@ function M1PracticeContent() {
           Elige cómo quieres practicar
         </Text>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {modes.map((mode) => (
-            <button
-              key={mode.value}
-              onClick={() => {
-                setQuizMode(mode.value);
-                setDifficulty(null);
-              }}
-              className={`p-4 rounded-xl border transition-all duration-[180ms] text-left ${
-                quizMode === mode.value
-                  ? 'border-[#0A84FF] bg-[#0A84FF]/[0.06] dark:bg-[#0A84FF]/[0.12] shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)] transform scale-105'
-                  : 'border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50 dark:hover:border-[#0A84FF] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:scale-[1.02]'
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <div className="text-5xl">{mode.emoji}</div>
-                <div className="flex-1">
-                  <Text size="lg" className="font-semibold mb-1">
-                    {mode.label}
-                  </Text>
-                  <Text size="sm" className="font-medium mb-2">
-                    {mode.description}
-                  </Text>
-                  <Text size="xs" variant="secondary">
-                    {mode.details}
-                  </Text>
+          {modes.map((mode) => {
+            const isZen = mode.value === 'zen';
+            const modeGradient = isZen
+              ? 'from-teal-400 via-cyan-500 to-blue-500 dark:from-teal-600 dark:via-cyan-700 dark:to-blue-700'
+              : 'from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-700 dark:via-purple-700 dark:to-pink-700';
+            const modeBorder = isZen
+              ? 'border-teal-500 dark:border-teal-400'
+              : 'border-purple-500 dark:border-purple-400';
+            const modeShadow = isZen
+              ? 'shadow-[0_0_30px_rgba(20,184,166,0.3)]'
+              : 'shadow-[0_0_30px_rgba(168,85,247,0.4)]';
+
+            return (
+              <button
+                key={mode.value}
+                onClick={() => {
+                  setQuizMode(mode.value);
+                  setDifficulty(null);
+                }}
+                className={`relative overflow-hidden p-5 rounded-xl border-2 transition-all duration-500 text-left ${
+                  quizMode === mode.value
+                    ? `${modeBorder} ${modeShadow} transform scale-105`
+                    : 'border-black/[0.12] dark:border-white/[0.16] hover:border-opacity-50 hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:scale-[1.02]'
+                }`}
+              >
+                {/* Gradient background overlay */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${modeGradient} opacity-${quizMode === mode.value ? '15' : '0'} transition-opacity duration-500`} />
+
+                {/* Content */}
+                <div className="relative z-10">
+                  <div className="flex items-start gap-4 mb-3">
+                    <div className="text-6xl drop-shadow-lg">{mode.emoji}</div>
+                    <div className="flex-1">
+                      <Text size="lg" className="font-bold mb-2">
+                        {mode.label}
+                      </Text>
+                      <Text size="sm" className="font-medium mb-2">
+                        {mode.description}
+                      </Text>
+                      <Text size="xs" variant="secondary">
+                        {mode.details}
+                      </Text>
+                    </div>
+                    {quizMode === mode.value && (
+                      <div className={`${isZen ? 'text-teal-500 dark:text-teal-400' : 'text-purple-500 dark:text-purple-400'} text-3xl drop-shadow-lg`}>✓</div>
+                    )}
+                  </div>
+
+                  {/* Color preview bar */}
+                  <div className={`h-1.5 rounded-full bg-gradient-to-r ${modeGradient} mt-3`} />
                 </div>
-                {quizMode === mode.value && (
-                  <div className="text-[#0A84FF] text-2xl">✓</div>
-                )}
-              </div>
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
       </Card>
     );
@@ -356,7 +415,7 @@ function M1PracticeContent() {
     if (quizMode !== 'rapidfire') return null;
 
     return (
-      <Card className="mb-6" padding="lg">
+      <Card className="mb-6 backdrop-blur-sm bg-white/90 dark:bg-gray-800/90" padding="lg">
         <Heading level={2} size="sm" className="mb-1">
           Paso 3: Selecciona la dificultad
         </Heading>
@@ -368,10 +427,10 @@ function M1PracticeContent() {
             <button
               key={diff.value}
               onClick={() => setDifficulty(diff.value)}
-              className={`p-5 rounded-xl border transition-all duration-[180ms] text-left ${
+              className={`p-5 rounded-xl border-2 transition-all duration-300 text-left ${
                 difficulty === diff.value
-                  ? 'border-[#0A84FF] bg-[#0A84FF]/[0.06] dark:bg-[#0A84FF]/[0.12] shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)] transform scale-[1.02]'
-                  : 'border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50 dark:hover:border-[#0A84FF] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:scale-[1.01]'
+                  ? `${themeColors.selectedBorder} ${themeColors.selectedBg} ${themeColors.selectedShadow} transform scale-[1.02]`
+                  : `border-black/[0.12] dark:border-white/[0.16] ${themeColors.hoverBorder} hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:scale-[1.01]`
               }`}
             >
               <div className="flex items-start gap-3 mb-3">
@@ -381,7 +440,7 @@ function M1PracticeContent() {
                     <Text size="lg" className="font-bold">
                       {diff.label}
                     </Text>
-                    <Text size="sm" className="font-semibold text-[#0A84FF] dark:text-[#66B2FF]">
+                    <Text size="sm" className={`font-semibold ${themeColors.checkmark}`}>
                       {diff.time} min
                     </Text>
                   </div>
@@ -403,7 +462,7 @@ function M1PracticeContent() {
               </div>
 
               {difficulty === diff.value && (
-                <div className="text-[#0A84FF] text-2xl mt-3 text-center">✓ Seleccionado</div>
+                <div className={`${themeColors.checkmark} text-2xl mt-3 text-center font-bold`}>✓ Seleccionado</div>
               )}
             </button>
           ))}
@@ -428,7 +487,7 @@ function M1PracticeContent() {
     if (quizMode !== 'zen') return null;
 
     return (
-      <Card className="mb-6" padding="lg">
+      <Card className="mb-6 backdrop-blur-sm bg-white/90 dark:bg-gray-800/90" padding="lg">
         <div className="flex gap-4">
           <Button variant="ghost" onClick={handleResetSelection}>
             ← Cambiar Selección
@@ -444,7 +503,7 @@ function M1PracticeContent() {
   // Quiz View
   if (quizStarted && canStartQuiz()) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
+      <div className={`min-h-screen ${themeColors.background} py-8 px-4 transition-all duration-700`}>
         <div className="max-w-7xl mx-auto">
           <div className="mb-6 flex justify-between items-center">
             <button
@@ -476,7 +535,7 @@ function M1PracticeContent() {
 
   // Selection View
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
+    <div className={`min-h-screen ${themeColors.background} py-8 px-4 transition-all duration-700`}>
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <div className="flex justify-between items-start mb-4">
