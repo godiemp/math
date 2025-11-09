@@ -22,6 +22,10 @@ function ProgressPageContent() {
   const [m2History, setM2History] = useState<QuestionAttempt[]>([]);
   const [recentQuestionsCount, setRecentQuestionsCount] = useState<number>(10);
   const [selectedAttempt, setSelectedAttempt] = useState<QuestionAttempt | null>(null);
+  const [selectedQuizSession, setSelectedQuizSession] = useState<{
+    attempts: QuestionAttempt[];
+    currentIndex: number;
+  } | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [viewMode, setViewMode] = useState<'overview' | 'quizzes' | 'skills-m1' | 'skills-m2'>('overview');
   const itemsPerPage = 10;
@@ -571,8 +575,11 @@ function ProgressPageContent() {
                         <Button
                           variant="ghost"
                           onClick={() => {
-                            // Show first question in modal
-                            setSelectedAttempt(session.attempts[0]);
+                            // Show quiz session with all questions
+                            setSelectedQuizSession({
+                              attempts: session.attempts.slice().reverse(), // Reverse to show in order
+                              currentIndex: 0
+                            });
                           }}
                         >
                           👁️ Ver Detalles
@@ -619,86 +626,139 @@ function ProgressPageContent() {
 
         {/* Review Modal with Liquid Glass */}
         <Modal
-          isOpen={!!selectedAttempt}
-          onClose={() => setSelectedAttempt(null)}
-          title="Revisar Pregunta"
+          isOpen={!!selectedAttempt || !!selectedQuizSession}
+          onClose={() => {
+            setSelectedAttempt(null);
+            setSelectedQuizSession(null);
+          }}
+          title={selectedQuizSession
+            ? `Pregunta ${selectedQuizSession.currentIndex + 1} de ${selectedQuizSession.attempts.length}`
+            : "Revisar Pregunta"
+          }
           maxWidth="lg"
         >
-          {selectedAttempt && (
-            <>
-              <div className="mb-4 flex gap-2 flex-wrap">
-                <Badge variant={selectedAttempt.level === 'M1' ? 'info' : 'secondary'}>
-                  {selectedAttempt.level}
-                </Badge>
-                <Badge variant={getDifficultyBadgeVariant(selectedAttempt.difficulty)}>
-                  {getDifficultyLabel(selectedAttempt.difficulty)}
-                </Badge>
-                <Badge variant="neutral">
-                  {selectedAttempt.topic}
-                </Badge>
-              </div>
+          {(() => {
+            const attempt = selectedQuizSession
+              ? selectedQuizSession.attempts[selectedQuizSession.currentIndex]
+              : selectedAttempt;
 
-              <div className="mb-6">
-                <div className="text-[17px] mb-4">
-                  <MathText content={selectedAttempt.question} />
+            return attempt && (
+              <>
+                <div className="mb-4 flex gap-2 flex-wrap">
+                  <Badge variant={attempt.level === 'M1' ? 'info' : 'secondary'}>
+                    {attempt.level}
+                  </Badge>
+                  <Badge variant={getDifficultyBadgeVariant(attempt.difficulty)}>
+                    {getDifficultyLabel(attempt.difficulty)}
+                  </Badge>
+                  <Badge variant="neutral">
+                    {attempt.topic}
+                  </Badge>
                 </div>
-                <div className="space-y-3">
-                  {selectedAttempt.options.map((option, index) => {
-                    const isUserAnswer = index === selectedAttempt.userAnswer;
-                    const isCorrectAnswer = index === selectedAttempt.correctAnswer;
 
-                    let className = 'p-4 rounded-xl border-2 transition-all duration-[180ms] ';
-                    if (isCorrectAnswer) {
-                      className += 'border-[#34C759] bg-[#34C759]/10 dark:border-[#30D158] dark:bg-[#30D158]/20 text-[#34C759] dark:text-[#5DE38D]';
-                    } else if (isUserAnswer && !isCorrectAnswer) {
-                      className += 'border-[#FF453A] bg-[#FF453A]/10 dark:border-[#FF453A] dark:bg-[#FF453A]/20 text-[#FF453A] dark:text-[#FF7A72]';
-                    } else {
-                      className += 'border-black/[0.12] dark:border-white/[0.16] bg-black/[0.02] dark:bg-white/[0.04] text-black/60 dark:text-white/70';
-                    }
+                <div className="mb-6">
+                  <div className="text-[17px] mb-4">
+                    <MathText content={attempt.question} />
+                  </div>
+                  <div className="space-y-3">
+                    {attempt.options.map((option, index) => {
+                      const isUserAnswer = index === attempt.userAnswer;
+                      const isCorrectAnswer = index === attempt.correctAnswer;
 
-                    return (
-                      <div key={index} className={className}>
-                        <span className="text-sm inline font-semibold mr-2">
-                          {String.fromCharCode(65 + index)}.
-                        </span>
-                        <span className="text-sm inline"><MathText content={option} /></span>
-                        {isCorrectAnswer && <Text size="xs" className="float-right">✓ Correcta</Text>}
-                        {isUserAnswer && !isCorrectAnswer && <Text size="xs" className="float-right">✗ Tu respuesta</Text>}
-                      </div>
-                    );
-                  })}
+                      let className = 'p-4 rounded-xl border-2 transition-all duration-[180ms] ';
+                      if (isCorrectAnswer) {
+                        className += 'border-[#34C759] bg-[#34C759]/10 dark:border-[#30D158] dark:bg-[#30D158]/20 text-[#34C759] dark:text-[#5DE38D]';
+                      } else if (isUserAnswer && !isCorrectAnswer) {
+                        className += 'border-[#FF453A] bg-[#FF453A]/10 dark:border-[#FF453A] dark:bg-[#FF453A]/20 text-[#FF453A] dark:text-[#FF7A72]';
+                      } else {
+                        className += 'border-black/[0.12] dark:border-white/[0.16] bg-black/[0.02] dark:bg-white/[0.04] text-black/60 dark:text-white/70';
+                      }
+
+                      return (
+                        <div key={index} className={className}>
+                          <span className="text-sm inline font-semibold mr-2">
+                            {String.fromCharCode(65 + index)}.
+                          </span>
+                          <span className="text-sm inline"><MathText content={option} /></span>
+                          {isCorrectAnswer && <Text size="xs" className="float-right">✓ Correcta</Text>}
+                          {isUserAnswer && !isCorrectAnswer && <Text size="xs" className="float-right">✗ Tu respuesta</Text>}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
 
-              <div className="bg-[#0A84FF]/5 dark:bg-[#0A84FF]/10 border-l-4 border-[#0A84FF] rounded-r-xl p-4 mb-6">
-                <Text size="sm" className="font-semibold text-[#0A84FF] dark:text-[#66B2FF] mb-2">
-                  Explicación:
-                </Text>
-                <div className="text-sm text-black/80 dark:text-white/80">
-                  <MathText content={selectedAttempt.explanation} />
+                <div className="bg-[#0A84FF]/5 dark:bg-[#0A84FF]/10 border-l-4 border-[#0A84FF] rounded-r-xl p-4 mb-6">
+                  <Text size="sm" className="font-semibold text-[#0A84FF] dark:text-[#66B2FF] mb-2">
+                    Explicación:
+                  </Text>
+                  <div className="text-sm text-black/80 dark:text-white/80">
+                    <MathText content={attempt.explanation} />
+                  </div>
                 </div>
-              </div>
 
-              <div className={`p-4 rounded-xl ${
-                selectedAttempt.isCorrect
-                  ? 'bg-[#34C759]/10 dark:bg-[#30D158]/20 text-[#34C759] dark:text-[#5DE38D]'
-                  : 'bg-[#FF453A]/10 dark:bg-[#FF453A]/20 text-[#FF453A] dark:text-[#FF7A72]'
-              }`}>
-                <Text size="md" className="font-semibold text-center">
-                  {selectedAttempt.isCorrect
-                    ? '¡Respuesta Correcta! 🎉'
-                    : 'Respuesta Incorrecta'}
-                </Text>
-                <Text size="xs" className="text-center mt-1 opacity-80">
-                  Respondida el {formatDate(selectedAttempt.timestamp)}
-                </Text>
-              </div>
+                <div className={`p-4 rounded-xl ${
+                  attempt.isCorrect
+                    ? 'bg-[#34C759]/10 dark:bg-[#30D158]/20 text-[#34C759] dark:text-[#5DE38D]'
+                    : 'bg-[#FF453A]/10 dark:bg-[#FF453A]/20 text-[#FF453A] dark:text-[#FF7A72]'
+                }`}>
+                  <Text size="md" className="font-semibold text-center">
+                    {attempt.isCorrect
+                      ? '¡Respuesta Correcta! 🎉'
+                      : 'Respuesta Incorrecta'}
+                  </Text>
+                  <Text size="xs" className="text-center mt-1 opacity-80">
+                    Respondida el {formatDate(attempt.timestamp)}
+                  </Text>
+                </div>
 
-              <Button onClick={() => setSelectedAttempt(null)} className="mt-6 w-full">
-                Cerrar
-              </Button>
-            </>
-          )}
+                {/* Navigation buttons for quiz session */}
+                {selectedQuizSession ? (
+                  <div className="flex gap-3 mt-6">
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        setSelectedQuizSession({
+                          ...selectedQuizSession,
+                          currentIndex: selectedQuizSession.currentIndex - 1
+                        });
+                      }}
+                      disabled={selectedQuizSession.currentIndex === 0}
+                      className="flex-1"
+                    >
+                      ← Anterior
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setSelectedAttempt(null);
+                        setSelectedQuizSession(null);
+                      }}
+                      className="flex-1"
+                    >
+                      Cerrar
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        setSelectedQuizSession({
+                          ...selectedQuizSession,
+                          currentIndex: selectedQuizSession.currentIndex + 1
+                        });
+                      }}
+                      disabled={selectedQuizSession.currentIndex === selectedQuizSession.attempts.length - 1}
+                      className="flex-1"
+                    >
+                      Siguiente →
+                    </Button>
+                  </div>
+                ) : (
+                  <Button onClick={() => setSelectedAttempt(null)} className="mt-6 w-full">
+                    Cerrar
+                  </Button>
+                )}
+              </>
+            );
+          })()}
         </Modal>
       </main>
     </div>
