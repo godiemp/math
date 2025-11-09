@@ -33,7 +33,6 @@ export const RAPIDFIRE_CONFIG = {
     questionCount: 10,             // 10 questions
     hintsAllowed: true,            // Hints available
     hintPenaltyPercent: 10,        // -10% points for using hint
-    immediateFeedback: true,       // See if answer is correct immediately
     pauseAllowed: true,            // Can pause once
     pauseMaxSeconds: 30,           // Max 30 second pause
     livesSystem: false,            // No lives limit
@@ -49,7 +48,6 @@ export const RAPIDFIRE_CONFIG = {
     questionCount: 10,             // 10 questions
     hintsAllowed: false,           // No hints
     hintPenaltyPercent: 0,
-    immediateFeedback: false,      // Only see results at end
     pauseAllowed: false,           // No pause
     pauseMaxSeconds: 0,
     livesSystem: false,            // No lives limit
@@ -67,7 +65,6 @@ export const RAPIDFIRE_CONFIG = {
     questionCount: 12,             // 12 questions
     hintsAllowed: false,           // No hints
     hintPenaltyPercent: 0,
-    immediateFeedback: true,       // Must show feedback for lives system to work
     pauseAllowed: false,           // No pause
     pauseMaxSeconds: 0,
     livesSystem: true,             // Lives system enabled
@@ -85,7 +82,6 @@ export const RAPIDFIRE_CONFIG = {
     questionCount: 15,             // 15 questions
     hintsAllowed: false,           // No hints
     hintPenaltyPercent: 0,
-    immediateFeedback: true,       // Must show feedback for lives system to work
     pauseAllowed: false,           // No pause
     pauseMaxSeconds: 0,
     livesSystem: true,             // Lives system enabled

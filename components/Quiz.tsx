@@ -262,9 +262,9 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
           return newState;
         });
 
-        // For modes with immediate feedback, automatically move to next question after a short delay
+        // Auto-advance to next question after showing feedback
         // BUT only if we didn't just lose our last life
-        if (config.immediateFeedback && !isCorrect) {
+        if (!isCorrect) {
           // Check if this wrong answer causes game over
           const willBeGameOver = config.livesSystem &&
                                  rapidFireState.wrongAnswerCount + 1 >= config.maxWrongAnswers;
@@ -280,7 +280,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
               }
             }, 1500);
           }
-        } else if (config.immediateFeedback && isCorrect) {
+        } else {
           // Correct answer, auto-advance or auto-submit if last question
           setTimeout(() => {
             if (currentQuestionIndex < quizQuestions.length - 1) {
@@ -909,8 +909,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
   // Question view (before or after submission)
   const userAnswer = userAnswers[currentQuestionIndex];
   const isCorrect = userAnswer === currentQuestion.correctAnswer;
-  // Show feedback immediately in easy mode if an answer is selected, or after submission for all modes
-  const showFeedback = quizSubmitted || (quizMode === 'rapidfire' && config?.immediateFeedback && userAnswer !== null);
+  // Show feedback immediately in rapid fire mode if an answer is selected, or after submission for all modes
+  const showFeedback = quizSubmitted || (quizMode === 'rapidfire' && userAnswer !== null);
 
   // Determine timer color based on time remaining
   const getTimerColor = () => {
@@ -1109,8 +1109,8 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
               isQuestionCorrect = answer === q.correctAnswer;
             }
 
-            // Disable navigation to answered questions in immediate feedback modes
-            const isDisabled = quizMode === 'rapidfire' && config?.immediateFeedback && isAnswered && !quizSubmitted;
+            // Disable navigation to answered questions in rapid fire mode
+            const isDisabled = quizMode === 'rapidfire' && isAnswered && !quizSubmitted;
 
             let buttonClass = 'w-full aspect-square rounded-lg text-xs font-bold transition-all flex items-center justify-center ';
 
@@ -1135,19 +1135,17 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
               }
             } else {
               if (isAnswered) {
-                // For immediate feedback modes, show green/red immediately
-                if (quizMode === 'rapidfire' && config?.immediateFeedback) {
+                // For rapid fire mode, show green/red immediately
+                if (quizMode === 'rapidfire') {
                   if (isQuestionCorrect) {
                     buttonClass += 'bg-green-500 text-white opacity-80';
                   } else {
                     buttonClass += 'bg-red-500 text-white opacity-80';
                   }
                 } else {
-                  // For non-immediate modes, show mode color
+                  // For zen and other modes, show mode color
                   buttonClass += quizMode === 'zen'
                     ? 'bg-teal-500 text-white'
-                    : quizMode === 'rapidfire'
-                    ? 'bg-purple-500 text-white'
                     : 'bg-indigo-500 text-white';
                 }
               } else {
@@ -1182,21 +1180,15 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         )}
         {showQuickNav && (
           <div className="flex items-center gap-4 mt-2 text-xs text-gray-600 dark:text-gray-400">
-            {/* Show answered indicator only for non-immediate feedback modes */}
-            {!(quizMode === 'rapidfire' && config?.immediateFeedback && !quizSubmitted) && (
+            {/* Show answered indicator only for zen mode */}
+            {quizMode === 'zen' && !quizSubmitted && (
               <div className="flex items-center gap-1">
-                <div className={`w-3 h-3 rounded ${
-                  quizMode === 'zen'
-                    ? 'bg-teal-500'
-                    : quizMode === 'rapidfire'
-                    ? 'bg-purple-500'
-                    : 'bg-indigo-500'
-                }`}></div>
+                <div className="w-3 h-3 rounded bg-teal-500"></div>
                 <span>Respondida</span>
               </div>
             )}
-            {/* Show correct/incorrect for immediate feedback modes OR when quiz is submitted */}
-            {((quizMode === 'rapidfire' && config?.immediateFeedback && !quizSubmitted) || quizSubmitted) && (
+            {/* Show correct/incorrect for rapid fire mode OR when quiz is submitted */}
+            {(quizMode === 'rapidfire' && !quizSubmitted) || quizSubmitted ? (
               <>
                 <div className="flex items-center gap-1">
                   <div className="w-3 h-3 rounded bg-green-500"></div>
@@ -1207,7 +1199,7 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
                   <span>Incorrecta</span>
                 </div>
               </>
-            )}
+            ) : null}
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 rounded bg-gray-200 dark:bg-gray-700"></div>
               <span>Sin responder</span>
@@ -1216,23 +1208,11 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         )}
       </div>
 
-      {/* Question answered indicator */}
-      {!quizSubmitted && userAnswer !== null && !(quizMode === 'rapidfire' && config?.immediateFeedback) && (
-        <div className={`mb-6 p-3 rounded-lg border ${
-          quizMode === 'rapidfire'
-            ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-300 dark:border-green-700 shadow-md'
-            : quizMode === 'zen'
-            ? 'bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 border-teal-300 dark:border-teal-700 shadow-md'
-            : 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700'
-        }`}>
-          <p className={`text-sm text-center font-semibold ${
-            quizMode === 'rapidfire'
-              ? 'text-green-700 dark:text-green-300'
-              : quizMode === 'zen'
-              ? 'text-teal-700 dark:text-teal-300'
-              : 'text-blue-700 dark:text-blue-300'
-          }`}>
-            {quizMode === 'rapidfire' ? '✓ ' : quizMode === 'zen' ? '🧘 ' : ''}Respuesta seleccionada. Puedes cambiarla antes de enviar el quiz.
+      {/* Question answered indicator - only show in zen mode */}
+      {!quizSubmitted && userAnswer !== null && quizMode === 'zen' && (
+        <div className="mb-6 p-3 rounded-lg border bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 border-teal-300 dark:border-teal-700 shadow-md">
+          <p className="text-sm text-center font-semibold text-teal-700 dark:text-teal-300">
+            🧘 Respuesta seleccionada. Puedes cambiarla antes de enviar el quiz.
           </p>
         </div>
       )}
@@ -1318,33 +1298,21 @@ export default function Quiz({ questions: allQuestions, level, subject, quizMode
         {/* In rapid fire mode before submission, show appropriate message */}
         {quizMode === 'rapidfire' && !quizSubmitted && (
           <div className="text-center text-sm text-purple-200 dark:text-purple-300 bg-purple-900/30 rounded-lg p-3">
-            {config?.immediateFeedback ? (
-              <>💡 Usa la navegación rápida arriba para saltar entre preguntas. El quiz se enviará automáticamente al terminar.</>
-            ) : (
-              <>💡 Usa la navegación rápida arriba para saltar entre preguntas. Presiona "Enviar Quiz" cuando termines.</>
-            )}
+            💡 Responde cada pregunta y avanza automáticamente. El quiz se enviará al terminar.
           </div>
         )}
 
-        {/* Only show submit button if NOT rapid fire with immediate feedback */}
-        {!quizSubmitted && !(quizMode === 'rapidfire' && config?.immediateFeedback) && (
+        {/* Only show submit button in zen mode */}
+        {!quizSubmitted && quizMode === 'zen' && (
           <button
             onClick={handleSubmitQuiz}
             disabled={userAnswers.filter(a => a !== null).length === 0}
-            className={`w-full px-6 py-3 rounded-lg font-semibold text-lg transition-all ${
-              quizMode === 'rapidfire'
-                ? 'bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 hover:from-yellow-500 hover:via-pink-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-xl hover:shadow-2xl hover:scale-[1.02]'
-                : quizMode === 'zen'
-                ? 'bg-gradient-to-r from-teal-400 via-cyan-500 to-blue-600 hover:from-teal-500 hover:via-cyan-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-xl hover:shadow-2xl hover:scale-[1.02]'
-                : 'bg-indigo-600 text-white hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors'
-            }`}
-            style={quizMode === 'rapidfire' && userAnswers.filter(a => a !== null).length > 0 ? {
-              boxShadow: '0 0 30px rgba(236, 72, 153, 0.5), 0 10px 25px rgba(0, 0, 0, 0.3)'
-            } : quizMode === 'zen' && userAnswers.filter(a => a !== null).length > 0 ? {
+            className="w-full px-6 py-3 rounded-lg font-semibold text-lg transition-all bg-gradient-to-r from-teal-400 via-cyan-500 to-blue-600 hover:from-teal-500 hover:via-cyan-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-xl hover:shadow-2xl hover:scale-[1.02]"
+            style={userAnswers.filter(a => a !== null).length > 0 ? {
               boxShadow: '0 0 30px rgba(20, 184, 166, 0.5), 0 10px 25px rgba(0, 0, 0, 0.3)'
             } : undefined}
           >
-            {quizMode === 'rapidfire' ? '⚡ ' : quizMode === 'zen' ? '🧘 ' : ''}Enviar Quiz ({userAnswers.filter(a => a !== null).length} de {quizQuestions.length} respondidas)
+            🧘 Enviar Quiz ({userAnswers.filter(a => a !== null).length} de {quizQuestions.length} respondidas)
           </button>
         )}
       </div>

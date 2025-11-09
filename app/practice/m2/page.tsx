@@ -131,8 +131,8 @@ function M2PracticeContent() {
       emoji: '🟢',
       time: 25,
       description: '10 preguntas - 2:30 por pregunta',
-      details: 'Modo de práctica con retroalimentación inmediata',
-      features: ['✓ Ves si acertaste inmediatamente', '💡 Pistas disponibles (-10% puntos)', '⏸️ Puedes pausar 1 vez (30s)', '🎯 60% para aprobar']
+      details: 'Modo de práctica relajado con ayudas',
+      features: ['✓ Ves si acertaste inmediatamente', '🔒 Las respuestas se bloquean', '💡 Pistas disponibles (-10% puntos)', '⏸️ Puedes pausar 1 vez (30s)', '🎯 60% para aprobar']
     },
     {
       value: 'medium',
@@ -140,8 +140,8 @@ function M2PracticeContent() {
       emoji: '🟡',
       time: 18,
       description: '10 preguntas - 1:48 por pregunta',
-      details: 'Responde todas y luego ve los resultados',
-      features: ['⚡ Sin retroalimentación inmediata', '🔥 Bonus por rachas (3+)', '📊 Solo ves resultados al final', '🎯 70% para aprobar']
+      details: 'Ritmo moderado con respuestas finales',
+      features: ['✓ Ves si acertaste inmediatamente', '🔒 Las respuestas se bloquean', '🔥 Bonus por rachas (3+)', '🎯 70% para aprobar']
     },
     {
       value: 'hard',
@@ -150,7 +150,7 @@ function M2PracticeContent() {
       time: 12,
       description: '12 preguntas - 1:12 por pregunta',
       details: 'Sistema de vidas: 2 errores permitidos',
-      features: ['💀 2 vidas (3er error = Game Over)', '✓ Retroalimentación inmediata', '🔥 Bonus por rachas (5+)', '🎯 75% para aprobar']
+      features: ['💀 2 vidas (3er error = Game Over)', '✓ Ves si acertaste inmediatamente', '🔒 Las respuestas se bloquean', '🔥 Bonus por rachas (5+)', '🎯 75% para aprobar']
     },
     {
       value: 'extreme',
@@ -159,7 +159,7 @@ function M2PracticeContent() {
       time: 10,
       description: '15 preguntas - 40s por pregunta',
       details: 'Máximo desafío: 1 vida + tiempo extra por acierto',
-      features: ['💀 1 vida (2do error = Game Over)', '⏱️ +5s por respuesta correcta', '✓ Retroalimentación inmediata', '🎯 80% para aprobar']
+      features: ['💀 1 vida (2do error = Game Over)', '✓ Ves si acertaste inmediatamente', '🔒 Las respuestas se bloquean', '⏱️ +5s por respuesta correcta', '🎯 80% para aprobar']
     }
   ];
 
