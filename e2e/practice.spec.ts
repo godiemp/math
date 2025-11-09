@@ -21,12 +21,12 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     // Check that subject selection is visible
     await expect(page.getByText(/Paso 1.*Selecciona una materia/i)).toBeVisible();
 
-    // Check that all subjects are displayed
-    await expect(page.getByText('Todas las Materias')).toBeVisible();
-    await expect(page.getByText('Números')).toBeVisible();
-    await expect(page.getByText('Álgebra')).toBeVisible();
-    await expect(page.getByText('Geometría')).toBeVisible();
-    await expect(page.getByText('Probabilidad')).toBeVisible();
+    // Check that all subjects are displayed (use button role for specificity)
+    await expect(page.getByRole('button', { name: /Todas las Materias/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Números/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Álgebra/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Geometría/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Probabilidad/i })).toBeVisible();
   });
 
   test('should allow subject and mode selection flow', async ({ page }) => {
@@ -34,15 +34,15 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(1000);
 
     // Select "Todas las Materias" subject
-    await page.getByText('Todas las Materias').click();
+    await page.getByRole('button', { name: /Todas las Materias/i }).click();
     await page.waitForTimeout(500);
 
     // Check that mode selection appears (Step 2)
     await expect(page.getByText(/Paso 2.*Selecciona el modo de práctica/i)).toBeVisible();
 
     // Check that both modes are displayed
-    await expect(page.getByText('Modo Zen')).toBeVisible();
-    await expect(page.getByText('Rapid Fire')).toBeVisible();
+    await expect(page.getByRole('button', { name: /Modo Zen/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Rapid Fire/i })).toBeVisible();
   });
 
   test('should complete a Zen mode quiz', async ({ page }) => {
@@ -50,13 +50,11 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(1000);
 
     // Select subject - Números
-    const numerosButton = page.locator('button').filter({ hasText: /^Números/ });
-    await numerosButton.click();
+    await page.getByRole('button', { name: /^Números/i }).click();
     await page.waitForTimeout(500);
 
     // Select Zen mode
-    const zenButton = page.locator('button').filter({ hasText: /Modo Zen/ });
-    await zenButton.click();
+    await page.getByRole('button', { name: /Modo Zen/i }).click();
     await page.waitForTimeout(500);
 
     // Start quiz
@@ -91,22 +89,21 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(1000);
 
     // Select subject
-    await page.getByText('Todas las Materias').click();
+    await page.getByRole('button', { name: /Todas las Materias/i }).click();
     await page.waitForTimeout(500);
 
     // Select Rapid Fire mode
-    const rapidFireButton = page.locator('button').filter({ hasText: /Rapid Fire/ });
-    await rapidFireButton.click();
+    await page.getByRole('button', { name: /Rapid Fire/i }).click();
     await page.waitForTimeout(500);
 
     // Check that difficulty selection appears (Step 3)
     await expect(page.getByText(/Paso 3.*Selecciona la dificultad/i)).toBeVisible();
 
     // Check that all difficulties are displayed
-    await expect(page.getByText(/^Fácil/)).toBeVisible();
-    await expect(page.getByText(/^Normal/)).toBeVisible();
-    await expect(page.getByText(/^Difícil/)).toBeVisible();
-    await expect(page.getByText(/^Extremo/)).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Fácil/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Normal/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Difícil/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Extremo/i })).toBeVisible();
   });
 
   test('should start Rapid Fire quiz with selected difficulty', async ({ page }) => {
@@ -114,17 +111,15 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(1000);
 
     // Select subject
-    await page.getByText('Todas las Materias').click();
+    await page.getByRole('button', { name: /Todas las Materias/i }).click();
     await page.waitForTimeout(500);
 
     // Select Rapid Fire mode
-    const rapidFireButton = page.locator('button').filter({ hasText: /Rapid Fire/ });
-    await rapidFireButton.click();
+    await page.getByRole('button', { name: /Rapid Fire/i }).click();
     await page.waitForTimeout(500);
 
     // Select Easy difficulty
-    const easyButton = page.locator('button').filter({ hasText: /Fácil/ });
-    await easyButton.click();
+    await page.getByRole('button', { name: /Fácil/i }).click();
     await page.waitForTimeout(500);
 
     // Start quiz button should be visible
@@ -143,12 +138,11 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(1000);
 
     // Select subject
-    await page.getByText('Números').click();
+    await page.getByRole('button', { name: /^Números/i }).click();
     await page.waitForTimeout(500);
 
     // Select Zen mode
-    const zenButton = page.locator('button').filter({ hasText: /Modo Zen/ });
-    await zenButton.click();
+    await page.getByRole('button', { name: /Modo Zen/i }).click();
     await page.waitForTimeout(500);
 
     // Click "Cambiar Selección" button
@@ -170,11 +164,10 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(1000);
 
     // Select and start a quiz
-    await page.getByText('Álgebra').click();
+    await page.getByRole('button', { name: /^Álgebra/i }).click();
     await page.waitForTimeout(500);
 
-    const zenButton = page.locator('button').filter({ hasText: /Modo Zen/ });
-    await zenButton.click();
+    await page.getByRole('button', { name: /Modo Zen/i }).click();
     await page.waitForTimeout(500);
 
     const startButton = page.getByRole('button', { name: /Comenzar Quiz/i });
@@ -250,11 +243,10 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(1000);
 
     // Start a Zen mode quiz
-    await page.getByText('Todas las Materias').click();
+    await page.getByRole('button', { name: /Todas las Materias/i }).click();
     await page.waitForTimeout(500);
 
-    const zenButton = page.locator('button').filter({ hasText: /Modo Zen/ });
-    await zenButton.click();
+    await page.getByRole('button', { name: /Modo Zen/i }).click();
     await page.waitForTimeout(500);
 
     const startButton = page.getByRole('button', { name: /Comenzar Quiz/i });
@@ -301,11 +293,10 @@ test.describe('Practice Mode - Progress Tracking', () => {
     await page.goto('/practice/m1');
     await page.waitForTimeout(1000);
 
-    await page.getByText('Todas las Materias').click();
+    await page.getByRole('button', { name: /Todas las Materias/i }).click();
     await page.waitForTimeout(500);
 
-    const zenButton = page.locator('button').filter({ hasText: /Modo Zen/ });
-    await zenButton.click();
+    await page.getByRole('button', { name: /Modo Zen/i }).click();
     await page.waitForTimeout(500);
 
     const startButton = page.getByRole('button', { name: /Comenzar Quiz/i });
