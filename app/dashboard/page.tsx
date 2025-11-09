@@ -13,6 +13,7 @@ import { Streak } from "@/components/Streak";
 import { api } from "@/lib/api-client";
 import { isAuthenticated } from "@/lib/auth";
 import { MathText } from "@/components/MathDisplay";
+import { ShareButton } from "@/components/ShareButton";
 
 function DashboardContent() {
   const { user, setUser, isAdmin } = useAuth();
@@ -273,11 +274,33 @@ function DashboardContent() {
                 ¡Nuevo! Practica con ensayos PAES en tiempo real. Regístrate, únete al lobby antes de comenzar y compite con otros estudiantes.
               </Text>
             )}
-            <Button asChild className="bg-white text-[#5E5CE6] hover:bg-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]">
-              <Link href="/live-practice">
-                {nextSession ? '¡Regístrate Ahora! →' : 'Ver Ensayos Disponibles →'}
-              </Link>
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
+              <Button asChild className="bg-white text-[#5E5CE6] hover:bg-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]">
+                <Link href="/live-practice">
+                  {nextSession ? '¡Regístrate Ahora! →' : 'Ver Ensayos Disponibles →'}
+                </Link>
+              </Button>
+              {nextSession && (
+                <ShareButton
+                  shareData={{
+                    text: `¡Únete al Ensayo PAES en Vivo! 📝\n${nextSession.name} - ${nextSession.level}\n📅 ${new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', {
+                      weekday: 'long',
+                      day: 'numeric',
+                      month: 'long'
+                    })} a las ${new Date(nextSession.scheduledStartTime).toLocaleTimeString('es-CL', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })} hrs`,
+                    url: typeof window !== 'undefined' ? window.location.origin + '/live-practice' : '/live-practice',
+                    hashtags: ['PAESChile', 'Ensayo', 'Matemáticas']
+                  }}
+                  buttonText="Invitar amigos"
+                  buttonVariant="ghost"
+                  className="bg-white/20 hover:bg-white/30 text-white border border-white/40"
+                  platforms={['whatsapp', 'copy']}
+                />
+              )}
+            </div>
           </div>
         </div>
 
