@@ -353,3 +353,133 @@ export const getQuizStats = async (req: AuthRequest, res: Response): Promise<voi
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+/**
+ * Save last quiz configuration for a user
+ */
+export const saveLastQuizConfig = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { level, subject, mode, difficulty } = req.body;
+
+    // Validate required fields
+    if (!level || !mode) {
+      res.status(400).json({ error: 'Missing required fields: level and mode are required' });
+      return;
+    }
+
+    // Validate level
+    if (level !== 'M1' && level !== 'M2') {
+      res.status(400).json({ error: 'Invalid level. Must be M1 or M2' });
+      return;
+    }
+
+    // Validate mode
+    if (mode !== 'zen' && mode !== 'rapidfire') {
+      res.status(400).json({ error: 'Invalid mode. Must be zen or rapidfire' });
+      return;
+    }
+
+    // Validate subject if provided
+    if (subject && !['números', 'álgebra', 'geometría', 'probabilidad'].includes(subject)) {
+      res.status(400).json({ error: 'Invalid subject' });
+      return;
+    }
+
+    // Validate difficulty if provided
+    if (difficulty && !['easy', 'medium', 'hard', 'extreme'].includes(difficulty)) {
+      res.status(400).json({ error: 'Invalid difficulty' });
+      return;
+    }
+
+    const updatedAt = Date.now();
+
+    // Upsert the last config (insert or update if exists)
+    await pool.query(
+      `INSERT INTO last_quiz_config (user_id, level, subject, mode, difficulty, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       ON CONFLICT (user_id, level)
+       DO UPDATE SET
+         subject = $3,
+         mode = $4,
+         difficulty = $5,
+         updated_at = $6`,
+      [userId, level, subject, mode, difficulty, updatedAt]
+    );
+
+    res.status(200).json({
+      message: 'Last quiz config saved successfully',
+      config: { level, subject, mode, difficulty },
+    });
+  } catch (error) {
+    console.error('Error saving last quiz config:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+/**
+ * Get last quiz configuration for a user
+ */
+export const getLastQuizConfig = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { level } = req.query;
+
+    // Validate level if provided
+    if (level && level !== 'M1' && level !== 'M2') {
+      res.status(400).json({ error: 'Invalid level. Must be M1 or M2' });
+      return;
+    }
+
+    let query = 'SELECT level, subject, mode, difficulty, updated_at FROM last_quiz_config WHERE user_id = $1';
+    const queryParams: any[] = [userId];
+
+    if (level) {
+      query += ' AND level = $2';
+      queryParams.push(level);
+    }
+
+    const result = await pool.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ error: 'No last quiz config found' });
+      return;
+    }
+
+    // If level was specified, return single config; otherwise return all configs
+    if (level) {
+      res.json({
+        config: {
+          level: result.rows[0].level,
+          subject: result.rows[0].subject,
+          mode: result.rows[0].mode,
+          difficulty: result.rows[0].difficulty,
+        },
+      });
+    } else {
+      res.json({
+        configs: result.rows.map((row) => ({
+          level: row.level,
+          subject: row.subject,
+          mode: row.mode,
+          difficulty: row.difficulty,
+        })),
+      });
+    }
+  } catch (error) {
+    console.error('Error getting last quiz config:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

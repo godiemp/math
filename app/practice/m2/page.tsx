@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Card, Button, Heading, Text } from '@/components/ui';
 import { getLastConfigKey } from '@/lib/constants';
+import { api } from '@/lib/api-client';
 
 type Subject = 'números' | 'álgebra' | 'geometría' | 'probabilidad';
 type QuizMode = 'zen' | 'rapidfire';
@@ -30,16 +31,39 @@ function M2PracticeContent() {
   const [lastConfig, setLastConfig] = useState<LastConfig | null>(null);
   const questions = getQuestionsByLevel('M2');
 
-  // Load last config from localStorage
+  // Load last config from backend (with localStorage fallback)
   useEffect(() => {
-    try {
-      const savedConfig = localStorage.getItem(getLastConfigKey('M2'));
-      if (savedConfig) {
-        setLastConfig(JSON.parse(savedConfig));
+    const loadLastConfig = async () => {
+      try {
+        // Try to fetch from backend first
+        const response = await api.get<{ config: LastConfig }>('/api/quiz/last-config?level=M2');
+
+        if (response.data?.config) {
+          setLastConfig(response.data.config);
+          // Update localStorage for offline access
+          localStorage.setItem(getLastConfigKey('M2'), JSON.stringify(response.data.config));
+        } else {
+          // Backend has no config, try localStorage
+          const savedConfig = localStorage.getItem(getLastConfigKey('M2'));
+          if (savedConfig) {
+            setLastConfig(JSON.parse(savedConfig));
+          }
+        }
+      } catch (error) {
+        // If backend fails, fall back to localStorage
+        console.error('Failed to load last config from backend, using localStorage:', error);
+        try {
+          const savedConfig = localStorage.getItem(getLastConfigKey('M2'));
+          if (savedConfig) {
+            setLastConfig(JSON.parse(savedConfig));
+          }
+        } catch (localError) {
+          console.error('Failed to load last config from localStorage:', localError);
+        }
       }
-    } catch (error) {
-      console.error('Failed to load last config:', error);
-    }
+    };
+
+    loadLastConfig();
   }, []);
 
   // Check for replay parameter and load questions
@@ -131,20 +155,33 @@ function M2PracticeContent() {
     }
   ];
 
-  const handleStartQuiz = () => {
+  const handleStartQuiz = async () => {
     if (quizMode === 'zen' || (quizMode === 'rapidfire' && difficulty)) {
-      // Save config to localStorage
+      // Save config to backend and localStorage
       const config: LastConfig = {
         subject: selectedSubject === undefined ? null : selectedSubject,
         mode: quizMode,
         difficulty: difficulty || undefined,
       };
+
       try {
+        // Save to localStorage immediately for quick access
         localStorage.setItem(getLastConfigKey('M2'), JSON.stringify(config));
         setLastConfig(config);
+
+        // Save to backend for cross-device sync (async, don't block quiz start)
+        api.post('/api/quiz/last-config', {
+          level: 'M2',
+          subject: config.subject,
+          mode: config.mode,
+          difficulty: config.difficulty,
+        }).catch(error => {
+          console.error('Failed to save last config to backend:', error);
+        });
       } catch (error) {
         console.error('Failed to save last config:', error);
       }
+
       setQuizStarted(true);
     }
   };
