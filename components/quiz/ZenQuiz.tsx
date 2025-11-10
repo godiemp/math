@@ -497,11 +497,6 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
         )}
       </div>
 
-      {!quizSubmitted && (
-        <div className="mt-6 text-center text-gray-600 dark:text-gray-400">
-          Preguntas respondidas: {userAnswers.filter(a => a !== null).length} / {quizQuestions.length}
-        </div>
-      )}
     </div>
   );
 
