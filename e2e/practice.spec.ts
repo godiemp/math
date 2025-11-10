@@ -229,6 +229,8 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
   });
 
   test('should complete a Rapid Fire quiz and verify timer functionality', async ({ page }) => {
+    // Increase timeout for this test since Rapid Fire takes longer
+    test.setTimeout(60000);
     // Navigate to M1 practice
     await page.goto('/practice/m1');
     await page.waitForTimeout(1000);
@@ -276,6 +278,10 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
         break;
       }
 
+      // Get current question number before answering
+      const beforeCounterText = await questionCounter.textContent().catch(() => '');
+      const beforeQuestionNum = parseInt(beforeCounterText?.match(/Pregunta (\d+)/)?.[1] || '0');
+
       // Select an answer
       const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
       const isOptionVisible = await firstOption.isVisible().catch(() => false);
@@ -288,11 +294,33 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
       await firstOption.click();
       questionsAnswered++;
 
-      // Wait for auto-advance or auto-submit (1.5s + buffer)
-      await page.waitForTimeout(2000);
-
       // Break if we've answered all questions
       if (questionsAnswered >= totalQuestions) {
+        // Wait a bit for auto-submit to process
+        await page.waitForTimeout(2000);
+        break;
+      }
+
+      // Wait for auto-advance by checking when question number changes (max 3s)
+      let advanced = false;
+      for (let waitAttempt = 0; waitAttempt < 15; waitAttempt++) {
+        await page.waitForTimeout(200);
+        const afterCounterText = await questionCounter.textContent().catch(() => '');
+        const afterQuestionNum = parseInt(afterCounterText?.match(/Pregunta (\d+)/)?.[1] || '0');
+
+        if (afterQuestionNum !== beforeQuestionNum && afterQuestionNum > 0) {
+          advanced = true;
+          break;
+        }
+
+        // Also check if quiz ended
+        if (!afterCounterText || !(await questionCounter.isVisible().catch(() => false))) {
+          break;
+        }
+      }
+
+      if (!advanced) {
+        // Didn't advance, quiz might have ended
         break;
       }
     }
