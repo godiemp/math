@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -19,8 +20,12 @@ export default function Footer() {
       >
         <div className="flex justify-center items-center gap-2">
           <button
-            onClick={() => setShowInfoModal(true)}
+            onClick={(e) => {
+              e.preventDefault();
+              setShowInfoModal(true);
+            }}
             className="spring-motion flex items-center gap-2"
+            type="button"
             style={{
               background: 'none',
               border: 'none',
@@ -279,11 +284,12 @@ export default function Footer() {
     </footer>
 
       {/* Mobile Info Modal */}
-      {showInfoModal && (
+      {showInfoModal && typeof window !== 'undefined' && createPortal(
         <div
-          className="fixed inset-0 z-50 flex items-end md:items-center justify-center md:hidden"
+          className="fixed inset-0 flex items-end md:items-center justify-center md:hidden"
           style={{
             background: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 9999,
           }}
           onClick={() => setShowInfoModal(false)}
         >
@@ -543,7 +549,8 @@ export default function Footer() {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
