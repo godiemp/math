@@ -18,6 +18,9 @@ export default function PrivacidadPage() {
             background: 'none',
             border: 'none',
             cursor: 'pointer',
+            position: 'relative',
+            zIndex: 10,
+            pointerEvents: 'auto',
           }}
         >
           ← Volver
