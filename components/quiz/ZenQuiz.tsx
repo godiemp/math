@@ -323,9 +323,11 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
   const showFeedback = quizSubmitted;
 
   const questionContent = (
-    <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8 animate-fadeIn"
+    <div className="w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8 animate-fadeIn"
       style={{
         boxShadow: '0 0 60px rgba(20, 184, 166, 0.3), 0 20px 40px rgba(0, 0, 0, 0.2)',
+        minHeight: '600px',
+        maxHeight: '85vh',
       }}>
       {/* Progress bar */}
       <div className="mb-6">
@@ -497,18 +499,13 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
         )}
       </div>
 
-      {!quizSubmitted && (
-        <div className="mt-6 text-center text-gray-600 dark:text-gray-400">
-          Preguntas respondidas: {userAnswers.filter(a => a !== null).length} / {quizQuestions.length}
-        </div>
-      )}
     </div>
   );
 
   return (
     <>
       <div className="fixed inset-0 bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500 dark:from-teal-800 dark:via-cyan-900 dark:to-blue-900 overflow-y-auto">
-        <div className="min-h-full py-6 px-4 sm:py-8 sm:px-6">
+        <div className="min-h-full py-6 px-4 sm:py-8 sm:px-6 flex items-center justify-center">
           {questionContent}
         </div>
       </div>
