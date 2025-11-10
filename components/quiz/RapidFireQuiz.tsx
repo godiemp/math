@@ -57,6 +57,7 @@ export default function RapidFireQuiz({
 
   // Menu state
   const [showMenu, setShowMenu] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Use shared hooks
   const {
@@ -240,9 +241,18 @@ export default function RapidFireQuiz({
   };
 
   const handleSubmitQuiz = async () => {
-    await submitQuiz(quizQuestions, userAnswers, quizSessionId, aiConversation);
-    setQuizSubmitted(true);
-    setCurrentQuestionIndex(0);
+    if (isSubmitting) return; // Prevent double submission
+
+    setIsSubmitting(true);
+    try {
+      await submitQuiz(quizQuestions, userAnswers, quizSessionId, aiConversation);
+      setQuizSubmitted(true);
+      setCurrentQuestionIndex(0);
+    } catch (error) {
+      console.error('Error submitting quiz:', error);
+      // Reset submitting state on error so user can retry
+      setIsSubmitting(false);
+    }
   };
 
   const handleRestart = () => {

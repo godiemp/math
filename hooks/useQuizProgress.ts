@@ -45,6 +45,7 @@ export const useQuizProgress = ({ level }: UseQuizProgressProps) => {
       // Save ALL questions, including unanswered ones (use -1 for unanswered)
       const attempt: QuestionAttempt = {
         questionId: question.id,
+        quizSessionId: quizSessionId, // Add session ID to track quiz sessions
         question: question.question,
         topic: question.topic,
         level: level,
@@ -82,6 +83,14 @@ export const useQuizProgress = ({ level }: UseQuizProgressProps) => {
 
     // Save updated history
     localStorage.setItem(historyKey, JSON.stringify(history));
+
+    // Debug logging
+    console.log('📝 Quiz Submitted - Debug Info:');
+    console.log(`  Questions in quiz: ${quizQuestions.length}`);
+    console.log(`  Attempts created: ${attempts.length}`);
+    console.log(`  Total history size: ${history.length}`);
+    console.log(`  Quiz Session ID: ${quizSessionId}`);
+    console.log(`  Level: ${level}`);
 
     // Save quiz attempts to backend and update streak if user is authenticated
     if (isAuthenticated()) {

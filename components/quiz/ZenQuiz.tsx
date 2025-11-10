@@ -31,6 +31,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
   });
   const [quizSessionId] = useState(generateQuizSessionId);
   const [aiConversation] = useState<Array<{ role: string; message: string; timestamp: number }>>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Use shared hooks
   const {
@@ -81,9 +82,18 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
   };
 
   const handleSubmitQuiz = async () => {
-    await submitQuiz(quizQuestions, userAnswers, quizSessionId, aiConversation);
-    setQuizSubmitted(true);
-    setCurrentQuestionIndex(0);
+    if (isSubmitting) return; // Prevent double submission
+
+    setIsSubmitting(true);
+    try {
+      await submitQuiz(quizQuestions, userAnswers, quizSessionId, aiConversation);
+      setQuizSubmitted(true);
+      setCurrentQuestionIndex(0);
+    } catch (error) {
+      console.error('Error submitting quiz:', error);
+      // Reset submitting state on error so user can retry
+      setIsSubmitting(false);
+    }
   };
 
   const handleRestart = () => {
@@ -492,13 +502,17 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
         {!quizSubmitted && (
           <button
             onClick={handleSubmitQuiz}
-            disabled={userAnswers.filter(a => a !== null).length === 0}
+            disabled={userAnswers.filter(a => a !== null).length === 0 || isSubmitting}
             className="w-full px-6 py-3 rounded-lg font-semibold text-lg transition-all bg-gradient-to-r from-teal-400 via-cyan-500 to-blue-600 hover:from-teal-500 hover:via-cyan-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-xl hover:shadow-2xl hover:scale-[1.02]"
-            style={userAnswers.filter(a => a !== null).length > 0 ? {
+            style={userAnswers.filter(a => a !== null).length > 0 && !isSubmitting ? {
               boxShadow: '0 0 30px rgba(20, 184, 166, 0.5), 0 10px 25px rgba(0, 0, 0, 0.3)'
             } : undefined}
           >
-            🧘 Enviar Quiz ({userAnswers.filter(a => a !== null).length} de {quizQuestions.length} respondidas)
+            {isSubmitting ? (
+              <>⏳ Enviando...</>
+            ) : (
+              <>🧘 Enviar Quiz ({userAnswers.filter(a => a !== null).length} de {quizQuestions.length} respondidas)</>
+            )}
           </button>
         )}
       </div>
