@@ -286,7 +286,7 @@ export default function Footer() {
       {/* Mobile Info Modal */}
       {showInfoModal && typeof window !== 'undefined' && createPortal(
         <div
-          className="fixed inset-0 flex items-end md:items-center justify-center md:hidden"
+          className="fixed inset-0 flex items-end justify-center"
           style={{
             background: 'rgba(0, 0, 0, 0.5)',
             zIndex: 9999,
@@ -294,7 +294,7 @@ export default function Footer() {
           onClick={() => setShowInfoModal(false)}
         >
           <div
-            className="translucent spring-motion w-full max-h-[85vh] overflow-y-auto"
+            className="translucent spring-motion w-full max-w-md max-h-[85vh] overflow-y-auto"
             style={{
               borderRadius: '24px 24px 0 0',
               boxShadow: 'var(--shadow-raised)',
