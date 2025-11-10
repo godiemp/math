@@ -22,6 +22,7 @@ const navItems: NavItem[] = [
   { name: 'Problems', path: '/admin/problems', icon: '❓' },
   { name: 'Generator', path: '/admin/qgen', icon: '🎲' },
   { name: 'Upload', path: '/admin/upload', icon: '📤' },
+  { name: 'Study Buddy Debug', path: '/admin/study-buddy-debug', icon: '🧠' },
   { name: 'Rapid Fire Debug', path: '/admin/rapidfire-debug', icon: '⚡' },
 ];
 
