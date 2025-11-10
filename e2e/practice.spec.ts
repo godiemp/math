@@ -169,9 +169,6 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     const questionCounterText = await page.getByTestId('question-counter').textContent();
     const totalQuestions = parseInt(questionCounterText?.match(/de (\d+)/)?.[1] || '10');
 
-    // Track correct answers for score validation
-    let correctAnswers = 0;
-
     // Answer all questions
     for (let i = 1; i <= totalQuestions; i++) {
       // Verify we're on the correct question
@@ -183,48 +180,39 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
       await firstOption.click();
       await page.waitForTimeout(500);
 
-      // For the last question, click "Finalizar" instead of "Siguiente"
-      if (i === totalQuestions) {
-        const finishButton = page.getByRole('button', { name: /Finalizar/i });
-        await expect(finishButton).toBeVisible();
-        await finishButton.click();
-      } else {
+      // Navigate to next question (except on last question)
+      if (i < totalQuestions) {
         const nextButton = page.getByRole('button', { name: /Siguiente/i });
         await expect(nextButton).toBeVisible();
         await nextButton.click();
+        await page.waitForTimeout(500);
       }
-
-      await page.waitForTimeout(500);
     }
 
-    // Wait for results page to load
+    // After answering all questions, submit the quiz using the "Enviar Quiz" button
+    const submitButton = page.getByRole('button', { name: /Enviar Quiz/i });
+    await expect(submitButton).toBeVisible();
+    await submitButton.click();
     await page.waitForTimeout(2000);
 
     // Verify results page elements are displayed
     await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible({ timeout: 10000 });
 
-    // Check that score is displayed
-    const scoreElement = page.getByText(/Puntaje:/i);
-    await expect(scoreElement).toBeVisible();
+    // Check that score percentage is displayed
+    await expect(page.locator('text=/\\d+%/')).toBeVisible();
 
-    // Verify score format (should show X/Y format or percentage)
-    const scoreText = await scoreElement.textContent();
-    expect(scoreText).toMatch(/\d+/); // Should contain at least one number
+    // Check that the score breakdown is displayed (X de Y respuestas correctas)
+    await expect(page.getByText(/de.*respuestas correctas/i)).toBeVisible();
 
-    // Verify other result elements
-    await expect(page.getByText(/Tiempo Total/i).or(page.getByText(/Duración/i))).toBeVisible();
+    // Check for "Revisar Respuestas" button
+    const reviewButton = page.getByRole('button', { name: /Revisar Respuestas/i });
+    await expect(reviewButton).toBeVisible();
 
-    // Check for "Ver Respuestas" or similar review button
-    const reviewButton = page.getByRole('button', { name: /Ver Respuestas|Revisar|Review/i });
-    if (await reviewButton.count() > 0) {
-      await expect(reviewButton).toBeVisible();
-    }
+    // Check for "Nuevo Quiz" button
+    await expect(page.getByRole('button', { name: /Nuevo Quiz/i })).toBeVisible();
 
-    // Check for return/home button
-    const returnButton = page.getByRole('button', { name: /Volver|Inicio|Práctica/i });
-    if (await returnButton.count() > 0) {
-      await expect(returnButton).toBeVisible();
-    }
+    // Check for "Volver al Inicio" link
+    await expect(page.getByRole('link', { name: /Volver al Inicio/i })).toBeVisible();
   });
 
   test('should complete a Rapid Fire quiz and verify timer functionality', async ({ page }) => {
@@ -256,15 +244,11 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     // Verify timer is visible
     await expect(page.locator('text=⚡')).toBeVisible();
 
-    // Get the initial time or verify timer changes
-    const timerExists = await page.locator('[data-testid="timer"]').or(page.locator('text=⚡').locator('..')).count() > 0;
-    expect(timerExists).toBe(true);
-
     // Get the total number of questions
     const questionCounterText = await page.getByTestId('question-counter').textContent();
     const totalQuestions = parseInt(questionCounterText?.match(/de (\d+)/)?.[1] || '10');
 
-    // Answer all questions quickly
+    // Answer all questions - Rapid Fire auto-advances after each answer
     for (let i = 1; i <= totalQuestions; i++) {
       // Verify we're on the correct question
       await expect(page.getByTestId('question-counter')).toContainText(`Pregunta ${i} de ${totalQuestions}`);
@@ -273,39 +257,29 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
       const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
       await expect(firstOption).toBeVisible();
       await firstOption.click();
-      await page.waitForTimeout(300);
 
-      // Click next or finish
-      if (i === totalQuestions) {
-        const finishButton = page.getByRole('button', { name: /Finalizar/i });
-        await expect(finishButton).toBeVisible();
-        await finishButton.click();
-      } else {
-        const nextButton = page.getByRole('button', { name: /Siguiente/i });
-        await expect(nextButton).toBeVisible();
-        await nextButton.click();
-      }
-
-      await page.waitForTimeout(300);
+      // Wait for auto-advance (1.5s) or auto-submit on last question
+      await page.waitForTimeout(2000);
     }
 
-    // Wait for results page
+    // Wait a bit more for results page to fully load after auto-submit
     await page.waitForTimeout(2000);
 
     // Verify results page shows completion
     await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible({ timeout: 10000 });
 
-    // Verify that time taken is displayed
-    await expect(page.getByText(/Tiempo/i)).toBeVisible();
+    // Verify score is displayed - Rapid Fire shows points
+    await expect(page.getByText(/Puntaje Total/i).or(page.getByText(/Puntos/i))).toBeVisible();
 
-    // Verify score is displayed
-    await expect(page.getByText(/Puntaje/i)).toBeVisible();
+    // Verify accuracy percentage
+    await expect(page.getByText(/Precisión/i).or(page.getByText(/Accuracy/i))).toBeVisible();
 
-    // For Rapid Fire, may also show time-based achievements or speed stats
-    const speedIndicator = page.getByText(/Rápido|Velocidad|⚡/i);
-    if (await speedIndicator.count() > 0) {
-      await expect(speedIndicator.first()).toBeVisible();
-    }
+    // Verify time used is displayed
+    await expect(page.getByText(/Tiempo Usado/i).or(page.getByText(/Time Used/i))).toBeVisible();
+
+    // Check for review and restart buttons
+    await expect(page.getByRole('button', { name: /Revisar Respuestas/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Nuevo Quiz/i })).toBeVisible();
   });
 
   test('should allow reviewing answers after quiz completion', async ({ page }) => {
@@ -336,34 +310,43 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
       await firstOption.click();
       await page.waitForTimeout(300);
 
-      if (i === totalQuestions) {
-        await page.getByRole('button', { name: /Finalizar/i }).click();
-      } else {
+      // Navigate to next question (except on last)
+      if (i < totalQuestions) {
         await page.getByRole('button', { name: /Siguiente/i }).click();
+        await page.waitForTimeout(300);
       }
-      await page.waitForTimeout(300);
     }
 
-    // Wait for results page
+    // Submit the quiz
+    await page.getByRole('button', { name: /Enviar Quiz/i }).click();
     await page.waitForTimeout(2000);
 
-    // Click "Ver Respuestas" button to review answers
-    const reviewButton = page.getByRole('button', { name: /Ver Respuestas|Revisar|Review/i });
+    // Should be on results page
+    await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible({ timeout: 10000 });
 
-    if (await reviewButton.count() > 0) {
-      await reviewButton.click();
-      await page.waitForTimeout(1000);
+    // Click "Revisar Respuestas" button to review answers
+    const reviewButton = page.getByRole('button', { name: /Revisar Respuestas/i });
+    await expect(reviewButton).toBeVisible();
+    await reviewButton.click();
+    await page.waitForTimeout(1000);
 
-      // Verify review page shows questions
-      // Look for question indicators or navigation
-      const hasQuestions = await page.getByText(/Pregunta|Question/i).count() > 0;
-      const hasAnswerOptions = await page.locator('button').filter({ hasText: /^[A-E]\./ }).count() > 0;
+    // Should be back on question view in review mode
+    // Verify we can see a question with feedback
+    await expect(page.getByTestId('question-counter')).toBeVisible();
+    await expect(page.getByTestId('question-counter')).toContainText('Pregunta 1 de');
 
-      expect(hasQuestions || hasAnswerOptions).toBe(true);
+    // Should show answer options
+    const answerOptions = page.locator('button').filter({ hasText: /^[A-E]\./ });
+    await expect(answerOptions.first()).toBeVisible();
 
-      // Should show which answers were correct/incorrect
-      const hasCorrectIndicator = await page.locator('text=✓').or(page.locator('text=✗')).or(page.getByText(/Correcta|Incorrecta/i)).count() > 0;
-      expect(hasCorrectIndicator).toBe(true);
-    }
+    // In review mode, should show feedback indicators (correct/incorrect markers)
+    // The correct answer should be highlighted or marked
+    const hasGreenMarker = await page.locator('.bg-green-500, .text-green-700, .border-green-500').count() > 0;
+    const hasCorrectText = await page.getByText(/Correcta|✓/i).count() > 0;
+
+    expect(hasGreenMarker || hasCorrectText).toBe(true);
+
+    // Should have navigation to see other questions
+    await expect(page.getByRole('button', { name: /Siguiente/i })).toBeVisible();
   });
 });
