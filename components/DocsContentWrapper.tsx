@@ -11,15 +11,15 @@ interface DocsContentWrapperProps {
 
 export function DocsContentWrapper({ content, title, isInicio = false }: DocsContentWrapperProps) {
   return (
-    <div className="flex-1">
+    <div className="flex-1 min-w-0">
       <div>
         {/* Export Button */}
-        <div className="flex justify-end mb-6 px-6 pt-6 print:hidden">
+        <div className="flex justify-end mb-4 sm:mb-6 px-4 sm:px-6 pt-4 sm:pt-6 print:hidden">
           <DocsExportButton title={title} />
         </div>
 
         {/* Content to be exported */}
-        <div className="px-6 pb-6 print:p-0">
+        <div className="px-4 sm:px-6 pb-6 print:p-0">
           <AdaptiveMarkdownViewer content={content} hideReadingModeControl={isInicio} />
         </div>
       </div>

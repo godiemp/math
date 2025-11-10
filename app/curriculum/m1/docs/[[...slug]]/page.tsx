@@ -2,6 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import Link from 'next/link';
 import { DocsContentWrapper } from '@/components/DocsContentWrapper';
+import { DocsPageWithNav } from '@/components/DocsPageWithNav';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { ModuleAccessGuard } from '@/components/ModuleAccessGuard';
 import { notFound } from 'next/navigation';
@@ -72,22 +73,22 @@ export default async function DocsPage({ params }: PageProps) {
       <ModuleAccessGuard moduleName="Documentación M1">
         <div className="min-h-screen bg-white dark:bg-[#000000] print:bg-white">
           {/* Navbar */}
-          <nav className="sticky top-0 z-30 h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] print:hidden">
-            <div className="max-w-7xl mx-auto px-6 lg:px-8 h-full flex justify-between items-center">
-              <div className="flex items-center gap-4">
+          <nav className="sticky top-0 z-30 min-h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] print:hidden">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-0 sm:h-14 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
+              <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
                 <Link
                   href="/curriculum/m1"
-                  className="text-sm text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors"
+                  className="text-xs sm:text-sm text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors whitespace-nowrap"
                 >
-                  ← Volver a Curriculum
+                  ← Curriculum
                 </Link>
-                <h1 className="text-lg font-semibold text-[#0A84FF]">
+                <h1 className="text-sm sm:text-base lg:text-lg font-semibold text-[#0A84FF]">
                   M1 - Documentación
                 </h1>
               </div>
               <Link
                 href="/dashboard"
-                className="text-sm text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors"
+                className="text-xs sm:text-sm text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors"
               >
                 Dashboard
               </Link>
@@ -96,55 +97,13 @@ export default async function DocsPage({ params }: PageProps) {
 
           {/* Main layout */}
           <div className="flex">
-            {/* Sidebar Navigation */}
-            <aside className="hidden lg:block w-64 bg-white dark:bg-[#121212] border-r border-black/[0.12] dark:border-white/[0.16] h-[calc(100vh-3.5rem)] sticky top-14 overflow-y-auto print:hidden">
-              <div className="p-6">
-                <Link
-                  href="/curriculum/m1/docs"
-                  className={`block px-3 py-1.5 rounded text-sm mb-3 ${
-                    currentSlug === ''
-                      ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-medium'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                  }`}
-                >
-                  Inicio
-                </Link>
-
-                <Link
-                  href="/curriculum/m1/docs-export-all"
-                  className="block px-3 py-1.5 rounded text-sm mb-6 text-[#0A84FF] hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                >
-                  Exportar Todo
-                </Link>
-
-                {docsStructure.sections.map((section) => (
-                  <div key={section.path} className="mb-6">
-                    <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider mb-2">
-                      {section.title}
-                    </h3>
-                    <ul className="space-y-1">
-                      {section.items.map((item) => (
-                        <li key={item.slug}>
-                          <Link
-                            href={`/curriculum/m1/docs/${item.slug}`}
-                            className={`block px-3 py-1.5 rounded text-sm ${
-                              currentSlug === item.slug
-                                ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-medium'
-                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                            }`}
-                          >
-                            {item.title}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </aside>
-
-            {/* Main Content */}
-            <DocsContentWrapper content={content} title={pageTitle} isInicio={currentSlug === ''} />
+            <DocsPageWithNav
+              docsStructure={docsStructure}
+              currentSlug={currentSlug}
+              level="M1"
+            >
+              <DocsContentWrapper content={content} title={pageTitle} isInicio={currentSlug === ''} />
+            </DocsPageWithNav>
           </div>
         </div>
       </ModuleAccessGuard>
