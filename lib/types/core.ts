@@ -142,6 +142,21 @@ export interface User {
   currentStreak?: number;
   longestStreak?: number;
   lastPracticeDate?: string | null;
+  subscription?: {
+    id: number;
+    userId: string;
+    planId: string;
+    status: 'trial' | 'active' | 'expired' | 'cancelled';
+    startedAt: number;
+    expiresAt?: number;
+    trialEndsAt?: number;
+    cancelledAt?: number;
+    autoRenew: boolean;
+    paymentMethod?: string;
+    lastPaymentAt?: number;
+    createdAt: number;
+    updatedAt: number;
+  };
 }
 
 /**

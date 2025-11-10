@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { QuestionAttempt, QuizHistoryResponse } from '@/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ModuleAccessGuard } from '@/components/ModuleAccessGuard';
 import { Button, Card, Badge, Heading, Text, Modal, Navbar, NavbarLink } from '@/components/ui';
 import { MathText } from '@/components/MathDisplay';
 import { SkillsDisplay } from '@/components/SkillsDisplay';
@@ -781,7 +782,9 @@ function ProgressPageContent() {
 export default function ProgressPage() {
   return (
     <ProtectedRoute>
-      <ProgressPageContent />
+      <ModuleAccessGuard moduleName="Progreso">
+        <ProgressPageContent />
+      </ModuleAccessGuard>
     </ProtectedRoute>
   );
 }
