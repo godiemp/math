@@ -6,7 +6,7 @@ export const registerSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
   password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
   fullName: z.string().min(1, 'El nombre es requerido'),
-  level: z.enum(['m1', 'm2'], { errorMap: () => ({ message: 'El nivel debe ser M1 o M2' }) }),
+  level: z.enum(['m1', 'm2']),
 });
 
 export const loginSchema = z.object({
@@ -26,7 +26,7 @@ export function validate(schema: z.ZodSchema) {
       next();
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const errors = error.errors.map((err) => ({
+        const errors = error.issues.map((err) => ({
           field: err.path.join('.'),
           message: err.message,
         }));
