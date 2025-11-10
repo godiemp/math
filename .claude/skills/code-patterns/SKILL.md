@@ -66,6 +66,56 @@ try {
 }
 ```
 
+**✨ NEW: USE RESPONSE HELPERS (Recommended):**
+
+To ensure consistency and reduce boilerplate, use the response helper functions:
+
+```typescript
+// Import helpers
+import { success, error, errorResponses, getErrorMessage } from '../lib/response-helpers';
+
+// In controllers - Success responses
+export const getUser = async (req: AuthRequest, res: Response) => {
+  const user = await getUserById(req.params.id);
+  return res.status(200).json(success(user));
+};
+
+// Error responses - Manual
+export const createUser = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = await createUserService(req.body);
+    return res.status(201).json(success(user, 'User created successfully'));
+  } catch (err) {
+    return res.status(500).json(error('Failed to create user', getErrorMessage(err)));
+  }
+};
+
+// Error responses - Using pre-built responses
+export const deleteUser = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.userId;
+  if (!userId) {
+    return res.status(401).json(errorResponses.unauthorized());
+  }
+
+  const user = await findUser(req.params.id);
+  if (!user) {
+    return res.status(404).json(errorResponses.notFound('User'));
+  }
+
+  await deleteUserService(user.id);
+  return res.status(200).json(success({ deleted: true }));
+};
+```
+
+**Benefits:**
+- Guaranteed consistent response format
+- Type-safe responses
+- Less boilerplate code
+- Pre-built common error responses
+- Easy to test
+
+**Location:** `backend/src/lib/response-helpers.ts`
+
 ---
 
 ### 2. Authentication Pattern
@@ -472,6 +522,98 @@ const result = await pool.query(query, params);
 
 ---
 
+### 9b. Pagination Pattern
+
+**✨ NEW: USE PAGINATION HELPERS (Recommended):**
+
+For consistent pagination across all list endpoints, use the pagination utilities:
+
+```typescript
+import { success } from '../lib/response-helpers';
+import {
+  normalizePagination,
+  paginate,
+  getPaginationFromQuery,
+  getParameterizedLimitOffset
+} from '../lib/pagination';
+
+export const getResources = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+    if (!userId) {
+      return res.status(401).json(errorResponses.unauthorized());
+    }
+
+    // Extract and normalize pagination params
+    const paginationParams = getPaginationFromQuery(req.query);
+    const { page, limit, offset } = normalizePagination(paginationParams);
+
+    // Get total count for pagination metadata
+    const countResult = await pool.query(
+      'SELECT COUNT(*) FROM resources WHERE user_id = $1',
+      [userId]
+    );
+    const total = parseInt(countResult.rows[0].count);
+
+    // Get paginated data using parameterized LIMIT/OFFSET
+    const { clause, params: paginationQueryParams } = getParameterizedLimitOffset(
+      { page, limit, offset },
+      2 // Starting param index (after $1 for userId)
+    );
+
+    const dataResult = await pool.query(
+      `SELECT * FROM resources
+       WHERE user_id = $1
+       ORDER BY created_at DESC ${clause}`,
+      [userId, ...paginationQueryParams]
+    );
+
+    // Create paginated response with metadata
+    const paginatedResponse = paginate(dataResult.rows, total, { page, limit, offset });
+
+    return res.status(200).json(success(paginatedResponse));
+  } catch (err) {
+    console.error('[getResources] Error:', err);
+    return res.status(500).json(error('Failed to fetch resources', getErrorMessage(err)));
+  }
+};
+```
+
+**Response Format:**
+```typescript
+{
+  "success": true,
+  "data": {
+    "data": [/* array of resources */],
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 150,
+      "totalPages": 8,
+      "hasNextPage": true,
+      "hasPreviousPage": false
+    }
+  }
+}
+```
+
+**Pagination Defaults:**
+- Default page: 1
+- Default limit: 20
+- Maximum limit: 100
+- Minimum limit: 1
+
+**Benefits:**
+- Consistent pagination across all endpoints
+- Automatic validation of page/limit parameters
+- Includes helpful metadata (hasNextPage, totalPages)
+- Type-safe
+- SQL injection safe
+
+**Location:** `backend/src/lib/pagination.ts`
+
+---
+
 ### 10. Route Registration Pattern
 
 **IN index.ts:**
@@ -650,34 +792,106 @@ export const create = async (req: AuthRequest, res: Response) => {
 
 ## Quick Reference
 
-**New Controller Template:**
+**New Controller Template (Using Helpers):**
 ```typescript
 import { Response } from 'express';
 import { AuthRequest } from '../types';
+import { success, error, errorResponses, getErrorMessage } from '../lib/response-helpers';
 
 export const myController = async (req: AuthRequest, res: Response) => {
   try {
+    // Check auth
     const userId = req.user?.userId;
     if (!userId) {
-      return res.status(401).json({ success: false, error: 'Auth required' });
+      return res.status(401).json(errorResponses.unauthorized());
     }
 
+    // Validate input
     const { field } = req.body;
     if (!field) {
-      return res.status(400).json({ success: false, error: 'Missing field' });
+      return res.status(400).json(errorResponses.badRequest('Missing required field: field'));
     }
 
+    // Execute logic
     const result = await service(field, userId);
-    return res.status(200).json({ success: true, data: result });
-  } catch (error) {
-    console.error('[myController] Error:', error);
-    return res.status(500).json({
-      success: false,
-      error: 'Operation failed',
-      message: error instanceof Error ? error.message : 'Unknown'
-    });
+
+    // Return success
+    return res.status(200).json(success(result));
+  } catch (err) {
+    console.error('[myController] Error:', err);
+    return res.status(500).json(
+      error('Operation failed', getErrorMessage(err))
+    );
   }
 };
 ```
+
+**New Paginated List Controller Template:**
+```typescript
+import { Response } from 'express';
+import { AuthRequest } from '../types';
+import { success, errorResponses, getErrorMessage } from '../lib/response-helpers';
+import {
+  normalizePagination,
+  paginate,
+  getPaginationFromQuery,
+  getParameterizedLimitOffset
+} from '../lib/pagination';
+
+export const listResources = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+    if (!userId) {
+      return res.status(401).json(errorResponses.unauthorized());
+    }
+
+    // Handle pagination
+    const { page, limit, offset } = normalizePagination(getPaginationFromQuery(req.query));
+
+    // Get total count
+    const countResult = await pool.query(
+      'SELECT COUNT(*) FROM resources WHERE user_id = $1',
+      [userId]
+    );
+    const total = parseInt(countResult.rows[0].count);
+
+    // Get paginated data
+    const { clause, params: paginationParams } = getParameterizedLimitOffset(
+      { page, limit, offset },
+      2
+    );
+    const result = await pool.query(
+      `SELECT * FROM resources WHERE user_id = $1 ORDER BY created_at DESC ${clause}`,
+      [userId, ...paginationParams]
+    );
+
+    // Return paginated response
+    const paginatedResponse = paginate(result.rows, total, { page, limit, offset });
+    return res.status(200).json(success(paginatedResponse));
+  } catch (err) {
+    console.error('[listResources] Error:', err);
+    return res.status(500).json(error('Failed to list resources', getErrorMessage(err)));
+  }
+};
+```
+
+---
+
+## Additional Resources
+
+### Helper Utilities
+- **Response Helpers:** `backend/src/lib/response-helpers.ts`
+- **Pagination Helpers:** `backend/src/lib/pagination.ts`
+
+### Documentation
+- **Testing Patterns:** `.claude/skills/code-patterns/testing-patterns.md`
+- **ESLint Setup:** `.claude/skills/code-patterns/eslint-setup.md`
+- **Migration Guide:** `.claude/skills/code-patterns/migration-guide.md`
+- **Gaps & Opportunities:** `.claude/skills/code-patterns/gaps-and-opportunities.md`
+
+### Setup & Configuration
+- **ESLint Config Template:** `.claude/skills/code-patterns/.eslintrc.json`
+
+---
 
 Use this skill proactively to catch inconsistencies and maintain code quality!
