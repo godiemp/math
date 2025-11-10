@@ -768,7 +768,7 @@ export default function RapidFireQuiz({
 
       {/* Streak Notification */}
       {showStreakNotification && (
-        <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 animate-fadeIn">
+        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
           <div
             className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-6 rounded-2xl shadow-2xl"
             style={{
