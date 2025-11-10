@@ -543,14 +543,14 @@ export default function Curriculum({ level }: CurriculumProps) {
   return (
     <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">
       {/* Navbar */}
-      <nav className="sticky top-0 z-30 h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] saturate-[1.2]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 h-full flex justify-between items-center">
-          <h1 className="text-lg font-semibold text-[#0A84FF]">
+      <nav className="sticky top-0 z-30 min-h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] saturate-[1.2]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-0 sm:h-14 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
+          <h1 className="text-sm sm:text-base lg:text-lg font-semibold text-[#0A84FF]">
             PAES Chile - Matemática
           </h1>
           <Link
             href="/dashboard"
-            className="text-sm text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors"
+            className="text-xs sm:text-sm text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors"
           >
             ← Volver al Inicio
           </Link>
@@ -559,45 +559,73 @@ export default function Curriculum({ level }: CurriculumProps) {
 
       {/* Main layout with sidebar */}
       <div className="flex">
-        <CurriculumSidebar currentLevel={level} />
+        {/* Hide sidebar on mobile, show on md and up */}
+        <div className="hidden md:block">
+          <CurriculumSidebar currentLevel={level} />
+        </div>
 
         {/* Main content */}
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-4 sm:p-6 md:p-8">
           <div className="max-w-5xl mx-auto">
+            {/* Mobile level selector - shown only on mobile */}
+            <div className="md:hidden mb-4 flex gap-2 overflow-x-auto pb-2">
+              <Link
+                href="/curriculum/m1"
+                className={`flex-shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  level === 'M1'
+                    ? 'bg-[#0A84FF] text-white'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                }`}
+              >
+                📐 M1
+              </Link>
+              <Link
+                href="/curriculum/m2"
+                className={`flex-shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  level === 'M2'
+                    ? 'bg-[#0A84FF] text-white'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                }`}
+              >
+                🎓 M2
+              </Link>
+            </div>
+
             {/* Header */}
-            <div className="mb-8">
-              <div className="flex justify-between items-start mb-3">
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 text-transparent bg-clip-text">
+            <div className="mb-6 sm:mb-8">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 text-transparent bg-clip-text">
                   Curriculum PAES - Nivel {level}
                 </h1>
                 {level === 'M1' && (
                   <Link
                     href="/curriculum/m1/docs"
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors text-sm flex items-center gap-2"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg transition-colors text-xs sm:text-sm flex items-center gap-2 whitespace-nowrap self-start"
                   >
-                    📖 Ver Documentación Detallada
+                    📖 <span className="hidden sm:inline">Ver Documentación Detallada</span><span className="sm:hidden">Docs</span>
                   </Link>
                 )}
               </div>
-              <p className="text-gray-600 dark:text-gray-300 text-lg mb-2">
+              <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base md:text-lg mb-2">
                 {level === 'M1'
                   ? 'Competencia Matemática 1 - Contenidos básicos'
                   : 'Competencia Matemática 2 - Contenidos avanzados'}
               </p>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
-                <span className="font-semibold">Duración:</span> 2h 20min |
-                <span className="font-semibold ml-2">Preguntas:</span> {level === 'M1' ? '65 (60 para puntaje)' : '55 (50 para puntaje)'}
-                {level === 'M2' && ' | Incluye Suficiencia de Datos'}
+              <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 flex flex-wrap gap-1">
+                <span><span className="font-semibold">Duración:</span> 2h 20min</span>
+                <span className="hidden sm:inline">|</span>
+                <span><span className="font-semibold">Preguntas:</span> {level === 'M1' ? '65 (60 para puntaje)' : '55 (50 para puntaje)'}</span>
+                {level === 'M2' && <><span className="hidden sm:inline">|</span><span>Incluye Suficiencia de Datos</span></>}
               </div>
             </div>
 
         {/* Official PAES Content */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-800 dark:text-gray-100">
             📚 Ejes Temáticos y Contenidos Oficiales PAES
           </h2>
 
-          <div className="space-y-4 mb-6">
+          <div className="space-y-3 sm:space-y-4 mb-6">
             {paesM1Content.map((area, index) => {
               const m2Addition = level === 'M2' ? paesM2AdditionalContent.find(a => a.name === area.name) : null;
               const displayQuestionCount = level === 'M2' && m2Addition ? m2Addition.questionCount : area.questionCount;
@@ -606,18 +634,18 @@ export default function Curriculum({ level }: CurriculumProps) {
               return (
                 <div
                   key={area.name}
-                  className={`${area.color} rounded-lg p-6 border-2 ${area.borderColor}`}
+                  className={`${area.color} rounded-lg p-4 sm:p-5 md:p-6 border-2 ${area.borderColor}`}
                 >
                   {/* Header with question distribution */}
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <span className="text-3xl">{area.icon}</span>
-                      <div>
-                        <h3 className={`text-2xl font-bold ${area.textColor}`}>
+                  <div className="flex flex-col sm:flex-row items-start justify-between gap-3 mb-3 sm:mb-4">
+                    <div className="flex items-start sm:items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                      <span className="text-2xl sm:text-3xl flex-shrink-0">{area.icon}</span>
+                      <div className="min-w-0">
+                        <h3 className={`text-lg sm:text-xl md:text-2xl font-bold ${area.textColor} break-words`}>
                           {index + 1}. {area.name}
                         </h3>
-                        <div className="flex items-center gap-3 mt-1">
-                          <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <div className="flex items-center gap-2 sm:gap-3 mt-1">
+                          <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300">
                             ~{displayQuestionCount} preguntas ({displayPercentage}% del examen)
                           </span>
                         </div>
@@ -625,30 +653,30 @@ export default function Curriculum({ level }: CurriculumProps) {
                     </div>
                     <Link
                       href={`/practice/${level.toLowerCase()}?subject=${mapSubjectToKey(area.name)}`}
-                      className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium py-2 px-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 transition-colors text-sm whitespace-nowrap"
+                      className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium py-2 px-3 sm:px-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 transition-colors text-xs sm:text-sm whitespace-nowrap self-start"
                     >
                       Practicar →
                     </Link>
                   </div>
 
                   {/* M1 Content - Expandable topics */}
-                  <div className="mb-4">
-                    <ul className="space-y-2">
+                  <div className="mb-3 sm:mb-4">
+                    <ul className="space-y-1.5 sm:space-y-2">
                       {area.topics.map((topic, idx) => {
                         const topicId = `${area.name}-${idx}`;
                         const isExpanded = expandedTopics[topicId];
                         const { stars, label } = getDifficultyStars(topic.difficulty);
 
                         return (
-                          <li key={idx} className="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
+                          <li key={idx} className="border-l-2 border-gray-300 dark:border-gray-600 pl-2 sm:pl-3">
                             <button
                               onClick={() => toggleTopic(topicId)}
                               className="flex items-start justify-between w-full text-left hover:opacity-80 transition-opacity select-text cursor-text"
                             >
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                  <span className="text-gray-800 dark:text-gray-200">{topic.text}</span>
-                                  <span className="text-xs" title={label}>{stars}</span>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-1.5 sm:gap-2 mb-1 flex-wrap">
+                                  <span className="text-sm sm:text-base text-gray-800 dark:text-gray-200">{topic.text}</span>
+                                  <span className="text-xs flex-shrink-0" title={label}>{stars}</span>
                                   {topic.realWorldContext && (
                                     <span className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded">
                                       {topic.realWorldContext}
@@ -656,22 +684,22 @@ export default function Curriculum({ level }: CurriculumProps) {
                                   )}
                                 </div>
                                 {isExpanded && (
-                                  <div className="mt-2 pl-4 space-y-2">
-                                    <div className="flex gap-2 flex-wrap mb-2">
-                                      <span className="text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-2 py-1 rounded">
+                                  <div className="mt-2 pl-2 sm:pl-4 space-y-1.5 sm:space-y-2">
+                                    <div className="flex gap-1.5 sm:gap-2 flex-wrap mb-2">
+                                      <span className="text-[10px] sm:text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
                                         Nivel: {topic.cognitiveLevel}
                                       </span>
                                       {topic.skills && topic.skills.map((skill: string) => (
-                                        <span key={skill} className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded">
+                                        <span key={skill} className="text-[10px] sm:text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
                                           {skill}
                                         </span>
                                       ))}
                                     </div>
-                                    <div className="bg-white/50 dark:bg-gray-800/50 rounded p-2 text-sm">
+                                    <div className="bg-white/50 dark:bg-gray-800/50 rounded p-2 text-xs sm:text-sm">
                                       <p className="font-semibold text-gray-700 dark:text-gray-300">💡 Ejemplo:</p>
                                       <p className="text-gray-600 dark:text-gray-400">{topic.example}</p>
                                     </div>
-                                    <div className="bg-white/50 dark:bg-gray-800/50 rounded p-2 text-sm">
+                                    <div className="bg-white/50 dark:bg-gray-800/50 rounded p-2 text-xs sm:text-sm">
                                       <p className="font-semibold text-gray-700 dark:text-gray-300">📌 Puntos clave:</p>
                                       <p className="text-gray-600 dark:text-gray-400">{topic.keyPoints}</p>
                                     </div>
@@ -679,13 +707,13 @@ export default function Curriculum({ level }: CurriculumProps) {
                                       const topicSkills = getTopicSkills(topic.text);
                                       if (topicSkills.length > 0) {
                                         return (
-                                          <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded p-3 text-sm border border-green-200 dark:border-green-700">
-                                            <p className="font-semibold text-green-800 dark:text-green-200 mb-2">🎯 Habilidades específicas:</p>
-                                            <div className="flex flex-wrap gap-1.5">
+                                          <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded p-2 sm:p-3 text-xs sm:text-sm border border-green-200 dark:border-green-700">
+                                            <p className="font-semibold text-green-800 dark:text-green-200 mb-1.5 sm:mb-2">🎯 Habilidades específicas:</p>
+                                            <div className="flex flex-wrap gap-1 sm:gap-1.5">
                                               {topicSkills.map(skill => (
                                                 <span
                                                   key={skill.id}
-                                                  className="text-xs bg-white dark:bg-gray-800 text-green-700 dark:text-green-300 px-2 py-1 rounded border border-green-300 dark:border-green-600"
+                                                  className="text-[10px] sm:text-xs bg-white dark:bg-gray-800 text-green-700 dark:text-green-300 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border border-green-300 dark:border-green-600"
                                                   title={skill.description}
                                                 >
                                                   {skill.name}
@@ -712,26 +740,26 @@ export default function Curriculum({ level }: CurriculumProps) {
 
                   {/* M2 Additions - Expandable */}
                   {m2Addition && m2Addition.additions.length > 0 && (
-                    <div className="mt-4 pt-4 border-t-2 border-dashed border-current opacity-70">
-                      <p className="font-bold text-sm mb-2 text-gray-900 dark:text-gray-100">
+                    <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t-2 border-dashed border-current opacity-70">
+                      <p className="font-bold text-xs sm:text-sm mb-2 text-gray-900 dark:text-gray-100">
                         ➕ En M2 se agrega:
                       </p>
-                      <ul className="space-y-2">
+                      <ul className="space-y-1.5 sm:space-y-2">
                         {m2Addition.additions.map((addition, idx) => {
                           const topicId = `${area.name}-m2-${idx}`;
                           const isExpanded = expandedTopics[topicId];
                           const { stars, label } = getDifficultyStars(addition.difficulty);
 
                           return (
-                            <li key={idx} className="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
+                            <li key={idx} className="border-l-2 border-gray-300 dark:border-gray-600 pl-2 sm:pl-3">
                               <button
                                 onClick={() => toggleTopic(topicId)}
                                 className="flex items-start justify-between w-full text-left hover:opacity-80 transition-opacity select-text cursor-text"
                               >
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                    <span className="text-gray-800 dark:text-gray-200 text-sm">{addition.text}</span>
-                                    <span className="text-xs" title={label}>{stars}</span>
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-1.5 sm:gap-2 mb-1 flex-wrap">
+                                    <span className="text-xs sm:text-sm text-gray-800 dark:text-gray-200">{addition.text}</span>
+                                    <span className="text-xs flex-shrink-0" title={label}>{stars}</span>
                                     {addition.realWorldContext && (
                                       <span className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded">
                                         {addition.realWorldContext}
@@ -739,22 +767,22 @@ export default function Curriculum({ level }: CurriculumProps) {
                                     )}
                                   </div>
                                   {isExpanded && (
-                                    <div className="mt-2 pl-4 space-y-2">
-                                      <div className="flex gap-2 flex-wrap mb-2">
-                                        <span className="text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-2 py-1 rounded">
+                                    <div className="mt-2 pl-2 sm:pl-4 space-y-1.5 sm:space-y-2">
+                                      <div className="flex gap-1.5 sm:gap-2 flex-wrap mb-2">
+                                        <span className="text-[10px] sm:text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
                                           Nivel: {addition.cognitiveLevel}
                                         </span>
                                         {addition.skills && addition.skills.map((skill: string) => (
-                                          <span key={skill} className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded">
+                                          <span key={skill} className="text-[10px] sm:text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
                                             {skill}
                                           </span>
                                         ))}
                                       </div>
-                                      <div className="bg-white/50 dark:bg-gray-800/50 rounded p-2 text-sm">
+                                      <div className="bg-white/50 dark:bg-gray-800/50 rounded p-2 text-xs sm:text-sm">
                                         <p className="font-semibold text-gray-700 dark:text-gray-300">💡 Ejemplo:</p>
                                         <p className="text-gray-600 dark:text-gray-400">{addition.example}</p>
                                       </div>
-                                      <div className="bg-white/50 dark:bg-gray-800/50 rounded p-2 text-sm">
+                                      <div className="bg-white/50 dark:bg-gray-800/50 rounded p-2 text-xs sm:text-sm">
                                         <p className="font-semibold text-gray-700 dark:text-gray-300">📌 Puntos clave:</p>
                                         <p className="text-gray-600 dark:text-gray-400">{addition.keyPoints}</p>
                                       </div>
@@ -762,13 +790,13 @@ export default function Curriculum({ level }: CurriculumProps) {
                                         const topicSkills = getTopicSkills(addition.text);
                                         if (topicSkills.length > 0) {
                                           return (
-                                            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded p-3 text-sm border border-green-200 dark:border-green-700">
-                                              <p className="font-semibold text-green-800 dark:text-green-200 mb-2">🎯 Habilidades específicas:</p>
-                                              <div className="flex flex-wrap gap-1.5">
+                                            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded p-2 sm:p-3 text-xs sm:text-sm border border-green-200 dark:border-green-700">
+                                              <p className="font-semibold text-green-800 dark:text-green-200 mb-1.5 sm:mb-2">🎯 Habilidades específicas:</p>
+                                              <div className="flex flex-wrap gap-1 sm:gap-1.5">
                                                 {topicSkills.map(skill => (
                                                   <span
                                                     key={skill.id}
-                                                    className="text-xs bg-white dark:bg-gray-800 text-green-700 dark:text-green-300 px-2 py-1 rounded border border-green-300 dark:border-green-600"
+                                                    className="text-[10px] sm:text-xs bg-white dark:bg-gray-800 text-green-700 dark:text-green-300 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border border-green-300 dark:border-green-600"
                                                     title={skill.description}
                                                   >
                                                     {skill.name}
@@ -799,39 +827,39 @@ export default function Curriculum({ level }: CurriculumProps) {
           </div>
 
           {/* Habilidades */}
-          <div className="mb-6 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-6 border-2 border-indigo-200 dark:border-indigo-700">
-            <h3 className="text-xl font-bold mb-3 text-indigo-900 dark:text-indigo-100">
+          <div className="mb-4 sm:mb-6 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-4 sm:p-5 md:p-6 border-2 border-indigo-200 dark:border-indigo-700">
+            <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-indigo-900 dark:text-indigo-100">
               🎯 Habilidades Evaluadas
             </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
               {['Resolver problemas', 'Modelar', 'Representar', 'Argumentar'].map((skill) => (
-                <div key={skill} className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
-                  <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{skill}</span>
+                <div key={skill} className="bg-white dark:bg-gray-800 rounded-lg p-2 sm:p-3 text-center">
+                  <span className="text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200">{skill}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Skill-Topic Matrix */}
-          <div className="mb-6 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-6 border-2 border-purple-200 dark:border-purple-700">
-            <h3 className="text-xl font-bold mb-3 text-purple-900 dark:text-purple-100">
+          <div className="mb-4 sm:mb-6 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-4 sm:p-5 md:p-6 border-2 border-purple-200 dark:border-purple-700">
+            <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-purple-900 dark:text-purple-100">
               🧩 Matriz Habilidad-Eje Temático
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-3 sm:mb-4">
               Cada eje temático evalúa diferentes habilidades. Esta matriz muestra qué habilidades se requieren en cada área.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
               {Object.entries(skillTopicMatrix).map(([axis, data]) => (
-                <div key={axis} className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-purple-200 dark:border-purple-700">
-                  <h4 className="font-bold text-sm mb-2 text-gray-800 dark:text-gray-200">{axis}</h4>
-                  <div className="flex flex-wrap gap-1 mb-2">
+                <div key={axis} className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-purple-200 dark:border-purple-700">
+                  <h4 className="font-bold text-xs sm:text-sm mb-1.5 sm:mb-2 text-gray-800 dark:text-gray-200">{axis}</h4>
+                  <div className="flex flex-wrap gap-1 mb-1.5 sm:mb-2">
                     {data.skills.map((skill) => (
-                      <span key={skill} className="text-xs bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded">
+                      <span key={skill} className="text-[10px] sm:text-xs bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-1.5 sm:px-2 py-0.5 rounded">
                         {skill}
                       </span>
                     ))}
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{data.description}</p>
+                  <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">{data.description}</p>
                 </div>
               ))}
             </div>
@@ -839,16 +867,16 @@ export default function Curriculum({ level }: CurriculumProps) {
         </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0">
               <Link
                 href={`/practice/${level.toLowerCase()}`}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg transition-colors"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 sm:py-3 px-6 sm:px-8 rounded-lg transition-colors text-sm sm:text-base text-center"
               >
                 Comenzar Práctica
               </Link>
               <Link
                 href="/dashboard"
-                className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-lg transition-colors"
+                className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2.5 sm:py-3 px-6 sm:px-8 rounded-lg transition-colors text-sm sm:text-base text-center"
               >
                 Volver al Inicio
               </Link>
