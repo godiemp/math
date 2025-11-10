@@ -17,6 +17,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { MathText } from '@/components/MathDisplay';
 import AdminLayout from '@/components/AdminLayout';
+import PreviewSession from '@/components/PreviewSession';
 
 function AdminBackofficeContent() {
   const { user: currentUser } = useAuth();
@@ -24,6 +25,7 @@ function AdminBackofficeContent() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingSession, setEditingSession] = useState<LiveSession | null>(null);
   const [viewingQuestionsSession, setViewingQuestionsSession] = useState<LiveSession | null>(null);
+  const [previewingSession, setPreviewingSession] = useState<LiveSession | null>(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
@@ -245,6 +247,11 @@ function AdminBackofficeContent() {
       timeStyle: 'short',
     });
   };
+
+  // If previewing session, show preview mode
+  if (previewingSession) {
+    return <PreviewSession session={previewingSession} onClose={() => setPreviewingSession(null)} />;
+  }
 
   // If viewing questions, show full-screen questions view
   if (viewingQuestionsSession) {
@@ -549,6 +556,9 @@ function AdminBackofficeContent() {
                     </div>
 
                     <div className="flex flex-wrap gap-2">
+                      <Button variant="secondary" size="sm" onClick={() => setPreviewingSession(session)}>
+                        👁️ Preview
+                      </Button>
                       <Button variant="secondary" size="sm" onClick={() => setViewingQuestionsSession(session)}>
                         Ver Preguntas
                       </Button>
