@@ -127,3 +127,11 @@ export function stripSectionMetadata(content: string): string {
     .replace(/<!--\s*full-only\s*-->/g, '')
     .replace(/<!--\s*\/full-only\s*-->/g, '');
 }
+
+/**
+ * Remove the first heading from content (to avoid duplication when title is already shown in CollapsibleSection header)
+ */
+export function stripFirstHeading(content: string): string {
+  // Remove the first heading (##, ###, etc.) and any metadata
+  return stripSectionMetadata(content).replace(/^#{2,6}\s+.+$/m, '').trim();
+}

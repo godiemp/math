@@ -6,20 +6,21 @@ import { DocsExportButton } from '@/components/DocsExportButton';
 interface DocsContentWrapperProps {
   content: string;
   title?: string;
+  isInicio?: boolean;
 }
 
-export function DocsContentWrapper({ content, title }: DocsContentWrapperProps) {
+export function DocsContentWrapper({ content, title, isInicio = false }: DocsContentWrapperProps) {
   return (
-    <div className="flex-1 p-8 lg:p-12">
-      <div className="max-w-4xl mx-auto">
+    <div className="flex-1">
+      <div>
         {/* Export Button */}
-        <div className="flex justify-end mb-6 print:hidden">
+        <div className="flex justify-end mb-6 px-6 pt-6 print:hidden">
           <DocsExportButton title={title} />
         </div>
 
         {/* Content to be exported */}
-        <div className="bg-white dark:bg-[#121212] p-8 rounded-lg shadow-sm print:shadow-none print:p-0 print:bg-white">
-          <AdaptiveMarkdownViewer content={content} />
+        <div className="px-6 pb-6 print:p-0">
+          <AdaptiveMarkdownViewer content={content} hideReadingModeControl={isInicio} />
         </div>
       </div>
     </div>
