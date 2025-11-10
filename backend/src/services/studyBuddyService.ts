@@ -1,0 +1,443 @@
+/**
+ * Study Buddy Service
+ * Provides personalized, conversational AI companion for students
+ * Analyzes progress, identifies focus areas, and maintains encouraging dialogue
+ */
+
+interface UserData {
+  displayName: string;
+  currentStreak: number;
+  longestStreak: number;
+  lastPracticeDate: string | null;
+}
+
+interface ProgressData {
+  recentSessions?: Array<{
+    date: string;
+    score: number;
+    topic: string;
+    questionsAnswered: number;
+  }>;
+  skillProgress?: Record<string, {
+    attempts: number;
+    correct: number;
+    accuracy: number;
+  }>;
+  topicAccuracy?: Record<string, {
+    total: number;
+    correct: number;
+    accuracy: number;
+  }>;
+  totalQuestionsAnswered?: number;
+  overallAccuracy?: number;
+}
+
+interface GreetingOptions {
+  userData: UserData;
+  progressData: ProgressData;
+  timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night';
+}
+
+interface GreetingResponse {
+  greeting: string;
+  insights: string[];
+  focusAreas: string[];
+  encouragement: string;
+  conversationStarter: string;
+  success: boolean;
+}
+
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+interface ContinueChatOptions {
+  userData: UserData;
+  progressData: ProgressData;
+  messages: ChatMessage[];
+  userMessage: string;
+}
+
+interface ChatResponse {
+  response: string;
+  success: boolean;
+}
+
+/**
+ * Analyze user progress and generate insights
+ */
+function analyzeProgress(progressData: ProgressData): {
+  strengths: string[];
+  weaknesses: string[];
+  trends: string[];
+} {
+  const strengths: string[] = [];
+  const weaknesses: string[] = [];
+  const trends: string[] = [];
+
+  // Analyze topic accuracy
+  if (progressData.topicAccuracy) {
+    const topics = Object.entries(progressData.topicAccuracy);
+    topics.forEach(([topic, stats]) => {
+      if (stats.total >= 5) { // Only consider topics with enough data
+        if (stats.accuracy >= 80) {
+          strengths.push(`${topic} (${stats.accuracy.toFixed(0)}% de precisión)`);
+        } else if (stats.accuracy < 60) {
+          weaknesses.push(`${topic} (${stats.accuracy.toFixed(0)}% de precisión)`);
+        }
+      }
+    });
+  }
+
+  // Analyze recent session trends
+  if (progressData.recentSessions && progressData.recentSessions.length >= 2) {
+    const sessions = progressData.recentSessions;
+    const recentAvg = sessions.slice(-3).reduce((sum, s) => sum + s.score, 0) / Math.min(3, sessions.length);
+    const olderAvg = sessions.slice(0, -3).reduce((sum, s) => sum + s.score, 0) / Math.max(1, sessions.length - 3);
+
+    if (recentAvg > olderAvg + 10) {
+      trends.push(`Mejorando (+${(recentAvg - olderAvg).toFixed(0)}% últimas sesiones)`);
+    } else if (recentAvg < olderAvg - 10) {
+      trends.push(`Necesita repaso (${(olderAvg - recentAvg).toFixed(0)}% menos últimas sesiones)`);
+    }
+  }
+
+  // Analyze skill progress
+  if (progressData.skillProgress) {
+    const skills = Object.entries(progressData.skillProgress);
+    const strugglingSkills = skills.filter(([_, stats]) =>
+      stats.attempts >= 3 && stats.accuracy < 60
+    );
+
+    if (strugglingSkills.length > 0) {
+      weaknesses.push(...strugglingSkills.slice(0, 2).map(([skill, stats]) =>
+        `${skill} (${stats.accuracy.toFixed(0)}%)`
+      ));
+    }
+  }
+
+  return { strengths, weaknesses, trends };
+}
+
+/**
+ * Generate personalized greeting with progress insights
+ */
+export async function generateGreeting(options: GreetingOptions): Promise<GreetingResponse> {
+  const { userData, progressData, timeOfDay } = options;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+
+  if (!apiKey) {
+    throw new Error('ANTHROPIC_API_KEY not configured');
+  }
+
+  // Analyze progress
+  const analysis = analyzeProgress(progressData);
+
+  // Calculate days since last practice
+  const daysSinceLastPractice = userData.lastPracticeDate
+    ? Math.floor((Date.now() - new Date(userData.lastPracticeDate).getTime()) / (1000 * 60 * 60 * 24))
+    : null;
+
+  // Build context for Claude
+  const greetingMap = {
+    morning: '¡Buenos días',
+    afternoon: '¡Buenas tardes',
+    evening: '¡Buenas tardes',
+    night: '¡Buenas noches'
+  };
+
+  const contextData = {
+    name: userData.displayName,
+    streak: userData.currentStreak,
+    longestStreak: userData.longestStreak,
+    daysSinceLastPractice,
+    totalQuestions: progressData.totalQuestionsAnswered || 0,
+    overallAccuracy: progressData.overallAccuracy || 0,
+    strengths: analysis.strengths,
+    weaknesses: analysis.weaknesses,
+    trends: analysis.trends,
+    recentSessions: progressData.recentSessions?.slice(-3) || []
+  };
+
+  const systemPrompt = `Eres "Compañero de Estudio", un tutor de IA amigable y motivador para estudiantes chilenos que preparan la PAES Matemática.
+
+CONTEXTO DE LA APLICACIÓN PAES CHILE:
+Esta plataforma ofrece práctica de matemáticas con las siguientes funcionalidades:
+
+📚 NIVELES DISPONIBLES:
+- M1 (Matemática Básica): Números, Álgebra básica, Geometría, Probabilidad
+- M2 (Matemática Avanzada): Contenidos avanzados para carreras científicas
+
+🎯 MODOS DE PRÁCTICA DETALLADOS:
+
+1. **ZEN MODE** (Práctica sin presión):
+   - Tiempo ilimitado, sin cronómetro
+   - Número de preguntas: el estudiante elige (típicamente 5-10)
+   - AI Tutor disponible en CADA pregunta (metodología socrática)
+   - Feedback inmediato al responder
+   - Ideal para: aprender conceptos nuevos, reforzar debilidades
+
+2. **RAPID FIRE** (Desafíos cronometrados - todos 10 minutos):
+
+   • EASY: 5 preguntas, PUEDE PAUSAR, sin límite de errores, 60% para pasar
+   → Para principiantes o ganar confianza
+
+   • MEDIUM: 8 preguntas, NO puede pausar, sin límite de errores, 70% para pasar
+   → Para práctica regular, mejorar velocidad
+
+   • HARD: 10 preguntas, NO pausa, VIDAS (máx 2 errores), 75% para pasar
+   → Para estudiantes avanzados, simular presión de examen
+
+   • EXTREME: 12 preguntas, NO pausa, VIDAS (máx 1 error), 80% para pasar, +5 seg por acierto
+   → Para perfeccionistas, universidad top, máximo desafío
+
+3. **LIVE SESSIONS** (Ensayos competitivos):
+   - Ensayos PAES oficiales en tiempo real (2h 20min)
+   - 60-65 preguntas (M1) o 50 (M2)
+   - Compites con otros estudiantes, leaderboard en vivo
+   - Lobby abre 15 min antes
+
+📊 4 ÁREAS PRINCIPALES:
+- Números: fracciones, porcentajes, potencias, proporciones, divisibilidad
+- Álgebra: ecuaciones, funciones, sistemas, factorización, cuadráticas
+- Geometría: área, perímetro, volumen, teorema de Pitágoras, coordenadas
+- Probabilidad: estadística, media, mediana, moda, combinaciones
+
+✨ OTRAS FUNCIONALIDADES:
+- Sistema de rachas: práctica diaria
+- Currículo: documentación LaTeX con teoría
+- Seguimiento: estadísticas por tema y 500+ skills
+- AI Tutor: metodología socrática (guía sin dar respuestas directas)
+
+Tu personalidad:
+- Cálido, cercano y alentador (usa emojis con moderación: 🎯 🔥 📈 💪 ✨)
+- Celebras logros genuinamente, pero sin exagerar
+- Identificas áreas de mejora con tacto y optimismo
+- Das sugerencias CONCRETAS basadas en las funcionalidades reales de la app
+- Usas lenguaje chileno natural pero profesional
+
+Tu tarea es generar un saludo personalizado que:
+1. Saluda al estudiante por su nombre
+2. Comenta brevemente sobre su progreso reciente o racha
+3. Identifica 1-2 insights clave (fortalezas o áreas de mejora)
+4. Sugiere un plan de acción ESPECÍFICO usando las funcionalidades de la app
+5. Termina con una pregunta abierta que invita a conversar
+
+Formato de respuesta (JSON):
+{
+  "greeting": "Saludo inicial con nombre (1 línea)",
+  "insights": ["Insight sobre fortaleza", "Insight sobre área de mejora"],
+  "focusAreas": ["Tema o habilidad específica", "Tema alternativo"],
+  "encouragement": "Mensaje motivacional con sugerencia concreta de acción (2-3 líneas, menciona modo de práctica específico)",
+  "conversationStarter": "Pregunta abierta que invita al diálogo"
+}
+
+IMPORTANTE - SUGERENCIAS SEGÚN SITUACIÓN:
+
+Para PRINCIPIANTES (<60% precisión) o baja confianza:
+→ "Zen Mode de [tema débil]" o "Rapid Fire Easy (puedes pausar si necesitas)"
+
+Para PRÁCTICA REGULAR (60-75% precisión):
+→ "Rapid Fire Medium" o "10 preguntas en Zen Mode"
+
+Para AVANZADOS (>75% precisión):
+→ "Rapid Fire Hard (cuidado, máx 2 errores)" o "Live Sessions"
+
+Para PERFECCIONISTAS (>85% precisión):
+→ "Rapid Fire Extreme (1 error máx, +5 seg por acierto)" o "Live Sessions completas"
+
+Para MANTENER RACHA:
+→ "5 preguntas en Zen Mode" o "Rapid Fire Easy rápido"
+
+Para REFORZAR DEBILIDADES:
+→ "10 preguntas de [tema] en Zen Mode con AI Tutor"
+
+Para SIMULAR EXAMEN REAL:
+→ "Live Session" o "Rapid Fire Hard/Extreme"
+
+EJEMPLOS DE BUENOS "encouragement":
+- "Te propongo 10 preguntas de Álgebra en Zen Mode. Refuerzas ecuaciones sin presión, y el AI Tutor te guía si te atoras."
+- "¿Qué tal Rapid Fire Medium? 8 preguntas en 10 minutos. No puedes pausar, pero sin límite de errores. Perfecto para mejorar velocidad."
+- "Tu racha de 5 días es sólida 🔥 Sigamos con Rapid Fire Easy: 5 preguntas, puedes pausar. Ideal para empezar."
+- "Estás listo para más desafío. Prueba Rapid Fire Hard: 10 preguntas con sistema de vidas (máx 2 errores). Así simulas presión real."
+
+Mantén cada campo conciso. Tono conversacional, no reporte.`;
+
+  const userPrompt = `Genera un saludo personalizado para:
+
+Hora del día: ${timeOfDay}
+Datos del estudiante:
+${JSON.stringify(contextData, null, 2)}
+
+Contexto adicional:
+- Si la racha es 0 o no hay práctica reciente: Motiva a empezar sin mencionar el fallo
+- Si hay racha activa: Celébrala y motiva a continuar
+- Si hay fortalezas: Reconócelas y sugiere avanzar
+- Si hay debilidades: Menciónalas constructivamente y sugiere práctica específica
+- Si hay tendencia de mejora: Celébrala con datos específicos
+
+Responde SOLO con el JSON, sin markdown ni texto adicional.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 1000,
+        messages: [
+          {
+            role: 'user',
+            content: userPrompt,
+          },
+        ],
+        system: systemPrompt,
+        temperature: 0.8, // More creative/varied responses
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('Anthropic API error:', error);
+      throw new Error(`AI service error: ${response.statusText}`);
+    }
+
+    const data = await response.json() as { content: Array<{ text: string } > };
+    const rawResponse = data.content[0].text;
+
+    // Parse JSON response
+    const jsonMatch = rawResponse.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('Failed to parse AI response');
+    }
+
+    const parsedResponse = JSON.parse(jsonMatch[0]);
+
+    return {
+      greeting: parsedResponse.greeting,
+      insights: parsedResponse.insights || [],
+      focusAreas: parsedResponse.focusAreas || [],
+      encouragement: parsedResponse.encouragement,
+      conversationStarter: parsedResponse.conversationStarter,
+      success: true,
+    };
+  } catch (error) {
+    console.error('Error generating greeting:', error);
+
+    // Fallback response
+    return {
+      greeting: `${greetingMap[timeOfDay]} ${userData.displayName}! 👋`,
+      insights: ['Estoy aquí para ayudarte en tu preparación PAES Matemática'],
+      focusAreas: ['Números', 'Álgebra'],
+      encouragement: 'Te propongo empezar con 10 preguntas en Zen Mode. Elige el tema que prefieras y practica sin presión. El AI Tutor está disponible si necesitas ayuda. 🎯',
+      conversationStarter: '¿Prefieres empezar con un desafío rápido en Rapid Fire o practicar tranquilo en Zen Mode?',
+      success: true,
+    };
+  }
+}
+
+/**
+ * Continue conversation with study buddy
+ */
+export async function continueChat(options: ContinueChatOptions): Promise<ChatResponse> {
+  const { userData, progressData, messages, userMessage } = options;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+
+  if (!apiKey) {
+    throw new Error('ANTHROPIC_API_KEY not configured');
+  }
+
+  // Analyze progress for context
+  const analysis = analyzeProgress(progressData);
+
+  const systemPrompt = `Eres "Compañero de Estudio", un tutor de IA amigable y motivador para estudiantes chilenos que preparan la PAES Matemática.
+
+CONTEXTO DE LA APLICACIÓN PAES CHILE:
+
+📚 NIVELES: M1 (básico) y M2 (avanzado)
+
+🎯 MODOS DE PRÁCTICA:
+
+1. ZEN MODE (sin presión):
+   - Tiempo ilimitado, sin cronómetro
+   - Número de preguntas: el estudiante elige
+   - AI Tutor disponible en cada pregunta
+   - Ideal para: aprender, reforzar debilidades
+
+2. RAPID FIRE (cronometrados - todos 10 min):
+   • EASY: 5 preguntas, PUEDE PAUSAR, sin límite errores, 60% para pasar
+   • MEDIUM: 8 preguntas, NO pausa, sin límite errores, 70% para pasar
+   • HARD: 10 preguntas, NO pausa, VIDAS (máx 2 errores), 75% para pasar
+   • EXTREME: 12 preguntas, NO pausa, VIDAS (máx 1 error), 80% para pasar, +5 seg/acierto
+
+3. LIVE SESSIONS: Ensayos completos 2h 20min, competitivo con otros
+
+📊 4 ÁREAS: Números, Álgebra, Geometría, Probabilidad
+
+Información del estudiante (${userData.displayName}):
+- Racha: ${userData.currentStreak} días (máx: ${userData.longestStreak})
+- Precisión: ${progressData.overallAccuracy?.toFixed(0) || 'N/A'}%
+- Fortalezas: ${analysis.strengths.join(', ') || 'Aún recopilando'}
+- Áreas de mejora: ${analysis.weaknesses.join(', ') || 'Ninguna aún'}
+- Tendencias: ${analysis.trends.join(', ') || 'Aún no hay datos'}
+
+Tu rol:
+1. Responde conversacional y cercano (2-4 líneas máx)
+2. Da sugerencias CONCRETAS con modo específico + tema + cantidad
+3. Si preguntan qué practicar: considera su precisión y situación
+4. Si piden motivación: usa logros reales + paso concreto
+5. Tono optimista pero realista
+
+SUGERENCIAS SEGÚN NIVEL:
+- <60% precisión → Zen Mode o Rapid Fire Easy (puede pausar)
+- 60-75% → Rapid Fire Medium (8 preg, no pausa)
+- >75% → Rapid Fire Hard (10 preg, máx 2 errores)
+- >85% → Rapid Fire Extreme (12 preg, máx 1 error) o Live Sessions
+
+Estilo: emojis moderados, trato de "tú", lenguaje chileno natural, empático`;
+
+  const conversationMessages: Array<{role: string; content: string}> = [
+    ...messages.map(m => ({ role: m.role, content: m.content })),
+    { role: 'user', content: userMessage }
+  ];
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 500,
+        messages: conversationMessages,
+        system: systemPrompt,
+        temperature: 0.7,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('Anthropic API error:', error);
+      throw new Error(`AI service error: ${response.statusText}`);
+    }
+
+    const data = await response.json() as { content: Array<{ text: string }> };
+    const aiResponse = data.content[0].text;
+
+    return {
+      response: aiResponse,
+      success: true,
+    };
+  } catch (error) {
+    console.error('Error in study buddy chat:', error);
+    throw error;
+  }
+}

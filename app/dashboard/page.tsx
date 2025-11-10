@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { LiveSession } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen } from "@/components/ui";
 import { Streak } from "@/components/Streak";
+import { StudyBuddy } from "@/components/StudyBuddy";
 import { ShareModal } from "@/components/ShareModal";
 import { Share2 } from "lucide-react";
 
@@ -129,6 +130,11 @@ function DashboardContent() {
             longestStreak: user.longestStreak || 0,
             lastPracticeDate: user.lastPracticeDate || null
           } : undefined} />
+        </div>
+
+        {/* Study Buddy Section */}
+        <div className="mb-8">
+          <StudyBuddy />
         </div>
 
         {/* Live Practice Featured Card with gradient */}

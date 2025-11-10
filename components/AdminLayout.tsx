@@ -15,7 +15,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { name: 'Dashboard', path: '/admin', icon: '📊' },
+  { name: 'Live Sessions', path: '/admin/live-sessions', icon: '📊' },
   { name: 'Users', path: '/admin/users', icon: '👥' },
   { name: 'Analytics', path: '/admin/analytics', icon: '📈' },
   { name: 'AI Analytics', path: '/admin/ai-analytics', icon: '🤖' },
@@ -23,6 +23,9 @@ const navItems: NavItem[] = [
   { name: 'Abstract Problems', path: '/admin/abstract-problems', icon: '📚' },
   { name: 'Generator', path: '/admin/qgen', icon: '🎲' },
   { name: 'Upload', path: '/admin/upload', icon: '📤' },
+  { name: 'Study Buddy Debug', path: '/admin/study-buddy-debug', icon: '🧠' },
+  { name: 'Rapid Fire Debug', path: '/admin/rapidfire-debug', icon: '⚡' },
+  { name: 'Zen Debug', path: '/admin/zen-debug', icon: '🧘' },
 ];
 
 export default function AdminLayout({ children }: AdminLayoutProps) {

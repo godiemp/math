@@ -9,10 +9,13 @@ PAES Chile es una plataforma de práctica completa que incluye:
 - **Quizzes de Práctica Interactivos** - Estudia a tu ritmo o desafíate con pruebas cronometradas
 - **Sesiones de Práctica en Vivo (Ensayos)** - Únete a simulaciones PAES programadas con otros estudiantes
 - **Tutor con IA** - Asistente personalizado con metodología Socrática que te ayuda a entender cada problema
-- **Seguimiento de Progreso** - Monitorea tu desempeño por temas y niveles de dificultad
+- **Seguimiento de Progreso** - Monitorea tu desempeño por temas y niveles de dificultad con tracking en base de datos
 - **Sistema de Rachas** - Mantén tu motivación con streaks diarios
 - **Dos Niveles de Competencia** - M1 (básico) y M2 (avanzado) alineados con estándares PAES
-- **Panel de Administración** - Gestiona sesiones en vivo y el banco de preguntas
+- **Generador Dinámico de Preguntas (QGen)** - Sistema inteligente para generar preguntas personalizadas
+- **Sistema de Suscripciones** - Planes de acceso con gestión completa de usuarios
+- **Analytics Completo** - Métricas de uso, desempeño y análisis de interacciones con IA
+- **Panel de Administración** - Gestiona sesiones en vivo, usuarios, planes, y el banco de preguntas
 - **Sistema de Documentación** - Accede a material de estudio completo con LaTeX
 
 ## Características Principales
@@ -89,6 +92,49 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 - Filtrado por nivel de maestría
 - Vinculado a documentación del currículum
 
+**Quiz Tracking Completo** - Historial persistente
+- Todas las sesiones de quiz guardadas en PostgreSQL
+- Cada intento registrado con detalles completos
+- Conversaciones con el tutor IA almacenadas por sesión
+- Estadísticas de desempeño por tema y dificultad
+- Configuración de quiz persistente entre sesiones
+
+### 🤖 Sistema QGen - Generador Dinámico de Preguntas
+
+**Generación Inteligente** - Crea preguntas personalizadas al instante
+
+- **Biblioteca de Contextos**: Situaciones de la vida real (economía, deportes, tecnología, etc.)
+- **Biblioteca de Objetivos**: Tipos de razonamiento (aplicar, analizar, sintetizar, evaluar)
+- **Sistema de Templates**: Plantillas parametrizadas para cada tipo de pregunta
+- **Generador de Valores**: Crea valores numéricos coherentes y realistas
+- **Algoritmo de Combinación**: Mezcla contextos, objetivos y templates inteligentemente
+- **Validación Automática**: Verifica que las preguntas generadas tengan sentido
+- **Admin Interface**: Panel para gestionar bibliotecas y generar preguntas
+
+**Beneficios del QGen:**
+- Práctica ilimitada sin agotar el banco de preguntas
+- Preguntas contextualizadas y relevantes
+- Variedad infinita manteniendo calidad
+- Adaptable a diferentes niveles y temas
+
+### 💳 Sistema de Suscripciones
+
+**Gestión Completa de Acceso** - Monetización y control de usuarios
+
+- **Planes de Suscripción**: Define múltiples planes con diferentes características
+- **Estados de Usuario**: Trial, Active, Expired, Cancelled
+- **Auto-renovación**: Gestión de renovaciones automáticas
+- **Features por Plan**: Control granular de acceso a características
+- **Admin Dashboard**: Interface completa para gestionar usuarios y suscripciones
+- **Métricas de Conversión**: Tracking de trials, conversiones y cancelaciones
+
+**Estructura de Planes:**
+- Precio configurable (CLP u otra moneda)
+- Duración personalizable
+- Período de prueba opcional
+- Lista de features incluidas
+- Estado activo/inactivo
+
 ### 👨‍💼 Características de Administración
 
 - **Crear y programar** sesiones de práctica en vivo
@@ -98,6 +144,35 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 - **Upload de PDFs** - Extrae preguntas automáticamente con IA
 - **Gestión de sesiones** - Editar, cancelar, eliminar ensayos
 - **Plantillas rápidas** - Templates para sesiones M1/M2
+- **Analytics Dashboard** - Métricas de uso, tendencias y desempeño
+- **AI Analytics** - Análisis de interacciones con el tutor IA
+- **Gestión de Usuarios** - CRUD completo de usuarios y suscripciones
+- **Sistema de Planes** - Crear y gestionar planes de suscripción
+- **QGen System** - Generador dinámico de preguntas con IA
+- **Debug Tools** - Páginas de debug para Zen y Rapid Fire
+
+### 📊 Analytics y Monitoring
+
+**Dashboard de Analytics General** - Métricas completas del sistema
+- Actividad de usuarios (registros, logins, sesiones activas)
+- Tendencias de uso por período
+- Métricas de desempeño por nivel y tema
+- Conversión de usuarios trial a activos
+- Uso de características por segmento
+
+**AI Analytics** - Análisis de interacciones con el tutor IA
+- Tracking de todas las conversaciones usuario-IA
+- Tipos de interacción: chat, help, summarize, practice
+- Métricas de uso de tokens y costos de API
+- Tiempo de respuesta del modelo
+- Análisis de efectividad del tutor
+- Historial completo almacenado en tabla `ai_interactions`
+
+**Monitoring de Sistema:**
+- Health checks del servidor
+- Métricas de base de datos (queries, conexiones)
+- Uso de recursos del servidor
+- Logs de errores y warnings
 
 ## Stack Tecnológico
 
@@ -118,6 +193,9 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 - **API**: Endpoints RESTful
 - **CORS**: Configurado para deployments en Vercel
 - **Sistema de Auto-actualización**: Actualiza estados de sesiones cada 30 segundos
+- **PDF Processing**: pdf-parse, pdf-lib, pdfjs-dist para extracción de preguntas
+- **Image Processing**: Sharp para optimización de imágenes
+- **File Upload**: Multer para manejo de archivos
 
 ### Testing & Quality
 - **E2E Testing**: Playwright con TypeScript
@@ -137,6 +215,10 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 - `@playwright/test` - Testing E2E
 - `sonner` - Toast notifications
 - `swr` - Data fetching y cache
+- `pdf-parse`, `pdf-lib`, `pdfjs-dist` - Procesamiento y extracción de PDFs
+- `sharp` - Optimización de imágenes
+- `multer` - Manejo de file uploads
+- `date-fns` - Manipulación de fechas
 
 ## Estructura del Proyecto
 
@@ -152,14 +234,23 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 │   ├── practice/                 # Páginas de práctica (M1/M2)
 │   ├── curriculum/               # Páginas de curriculum overview
 │   │   ├── m1/                   # Curriculum M1
-│   │   │   └── docs/[[...slug]]  # Sistema de documentación M1
+│   │   │   ├── docs/[[...slug]]  # Sistema de documentación M1
+│   │   │   └── docs-export-all/  # Exportar toda la documentación
 │   │   └── m2/                   # Curriculum M2
 │   │       └── docs/[[...slug]]  # Sistema de documentación M2
 │   ├── live-practice/            # Interfaz de sesiones en vivo
 │   ├── progress/                 # Página de seguimiento de progreso
 │   ├── admin/                    # Dashboard y herramientas de admin
+│   │   ├── page.tsx              # Dashboard principal de admin
 │   │   ├── problems/             # Navegador de banco de preguntas
-│   │   └── upload/               # Upload y extracción de PDFs
+│   │   ├── upload/               # Upload y extracción de PDFs
+│   │   ├── analytics/            # Dashboard de analytics general
+│   │   ├── ai-analytics/         # Analytics de interacciones IA
+│   │   ├── users/                # Gestión de usuarios y suscripciones
+│   │   ├── qgen/                 # Generador dinámico de preguntas
+│   │   ├── live-sessions/        # Gestión de sesiones en vivo
+│   │   ├── zen-debug/            # Debug del modo Zen
+│   │   └── rapidfire-debug/      # Debug del modo Rapid Fire
 │   └── api/                      # Next.js Route Handlers
 │       ├── ai-chat/              # API del tutor IA
 │       ├── ai-help/              # API de ayuda IA
@@ -179,9 +270,19 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 │   │   │   ├── sessionRoutes.ts  # Sesiones en vivo
 │   │   │   ├── streakRoutes.ts   # Sistema de rachas
 │   │   │   ├── adminRoutes.ts    # Admin endpoints
-│   │   │   └── aiRoutes.ts       # Servicios de IA
+│   │   │   ├── aiRoutes.ts       # Servicios de IA
+│   │   │   ├── analyticsRoutes.ts # Analytics general
+│   │   │   ├── aiAnalyticsRoutes.ts # Analytics de IA
+│   │   │   ├── quizRoutes.ts     # Quiz tracking
+│   │   │   ├── qgenRoutes.ts     # Generador de preguntas
+│   │   │   └── userManagementRoutes.ts # Gestión de usuarios
 │   │   ├── scripts/              # Scripts de utilidad
 │   │   └── services/             # Servicios de negocio
+│   │       ├── aiService.ts      # Servicios de IA
+│   │       ├── pdfService.ts     # Procesamiento de PDFs
+│   │       ├── pdfVisionService.ts # Extracción con visión
+│   │       ├── imageStorageService.ts # Almacenamiento de imágenes
+│   │       └── subscriptionService.ts # Gestión de suscripciones
 │   └── package.json
 ├── components/                   # Componentes React
 │   ├── Quiz.tsx                  # Componente principal de quiz
@@ -226,6 +327,13 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 │   │   │   ├── geometria/        # 7 preguntas
 │   │   │   └── probabilidad/     # 7 preguntas
 │   │   └── index.ts              # Agregación de preguntas
+│   ├── qgen/                     # Sistema de generación dinámica
+│   │   ├── contextLibrary.ts     # Biblioteca de contextos
+│   │   ├── goalLibrary.ts        # Biblioteca de objetivos
+│   │   ├── templateLibrary.ts    # Plantillas de preguntas
+│   │   ├── valueGenerator.ts     # Generador de valores
+│   │   ├── goalSkillMappings.ts  # Mapeo goals-skills
+│   │   └── qgenAlgorithm.ts      # Algoritmo principal
 │   ├── auth/                     # Sistema de auth del cliente
 │   │   ├── authApi.ts            # API calls de autenticación
 │   │   ├── tokenService.ts       # Manejo de tokens JWT
@@ -235,11 +343,14 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 │   │   ├── core.ts               # Tipos core (Question, etc.)
 │   │   ├── sessions.ts           # Tipos de sesiones en vivo
 │   │   └── practice.ts           # Tipos de práctica
+│   ├── hooks/                    # Custom React hooks
+│   │   └── useSessions.ts        # Hook para sesiones en vivo
 │   ├── questions.ts              # Utilidades de preguntas
 │   ├── api-client.ts             # Cliente HTTP centralizado
 │   ├── liveSessions.ts           # Gestión de sesiones en vivo
 │   ├── skillTaxonomy.ts          # Definiciones de skills (500+)
 │   ├── skillsArray.ts            # Array de skills
+│   ├── markdown-parser.ts        # Parser de markdown
 │   └── utils.ts                  # Utilidades generales
 ├── docs/                         # Documentación
 │   ├── curriculum/               # Docs de currículum completo
@@ -293,6 +404,40 @@ Cada pregunta incluye:
 }
 ```
 
+## Esquema de Base de Datos
+
+### Tablas Principales
+
+**Usuarios y Autenticación:**
+- `users` - Información de usuarios con roles (student/admin)
+- `streaks` - Rachas diarias de práctica por usuario
+
+**Sistema de Suscripciones:**
+- `plans` - Planes de suscripción disponibles
+- `subscriptions` - Suscripciones activas por usuario
+
+**Quiz y Tracking:**
+- `quiz_sessions` - Sesiones de quiz agrupadas con conversaciones IA
+- `quiz_attempts` - Intentos individuales de preguntas
+- `last_quiz_config` - Última configuración de quiz por usuario
+
+**Sesiones en Vivo:**
+- `sessions` - Sesiones de práctica en vivo (ensayos)
+- `session_participants` - Participantes registrados en sesiones
+- `session_answers` - Respuestas de participantes en sesiones
+
+**Contenido y Preguntas:**
+- `problems` - Banco de preguntas extraídas de PDFs
+- `uploads` - Historial de uploads de PDFs
+
+**Sistema QGen:**
+- `contexts` - Biblioteca de contextos de la vida real
+- `goals` - Biblioteca de objetivos de razonamiento
+- `templates` - Plantillas parametrizadas de preguntas
+
+**Analytics:**
+- `ai_interactions` - Todas las conversaciones usuario-IA con métricas
+
 ## Empezando
 
 ### Prerrequisitos
@@ -338,11 +483,16 @@ ANTHROPIC_API_KEY=tu-api-key-de-anthropic
 
 5. **Configurar base de datos**
 
-Ejecutar el script de seed para crear usuario admin:
+Ejecutar los scripts de seed para crear usuario admin y planes de suscripción:
 ```bash
 cd backend
 npm run seed:admin
+npm run seed:plans
 ```
+
+Esto creará:
+- Un usuario administrador (admin@paes.cl / admin123)
+- Planes de suscripción por defecto (Free, Basic, Premium)
 
 6. **Iniciar los servidores de desarrollo**
 
@@ -460,10 +610,20 @@ El skill te guiará para crear:
 ### Para Administradores
 
 1. **Acceder al Panel Admin** - Navega a `/admin` (requiere rol admin)
-2. **Crear Sesiones** - Programa nuevos ensayos de práctica
-3. **Navegar Problemas** - Ve y filtra el banco de preguntas
-4. **Upload PDFs** - Sube PDFs y extrae preguntas automáticamente con IA
-5. **Monitorear Actividad** - Ve usuarios registrados y participación
+2. **Dashboard de Analytics** - Ve métricas generales de uso y desempeño en `/admin/analytics`
+3. **AI Analytics** - Analiza interacciones con el tutor IA en `/admin/ai-analytics`
+4. **Gestión de Usuarios** - CRUD completo de usuarios en `/admin/users`
+   - Ver, crear, editar y eliminar usuarios
+   - Gestionar suscripciones y planes por usuario
+   - Ver actividad y estadísticas de usuarios
+5. **Gestión de Planes** - Configurar planes de suscripción en `/admin/users`
+6. **Crear Sesiones en Vivo** - Programa nuevos ensayos en `/admin/live-sessions`
+7. **Navegar Problemas** - Ve y filtra el banco de preguntas en `/admin/problems`
+8. **Upload PDFs** - Sube PDFs y extrae preguntas automáticamente con IA en `/admin/upload`
+9. **QGen System** - Gestiona el generador dinámico de preguntas en `/admin/qgen`
+   - Administrar contextos, objetivos y templates
+   - Generar y validar preguntas dinámicas
+10. **Debug Tools** - Herramientas de debug en `/admin/zen-debug` y `/admin/rapidfire-debug`
 
 ## API Endpoints
 
@@ -471,6 +631,7 @@ El skill te guiará para crear:
 - `POST /api/auth/register` - Registrar nuevo usuario
 - `POST /api/auth/login` - Iniciar sesión
 - `POST /api/auth/refresh` - Refrescar token JWT
+- `POST /api/auth/logout` - Cerrar sesión
 - `GET /api/auth/me` - Obtener perfil del usuario actual
 
 ### Rachas
@@ -485,16 +646,68 @@ El skill te guiará para crear:
 - `POST /api/sessions/:id/join` - Unirse a sesión activa
 - `POST /api/sessions/:id/answers` - Enviar respuesta en sesión
 
-### Admin
+### Quiz Tracking
+- `POST /api/quiz/attempt` - Guardar intento individual
+- `POST /api/quiz/attempts` - Guardar múltiples intentos
+- `GET /api/quiz/history` - Obtener historial de intentos del usuario
+- `GET /api/quiz/stats` - Obtener estadísticas de quiz del usuario
+- `GET /api/quiz/sessions` - Obtener sesiones de quiz del usuario
+- `POST /api/quiz/sessions` - Crear nueva sesión de quiz
+- `PUT /api/quiz/sessions/:id` - Actualizar sesión de quiz
+
+### Admin - Gestión de Contenido
 - `POST /api/admin/upload-pdf` - Upload y extracción de preguntas desde PDF
 - `POST /api/admin/save-questions` - Guardar preguntas extraídas
 - `GET /api/admin/questions` - Obtener preguntas desde base de datos
+- `GET /api/admin/uploads` - Obtener historial de uploads
+- `GET /api/images/:filename` - Servir imágenes de preguntas
+
+### Admin - Gestión de Usuarios
+- `GET /api/admin/users` - Listar todos los usuarios
+- `GET /api/admin/users/:id` - Obtener detalles de usuario
+- `POST /api/admin/users` - Crear nuevo usuario
+- `PUT /api/admin/users/:id` - Actualizar usuario
+- `DELETE /api/admin/users/:id` - Eliminar usuario
+
+### Admin - Planes y Suscripciones
+- `GET /api/admin/plans` - Listar todos los planes
+- `GET /api/admin/plans/:id` - Obtener detalles de plan
+- `POST /api/admin/plans` - Crear nuevo plan
+- `PUT /api/admin/plans/:id` - Actualizar plan
+- `DELETE /api/admin/plans/:id` - Eliminar plan
+- `GET /api/admin/subscriptions` - Listar todas las suscripciones
+- `GET /api/admin/subscriptions/:id` - Obtener detalles de suscripción
+- `POST /api/admin/subscriptions` - Crear suscripción
+- `PUT /api/admin/subscriptions/:id` - Actualizar suscripción
+- `DELETE /api/admin/subscriptions/:id` - Cancelar suscripción
+
+### Analytics
+- `GET /api/analytics/dashboard` - Dashboard de analytics general (Admin)
+- `GET /api/analytics/trends` - Tendencias de uso (Admin)
+- `GET /api/analytics/user-activity` - Actividad de usuarios (Admin)
+- `GET /api/analytics/performance` - Métricas de desempeño (Admin)
+
+### AI Analytics
+- `GET /api/ai-analytics/overview` - Vista general de uso de IA (Admin)
+- `GET /api/ai-analytics/interactions` - Historial de interacciones (Admin)
+- `GET /api/ai-analytics/costs` - Costos de API de IA (Admin)
+- `GET /api/ai-analytics/performance` - Performance del tutor IA (Admin)
+
+### QGen - Generador de Preguntas
+- `GET /api/qgen/contexts` - Obtener contextos disponibles
+- `GET /api/qgen/goals` - Obtener objetivos de razonamiento
+- `GET /api/qgen/templates` - Obtener plantillas de preguntas
+- `POST /api/qgen/generate` - Generar pregunta dinámica
+- `POST /api/qgen/validate` - Validar pregunta generada
 
 ### IA
 - `POST /api/ai-chat` - Chat con tutor IA (metodología Socrática)
 - `POST /api/ai-help` - Obtener ayuda IA para respuestas incorrectas
 - `POST /api/ai/summarize` - Resumir contenido educativo
 - `POST /api/ai/practice` - Generar problemas de práctica
+
+### Utilidades
+- `GET /health` - Health check del servidor
 
 ## Características Actuales
 
@@ -517,7 +730,38 @@ El skill te guiará para crear:
 - Mensajes de carga personalizados por ruta
 - Auto-actualización de estados de sesiones
 
-**Developer Experience:**
+**Sistema de Suscripciones:**
+- ✅ **Planes de Suscripción** - Sistema completo de planes con precios y características
+- ✅ **Gestión de Usuarios** - CRUD completo de usuarios y suscripciones
+- ✅ **Estados de Suscripción** - Trial, activa, expirada, cancelada
+- ✅ **Auto-renovación** - Gestión de renovaciones automáticas
+- ✅ **Admin Interface** - Panel de administración para gestionar usuarios y planes
+
+**Quiz Tracking en Base de Datos:**
+- ✅ **Quiz Sessions** - Agrupación de intentos con tracking de conversaciones IA
+- ✅ **Quiz Attempts** - Persistencia de cada intento con detalles completos
+- ✅ **Historial de Quiz** - Acceso a historial completo del usuario
+- ✅ **Estadísticas** - Analytics detallado de desempeño por usuario
+- ✅ **Last Quiz Config** - Recordar configuración preferida del usuario
+
+**Sistema QGen - Generación Dinámica:**
+- ✅ **Biblioteca de Contextos** - Situaciones de la vida real para problemas
+- ✅ **Biblioteca de Objetivos** - Tipos de razonamiento y metas de preguntas
+- ✅ **Plantillas** - Templates parametrizados para generar preguntas
+- ✅ **Generador de Valores** - Creación inteligente de valores numéricos
+- ✅ **Algoritmo de Generación** - Combina contextos, objetivos y templates
+- ✅ **Admin Interface** - Panel para gestionar el sistema QGen
+
+**Analytics y Monitoring:**
+- ✅ **Analytics Dashboard** - Métricas de uso, tendencias y desempeño
+- ✅ **AI Analytics** - Tracking de todas las interacciones con el tutor IA
+- ✅ **User Activity Tracking** - Monitoreo de actividad de usuarios
+- ✅ **Performance Metrics** - Métricas de desempeño del sistema
+- ✅ **Cost Tracking** - Seguimiento de costos de API de IA
+- ✅ **AI Interactions Table** - Almacena todas las conversaciones usuario-IA
+
+**Developer Tools:**
+- ✅ **Debug Pages** - Páginas de debug para Zen y Rapid Fire
 - ✅ **Tests E2E con Playwright** - Cobertura completa de flujos críticos
 - ✅ **Claude Code Skills** - Skills personalizados para desarrollo consistente
   - `code-patterns` - Enforza patrones y estándares
@@ -529,36 +773,43 @@ El skill te guiará para crear:
 
 ### 🚧 Limitaciones Actuales
 
-- **Cobertura M2**: Solo 26 problemas (necesita expansión)
-- **Progreso de Quiz**: Historial almacenado en localStorage (no sincronizado en la nube)
-- **Sin Aprendizaje Adaptativo**: Generación de quiz es aleatoria, no ajustada por dificultad
-- **Tests Unitarios**: No hay tests unitarios (solo E2E)
-- **Herramientas Admin**: No hay CRUD completo para preguntas en base de datos
+- **Cobertura M2**: Solo 26 problemas (necesita expansión a 200+)
+- **Sin Aprendizaje Adaptativo**: Generación de quiz es aleatoria, no ajustada por dificultad del usuario
+- **Tests Unitarios**: No hay tests unitarios (solo E2E con Playwright)
+- **QGen en Desarrollo**: Sistema de generación dinámica necesita más contextos, objetivos y templates
+- **Integración de Pagos**: Sistema de suscripciones sin integración de pasarela de pago
+- **Analytics en Tiempo Real**: Dashboard de analytics sin actualización en tiempo real
 
 ## Mejoras Futuras
 
 ### Alta Prioridad
 - [ ] Expandir banco de preguntas M2 a 200+ problemas
-- [ ] Migrar historial de progreso de quiz a PostgreSQL
-- [ ] Implementar algoritmo de repetición espaciada
-- [ ] Agregar tests unitarios (vitest/jest)
-- [ ] Construir interfaz CRUD completa para gestión de preguntas
+- [ ] Implementar algoritmo de aprendizaje adaptativo basado en desempeño
+- [ ] Agregar tests unitarios (vitest/jest) para componentes y servicios
+- [ ] Integración de pasarela de pago (Stripe/MercadoPago)
+- [ ] Expandir biblioteca QGen (más contextos, objetivos y templates)
+- [ ] Sistema de recomendaciones personalizado basado en habilidades débiles
 
 ### Prioridad Media
 - [ ] Implementar sistema de calibración de dificultad de problemas
-- [ ] Agregar dashboard de analytics detallado
+- [ ] Analytics en tiempo real con WebSockets
 - [ ] Renderizador de soluciones paso a paso mejorado
 - [ ] Soporte para importar/exportar problemas en batch
-- [ ] Sistema de recomendaciones personalizado basado en desempeño
-- [ ] CI/CD pipeline con tests automáticos
-- [ ] Agregar validación con Zod para inputs
+- [ ] CI/CD pipeline con tests automáticos en GitHub Actions
+- [ ] Agregar validación con Zod para inputs de API
+- [ ] Sistema de notificaciones push
+- [ ] Interfaz CRUD completa para gestión de preguntas desde admin
+- [ ] Búsqueda y filtrado avanzado de preguntas
 
 ### Prioridad Baja
 - [ ] Aplicación móvil (React Native)
-- [ ] Salas de estudio colaborativo
-- [ ] Gamificación y logros adicionales
+- [ ] Salas de estudio colaborativo en tiempo real
+- [ ] Gamificación y logros adicionales (badges, leaderboards)
 - [ ] Explicaciones en video para problemas
-- [ ] Generador de tests de práctica personalizados
+- [ ] Sistema de tutorías 1-on-1
+- [ ] Modo oscuro
+- [ ] Internacionalización (i18n) para otros países
+- [ ] Integración con sistemas LMS (Moodle, Canvas)
 
 ## Documentación
 
@@ -584,6 +835,41 @@ Para más información detallada, ver:
 
 ## Mejoras Recientes
 
+### Sistema de Suscripciones (NUEVO)
+- ✅ Sistema completo de planes y suscripciones
+- ✅ Gestión de usuarios con roles
+- ✅ Estados de suscripción (trial, active, expired, cancelled)
+- ✅ Admin interface para gestionar usuarios y planes
+- ✅ Script de seed para crear planes iniciales
+
+### Quiz Tracking en Base de Datos (NUEVO)
+- ✅ Migración de localStorage a PostgreSQL
+- ✅ Quiz sessions con tracking de conversaciones IA
+- ✅ Quiz attempts con detalles completos
+- ✅ Historial y estadísticas de usuario
+- ✅ Configuración de quiz persistente
+
+### Sistema QGen - Generación Dinámica (NUEVO)
+- ✅ Biblioteca de contextos de la vida real
+- ✅ Biblioteca de objetivos de razonamiento
+- ✅ Sistema de templates parametrizados
+- ✅ Generador inteligente de valores
+- ✅ Algoritmo de generación de preguntas
+- ✅ Admin interface para gestionar QGen
+
+### Analytics y Monitoring (NUEVO)
+- ✅ Dashboard de analytics general
+- ✅ AI Analytics con tracking de interacciones
+- ✅ Tabla de ai_interactions en base de datos
+- ✅ Métricas de desempeño y uso
+- ✅ Tracking de costos de API
+
+### Herramientas Admin (NUEVO)
+- ✅ Páginas de debug para Zen y Rapid Fire
+- ✅ Gestión completa de usuarios
+- ✅ Exportador de documentación completa
+- ✅ Panel de analytics detallado
+
 ### Testing Infrastructure
 - ✅ Tests E2E completos con Playwright
 - ✅ Docker Compose para ambiente de testing aislado
@@ -595,7 +881,7 @@ Para más información detallada, ver:
 - ✅ API client centralizado con manejo de errores
 - ✅ Patrones de código estandarizados
 
-### Features
+### Features Anteriores
 - ✅ Implementación de metodología Socrática en tutor IA
 - ✅ Upgrade a modelo Claude Sonnet 4.5
 - ✅ Mejoras en Modo Zen con tutor IA integrado
@@ -624,7 +910,7 @@ Para preguntas o soporte, por favor abre un issue en GitHub.
 
 **Última actualización**: Noviembre 10, 2025
 
-**Estado del Proyecto**: En desarrollo activo con features principales implementadas, testing E2E completo, y herramientas de desarrollo mejoradas con Claude Code skills.
+**Estado del Proyecto**: En desarrollo activo con features principales implementadas, sistema de suscripciones completo, quiz tracking en base de datos, generador dinámico de preguntas (QGen), analytics completo, testing E2E, y herramientas de desarrollo mejoradas con Claude Code skills.
 
 ## Tech Stack Summary
 

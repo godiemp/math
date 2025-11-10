@@ -15,6 +15,7 @@ import quizRoutes from './routes/quizRoutes';
 import qgenRoutes from './routes/qgenRoutes';
 import abstractProblemsRoutes from './routes/abstractProblemsRoutes';
 import contextProblemsRoutes from './routes/contextProblemsRoutes';
+import studyBuddyRoutes from './routes/studyBuddyRoutes';
 import { serveImage } from './controllers/adminController';
 
 // Load environment variables
@@ -108,6 +109,7 @@ app.use('/api/quiz', quizRoutes);
 app.use('/api/qgen', qgenRoutes);
 app.use('/api/abstract-problems', abstractProblemsRoutes);
 app.use('/api/context-problems', contextProblemsRoutes);
+app.use('/api/study-buddy', studyBuddyRoutes);
 
 // Public image serving route
 app.get('/api/images/:filename', serveImage);
@@ -123,6 +125,7 @@ console.log('✅ Quiz routes registered at /api/quiz');
 console.log('✅ QGen routes registered at /api/qgen');
 console.log('✅ Abstract Problems routes registered at /api/abstract-problems');
 console.log('✅ Context Problems routes registered at /api/context-problems');
+console.log('✅ Study Buddy routes registered at /api/study-buddy');
 
 // 404 handler
 app.use((req: Request, res: Response) => {
