@@ -37,20 +37,20 @@ export default function Home() {
       />
 
       {/* Content Container */}
-      <div className="flex-grow flex items-center justify-center relative z-10">
-        <div className="w-full max-w-md px-4">
+      <div className="flex-grow flex md:items-center justify-center relative z-10 pt-8 md:pt-0">
+        <div className="w-full max-w-md px-4 pb-8">
           {/* Hero Section */}
-          <div className="text-center mb-12 spring-motion">
-            <div className="mb-6">
+          <div className="text-center mb-6 md:mb-8 spring-motion">
+            <div className="mb-4">
               <div
-                className="inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-4 spring-emphasized hover:scale-110"
+                className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-3xl mb-3 spring-emphasized hover:scale-110"
                 style={{
                   background: 'var(--color-tint)',
                   boxShadow: 'var(--shadow-raised)',
                 }}
               >
                 <svg
-                  className="w-10 h-10"
+                  className="w-8 h-8 md:w-10 md:h-10"
                   fill="none"
                   stroke="white"
                   viewBox="0 0 24 24"
@@ -66,10 +66,10 @@ export default function Home() {
             </div>
 
             <h1
-              className="font-semibold mb-3 spring-motion"
+              className="font-semibold mb-2 md:mb-3 spring-motion"
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: '44px',
+                fontSize: 'clamp(32px, 8vw, 44px)',
                 lineHeight: '1.1',
                 letterSpacing: '-1px',
                 color: 'var(--color-label-primary)',
@@ -117,7 +117,7 @@ export default function Home() {
 
           {/* Footer Info */}
           <div
-            className="text-center mt-8 spring-motion"
+            className="text-center mt-6 md:mt-8 spring-motion"
             style={{
               fontSize: '13px',
               color: 'var(--color-label-secondary)',
@@ -137,10 +137,9 @@ export default function Home() {
             onClick={() => setShowInfoModal(false)}
           >
             <div
-              className="translucent spring-motion max-w-lg w-full"
+              className="translucent spring-motion max-w-lg w-full p-6 md:p-8"
               style={{
                 borderRadius: 'var(--radius-xl)',
-                padding: 'var(--spacing-16)',
                 boxShadow: 'var(--shadow-raised)',
                 maxHeight: '80vh',
                 overflowY: 'auto',

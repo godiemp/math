@@ -77,20 +77,19 @@ export default function Auth({ onSuccess }: AuthProps) {
 
   return (
     <div
-      className="w-full translucent spring-motion"
+      className="w-full translucent spring-motion p-6 md:p-8"
       style={{
         borderRadius: 'var(--radius-xl)',
-        padding: 'var(--spacing-16)',
         boxShadow: 'var(--shadow-ambient)',
       }}
     >
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-6 md:mb-8">
         <h2
           className="text-center font-semibold mb-2"
           style={{
             fontFamily: 'var(--font-heading)',
-            fontSize: '28px',
+            fontSize: 'clamp(24px, 5vw, 28px)',
             lineHeight: '1.2',
             letterSpacing: '-0.5px',
             color: 'var(--color-label-primary)',

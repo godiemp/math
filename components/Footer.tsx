@@ -5,15 +5,14 @@ export default function Footer() {
 
   return (
     <footer
+      className="mt-auto py-8 md:py-10 px-5 border-t"
       style={{
-        marginTop: 'auto',
-        padding: '40px 20px',
-        borderTop: '1px solid var(--color-separator)',
+        borderColor: 'var(--color-separator)',
         background: 'var(--color-bg)',
       }}
     >
       <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
+        <div className="grid md:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
           {/* Company Info */}
           <div>
             <h3
@@ -202,12 +201,12 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div
+          className="pt-6 md:pt-6 border-t"
           style={{
-            paddingTop: '24px',
-            borderTop: '1px solid var(--color-separator)',
+            borderColor: 'var(--color-separator)',
           }}
         >
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4">
             <p
               style={{
                 fontSize: '13px',
