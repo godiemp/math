@@ -37,6 +37,8 @@ export default function RapidFireQuiz({
   const [totalTimeElapsed, setTotalTimeElapsed] = useState(0);
   const [quizSessionId] = useState(generateQuizSessionId);
   const [aiConversation] = useState<Array<{ role: string; message: string; timestamp: number }>>([]);
+  const [showStreakNotification, setShowStreakNotification] = useState(false);
+  const [streakNotificationValue, setStreakNotificationValue] = useState(0);
 
   // Rapid Fire state
   const [rapidFireState, setRapidFireState] = useState<RapidFireState>({
@@ -177,6 +179,17 @@ export default function RapidFireQuiz({
         newState.currentStreak = prev.currentStreak + 1;
         newState.longestStreak = Math.max(prev.longestStreak, newState.currentStreak);
 
+        // Show streak notification occasionally (at milestones: 3, 5, 10, 15, 20, etc.)
+        const shouldShowStreak = newState.currentStreak === 3 ||
+                                 newState.currentStreak === 5 ||
+                                 newState.currentStreak % 5 === 0;
+
+        if (shouldShowStreak) {
+          setStreakNotificationValue(newState.currentStreak);
+          setShowStreakNotification(true);
+          setTimeout(() => setShowStreakNotification(false), 2000);
+        }
+
         // Extreme mode: add time back
         if (difficulty === 'extreme' && 'timeBackPerCorrect' in config && config.timeBackPerCorrect) {
           setTimeRemaining(time => time + config.timeBackPerCorrect);
@@ -210,14 +223,7 @@ export default function RapidFireQuiz({
     }
   };
 
-  const handleHint = () => {
-    if (!config.hintsAllowed || rapidFireState.hintsUsed.includes(currentQuestionIndex)) return;
-
-    setRapidFireState(prev => ({
-      ...prev,
-      hintsUsed: [...prev.hintsUsed, currentQuestionIndex],
-    }));
-  };
+  // Hint feature removed for rapidfire mode
 
   const handlePause = () => {
     if (!config.pauseAllowed || rapidFireState.pausesRemaining <= 0) return;
@@ -274,10 +280,8 @@ export default function RapidFireQuiz({
     const isPerfect = correctCount === quizQuestions.length;
     const perfectBonus = isPerfect ? config.perfectBonus : 0;
 
-    // Hint penalty
-    const hintPenalty = config.hintsAllowed
-      ? rapidFireState.hintsUsed.length * (config.pointsPerCorrect * config.hintPenaltyPercent / 100)
-      : 0;
+    // Hint penalty removed
+    const hintPenalty = 0;
 
     // Total
     const totalPoints = Math.max(0, basePoints + speedBonus + streakBonus + perfectBonus - hintPenalty);
@@ -452,12 +456,6 @@ export default function RapidFireQuiz({
               </div>
             )}
 
-            {rapidFireScore.hintPenalty > 0 && (
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700 dark:text-gray-300">💡 Penalización por pistas ({rapidFireState.hintsUsed.length})</span>
-                <span className="font-bold text-amber-600 dark:text-amber-400">-{rapidFireScore.hintPenalty.toFixed(0)}</span>
-              </div>
-            )}
 
             <div className="pt-2 mt-2 border-t border-purple-300 dark:border-purple-600 flex justify-between">
               <span className="font-bold text-purple-900 dark:text-purple-100">Total</span>
@@ -589,15 +587,6 @@ export default function RapidFireQuiz({
               </div>
             )}
 
-            {/* Streak */}
-            {rapidFireState.currentStreak > 0 && (
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Racha:</span>
-                <span className="text-sm font-bold text-orange-600 dark:text-orange-400">
-                  🔥 {rapidFireState.currentStreak}
-                </span>
-              </div>
-            )}
 
             {/* Pause remaining */}
             {config.pauseAllowed && (
@@ -611,35 +600,15 @@ export default function RapidFireQuiz({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-2">
-            {/* Hint Button */}
-            {config.hintsAllowed && !rapidFireState.hintsUsed.includes(currentQuestionIndex) && (
-              <button
-                onClick={handleHint}
-                className="flex-1 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors"
-              >
-                💡 Pista (-{config.hintPenaltyPercent}%)
-              </button>
-            )}
-
-            {/* Pause Button */}
-            {config.pauseAllowed && rapidFireState.pausesRemaining > 0 && !rapidFireState.isPaused && (
+          {config.pauseAllowed && rapidFireState.pausesRemaining > 0 && !rapidFireState.isPaused && (
+            <div className="flex gap-2">
+              {/* Pause Button */}
               <button
                 onClick={handlePause}
                 className="flex-1 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors"
               >
                 ⏸️ Pausar ({config.pauseMaxSeconds}s)
               </button>
-            )}
-          </div>
-
-          {/* Hint Display */}
-          {config.hintsAllowed && rapidFireState.hintsUsed.includes(currentQuestionIndex) && (
-            <div className="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 rounded-lg">
-              <p className="text-sm font-medium text-amber-900 dark:text-amber-100 mb-1">💡 Pista:</p>
-              <p className="text-sm text-amber-800 dark:text-amber-200">
-                {currentQuestion.explanation.split('.')[0]}.
-              </p>
             </div>
           )}
         </div>
@@ -683,7 +652,7 @@ export default function RapidFireQuiz({
       {/* Question Renderer */}
       <QuestionRenderer
         question={currentQuestion}
-        mode="full"
+        mode={quizSubmitted ? "full" : "with-options"}
         selectedAnswer={userAnswer}
         showFeedback={showFeedback}
         onAnswerSelect={handleAnswerSelect}
@@ -793,6 +762,25 @@ export default function RapidFireQuiz({
             <p className="text-xl text-white/60">
               Enviando resultados...
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* Streak Notification */}
+      {showStreakNotification && (
+        <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 animate-fadeIn">
+          <div
+            className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-6 rounded-2xl shadow-2xl"
+            style={{
+              animation: 'scale-in 0.3s ease-out',
+              boxShadow: '0 0 60px rgba(249, 115, 22, 0.6), 0 20px 40px rgba(0, 0, 0, 0.3)'
+            }}
+          >
+            <div className="text-center">
+              <div className="text-6xl mb-2">🔥</div>
+              <div className="text-4xl font-black mb-1">¡RACHA!</div>
+              <div className="text-5xl font-black">{streakNotificationValue}</div>
+            </div>
           </div>
         </div>
       )}
