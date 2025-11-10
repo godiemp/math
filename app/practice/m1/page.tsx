@@ -273,22 +273,22 @@ function M1PracticeContent() {
     if (!lastConfig) return null;
 
     return (
-      <div className="mb-6 p-6 rounded-2xl bg-black/20 dark:bg-white/10 border border-white/20 shadow-2xl">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-3xl">🔄</span>
-              <h2 className="text-xl font-bold text-white">
+      <div className="mb-4 p-4 rounded-xl bg-black/20 dark:bg-white/10 border border-white/20 shadow-xl">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 flex-1 min-w-0">
+            <span className="text-2xl flex-shrink-0">🔄</span>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-base font-bold text-white">
                 Repetir Última Configuración
               </h2>
+              <p className="text-white/80 text-sm">
+                {getConfigDisplayText(lastConfig)}
+              </p>
             </div>
-            <p className="text-white/80 text-base">
-              {getConfigDisplayText(lastConfig)}
-            </p>
           </div>
           <button
             onClick={handleRepeatLastQuiz}
-            className="px-6 py-3 rounded-xl bg-white/20 hover:bg-white/30 border border-white/30 text-white font-bold transition-all hover:scale-105 shadow-lg whitespace-nowrap"
+            className="px-4 py-2 rounded-lg bg-white/20 hover:bg-white/30 border border-white/30 text-white font-bold text-sm transition-all hover:scale-105 shadow-lg whitespace-nowrap flex-shrink-0"
           >
             Comenzar →
           </button>
@@ -299,16 +299,16 @@ function M1PracticeContent() {
 
   // Step 1: Subject Selection
   const renderSubjectSelection = () => (
-    <div className="mb-8">
-      <div className="mb-6 text-center">
-        <h2 className="text-2xl font-bold text-white mb-2">
+    <div className="mb-5">
+      <div className="mb-3 text-center">
+        <h2 className="text-xl font-bold text-white mb-1">
           Paso 1: Selecciona una materia
         </h2>
-        <p className="text-white/70 text-base">
+        <p className="text-white/70 text-sm">
           Elige el área que quieres practicar
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {subjects.map((subject) => (
           <button
             key={subject.label}
@@ -317,24 +317,24 @@ function M1PracticeContent() {
               setQuizMode(null);
               setDifficulty(null);
             }}
-            className={`p-5 rounded-2xl border-2 transition-all duration-300 text-left ${
+            className={`p-3 rounded-xl border-2 transition-all duration-300 text-left ${
               selectedSubject === subject.value
                 ? 'border-white/60 bg-white/25 shadow-[0_0_40px_rgba(255,255,255,0.3)] transform scale-105'
                 : 'border-white/20 bg-black/20 hover:bg-white/10 hover:border-white/40 hover:shadow-xl hover:scale-102'
             }`}
           >
-            <div className="flex items-start gap-3">
-              <div className="text-5xl">{subject.emoji}</div>
-              <div className="flex-1">
-                <p className="text-lg font-bold text-white mb-1">
+            <div className="flex items-center gap-2.5">
+              <div className="text-3xl">{subject.emoji}</div>
+              <div className="flex-1 min-w-0">
+                <p className="text-base font-bold text-white mb-0.5">
                   {subject.label}
                 </p>
-                <p className="text-sm text-white/70">
+                <p className="text-xs text-white/70">
                   {subject.description}
                 </p>
               </div>
               {selectedSubject === subject.value && (
-                <div className="text-white text-3xl">✓</div>
+                <div className="text-white text-xl flex-shrink-0">✓</div>
               )}
             </div>
           </button>
@@ -348,16 +348,16 @@ function M1PracticeContent() {
     if (selectedSubject === undefined) return null;
 
     return (
-      <div className="mb-8">
-        <div className="mb-6 text-center">
-          <h2 className="text-2xl font-bold text-white mb-2">
+      <div className="mb-5">
+        <div className="mb-3 text-center">
+          <h2 className="text-xl font-bold text-white mb-1">
             Paso 2: Selecciona el modo de práctica
           </h2>
-          <p className="text-white/70 text-base">
+          <p className="text-white/70 text-sm">
             Elige cómo quieres practicar
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {modes.map((mode) => {
             const isZen = mode.value === 'zen';
             const modeGradient = isZen
@@ -372,7 +372,7 @@ function M1PracticeContent() {
                   setQuizMode(mode.value);
                   setDifficulty(null);
                 }}
-                className={`relative overflow-hidden p-6 rounded-2xl border-2 transition-all duration-500 text-left ${
+                className={`relative overflow-hidden p-4 rounded-xl border-2 transition-all duration-500 text-left ${
                   isSelected
                     ? 'border-white/60 shadow-[0_0_50px_rgba(255,255,255,0.4)] transform scale-105'
                     : 'border-white/20 bg-black/20 hover:bg-white/10 hover:border-white/40 hover:shadow-2xl hover:scale-102'
@@ -383,26 +383,26 @@ function M1PracticeContent() {
 
                 {/* Content */}
                 <div className="relative z-10">
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="text-7xl drop-shadow-2xl">{mode.emoji}</div>
+                  <div className="flex items-start gap-3">
+                    <div className="text-5xl drop-shadow-2xl">{mode.emoji}</div>
                     <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-white mb-2">
+                      <h3 className="text-xl font-bold text-white mb-1">
                         {mode.label}
                       </h3>
-                      <p className="text-base font-semibold text-white/90 mb-2">
+                      <p className="text-sm font-semibold text-white/90 mb-1">
                         {mode.description}
                       </p>
-                      <p className="text-sm text-white/70">
+                      <p className="text-xs text-white/70">
                         {mode.details}
                       </p>
                     </div>
                     {isSelected && (
-                      <div className="text-white text-4xl drop-shadow-lg">✓</div>
+                      <div className="text-white text-2xl drop-shadow-lg flex-shrink-0">✓</div>
                     )}
                   </div>
 
                   {/* Color preview bar */}
-                  <div className={`h-2 rounded-full bg-gradient-to-r ${modeGradient} shadow-lg`} />
+                  <div className={`h-1.5 rounded-full bg-gradient-to-r ${modeGradient} shadow-lg mt-3`} />
                 </div>
               </button>
             );
@@ -417,58 +417,58 @@ function M1PracticeContent() {
     if (quizMode !== 'rapidfire') return null;
 
     return (
-      <div className="mb-8">
-        <div className="mb-6 text-center">
-          <h2 className="text-2xl font-bold text-white mb-2">
+      <div className="mb-5">
+        <div className="mb-3 text-center">
+          <h2 className="text-xl font-bold text-white mb-1">
             Paso 3: Selecciona la dificultad
           </h2>
-          <p className="text-white/70 text-base">
+          <p className="text-white/70 text-sm">
             Cada dificultad tiene mecánicas únicas
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
           {difficulties.map((diff) => {
             const isSelected = difficulty === diff.value;
             return (
               <button
                 key={diff.value}
                 onClick={() => setDifficulty(diff.value)}
-                className={`p-6 rounded-2xl border-2 transition-all duration-300 text-left ${
+                className={`p-3.5 rounded-xl border-2 transition-all duration-300 text-left ${
                   isSelected
                     ? 'border-white/60 bg-white/25 shadow-[0_0_40px_rgba(255,255,255,0.3)] transform scale-105'
                     : 'border-white/20 bg-black/20 hover:bg-white/10 hover:border-white/40 hover:shadow-xl hover:scale-102'
                 }`}
               >
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="text-5xl">{diff.emoji}</div>
+                <div className="flex items-start gap-2.5 mb-2">
+                  <div className="text-3xl">{diff.emoji}</div>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-xl font-bold text-white">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <h3 className="text-base font-bold text-white">
                         {diff.label}
                       </h3>
-                      <span className="text-sm font-bold text-white/90 bg-white/20 px-2 py-1 rounded-lg">
+                      <span className="text-xs font-bold text-white/90 bg-white/20 px-1.5 py-0.5 rounded">
                         {diff.time} min
                       </span>
                     </div>
-                    <p className="text-sm text-white/70 mb-1">
+                    <p className="text-xs text-white/70 mb-0.5">
                       {diff.description}
                     </p>
-                    <p className="text-sm font-medium text-white/80 mb-2">
+                    <p className="text-xs font-medium text-white/80">
                       {diff.details}
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-1.5 pl-1">
+                <div className="space-y-0.5 pl-0.5">
                   {diff.features.map((feature, idx) => (
-                    <p key={idx} className="text-xs text-white/70 leading-relaxed">
+                    <p key={idx} className="text-[11px] text-white/65 leading-relaxed">
                       {feature}
                     </p>
                   ))}
                 </div>
 
                 {isSelected && (
-                  <div className="text-white text-2xl mt-3 text-center font-bold">✓ Seleccionado</div>
+                  <div className="text-white text-lg mt-2 text-center font-bold">✓ Seleccionado</div>
                 )}
               </button>
             );
@@ -476,16 +476,16 @@ function M1PracticeContent() {
         </div>
 
         {difficulty && (
-          <div className="flex gap-4">
+          <div className="flex gap-3">
             <button
               onClick={handleResetSelection}
-              className="px-6 py-3 rounded-xl bg-black/30 hover:bg-black/40 border border-white/30 text-white font-semibold transition-all"
+              className="px-4 py-2 rounded-lg bg-black/30 hover:bg-black/40 border border-white/30 text-white text-sm font-semibold transition-all"
             >
-              ← Cambiar Selección
+              ← Cambiar
             </button>
             <button
               onClick={handleStartQuiz}
-              className="flex-1 px-6 py-4 rounded-xl bg-white/25 hover:bg-white/35 border-2 border-white/50 text-white font-bold text-lg transition-all hover:scale-105 shadow-2xl"
+              className="flex-1 px-5 py-2.5 rounded-lg bg-white/25 hover:bg-white/35 border-2 border-white/50 text-white font-bold transition-all hover:scale-105 shadow-xl"
             >
               Comenzar Quiz →
             </button>
@@ -500,17 +500,17 @@ function M1PracticeContent() {
     if (quizMode !== 'zen') return null;
 
     return (
-      <div className="mb-6">
-        <div className="flex gap-4">
+      <div className="mb-4">
+        <div className="flex gap-3">
           <button
             onClick={handleResetSelection}
-            className="px-6 py-3 rounded-xl bg-black/30 hover:bg-black/40 border border-white/30 text-white font-semibold transition-all"
+            className="px-4 py-2 rounded-lg bg-black/30 hover:bg-black/40 border border-white/30 text-white text-sm font-semibold transition-all"
           >
-            ← Cambiar Selección
+            ← Cambiar
           </button>
           <button
             onClick={handleStartQuiz}
-            className="flex-1 px-6 py-4 rounded-xl bg-white/25 hover:bg-white/35 border-2 border-white/50 text-white font-bold text-lg transition-all hover:scale-105 shadow-2xl"
+            className="flex-1 px-5 py-2.5 rounded-lg bg-white/25 hover:bg-white/35 border-2 border-white/50 text-white font-bold transition-all hover:scale-105 shadow-xl"
           >
             Comenzar Quiz →
           </button>
@@ -554,28 +554,28 @@ function M1PracticeContent() {
 
   // Selection View
   return (
-    <div className={`min-h-screen ${themeColors.background} py-8 px-4 transition-all duration-700`}>
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-10">
-          <div className="flex justify-between items-start mb-6">
+    <div className={`min-h-screen ${themeColors.background} py-6 px-4 transition-all duration-700`}>
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-6">
+          <div className="flex justify-between items-start mb-4">
             <Link
               href="/dashboard"
-              className="text-white/90 hover:text-white transition-colors px-4 py-2 rounded-lg hover:bg-white/10 inline-block font-semibold"
+              className="text-white/80 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/10 inline-block text-sm font-semibold"
             >
               ← Volver al Inicio
             </Link>
             <Link
               href="/curriculum/m1"
-              className="text-white/90 hover:text-white transition-colors px-4 py-2 rounded-lg hover:bg-white/10 inline-block font-semibold"
+              className="text-white/80 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/10 inline-block text-sm font-semibold"
             >
               📚 Ver Curriculum M1
             </Link>
           </div>
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-white mb-3 drop-shadow-lg">
+            <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">
               Práctica PAES - Competencia Matemática M1
             </h1>
-            <p className="text-lg text-white/80">
+            <p className="text-sm text-white/70">
               Contenidos básicos de matemática para todos los estudiantes
             </p>
           </div>
