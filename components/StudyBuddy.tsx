@@ -46,6 +46,30 @@ export function StudyBuddy({ className = '' }: StudyBuddyProps) {
 
   useEffect(() => {
     loadGreeting();
+
+    // Also refresh in background to check if cache is stale
+    const checkForUpdates = async () => {
+      const cachedGreeting = localStorage.getItem('study-buddy-greeting');
+      const m1History = localStorage.getItem('paes-history-M1');
+      const m2History = localStorage.getItem('paes-history-M2');
+
+      const totalQuestions = (m1History ? JSON.parse(m1History).length : 0) +
+                            (m2History ? JSON.parse(m2History).length : 0);
+
+      if (cachedGreeting) {
+        const cached = JSON.parse(cachedGreeting);
+        const cachedQuestionCount = cached.contextData?.totalQuestionsAnswered || 0;
+
+        // If question count has changed, refresh the greeting
+        if (totalQuestions !== cachedQuestionCount) {
+          console.log('🤖 Study Buddy - Cache is stale, refreshing in background...');
+          loadGreeting(true);
+        }
+      }
+    };
+
+    // Check after a short delay to not block initial render
+    setTimeout(checkForUpdates, 1000);
   }, []);
 
   const loadGreeting = async (forceRefresh = false) => {
