@@ -3,6 +3,7 @@ import path from 'path';
 import Link from 'next/link';
 import { AdaptiveMarkdownViewer } from '@/components/AdaptiveMarkdownViewer';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ModuleAccessGuard } from '@/components/ModuleAccessGuard';
 import { DocsExportButton } from '@/components/DocsExportButton';
 
 // Define the docs structure - same as in the main docs page
@@ -98,7 +99,8 @@ export default async function DocsExportAllPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] print:bg-white">
+      <ModuleAccessGuard moduleName="Exportar Documentación M1">
+        <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] print:bg-white">
         {/* Navbar */}
         <nav className="sticky top-0 z-30 h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] print:hidden">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 h-full flex justify-between items-center">
@@ -177,6 +179,7 @@ export default async function DocsExportAllPage() {
           </div>
         </div>
       </div>
+      </ModuleAccessGuard>
     </ProtectedRoute>
   );
 }

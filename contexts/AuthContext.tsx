@@ -9,6 +9,7 @@ interface AuthContextType {
   setUser: (user: User | null) => void;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isPaidUser: boolean;
   refreshUser: () => Promise<void>;
 }
 
@@ -43,11 +44,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initAuth();
   }, []);
 
+  // Check if user has paid access (admins always have access, or users with active/trial subscription)
+  const isPaidUser = !!user && (
+    user.role === 'admin' ||
+    (user.subscription?.status === 'active' || user.subscription?.status === 'trial')
+  );
+
   const value = {
     user,
     setUser,
     isAuthenticated: !!user,
     isAdmin: user?.role === 'admin',
+    isPaidUser,
     refreshUser,
   };
 

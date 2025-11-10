@@ -8,6 +8,7 @@ import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { MathText } from '@/components/MathDisplay';
 import type { Level, Subject } from '@/lib/types/core';
 import AdminLayout from '@/components/AdminLayout';
+import { api } from '@/lib/api-client';
 
 // Available skills organized by subject
 const SKILLS_BY_SUBJECT = {
@@ -96,28 +97,25 @@ function QGenAdminContent() {
     setResult(null);
 
     try {
-      const token = localStorage.getItem('token');
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
-      const response = await fetch(`${apiUrl}/api/qgen/generate-single`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
+      const response = await api.post<{ success: boolean; data: QGenResult; error?: string }>(
+        '/api/qgen/generate-single',
+        {
           targetSkills: selectedSkills,
           level,
           subject,
-        }),
-      });
+        }
+      );
 
-      const data = await response.json();
+      if (response.error) {
+        toast.error(response.error.error || 'Error al generar pregunta');
+        return;
+      }
 
-      if (data.success) {
-        setResult(data.data);
+      if (response.data?.success) {
+        setResult(response.data.data);
         toast.success('¡Pregunta generada con AI exitosamente!');
       } else {
-        toast.error(data.error || 'Error al generar pregunta');
+        toast.error(response.data?.error || 'Error al generar pregunta');
       }
     } catch (error: any) {
       console.error('Error generating question:', error);

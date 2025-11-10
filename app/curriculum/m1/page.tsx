@@ -2,6 +2,7 @@
 
 import Curriculum from '@/components/Curriculum';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ModuleAccessGuard } from '@/components/ModuleAccessGuard';
 
 function M1CurriculumContent() {
   return <Curriculum level="M1" />;
@@ -10,7 +11,9 @@ function M1CurriculumContent() {
 export default function M1CurriculumPage() {
   return (
     <ProtectedRoute>
-      <M1CurriculumContent />
+      <ModuleAccessGuard moduleName="Temario M1">
+        <M1CurriculumContent />
+      </ModuleAccessGuard>
     </ProtectedRoute>
   );
 }

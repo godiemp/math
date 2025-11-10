@@ -43,7 +43,11 @@ export function verifyAccessToken(token: string): TokenPayload {
   try {
     return jwt.verify(token, JWT_SECRET) as TokenPayload;
   } catch (error) {
-    throw new Error('Invalid or expired access token');
+    // Preserve original error details for better debugging
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('❌ Token verification failed:', errorMessage);
+    console.error('   JWT_SECRET configured:', JWT_SECRET ? 'Yes (length: ' + JWT_SECRET.length + ')' : 'No');
+    throw new Error(`Invalid or expired access token: ${errorMessage}`);
   }
 }
 
@@ -54,7 +58,11 @@ export function verifyRefreshToken(token: string): TokenPayload {
   try {
     return jwt.verify(token, JWT_REFRESH_SECRET) as TokenPayload;
   } catch (error) {
-    throw new Error('Invalid or expired refresh token');
+    // Preserve original error details for better debugging
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('❌ Refresh token verification failed:', errorMessage);
+    console.error('   JWT_REFRESH_SECRET configured:', JWT_REFRESH_SECRET ? 'Yes (length: ' + JWT_REFRESH_SECRET.length + ')' : 'No');
+    throw new Error(`Invalid or expired refresh token: ${errorMessage}`);
   }
 }
 

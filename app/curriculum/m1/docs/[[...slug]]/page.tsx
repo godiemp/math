@@ -3,6 +3,7 @@ import path from 'path';
 import Link from 'next/link';
 import { DocsContentWrapper } from '@/components/DocsContentWrapper';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ModuleAccessGuard } from '@/components/ModuleAccessGuard';
 import { notFound } from 'next/navigation';
 import { m1DocsStructure, getAllDocSlugs } from '@/docs';
 
@@ -68,83 +69,85 @@ export default async function DocsPage({ params }: PageProps) {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] print:bg-white">
-        {/* Navbar */}
-        <nav className="sticky top-0 z-30 h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] print:hidden">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8 h-full flex justify-between items-center">
-            <div className="flex items-center gap-4">
+      <ModuleAccessGuard moduleName="Documentación M1">
+        <div className="min-h-screen bg-white dark:bg-[#000000] print:bg-white">
+          {/* Navbar */}
+          <nav className="sticky top-0 z-30 h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] print:hidden">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 h-full flex justify-between items-center">
+              <div className="flex items-center gap-4">
+                <Link
+                  href="/curriculum/m1"
+                  className="text-sm text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors"
+                >
+                  ← Volver a Curriculum
+                </Link>
+                <h1 className="text-lg font-semibold text-[#0A84FF]">
+                  M1 - Documentación
+                </h1>
+              </div>
               <Link
-                href="/curriculum/m1"
+                href="/dashboard"
                 className="text-sm text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors"
               >
-                ← Volver a Curriculum
+                Dashboard
               </Link>
-              <h1 className="text-lg font-semibold text-[#0A84FF]">
-                M1 - Documentación
-              </h1>
             </div>
-            <Link
-              href="/dashboard"
-              className="text-sm text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors"
-            >
-              Dashboard
-            </Link>
+          </nav>
+
+          {/* Main layout */}
+          <div className="flex">
+            {/* Sidebar Navigation */}
+            <aside className="hidden lg:block w-64 bg-white dark:bg-[#121212] border-r border-black/[0.12] dark:border-white/[0.16] h-[calc(100vh-3.5rem)] sticky top-14 overflow-y-auto print:hidden">
+              <div className="p-6">
+                <Link
+                  href="/curriculum/m1/docs"
+                  className={`block px-3 py-1.5 rounded text-sm mb-3 ${
+                    currentSlug === ''
+                      ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-medium'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                  }`}
+                >
+                  Inicio
+                </Link>
+
+                <Link
+                  href="/curriculum/m1/docs-export-all"
+                  className="block px-3 py-1.5 rounded text-sm mb-6 text-[#0A84FF] hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                >
+                  Exportar Todo
+                </Link>
+
+                {docsStructure.sections.map((section) => (
+                  <div key={section.path} className="mb-6">
+                    <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider mb-2">
+                      {section.title}
+                    </h3>
+                    <ul className="space-y-1">
+                      {section.items.map((item) => (
+                        <li key={item.slug}>
+                          <Link
+                            href={`/curriculum/m1/docs/${item.slug}`}
+                            className={`block px-3 py-1.5 rounded text-sm ${
+                              currentSlug === item.slug
+                                ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-medium'
+                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                            }`}
+                          >
+                            {item.title}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </aside>
+
+            {/* Main Content */}
+            <DocsContentWrapper content={content} title={pageTitle} isInicio={currentSlug === ''} />
           </div>
-        </nav>
-
-        {/* Main layout */}
-        <div className="flex">
-          {/* Sidebar Navigation */}
-          <aside className="hidden lg:block w-64 bg-white dark:bg-[#121212] border-r border-black/[0.12] dark:border-white/[0.16] h-[calc(100vh-3.5rem)] sticky top-14 overflow-y-auto print:hidden">
-            <div className="p-6">
-              <Link
-                href="/curriculum/m1/docs"
-                className={`block mb-3 text-sm font-semibold ${
-                  currentSlug === ''
-                    ? 'text-indigo-600 dark:text-indigo-400'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
-                }`}
-              >
-                📚 Inicio
-              </Link>
-
-              <Link
-                href="/curriculum/m1/docs-export-all"
-                className="block mb-6 text-sm font-semibold text-[#0A84FF] hover:text-[#0A84FF]/80 transition-colors"
-              >
-                📥 Exportar Todo
-              </Link>
-
-              {docsStructure.sections.map((section) => (
-                <div key={section.path} className="mb-6">
-                  <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider mb-2">
-                    {section.title}
-                  </h3>
-                  <ul className="space-y-1">
-                    {section.items.map((item) => (
-                      <li key={item.slug}>
-                        <Link
-                          href={`/curriculum/m1/docs/${item.slug}`}
-                          className={`block px-3 py-1.5 rounded text-sm ${
-                            currentSlug === item.slug
-                              ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-medium'
-                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                          }`}
-                        >
-                          {item.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </aside>
-
-          {/* Main Content */}
-          <DocsContentWrapper content={content} title={pageTitle} />
         </div>
-      </div>
+      </ModuleAccessGuard>
     </ProtectedRoute>
   );
 }

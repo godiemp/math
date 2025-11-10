@@ -4,14 +4,14 @@
  */
 
 import { Request, Response } from 'express';
-import { generateQuestions } from '../lib/qgen/qgenAlgorithm.js';
-import { contextLibrary } from '../lib/qgen/contextLibrary.js';
-import { templateLibrary } from '../lib/qgen/templateLibrary.js';
-import { goalSkillMappings } from '../lib/qgen/goalSkillMappings.js';
-import { QGenInput, Level, Subject } from '../lib/types/core.js';
-import { generateQuestionAnswer } from '../services/aiService.js';
-import { ValueGenerator } from '../lib/qgen/valueGenerator.js';
-import { getCompatibleGoals } from '../lib/qgen/goalSkillMappings.js';
+import { generateQuestions } from '../lib/qgen/qgenAlgorithm';
+import { contextLibrary } from '../lib/qgen/contextLibrary';
+import { templateLibrary } from '../lib/qgen/templateLibrary';
+import { goalSkillMappings } from '../lib/qgen/goalSkillMappings';
+import { QGenInput, Level, Subject } from '../lib/types/core';
+import { generateQuestionAnswer } from '../services/aiService';
+import { ValueGenerator } from '../lib/qgen/valueGenerator';
+import { getCompatibleGoals } from '../lib/qgen/goalSkillMappings';
 
 /**
  * Generate questions using QGen algorithm
@@ -120,8 +120,19 @@ export const getTemplates = async (req: Request, res: Response) => {
  * POST /api/qgen/generate-single
  */
 export const generateSingleQuestion = async (req: Request, res: Response) => {
+  console.log('\n====================================');
+  console.log('📝 GENERATE SINGLE QUESTION HANDLER CALLED');
+  console.log(`   Method: ${req.method}`);
+  console.log(`   URL: ${req.url}`);
+  console.log(`   Body:`, JSON.stringify(req.body, null, 2));
+  console.log('====================================\n');
+
   try {
     const { targetSkills, level, subject } = req.body;
+    console.log('✅ Handler: Parsing request body...');
+    console.log(`   targetSkills: ${targetSkills}`);
+    console.log(`   level: ${level}`);
+    console.log(`   subject: ${subject}`);
 
     // Validate input
     if (!targetSkills || !Array.isArray(targetSkills) || targetSkills.length === 0) {

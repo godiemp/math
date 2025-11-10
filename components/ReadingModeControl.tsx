@@ -19,12 +19,6 @@ const modes = [
     description: 'Todo el contenido detallado',
   },
   {
-    id: 'summary' as ReadingMode,
-    label: 'Síntesis Ejecutiva',
-    icon: '📄',
-    description: 'Solo lo esencial',
-  },
-  {
     id: 'formulas' as ReadingMode,
     label: 'Solo Fórmulas',
     icon: '📐',
