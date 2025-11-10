@@ -236,7 +236,8 @@ export default function RapidFireQuiz({
 
     return {
       correctAnswers: correctCount,
-      totalQuestions: answeredCount, // Use answered count instead of total questions
+      answeredQuestions: answeredCount,
+      totalQuestions: quizQuestions.length, // Total questions in the quiz
       accuracy,
       timeUsed: totalTimeElapsed,
       passed,
@@ -362,8 +363,13 @@ export default function RapidFireQuiz({
         <div className="mb-8">
           <div className="text-center mb-6">
             <div className={`text-7xl font-black mb-4 ${summary.passed ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-              {summary.correctAnswers}/{summary.totalQuestions}
+              {summary.correctAnswers}/{summary.answeredQuestions}
             </div>
+            {summary.answeredQuestions < summary.totalQuestions && (
+              <p className="text-sm text-gray-500 dark:text-gray-400 -mt-2 mb-2">
+                {summary.answeredQuestions} de {summary.totalQuestions} preguntas respondidas
+              </p>
+            )}
             <p className="text-2xl font-bold text-gray-700 dark:text-gray-300">
               {summary.passed ? '✅ ¡Aprobado!' : '❌ No Aprobado'}
             </p>
@@ -381,13 +387,14 @@ export default function RapidFireQuiz({
               const isCorrect = userAnswer === question.correctAnswer;
               const isAnswered = userAnswer !== null;
 
+              // Only show questions that were answered
+              if (!isAnswered) return null;
+
               return (
                 <div
                   key={question.id}
                   className={`p-3 rounded-lg border-2 ${
-                    !isAnswered
-                      ? 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50'
-                      : isCorrect
+                    isCorrect
                       ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
                       : 'border-red-500 bg-red-50 dark:bg-red-900/20'
                   }`}
@@ -401,9 +408,7 @@ export default function RapidFireQuiz({
                         Pregunta {index + 1}: {question.topic}
                       </span>
                       <span className="text-sm font-semibold">
-                        {!isAnswered ? (
-                          <span className="text-gray-500 dark:text-gray-400">Sin responder</span>
-                        ) : isCorrect ? (
+                        {isCorrect ? (
                           <span className="text-green-700 dark:text-green-300">✓ Correcta</span>
                         ) : (
                           <span className="text-red-700 dark:text-red-300">✗ Incorrecta</span>
