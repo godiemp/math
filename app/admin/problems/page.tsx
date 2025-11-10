@@ -10,9 +10,11 @@ import { Card, Button, Heading, Text, Badge } from '@/components/ui'
 import { QuestionPreview, QuestionRenderer } from '@/components/QuestionRenderer'
 import { MathText } from '@/components/MathDisplay'
 import AdminLayout from '@/components/AdminLayout'
+import { SkillsAnalytics } from '@/components/SkillsAnalytics'
 
 function ProblemsExplorerContent() {
   const router = useRouter()
+  const [activeTab, setActiveTab] = useState<'explorer' | 'analytics'>('explorer')
   const [selectedLevel, setSelectedLevel] = useState<'all' | 'M1' | 'M2'>('all')
   const [selectedSubject, setSelectedSubject] = useState<'all' | 'números' | 'álgebra' | 'geometría' | 'probabilidad'>('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard' | 'extreme'>('all')
@@ -148,13 +150,44 @@ function ProblemsExplorerContent() {
     <AdminLayout>
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <Heading level={1} size="lg" className="mb-2">
-            Explorador de Problemas
+            Problemas
           </Heading>
           <Text variant="secondary">
             Explora y gestiona todos los problemas de práctica
           </Text>
+        </div>
+
+        {/* Tabs */}
+        <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex gap-4">
+            <button
+              onClick={() => setActiveTab('explorer')}
+              className={`pb-3 px-4 text-sm font-medium border-b-2 transition-all ${
+                activeTab === 'explorer'
+                  ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400'
+                  : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+              }`}
+            >
+              Explorador
+            </button>
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`pb-3 px-4 text-sm font-medium border-b-2 transition-all ${
+                activeTab === 'analytics'
+                  ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400'
+                  : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+              }`}
+            >
+              Análisis de Skills
+            </button>
+          </div>
+        </div>
+
+        {/* Tab Content - Explorer */}
+        {activeTab === 'explorer' && (
+        <div>
 
           {/* Statistics Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -175,7 +208,6 @@ function ProblemsExplorerContent() {
               <Text size="xs" variant="secondary">Filtrados</Text>
             </Card>
           </div>
-        </div>
 
         {/* Filters */}
         <Card padding="lg" className="mb-6">
@@ -618,6 +650,13 @@ function ProblemsExplorerContent() {
               </div>
             </div>
           </div>
+        )}
+        </div>
+        )}
+
+        {/* Tab Content - Analytics */}
+        {activeTab === 'analytics' && (
+          <SkillsAnalytics />
         )}
       </div>
     </AdminLayout>
