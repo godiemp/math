@@ -482,72 +482,82 @@ export default function RapidFireQuiz({
 
   return (
     <>
-      <div className="fixed inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 overflow-y-auto">
-        <div className="min-h-full py-6 px-4 sm:py-8 sm:px-6">
-          {questionContent}
-        </div>
-      </div>
-
-      {/* External Game Elements - Only during active quiz */}
-      {!quizSubmitted && (
-        <>
-          {/* Timer - Top Left */}
-          <div className="fixed top-4 left-4 z-40">
-            <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20">
-              <div className="flex items-center gap-2">
-                <span className="text-lg">⚡</span>
-                <span className={`text-xl font-bold ${getTimerColor(timeRemaining, config.timeLimit)}`}>
-                  {formatTime(timeRemaining)}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Lives - Top Center */}
-          {config.livesSystem && (
-            <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-40">
-              <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20">
-                <div className="flex items-center gap-2">
-                  {Array.from({ length: config.maxWrongAnswers }).map((_, i) => (
-                    <span
-                      key={i}
-                      className={`text-2xl transition-all ${i < rapidFireState.livesRemaining ? 'text-red-500 scale-100' : 'text-gray-300 dark:text-gray-600 scale-75 opacity-50'}`}
-                    >
-                      ❤️
-                    </span>
-                  ))}
+      {/* Background */}
+      <div className="fixed inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900">
+        {/* Centered Layout Container */}
+        <div className="min-h-screen flex items-center justify-center px-4 py-6">
+          <div className="w-full max-w-5xl">
+            {/* Lives - Above card when applicable */}
+            {!quizSubmitted && config.livesSystem && (
+              <div className="flex justify-center mb-4">
+                <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20">
+                  <div className="flex items-center gap-2">
+                    {Array.from({ length: config.maxWrongAnswers }).map((_, i) => (
+                      <span
+                        key={i}
+                        className={`text-2xl transition-all ${i < rapidFireState.livesRemaining ? 'text-red-500 scale-100' : 'text-gray-300 dark:text-gray-600 scale-75 opacity-50'}`}
+                      >
+                        ❤️
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Pause Button - Top Right (only in easy mode) */}
-          {config.pauseAllowed && !rapidFireState.isPaused && (
-            <div className="fixed top-4 right-4 z-40">
-              <button
-                onClick={handlePause}
-                className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20 hover:scale-105 transition-transform"
-              >
-                <span className="text-2xl">⏸️</span>
-              </button>
-            </div>
-          )}
+            {/* Main game area with timer, question card, and pause */}
+            <div className="flex items-start gap-4 mb-4">
+              {/* Timer - Left of card */}
+              {!quizSubmitted && (
+                <div className="flex-shrink-0 pt-2">
+                  <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20">
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-lg">⚡</span>
+                      <span className={`text-xl font-bold ${getTimerColor(timeRemaining, config.timeLimit)}`}>
+                        {formatTime(timeRemaining)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
 
-          {/* Progress Bar - Bottom */}
-          <div className="fixed bottom-4 left-4 right-4 z-40">
-            <div className="max-w-3xl mx-auto">
-              <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-full h-2 shadow-xl overflow-hidden">
-                <div
-                  className="h-full transition-all duration-300 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500"
-                  style={{
-                    width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`,
-                  }}
-                />
+              {/* Question Card */}
+              <div className="flex-1">
+                {questionContent}
               </div>
+
+              {/* Pause Button - Right of card (only in easy mode) */}
+              {!quizSubmitted && config.pauseAllowed && !rapidFireState.isPaused && (
+                <div className="flex-shrink-0 pt-2">
+                  <button
+                    onClick={handlePause}
+                    className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20 hover:scale-105 transition-transform"
+                  >
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-2xl">⏸️</span>
+                      <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Pausa</span>
+                    </div>
+                  </button>
+                </div>
+              )}
             </div>
+
+            {/* Progress Bar - Below card */}
+            {!quizSubmitted && (
+              <div className="w-full">
+                <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-full h-2 shadow-xl overflow-hidden">
+                  <div
+                    className="h-full transition-all duration-300 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500"
+                    style={{
+                      width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
-        </>
-      )}
+        </div>
+      </div>
 
       {/* Pause Overlay */}
       {rapidFireState.isPaused && (
