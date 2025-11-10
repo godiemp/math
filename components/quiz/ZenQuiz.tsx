@@ -363,33 +363,33 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
       style={{
         minHeight: '600px',
         maxHeight: '85vh',
-        background: 'rgba(255, 255, 255, 0.25)',
-        backdropFilter: 'blur(30px) saturate(200%)',
-        WebkitBackdropFilter: 'blur(30px) saturate(200%)',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15), 0 0 100px rgba(20, 184, 166, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(255, 255, 255, 0.2)',
-        border: '1px solid rgba(255, 255, 255, 0.3)',
+        background: 'rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(40px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), 0 0 80px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 0 rgba(255, 255, 255, 0.1)',
+        border: '1px solid rgba(255, 255, 255, 0.25)',
       }}>
       {/* Liquid glass effect layers */}
-      <div className="absolute inset-0 -z-10 opacity-40 rounded-xl overflow-hidden">
+      <div className="absolute inset-0 -z-10 opacity-20 rounded-xl overflow-hidden">
         <div
-          className="absolute inset-0 bg-gradient-to-br from-teal-200/60 via-cyan-200/60 to-blue-200/60 dark:from-teal-400/50 dark:via-cyan-400/50 dark:to-blue-400/50"
+          className="absolute inset-0 bg-gradient-to-br from-white/30 via-white/10 to-transparent"
           style={{
             animation: 'liquidFlow1 15s ease-in-out infinite',
-            filter: 'blur(40px)',
+            filter: 'blur(60px)',
           }}
         />
         <div
-          className="absolute inset-0 bg-gradient-to-tl from-cyan-200/50 via-blue-200/50 to-teal-200/50 dark:from-cyan-400/40 dark:via-blue-400/40 dark:to-teal-400/40"
+          className="absolute inset-0 bg-gradient-to-tl from-white/20 via-transparent to-white/30"
           style={{
             animation: 'liquidFlow2 20s ease-in-out infinite',
-            filter: 'blur(40px)',
+            filter: 'blur(80px)',
           }}
         />
         <div
-          className="absolute inset-0 bg-gradient-to-r from-teal-300/30 via-transparent to-cyan-300/30"
+          className="absolute inset-0 bg-gradient-to-r from-teal-200/20 via-cyan-200/10 to-blue-200/20 dark:from-teal-300/20 dark:via-cyan-300/10 dark:to-blue-300/20"
           style={{
             animation: 'liquidFlow1 25s ease-in-out infinite reverse',
-            filter: 'blur(60px)',
+            filter: 'blur(100px)',
           }}
         />
       </div>
