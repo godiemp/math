@@ -542,17 +542,42 @@ export default function RapidFireQuiz({
               )}
             </div>
 
-            {/* Progress Bar - Below card */}
+            {/* Progress Bar - Below card, aligned with question card width */}
             {!quizSubmitted && (
-              <div className="w-full">
-                <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-full h-2 shadow-xl overflow-hidden">
-                  <div
-                    className="h-full transition-all duration-300 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500"
-                    style={{
-                      width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`,
-                    }}
-                  />
+              <div className="flex items-start gap-4">
+                {/* Invisible spacer to match timer width */}
+                <div className="flex-shrink-0 pt-2">
+                  <div className="invisible bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20">
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-lg">⚡</span>
+                      <span className="text-xl font-bold">00:00</span>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Progress Bar */}
+                <div className="flex-1">
+                  <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-full h-2 shadow-xl overflow-hidden">
+                    <div
+                      className="h-full transition-all duration-300 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500"
+                      style={{
+                        width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Invisible spacer to match pause button width */}
+                {config.pauseAllowed && (
+                  <div className="flex-shrink-0 pt-2">
+                    <div className="invisible bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20">
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-2xl">⏸️</span>
+                        <span className="text-xs font-medium">Pausa</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
