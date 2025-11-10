@@ -35,23 +35,22 @@ export default function CookieConsent() {
       }}
     >
       <div
-        className="translucent mx-4 mb-4 md:mx-8 md:mb-8 p-4 md:p-6 max-w-5xl md:mx-auto"
+        className="translucent mx-4 mb-4 md:mx-8 md:mb-8 p-3 md:p-6 max-w-5xl md:mx-auto"
         style={{
-          borderRadius: 'var(--radius-xl)',
+          borderRadius: 'var(--radius-lg)',
           boxShadow: 'var(--shadow-raised)',
           border: '1px solid var(--color-separator)',
         }}
       >
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-          {/* Icon */}
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
+          {/* Icon - hidden on mobile */}
           <div
-            className="flex-shrink-0"
+            className="hidden md:flex flex-shrink-0"
             style={{
               width: '40px',
               height: '40px',
               borderRadius: 'var(--radius-sm)',
               background: 'var(--color-tint)',
-              display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             }}
@@ -81,25 +80,14 @@ export default function CookieConsent() {
 
           {/* Content */}
           <div className="flex-1">
-            <h3
-              style={{
-                fontSize: '16px',
-                fontWeight: 600,
-                color: 'var(--color-label-primary)',
-                marginBottom: '8px',
-              }}
-            >
-              Uso de Cookies
-            </h3>
             <p
               style={{
                 fontSize: '14px',
-                lineHeight: '1.6',
+                lineHeight: '1.5',
                 color: 'var(--color-label-secondary)',
               }}
             >
-              Utilizamos cookies esenciales para que la plataforma funcione correctamente, y cookies de análisis para mejorar tu experiencia.
-              {' '}
+              Usamos cookies para mejorar tu experiencia.{' '}
               <Link
                 href="/legal/cookies"
                 style={{
