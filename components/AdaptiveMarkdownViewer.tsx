@@ -5,7 +5,7 @@ import { MarkdownViewer } from './MarkdownViewer';
 import { ReadingModeControl, ReadingMode } from './ReadingModeControl';
 import { CollapsibleSection, CollapseControl } from './CollapsibleSection';
 import { CollapseControls } from './CollapseControls';
-import { parseMarkdownSections, filterSectionsByMode, stripSectionMetadata } from '@/lib/markdown-parser';
+import { parseMarkdownSections, filterSectionsByMode, stripFirstHeading } from '@/lib/markdown-parser';
 
 interface AdaptiveMarkdownViewerProps {
   content: string;
@@ -113,7 +113,7 @@ export function AdaptiveMarkdownViewer({ content, hideReadingModeControl = false
                   level={level}
                   collapseControl={collapseControl}
                 >
-                  <MarkdownViewer content={stripSectionMetadata(section.content)} />
+                  <MarkdownViewer content={stripFirstHeading(section.content)} />
                 </CollapsibleSection>
               );
             }
@@ -121,7 +121,7 @@ export function AdaptiveMarkdownViewer({ content, hideReadingModeControl = false
             // Fallback for non-section types
             return (
               <div key={section.id} className="my-6">
-                <MarkdownViewer content={stripSectionMetadata(section.content)} />
+                <MarkdownViewer content={stripFirstHeading(section.content)} />
               </div>
             );
             })}
