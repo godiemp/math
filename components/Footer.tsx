@@ -1,12 +1,216 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    console.log('showInfoModal state changed:', showInfoModal);
+  }, [showInfoModal]);
+
+  const handleOpenModal = () => {
+    console.log('Button clicked - opening modal');
+    setShowInfoModal(true);
+  };
+
+  const handleCloseModal = () => {
+    console.log('Closing modal');
+    setShowInfoModal(false);
+  };
+
+  // Modal content
+  const modalContent = showInfoModal && mounted ? (
+    <div
+      className="fixed inset-0 flex items-end justify-center"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'rgba(0, 0, 0, 0.5)',
+        backdropFilter: 'blur(4px)',
+        zIndex: 9999,
+      }}
+      onClick={handleCloseModal}
+    >
+      <div
+        className="w-full max-w-md max-h-[85vh] overflow-y-auto"
+        style={{
+          borderRadius: '24px 24px 0 0',
+          boxShadow: '0 -4px 24px rgba(0, 0, 0, 0.2)',
+          background: 'white',
+          animation: 'slideUp 0.3s ease-out',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Handle bar */}
+        <div className="flex justify-center pt-3 pb-2">
+          <div
+            style={{
+              width: '36px',
+              height: '4px',
+              borderRadius: '2px',
+              background: '#d1d1d6',
+            }}
+          />
+        </div>
+
+        {/* Content */}
+        <div className="p-6 pb-8">
+          {/* Header */}
+          <div className="flex justify-between items-start mb-6">
+            <h2
+              style={{
+                fontSize: '22px',
+                fontWeight: 600,
+                color: '#000',
+              }}
+            >
+              Información Legal y Soporte
+            </h2>
+            <button
+              onClick={handleCloseModal}
+              type="button"
+              style={{
+                background: 'none',
+                border: 'none',
+                fontSize: '28px',
+                color: '#8e8e93',
+                cursor: 'pointer',
+                padding: 0,
+                lineHeight: 1,
+              }}
+            >
+              ×
+            </button>
+          </div>
+
+          {/* Sections */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            {/* Company Info */}
+            <div>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#000', marginBottom: '12px' }}>
+                PAES Chile
+              </h3>
+              <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#636366' }}>
+                Plataforma de preparación para la Prueba de Acceso a la Educación Superior
+              </p>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#000', marginBottom: '12px' }}>
+                Legal
+              </h3>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link
+                    href="/legal/terminos"
+                    onClick={handleCloseModal}
+                    style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
+                  >
+                    Términos y Condiciones
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link
+                    href="/legal/privacidad"
+                    onClick={handleCloseModal}
+                    style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
+                  >
+                    Política de Privacidad
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link
+                    href="/legal/cookies"
+                    onClick={handleCloseModal}
+                    style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
+                  >
+                    Política de Cookies
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link
+                    href="/legal/reembolsos"
+                    onClick={handleCloseModal}
+                    style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
+                  >
+                    Política de Reembolsos
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Support */}
+            <div>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#000', marginBottom: '12px' }}>
+                Soporte
+              </h3>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                <li style={{ marginBottom: '8px' }}>
+                  <Link
+                    href="/contacto"
+                    onClick={handleCloseModal}
+                    style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
+                  >
+                    Contacto
+                  </Link>
+                </li>
+                <li style={{ marginBottom: '8px' }}>
+                  <a
+                    href="mailto:soporte@paeschile.cl"
+                    style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
+                  >
+                    soporte@paeschile.cl
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Consumer Protection */}
+            <div>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#000', marginBottom: '12px' }}>
+                Protección al Consumidor
+              </h3>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                <li style={{ marginBottom: '8px' }}>
+                  <a
+                    href="https://www.sernac.cl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
+                  >
+                    SERNAC
+                  </a>
+                </li>
+                <li style={{ fontSize: '13px', color: '#8e8e93' }}>
+                  800 700 100
+                </li>
+              </ul>
+            </div>
+
+            {/* Copyright */}
+            <div style={{ paddingTop: '16px', borderTop: '1px solid #d1d1d6' }}>
+              <p style={{ fontSize: '12px', color: '#8e8e93', textAlign: 'center', margin: 0 }}>
+                © {currentYear} PAES Chile. Todos los derechos reservados.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : null;
 
   return (
     <>
@@ -20,10 +224,7 @@ export default function Footer() {
       >
         <div className="flex justify-center items-center gap-2">
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              setShowInfoModal(true);
-            }}
+            onClick={handleOpenModal}
             className="spring-motion flex items-center gap-2"
             type="button"
             style={{
@@ -283,275 +484,8 @@ export default function Footer() {
       </div>
     </footer>
 
-      {/* Mobile Info Modal */}
-      {showInfoModal && typeof window !== 'undefined' && createPortal(
-        <div
-          className="fixed inset-0 flex items-end justify-center"
-          style={{
-            background: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 9999,
-          }}
-          onClick={() => setShowInfoModal(false)}
-        >
-          <div
-            className="translucent spring-motion w-full max-w-md max-h-[85vh] overflow-y-auto"
-            style={{
-              borderRadius: '24px 24px 0 0',
-              boxShadow: 'var(--shadow-raised)',
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Handle bar */}
-            <div className="flex justify-center pt-3 pb-2">
-              <div
-                style={{
-                  width: '36px',
-                  height: '4px',
-                  borderRadius: '2px',
-                  background: 'var(--color-separator)',
-                }}
-              />
-            </div>
-
-            {/* Content */}
-            <div className="p-6 pb-8">
-              {/* Header */}
-              <div className="flex justify-between items-start mb-6">
-                <h2
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: '22px',
-                    fontWeight: 600,
-                    color: 'var(--color-label-primary)',
-                  }}
-                >
-                  Información Legal y Soporte
-                </h2>
-                <button
-                  onClick={() => setShowInfoModal(false)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '24px',
-                    color: 'var(--color-label-secondary)',
-                    cursor: 'pointer',
-                    padding: 0,
-                    lineHeight: 1,
-                  }}
-                >
-                  ×
-                </button>
-              </div>
-
-              {/* Sections */}
-              <div className="space-y-6">
-                {/* Company Info */}
-                <div>
-                  <h3
-                    style={{
-                      fontSize: '16px',
-                      fontWeight: 600,
-                      color: 'var(--color-label-primary)',
-                      marginBottom: '12px',
-                    }}
-                  >
-                    PAES Chile
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: '14px',
-                      lineHeight: '1.6',
-                      color: 'var(--color-label-secondary)',
-                    }}
-                  >
-                    Plataforma de preparación para la Prueba de Acceso a la Educación Superior
-                  </p>
-                </div>
-
-                {/* Legal */}
-                <div>
-                  <h3
-                    style={{
-                      fontSize: '16px',
-                      fontWeight: 600,
-                      color: 'var(--color-label-primary)',
-                      marginBottom: '12px',
-                    }}
-                  >
-                    Legal
-                  </h3>
-                  <ul
-                    style={{
-                      listStyle: 'none',
-                      padding: 0,
-                      margin: 0,
-                    }}
-                  >
-                    <li style={{ marginBottom: '8px' }}>
-                      <Link
-                        href="/legal/terminos"
-                        onClick={() => setShowInfoModal(false)}
-                        style={{
-                          fontSize: '14px',
-                          color: 'var(--color-link)',
-                          textDecoration: 'none',
-                        }}
-                      >
-                        Términos y Condiciones
-                      </Link>
-                    </li>
-                    <li style={{ marginBottom: '8px' }}>
-                      <Link
-                        href="/legal/privacidad"
-                        onClick={() => setShowInfoModal(false)}
-                        style={{
-                          fontSize: '14px',
-                          color: 'var(--color-link)',
-                          textDecoration: 'none',
-                        }}
-                      >
-                        Política de Privacidad
-                      </Link>
-                    </li>
-                    <li style={{ marginBottom: '8px' }}>
-                      <Link
-                        href="/legal/cookies"
-                        onClick={() => setShowInfoModal(false)}
-                        style={{
-                          fontSize: '14px',
-                          color: 'var(--color-link)',
-                          textDecoration: 'none',
-                        }}
-                      >
-                        Política de Cookies
-                      </Link>
-                    </li>
-                    <li style={{ marginBottom: '8px' }}>
-                      <Link
-                        href="/legal/reembolsos"
-                        onClick={() => setShowInfoModal(false)}
-                        style={{
-                          fontSize: '14px',
-                          color: 'var(--color-link)',
-                          textDecoration: 'none',
-                        }}
-                      >
-                        Política de Reembolsos
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Support */}
-                <div>
-                  <h3
-                    style={{
-                      fontSize: '16px',
-                      fontWeight: 600,
-                      color: 'var(--color-label-primary)',
-                      marginBottom: '12px',
-                    }}
-                  >
-                    Soporte
-                  </h3>
-                  <ul
-                    style={{
-                      listStyle: 'none',
-                      padding: 0,
-                      margin: 0,
-                    }}
-                  >
-                    <li style={{ marginBottom: '8px' }}>
-                      <Link
-                        href="/contacto"
-                        onClick={() => setShowInfoModal(false)}
-                        style={{
-                          fontSize: '14px',
-                          color: 'var(--color-link)',
-                          textDecoration: 'none',
-                        }}
-                      >
-                        Contacto
-                      </Link>
-                    </li>
-                    <li style={{ marginBottom: '8px' }}>
-                      <a
-                        href="mailto:soporte@paeschile.cl"
-                        style={{
-                          fontSize: '14px',
-                          color: 'var(--color-link)',
-                          textDecoration: 'none',
-                        }}
-                      >
-                        soporte@paeschile.cl
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Consumer Protection */}
-                <div>
-                  <h3
-                    style={{
-                      fontSize: '16px',
-                      fontWeight: 600,
-                      color: 'var(--color-label-primary)',
-                      marginBottom: '12px',
-                    }}
-                  >
-                    Protección al Consumidor
-                  </h3>
-                  <ul
-                    style={{
-                      listStyle: 'none',
-                      padding: 0,
-                      margin: 0,
-                    }}
-                  >
-                    <li style={{ marginBottom: '8px' }}>
-                      <a
-                        href="https://www.sernac.cl"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          fontSize: '14px',
-                          color: 'var(--color-link)',
-                          textDecoration: 'none',
-                        }}
-                      >
-                        SERNAC
-                      </a>
-                    </li>
-                    <li style={{ marginBottom: '4px', fontSize: '13px', color: 'var(--color-label-tertiary)' }}>
-                      800 700 100
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Copyright */}
-                <div
-                  className="pt-4 border-t"
-                  style={{
-                    borderColor: 'var(--color-separator)',
-                  }}
-                >
-                  <p
-                    style={{
-                      fontSize: '12px',
-                      color: 'var(--color-label-tertiary)',
-                      textAlign: 'center',
-                      margin: 0,
-                    }}
-                  >
-                    © {currentYear} PAES Chile. Todos los derechos reservados.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
+      {/* Mobile Info Modal - Rendered via Portal */}
+      {mounted && modalContent && createPortal(modalContent, document.body)}
     </>
   );
 }
