@@ -20,6 +20,7 @@ const navItems: NavItem[] = [
   { name: 'Analytics', path: '/admin/analytics', icon: '📈' },
   { name: 'AI Analytics', path: '/admin/ai-analytics', icon: '🤖' },
   { name: 'Problems', path: '/admin/problems', icon: '❓' },
+  { name: 'Abstract Problems', path: '/admin/abstract-problems', icon: '📚' },
   { name: 'Generator', path: '/admin/qgen', icon: '🎲' },
   { name: 'Upload', path: '/admin/upload', icon: '📤' },
   { name: 'Study Buddy Debug', path: '/admin/study-buddy-debug', icon: '🧠' },

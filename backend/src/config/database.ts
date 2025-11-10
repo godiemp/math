@@ -497,8 +497,173 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_progressive_questions_template_id ON progressive_questions(template_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_progressive_questions_builds_on ON progressive_questions(builds_on)');
 
+    // ========================================
+    // ABSTRACT PROBLEMS SYSTEM TABLES
+    // ========================================
+
+    // Enable UUID extension for abstract problems system
+    await client.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
+
+    // Create abstract_problems table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS abstract_problems (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        essence TEXT NOT NULL,
+        cognitive_level VARCHAR(20) NOT NULL,
+        level VARCHAR(10) NOT NULL,
+        subject VARCHAR(50) NOT NULL,
+        unit VARCHAR(100) NOT NULL,
+        difficulty VARCHAR(20) NOT NULL,
+        difficulty_score INTEGER NOT NULL,
+        primary_skills TEXT[] NOT NULL,
+        secondary_skills TEXT[],
+        generation_method VARCHAR(20) NOT NULL,
+        generated_by VARCHAR(100),
+        generation_prompt TEXT,
+        answer_type VARCHAR(20) NOT NULL,
+        expected_steps JSONB,
+        common_errors JSONB,
+        status VARCHAR(20) DEFAULT 'draft',
+        review_notes TEXT,
+        created_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL,
+        CHECK (level IN ('M1', 'M2')),
+        CHECK (subject IN ('números', 'álgebra', 'geometría', 'probabilidad')),
+        CHECK (difficulty IN ('easy', 'medium', 'hard', 'extreme')),
+        CHECK (cognitive_level IN ('remember', 'understand', 'apply', 'analyze', 'evaluate', 'create')),
+        CHECK (difficulty_score >= 1 AND difficulty_score <= 100),
+        CHECK (status IN ('draft', 'reviewed', 'active', 'deprecated')),
+        CHECK (generation_method IN ('openai', 'manual', 'template')),
+        CHECK (answer_type IN ('multiple_choice', 'numeric', 'algebraic', 'true_false'))
+      )
+    `);
+
+    // Create context_problems table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS context_problems (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        abstract_problem_id UUID NOT NULL REFERENCES abstract_problems(id) ON DELETE CASCADE,
+        context_type VARCHAR(50) NOT NULL,
+        context_description TEXT NOT NULL,
+        question TEXT NOT NULL,
+        question_latex TEXT,
+        options JSONB,
+        options_latex JSONB,
+        correct_answer INTEGER,
+        explanation TEXT NOT NULL,
+        explanation_latex TEXT,
+        step_by_step JSONB,
+        variable_values JSONB,
+        images JSONB,
+        visual_data JSONB,
+        generation_method VARCHAR(20) NOT NULL,
+        template_id VARCHAR(100),
+        generation_params JSONB,
+        quality_score INTEGER,
+        verified BOOLEAN DEFAULT FALSE,
+        verification_notes TEXT,
+        times_used INTEGER DEFAULT 0,
+        avg_correctness DECIMAL(5,2),
+        avg_time_seconds INTEGER,
+        status VARCHAR(20) DEFAULT 'active',
+        created_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL,
+        CHECK (context_type IN ('shopping', 'cooking', 'geometry', 'sports', 'finance',
+                                'travel', 'construction', 'science', 'abstract', 'other')),
+        CHECK (quality_score IS NULL OR (quality_score >= 1 AND quality_score <= 10)),
+        CHECK (status IN ('active', 'deprecated')),
+        CHECK (generation_method IN ('openai', 'template', 'manual'))
+      )
+    `);
+
+    // Abstract problems indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_level ON abstract_problems(level)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_subject ON abstract_problems(subject)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_difficulty ON abstract_problems(difficulty)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_difficulty_score ON abstract_problems(difficulty_score)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_unit ON abstract_problems(unit)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_status ON abstract_problems(status)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_skills ON abstract_problems USING GIN(primary_skills)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_cognitive_level ON abstract_problems(cognitive_level)');
+
+    // Context problems indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_context_problems_abstract_id ON context_problems(abstract_problem_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_context_problems_context_type ON context_problems(context_type)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_context_problems_status ON context_problems(status)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_context_problems_quality ON context_problems(quality_score)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_context_problems_verified ON context_problems(verified)');
+
+    // Update question_attempts table to support new system
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'question_attempts' AND column_name = 'context_problem_id'
+        ) THEN
+          ALTER TABLE question_attempts
+          ADD COLUMN context_problem_id UUID REFERENCES context_problems(id) ON DELETE SET NULL;
+        END IF;
+
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'question_attempts' AND column_name = 'abstract_problem_id'
+        ) THEN
+          ALTER TABLE question_attempts
+          ADD COLUMN abstract_problem_id UUID REFERENCES abstract_problems(id) ON DELETE SET NULL;
+        END IF;
+      END $$;
+    `);
+
+    await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_context_problem ON question_attempts(context_problem_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_abstract_problem ON question_attempts(abstract_problem_id)');
+
+    // Create views
+    await client.query(`
+      CREATE OR REPLACE VIEW active_problems_view AS
+      SELECT
+        ap.id as abstract_id,
+        ap.essence,
+        ap.level,
+        ap.subject,
+        ap.unit,
+        ap.difficulty,
+        ap.difficulty_score,
+        ap.primary_skills,
+        ap.cognitive_level,
+        cp.id as context_id,
+        cp.context_type,
+        cp.question,
+        cp.options,
+        cp.correct_answer,
+        cp.quality_score,
+        cp.avg_correctness,
+        cp.times_used
+      FROM abstract_problems ap
+      LEFT JOIN context_problems cp ON ap.id = cp.abstract_problem_id
+      WHERE ap.status = 'active' AND (cp.status = 'active' OR cp.status IS NULL)
+    `);
+
+    await client.query(`
+      CREATE OR REPLACE VIEW problem_stats_by_unit AS
+      SELECT
+        ap.level,
+        ap.subject,
+        ap.unit,
+        ap.difficulty,
+        COUNT(DISTINCT ap.id) as abstract_count,
+        COUNT(cp.id) as context_count,
+        AVG(cp.avg_correctness) as avg_correctness,
+        AVG(cp.quality_score) as avg_quality
+      FROM abstract_problems ap
+      LEFT JOIN context_problems cp ON ap.id = cp.abstract_problem_id
+      WHERE ap.status = 'active'
+      GROUP BY ap.level, ap.subject, ap.unit, ap.difficulty
+      ORDER BY ap.level, ap.subject, ap.unit, ap.difficulty
+    `);
+
     await client.query('COMMIT');
-    console.log('✅ Database tables initialized successfully');
+    console.log('✅ Database tables initialized successfully (including abstract problems system)');
   } catch (error) {
     await client.query('ROLLBACK');
     console.error('❌ Database initialization failed:', error);
