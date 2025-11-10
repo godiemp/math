@@ -168,22 +168,41 @@ test.describe('Progress & Analytics Page', () => {
 
     // Click on "Mis Quizzes" tab
     await page.getByRole('button', { name: /🎯 Mis Quizzes/i }).click();
-    await page.waitForTimeout(500);
+
+    // Give the tab a moment to switch
+    await page.waitForTimeout(1000);
 
     // Tab should be active (blue background)
     const quizzesTab = page.getByRole('button', { name: /🎯 Mis Quizzes/i });
     await expect(quizzesTab).toHaveClass(/bg-\[#0A84FF\]/);
 
-    // Wait for loading to complete (if loading state is present)
-    const loadingText = page.getByText(/Cargando tus quizzes/i);
-    const isLoading = await loadingText.isVisible().catch(() => false);
-    if (isLoading) {
-      await loadingText.waitFor({ state: 'hidden', timeout: 10000 });
+    // Wait for the loading spinner to disappear if present
+    const spinner = page.locator('.animate-spin');
+    const spinnerExists = await spinner.count() > 0;
+    if (spinnerExists) {
+      await spinner.waitFor({ state: 'hidden', timeout: 15000 });
+      // Give it another moment after spinner disappears
+      await page.waitForTimeout(1000);
     }
 
-    // Should either show quiz sessions or empty state
-    const hasQuizzes = await page.getByText(/Quiz #/i).isVisible().catch(() => false);
-    const hasEmptyState = await page.getByText(/No has completado ningún quiz todavía/i).isVisible().catch(() => false);
+    // Now check for quiz sessions or empty state with explicit waits
+    const quizHeading = page.getByText(/Quiz #/i).first();
+    const emptyStateText = page.getByText(/No has completado ningún quiz todavía/i);
+
+    // Wait for at least one of these to be visible (15 second timeout total)
+    try {
+      await Promise.race([
+        quizHeading.waitFor({ state: 'visible', timeout: 15000 }),
+        emptyStateText.waitFor({ state: 'visible', timeout: 15000 })
+      ]);
+    } catch (error) {
+      // If neither appears, fail with descriptive message
+      throw new Error('Neither quiz sessions nor empty state appeared after loading completed');
+    }
+
+    // Final verification
+    const hasQuizzes = await quizHeading.isVisible().catch(() => false);
+    const hasEmptyState = await emptyStateText.isVisible().catch(() => false);
 
     expect(hasQuizzes || hasEmptyState).toBe(true);
   });
