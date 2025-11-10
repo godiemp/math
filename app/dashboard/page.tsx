@@ -98,28 +98,30 @@ function DashboardContent() {
   return (
     <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">
       {/* Navbar with variableBlur material */}
-      <nav className="sticky top-0 z-30 h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] saturate-[1.2]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 h-full flex justify-between items-center">
-          <Heading level={1} size="xs" className="text-[#0A84FF]">
+      <nav className="sticky top-0 z-30 min-h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] saturate-[1.2]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-0 sm:h-14 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+          <Heading level={1} size="xs" className="text-[#0A84FF] text-sm sm:text-base">
             PAES Chile - Matemática
           </Heading>
-          <div className="flex items-center gap-3">
-            <Text size="sm" variant="secondary">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
+            <Text size="sm" variant="secondary" className="text-xs sm:text-sm">
               Hola, {user?.displayName}
             </Text>
-            {isAdmin && (
-              <Button variant="secondary" onClick={() => router.push('/admin')}>
-                Admin
+            <div className="flex gap-2 ml-auto sm:ml-0">
+              {isAdmin && (
+                <Button variant="secondary" onClick={() => router.push('/admin')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
+                  Admin
+                </Button>
+              )}
+              <Button variant="danger" onClick={handleLogout} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
+                Cerrar Sesión
               </Button>
-            )}
-            <Button variant="danger" onClick={handleLogout}>
-              Cerrar Sesión
-            </Button>
+            </div>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-8 md:py-12">
         {/* Streak Section */}
         <div className="mb-8">
           <Streak initialStreak={user ? {
@@ -130,46 +132,46 @@ function DashboardContent() {
         </div>
 
         {/* Live Practice Featured Card with gradient */}
-        <div className="relative overflow-hidden backdrop-blur-[20px] bg-gradient-to-r from-[#5E5CE6] to-[#0A84FF] dark:from-[#9A99FF] dark:to-[#0A84FF] rounded-3xl p-8 mb-12 shadow-[0_14px_36px_rgba(0,0,0,0.22)]">
+        <div className="relative overflow-hidden backdrop-blur-[20px] bg-gradient-to-r from-[#5E5CE6] to-[#0A84FF] dark:from-[#9A99FF] dark:to-[#0A84FF] rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 mb-8 sm:mb-10 md:mb-12 shadow-[0_14px_36px_rgba(0,0,0,0.22)]">
           <div className="text-center relative z-10">
-            <div className="text-5xl mb-4">📝</div>
-            <Heading level={3} size="sm" className="mb-3 text-white">
+            <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">📝</div>
+            <Heading level={3} size="sm" className="mb-2 sm:mb-3 text-white text-lg sm:text-xl">
               Ensayo PAES en Vivo
             </Heading>
             {nextSession ? (
               <>
-                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 mb-4 inline-block">
-                  <Text size="xs" className="text-white/80 font-semibold uppercase tracking-wider mb-1">
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-3 sm:mb-4 inline-block w-full sm:w-auto">
+                  <Text size="xs" className="text-white/80 font-semibold uppercase tracking-wider mb-1 text-[10px] sm:text-xs">
                     Próximo Ensayo
                   </Text>
-                  <div className="text-2xl font-bold text-white mb-1">
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
                     {new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', {
                       weekday: 'long',
                       day: 'numeric',
                       month: 'long'
                     })}
                   </div>
-                  <div className="text-xl font-semibold text-white/95">
+                  <div className="text-lg sm:text-xl font-semibold text-white/95">
                     {new Date(nextSession.scheduledStartTime).toLocaleTimeString('es-CL', {
                       hour: '2-digit',
                       minute: '2-digit'
                     })} hrs
                   </div>
-                  <Text size="sm" className="text-white/90 mt-2">
+                  <Text size="sm" className="text-white/90 mt-2 text-xs sm:text-sm">
                     {nextSession.name} - {nextSession.level}
                   </Text>
                 </div>
-                <Text size="md" className="mb-6 max-w-2xl mx-auto text-white/90">
+                <Text size="md" className="mb-4 sm:mb-6 max-w-2xl mx-auto text-white/90 text-sm sm:text-base px-2">
                   ¡Regístrate ahora! Practica con ensayos PAES en tiempo real y compite con otros estudiantes.
                 </Text>
               </>
             ) : (
-              <Text size="md" className="mb-6 max-w-2xl mx-auto text-white/90">
+              <Text size="md" className="mb-4 sm:mb-6 max-w-2xl mx-auto text-white/90 text-sm sm:text-base px-2">
                 ¡Nuevo! Practica con ensayos PAES en tiempo real. Regístrate, únete al lobby antes de comenzar y compite con otros estudiantes.
               </Text>
             )}
-            <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
-              <Button asChild className="bg-white text-[#5E5CE6] hover:bg-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-center justify-center px-2 sm:px-0">
+              <Button asChild className="bg-white text-[#5E5CE6] hover:bg-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] w-full sm:w-auto text-sm sm:text-base">
                 <Link href="/live-practice">
                   {nextSession ? '¡Regístrate Ahora! →' : 'Ver Ensayos Disponibles →'}
                 </Link>
@@ -178,7 +180,7 @@ function DashboardContent() {
                 <Button
                   onClick={() => setIsShareModalOpen(true)}
                   variant="ghost"
-                  className="bg-white/20 hover:bg-white/30 text-white border border-white/40 gap-2"
+                  className="bg-white/20 hover:bg-white/30 text-white border border-white/40 gap-2 w-full sm:w-auto text-sm sm:text-base"
                 >
                   <Share2 className="w-4 h-4" />
                   Invitar amigos
@@ -189,9 +191,9 @@ function DashboardContent() {
         </div>
 
         {/* Practice and Temario Cards */}
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
+        <div className="grid md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mb-8 sm:mb-10 md:mb-12">
           {/* Practice Card */}
-          <Card hover className="p-6 relative">
+          <Card hover className="p-4 sm:p-5 md:p-6 relative">
             {!isPaidUser && (
               <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
@@ -254,7 +256,7 @@ function DashboardContent() {
           </Card>
 
           {/* Temario Card */}
-          <Card hover className="p-6 relative">
+          <Card hover className="p-4 sm:p-5 md:p-6 relative">
             {!isPaidUser && (
               <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
@@ -353,13 +355,13 @@ function DashboardContent() {
 
         {/* Registered Sessions Section */}
         {registeredSessions.length > 0 && (
-          <div className="mb-12">
-            <Heading level={3} size="sm" className="mb-6">
+          <div className="mb-8 sm:mb-10 md:mb-12">
+            <Heading level={3} size="sm" className="mb-4 sm:mb-5 md:mb-6 text-base sm:text-lg">
               Mis Próximos Ensayos
             </Heading>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
               {registeredSessions.map(session => (
-                <Card key={session.id} hover className="p-5">
+                <Card key={session.id} hover className="p-4 sm:p-5">
                   <div className="flex justify-between items-start mb-3 gap-2">
                     <Heading level={4} size="xs" className="text-[17px] flex-1">
                       {session.name}
@@ -386,8 +388,8 @@ function DashboardContent() {
         )}
 
         {/* Progress Tracking Card */}
-        <div className="mt-12 text-center">
-          <Card hover className="p-8 max-w-md mx-auto rounded-3xl relative">
+        <div className="mt-8 sm:mt-10 md:mt-12 text-center">
+          <Card hover className="p-5 sm:p-6 md:p-8 max-w-md mx-auto rounded-2xl sm:rounded-3xl relative">
             {!isPaidUser && (
               <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
@@ -448,8 +450,8 @@ function DashboardContent() {
       )}
 
       {/* Footer with hairline border */}
-      <footer className="backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-t border-black/[0.12] dark:border-white/[0.16] mt-12">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-6 text-center">
+      <footer className="backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-t border-black/[0.12] dark:border-white/[0.16] mt-8 sm:mt-10 md:mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-4 sm:py-5 md:py-6 text-center">
           <Text size="xs" variant="secondary">
             © 2024 PAES Chile - Plataforma de Preparación Matemática
           </Text>
