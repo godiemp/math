@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { API_BASE_URL } from '@/lib/config';
+import { api } from '@/lib/api-client';
 import GenerateAbstractModal from './GenerateAbstractModal';
 import AbstractProblemRow from './AbstractProblemRow';
 
@@ -38,7 +38,6 @@ export default function AbstractProblemsTab() {
   const fetchProblems = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
       const params = new URLSearchParams();
 
       if (filters.level !== 'all') params.append('level', filters.level);
@@ -46,13 +45,10 @@ export default function AbstractProblemsTab() {
       if (filters.status !== 'all') params.append('status', filters.status);
       if (filters.difficulty !== 'all') params.append('difficulty', filters.difficulty);
 
-      const res = await fetch(`${API_BASE_URL}/abstract-problems?${params}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get(`/api/abstract-problems?${params}`);
 
-      const data = await res.json();
-      if (data.success) {
-        setProblems(data.problems || []);
+      if (res.data) {
+        setProblems(res.data.problems || []);
       }
     } catch (error) {
       console.error('Error fetching problems:', error);
@@ -64,18 +60,13 @@ export default function AbstractProblemsTab() {
 
   const handleActivate = async (id: string) => {
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_BASE_URL}/abstract-problems/${id}/activate`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.post(`/api/abstract-problems/${id}/activate`);
 
-      const data = await res.json();
-      if (data.success) {
+      if (res.data?.success) {
         toast.success('Problem activated');
         fetchProblems();
       } else {
-        toast.error(data.error || 'Failed to activate');
+        toast.error(res.error?.error || 'Failed to activate');
       }
     } catch (error) {
       console.error('Error activating:', error);
@@ -87,18 +78,13 @@ export default function AbstractProblemsTab() {
     if (!confirm('Are you sure you want to delete this problem?')) return;
 
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_BASE_URL}/abstract-problems/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.delete(`/api/abstract-problems/${id}`);
 
-      const data = await res.json();
-      if (data.success) {
+      if (res.data?.success) {
         toast.success('Problem deleted');
         fetchProblems();
       } else {
-        toast.error(data.error || 'Failed to delete');
+        toast.error(res.error?.error || 'Failed to delete');
       }
     } catch (error) {
       console.error('Error deleting:', error);

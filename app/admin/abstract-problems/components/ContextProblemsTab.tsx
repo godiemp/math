@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { API_BASE_URL } from '@/lib/config';
+import { api } from '@/lib/api-client';
 import GenerateContextModal from './GenerateContextModal';
 import ContextProblemCard from './ContextProblemCard';
 
@@ -45,23 +45,17 @@ export default function ContextProblemsTab() {
   const fetchContexts = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
-
       // Fetch all abstract problems
-      const abstractRes = await fetch(`${API_BASE_URL}/abstract-problems?status=active`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const abstractData = await abstractRes.json();
+      const abstractRes = await api.get('/api/abstract-problems?status=active');
+      const abstractData = abstractRes.data;
 
       // Fetch all context problems
-      const contextRes = await fetch(`${API_BASE_URL}/context-problems`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const contextData = await contextRes.json();
+      const contextRes = await api.get('/api/context-problems');
+      const contextData = contextRes.data;
 
       // Group contexts by abstract problem
-      const abstractProblems = abstractData.problems || [];
-      const contextProblems = contextData.problems || [];
+      const abstractProblems = abstractData?.problems || [];
+      const contextProblems = contextData?.problems || [];
 
       const groupedData: GroupedContext[] = abstractProblems.map((abstract: AbstractProblem) => ({
         abstract,
@@ -83,18 +77,13 @@ export default function ContextProblemsTab() {
     if (!confirm('Are you sure you want to delete this context problem?')) return;
 
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_BASE_URL}/context-problems/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.delete(`/api/context-problems/${id}`);
 
-      const data = await res.json();
-      if (data.success) {
+      if (res.data?.success) {
         toast.success('Context problem deleted');
         fetchContexts();
       } else {
-        toast.error(data.error || 'Failed to delete');
+        toast.error(res.error?.error || 'Failed to delete');
       }
     } catch (error) {
       console.error('Error deleting:', error);

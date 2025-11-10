@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import { API_BASE_URL } from '@/lib/config';
+import { api } from '@/lib/api-client';
 
 interface GenerateContextModalProps {
   abstractProblemId: string;
@@ -39,20 +39,15 @@ export default function GenerateContextModal({
 
   const fetchSuggestions = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(
-        `${API_BASE_URL}/context-problems/suggest-contexts/${abstractProblemId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      const res = await api.get(
+        `/api/context-problems/suggest-contexts/${abstractProblemId}`
       );
 
-      const data = await res.json();
-      if (data.success && data.suggestions) {
-        setSuggestedTypes(data.suggestions);
+      if (res.data?.success && res.data.suggestions) {
+        setSuggestedTypes(res.data.suggestions);
         // Set first suggestion as default
-        if (data.suggestions.length > 0) {
-          setContextType(data.suggestions[0]);
+        if (res.data.suggestions.length > 0) {
+          setContextType(res.data.suggestions[0]);
         }
       }
     } catch (error) {
@@ -63,27 +58,18 @@ export default function GenerateContextModal({
   const handleGenerate = async () => {
     setGenerating(true);
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_BASE_URL}/context-problems/generate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          abstract_problem_id: abstractProblemId,
-          context_type: contextType,
-          count,
-          save_to_db: true,
-        }),
+      const res = await api.post('/api/context-problems/generate', {
+        abstract_problem_id: abstractProblemId,
+        context_type: contextType,
+        count,
+        save_to_db: true,
       });
 
-      const data = await res.json();
-      if (data.success) {
-        toast.success(`Generated ${data.count} context problem(s)!`);
+      if (res.data?.success) {
+        toast.success(`Generated ${res.data.count} context problem(s)!`);
         onSuccess();
       } else {
-        toast.error(data.error || 'Failed to generate context problems');
+        toast.error(res.error?.error || 'Failed to generate context problems');
       }
     } catch (error) {
       console.error('Error generating:', error);

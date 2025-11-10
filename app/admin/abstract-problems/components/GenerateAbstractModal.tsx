@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { API_BASE_URL } from '@/lib/config';
+import { api } from '@/lib/api-client';
 
 interface GenerateAbstractModalProps {
   onClose: () => void;
@@ -65,25 +65,16 @@ export default function GenerateAbstractModal({ onClose, onSuccess }: GenerateAb
 
     setGenerating(true);
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_BASE_URL}/abstract-problems/generate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...formData,
-          save_to_db: true,
-        }),
+      const res = await api.post('/api/abstract-problems/generate', {
+        ...formData,
+        save_to_db: true,
       });
 
-      const data = await res.json();
-      if (data.success) {
-        toast.success(`Generated ${data.count} abstract problems!`);
+      if (res.data?.success) {
+        toast.success(`Generated ${res.data.count} abstract problems!`);
         onSuccess();
       } else {
-        toast.error(data.error || 'Failed to generate problems');
+        toast.error(res.error?.error || 'Failed to generate problems');
       }
     } catch (error) {
       console.error('Error generating:', error);

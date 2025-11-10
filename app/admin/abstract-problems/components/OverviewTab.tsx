@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { API_BASE_URL } from '@/lib/config';
+import { api } from '@/lib/api-client';
 
 interface Stats {
   abstract: {
@@ -34,23 +34,17 @@ export default function OverviewTab() {
 
   const fetchStats = async () => {
     try {
-      const token = localStorage.getItem('token');
-
       // Fetch abstract problems
-      const abstractRes = await fetch(`${API_BASE_URL}/abstract-problems`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const abstractData = await abstractRes.json();
+      const abstractRes = await api.get('/api/abstract-problems');
+      const abstractData = abstractRes.data;
 
       // Fetch context problems
-      const contextRes = await fetch(`${API_BASE_URL}/context-problems`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const contextData = await contextRes.json();
+      const contextRes = await api.get('/api/context-problems');
+      const contextData = contextRes.data;
 
       // Calculate stats
-      const abstractProblems = abstractData.problems || [];
-      const contextProblems = contextData.problems || [];
+      const abstractProblems = abstractData?.problems || [];
+      const contextProblems = contextData?.problems || [];
 
       const abstractStats = {
         total: abstractProblems.length,
