@@ -4,7 +4,7 @@
  */
 
 import express from 'express';
-import { authenticate, requireAdmin } from '../middleware/auth';
+import { authenticate, requireAdmin } from '../auth/middleware';
 import {
   generateQGenQuestions,
   generateSingleQuestion,

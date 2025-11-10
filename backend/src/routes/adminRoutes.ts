@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import { uploadPDF, uploadPDFWithVision, saveQuestions, getQuestions, getUploads, serveImage } from '../controllers/adminController';
-import { authenticate, requireAdmin } from '../middleware/auth';
+import { authenticate, requireAdmin } from '../auth/middleware';
 
 const router = Router();
 

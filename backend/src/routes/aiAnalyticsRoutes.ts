@@ -5,7 +5,7 @@ import {
   getAllConversations,
   getCommonQuestions
 } from '../controllers/aiAnalyticsController';
-import { authenticate } from '../middleware/auth';
+import { authenticate } from '../auth/middleware';
 import { requireAdmin } from '../auth/middleware/authorize';
 
 const router = Router();

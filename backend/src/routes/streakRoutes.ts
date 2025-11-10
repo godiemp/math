@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getStreak, updateStreak } from '../controllers/streakController';
-import { authenticate } from '../middleware/auth';
+import { authenticate } from '../auth/middleware';
 
 const router = Router();
 

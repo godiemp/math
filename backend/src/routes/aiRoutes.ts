@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { summarizeContent, generatePracticeProblems, aiChat, aiHelp } from '../services/aiService';
-import { authenticate } from '../middleware/auth';
+import { authenticate } from '../auth/middleware';
 
 const router = Router();
 
