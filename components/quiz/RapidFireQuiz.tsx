@@ -251,7 +251,9 @@ export default function RapidFireQuiz({
     try {
       await submitQuiz(quizQuestions, userAnswers, quizSessionId, aiConversation);
       setQuizSubmitted(true);
-      setCurrentQuestionIndex(0);
+      // Set to first answered question for review
+      const firstAnswered = quizQuestions.findIndex((_, index) => userAnswers[index] !== null);
+      setCurrentQuestionIndex(firstAnswered >= 0 ? firstAnswered : 0);
     } catch (error) {
       console.error('Error submitting quiz:', error);
       // Reset submitting state on error so user can retry
@@ -424,7 +426,11 @@ export default function RapidFireQuiz({
 
         <div className="space-y-4">
           <button
-            onClick={() => setCurrentQuestionIndex(0)}
+            onClick={() => {
+              // Find first answered question
+              const firstAnswered = quizQuestions.findIndex((_, index) => userAnswers[index] !== null);
+              setCurrentQuestionIndex(firstAnswered >= 0 ? firstAnswered : 0);
+            }}
             className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
           >
             Revisar Respuestas
@@ -450,6 +456,12 @@ export default function RapidFireQuiz({
   const userAnswer = userAnswers[currentQuestionIndex];
   const showFeedback = quizSubmitted || userAnswer !== null;
 
+  // Get list of answered question indices for navigation
+  const answeredQuestionIndices = quizQuestions
+    .map((_, index) => ({ index, answered: userAnswers[index] !== null }))
+    .filter(item => item.answered)
+    .map(item => item.index);
+
   const questionContent = (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8 animate-fadeIn"
       style={{
@@ -462,7 +474,10 @@ export default function RapidFireQuiz({
             {currentQuestion.topic}
           </span>
           <span data-testid="question-counter" className="text-sm text-gray-600 dark:text-gray-400">
-            {currentQuestionIndex + 1}/{quizQuestions.length}
+            {quizSubmitted
+              ? `${answeredQuestionIndices.indexOf(currentQuestionIndex) + 1}/${answeredQuestionIndices.length}`
+              : `${currentQuestionIndex + 1}/${quizQuestions.length}`
+            }
           </span>
         </div>
       </div>
@@ -482,15 +497,25 @@ export default function RapidFireQuiz({
       {quizSubmitted && (
         <div className="mt-8 flex gap-4">
           <button
-            onClick={handlePrevious}
-            disabled={currentQuestionIndex === 0}
+            onClick={() => {
+              const currentPos = answeredQuestionIndices.indexOf(currentQuestionIndex);
+              if (currentPos > 0) {
+                setCurrentQuestionIndex(answeredQuestionIndices[currentPos - 1]);
+              }
+            }}
+            disabled={answeredQuestionIndices.indexOf(currentQuestionIndex) === 0}
             className="flex-1 px-6 py-3 rounded-lg font-semibold transition-all bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
           >
             ← Anterior
           </button>
-          {currentQuestionIndex < quizQuestions.length - 1 ? (
+          {answeredQuestionIndices.indexOf(currentQuestionIndex) < answeredQuestionIndices.length - 1 ? (
             <button
-              onClick={handleNext}
+              onClick={() => {
+                const currentPos = answeredQuestionIndices.indexOf(currentQuestionIndex);
+                if (currentPos < answeredQuestionIndices.length - 1) {
+                  setCurrentQuestionIndex(answeredQuestionIndices[currentPos + 1]);
+                }
+              }}
               className="flex-1 px-6 py-3 rounded-lg font-semibold transition-all bg-gradient-to-r from-indigo-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl"
             >
               Siguiente →
