@@ -72,7 +72,7 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await expect(page.getByTestId('question-counter')).toContainText('Pregunta 1 de');
 
     // Answer the first question (select any option)
-    const firstOption = page.locator('button').filter({ hasText: /^[A-E]\)/ }).first();
+    const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
     await firstOption.click();
     await page.waitForTimeout(500);
 
