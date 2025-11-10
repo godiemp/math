@@ -65,25 +65,23 @@ export function StudyBuddy({ className = '' }: StudyBuddyProps) {
         m2History: m2History ? JSON.parse(m2History) : null,
       };
 
-      // Combine histories for analysis
-      const allSessions = [
+      // Combine histories - these are individual question attempts, not sessions
+      const allAttempts = [
         ...(progressData.m1History || []),
         ...(progressData.m2History || [])
-      ].sort((a, b) => b.timestamp - a.timestamp).slice(0, 10);
+      ].sort((a, b) => b.timestamp - a.timestamp);
 
-      // Calculate topic accuracy
+      // Calculate topic accuracy from individual attempts
       const topicAccuracy: Record<string, { total: number; correct: number; accuracy: number }> = {};
-      allSessions.forEach(session => {
-        session.questions?.forEach((q: any) => {
-          const topic = q.topic || 'Unknown';
-          if (!topicAccuracy[topic]) {
-            topicAccuracy[topic] = { total: 0, correct: 0, accuracy: 0 };
-          }
-          topicAccuracy[topic].total++;
-          if (q.isCorrect) {
-            topicAccuracy[topic].correct++;
-          }
-        });
+      allAttempts.forEach((attempt: any) => {
+        const topic = attempt.topic || 'Unknown';
+        if (!topicAccuracy[topic]) {
+          topicAccuracy[topic] = { total: 0, correct: 0, accuracy: 0 };
+        }
+        topicAccuracy[topic].total++;
+        if (attempt.isCorrect) {
+          topicAccuracy[topic].correct++;
+        }
       });
 
       // Calculate accuracy percentages
@@ -92,20 +90,44 @@ export function StudyBuddy({ className = '' }: StudyBuddyProps) {
         stats.accuracy = (stats.correct / stats.total) * 100;
       });
 
-      // Format recent sessions for the AI
-      const recentSessions = allSessions.slice(0, 5).map(session => ({
-        date: new Date(session.timestamp).toISOString().split('T')[0],
-        score: session.score || 0,
-        topic: session.topic || 'Mixed',
-        questionsAnswered: session.questions?.length || 0,
-      }));
+      // Group attempts by session (quizSessionId) or by day for recent sessions
+      const sessionMap = new Map<string, any>();
+      allAttempts.forEach((attempt: any) => {
+        const sessionKey = attempt.quizSessionId ||
+                          new Date(attempt.timestamp).toISOString().split('T')[0];
+
+        if (!sessionMap.has(sessionKey)) {
+          sessionMap.set(sessionKey, {
+            date: new Date(attempt.timestamp).toISOString().split('T')[0],
+            topic: attempt.topic,
+            attempts: [],
+            timestamp: attempt.timestamp
+          });
+        }
+        sessionMap.get(sessionKey).attempts.push(attempt);
+      });
+
+      // Convert sessions map to array and calculate scores
+      const recentSessions = Array.from(sessionMap.values())
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .slice(0, 5)
+        .map(session => {
+          const correct = session.attempts.filter((a: any) => a.isCorrect).length;
+          const total = session.attempts.length;
+          return {
+            date: session.date,
+            score: total > 0 ? Math.round((correct / total) * 100) : 0,
+            topic: session.topic || 'Mixed',
+            questionsAnswered: total,
+          };
+        });
 
       const progressDataPayload = {
         recentSessions,
         topicAccuracy,
-        totalQuestionsAnswered: allSessions.reduce((sum, s) => sum + (s.questions?.length || 0), 0),
-        overallAccuracy: allSessions.length > 0
-          ? (allSessions.reduce((sum, s) => sum + (s.score || 0), 0) / allSessions.length)
+        totalQuestionsAnswered: allAttempts.length,
+        overallAccuracy: allAttempts.length > 0
+          ? Math.round((allAttempts.filter((a: any) => a.isCorrect).length / allAttempts.length) * 100)
           : 0,
       };
 
@@ -163,23 +185,21 @@ export function StudyBuddy({ className = '' }: StudyBuddyProps) {
       const m1History = localStorage.getItem('paes-history-M1');
       const m2History = localStorage.getItem('paes-history-M2');
 
-      const allSessions = [
+      const allAttempts = [
         ...(m1History ? JSON.parse(m1History) : []),
         ...(m2History ? JSON.parse(m2History) : [])
-      ].sort((a, b) => b.timestamp - a.timestamp).slice(0, 10);
+      ].sort((a, b) => b.timestamp - a.timestamp);
 
       const topicAccuracy: Record<string, { total: number; correct: number; accuracy: number }> = {};
-      allSessions.forEach(session => {
-        session.questions?.forEach((q: any) => {
-          const topic = q.topic || 'Unknown';
-          if (!topicAccuracy[topic]) {
-            topicAccuracy[topic] = { total: 0, correct: 0, accuracy: 0 };
-          }
-          topicAccuracy[topic].total++;
-          if (q.isCorrect) {
-            topicAccuracy[topic].correct++;
-          }
-        });
+      allAttempts.forEach((attempt: any) => {
+        const topic = attempt.topic || 'Unknown';
+        if (!topicAccuracy[topic]) {
+          topicAccuracy[topic] = { total: 0, correct: 0, accuracy: 0 };
+        }
+        topicAccuracy[topic].total++;
+        if (attempt.isCorrect) {
+          topicAccuracy[topic].correct++;
+        }
       });
 
       Object.keys(topicAccuracy).forEach(topic => {
@@ -190,9 +210,9 @@ export function StudyBuddy({ className = '' }: StudyBuddyProps) {
       const response = await api.post<{ response: string; success: boolean }>('/api/study-buddy/chat', {
         progressData: {
           topicAccuracy,
-          totalQuestionsAnswered: allSessions.reduce((sum, s) => sum + (s.questions?.length || 0), 0),
-          overallAccuracy: allSessions.length > 0
-            ? (allSessions.reduce((sum, s) => sum + (s.score || 0), 0) / allSessions.length)
+          totalQuestionsAnswered: allAttempts.length,
+          overallAccuracy: allAttempts.length > 0
+            ? Math.round((allAttempts.filter((a: any) => a.isCorrect).length / allAttempts.length) * 100)
             : 0,
         },
         messages: messages.map(m => ({ role: m.role, content: m.content })),
