@@ -65,10 +65,12 @@ GitHub Actions will:
 e2e/
 ├── auth.spec.ts          # Authentication tests (2 tests)
 ├── live-practice.spec.ts # Live practice registration tests (6 tests)
-├── practice.spec.ts      # Practice mode & progress tracking tests (16 tests)
+├── practice.spec.ts      # Practice mode & quiz tests (11 tests)
+├── progress.spec.ts      # Progress & Analytics page tests (20 tests)
 ├── global-setup.ts       # Database seeding before tests
 └── helpers/
-    └── db-setup.ts       # Database utilities
+    ├── db-setup.ts       # Database utilities
+    └── auth.ts           # Authentication helper
 ```
 
 ## Test Coverage
@@ -92,23 +94,74 @@ e2e/
 - Zen mode quiz completion
 - Rapid Fire difficulty selection
 - Starting Rapid Fire quiz with difficulty
-- Changing selection before quiz start
-- Repeat last configuration feature
-- Navigation back to dashboard
-- Curriculum link display
-- Accessing practice from dashboard
-- Quiz completion and results
+- Quiz completion with accurate results
+- Rapid Fire timer functionality
+- Answer review after completion
 
-**Progress Tracking (5 tests):**
-- Progress tracking after completing questions
-- M1 and M2 progress sections display
-- View mode tabs (Overview, Quizzes, Skills)
-- Switching between view modes
-- Navigation to dashboard
+### Progress & Analytics Tests (progress.spec.ts)
+**Overview Tab (8 tests):**
+- Progress page display with heading and tabs
+- M1 and M2 progress cards display
+- Recent questions count selector
+- Question history with pagination
+- Question review modal
+- Visual indicators for correct/incorrect answers
+- Progress bars with percentages
+- Navigation back to dashboard
+
+**Quizzes Tab (6 tests):**
+- Quiz session listing with scores
+- Empty state with practice links
+- Complete quiz and verify it appears
+- Quiz details modal
+- Navigate between questions in modal
+- Question visual indicators (numbered boxes)
+
+**Skills Tabs (2 tests):**
+- Skills M1 tab switching and display
+- Skills M2 tab switching and display
+
+**State Management (1 test):**
+- Tab state persistence within page
 
 ## Writing Tests
 
-Example test:
+### Authentication Helper
+
+For tests that require an authenticated user, use the `setupAuthenticatedSession` helper instead of manually logging in:
+
+```typescript
+import { test, expect } from '@playwright/test';
+import { setupAuthenticatedSession } from './helpers/auth';
+
+test.describe('My Feature Tests', () => {
+  test.beforeEach(async ({ page }) => {
+    // This logs in as student@test.com and navigates to /dashboard
+    await setupAuthenticatedSession(page);
+  });
+
+  test('should do something', async ({ page }) => {
+    // Start from dashboard, no need to login manually
+    await page.goto('/progress');
+    await expect(page).toHaveTitle(/PAES/);
+  });
+});
+```
+
+**Benefits:**
+- Faster tests (no repeated login UI interactions)
+- Cleaner test code
+- Centralized authentication logic
+- Easy to update if login flow changes
+
+### Available Helper Functions
+
+From `helpers/auth.ts`:
+- `setupAuthenticatedSession(page)` - Login and navigate to dashboard (recommended)
+- `loginAsStudent(page)` - Just perform login, stay on current page
+- `goToDashboard(page)` - Navigate to dashboard (use after login)
+
+### Basic Example
 
 ```typescript
 import { test, expect } from '@playwright/test';

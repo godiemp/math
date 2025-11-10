@@ -1,13 +1,10 @@
 import { test, expect } from '@playwright/test';
+import { setupAuthenticatedSession } from './helpers/auth';
 
 test.describe('Progress & Analytics Page', () => {
   test.beforeEach(async ({ page }) => {
-    // Login as test student
-    await page.goto('/');
-    await page.fill('input[type="email"], input[name="email"], input[name="username"]', 'student@test.com');
-    await page.fill('input[type="password"]', 'student123');
-    await page.click('button[type="submit"]');
-    await page.waitForTimeout(2000);
+    // Setup authenticated session and navigate to dashboard
+    await setupAuthenticatedSession(page);
   });
 
   test('should display progress page with heading and tabs', async ({ page }) => {
