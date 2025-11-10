@@ -9,7 +9,7 @@ import {
   UpdateContextProblemInput,
   ContextProblemFilters,
   ProblemQueryOptions,
-} from '../../../lib/types/abstractProblems';
+} from '../types/abstractProblems';
 
 /**
  * Create a new context problem

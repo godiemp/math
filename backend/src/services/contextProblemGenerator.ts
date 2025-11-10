@@ -10,7 +10,7 @@ import {
   GenerateContextProblemRequest,
   GenerateContextProblemResponse,
   ContextType,
-} from '../../../lib/types/abstractProblems';
+} from '../types/abstractProblems';
 
 // Initialize OpenAI client
 const openai = new OpenAI({

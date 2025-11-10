@@ -17,7 +17,7 @@ import {
   getContextsByAbstractController,
   suggestContextTypesController,
 } from '../controllers/abstractProblemsController';
-import { authenticateToken, requireAdmin } from '../auth/middleware/authMiddleware';
+import { authenticate, requireAdmin } from '../auth/middleware';
 
 const router = express.Router();
 
@@ -30,7 +30,7 @@ const router = express.Router();
  * Generate abstract problems using OpenAI
  * Requires: Admin authentication
  */
-router.post('/generate', authenticateToken, requireAdmin, generateAbstractProblemsController);
+router.post('/generate', authenticate, requireAdmin, generateAbstractProblemsController);
 
 /**
  * POST /api/abstract-problems/generate-numeros-m1
@@ -39,7 +39,7 @@ router.post('/generate', authenticateToken, requireAdmin, generateAbstractProble
  */
 router.post(
   '/generate-numeros-m1',
-  authenticateToken,
+  authenticate,
   requireAdmin,
   generateNumerosM1Controller
 );
@@ -49,40 +49,40 @@ router.post(
  * List abstract problems with filters
  * Query params: level, subject, unit, difficulty, status, cognitive_level, skills, limit, offset, sort_by, sort_order
  */
-router.get('/', authenticateToken, listAbstractProblemsController);
+router.get('/', authenticate, listAbstractProblemsController);
 
 /**
  * GET /api/abstract-problems/stats/by-unit
  * Get statistics grouped by unit
  * Query params: level, subject
  */
-router.get('/stats/by-unit', authenticateToken, getStatsByUnitController);
+router.get('/stats/by-unit', authenticate, getStatsByUnitController);
 
 /**
  * GET /api/abstract-problems/:id
  * Get single abstract problem by ID
  */
-router.get('/:id', authenticateToken, getAbstractProblemController);
+router.get('/:id', authenticate, getAbstractProblemController);
 
 /**
  * PUT /api/abstract-problems/:id
  * Update abstract problem
  * Requires: Admin authentication
  */
-router.put('/:id', authenticateToken, requireAdmin, updateAbstractProblemController);
+router.put('/:id', authenticate, requireAdmin, updateAbstractProblemController);
 
 /**
  * DELETE /api/abstract-problems/:id
  * Delete abstract problem
  * Requires: Admin authentication
  */
-router.delete('/:id', authenticateToken, requireAdmin, deleteAbstractProblemController);
+router.delete('/:id', authenticate, requireAdmin, deleteAbstractProblemController);
 
 /**
  * POST /api/abstract-problems/:id/activate
  * Activate abstract problem (set status to active)
  * Requires: Admin authentication
  */
-router.post('/:id/activate', authenticateToken, requireAdmin, activateAbstractProblemController);
+router.post('/:id/activate', authenticate, requireAdmin, activateAbstractProblemController);
 
 export default router;

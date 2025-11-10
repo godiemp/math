@@ -9,7 +9,7 @@ import {
   UpdateAbstractProblemInput,
   AbstractProblemFilters,
   ProblemQueryOptions,
-} from '../../../lib/types/abstractProblems';
+} from '../types/abstractProblems';
 import { calculateDifficultyScore, scoreToDifficulty } from './abstractProblemGenerator';
 
 /**

@@ -36,7 +36,7 @@ import {
   GenerateContextProblemRequest,
   CreateAbstractProblemInput,
   CreateContextProblemInput,
-} from '../../../lib/types/abstractProblems';
+} from '../types/abstractProblems';
 
 // ========================================
 // Abstract Problem Endpoints
