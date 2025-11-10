@@ -163,12 +163,7 @@ export default function RapidFireQuiz({
     setRapidFireState(prev => {
       const newState = { ...prev };
 
-      if (isCorrect) {
-        // Extreme mode: add time back
-        if (difficulty === 'extreme' && 'timeBackPerCorrect' in config && config.timeBackPerCorrect) {
-          setTimeRemaining(time => time + config.timeBackPerCorrect);
-        }
-      } else {
+      if (!isCorrect) {
         newState.wrongAnswerCount = prev.wrongAnswerCount + 1;
 
         // Check lives system - GAME OVER
@@ -222,18 +217,26 @@ export default function RapidFireQuiz({
 
   const calculateRapidFireSummary = () => {
     let correctCount = 0;
+    let answeredCount = 0;
+
     quizQuestions.forEach((question, index) => {
-      if (userAnswers[index] === question.correctAnswer) {
-        correctCount++;
+      const userAnswer = userAnswers[index];
+      // Only count questions that were actually answered
+      if (userAnswer !== null && userAnswer !== undefined) {
+        answeredCount++;
+        if (userAnswer === question.correctAnswer) {
+          correctCount++;
+        }
       }
     });
 
-    const accuracy = (correctCount / quizQuestions.length) * 100;
+    // Calculate accuracy based on answered questions only
+    const accuracy = answeredCount > 0 ? (correctCount / answeredCount) * 100 : 0;
     const passed = accuracy >= config.passingPercentage;
 
     return {
       correctAnswers: correctCount,
-      totalQuestions: quizQuestions.length,
+      totalQuestions: answeredCount, // Use answered count instead of total questions
       accuracy,
       timeUsed: totalTimeElapsed,
       passed,
@@ -466,7 +469,7 @@ export default function RapidFireQuiz({
         selectedAnswer={userAnswer}
         showFeedback={showFeedback}
         onAnswerSelect={handleAnswerSelect}
-        disabled={quizSubmitted}
+        disabled={quizSubmitted || userAnswer !== null}
         quizMode="rapidfire"
       />
 
