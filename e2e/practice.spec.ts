@@ -68,7 +68,8 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(5000);
 
     // Should see quiz questions
-    await expect(page.getByText(/Pregunta/i)).toBeVisible();
+    await expect(page.getByTestId('question-counter')).toBeVisible();
+    await expect(page.getByTestId('question-counter')).toContainText('Pregunta 1 de');
 
     // Answer the first question (select any option)
     const firstOption = page.locator('button').filter({ hasText: /^[A-E]\)/ }).first();
@@ -80,7 +81,7 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(500);
 
     // Should be on question 2
-    await expect(page.getByText(/2.*\//i)).toBeVisible();
+    await expect(page.getByTestId('question-counter')).toContainText('Pregunta 2 de');
   });
 
   test('should show difficulty selection for Rapid Fire mode', async ({ page }) => {
@@ -135,7 +136,8 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(5000);
 
     // Should see quiz questions with timer
-    await expect(page.getByText(/Pregunta/i)).toBeVisible();
+    await expect(page.getByTestId('question-counter')).toBeVisible();
+    await expect(page.getByTestId('question-counter')).toContainText('Pregunta 1 de');
 
     // Should see timer indicator
     await expect(page.locator('text=⚡')).toBeVisible();

@@ -651,7 +651,7 @@ export default function RapidFireQuiz({
           <span className="text-sm font-semibold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
             {currentQuestion.topic}
           </span>
-          <span className="text-sm text-gray-600 dark:text-gray-400">
+          <span data-testid="question-counter" className="text-sm text-gray-600 dark:text-gray-400">
             Pregunta {currentQuestionIndex + 1} de {quizQuestions.length}
           </span>
         </div>
