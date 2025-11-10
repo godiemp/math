@@ -103,32 +103,49 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 
 ### Frontend
 - **Framework**: Next.js 15.0.0 con React 19
-- **Lenguaje**: TypeScript
+- **Lenguaje**: TypeScript 5.9.3
 - **Estilos**: Tailwind CSS con sistema de diseño personalizado (inspirado en Apple)
 - **Renderizado Matemático**: KaTeX para expresiones LaTeX
 - **Gestión de Estado**: React Context API
 - **IA**: Anthropic SDK (Claude Sonnet 4.5)
+- **UI Components**: Radix UI + Lucide Icons
 
 ### Backend
 - **Runtime**: Node.js con Express
+- **Lenguaje**: TypeScript
 - **Base de Datos**: PostgreSQL con connection pooling
-- **Autenticación**: JWT (JSON Web Tokens) con bcrypt
+- **Autenticación**: JWT (JSON Web Tokens) con bcryptjs
 - **API**: Endpoints RESTful
 - **CORS**: Configurado para deployments en Vercel
 - **Sistema de Auto-actualización**: Actualiza estados de sesiones cada 30 segundos
 
+### Testing & Quality
+- **E2E Testing**: Playwright con TypeScript
+- **Test Environment**: Docker Compose para PostgreSQL de pruebas
+- **Code Standards**: Claude Code skills para patrones consistentes
+- **Development Tools**: Claude Code integration con skills personalizados
+
 ### Bibliotecas Clave
 - `react-katex` - Renderizado de expresiones matemáticas
+- `react-markdown` - Renderizado de contenido markdown
+- `rehype-katex` & `remark-math` - Procesamiento de matemáticas
 - `clsx` & `tailwind-merge` - Estilos utility-first
 - `jsonwebtoken` - Autenticación segura
 - `pg` - Cliente PostgreSQL
 - `@anthropic-ai/sdk` - Integración con Claude AI
-- `bcrypt` - Hashing de contraseñas
+- `bcryptjs` - Hashing de contraseñas
+- `@playwright/test` - Testing E2E
+- `sonner` - Toast notifications
+- `swr` - Data fetching y cache
 
 ## Estructura del Proyecto
 
 ```
 /home/user/math/
+├── .claude/                      # Claude Code Skills
+│   └── skills/                   # Skills personalizados
+│       ├── endpoint/             # Generador de endpoints Express.js
+│       └── code-patterns/        # Guías de patrones y estándares
 ├── app/                          # Páginas Next.js App Router
 │   ├── page.tsx                  # Landing page con autenticación
 │   ├── dashboard/                # Dashboard principal del estudiante
@@ -150,9 +167,13 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 ├── backend/                      # Backend Express.js
 │   ├── src/
 │   │   ├── index.ts              # Entry point del servidor
-│   │   ├── auth/                 # Autenticación y controladores
+│   │   ├── auth/                 # Sistema de autenticación modular
+│   │   │   ├── controllers/      # Controladores de auth
+│   │   │   ├── middleware/       # Auth middleware
+│   │   │   └── services/         # Servicios de auth
 │   │   ├── config/               # Configuración de base de datos
-│   │   ├── middleware/           # Auth middleware
+│   │   ├── controllers/          # Controladores de API
+│   │   ├── middleware/           # Middleware general
 │   │   ├── routes/               # Rutas de API
 │   │   │   ├── authRoutes.ts     # Autenticación
 │   │   │   ├── sessionRoutes.ts  # Sesiones en vivo
@@ -187,6 +208,11 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 │       └── CurriculumSidebar.tsx
 ├── contexts/                     # Proveedores de React Context
 │   └── AuthContext.tsx           # Estado de autenticación
+├── e2e/                          # Tests End-to-End con Playwright
+│   ├── auth.spec.ts              # Tests de autenticación
+│   ├── practice.spec.ts          # Tests de práctica
+│   ├── live-practice.spec.ts     # Tests de sesiones en vivo
+│   └── helpers/                  # Utilidades de testing
 ├── lib/                          # Lógica core y datos
 │   ├── questions/                # Banco de preguntas por módulo
 │   │   ├── m1/                   # 406 preguntas M1
@@ -200,9 +226,17 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 │   │   │   ├── geometria/        # 7 preguntas
 │   │   │   └── probabilidad/     # 7 preguntas
 │   │   └── index.ts              # Agregación de preguntas
+│   ├── auth/                     # Sistema de auth del cliente
+│   │   ├── authApi.ts            # API calls de autenticación
+│   │   ├── tokenService.ts       # Manejo de tokens JWT
+│   │   └── userStorage.ts        # Almacenamiento de usuario
+│   ├── types/                    # Tipos TypeScript organizados
+│   │   ├── auth.ts               # Tipos de autenticación
+│   │   ├── core.ts               # Tipos core (Question, etc.)
+│   │   ├── sessions.ts           # Tipos de sesiones en vivo
+│   │   └── practice.ts           # Tipos de práctica
 │   ├── questions.ts              # Utilidades de preguntas
-│   ├── types.ts                  # Interfaces TypeScript
-│   ├── auth.ts                   # Lógica de auth del cliente
+│   ├── api-client.ts             # Cliente HTTP centralizado
 │   ├── liveSessions.ts           # Gestión de sesiones en vivo
 │   ├── skillTaxonomy.ts          # Definiciones de skills (500+)
 │   ├── skillsArray.ts            # Array de skills
@@ -212,7 +246,11 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 │   │   ├── m1/                   # Material de estudio M1
 │   │   └── m2/                   # Material de estudio M2
 │   └── architecture/             # Documentación de arquitectura
-└── CODEBASE_OVERVIEW.md          # Documentación técnica detallada
+├── docker-compose.test.yml       # Setup Docker para tests E2E
+├── playwright.config.ts          # Configuración de Playwright
+├── E2E_TEST_SETUP.md            # Guía de setup de tests E2E
+├── E2E_TEST_ANALYSIS.md         # Análisis de tests E2E
+└── CODEBASE_OVERVIEW.md         # Documentación técnica detallada
 ```
 
 ## Banco de Preguntas
@@ -323,6 +361,89 @@ npm run dev
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:3001
 
+## Testing
+
+### Tests End-to-End con Playwright
+
+El proyecto incluye tests E2E completos para flujos críticos:
+
+**Configurar ambiente de pruebas:**
+```bash
+# Iniciar base de datos PostgreSQL de pruebas con Docker
+docker-compose -f docker-compose.test.yml up -d
+
+# Configurar variables de entorno de prueba
+cp .env.test.example .env.test
+```
+
+**Ejecutar tests:**
+```bash
+# Tests en modo headless
+npm run test:e2e
+
+# Tests con navegador visible
+npm run test:e2e:headed
+
+# UI mode interactivo
+npm run test:e2e:ui
+
+# Ver reporte de tests
+npm run test:e2e:report
+```
+
+**Cobertura de tests:**
+- ✅ Autenticación (registro, login, logout)
+- ✅ Práctica M1 y M2 (modo Zen y Rapid Fire)
+- ✅ Sesiones de práctica en vivo (registro, participación)
+- ✅ Navegación y protección de rutas
+
+## Claude Code Skills
+
+Este proyecto incluye skills personalizados para Claude Code que facilitan el desarrollo:
+
+### 📋 Skill: code-patterns
+
+**Uso:** Mantener consistencia de código en toda la base de código
+
+**Qué hace:**
+- Enforza patrones estándar de respuestas de API
+- Guía para manejo consistente de errores
+- Patrones de autenticación con AuthRequest
+- Validación de inputs y type safety
+- Estructura de controladores y servicios
+
+**Cuándo usar:**
+- Implementando nuevas features
+- Revisando código existente
+- Refactorizando código inconsistente
+- Preguntando sobre "best practices"
+
+### 🔧 Skill: endpoint
+
+**Uso:** Crear endpoints Express.js siguiendo el patrón MVC
+
+**Qué hace:**
+- Genera archivos de rutas estructurados
+- Crea controladores con manejo de errores
+- Opcionalmente crea capa de servicios
+- Provee instrucciones de registro en index.ts
+
+**Cuándo usar:**
+- Creando nuevos endpoints REST API
+- Implementando CRUD operations
+- Agregando nuevas features al backend
+
+**Ejemplo de uso en Claude Code:**
+```
+Crear un endpoint para gestionar notificaciones de usuarios
+```
+
+El skill te guiará para crear:
+- `/backend/src/routes/notificationRoutes.ts`
+- `/backend/src/controllers/notificationController.ts`
+- `/backend/src/services/notificationService.ts` (si es necesario)
+- Instrucciones de registro
+
 ## Uso
 
 ### Para Estudiantes
@@ -379,6 +500,7 @@ npm run dev
 
 ### ✅ Completamente Implementado
 
+**Core Features:**
 - Sistema completo de práctica con dos modos (Zen y Rapid Fire)
 - 432 preguntas en el banco (406 M1 + 26 M2)
 - Tutor IA con metodología Socrática (Claude Sonnet 4.5)
@@ -395,12 +517,22 @@ npm run dev
 - Mensajes de carga personalizados por ruta
 - Auto-actualización de estados de sesiones
 
+**Developer Experience:**
+- ✅ **Tests E2E con Playwright** - Cobertura completa de flujos críticos
+- ✅ **Claude Code Skills** - Skills personalizados para desarrollo consistente
+  - `code-patterns` - Enforza patrones y estándares
+  - `endpoint` - Generador de endpoints Express.js
+- ✅ **Docker Compose** - Ambiente de testing aislado
+- ✅ **TypeScript** - Type safety en frontend y backend
+- ✅ **Sistema de Auth Modular** - Arquitectura mejorada de autenticación
+- ✅ **API Client Centralizado** - Manejo consistente de requests
+
 ### 🚧 Limitaciones Actuales
 
 - **Cobertura M2**: Solo 26 problemas (necesita expansión)
 - **Progreso de Quiz**: Historial almacenado en localStorage (no sincronizado en la nube)
 - **Sin Aprendizaje Adaptativo**: Generación de quiz es aleatoria, no ajustada por dificultad
-- **Sin Tests**: No hay tests unitarios o de integración
+- **Tests Unitarios**: No hay tests unitarios (solo E2E)
 - **Herramientas Admin**: No hay CRUD completo para preguntas en base de datos
 
 ## Mejoras Futuras
@@ -409,7 +541,7 @@ npm run dev
 - [ ] Expandir banco de preguntas M2 a 200+ problemas
 - [ ] Migrar historial de progreso de quiz a PostgreSQL
 - [ ] Implementar algoritmo de repetición espaciada
-- [ ] Agregar tests unitarios e integración
+- [ ] Agregar tests unitarios (vitest/jest)
 - [ ] Construir interfaz CRUD completa para gestión de preguntas
 
 ### Prioridad Media
@@ -418,6 +550,8 @@ npm run dev
 - [ ] Renderizador de soluciones paso a paso mejorado
 - [ ] Soporte para importar/exportar problemas en batch
 - [ ] Sistema de recomendaciones personalizado basado en desempeño
+- [ ] CI/CD pipeline con tests automáticos
+- [ ] Agregar validación con Zod para inputs
 
 ### Prioridad Baja
 - [ ] Aplicación móvil (React Native)
@@ -429,21 +563,44 @@ npm run dev
 ## Documentación
 
 Para más información detallada, ver:
+
+### Documentación Técnica
 - [Visión General del Código](./CODEBASE_OVERVIEW.md) - Documentación técnica detallada
 - [Setup del Backend](./backend/README.md) - Instrucciones específicas del backend
-- [Documentación de Arquitectura Original](./docs/) - Documentos de planificación inicial
+- [Documentación de Arquitectura](./docs/architecture/) - Documentos de planificación inicial
 
-## Commits Recientes
+### Testing
+- [E2E Test Setup](./E2E_TEST_SETUP.md) - Guía de configuración de tests E2E
+- [E2E Test Analysis](./E2E_TEST_ANALYSIS.md) - Análisis de cobertura y estrategia de tests
+- [E2E Analysis Summary](./E2E_ANALYSIS_SUMMARY.md) - Resumen de análisis E2E
 
-Los últimos 20 commits incluyen mejoras significativas:
-- Implementación de metodología Socrática en tutor IA
-- Optimizaciones de estados de carga
-- Modularización del sistema de autenticación
-- Upgrade a modelo Claude Sonnet 4.5
-- Mejoras en Modo Zen
-- Fixes de persistencia de contexto en IA
-- Threshold de carga para prevenir flashes
-- Mensajes de carga personalizados por ruta
+### Claude Code Skills
+- [Code Patterns Skill](./.claude/skills/code-patterns/SKILL.md) - Guía de patrones y estándares
+- [Endpoint Generator](./.claude/skills/endpoint/SKILL.md) - Generador de endpoints Express.js
+
+### Otras Documentaciones
+- [Análisis de Feature Ensayos](./docs/ENSAYOS_FEATURE_ANALYSIS.md) - Análisis de sesiones en vivo
+- [AI Setup](./docs/AI_SETUP.md) - Configuración del sistema de IA
+
+## Mejoras Recientes
+
+### Testing Infrastructure
+- ✅ Tests E2E completos con Playwright
+- ✅ Docker Compose para ambiente de testing aislado
+- ✅ Cobertura de autenticación, práctica y sesiones en vivo
+
+### Developer Tools
+- ✅ Claude Code skills para desarrollo consistente
+- ✅ Sistema modular de autenticación
+- ✅ API client centralizado con manejo de errores
+- ✅ Patrones de código estandarizados
+
+### Features
+- ✅ Implementación de metodología Socrática en tutor IA
+- ✅ Upgrade a modelo Claude Sonnet 4.5
+- ✅ Mejoras en Modo Zen con tutor IA integrado
+- ✅ Sistema de rachas diarias
+- ✅ Auto-actualización de estados de sesiones
 
 ## Contribuir
 
@@ -465,6 +622,28 @@ Para preguntas o soporte, por favor abre un issue en GitHub.
 
 ---
 
-**Última actualización**: Noviembre 2024
+**Última actualización**: Noviembre 10, 2025
 
-**Estado del Proyecto**: En desarrollo activo con features principales implementadas y funcionando.
+**Estado del Proyecto**: En desarrollo activo con features principales implementadas, testing E2E completo, y herramientas de desarrollo mejoradas con Claude Code skills.
+
+## Tech Stack Summary
+
+| Categoría | Tecnologías |
+|-----------|------------|
+| **Frontend** | Next.js 15, React 19, TypeScript 5.9, Tailwind CSS, KaTeX |
+| **Backend** | Express.js, Node.js, TypeScript, PostgreSQL |
+| **Autenticación** | JWT, bcryptjs |
+| **IA** | Anthropic Claude Sonnet 4.5 |
+| **Testing** | Playwright (E2E), Docker Compose |
+| **Developer Tools** | Claude Code Skills, ESLint, Prettier |
+| **UI/UX** | Radix UI, Lucide Icons, Sonner (toasts) |
+| **Data Fetching** | SWR, Centralized API Client |
+
+## Quick Links
+
+- 🚀 [Getting Started](#empezando)
+- 📚 [Documentation](#documentación)
+- 🧪 [Testing](#testing)
+- 🛠️ [Claude Code Skills](#claude-code-skills)
+- 📖 [API Endpoints](#api-endpoints)
+- 🎯 [Features](#características-principales)
