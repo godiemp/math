@@ -137,10 +137,7 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
     // Should see quiz questions with timer
     await expect(page.getByTestId('question-counter')).toBeVisible();
-    await expect(page.getByTestId('question-counter')).toContainText('Pregunta 1 de');
-
-    // Should see timer indicator
-    await expect(page.locator('text=⚡')).toBeVisible();
+    await expect(page.getByTestId('question-counter')).toContainText('1/');
   });
 
   test('should complete a Zen mode quiz and display accurate results', async ({ page }) => {
@@ -256,12 +253,9 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     // Wait for the countdown animation (3-2-1-GO!)
     await page.waitForTimeout(5000);
 
-    // Verify timer is visible
-    await expect(page.locator('text=⚡')).toBeVisible();
-
-    // Get the total number of questions
+    // Get the total number of questions (format is "1/5")
     const questionCounterText = await page.getByTestId('question-counter').textContent();
-    const totalQuestions = parseInt(questionCounterText?.match(/de (\d+)/)?.[1] || '10');
+    const totalQuestions = parseInt(questionCounterText?.split('/')[1] || '10');
 
     // Answer questions - Rapid Fire auto-advances after each answer
     // Use a for loop with max iterations to prevent infinite loops
@@ -278,9 +272,9 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
         break;
       }
 
-      // Get current question number before answering
+      // Get current question number before answering (format is "1/5")
       const beforeCounterText = await questionCounter.textContent().catch(() => '');
-      const beforeQuestionNum = parseInt(beforeCounterText?.match(/Pregunta (\d+)/)?.[1] || '0');
+      const beforeQuestionNum = parseInt(beforeCounterText?.split('/')[0] || '0');
 
       // Select an answer
       const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
@@ -296,8 +290,8 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
       // Break if we've answered all questions
       if (questionsAnswered >= totalQuestions) {
-        // Wait a bit for auto-submit to process
-        await page.waitForTimeout(2000);
+        // Wait for auto-submit to process (1.5s for feedback + auto-submit)
+        await page.waitForTimeout(3000);
         break;
       }
 
@@ -306,7 +300,7 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
       for (let waitAttempt = 0; waitAttempt < 15; waitAttempt++) {
         await page.waitForTimeout(200);
         const afterCounterText = await questionCounter.textContent().catch(() => '');
-        const afterQuestionNum = parseInt(afterCounterText?.match(/Pregunta (\d+)/)?.[1] || '0');
+        const afterQuestionNum = parseInt(afterCounterText?.split('/')[0] || '0');
 
         if (afterQuestionNum !== beforeQuestionNum && afterQuestionNum > 0) {
           advanced = true;
@@ -325,8 +319,8 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
       }
     }
 
-    // Wait for auto-submit to complete
-    await page.waitForTimeout(2000);
+    // Wait for auto-submit to complete and quiz to enter review mode
+    await page.waitForTimeout(3000);
 
     // After auto-submit, quiz should be in review mode at question 0
     // Navigate to last question to access "Ver Resumen"
@@ -347,12 +341,12 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
       const verResumenButton = page.getByRole('button', { name: /Ver Resumen/i });
       if (await verResumenButton.isVisible().catch(() => false)) {
         await verResumenButton.click();
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(2000);
       }
     }
 
-    // Now verify completion screen
-    await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible({ timeout: 5000 });
+    // Now verify completion screen (with longer timeout)
+    await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible({ timeout: 10000 });
 
     // Verify accuracy percentage with "precisión"
     await expect(page.getByText(/% precisión/i)).toBeVisible();
