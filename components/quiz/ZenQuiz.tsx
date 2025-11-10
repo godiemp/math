@@ -333,7 +333,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
           <span className="text-sm font-semibold text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-cyan-600 dark:from-teal-400 dark:to-cyan-400">
             {currentQuestion.topic}
           </span>
-          <span className="text-sm text-gray-600 dark:text-gray-400">
+          <span data-testid="question-counter" className="text-sm text-gray-600 dark:text-gray-400">
             Pregunta {currentQuestionIndex + 1} de {quizQuestions.length}
           </span>
         </div>

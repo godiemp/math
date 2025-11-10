@@ -26,7 +26,9 @@ export async function clearDatabase() {
     await client.query('DELETE FROM pdf_uploads');
     await client.query('DELETE FROM questions');
     await client.query('DELETE FROM refresh_tokens');
+    await client.query('DELETE FROM subscriptions');
     await client.query('DELETE FROM users');
+    await client.query('DELETE FROM plans');
     await client.query('DELETE FROM last_quiz_config');
 
     await client.query('COMMIT');
@@ -68,6 +70,40 @@ export async function seedTestData() {
       [studentId, 'teststudent', 'student@test.com', studentPassword, 'Test Student', 'student', now, now]
     );
 
+    // Create test plan (if it doesn't exist)
+    const testPlanId = 'test-plan';
+    await client.query(
+      `INSERT INTO plans (id, name, description, price, duration_days, features, is_active, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       ON CONFLICT (id) DO NOTHING`,
+      [
+        testPlanId,
+        'Test Plan',
+        'Plan for e2e testing',
+        0, // Free for testing
+        365, // 1 year
+        JSON.stringify(['all-features']),
+        true,
+        now,
+        now
+      ]
+    );
+
+    // Create active subscription for test student
+    await client.query(
+      `INSERT INTO subscriptions (user_id, plan_id, status, started_at, expires_at, auto_renew, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [
+        studentId,
+        testPlanId,
+        'active',
+        now,
+        now + (365 * 24 * 60 * 60 * 1000), // 1 year from now
+        true,
+        now,
+        now
+      ]
+    );
 
     // Create sample questions
     const questions = [
