@@ -13,6 +13,7 @@ import analyticsRoutes from './routes/analyticsRoutes';
 import aiAnalyticsRoutes from './routes/aiAnalyticsRoutes';
 import quizRoutes from './routes/quizRoutes';
 import qgenRoutes from './routes/qgenRoutes';
+import studyBuddyRoutes from './routes/studyBuddyRoutes';
 import { serveImage } from './controllers/adminController';
 
 // Load environment variables
@@ -104,6 +105,7 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/ai-analytics', aiAnalyticsRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/qgen', qgenRoutes);
+app.use('/api/study-buddy', studyBuddyRoutes);
 
 // Public image serving route
 app.get('/api/images/:filename', serveImage);
@@ -117,6 +119,7 @@ console.log('✅ Analytics routes registered at /api/analytics');
 console.log('✅ AI Analytics routes registered at /api/ai-analytics');
 console.log('✅ Quiz routes registered at /api/quiz');
 console.log('✅ QGen routes registered at /api/qgen');
+console.log('✅ Study Buddy routes registered at /api/study-buddy');
 
 // 404 handler
 app.use((req: Request, res: Response) => {
