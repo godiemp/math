@@ -69,10 +69,22 @@ export const goalSkillMappings: GoalSkillMapping[] = [
   },
 
   // ============================================================================
-  // ÁLGEBRA - FUNCIONES LINEALES
+  // NÚMEROS - FRACCIONES Y OPERACIONES BÁSICAS
   // ============================================================================
   {
     id: 7,
+    goalId: 'goal-compute-basic',
+    skillCombination: ['numeros-operaciones-basicas', 'numeros-fracciones'],
+    minSkills: 2,
+    maxSkills: 2,
+    createdAt: Date.now(),
+  },
+
+  // ============================================================================
+  // ÁLGEBRA - FUNCIONES LINEALES
+  // ============================================================================
+  {
+    id: 8,
     goalId: 'goal-compute-basic',
     skillCombination: ['algebra-funciones-lineales'],
     minSkills: 1,
@@ -80,7 +92,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
     createdAt: Date.now(),
   },
   {
-    id: 8,
+    id: 9,
     goalId: 'goal-model-function',
     skillCombination: ['algebra-funciones-lineales', 'algebra-expresiones-algebraicas'],
     minSkills: 2,
@@ -88,7 +100,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
     createdAt: Date.now(),
   },
   {
-    id: 9,
+    id: 10,
     goalId: 'goal-compare-options',
     skillCombination: ['algebra-funciones-lineales', 'algebra-sistemas-ecuaciones'],
     minSkills: 2,
@@ -96,7 +108,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
     createdAt: Date.now(),
   },
   {
-    id: 10,
+    id: 11,
     goalId: 'goal-compare-options',
     skillCombination: ['algebra-funciones-lineales', 'algebra-inecuaciones'],
     minSkills: 2,
@@ -108,7 +120,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
   // ÁLGEBRA - ECUACIONES
   // ============================================================================
   {
-    id: 11,
+    id: 12,
     goalId: 'goal-model-equation',
     skillCombination: ['algebra-ecuaciones-lineales', 'algebra-expresiones-algebraicas'],
     minSkills: 2,
@@ -120,7 +132,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
   // GEOMETRÍA - PERÍMETRO Y ÁREA
   // ============================================================================
   {
-    id: 12,
+    id: 13,
     goalId: 'goal-compute-perimeter',
     skillCombination: ['geometria-perimetro'],
     minSkills: 1,
@@ -128,7 +140,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
     createdAt: Date.now(),
   },
   {
-    id: 13,
+    id: 14,
     goalId: 'goal-compute-perimeter',
     skillCombination: ['geometria-perimetro', 'geometria-rectangulo'],
     minSkills: 2,
@@ -136,7 +148,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
     createdAt: Date.now(),
   },
   {
-    id: 14,
+    id: 15,
     goalId: 'goal-compute-area',
     skillCombination: ['geometria-area'],
     minSkills: 1,
@@ -144,7 +156,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
     createdAt: Date.now(),
   },
   {
-    id: 15,
+    id: 16,
     goalId: 'goal-compute-area',
     skillCombination: ['geometria-area', 'geometria-rectangulo'],
     minSkills: 2,
@@ -152,7 +164,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
     createdAt: Date.now(),
   },
   {
-    id: 16,
+    id: 17,
     goalId: 'goal-compute-area',
     skillCombination: ['geometria-area', 'geometria-triangulos'],
     minSkills: 2,
@@ -164,7 +176,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
   // GEOMETRÍA - TEOREMA DE PITÁGORAS
   // ============================================================================
   {
-    id: 17,
+    id: 18,
     goalId: 'goal-compute-pythagorean',
     skillCombination: ['geometria-teorema-pitagoras'],
     minSkills: 1,
@@ -172,7 +184,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
     createdAt: Date.now(),
   },
   {
-    id: 18,
+    id: 19,
     goalId: 'goal-compute-pythagorean',
     skillCombination: ['geometria-teorema-pitagoras', 'numeros-raices', 'numeros-potencias'],
     minSkills: 3,
@@ -184,7 +196,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
   // PROBABILIDAD - TENDENCIA CENTRAL
   // ============================================================================
   {
-    id: 19,
+    id: 20,
     goalId: 'goal-compute-basic',
     skillCombination: ['probabilidad-media'],
     minSkills: 1,
@@ -192,7 +204,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
     createdAt: Date.now(),
   },
   {
-    id: 20,
+    id: 21,
     goalId: 'goal-compute-basic',
     skillCombination: ['probabilidad-mediana'],
     minSkills: 1,
@@ -200,7 +212,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
     createdAt: Date.now(),
   },
   {
-    id: 21,
+    id: 22,
     goalId: 'goal-compute-basic',
     skillCombination: ['probabilidad-moda'],
     minSkills: 1,
@@ -208,7 +220,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
     createdAt: Date.now(),
   },
   {
-    id: 22,
+    id: 23,
     goalId: 'goal-interpret-table',
     skillCombination: ['probabilidad-tablas-frecuencia'],
     minSkills: 1,
@@ -216,7 +228,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
     createdAt: Date.now(),
   },
   {
-    id: 23,
+    id: 24,
     goalId: 'goal-interpret-graph',
     skillCombination: ['probabilidad-graficos'],
     minSkills: 1,
@@ -228,7 +240,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
   // COMBINED SKILLS - Progressive complexity
   // ============================================================================
   {
-    id: 24,
+    id: 25,
     goalId: 'goal-analyze-relationship',
     skillCombination: ['numeros-proporcionalidad', 'algebra-funciones-lineales'],
     minSkills: 2,
@@ -236,7 +248,7 @@ export const goalSkillMappings: GoalSkillMapping[] = [
     createdAt: Date.now(),
   },
   {
-    id: 25,
+    id: 26,
     goalId: 'goal-compare-values',
     skillCombination: ['numeros-operaciones-basicas', 'numeros-fracciones', 'numeros-decimales'],
     minSkills: 2,
