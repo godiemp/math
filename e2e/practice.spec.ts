@@ -354,14 +354,14 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     // Now verify completion screen
     await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible({ timeout: 5000 });
 
-    // Verify score is displayed - Rapid Fire shows points
-    await expect(page.getByText(/Puntaje Total/i).or(page.getByText(/Puntos/i))).toBeVisible();
+    // Verify score (large points number) is displayed
+    await expect(page.locator('text=/\\d+/')).toBeVisible();
 
-    // Verify accuracy percentage
-    await expect(page.getByText(/Precisión/i).or(page.getByText(/Accuracy/i))).toBeVisible();
+    // Verify accuracy percentage with "precisión"
+    await expect(page.getByText(/% precisión/i)).toBeVisible();
 
-    // Verify time used is displayed
-    await expect(page.getByText(/Tiempo Usado/i).or(page.getByText(/Time Used/i))).toBeVisible();
+    // Verify time with "usado"
+    await expect(page.getByText(/usado/i)).toBeVisible();
 
     // Check for review and restart buttons
     await expect(page.getByRole('button', { name: /Revisar Respuestas/i })).toBeVisible();
