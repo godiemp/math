@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { MathText } from '@/components/MathDisplay';
+import { MarkdownViewer } from '@/components/MarkdownViewer';
 import type { Level, Subject } from '@/lib/types/core';
 import AdminLayout from '@/components/AdminLayout';
 import { api } from '@/lib/api-client';
@@ -335,8 +336,8 @@ function QGenAdminContent() {
                     <Heading level={4} size="xs" className="mb-2">
                       💡 Explicación
                     </Heading>
-                    <div className="text-sm">
-                      <MathText
+                    <div className="text-sm prose-sm">
+                      <MarkdownViewer
                         content={result.explanationLatex || result.explanation}
                       />
                     </div>

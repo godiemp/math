@@ -77,6 +77,26 @@ interface GenerateQuestionAnswerResponse {
   explanationLatex?: string;
 }
 
+interface GenerateCompleteQuestionInput {
+  skills: string[];
+  level: string;
+  subject: string;
+  context?: string;
+  difficulty?: 'easy' | 'medium' | 'hard';
+}
+
+interface GenerateCompleteQuestionResponse {
+  question: string;
+  questionLatex?: string;
+  options: string[];
+  optionsLatex?: string[];
+  correctAnswer: number;
+  explanation: string;
+  explanationLatex?: string;
+  context: string;
+  variables?: Record<string, any>;
+}
+
 /**
  * Summarize educational content using AI
  */
@@ -667,6 +687,159 @@ Usa emojis sutiles para mantener un tono amigable pero no exagerado.`;
     };
   } catch (error) {
     console.error('Error in AI help:', error);
+    throw error;
+  }
+}
+
+/**
+ * Generate Complete Question - Generates a full question from scratch without templates
+ */
+export async function generateCompleteQuestion(
+  input: GenerateCompleteQuestionInput
+): Promise<GenerateCompleteQuestionResponse> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+
+  if (!apiKey) {
+    throw new Error('ANTHROPIC_API_KEY not configured');
+  }
+
+  const { skills, level, subject, context, difficulty = 'medium' } = input;
+
+  // Map skill IDs to readable names
+  const skillMap: Record<string, string> = {
+    'numeros-porcentajes': 'Porcentajes',
+    'numeros-operaciones-basicas': 'Operaciones Básicas',
+    'numeros-decimales': 'Decimales',
+    'numeros-fracciones': 'Fracciones',
+    'numeros-proporcionalidad': 'Proporcionalidad',
+    'numeros-potencias': 'Potencias',
+    'numeros-raices': 'Raíces',
+    'algebra-funciones-lineales': 'Funciones Lineales',
+    'algebra-expresiones-algebraicas': 'Expresiones Algebraicas',
+    'algebra-ecuaciones-lineales': 'Ecuaciones Lineales',
+    'algebra-sistemas-ecuaciones': 'Sistemas de Ecuaciones',
+    'algebra-inecuaciones': 'Inecuaciones',
+    'algebra-funciones-cuadraticas': 'Funciones Cuadráticas',
+    'geometria-perimetro': 'Perímetro',
+    'geometria-area': 'Área',
+    'geometria-rectangulo': 'Rectángulos',
+    'geometria-triangulos': 'Triángulos',
+    'geometria-teorema-pitagoras': 'Teorema de Pitágoras',
+    'probabilidad-media': 'Media',
+    'probabilidad-mediana': 'Mediana',
+    'probabilidad-moda': 'Moda',
+    'probabilidad-tablas-frecuencia': 'Tablas de Frecuencia',
+    'probabilidad-graficos': 'Gráficos',
+  };
+
+  const skillNames = skills.map(s => skillMap[s] || s).join(', ');
+
+  const systemPrompt = `Eres un experto en matemáticas PAES de Chile especializado en crear preguntas de alta calidad.
+
+Tu tarea es generar una pregunta COMPLETA de matemáticas que integre las habilidades especificadas.
+
+REGLAS IMPORTANTES:
+1. La pregunta debe ser contextualizada en una situación realista y relevante para estudiantes chilenos
+2. Debe requerir aplicar TODAS las habilidades especificadas para resolverla
+3. Genera 4 opciones de respuesta (A, B, C, D) donde:
+   - UNA es correcta
+   - TRES son distractores que reflejan errores comunes
+4. La explicación debe ser paso a paso, clara y educativa
+5. Usa LaTeX para fórmulas matemáticas: $...$ para inline, $$...$$ para bloques
+6. Usa markdown para formato: **negrita**, listas, etc.
+7. Responde SOLO con JSON válido, sin texto adicional`;
+
+  const contextPrompt = context
+    ? `\n**Contexto específico:** ${context}\n`
+    : '';
+
+  const userPrompt = `Genera una pregunta COMPLETA de matemáticas con estas especificaciones:
+
+**Nivel:** ${level}
+**Asignatura:** ${subject}
+**Habilidades a evaluar:** ${skillNames}
+**Dificultad:** ${difficulty}${contextPrompt}
+
+IMPORTANTE:
+- La pregunta debe integrar TODAS las habilidades de forma natural
+- Debe ser apropiada para el nivel ${level}
+- Los valores numéricos deben dar resultados "limpios" (sin decimales muy largos)
+- Los distractores deben reflejar errores típicos de estudiantes
+
+Responde con este formato JSON exacto:
+{
+  "question": "Texto de la pregunta",
+  "questionLatex": "Texto de la pregunta con $LaTeX$",
+  "options": ["opción A", "opción B", "opción C", "opción D"],
+  "optionsLatex": ["opción A con $LaTeX$", "opción B", "opción C", "opción D"],
+  "correctAnswer": 0,
+  "explanation": "**Paso 1:** ...\n\n**Paso 2:** ...\n\n**Errores comunes:**\n- Error 1\n- Error 2",
+  "explanationLatex": "**Paso 1:** $formula$ ...\n\n**Paso 2:** ...",
+  "context": "Breve descripción del contexto usado",
+  "variables": {"variable1": valor1, "variable2": valor2}
+}
+
+NOTA: correctAnswer debe ser el índice (0-3) de la opción correcta. Mezcla la posición de la respuesta correcta.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 2048,
+        temperature: 0.8,
+        messages: [
+          {
+            role: 'user',
+            content: userPrompt,
+          },
+        ],
+        system: systemPrompt,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('Anthropic API error:', error);
+      throw new Error(`AI service error: ${response.statusText}`);
+    }
+
+    const data = (await response.json()) as { content: Array<{ text: string }> };
+    const responseText = data.content[0].text;
+
+    // Extract JSON from response (Claude might wrap it in markdown)
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('Failed to extract JSON from AI response');
+    }
+
+    const result = JSON.parse(jsonMatch[0]) as GenerateCompleteQuestionResponse;
+
+    // Validate response
+    if (
+      typeof result.correctAnswer !== 'number' ||
+      result.correctAnswer < 0 ||
+      result.correctAnswer > 3
+    ) {
+      throw new Error('Invalid correctAnswer index from AI');
+    }
+
+    if (!Array.isArray(result.options) || result.options.length !== 4) {
+      throw new Error('Invalid options array from AI');
+    }
+
+    if (!result.question || !result.explanation) {
+      throw new Error('Missing required fields in AI response');
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Error generating complete question:', error);
     throw error;
   }
 }
