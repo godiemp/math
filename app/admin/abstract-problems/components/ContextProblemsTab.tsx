@@ -47,11 +47,11 @@ export default function ContextProblemsTab() {
     try {
       // Fetch all abstract problems
       const abstractRes = await api.get('/api/abstract-problems?status=active');
-      const abstractData = abstractRes.data;
+      const abstractData = abstractRes.data as any;
 
       // Fetch all context problems
       const contextRes = await api.get('/api/context-problems');
-      const contextData = contextRes.data;
+      const contextData = contextRes.data as any;
 
       // Group contexts by abstract problem
       const abstractProblems = abstractData?.problems || [];
@@ -79,7 +79,7 @@ export default function ContextProblemsTab() {
     try {
       const res = await api.delete(`/api/context-problems/${id}`);
 
-      if (res.data?.success) {
+      if (res.data && (res.data as any).success) {
         toast.success('Context problem deleted');
         fetchContexts();
       } else {

@@ -36,11 +36,11 @@ export default function OverviewTab() {
     try {
       // Fetch abstract problems
       const abstractRes = await api.get('/api/abstract-problems');
-      const abstractData = abstractRes.data;
+      const abstractData = abstractRes.data as any;
 
       // Fetch context problems
       const contextRes = await api.get('/api/context-problems');
-      const contextData = contextRes.data;
+      const contextData = contextRes.data as any;
 
       // Calculate stats
       const abstractProblems = abstractData?.problems || [];

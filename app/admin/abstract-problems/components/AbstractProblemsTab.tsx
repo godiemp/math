@@ -47,8 +47,8 @@ export default function AbstractProblemsTab() {
 
       const res = await api.get(`/api/abstract-problems?${params}`);
 
-      if (res.data) {
-        setProblems(res.data.problems || []);
+      if (res.data && 'problems' in res.data) {
+        setProblems((res.data as any).problems || []);
       }
     } catch (error) {
       console.error('Error fetching problems:', error);
@@ -62,7 +62,7 @@ export default function AbstractProblemsTab() {
     try {
       const res = await api.post(`/api/abstract-problems/${id}/activate`);
 
-      if (res.data?.success) {
+      if (res.data && (res.data as any).success) {
         toast.success('Problem activated');
         fetchProblems();
       } else {
@@ -80,7 +80,7 @@ export default function AbstractProblemsTab() {
     try {
       const res = await api.delete(`/api/abstract-problems/${id}`);
 
-      if (res.data?.success) {
+      if (res.data && (res.data as any).success) {
         toast.success('Problem deleted');
         fetchProblems();
       } else {

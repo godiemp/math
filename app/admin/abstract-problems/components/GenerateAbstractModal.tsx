@@ -70,8 +70,8 @@ export default function GenerateAbstractModal({ onClose, onSuccess }: GenerateAb
         save_to_db: true,
       });
 
-      if (res.data?.success) {
-        toast.success(`Generated ${res.data.count} abstract problems!`);
+      if (res.data && (res.data as any).success) {
+        toast.success(`Generated ${(res.data as any).count} abstract problems!`);
         onSuccess();
       } else {
         toast.error(res.error?.error || 'Failed to generate problems');
