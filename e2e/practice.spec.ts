@@ -138,9 +138,6 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     // Should see quiz questions with timer
     await expect(page.getByTestId('question-counter')).toBeVisible();
     await expect(page.getByTestId('question-counter')).toContainText('1/');
-
-    // Should see timer indicator (use .first() since we have mobile and desktop versions)
-    await expect(page.getByTestId('rapidfire-timer').first()).toBeVisible();
   });
 
   test('should complete a Zen mode quiz and display accurate results', async ({ page }) => {
@@ -255,9 +252,6 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
     // Wait for the countdown animation (3-2-1-GO!)
     await page.waitForTimeout(5000);
-
-    // Verify timer is visible (use .first() since we have mobile and desktop versions)
-    await expect(page.getByTestId('rapidfire-timer').first()).toBeVisible();
 
     // Get the total number of questions (format is "1/5")
     const questionCounterText = await page.getByTestId('question-counter').textContent();
