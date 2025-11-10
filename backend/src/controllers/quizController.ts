@@ -221,7 +221,7 @@ export const getQuizHistory = async (req: AuthRequest, res: Response): Promise<v
 
     let query = `
       SELECT
-        id, question_id as "questionId", level, topic, subject, question,
+        id, quiz_session_id as "quizSessionId", question_id as "questionId", level, topic, subject, question,
         options, user_answer as "userAnswer", correct_answer as "correctAnswer",
         is_correct as "isCorrect", difficulty, explanation, skills, attempted_at as "timestamp"
       FROM quiz_attempts
