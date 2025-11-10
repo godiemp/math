@@ -45,8 +45,8 @@ function RapidFireDebugContent() {
   ];
 
   const launchQuiz = (difficulty: string, level: 'M1' | 'M2') => {
-    // Add debug flag to skip countdown
-    router.push(`/practice/${level.toLowerCase()}/rapidfire?difficulty=${difficulty}&debug=true`);
+    // Navigate to practice page with rapidfire mode and debug parameters
+    router.push(`/practice/${level.toLowerCase()}?mode=rapidfire&difficulty=${difficulty}&debug=true&autostart=true`);
   };
 
   return (

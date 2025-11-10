@@ -100,6 +100,40 @@ function M1PracticeContent() {
     }
   }, [searchParams]);
 
+  // Auto-start quiz from URL parameters (for debug mode)
+  useEffect(() => {
+    const modeParam = searchParams.get('mode');
+    const difficultyParam = searchParams.get('difficulty');
+    const autostartParam = searchParams.get('autostart');
+    const subjectParam = searchParams.get('subject');
+
+    if (autostartParam === 'true' && modeParam) {
+      // Set mode
+      if (modeParam === 'zen' || modeParam === 'rapidfire') {
+        setQuizMode(modeParam as QuizMode);
+      }
+
+      // Set subject (default to all subjects if not specified)
+      if (subjectParam && ['números', 'álgebra', 'geometría', 'probabilidad'].includes(subjectParam)) {
+        setSelectedSubject(subjectParam as Subject);
+      } else {
+        setSelectedSubject(null);
+      }
+
+      // Set difficulty for rapidfire
+      if (modeParam === 'rapidfire' && difficultyParam) {
+        if (['easy', 'medium', 'hard', 'extreme'].includes(difficultyParam)) {
+          setDifficulty(difficultyParam as Difficulty);
+        }
+      }
+
+      // Auto-start the quiz
+      setTimeout(() => {
+        setQuizStarted(true);
+      }, 100);
+    }
+  }, [searchParams]);
+
   const subjects: { value: Subject | null; label: string; emoji: string; description: string }[] = [
     { value: null, label: 'Todas las Materias', emoji: '📚', description: 'Practica con todas las materias mezcladas' },
     { value: 'números', label: 'Números', emoji: '🔢', description: 'Números y Proporcionalidad' },
