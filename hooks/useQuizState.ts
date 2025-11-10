@@ -18,20 +18,12 @@ export const useQuizState = ({
   questionCount,
   replayQuestions
 }: UseQuizStateProps) => {
-  // Use lazy initialization to load questions immediately on first render
-  const [quizQuestions, setQuizQuestions] = useState<Question[]>(() => {
-    return replayQuestions && replayQuestions.length > 0
-      ? replayQuestions
-      : getRandomQuestions(level, questionCount, subject);
-  });
-
+  const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState<(number | null)[]>(
-    () => new Array(quizQuestions.length).fill(null)
-  );
+  const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
 
-  // Update questions if parameters change
+  // Initialize quiz questions
   useEffect(() => {
     const questionsToUse = replayQuestions && replayQuestions.length > 0
       ? replayQuestions
