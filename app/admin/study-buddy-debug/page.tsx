@@ -39,6 +39,7 @@ function StudyBuddyDebugContent() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const archetypes = getAllArchetypes();
 
@@ -46,6 +47,7 @@ function StudyBuddyDebugContent() {
     setSelectedArchetype(archetype);
     setGreetingResponse(null);
     setMessages([]);
+    setErrorMessage(null);
 
     // Generate greeting
     await generateGreeting(archetype);
@@ -75,6 +77,12 @@ function StudyBuddyDebugContent() {
         timeOfDay,
       });
 
+      if (response.error) {
+        console.error('API error:', response.error);
+        setErrorMessage(`Error: ${response.error.error || 'Failed to generate greeting'}`);
+        return;
+      }
+
       if (response.data) {
         setGreetingResponse(response.data);
         setMessages([
@@ -83,9 +91,11 @@ function StudyBuddyDebugContent() {
             content: `${response.data.greeting}\n\n${response.data.encouragement}\n\n${response.data.conversationStarter}`
           }
         ]);
+        setErrorMessage(null);
       }
     } catch (error) {
       console.error('Error generating greeting:', error);
+      setErrorMessage(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
@@ -113,6 +123,16 @@ function StudyBuddyDebugContent() {
         userMessage: inputValue,
       });
 
+      if (response.error) {
+        console.error('API error:', response.error);
+        const errorMsg: Message = {
+          role: 'assistant',
+          content: `❌ Error: ${response.error.error || 'Failed to get response'}`
+        };
+        setMessages(prev => [...prev, errorMsg]);
+        return;
+      }
+
       if (response.data && response.data.success) {
         const assistantMessage: Message = {
           role: 'assistant',
@@ -122,6 +142,11 @@ function StudyBuddyDebugContent() {
       }
     } catch (error) {
       console.error('Error sending message:', error);
+      const errorMsg: Message = {
+        role: 'assistant',
+        content: `❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`
+      };
+      setMessages(prev => [...prev, errorMsg]);
     } finally {
       setIsSending(false);
     }
@@ -342,6 +367,29 @@ function StudyBuddyDebugContent() {
                     <Text size="sm" variant="secondary">
                       Generando respuesta del AI Study Buddy...
                     </Text>
+                  </Card>
+                ) : errorMessage ? (
+                  <Card className="p-8 border-2 border-red-300 dark:border-red-700">
+                    <div className="text-center">
+                      <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-4">
+                        <span className="text-2xl">❌</span>
+                      </div>
+                      <Heading level={3} size="sm" className="mb-2 text-red-900 dark:text-red-100">
+                        Error al Generar Respuesta
+                      </Heading>
+                      <Text size="sm" className="text-red-700 dark:text-red-300 mb-4">
+                        {errorMessage}
+                      </Text>
+                      <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-4 text-left">
+                        <Text size="xs" className="font-semibold mb-2">Posibles causas:</Text>
+                        <ul className="text-xs space-y-1 text-red-800 dark:text-red-200">
+                          <li>• ANTHROPIC_API_KEY no configurada en el backend</li>
+                          <li>• Error de red o timeout</li>
+                          <li>• Usuario no es admin</li>
+                          <li>• Revisa los logs del backend para más detalles</li>
+                        </ul>
+                      </div>
+                    </div>
                   </Card>
                 ) : greetingResponse ? (
                   <Card className="p-6">
