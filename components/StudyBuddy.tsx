@@ -71,6 +71,16 @@ export function StudyBuddy({ className = '' }: StudyBuddyProps) {
         ...(progressData.m2History || [])
       ].sort((a, b) => b.timestamp - a.timestamp);
 
+      // Debug logging
+      console.log('🤖 Study Buddy - Loading Progress:');
+      console.log(`  M1 History: ${progressData.m1History?.length || 0} attempts`);
+      console.log(`  M2 History: ${progressData.m2History?.length || 0} attempts`);
+      console.log(`  Total attempts: ${allAttempts.length}`);
+      if (allAttempts.length > 0) {
+        console.log(`  Latest attempt:`, allAttempts[0]);
+        console.log(`  Session IDs:`, [...new Set(allAttempts.map((a: any) => a.quizSessionId || 'none'))].slice(0, 5));
+      }
+
       // Calculate topic accuracy from individual attempts
       const topicAccuracy: Record<string, { total: number; correct: number; accuracy: number }> = {};
       allAttempts.forEach((attempt: any) => {
