@@ -257,13 +257,13 @@ function M1PracticeContent() {
     }
     // Default neutral theme
     return {
-      background: 'bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 dark:from-violet-700 dark:via-purple-800 dark:to-fuchsia-800',
-      selectedBorder: 'border-[#0A84FF]',
-      selectedBg: 'bg-[#0A84FF]/[0.06] dark:bg-[#0A84FF]/[0.12]',
-      selectedShadow: 'shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)]',
-      hoverBorder: 'hover:border-[#0A84FF]/50 dark:hover:border-[#0A84FF]',
-      checkmark: 'text-[#0A84FF]',
-      gradient: 'from-blue-500 to-indigo-500',
+      background: 'bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 dark:from-orange-700 dark:via-amber-700 dark:to-yellow-600',
+      selectedBorder: 'border-white/60',
+      selectedBg: 'bg-white/20',
+      selectedShadow: 'shadow-[0_0_40px_rgba(255,255,255,0.3)]',
+      hoverBorder: 'hover:border-white/40',
+      checkmark: 'text-white',
+      gradient: 'from-orange-500 to-yellow-500',
     };
   };
 
@@ -358,7 +358,7 @@ function M1PracticeContent() {
           Elige cómo quieres practicar
         </p>
       </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {modes.map((mode) => {
             const isZen = mode.value === 'zen';
             const modeGradient = isZen
