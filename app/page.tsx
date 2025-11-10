@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Auth from "@/components/Auth";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   const { isAuthenticated, setUser } = useAuth();
@@ -22,7 +23,7 @@ export default function Home() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center relative overflow-hidden"
+      className="min-h-screen flex flex-col relative overflow-hidden"
       style={{
         background: 'var(--color-bg)'
       }}
@@ -36,7 +37,8 @@ export default function Home() {
       />
 
       {/* Content Container */}
-      <div className="w-full max-w-md px-4 relative z-10">
+      <div className="flex-grow flex items-center justify-center relative z-10">
+        <div className="w-full max-w-md px-4">
         {/* Hero Section */}
         <div className="text-center mb-12 spring-motion">
           <div className="mb-6">
@@ -296,6 +298,11 @@ export default function Home() {
           </div>
         </div>
       )}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

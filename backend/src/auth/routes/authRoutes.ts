@@ -9,6 +9,7 @@
 import { Router } from 'express';
 import { register, login, refresh, logout, getCurrentUser } from '../controllers/authController';
 import { authenticate } from '../middleware';
+import { validateRegister, validateLogin, validateRefreshToken } from '../../middleware/validation';
 
 const router = Router();
 
@@ -17,21 +18,21 @@ const router = Router();
  * @desc    Register a new user
  * @access  Public
  */
-router.post('/register', register);
+router.post('/register', validateRegister, register);
 
 /**
  * @route   POST /api/auth/login
  * @desc    Login user
  * @access  Public
  */
-router.post('/login', login);
+router.post('/login', validateLogin, login);
 
 /**
  * @route   POST /api/auth/refresh
  * @desc    Refresh access token
  * @access  Public
  */
-router.post('/refresh', refresh);
+router.post('/refresh', validateRefreshToken, refresh);
 
 /**
  * @route   POST /api/auth/logout
