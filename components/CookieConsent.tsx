@@ -32,6 +32,7 @@ export default function CookieConsent() {
       className="fixed bottom-0 left-0 right-0 z-50 spring-motion"
       style={{
         animation: 'slideUp 0.3s ease-out',
+        pointerEvents: 'none',
       }}
     >
       <div
@@ -40,6 +41,7 @@ export default function CookieConsent() {
           borderRadius: 'var(--radius-lg)',
           boxShadow: 'var(--shadow-raised)',
           border: '1px solid var(--color-separator)',
+          pointerEvents: 'auto',
         }}
       >
         <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
