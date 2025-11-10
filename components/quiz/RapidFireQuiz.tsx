@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import type { Question, RapidFireState, RapidFireScore } from '@/lib/types';
 import { getRandomQuestions } from '@/lib/questions';
 import { QuestionRenderer } from '../QuestionRenderer';
@@ -26,8 +27,10 @@ export default function RapidFireQuiz({
   replayQuestions
 }: RapidFireQuizProps) {
   const config = RAPIDFIRE_CONFIG[difficulty];
+  const searchParams = useSearchParams();
+  const isDebugMode = searchParams?.get('debug') === 'true';
 
-  const [showCountdown, setShowCountdown] = useState(true);
+  const [showCountdown, setShowCountdown] = useState(!isDebugMode);
   const [countdown, setCountdown] = useState(3);
   const [showTimer, setShowTimer] = useState(() => {
     const saved = localStorage.getItem('quiz-show-timer');
@@ -140,23 +143,6 @@ export default function RapidFireQuiz({
     return () => clearInterval(timer);
   }, [quizSubmitted, quizQuestions.length, showCountdown, rapidFireState.isPaused, currentQuestionIndex]);
 
-  // Pause timer effect
-  useEffect(() => {
-    if (!rapidFireState.isPaused || rapidFireState.pauseTimeRemaining <= 0) {
-      return;
-    }
-
-    const timer = setInterval(() => {
-      setRapidFireState(prev => {
-        if (prev.pauseTimeRemaining <= 1) {
-          return { ...prev, isPaused: false, pauseTimeRemaining: 0 };
-        }
-        return { ...prev, pauseTimeRemaining: prev.pauseTimeRemaining - 1 };
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [rapidFireState.isPaused, rapidFireState.pauseTimeRemaining]);
 
   const toggleTimer = () => {
     const newValue = !showTimer;
@@ -224,16 +210,12 @@ export default function RapidFireQuiz({
   };
 
   // Hint feature removed for rapidfire mode
+  // General pause - unlimited use for real-life interruptions (helping at home, etc.)
 
   const handlePause = () => {
-    if (!config.pauseAllowed || rapidFireState.pausesRemaining <= 0) return;
-
     setRapidFireState(prev => ({
       ...prev,
       isPaused: true,
-      pausesUsed: prev.pausesUsed + 1,
-      pausesRemaining: prev.pausesRemaining - 1,
-      pauseTimeRemaining: config.pauseMaxSeconds,
     }));
   };
 
@@ -241,7 +223,6 @@ export default function RapidFireQuiz({
     setRapidFireState(prev => ({
       ...prev,
       isPaused: false,
-      pauseTimeRemaining: 0,
     }));
   };
 
@@ -586,30 +567,16 @@ export default function RapidFireQuiz({
                 </div>
               </div>
             )}
-
-
-            {/* Pause remaining */}
-            {config.pauseAllowed && (
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Pausas:</span>
-                <span className="text-sm font-bold text-teal-600 dark:text-teal-400">
-                  {rapidFireState.pausesRemaining}
-                </span>
-              </div>
-            )}
           </div>
 
-          {/* Action Buttons */}
-          {config.pauseAllowed && rapidFireState.pausesRemaining > 0 && !rapidFireState.isPaused && (
-            <div className="flex gap-2">
-              {/* Pause Button */}
-              <button
-                onClick={handlePause}
-                className="flex-1 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors"
-              >
-                ⏸️ Pausar ({config.pauseMaxSeconds}s)
-              </button>
-            </div>
+          {/* Pause Button - Always available */}
+          {!rapidFireState.isPaused && (
+            <button
+              onClick={handlePause}
+              className="w-full bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors"
+            >
+              ⏸️ Pausar Quiz
+            </button>
           )}
         </div>
       )}
@@ -714,20 +681,17 @@ export default function RapidFireQuiz({
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
                 Quiz Pausado
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
-                Tiempo de pausa restante:
+              <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
+                Tómate el tiempo que necesites. El cronómetro está detenido.
               </p>
-              <div className="text-5xl font-black text-teal-600 dark:text-teal-400 mb-8">
-                {formatTime(rapidFireState.pauseTimeRemaining)}
-              </div>
               <button
                 onClick={handleUnpause}
                 className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                ▶️ Continuar Ahora
+                ▶️ Continuar Quiz
               </button>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
-                La pausa terminará automáticamente cuando se acabe el tiempo
+                Puedes pausar las veces que necesites
               </p>
             </div>
           </div>
