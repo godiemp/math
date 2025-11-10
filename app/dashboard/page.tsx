@@ -129,6 +129,65 @@ function DashboardContent() {
           } : undefined} />
         </div>
 
+        {/* Live Practice Featured Card with gradient */}
+        <div className="relative overflow-hidden backdrop-blur-[20px] bg-gradient-to-r from-[#5E5CE6] to-[#0A84FF] dark:from-[#9A99FF] dark:to-[#0A84FF] rounded-3xl p-8 mb-12 shadow-[0_14px_36px_rgba(0,0,0,0.22)]">
+          <div className="text-center relative z-10">
+            <div className="text-5xl mb-4">📝</div>
+            <Heading level={3} size="sm" className="mb-3 text-white">
+              Ensayo PAES en Vivo
+            </Heading>
+            {nextSession ? (
+              <>
+                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 mb-4 inline-block">
+                  <Text size="xs" className="text-white/80 font-semibold uppercase tracking-wider mb-1">
+                    Próximo Ensayo
+                  </Text>
+                  <div className="text-2xl font-bold text-white mb-1">
+                    {new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', {
+                      weekday: 'long',
+                      day: 'numeric',
+                      month: 'long'
+                    })}
+                  </div>
+                  <div className="text-xl font-semibold text-white/95">
+                    {new Date(nextSession.scheduledStartTime).toLocaleTimeString('es-CL', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })} hrs
+                  </div>
+                  <Text size="sm" className="text-white/90 mt-2">
+                    {nextSession.name} - {nextSession.level}
+                  </Text>
+                </div>
+                <Text size="md" className="mb-6 max-w-2xl mx-auto text-white/90">
+                  ¡Regístrate ahora! Practica con ensayos PAES en tiempo real y compite con otros estudiantes.
+                </Text>
+              </>
+            ) : (
+              <Text size="md" className="mb-6 max-w-2xl mx-auto text-white/90">
+                ¡Nuevo! Practica con ensayos PAES en tiempo real. Regístrate, únete al lobby antes de comenzar y compite con otros estudiantes.
+              </Text>
+            )}
+            <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
+              <Button asChild className="bg-white text-[#5E5CE6] hover:bg-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]">
+                <Link href="/live-practice">
+                  {nextSession ? '¡Regístrate Ahora! →' : 'Ver Ensayos Disponibles →'}
+                </Link>
+              </Button>
+              {nextSession && (
+                <Button
+                  onClick={() => setIsShareModalOpen(true)}
+                  variant="ghost"
+                  className="bg-white/20 hover:bg-white/30 text-white border border-white/40 gap-2"
+                >
+                  <Share2 className="w-4 h-4" />
+                  Invitar amigos
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Practice and Temario Cards */}
         <div className="grid md:grid-cols-2 gap-6 mb-12">
           {/* Practice Card */}
@@ -290,65 +349,6 @@ function DashboardContent() {
               </div>
             </div>
           </Card>
-        </div>
-
-        {/* Live Practice Featured Card with gradient */}
-        <div className="relative overflow-hidden backdrop-blur-[20px] bg-gradient-to-r from-[#5E5CE6] to-[#0A84FF] dark:from-[#9A99FF] dark:to-[#0A84FF] rounded-3xl p-8 mb-12 shadow-[0_14px_36px_rgba(0,0,0,0.22)]">
-          <div className="text-center relative z-10">
-            <div className="text-5xl mb-4">📝</div>
-            <Heading level={3} size="sm" className="mb-3 text-white">
-              Ensayo PAES en Vivo
-            </Heading>
-            {nextSession ? (
-              <>
-                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 mb-4 inline-block">
-                  <Text size="xs" className="text-white/80 font-semibold uppercase tracking-wider mb-1">
-                    Próximo Ensayo
-                  </Text>
-                  <div className="text-2xl font-bold text-white mb-1">
-                    {new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', {
-                      weekday: 'long',
-                      day: 'numeric',
-                      month: 'long'
-                    })}
-                  </div>
-                  <div className="text-xl font-semibold text-white/95">
-                    {new Date(nextSession.scheduledStartTime).toLocaleTimeString('es-CL', {
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })} hrs
-                  </div>
-                  <Text size="sm" className="text-white/90 mt-2">
-                    {nextSession.name} - {nextSession.level}
-                  </Text>
-                </div>
-                <Text size="md" className="mb-6 max-w-2xl mx-auto text-white/90">
-                  ¡Regístrate ahora! Practica con ensayos PAES en tiempo real y compite con otros estudiantes.
-                </Text>
-              </>
-            ) : (
-              <Text size="md" className="mb-6 max-w-2xl mx-auto text-white/90">
-                ¡Nuevo! Practica con ensayos PAES en tiempo real. Regístrate, únete al lobby antes de comenzar y compite con otros estudiantes.
-              </Text>
-            )}
-            <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
-              <Button asChild className="bg-white text-[#5E5CE6] hover:bg-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]">
-                <Link href="/live-practice">
-                  {nextSession ? '¡Regístrate Ahora! →' : 'Ver Ensayos Disponibles →'}
-                </Link>
-              </Button>
-              {nextSession && (
-                <Button
-                  onClick={() => setIsShareModalOpen(true)}
-                  variant="ghost"
-                  className="bg-white/20 hover:bg-white/30 text-white border border-white/40 gap-2"
-                >
-                  <Share2 className="w-4 h-4" />
-                  Invitar amigos
-                </Button>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* Registered Sessions Section */}
