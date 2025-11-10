@@ -24,13 +24,15 @@ export async function registerUser(
   username: string,
   email: string,
   password: string,
-  displayName: string
+  displayName: string,
+  acceptedTerms: boolean
 ): Promise<AuthResult> {
   const response = await api.post<AuthResponse>(AUTH_ENDPOINTS.REGISTER, {
     username,
     email,
     password,
     displayName,
+    acceptedTerms,
   });
 
   if (response.error) {

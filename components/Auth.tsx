@@ -16,6 +16,7 @@ export default function Auth({ onSuccess }: AuthProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState(isPreview ? 'admin123' : '');
   const [displayName, setDisplayName] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -58,7 +59,14 @@ export default function Auth({ onSuccess }: AuthProps) {
           return;
         }
 
-        const result = await registerUser(username, email, password, displayName);
+        if (!acceptedTerms) {
+          setError('Debes aceptar los términos y condiciones');
+          toast.error('Debes aceptar los términos y condiciones');
+          setIsLoading(false);
+          return;
+        }
+
+        const result = await registerUser(username, email, password, displayName, acceptedTerms);
         if (result.success) {
           toast.success('Cuenta creada exitosamente');
           onSuccess();
@@ -326,6 +334,64 @@ export default function Auth({ onSuccess }: AuthProps) {
                   e.target.style.boxShadow = 'none';
                 }}
               />
+            </div>
+          )}
+
+          {/* Terms and Conditions Checkbox (Register Only) */}
+          {!isLogin && (
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+              <input
+                id="acceptedTerms"
+                name="acceptedTerms"
+                type="checkbox"
+                checked={acceptedTerms}
+                onChange={(e) => setAcceptedTerms(e.target.checked)}
+                style={{
+                  width: '18px',
+                  height: '18px',
+                  marginTop: '2px',
+                  cursor: 'pointer',
+                  flexShrink: 0,
+                }}
+              />
+              <label
+                htmlFor="acceptedTerms"
+                style={{
+                  fontSize: '13px',
+                  lineHeight: '1.5',
+                  color: 'var(--color-label-secondary)',
+                  cursor: 'pointer',
+                }}
+              >
+                Acepto los{' '}
+                <a
+                  href="/legal/terminos"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    color: 'var(--color-link)',
+                    textDecoration: 'none',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
+                  onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
+                >
+                  Términos y Condiciones
+                </a>
+                {' '}y la{' '}
+                <a
+                  href="/legal/privacidad"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    color: 'var(--color-link)',
+                    textDecoration: 'none',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
+                  onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
+                >
+                  Política de Privacidad
+                </a>
+              </label>
             </div>
           )}
 

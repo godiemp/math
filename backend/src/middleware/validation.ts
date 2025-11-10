@@ -3,10 +3,13 @@ import { z } from 'zod';
 
 // Validation schemas
 export const registerSchema = z.object({
+  username: z.string().min(3, 'El nombre de usuario debe tener al menos 3 caracteres'),
   email: z.string().email('Correo electrónico inválido'),
   password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
-  fullName: z.string().min(1, 'El nombre es requerido'),
-  level: z.enum(['m1', 'm2']),
+  displayName: z.string().min(1, 'El nombre es requerido'),
+  acceptedTerms: z.boolean().refine((val) => val === true, {
+    message: 'Debes aceptar los términos y condiciones',
+  }),
 });
 
 export const loginSchema = z.object({
