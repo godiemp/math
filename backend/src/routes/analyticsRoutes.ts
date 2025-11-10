@@ -1,6 +1,6 @@
 import express from 'express';
 import { getAnalyticsDashboard, getWeeklyTrends } from '../controllers/analyticsController';
-import { authenticate, requireAdmin } from '../middleware/auth';
+import { authenticate, requireAdmin } from '../auth/middleware';
 
 const router = express.Router();
 

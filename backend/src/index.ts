@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { testConnection, initializeDatabase, closeDatabase, pool } from './config/database';
 import { initImageStorage } from './services/imageStorageService';
-import authRoutes from './routes/authRoutes';
+import authRoutes from './auth/routes/authRoutes';
 import adminRoutes from './routes/adminRoutes';
 import userManagementRoutes from './routes/userManagementRoutes';
 import streakRoutes from './routes/streakRoutes';
