@@ -137,10 +137,10 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
     // Should see quiz questions with timer
     await expect(page.getByTestId('question-counter')).toBeVisible();
-    await expect(page.getByTestId('question-counter')).toContainText('Pregunta 1 de');
+    await expect(page.getByTestId('question-counter')).toContainText('1/');
 
     // Should see timer indicator
-    await expect(page.locator('text=⚡')).toBeVisible();
+    await expect(page.getByTestId('rapidfire-timer')).toBeVisible();
   });
 
   test('should complete a Zen mode quiz and display accurate results', async ({ page }) => {
@@ -257,11 +257,11 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(5000);
 
     // Verify timer is visible
-    await expect(page.locator('text=⚡')).toBeVisible();
+    await expect(page.getByTestId('rapidfire-timer')).toBeVisible();
 
-    // Get the total number of questions
+    // Get the total number of questions (format is "1/5")
     const questionCounterText = await page.getByTestId('question-counter').textContent();
-    const totalQuestions = parseInt(questionCounterText?.match(/de (\d+)/)?.[1] || '10');
+    const totalQuestions = parseInt(questionCounterText?.split('/')[1] || '10');
 
     // Answer questions - Rapid Fire auto-advances after each answer
     // Use a for loop with max iterations to prevent infinite loops

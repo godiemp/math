@@ -504,7 +504,7 @@ export default function RapidFireQuiz({
                 <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20">
                   <div className="flex items-center gap-2">
                     <span className="text-lg">⚡</span>
-                    <span className={`text-lg font-bold ${getTimerColor(timeRemaining, config.timeLimit)}`}>
+                    <span data-testid="rapidfire-timer" className={`text-lg font-bold ${getTimerColor(timeRemaining, config.timeLimit)}`}>
                       {formatTime(timeRemaining)}
                     </span>
                   </div>
@@ -576,7 +576,7 @@ export default function RapidFireQuiz({
                   <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20">
                     <div className="flex items-center gap-2">
                       <span className="text-lg">⚡</span>
-                      <span className={`text-lg font-bold ${getTimerColor(timeRemaining, config.timeLimit)}`}>
+                      <span data-testid="rapidfire-timer" className={`text-lg font-bold ${getTimerColor(timeRemaining, config.timeLimit)}`}>
                         {formatTime(timeRemaining)}
                       </span>
                     </div>
