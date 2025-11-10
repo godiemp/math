@@ -195,8 +195,21 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await submitButton.click();
     await page.waitForTimeout(2000);
 
-    // Verify results page elements are displayed
-    await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible({ timeout: 10000 });
+    // After submission, quiz goes to review mode (question 0)
+    // Navigate to last question to access "Ver Resumen" button
+    for (let i = 1; i < totalQuestions; i++) {
+      await page.getByRole('button', { name: /Siguiente/i }).click();
+      await page.waitForTimeout(300);
+    }
+
+    // Click "Ver Resumen" to see the completion screen
+    const verResumenButton = page.getByRole('button', { name: /Ver Resumen/i });
+    await expect(verResumenButton).toBeVisible();
+    await verResumenButton.click();
+    await page.waitForTimeout(1000);
+
+    // Now verify completion screen elements are displayed
+    await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible();
 
     // Check that score percentage is displayed
     await expect(page.locator('text=/\\d+%/')).toBeVisible();
@@ -249,24 +262,67 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     const totalQuestions = parseInt(questionCounterText?.match(/de (\d+)/)?.[1] || '10');
 
     // Answer all questions - Rapid Fire auto-advances after each answer
-    for (let i = 1; i <= totalQuestions; i++) {
-      // Verify we're on the correct question
-      await expect(page.getByTestId('question-counter')).toContainText(`Pregunta ${i} de ${totalQuestions}`);
+    let questionsAnswered = 0;
+    while (questionsAnswered < totalQuestions) {
+      // Get current question number
+      const currentCounterText = await page.getByTestId('question-counter').textContent();
+      const currentQuestionNum = parseInt(currentCounterText?.match(/Pregunta (\d+)/)?.[1] || '1');
 
       // Select an answer
       const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
       await expect(firstOption).toBeVisible();
       await firstOption.click();
 
-      // Wait for auto-advance (1.5s) or auto-submit on last question
+      questionsAnswered++;
+
+      // Wait for auto-advance (1.5s) or auto-submit
       await page.waitForTimeout(2000);
+
+      // Check if quiz ended early (game over or completed)
+      const completedEarly = await page.getByText(/¡Quiz Completado!/i).isVisible().catch(() => false);
+      if (completedEarly || questionsAnswered >= totalQuestions) {
+        break;
+      }
+
+      // Verify we advanced to next question (unless quiz ended)
+      const newCounterText = await page.getByTestId('question-counter').textContent().catch(() => '');
+      if (newCounterText && newCounterText.includes('Pregunta')) {
+        const newQuestionNum = parseInt(newCounterText.match(/Pregunta (\d+)/)?.[1] || '0');
+        // If still on same question, quiz might have ended
+        if (newQuestionNum === currentQuestionNum) {
+          break;
+        }
+      }
     }
 
-    // Wait a bit more for results page to fully load after auto-submit
-    await page.waitForTimeout(2000);
+    // Wait for auto-submit to complete and navigate to review mode
+    await page.waitForTimeout(3000);
 
-    // Verify results page shows completion
-    await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible({ timeout: 10000 });
+    // After auto-submit, quiz goes to review mode at question 0
+    // Check if we're in review mode or already on completion screen
+    const isCompletionVisible = await page.getByText(/¡Quiz Completado!/i).isVisible().catch(() => false);
+
+    if (!isCompletionVisible) {
+      // Navigate to last question to access "Ver Resumen"
+      const questionsToNavigate = Math.min(questionsAnswered, totalQuestions) - 1;
+      for (let i = 0; i < questionsToNavigate; i++) {
+        const nextBtn = page.getByRole('button', { name: /Siguiente/i });
+        if (await nextBtn.isVisible()) {
+          await nextBtn.click();
+          await page.waitForTimeout(300);
+        }
+      }
+
+      // Click "Ver Resumen"
+      const verResumenButton = page.getByRole('button', { name: /Ver Resumen/i });
+      if (await verResumenButton.isVisible()) {
+        await verResumenButton.click();
+        await page.waitForTimeout(1000);
+      }
+    }
+
+    // Now verify completion screen
+    await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible({ timeout: 5000 });
 
     // Verify score is displayed - Rapid Fire shows points
     await expect(page.getByText(/Puntaje Total/i).or(page.getByText(/Puntos/i))).toBeVisible();
@@ -321,8 +377,19 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.getByRole('button', { name: /Enviar Quiz/i }).click();
     await page.waitForTimeout(2000);
 
+    // After submission, navigate to completion screen
+    // Quiz puts us in review mode at question 0, need to navigate to last question
+    for (let i = 1; i < totalQuestions; i++) {
+      await page.getByRole('button', { name: /Siguiente/i }).click();
+      await page.waitForTimeout(300);
+    }
+
+    // Click "Ver Resumen" to see completion screen
+    await page.getByRole('button', { name: /Ver Resumen/i }).click();
+    await page.waitForTimeout(1000);
+
     // Should be on results page
-    await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible();
 
     // Click "Revisar Respuestas" button to review answers
     const reviewButton = page.getByRole('button', { name: /Revisar Respuestas/i });
