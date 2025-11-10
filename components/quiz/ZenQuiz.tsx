@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import type { Question } from '@/lib/types';
 import { getRandomQuestions } from '@/lib/questions';
 import { QuestionRenderer } from '../QuestionRenderer';
@@ -18,7 +19,10 @@ interface ZenQuizProps {
 }
 
 export default function ZenQuiz({ questions: allQuestions, level, subject, replayQuestions }: ZenQuizProps) {
-  const [showZenIntro, setShowZenIntro] = useState(true);
+  const searchParams = useSearchParams();
+  const isDebugMode = searchParams.get('debug') === 'true';
+
+  const [showZenIntro, setShowZenIntro] = useState(!isDebugMode);
   const [zenIntroPhase, setZenIntroPhase] = useState(0); // 0: fade in, 1: breathe, 2: fade out
   const [isChatModalOpen, setIsChatModalOpen] = useState(false);
   const [showQuickNav, setShowQuickNav] = useState(() => {
@@ -86,7 +90,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
     const randomQuestions = getRandomQuestions(level, 10, subject);
     resetQuiz(randomQuestions);
     setIsChatModalOpen(false);
-    setShowZenIntro(true);
+    setShowZenIntro(!isDebugMode);
     setZenIntroPhase(0);
   };
 
