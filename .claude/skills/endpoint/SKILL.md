@@ -1,4 +1,9 @@
-# Endpoint Generator Skill
+---
+name: endpoint
+description: Create Express.js API endpoints following the MVC pattern. Use when the user wants to create new REST API routes, controllers, or services for the backend.
+---
+
+# Endpoint Generator
 
 This skill helps you create new API endpoints following the Express.js MVC pattern used in this codebase.
 
@@ -10,7 +15,7 @@ When the user invokes this skill, guide them through creating a new endpoint:
    - Feature name (e.g., "notifications", "settings", "reports")
    - Route path (e.g., "/api/notifications")
    - HTTP methods needed (GET, POST, PUT, DELETE, PATCH)
-   - Authentication requirements (none, authenticate, requireAdmin, requireRole)
+   - Authentication requirements (none, authenticate, requireAdmin)
    - Brief description of what each endpoint does
 
 2. **Create the route file:**
@@ -189,16 +194,29 @@ After creating the files, provide these instructions:
 - Consider adding TypeScript interfaces for request/response types
 - Test with different authentication scenarios
 
-## Example Usage
+## Examples
 
-When user says: "Create an endpoint for managing user notifications"
+### Example 1: Simple GET endpoint
 
-You should:
-1. Ask clarifying questions about specific endpoints needed
-2. Create notificationRoutes.ts with routes like:
+**User request:** "Create an endpoint to get user profile"
+
+**Steps:**
+1. Create `profileRoutes.ts` with GET /api/profile route
+2. Create `profileController.ts` with getProfile function
+3. Add authentication middleware
+4. Register route in index.ts
+
+### Example 2: Full CRUD resource
+
+**User request:** "Create endpoints for managing user notifications"
+
+**Steps:**
+1. Create `notificationRoutes.ts` with routes:
    - GET /api/notifications - Get user's notifications
-   - POST /api/notifications/mark-read - Mark notification as read
-   - DELETE /api/notifications/:id - Delete a notification
-3. Create notificationController.ts with corresponding controllers
-4. Create notificationService.ts for business logic
-5. Show how to register in index.ts
+   - POST /api/notifications - Create new notification
+   - PATCH /api/notifications/:id/read - Mark as read
+   - DELETE /api/notifications/:id - Delete notification
+2. Create `notificationController.ts` with all controller functions
+3. Create `notificationService.ts` for database operations
+4. Add authentication middleware to all routes
+5. Register routes in index.ts
