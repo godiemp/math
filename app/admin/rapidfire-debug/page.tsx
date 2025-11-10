@@ -13,7 +13,7 @@ function RapidFireDebugContent() {
     {
       id: 'easy',
       name: 'Easy Mode',
-      description: '10 preguntas • 5 min • 3 vidas',
+      description: '5 preguntas • 10 min • Pausa disponible',
       emoji: '🟢',
       color: 'from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-green-200 dark:border-green-800',
       textColor: 'text-green-600 dark:text-green-400',
@@ -21,7 +21,7 @@ function RapidFireDebugContent() {
     {
       id: 'medium',
       name: 'Medium Mode',
-      description: '15 preguntas • 7 min • 2 vidas',
+      description: '8 preguntas • 10 min • Sin vidas',
       emoji: '🟡',
       color: 'from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 border-yellow-200 dark:border-yellow-800',
       textColor: 'text-yellow-600 dark:text-yellow-400',
@@ -29,16 +29,16 @@ function RapidFireDebugContent() {
     {
       id: 'hard',
       name: 'Hard Mode',
-      description: '20 preguntas • 10 min • 1 vida',
-      emoji: '🔴',
+      description: '10 preguntas • 10 min • 2 vidas',
+      emoji: '🟠',
       color: 'from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-red-200 dark:border-red-800',
       textColor: 'text-red-600 dark:text-red-400',
     },
     {
       id: 'extreme',
       name: 'Extreme Mode',
-      description: '30 preguntas • 12 min • Sin vidas • Tiempo de vuelta',
-      emoji: '💀',
+      description: '12 preguntas • 10 min • 1 vida • +5s por correcta',
+      emoji: '🔴',
       color: 'from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border-purple-200 dark:border-purple-800',
       textColor: 'text-purple-600 dark:text-purple-400',
     },
@@ -71,8 +71,8 @@ function RapidFireDebugContent() {
                 Modo Debug Activado
               </Heading>
               <Text size="sm" className="text-blue-800 dark:text-blue-200">
-                En este modo, el countdown de 3-2-1 se salta automáticamente. Las rachas aparecen en los milestones (3, 5, 10, 15, 20...).
-                Las explicaciones solo se muestran en el review final, no durante el quiz.
+                En este modo, el countdown de 3-2-1 se salta automáticamente.
+                Las explicaciones solo se muestran en el review final. Timer, vidas y pausa están fuera del modal.
               </Text>
             </div>
           </div>
@@ -155,19 +155,20 @@ function RapidFireDebugContent() {
             <div>
               <Text size="sm" className="font-semibold mb-2">Cambios Implementados:</Text>
               <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
-                <li>❌ Pistas removidas completamente</li>
+                <li>❌ Sistema de puntos removido</li>
                 <li>✅ Explicaciones solo al final (review)</li>
-                <li>🔥 Racha solo en milestones (3, 5, 10, 15...)</li>
-                <li>⏸️ Pausa ilimitada (sin restricciones)</li>
+                <li>🎮 Game elements externos (timer, vidas, pausa)</li>
+                <li>⏸️ Pausa ilimitada en Easy mode</li>
+                <li>📊 Solo accuracy%, tiempo, y correctas/total</li>
               </ul>
             </div>
             <div>
               <Text size="sm" className="font-semibold mb-2">Comportamiento:</Text>
               <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
                 <li>Auto-avance después de responder (1.5s)</li>
-                <li>Notificación de racha: 2 segundos</li>
-                <li>Timer se detiene en pausa</li>
-                <li>Explicaciones en modo review únicamente</li>
+                <li>Timer, vidas, pausa: externos al modal</li>
+                <li>Modal limpio solo con pregunta</li>
+                <li>Progress bar en la parte inferior</li>
               </ul>
             </div>
           </div>

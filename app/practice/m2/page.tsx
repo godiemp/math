@@ -164,37 +164,37 @@ function M2PracticeContent() {
       value: 'easy',
       label: 'Fácil',
       emoji: '🟢',
-      time: 25,
-      description: '10 preguntas - 2:30 por pregunta',
-      details: 'Modo de práctica relajado con ayudas',
-      features: ['✓ Ves si acertaste inmediatamente', '🔒 Las respuestas se bloquean', '💡 Pistas disponibles (-10% puntos)', '⏸️ Puedes pausar 1 vez (30s)', '🎯 60% para aprobar']
+      time: 10,
+      description: '5 preguntas - 2 min por pregunta',
+      details: 'Modo tranquilo para principiantes',
+      features: ['⏸️ Pausa ilimitada disponible', '✓ Feedback inmediato', '🎯 60% para aprobar']
     },
     {
       value: 'medium',
       label: 'Normal',
       emoji: '🟡',
-      time: 18,
-      description: '10 preguntas - 1:48 por pregunta',
-      details: 'Ritmo moderado con respuestas finales',
-      features: ['✓ Ves si acertaste inmediatamente', '🔒 Las respuestas se bloquean', '🔥 Bonus por rachas (3+)', '🎯 70% para aprobar']
+      time: 10,
+      description: '8 preguntas - 1:15 por pregunta',
+      details: 'Ritmo moderado sin presión',
+      features: ['✓ Feedback inmediato', '⏱️ Sin pausa', '🎯 70% para aprobar']
     },
     {
       value: 'hard',
       label: 'Difícil',
       emoji: '🟠',
-      time: 12,
-      description: '12 preguntas - 1:12 por pregunta',
+      time: 10,
+      description: '10 preguntas - 1 min por pregunta',
       details: 'Sistema de vidas: 2 errores permitidos',
-      features: ['💀 2 vidas (3er error = Game Over)', '✓ Ves si acertaste inmediatamente', '🔒 Las respuestas se bloquean', '🔥 Bonus por rachas (5+)', '🎯 75% para aprobar']
+      features: ['💀 2 vidas (3er error = Game Over)', '✓ Feedback inmediato', '⏱️ Sin pausa', '🎯 75% para aprobar']
     },
     {
       value: 'extreme',
       label: 'Extremo',
       emoji: '🔴',
       time: 10,
-      description: '15 preguntas - 40s por pregunta',
-      details: 'Máximo desafío: 1 vida + tiempo extra por acierto',
-      features: ['💀 1 vida (2do error = Game Over)', '✓ Ves si acertaste inmediatamente', '🔒 Las respuestas se bloquean', '⏱️ +5s por respuesta correcta', '🎯 80% para aprobar']
+      description: '12 preguntas - 50s por pregunta',
+      details: 'Máximo desafío: 1 vida + tiempo extra',
+      features: ['💀 1 vida (2do error = Game Over)', '⏱️ +5s por respuesta correcta', '✓ Feedback inmediato', '🎯 80% para aprobar']
     }
   ];
 

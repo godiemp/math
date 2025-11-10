@@ -40,8 +40,6 @@ export default function RapidFireQuiz({
   const [totalTimeElapsed, setTotalTimeElapsed] = useState(0);
   const [quizSessionId] = useState(generateQuizSessionId);
   const [aiConversation] = useState<Array<{ role: string; message: string; timestamp: number }>>([]);
-  const [showStreakNotification, setShowStreakNotification] = useState(false);
-  const [streakNotificationValue, setStreakNotificationValue] = useState(0);
 
   // Rapid Fire state
   const [rapidFireState, setRapidFireState] = useState<RapidFireState>({
@@ -162,26 +160,11 @@ export default function RapidFireQuiz({
       const newState = { ...prev };
 
       if (isCorrect) {
-        newState.currentStreak = prev.currentStreak + 1;
-        newState.longestStreak = Math.max(prev.longestStreak, newState.currentStreak);
-
-        // Show streak notification occasionally (at milestones: 3, 5, 10, 15, 20, etc.)
-        const shouldShowStreak = newState.currentStreak === 3 ||
-                                 newState.currentStreak === 5 ||
-                                 newState.currentStreak % 5 === 0;
-
-        if (shouldShowStreak) {
-          setStreakNotificationValue(newState.currentStreak);
-          setShowStreakNotification(true);
-          setTimeout(() => setShowStreakNotification(false), 2000);
-        }
-
         // Extreme mode: add time back
         if (difficulty === 'extreme' && 'timeBackPerCorrect' in config && config.timeBackPerCorrect) {
           setTimeRemaining(time => time + config.timeBackPerCorrect);
         }
       } else {
-        newState.currentStreak = 0;
         newState.wrongAnswerCount = prev.wrongAnswerCount + 1;
 
         // Check lives system - GAME OVER
@@ -226,7 +209,7 @@ export default function RapidFireQuiz({
     }));
   };
 
-  const calculateRapidFireScore = (): RapidFireScore => {
+  const calculateRapidFireSummary = () => {
     let correctCount = 0;
     quizQuestions.forEach((question, index) => {
       if (userAnswers[index] === question.correctAnswer) {
@@ -234,55 +217,14 @@ export default function RapidFireQuiz({
       }
     });
 
-    const basePoints = correctCount * config.pointsPerCorrect;
-
-    // Speed bonus
-    const timeAllocated = config.timeLimit;
-    const timeSaved = Math.max(0, timeAllocated - totalTimeElapsed);
-    const speedBonus = Math.floor(timeSaved / 10) * config.speedBonusPerTenSeconds;
-
-    // Streak bonus
-    let streakBonus = 0;
-    if (config.streakBonusEnabled) {
-      if (difficulty === 'extreme' && 'streakBonusThresholds' in config) {
-        config.streakBonusThresholds.forEach(({ threshold, points }) => {
-          if (rapidFireState.longestStreak >= threshold) {
-            streakBonus = Math.max(streakBonus, points);
-          }
-        });
-      } else if ('streakBonusThreshold' in config && 'streakBonusPoints' in config) {
-        if (rapidFireState.longestStreak >= config.streakBonusThreshold) {
-          streakBonus = config.streakBonusPoints;
-        }
-      }
-    }
-
-    // Perfect bonus
-    const isPerfect = correctCount === quizQuestions.length;
-    const perfectBonus = isPerfect ? config.perfectBonus : 0;
-
-    // Hint penalty removed
-    const hintPenalty = 0;
-
-    // Total
-    const totalPoints = Math.max(0, basePoints + speedBonus + streakBonus + perfectBonus - hintPenalty);
-
-    // Check if passed
     const accuracy = (correctCount / quizQuestions.length) * 100;
     const passed = accuracy >= config.passingPercentage;
 
     return {
-      basePoints,
-      speedBonus,
-      streakBonus,
-      perfectBonus,
-      hintPenalty,
-      totalPoints,
       correctAnswers: correctCount,
       totalQuestions: quizQuestions.length,
       accuracy,
       timeUsed: totalTimeElapsed,
-      timeSaved,
       passed,
     };
   };
@@ -386,7 +328,7 @@ export default function RapidFireQuiz({
 
   // Completion screen
   if (quizSubmitted && currentQuestionIndex === quizQuestions.length) {
-    const rapidFireScore = calculateRapidFireScore();
+    const summary = calculateRapidFireSummary();
 
     return (
       <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
@@ -396,52 +338,15 @@ export default function RapidFireQuiz({
 
         <div className="mb-8">
           <div className="text-center mb-6">
-            <div className={`text-7xl font-black mb-4 ${rapidFireScore.passed ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-              {Math.round(rapidFireScore.totalPoints)}
+            <div className={`text-7xl font-black mb-4 ${summary.passed ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+              {summary.correctAnswers}/{summary.totalQuestions}
             </div>
             <p className="text-2xl font-bold text-gray-700 dark:text-gray-300">
-              {rapidFireScore.passed ? '✅ ¡Aprobado!' : '❌ No Aprobado'}
+              {summary.passed ? '✅ ¡Aprobado!' : '❌ No Aprobado'}
             </p>
             <p className="text-lg text-gray-600 dark:text-gray-400 mt-2">
-              {rapidFireScore.accuracy.toFixed(1)}% precisión • {formatTime(rapidFireScore.timeUsed)} usado
+              {summary.accuracy.toFixed(1)}% precisión • {formatTime(summary.timeUsed)} usado
             </p>
-          </div>
-
-          {/* Score Breakdown */}
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-lg p-4 border border-purple-200 dark:border-purple-700 space-y-2">
-            <h3 className="font-bold text-lg text-purple-900 dark:text-purple-100 mb-3">📊 Desglose de Puntuación</h3>
-
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-700 dark:text-gray-300">Puntos base ({rapidFireScore.correctAnswers}/{rapidFireScore.totalQuestions} correctas)</span>
-              <span className="font-bold text-green-600 dark:text-green-400">+{rapidFireScore.basePoints}</span>
-            </div>
-
-            {rapidFireScore.speedBonus > 0 && (
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700 dark:text-gray-300">⚡ Bonus de velocidad ({formatTime(rapidFireScore.timeSaved)} ahorrado)</span>
-                <span className="font-bold text-blue-600 dark:text-blue-400">+{rapidFireScore.speedBonus}</span>
-              </div>
-            )}
-
-            {rapidFireScore.streakBonus > 0 && (
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700 dark:text-gray-300">🔥 Bonus de racha (mejor: {rapidFireState.longestStreak})</span>
-                <span className="font-bold text-orange-600 dark:text-orange-400">+{rapidFireScore.streakBonus}</span>
-              </div>
-            )}
-
-            {rapidFireScore.perfectBonus > 0 && (
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700 dark:text-gray-300">⭐ Bonus perfecto</span>
-                <span className="font-bold text-yellow-600 dark:text-yellow-400">+{rapidFireScore.perfectBonus}</span>
-              </div>
-            )}
-
-
-            <div className="pt-2 mt-2 border-t border-purple-300 dark:border-purple-600 flex justify-between">
-              <span className="font-bold text-purple-900 dark:text-purple-100">Total</span>
-              <span className="font-bold text-2xl text-purple-600 dark:text-purple-400">{Math.round(rapidFireScore.totalPoints)}</span>
-            </div>
           </div>
         </div>
 
@@ -522,98 +427,16 @@ export default function RapidFireQuiz({
       style={{
         boxShadow: '0 0 60px rgba(139, 92, 246, 0.3), 0 20px 40px rgba(0, 0, 0, 0.2)',
       }}>
-      {/* Rapid Fire Stats and Timer */}
-      {!quizSubmitted && (
-        <div className="mb-6 space-y-3">
-          {/* Timer */}
-          {showTimer ? (
-            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-lg border border-purple-200 dark:border-purple-700">
-              <div className="flex items-center gap-2">
-                <span className="text-base">⚡</span>
-                <span className={`text-base font-bold ${getTimerColor(timeRemaining, config.timeLimit)}`}>
-                  {formatTime(timeRemaining)}
-                </span>
-              </div>
-              <button
-                onClick={toggleTimer}
-                className="text-xs text-purple-500 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-semibold"
-                title="Ocultar timer"
-              >
-                ✕
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={toggleTimer}
-              className="text-sm text-purple-500 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 underline font-semibold"
-              title="Mostrar timer"
-            >
-              ⚡ Mostrar tiempo
-            </button>
-          )}
-
-          {/* Rapid Fire Stats Bar */}
-          <div className="flex items-center justify-between gap-4 p-3 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 rounded-lg border border-indigo-200 dark:border-indigo-700">
-            {/* Lives */}
-            {config.livesSystem && (
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Vidas:</span>
-                <div className="flex gap-1">
-                  {Array.from({ length: config.maxWrongAnswers }).map((_, i) => (
-                    <span key={i} className={`text-lg ${i < rapidFireState.livesRemaining ? 'text-red-500' : 'text-gray-300 dark:text-gray-600'}`}>
-                      ❤️
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Pause Button - Always available */}
-          {!rapidFireState.isPaused && (
-            <button
-              onClick={handlePause}
-              className="w-full bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors"
-            >
-              ⏸️ Pausar Quiz
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* Progress bar */}
+      {/* Question topic and progress */}
       <div className="mb-6">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-semibold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
             {currentQuestion.topic}
           </span>
           <span data-testid="question-counter" className="text-sm text-gray-600 dark:text-gray-400">
-            Pregunta {currentQuestionIndex + 1} de {quizQuestions.length}
+            {currentQuestionIndex + 1}/{quizQuestions.length}
           </span>
         </div>
-        <div className="w-full rounded-full h-2 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600">
-          <div
-            className="h-2 rounded-full transition-all duration-300 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600"
-            style={{
-              width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`,
-              boxShadow: '0 0 10px rgba(139, 92, 246, 0.5)'
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Difficulty badge */}
-      <div className="mb-8">
-        <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4 shadow-md ${
-          currentQuestion.difficulty === 'easy'
-            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-            : currentQuestion.difficulty === 'medium'
-            ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-        }`}>
-          {currentQuestion.difficulty === 'easy' ? '🟢 Fácil' :
-           currentQuestion.difficulty === 'medium' ? '🟡 Media' : '🔴 Difícil'}
-        </span>
       </div>
 
       {/* Question Renderer */}
@@ -654,13 +477,6 @@ export default function RapidFireQuiz({
           )}
         </div>
       )}
-
-      {/* Auto-advance message */}
-      {!quizSubmitted && (
-        <div className="mt-8 text-center text-sm text-purple-200 dark:text-purple-300 bg-purple-900/30 rounded-lg p-3">
-          💡 Responde cada pregunta y avanza automáticamente. El quiz se enviará al terminar.
-        </div>
-      )}
     </div>
   );
 
@@ -671,6 +487,67 @@ export default function RapidFireQuiz({
           {questionContent}
         </div>
       </div>
+
+      {/* External Game Elements - Only during active quiz */}
+      {!quizSubmitted && (
+        <>
+          {/* Timer - Top Left */}
+          <div className="fixed top-4 left-4 z-40">
+            <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">⚡</span>
+                <span className={`text-xl font-bold ${getTimerColor(timeRemaining, config.timeLimit)}`}>
+                  {formatTime(timeRemaining)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Lives - Top Center */}
+          {config.livesSystem && (
+            <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-40">
+              <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20">
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: config.maxWrongAnswers }).map((_, i) => (
+                    <span
+                      key={i}
+                      className={`text-2xl transition-all ${i < rapidFireState.livesRemaining ? 'text-red-500 scale-100' : 'text-gray-300 dark:text-gray-600 scale-75 opacity-50'}`}
+                    >
+                      ❤️
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Pause Button - Top Right (only in easy mode) */}
+          {config.pauseAllowed && !rapidFireState.isPaused && (
+            <div className="fixed top-4 right-4 z-40">
+              <button
+                onClick={handlePause}
+                className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20 hover:scale-105 transition-transform"
+              >
+                <span className="text-2xl">⏸️</span>
+              </button>
+            </div>
+          )}
+
+          {/* Progress Bar - Bottom */}
+          <div className="fixed bottom-4 left-4 right-4 z-40">
+            <div className="max-w-3xl mx-auto">
+              <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-full h-2 shadow-xl overflow-hidden">
+                <div
+                  className="h-full transition-all duration-300 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500"
+                  style={{
+                    width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Pause Overlay */}
       {rapidFireState.isPaused && (
@@ -698,52 +575,21 @@ export default function RapidFireQuiz({
         </div>
       )}
 
-      {/* Game Over Overlay */}
+      {/* Game Over Overlay - Simple version */}
       {config.livesSystem && rapidFireState.livesRemaining === 0 && !quizSubmitted && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 animate-fadeIn">
-          <div className="text-center px-4">
-            <div
-              className="text-9xl mb-6 animate-pulse"
-              style={{
-                animation: 'pulse 1s ease-in-out infinite',
-                textShadow: '0 0 40px rgba(239, 68, 68, 0.8)'
-              }}
-            >
-              💀
-            </div>
-            <h2
-              className="text-7xl font-black text-red-500 mb-4"
-              style={{
-                textShadow: '0 0 30px rgba(239, 68, 68, 0.6), 0 0 60px rgba(239, 68, 68, 0.4)',
-                animation: 'pulse 1.5s ease-in-out infinite'
-              }}
-            >
-              GAME OVER
-            </h2>
-            <p className="text-3xl text-white/90 mb-2">
-              Te quedaste sin vidas
-            </p>
-            <p className="text-xl text-white/60">
-              Enviando resultados...
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Streak Notification */}
-      {showStreakNotification && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-          <div
-            className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-6 rounded-2xl shadow-2xl"
-            style={{
-              animation: 'scale-in 0.3s ease-out',
-              boxShadow: '0 0 60px rgba(249, 115, 22, 0.6), 0 20px 40px rgba(0, 0, 0, 0.3)'
-            }}
-          >
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
             <div className="text-center">
-              <div className="text-6xl mb-2">🔥</div>
-              <div className="text-4xl font-black mb-1">¡RACHA!</div>
-              <div className="text-5xl font-black">{streakNotificationValue}</div>
+              <div className="text-6xl mb-4">💀</div>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
+                Sin Vidas
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 mb-2">
+                Se acabaron las oportunidades
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-500">
+                Finalizando quiz...
+              </p>
             </div>
           </div>
         </div>
