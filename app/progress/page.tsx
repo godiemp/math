@@ -150,7 +150,7 @@ function ProgressPageContent() {
     }
   };
 
-  // Group attempts into quiz sessions using quizSessionId
+  // Group attempts into quiz sessions using quizSessionId (with fallback to time-based grouping)
   const groupIntoQuizSessions = (attempts: QuestionAttempt[]) => {
     if (attempts.length === 0) return [];
 
@@ -166,33 +166,79 @@ function ProgressPageContent() {
       totalCount: number;
     }> = [];
 
-    // Group by quizSessionId
+    // Separate attempts with and without quizSessionId
+    const attemptsWithSession = sorted.filter(a => a.quizSessionId);
+    const attemptsWithoutSession = sorted.filter(a => !a.quizSessionId);
+
+    // Group attempts that have quizSessionId
     const sessionMap = new Map<string, QuestionAttempt[]>();
-
-    for (const attempt of sorted) {
-      // Use quizSessionId if available, otherwise create a session per question (old data)
-      const sessionId = attempt.quizSessionId || `legacy-${attempt.questionId}-${attempt.timestamp}`;
-
+    for (const attempt of attemptsWithSession) {
+      const sessionId = attempt.quizSessionId!;
       if (!sessionMap.has(sessionId)) {
         sessionMap.set(sessionId, []);
       }
       sessionMap.get(sessionId)!.push(attempt);
     }
 
-    // Convert map to sessions array
+    // Convert to sessions array
     for (const [sessionId, sessionAttempts] of sessionMap.entries()) {
-      // Sort attempts within session by timestamp (earliest first for startTime)
       const sortedAttempts = sessionAttempts.sort((a, b) => a.timestamp - b.timestamp);
       const correct = sortedAttempts.filter(a => a.isCorrect).length;
 
       sessions.push({
         id: sessionId,
         attempts: sortedAttempts,
-        startTime: sortedAttempts[0].timestamp, // Earliest timestamp in session
+        startTime: sortedAttempts[0].timestamp,
         level: sortedAttempts[0].level,
         correctCount: correct,
         totalCount: sortedAttempts.length,
       });
+    }
+
+    // For old attempts without quizSessionId, use time-based grouping with size cap
+    if (attemptsWithoutSession.length > 0) {
+      const MAX_QUIZ_SIZE = 20;
+      let currentSession: QuestionAttempt[] = [attemptsWithoutSession[0]];
+
+      for (let i = 1; i < attemptsWithoutSession.length; i++) {
+        const timeDiff = Math.abs(attemptsWithoutSession[i].timestamp - attemptsWithoutSession[i - 1].timestamp);
+
+        // If within 2 minutes, same level, AND under the max size cap, add to current session
+        if (timeDiff < 120000 &&
+            attemptsWithoutSession[i].level === attemptsWithoutSession[i - 1].level &&
+            currentSession.length < MAX_QUIZ_SIZE) {
+          currentSession.push(attemptsWithoutSession[i]);
+        } else {
+          // Save current session and start new one
+          if (currentSession.length > 0) {
+            const sortedAttempts = currentSession.sort((a, b) => a.timestamp - b.timestamp);
+            const correct = sortedAttempts.filter(a => a.isCorrect).length;
+            sessions.push({
+              id: `legacy-${sortedAttempts[0].timestamp}`,
+              attempts: sortedAttempts,
+              startTime: sortedAttempts[0].timestamp,
+              level: sortedAttempts[0].level,
+              correctCount: correct,
+              totalCount: sortedAttempts.length,
+            });
+          }
+          currentSession = [attemptsWithoutSession[i]];
+        }
+      }
+
+      // Add last session
+      if (currentSession.length > 0) {
+        const sortedAttempts = currentSession.sort((a, b) => a.timestamp - b.timestamp);
+        const correct = sortedAttempts.filter(a => a.isCorrect).length;
+        sessions.push({
+          id: `legacy-${sortedAttempts[0].timestamp}`,
+          attempts: sortedAttempts,
+          startTime: sortedAttempts[0].timestamp,
+          level: sortedAttempts[0].level,
+          correctCount: correct,
+          totalCount: sortedAttempts.length,
+        });
+      }
     }
 
     // Sort sessions by start time (most recent first)
