@@ -55,6 +55,9 @@ export default function RapidFireQuiz({
     pauseTimeRemaining: 0,
   });
 
+  // Menu state
+  const [showMenu, setShowMenu] = useState(false);
+
   // Use shared hooks
   const {
     quizQuestions,
@@ -196,6 +199,7 @@ export default function RapidFireQuiz({
   // General pause - unlimited use for real-life interruptions (helping at home, etc.)
 
   const handlePause = () => {
+    setShowMenu(false);
     setRapidFireState(prev => ({
       ...prev,
       isPaused: true,
@@ -207,6 +211,12 @@ export default function RapidFireQuiz({
       ...prev,
       isPaused: false,
     }));
+  };
+
+  const handleExitSession = () => {
+    if (confirm('¿Estás seguro de que quieres salir? Se perderá el progreso actual.')) {
+      window.location.href = '/dashboard';
+    }
   };
 
   const calculateRapidFireSummary = () => {
@@ -423,7 +433,7 @@ export default function RapidFireQuiz({
   const showFeedback = quizSubmitted || userAnswer !== null;
 
   const questionContent = (
-    <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8 animate-fadeIn"
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8 animate-fadeIn"
       style={{
         boxShadow: '0 0 60px rgba(139, 92, 246, 0.3), 0 20px 40px rgba(0, 0, 0, 0.2)',
       }}>
@@ -487,7 +497,7 @@ export default function RapidFireQuiz({
         {/* Centered Layout Container */}
         <div className="min-h-screen flex items-center justify-center px-4 py-6">
           <div className="w-full max-w-5xl">
-            {/* Mobile: Timer and Pause in same row at top */}
+            {/* Mobile: Timer and Menu in same row at top */}
             {!quizSubmitted && (
               <div className="flex md:hidden justify-center items-center gap-3 mb-4">
                 {/* Timer - Mobile */}
@@ -500,15 +510,43 @@ export default function RapidFireQuiz({
                   </div>
                 </div>
 
-                {/* Pause Button - Mobile (only in easy mode) */}
-                {config.pauseAllowed && !rapidFireState.isPaused && (
+                {/* Menu Button - Mobile */}
+                <div className="relative">
                   <button
-                    onClick={handlePause}
+                    onClick={() => setShowMenu(!showMenu)}
                     className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20 hover:scale-105 transition-transform"
                   >
-                    <span className="text-2xl">⏸️</span>
+                    <span className="text-2xl">⋮</span>
                   </button>
-                )}
+
+                  {/* Dropdown Menu */}
+                  {showMenu && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-40"
+                        onClick={() => setShowMenu(false)}
+                      />
+                      <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
+                        {config.pauseAllowed && (
+                          <button
+                            onClick={handlePause}
+                            className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 text-gray-900 dark:text-white transition-colors"
+                          >
+                            <span className="text-xl">⏸️</span>
+                            <span className="font-medium">Pausar</span>
+                          </button>
+                        )}
+                        <button
+                          onClick={handleExitSession}
+                          className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 text-red-600 dark:text-red-400 transition-colors"
+                        >
+                          <span className="text-xl">🚪</span>
+                          <span className="font-medium">Salir</span>
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             )}
 
@@ -530,7 +568,7 @@ export default function RapidFireQuiz({
               </div>
             )}
 
-            {/* Desktop: Main game area with timer, question card, and pause */}
+            {/* Desktop: Main game area with timer, question card, and menu */}
             <div className="flex items-start gap-4 mb-4">
               {/* Timer - Left of card (Desktop only) */}
               {!quizSubmitted && (
@@ -551,15 +589,43 @@ export default function RapidFireQuiz({
                 {questionContent}
               </div>
 
-              {/* Pause Button - Right of card (Desktop only, only in easy mode) */}
-              {!quizSubmitted && config.pauseAllowed && !rapidFireState.isPaused && (
-                <div className="hidden md:block flex-shrink-0 pt-2">
+              {/* Menu Button - Right of card (Desktop only) */}
+              {!quizSubmitted && (
+                <div className="hidden md:block flex-shrink-0 pt-2 relative">
                   <button
-                    onClick={handlePause}
+                    onClick={() => setShowMenu(!showMenu)}
                     className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20 hover:scale-105 transition-transform"
                   >
-                    <span className="text-2xl">⏸️</span>
+                    <span className="text-2xl">⋮</span>
                   </button>
+
+                  {/* Dropdown Menu */}
+                  {showMenu && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-40"
+                        onClick={() => setShowMenu(false)}
+                      />
+                      <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
+                        {config.pauseAllowed && (
+                          <button
+                            onClick={handlePause}
+                            className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 text-gray-900 dark:text-white transition-colors"
+                          >
+                            <span className="text-xl">⏸️</span>
+                            <span className="font-medium">Pausar</span>
+                          </button>
+                        )}
+                        <button
+                          onClick={handleExitSession}
+                          className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 text-red-600 dark:text-red-400 transition-colors"
+                        >
+                          <span className="text-xl">🚪</span>
+                          <span className="font-medium">Salir</span>
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -589,14 +655,12 @@ export default function RapidFireQuiz({
                   </div>
                 </div>
 
-                {/* Invisible spacer to match pause button width (Desktop only) */}
-                {config.pauseAllowed && (
-                  <div className="hidden md:block flex-shrink-0 pt-2">
-                    <div className="invisible bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20">
-                      <span className="text-2xl">⏸️</span>
-                    </div>
+                {/* Invisible spacer to match menu button width (Desktop only) */}
+                <div className="hidden md:block flex-shrink-0 pt-2">
+                  <div className="invisible bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20">
+                    <span className="text-2xl">⋮</span>
                   </div>
-                )}
+                </div>
               </div>
             )}
           </div>
