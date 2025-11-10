@@ -13,24 +13,15 @@ export default function Footer() {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    console.log('showInfoModal state changed:', showInfoModal);
-  }, [showInfoModal]);
-
   const handleOpenModal = (e?: React.MouseEvent) => {
-    console.log('handleOpenModal called!', e);
     e?.preventDefault();
     e?.stopPropagation();
-    console.log('Setting showInfoModal to true');
     setShowInfoModal(true);
   };
 
   const handleCloseModal = () => {
-    console.log('Closing modal');
     setShowInfoModal(false);
   };
-
-  console.log('Footer render - showInfoModal:', showInfoModal, 'mounted:', mounted);
 
   // Modal content
   const modalContent = showInfoModal && mounted ? (
@@ -229,12 +220,7 @@ export default function Footer() {
       >
         <div className="flex justify-center items-center gap-2">
           <button
-            onClick={(e) => {
-              console.log('BUTTON ONCLICK FIRED!');
-              handleOpenModal(e);
-            }}
-            onMouseDown={() => console.log('BUTTON MOUSEDOWN')}
-            onTouchStart={() => console.log('BUTTON TOUCHSTART')}
+            onClick={handleOpenModal}
             className="spring-motion flex items-center gap-2"
             type="button"
             style={{
