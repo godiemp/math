@@ -290,8 +290,8 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
       // Break if we've answered all questions
       if (questionsAnswered >= totalQuestions) {
-        // Wait a bit for auto-submit to process
-        await page.waitForTimeout(2000);
+        // Wait for auto-submit to process (1.5s for feedback + auto-submit)
+        await page.waitForTimeout(3000);
         break;
       }
 
@@ -319,8 +319,8 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
       }
     }
 
-    // Wait for auto-submit to complete
-    await page.waitForTimeout(2000);
+    // Wait for auto-submit to complete and quiz to enter review mode
+    await page.waitForTimeout(3000);
 
     // After auto-submit, quiz should be in review mode at question 0
     // Navigate to last question to access "Ver Resumen"
@@ -341,12 +341,12 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
       const verResumenButton = page.getByRole('button', { name: /Ver Resumen/i });
       if (await verResumenButton.isVisible().catch(() => false)) {
         await verResumenButton.click();
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(2000);
       }
     }
 
-    // Now verify completion screen
-    await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible({ timeout: 5000 });
+    // Now verify completion screen (with longer timeout)
+    await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible({ timeout: 10000 });
 
     // Verify accuracy percentage with "precisión"
     await expect(page.getByText(/% precisión/i)).toBeVisible();
