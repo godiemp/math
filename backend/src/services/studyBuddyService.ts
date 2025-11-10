@@ -5,8 +5,10 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { pool } from '../config/database';
 
 interface UserData {
+  userId?: string; // Optional for backwards compatibility, required for database tools
   displayName: string;
   currentStreak: number;
   longestStreak: number;
@@ -216,6 +218,30 @@ const STUDY_BUDDY_TOOLS: Anthropic.Tool[] = [
       properties: {},
       required: []
     }
+  },
+  {
+    name: "get_recent_questions",
+    description: "Get details about recently answered questions including the actual questions, user's answers, and whether they got them right or wrong. Use this when the student asks about recent questions, wants to review mistakes, or asks what they got wrong.",
+    input_schema: {
+      type: "object",
+      properties: {
+        limit: {
+          type: "number",
+          description: "Number of recent questions to retrieve (default: 10, max: 50)"
+        },
+        filter: {
+          type: "string",
+          enum: ["all", "correct", "incorrect"],
+          description: "Filter by correctness: 'all' for all questions, 'correct' for only correct answers, 'incorrect' for only mistakes"
+        },
+        subject: {
+          type: "string",
+          enum: ["números", "álgebra", "geometría", "probabilidad"],
+          description: "Filter by specific subject/topic (optional)"
+        }
+      },
+      required: []
+    }
   }
 ];
 
@@ -420,15 +446,113 @@ function executeGetStreakInsights(userData: UserData): string {
   return JSON.stringify(insights);
 }
 
+async function executeGetRecentQuestions(
+  limit: number = 10,
+  filter: string = "all",
+  subject: string | undefined,
+  userData: UserData
+): Promise<string> {
+  if (!userData.userId) {
+    return "Error: No se pudo identificar al usuario para obtener preguntas recientes.";
+  }
+
+  try {
+    // Build query
+    let query = `
+      SELECT
+        qa.question_id,
+        qa.subject,
+        qa.difficulty,
+        qa.user_answer,
+        qa.correct_answer,
+        qa.is_correct,
+        qa.quiz_mode,
+        qa.time_spent_seconds,
+        qa.attempted_at,
+        q.question as question_text,
+        q.options,
+        q.explanation
+      FROM question_attempts qa
+      LEFT JOIN questions q ON qa.question_id = q.id
+      WHERE qa.user_id = $1
+    `;
+
+    const params: any[] = [userData.userId];
+    let paramIndex = 2;
+
+    // Add filter for correct/incorrect
+    if (filter === "correct") {
+      query += ` AND qa.is_correct = true`;
+    } else if (filter === "incorrect") {
+      query += ` AND qa.is_correct = false`;
+    }
+
+    // Add subject filter
+    if (subject) {
+      query += ` AND qa.subject = $${paramIndex}`;
+      params.push(subject);
+      paramIndex++;
+    }
+
+    // Order by most recent and limit
+    const safeLimit = Math.min(Math.max(1, limit), 50); // Between 1 and 50
+    query += ` ORDER BY qa.attempted_at DESC LIMIT $${paramIndex}`;
+    params.push(safeLimit);
+
+    const result = await pool.query(query, params);
+
+    if (result.rows.length === 0) {
+      return JSON.stringify({
+        message: "No se encontraron preguntas con los filtros especificados.",
+        count: 0,
+        questions: []
+      });
+    }
+
+    // Format questions for AI
+    const questions = result.rows.map((row, index) => ({
+      number: index + 1,
+      subject: row.subject,
+      difficulty: row.difficulty,
+      question: row.question_text || "Pregunta no disponible",
+      options: row.options || [],
+      user_answer: row.user_answer,
+      correct_answer: row.correct_answer,
+      is_correct: row.is_correct,
+      explanation: row.explanation || "No disponible",
+      quiz_mode: row.quiz_mode,
+      time_spent: row.time_spent_seconds ? `${row.time_spent_seconds}s` : "N/A",
+      date: new Date(row.attempted_at).toLocaleDateString('es-CL')
+    }));
+
+    const summary = {
+      total_questions: result.rows.length,
+      correct: result.rows.filter(r => r.is_correct).length,
+      incorrect: result.rows.filter(r => !r.is_correct).length,
+      accuracy: ((result.rows.filter(r => r.is_correct).length / result.rows.length) * 100).toFixed(1) + "%",
+      filter_applied: filter,
+      subject_filter: subject || "todas las materias"
+    };
+
+    return JSON.stringify({
+      summary,
+      questions: questions.slice(0, 5) // Only return first 5 with full details to avoid token overflow
+    });
+  } catch (error) {
+    console.error('Error fetching recent questions:', error);
+    return `Error al obtener preguntas recientes: ${error instanceof Error ? error.message : 'Error desconocido'}`;
+  }
+}
+
 /**
  * Execute a tool call
  */
-function executeTool(
+async function executeTool(
   toolName: string,
   toolInput: any,
   userData: UserData,
   progressData: ProgressData
-): string {
+): Promise<string> {
   try {
     switch (toolName) {
       case "get_skill_details":
@@ -454,6 +578,14 @@ function executeTool(
 
       case "get_streak_insights":
         return executeGetStreakInsights(userData);
+
+      case "get_recent_questions":
+        return await executeGetRecentQuestions(
+          toolInput.limit,
+          toolInput.filter,
+          toolInput.subject,
+          userData
+        );
 
       default:
         return `Error: Unknown tool "${toolName}"`;
@@ -651,7 +783,7 @@ Responde SOLO con el JSON, sin markdown ni texto adicional.`;
       if (!toolUseBlock) break;
 
       // Execute the tool
-      const toolResult = executeTool(
+      const toolResult = await executeTool(
         toolUseBlock.name,
         toolUseBlock.input,
         userData,
@@ -817,7 +949,7 @@ Estilo: emojis moderados, trato de "tú", lenguaje chileno natural, empático`;
       if (!toolUseBlock) break;
 
       // Execute the tool
-      const toolResult = executeTool(
+      const toolResult = await executeTool(
         toolUseBlock.name,
         toolUseBlock.input,
         userData,

@@ -55,6 +55,7 @@ export const getGreeting = async (req: AuthRequest, res: Response): Promise<void
       const user = userResult.rows[0];
 
       userData = {
+        userId: userId,
         displayName: user.display_name,
         currentStreak: user.current_streak,
         longestStreak: user.longest_streak,
@@ -144,6 +145,7 @@ export const continueChat = async (req: AuthRequest, res: Response): Promise<voi
       const user = userResult.rows[0];
 
       userData = {
+        userId: userId,
         displayName: user.display_name,
         currentStreak: user.current_streak,
         longestStreak: user.longest_streak,

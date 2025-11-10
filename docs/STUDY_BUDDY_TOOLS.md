@@ -116,6 +116,35 @@ Student: "¿Cómo va mi racha?"
 → Tool returns: {current_streak: 5, longest_streak: 12, status: "A 7 días de tu mejor racha", motivation: "..."}
 ```
 
+### 7. `get_recent_questions`
+**Purpose:** Get details about recently answered questions including the actual questions, user's answers, and correctness
+
+**When to use:** Student asks about recent questions, wants to review mistakes, or asks what they got wrong
+
+**Parameters:**
+- `limit` (number, optional): Number of questions to retrieve (default: 10, max: 50)
+- `filter` (enum, optional): "all", "correct", or "incorrect" - filter by correctness
+- `subject` (enum, optional): "números", "álgebra", "geometría", or "probabilidad" - filter by subject
+
+**Example:**
+```
+Student: "¿Qué preguntas me equivoqué últimamente?"
+→ Tool returns: {
+  summary: {total_questions: 10, correct: 6, incorrect: 4, accuracy: "60.0%"},
+  questions: [
+    {number: 1, subject: "álgebra", question: "...", user_answer: 2, correct_answer: 1, is_correct: false, explanation: "..."},
+    ...
+  ]
+}
+```
+
+**Database Access:**
+This tool queries the `question_attempts` table directly to retrieve:
+- Question text and options (joined from `questions` table)
+- User's answer vs correct answer
+- Time spent, quiz mode, difficulty
+- Date of attempt
+
 ## Technical Implementation
 
 ### Architecture
@@ -144,19 +173,23 @@ return response
 ### Key Files
 
 - **`backend/src/services/studyBuddyService.ts`** - Main implementation
-  - Lines 128-220: Tool definitions
-  - Lines 225-421: Tool execution functions
-  - Lines 426-465: Tool dispatcher
-  - Lines 626-689: Tool handling in `generateGreeting`
-  - Lines 795-869: Tool handling in `continueChat`
+  - Lines 126-244: Tool definitions (7 tools)
+  - Lines 249-545: Tool execution functions
+  - Lines 550-597: Tool dispatcher (async)
+  - Lines 765-825: Tool handling in `generateGreeting`
+  - Lines 930-1005: Tool handling in `continueChat`
+- **`backend/src/controllers/studyBuddyController.ts`** - API endpoints
+  - Updated to pass `userId` in userData for database access
 
 ### Changes from Previous Implementation
 
 | Before | After |
 |--------|-------|
 | `fetch()` to Anthropic API | Anthropic SDK (`@anthropic-ai/sdk`) |
-| No tool support | 6 tools available |
+| No tool support | 7 tools available |
 | Static responses | Dynamic, data-driven responses |
+| No database access | Direct database queries for recent questions |
+| Synchronous tool execution | Async tool execution for database queries |
 | Temperature: 0.8 (greeting), 0.7 (chat) | Same temperatures maintained |
 | Max tokens: 1000 (greeting), 500 (chat) | Max tokens: 1000 (greeting), 1500 (chat) |
 
@@ -229,6 +262,55 @@ El AI Tutor te guía paso a paso sin presión.
 ¿Practicamos ahora? 🎯"
 ```
 
+### Example 4: Review Recent Mistakes
+```
+Student: "¿Qué preguntas me equivoqué hoy?"
+
+Claude uses tool: get_recent_questions
+Parameters: {limit: 10, filter: "incorrect"}
+
+Tool returns: {
+  summary: {
+    total_questions: 5,
+    correct: 0,
+    incorrect: 5,
+    accuracy: "0.0%",
+    filter_applied: "incorrect",
+    subject_filter: "todas las materias"
+  },
+  questions: [
+    {
+      number: 1,
+      subject: "álgebra",
+      difficulty: "medium",
+      question: "Resuelve: 2x + 5 = 15",
+      options: ["x = 5", "x = 10", "x = 7.5", "x = 20"],
+      user_answer: 1,
+      correct_answer: 0,
+      is_correct: false,
+      explanation: "Resta 5 de ambos lados: 2x = 10, luego divide por 2: x = 5",
+      quiz_mode: "rapidfire",
+      time_spent: "45s",
+      date: "10/11/2025"
+    },
+    // ... más preguntas
+  ]
+}
+
+Claude responds: "Hoy fallaste 5 preguntas. Vamos a revisarlas:
+
+1️⃣ Álgebra (dificultad media): '2x + 5 = 15'
+   - Respondiste: x = 10
+   - Correcto: x = 5
+   - Tip: Resta 5 primero (2x = 10), luego divide por 2
+
+2️⃣ [más análisis...]
+
+Veo que 3 de 5 son de Álgebra 📊
+Te recomiendo: 10 preguntas de ecuaciones en Zen Mode con AI Tutor.
+Repasa la técnica paso a paso sin presión. ¿Practicamos ahora? 💪"
+```
+
 ## Benefits
 
 1. **Accuracy** - Real data instead of assumptions
@@ -258,6 +340,8 @@ To test the tools manually:
    - "Dame un plan de estudio" → `generate_study_plan`
    - "¿Qué debería practicar?" → `get_practice_recommendations`
    - "¿Cómo va mi racha?" → `get_streak_insights`
+   - "¿Qué preguntas me equivoqué?" → `get_recent_questions`
+   - "Muéstrame mis últimas preguntas de geometría" → `get_recent_questions` with subject filter
 
 Check backend logs to see which tools are being called.
 
