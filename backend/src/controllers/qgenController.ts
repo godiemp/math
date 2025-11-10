@@ -9,7 +9,7 @@ import { contextLibrary } from '../lib/qgen/contextLibrary';
 import { templateLibrary } from '../lib/qgen/templateLibrary';
 import { goalSkillMappings } from '../lib/qgen/goalSkillMappings';
 import { QGenInput, Level, Subject } from '../lib/types/core';
-import { generateQuestionAnswer } from '../services/aiService';
+import { generateQuestionAnswer, generateCompleteQuestion } from '../services/aiService';
 import { ValueGenerator } from '../lib/qgen/valueGenerator';
 import { getCompatibleGoals } from '../lib/qgen/goalSkillMappings';
 
@@ -116,7 +116,7 @@ export const getTemplates = async (req: Request, res: Response) => {
 };
 
 /**
- * Generate a single complete question with AI
+ * Generate a single complete question with AI (no templates required)
  * POST /api/qgen/generate-single
  */
 export const generateSingleQuestion = async (req: Request, res: Response) => {
@@ -156,87 +156,40 @@ export const generateSingleQuestion = async (req: Request, res: Response) => {
       });
     }
 
-    // Find a compatible context
+    // Optionally find a compatible context for additional guidance
     const compatibleContexts = contextLibrary.filter((ctx) =>
       targetSkills.every((skill) => ctx.compatibleSkills.includes(skill))
     );
 
-    if (compatibleContexts.length === 0) {
-      return res.status(400).json({
-        success: false,
-        error: `No context found that supports all skills: ${targetSkills.join(', ')}`,
-      });
-    }
-
-    const context = compatibleContexts[0];
-
-    // Find compatible goals
-    const compatibleGoals = getCompatibleGoals(targetSkills);
-
-    if (compatibleGoals.length === 0) {
-      return res.status(400).json({
-        success: false,
-        error: `No compatible goals found for skills: ${targetSkills.join(', ')}`,
-      });
-    }
-
-    // Find compatible templates
-    const compatibleTemplates = templateLibrary.filter(
-      (tmpl) =>
-        tmpl.compatibleContexts.includes(context.id) &&
-        tmpl.requiredSkills.some((skill) => targetSkills.includes(skill)) &&
-        compatibleGoals.includes(tmpl.goalId)
-    );
-
-    if (compatibleTemplates.length === 0) {
-      return res.status(400).json({
-        success: false,
-        error: `No compatible templates found`,
-      });
-    }
-
-    // Pick a template (first one for now)
-    const template = compatibleTemplates[0];
-
-    // Generate values for the template
-    const valueGenerator = new ValueGenerator();
-    const values = valueGenerator.generateValuesWithConstraints(
-      template.variables,
-      template.constraints
-    );
-
-    // Fill the template
-    const questionText = valueGenerator.fillTemplate(template.templateText, values);
-    const questionLatex = template.templateLatex
-      ? valueGenerator.fillTemplate(template.templateLatex, values)
+    const contextHint = compatibleContexts.length > 0
+      ? compatibleContexts[0].description
       : undefined;
 
-    // Determine difficulty
+    // Determine difficulty based on number of skills
     const difficulty =
       targetSkills.length === 1 ? 'easy' : targetSkills.length === 2 ? 'medium' : 'hard';
 
-    console.log('Calling AI to generate answer options...');
+    console.log('🤖 Calling AI to generate complete question...');
 
-    // Generate answer options using AI
-    const aiResponse = await generateQuestionAnswer({
-      question: questionText,
-      questionLatex,
-      context: context.description,
-      variables: values,
+    // Generate complete question using AI (no templates!)
+    const aiResponse = await generateCompleteQuestion({
       skills: targetSkills,
+      level,
+      subject,
+      context: contextHint,
       difficulty,
     });
 
-    console.log('AI response received:', aiResponse);
+    console.log('✅ AI response received:', aiResponse);
 
-    // Build the complete question
+    // Build the complete question response
     const completeQuestion = {
       id: `qgen-single-${Date.now()}`,
       level,
       subject,
-      topic: context.name,
-      question: questionText,
-      questionLatex,
+      topic: subject,
+      question: aiResponse.question,
+      questionLatex: aiResponse.questionLatex,
       options: aiResponse.options,
       optionsLatex: aiResponse.optionsLatex,
       correctAnswer: aiResponse.correctAnswer,
@@ -245,14 +198,14 @@ export const generateSingleQuestion = async (req: Request, res: Response) => {
       difficulty,
       skills: targetSkills,
       context: {
-        id: context.id,
-        description: context.description,
+        id: 'ai-generated',
+        description: aiResponse.context,
       },
       template: {
-        id: template.id,
-        name: template.name,
+        id: 'ai-generated',
+        name: 'AI Generated Question',
       },
-      variables: values,
+      variables: aiResponse.variables || {},
       createdAt: Date.now(),
     };
 
@@ -261,7 +214,7 @@ export const generateSingleQuestion = async (req: Request, res: Response) => {
       data: completeQuestion,
     });
   } catch (error: any) {
-    console.error('Error generating single question:', error);
+    console.error('❌ Error generating single question:', error);
     return res.status(500).json({
       success: false,
       error: error.message || 'Failed to generate question',
