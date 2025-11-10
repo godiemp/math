@@ -487,6 +487,31 @@ export default function RapidFireQuiz({
         {/* Centered Layout Container */}
         <div className="min-h-screen flex items-center justify-center px-4 py-6">
           <div className="w-full max-w-5xl">
+            {/* Mobile: Timer and Pause in same row at top */}
+            {!quizSubmitted && (
+              <div className="flex md:hidden justify-center items-center gap-3 mb-4">
+                {/* Timer - Mobile */}
+                <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">⚡</span>
+                    <span className={`text-lg font-bold ${getTimerColor(timeRemaining, config.timeLimit)}`}>
+                      {formatTime(timeRemaining)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Pause Button - Mobile (only in easy mode) */}
+                {config.pauseAllowed && !rapidFireState.isPaused && (
+                  <button
+                    onClick={handlePause}
+                    className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20 hover:scale-105 transition-transform"
+                  >
+                    <span className="text-2xl">⏸️</span>
+                  </button>
+                )}
+              </div>
+            )}
+
             {/* Lives - Above card when applicable */}
             {!quizSubmitted && config.livesSystem && (
               <div className="flex justify-center mb-4">
@@ -505,15 +530,15 @@ export default function RapidFireQuiz({
               </div>
             )}
 
-            {/* Main game area with timer, question card, and pause */}
+            {/* Desktop: Main game area with timer, question card, and pause */}
             <div className="flex items-start gap-4 mb-4">
-              {/* Timer - Left of card */}
+              {/* Timer - Left of card (Desktop only) */}
               {!quizSubmitted && (
-                <div className="flex-shrink-0 pt-2">
-                  <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20">
-                    <div className="flex flex-col items-center gap-1">
+                <div className="hidden md:block flex-shrink-0 pt-2">
+                  <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20">
+                    <div className="flex items-center gap-2">
                       <span className="text-lg">⚡</span>
-                      <span className={`text-xl font-bold ${getTimerColor(timeRemaining, config.timeLimit)}`}>
+                      <span className={`text-lg font-bold ${getTimerColor(timeRemaining, config.timeLimit)}`}>
                         {formatTime(timeRemaining)}
                       </span>
                     </div>
@@ -526,17 +551,14 @@ export default function RapidFireQuiz({
                 {questionContent}
               </div>
 
-              {/* Pause Button - Right of card (only in easy mode) */}
+              {/* Pause Button - Right of card (Desktop only, only in easy mode) */}
               {!quizSubmitted && config.pauseAllowed && !rapidFireState.isPaused && (
-                <div className="flex-shrink-0 pt-2">
+                <div className="hidden md:block flex-shrink-0 pt-2">
                   <button
                     onClick={handlePause}
-                    className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20 hover:scale-105 transition-transform"
+                    className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20 hover:scale-105 transition-transform"
                   >
-                    <div className="flex flex-col items-center gap-1">
-                      <span className="text-2xl">⏸️</span>
-                      <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Pausa</span>
-                    </div>
+                    <span className="text-2xl">⏸️</span>
                   </button>
                 </div>
               )}
@@ -545,12 +567,12 @@ export default function RapidFireQuiz({
             {/* Progress Bar - Below card, aligned with question card width */}
             {!quizSubmitted && (
               <div className="flex items-start gap-4">
-                {/* Invisible spacer to match timer width */}
-                <div className="flex-shrink-0 pt-2">
-                  <div className="invisible bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20">
-                    <div className="flex flex-col items-center gap-1">
+                {/* Invisible spacer to match timer width (Desktop only) */}
+                <div className="hidden md:block flex-shrink-0 pt-2">
+                  <div className="invisible bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20">
+                    <div className="flex items-center gap-2">
                       <span className="text-lg">⚡</span>
-                      <span className="text-xl font-bold">00:00</span>
+                      <span className="text-lg font-bold">00:00</span>
                     </div>
                   </div>
                 </div>
@@ -567,14 +589,11 @@ export default function RapidFireQuiz({
                   </div>
                 </div>
 
-                {/* Invisible spacer to match pause button width */}
+                {/* Invisible spacer to match pause button width (Desktop only) */}
                 {config.pauseAllowed && (
-                  <div className="flex-shrink-0 pt-2">
-                    <div className="invisible bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl border border-white/20">
-                      <div className="flex flex-col items-center gap-1">
-                        <span className="text-2xl">⏸️</span>
-                        <span className="text-xs font-medium">Pausa</span>
-                      </div>
+                  <div className="hidden md:block flex-shrink-0 pt-2">
+                    <div className="invisible bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20">
+                      <span className="text-2xl">⏸️</span>
                     </div>
                   </div>
                 )}
