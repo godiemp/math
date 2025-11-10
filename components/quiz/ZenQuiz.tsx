@@ -503,7 +503,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
   return (
     <>
       <div className="fixed inset-0 bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500 dark:from-teal-800 dark:via-cyan-900 dark:to-blue-900 overflow-y-auto">
-        <div className="min-h-full py-6 px-4 sm:py-8 sm:px-6">
+        <div className="min-h-full py-6 px-4 sm:py-8 sm:px-6 flex items-center justify-center">
           {questionContent}
         </div>
       </div>
