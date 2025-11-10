@@ -12,10 +12,23 @@ import {
   DifficultyLevel,
 } from '../types/abstractProblems';
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy initialization of OpenAI client
+let openaiClient: OpenAI | null = null;
+
+function getOpenAIClient(): OpenAI {
+  if (!openaiClient) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error(
+        'OPENAI_API_KEY environment variable is required to use AI generation features. ' +
+        'The abstract problems system will work without it, but AI generation will not be available.'
+      );
+    }
+    openaiClient = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openaiClient;
+}
 
 // Use latest model (GPT-4 Turbo or GPT-4o)
 const MODEL = 'gpt-4-turbo-preview';
@@ -164,6 +177,7 @@ ${secondary_skills.length > 0 ? `- Secondary Skills: ${secondary_skills.join(', 
 Generate ${count} problem(s) now. Return ONLY the JSON array, no additional text.`;
 
   try {
+    const openai = getOpenAIClient();
     const response = await openai.chat.completions.create({
       model: MODEL,
       messages: [
