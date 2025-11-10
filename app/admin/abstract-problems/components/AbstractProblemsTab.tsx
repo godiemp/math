@@ -47,7 +47,7 @@ export default function AbstractProblemsTab() {
 
       const res = await api.get(`/api/abstract-problems?${params}`);
 
-      if (res.data && 'problems' in res.data) {
+      if (res.data) {
         setProblems((res.data as any).problems || []);
       }
     } catch (error) {
