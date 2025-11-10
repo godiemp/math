@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import type { LiveSession } from '@/lib/types';
 import { QuestionRenderer } from './QuestionRenderer';
-import { Button, Heading, Text, Badge } from '@/components/ui';
 
 interface PreviewSessionProps {
   session: LiveSession;
@@ -16,7 +15,6 @@ export default function PreviewSession({ session, onClose }: PreviewSessionProps
   const [previewAnswers, setPreviewAnswers] = useState<(number | null)[]>(
     new Array(session.questions.length).fill(null)
   );
-  const [showSummary, setShowSummary] = useState(false);
 
   const currentQuestion = session.questions[currentQuestionIndex];
 
@@ -43,220 +41,64 @@ export default function PreviewSession({ session, onClose }: PreviewSessionProps
     }
   };
 
-  const handleSubmit = () => {
-    setShowSummary(true);
-  };
-
-  const answeredCount = previewAnswers.filter(a => a !== null).length;
-  const progressPercentage = ((currentQuestionIndex + 1) / session.questions.length) * 100;
-
-  // If showing summary, render summary view
-  if (showSummary) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Preview Banner */}
-          <div className="mb-4 bg-yellow-100 dark:bg-yellow-900/30 border-2 border-yellow-400 dark:border-yellow-600 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">👁️</span>
-                <div>
-                  <Heading level={3} size="xs" className="text-yellow-900 dark:text-yellow-100">
-                    MODO PREVIEW
-                  </Heading>
-                  <Text size="xs" className="text-yellow-800 dark:text-yellow-200">
-                    Resumen del ensayo - Las respuestas no se guardan en modo preview
-                  </Text>
-                </div>
-              </div>
-              <Button variant="ghost" onClick={onClose} className="text-yellow-900 dark:text-yellow-100">
-                ✕ Cerrar Preview
-              </Button>
-            </div>
-          </div>
-
-          {/* Summary Container */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8">
-            <div className="text-center mb-8">
-              <div className="mb-4">
-                <span className="text-6xl">✅</span>
-              </div>
-              <Heading level={2} size="lg" className="mb-2">
-                Ensayo Completado (Preview)
-              </Heading>
-              <Text variant="secondary">
-                Esta es una vista previa de cómo se vería el resumen al enviar el ensayo
-              </Text>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 text-center">
-                <Text size="sm" variant="secondary" className="mb-1">
-                  Total de Preguntas
-                </Text>
-                <Heading level={3} size="lg">
-                  {session.questions.length}
-                </Heading>
-              </div>
-              <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 text-center">
-                <Text size="sm" variant="secondary" className="mb-1">
-                  Preguntas Respondidas
-                </Text>
-                <Heading level={3} size="lg" className="text-green-600 dark:text-green-400">
-                  {answeredCount}
-                </Heading>
-              </div>
-              <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4 text-center">
-                <Text size="sm" variant="secondary" className="mb-1">
-                  Sin Responder
-                </Text>
-                <Heading level={3} size="lg" className="text-orange-600 dark:text-orange-400">
-                  {session.questions.length - answeredCount}
-                </Heading>
-              </div>
-            </div>
-
-            {/* Question Summary */}
-            <div className="mb-6">
-              <Heading level={3} size="sm" className="mb-4">
-                Resumen de Respuestas:
-              </Heading>
-              <div className="grid grid-cols-10 gap-2">
-                {session.questions.map((_, idx) => (
-                  <div
-                    key={idx}
-                    className={`
-                      aspect-square rounded-lg flex items-center justify-center font-medium text-xs
-                      ${previewAnswers[idx] !== null
-                        ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
-                      }
-                    `}
-                  >
-                    {idx + 1}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="flex flex-col gap-3">
-              <Button
-                variant="secondary"
-                onClick={() => setShowSummary(false)}
-                fullWidth
-              >
-                ← Volver a Revisar Respuestas
-              </Button>
-              <Button
-                variant="primary"
-                onClick={onClose}
-                fullWidth
-              >
-                Cerrar Preview y Volver al Panel Admin
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+  // Active quiz - matching exact student experience from LiveSession.tsx
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
-        {/* Preview Banner */}
+        {/* Preview Banner - ONLY difference from student view */}
         <div className="mb-4 bg-yellow-100 dark:bg-yellow-900/30 border-2 border-yellow-400 dark:border-yellow-600 rounded-lg p-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">👁️</span>
+            <div className="flex items-center gap-2">
+              <span className="text-xl">👁️</span>
               <div>
-                <Heading level={3} size="xs" className="text-yellow-900 dark:text-yellow-100">
+                <p className="text-sm font-bold text-yellow-900 dark:text-yellow-100">
                   MODO PREVIEW
-                </Heading>
-                <Text size="xs" className="text-yellow-800 dark:text-yellow-200">
-                  Esta es una vista previa de cómo verán los estudiantes este ensayo. Las respuestas no se guardarán.
-                </Text>
+                </p>
+                <p className="text-xs text-yellow-800 dark:text-yellow-200">
+                  Esto es exactamente lo que ven los estudiantes
+                </p>
               </div>
             </div>
-            <Button variant="ghost" onClick={onClose} className="text-yellow-900 dark:text-yellow-100">
+            <button
+              onClick={onClose}
+              className="px-3 py-1 text-sm text-yellow-900 dark:text-yellow-100 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded transition-colors"
+            >
               ✕ Cerrar Preview
-            </Button>
+            </button>
           </div>
         </div>
 
-        {/* Main Quiz Container */}
+        {/* Main Quiz Container - EXACT copy from LiveSession.tsx */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8">
           {/* Header */}
           <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
-              <Heading level={2} size="md" className="text-gray-900 dark:text-white">
-                {session.name}
-              </Heading>
-              <div className="flex gap-2">
-                <Badge variant="info" size="sm">
-                  {session.level}
-                </Badge>
-                <Badge variant="neutral" size="sm">
-                  Preview
-                </Badge>
-              </div>
-            </div>
-            {session.description && (
-              <Text size="sm" variant="secondary" className="mb-2">
-                {session.description}
-              </Text>
-            )}
-            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-              <span>Pregunta {currentQuestionIndex + 1} de {session.questions.length}</span>
-              <span>•</span>
-              <span>{answeredCount} respondidas</span>
-              <span>•</span>
-              <span>{session.durationMinutes} minutos</span>
-            </div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {session.name}
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Pregunta {currentQuestionIndex + 1} de {session.questions.length}
+            </p>
           </div>
 
           {/* Progress bar */}
           <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
-              <Text size="xs" variant="secondary">
-                Progreso
-              </Text>
-              <Text size="xs" variant="secondary">
-                {Math.round(progressPercentage)}%
-              </Text>
-            </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
               <div
-                className="bg-gradient-to-r from-indigo-500 to-purple-600 h-3 rounded-full transition-all duration-300 ease-out"
-                style={{ width: `${progressPercentage}%` }}
+                className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${((currentQuestionIndex + 1) / session.questions.length) * 100}%` }}
               />
             </div>
           </div>
 
-          {/* Question metadata */}
-          <div className="mb-4 flex gap-2 flex-wrap">
-            <Badge variant="info" size="sm">
-              {currentQuestion.subject}
-            </Badge>
-            <Badge
-              variant={
-                currentQuestion.difficulty === 'easy' ? 'success' :
-                currentQuestion.difficulty === 'medium' ? 'warning' : 'danger'
-              }
-              size="sm"
-            >
-              {currentQuestion.difficulty === 'easy' ? 'Fácil' :
-               currentQuestion.difficulty === 'medium' ? 'Media' : 'Difícil'}
-            </Badge>
-            <Badge variant="neutral" size="sm">
-              {currentQuestion.topic}
-            </Badge>
-          </div>
-
           {/* Question */}
           <div className="mb-6">
+            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-4">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                {currentQuestion.topic}
+              </h3>
+            </div>
+
+            {/* Use centralized QuestionRenderer */}
             <QuestionRenderer
               question={currentQuestion}
               mode="with-options"
@@ -266,73 +108,23 @@ export default function PreviewSession({ session, onClose }: PreviewSessionProps
             />
           </div>
 
-          {/* Question Navigator Grid (optional - for quick navigation) */}
-          <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-            <Text size="xs" variant="secondary" className="mb-2 font-medium">
-              Navegación rápida:
-            </Text>
-            <div className="grid grid-cols-10 gap-2">
-              {session.questions.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setCurrentQuestionIndex(idx);
-                    setSelectedAnswer(previewAnswers[idx]);
-                  }}
-                  className={`
-                    w-full aspect-square rounded-lg font-medium text-xs transition-all
-                    ${idx === currentQuestionIndex
-                      ? 'bg-indigo-600 text-white ring-2 ring-indigo-400 ring-offset-2'
-                      : previewAnswers[idx] !== null
-                      ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200'
-                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600'
-                    }
-                  `}
-                >
-                  {idx + 1}
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* Navigation */}
-          <div className="flex gap-4">
-            <Button
-              variant="secondary"
+          <div className="flex space-x-4">
+            <button
               onClick={handlePreviousQuestion}
               disabled={currentQuestionIndex === 0}
+              className="px-6 py-3 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              ← Anterior
-            </Button>
+              Anterior
+            </button>
 
-            {currentQuestionIndex < session.questions.length - 1 ? (
-              <Button
-                variant="primary"
-                onClick={handleNextQuestion}
-                className="flex-1"
-              >
-                Siguiente →
-              </Button>
-            ) : (
-              <Button
-                variant="success"
-                onClick={handleSubmit}
-                className="flex-1"
-              >
-                ✓ Enviar Ensayo
-              </Button>
-            )}
-          </div>
-
-          {/* Close button at bottom */}
-          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <Button
-              variant="ghost"
-              onClick={onClose}
-              fullWidth
+            <button
+              onClick={handleNextQuestion}
+              disabled={currentQuestionIndex >= session.questions.length - 1}
+              className="flex-1 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
             >
-              Cerrar Preview y Volver al Panel Admin
-            </Button>
+              {currentQuestionIndex < session.questions.length - 1 ? 'Siguiente' : 'Última pregunta'}
+            </button>
           </div>
         </div>
       </div>
