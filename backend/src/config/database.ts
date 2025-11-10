@@ -501,6 +501,9 @@ export const initializeDatabase = async (): Promise<void> => {
     // ABSTRACT PROBLEMS SYSTEM TABLES
     // ========================================
 
+    // Enable UUID extension for abstract problems system
+    await client.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
+
     // Create abstract_problems table
     await client.query(`
       CREATE TABLE IF NOT EXISTS abstract_problems (
