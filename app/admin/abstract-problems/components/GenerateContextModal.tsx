@@ -43,11 +43,11 @@ export default function GenerateContextModal({
         `/api/context-problems/suggest-contexts/${abstractProblemId}`
       );
 
-      if (res.data?.success && res.data.suggestions) {
-        setSuggestedTypes(res.data.suggestions);
+      if (res.data && (res.data as any).success && (res.data as any).suggestions) {
+        setSuggestedTypes((res.data as any).suggestions);
         // Set first suggestion as default
-        if (res.data.suggestions.length > 0) {
-          setContextType(res.data.suggestions[0]);
+        if ((res.data as any).suggestions.length > 0) {
+          setContextType((res.data as any).suggestions[0]);
         }
       }
     } catch (error) {
@@ -65,8 +65,8 @@ export default function GenerateContextModal({
         save_to_db: true,
       });
 
-      if (res.data?.success) {
-        toast.success(`Generated ${res.data.count} context problem(s)!`);
+      if (res.data && (res.data as any).success) {
+        toast.success(`Generated ${(res.data as any).count} context problem(s)!`);
         onSuccess();
       } else {
         toast.error(res.error?.error || 'Failed to generate context problems');
