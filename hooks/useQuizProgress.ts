@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { Question, QuestionAttempt } from '@/lib/types';
 import { api } from '@/lib/api-client';
 import { isAuthenticated } from '@/lib/auth';
+import { refreshStudyBuddyGreeting } from '@/lib/studyBuddyUtils';
 
 interface UseQuizProgressProps {
   level: 'M1' | 'M2';
@@ -83,6 +84,11 @@ export const useQuizProgress = ({ level }: UseQuizProgressProps) => {
 
     // Save updated history
     localStorage.setItem(historyKey, JSON.stringify(history));
+
+    // Refresh Study Buddy greeting in the background
+    refreshStudyBuddyGreeting().catch(err =>
+      console.error('Failed to refresh Study Buddy greeting:', err)
+    );
 
     // Debug logging
     console.log('📝 Quiz Submitted - Debug Info:');

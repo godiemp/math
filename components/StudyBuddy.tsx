@@ -46,10 +46,56 @@ export function StudyBuddy({ className = '' }: StudyBuddyProps) {
 
   useEffect(() => {
     loadGreeting();
+
+    // Also refresh in background to check if cache is stale
+    const checkForUpdates = async () => {
+      const cachedGreeting = localStorage.getItem('study-buddy-greeting');
+      const m1History = localStorage.getItem('paes-history-M1');
+      const m2History = localStorage.getItem('paes-history-M2');
+
+      const totalQuestions = (m1History ? JSON.parse(m1History).length : 0) +
+                            (m2History ? JSON.parse(m2History).length : 0);
+
+      if (cachedGreeting) {
+        const cached = JSON.parse(cachedGreeting);
+        const cachedQuestionCount = cached.contextData?.totalQuestionsAnswered || 0;
+
+        // If question count has changed, refresh the greeting
+        if (totalQuestions !== cachedQuestionCount) {
+          console.log('🤖 Study Buddy - Cache is stale, refreshing in background...');
+          loadGreeting(true);
+        }
+      }
+    };
+
+    // Check after a short delay to not block initial render
+    setTimeout(checkForUpdates, 1000);
   }, []);
 
-  const loadGreeting = async () => {
+  const loadGreeting = async (forceRefresh = false) => {
     try {
+      // Check for cached greeting first (unless forcing refresh)
+      if (!forceRefresh) {
+        const cachedGreeting = localStorage.getItem('study-buddy-greeting');
+        if (cachedGreeting) {
+          try {
+            const parsed = JSON.parse(cachedGreeting);
+            setGreetingData(parsed.greetingData);
+            setContextData(parsed.contextData);
+            setMessages([
+              {
+                role: 'assistant',
+                content: `${parsed.greetingData.greeting}\n\n${parsed.greetingData.encouragement}\n\n${parsed.greetingData.conversationStarter}`
+              }
+            ]);
+            setIsLoading(false);
+            return;
+          } catch (e) {
+            console.error('Failed to parse cached greeting:', e);
+          }
+        }
+      }
+
       setIsLoading(true);
 
       // Gather progress data from localStorage
@@ -155,24 +201,55 @@ export function StudyBuddy({ className = '' }: StudyBuddyProps) {
             content: `${response.data.greeting}\n\n${response.data.encouragement}\n\n${response.data.conversationStarter}`
           }
         ]);
+
+        // Cache the greeting in localStorage
+        localStorage.setItem('study-buddy-greeting', JSON.stringify({
+          greetingData: response.data,
+          contextData: progressDataPayload,
+          timestamp: Date.now()
+        }));
       }
     } catch (error) {
       console.error('Error loading greeting:', error);
-      // Fallback greeting
-      setGreetingData({
-        greeting: '¡Hola! 👋',
-        insights: ['Estoy aquí para ayudarte en tu preparación PAES'],
-        focusAreas: ['Matemática'],
-        encouragement: '¡Vamos con todo!',
-        conversationStarter: '¿En qué te gustaría enfocarte hoy?',
-        success: true,
-      });
-      setMessages([
-        {
-          role: 'assistant',
-          content: '¡Hola! 👋 Estoy aquí para ayudarte en tu preparación PAES. ¿En qué te gustaría enfocarte hoy?'
-        }
-      ]);
+
+      // Check if user has any progress data
+      const m1History = localStorage.getItem('paes-history-M1');
+      const m2History = localStorage.getItem('paes-history-M2');
+      const hasProgress = (m1History && JSON.parse(m1History).length > 0) ||
+                         (m2History && JSON.parse(m2History).length > 0);
+
+      // Fallback greeting based on whether they have progress
+      if (hasProgress) {
+        setGreetingData({
+          greeting: '¡Hola! 👋',
+          insights: ['Estoy aquí para ayudarte en tu preparación PAES'],
+          focusAreas: ['Matemática'],
+          encouragement: '¡Vamos con todo!',
+          conversationStarter: '¿En qué te gustaría enfocarte hoy?',
+          success: true,
+        });
+        setMessages([
+          {
+            role: 'assistant',
+            content: '¡Hola! 👋 Estoy aquí para ayudarte en tu preparación PAES. ¿En qué te gustaría enfocarte hoy?'
+          }
+        ]);
+      } else {
+        setGreetingData({
+          greeting: '¡Bienvenido! 🌟',
+          insights: ['Comienza tu preparación respondiendo algunas preguntas', 'Analizaré tu progreso para darte recomendaciones personalizadas'],
+          focusAreas: ['M1', 'M2'],
+          encouragement: '¡Empieza tu viaje de preparación PAES!',
+          conversationStarter: 'Una vez que respondas algunas preguntas, podré ayudarte a identificar tus fortalezas y áreas de mejora.',
+          success: true,
+        });
+        setMessages([
+          {
+            role: 'assistant',
+            content: '¡Bienvenido! 🌟\n\n¡Empieza tu viaje de preparación PAES!\n\nUna vez que respondas algunas preguntas, podré ayudarte a identificar tus fortalezas y áreas de mejora.'
+          }
+        ]);
+      }
     } finally {
       setIsLoading(false);
     }
