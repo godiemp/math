@@ -272,9 +272,9 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
         break;
       }
 
-      // Get current question number before answering
+      // Get current question number before answering (format is "1/5")
       const beforeCounterText = await questionCounter.textContent().catch(() => '');
-      const beforeQuestionNum = parseInt(beforeCounterText?.match(/Pregunta (\d+)/)?.[1] || '0');
+      const beforeQuestionNum = parseInt(beforeCounterText?.split('/')[0] || '0');
 
       // Select an answer
       const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
@@ -300,7 +300,7 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
       for (let waitAttempt = 0; waitAttempt < 15; waitAttempt++) {
         await page.waitForTimeout(200);
         const afterCounterText = await questionCounter.textContent().catch(() => '');
-        const afterQuestionNum = parseInt(afterCounterText?.match(/Pregunta (\d+)/)?.[1] || '0');
+        const afterQuestionNum = parseInt(afterCounterText?.split('/')[0] || '0');
 
         if (afterQuestionNum !== beforeQuestionNum && afterQuestionNum > 0) {
           advanced = true;
