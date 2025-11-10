@@ -21,6 +21,7 @@ function ProgressPageContent() {
   const [m2Progress, setM2Progress] = useState<Progress>({ correct: 0, total: 0 });
   const [m1History, setM1History] = useState<QuestionAttempt[]>([]);
   const [m2History, setM2History] = useState<QuestionAttempt[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [recentQuestionsCount, setRecentQuestionsCount] = useState<number>(10);
   const [selectedAttempt, setSelectedAttempt] = useState<QuestionAttempt | null>(null);
   const [selectedQuizSession, setSelectedQuizSession] = useState<{
@@ -94,7 +95,7 @@ function ProgressPageContent() {
       }
     };
 
-    loadProgressAndHistory();
+    loadProgressAndHistory().finally(() => setIsLoading(false));
   }, []);
 
   const calculatePercentage = (progress: Progress) => {
@@ -476,7 +477,16 @@ function ProgressPageContent() {
         {/* Quizzes View */}
         {viewMode === 'quizzes' && (
           <>
-            {allQuizSessions.length > 0 ? (
+            {isLoading ? (
+              <Card className="p-12">
+                <div className="flex flex-col items-center justify-center">
+                  <div className="w-12 h-12 border-4 border-[#0A84FF]/30 border-t-[#0A84FF] rounded-full animate-spin mb-4"></div>
+                  <Text size="sm" variant="secondary">
+                    Cargando tus quizzes...
+                  </Text>
+                </div>
+              </Card>
+            ) : allQuizSessions.length > 0 ? (
               <div className="grid gap-4">
                 {allQuizSessions.map((session, index) => {
                   const percentage = Math.round((session.correctCount / session.totalCount) * 100);
