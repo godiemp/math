@@ -28,9 +28,11 @@ export function StudyBuddy({ className = '' }: StudyBuddyProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [greetingData, setGreetingData] = useState<GreetingData | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isContextExpanded, setIsContextExpanded] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [contextData, setContextData] = useState<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -98,19 +100,22 @@ export function StudyBuddy({ className = '' }: StudyBuddyProps) {
         questionsAnswered: session.questions?.length || 0,
       }));
 
+      const progressDataPayload = {
+        recentSessions,
+        topicAccuracy,
+        totalQuestionsAnswered: allSessions.reduce((sum, s) => sum + (s.questions?.length || 0), 0),
+        overallAccuracy: allSessions.length > 0
+          ? (allSessions.reduce((sum, s) => sum + (s.score || 0), 0) / allSessions.length)
+          : 0,
+      };
+
       const response = await api.post<GreetingData>('/api/study-buddy/greeting', {
-        progressData: {
-          recentSessions,
-          topicAccuracy,
-          totalQuestionsAnswered: allSessions.reduce((sum, s) => sum + (s.questions?.length || 0), 0),
-          overallAccuracy: allSessions.length > 0
-            ? (allSessions.reduce((sum, s) => sum + (s.score || 0), 0) / allSessions.length)
-            : 0,
-        }
+        progressData: progressDataPayload
       });
 
       if (response.data) {
         setGreetingData(response.data);
+        setContextData(progressDataPayload); // Save context for display
         // Initialize conversation with the greeting
         setMessages([
           {
@@ -334,6 +339,128 @@ export function StudyBuddy({ className = '' }: StudyBuddyProps) {
               >
                 <X className="w-6 h-6" />
               </button>
+            </div>
+
+            {/* Context Card */}
+            <div className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 border-b-2 border-teal-200 dark:border-teal-700">
+              {/* Context Toggle Button */}
+              <button
+                onClick={() => setIsContextExpanded(!isContextExpanded)}
+                className="w-full p-4 flex items-center justify-between gap-2 hover:bg-teal-100/50 dark:hover:bg-teal-800/30 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-teal-500 text-white rounded-full text-xs font-semibold shadow-sm">
+                    <span>🧠</span>
+                    <span>Contexto del estudiante</span>
+                  </div>
+                  <span className="text-xs text-teal-700 dark:text-teal-300">
+                    {isContextExpanded ? 'Ver menos' : 'Ver qué sé de ti'}
+                  </span>
+                </div>
+                <div className="text-teal-700 dark:text-teal-300 text-xl transition-transform duration-200" style={{
+                  transform: isContextExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+                }}>
+                  ▼
+                </div>
+              </button>
+
+              {/* Collapsible Context Details */}
+              {isContextExpanded && contextData && (
+                <div className="px-4 pb-4 space-y-3">
+
+                  {/* Overall Stats */}
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-3">
+                    <div className="text-xs font-semibold text-teal-700 dark:text-teal-300 mb-2">
+                      📊 ESTADÍSTICAS GENERALES:
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="bg-teal-50 dark:bg-teal-900/20 p-2 rounded">
+                        <div className="text-gray-600 dark:text-gray-400">Preguntas totales</div>
+                        <div className="text-lg font-bold text-teal-600 dark:text-teal-400">
+                          {contextData.totalQuestionsAnswered || 0}
+                        </div>
+                      </div>
+                      <div className="bg-cyan-50 dark:bg-cyan-900/20 p-2 rounded">
+                        <div className="text-gray-600 dark:text-gray-400">Precisión general</div>
+                        <div className="text-lg font-bold text-cyan-600 dark:text-cyan-400">
+                          {contextData.overallAccuracy?.toFixed(1) || 0}%
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Topic Accuracy */}
+                  {contextData.topicAccuracy && Object.keys(contextData.topicAccuracy).length > 0 && (
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-3">
+                      <div className="text-xs font-semibold text-teal-700 dark:text-teal-300 mb-2">
+                        📚 RENDIMIENTO POR TEMA:
+                      </div>
+                      <div className="space-y-1.5">
+                        {Object.entries(contextData.topicAccuracy).map(([topic, stats]: [string, any]) => (
+                          <div key={topic} className="flex items-center justify-between text-xs bg-gray-50 dark:bg-gray-900/50 p-2 rounded">
+                            <span className="font-medium">{topic}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-gray-600 dark:text-gray-400">
+                                {stats.correct}/{stats.total}
+                              </span>
+                              <span className={`font-bold ${
+                                stats.accuracy >= 80 ? 'text-green-600' :
+                                stats.accuracy >= 60 ? 'text-yellow-600' :
+                                'text-red-600'
+                              }`}>
+                                {stats.accuracy.toFixed(0)}%
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Recent Sessions */}
+                  {contextData.recentSessions && contextData.recentSessions.length > 0 && (
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-3">
+                      <div className="text-xs font-semibold text-teal-700 dark:text-teal-300 mb-2">
+                        📅 SESIONES RECIENTES:
+                      </div>
+                      <div className="space-y-1.5">
+                        {contextData.recentSessions.slice(0, 3).map((session: any, i: number) => (
+                          <div key={i} className="flex items-center justify-between text-xs bg-gray-50 dark:bg-gray-900/50 p-2 rounded">
+                            <div>
+                              <div className="font-medium">{session.topic}</div>
+                              <div className="text-gray-500 dark:text-gray-400">{session.date}</div>
+                            </div>
+                            <div className="text-right">
+                              <div className="font-bold text-teal-600 dark:text-teal-400">{session.score}%</div>
+                              <div className="text-gray-500 dark:text-gray-400">{session.questionsAnswered} preg.</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Available Tools */}
+                  <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-3 border border-purple-200 dark:border-purple-700">
+                    <div className="text-xs font-semibold text-purple-700 dark:text-purple-300 mb-2">
+                      🛠️ HERRAMIENTAS DISPONIBLES:
+                    </div>
+                    <div className="text-xs text-gray-700 dark:text-gray-300 space-y-1">
+                      <div>• Analizar rendimiento por tema</div>
+                      <div>• Generar planes de estudio personalizados</div>
+                      <div>• Recomendar modos de práctica</div>
+                      <div>• Revisar preguntas recientes</div>
+                      <div>• Calcular métricas de mejora</div>
+                      <div>• Ver insights de racha</div>
+                    </div>
+                  </div>
+
+                  {/* Info Note */}
+                  <div className="text-xs text-gray-600 dark:text-gray-400 italic text-center">
+                    💡 Uso estos datos para darte recomendaciones personalizadas
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Messages Area */}
