@@ -182,7 +182,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
           </div>
         </div>
 
-        <style jsx>{`
+        <style jsx global>{`
           @keyframes fade-in {
             from {
               opacity: 0;
@@ -221,6 +221,38 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
             50% {
               transform: scale(0.8);
               opacity: 0.5;
+            }
+          }
+          @keyframes liquidFlow1 {
+            0%, 100% {
+              transform: translateX(0) translateY(0) rotate(0deg);
+              opacity: 0.3;
+            }
+            25% {
+              transform: translateX(20px) translateY(-20px) rotate(5deg);
+              opacity: 0.5;
+            }
+            50% {
+              transform: translateX(0) translateY(-30px) rotate(0deg);
+              opacity: 0.4;
+            }
+            75% {
+              transform: translateX(-20px) translateY(-10px) rotate(-5deg);
+              opacity: 0.5;
+            }
+          }
+          @keyframes liquidFlow2 {
+            0%, 100% {
+              transform: translateX(0) translateY(0) rotate(0deg) scale(1);
+              opacity: 0.25;
+            }
+            33% {
+              transform: translateX(-25px) translateY(15px) rotate(-3deg) scale(1.05);
+              opacity: 0.4;
+            }
+            66% {
+              transform: translateX(15px) translateY(-15px) rotate(3deg) scale(0.95);
+              opacity: 0.35;
             }
           }
         `}</style>
@@ -327,12 +359,37 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
   const showFeedback = quizSubmitted;
 
   const questionContent = (
-    <div className="w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8 animate-fadeIn"
+    <div className="w-full max-w-3xl mx-auto rounded-xl p-6 sm:p-8 animate-fadeIn relative overflow-hidden"
       style={{
-        boxShadow: '0 0 60px rgba(20, 184, 166, 0.3), 0 20px 40px rgba(0, 0, 0, 0.2)',
         minHeight: '600px',
         maxHeight: '85vh',
+        background: 'rgba(255, 255, 255, 0.15)',
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), 0 0 80px rgba(20, 184, 166, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
       }}>
+      {/* Liquid glass effect layers */}
+      <div className="absolute inset-0 -z-10 opacity-30">
+        <div
+          className="absolute inset-0 bg-gradient-to-br from-teal-300/40 via-cyan-300/40 to-blue-300/40"
+          style={{
+            animation: 'liquidFlow1 15s ease-in-out infinite',
+          }}
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-tl from-cyan-300/30 via-blue-300/30 to-teal-300/30"
+          style={{
+            animation: 'liquidFlow2 20s ease-in-out infinite',
+          }}
+        />
+      </div>
+
+      {/* Content wrapper with additional background for readability */}
+      <div className="relative bg-white/80 dark:bg-gray-800/80 rounded-lg p-6 backdrop-blur-sm"
+        style={{
+          boxShadow: 'inset 0 0 20px rgba(20, 184, 166, 0.1)',
+        }}>
       {/* Progress bar */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-4">
@@ -503,6 +560,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
         )}
       </div>
 
+      </div> {/* Close content wrapper */}
     </div>
   );
 
