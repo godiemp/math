@@ -261,6 +261,8 @@ export default function Footer() {
         style={{
           borderColor: 'var(--color-separator)',
           background: 'var(--color-bg)',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <div className="max-w-6xl mx-auto">
