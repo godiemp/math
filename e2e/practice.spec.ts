@@ -22,8 +22,8 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await expect(page.getByText(/Paso 1.*Selecciona el modo de práctica/i)).toBeVisible();
 
     // Check that Zen and Rapidfire mode cards are visible
-    await expect(page.getByText(/Modo Zen/i)).toBeVisible();
-    await expect(page.getByText(/Rapid Fire/i)).toBeVisible();
+    await expect(page.getByTestId('mode-zen')).toBeVisible();
+    await expect(page.getByTestId('mode-rapidfire')).toBeVisible();
   });
 
   test('should allow subject and mode selection flow', async ({ page }) => {
@@ -32,15 +32,15 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(1000);
 
     // Step 1: Select Zen mode
-    await page.getByText(/Modo Zen/i).click();
+    await page.getByTestId('mode-zen').click();
     await page.waitForTimeout(500);
 
     // After selecting mode, subject selection (Step 2) should appear
     await expect(page.getByText(/Paso 2.*Selecciona una materia/i)).toBeVisible();
 
     // Check that subjects are visible
-    await expect(page.getByText(/Todas las Materias/i)).toBeVisible();
-    await expect(page.getByText(/Números/i)).toBeVisible();
+    await expect(page.getByTestId('subject-all')).toBeVisible();
+    await expect(page.getByTestId('subject-números')).toBeVisible();
   });
 
   test('should complete a Zen mode quiz', async ({ page }) => {
@@ -49,15 +49,15 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(1000);
 
     // Step 1: Select Zen mode
-    await page.getByText(/Modo Zen/i).click();
+    await page.getByTestId('mode-zen').click();
     await page.waitForTimeout(500);
 
     // Step 2: Select a subject (Todas las Materias)
-    await page.getByText(/Todas las Materias/i).click();
+    await page.getByTestId('subject-all').click();
     await page.waitForTimeout(500);
 
     // Should show "Comenzar Quiz" button
-    const startButton = page.getByRole('button', { name: /Comenzar Quiz/i });
+    const startButton = page.getByTestId('start-quiz-button');
     await expect(startButton).toBeVisible();
 
     // Click to start the quiz
@@ -89,21 +89,21 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(1000);
 
     // Step 1: Select Rapid Fire mode
-    await page.getByText(/Rapid Fire/i).click();
+    await page.getByTestId('mode-rapidfire').click();
     await page.waitForTimeout(500);
 
     // Step 2: Select a subject
-    await page.getByText(/Todas las Materias/i).click();
+    await page.getByTestId('subject-all').click();
     await page.waitForTimeout(500);
 
     // Step 3: Should show difficulty selection
     await expect(page.getByText(/Paso 3.*Selecciona la dificultad/i)).toBeVisible();
 
     // Check that difficulty levels are visible
-    await expect(page.getByText(/Fácil/i)).toBeVisible();
-    await expect(page.getByText(/Normal/i)).toBeVisible();
-    await expect(page.getByText(/Difícil/i)).toBeVisible();
-    await expect(page.getByText(/Extremo/i)).toBeVisible();
+    await expect(page.getByTestId('difficulty-easy')).toBeVisible();
+    await expect(page.getByTestId('difficulty-medium')).toBeVisible();
+    await expect(page.getByTestId('difficulty-hard')).toBeVisible();
+    await expect(page.getByTestId('difficulty-extreme')).toBeVisible();
   });
 
   test('should start Rapid Fire quiz with selected difficulty', async ({ page }) => {
@@ -112,19 +112,19 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     await page.waitForTimeout(1000);
 
     // Step 1: Select Rapid Fire mode
-    await page.getByText(/Rapid Fire/i).click();
+    await page.getByTestId('mode-rapidfire').click();
     await page.waitForTimeout(500);
 
     // Step 2: Select a subject
-    await page.getByText(/Todas las Materias/i).click();
+    await page.getByTestId('subject-all').click();
     await page.waitForTimeout(500);
 
     // Step 3: Select difficulty (Fácil)
-    await page.getByText(/Fácil/i).first().click();
+    await page.getByTestId('difficulty-easy').click();
     await page.waitForTimeout(500);
 
     // Should show "Comenzar Quiz" button
-    const startButton = page.getByRole('button', { name: /Comenzar Quiz/i });
+    const startButton = page.getByTestId('start-quiz-button');
     await expect(startButton).toBeVisible();
 
     // Click to start the quiz

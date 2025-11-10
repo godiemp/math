@@ -289,6 +289,7 @@ function M1PracticeContent() {
             </div>
           </div>
           <button
+            data-testid="repeat-last-quiz-button"
             onClick={handleRepeatLastQuiz}
             className="px-4 py-2 rounded-lg bg-white/20 hover:bg-white/30 border border-white/30 text-white font-bold text-sm transition-all hover:scale-105 shadow-lg whitespace-nowrap flex-shrink-0"
           >
@@ -317,6 +318,7 @@ function M1PracticeContent() {
         {subjects.map((subject) => (
           <button
             key={subject.label}
+            data-testid={`subject-${subject.value === null ? 'all' : subject.value}`}
             onClick={() => {
               setSelectedSubject(subject.value);
               setDifficulty(null);
@@ -370,6 +372,7 @@ function M1PracticeContent() {
             return (
               <button
                 key={mode.value}
+                data-testid={`mode-${mode.value}`}
                 onClick={() => {
                   setQuizMode(mode.value);
                   setSelectedSubject(undefined);
@@ -434,6 +437,7 @@ function M1PracticeContent() {
             return (
               <button
                 key={diff.value}
+                data-testid={`difficulty-${diff.value}`}
                 onClick={() => setDifficulty(diff.value)}
                 className={`p-3.5 rounded-xl border-2 transition-all duration-300 text-left ${
                   isSelected
@@ -480,12 +484,14 @@ function M1PracticeContent() {
         {difficulty && (
           <div className="flex gap-3">
             <button
+              data-testid="reset-selection-button"
               onClick={handleResetSelection}
               className="px-4 py-2 rounded-lg bg-black/30 hover:bg-black/40 border border-white/30 text-white text-sm font-semibold transition-all"
             >
               ← Cambiar
             </button>
             <button
+              data-testid="start-quiz-button"
               onClick={handleStartQuiz}
               className="flex-1 px-5 py-2.5 rounded-lg bg-white/25 hover:bg-white/35 border-2 border-white/50 text-white font-bold transition-all hover:scale-105 shadow-xl"
             >
@@ -505,12 +511,14 @@ function M1PracticeContent() {
       <div className="mb-4">
         <div className="flex gap-3">
           <button
+            data-testid="reset-selection-button"
             onClick={handleResetSelection}
             className="px-4 py-2 rounded-lg bg-black/30 hover:bg-black/40 border border-white/30 text-white text-sm font-semibold transition-all"
           >
             ← Cambiar
           </button>
           <button
+            data-testid="start-quiz-button"
             onClick={handleStartQuiz}
             className="flex-1 px-5 py-2.5 rounded-lg bg-white/25 hover:bg-white/35 border-2 border-white/50 text-white font-bold transition-all hover:scale-105 shadow-xl"
           >
