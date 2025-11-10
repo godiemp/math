@@ -165,10 +165,12 @@ export default function Footer() {
                 </li>
                 <li style={{ marginBottom: '8px' }}>
                   <a
-                    href="mailto:soporte@paeschile.cl"
+                    href="https://wa.me/56931338020"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
                   >
-                    soporte@paeschile.cl
+                    WhatsApp: +56 9 3133 8020
                   </a>
                 </li>
               </ul>
@@ -398,7 +400,9 @@ export default function Footer() {
               </li>
               <li style={{ marginBottom: '8px' }}>
                 <a
-                  href="mailto:soporte@paeschile.cl"
+                  href="https://wa.me/56931338020"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   style={{
                     fontSize: '14px',
                     color: 'var(--color-label-secondary)',
@@ -406,7 +410,7 @@ export default function Footer() {
                   }}
                   className="hover:underline"
                 >
-                  soporte@paeschile.cl
+                  WhatsApp: +56 9 3133 8020
                 </a>
               </li>
             </ul>
