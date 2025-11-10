@@ -21,6 +21,12 @@ function DashboardContent() {
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
   const [nextSession, setNextSession] = useState<LiveSession | null>(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [shareUrl, setShareUrl] = useState('/live-practice');
+
+  // Set share URL on client-side to avoid hydration mismatch
+  useEffect(() => {
+    setShareUrl(`${window.location.origin}/live-practice`);
+  }, []);
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -459,7 +465,7 @@ function DashboardContent() {
           data={{
             title: '',
             message: `Ensayo PAES ${nextSession.level}\n${new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })} • ${new Date(nextSession.scheduledStartTime).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}\n\nVamos juntos 📝`,
-            url: typeof window !== 'undefined' ? `${window.location.origin}/live-practice` : '/live-practice',
+            url: shareUrl,
             sessionName: nextSession.name,
             sessionLevel: nextSession.level,
             sessionDate: new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', {
