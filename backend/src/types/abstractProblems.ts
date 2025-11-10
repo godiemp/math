@@ -2,7 +2,13 @@
  * Types for the new Abstract Problems system
  */
 
-import { Level, Subject, DifficultyLevel } from './core';
+// ========================================
+// Core Types (inline for backend)
+// ========================================
+
+export type Level = 'M1' | 'M2';
+export type Subject = 'números' | 'álgebra' | 'geometría' | 'probabilidad';
+export type DifficultyLevel = 'easy' | 'medium' | 'hard' | 'extreme';
 
 // ========================================
 // Enums and Constants
