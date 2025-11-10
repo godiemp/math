@@ -22,6 +22,7 @@ const navItems: NavItem[] = [
   { name: 'Questions', path: '/admin/problems', icon: '❓' },
   { name: 'Generator', path: '/admin/qgen', icon: '🎲' },
   { name: 'Upload', path: '/admin/upload', icon: '📤' },
+  { name: 'Rapid Fire Debug', path: '/admin/rapidfire-debug', icon: '⚡' },
 ];
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
