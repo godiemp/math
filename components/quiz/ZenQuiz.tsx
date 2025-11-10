@@ -395,12 +395,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
       </div>
 
       {/* Content wrapper */}
-      <div className="relative rounded-lg p-6"
-        style={{
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-        }}>
+      <div className="relative">
       {/* Progress bar */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-4">
