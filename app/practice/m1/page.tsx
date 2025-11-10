@@ -211,6 +211,7 @@ function M1PracticeContent() {
   };
 
   const canStartQuiz = () => {
+    if (selectedSubject === undefined) return false; // Must select subject
     if (quizMode === 'zen') return true;
     if (quizMode === 'rapidfire' && difficulty) return true;
     return false;
@@ -256,7 +257,7 @@ function M1PracticeContent() {
     }
     // Default neutral theme
     return {
-      background: 'bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800',
+      background: 'bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 dark:from-violet-700 dark:via-purple-800 dark:to-fuchsia-800',
       selectedBorder: 'border-[#0A84FF]',
       selectedBg: 'bg-[#0A84FF]/[0.06] dark:bg-[#0A84FF]/[0.12]',
       selectedShadow: 'shadow-[0_14px_36px_-4px_rgba(0,0,0,0.22)]',
@@ -297,24 +298,26 @@ function M1PracticeContent() {
     );
   };
 
-  // Step 1: Subject Selection
-  const renderSubjectSelection = () => (
-    <div className="mb-5">
-      <div className="mb-3 text-center">
-        <h2 className="text-xl font-bold text-white mb-1">
-          Paso 1: Selecciona una materia
-        </h2>
-        <p className="text-white/70 text-sm">
-          Elige el área que quieres practicar
-        </p>
-      </div>
+  // Step 2: Subject Selection
+  const renderSubjectSelection = () => {
+    if (!quizMode) return null;
+
+    return (
+      <div className="mb-5">
+        <div className="mb-3 text-center">
+          <h2 className="text-xl font-bold text-white mb-1">
+            Paso 2: Selecciona una materia
+          </h2>
+          <p className="text-white/70 text-sm">
+            Elige el área que quieres practicar
+          </p>
+        </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {subjects.map((subject) => (
           <button
             key={subject.label}
             onClick={() => {
               setSelectedSubject(subject.value);
-              setQuizMode(null);
               setDifficulty(null);
             }}
             className={`p-3 rounded-xl border-2 transition-all duration-300 text-left ${
@@ -341,22 +344,20 @@ function M1PracticeContent() {
         ))}
       </div>
     </div>
-  );
+    );
+  };
 
-  // Step 2: Mode Selection
-  const renderModeSelection = () => {
-    if (selectedSubject === undefined) return null;
-
-    return (
-      <div className="mb-5">
-        <div className="mb-3 text-center">
-          <h2 className="text-xl font-bold text-white mb-1">
-            Paso 2: Selecciona el modo de práctica
-          </h2>
-          <p className="text-white/70 text-sm">
-            Elige cómo quieres practicar
-          </p>
-        </div>
+  // Step 1: Mode Selection
+  const renderModeSelection = () => (
+    <div className="mb-5">
+      <div className="mb-3 text-center">
+        <h2 className="text-xl font-bold text-white mb-1">
+          Paso 1: Selecciona el modo de práctica
+        </h2>
+        <p className="text-white/70 text-sm">
+          Elige cómo quieres practicar
+        </p>
+      </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {modes.map((mode) => {
             const isZen = mode.value === 'zen';
@@ -370,6 +371,7 @@ function M1PracticeContent() {
                 key={mode.value}
                 onClick={() => {
                   setQuizMode(mode.value);
+                  setSelectedSubject(undefined);
                   setDifficulty(null);
                 }}
                 className={`relative overflow-hidden p-4 rounded-xl border-2 transition-all duration-500 text-left ${
@@ -408,9 +410,8 @@ function M1PracticeContent() {
             );
           })}
         </div>
-      </div>
-    );
-  };
+    </div>
+  );
 
   // Step 3: Difficulty Selection (only for Rapid Fire)
   const renderDifficultySelection = () => {
@@ -582,8 +583,8 @@ function M1PracticeContent() {
         </div>
 
         {renderRepeatLastQuiz()}
-        {renderSubjectSelection()}
         {renderModeSelection()}
+        {renderSubjectSelection()}
         {renderDifficultySelection()}
         {renderStartButton()}
       </div>
