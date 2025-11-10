@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { pool } from '../config/database';
 import { AuthRequest } from '../types';
+import { success, errorResponses, getErrorMessage } from '../lib/response-helpers';
 
 /**
  * Calculate if streak should continue based on last practice date
@@ -42,7 +43,7 @@ export const getStreak = async (req: AuthRequest, res: Response): Promise<void> 
     const userId = req.user?.userId;
 
     if (!userId) {
-      res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json(errorResponses.unauthorized());
       return;
     }
 
@@ -52,7 +53,7 @@ export const getStreak = async (req: AuthRequest, res: Response): Promise<void> 
     );
 
     if (result.rows.length === 0) {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json(errorResponses.notFound('User'));
       return;
     }
 
@@ -69,14 +70,14 @@ export const getStreak = async (req: AuthRequest, res: Response): Promise<void> 
       currentStreak = 0;
     }
 
-    res.json({
+    res.json(success({
       currentStreak,
       longestStreak: user.longest_streak,
       lastPracticeDate: user.last_practice_date,
-    });
-  } catch (error) {
-    console.error('Error getting streak:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    }));
+  } catch (err) {
+    console.error('[getStreak] Error:', err);
+    res.status(500).json(errorResponses.internal('Failed to get streak', getErrorMessage(err)));
   }
 };
 
@@ -88,7 +89,7 @@ export const updateStreak = async (req: AuthRequest, res: Response): Promise<voi
     const userId = req.user?.userId;
 
     if (!userId) {
-      res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json(errorResponses.unauthorized());
       return;
     }
 
@@ -102,7 +103,7 @@ export const updateStreak = async (req: AuthRequest, res: Response): Promise<voi
     );
 
     if (result.rows.length === 0) {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json(errorResponses.notFound('User'));
       return;
     }
 
@@ -112,12 +113,11 @@ export const updateStreak = async (req: AuthRequest, res: Response): Promise<voi
 
     // Check if already practiced today
     if (user.last_practice_date === todayString) {
-      res.json({
+      res.json(success({
         currentStreak,
         longestStreak,
         lastPracticeDate: todayString,
-        message: 'Streak already updated today',
-      });
+      }, 'Streak already updated today'));
       return;
     }
 
@@ -150,14 +150,13 @@ export const updateStreak = async (req: AuthRequest, res: Response): Promise<voi
       [currentStreak, longestStreak, todayString, Date.now(), userId]
     );
 
-    res.json({
+    res.json(success({
       currentStreak,
       longestStreak,
       lastPracticeDate: todayString,
-      message: 'Streak updated successfully',
-    });
-  } catch (error) {
-    console.error('Error updating streak:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    }, 'Streak updated successfully'));
+  } catch (err) {
+    console.error('[updateStreak] Error:', err);
+    res.status(500).json(errorResponses.internal('Failed to update streak', getErrorMessage(err)));
   }
 };

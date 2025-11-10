@@ -1,5 +1,11 @@
 import { Request, Response } from 'express';
 import { pool } from '../config/database';
+import { success, error, errorResponses, getErrorMessage } from '../lib/response-helpers';
+import {
+  normalizePagination,
+  paginate,
+  getPaginationFromQuery
+} from '../lib/pagination';
 
 /**
  * AI Analytics Controller
@@ -189,13 +195,10 @@ export const getAIAnalyticsDashboard = async (req: Request, res: Response) => {
       timeSeries: timeSeriesResult.rows
     };
 
-    res.json(analytics);
-  } catch (error) {
-    console.error('Error fetching AI analytics:', error);
-    res.status(500).json({
-      error: 'Failed to fetch AI analytics',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    });
+    res.json(success(analytics));
+  } catch (err) {
+    console.error('[getAIAnalyticsDashboard] Error:', err);
+    res.status(500).json(error('Failed to fetch AI analytics', getErrorMessage(err)));
   }
 };
 
@@ -224,19 +227,16 @@ export const getConversationDetails = async (req: Request, res: Response) => {
     `, [sessionId]);
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Conversation not found' });
+      return res.status(404).json(errorResponses.notFound('Conversation'));
     }
 
-    res.json({
+    res.json(success({
       sessionId,
       interactions: result.rows
-    });
-  } catch (error) {
-    console.error('Error fetching conversation details:', error);
-    res.status(500).json({
-      error: 'Failed to fetch conversation details',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    });
+    }));
+  } catch (err) {
+    console.error('[getConversationDetails] Error:', err);
+    res.status(500).json(error('Failed to fetch conversation details', getErrorMessage(err)));
   }
 };
 
@@ -245,8 +245,18 @@ export const getConversationDetails = async (req: Request, res: Response) => {
  */
 export const getAllConversations = async (req: Request, res: Response) => {
   try {
-    const { limit = 100, offset = 0 } = req.query;
+    // Extract and normalize pagination params
+    const { page, limit, offset } = normalizePagination(getPaginationFromQuery(req.query));
 
+    // Get total count for pagination metadata
+    const countResult = await pool.query(`
+      SELECT COUNT(DISTINCT quiz_session_id) as total
+      FROM ai_interactions
+      WHERE quiz_session_id IS NOT NULL
+    `);
+    const total = parseInt(countResult.rows[0].total);
+
+    // Get paginated data
     const result = await pool.query(`
       SELECT
         quiz_session_id,
@@ -263,23 +273,23 @@ export const getAllConversations = async (req: Request, res: Response) => {
       LIMIT $1 OFFSET $2
     `, [limit, offset]);
 
-    res.json({
-      conversations: result.rows.map(row => ({
-        sessionId: row.quiz_session_id,
-        userId: row.user_id,
-        messageCount: parseInt(row.message_count),
-        startedAt: row.started_at,
-        lastMessageAt: row.last_message_at,
-        durationMs: parseInt(row.duration_ms),
-        interactionTypes: row.interaction_types
-      }))
-    });
-  } catch (error) {
-    console.error('Error fetching conversations:', error);
-    res.status(500).json({
-      error: 'Failed to fetch conversations',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    });
+    const conversations = result.rows.map(row => ({
+      sessionId: row.quiz_session_id,
+      userId: row.user_id,
+      messageCount: parseInt(row.message_count),
+      startedAt: row.started_at,
+      lastMessageAt: row.last_message_at,
+      durationMs: parseInt(row.duration_ms),
+      interactionTypes: row.interaction_types
+    }));
+
+    // Create paginated response
+    const paginatedResponse = paginate(conversations, total, { page, limit, offset });
+
+    res.json(success(paginatedResponse));
+  } catch (err) {
+    console.error('[getAllConversations] Error:', err);
+    res.status(500).json(error('Failed to fetch conversations', getErrorMessage(err)));
   }
 };
 
@@ -308,7 +318,7 @@ export const getCommonQuestions = async (req: Request, res: Response) => {
       LIMIT $1
     `, [limit]);
 
-    res.json({
+    res.json(success({
       commonQuestions: result.rows.map(row => ({
         question: row.user_message,
         frequency: parseInt(row.frequency),
@@ -316,12 +326,9 @@ export const getCommonQuestions = async (req: Request, res: Response) => {
         avgResponseTime: row.avg_response_time,
         topics: row.topics || []
       }))
-    });
-  } catch (error) {
-    console.error('Error fetching common questions:', error);
-    res.status(500).json({
-      error: 'Failed to fetch common questions',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    });
+    }));
+  } catch (err) {
+    console.error('[getCommonQuestions] Error:', err);
+    res.status(500).json(error('Failed to fetch common questions', getErrorMessage(err)));
   }
 };
