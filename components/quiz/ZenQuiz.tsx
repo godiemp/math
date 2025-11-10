@@ -363,32 +363,43 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
       style={{
         minHeight: '600px',
         maxHeight: '85vh',
-        background: 'rgba(255, 255, 255, 0.15)',
-        backdropFilter: 'blur(20px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), 0 0 80px rgba(20, 184, 166, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
+        background: 'rgba(255, 255, 255, 0.25)',
+        backdropFilter: 'blur(30px) saturate(200%)',
+        WebkitBackdropFilter: 'blur(30px) saturate(200%)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15), 0 0 100px rgba(20, 184, 166, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(255, 255, 255, 0.2)',
+        border: '1px solid rgba(255, 255, 255, 0.3)',
       }}>
       {/* Liquid glass effect layers */}
-      <div className="absolute inset-0 -z-10 opacity-30">
+      <div className="absolute inset-0 -z-10 opacity-40 rounded-xl overflow-hidden">
         <div
-          className="absolute inset-0 bg-gradient-to-br from-teal-300/40 via-cyan-300/40 to-blue-300/40"
+          className="absolute inset-0 bg-gradient-to-br from-teal-200/60 via-cyan-200/60 to-blue-200/60 dark:from-teal-400/50 dark:via-cyan-400/50 dark:to-blue-400/50"
           style={{
             animation: 'liquidFlow1 15s ease-in-out infinite',
+            filter: 'blur(40px)',
           }}
         />
         <div
-          className="absolute inset-0 bg-gradient-to-tl from-cyan-300/30 via-blue-300/30 to-teal-300/30"
+          className="absolute inset-0 bg-gradient-to-tl from-cyan-200/50 via-blue-200/50 to-teal-200/50 dark:from-cyan-400/40 dark:via-blue-400/40 dark:to-teal-400/40"
           style={{
             animation: 'liquidFlow2 20s ease-in-out infinite',
+            filter: 'blur(40px)',
+          }}
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-teal-300/30 via-transparent to-cyan-300/30"
+          style={{
+            animation: 'liquidFlow1 25s ease-in-out infinite reverse',
+            filter: 'blur(60px)',
           }}
         />
       </div>
 
-      {/* Content wrapper with additional background for readability */}
-      <div className="relative bg-white/80 dark:bg-gray-800/80 rounded-lg p-6 backdrop-blur-sm"
+      {/* Content wrapper */}
+      <div className="relative rounded-lg p-6"
         style={{
-          boxShadow: 'inset 0 0 20px rgba(20, 184, 166, 0.1)',
+          background: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
         }}>
       {/* Progress bar */}
       <div className="mb-6">
