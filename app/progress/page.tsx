@@ -166,13 +166,15 @@ function ProgressPageContent() {
       totalCount: number;
     }> = [];
 
+    // Maximum quiz size is 15 (Extreme mode), use 20 as a safety cap
+    const MAX_QUIZ_SIZE = 20;
     let currentSession: QuestionAttempt[] = [sorted[0]];
 
     for (let i = 1; i < sorted.length; i++) {
       const timeDiff = Math.abs(sorted[i].timestamp - sorted[i - 1].timestamp);
 
-      // If within 2 minutes and same level, add to current session
-      if (timeDiff < 120000 && sorted[i].level === sorted[i - 1].level) {
+      // If within 2 minutes, same level, AND under the max size cap, add to current session
+      if (timeDiff < 120000 && sorted[i].level === sorted[i - 1].level && currentSession.length < MAX_QUIZ_SIZE) {
         currentSession.push(sorted[i]);
       } else {
         // Start new session
