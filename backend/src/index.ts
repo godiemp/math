@@ -13,6 +13,8 @@ import analyticsRoutes from './routes/analyticsRoutes';
 import aiAnalyticsRoutes from './routes/aiAnalyticsRoutes';
 import quizRoutes from './routes/quizRoutes';
 import qgenRoutes from './routes/qgenRoutes';
+import abstractProblemsRoutes from './routes/abstractProblemsRoutes';
+import contextProblemsRoutes from './routes/contextProblemsRoutes';
 import { serveImage } from './controllers/adminController';
 
 // Load environment variables
@@ -104,6 +106,8 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/ai-analytics', aiAnalyticsRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/qgen', qgenRoutes);
+app.use('/api/abstract-problems', abstractProblemsRoutes);
+app.use('/api/context-problems', contextProblemsRoutes);
 
 // Public image serving route
 app.get('/api/images/:filename', serveImage);
@@ -117,6 +121,8 @@ console.log('✅ Analytics routes registered at /api/analytics');
 console.log('✅ AI Analytics routes registered at /api/ai-analytics');
 console.log('✅ Quiz routes registered at /api/quiz');
 console.log('✅ QGen routes registered at /api/qgen');
+console.log('✅ Abstract Problems routes registered at /api/abstract-problems');
+console.log('✅ Context Problems routes registered at /api/context-problems');
 
 // 404 handler
 app.use((req: Request, res: Response) => {
