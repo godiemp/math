@@ -1,14 +1,13 @@
 # Enteros y Racionales
 
-## Overview
-
 Los números enteros y racionales forman la base fundamental de las matemáticas. Este módulo cubre las operaciones, propiedades y aplicaciones de estos conjuntos numéricos.
-
 
 ---
 
-<!-- section: numeros-enteros, importance: essential, collapsible: true, defaultOpen: true -->
-## Números Enteros ($\mathbb{Z}$)
+<!-- section: conceptos-basicos, importance: essential, collapsible: true, defaultOpen: true -->
+## Conceptos Básicos
+
+### Números Enteros ($\mathbb{Z}$)
 
 Los números enteros incluyen:
 - Números positivos: $1, 2, 3, \ldots$
@@ -16,10 +15,8 @@ Los números enteros incluyen:
 - El cero: $0$
 
 **Conjunto**: $\mathbb{Z} = \{\ldots, -3, -2, -1, 0, 1, 2, 3, \ldots\}$
-<!-- /section -->
 
-<!-- section: numeros-racionales, importance: essential, collapsible: true, defaultOpen: true -->
-## Números Racionales ($\mathbb{Q}$)
+### Números Racionales ($\mathbb{Q}$)
 
 Un número racional es cualquier número que puede expresarse como una fracción $\frac{a}{b}$ donde:
 - $a$ es un entero (numerador)
@@ -27,10 +24,8 @@ Un número racional es cualquier número que puede expresarse como una fracción
 - La fracción puede ser propia, impropia o un número entero
 
 **Conjunto**: $\mathbb{Q} = \left\{\frac{a}{b} \mid a \in \mathbb{Z}, b \in \mathbb{Z}, b \neq 0\right\}$
-<!-- /section -->
 
-<!-- section: tipos-racionales, importance: essential, collapsible: true, defaultOpen: true -->
-## Tipos de Números Racionales
+### Tipos de Números Racionales
 
 **1. Fracciones Propias** (numerador < denominador):
 $$\frac{1}{2}, \quad \frac{3}{4}, \quad \frac{5}{8}, \quad \frac{2}{3}$$
@@ -49,10 +44,8 @@ $$0.25 = \frac{1}{4}, \quad 0.75 = \frac{3}{4}, \quad 1.5 = \frac{3}{2}$$
 
 **6. Decimales Periódicos**:
 $$0.\overline{3} = \frac{1}{3}, \quad 0.\overline{6} = \frac{2}{3}, \quad 0.1\overline{6} = \frac{1}{6}$$
-<!-- /section -->
 
-<!-- section: visualizacion-fracciones, importance: essential, collapsible: true, defaultOpen: true -->
-## 🎓 Nota Pedagógica: Visualizando Fracciones
+### 🎓 Visualizando Fracciones
 
 Una fracción representa **partes de un todo**. Piensa en una pizza:
 - $\frac{1}{4}$ significa 1 pedazo de 4 pedazos totales
@@ -69,10 +62,8 @@ $$\text{Entre } \frac{1}{2} \text{ y } \frac{3}{4} \text{ está } \frac{5}{8} = 
 Toda fracción puede convertirse a decimal dividiendo el numerador por el denominador:
 $$\frac{1}{4} = 1 \div 4 = 0.25$$
 $$\frac{2}{3} = 2 \div 3 = 0.666... = 0.\overline{6}$$
-<!-- /section -->
 
-<!-- section: reconocer-racionales, importance: important, collapsible: true, defaultOpen: false -->
-## ⚡ Estrategia Rápida: Reconocer Números Racionales
+### ⚡ Reconocer Números Racionales
 
 **¿Cómo identificar si un número es racional?**
 
@@ -90,8 +81,10 @@ $$\frac{2}{3} = 2 \div 3 = 0.666... = 0.\overline{6}$$
 **Tip PAES**: Si te dan un decimal largo sin indicar periodicidad, asume que es racional y busca el patrón que se repite.
 <!-- /section -->
 
-<!-- section: aplicaciones-racionales, importance: important, collapsible: true, defaultOpen: false -->
-## 🌍 Aplicaciones Prácticas de Números Racionales
+<!-- section: aplicaciones-contexto, importance: important, collapsible: true, defaultOpen: false -->
+## Aplicaciones y Contexto
+
+### 🌍 Aplicaciones Prácticas
 
 **Situación 1: Recetas de cocina**
 Una receta pide $\frac{2}{3}$ de taza de azúcar. Si quieres hacer $\frac{1}{2}$ de la receta:
@@ -108,10 +101,8 @@ $$\frac{12.000}{3} = \frac{12.000}{3} = 4.000 \text{ pesos cada uno}$$
 **Situación 4: Mediciones**
 Un terreno mide $2\frac{1}{2}$ hectáreas. Vendes $\frac{3}{5}$ del terreno:
 $$2\frac{1}{2} \times \frac{3}{5} = \frac{5}{2} \times \frac{3}{5} = \frac{15}{10} = \frac{3}{2} = 1\frac{1}{2} \text{ hectáreas vendidas}$$
-<!-- /section -->
 
-<!-- section: jerarquia-conjuntos, importance: important, collapsible: true, defaultOpen: false -->
-## 🔍 Jerarquía de Conjuntos Numéricos
+### 🔍 Jerarquía de Conjuntos Numéricos
 
 Es importante entender cómo se relacionan los distintos conjuntos:
 
@@ -135,10 +126,8 @@ $$\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q} \subset \mathbb{R}$$
 - $\frac{4}{2} = 2$ es racional (y también entero y natural)
 - $\frac{5}{2} = 2.5$ es racional (pero NO entero ni natural)
 - $\sqrt{2} \approx 1.414...$ es real (pero NO racional)
-<!-- /section -->
 
-<!-- section: importancia-racionales, importance: important, collapsible: true, defaultOpen: false -->
-## ¿Por qué son importantes los racionales?
+### ¿Por qué son importantes los racionales?
 
 **1. En matemáticas:**
 - Resuelven ecuaciones: $2x = 3 \Rightarrow x = \frac{3}{2}$
@@ -155,10 +144,8 @@ $$\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q} \subset \mathbb{R}$$
 - Aparecen en geometría (razones, proporciones)
 - En álgebra (soluciones de ecuaciones)
 - En datos y azar (probabilidades, promedios)
-<!-- /section -->
 
-<!-- section: conversion-formas, importance: essential, collapsible: true, defaultOpen: false -->
-## 🎯 Conversión entre Formas
+### 🎯 Conversión entre Formas
 
 **Fracción impropia ↔ Número mixto:**
 
@@ -183,11 +170,9 @@ $$9x = 3 \Rightarrow x = \frac{3}{9} = \frac{1}{3}$$
 Para $0.\overline{6}$:
 $$x = 0.666...$$
 $$10x = 6.666...$$
-$$9x = 6 \Rightarrow x = \frac{6}{9} = \frac{2}{3}$$
-<!-- /section -->
+$$9x = 6 \Rightarrow x = \frac{6}{9} = \frac{2}{3}$
 
-<!-- section: conceptos-erroneos-racionales, importance: important, collapsible: true, defaultOpen: false -->
-## ⚠️ Conceptos Erróneos Comunes
+### ⚠️ Conceptos Erróneos Comunes
 
 **Error 1: "Todo decimal es racional"**
 - ✗ **Falso**: $\pi = 3.14159...$ es decimal pero NO es racional
@@ -208,10 +193,12 @@ $$9x = 6 \Rightarrow x = \frac{6}{9} = \frac{2}{3}$$
 
 ---
 
-<!-- section: suma-fracciones, importance: essential, collapsible: true, defaultOpen: true -->
-## Suma de Fracciones
+<!-- section: operaciones, importance: essential, collapsible: true, defaultOpen: true -->
+## Operaciones con Fracciones
 
-### Mismo Denominador
+### Suma de Fracciones
+
+#### Mismo Denominador
 <!-- formula-only -->
 $$\frac{a}{c} + \frac{b}{c} = \frac{a + b}{c}$$
 <!-- /formula-only -->
@@ -219,7 +206,7 @@ $$\frac{a}{c} + \frac{b}{c} = \frac{a + b}{c}$$
 **Ejemplo**:
 $$\frac{2}{5} + \frac{1}{5} = \frac{2 + 1}{5} = \frac{3}{5}$$
 
-### Diferente Denominador
+#### Diferente Denominador
 1. Encontrar el mínimo común múltiplo (MCM)
 2. Convertir fracciones al mismo denominador
 3. Sumar numeradores
@@ -233,7 +220,7 @@ $$\frac{1}{3} = \frac{4}{12}, \quad \frac{1}{4} = \frac{3}{12}$$
 
 $$\frac{4}{12} + \frac{3}{12} = \frac{7}{12}$$
 
-### ⚡ Estrategia Rápida: Suma de Fracciones
+#### ⚡ Estrategia Rápida
 
 **¿Cuándo usar cada método?**
 
@@ -260,10 +247,7 @@ $$\frac{2}{7} + \frac{3}{11} = \frac{(2 \times 11) + (3 \times 7)}{7 \times 11} 
 
 3. $\frac{5}{6} - \frac{1}{4} = \frac{10}{12} - \frac{3}{12} = \frac{7}{12}$ (resta igual que suma)
 
-<!-- /section -->
-
-<!-- section: multiplicacion-fracciones, importance: essential, collapsible: true, defaultOpen: true -->
-## Multiplicación de Fracciones
+### Multiplicación de Fracciones
 
 <!-- formula-only -->
 $$\frac{a}{b} \times \frac{c}{d} = \frac{a \times c}{b \times d}$$
@@ -274,10 +258,8 @@ $$\frac{2}{3} \times \frac{3}{5} = \frac{2 \times 3}{3 \times 5} = \frac{6}{15} 
 
 **Tip**: Simplifica antes de multiplicar cuando sea posible:
 $$\frac{2}{3} \times \frac{3}{5} = \frac{2 \times \cancel{3}}{\cancel{3} \times 5} = \frac{2}{5}$$
-<!-- /section -->
 
-<!-- section: division-fracciones, importance: essential, collapsible: true, defaultOpen: true -->
-## División de Fracciones
+### División de Fracciones
 
 <!-- formula-only -->
 $$\frac{a}{b} \div \frac{c}{d} = \frac{a}{b} \times \frac{d}{c}$$
@@ -288,7 +270,7 @@ $$\frac{a}{b} \div \frac{c}{d} = \frac{a}{b} \times \frac{d}{c}$$
 **Ejemplo**:
 $$\frac{3}{4} \div \frac{2}{5} = \frac{3}{4} \times \frac{5}{2} = \frac{15}{8}$$
 
-### 🌍 Aplicaciones Prácticas
+#### Aplicaciones Prácticas
 
 **Situación 1: Repartir pizza**
 Tienes $\frac{3}{4}$ de una pizza y quieres repartirla entre 3 amigos. ¿Cuánto recibe cada uno?
@@ -324,8 +306,10 @@ La respuesta es $\frac{3}{2} = 1.5$ (una mitad y media).
 
 ---
 
-<!-- section: orden-racionales, importance: important, collapsible: true, defaultOpen: false -->
-## Orden en $\mathbb{Q}$
+<!-- section: herramientas, importance: important, collapsible: true, defaultOpen: false -->
+## Herramientas Matemáticas
+
+### Orden en $\mathbb{Q}$
 
 Para comparar fracciones:
 
@@ -342,10 +326,8 @@ $$8 < 9 \,\checkmark \quad \text{Entonces } \frac{2}{3} < \frac{3}{4}$$
 $$\frac{2}{3} \approx 0.667$$
 $$\frac{3}{4} = 0.75$$
 $$0.667 < 0.75 \,\checkmark$$
-<!-- /section -->
 
-<!-- section: mcd, importance: important, collapsible: true, defaultOpen: false -->
-## Máximo Común Divisor (MCD)
+### Máximo Común Divisor (MCD)
 
 El MCD de dos números es el mayor número que divide a ambos.
 
@@ -368,10 +350,8 @@ Divisiones sucesivas:
 - $12 = 6 \times 2 + 0$
 
 $$\Rightarrow \text{MCD} = 6$$
-<!-- /section -->
 
-<!-- section: mcm, importance: important, collapsible: true, defaultOpen: false -->
-## Mínimo Común Múltiplo (MCM)
+### Mínimo Común Múltiplo (MCM)
 
 El MCM de dos números es el menor múltiplo común.
 
@@ -390,7 +370,7 @@ $$\text{MCM}(4, 6) = 12$$
 $$\text{MCM}(a, b) = \frac{a \times b}{\text{MCD}(a, b)}$$
 <!-- /formula-only -->
 
-### 🔍 Estrategias Avanzadas: MCD y MCM
+#### Estrategias Avanzadas
 
 **Método alternativo: Factorización prima**
 
@@ -441,8 +421,10 @@ $$\text{MCD}(24, 36) \times \text{MCM}(24, 36) = 12 \times 72 = 864 = 24 \times 
 
 ---
 
-<!-- section: ejemplo-1-paes, importance: essential, collapsible: true, defaultOpen: false -->
-## Ejemplo 1: Operaciones Básicas
+<!-- section: ejemplos-paes, importance: essential, collapsible: true, defaultOpen: false -->
+## Ejemplos PAES
+
+### Ejemplo 1: Operaciones Básicas
 
 **Pregunta**: ¿Cuál es el resultado de $\frac{2}{3} + \frac{1}{4}$?
 
@@ -460,10 +442,8 @@ $$\frac{2}{3} = \frac{8}{12}, \quad \frac{1}{4} = \frac{3}{12}$$
 $$\frac{8}{12} + \frac{3}{12} = \frac{11}{12}$$
 
 **Respuesta**: B) $\frac{11}{12}$
-<!-- /section -->
 
-<!-- section: ejemplo-2-paes, importance: essential, collapsible: true, defaultOpen: false -->
-## Ejemplo 2: MCD
+### Ejemplo 2: MCD
 
 **Pregunta**: ¿Cuál es el MCD de 12 y 18?
 
@@ -484,10 +464,8 @@ $$\frac{8}{12} + \frac{3}{12} = \frac{11}{12}$$
 **Mayor:** $6$
 
 **Respuesta**: C) $6$
-<!-- /section -->
 
-<!-- section: ejemplo-3-paes, importance: essential, collapsible: true, defaultOpen: false -->
-## Ejemplo 3: Comparación
+### Ejemplo 3: Comparación
 
 **Pregunta**: Ordena de menor a mayor: $\frac{1}{2}$, $\frac{2}{5}$, $\frac{3}{4}$
 
@@ -501,7 +479,7 @@ $$\frac{8}{20} < \frac{10}{20} < \frac{15}{20}$$
 
 **Respuesta**: $\frac{2}{5} < \frac{1}{2} < \frac{3}{4}$
 
-### 🎯 Análisis de Distractores (Trampas Comunes en PAES)
+### Análisis de Distractores
 
 **¿Por qué las otras opciones están mal?**
 
