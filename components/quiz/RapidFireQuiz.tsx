@@ -582,7 +582,7 @@ export default function RapidFireQuiz({
             <div className="flex items-start gap-4 mb-4">
               {/* Timer - Left of card (Desktop only) */}
               {!quizSubmitted && (
-                <div className="hidden md:block flex-shrink-0 pt-2">
+                <div className="hidden md:block flex-shrink-0 pt-2 w-24">
                   <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20">
                     <div className="flex items-center gap-2">
                       <span className="text-lg">⚡</span>
@@ -644,7 +644,7 @@ export default function RapidFireQuiz({
             {!quizSubmitted && (
               <div className="flex items-start gap-4">
                 {/* Invisible spacer to match timer width (Desktop only) */}
-                <div className="hidden md:block flex-shrink-0 pt-2">
+                <div className="hidden md:block flex-shrink-0 pt-2 w-24">
                   <div className="invisible bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20">
                     <div className="flex items-center gap-2">
                       <span className="text-lg">⚡</span>
