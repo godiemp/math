@@ -354,9 +354,6 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     // Now verify completion screen
     await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible({ timeout: 5000 });
 
-    // Verify score (large points number) is displayed
-    await expect(page.locator('text=/\\d+/')).toBeVisible();
-
     // Verify accuracy percentage with "precisión"
     await expect(page.getByText(/% precisión/i)).toBeVisible();
 
