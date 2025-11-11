@@ -31,8 +31,11 @@ function getOpenAIClient(): OpenAI {
   return openaiClient;
 }
 
-// Use latest model (GPT-4 Turbo or GPT-4o)
-const MODEL = 'gpt-4-turbo-preview';
+// Use latest model (GPT-5 released August 2025)
+// GPT-5: Best quality, 94.6% on AIME 2025 math benchmark
+// GPT-4.1: More cost-effective alternative with 1M context window
+// GPT-5-mini: Budget option with good performance
+const MODEL = 'gpt-5';
 
 /**
  * Calculate difficulty score based on multiple factors
