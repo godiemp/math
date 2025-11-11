@@ -336,10 +336,10 @@ export default function PricingPage() {
       {/* Payment Options Modal */}
       {showPaymentModal && selectedPlan && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <Card padding="lg" className="max-w-lg w-full">
+          <div className="bg-white dark:bg-white rounded-lg shadow-xl max-w-lg w-full p-8">
             <div className="mb-6">
-              <h3 className="text-2xl font-bold mb-2">Elige cómo empezar</h3>
-              <p className="text-gray-600 dark:text-gray-400">
+              <h3 className="text-2xl font-bold mb-2 text-gray-900">Elige cómo empezar</h3>
+              <p className="text-gray-600">
                 {selectedPlan.name} - {formatPrice(selectedPlan.price, selectedPlan.currency)}/mes
               </p>
             </div>
@@ -349,18 +349,18 @@ export default function PricingPage() {
               <button
                 onClick={() => proceedWithPayment(selectedPlan.id, true)}
                 disabled={loadingPlanId === selectedPlan.id}
-                className="w-full p-6 border-2 border-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors text-left"
+                className="w-full p-6 border-2 border-blue-500 rounded-lg hover:bg-blue-50 transition-colors text-left"
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
-                    <h4 className="text-lg font-semibold mb-1">Probar y pagar después</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <h4 className="text-lg font-semibold mb-1 text-gray-900">Probar y pagar después</h4>
+                    <p className="text-sm text-gray-600">
                       Comienza tu prueba gratuita de 7 días ahora. No se requiere tarjeta.
                     </p>
                   </div>
                   <Badge variant="success" className="ml-2">Recomendado</Badge>
                 </div>
-                <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 mt-3">
+                <ul className="text-sm text-gray-600 space-y-1 mt-3">
                   <li>✓ Sin tarjeta requerida</li>
                   <li>✓ 7 días de acceso completo gratis</li>
                   <li>✓ Paga solo si decides continuar</li>
@@ -371,15 +371,15 @@ export default function PricingPage() {
               <button
                 onClick={() => proceedWithPayment(selectedPlan.id, false)}
                 disabled={loadingPlanId === selectedPlan.id}
-                className="w-full p-6 border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
+                className="w-full p-6 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-left"
               >
                 <div className="flex-1">
-                  <h4 className="text-lg font-semibold mb-1">Pagar ahora</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <h4 className="text-lg font-semibold mb-1 text-gray-900">Pagar ahora</h4>
+                  <p className="text-sm text-gray-600">
                     Paga hoy y obtén acceso inmediato. Tu prueba de 7 días comienza ahora.
                   </p>
                 </div>
-                <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 mt-3">
+                <ul className="text-sm text-gray-600 space-y-1 mt-3">
                   <li>✓ Tu cargo comienza en 7 días</li>
                   <li>✓ Acceso completo inmediato</li>
                   <li>✓ Cancela en cualquier momento</li>
@@ -402,12 +402,12 @@ export default function PricingPage() {
 
             {loadingPlanId === selectedPlan.id && (
               <div className="mt-4 text-center">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-gray-600">
                   Procesando...
                 </p>
               </div>
             )}
-          </Card>
+          </div>
         </div>
       )}
     </div>
