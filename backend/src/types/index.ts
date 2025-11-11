@@ -170,6 +170,51 @@ export interface UpdateSubscriptionRequest {
   paymentMethod?: string;
 }
 
+// Payment types
+export type PaymentStatus = 'pending' | 'approved' | 'rejected' | 'cancelled' | 'refunded' | 'in_process';
+
+export interface Payment {
+  id: number;
+  userId: string;
+  subscriptionId?: number;
+  planId: string;
+  amount: number;
+  currency: string;
+  paymentMethod: string;
+  paymentGateway: string;
+  gatewayPaymentId?: string;
+  gatewayPreferenceId?: string;
+  status: PaymentStatus;
+  statusDetail?: string;
+  transactionAmount?: number;
+  netAmount?: number;
+  feeAmount?: number;
+  payerEmail?: string;
+  payerId?: string;
+  metadata?: any;
+  paymentDate?: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface CreatePaymentPreferenceRequest {
+  userId: string;
+  planId: string;
+}
+
+export interface PaymentWebhookData {
+  action: string;
+  api_version: string;
+  data: {
+    id: string;
+  };
+  date_created: string;
+  id: number;
+  live_mode: boolean;
+  type: string;
+  user_id: string;
+}
+
 // Backend metadata types
 // Question already has metadata fields, so this is just an alias
 export type QuestionWithMetadata = Question;

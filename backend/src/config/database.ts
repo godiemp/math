@@ -355,6 +355,33 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
+    // Create payments table - tracks all payment transactions
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS payments (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        subscription_id INTEGER REFERENCES subscriptions(id) ON DELETE SET NULL,
+        plan_id VARCHAR(50) NOT NULL REFERENCES plans(id),
+        amount DECIMAL(10, 2) NOT NULL,
+        currency VARCHAR(3) NOT NULL DEFAULT 'CLP',
+        payment_method VARCHAR(50) NOT NULL,
+        payment_gateway VARCHAR(50) NOT NULL,
+        gateway_payment_id VARCHAR(255) UNIQUE,
+        gateway_preference_id VARCHAR(255),
+        status VARCHAR(20) NOT NULL CHECK (status IN ('pending', 'approved', 'rejected', 'cancelled', 'refunded', 'in_process')),
+        status_detail TEXT,
+        transaction_amount DECIMAL(10, 2),
+        net_amount DECIMAL(10, 2),
+        fee_amount DECIMAL(10, 2),
+        payer_email VARCHAR(255),
+        payer_id VARCHAR(255),
+        metadata JSONB,
+        payment_date BIGINT,
+        created_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL
+      )
+    `);
+
     // ========================================
     // QGEN SYSTEM TABLES
     // ========================================
@@ -515,6 +542,14 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_subscriptions_plan_id ON subscriptions(plan_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_subscriptions_status ON subscriptions(status)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_subscriptions_expires_at ON subscriptions(expires_at)');
+
+    // Payment system indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_payments_user_id ON payments(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_payments_subscription_id ON payments(subscription_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_payments_plan_id ON payments(plan_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_payments_status ON payments(status)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_payments_gateway_payment_id ON payments(gateway_payment_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_payments_created_at ON payments(created_at)');
 
     // QGen system indexes
     await client.query('CREATE INDEX IF NOT EXISTS idx_contexts_category ON contexts(category)');
