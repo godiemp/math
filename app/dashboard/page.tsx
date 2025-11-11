@@ -109,6 +109,9 @@ function DashboardContent() {
               Hola, {user?.displayName}
             </Text>
             <div className="flex gap-2 ml-auto sm:ml-0">
+              <Button variant="ghost" onClick={() => router.push('/profile')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
+                Mi Perfil
+              </Button>
               {!isPaidUser && (
                 <Button variant="primary" onClick={() => router.push('/pricing')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
                   ⭐ Premium
