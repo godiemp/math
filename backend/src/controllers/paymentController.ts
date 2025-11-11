@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { PaymentService } from '../services/paymentService';
-import { PlanService } from '../services/planService';
+import { PlanService } from '../services/subscriptionService';
 import { CreatePaymentPreferenceRequest } from '../types';
 
 /**
