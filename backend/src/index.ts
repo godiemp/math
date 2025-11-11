@@ -17,6 +17,7 @@ import { initImageStorage } from './services/imageStorageService';
 import authRoutes from './auth/routes/authRoutes';
 import adminRoutes from './routes/adminRoutes';
 import userManagementRoutes from './routes/userManagementRoutes';
+import userProfileRoutes from './routes/userProfileRoutes';
 import streakRoutes from './routes/streakRoutes';
 import sessionRoutes from './routes/sessionRoutes';
 import aiRoutes from './routes/aiRoutes';
@@ -154,6 +155,7 @@ app.get('/health', (req: Request, res: Response) => {
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin', userManagementRoutes); // User & subscription management
+app.use('/api/user', userProfileRoutes); // User profile management
 app.use('/api/streak', streakRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/ai', aiRoutes);
@@ -171,6 +173,7 @@ app.get('/api/images/:filename', serveImage);
 
 console.log('✅ Admin routes registered at /api/admin');
 console.log('✅ Auth routes registered at /api/auth');
+console.log('✅ User Profile routes registered at /api/user');
 console.log('✅ Streak routes registered at /api/streak');
 console.log('✅ Session routes registered at /api/sessions');
 console.log('✅ AI routes registered at /api/ai');
