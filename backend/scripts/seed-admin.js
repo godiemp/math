@@ -131,7 +131,7 @@ async function seedAdmin() {
     await initializeDatabase(pool);
 
     const username = 'admin';
-    const email = 'admin@simplepaes.cl';
+    const email = 'admin@paes.cl';
     const password = 'admin123'; // Default password - CHANGE IN PRODUCTION
     const displayName = 'Administrador';
 
