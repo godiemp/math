@@ -24,8 +24,8 @@ test.describe('Authentication', () => {
     // Find and fill email/username field
     await page.fill('input[type="email"], input[name="email"], input[name="username"]', 'student@test.com');
 
-    // Find and fill password field
-    await page.fill('input[type="password"]', 'student123');
+    // Find and fill password field - SECURITY: Updated to match new password requirements
+    await page.fill('input[type="password"]', 'StudentTest123!');
 
     // Click login button
     await page.click('button[type="submit"]');

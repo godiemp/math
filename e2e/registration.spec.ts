@@ -50,7 +50,8 @@ test.describe('User Registration', () => {
     // Fill in registration form
     await page.getByTestId('auth-username-input').fill(username);
     await page.getByTestId('auth-email-input').fill(email);
-    await page.getByTestId('auth-password-input').fill('password123');
+    // SECURITY: Password meets new requirements (12+ chars, uppercase, lowercase, number, special char)
+    await page.getByTestId('auth-password-input').fill('TestPass123!');
     await page.getByTestId('auth-displayname-input').fill('Test User');
     await page.getByTestId('auth-terms-checkbox').check();
 
@@ -69,7 +70,7 @@ test.describe('User Registration', () => {
     // Fill form with short username
     await page.getByTestId('auth-username-input').fill('ab');
     await page.getByTestId('auth-email-input').fill('test@example.com');
-    await page.getByTestId('auth-password-input').fill('password123');
+    await page.getByTestId('auth-password-input').fill('TestPass123!');
     await page.getByTestId('auth-displayname-input').fill('Test User');
     await page.getByTestId('auth-terms-checkbox').check();
 
@@ -94,7 +95,7 @@ test.describe('User Registration', () => {
     // Fill form with invalid email - Note: Browser HTML5 validation may prevent submission
     await page.getByTestId('auth-username-input').fill(`user${timestamp}`);
     await page.getByTestId('auth-email-input').fill('invalid-email');
-    await page.getByTestId('auth-password-input').fill('password123');
+    await page.getByTestId('auth-password-input').fill('TestPass123!');
     await page.getByTestId('auth-displayname-input').fill('Test User');
     await page.getByTestId('auth-terms-checkbox').check();
 
@@ -112,10 +113,10 @@ test.describe('User Registration', () => {
     await expect(page.getByTestId('auth-heading')).toContainText('Crear Cuenta');
   });
 
-  test('should show error for password less than 6 characters', async ({ page }) => {
+  test('should show error for password less than 12 characters', async ({ page }) => {
     const timestamp = Date.now();
 
-    // Fill form with short password
+    // Fill form with short password (only 5 chars - fails minimum length)
     await page.getByTestId('auth-username-input').fill(`user${timestamp}`);
     await page.getByTestId('auth-email-input').fill(`user${timestamp}@example.com`);
     await page.getByTestId('auth-password-input').fill('12345');
@@ -128,8 +129,8 @@ test.describe('User Registration', () => {
     // Wait for error message
     await page.waitForTimeout(1500);
 
-    // Verify error is shown
-    const errorCount = await page.getByText(/contraseña debe tener al menos 6 caracteres/i).count();
+    // Verify error is shown (new minimum is 12 characters)
+    const errorCount = await page.getByText(/contraseña debe tener al menos 12 caracteres/i).count();
     expect(errorCount).toBeGreaterThan(0);
 
     // Should still be on login page
@@ -161,7 +162,7 @@ test.describe('User Registration', () => {
     // Fill all fields but don't check terms
     await page.getByTestId('auth-username-input').fill(`user${timestamp}`);
     await page.getByTestId('auth-email-input').fill(`user${timestamp}@example.com`);
-    await page.getByTestId('auth-password-input').fill('password123');
+    await page.getByTestId('auth-password-input').fill('TestPass123!');
     await page.getByTestId('auth-displayname-input').fill('Test User');
     // Don't check terms checkbox
 
@@ -184,7 +185,7 @@ test.describe('User Registration', () => {
     // Try to register with existing test user credentials
     await page.getByTestId('auth-username-input').fill('teststudent');
     await page.getByTestId('auth-email-input').fill('student@test.com');
-    await page.getByTestId('auth-password-input').fill('password123');
+    await page.getByTestId('auth-password-input').fill('TestPass123!');
     await page.getByTestId('auth-displayname-input').fill('Test User');
     await page.getByTestId('auth-terms-checkbox').check();
 
@@ -235,7 +236,7 @@ test.describe('User Registration', () => {
     // Fill in registration form
     await page.getByTestId('auth-username-input').fill(`user${timestamp}`);
     await page.getByTestId('auth-email-input').fill(`user${timestamp}@example.com`);
-    await page.getByTestId('auth-password-input').fill('password123');
+    await page.getByTestId('auth-password-input').fill('TestPass123!');
     await page.getByTestId('auth-displayname-input').fill('Test User');
     await page.getByTestId('auth-terms-checkbox').check();
 

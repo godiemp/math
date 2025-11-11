@@ -16,7 +16,8 @@ export async function loginAsStudent(page: Page) {
 
   // Fill in credentials
   await page.fill('input[type="email"], input[name="email"], input[name="username"]', 'student@test.com');
-  await page.fill('input[type="password"]', 'student123');
+  // SECURITY: Updated to use new password that meets security requirements
+  await page.fill('input[type="password"]', 'StudentTest123!');
 
   // Submit login
   await page.click('button[type="submit"]');
