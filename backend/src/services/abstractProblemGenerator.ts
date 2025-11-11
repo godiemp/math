@@ -186,26 +186,28 @@ ${existingEssences.length > 50 ? `\n... and ${existingEssences.length - 50} more
 
 7. **Common Errors**: Anticipate typical student mistakes
 
-**Output Format (JSON array):**
-[
-  {
-    "essence": "Calcula: (-3) × 4",
-    "answer_type": "multiple_choice",
-    "expected_steps": [
-      "Identificar signos: negativo × positivo",
-      "Multiplicar valores absolutos: 3 × 4 = 12",
-      "Aplicar regla de signos: resultado es negativo",
-      "Respuesta: -12"
-    ],
-    "common_errors": [
-      "Olvidar cambiar el signo (responder 12 en lugar de -12)",
-      "Aplicar incorrectamente la regla de signos (pensar que negativo × positivo = positivo)"
-    ],
-    "suggested_difficulty_score": 20
-  }
-]
+**Output Format (JSON object with problems array):**
+{
+  "problems": [
+    {
+      "essence": "Calcula: (-3) × 4",
+      "answer_type": "multiple_choice",
+      "expected_steps": [
+        "Identificar signos: negativo × positivo",
+        "Multiplicar valores absolutos: 3 × 4 = 12",
+        "Aplicar regla de signos: resultado es negativo",
+        "Respuesta: -12"
+      ],
+      "common_errors": [
+        "Olvidar cambiar el signo (responder 12 en lugar de -12)",
+        "Aplicar incorrectamente la regla de signos (pensar que negativo × positivo = positivo)"
+      ],
+      "suggested_difficulty_score": 20
+    }
+  ]
+}
 
-Generate ${count} problem(s) now. Return ONLY the JSON array, no additional text.`;
+CRITICAL: You MUST generate exactly ${count} problem(s). The "problems" array MUST contain ${count} items. Return ONLY valid JSON, no additional text.`;
 
   try {
     const openai = getOpenAIClient();
