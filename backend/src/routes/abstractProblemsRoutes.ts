@@ -13,6 +13,7 @@ import {
   deleteAbstractProblemController,
   activateAbstractProblemController,
   getStatsByUnitController,
+  getProblemsGroupedByUnitController,
   seedAbstractProblemsController,
   activateAllDraftsController,
   getCoverageStatsController,
@@ -95,6 +96,13 @@ router.get('/', authenticate, listAbstractProblemsController);
  * Query params: level, subject
  */
 router.get('/stats/by-unit', authenticate, getStatsByUnitController);
+
+/**
+ * GET /api/abstract-problems/grouped
+ * Get problems grouped by thematic unit and subsection
+ * Query params: level, subject, status
+ */
+router.get('/grouped', authenticate, getProblemsGroupedByUnitController);
 
 /**
  * GET /api/abstract-problems/:id

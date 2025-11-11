@@ -12,6 +12,7 @@ import {
   deleteAbstractProblem,
   activateAbstractProblem,
   getStatsByUnit,
+  getProblemsGroupedByUnit,
 } from '../services/abstractProblemService';
 import {
   createContextProblem,
@@ -428,15 +429,44 @@ export const getStatsByUnitController = async (req: Request, res: Response) => {
 };
 
 /**
+ * Get problems grouped by thematic unit and subsection
+ * GET /api/abstract-problems/grouped
+ * Query: { level?: 'M1' | 'M2', subject?: string, status?: string }
+ */
+export const getProblemsGroupedByUnitController = async (req: Request, res: Response) => {
+  try {
+    const { level, subject, status } = req.query;
+
+    const result = await getProblemsGroupedByUnit(
+      level as 'M1' | 'M2' | undefined,
+      subject as string | undefined,
+      status as string | undefined
+    );
+
+    res.json({
+      success: true,
+      ...result,
+    });
+  } catch (error: any) {
+    console.error('Error getting grouped problems:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to get grouped problems',
+    });
+  }
+};
+
+/**
  * Bulk seed abstract problems
  * POST /api/abstract-problems/seed
- * Body: { level?: 'M1' | 'M2', subject?: string, limit?: number, problemsPerUnit?: number, dryRun?: boolean }
+ * Body: { level?: 'M1' | 'M2', subject?: string, unit_code?: string, limit?: number, problemsPerUnit?: number, dryRun?: boolean }
  */
 export const seedAbstractProblemsController = async (req: Request, res: Response) => {
   try {
     const {
       level: levelFilter,
       subject: subjectFilter,
+      unit_code: unitCodeFilter,
       limit,
       problemsPerUnit,
       dryRun = false,
@@ -448,6 +478,7 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
     console.log('Request parameters:', {
       levelFilter,
       subjectFilter,
+      unitCodeFilter,
       limit,
       problemsPerUnit,
       dryRun,
@@ -467,6 +498,14 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
       return res.status(400).json({
         success: false,
         error: 'subject must be números, álgebra, geometría, or probabilidad',
+      });
+    }
+
+    if (unitCodeFilter && !THEMATIC_UNITS.find(u => u.code === unitCodeFilter)) {
+      console.error('❌ Invalid unit_code filter:', unitCodeFilter);
+      return res.status(400).json({
+        success: false,
+        error: `unit_code '${unitCodeFilter}' not found in thematic units`,
       });
     }
 
@@ -570,6 +609,11 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
       const beforeCount = configs.length;
       configs = configs.filter(c => c.subject === subjectFilter);
       console.log(`  Subject filter (${subjectFilter}): ${beforeCount} → ${configs.length} units`);
+    }
+    if (unitCodeFilter) {
+      const beforeCount = configs.length;
+      configs = configs.filter(c => c.unit_code === unitCodeFilter);
+      console.log(`  Unit code filter (${unitCodeFilter}): ${beforeCount} → ${configs.length} units`);
     }
     if (limit) {
       const beforeCount = configs.length;

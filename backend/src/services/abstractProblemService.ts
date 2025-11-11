@@ -370,3 +370,94 @@ function mapRowToAbstractProblem(row: any): AbstractProblem {
     updated_at: parseInt(row.updated_at),
   };
 }
+
+/**
+ * Get problems grouped by thematic unit and subsection
+ */
+export async function getProblemsGroupedByUnit(
+  level?: 'M1' | 'M2',
+  subject?: string,
+  status?: string
+): Promise<any> {
+  let whereClause = '1=1';
+  const values: any[] = [];
+  let paramCount = 1;
+
+  if (level) {
+    whereClause += ` AND ap.level = $${paramCount++}`;
+    values.push(level);
+  }
+
+  if (subject) {
+    whereClause += ` AND ap.subject = $${paramCount++}`;
+    values.push(subject);
+  }
+
+  if (status) {
+    whereClause += ` AND ap.status = $${paramCount++}`;
+    values.push(status);
+  }
+
+  const query = `
+    SELECT
+      ap.*
+    FROM abstract_problems ap
+    WHERE ${whereClause}
+    ORDER BY ap.level, ap.subject, ap.unit, ap.subsection, ap.created_at
+  `;
+
+  const result = await pool.query(query, values);
+  const problems = result.rows.map(mapRowToAbstractProblem);
+
+  // Group by unit
+  const unitMap = new Map<string, any>();
+
+  for (const problem of problems) {
+    const unitKey = `${problem.level}-${problem.subject}-${problem.unit}`;
+
+    if (!unitMap.has(unitKey)) {
+      unitMap.set(unitKey, {
+        unit: problem.unit,
+        level: problem.level,
+        subject: problem.subject,
+        total_problems: 0,
+        subsections: new Map<string, any>(),
+        problems_without_subsection: [],
+      });
+    }
+
+    const unitData = unitMap.get(unitKey)!;
+    unitData.total_problems++;
+
+    if (problem.subsection) {
+      if (!unitData.subsections.has(problem.subsection)) {
+        unitData.subsections.set(problem.subsection, {
+          subsection: problem.subsection,
+          problem_count: 0,
+          problems: [],
+        });
+      }
+      const subsectionData = unitData.subsections.get(problem.subsection)!;
+      subsectionData.problem_count++;
+      subsectionData.problems.push(problem);
+    } else {
+      unitData.problems_without_subsection.push(problem);
+    }
+  }
+
+  // Convert maps to arrays
+  const units = Array.from(unitMap.values()).map(unit => ({
+    unit: unit.unit,
+    level: unit.level,
+    subject: unit.subject,
+    total_problems: unit.total_problems,
+    subsections: Array.from(unit.subsections.values()),
+    problems_without_subsection: unit.problems_without_subsection,
+  }));
+
+  return {
+    total_units: units.length,
+    total_problems: problems.length,
+    units,
+  };
+}
