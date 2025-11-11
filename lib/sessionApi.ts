@@ -12,7 +12,8 @@ import type {
   UpdateSessionData,
   SessionsResponse,
   SessionResponse,
-  MessageResponse
+  MessageResponse,
+  StudentStatistics
 } from './types';
 
 // Re-export types for convenience
@@ -289,6 +290,29 @@ export async function getMyParticipationAPI(
     return {
       success: false,
       error: response.error.error || 'Failed to get participation data',
+    };
+  }
+
+  return {
+    success: true,
+    data: response.data,
+  };
+}
+
+/**
+ * Get my statistics for live practice sessions
+ */
+export async function getMyStatistics(): Promise<{
+  success: boolean;
+  data?: StudentStatistics;
+  error?: string;
+}> {
+  const response = await api.get<StudentStatistics>('/api/sessions/stats/me');
+
+  if (response.error) {
+    return {
+      success: false,
+      error: response.error.error || 'Failed to get statistics',
     };
   }
 

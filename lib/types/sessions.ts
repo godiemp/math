@@ -135,3 +135,60 @@ export interface MessageResponse {
   success: boolean;
   message?: string;
 }
+
+/**
+ * ============================================================================
+ * STUDENT STATISTICS TYPES
+ * ============================================================================
+ */
+
+/**
+ * Recent session participation data
+ */
+export interface RecentSessionStats {
+  sessionId: string;
+  sessionName: string;
+  level: Level;
+  score: number;
+  totalQuestions: number;
+  accuracy: number;
+  rank: number;
+  completedAt: number;
+}
+
+/**
+ * Statistics by level (M1 or M2)
+ */
+export interface LevelStats {
+  sessions: number;
+  averageScore: number;
+  averageAccuracy: number;
+}
+
+/**
+ * Top ranking achievements
+ */
+export interface TopRankings {
+  first: number;  // Number of first place finishes
+  second: number; // Number of second place finishes
+  third: number;  // Number of third place finishes
+}
+
+/**
+ * Student statistics for live practice sessions
+ */
+export interface StudentStatistics {
+  totalSessions: number;
+  totalQuestions: number;
+  totalCorrect: number;
+  averageScore: number;
+  averageAccuracy: number;
+  bestScore: number;
+  bestAccuracy: number;
+  byLevel: {
+    M1: LevelStats;
+    M2: LevelStats;
+  };
+  topRankings: TopRankings;
+  recentSessions: RecentSessionStats[];
+}
