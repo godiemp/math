@@ -1,6 +1,5 @@
 import { pool } from '../config/database';
-import { questions } from '../../../lib/questions';
-import { Question } from '../../../lib/types';
+import { Question } from '../types';
 
 /**
  * Skill mastery information
@@ -52,9 +51,9 @@ async function calculateSkillMastery(userId: string, level?: 'M1' | 'M2'): Promi
 
   // Process each attempt
   result.rows.forEach(row => {
-    const skills = Array.isArray(row.skills) ? row.skills : [];
-    const isCorrect = row.is_correct;
-    const attemptedAt = parseInt(row.attempted_at, 10);
+    const skills: string[] = Array.isArray(row.skills) ? row.skills : [];
+    const isCorrect: boolean = row.is_correct;
+    const attemptedAt: number = parseInt(row.attempted_at, 10);
 
     skills.forEach((skillId: string) => {
       const existing = skillStats.get(skillId) || {
@@ -254,16 +253,44 @@ export async function getAdaptiveQuestions(
   // Get recently attempted questions
   const recentQuestionIds = await getRecentQuestionIds(userId, level);
 
-  // Filter questions by level and subject
-  let availableQuestions = questions.filter(q => q.level === level);
+  // Query questions from database
+  let query = 'SELECT * FROM questions WHERE level = $1';
+  const params: any[] = [level];
+  let paramCount = 2;
 
   if (subject) {
-    availableQuestions = availableQuestions.filter(q => q.subject === subject);
+    query += ` AND subject = $${paramCount}`;
+    params.push(subject);
+    paramCount++;
   }
+
+  const result = await pool.query(query, params);
+
+  // Parse JSON fields
+  const availableQuestions: Question[] = result.rows.map((row: any) => ({
+    id: row.id,
+    topic: row.topic,
+    level: row.level,
+    question: row.question,
+    questionLatex: row.question_latex,
+    options: typeof row.options === 'string' ? JSON.parse(row.options) : row.options,
+    optionsLatex: row.options_latex ? (typeof row.options_latex === 'string' ? JSON.parse(row.options_latex) : row.options_latex) : undefined,
+    correctAnswer: row.correct_answer,
+    explanation: row.explanation,
+    explanationLatex: row.explanation_latex,
+    difficulty: row.difficulty,
+    subject: row.subject,
+    skills: typeof row.skills === 'string' ? JSON.parse(row.skills) : row.skills,
+    images: row.images ? (typeof row.images === 'string' ? JSON.parse(row.images) : row.images) : undefined,
+    visualData: row.visual_data ? (typeof row.visual_data === 'string' ? JSON.parse(row.visual_data) : row.visual_data) : undefined,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    createdBy: row.created_by,
+  }));
 
   // If not enough questions, return all available
   if (availableQuestions.length <= count) {
-    return availableQuestions.sort((a, b) =>
+    return availableQuestions.sort((a: Question, b: Question) =>
       (DIFFICULTY_ORDER[a.difficulty] || 0) - (DIFFICULTY_ORDER[b.difficulty] || 0)
     );
   }
@@ -292,16 +319,45 @@ export async function getAdaptiveQuestions(
 /**
  * Fallback to random selection if adaptive selection fails
  */
-export function getRandomQuestionsFallback(
+export async function getRandomQuestionsFallback(
   level: 'M1' | 'M2',
   count: number = 10,
   subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad'
-): Question[] {
-  let levelQuestions = questions.filter(q => q.level === level);
+): Promise<Question[]> {
+  // Query questions from database
+  let query = 'SELECT * FROM questions WHERE level = $1';
+  const params: any[] = [level];
+  let paramCount = 2;
 
   if (subject) {
-    levelQuestions = levelQuestions.filter(q => q.subject === subject);
+    query += ` AND subject = $${paramCount}`;
+    params.push(subject);
+    paramCount++;
   }
+
+  const result = await pool.query(query, params);
+
+  // Parse JSON fields
+  const levelQuestions: Question[] = result.rows.map((row: any) => ({
+    id: row.id,
+    topic: row.topic,
+    level: row.level,
+    question: row.question,
+    questionLatex: row.question_latex,
+    options: typeof row.options === 'string' ? JSON.parse(row.options) : row.options,
+    optionsLatex: row.options_latex ? (typeof row.options_latex === 'string' ? JSON.parse(row.options_latex) : row.options_latex) : undefined,
+    correctAnswer: row.correct_answer,
+    explanation: row.explanation,
+    explanationLatex: row.explanation_latex,
+    difficulty: row.difficulty,
+    subject: row.subject,
+    skills: typeof row.skills === 'string' ? JSON.parse(row.skills) : row.skills,
+    images: row.images ? (typeof row.images === 'string' ? JSON.parse(row.images) : row.images) : undefined,
+    visualData: row.visual_data ? (typeof row.visual_data === 'string' ? JSON.parse(row.visual_data) : row.visual_data) : undefined,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    createdBy: row.created_by,
+  }));
 
   if (levelQuestions.length <= count) {
     return [...levelQuestions].sort(() => Math.random() - 0.5);

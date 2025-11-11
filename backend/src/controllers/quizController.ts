@@ -538,7 +538,7 @@ export const getAdaptiveQuestionSelection = async (req: AuthRequest, res: Respon
       // If adaptive selection fails, fall back to random selection
       console.warn('Adaptive selection failed, falling back to random:', adaptiveError);
 
-      const questions = getRandomQuestionsFallback(
+      const questions = await getRandomQuestionsFallback(
         level as 'M1' | 'M2',
         questionCount,
         subject as 'números' | 'álgebra' | 'geometría' | 'probabilidad' | undefined
