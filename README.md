@@ -14,6 +14,7 @@ SimplePAES es una plataforma de práctica completa que incluye:
 - **Dos Niveles de Competencia** - M1 (básico) y M2 (avanzado) alineados con estándares PAES
 - **Generador Dinámico de Preguntas (QGen)** - Sistema inteligente para generar preguntas personalizadas
 - **Sistema de Suscripciones** - Planes de acceso con gestión completa de usuarios
+- **Integración de Pagos** - Procesamiento de pagos con MercadoPago para Chile
 - **Analytics Completo** - Métricas de uso, desempeño y análisis de interacciones con IA
 - **Panel de Administración** - Gestiona sesiones en vivo, usuarios, planes, y el banco de preguntas
 - **Sistema de Documentación** - Accede a material de estudio completo con LaTeX
@@ -135,6 +136,33 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 - Lista de features incluidas
 - Estado activo/inactivo
 
+### 💳 Integración de Pagos con MercadoPago
+
+**Procesamiento de Pagos Completo** - Sistema integrado para Chile
+
+- **MercadoPago SDK**: Integración oficial con gateway de pago chileno
+- **Webhooks Automáticos**: Actualización en tiempo real del estado de pagos
+- **Activación Automática**: Suscripciones se activan al confirmar el pago
+- **Tracking de Pagos**: Historial completo de transacciones
+- **Páginas de Estado**: Success, pending, y failure pages
+- **Modo Sandbox**: Testing completo con tarjetas de prueba
+- **Seguridad**: Validación de webhooks y auditoría completa
+
+**Flujo de Pago:**
+1. Usuario selecciona plan en frontend
+2. Sistema crea preferencia de pago en MercadoPago
+3. Usuario completa el pago en checkout de MercadoPago
+4. Webhook notifica al backend sobre el estado del pago
+5. Sistema activa suscripción automáticamente al aprobar
+6. Usuario recibe confirmación y acceso inmediato
+
+**Características de Seguridad:**
+- Tokens JWT para autenticación
+- Validación de webhooks de MercadoPago
+- Registro completo de transacciones para auditoría
+- Rate limiting en endpoints de pago
+- Helmet para headers de seguridad HTTP
+
 ### 👨‍💼 Características de Administración
 
 - **Crear y programar** sesiones de práctica en vivo
@@ -193,6 +221,10 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 - **API**: Endpoints RESTful
 - **CORS**: Configurado para deployments en Vercel
 - **Sistema de Auto-actualización**: Actualiza estados de sesiones cada 30 segundos
+- **Pagos**: MercadoPago SDK para procesamiento de pagos en Chile
+- **Email**: Resend y Nodemailer para notificaciones
+- **Validación**: Zod para validación de esquemas
+- **Seguridad**: Helmet para headers HTTP, express-rate-limit para protección
 - **PDF Processing**: pdf-parse, pdf-lib, pdfjs-dist para extracción de preguntas
 - **Image Processing**: Sharp para optimización de imágenes
 - **File Upload**: Multer para manejo de archivos
@@ -219,6 +251,12 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 - `sharp` - Optimización de imágenes
 - `multer` - Manejo de file uploads
 - `date-fns` - Manipulación de fechas
+- `mercadopago` - SDK oficial de MercadoPago para pagos
+- `resend` & `nodemailer` - Servicios de email
+- `zod` - Validación de esquemas TypeScript
+- `helmet` - Seguridad HTTP headers
+- `express-rate-limit` - Rate limiting y protección
+- `openai` - Integración con OpenAI (opcional)
 
 ## Estructura del Proyecto
 
@@ -240,6 +278,11 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 │   │       └── docs/[[...slug]]  # Sistema de documentación M2
 │   ├── live-practice/            # Interfaz de sesiones en vivo
 │   ├── progress/                 # Página de seguimiento de progreso
+│   ├── payment/                  # Páginas de estado de pago
+│   │   ├── success/              # Pago exitoso
+│   │   ├── pending/              # Pago pendiente
+│   │   └── failure/              # Pago fallido
+│   ├── payments/                 # Interfaz de gestión de pagos
 │   ├── admin/                    # Dashboard y herramientas de admin
 │   │   ├── page.tsx              # Dashboard principal de admin
 │   │   ├── problems/             # Navegador de banco de preguntas
@@ -275,6 +318,7 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 │   │   │   ├── aiAnalyticsRoutes.ts # Analytics de IA
 │   │   │   ├── quizRoutes.ts     # Quiz tracking
 │   │   │   ├── qgenRoutes.ts     # Generador de preguntas
+│   │   │   ├── paymentRoutes.ts  # Procesamiento de pagos MercadoPago
 │   │   │   └── userManagementRoutes.ts # Gestión de usuarios
 │   │   ├── scripts/              # Scripts de utilidad
 │   │   └── services/             # Servicios de negocio
@@ -282,7 +326,9 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 │   │       ├── pdfService.ts     # Procesamiento de PDFs
 │   │       ├── pdfVisionService.ts # Extracción con visión
 │   │       ├── imageStorageService.ts # Almacenamiento de imágenes
-│   │       └── subscriptionService.ts # Gestión de suscripciones
+│   │       ├── subscriptionService.ts # Gestión de suscripciones
+│   │       ├── paymentService.ts # Procesamiento de pagos MercadoPago
+│   │       └── emailService.ts   # Servicio de notificaciones email
 │   └── package.json
 ├── components/                   # Componentes React
 │   ├── Quiz.tsx                  # Componente principal de quiz
@@ -415,6 +461,7 @@ Cada pregunta incluye:
 **Sistema de Suscripciones:**
 - `plans` - Planes de suscripción disponibles
 - `subscriptions` - Suscripciones activas por usuario
+- `payments` - Historial de pagos y transacciones MercadoPago
 
 **Quiz y Tracking:**
 - `quiz_sessions` - Sesiones de quiz agrupadas con conversaciones IA
@@ -479,6 +526,9 @@ DATABASE_URL=postgresql://user:password@localhost:5432/paes_chile
 JWT_SECRET=tu-secret-key
 PORT=3001
 ANTHROPIC_API_KEY=tu-api-key-de-anthropic
+MERCADOPAGO_ACCESS_TOKEN=TEST-tu-token-de-mercadopago
+BACKEND_URL=http://localhost:3001
+FRONTEND_URL=http://localhost:3000
 ```
 
 5. **Configurar base de datos**
@@ -681,6 +731,12 @@ El skill te guiará para crear:
 - `PUT /api/admin/subscriptions/:id` - Actualizar suscripción
 - `DELETE /api/admin/subscriptions/:id` - Cancelar suscripción
 
+### Pagos
+- `POST /api/payments/create-preference` - Crear preferencia de pago en MercadoPago
+- `GET /api/payments/my-payments` - Obtener historial de pagos del usuario
+- `GET /api/payments/:id` - Obtener detalles de un pago específico
+- `POST /api/payments/webhook` - Webhook para notificaciones de MercadoPago (público)
+
 ### Analytics
 - `GET /api/analytics/dashboard` - Dashboard de analytics general (Admin)
 - `GET /api/analytics/trends` - Tendencias de uso (Admin)
@@ -730,12 +786,18 @@ El skill te guiará para crear:
 - Mensajes de carga personalizados por ruta
 - Auto-actualización de estados de sesiones
 
-**Sistema de Suscripciones:**
+**Sistema de Suscripciones y Pagos:**
 - ✅ **Planes de Suscripción** - Sistema completo de planes con precios y características
 - ✅ **Gestión de Usuarios** - CRUD completo de usuarios y suscripciones
 - ✅ **Estados de Suscripción** - Trial, activa, expirada, cancelada
 - ✅ **Auto-renovación** - Gestión de renovaciones automáticas
 - ✅ **Admin Interface** - Panel de administración para gestionar usuarios y planes
+- ✅ **Integración MercadoPago** - Procesamiento de pagos completo para Chile
+- ✅ **Webhooks Automáticos** - Actualización en tiempo real de pagos
+- ✅ **Activación Automática** - Suscripciones se activan al confirmar pago
+- ✅ **Tracking de Pagos** - Historial completo de transacciones
+- ✅ **Páginas de Estado** - Success, pending, failure pages
+- ✅ **Seguridad de Pagos** - Rate limiting, validación de webhooks, auditoría
 
 **Quiz Tracking en Base de Datos:**
 - ✅ **Quiz Sessions** - Agrupación de intentos con tracking de conversaciones IA
@@ -777,8 +839,8 @@ El skill te guiará para crear:
 - **Sin Aprendizaje Adaptativo**: Generación de quiz es aleatoria, no ajustada por dificultad del usuario
 - **Tests Unitarios**: No hay tests unitarios (solo E2E con Playwright)
 - **QGen en Desarrollo**: Sistema de generación dinámica necesita más contextos, objetivos y templates
-- **Integración de Pagos**: Sistema de suscripciones sin integración de pasarela de pago
 - **Analytics en Tiempo Real**: Dashboard de analytics sin actualización en tiempo real
+- **Notificaciones Email**: Sistema de email configurado pero necesita más templates
 
 ## Mejoras Futuras
 
@@ -786,9 +848,9 @@ El skill te guiará para crear:
 - [ ] Expandir banco de preguntas M2 a 200+ problemas
 - [ ] Implementar algoritmo de aprendizaje adaptativo basado en desempeño
 - [ ] Agregar tests unitarios (vitest/jest) para componentes y servicios
-- [ ] Integración de pasarela de pago (Stripe/MercadoPago)
 - [ ] Expandir biblioteca QGen (más contextos, objetivos y templates)
 - [ ] Sistema de recomendaciones personalizado basado en habilidades débiles
+- [ ] Templates de email para confirmaciones y notificaciones
 
 ### Prioridad Media
 - [ ] Implementar sistema de calibración de dificultad de problemas
@@ -829,13 +891,26 @@ Para más información detallada, ver:
 - [Code Patterns Skill](./.claude/skills/code-patterns/SKILL.md) - Guía de patrones y estándares
 - [Endpoint Generator](./.claude/skills/endpoint/SKILL.md) - Generador de endpoints Express.js
 
+### Pagos y Suscripciones
+- [Integración de Pagos MercadoPago](./PAYMENT_INTEGRATION.md) - Guía completa de configuración de pagos
+
 ### Otras Documentaciones
 - [Análisis de Feature Ensayos](./docs/ENSAYOS_FEATURE_ANALYSIS.md) - Análisis de sesiones en vivo
 - [AI Setup](./docs/AI_SETUP.md) - Configuración del sistema de IA
 
 ## Mejoras Recientes
 
-### Sistema de Suscripciones (NUEVO)
+### Integración de Pagos MercadoPago (NUEVO ⭐)
+- ✅ SDK oficial de MercadoPago integrado
+- ✅ Procesamiento completo de pagos para Chile
+- ✅ Webhooks automáticos para actualización de estados
+- ✅ Activación automática de suscripciones al aprobar pago
+- ✅ Páginas de estado (success, pending, failure)
+- ✅ Tracking completo de transacciones
+- ✅ Modo sandbox para testing
+- ✅ Seguridad con rate limiting y validación de webhooks
+
+### Sistema de Suscripciones
 - ✅ Sistema completo de planes y suscripciones
 - ✅ Gestión de usuarios con roles
 - ✅ Estados de suscripción (trial, active, expired, cancelled)
@@ -908,9 +983,9 @@ Para preguntas o soporte, por favor abre un issue en GitHub.
 
 ---
 
-**Última actualización**: Noviembre 10, 2025
+**Última actualización**: Noviembre 11, 2025
 
-**Estado del Proyecto**: En desarrollo activo con features principales implementadas, sistema de suscripciones completo, quiz tracking en base de datos, generador dinámico de preguntas (QGen), analytics completo, testing E2E, y herramientas de desarrollo mejoradas con Claude Code skills.
+**Estado del Proyecto**: En desarrollo activo con features principales implementadas, sistema de suscripciones completo con **integración de pagos MercadoPago**, quiz tracking en base de datos, generador dinámico de preguntas (QGen), analytics completo, testing E2E, y herramientas de desarrollo mejoradas con Claude Code skills.
 
 ## Tech Stack Summary
 
@@ -919,7 +994,11 @@ Para preguntas o soporte, por favor abre un issue en GitHub.
 | **Frontend** | Next.js 15, React 19, TypeScript 5.9, Tailwind CSS, KaTeX |
 | **Backend** | Express.js, Node.js, TypeScript, PostgreSQL |
 | **Autenticación** | JWT, bcryptjs |
-| **IA** | Anthropic Claude Sonnet 4.5 |
+| **Pagos** | MercadoPago SDK (Chile) |
+| **Email** | Resend, Nodemailer |
+| **Validación** | Zod |
+| **Seguridad** | Helmet, express-rate-limit |
+| **IA** | Anthropic Claude Sonnet 4.5, OpenAI |
 | **Testing** | Playwright (E2E), Docker Compose |
 | **Developer Tools** | Claude Code Skills, ESLint, Prettier |
 | **UI/UX** | Radix UI, Lucide Icons, Sonner (toasts) |
