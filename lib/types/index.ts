@@ -140,3 +140,17 @@ export type {
   PlanResponse,
   SubscriptionResponse,
 } from './subscription';
+
+// ============================================================================
+// PAYMENT TYPES
+// ============================================================================
+export type {
+  PaymentStatus,
+  Payment,
+  PaymentWithPlan,
+  CreatePaymentPreferenceRequest,
+  PaymentPreferenceResponse,
+  CreatePaymentPreferenceResponse,
+  GetPaymentResponse,
+  GetPaymentsResponse,
+} from './payment';

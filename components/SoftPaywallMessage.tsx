@@ -88,12 +88,19 @@ export function SoftPaywallMessage({ moduleName }: SoftPaywallMessageProps) {
           </div>
 
           <p className="text-sm text-gray-400 italic">
-            Estamos en fase de lanzamiento. Pronto podrás acceder a todo el contenido premium.
+            Actualízate a Premium para desbloquear todo el contenido y funciones avanzadas.
           </p>
         </div>
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            onClick={() => router.push('/pricing')}
+            className="px-8 py-3 bg-gradient-to-r from-purple-500 to-blue-600 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl"
+          >
+            ⭐ Ver Planes Premium
+          </button>
+
           <button
             onClick={() => router.push('/live-practice')}
             className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl"

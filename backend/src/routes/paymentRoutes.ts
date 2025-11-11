@@ -5,6 +5,13 @@ import * as paymentController from '../controllers/paymentController';
 const router = express.Router();
 
 /**
+ * GET /api/payments/plans
+ * Get all active subscription plans
+ * Public endpoint (no authentication required)
+ */
+router.get('/plans', paymentController.getActivePlans);
+
+/**
  * POST /api/payments/create-preference
  * Create a payment preference for a plan
  * Requires authentication

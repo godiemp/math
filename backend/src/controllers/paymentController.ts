@@ -1,6 +1,28 @@
 import { Request, Response } from 'express';
 import { PaymentService } from '../services/paymentService';
+import { PlanService } from '../services/subscriptionService';
 import { CreatePaymentPreferenceRequest } from '../types';
+
+/**
+ * Get all active subscription plans
+ * GET /api/payments/plans
+ */
+export const getActivePlans = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const plans = await PlanService.getAllPlans(true); // true = active only
+
+    res.status(200).json({
+      success: true,
+      plans,
+    });
+  } catch (error: any) {
+    console.error('Error fetching active plans:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to fetch plans',
+    });
+  }
+};
 
 /**
  * Create a payment preference for a plan
