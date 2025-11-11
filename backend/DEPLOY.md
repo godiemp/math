@@ -364,7 +364,75 @@ railway logs
 1. **Update Frontend**: Point your Next.js app to use the Railway backend URL
 2. **Set CORS**: Update `FRONTEND_URL` in Railway when you deploy frontend to Vercel
 3. **Create Admin User**: Register your first admin user via API
-4. **Add More Endpoints**: Build question management, live sessions, etc.
+4. **Set Up Database Backups**: Configure automated backups (see below)
+5. **Add More Endpoints**: Build question management, live sessions, etc.
+
+---
+
+## 💾 Database Backups
+
+### Automated Backups
+
+Database backups run **automatically every day at 2:00 AM UTC** via GitHub Actions.
+
+**Check backup status:**
+1. Go to GitHub Actions in your repository
+2. Select "Database Backup" workflow
+3. View recent runs and artifacts
+
+### Manual Backup
+
+Before major changes, create a manual backup:
+
+```bash
+cd backend
+npm run backup
+```
+
+### Verify Backups
+
+```bash
+# List all backups
+npm run backup:list
+
+# Verify latest backup
+npm run verify-backup -- --latest
+
+# Check backup health
+npm run monitor-backups
+```
+
+### Restore Database
+
+⚠️ **IMPORTANT**: Only restore in emergencies or with proper authorization
+
+```bash
+# Restore from latest backup
+npm run restore -- --latest
+
+# Restore from specific backup
+npm run restore -- <backup-filename>
+```
+
+### Railway Backups
+
+Railway also provides backup features:
+
+1. Open Railway dashboard: `railway open`
+2. Select PostgreSQL database
+3. Go to "Backups" tab
+4. Configure automated backups
+
+**Recommended Railway backup settings:**
+- Backup frequency: Daily
+- Retention: 14 days
+- Point-in-time recovery: Enabled
+
+### Full Documentation
+
+For comprehensive backup documentation, see:
+- **Quick Reference**: [BACKUP_README.md](./BACKUP_README.md)
+- **Full Guide**: [docs/DATABASE_BACKUP.md](../docs/DATABASE_BACKUP.md)
 
 ---
 
@@ -400,6 +468,8 @@ Your backend will likely cost **$5-10/month** including database.
 - [ ] Registration endpoint works
 - [ ] Login endpoint works
 - [ ] Protected endpoint works (with JWT)
+- [ ] Database backups configured (automated via GitHub Actions)
+- [ ] Verified backup functionality works
 
 ---
 
