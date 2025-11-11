@@ -49,16 +49,16 @@ function PaymentHistoryContent() {
   };
 
   const getStatusBadge = (status: PaymentStatus) => {
-    const statusConfig: Record<PaymentStatus, { variant: 'success' | 'danger' | 'default'; label: string }> = {
+    const statusConfig: Record<PaymentStatus, { variant: 'success' | 'danger' | 'warning' | 'info' | 'neutral'; label: string }> = {
       approved: { variant: 'success', label: 'Aprobado' },
       rejected: { variant: 'danger', label: 'Rechazado' },
       cancelled: { variant: 'danger', label: 'Cancelado' },
-      refunded: { variant: 'default', label: 'Reembolsado' },
-      pending: { variant: 'default', label: 'Pendiente' },
-      in_process: { variant: 'default', label: 'En Proceso' },
+      refunded: { variant: 'neutral', label: 'Reembolsado' },
+      pending: { variant: 'warning', label: 'Pendiente' },
+      in_process: { variant: 'info', label: 'En Proceso' },
     };
 
-    const config = statusConfig[status] || { variant: 'default' as const, label: status };
+    const config = statusConfig[status] || { variant: 'neutral' as const, label: status };
 
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };

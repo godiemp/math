@@ -93,12 +93,12 @@ export default function PaymentPendingPage() {
     if (!payment) return null;
 
     if (payment.status === 'pending') {
-      return <Badge variant="default">Pendiente</Badge>;
+      return <Badge variant="warning">Pendiente</Badge>;
     } else if (payment.status === 'in_process') {
-      return <Badge variant="default">En Proceso</Badge>;
+      return <Badge variant="info">En Proceso</Badge>;
     }
 
-    return <Badge variant="default">{payment.status}</Badge>;
+    return <Badge variant="neutral">{payment.status}</Badge>;
   };
 
   if (isLoading) {
