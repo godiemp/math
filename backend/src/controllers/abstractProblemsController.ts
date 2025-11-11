@@ -36,7 +36,13 @@ import {
   GenerateContextProblemRequest,
   CreateAbstractProblemInput,
   CreateContextProblemInput,
+  Level,
+  Subject,
+  CognitiveLevel,
+  DifficultyLevel,
 } from '../types/abstractProblems';
+import { THEMATIC_UNITS } from '../config/thematic-units';
+import { pool } from '../config/database';
 
 // ========================================
 // Abstract Problem Endpoints
@@ -412,6 +418,389 @@ export const getStatsByUnitController = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       error: error.message || 'Failed to get statistics',
+    });
+  }
+};
+
+/**
+ * Bulk seed abstract problems
+ * POST /api/abstract-problems/seed
+ * Body: { level?: 'M1' | 'M2', subject?: string, limit?: number, problemsPerUnit?: number, dryRun?: boolean }
+ */
+export const seedAbstractProblemsController = async (req: Request, res: Response) => {
+  try {
+    const {
+      level: levelFilter,
+      subject: subjectFilter,
+      limit,
+      problemsPerUnit,
+      dryRun = false,
+    } = req.body;
+
+    console.log('========================================');
+    console.log('SEED OPERATION STARTED');
+    console.log('========================================');
+    console.log('Request parameters:', {
+      levelFilter,
+      subjectFilter,
+      limit,
+      problemsPerUnit,
+      dryRun,
+    });
+
+    // Validate filters
+    if (levelFilter && !['M1', 'M2'].includes(levelFilter)) {
+      console.error('❌ Invalid level filter:', levelFilter);
+      return res.status(400).json({
+        success: false,
+        error: 'level must be M1 or M2',
+      });
+    }
+
+    if (subjectFilter && !['números', 'álgebra', 'geometría', 'probabilidad'].includes(subjectFilter)) {
+      console.error('❌ Invalid subject filter:', subjectFilter);
+      return res.status(400).json({
+        success: false,
+        error: 'subject must be números, álgebra, geometría, or probabilidad',
+      });
+    }
+
+    if (!process.env.OPENAI_API_KEY && !dryRun) {
+      console.error('❌ OPENAI_API_KEY not configured');
+      return res.status(500).json({
+        success: false,
+        error: 'OPENAI_API_KEY is not configured',
+      });
+    }
+
+    console.log('✓ Validation passed');
+
+    // Generate unit configurations (same logic as seed script)
+    interface UnitGenerationConfig {
+      unit_code: string;
+      unit_name: string;
+      level: Level;
+      subject: Subject;
+      total_problems: number;
+      distribution: {
+        difficulty: DifficultyLevel;
+        cognitive_level: CognitiveLevel;
+        count: number;
+      }[];
+    }
+
+    console.log('\n📋 Building unit configurations...');
+    console.log('Total thematic units available:', THEMATIC_UNITS.length);
+    if (problemsPerUnit) {
+      console.log(`Using custom distribution: ${problemsPerUnit} problems per unit`);
+    }
+
+    // If problemsPerUnit is specified, use a simple distribution
+    // Otherwise use the standard/extended distributions
+    const standardDistribution = [
+      { difficulty: 'easy' as DifficultyLevel, cognitive_level: 'understand' as CognitiveLevel, count: 3 },
+      { difficulty: 'easy' as DifficultyLevel, cognitive_level: 'apply' as CognitiveLevel, count: 3 },
+      { difficulty: 'medium' as DifficultyLevel, cognitive_level: 'apply' as CognitiveLevel, count: 3 },
+      { difficulty: 'medium' as DifficultyLevel, cognitive_level: 'analyze' as CognitiveLevel, count: 3 },
+      { difficulty: 'hard' as DifficultyLevel, cognitive_level: 'analyze' as CognitiveLevel, count: 2 },
+      { difficulty: 'hard' as DifficultyLevel, cognitive_level: 'evaluate' as CognitiveLevel, count: 1 },
+    ];
+
+    const extendedDistribution = [
+      { difficulty: 'easy' as DifficultyLevel, cognitive_level: 'remember' as CognitiveLevel, count: 2 },
+      { difficulty: 'easy' as DifficultyLevel, cognitive_level: 'understand' as CognitiveLevel, count: 4 },
+      { difficulty: 'easy' as DifficultyLevel, cognitive_level: 'apply' as CognitiveLevel, count: 4 },
+      { difficulty: 'medium' as DifficultyLevel, cognitive_level: 'apply' as CognitiveLevel, count: 5 },
+      { difficulty: 'medium' as DifficultyLevel, cognitive_level: 'analyze' as CognitiveLevel, count: 5 },
+      { difficulty: 'hard' as DifficultyLevel, cognitive_level: 'analyze' as CognitiveLevel, count: 4 },
+      { difficulty: 'hard' as DifficultyLevel, cognitive_level: 'evaluate' as CognitiveLevel, count: 3 },
+      { difficulty: 'extreme' as DifficultyLevel, cognitive_level: 'evaluate' as CognitiveLevel, count: 2 },
+      { difficulty: 'extreme' as DifficultyLevel, cognitive_level: 'create' as CognitiveLevel, count: 1 },
+    ];
+
+    const customDistribution = problemsPerUnit ? [
+      { difficulty: 'medium' as DifficultyLevel, cognitive_level: 'apply' as CognitiveLevel, count: problemsPerUnit },
+    ] : null;
+
+    const keyUnits = [
+      'M1-NUM-001', 'M1-NUM-002', 'M1-NUM-005', 'M1-ALG-006',
+      'M1-ALG-011', 'M1-GEO-002', 'M1-PROB-002', 'M1-PROB-004',
+    ];
+
+    let configs: UnitGenerationConfig[] = [];
+    for (const unit of THEMATIC_UNITS) {
+      const isKeyUnit = keyUnits.includes(unit.code);
+
+      // Use custom distribution if problemsPerUnit is specified
+      let distribution;
+      let totalProbs;
+      if (customDistribution) {
+        distribution = customDistribution;
+        totalProbs = problemsPerUnit;
+      } else {
+        distribution = isKeyUnit ? extendedDistribution : standardDistribution;
+        totalProbs = isKeyUnit ? 30 : 15;
+      }
+
+      configs.push({
+        unit_code: unit.code,
+        unit_name: unit.name,
+        level: unit.level,
+        subject: unit.subject,
+        total_problems: totalProbs,
+        distribution: distribution,
+      });
+    }
+
+    console.log('✓ Generated', configs.length, 'unit configurations');
+
+    // Apply filters
+    console.log('\n🔍 Applying filters...');
+    if (levelFilter) {
+      const beforeCount = configs.length;
+      configs = configs.filter(c => c.level === levelFilter);
+      console.log(`  Level filter (${levelFilter}): ${beforeCount} → ${configs.length} units`);
+    }
+    if (subjectFilter) {
+      const beforeCount = configs.length;
+      configs = configs.filter(c => c.subject === subjectFilter);
+      console.log(`  Subject filter (${subjectFilter}): ${beforeCount} → ${configs.length} units`);
+    }
+    if (limit) {
+      const beforeCount = configs.length;
+      configs = configs.slice(0, limit);
+      console.log(`  Limit filter (${limit}): ${beforeCount} → ${configs.length} units`);
+    }
+
+    const totalProblems = configs.reduce((sum, c) => sum + c.total_problems, 0);
+
+    console.log('\n📊 Final plan:');
+    console.log('  Units to process:', configs.length);
+    console.log('  Total problems:', totalProblems);
+    console.log('  Mode:', dryRun ? 'DRY RUN' : 'LIVE GENERATION');
+
+    // Return early if dry run
+    if (dryRun) {
+      console.log('\n✓ Dry run completed - returning plan');
+      console.log('========================================\n');
+      return res.json({
+        success: true,
+        dryRun: true,
+        plan: {
+          units: configs.length,
+          totalProblems,
+          configs: configs.map(c => ({
+            unit: c.unit_name,
+            code: c.unit_code,
+            level: c.level,
+            subject: c.subject,
+            problems: c.total_problems,
+          })),
+        },
+      });
+    }
+
+    console.log('\n🚀 Starting live generation...');
+    console.log('⏱️  Estimated duration:', Math.ceil(totalProblems * 0.5), '-', Math.ceil(totalProblems * 1), 'minutes');
+    console.log('');
+
+    // Start the seeding process (run async, don't wait)
+    // We'll return immediately and let it run in the background
+    const startTime = Date.now();
+    let totalSuccess = 0;
+    let totalFailed = 0;
+    let unitIndex = 0;
+
+    // Process each unit
+    for (const config of configs) {
+      unitIndex++;
+      console.log(`\n[${unitIndex}/${configs.length}] Processing unit: ${config.unit_name}`);
+      console.log(`  Code: ${config.unit_code}`);
+      console.log(`  Level: ${config.level} | Subject: ${config.subject}`);
+      console.log(`  Target: ${config.total_problems} problems`);
+
+      let unitSuccess = 0;
+      let unitFailed = 0;
+
+      for (const dist of config.distribution) {
+        console.log(`  → Generating ${dist.count} problems (${dist.difficulty}/${dist.cognitive_level})...`);
+
+        try {
+          const request: GenerateAbstractProblemRequest = {
+            level: config.level,
+            subject: config.subject,
+            unit: config.unit_name,
+            difficulty: dist.difficulty,
+            cognitive_level: dist.cognitive_level,
+            primary_skills: [config.unit_code.toLowerCase()],
+            count: dist.count,
+          };
+
+          const generated = await generateAbstractProblems(request);
+          console.log(`    ✓ Generated ${generated.length} problems from OpenAI`);
+
+          // Save each generated problem
+          for (const problem of generated) {
+            try {
+              await createAbstractProblem({
+                essence: problem.essence,
+                cognitive_level: dist.cognitive_level,
+                level: config.level,
+                subject: config.subject,
+                unit: config.unit_name,
+                difficulty: dist.difficulty,
+                difficulty_score: problem.suggested_difficulty_score,
+                primary_skills: [config.unit_code.toLowerCase()],
+                secondary_skills: [],
+                generation_method: 'openai',
+                generated_by: (req as any).user?.id || 'seed-api',
+                generation_prompt: `Unit: ${config.unit_name}`,
+                answer_type: problem.answer_type,
+                expected_steps: problem.expected_steps,
+                common_errors: problem.common_errors,
+                status: 'draft',
+              });
+              totalSuccess++;
+              unitSuccess++;
+            } catch (dbError: any) {
+              console.error(`    ❌ Failed to save problem: ${dbError.message}`);
+              totalFailed++;
+              unitFailed++;
+            }
+          }
+
+          // Rate limiting: wait 1 second between API calls
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        } catch (error: any) {
+          console.error(`    ❌ Failed to generate: ${error.message}`);
+          totalFailed += dist.count;
+          unitFailed += dist.count;
+        }
+      }
+
+      console.log(`  Unit summary: ${unitSuccess} success, ${unitFailed} failed`);
+      console.log(`  Progress: ${totalSuccess}/${totalProblems} (${((totalSuccess / totalProblems) * 100).toFixed(1)}%)`);
+    }
+
+    const endTime = Date.now();
+    const durationMinutes = ((endTime - startTime) / 1000 / 60).toFixed(1);
+
+    console.log('\n========================================');
+    console.log('SEED OPERATION COMPLETED');
+    console.log('========================================');
+    console.log('Results:');
+    console.log('  Units processed:', configs.length);
+    console.log('  Problems created:', totalSuccess);
+    console.log('  Problems failed:', totalFailed);
+    console.log('  Success rate:', ((totalSuccess / (totalSuccess + totalFailed)) * 100).toFixed(1) + '%');
+    console.log('  Duration:', durationMinutes, 'minutes');
+    console.log('========================================\n');
+
+    res.json({
+      success: true,
+      message: 'Seeding completed',
+      results: {
+        unitsProcessed: configs.length,
+        problemsCreated: totalSuccess,
+        problemsFailed: totalFailed,
+        successRate: ((totalSuccess / (totalSuccess + totalFailed)) * 100).toFixed(1) + '%',
+        durationMinutes,
+      },
+    });
+  } catch (error: any) {
+    console.error('\n========================================');
+    console.error('❌ SEED OPERATION FAILED');
+    console.error('========================================');
+    console.error('Error:', error.message);
+    console.error('Stack:', error.stack);
+    console.error('========================================\n');
+
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to seed abstract problems',
+    });
+  }
+};
+
+/**
+ * Activate all draft problems
+ * POST /api/abstract-problems/activate-all
+ */
+export const activateAllDraftsController = async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`
+      UPDATE abstract_problems
+      SET status = 'active', updated_at = $1
+      WHERE status = 'draft'
+      RETURNING id
+    `, [Date.now()]);
+
+    res.json({
+      success: true,
+      message: `Activated ${result.rowCount} problems`,
+      count: result.rowCount,
+    });
+  } catch (error: any) {
+    console.error('Error activating drafts:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to activate draft problems',
+    });
+  }
+};
+
+/**
+ * Get coverage statistics
+ * GET /api/abstract-problems/coverage
+ */
+export const getCoverageStatsController = async (req: Request, res: Response) => {
+  try {
+    // Get units from database
+    const dbResult = await pool.query(`
+      SELECT DISTINCT unit, COUNT(*) as count
+      FROM abstract_problems
+      GROUP BY unit
+      ORDER BY unit
+    `);
+
+    const taxonomyUnits = THEMATIC_UNITS.map(u => ({
+      code: u.code,
+      name: u.name,
+      level: u.level,
+      subject: u.subject,
+    }));
+
+    const dbUnitsMap = new Map(dbResult.rows.map(r => [r.unit, r.count]));
+
+    const coverage = taxonomyUnits.map(unit => ({
+      code: unit.code,
+      name: unit.name,
+      level: unit.level,
+      subject: unit.subject,
+      problemCount: dbUnitsMap.get(unit.name) || 0,
+      hasPrblems: dbUnitsMap.has(unit.name),
+    }));
+
+    const totalUnits = taxonomyUnits.length;
+    const unitsWithProblems = dbResult.rows.length;
+    const unitsWithoutProblems = totalUnits - unitsWithProblems;
+
+    res.json({
+      success: true,
+      summary: {
+        totalUnits,
+        unitsWithProblems,
+        unitsWithoutProblems,
+        coveragePercent: ((unitsWithProblems / totalUnits) * 100).toFixed(1) + '%',
+      },
+      coverage,
+      unitsWithProblems: dbResult.rows,
+    });
+  } catch (error: any) {
+    console.error('Error getting coverage stats:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to get coverage statistics',
     });
   }
 };

@@ -321,6 +321,19 @@ export async function getStatsByUnit(
  * Helper function to map database row to AbstractProblem type
  */
 function mapRowToAbstractProblem(row: any): AbstractProblem {
+  // Helper to safely parse JSON or return the value if already parsed
+  const safeParseJSON = (value: any, defaultValue: any = []): any => {
+    if (!value) return defaultValue;
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'object') return value;
+    try {
+      return JSON.parse(value);
+    } catch (error) {
+      console.warn('Failed to parse JSON value:', value, error);
+      return defaultValue;
+    }
+  };
+
   return {
     id: row.id,
     essence: row.essence,
@@ -336,8 +349,8 @@ function mapRowToAbstractProblem(row: any): AbstractProblem {
     generated_by: row.generated_by,
     generation_prompt: row.generation_prompt,
     answer_type: row.answer_type,
-    expected_steps: row.expected_steps ? JSON.parse(row.expected_steps) : [],
-    common_errors: row.common_errors ? JSON.parse(row.common_errors) : [],
+    expected_steps: safeParseJSON(row.expected_steps, []),
+    common_errors: safeParseJSON(row.common_errors, []),
     status: row.status,
     review_notes: row.review_notes,
     created_at: parseInt(row.created_at),
