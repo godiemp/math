@@ -137,6 +137,21 @@ function DashboardContent() {
           <StudyBuddy />
         </div>
 
+        {/* Improvement Notice */}
+        <Card className="p-4 sm:p-5 md:p-6 mb-8 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border-amber-200 dark:border-amber-800">
+          <div className="flex items-start gap-3 sm:gap-4">
+            <div className="text-2xl sm:text-3xl flex-shrink-0">🚀</div>
+            <div className="flex-1">
+              <Heading level={3} size="xs" className="mb-2 text-amber-900 dark:text-amber-100">
+                ¡Estamos Mejorando!
+              </Heading>
+              <Text size="sm" className="text-amber-800 dark:text-amber-200">
+                Estamos mejorando los problemas para tener problemas estilo PAES. Hasta ahora tenemos los temarios cubiertos pero no el formato. Pronto tendrás una experiencia más cercana al examen real.
+              </Text>
+            </div>
+          </div>
+        </Card>
+
         {/* Live Practice Featured Card with gradient */}
         <div className="relative overflow-hidden backdrop-blur-[20px] bg-gradient-to-r from-[#5E5CE6] to-[#0A84FF] dark:from-[#9A99FF] dark:to-[#0A84FF] rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 mb-8 sm:mb-10 md:mb-12 shadow-[0_14px_36px_rgba(0,0,0,0.22)]">
           <div className="text-center relative z-10">
