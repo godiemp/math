@@ -13,7 +13,11 @@ CREATE INDEX IF NOT EXISTS idx_abstract_problems_subsection ON abstract_problems
 COMMENT ON COLUMN abstract_problems.subsection IS 'Subsection within the thematic unit (e.g., "A. Orden y valor absoluto")';
 
 -- Update the active_problems_view to include subsection
-CREATE OR REPLACE VIEW active_problems_view AS
+-- Drop views first to allow structure changes (e.g., adding subsection to GROUP BY)
+DROP VIEW IF EXISTS active_problems_view CASCADE;
+DROP VIEW IF EXISTS problem_stats_by_unit CASCADE;
+
+CREATE VIEW active_problems_view AS
 SELECT
   ap.id as abstract_id,
   ap.essence,
@@ -38,7 +42,7 @@ LEFT JOIN context_problems cp ON ap.id = cp.abstract_problem_id
 WHERE ap.status = 'active' AND (cp.status = 'active' OR cp.status IS NULL);
 
 -- Update problem_stats_by_unit to include subsection
-CREATE OR REPLACE VIEW problem_stats_by_unit AS
+CREATE VIEW problem_stats_by_unit AS
 SELECT
   level,
   subject,

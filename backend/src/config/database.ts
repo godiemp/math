@@ -701,9 +701,12 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_context_problem ON question_attempts(context_problem_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_abstract_problem ON question_attempts(abstract_problem_id)');
 
-    // Create views
+    // Create views - Drop first to allow structure changes (e.g., adding subsection to GROUP BY)
+    await client.query('DROP VIEW IF EXISTS active_problems_view CASCADE');
+    await client.query('DROP VIEW IF EXISTS problem_stats_by_unit CASCADE');
+
     await client.query(`
-      CREATE OR REPLACE VIEW active_problems_view AS
+      CREATE VIEW active_problems_view AS
       SELECT
         ap.id as abstract_id,
         ap.essence,
@@ -729,7 +732,7 @@ export const initializeDatabase = async (): Promise<void> => {
     `);
 
     await client.query(`
-      CREATE OR REPLACE VIEW problem_stats_by_unit AS
+      CREATE VIEW problem_stats_by_unit AS
       SELECT
         ap.level,
         ap.subject,
