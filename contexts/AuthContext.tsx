@@ -10,6 +10,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isAdmin: boolean;
   isPaidUser: boolean;
+  isVerifying: boolean;
   refreshUser: () => Promise<void>;
 }
 
@@ -18,6 +19,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Initialize with cached user immediately (no loading state)
   const [user, setUser] = useState<User | null>(() => getCachedUser());
+  // Track if we're verifying the cached user with backend
+  const [isVerifying, setIsVerifying] = useState<boolean>(() => {
+    // Only set to true if there's a cached user to verify
+    return getCachedUser() !== null;
+  });
 
   const refreshUser = async () => {
     const fetchedUser = await fetchCurrentUser();
@@ -38,6 +44,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // Token was invalid, clear cached user
           setUser(null);
         }
+        // Mark verification as complete
+        setIsVerifying(false);
+      } else {
+        // No cached user, no need to verify
+        setIsVerifying(false);
       }
     };
 
@@ -56,6 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated: !!user,
     isAdmin: user?.role === 'admin',
     isPaidUser,
+    isVerifying,
     refreshUser,
   };
 
