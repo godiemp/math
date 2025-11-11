@@ -188,18 +188,34 @@ export default function Auth({ onSuccess }: AuthProps) {
 
           {/* Password Input */}
           <div>
-            <label
-              htmlFor="password"
-              style={{
-                display: 'block',
-                fontSize: '13px',
-                fontWeight: 500,
-                color: 'var(--color-label-primary)',
-                marginBottom: 'var(--spacing-2)',
-              }}
-            >
-              Contraseña
-            </label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-2)' }}>
+              <label
+                htmlFor="password"
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  color: 'var(--color-label-primary)',
+                }}
+              >
+                Contraseña
+              </label>
+              {isLogin && (
+                <a
+                  href="/forgot-password"
+                  className="spring-motion"
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 500,
+                    color: 'var(--color-link)',
+                    textDecoration: 'none',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
+                  onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
+                >
+                  ¿Olvidaste tu contraseña?
+                </a>
+              )}
+            </div>
             <input
               id="password"
               name="password"
