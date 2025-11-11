@@ -8,6 +8,7 @@ import { registerForSession, unregisterFromSession, joinSessionAPI } from '@/lib
 import { useAvailableSessions } from '@/lib/hooks/useSessions';
 import { LiveSession } from '@/lib/types';
 import LiveSessionComponent from '@/components/LiveSession';
+import StudentStatisticsComponent from '@/components/StudentStatistics';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
@@ -163,7 +164,7 @@ function LivePracticePageContent() {
         )}
 
         {/* Available Ensayos */}
-        <Card padding="md">
+        <Card padding="md" className="mb-4 sm:mb-5 md:mb-6">
           <Heading level={2} size="xs" className="mb-3 sm:mb-4 text-base sm:text-lg">
             Ensayos Disponibles ({sessions.length})
           </Heading>
@@ -280,6 +281,9 @@ function LivePracticePageContent() {
             </div>
           )}
         </Card>
+
+        {/* Student Statistics */}
+        <StudentStatisticsComponent />
       </div>
     </div>
   );

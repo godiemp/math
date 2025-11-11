@@ -12,6 +12,7 @@ import {
   joinSession,
   submitAnswer,
   getMyParticipation,
+  getMyStatistics,
 } from '../controllers/sessionController';
 import { authenticate, requireAdmin } from '../auth/middleware';
 
@@ -37,6 +38,13 @@ router.post('/', authenticate, requireAdmin, createSession);
  * @access  Public
  */
 router.post('/update-statuses', updateSessionStatuses);
+
+/**
+ * @route   GET /api/sessions/stats/me
+ * @desc    Get my statistics for live practice sessions
+ * @access  Private
+ */
+router.get('/stats/me', authenticate, getMyStatistics);
 
 /**
  * @route   GET /api/sessions/:id
