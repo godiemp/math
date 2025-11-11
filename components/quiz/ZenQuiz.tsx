@@ -44,6 +44,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
     currentQuestion,
     handleAnswerSelect,
     resetQuiz,
+    isLoadingQuestions,
   } = useQuizState({
     level,
     subject,
@@ -112,6 +113,19 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
     return (
       <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
         <p className="text-center text-gray-600 dark:text-gray-400">Cargando preguntas...</p>
+      </div>
+    );
+  }
+
+  // Loading state while fetching questions
+  if (isLoadingQuestions) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500 dark:from-teal-800 dark:via-cyan-900 dark:to-blue-900">
+        <div className="text-center">
+          <div className="text-6xl mb-6 animate-pulse">🧠</div>
+          <h2 className="text-3xl font-bold text-white mb-3">Seleccionando preguntas...</h2>
+          <p className="text-lg text-white/90">Personalizando tu práctica</p>
+        </div>
       </div>
     );
   }

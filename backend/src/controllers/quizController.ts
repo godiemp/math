@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { pool } from '../config/database';
 import { AuthRequest } from '../types';
+import { getAdaptiveQuestions, getRandomQuestionsFallback } from '../services/adaptiveQuestionService';
 
 /**
  * Save a quiz attempt
@@ -480,6 +481,77 @@ export const getLastQuizConfig = async (req: AuthRequest, res: Response): Promis
     }
   } catch (error) {
     console.error('Error getting last quiz config:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+/**
+ * Get adaptive question selection for a user
+ * Questions are selected based on the user's learning history and skill mastery
+ */
+export const getAdaptiveQuestionSelection = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { level, count, subject } = req.query;
+
+    // Validate level
+    if (!level || (level !== 'M1' && level !== 'M2')) {
+      res.status(400).json({ error: 'Invalid level. Must be M1 or M2' });
+      return;
+    }
+
+    // Validate subject if provided
+    if (subject && !['números', 'álgebra', 'geometría', 'probabilidad'].includes(subject as string)) {
+      res.status(400).json({ error: 'Invalid subject' });
+      return;
+    }
+
+    // Parse count (default to 10)
+    const questionCount = count ? parseInt(count as string, 10) : 10;
+
+    if (isNaN(questionCount) || questionCount < 1 || questionCount > 100) {
+      res.status(400).json({ error: 'Invalid count. Must be between 1 and 100' });
+      return;
+    }
+
+    try {
+      // Try adaptive selection
+      const questions = await getAdaptiveQuestions(
+        userId,
+        level as 'M1' | 'M2',
+        questionCount,
+        subject as 'números' | 'álgebra' | 'geometría' | 'probabilidad' | undefined
+      );
+
+      res.json({
+        questions,
+        count: questions.length,
+        adaptive: true
+      });
+    } catch (adaptiveError) {
+      // If adaptive selection fails, fall back to random selection
+      console.warn('Adaptive selection failed, falling back to random:', adaptiveError);
+
+      const questions = getRandomQuestionsFallback(
+        level as 'M1' | 'M2',
+        questionCount,
+        subject as 'números' | 'álgebra' | 'geometría' | 'probabilidad' | undefined
+      );
+
+      res.json({
+        questions,
+        count: questions.length,
+        adaptive: false
+      });
+    }
+  } catch (error) {
+    console.error('Error getting adaptive questions:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

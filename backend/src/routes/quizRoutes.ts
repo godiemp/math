@@ -6,6 +6,7 @@ import {
   getQuizStats,
   saveLastQuizConfig,
   getLastQuizConfig,
+  getAdaptiveQuestionSelection,
 } from '../controllers/quizController';
 import { authenticate } from '../auth/middleware/authenticate';
 
@@ -58,5 +59,15 @@ router.post('/last-config', authenticate, saveLastQuizConfig);
  * @access  Private
  */
 router.get('/last-config', authenticate, getLastQuizConfig);
+
+/**
+ * @route   GET /api/quiz/adaptive-questions
+ * @desc    Get adaptive question selection based on user's learning history
+ * @query   level (required): M1 or M2
+ * @query   count (optional): number of questions (default 10, max 100)
+ * @query   subject (optional): números, álgebra, geometría, probabilidad
+ * @access  Private
+ */
+router.get('/adaptive-questions', authenticate, getAdaptiveQuestionSelection);
 
 export default router;
