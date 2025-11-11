@@ -64,6 +64,7 @@ GitHub Actions will:
 ```
 e2e/
 ├── auth.spec.ts          # Authentication tests (2 tests)
+├── registration.spec.ts  # User registration tests (12 tests)
 ├── live-practice.spec.ts # Live practice registration tests (6 tests)
 ├── practice.spec.ts      # Practice mode & quiz tests (11 tests)
 ├── progress.spec.ts      # Progress & Analytics page tests (20 tests)
@@ -78,6 +79,20 @@ e2e/
 ### Authentication Tests (auth.spec.ts)
 - Login page display
 - Login with student credentials
+
+### User Registration Tests (registration.spec.ts)
+- Display registration form with all required fields
+- Successfully register a new user
+- Validate username length (minimum 3 characters)
+- Validate email format
+- Validate password length (minimum 6 characters)
+- Validate required fields (show error when missing)
+- Validate terms and conditions acceptance
+- Handle duplicate username/email (show appropriate error)
+- Switch between login and register modes
+- Show loading state during registration
+- Verify form accessibility (labels for all inputs)
+- Verify terms and privacy policy links
 
 ### Live Practice Tests (live-practice.spec.ts)
 - Display available sessions
