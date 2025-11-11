@@ -60,6 +60,13 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
     quizQuestions.length
   );
 
+  // Scroll to top when questions are loaded to prevent viewport issues
+  useEffect(() => {
+    if (!isLoadingQuestions && quizQuestions.length > 0) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [isLoadingQuestions, quizQuestions.length]);
+
   // Zen intro effect
   useEffect(() => {
     if (!showZenIntro) return;
@@ -120,7 +127,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
   // Loading state while fetching questions
   if (isLoadingQuestions) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500 dark:from-teal-800 dark:via-cyan-900 dark:to-blue-900">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500 dark:from-teal-800 dark:via-cyan-900 dark:to-blue-900 overflow-hidden">
         <div className="text-center">
           <div className="text-6xl mb-6 animate-pulse">🧠</div>
           <h2 className="text-3xl font-bold text-white mb-3">Seleccionando preguntas...</h2>
