@@ -425,7 +425,7 @@ export const getStatsByUnitController = async (req: Request, res: Response) => {
 /**
  * Bulk seed abstract problems
  * POST /api/abstract-problems/seed
- * Body: { level?: 'M1' | 'M2', subject?: string, limit?: number, dryRun?: boolean }
+ * Body: { level?: 'M1' | 'M2', subject?: string, limit?: number, problemsPerUnit?: number, dryRun?: boolean }
  */
 export const seedAbstractProblemsController = async (req: Request, res: Response) => {
   try {
@@ -433,6 +433,7 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
       level: levelFilter,
       subject: subjectFilter,
       limit,
+      problemsPerUnit,
       dryRun = false,
     } = req.body;
 
@@ -443,6 +444,7 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
       levelFilter,
       subjectFilter,
       limit,
+      problemsPerUnit,
       dryRun,
     });
 
@@ -489,7 +491,12 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
 
     console.log('\n📋 Building unit configurations...');
     console.log('Total thematic units available:', THEMATIC_UNITS.length);
+    if (problemsPerUnit) {
+      console.log(`Using custom distribution: ${problemsPerUnit} problems per unit`);
+    }
 
+    // If problemsPerUnit is specified, use a simple distribution
+    // Otherwise use the standard/extended distributions
     const standardDistribution = [
       { difficulty: 'easy' as DifficultyLevel, cognitive_level: 'understand' as CognitiveLevel, count: 3 },
       { difficulty: 'easy' as DifficultyLevel, cognitive_level: 'apply' as CognitiveLevel, count: 3 },
@@ -511,6 +518,10 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
       { difficulty: 'extreme' as DifficultyLevel, cognitive_level: 'create' as CognitiveLevel, count: 1 },
     ];
 
+    const customDistribution = problemsPerUnit ? [
+      { difficulty: 'medium' as DifficultyLevel, cognitive_level: 'apply' as CognitiveLevel, count: problemsPerUnit },
+    ] : null;
+
     const keyUnits = [
       'M1-NUM-001', 'M1-NUM-002', 'M1-NUM-005', 'M1-ALG-006',
       'M1-ALG-011', 'M1-GEO-002', 'M1-PROB-002', 'M1-PROB-004',
@@ -519,13 +530,25 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
     let configs: UnitGenerationConfig[] = [];
     for (const unit of THEMATIC_UNITS) {
       const isKeyUnit = keyUnits.includes(unit.code);
+
+      // Use custom distribution if problemsPerUnit is specified
+      let distribution;
+      let totalProbs;
+      if (customDistribution) {
+        distribution = customDistribution;
+        totalProbs = problemsPerUnit;
+      } else {
+        distribution = isKeyUnit ? extendedDistribution : standardDistribution;
+        totalProbs = isKeyUnit ? 30 : 15;
+      }
+
       configs.push({
         unit_code: unit.code,
         unit_name: unit.name,
         level: unit.level,
         subject: unit.subject,
-        total_problems: isKeyUnit ? 30 : 15,
-        distribution: isKeyUnit ? extendedDistribution : standardDistribution,
+        total_problems: totalProbs,
+        distribution: distribution,
       });
     }
 

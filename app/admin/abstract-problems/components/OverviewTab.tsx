@@ -28,6 +28,7 @@ interface SeedOptions {
   level?: 'M1' | 'M2' | '';
   subject?: string;
   limit?: number;
+  problemsPerUnit?: number;
   dryRun: boolean;
 }
 
@@ -54,6 +55,7 @@ export default function OverviewTab() {
     level: '',
     subject: '',
     limit: undefined,
+    problemsPerUnit: undefined,
     dryRun: true,
   });
   const [seedResult, setSeedResult] = useState<any>(null);
@@ -178,6 +180,7 @@ export default function OverviewTab() {
       seedOptions.level && `Level: ${seedOptions.level}`,
       seedOptions.subject && `Subject: ${seedOptions.subject}`,
       seedOptions.limit && `Limit: ${seedOptions.limit} units`,
+      seedOptions.problemsPerUnit && `${seedOptions.problemsPerUnit} problems/unit`,
     ]
       .filter(Boolean)
       .join(', ') || 'All units';
@@ -234,6 +237,7 @@ export default function OverviewTab() {
       if (seedOptions.level) payload.level = seedOptions.level;
       if (seedOptions.subject) payload.subject = seedOptions.subject;
       if (seedOptions.limit) payload.limit = parseInt(seedOptions.limit.toString());
+      if (seedOptions.problemsPerUnit) payload.problemsPerUnit = parseInt(seedOptions.problemsPerUnit.toString());
 
       const res = await api.post('/api/abstract-problems/seed', payload);
       clearInterval(progressInterval);
@@ -351,7 +355,7 @@ export default function OverviewTab() {
           Generate abstract problems in bulk using OpenAI. Target ~1000 problems across all units.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Level Filter
@@ -397,6 +401,21 @@ export default function OverviewTab() {
               placeholder="All units"
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               disabled={seeding}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Problems/Unit
+            </label>
+            <input
+              type="number"
+              value={seedOptions.problemsPerUnit || ''}
+              onChange={(e) => setSeedOptions({ ...seedOptions, problemsPerUnit: e.target.value ? parseInt(e.target.value) : undefined })}
+              placeholder="Default (15)"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              disabled={seeding}
+              min="1"
             />
           </div>
 
