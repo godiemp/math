@@ -1,0 +1,380 @@
+================================================================================
+PAES PREDICTION FEATURE - CODEBASE EXPLORATION SUMMARY
+================================================================================
+
+Exploration Date: November 11, 2025
+Codebase: SimplePAES - PAES Math Preparation Platform
+Location: /home/user/math/
+
+================================================================================
+1. PROJECT OVERVIEW
+================================================================================
+
+FRONTEND:
+- Framework: Next.js 14+ (App Router)
+- Language: TypeScript/TSX
+- Key Pages: /dashboard, /progress, /profile, /practice (M1/M2), /live-practice
+- Components: 20+ reusable UI components
+
+BACKEND:
+- Framework: Express.js
+- Language: TypeScript
+- Database: PostgreSQL (full schema in database.ts - 769 lines)
+- Architecture: MVC (Controllers, Services, Routes)
+
+================================================================================
+2. DATABASE STRUCTURE - PERFORMANCE TRACKING
+================================================================================
+
+CORE DATA TABLE: question_attempts
+- Records: 100,000+ individual attempts
+- Fields: user_id, is_correct, difficulty, subject, time_spent_seconds, 
+          skills_tested, attempted_at, level
+- Indexes: user_id, attempted_at, level, subject, difficulty
+- Linked to: abstract_problems, quiz_sessions, users
+
+SUPPORTING TABLES:
+- quiz_sessions: Groups attempts into sessions
+- users: Tracks streaks and engagement
+- abstract_problems: Problem metadata (skills, difficulty_score 1-100, 
+                     cognitive_level, unit/subsection mapping)
+- ai_interactions: Help-seeking behavior (user_id, interaction_type,
+                   quiz_session_id, response patterns)
+- subscriptions/payments: Engagement signals
+
+DATA QUALITY:
+- Coverage: Every quiz attempt stored with full history
+- Granularity: Per-question level with time tracking
+- Temporal: Full timestamps for trend analysis
+- Lookback: Complete historical data available
+
+================================================================================
+3. EXISTING ANALYTICS & STATISTICS
+================================================================================
+
+ADMIN ANALYTICS DASHBOARD (/admin/analytics)
+Backend: analyticsController.ts (350+ lines)
+Metrics:
+  - North Star: WAU, DAU, total attempts, overall accuracy
+  - Accuracy by: level, subject (4 types), difficulty (4 levels)
+  - Engagement: sessions, streaks distribution
+  - Retention: D1, D7, D30 cohort analysis
+  - Question coverage: Top questions attempted
+
+AI ANALYTICS DASHBOARD (/admin/ai-analytics)
+Backend: aiAnalyticsController.ts (250+ lines)
+Metrics:
+  - Interaction patterns: type, frequency, user engagement
+  - Top questions needing help
+  - Conversation metrics: turns, response times
+  - Token usage and costs
+
+USER-FACING STATISTICS
+- /progress page: Quiz history, accuracy by level, skills view
+- /profile page: Total questions, correctness %, accuracy
+- StudentStatistics.tsx: Live session stats
+- SkillsAnalytics.tsx: Skill mastery tracking
+
+================================================================================
+4. USER PERFORMANCE DATA AVAILABLE
+================================================================================
+
+PER-QUESTION TRACKING:
+✓ Answer correctness (is_correct: BOOLEAN)
+✓ Time spent (time_spent_seconds: INTEGER)
+✓ Difficulty (easy/medium/hard/extreme)
+✓ Subject (números/álgebra/geometría/probabilidad)
+✓ Level (M1 or M2)
+✓ Skills tested (TEXT[] array of skill IDs)
+✓ Timestamp (attempted_at: BIGINT milliseconds)
+
+AGGREGATED METRICS (Already Calculated):
+✓ Accuracy by subject
+✓ Accuracy by difficulty
+✓ Accuracy by level
+✓ Streak data (current, longest)
+✓ Quiz mode preferences (Zen vs Rapid Fire)
+✓ Time trends
+✓ Engagement patterns
+
+BEHAVIORAL DATA (Available):
+✓ Days active (streak tracking)
+✓ Practice frequency
+✓ AI help requests (interaction_type, frequency)
+✓ Question coverage
+✓ Peer comparison (live sessions)
+
+DERIVED METRICS (Can Calculate):
+✓ Accuracy trend (recent vs older)
+✓ Consistency/variance in performance
+✓ Strength/weakness by subject
+✓ Learning velocity
+✓ Knowledge gaps
+✓ Cognitive level progression
+
+================================================================================
+5. UI STRUCTURE & INTEGRATION POINTS
+================================================================================
+
+CURRENT LAYOUT:
+Dashboard (main hub)
+├── Registered Sessions Widget
+├── Study Buddy (AI assistant)
+├── Streak Display
+└── [PREDICTION WIDGET FITS HERE]
+
+Progress Page
+├── M1/M2 Overall Stats
+├── Quiz History
+├── Skill Mastery View
+└── [NEW TAB: PAES PREDICTION]
+
+Profile Page
+├── User Info
+├── Performance Stats
+└── [PREDICTION CARD FITS HERE]
+
+BEST INTEGRATION POINTS FOR PAES SCORE PREDICTION:
+1. Dashboard widget - "Your predicted PAES: 720 (±30)"
+2. Progress page tab - Dedicated prediction analytics
+3. Profile page card - Prominent prediction display
+4. Post-quiz modal - Updated prediction after each session
+5. Goal modal - "If you improve X, score becomes Y"
+6. Admin dashboard - Per-user predictions for intervention
+7. Streak widget - "Keep streak at X+ days to reach Y score"
+
+================================================================================
+6. DATA AVAILABLE FOR PREDICTION MODEL
+================================================================================
+
+DIRECTLY AVAILABLE METRICS:
+- Accuracy percentages (overall, by subject, by difficulty)
+- Time metrics (average per question, by difficulty)
+- Attempt frequency (total, per day, per week)
+- Streak information (current, longest, consistency)
+- Question coverage (breadth across subjects/skills)
+- Help-seeking patterns (AI interaction frequency)
+- Cognitive level progression (moving through Bloom's levels)
+- Difficulty progression (tackling harder questions)
+
+SAMPLE SIZE FOR MODELING:
+- 100,000+ question attempts across all users
+- Full historical data available
+- Multi-dimensional: 4 subjects × 4 difficulties × 6 cognitive levels
+- Temporal: Every attempt timestamped for trend analysis
+
+CONFIDENCE FACTORS:
+- Number of attempts (more = higher confidence)
+- Recency of data (recent = more weight)
+- Consistency of performance (variance measurement)
+- Time trends (improving vs declining)
+- Subject coverage (balanced vs specialized)
+
+================================================================================
+7. API ENDPOINTS & ARCHITECTURE
+================================================================================
+
+EXISTING PERFORMANCE APIs:
+GET /api/quiz/history?level=M1|M2
+  → Raw quiz attempts with full details
+
+GET /api/quiz/stats?level=M1|M2
+  → Aggregated statistics by dimension
+
+GET /api/admin/analytics
+  → Global platform metrics
+
+GET /api/admin/ai-analytics
+  → AI interaction patterns
+
+NEW ENDPOINTS TO CREATE:
+POST /api/prediction/calculate
+  → Calculate user's PAES prediction
+
+GET /api/prediction/current
+  → Get latest prediction for user
+
+GET /api/prediction/forecast?weeks=4
+  → Project score if trend continues
+
+GET /api/prediction/improvement-paths
+  → Top 3 areas to improve
+
+GET /api/prediction/strength-weakness
+  → Subject/skill breakdown
+
+================================================================================
+8. TECHNOLOGY STACK SUMMARY
+================================================================================
+
+Backend:
+- Express.js + TypeScript
+- PostgreSQL database
+- JWT authentication (access + refresh tokens)
+- Claude Sonnet 4.5 (AI integration)
+- Node.js runtime
+
+Frontend:
+- Next.js 14+ (App Router)
+- React 18
+- TypeScript
+- TailwindCSS (styling)
+- React Query/SWR (data fetching)
+
+Database:
+- PostgreSQL 13+
+- 25+ tables total
+- Full schema initialization in code (database.ts)
+- Migration support (abstract problems system)
+- Connection pooling (20 max)
+
+================================================================================
+9. KEY FILES REFERENCE
+================================================================================
+
+Database & Schema:
+  /backend/src/config/database.ts (769 lines - ALL table definitions)
+  /backend/src/config/schema.sql (46 lines)
+  /backend/src/config/migrations/ (SQL migration files)
+
+Controllers (Data Access):
+  /backend/src/controllers/quizController.ts (quiz attempts)
+  /backend/src/controllers/analyticsController.ts (analytics)
+  /backend/src/controllers/aiAnalyticsController.ts (AI interactions)
+
+Services (Business Logic):
+  /backend/src/services/analyticsController.ts
+  /backend/src/services/aiService.ts
+  /backend/src/services/studyBuddyService.ts
+
+Routes:
+  /backend/src/routes/quizRoutes.ts
+  /backend/src/routes/analyticsRoutes.ts
+  /backend/src/routes/aiAnalyticsRoutes.ts
+
+Frontend Pages:
+  /app/dashboard/page.tsx (main dashboard)
+  /app/progress/page.tsx (user statistics)
+  /app/profile/page.tsx (profile + stats)
+  /app/practice/m1/page.tsx (M1 quiz)
+  /app/practice/m2/page.tsx (M2 quiz)
+
+Components:
+  /components/StudentStatistics.tsx
+  /components/SkillsAnalytics.tsx
+  /components/Quiz.tsx (quiz interface)
+  /components/ui/ (reusable UI components)
+
+================================================================================
+10. IMPLEMENTATION ROADMAP
+================================================================================
+
+PHASE 1 - Backend Foundation (1-2 weeks):
+  - Create predictionService.ts
+  - Add paes_predictions database table
+  - Implement core prediction algorithm
+  - Create API endpoints (/api/prediction/*)
+  - Test with sample data
+
+PHASE 2 - ML Model Design (1 week):
+  - Define weighting factors for metrics
+  - Implement normalization (0-100 scale)
+  - Add temporal weighting (recent bias)
+  - Design confidence intervals
+  - Map cognitive levels to PAES scale
+
+PHASE 3 - Frontend Integration (1-2 weeks):
+  - Create PaesScorePredictionWidget.tsx
+  - Add to dashboard, progress page, profile
+  - Create post-quiz notification
+  - Implement forecast chart
+  - Add improvement suggestions
+
+PHASE 4 - Admin & Advanced Features (1 week):
+  - Add prediction distribution to admin dashboard
+  - Identify at-risk users (declining trend)
+  - Identify high-potential users (improving)
+  - Create improvement path recommendations
+
+================================================================================
+11. DOCUMENTATION CREATED
+================================================================================
+
+Three comprehensive analysis documents saved in /home/user/math/:
+
+1. PAES_PREDICTION_ANALYSIS.md (430 lines, 14 KB)
+   - Complete 11-section codebase analysis
+   - Database models detailed breakdown
+   - Existing analytics features inventory
+   - UI structure and integration points
+   - Data availability assessment
+   - Architecture notes
+   - File location reference
+   - Implementation roadmap
+   - Example prediction calculations
+
+2. PREDICTION_DATA_FLOW.md (276 lines, 21 KB)
+   - Data collection pipeline diagram
+   - Analytics aggregation layer
+   - Prediction service flow
+   - Database storage schema
+   - API endpoint specifications
+   - Frontend presentation layer
+   - Key data transformations
+   - Real-time update flow
+   - Performance considerations
+
+3. QUICK_REFERENCE.md (172 lines, 4.7 KB)
+   - Quick overview of available resources
+   - Implementation checklist
+   - Key file locations
+   - Database query patterns
+   - API endpoint design examples
+   - Testing approach
+   - Performance optimization tips
+
+================================================================================
+12. KEY FINDINGS & RECOMMENDATIONS
+================================================================================
+
+STRENGTHS:
+✓ Comprehensive performance data collection (100K+ attempts)
+✓ Well-structured codebase with clear separation of concerns
+✓ Existing analytics infrastructure can be leveraged
+✓ Rich metadata available (skills, cognitive levels, unit mapping)
+✓ Full temporal data for trend analysis
+✓ Multiple UI integration points identified
+✓ TypeScript throughout for type safety
+✓ PostgreSQL with proper indexing for performance
+
+OPPORTUNITIES:
+✓ Leverage existing analytics patterns (analyticsController.ts)
+✓ Build on quiz stats endpoint infrastructure
+✓ Use admin dashboard template for prediction admin view
+✓ Integrate with existing AI services (Claude Sonnet)
+✓ Cache predictions for performance
+✓ Validate against historical performance trends
+
+CONSIDERATIONS:
+- PAES score mapping needs expert input (exact weights unknown)
+- Consider incorporating actual PAES score data for model validation
+- Plan for edge cases (very new users, single-subject specialists)
+- Design for explainability (why this prediction?)
+- Consider personalized improvement suggestions
+- Plan for iterative model refinement
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Review the three documentation files
+2. Discuss PAES scoring model with domain experts
+3. Design confidence interval strategy
+4. Create predictionService.ts starter file
+5. Add paes_predictions table to database migrations
+6. Implement initial MVP with basic weighting
+7. Create frontend widget with real data integration
+8. Validate predictions against historical trends
+9. Iterate based on user feedback
+
+================================================================================
