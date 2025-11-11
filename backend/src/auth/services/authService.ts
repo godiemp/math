@@ -7,6 +7,7 @@
  */
 
 import bcrypt from 'bcryptjs';
+import { randomUUID } from 'crypto';
 import { pool } from '../../config/database';
 import {
   generateAccessToken,
@@ -75,8 +76,8 @@ export async function registerUser(
   // Hash password
   const passwordHash = await bcrypt.hash(password, 10);
 
-  // Generate user ID
-  const userId = `user-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  // Generate cryptographically secure user ID (RFC 4122 UUID)
+  const userId = randomUUID();
   const now = Date.now();
 
   // Insert user
