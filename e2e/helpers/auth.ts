@@ -9,6 +9,11 @@ export async function loginAsStudent(page: Page) {
   // Navigate to login page
   await page.goto('/');
 
+  // Dismiss cookie banner before interacting with the page
+  await page.evaluate(() => {
+    localStorage.setItem('cookie-consent', 'accepted');
+  });
+
   // Fill in credentials
   await page.fill('input[type="email"], input[name="email"], input[name="username"]', 'student@test.com');
   await page.fill('input[type="password"]', 'student123');
