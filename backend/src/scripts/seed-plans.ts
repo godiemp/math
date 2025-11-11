@@ -116,30 +116,7 @@ async function seedPlans() {
   const client = await pool.connect();
 
   try {
-    // Check if force seeding is enabled via environment variable
-    const forceSeed = process.env.FORCE_SEED_PLANS === 'true';
-
-    console.log('🌱 Checking if plan seeding is needed...');
-
-    // Quick check: if all plans exist and not forcing, skip seeding entirely
-    if (!forceSeed) {
-      const allPlansExist = await client.query(
-        'SELECT COUNT(*) as count FROM plans WHERE id = ANY($1)',
-        [plans.map(p => p.id)]
-      );
-
-      const existingCount = parseInt(allPlansExist.rows[0].count);
-      const totalPlans = plans.length;
-
-      if (existingCount === totalPlans) {
-        console.log(`✅ All ${totalPlans} plans already exist. Skipping seeding.`);
-        return;
-      }
-
-      console.log(`📊 Found ${existingCount}/${totalPlans} existing plans. Seeding missing plans...`);
-    } else {
-      console.log('⚠️  FORCE_SEED_PLANS=true detected. Running seed for all plans...');
-    }
+    console.log('🌱 Starting plan seeding (will create new plans and update existing ones)...');
 
     await client.query('BEGIN');
 
@@ -147,14 +124,43 @@ async function seedPlans() {
       const now = Date.now();
 
       // Check if plan already exists
-      const existing = await client.query('SELECT id FROM plans WHERE id = $1', [plan.id]);
+      const existing = await client.query('SELECT * FROM plans WHERE id = $1', [plan.id]);
 
       if (existing.rows.length > 0) {
-        console.log(`⚠️  Plan "${plan.name}" (${plan.id}) already exists, skipping...`);
+        // Plan exists - update it with current values
+        await client.query(
+          `UPDATE plans SET
+            name = $1,
+            description = $2,
+            price = $3,
+            currency = $4,
+            duration_days = $5,
+            trial_duration_days = $6,
+            features = $7,
+            is_active = $8,
+            display_order = $9,
+            updated_at = $10
+          WHERE id = $11`,
+          [
+            plan.name,
+            plan.description,
+            plan.price,
+            plan.currency,
+            plan.duration_days,
+            plan.trial_duration_days,
+            plan.features,
+            plan.is_active,
+            plan.display_order,
+            now,
+            plan.id,
+          ]
+        );
+
+        console.log(`🔄 Updated plan: ${plan.name} (${plan.id}) - Active: ${plan.is_active}`);
         continue;
       }
 
-      // Insert plan
+      // Insert new plan
       await client.query(
         `INSERT INTO plans (
           id, name, description, price, currency, duration_days,
