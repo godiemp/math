@@ -1,6 +1,8 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import { testConnection, initializeDatabase, closeDatabase, pool } from './config/database';
 import { initImageStorage } from './services/imageStorageService';
 import authRoutes from './auth/routes/authRoutes';
@@ -74,10 +76,55 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
+// Security middleware
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  },
+  crossOriginEmbedderPolicy: false, // Allow embedding for Vercel preview
+}));
+
+// General API rate limiting - 100 requests per 15 minutes per IP
+// Disabled in test environment to allow multiple requests in e2e tests
+const apiLimiter = process.env.NODE_ENV === 'test'
+  ? (req: Request, res: Response, next: NextFunction) => next() // No rate limiting in test
+  : rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 100, // Limit each IP to 100 requests per windowMs
+      message: {
+        error: 'Demasiadas solicitudes desde esta IP, por favor intenta de nuevo más tarde.',
+      },
+      standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+      legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    });
+
+// Strict rate limiting for authentication endpoints - 5 attempts per 15 minutes per IP
+// Disabled in test environment to allow multiple logins in e2e tests
+const authLimiter = process.env.NODE_ENV === 'test'
+  ? (req: Request, res: Response, next: NextFunction) => next() // No rate limiting in test
+  : rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 5, // Limit each IP to 5 requests per windowMs
+      message: {
+        error: 'Demasiados intentos de inicio de sesión. Por favor, intenta de nuevo en 15 minutos.',
+      },
+      standardHeaders: true,
+      legacyHeaders: false,
+      skipSuccessfulRequests: false, // Count successful requests
+    });
+
 // Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Apply general rate limiting to all API routes
+app.use('/api/', apiLimiter);
 
 // Request logging middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -96,8 +143,8 @@ app.get('/health', (req: Request, res: Response) => {
   });
 });
 
-// API routes
-app.use('/api/auth', authRoutes);
+// API routes with stricter rate limiting for auth
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin', userManagementRoutes); // User & subscription management
 app.use('/api/streak', streakRoutes);

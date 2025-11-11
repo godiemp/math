@@ -4,12 +4,22 @@ test.describe('Authentication', () => {
   test('should display login page', async ({ page }) => {
     await page.goto('/');
 
+    // Dismiss cookie banner
+    await page.evaluate(() => {
+      localStorage.setItem('cookie-consent', 'accepted');
+    });
+
     // Check page loaded
     await expect(page).toHaveTitle(/PAES|Math|Matemáticas/i);
   });
 
   test('should login with test student credentials', async ({ page }) => {
     await page.goto('/');
+
+    // Dismiss cookie banner before interacting with the page
+    await page.evaluate(() => {
+      localStorage.setItem('cookie-consent', 'accepted');
+    });
 
     // Find and fill email/username field
     await page.fill('input[type="email"], input[name="email"], input[name="username"]', 'student@test.com');

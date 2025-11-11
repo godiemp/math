@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SWRProvider } from "@/lib/swr-config";
 import { Toaster } from "sonner";
+import CookieConsent from "@/components/CookieConsent";
 
 export const metadata: Metadata = {
   title: "PAES Chile - Preparación Matemática",
@@ -23,6 +24,7 @@ export default function RootLayout({
           </AuthProvider>
         </SWRProvider>
         <Toaster position="top-right" richColors />
+        <CookieConsent />
       </body>
     </html>
   );

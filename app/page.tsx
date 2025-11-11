@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Auth from "@/components/Auth";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   const { isAuthenticated, setUser } = useAuth();
@@ -22,7 +23,7 @@ export default function Home() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center relative overflow-hidden"
+      className="min-h-screen flex flex-col relative overflow-hidden"
       style={{
         background: 'var(--color-bg)'
       }}
@@ -36,266 +37,270 @@ export default function Home() {
       />
 
       {/* Content Container */}
-      <div className="w-full max-w-md px-4 relative z-10">
-        {/* Hero Section */}
-        <div className="text-center mb-12 spring-motion">
-          <div className="mb-6">
-            <div
-              className="inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-4 spring-emphasized hover:scale-110"
+      <div className="flex-grow flex md:items-center justify-center relative z-10 pt-8 md:pt-0">
+        <div className="w-full max-w-md px-4 pb-8">
+          {/* Hero Section */}
+          <div className="text-center mb-6 md:mb-8 spring-motion">
+            <div className="mb-4">
+              <div
+                className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-3xl mb-3 spring-emphasized hover:scale-110"
+                style={{
+                  background: 'var(--color-tint)',
+                  boxShadow: 'var(--shadow-raised)',
+                }}
+              >
+                <svg
+                  className="w-8 h-8 md:w-10 md:h-10"
+                  fill="none"
+                  stroke="white"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                  <path d="M2 17l10 5 10-5"/>
+                  <path d="M2 12l10 5 10-5"/>
+                </svg>
+              </div>
+            </div>
+
+            <h1
+              className="font-semibold mb-2 md:mb-3 spring-motion"
               style={{
-                background: 'var(--color-tint)',
-                boxShadow: 'var(--shadow-raised)',
+                fontFamily: 'var(--font-heading)',
+                fontSize: 'clamp(32px, 8vw, 44px)',
+                lineHeight: '1.1',
+                letterSpacing: '-1px',
+                color: 'var(--color-label-primary)',
               }}
             >
-              <svg
-                className="w-10 h-10"
-                fill="none"
-                stroke="white"
-                viewBox="0 0 24 24"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                <path d="M2 17l10 5 10-5"/>
-                <path d="M2 12l10 5 10-5"/>
-              </svg>
-            </div>
+              PAES Chile
+            </h1>
+
+            <p
+              className="spring-motion"
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '17px',
+                lineHeight: '1.4',
+                color: 'var(--color-label-secondary)',
+              }}
+            >
+              Plataforma de Preparación Matemática
+            </p>
+
+            {/* Info Button */}
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="spring-motion mt-4"
+              style={{
+                fontSize: '14px',
+                color: 'var(--color-tint)',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                textDecoration: 'underline',
+              }}
+            >
+              cómo funciona
+            </button>
           </div>
 
-          <h1
-            className="font-semibold mb-3 spring-motion"
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '44px',
-              lineHeight: '1.1',
-              letterSpacing: '-1px',
-              color: 'var(--color-label-primary)',
+          {/* Auth Component */}
+          <Auth
+            onSuccess={() => {
+              setUser(require('@/lib/auth').getCurrentUser());
+              router.push('/dashboard');
             }}
-          >
-            PAES Chile
-          </h1>
+          />
 
-          <p
-            className="spring-motion"
+          {/* Footer Info */}
+          <div
+            className="text-center mt-6 md:mt-8 spring-motion"
             style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '17px',
-              lineHeight: '1.4',
+              fontSize: '13px',
               color: 'var(--color-label-secondary)',
             }}
           >
-            Plataforma de Preparación Matemática
-          </p>
-
-          {/* Info Button */}
-          <button
-            onClick={() => setShowInfoModal(true)}
-            className="spring-motion mt-4"
-            style={{
-              fontSize: '14px',
-              color: 'var(--color-tint)',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              textDecoration: 'underline',
-            }}
-          >
-            cómo funciona
-          </button>
+            <p>Preparación para la Prueba de Acceso a la Educación Superior</p>
+          </div>
         </div>
 
-        {/* Auth Component */}
-        <Auth
-          onSuccess={() => {
-            setUser(require('@/lib/auth').getCurrentUser());
-            router.push('/dashboard');
-          }}
-        />
-
-        {/* Footer Info */}
-        <div
-          className="text-center mt-8 spring-motion"
-          style={{
-            fontSize: '13px',
-            color: 'var(--color-label-secondary)',
-          }}
-        >
-          <p>Preparación para la Prueba de Acceso a la Educación Superior</p>
-        </div>
-      </div>
-
-      {/* Info Modal */}
-      {showInfoModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{
-            background: 'rgba(0, 0, 0, 0.5)',
-          }}
-          onClick={() => setShowInfoModal(false)}
-        >
+        {/* Info Modal */}
+        {showInfoModal && (
           <div
-            className="translucent spring-motion max-w-lg w-full"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
             style={{
-              borderRadius: 'var(--radius-xl)',
-              padding: 'var(--spacing-16)',
-              boxShadow: 'var(--shadow-raised)',
-              maxHeight: '80vh',
-              overflowY: 'auto',
+              background: 'rgba(0, 0, 0, 0.5)',
             }}
-            onClick={(e) => e.stopPropagation()}
+            onClick={() => setShowInfoModal(false)}
           >
-            {/* Header */}
-            <div className="flex justify-between items-start mb-6">
-              <h2
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '24px',
-                  fontWeight: 600,
-                  color: 'var(--color-label-primary)',
-                }}
-              >
-                cómo funciona esto
-              </h2>
-              <button
-                onClick={() => setShowInfoModal(false)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '24px',
-                  color: 'var(--color-label-secondary)',
-                  cursor: 'pointer',
-                  padding: 0,
-                  lineHeight: 1,
-                }}
-              >
-                ×
-              </button>
-            </div>
-
-            {/* Content */}
-            <div className="space-y-5">
-              <div>
-                <h3
+            <div
+              className="translucent spring-motion max-w-lg w-full p-6 md:p-8"
+              style={{
+                borderRadius: 'var(--radius-xl)',
+                boxShadow: 'var(--shadow-raised)',
+                maxHeight: '80vh',
+                overflowY: 'auto',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="flex justify-between items-start mb-6">
+                <h2
                   style={{
-                    fontSize: '17px',
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '24px',
                     fontWeight: 600,
                     color: 'var(--color-label-primary)',
-                    marginBottom: '8px',
                   }}
                 >
-                  qué es esto
-                </h3>
-                <p
+                  cómo funciona esto
+                </h2>
+                <button
+                  onClick={() => setShowInfoModal(false)}
                   style={{
-                    fontSize: '15px',
-                    lineHeight: '1.6',
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '24px',
                     color: 'var(--color-label-secondary)',
+                    cursor: 'pointer',
+                    padding: 0,
+                    lineHeight: 1,
                   }}
                 >
-                  una plataforma donde practicas mate para la PAES. tienes ejercicios del temario oficial, feedback cuando te equivocas, y ves tu progreso en tiempo real. sin publicidad.
-                </p>
+                  ×
+                </button>
               </div>
 
-              <div>
-                <h3
+              {/* Content */}
+              <div className="space-y-5">
+                <div>
+                  <h3
+                    style={{
+                      fontSize: '17px',
+                      fontWeight: 600,
+                      color: 'var(--color-label-primary)',
+                      marginBottom: '8px',
+                    }}
+                  >
+                    qué es esto
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: '15px',
+                      lineHeight: '1.6',
+                      color: 'var(--color-label-secondary)',
+                    }}
+                  >
+                    una plataforma donde practicas mate para la PAES. tienes ejercicios del temario oficial, feedback cuando te equivocas, y ves tu progreso en tiempo real. sin publicidad.
+                  </p>
+                </div>
+
+                <div>
+                  <h3
+                    style={{
+                      fontSize: '17px',
+                      fontWeight: 600,
+                      color: 'var(--color-label-primary)',
+                      marginBottom: '8px',
+                    }}
+                  >
+                    qué incluye
+                  </h3>
+                  <div className="space-y-2">
+                    {[
+                      'problemas del temario oficial PAES',
+                      'explicaciones cuando te equivocas',
+                      'seguimiento de tu progreso',
+                      'sesiones de práctica en vivo',
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-start gap-2">
+                        <span style={{ color: 'var(--color-tint)', marginTop: '4px', fontSize: '18px' }}>•</span>
+                        <p
+                          style={{
+                            fontSize: '15px',
+                            lineHeight: '1.6',
+                            color: 'var(--color-label-secondary)',
+                            margin: 0,
+                          }}
+                        >
+                          {item}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3
+                    style={{
+                      fontSize: '17px',
+                      fontWeight: 600,
+                      color: 'var(--color-label-primary)',
+                      marginBottom: '8px',
+                    }}
+                  >
+                    el precio
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: '15px',
+                      lineHeight: '1.6',
+                      color: 'var(--color-label-secondary)',
+                    }}
+                  >
+                    8.000 al mes. es menos que un preu, menos que una salida al cine. cuando pagas, te comprometes de verdad. y puede ser la diferencia para entrar a la u que quieres.
+                  </p>
+                </div>
+
+                <div
+                  className="mt-6 p-4"
                   style={{
-                    fontSize: '17px',
-                    fontWeight: 600,
-                    color: 'var(--color-label-primary)',
-                    marginBottom: '8px',
+                    borderRadius: 'var(--radius-sm)',
+                    background: 'var(--color-fill)',
+                    border: '1px solid var(--color-separator)',
                   }}
                 >
-                  qué incluye
-                </h3>
-                <div className="space-y-2">
-                  {[
-                    'problemas del temario oficial PAES',
-                    'explicaciones cuando te equivocas',
-                    'seguimiento de tu progreso',
-                    'sesiones de práctica en vivo',
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-start gap-2">
-                      <span style={{ color: 'var(--color-tint)', marginTop: '4px', fontSize: '18px' }}>•</span>
-                      <p
-                        style={{
-                          fontSize: '15px',
-                          lineHeight: '1.6',
-                          color: 'var(--color-label-secondary)',
-                          margin: 0,
-                        }}
-                      >
-                        {item}
-                      </p>
-                    </div>
-                  ))}
+                  <p
+                    style={{
+                      fontSize: '14px',
+                      lineHeight: '1.5',
+                      color: 'var(--color-label-secondary)',
+                      textAlign: 'center',
+                    }}
+                  >
+                    <strong>8.000 CLP/mes</strong> • cancela cuando quieras • sin permanencia
+                  </p>
                 </div>
               </div>
 
-              <div>
-                <h3
-                  style={{
-                    fontSize: '17px',
-                    fontWeight: 600,
-                    color: 'var(--color-label-primary)',
-                    marginBottom: '8px',
-                  }}
-                >
-                  el precio
-                </h3>
-                <p
-                  style={{
-                    fontSize: '15px',
-                    lineHeight: '1.6',
-                    color: 'var(--color-label-secondary)',
-                  }}
-                >
-                  8.000 al mes. es menos que un preu, menos que una salida al cine. cuando pagas, te comprometes de verdad. y puede ser la diferencia para entrar a la u que quieres.
-                </p>
-              </div>
-
-              <div
-                className="mt-6 p-4"
+              {/* Close Button */}
+              <button
+                onClick={() => setShowInfoModal(false)}
+                className="spring-emphasized w-full mt-6"
                 style={{
+                  height: '44px',
+                  padding: '0 var(--spacing-8)',
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  color: 'white',
+                  background: 'var(--color-tint)',
+                  border: 'none',
                   borderRadius: 'var(--radius-sm)',
-                  background: 'var(--color-fill)',
-                  border: '1px solid var(--color-separator)',
+                  cursor: 'pointer',
                 }}
               >
-                <p
-                  style={{
-                    fontSize: '14px',
-                    lineHeight: '1.5',
-                    color: 'var(--color-label-secondary)',
-                    textAlign: 'center',
-                  }}
-                >
-                  <strong>8.000 CLP/mes</strong> • cancela cuando quieras • sin permanencia
-                </p>
-              </div>
+                ok, entendido
+              </button>
             </div>
-
-            {/* Close Button */}
-            <button
-              onClick={() => setShowInfoModal(false)}
-              className="spring-emphasized w-full mt-6"
-              style={{
-                height: '44px',
-                padding: '0 var(--spacing-8)',
-                fontSize: '16px',
-                fontWeight: 600,
-                color: 'white',
-                background: 'var(--color-tint)',
-                border: 'none',
-                borderRadius: 'var(--radius-sm)',
-                cursor: 'pointer',
-              }}
-            >
-              ok, entendido
-            </button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

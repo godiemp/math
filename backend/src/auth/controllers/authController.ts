@@ -47,7 +47,19 @@ export async function login(req: Request, res: Response): Promise<void> {
   try {
     const data = req.body as LoginRequest;
     const result = await loginUserService(data);
-    res.json(result);
+
+    // Fetch subscription status for non-admin users
+    const subscription = result.user.role !== 'admin'
+      ? await SubscriptionService.getUserSubscription(result.user.id)
+      : null;
+
+    res.json({
+      ...result,
+      user: {
+        ...result.user,
+        subscription,
+      },
+    });
   } catch (error) {
     console.error('Login error:', error);
     const message = error instanceof Error ? error.message : 'Login failed';
