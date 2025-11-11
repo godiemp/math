@@ -483,3 +483,211 @@ export const getLastQuizConfig = async (req: AuthRequest, res: Response): Promis
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+/**
+ * Get adaptive learning recommendations based on user performance
+ */
+export const getAdaptiveRecommendations = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    // Get performance stats by subject and level
+    const performanceResult = await pool.query(
+      `SELECT
+        level,
+        subject,
+        topic,
+        COUNT(*) as total_attempts,
+        SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) as correct_attempts,
+        ROUND(AVG(CASE WHEN is_correct THEN 100 ELSE 0 END)) as accuracy
+      FROM quiz_attempts
+      WHERE user_id = $1 AND subject IS NOT NULL AND subject != ''
+      GROUP BY level, subject, topic
+      HAVING COUNT(*) >= 3
+      ORDER BY accuracy ASC, total_attempts DESC`,
+      [userId]
+    );
+
+    // Get total questions attempted
+    const totalResult = await pool.query(
+      `SELECT
+        COUNT(*) as total_questions,
+        SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) as correct_questions,
+        COUNT(DISTINCT quiz_session_id) as total_sessions
+      FROM quiz_attempts
+      WHERE user_id = $1`,
+      [userId]
+    );
+
+    // Get M1 and M2 specific stats
+    const levelStatsResult = await pool.query(
+      `SELECT
+        level,
+        COUNT(*) as attempted,
+        SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) as correct
+      FROM quiz_attempts
+      WHERE user_id = $1
+      GROUP BY level`,
+      [userId]
+    );
+
+    const totalQuestions = parseInt(totalResult.rows[0]?.total_questions || '0', 10);
+    const correctQuestions = parseInt(totalResult.rows[0]?.correct_questions || '0', 10);
+    const totalSessions = parseInt(totalResult.rows[0]?.total_sessions || '0', 10);
+
+    // Calculate readiness score (0-100)
+    const overallAccuracy = totalQuestions > 0 ? Math.round((correctQuestions / totalQuestions) * 100) : 0;
+    const volumeScore = Math.min(100, Math.round((totalQuestions / 100) * 100)); // 100 questions = 100%
+    const consistencyScore = Math.min(100, totalSessions * 10); // 10 sessions = 100%
+    const readinessScore = Math.round((overallAccuracy * 0.5) + (volumeScore * 0.3) + (consistencyScore * 0.2));
+
+    // Process level stats
+    const m1Stats = levelStatsResult.rows.find((row) => row.level === 'M1');
+    const m2Stats = levelStatsResult.rows.find((row) => row.level === 'M2');
+
+    const m1Attempted = parseInt(m1Stats?.attempted || '0', 10);
+    const m1Correct = parseInt(m1Stats?.correct || '0', 10);
+    const m2Attempted = parseInt(m2Stats?.attempted || '0', 10);
+    const m2Correct = parseInt(m2Stats?.correct || '0', 10);
+
+    const m1Percentage = m1Attempted > 0 ? Math.round((m1Attempted / 406) * 100) : 0;
+    const m2Percentage = m2Attempted > 0 ? Math.round((m2Attempted / 26) * 100) : 0;
+
+    // Categorize areas
+    const weakAreas = performanceResult.rows
+      .filter((row) => parseInt(row.accuracy, 10) < 60 && parseInt(row.total_attempts, 10) >= 5)
+      .slice(0, 3)
+      .map((row) => ({
+        level: row.level,
+        subject: row.subject,
+        topic: row.topic,
+        accuracy: parseInt(row.accuracy, 10),
+        attempts: parseInt(row.total_attempts, 10),
+      }));
+
+    const improvingAreas = performanceResult.rows
+      .filter((row) => {
+        const accuracy = parseInt(row.accuracy, 10);
+        return accuracy >= 60 && accuracy < 80 && parseInt(row.total_attempts, 10) >= 5;
+      })
+      .slice(0, 3)
+      .map((row) => ({
+        level: row.level,
+        subject: row.subject,
+        topic: row.topic,
+        accuracy: parseInt(row.accuracy, 10),
+        attempts: parseInt(row.total_attempts, 10),
+      }));
+
+    const strongAreas = performanceResult.rows
+      .filter((row) => parseInt(row.accuracy, 10) >= 80 && parseInt(row.total_attempts, 10) >= 5)
+      .slice(0, 3)
+      .map((row) => ({
+        level: row.level,
+        subject: row.subject,
+        topic: row.topic,
+        accuracy: parseInt(row.accuracy, 10),
+        attempts: parseInt(row.total_attempts, 10),
+      }));
+
+    // Generate recommendations
+    const recommendations = [];
+
+    if (weakAreas.length > 0) {
+      const weakSubject = weakAreas[0].subject;
+      const weakLevel = weakAreas[0].level;
+      recommendations.push({
+        type: 'focus',
+        priority: 'high',
+        message: `Enfócate en ${weakSubject} (${weakLevel})`,
+        detail: `Tu precisión es ${weakAreas[0].accuracy}%. Practica para mejorar.`,
+        action: {
+          level: weakLevel,
+          subject: weakSubject,
+          mode: 'zen',
+        },
+      });
+    }
+
+    if (improvingAreas.length > 0) {
+      const improvingSubject = improvingAreas[0].subject;
+      const improvingLevel = improvingAreas[0].level;
+      recommendations.push({
+        type: 'reinforce',
+        priority: 'medium',
+        message: `Refuerza ${improvingSubject} (${improvingLevel})`,
+        detail: `Vas bien con ${improvingAreas[0].accuracy}%. Sigue practicando.`,
+        action: {
+          level: improvingLevel,
+          subject: improvingSubject,
+          mode: 'rapidfire',
+        },
+      });
+    }
+
+    if (strongAreas.length > 0) {
+      const strongSubject = strongAreas[0].subject;
+      const strongLevel = strongAreas[0].level;
+      recommendations.push({
+        type: 'maintain',
+        priority: 'low',
+        message: `Mantén tu nivel en ${strongSubject} (${strongLevel})`,
+        detail: `Excelente precisión de ${strongAreas[0].accuracy}%.`,
+        action: {
+          level: strongLevel,
+          subject: strongSubject,
+          mode: 'rapidfire',
+        },
+      });
+    }
+
+    // If no data yet, give starter recommendations
+    if (totalQuestions === 0) {
+      recommendations.push({
+        type: 'start',
+        priority: 'high',
+        message: 'Comienza tu preparación PAES',
+        detail: 'Empieza con Modo Zen para familiarizarte con las preguntas.',
+        action: {
+          level: 'M1',
+          subject: 'números',
+          mode: 'zen',
+        },
+      });
+    }
+
+    res.json({
+      readinessScore,
+      progress: {
+        totalQuestions,
+        correctQuestions,
+        overallAccuracy,
+        totalSessions,
+        m1: {
+          attempted: m1Attempted,
+          correct: m1Correct,
+          percentage: m1Percentage,
+          total: 406,
+        },
+        m2: {
+          attempted: m2Attempted,
+          correct: m2Correct,
+          percentage: m2Percentage,
+          total: 26,
+        },
+      },
+      weakAreas,
+      improvingAreas,
+      strongAreas,
+      recommendations,
+    });
+  } catch (error) {
+    console.error('Error getting adaptive recommendations:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

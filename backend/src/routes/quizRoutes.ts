@@ -6,6 +6,7 @@ import {
   getQuizStats,
   saveLastQuizConfig,
   getLastQuizConfig,
+  getAdaptiveRecommendations,
 } from '../controllers/quizController';
 import { authenticate } from '../auth/middleware/authenticate';
 
@@ -58,5 +59,12 @@ router.post('/last-config', authenticate, saveLastQuizConfig);
  * @access  Private
  */
 router.get('/last-config', authenticate, getLastQuizConfig);
+
+/**
+ * @route   GET /api/quiz/recommendations
+ * @desc    Get adaptive learning recommendations based on user performance
+ * @access  Private
+ */
+router.get('/recommendations', authenticate, getAdaptiveRecommendations);
 
 export default router;
