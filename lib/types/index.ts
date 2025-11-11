@@ -74,6 +74,10 @@ export type {
   SessionsResponse,
   SessionResponse,
   MessageResponse,
+  RecentSessionStats,
+  LevelStats,
+  TopRankings,
+  StudentStatistics,
 } from './sessions';
 
 // ============================================================================
