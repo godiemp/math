@@ -16,6 +16,19 @@ interface ProfileStats {
   accuracy: number;
 }
 
+interface UpdateProfileResponse {
+  success: boolean;
+  message: string;
+  user?: {
+    id: string;
+    username: string;
+    email: string;
+    displayName: string;
+    role: string;
+    createdAt: number;
+  };
+}
+
 function ProfilePageContent() {
   const { user, refreshUser } = useAuth();
   const [stats, setStats] = useState<ProfileStats>({
@@ -110,7 +123,7 @@ function ProfilePageContent() {
     setEditError('');
 
     try {
-      const response = await api.put('/api/user/profile', editForm);
+      const response = await api.put<UpdateProfileResponse>('/api/user/profile', editForm);
 
       if (response.data?.success) {
         // Refresh user data
