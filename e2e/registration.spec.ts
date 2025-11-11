@@ -63,8 +63,8 @@ test.describe('User Registration', () => {
     expect(url).toContain('/dashboard');
 
     // Verify dashboard content is visible
-    const hasDashboardContent = await page.getByText(/dashboard|práctica|inicio/i).count() > 0;
-    expect(hasDashboardContent).toBeGreaterThan(0);
+    const dashboardContentCount = await page.getByText(/dashboard|práctica|inicio/i).count();
+    expect(dashboardContentCount).toBeGreaterThan(0);
   });
 
   test('should show error for username less than 3 characters', async ({ page }) => {
@@ -82,8 +82,8 @@ test.describe('User Registration', () => {
     await page.waitForTimeout(1500);
 
     // Verify error is shown (either in toast or error message div)
-    const hasError = await page.getByText(/nombre de usuario debe tener al menos 3 caracteres/i).count() > 0;
-    expect(hasError).toBeGreaterThan(0);
+    const errorCount = await page.getByText(/nombre de usuario debe tener al menos 3 caracteres/i).count();
+    expect(errorCount).toBeGreaterThan(0);
 
     // Should still be on login page
     const url = page.url();
@@ -107,8 +107,8 @@ test.describe('User Registration', () => {
     await page.waitForTimeout(1500);
 
     // Verify error is shown
-    const hasError = await page.getByText(/correo electrónico inválido|email.*inválido/i).count() > 0;
-    expect(hasError).toBeGreaterThan(0);
+    const errorCount = await page.getByText(/correo electrónico inválido|email.*inválido/i).count();
+    expect(errorCount).toBeGreaterThan(0);
 
     // Should still be on login page
     const url = page.url();
@@ -132,8 +132,8 @@ test.describe('User Registration', () => {
     await page.waitForTimeout(1500);
 
     // Verify error is shown
-    const hasError = await page.getByText(/contraseña debe tener al menos 6 caracteres/i).count() > 0;
-    expect(hasError).toBeGreaterThan(0);
+    const errorCount = await page.getByText(/contraseña debe tener al menos 6 caracteres/i).count();
+    expect(errorCount).toBeGreaterThan(0);
 
     // Should still be on login page
     const url = page.url();
@@ -151,8 +151,8 @@ test.describe('User Registration', () => {
     await page.waitForTimeout(1500);
 
     // Verify error is shown
-    const hasError = await page.getByText(/completa todos los campos/i).count() > 0;
-    expect(hasError).toBeGreaterThan(0);
+    const errorCount = await page.getByText(/completa todos los campos/i).count();
+    expect(errorCount).toBeGreaterThan(0);
 
     // Should still be on login page
     const url = page.url();
@@ -176,8 +176,8 @@ test.describe('User Registration', () => {
     await page.waitForTimeout(1500);
 
     // Verify error is shown
-    const hasError = await page.getByText(/aceptar los términos/i).count() > 0;
-    expect(hasError).toBeGreaterThan(0);
+    const errorCount = await page.getByText(/aceptar los términos/i).count();
+    expect(errorCount).toBeGreaterThan(0);
 
     // Should still be on login page
     const url = page.url();
@@ -199,8 +199,8 @@ test.describe('User Registration', () => {
     await page.waitForTimeout(1500);
 
     // Verify error is shown (should mention user already exists)
-    const hasError = await page.getByText(/ya existe|already exists/i).count() > 0;
-    expect(hasError).toBeGreaterThan(0);
+    const errorCount = await page.getByText(/ya existe|already exists/i).count();
+    expect(errorCount).toBeGreaterThan(0);
 
     // Should still be on login page
     const url = page.url();
@@ -275,9 +275,9 @@ test.describe('User Registration', () => {
   });
 
   test('should have links to terms and privacy policy', async ({ page }) => {
-    // Check that terms and privacy links are present
-    const termsLink = page.locator('a[href="/legal/terminos"]');
-    const privacyLink = page.locator('a[href="/legal/privacidad"]');
+    // Check that terms and privacy links are present in the registration form
+    const termsLink = page.locator('form a[href="/legal/terminos"]');
+    const privacyLink = page.locator('form a[href="/legal/privacidad"]');
 
     await expect(termsLink).toBeVisible();
     await expect(privacyLink).toBeVisible();
