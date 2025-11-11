@@ -365,6 +365,45 @@ export class PaymentService {
   }
 
   /**
+   * Start a free trial without payment
+   */
+  static async startFreeTrial(userId: string, planId: string): Promise<any> {
+    try {
+      // Get plan details
+      const plan = await PlanService.getPlanById(planId);
+      if (!plan) {
+        throw new Error('Plan not found');
+      }
+
+      // Verify plan has a trial period
+      if (plan.trialDurationDays <= 0) {
+        throw new Error('This plan does not offer a trial period');
+      }
+
+      // Check if user already has an active subscription
+      const existingSubscription = await SubscriptionService.getUserSubscription(userId);
+      if (existingSubscription) {
+        throw new Error('You already have an active subscription');
+      }
+
+      // Create trial subscription
+      const subscription = await SubscriptionService.createSubscription({
+        userId,
+        planId,
+        startTrial: true,
+      });
+
+      return {
+        subscription,
+        message: `Trial started successfully. You have ${plan.trialDurationDays} days of free access.`,
+      };
+    } catch (error: any) {
+      console.error('Error starting free trial:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Map database row to Payment object
    */
   private static mapRowToPayment(row: any): Payment {

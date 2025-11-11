@@ -15,6 +15,8 @@ export default function PricingPage() {
   const router = useRouter();
   const { isAuthenticated, isPaidUser } = useAuth();
   const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
   // Fetch active plans
   const { data: plansResponse, error, isLoading } = useSWR(
@@ -30,7 +32,7 @@ export default function PricingPage() {
 
   const plans = plansResponse?.plans || [];
 
-  const handleSubscribe = async (planId: string) => {
+  const handleSubscribe = async (plan: Plan) => {
     if (!isAuthenticated) {
       toast.error('Debes iniciar sesión para suscribirte');
       router.push('/login?redirect=/pricing');
@@ -42,27 +44,62 @@ export default function PricingPage() {
       return;
     }
 
+    // If plan has trial and costs money, show payment options modal
+    if (plan.trialDurationDays > 0 && plan.price > 0) {
+      setSelectedPlan(plan);
+      setShowPaymentModal(true);
+      return;
+    }
+
+    // Otherwise, proceed directly
+    await proceedWithPayment(plan.id, false);
+  };
+
+  const proceedWithPayment = async (planId: string, startTrialWithoutCard: boolean) => {
     setLoadingPlanId(planId);
+    setShowPaymentModal(false);
 
     try {
-      const result = await createPaymentPreference(planId);
+      if (startTrialWithoutCard) {
+        // Start trial without payment - call backend to create trial subscription
+        const response = await fetch('/api/payments/start-trial', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ planId }),
+          credentials: 'include',
+        });
 
-      if (result.error) {
-        toast.error(result.error.error || 'Error al crear la preferencia de pago');
-        return;
-      }
+        const result = await response.json();
 
-      if (result.data?.data) {
-        // Redirect to MercadoPago checkout
-        const checkoutUrl = process.env.NODE_ENV === 'production'
-          ? result.data.data.initPoint
-          : result.data.data.sandboxInitPoint;
+        if (!response.ok || result.error) {
+          toast.error(result.error || 'Error al iniciar la prueba gratuita');
+          return;
+        }
 
-        window.location.href = checkoutUrl;
+        toast.success('¡Prueba gratuita activada! Disfruta 7 días de acceso completo');
+        router.push('/dashboard');
+      } else {
+        // Proceed with payment - redirect to MercadoPago
+        const result = await createPaymentPreference(planId);
+
+        if (result.error) {
+          toast.error(result.error.error || 'Error al crear la preferencia de pago');
+          return;
+        }
+
+        if (result.data?.data) {
+          const checkoutUrl = process.env.NODE_ENV === 'production'
+            ? result.data.data.initPoint
+            : result.data.data.sandboxInitPoint;
+
+          window.location.href = checkoutUrl;
+        }
       }
     } catch (error) {
-      console.error('Error creating payment preference:', error);
-      toast.error('Error al iniciar el proceso de pago');
+      console.error('Error processing subscription:', error);
+      toast.error('Error al procesar la suscripción');
     } finally {
       setLoadingPlanId(null);
     }
@@ -216,7 +253,7 @@ export default function PricingPage() {
               {/* Subscribe Button */}
               <Button
                 variant="primary"
-                onClick={() => handleSubscribe(plan.id)}
+                onClick={() => handleSubscribe(plan)}
                 disabled={isLoading || (isAuthenticated && isPaidUser)}
                 className="w-full"
               >
@@ -295,6 +332,84 @@ export default function PricingPage() {
           </div>
         </Card>
       </div>
+
+      {/* Payment Options Modal */}
+      {showPaymentModal && selectedPlan && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <Card padding="lg" className="max-w-lg w-full">
+            <div className="mb-6">
+              <h3 className="text-2xl font-bold mb-2">Elige cómo empezar</h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                {selectedPlan.name} - {formatPrice(selectedPlan.price, selectedPlan.currency)}/mes
+              </p>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              {/* Option 1: Start trial without card */}
+              <button
+                onClick={() => proceedWithPayment(selectedPlan.id, true)}
+                disabled={loadingPlanId === selectedPlan.id}
+                className="w-full p-6 border-2 border-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors text-left"
+              >
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex-1">
+                    <h4 className="text-lg font-semibold mb-1">Probar y pagar después</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Comienza tu prueba gratuita de 7 días ahora. No se requiere tarjeta.
+                    </p>
+                  </div>
+                  <Badge variant="success" className="ml-2">Recomendado</Badge>
+                </div>
+                <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 mt-3">
+                  <li>✓ Sin tarjeta requerida</li>
+                  <li>✓ 7 días de acceso completo gratis</li>
+                  <li>✓ Paga solo si decides continuar</li>
+                </ul>
+              </button>
+
+              {/* Option 2: Pay now with trial */}
+              <button
+                onClick={() => proceedWithPayment(selectedPlan.id, false)}
+                disabled={loadingPlanId === selectedPlan.id}
+                className="w-full p-6 border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
+              >
+                <div className="flex-1">
+                  <h4 className="text-lg font-semibold mb-1">Pagar ahora</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Paga hoy y obtén acceso inmediato. Tu prueba de 7 días comienza ahora.
+                  </p>
+                </div>
+                <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 mt-3">
+                  <li>✓ Tu cargo comienza en 7 días</li>
+                  <li>✓ Acceso completo inmediato</li>
+                  <li>✓ Cancela en cualquier momento</li>
+                </ul>
+              </button>
+            </div>
+
+            {/* Close button */}
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setShowPaymentModal(false);
+                setSelectedPlan(null);
+              }}
+              disabled={loadingPlanId === selectedPlan.id}
+              className="w-full"
+            >
+              Cancelar
+            </Button>
+
+            {loadingPlanId === selectedPlan.id && (
+              <div className="mt-4 text-center">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Procesando...
+                </p>
+              </div>
+            )}
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
