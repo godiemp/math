@@ -329,7 +329,9 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
       for (let i = 1; i < questionsAnswered; i++) {
         const nextBtn = page.getByRole('button', { name: /Siguiente/i });
         if (await nextBtn.isVisible().catch(() => false)) {
-          await nextBtn.click();
+          // Scroll into view before clicking to fix viewport issue
+          await nextBtn.scrollIntoViewIfNeeded();
+          await nextBtn.click({ force: true });
           await page.waitForTimeout(300);
         }
       }
@@ -337,7 +339,8 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
       // Click "Ver Resumen"
       const verResumenButton = page.getByRole('button', { name: /Ver Resumen/i });
       if (await verResumenButton.isVisible().catch(() => false)) {
-        await verResumenButton.click();
+        await verResumenButton.scrollIntoViewIfNeeded();
+        await verResumenButton.click({ force: true });
         await page.waitForTimeout(2000);
       }
     }
