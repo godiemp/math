@@ -47,7 +47,7 @@ const plans = [
       'Generación de preguntas personalizadas',
       'Sin límite de intentos',
     ]),
-    is_active: true,
+    is_active: false, // Replaced by trial included in student plan
     display_order: 2,
   },
   {
