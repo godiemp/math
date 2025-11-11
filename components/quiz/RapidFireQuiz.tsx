@@ -163,12 +163,7 @@ export default function RapidFireQuiz({
     setRapidFireState(prev => {
       const newState = { ...prev };
 
-      if (isCorrect) {
-        // Extreme mode: add time back
-        if (difficulty === 'extreme' && 'timeBackPerCorrect' in config && config.timeBackPerCorrect) {
-          setTimeRemaining(time => time + config.timeBackPerCorrect);
-        }
-      } else {
+      if (!isCorrect) {
         newState.wrongAnswerCount = prev.wrongAnswerCount + 1;
 
         // Check lives system - GAME OVER
@@ -222,18 +217,27 @@ export default function RapidFireQuiz({
 
   const calculateRapidFireSummary = () => {
     let correctCount = 0;
+    let answeredCount = 0;
+
     quizQuestions.forEach((question, index) => {
-      if (userAnswers[index] === question.correctAnswer) {
-        correctCount++;
+      const userAnswer = userAnswers[index];
+      // Only count questions that were actually answered
+      if (userAnswer !== null && userAnswer !== undefined) {
+        answeredCount++;
+        if (userAnswer === question.correctAnswer) {
+          correctCount++;
+        }
       }
     });
 
-    const accuracy = (correctCount / quizQuestions.length) * 100;
+    // Calculate accuracy based on answered questions only
+    const accuracy = answeredCount > 0 ? (correctCount / answeredCount) * 100 : 0;
     const passed = accuracy >= config.passingPercentage;
 
     return {
       correctAnswers: correctCount,
-      totalQuestions: quizQuestions.length,
+      answeredQuestions: answeredCount,
+      totalQuestions: quizQuestions.length, // Total questions in the quiz
       accuracy,
       timeUsed: totalTimeElapsed,
       passed,
@@ -247,7 +251,9 @@ export default function RapidFireQuiz({
     try {
       await submitQuiz(quizQuestions, userAnswers, quizSessionId, aiConversation);
       setQuizSubmitted(true);
-      setCurrentQuestionIndex(0);
+      // Set to first answered question for review
+      const firstAnswered = quizQuestions.findIndex((_, index) => userAnswers[index] !== null);
+      setCurrentQuestionIndex(firstAnswered >= 0 ? firstAnswered : 0);
     } catch (error) {
       console.error('Error submitting quiz:', error);
       // Reset submitting state on error so user can retry
@@ -359,8 +365,13 @@ export default function RapidFireQuiz({
         <div className="mb-8">
           <div className="text-center mb-6">
             <div className={`text-7xl font-black mb-4 ${summary.passed ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-              {summary.correctAnswers}/{summary.totalQuestions}
+              {summary.correctAnswers}/{summary.answeredQuestions}
             </div>
+            {summary.answeredQuestions < summary.totalQuestions && (
+              <p className="text-sm text-gray-500 dark:text-gray-400 -mt-2 mb-2">
+                {summary.answeredQuestions} de {summary.totalQuestions} preguntas respondidas
+              </p>
+            )}
             <p className="text-2xl font-bold text-gray-700 dark:text-gray-300">
               {summary.passed ? '✅ ¡Aprobado!' : '❌ No Aprobado'}
             </p>
@@ -378,13 +389,14 @@ export default function RapidFireQuiz({
               const isCorrect = userAnswer === question.correctAnswer;
               const isAnswered = userAnswer !== null;
 
+              // Only show questions that were answered
+              if (!isAnswered) return null;
+
               return (
                 <div
                   key={question.id}
                   className={`p-3 rounded-lg border-2 ${
-                    !isAnswered
-                      ? 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50'
-                      : isCorrect
+                    isCorrect
                       ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
                       : 'border-red-500 bg-red-50 dark:bg-red-900/20'
                   }`}
@@ -398,9 +410,7 @@ export default function RapidFireQuiz({
                         Pregunta {index + 1}: {question.topic}
                       </span>
                       <span className="text-sm font-semibold">
-                        {!isAnswered ? (
-                          <span className="text-gray-500 dark:text-gray-400">Sin responder</span>
-                        ) : isCorrect ? (
+                        {isCorrect ? (
                           <span className="text-green-700 dark:text-green-300">✓ Correcta</span>
                         ) : (
                           <span className="text-red-700 dark:text-red-300">✗ Incorrecta</span>
@@ -416,7 +426,11 @@ export default function RapidFireQuiz({
 
         <div className="space-y-4">
           <button
-            onClick={() => setCurrentQuestionIndex(0)}
+            onClick={() => {
+              // Find first answered question
+              const firstAnswered = quizQuestions.findIndex((_, index) => userAnswers[index] !== null);
+              setCurrentQuestionIndex(firstAnswered >= 0 ? firstAnswered : 0);
+            }}
             className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
           >
             Revisar Respuestas
@@ -442,6 +456,12 @@ export default function RapidFireQuiz({
   const userAnswer = userAnswers[currentQuestionIndex];
   const showFeedback = quizSubmitted || userAnswer !== null;
 
+  // Get list of answered question indices for navigation
+  const answeredQuestionIndices = quizQuestions
+    .map((_, index) => ({ index, answered: userAnswers[index] !== null }))
+    .filter(item => item.answered)
+    .map(item => item.index);
+
   const questionContent = (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8 animate-fadeIn"
       style={{
@@ -454,7 +474,10 @@ export default function RapidFireQuiz({
             {currentQuestion.topic}
           </span>
           <span data-testid="question-counter" className="text-sm text-gray-600 dark:text-gray-400">
-            {currentQuestionIndex + 1}/{quizQuestions.length}
+            {quizSubmitted
+              ? `${answeredQuestionIndices.indexOf(currentQuestionIndex) + 1}/${answeredQuestionIndices.length}`
+              : `${currentQuestionIndex + 1}/${quizQuestions.length}`
+            }
           </span>
         </div>
       </div>
@@ -466,7 +489,7 @@ export default function RapidFireQuiz({
         selectedAnswer={userAnswer}
         showFeedback={showFeedback}
         onAnswerSelect={handleAnswerSelect}
-        disabled={quizSubmitted}
+        disabled={quizSubmitted || userAnswer !== null}
         quizMode="rapidfire"
       />
 
@@ -474,15 +497,25 @@ export default function RapidFireQuiz({
       {quizSubmitted && (
         <div className="mt-8 flex gap-4">
           <button
-            onClick={handlePrevious}
-            disabled={currentQuestionIndex === 0}
+            onClick={() => {
+              const currentPos = answeredQuestionIndices.indexOf(currentQuestionIndex);
+              if (currentPos > 0) {
+                setCurrentQuestionIndex(answeredQuestionIndices[currentPos - 1]);
+              }
+            }}
+            disabled={answeredQuestionIndices.indexOf(currentQuestionIndex) === 0}
             className="flex-1 px-6 py-3 rounded-lg font-semibold transition-all bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
           >
             ← Anterior
           </button>
-          {currentQuestionIndex < quizQuestions.length - 1 ? (
+          {answeredQuestionIndices.indexOf(currentQuestionIndex) < answeredQuestionIndices.length - 1 ? (
             <button
-              onClick={handleNext}
+              onClick={() => {
+                const currentPos = answeredQuestionIndices.indexOf(currentQuestionIndex);
+                if (currentPos < answeredQuestionIndices.length - 1) {
+                  setCurrentQuestionIndex(answeredQuestionIndices[currentPos + 1]);
+                }
+              }}
               className="flex-1 px-6 py-3 rounded-lg font-semibold transition-all bg-gradient-to-r from-indigo-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl"
             >
               Siguiente →
@@ -582,7 +615,7 @@ export default function RapidFireQuiz({
             <div className="flex items-start gap-4 mb-4">
               {/* Timer - Left of card (Desktop only) */}
               {!quizSubmitted && (
-                <div className="hidden md:block flex-shrink-0 pt-2">
+                <div className="hidden md:block flex-shrink-0 pt-2 w-24">
                   <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20">
                     <div className="flex items-center gap-2">
                       <span className="text-lg">⚡</span>
@@ -644,7 +677,7 @@ export default function RapidFireQuiz({
             {!quizSubmitted && (
               <div className="flex items-start gap-4">
                 {/* Invisible spacer to match timer width (Desktop only) */}
-                <div className="hidden md:block flex-shrink-0 pt-2">
+                <div className="hidden md:block flex-shrink-0 pt-2 w-24">
                   <div className="invisible bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-xl border border-white/20">
                     <div className="flex items-center gap-2">
                       <span className="text-lg">⚡</span>

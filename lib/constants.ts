@@ -40,7 +40,7 @@ export const RAPIDFIRE_CONFIG = {
   medium: {
     timeLimit: 10 * 60,           // 10 minutes
     questionCount: 8,              // 8 questions
-    pauseAllowed: false,           // No pause
+    pauseAllowed: true,            // Can pause unlimited times
     livesSystem: false,            // No lives limit
     maxWrongAnswers: Infinity,     // Unlimited wrong answers
     passingPercentage: 70,         // 70% to pass
@@ -48,7 +48,7 @@ export const RAPIDFIRE_CONFIG = {
   hard: {
     timeLimit: 10 * 60,           // 10 minutes
     questionCount: 10,             // 10 questions
-    pauseAllowed: false,           // No pause
+    pauseAllowed: true,            // Can pause unlimited times
     livesSystem: true,             // Lives system enabled
     maxWrongAnswers: 2,            // 2 wrong answers allowed, 3rd ends quiz immediately
     passingPercentage: 75,         // 75% to pass
@@ -56,11 +56,10 @@ export const RAPIDFIRE_CONFIG = {
   extreme: {
     timeLimit: 10 * 60,           // 10 minutes
     questionCount: 12,             // 12 questions
-    pauseAllowed: false,           // No pause
+    pauseAllowed: true,            // Can pause unlimited times
     livesSystem: true,             // Lives system enabled
     maxWrongAnswers: 1,            // 1 wrong answer allowed, 2nd ends quiz immediately
     passingPercentage: 80,         // 80% to pass
-    timeBackPerCorrect: 5,         // +5 seconds back per correct answer
   },
 } as const;
 

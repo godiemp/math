@@ -167,7 +167,7 @@ function M2PracticeContent() {
       time: 10,
       description: '5 preguntas - 2 min por pregunta',
       details: 'Modo tranquilo para principiantes',
-      features: ['⏸️ Pausa ilimitada disponible', '✓ Feedback inmediato', '🎯 60% para aprobar']
+      features: ['✓ Feedback inmediato', '🎯 60% para aprobar']
     },
     {
       value: 'medium',
@@ -176,7 +176,7 @@ function M2PracticeContent() {
       time: 10,
       description: '8 preguntas - 1:15 por pregunta',
       details: 'Ritmo moderado sin presión',
-      features: ['✓ Feedback inmediato', '⏱️ Sin pausa', '🎯 70% para aprobar']
+      features: ['✓ Feedback inmediato', '🎯 70% para aprobar']
     },
     {
       value: 'hard',
@@ -185,7 +185,7 @@ function M2PracticeContent() {
       time: 10,
       description: '10 preguntas - 1 min por pregunta',
       details: 'Sistema de vidas: 2 errores permitidos',
-      features: ['💀 2 vidas (3er error = Game Over)', '✓ Feedback inmediato', '⏱️ Sin pausa', '🎯 75% para aprobar']
+      features: ['❤️ 2 vidas (3er error = Game Over)', '✓ Feedback inmediato', '🎯 75% para aprobar']
     },
     {
       value: 'extreme',
@@ -193,8 +193,8 @@ function M2PracticeContent() {
       emoji: '🔴',
       time: 10,
       description: '12 preguntas - 50s por pregunta',
-      details: 'Máximo desafío: 1 vida + tiempo extra',
-      features: ['💀 1 vida (2do error = Game Over)', '⏱️ +5s por respuesta correcta', '✓ Feedback inmediato', '🎯 80% para aprobar']
+      details: 'Máximo desafío con sistema de 1 vida',
+      features: ['❤️ 1 vida (2do error = Game Over)', '✓ Feedback inmediato', '🎯 80% para aprobar']
     }
   ];
 
