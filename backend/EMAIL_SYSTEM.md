@@ -52,7 +52,33 @@ All email templates feature:
 
 ### Environment Variables
 
-Add to `.env`:
+The email system supports multiple providers. Choose the one that best fits your needs:
+
+#### Option 1: Resend API (Recommended) ⭐
+
+```bash
+# Email Configuration with Resend
+RESEND_API_KEY=re_your_api_key_here
+RESEND_FROM=noreply@paes.cl
+
+# App Configuration
+APP_NAME=PAES Platform
+```
+
+**Why Resend?**
+- Modern, developer-friendly API
+- 100 emails/day free (3,000/month)
+- No domain verification required for testing
+- Excellent deliverability
+- Simple setup (just add API key)
+
+**Setup:**
+1. Sign up at https://resend.com
+2. Get your API key from https://resend.com/api-keys
+3. Add to your `.env` file
+4. Done! ✅
+
+#### Option 2: SMTP Providers
 
 ```bash
 # Email Configuration (SMTP)
@@ -68,6 +94,23 @@ APP_NAME=PAES Platform
 ```
 
 ### Supported Email Providers
+
+#### Resend (Recommended)
+```env
+RESEND_API_KEY=re_your_api_key_here
+RESEND_FROM=noreply@yourdomain.com
+```
+
+**Setup:**
+1. Sign up at https://resend.com (no credit card required)
+2. Verify your email address
+3. Get API key from https://resend.com/api-keys
+4. For testing: Use `onboarding@resend.dev` as the from address
+5. For production: Add and verify your domain
+
+**Cost:** FREE up to 100 emails/day (3,000/month)
+
+---
 
 #### Gmail
 ```env

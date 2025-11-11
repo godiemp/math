@@ -1,4 +1,5 @@
 import nodemailer, { Transporter } from 'nodemailer';
+import { Resend } from 'resend';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -20,24 +21,49 @@ interface EmailConfig {
   };
 }
 
+type EmailProvider = 'resend' | 'smtp' | 'console';
+
 class EmailService {
+  private provider: EmailProvider;
   private transporter: Transporter | null = null;
+  private resend: Resend | null = null;
   private fromEmail: string;
   private appName: string;
   private frontendUrl: string;
 
   constructor() {
-    this.fromEmail = process.env.SMTP_FROM || 'noreply@paes.cl';
+    this.fromEmail = process.env.SMTP_FROM || process.env.RESEND_FROM || 'noreply@paes.cl';
     this.appName = process.env.APP_NAME || 'PAES Platform';
     this.frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 
-    this.initializeTransporter();
+    // Determine provider: Resend API > SMTP > Console logging
+    if (process.env.RESEND_API_KEY) {
+      this.provider = 'resend';
+      this.initializeResend();
+    } else if (process.env.SMTP_HOST) {
+      this.provider = 'smtp';
+      this.initializeTransporter();
+    } else {
+      this.provider = 'console';
+      console.log('⚠️  Email service not configured - emails will be logged to console');
+    }
+  }
+
+  private initializeResend() {
+    try {
+      this.resend = new Resend(process.env.RESEND_API_KEY);
+      console.log('✅ Email service initialized with Resend API');
+    } catch (error) {
+      console.error('❌ Failed to initialize Resend:', error);
+      this.provider = 'console';
+    }
   }
 
   private initializeTransporter() {
-    // Skip email initialization in test environment or if SMTP is not configured
-    if (process.env.NODE_ENV === 'test' || !process.env.SMTP_HOST) {
-      console.log('⚠️  Email service not configured - emails will be logged to console');
+    // Skip email initialization in test environment
+    if (process.env.NODE_ENV === 'test') {
+      this.provider = 'console';
+      console.log('⚠️  Test environment - emails will be logged to console');
       return;
     }
 
@@ -65,29 +91,50 @@ class EmailService {
 
   async send(options: EmailOptions): Promise<boolean> {
     try {
-      // If transporter is not configured, log to console in development
-      if (!this.transporter) {
-        if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
-          console.log('\n📧 Email would be sent:');
-          console.log(`To: ${options.to}`);
-          console.log(`Subject: ${options.subject}`);
-          console.log(`Content:\n${options.text || 'See HTML version'}\n`);
-          return true;
-        }
-        throw new Error('Email service not configured');
+      // Console logging mode
+      if (this.provider === 'console') {
+        console.log('\n📧 Email would be sent:');
+        console.log(`To: ${options.to}`);
+        console.log(`Subject: ${options.subject}`);
+        console.log(`Content:\n${options.text || 'See HTML version'}\n`);
+        return true;
       }
 
-      const mailOptions = {
-        from: `"${this.appName}" <${this.fromEmail}>`,
-        to: options.to,
-        subject: options.subject,
-        html: options.html,
-        text: options.text || this.stripHtml(options.html),
-      };
+      // Resend API
+      if (this.provider === 'resend' && this.resend) {
+        const result = await this.resend.emails.send({
+          from: `${this.appName} <${this.fromEmail}>`,
+          to: options.to,
+          subject: options.subject,
+          html: options.html,
+          text: options.text || this.stripHtml(options.html),
+        });
 
-      const info = await this.transporter.sendMail(mailOptions);
-      console.log('✅ Email sent:', info.messageId);
-      return true;
+        if (result.error) {
+          console.error('❌ Resend error:', result.error);
+          return false;
+        }
+
+        console.log('✅ Email sent via Resend:', result.data?.id);
+        return true;
+      }
+
+      // SMTP
+      if (this.provider === 'smtp' && this.transporter) {
+        const mailOptions = {
+          from: `"${this.appName}" <${this.fromEmail}>`,
+          to: options.to,
+          subject: options.subject,
+          html: options.html,
+          text: options.text || this.stripHtml(options.html),
+        };
+
+        const info = await this.transporter.sendMail(mailOptions);
+        console.log('✅ Email sent via SMTP:', info.messageId);
+        return true;
+      }
+
+      throw new Error('Email service not properly configured');
     } catch (error) {
       console.error('❌ Failed to send email:', error);
       return false;
@@ -464,19 +511,28 @@ Accede a tu dashboard: ${dashboardUrl}
 
   // Test email configuration
   async verifyConnection(): Promise<boolean> {
-    if (!this.transporter) {
-      console.log('⚠️  Email service not configured');
+    if (this.provider === 'console') {
+      console.log('⚠️  Email service not configured (console mode)');
       return false;
     }
 
-    try {
-      await this.transporter.verify();
-      console.log('✅ Email service is ready to send emails');
-      return true;
-    } catch (error) {
-      console.error('❌ Email service verification failed:', error);
-      return false;
+    if (this.provider === 'resend') {
+      console.log('✅ Email service ready (Resend API)');
+      return true; // Resend doesn't need connection verification
     }
+
+    if (this.provider === 'smtp' && this.transporter) {
+      try {
+        await this.transporter.verify();
+        console.log('✅ Email service is ready to send emails (SMTP)');
+        return true;
+      } catch (error) {
+        console.error('❌ Email service verification failed:', error);
+        return false;
+      }
+    }
+
+    return false;
   }
 }
 
