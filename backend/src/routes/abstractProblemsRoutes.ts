@@ -12,6 +12,9 @@ import {
   deleteAbstractProblemController,
   activateAbstractProblemController,
   getStatsByUnitController,
+  seedAbstractProblemsController,
+  activateAllDraftsController,
+  getCoverageStatsController,
   generateContextProblemsController,
   listContextProblemsController,
   getContextsByAbstractController,
@@ -43,6 +46,27 @@ router.post(
   requireAdmin,
   generateNumerosM1Controller
 );
+
+/**
+ * POST /api/abstract-problems/seed
+ * Bulk seed abstract problems with filters
+ * Body: { level?: 'M1' | 'M2', subject?: string, limit?: number, dryRun?: boolean }
+ * Requires: Admin authentication
+ */
+router.post('/seed', authenticate, requireAdmin, seedAbstractProblemsController);
+
+/**
+ * POST /api/abstract-problems/activate-all
+ * Activate all draft problems
+ * Requires: Admin authentication
+ */
+router.post('/activate-all', authenticate, requireAdmin, activateAllDraftsController);
+
+/**
+ * GET /api/abstract-problems/coverage
+ * Get coverage statistics (which units have problems)
+ */
+router.get('/coverage', authenticate, getCoverageStatsController);
 
 /**
  * GET /api/abstract-problems

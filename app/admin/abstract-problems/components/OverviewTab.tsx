@@ -24,9 +24,25 @@ interface Stats {
   }>;
 }
 
+interface SeedOptions {
+  level?: 'M1' | 'M2' | '';
+  subject?: string;
+  limit?: number;
+  dryRun: boolean;
+}
+
 export default function OverviewTab() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [seeding, setSeeding] = useState(false);
+  const [seedOptions, setSeedOptions] = useState<SeedOptions>({
+    level: '',
+    subject: '',
+    limit: undefined,
+    dryRun: true,
+  });
+  const [seedResult, setSeedResult] = useState<any>(null);
+  const [activating, setActivating] = useState(false);
 
   useEffect(() => {
     fetchStats();
@@ -94,6 +110,50 @@ export default function OverviewTab() {
     }
   };
 
+  const handleSeed = async () => {
+    setSeeding(true);
+    setSeedResult(null);
+    try {
+      const payload: any = {
+        dryRun: seedOptions.dryRun,
+      };
+      if (seedOptions.level) payload.level = seedOptions.level;
+      if (seedOptions.subject) payload.subject = seedOptions.subject;
+      if (seedOptions.limit) payload.limit = parseInt(seedOptions.limit.toString());
+
+      const res = await api.post('/api/abstract-problems/seed', payload);
+      setSeedResult(res.data);
+
+      // Refresh stats after seeding (if not dry run)
+      if (!seedOptions.dryRun) {
+        await fetchStats();
+      }
+    } catch (error: any) {
+      console.error('Error seeding:', error);
+      setSeedResult({ success: false, error: error.response?.data?.error || error.message });
+    } finally {
+      setSeeding(false);
+    }
+  };
+
+  const handleActivateAll = async () => {
+    if (!confirm('Are you sure you want to activate all draft problems?')) {
+      return;
+    }
+
+    setActivating(true);
+    try {
+      const res = await api.post('/api/abstract-problems/activate-all');
+      alert(res.data.message);
+      await fetchStats();
+    } catch (error: any) {
+      console.error('Error activating:', error);
+      alert('Failed to activate: ' + (error.response?.data?.error || error.message));
+    } finally {
+      setActivating(false);
+    }
+  };
+
   if (loading) {
     return <div className="text-center py-12">Loading...</div>;
   }
@@ -104,6 +164,127 @@ export default function OverviewTab() {
 
   return (
     <div className="space-y-6">
+      {/* Bulk Seeding Section */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg border border-blue-200 dark:border-blue-800 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          Bulk Populate Abstract Problems
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          Generate abstract problems in bulk using OpenAI. Target ~1000 problems across all units.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Level Filter
+            </label>
+            <select
+              value={seedOptions.level}
+              onChange={(e) => setSeedOptions({ ...seedOptions, level: e.target.value as any })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              disabled={seeding}
+            >
+              <option value="">All Levels</option>
+              <option value="M1">M1 Only</option>
+              <option value="M2">M2 Only</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Subject Filter
+            </label>
+            <select
+              value={seedOptions.subject}
+              onChange={(e) => setSeedOptions({ ...seedOptions, subject: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              disabled={seeding}
+            >
+              <option value="">All Subjects</option>
+              <option value="números">Números</option>
+              <option value="álgebra">Álgebra</option>
+              <option value="geometría">Geometría</option>
+              <option value="probabilidad">Probabilidad</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Limit Units
+            </label>
+            <input
+              type="number"
+              value={seedOptions.limit || ''}
+              onChange={(e) => setSeedOptions({ ...seedOptions, limit: e.target.value ? parseInt(e.target.value) : undefined })}
+              placeholder="All units"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              disabled={seeding}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Mode
+            </label>
+            <select
+              value={seedOptions.dryRun ? 'dry' : 'live'}
+              onChange={(e) => setSeedOptions({ ...seedOptions, dryRun: e.target.value === 'dry' })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              disabled={seeding}
+            >
+              <option value="dry">Dry Run (Preview)</option>
+              <option value="live">Live (Generate)</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleSeed}
+            disabled={seeding}
+            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-md font-medium transition-colors"
+          >
+            {seeding ? 'Processing...' : seedOptions.dryRun ? 'Preview Plan' : 'Start Seeding'}
+          </button>
+
+          {stats.abstract.draft > 0 && (
+            <button
+              onClick={handleActivateAll}
+              disabled={activating || seeding}
+              className="px-6 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white rounded-md font-medium transition-colors"
+            >
+              {activating ? 'Activating...' : `Activate ${stats.abstract.draft} Drafts`}
+            </button>
+          )}
+        </div>
+
+        {seedResult && (
+          <div className={`mt-4 p-4 rounded-md ${seedResult.success ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' : 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800'}`}>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+              {seedResult.success ? (seedResult.dryRun ? 'Plan Preview' : 'Seeding Complete') : 'Error'}
+            </h4>
+            {seedResult.success && seedResult.dryRun && seedResult.plan && (
+              <div className="text-sm text-gray-700 dark:text-gray-300">
+                <p>Units to process: {seedResult.plan.units}</p>
+                <p>Total problems to generate: {seedResult.plan.totalProblems}</p>
+              </div>
+            )}
+            {seedResult.success && !seedResult.dryRun && seedResult.results && (
+              <div className="text-sm text-gray-700 dark:text-gray-300">
+                <p>Units processed: {seedResult.results.unitsProcessed}</p>
+                <p>Problems created: {seedResult.results.problemsCreated}</p>
+                <p>Problems failed: {seedResult.results.problemsFailed}</p>
+                <p>Success rate: {seedResult.results.successRate}</p>
+                <p>Duration: {seedResult.results.durationMinutes} minutes</p>
+              </div>
+            )}
+            {!seedResult.success && (
+              <p className="text-sm text-red-700 dark:text-red-300">{seedResult.error}</p>
+            )}
+          </div>
+        )}
+      </div>
+
       {/* Abstract Problems Stats */}
       <div>
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
