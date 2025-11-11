@@ -234,6 +234,8 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 - **Test Environment**: Docker Compose para PostgreSQL de pruebas
 - **Code Standards**: Claude Code skills para patrones consistentes
 - **Development Tools**: Claude Code integration con skills personalizados
+- **Error Tracking**: Sentry para monitoreo de errores y rendimiento
+- **Performance Monitoring**: Sentry APM para frontend y backend
 
 ### Bibliotecas Clave
 - `react-katex` - Renderizado de expresiones matemáticas
@@ -246,6 +248,8 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 - `bcryptjs` - Hashing de contraseñas
 - `@playwright/test` - Testing E2E
 - `sonner` - Toast notifications
+- `@sentry/nextjs` - Error tracking y performance monitoring (frontend)
+- `@sentry/node` - Error tracking y APM (backend)
 - `swr` - Data fetching y cache
 - `pdf-parse`, `pdf-lib`, `pdfjs-dist` - Procesamiento y extracción de PDFs
 - `sharp` - Optimización de imágenes
@@ -515,9 +519,11 @@ npm install
 
 4. **Configurar variables de entorno**
 
-Crear `.env` en el directorio raíz:
+Crear `.env.local` en el directorio raíz:
 ```env
+NEXT_PUBLIC_API_URL=http://localhost:3001
 ANTHROPIC_API_KEY=tu-api-key-de-anthropic
+NEXT_PUBLIC_SENTRY_DSN=tu-sentry-dsn-frontend (opcional)
 ```
 
 Crear `.env` en el directorio backend:
@@ -529,7 +535,10 @@ ANTHROPIC_API_KEY=tu-api-key-de-anthropic
 MERCADOPAGO_ACCESS_TOKEN=TEST-tu-token-de-mercadopago
 BACKEND_URL=http://localhost:3001
 FRONTEND_URL=http://localhost:3000
+SENTRY_DSN=tu-sentry-dsn-backend (opcional)
 ```
+
+**Nota sobre Sentry**: Para configurar el monitoreo de errores con Sentry, consulta [SENTRY_SETUP.md](./SENTRY_SETUP.md).
 
 5. **Configurar base de datos**
 
