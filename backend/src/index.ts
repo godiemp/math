@@ -67,6 +67,12 @@ const corsOptions = {
     // Log rejected origins but still allow them in development
     console.log(`⚠️ CORS: Origin not in allowed list: ${origin}`);
     if (process.env.NODE_ENV === 'development') {
+      // Safeguard: Ensure development mode is never accidentally used in production
+      if (process.env.RAILWAY_ENVIRONMENT || process.env.VERCEL_ENV === 'production') {
+        console.error('❌ FATAL: Development mode detected in production environment!');
+        console.error('   NODE_ENV=development should never be used in production.');
+        process.exit(1);
+      }
       console.log('🔧 CORS: Allowing in development mode');
       return callback(null, true);
     }
@@ -125,11 +131,40 @@ const authLimiter = process.env.NODE_ENV === 'test'
       skipSuccessfulRequests: false, // Count successful requests
     });
 
+// Strict rate limiting for payment operations - 10 attempts per 15 minutes per IP
+// Prevents abuse of payment preference creation and payment enumeration attacks
+const paymentLimiter = process.env.NODE_ENV === 'test'
+  ? (req: Request, res: Response, next: NextFunction) => next() // No rate limiting in test
+  : rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 10, // Limit each IP to 10 payment operations per windowMs
+      message: {
+        error: 'Demasiadas solicitudes de pago. Por favor, intenta de nuevo más tarde.',
+      },
+      standardHeaders: true,
+      legacyHeaders: false,
+      skipSuccessfulRequests: false,
+    });
+
 // Middleware
 app.use(cors(corsOptions));
 app.use(cookieParser()); // SECURITY: Parse cookies for HttpOnly JWT tokens
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Add request body size limits to prevent DoS attacks
+app.use(express.json({ limit: '10mb' })); // Max 10MB for JSON (mainly for PDF uploads)
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Note on CSRF Protection:
+// This API now uses JWT tokens in HttpOnly cookies (migrated from Authorization headers).
+// HttpOnly cookies provide better XSS protection but require CSRF protection:
+//
+// CSRF protections currently in place:
+// - Strict CORS origin validation with credentials:true
+// - SameSite=Strict cookie attribute (should be set in auth service)
+// - Rate limiting on all state-changing operations
+// - Request body size limits
+//
+// Additional CSRF protection (SameSite cookies) should be implemented in the auth service
+// to ensure cookies are only sent in same-site requests.
 
 // Apply general rate limiting to all API routes
 app.use('/api/', apiLimiter);
@@ -151,8 +186,9 @@ app.get('/health', (req: Request, res: Response) => {
   });
 });
 
-// API routes with stricter rate limiting for auth
+// API routes with stricter rate limiting for auth and payments
 app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/payments', paymentLimiter, paymentRoutes); // Apply payment rate limiter
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin', userManagementRoutes); // User & subscription management
 app.use('/api/user', userProfileRoutes); // User profile management
@@ -166,7 +202,6 @@ app.use('/api/qgen', qgenRoutes);
 app.use('/api/abstract-problems', abstractProblemsRoutes);
 app.use('/api/context-problems', contextProblemsRoutes);
 app.use('/api/study-buddy', studyBuddyRoutes);
-app.use('/api/payments', paymentRoutes);
 
 // Public image serving route
 app.get('/api/images/:filename', serveImage);

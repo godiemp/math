@@ -7,6 +7,7 @@
  */
 
 import bcrypt from 'bcryptjs';
+import { randomUUID } from 'crypto';
 import { pool } from '../../config/database';
 import {
   generateAccessToken,
@@ -58,8 +59,25 @@ export async function registerUser(
     throw new Error('All fields are required');
   }
 
-  if (password.length < 6) {
-    throw new Error('Password must be at least 6 characters');
+  // Password validation - must match Zod schema requirements
+  if (password.length < 12) {
+    throw new Error('Password must be at least 12 characters');
+  }
+
+  if (!/[A-Z]/.test(password)) {
+    throw new Error('Password must contain at least one uppercase letter');
+  }
+
+  if (!/[a-z]/.test(password)) {
+    throw new Error('Password must contain at least one lowercase letter');
+  }
+
+  if (!/[0-9]/.test(password)) {
+    throw new Error('Password must contain at least one number');
+  }
+
+  if (!/[^A-Za-z0-9]/.test(password)) {
+    throw new Error('Password must contain at least one special character');
   }
 
   // Check if user already exists
@@ -75,8 +93,8 @@ export async function registerUser(
   // Hash password
   const passwordHash = await bcrypt.hash(password, 10);
 
-  // Generate user ID
-  const userId = `user-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  // Generate cryptographically secure user ID (RFC 4122 UUID)
+  const userId = randomUUID();
   const now = Date.now();
 
   // Insert user

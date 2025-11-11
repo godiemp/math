@@ -45,17 +45,26 @@ export function authenticate(
     // SECURITY: Read token from HttpOnly cookie instead of Authorization header
     const token = req.cookies.accessToken;
 
-    console.log('🔐 Auth middleware - Access token cookie:', token ? 'present' : 'missing');
-    console.log('🔐 Auth middleware - Cookies:', Object.keys(req.cookies));
+    // Log presence of token without exposing the actual value
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔐 Auth middleware - Access token cookie:', token ? 'present' : 'missing');
+      // Redact sensitive cookie data in logs
+      const safeCookies = { ...req.cookies };
+      if (safeCookies.accessToken) safeCookies.accessToken = '[REDACTED]';
+      if (safeCookies.refreshToken) safeCookies.refreshToken = '[REDACTED]';
+      console.log('🔐 Auth middleware - Cookies:', JSON.stringify(safeCookies, null, 2));
+    }
 
     if (!token) {
       console.log('❌ Auth failed: No token provided');
-      console.log('   Sending 401 response...');
       res.status(401).json({ error: 'No token provided' });
       return;
     }
 
-    console.log('🔑 Token extracted from cookie, length:', token.length);
+    // Only log token length in development, never log the actual token
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔑 Token extracted from cookie, length:', token.length);
+    }
 
     const payload = verifyAccessToken(token);
 
@@ -63,8 +72,10 @@ export function authenticate(
     req.user = payload;
     next();
   } catch (error) {
-    console.log('❌ Auth failed: Invalid or expired token', error);
-    console.log('   Sending 401 response...');
+    console.log('❌ Auth failed: Invalid or expired token');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('   Error details:', error);
+    }
     res.status(401).json({ error: 'Invalid or expired token' });
   }
 }
