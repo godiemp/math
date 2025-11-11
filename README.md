@@ -1,10 +1,10 @@
-# PAES Chile - Plataforma de Preparación Matemática
+# SimplePAES - Plataforma de Preparación Matemática
 
 Una aplicación web completa diseñada para ayudar a estudiantes chilenos a prepararse para el examen de matemáticas PAES (Prueba de Acceso a la Educación Superior).
 
 ## Descripción General
 
-PAES Chile es una plataforma de práctica completa que incluye:
+SimplePAES es una plataforma de práctica completa que incluye:
 
 - **Quizzes de Práctica Interactivos** - Estudia a tu ritmo o desafíate con pruebas cronometradas
 - **Sesiones de Práctica en Vivo (Ensayos)** - Únete a simulaciones PAES programadas con otros estudiantes

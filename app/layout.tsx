@@ -6,7 +6,7 @@ import { Toaster } from "sonner";
 import CookieConsent from "@/components/CookieConsent";
 
 export const metadata: Metadata = {
-  title: "PAES Chile - Preparación Matemática",
+  title: "SimplePAES - Preparación Matemática",
   description: "Plataforma de preparación para la Prueba de Acceso a la Educación Superior (PAES) de Chile - Competencia Matemática",
 };
 

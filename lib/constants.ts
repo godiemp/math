@@ -180,17 +180,17 @@ export const DB_POOL_CONFIG = {
  */
 export const STORAGE_KEYS = {
   // Progress tracking
-  progressPrefix: 'paes-progress-',      // Suffix: M1 or M2
-  historyPrefix: 'paes-history-',        // Suffix: M1 or M2
-  lastConfigPrefix: 'paes-last-config-', // Suffix: M1 or M2
+  progressPrefix: 'simplepaes-progress-',      // Suffix: M1 or M2
+  historyPrefix: 'simplepaes-history-',        // Suffix: M1 or M2
+  lastConfigPrefix: 'simplepaes-last-config-', // Suffix: M1 or M2
 
   // Quiz preferences
   showTimer: 'quiz-show-timer',
 
   // Authentication
-  accessToken: 'paes-access-token',
-  refreshToken: 'paes-refresh-token',
-  currentUser: 'paes-current-user',
+  accessToken: 'simplepaes-access-token',
+  refreshToken: 'simplepaes-refresh-token',
+  currentUser: 'simplepaes-current-user',
 
   // SWR cache
   swrCache: 'app-cache',

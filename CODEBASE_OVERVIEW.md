@@ -2,7 +2,7 @@
 
 ## 1. APPLICATION TYPE
 
-**PAES Chile Math Learning Platform** - A Next.js-based web application designed to help Chilean students prepare for the PAES (Prueba de Acceso a la Educación Superior) entrance exam.
+**SimplePAES Math Learning Platform** - A Next.js-based web application designed to help Chilean students prepare for the PAES (Prueba de Acceso a la Educación Superior) entrance exam.
 
 ### Key Characteristics:
 - **Framework**: Next.js 15.0.0 with React 19

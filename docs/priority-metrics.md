@@ -1,7 +1,7 @@
-# Priority Metrics for PAES Chile Platform
+# Priority Metrics for SimplePAES Platform
 
 ## Overview
-This document defines the key metrics to track the success of the PAES Chile math practice platform. These metrics are organized by priority and category to help focus analytics implementation and dashboard development.
+This document defines the key metrics to track the success of the SimplePAES math practice platform. These metrics are organized by priority and category to help focus analytics implementation and dashboard development.
 
 ---
 

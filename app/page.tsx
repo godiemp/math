@@ -75,7 +75,7 @@ export default function Home() {
                 color: 'var(--color-label-primary)',
               }}
             >
-              PAES Chile
+              SimplePAES
             </h1>
 
             <p
