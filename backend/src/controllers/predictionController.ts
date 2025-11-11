@@ -1,5 +1,6 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { PredictionService } from '../services/predictionService';
+import { AuthRequest } from '../types';
 
 /**
  * Prediction Controller
@@ -10,9 +11,9 @@ import { PredictionService } from '../services/predictionService';
  * Get or calculate prediction for the authenticated user
  * GET /api/prediction
  */
-export const getPrediction = async (req: Request, res: Response) => {
+export const getPrediction = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?.userId;
 
     if (!userId) {
       return res.status(401).json({ error: 'Authentication required' });
@@ -44,9 +45,9 @@ export const getPrediction = async (req: Request, res: Response) => {
  * Force recalculate prediction for the authenticated user
  * POST /api/prediction/calculate
  */
-export const calculatePrediction = async (req: Request, res: Response) => {
+export const calculatePrediction = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?.userId;
 
     if (!userId) {
       return res.status(401).json({ error: 'Authentication required' });
@@ -72,9 +73,9 @@ export const calculatePrediction = async (req: Request, res: Response) => {
  * POST /api/prediction/user
  * Body: { prediction: number }
  */
-export const updateUserPrediction = async (req: Request, res: Response) => {
+export const updateUserPrediction = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?.userId;
 
     if (!userId) {
       return res.status(401).json({ error: 'Authentication required' });
