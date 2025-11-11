@@ -9,6 +9,7 @@ import {
   UpdateSubscriptionRequest,
   User,
 } from '../types';
+import { emailService } from './emailService';
 
 /**
  * Plan Service - Manages subscription plans
@@ -260,14 +261,15 @@ export class SubscriptionService {
     const result = await pool.query(
       `INSERT INTO subscriptions (
         user_id, plan_id, status, started_at, expires_at, trial_ends_at,
-        auto_renew, payment_method, created_at, updated_at
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        auto_renew, payment_method, last_payment_at, created_at, updated_at
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
       ON CONFLICT (user_id, plan_id)
       DO UPDATE SET
         status = EXCLUDED.status,
         started_at = EXCLUDED.started_at,
         expires_at = EXCLUDED.expires_at,
         trial_ends_at = EXCLUDED.trial_ends_at,
+        last_payment_at = EXCLUDED.last_payment_at,
         updated_at = EXCLUDED.updated_at
       RETURNING *`,
       [
@@ -279,12 +281,40 @@ export class SubscriptionService {
         trialEndsAt,
         true,
         data.paymentMethod || null,
+        status === 'active' ? now : null, // Only set last_payment_at for paid subscriptions
         now,
         now,
       ]
     );
 
-    return this.mapRowToSubscription(result.rows[0]);
+    const subscription = this.mapRowToSubscription(result.rows[0]);
+
+    // Send payment confirmation email (only for paid subscriptions, not trials)
+    if (status === 'active' && !data.startTrial) {
+      // Get user details
+      const userResult = await pool.query(
+        'SELECT username, email FROM users WHERE id = $1',
+        [data.userId]
+      );
+
+      if (userResult.rows.length > 0) {
+        const user = userResult.rows[0];
+        emailService
+          .sendPaymentConfirmationEmail(
+            user.email,
+            user.username,
+            plan.name,
+            plan.price,
+            plan.currency,
+            expiresAt || now
+          )
+          .catch((error) => {
+            console.error('Failed to send payment confirmation email:', error);
+          });
+      }
+    }
+
+    return subscription;
   }
 
   /**

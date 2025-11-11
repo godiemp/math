@@ -50,6 +50,12 @@ export interface UserRecord {
   current_streak: number;
   longest_streak: number;
   last_practice_date: string | null;
+  email_verified: boolean;
+  email_verified_at: number | null;
+  verification_token: string | null;
+  verification_token_expires_at: number | null;
+  password_reset_token: string | null;
+  password_reset_token_expires_at: number | null;
 }
 
 /**
@@ -66,6 +72,7 @@ export interface UserResponse {
   currentStreak?: number;
   longestStreak?: number;
   lastPracticeDate?: string | null;
+  emailVerified?: boolean;
 }
 
 /**

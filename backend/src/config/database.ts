@@ -68,6 +68,37 @@ export const initializeDatabase = async (): Promise<void> => {
       END $$;
     `);
 
+    // Add email verification and password reset columns if they don't exist
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='email_verified') THEN
+          ALTER TABLE users ADD COLUMN email_verified BOOLEAN DEFAULT FALSE NOT NULL;
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='email_verified_at') THEN
+          ALTER TABLE users ADD COLUMN email_verified_at BIGINT;
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='verification_token') THEN
+          ALTER TABLE users ADD COLUMN verification_token VARCHAR(255);
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='verification_token_expires_at') THEN
+          ALTER TABLE users ADD COLUMN verification_token_expires_at BIGINT;
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='password_reset_token') THEN
+          ALTER TABLE users ADD COLUMN password_reset_token VARCHAR(255);
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='password_reset_token_expires_at') THEN
+          ALTER TABLE users ADD COLUMN password_reset_token_expires_at BIGINT;
+        END IF;
+      END $$;
+    `);
+
     // Create refresh_tokens table
     await client.query(`
       CREATE TABLE IF NOT EXISTS refresh_tokens (
@@ -444,6 +475,8 @@ export const initializeDatabase = async (): Promise<void> => {
     // Create indexes
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_users_verification_token ON users(verification_token)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_users_password_reset_token ON users(password_reset_token)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_refresh_tokens_token ON refresh_tokens(token)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_questions_level ON questions(level)');
