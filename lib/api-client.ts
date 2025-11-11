@@ -111,8 +111,6 @@ export {
 } from './auth/tokenService';
 
 import {
-  getAccessToken as getToken,
-  getRefreshToken as getRefresh,
   refreshAccessToken as refreshToken,
 } from './auth/tokenService';
 

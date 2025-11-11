@@ -10,14 +10,15 @@
  */
 
 import { User } from '../types';
-import { getAccessToken } from './tokenService';
 import { getCachedUser } from './userStorage';
 
 /**
  * Check if user is authenticated
+ * SECURITY: With HttpOnly cookies, we can't check tokens from JavaScript.
+ * We rely on the cached user data which is set after successful login.
  */
 export function isAuthenticated(): boolean {
-  return getCachedUser() !== null && getAccessToken() !== null;
+  return getCachedUser() !== null;
 }
 
 /**

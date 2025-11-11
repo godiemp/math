@@ -16,7 +16,6 @@
 import { User } from '../types';
 import { api } from '../api-client';
 import { AUTH_ENDPOINTS } from './constants';
-import { clearTokens } from './tokenService';
 import { setCachedUser, clearCachedUser } from './userStorage';
 import { AuthResponse, AuthResult } from './types';
 
@@ -90,8 +89,7 @@ export async function logoutUser(): Promise<void> {
   // Call backend to revoke refresh token and clear cookies
   await api.post(AUTH_ENDPOINTS.LOGOUT, {});
 
-  // Clear all local data
-  clearTokens(); // No-op for cookie-based auth, kept for compatibility
+  // Clear cached user data
   clearCachedUser();
 }
 
@@ -103,8 +101,7 @@ export async function fetchCurrentUser(): Promise<User | null> {
   const response = await api.get<User>(AUTH_ENDPOINTS.ME);
 
   if (response.error) {
-    // Token is invalid or expired
-    clearTokens(); // No-op for cookie-based auth
+    // Token is invalid or expired - clear cached user
     clearCachedUser();
     return null;
   }
