@@ -546,7 +546,7 @@ export default function Curriculum({ level }: CurriculumProps) {
       <nav className="sticky top-0 z-30 min-h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] saturate-[1.2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-0 sm:h-14 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
           <h1 className="text-sm sm:text-base lg:text-lg font-semibold text-[#0A84FF]">
-            PAES Chile - Matemática
+            SimplePAES - Matemática
           </h1>
           <Link
             href="/dashboard"

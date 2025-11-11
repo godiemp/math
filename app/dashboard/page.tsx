@@ -102,7 +102,7 @@ function DashboardContent() {
       <nav className="sticky top-0 z-30 min-h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] saturate-[1.2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-0 sm:h-14 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
           <Heading level={1} size="xs" className="text-[#0A84FF] text-sm sm:text-base">
-            PAES Chile - Matemática
+            SimplePAES - Matemática
           </Heading>
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <Text size="sm" variant="secondary" className="text-xs sm:text-sm">
@@ -476,7 +476,7 @@ function DashboardContent() {
       <footer className="backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-t border-black/[0.12] dark:border-white/[0.16] mt-8 sm:mt-10 md:mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-4 sm:py-5 md:py-6 text-center">
           <Text size="xs" variant="secondary">
-            © 2024 PAES Chile - Plataforma de Preparación Matemática
+            © 2024 SimplePAES - Plataforma de Preparación Matemática
           </Text>
         </div>
       </footer>
