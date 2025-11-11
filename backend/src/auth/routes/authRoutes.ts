@@ -8,6 +8,13 @@
 
 import { Router } from 'express';
 import { register, login, refresh, logout, getCurrentUser } from '../controllers/authController';
+import {
+  handleSendVerification,
+  handleVerifyEmail,
+  handleForgotPassword,
+  handleResetPassword,
+  handleResendVerification,
+} from '../controllers/emailController';
 import { authenticate } from '../middleware';
 import { validateRegister, validateLogin, validateRefreshToken } from '../../middleware/validation';
 
@@ -47,5 +54,40 @@ router.post('/logout', logout);
  * @access  Private
  */
 router.get('/me', authenticate, getCurrentUser);
+
+/**
+ * @route   POST /api/auth/send-verification
+ * @desc    Send email verification
+ * @access  Private
+ */
+router.post('/send-verification', authenticate, handleSendVerification);
+
+/**
+ * @route   GET /api/auth/verify-email/:token
+ * @desc    Verify email with token
+ * @access  Public
+ */
+router.get('/verify-email/:token', handleVerifyEmail);
+
+/**
+ * @route   POST /api/auth/resend-verification
+ * @desc    Resend verification email
+ * @access  Public
+ */
+router.post('/resend-verification', handleResendVerification);
+
+/**
+ * @route   POST /api/auth/forgot-password
+ * @desc    Request password reset
+ * @access  Public
+ */
+router.post('/forgot-password', handleForgotPassword);
+
+/**
+ * @route   POST /api/auth/reset-password
+ * @desc    Reset password with token
+ * @access  Public
+ */
+router.post('/reset-password', handleResetPassword);
 
 export default router;
