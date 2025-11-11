@@ -670,77 +670,142 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
 
       // Check if unit has subsections
       const subsections = getSubsectionsByUnit(config.unit_code);
-      if (subsections.length > 0) {
-        console.log(`  📋 Unit has ${subsections.length} subsections - will distribute problems across them`);
-      }
+      const hasSubsections = subsections.length > 0;
 
       let unitSuccess = 0;
       let unitFailed = 0;
 
-      for (const dist of config.distribution) {
-        console.log(`  → Generating ${dist.count} problems (${dist.difficulty}/${dist.cognitive_level})...`);
+      if (hasSubsections) {
+        // Generate problems for each subsection
+        console.log(`  📋 Unit has ${subsections.length} subsections - generating problems for each`);
 
-        try {
-          const request: GenerateAbstractProblemRequest = {
-            level: config.level,
-            subject: config.subject,
-            unit: config.unit_name,
-            difficulty: dist.difficulty,
-            cognitive_level: dist.cognitive_level,
-            primary_skills: [config.unit_code.toLowerCase()],
-            count: dist.count,
-          };
+        for (const dist of config.distribution) {
+          // Distribute problems across subsections
+          const problemsPerSubsection = Math.floor(dist.count / subsections.length);
+          const extraProblems = dist.count % subsections.length;
 
-          const generated = await generateAbstractProblems(request);
-          console.log(`    ✓ Generated ${generated.length} problems from OpenAI`);
+          for (let subIdx = 0; subIdx < subsections.length; subIdx++) {
+            const subsection = subsections[subIdx];
+            const subsectionName = formatSubsectionName(subsection);
+            const problemCount = problemsPerSubsection + (subIdx < extraProblems ? 1 : 0);
 
-          // Save each generated problem
-          for (let i = 0; i < generated.length; i++) {
-            const problem = generated[i];
+            if (problemCount === 0) continue;
 
-            // Assign subsection if unit has subsections (distribute evenly in round-robin)
-            let subsection: string | undefined = undefined;
-            if (subsections.length > 0) {
-              const subsectionIndex = i % subsections.length;
-              const selectedSubsection = subsections[subsectionIndex];
-              subsection = formatSubsectionName(selectedSubsection);
-            }
+            console.log(`    → [${subsectionName}] Generating ${problemCount} problems (${dist.difficulty}/${dist.cognitive_level})...`);
 
             try {
-              await createAbstractProblem({
-                essence: problem.essence,
-                cognitive_level: dist.cognitive_level,
+              const request: GenerateAbstractProblemRequest = {
                 level: config.level,
                 subject: config.subject,
                 unit: config.unit_name,
-                subsection: subsection,
+                subsection: subsectionName,
                 difficulty: dist.difficulty,
-                difficulty_score: problem.suggested_difficulty_score,
+                cognitive_level: dist.cognitive_level,
                 primary_skills: [config.unit_code.toLowerCase()],
-                secondary_skills: [],
-                generation_method: 'openai',
-                generated_by: (req as any).user?.id || 'seed-api',
-                generation_prompt: `Unit: ${config.unit_name}${subsection ? ` - ${subsection}` : ''}`,
-                answer_type: problem.answer_type,
-                expected_steps: problem.expected_steps,
-                common_errors: problem.common_errors,
-                status: 'draft',
-              });
-              totalSuccess++;
-              unitSuccess++;
-            } catch (dbError: any) {
-              console.error(`    ❌ Failed to save problem: ${dbError.message}`);
-              totalFailed++;
-              unitFailed++;
+                count: problemCount,
+              };
+
+              const generated = await generateAbstractProblems(request);
+              console.log(`      ✓ Generated ${generated.length} problems from OpenAI`);
+
+              // Save each generated problem
+              for (const problem of generated) {
+                try {
+                  await createAbstractProblem({
+                    essence: problem.essence,
+                    cognitive_level: dist.cognitive_level,
+                    level: config.level,
+                    subject: config.subject,
+                    unit: config.unit_name,
+                    subsection: subsectionName,
+                    difficulty: dist.difficulty,
+                    difficulty_score: problem.suggested_difficulty_score,
+                    primary_skills: [config.unit_code.toLowerCase()],
+                    secondary_skills: [],
+                    generation_method: 'openai',
+                    generated_by: (req as any).user?.id || 'seed-api',
+                    generation_prompt: `Unit: ${config.unit_name} - ${subsectionName}`,
+                    answer_type: problem.answer_type,
+                    expected_steps: problem.expected_steps,
+                    common_errors: problem.common_errors,
+                    status: 'draft',
+                  });
+                  totalSuccess++;
+                  unitSuccess++;
+                } catch (dbError: any) {
+                  console.error(`      ❌ Failed to save problem: ${dbError.message}`);
+                  totalFailed++;
+                  unitFailed++;
+                }
+              }
+
+              // Rate limiting: wait 1 second between API calls
+              await new Promise(resolve => setTimeout(resolve, 1000));
+            } catch (error: any) {
+              console.error(`      ❌ Failed to generate: ${error.message}`);
+              totalFailed += problemCount;
+              unitFailed += problemCount;
             }
           }
+        }
+      } else {
+        // No subsections - generate normally
+        console.log(`  📝 No subsections defined - generating problems for unit`);
 
-          // Rate limiting: wait 1 second between API calls
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        } catch (error: any) {
-          console.error(`    ❌ Failed to generate: ${error.message}`);
-          totalFailed += dist.count;
-          unitFailed += dist.count;
+        for (const dist of config.distribution) {
+          console.log(`  → Generating ${dist.count} problems (${dist.difficulty}/${dist.cognitive_level})...`);
+
+          try {
+            const request: GenerateAbstractProblemRequest = {
+              level: config.level,
+              subject: config.subject,
+              unit: config.unit_name,
+              difficulty: dist.difficulty,
+              cognitive_level: dist.cognitive_level,
+              primary_skills: [config.unit_code.toLowerCase()],
+              count: dist.count,
+            };
+
+            const generated = await generateAbstractProblems(request);
+            console.log(`    ✓ Generated ${generated.length} problems from OpenAI`);
+
+            // Save each generated problem
+            for (const problem of generated) {
+              try {
+                await createAbstractProblem({
+                  essence: problem.essence,
+                  cognitive_level: dist.cognitive_level,
+                  level: config.level,
+                  subject: config.subject,
+                  unit: config.unit_name,
+                  difficulty: dist.difficulty,
+                  difficulty_score: problem.suggested_difficulty_score,
+                  primary_skills: [config.unit_code.toLowerCase()],
+                  secondary_skills: [],
+                  generation_method: 'openai',
+                  generated_by: (req as any).user?.id || 'seed-api',
+                  generation_prompt: `Unit: ${config.unit_name}`,
+                  answer_type: problem.answer_type,
+                  expected_steps: problem.expected_steps,
+                  common_errors: problem.common_errors,
+                  status: 'draft',
+                });
+                totalSuccess++;
+                unitSuccess++;
+              } catch (dbError: any) {
+                console.error(`    ❌ Failed to save problem: ${dbError.message}`);
+                totalFailed++;
+                unitFailed++;
+              }
+            }
+
+            // Rate limiting: wait 1 second between API calls
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          } catch (error: any) {
+            console.error(`    ❌ Failed to generate: ${error.message}`);
+            totalFailed += dist.count;
+            unitFailed += dist.count;
+          }
         }
       }
 
