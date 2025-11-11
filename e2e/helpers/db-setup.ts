@@ -50,7 +50,8 @@ export async function seedTestData() {
 
     // Create test admin user
     const bcrypt = require('bcryptjs');
-    const adminPassword = await bcrypt.hash('admin123', 10);
+    // SECURITY: Password meets new requirements (12+ chars, uppercase, lowercase, number, special char)
+    const adminPassword = await bcrypt.hash('AdminTest123!', 10);
     const adminId = 'test-admin';
     const now = Date.now();
 
@@ -61,7 +62,8 @@ export async function seedTestData() {
     );
 
     // Create test student user
-    const studentPassword = await bcrypt.hash('student123', 10);
+    // SECURITY: Password meets new requirements (12+ chars, uppercase, lowercase, number, special char)
+    const studentPassword = await bcrypt.hash('StudentTest123!', 10);
     const studentId = 'test-student';
 
     await client.query(

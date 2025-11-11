@@ -27,10 +27,12 @@
   "license": "ISC",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.68.0",
+    "@types/cookie-parser": "^1.4.10",
     "@types/nodemailer": "^7.0.3",
     "@types/pdfjs-dist": "^2.10.377",
     "bcryptjs": "^3.0.3",
     "canvas": "^3.2.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",

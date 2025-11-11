@@ -3,6 +3,9 @@
  * AUTH API SERVICE
  * ============================================================================
  *
+ * SECURITY UPDATE: Now uses HttpOnly cookie-based authentication
+ * instead of localStorage tokens to prevent XSS attacks.
+ *
  * Handles authentication API calls:
  * - User registration
  * - User login
@@ -13,12 +16,12 @@
 import { User } from '../types';
 import { api } from '../api-client';
 import { AUTH_ENDPOINTS } from './constants';
-import { setTokens, clearTokens, getAccessToken } from './tokenService';
 import { setCachedUser, clearCachedUser } from './userStorage';
 import { AuthResponse, AuthResult } from './types';
 
 /**
  * Register a new user
+ * SECURITY: Tokens are automatically stored as HttpOnly cookies by backend
  */
 export async function registerUser(
   username: string,
@@ -40,8 +43,8 @@ export async function registerUser(
   }
 
   if (response.data) {
-    // Store tokens and user data
-    setTokens(response.data.accessToken, response.data.refreshToken);
+    // SECURITY: Tokens are now in HttpOnly cookies (set by backend)
+    // Just store user data in memory cache
     setCachedUser(response.data.user);
 
     return { success: true, user: response.data.user };
@@ -52,6 +55,7 @@ export async function registerUser(
 
 /**
  * Login user
+ * SECURITY: Tokens are automatically stored as HttpOnly cookies by backend
  */
 export async function loginUser(
   usernameOrEmail: string,
@@ -67,8 +71,8 @@ export async function loginUser(
   }
 
   if (response.data) {
-    // Store tokens and user data
-    setTokens(response.data.accessToken, response.data.refreshToken);
+    // SECURITY: Tokens are now in HttpOnly cookies (set by backend)
+    // Just store user data in memory cache
     setCachedUser(response.data.user);
 
     return { success: true, user: response.data.user };
@@ -79,35 +83,25 @@ export async function loginUser(
 
 /**
  * Logout user
+ * SECURITY: Backend clears HttpOnly cookies
  */
 export async function logoutUser(): Promise<void> {
-  const refreshToken = typeof window !== 'undefined'
-    ? localStorage.getItem('paes-refresh-token')
-    : null;
+  // Call backend to revoke refresh token and clear cookies
+  await api.post(AUTH_ENDPOINTS.LOGOUT, {});
 
-  if (refreshToken) {
-    // Call backend to revoke refresh token
-    await api.post(AUTH_ENDPOINTS.LOGOUT, { refreshToken });
-  }
-
-  // Clear all local data
-  clearTokens();
+  // Clear cached user data
   clearCachedUser();
 }
 
 /**
  * Fetch current user from backend
+ * SECURITY: Access token is sent automatically via HttpOnly cookies
  */
 export async function fetchCurrentUser(): Promise<User | null> {
-  if (!getAccessToken()) {
-    return null;
-  }
-
   const response = await api.get<User>(AUTH_ENDPOINTS.ME);
 
   if (response.error) {
-    // Token is invalid or expired
-    clearTokens();
+    // Token is invalid or expired - clear cached user
     clearCachedUser();
     return null;
   }

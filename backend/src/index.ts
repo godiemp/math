@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import cookieParser from 'cookie-parser';
 import { testConnection, initializeDatabase, closeDatabase, pool } from './config/database';
 import { initImageStorage } from './services/imageStorageService';
 import authRoutes from './auth/routes/authRoutes';
@@ -121,6 +122,7 @@ const authLimiter = process.env.NODE_ENV === 'test'
 
 // Middleware
 app.use(cors(corsOptions));
+app.use(cookieParser()); // SECURITY: Parse cookies for HttpOnly JWT tokens
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

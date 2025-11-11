@@ -12,9 +12,18 @@ import { TokenPayload } from '../types';
 
 dotenv.config();
 
-// JWT configuration
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret-key';
+// JWT configuration - SECURITY: Secrets are REQUIRED, no fallbacks
+// Validate required secrets on module load
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+  throw new Error('SECURITY ERROR: JWT_SECRET must be set and at least 32 characters long');
+}
+if (!process.env.JWT_REFRESH_SECRET || process.env.JWT_REFRESH_SECRET.length < 32) {
+  throw new Error('SECURITY ERROR: JWT_REFRESH_SECRET must be set and at least 32 characters long');
+}
+
+// After validation, these are guaranteed to be defined
+const JWT_SECRET: string = process.env.JWT_SECRET;
+const JWT_REFRESH_SECRET: string = process.env.JWT_REFRESH_SECRET;
 const JWT_EXPIRES_IN: string | number = process.env.JWT_EXPIRES_IN || '1h';
 const JWT_REFRESH_EXPIRES_IN: string | number = process.env.JWT_REFRESH_EXPIRES_IN || '7d';
 
