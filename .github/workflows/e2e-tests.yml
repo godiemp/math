@@ -136,8 +136,8 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
-      - name: Upload screenshots on failure
-        if: failure()
+      - name: Upload screenshots and test results
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-screenshots
@@ -153,6 +153,7 @@ jobs:
             const testStatus = '${{ job.status }}';
             const emoji = testStatus === 'success' ? '✅' : '❌';
             const statusText = testStatus === 'success' ? 'passed' : 'failed';
+            const runUrl = `https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}`;
 
             const marker = '<!-- e2e-test-status -->';
             const comment = `${marker}
@@ -161,7 +162,16 @@ jobs:
             **Test Status:** ${statusText}
             **Commit:** ${context.sha.substring(0, 7)}
 
-            ${testStatus === 'failure' ? '⚠️ Tests failed. Check the [test report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.' : '🎉 All tests passed!'}
+            ${testStatus === 'failure' ? '⚠️ Tests failed. Check the artifacts below for details.' : '🎉 All tests passed!'}
+
+            ### 📦 Test Artifacts
+            - 📊 [View HTML Report](${runUrl}#artifacts) - Download \`playwright-report\` artifact
+            - 📸 [View Screenshots & Videos](${runUrl}#artifacts) - Download \`playwright-screenshots\` artifact
+
+            **How to access artifacts:**
+            1. Click on the links above to go to the Actions run page
+            2. Scroll to the "Artifacts" section at the bottom
+            3. Download the artifacts to view screenshots, videos, and detailed HTML reports
             `;
 
             const commentId = '${{ steps.initial-comment.outputs.result }}';
