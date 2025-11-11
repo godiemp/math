@@ -8,7 +8,7 @@ import { logoutUser } from "@/lib/auth";
 import { getAllAvailableSessions, updateSessionStatuses } from "@/lib/sessionApi";
 import { useEffect, useState } from "react";
 import { LiveSession } from "@/lib/types";
-import { Button, Card, Badge, Heading, Text, LoadingScreen } from "@/components/ui";
+import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar } from "@/components/ui";
 import { Streak } from "@/components/Streak";
 import { StudyBuddy } from "@/components/StudyBuddy";
 import { ShareModal } from "@/components/ShareModal";
@@ -99,8 +99,8 @@ function DashboardContent() {
   return (
     <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">
       {/* Navbar with variableBlur material */}
-      <nav className="sticky top-0 z-30 min-h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] saturate-[1.2]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-0 sm:h-14 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+      <Navbar className="min-h-14">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 py-0 sm:h-10">
           <Heading level={1} size="xs" className="text-[#0A84FF] text-sm sm:text-base">
             SimplePAES - Matemática
           </Heading>
@@ -120,7 +120,7 @@ function DashboardContent() {
             </div>
           </div>
         </div>
-      </nav>
+      </Navbar>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-8 md:py-12">
         {/* Streak Section */}
