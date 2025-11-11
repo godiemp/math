@@ -42,7 +42,7 @@ import {
   CognitiveLevel,
   DifficultyLevel,
 } from '../types/abstractProblems';
-import { THEMATIC_UNITS } from '../config/thematic-units';
+import { THEMATIC_UNITS, getSubsectionsByUnit, formatSubsectionName } from '../config/thematic-units';
 import { pool } from '../config/database';
 
 // ========================================
@@ -668,6 +668,12 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
       console.log(`  Level: ${config.level} | Subject: ${config.subject}`);
       console.log(`  Target: ${config.total_problems} problems`);
 
+      // Check if unit has subsections
+      const subsections = getSubsectionsByUnit(config.unit_code);
+      if (subsections.length > 0) {
+        console.log(`  📋 Unit has ${subsections.length} subsections - will distribute problems across them`);
+      }
+
       let unitSuccess = 0;
       let unitFailed = 0;
 
@@ -689,7 +695,17 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
           console.log(`    ✓ Generated ${generated.length} problems from OpenAI`);
 
           // Save each generated problem
-          for (const problem of generated) {
+          for (let i = 0; i < generated.length; i++) {
+            const problem = generated[i];
+
+            // Assign subsection if unit has subsections (distribute evenly in round-robin)
+            let subsection: string | undefined = undefined;
+            if (subsections.length > 0) {
+              const subsectionIndex = i % subsections.length;
+              const selectedSubsection = subsections[subsectionIndex];
+              subsection = formatSubsectionName(selectedSubsection);
+            }
+
             try {
               await createAbstractProblem({
                 essence: problem.essence,
@@ -697,13 +713,14 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
                 level: config.level,
                 subject: config.subject,
                 unit: config.unit_name,
+                subsection: subsection,
                 difficulty: dist.difficulty,
                 difficulty_score: problem.suggested_difficulty_score,
                 primary_skills: [config.unit_code.toLowerCase()],
                 secondary_skills: [],
                 generation_method: 'openai',
                 generated_by: (req as any).user?.id || 'seed-api',
-                generation_prompt: `Unit: ${config.unit_name}`,
+                generation_prompt: `Unit: ${config.unit_name}${subsection ? ` - ${subsection}` : ''}`,
                 answer_type: problem.answer_type,
                 expected_steps: problem.expected_steps,
                 common_errors: problem.common_errors,
