@@ -7,19 +7,19 @@ import Auth from "@/components/Auth";
 import Footer from "@/components/Footer";
 
 export default function Home() {
-  const { isAuthenticated, isVerifying, setUser } = useAuth();
+  const { isAuthenticated, isLoading, setUser } = useAuth();
   const router = useRouter();
   const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
-    // Only redirect if verification is complete and user is authenticated
-    if (!isVerifying && isAuthenticated) {
+    // Only redirect if auth loading is complete and user is authenticated
+    if (!isLoading && isAuthenticated) {
       router.push('/dashboard');
     }
-  }, [isAuthenticated, isVerifying, router]);
+  }, [isAuthenticated, isLoading, router]);
 
-  // While verifying or if authenticated, don't show login
-  if (isVerifying || isAuthenticated) {
+  // While loading auth or if authenticated, don't show login
+  if (isLoading || isAuthenticated) {
     return null;
   }
 
