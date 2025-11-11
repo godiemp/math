@@ -1,19 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { setupAuthenticatedSession } from './helpers/auth';
 
 test.describe('Student Profile Page', () => {
   // Login before each test
   test.beforeEach(async ({ page }) => {
-    // Navigate to login page
-    await page.goto('/');
-
-    // Login with test student credentials
-    await page.fill('input[type="text"]', 'student1');
-    await page.fill('input[type="password"]', 'password123');
-    await page.click('button[type="submit"]');
-
-    // Wait for dashboard to load
-    await page.waitForURL('/dashboard', { timeout: 10000 });
-    await page.waitForTimeout(1000);
+    // Setup authenticated session and navigate to dashboard
+    await setupAuthenticatedSession(page);
   });
 
   test('should navigate to profile page from dashboard', async ({ page }) => {
@@ -37,8 +29,8 @@ test.describe('Student Profile Page', () => {
     await expect(avatarCircle).toBeVisible();
 
     // Check for display name, username, and email
-    await expect(page.getByText(/student1/i)).toBeVisible(); // username
-    await expect(page.getByText(/student1@test\.com/i)).toBeVisible(); // email
+    await expect(page.getByText(/teststudent/i)).toBeVisible(); // username
+    await expect(page.getByText(/student@test\.com/i)).toBeVisible(); // email
 
     // Check for role badge
     await expect(page.getByText(/Estudiante/i)).toBeVisible();
