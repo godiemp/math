@@ -66,6 +66,16 @@ export function ShareModal({
 }: ShareModalProps) {
   const [copied, setCopied] = useState(false);
 
+  // Get full URL with origin
+  const getFullUrl = () => {
+    const url = data.url;
+    // If URL is relative, prepend origin
+    if (url.startsWith('/')) {
+      return `${window.location.origin}${url}`;
+    }
+    return url;
+  };
+
   const handleShare = (platform: SharePlatform) => {
     if (platform === 'copy') {
       handleCopyLink();
@@ -73,14 +83,17 @@ export function ShareModal({
     }
 
     const config = platformConfig[platform];
-    const url = config.generateUrl(data);
+    // Pass data with full URL for share links
+    const fullData = { ...data, url: getFullUrl() };
+    const url = config.generateUrl(fullData);
     window.open(url, '_blank', 'noopener,noreferrer,width=600,height=400');
     toast.success('Compartido');
   };
 
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(data.url);
+      const fullUrl = getFullUrl();
+      await navigator.clipboard.writeText(fullUrl);
       setCopied(true);
       toast.success('Copiado');
       setTimeout(() => setCopied(false), 2000);
@@ -159,7 +172,7 @@ export function ShareModal({
       {/* URL Display - Minimal */}
       <div className="mt-6 p-3 rounded-xl bg-black/[0.04] dark:bg-white/[0.06] text-center">
         <Text size="xs" variant="secondary" className="break-all font-mono">
-          {data.url}
+          {getFullUrl()}
         </Text>
       </div>
     </Modal>
