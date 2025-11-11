@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Heading, Text, Button } from '@/components/ui';
 import { Target, TrendingUp, Award, ArrowRight, Loader2 } from 'lucide-react';
+import { api } from '@/lib/api-client';
 
 interface WeakArea {
   level: string;
@@ -62,21 +63,13 @@ export const AdaptiveLearning = () => {
   useEffect(() => {
     const fetchRecommendations = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const response = await api.get<RecommendationsData>('/api/quiz/recommendations');
 
-        const response = await fetch(`${apiUrl}/api/quiz/recommendations`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch recommendations');
+        if (response.error) {
+          setError('No se pudieron cargar las recomendaciones');
+        } else if (response.data) {
+          setData(response.data);
         }
-
-        const result = await response.json();
-        setData(result);
       } catch (err) {
         console.error('Error fetching recommendations:', err);
         setError('No se pudieron cargar las recomendaciones');
