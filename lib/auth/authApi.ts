@@ -119,3 +119,38 @@ export async function fetchCurrentUser(): Promise<User | null> {
 
   return null;
 }
+
+/**
+ * Request password reset (send reset email)
+ */
+export async function requestPasswordReset(email: string): Promise<{ success: boolean; error?: string }> {
+  const response = await api.post<{ message: string }>(AUTH_ENDPOINTS.FORGOT_PASSWORD, {
+    email,
+  });
+
+  if (response.error) {
+    return { success: false, error: response.error.error || 'Failed to send reset email' };
+  }
+
+  // Always return success (backend doesn't reveal if email exists)
+  return { success: true };
+}
+
+/**
+ * Reset password with token
+ */
+export async function resetPassword(
+  token: string,
+  password: string
+): Promise<{ success: boolean; error?: string }> {
+  const response = await api.post<{ message: string }>(AUTH_ENDPOINTS.RESET_PASSWORD, {
+    token,
+    password,
+  });
+
+  if (response.error) {
+    return { success: false, error: response.error.error || 'Failed to reset password' };
+  }
+
+  return { success: true };
+}

@@ -46,6 +46,8 @@ export {
   loginUser,
   logoutUser,
   fetchCurrentUser,
+  requestPasswordReset,
+  resetPassword,
 } from './authApi';
 
 // Auth Utilities
