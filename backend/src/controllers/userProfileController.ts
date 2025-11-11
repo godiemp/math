@@ -38,8 +38,8 @@ export async function updateUserProfile(req: Request, res: Response): Promise<vo
     const values: any[] = [];
     let paramIndex = 1;
 
-    if (displayName) {
-      if (displayName.trim().length === 0) {
+    if (displayName !== undefined) {
+      if (typeof displayName !== 'string' || displayName.trim().length === 0) {
         res.status(400).json({ error: 'Display name cannot be empty' });
         return;
       }
@@ -47,7 +47,7 @@ export async function updateUserProfile(req: Request, res: Response): Promise<vo
       values.push(displayName.trim());
     }
 
-    if (email) {
+    if (email !== undefined) {
       // Validate email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
@@ -68,6 +68,12 @@ export async function updateUserProfile(req: Request, res: Response): Promise<vo
 
       updates.push(`email = $${paramIndex++}`);
       values.push(email.toLowerCase().trim());
+    }
+
+    // Check if there are any updates to make
+    if (updates.length === 0) {
+      res.status(400).json({ error: 'No valid fields to update' });
+      return;
     }
 
     // Add updated_at timestamp

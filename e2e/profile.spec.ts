@@ -195,9 +195,9 @@ test.describe('Student Profile Page', () => {
     await page.getByRole('button', { name: /Guardar Cambios/i }).click();
     await page.waitForTimeout(1500);
 
-    // Should show error message in the modal
-    const errorMessage = page.getByText(/cannot be empty|no puede estar vacío|Error al actualizar/i);
-    await expect(errorMessage).toBeVisible();
+    // Should show error message in the modal (from backend or frontend)
+    const errorMessage = page.getByText(/cannot be empty|Display name cannot be empty|Error al actualizar/i);
+    await expect(errorMessage).toBeVisible({ timeout: 10000 });
   });
 
   test('should show error for invalid email format', async ({ page }) => {
