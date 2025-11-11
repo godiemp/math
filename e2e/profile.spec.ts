@@ -186,19 +186,18 @@ test.describe('Student Profile Page', () => {
     // Get the display name input
     const displayNameInput = page.getByLabel(/Nombre para mostrar/i);
 
-    // Clear display name (make it empty)
+    // Clear display name and fill with empty/whitespace
     await displayNameInput.clear();
-
-    // Get email input and clear it too (so we're only updating display name)
-    const emailInput = page.getByLabel(/Email/i);
-    const originalEmail = await emailInput.inputValue();
+    await displayNameInput.fill(' ');
+    await displayNameInput.clear();
 
     // Click save with empty display name
     await page.getByRole('button', { name: /Guardar Cambios/i }).click();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1500);
 
-    // Should show error message
-    await expect(page.getByText(/cannot be empty|no puede estar vacío|Error/i)).toBeVisible();
+    // Should show error message in the modal
+    const errorMessage = page.getByText(/cannot be empty|no puede estar vacío|Error al actualizar/i);
+    await expect(errorMessage).toBeVisible();
   });
 
   test('should show error for invalid email format', async ({ page }) => {
