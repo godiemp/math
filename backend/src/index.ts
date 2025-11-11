@@ -1,6 +1,14 @@
+// Load environment variables first
+import dotenv from 'dotenv';
+dotenv.config();
+
+// IMPORTANT: Import Sentry instrumentation at the top of your file
+import './instrument';
+
+// All other imports below
+import * as Sentry from '@sentry/node';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
@@ -21,10 +29,6 @@ import contextProblemsRoutes from './routes/contextProblemsRoutes';
 import studyBuddyRoutes from './routes/studyBuddyRoutes';
 import paymentRoutes from './routes/paymentRoutes';
 import { serveImage } from './controllers/adminController';
-
-// Load environment variables
-dotenv.config();
-// Force Railway redeploy - includes admin routes
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -189,12 +193,20 @@ app.use((req: Request, res: Response) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Error handling middleware
+// The Sentry error handler must be registered before any other error middleware and after all controllers
+Sentry.setupExpressErrorHandler(app);
+
+// Optional fallthrough error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  // The error id is attached to `res.sentry` to be returned and optionally displayed to the user for support.
+  const errorId = (res as any).sentry;
   console.error('Error:', err);
+  console.error('Sentry Error ID:', errorId);
+
   res.status(500).json({
     error: 'Internal server error',
     message: process.env.NODE_ENV === 'development' ? err.message : undefined,
+    errorId: errorId, // Include Sentry error ID for tracking
   });
 });
 

@@ -37,3 +37,7 @@ coverage/
 .cache/
 temp/
 tmp/
+
+# Sentry
+.sentryclirc
+*.sentry-*
