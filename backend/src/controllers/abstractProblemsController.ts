@@ -12,6 +12,7 @@ import {
   deleteAbstractProblem,
   activateAbstractProblem,
   getStatsByUnit,
+  getProblemsGroupedByUnit,
 } from '../services/abstractProblemService';
 import {
   createContextProblem,
@@ -41,7 +42,7 @@ import {
   CognitiveLevel,
   DifficultyLevel,
 } from '../types/abstractProblems';
-import { THEMATIC_UNITS } from '../config/thematic-units';
+import { THEMATIC_UNITS, getSubsectionsByUnit, formatSubsectionName } from '../config/thematic-units';
 import { pool } from '../config/database';
 
 // ========================================
@@ -58,6 +59,7 @@ export const generateAbstractProblemsController = async (req: Request, res: Resp
       level,
       subject,
       unit,
+      subsection,
       difficulty,
       cognitive_level,
       primary_skills,
@@ -122,6 +124,7 @@ export const generateAbstractProblemsController = async (req: Request, res: Resp
       level,
       subject,
       unit,
+      subsection,
       difficulty,
       cognitive_level,
       primary_skills,
@@ -140,6 +143,7 @@ export const generateAbstractProblemsController = async (req: Request, res: Resp
             level,
             subject,
             unit,
+            subsection,
             difficulty,
             difficulty_score: genProb.suggested_difficulty_score,
             primary_skills,
@@ -234,6 +238,7 @@ export const listAbstractProblemsController = async (req: Request, res: Response
       level,
       subject,
       unit,
+      subsection,
       difficulty,
       status,
       cognitive_level,
@@ -250,6 +255,7 @@ export const listAbstractProblemsController = async (req: Request, res: Response
     if (level) filters.level = level;
     if (subject) filters.subject = subject;
     if (unit) filters.unit = unit;
+    if (subsection) filters.subsection = subsection;
     if (difficulty) filters.difficulty = difficulty;
     if (status) filters.status = status;
     if (cognitive_level) filters.cognitive_level = cognitive_level;
@@ -423,15 +429,44 @@ export const getStatsByUnitController = async (req: Request, res: Response) => {
 };
 
 /**
+ * Get problems grouped by thematic unit and subsection
+ * GET /api/abstract-problems/grouped
+ * Query: { level?: 'M1' | 'M2', subject?: string, status?: string }
+ */
+export const getProblemsGroupedByUnitController = async (req: Request, res: Response) => {
+  try {
+    const { level, subject, status } = req.query;
+
+    const result = await getProblemsGroupedByUnit(
+      level as 'M1' | 'M2' | undefined,
+      subject as string | undefined,
+      status as string | undefined
+    );
+
+    res.json({
+      success: true,
+      ...result,
+    });
+  } catch (error: any) {
+    console.error('Error getting grouped problems:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to get grouped problems',
+    });
+  }
+};
+
+/**
  * Bulk seed abstract problems
  * POST /api/abstract-problems/seed
- * Body: { level?: 'M1' | 'M2', subject?: string, limit?: number, problemsPerUnit?: number, dryRun?: boolean }
+ * Body: { level?: 'M1' | 'M2', subject?: string, unit_code?: string, limit?: number, problemsPerUnit?: number, dryRun?: boolean }
  */
 export const seedAbstractProblemsController = async (req: Request, res: Response) => {
   try {
     const {
       level: levelFilter,
       subject: subjectFilter,
+      unit_code: unitCodeFilter,
       limit,
       problemsPerUnit,
       dryRun = false,
@@ -443,6 +478,7 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
     console.log('Request parameters:', {
       levelFilter,
       subjectFilter,
+      unitCodeFilter,
       limit,
       problemsPerUnit,
       dryRun,
@@ -462,6 +498,14 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
       return res.status(400).json({
         success: false,
         error: 'subject must be números, álgebra, geometría, or probabilidad',
+      });
+    }
+
+    if (unitCodeFilter && !THEMATIC_UNITS.find(u => u.code === unitCodeFilter)) {
+      console.error('❌ Invalid unit_code filter:', unitCodeFilter);
+      return res.status(400).json({
+        success: false,
+        error: `unit_code '${unitCodeFilter}' not found in thematic units`,
       });
     }
 
@@ -566,6 +610,11 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
       configs = configs.filter(c => c.subject === subjectFilter);
       console.log(`  Subject filter (${subjectFilter}): ${beforeCount} → ${configs.length} units`);
     }
+    if (unitCodeFilter) {
+      const beforeCount = configs.length;
+      configs = configs.filter(c => c.unit_code === unitCodeFilter);
+      console.log(`  Unit code filter (${unitCodeFilter}): ${beforeCount} → ${configs.length} units`);
+    }
     if (limit) {
       const beforeCount = configs.length;
       configs = configs.slice(0, limit);
@@ -619,62 +668,144 @@ export const seedAbstractProblemsController = async (req: Request, res: Response
       console.log(`  Level: ${config.level} | Subject: ${config.subject}`);
       console.log(`  Target: ${config.total_problems} problems`);
 
+      // Check if unit has subsections
+      const subsections = getSubsectionsByUnit(config.unit_code);
+      const hasSubsections = subsections.length > 0;
+
       let unitSuccess = 0;
       let unitFailed = 0;
 
-      for (const dist of config.distribution) {
-        console.log(`  → Generating ${dist.count} problems (${dist.difficulty}/${dist.cognitive_level})...`);
+      if (hasSubsections) {
+        // Generate problems for each subsection
+        console.log(`  📋 Unit has ${subsections.length} subsections - generating problems for each`);
 
-        try {
-          const request: GenerateAbstractProblemRequest = {
-            level: config.level,
-            subject: config.subject,
-            unit: config.unit_name,
-            difficulty: dist.difficulty,
-            cognitive_level: dist.cognitive_level,
-            primary_skills: [config.unit_code.toLowerCase()],
-            count: dist.count,
-          };
+        for (const dist of config.distribution) {
+          // Distribute problems across subsections
+          const problemsPerSubsection = Math.floor(dist.count / subsections.length);
+          const extraProblems = dist.count % subsections.length;
 
-          const generated = await generateAbstractProblems(request);
-          console.log(`    ✓ Generated ${generated.length} problems from OpenAI`);
+          for (let subIdx = 0; subIdx < subsections.length; subIdx++) {
+            const subsection = subsections[subIdx];
+            const subsectionName = formatSubsectionName(subsection);
+            const problemCount = problemsPerSubsection + (subIdx < extraProblems ? 1 : 0);
 
-          // Save each generated problem
-          for (const problem of generated) {
+            if (problemCount === 0) continue;
+
+            console.log(`    → [${subsectionName}] Generating ${problemCount} problems (${dist.difficulty}/${dist.cognitive_level})...`);
+
             try {
-              await createAbstractProblem({
-                essence: problem.essence,
-                cognitive_level: dist.cognitive_level,
+              const request: GenerateAbstractProblemRequest = {
                 level: config.level,
                 subject: config.subject,
                 unit: config.unit_name,
+                subsection: subsectionName,
                 difficulty: dist.difficulty,
-                difficulty_score: problem.suggested_difficulty_score,
+                cognitive_level: dist.cognitive_level,
                 primary_skills: [config.unit_code.toLowerCase()],
-                secondary_skills: [],
-                generation_method: 'openai',
-                generated_by: (req as any).user?.id || 'seed-api',
-                generation_prompt: `Unit: ${config.unit_name}`,
-                answer_type: problem.answer_type,
-                expected_steps: problem.expected_steps,
-                common_errors: problem.common_errors,
-                status: 'draft',
-              });
-              totalSuccess++;
-              unitSuccess++;
-            } catch (dbError: any) {
-              console.error(`    ❌ Failed to save problem: ${dbError.message}`);
-              totalFailed++;
-              unitFailed++;
+                count: problemCount,
+              };
+
+              const generated = await generateAbstractProblems(request);
+              console.log(`      ✓ Generated ${generated.length} problems from OpenAI`);
+
+              // Save each generated problem
+              for (const problem of generated) {
+                try {
+                  await createAbstractProblem({
+                    essence: problem.essence,
+                    cognitive_level: dist.cognitive_level,
+                    level: config.level,
+                    subject: config.subject,
+                    unit: config.unit_name,
+                    subsection: subsectionName,
+                    difficulty: dist.difficulty,
+                    difficulty_score: problem.suggested_difficulty_score,
+                    primary_skills: [config.unit_code.toLowerCase()],
+                    secondary_skills: [],
+                    generation_method: 'openai',
+                    generated_by: (req as any).user?.id || 'seed-api',
+                    generation_prompt: `Unit: ${config.unit_name} - ${subsectionName}`,
+                    answer_type: problem.answer_type,
+                    expected_steps: problem.expected_steps,
+                    common_errors: problem.common_errors,
+                    status: 'draft',
+                  });
+                  totalSuccess++;
+                  unitSuccess++;
+                } catch (dbError: any) {
+                  console.error(`      ❌ Failed to save problem: ${dbError.message}`);
+                  totalFailed++;
+                  unitFailed++;
+                }
+              }
+
+              // Rate limiting: wait 1 second between API calls
+              await new Promise(resolve => setTimeout(resolve, 1000));
+            } catch (error: any) {
+              console.error(`      ❌ Failed to generate: ${error.message}`);
+              totalFailed += problemCount;
+              unitFailed += problemCount;
             }
           }
+        }
+      } else {
+        // No subsections - generate normally
+        console.log(`  📝 No subsections defined - generating problems for unit`);
 
-          // Rate limiting: wait 1 second between API calls
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        } catch (error: any) {
-          console.error(`    ❌ Failed to generate: ${error.message}`);
-          totalFailed += dist.count;
-          unitFailed += dist.count;
+        for (const dist of config.distribution) {
+          console.log(`  → Generating ${dist.count} problems (${dist.difficulty}/${dist.cognitive_level})...`);
+
+          try {
+            const request: GenerateAbstractProblemRequest = {
+              level: config.level,
+              subject: config.subject,
+              unit: config.unit_name,
+              difficulty: dist.difficulty,
+              cognitive_level: dist.cognitive_level,
+              primary_skills: [config.unit_code.toLowerCase()],
+              count: dist.count,
+            };
+
+            const generated = await generateAbstractProblems(request);
+            console.log(`    ✓ Generated ${generated.length} problems from OpenAI`);
+
+            // Save each generated problem
+            for (const problem of generated) {
+              try {
+                await createAbstractProblem({
+                  essence: problem.essence,
+                  cognitive_level: dist.cognitive_level,
+                  level: config.level,
+                  subject: config.subject,
+                  unit: config.unit_name,
+                  difficulty: dist.difficulty,
+                  difficulty_score: problem.suggested_difficulty_score,
+                  primary_skills: [config.unit_code.toLowerCase()],
+                  secondary_skills: [],
+                  generation_method: 'openai',
+                  generated_by: (req as any).user?.id || 'seed-api',
+                  generation_prompt: `Unit: ${config.unit_name}`,
+                  answer_type: problem.answer_type,
+                  expected_steps: problem.expected_steps,
+                  common_errors: problem.common_errors,
+                  status: 'draft',
+                });
+                totalSuccess++;
+                unitSuccess++;
+              } catch (dbError: any) {
+                console.error(`    ❌ Failed to save problem: ${dbError.message}`);
+                totalFailed++;
+                unitFailed++;
+              }
+            }
+
+            // Rate limiting: wait 1 second between API calls
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          } catch (error: any) {
+            console.error(`    ❌ Failed to generate: ${error.message}`);
+            totalFailed += dist.count;
+            unitFailed += dist.count;
+          }
         }
       }
 
@@ -801,6 +932,124 @@ export const getCoverageStatsController = async (req: Request, res: Response) =>
     res.status(500).json({
       success: false,
       error: error.message || 'Failed to get coverage statistics',
+    });
+  }
+};
+
+/**
+ * Generate problems for a unit with subsections
+ * POST /api/abstract-problems/generate-by-subsections
+ */
+export const generateBySubsectionsController = async (req: Request, res: Response) => {
+  try {
+    const { unit_code, problem_counts } = req.body;
+
+    if (!unit_code) {
+      return res.status(400).json({
+        success: false,
+        error: 'unit_code is required',
+      });
+    }
+
+    // Get unit configuration
+    const unit = THEMATIC_UNITS.find(u => u.code === unit_code);
+    if (!unit) {
+      return res.status(404).json({
+        success: false,
+        error: 'Unit not found',
+      });
+    }
+
+    if (!unit.subsections || unit.subsections.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Unit does not have subsections defined',
+      });
+    }
+
+    const { generateSubsectionProblems } = await import('../services/abstractProblemGenerator');
+    const { formatSubsectionName } = await import('../config/thematic-units');
+
+    console.log(`\n🎯 Generating problems for unit: ${unit.name}`);
+    console.log(`📚 Subsections: ${unit.subsections.length}`);
+
+    const results = [];
+    let totalGenerated = 0;
+
+    for (const subsection of unit.subsections) {
+      console.log(`\n  Processing subsection: ${formatSubsectionName(subsection)}`);
+
+      try {
+        const result = await generateSubsectionProblems(
+          unit.level,
+          unit.subject,
+          unit.name,
+          subsection.code,
+          subsection.name,
+          subsection.primary_skills,
+          problem_counts || { easy: 3, medium: 3, hard: 2 }
+        );
+
+        // Save to database
+        const savedProblems = [];
+        for (const problem of result.problems) {
+          const input: CreateAbstractProblemInput = {
+            essence: problem.essence,
+            cognitive_level: 'apply' as CognitiveLevel,
+            level: unit.level,
+            subject: unit.subject,
+            unit: unit.name,
+            subsection: result.subsection,
+            difficulty: 'medium' as DifficultyLevel,
+            difficulty_score: problem.suggested_difficulty_score,
+            primary_skills: subsection.primary_skills,
+            generation_method: 'openai',
+            generated_by: (req as any).user?.id || 'system',
+            answer_type: problem.answer_type,
+            expected_steps: problem.expected_steps,
+            common_errors: problem.common_errors,
+            status: 'draft',
+          };
+
+          const saved = await createAbstractProblem(input);
+          savedProblems.push(saved);
+        }
+
+        results.push({
+          subsection: result.subsection,
+          generated: result.problems.length,
+          saved: savedProblems.length,
+        });
+
+        totalGenerated += result.problems.length;
+        console.log(`    ✓ Generated ${result.problems.length} problems`);
+      } catch (error: any) {
+        console.error(`    ❌ Failed: ${error.message}`);
+        results.push({
+          subsection: formatSubsectionName(subsection),
+          error: error.message,
+        });
+      }
+    }
+
+    console.log(`\n✅ Complete! Generated ${totalGenerated} problems across ${unit.subsections.length} subsections`);
+
+    res.json({
+      success: true,
+      unit: {
+        code: unit.code,
+        name: unit.name,
+        level: unit.level,
+        subject: unit.subject,
+      },
+      totalGenerated,
+      subsections: results,
+    });
+  } catch (error: any) {
+    console.error('Error generating by subsections:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to generate problems by subsections',
     });
   }
 };

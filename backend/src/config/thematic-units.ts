@@ -5,12 +5,20 @@
 
 import { Level, Subject, CognitiveLevel, DifficultyLevel } from '../types/abstractProblems';
 
+export interface UnitSubsection {
+  code: string; // e.g., "A", "B", "C"
+  name: string; // e.g., "Orden y valor absoluto"
+  description?: string;
+  primary_skills: string[];
+}
+
 export interface ThematicUnit {
   code: string;
   name: string;
   level: Level;
   subject: Subject;
   description?: string;
+  subsections?: UnitSubsection[];
 }
 
 export interface SkillDefinition {
@@ -33,6 +41,38 @@ export const THEMATIC_UNITS: ThematicUnit[] = [
     name: 'Operaciones y orden en el conjunto de los números enteros',
     level: 'M1',
     subject: 'números',
+    subsections: [
+      {
+        code: 'A',
+        name: 'Orden y valor absoluto',
+        primary_skills: ['numeros-enteros-orden', 'numeros-enteros-valor-absoluto'],
+      },
+      {
+        code: 'B',
+        name: 'Suma y resta',
+        primary_skills: ['numeros-enteros-sumar-restar'],
+      },
+      {
+        code: 'C',
+        name: 'Multiplicación y división',
+        primary_skills: ['numeros-enteros-multiplicar-dividir'],
+      },
+      {
+        code: 'D',
+        name: 'Propiedades y jerarquía de operaciones',
+        primary_skills: ['numeros-enteros-multiplicar-dividir', 'numeros-enteros-sumar-restar'],
+      },
+      {
+        code: 'E',
+        name: 'Problemas combinados y de razonamiento',
+        primary_skills: ['numeros-enteros-orden', 'numeros-enteros-valor-absoluto', 'numeros-enteros-multiplicar-dividir'],
+      },
+      {
+        code: 'F',
+        name: 'Comparaciones encadenadas y desigualdades',
+        primary_skills: ['numeros-enteros-orden', 'numeros-enteros-valor-absoluto'],
+      },
+    ],
   },
   {
     code: 'M1-NUM-002',
@@ -365,6 +405,29 @@ export function getUnitsByLevel(level: Level): ThematicUnit[] {
  */
 export function getUnitByCode(code: string): ThematicUnit | undefined {
   return THEMATIC_UNITS.find(u => u.code === code);
+}
+
+/**
+ * Get subsections for a specific unit
+ */
+export function getSubsectionsByUnit(unitCode: string): UnitSubsection[] {
+  const unit = THEMATIC_UNITS.find(u => u.code === unitCode);
+  return unit?.subsections || [];
+}
+
+/**
+ * Get a specific subsection by unit code and subsection code
+ */
+export function getSubsection(unitCode: string, subsectionCode: string): UnitSubsection | undefined {
+  const unit = THEMATIC_UNITS.find(u => u.code === unitCode);
+  return unit?.subsections?.find(s => s.code === subsectionCode);
+}
+
+/**
+ * Format subsection for display (e.g., "A. Orden y valor absoluto")
+ */
+export function formatSubsectionName(subsection: UnitSubsection): string {
+  return `${subsection.code}. ${subsection.name}`;
 }
 
 /**

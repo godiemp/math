@@ -6,12 +6,14 @@ import express from 'express';
 import {
   generateAbstractProblemsController,
   generateNumerosM1Controller,
+  generateBySubsectionsController,
   listAbstractProblemsController,
   getAbstractProblemController,
   updateAbstractProblemController,
   deleteAbstractProblemController,
   activateAbstractProblemController,
   getStatsByUnitController,
+  getProblemsGroupedByUnitController,
   seedAbstractProblemsController,
   activateAllDraftsController,
   getCoverageStatsController,
@@ -48,6 +50,19 @@ router.post(
 );
 
 /**
+ * POST /api/abstract-problems/generate-by-subsections
+ * Generate problems for a unit organized by subsections
+ * Body: { unit_code: string, problem_counts?: { easy?: number, medium?: number, hard?: number, extreme?: number } }
+ * Requires: Admin authentication
+ */
+router.post(
+  '/generate-by-subsections',
+  authenticate,
+  requireAdmin,
+  generateBySubsectionsController
+);
+
+/**
  * POST /api/abstract-problems/seed
  * Bulk seed abstract problems with filters
  * Body: { level?: 'M1' | 'M2', subject?: string, limit?: number, dryRun?: boolean }
@@ -81,6 +96,13 @@ router.get('/', authenticate, listAbstractProblemsController);
  * Query params: level, subject
  */
 router.get('/stats/by-unit', authenticate, getStatsByUnitController);
+
+/**
+ * GET /api/abstract-problems/grouped
+ * Get problems grouped by thematic unit and subsection
+ * Query params: level, subject, status
+ */
+router.get('/grouped', authenticate, getProblemsGroupedByUnitController);
 
 /**
  * GET /api/abstract-problems/:id

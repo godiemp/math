@@ -66,6 +66,7 @@ export interface AbstractProblem {
   level: Level;
   subject: Subject;
   unit: string;
+  subsection?: string; // e.g., "A. Orden y valor absoluto", "B. Suma y resta"
 
   // Difficulty
   difficulty: DifficultyLevel;
@@ -100,6 +101,7 @@ export interface CreateAbstractProblemInput {
   level: Level;
   subject: Subject;
   unit: string;
+  subsection?: string;
   difficulty: DifficultyLevel;
   difficulty_score?: number; // Auto-calculated if not provided
   primary_skills: string[];
@@ -118,6 +120,7 @@ export interface UpdateAbstractProblemInput {
   essence?: string;
   cognitive_level?: CognitiveLevel;
   unit?: string;
+  subsection?: string;
   difficulty?: DifficultyLevel;
   difficulty_score?: number;
   primary_skills?: string[];
@@ -276,6 +279,7 @@ export interface AbstractProblemFilters {
   level?: Level;
   subject?: Subject;
   unit?: string;
+  subsection?: string;
   difficulty?: DifficultyLevel;
   status?: ProblemStatus;
   cognitive_level?: CognitiveLevel;
@@ -308,6 +312,7 @@ export interface GenerateAbstractProblemRequest {
   level: Level;
   subject: Subject;
   unit: string;
+  subsection?: string;
   difficulty: DifficultyLevel;
   cognitive_level: CognitiveLevel;
   primary_skills: string[];
@@ -357,6 +362,7 @@ export interface ActiveProblemView {
   level: Level;
   subject: Subject;
   unit: string;
+  subsection?: string;
   difficulty: DifficultyLevel;
   difficulty_score: number;
   primary_skills: string[];
