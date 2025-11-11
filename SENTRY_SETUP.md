@@ -2,6 +2,29 @@
 
 This application uses [Sentry](https://sentry.io) for error tracking and performance monitoring in both the frontend (Next.js) and backend (Express).
 
+## ✅ Projects Already Created
+
+Your Sentry projects are already set up:
+- **Organization:** `paes-math`
+- **Frontend Project:** `paes-math-frontend` (Next.js)
+- **Backend Project:** `paes-math-backend` (Node.js)
+
+### Quick Start - Add to Your Local Environment
+
+**Frontend (.env.local):**
+```bash
+NEXT_PUBLIC_SENTRY_DSN=https://a324bdfc921b5d48d16847bd9dc86037@o4510346124132352.ingest.us.sentry.io/4510346125115392
+```
+
+**Backend (.env):**
+```bash
+SENTRY_DSN=https://29dadd3000275242ede01c8d3d52bf7c@o4510346124132352.ingest.us.sentry.io/4510346128654336
+```
+
+That's it! Restart your dev servers and Sentry will start tracking errors.
+
+---
+
 ## What is Sentry?
 
 Sentry is an error tracking and performance monitoring platform that helps you:

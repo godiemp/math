@@ -2,23 +2,11 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-// Import Sentry before anything else
+// IMPORTANT: Import Sentry instrumentation at the top of your file
+import './instrument';
+
+// All other imports below
 import * as Sentry from '@sentry/node';
-import { nodeProfilingIntegration } from '@sentry/profiling-node';
-
-// Initialize Sentry
-Sentry.init({
-  dsn: process.env.SENTRY_DSN,
-  integrations: [
-    nodeProfilingIntegration(),
-  ],
-  // Performance Monitoring
-  tracesSampleRate: 1.0, // Capture 100% of the transactions
-  // Set sampling rate for profiling - this is relative to tracesSampleRate
-  profilesSampleRate: 1.0,
-  environment: process.env.NODE_ENV || 'development',
-});
-
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -43,13 +31,6 @@ import paymentRoutes from './routes/paymentRoutes';
 import { serveImage } from './controllers/adminController';
 
 const app = express();
-
-// Sentry request handler must be the first middleware on the app
-app.use(Sentry.Handlers.requestHandler());
-
-// Sentry tracing handler for performance monitoring
-app.use(Sentry.Handlers.tracingHandler());
-
 const PORT = process.env.PORT || 3001;
 
 // CORS configuration for Vercel production and preview deployments
@@ -212,12 +193,12 @@ app.use((req: Request, res: Response) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Sentry error handler must be before any other error middleware
-app.use(Sentry.Handlers.errorHandler());
+// The Sentry error handler must be registered before any other error middleware and after all controllers
+Sentry.setupExpressErrorHandler(app);
 
-// Optional fallthrough error handler to capture additional context
+// Optional fallthrough error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  // The error ID is attached to `res.sentry` by the error handler
+  // The error id is attached to `res.sentry` to be returned and optionally displayed to the user for support.
   const errorId = (res as any).sentry;
   console.error('Error:', err);
   console.error('Sentry Error ID:', errorId);
