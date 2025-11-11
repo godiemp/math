@@ -66,6 +66,47 @@ export const createPaymentPreference = async (req: Request, res: Response): Prom
 };
 
 /**
+ * Start a free trial without payment
+ * POST /api/payments/start-trial
+ */
+export const startFreeTrial = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { planId } = req.body;
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        message: 'User not authenticated',
+      });
+      return;
+    }
+
+    if (!planId) {
+      res.status(400).json({
+        success: false,
+        message: 'Plan ID is required',
+      });
+      return;
+    }
+
+    const result = await PaymentService.startFreeTrial(userId, planId);
+
+    res.status(200).json({
+      success: true,
+      data: result,
+      message: 'Free trial started successfully',
+    });
+  } catch (error: any) {
+    console.error('Error starting free trial:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to start free trial',
+    });
+  }
+};
+
+/**
  * Handle MercadoPago webhook notifications
  * POST /api/payments/webhook
  */

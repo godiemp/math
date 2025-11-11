@@ -23,13 +23,10 @@ const plans = [
     duration_days: 365 * 100, // Essentially permanent (100 years)
     trial_duration_days: 0,
     features: JSON.stringify([
-      'Acceso a preguntas de práctica básicas',
-      'Quiz en modo Zen y Rapid Fire',
-      'Seguimiento de progreso básico',
-      'Acceso a currículum M1 y M2',
+      'Acceso a ensayos en vivo',
     ]),
     is_active: true,
-    display_order: 1,
+    display_order: 2,
   },
   {
     id: 'trial',
@@ -47,8 +44,29 @@ const plans = [
       'Generación de preguntas personalizadas',
       'Sin límite de intentos',
     ]),
-    is_active: true,
+    is_active: false, // Replaced by trial included in student plan
     display_order: 2,
+  },
+  {
+    id: 'student',
+    name: 'Plan Estudiante',
+    description: 'Tarifa especial mensual para estudiantes',
+    price: 8000,
+    currency: 'CLP',
+    duration_days: 30,
+    trial_duration_days: 7, // 7 days trial before first payment
+    features: JSON.stringify([
+      'Acceso completo a todas las preguntas',
+      'Sesiones de práctica en vivo',
+      'Tutor AI con método socrático',
+      'Analytics detallado de progreso',
+      'Generación de preguntas personalizadas',
+      'Sin límite de intentos',
+      'Cancela cuando quieras',
+      'Tarifa especial para estudiantes',
+    ]),
+    is_active: true,
+    display_order: 1,
   },
   {
     id: 'basic',
@@ -67,8 +85,8 @@ const plans = [
       'Sin límite de intentos',
       'Cancela cuando quieras',
     ]),
-    is_active: true,
-    display_order: 3,
+    is_active: false, // Replaced by student plan
+    display_order: 4,
   },
   {
     id: 'premium',
@@ -87,7 +105,7 @@ const plans = [
       'Soporte prioritario',
     ]),
     is_active: false, // Not active yet
-    display_order: 4,
+    display_order: 5,
   },
 ];
 
@@ -95,7 +113,7 @@ async function seedPlans() {
   const client = await pool.connect();
 
   try {
-    console.log('🌱 Starting plan seeding...');
+    console.log('🌱 Starting plan seeding (will create new plans and update existing ones)...');
 
     await client.query('BEGIN');
 
@@ -103,14 +121,43 @@ async function seedPlans() {
       const now = Date.now();
 
       // Check if plan already exists
-      const existing = await client.query('SELECT id FROM plans WHERE id = $1', [plan.id]);
+      const existing = await client.query('SELECT * FROM plans WHERE id = $1', [plan.id]);
 
       if (existing.rows.length > 0) {
-        console.log(`⚠️  Plan "${plan.name}" (${plan.id}) already exists, skipping...`);
+        // Plan exists - update it with current values
+        await client.query(
+          `UPDATE plans SET
+            name = $1,
+            description = $2,
+            price = $3,
+            currency = $4,
+            duration_days = $5,
+            trial_duration_days = $6,
+            features = $7,
+            is_active = $8,
+            display_order = $9,
+            updated_at = $10
+          WHERE id = $11`,
+          [
+            plan.name,
+            plan.description,
+            plan.price,
+            plan.currency,
+            plan.duration_days,
+            plan.trial_duration_days,
+            plan.features,
+            plan.is_active,
+            plan.display_order,
+            now,
+            plan.id,
+          ]
+        );
+
+        console.log(`🔄 Updated plan: ${plan.name} (${plan.id}) - Active: ${plan.is_active}`);
         continue;
       }
 
-      // Insert plan
+      // Insert new plan
       await client.query(
         `INSERT INTO plans (
           id, name, description, price, currency, duration_days,

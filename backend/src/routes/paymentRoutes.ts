@@ -19,6 +19,13 @@ router.get('/plans', paymentController.getActivePlans);
 router.post('/create-preference', authenticate, paymentController.createPaymentPreference);
 
 /**
+ * POST /api/payments/start-trial
+ * Start a free trial without payment
+ * Requires authentication
+ */
+router.post('/start-trial', authenticate, paymentController.startFreeTrial);
+
+/**
  * POST /api/payments/webhook
  * Handle MercadoPago webhook notifications
  * Public endpoint (no authentication required)
