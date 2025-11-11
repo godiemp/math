@@ -88,7 +88,7 @@ const plans = [
       'Sin límite de intentos',
       'Cancela cuando quieras',
     ]),
-    is_active: true,
+    is_active: false, // Replaced by student plan
     display_order: 4,
   },
   {
