@@ -11,6 +11,7 @@ import {
   CognitiveLevel,
   DifficultyLevel,
 } from '../types/abstractProblems';
+import { listAbstractProblems } from './abstractProblemService';
 
 // Lazy initialization of OpenAI client
 let openaiClient: OpenAI | null = null;
@@ -105,6 +106,17 @@ export async function generateAbstractProblems(
     count = 1,
   } = request;
 
+  // Fetch existing problems to avoid duplicates
+  const existingProblems = await listAbstractProblems({
+    level,
+    subject,
+    unit,
+    subsection,
+  }, { limit: 1000 }); // Get up to 1000 existing problems
+
+  const existingEssences = existingProblems.problems.map(p => p.essence);
+  const hasExisting = existingEssences.length > 0;
+
   const prompt = `You are a PAES mathematics curriculum expert. Generate ${count} abstract mathematical problem(s) following these requirements:
 
 **Requirements:**
@@ -117,6 +129,14 @@ ${subsection ? `- Subsection: ${subsection}` : ''}
 - Primary Skills: ${primary_skills.join(', ')}
 ${secondary_skills.length > 0 ? `- Secondary Skills: ${secondary_skills.join(', ')}` : ''}
 
+${hasExisting ? `**EXISTING PROBLEMS IN DATABASE (${existingEssences.length} total) - DO NOT REPEAT THESE:**
+
+${existingEssences.slice(0, 50).map((e, i) => `${i + 1}. ${e}`).join('\n')}
+${existingEssences.length > 50 ? `\n... and ${existingEssences.length - 50} more existing problems\n` : ''}
+
+**CRITICAL: Generate COMPLETELY DIFFERENT problems from the ones listed above. Explore new variations, different number combinations, different operations, or different conceptual approaches.**
+` : ''}
+
 **IMPORTANT GUIDELINES:**
 
 1. **Abstract Nature**: Create problems that represent the PURE MATHEMATICAL ESSENCE, NOT a contextual story.
@@ -125,13 +145,22 @@ ${secondary_skills.length > 0 ? `- Secondary Skills: ${secondary_skills.join(', 
    - ✅ GOOD: "Resuelve: x - 5 = -2"
    - ❌ BAD: "María tiene -5 grados en el termómetro..." (This is contextual, not abstract!)
 
-2. **Examples of Abstract Problems** (use these as inspiration):
+2. **Examples of Abstract Problems** (use these as inspiration, but create NEW variations):
    - "Compara: -7 __ -3" (orden y valor absoluto)
    - "Evalúa: |-6|, |3|, |-2|+|-5|" (valor absoluto)
    - "Determina: signo de (a×b×c) según el número de negativos" (multiplicación)
    - "Resuelve: (-4) × x = -16" (ecuaciones)
    - "Evalúa: 2+(-3)×(-4)" (jerarquía de operaciones)
    - "Si a<b<0, compara a+b con a-b" (razonamiento con desigualdades)
+
+   **For variety, explore:**
+   - Different number ranges (small vs. large numbers)
+   - Different operations or combinations
+   - Variables vs. concrete numbers
+   - Inequalities vs. equations
+   - Comparison problems
+   - Absolute value combinations
+   - Mixed operations with different priorities
 
 3. **Cognitive Levels**:
    - **remember**: Recall facts, definitions (e.g., "Define valor absoluto")
