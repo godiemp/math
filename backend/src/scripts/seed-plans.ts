@@ -23,13 +23,10 @@ const plans = [
     duration_days: 365 * 100, // Essentially permanent (100 years)
     trial_duration_days: 0,
     features: JSON.stringify([
-      'Acceso a preguntas de práctica básicas',
-      'Quiz en modo Zen y Rapid Fire',
-      'Seguimiento de progreso básico',
-      'Acceso a currículum M1 y M2',
+      'Acceso a ensayos en vivo',
     ]),
     is_active: true,
-    display_order: 1,
+    display_order: 2,
   },
   {
     id: 'trial',
@@ -69,7 +66,7 @@ const plans = [
       'Tarifa especial para estudiantes',
     ]),
     is_active: true,
-    display_order: 3,
+    display_order: 1,
   },
   {
     id: 'basic',
