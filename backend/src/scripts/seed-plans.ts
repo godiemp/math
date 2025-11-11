@@ -51,6 +51,27 @@ const plans = [
     display_order: 2,
   },
   {
+    id: 'student',
+    name: 'Plan Estudiante',
+    description: 'Tarifa especial mensual para estudiantes',
+    price: 8000,
+    currency: 'CLP',
+    duration_days: 30,
+    trial_duration_days: 7, // 7 days trial before first payment
+    features: JSON.stringify([
+      'Acceso completo a todas las preguntas',
+      'Sesiones de práctica en vivo',
+      'Tutor AI con método socrático',
+      'Analytics detallado de progreso',
+      'Generación de preguntas personalizadas',
+      'Sin límite de intentos',
+      'Cancela cuando quieras',
+      'Tarifa especial para estudiantes',
+    ]),
+    is_active: true,
+    display_order: 3,
+  },
+  {
     id: 'basic',
     name: 'Plan Básico',
     description: 'Suscripción mensual con acceso completo',
@@ -68,7 +89,7 @@ const plans = [
       'Cancela cuando quieras',
     ]),
     is_active: true,
-    display_order: 3,
+    display_order: 4,
   },
   {
     id: 'premium',
@@ -87,7 +108,7 @@ const plans = [
       'Soporte prioritario',
     ]),
     is_active: false, // Not active yet
-    display_order: 4,
+    display_order: 5,
   },
 ];
 
