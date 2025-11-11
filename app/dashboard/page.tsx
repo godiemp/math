@@ -24,38 +24,43 @@ function DashboardContent() {
 
   useEffect(() => {
     const loadDashboardData = async () => {
-      if (user) {
-        // Update session statuses
-        await updateSessionStatuses();
-
-        // Get all available sessions from API
-        const allAvailableSessions = await getAllAvailableSessions();
-
-        // Filter for user's registered sessions
-        const userRegisteredSessions = allAvailableSessions.filter(s =>
-          s.registeredUsers?.some(r => r.userId === user.id)
-        );
-
-        // Filter for upcoming sessions only (scheduled, lobby, active)
-        const upcomingSessions = userRegisteredSessions.filter(s =>
-          s.status === 'scheduled' || s.status === 'lobby' || s.status === 'active'
-        );
-
-        // Sort by scheduled start time
-        upcomingSessions.sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
-
-        setRegisteredSessions(upcomingSessions);
-
-        // Get the next scheduled session (for all users, not just registered)
-        const allUpcoming = allAvailableSessions
-          .filter(s => s.status === 'scheduled' || s.status === 'lobby')
-          .sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
-
-        setNextSession(allUpcoming[0] || null);
-
-        // Mark loading as complete
+      if (!user) {
+        // No user yet (still loading from auth), or user is not authenticated
+        // ProtectedRoute will handle redirect if needed
         setIsLoading(false);
+        return;
       }
+
+      // Update session statuses
+      await updateSessionStatuses();
+
+      // Get all available sessions from API
+      const allAvailableSessions = await getAllAvailableSessions();
+
+      // Filter for user's registered sessions
+      const userRegisteredSessions = allAvailableSessions.filter(s =>
+        s.registeredUsers?.some(r => r.userId === user.id)
+      );
+
+      // Filter for upcoming sessions only (scheduled, lobby, active)
+      const upcomingSessions = userRegisteredSessions.filter(s =>
+        s.status === 'scheduled' || s.status === 'lobby' || s.status === 'active'
+      );
+
+      // Sort by scheduled start time
+      upcomingSessions.sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
+
+      setRegisteredSessions(upcomingSessions);
+
+      // Get the next scheduled session (for all users, not just registered)
+      const allUpcoming = allAvailableSessions
+        .filter(s => s.status === 'scheduled' || s.status === 'lobby')
+        .sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
+
+      setNextSession(allUpcoming[0] || null);
+
+      // Mark loading as complete
+      setIsLoading(false);
     };
 
     loadDashboardData();
