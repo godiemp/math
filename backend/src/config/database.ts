@@ -701,6 +701,28 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_context_problem ON question_attempts(context_problem_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_abstract_problem ON question_attempts(abstract_problem_id)');
 
+    // Create paes_predictions table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS paes_predictions (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        system_prediction INTEGER NOT NULL,
+        confidence_range INTEGER NOT NULL,
+        user_prediction INTEGER,
+        factors JSONB,
+        calculated_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL,
+        CHECK (system_prediction >= 500 AND system_prediction <= 850),
+        CHECK (user_prediction IS NULL OR (user_prediction >= 500 AND user_prediction <= 850)),
+        CHECK (confidence_range >= 0 AND confidence_range <= 100)
+      )
+    `);
+
+    // Create indexes for paes_predictions
+    await client.query('CREATE INDEX IF NOT EXISTS idx_paes_predictions_user ON paes_predictions(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_paes_predictions_calculated_at ON paes_predictions(calculated_at)');
+    await client.query('CREATE UNIQUE INDEX IF NOT EXISTS idx_paes_predictions_user_unique ON paes_predictions(user_id)');
+
     // Create views - Drop first to allow structure changes (e.g., adding subsection to GROUP BY)
     await client.query('DROP VIEW IF EXISTS active_problems_view CASCADE');
     await client.query('DROP VIEW IF EXISTS problem_stats_by_unit CASCADE');
