@@ -10,20 +10,17 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isAdmin: boolean;
   isPaidUser: boolean;
-  isVerifying: boolean;
+  isLoading: boolean;
   refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // Initialize with cached user immediately (no loading state)
-  const [user, setUser] = useState<User | null>(() => getCachedUser());
-  // Track if we're verifying the cached user with backend
-  const [isVerifying, setIsVerifying] = useState<boolean>(() => {
-    // Only set to true if there's a cached user to verify
-    return getCachedUser() !== null;
-  });
+  // Initialize with null to avoid hydration mismatch
+  // User will be loaded from cache in useEffect (client-side only)
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const refreshUser = async () => {
     const fetchedUser = await fetchCurrentUser();
@@ -31,6 +28,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    // Load cached user immediately on client-side
+    const cachedUser = getCachedUser();
+    if (cachedUser) {
+      setUser(cachedUser);
+      setIsLoading(false); // Stop loading once we have cached user
+    }
+
     // Verify user with backend in the background
     const initAuth = async () => {
       const cachedUser = getCachedUser();
@@ -44,12 +48,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // Token was invalid, clear cached user
           setUser(null);
         }
-        // Mark verification as complete
-        setIsVerifying(false);
-      } else {
-        // No cached user, no need to verify
-        setIsVerifying(false);
       }
+
+      // Done checking auth
+      setIsLoading(false);
     };
 
     initAuth();
@@ -67,7 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated: !!user,
     isAdmin: user?.role === 'admin',
     isPaidUser,
-    isVerifying,
+    isLoading,
     refreshUser,
   };
 

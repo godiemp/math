@@ -15,47 +15,51 @@ import { ShareModal } from "@/components/ShareModal";
 import { Share2 } from "lucide-react";
 
 function DashboardContent() {
-  const { user, setUser, isAdmin, isPaidUser } = useAuth();
+  const { user, setUser, isAdmin, isPaidUser, isLoading: authLoading } = useAuth();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
   const [nextSession, setNextSession] = useState<LiveSession | null>(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   useEffect(() => {
     const loadDashboardData = async () => {
-      if (user) {
-        // Update session statuses
-        await updateSessionStatuses();
-
-        // Get all available sessions from API
-        const allAvailableSessions = await getAllAvailableSessions();
-
-        // Filter for user's registered sessions
-        const userRegisteredSessions = allAvailableSessions.filter(s =>
-          s.registeredUsers?.some(r => r.userId === user.id)
-        );
-
-        // Filter for upcoming sessions only (scheduled, lobby, active)
-        const upcomingSessions = userRegisteredSessions.filter(s =>
-          s.status === 'scheduled' || s.status === 'lobby' || s.status === 'active'
-        );
-
-        // Sort by scheduled start time
-        upcomingSessions.sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
-
-        setRegisteredSessions(upcomingSessions);
-
-        // Get the next scheduled session (for all users, not just registered)
-        const allUpcoming = allAvailableSessions
-          .filter(s => s.status === 'scheduled' || s.status === 'lobby')
-          .sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
-
-        setNextSession(allUpcoming[0] || null);
-
-        // Mark loading as complete
-        setIsLoading(false);
+      if (!user) {
+        // No user yet, stop data loading
+        setIsLoadingData(false);
+        return;
       }
+
+      // Update session statuses
+      await updateSessionStatuses();
+
+      // Get all available sessions from API
+      const allAvailableSessions = await getAllAvailableSessions();
+
+      // Filter for user's registered sessions
+      const userRegisteredSessions = allAvailableSessions.filter(s =>
+        s.registeredUsers?.some(r => r.userId === user.id)
+      );
+
+      // Filter for upcoming sessions only (scheduled, lobby, active)
+      const upcomingSessions = userRegisteredSessions.filter(s =>
+        s.status === 'scheduled' || s.status === 'lobby' || s.status === 'active'
+      );
+
+      // Sort by scheduled start time
+      upcomingSessions.sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
+
+      setRegisteredSessions(upcomingSessions);
+
+      // Get the next scheduled session (for all users, not just registered)
+      const allUpcoming = allAvailableSessions
+        .filter(s => s.status === 'scheduled' || s.status === 'lobby')
+        .sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
+
+      setNextSession(allUpcoming[0] || null);
+
+      // Mark loading as complete
+      setIsLoadingData(false);
     };
 
     loadDashboardData();
@@ -91,8 +95,8 @@ function DashboardContent() {
     }
   };
 
-  // Show loading screen while data is being fetched
-  if (isLoading) {
+  // Show loading screen while auth or data is being loaded
+  if (authLoading || isLoadingData) {
     return <LoadingScreen message="Preparando tu panel..." />;
   }
 
@@ -459,7 +463,7 @@ function DashboardContent() {
           data={{
             title: '',
             message: `Ensayo PAES ${nextSession.level}\n${new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })} • ${new Date(nextSession.scheduledStartTime).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}\n\nVamos juntos 📝`,
-            url: typeof window !== 'undefined' ? `${window.location.origin}/live-practice` : '/live-practice',
+            url: '/live-practice',
             sessionName: nextSession.name,
             sessionLevel: nextSession.level,
             sessionDate: new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', {

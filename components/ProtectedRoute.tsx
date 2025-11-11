@@ -34,15 +34,15 @@ const getLoadingMessage = (pathname: string): string => {
 const LOADING_THRESHOLD_MS = 200; // Only show loading if it takes longer than this
 
 export function ProtectedRoute({ children, requireAdmin = false, loadingMessage }: ProtectedRouteProps) {
-  const { user, isAuthenticated, isAdmin, isVerifying } = useAuth();
+  const { user, isAuthenticated, isAdmin, isLoading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [shouldShowLoading, setShouldShowLoading] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
-    // If still verifying, don't make any decisions yet
-    if (isVerifying) {
+    // Don't make auth decisions while auth is still loading
+    if (isLoading) {
       return;
     }
 
@@ -68,14 +68,14 @@ export function ProtectedRoute({ children, requireAdmin = false, loadingMessage 
 
     // If we're authenticated, cancel the loading timer
     return () => clearTimeout(loadingTimer);
-  }, [isAuthenticated, isAdmin, requireAdmin, router, isVerifying]);
+  }, [isLoading, isAuthenticated, isAdmin, requireAdmin, router]);
 
   // Get the appropriate message based on route or use custom message
   const currentLoadingMessage = loadingMessage || getLoadingMessage(pathname);
 
-  // While verifying cached user with backend, show nothing to prevent flash
-  if (isVerifying) {
-    return null;
+  // Show loading while auth is being checked
+  if (isLoading) {
+    return null; // Return null during initial auth check to avoid flash
   }
 
   // Show redirect message if redirecting due to lack of authentication
