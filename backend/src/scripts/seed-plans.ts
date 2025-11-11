@@ -116,7 +116,30 @@ async function seedPlans() {
   const client = await pool.connect();
 
   try {
-    console.log('🌱 Starting plan seeding...');
+    // Check if force seeding is enabled via environment variable
+    const forceSeed = process.env.FORCE_SEED_PLANS === 'true';
+
+    console.log('🌱 Checking if plan seeding is needed...');
+
+    // Quick check: if all plans exist and not forcing, skip seeding entirely
+    if (!forceSeed) {
+      const allPlansExist = await client.query(
+        'SELECT COUNT(*) as count FROM plans WHERE id = ANY($1)',
+        [plans.map(p => p.id)]
+      );
+
+      const existingCount = parseInt(allPlansExist.rows[0].count);
+      const totalPlans = plans.length;
+
+      if (existingCount === totalPlans) {
+        console.log(`✅ All ${totalPlans} plans already exist. Skipping seeding.`);
+        return;
+      }
+
+      console.log(`📊 Found ${existingCount}/${totalPlans} existing plans. Seeding missing plans...`);
+    } else {
+      console.log('⚠️  FORCE_SEED_PLANS=true detected. Running seed for all plans...');
+    }
 
     await client.query('BEGIN');
 
