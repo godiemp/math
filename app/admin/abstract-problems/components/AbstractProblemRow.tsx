@@ -8,6 +8,7 @@ interface AbstractProblemRowProps {
   onActivate: (id: string) => void;
   onDelete: (id: string) => void;
   onRefresh: () => void;
+  compact?: boolean; // Hide level and subject columns when true
 }
 
 export default function AbstractProblemRow({
@@ -15,6 +16,7 @@ export default function AbstractProblemRow({
   onActivate,
   onDelete,
   onRefresh,
+  compact = false,
 }: AbstractProblemRowProps) {
   const [showMenu, setShowMenu] = useState(false);
   const router = useRouter();
@@ -34,23 +36,27 @@ export default function AbstractProblemRow({
 
   return (
     <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-      <td className="px-6 py-4">
+      <td className={compact ? "px-10 py-3" : "px-6 py-4"}>
         <div className="text-sm text-gray-900 dark:text-white font-medium line-clamp-2">
           {problem.essence}
         </div>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap">
-        <span className="text-sm font-mono text-gray-900 dark:text-white">{problem.level}</span>
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap">
-        <span className="text-sm text-gray-700 dark:text-gray-300">{problem.subject}</span>
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap">
+      {!compact && (
+        <>
+          <td className="px-6 py-4 whitespace-nowrap">
+            <span className="text-sm font-mono text-gray-900 dark:text-white">{problem.level}</span>
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap">
+            <span className="text-sm text-gray-700 dark:text-gray-300">{problem.subject}</span>
+          </td>
+        </>
+      )}
+      <td className={compact ? "px-4 py-3 whitespace-nowrap" : "px-6 py-4 whitespace-nowrap"}>
         <span className={`text-sm font-medium ${difficultyColors[problem.difficulty as keyof typeof difficultyColors]}`}>
           {problem.difficulty[0].toUpperCase()}
         </span>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap">
+      <td className={compact ? "px-4 py-3 whitespace-nowrap" : "px-6 py-4 whitespace-nowrap"}>
         <span
           className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
             statusColors[problem.status as keyof typeof statusColors]
@@ -59,7 +65,7 @@ export default function AbstractProblemRow({
           {problem.status}
         </span>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-right text-sm relative">
+      <td className={compact ? "px-4 py-3 whitespace-nowrap text-right text-sm relative" : "px-6 py-4 whitespace-nowrap text-right text-sm relative"}>
         <button
           onClick={() => setShowMenu(!showMenu)}
           className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"

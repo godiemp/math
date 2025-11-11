@@ -12,24 +12,46 @@ interface AbstractProblem {
   level: string;
   subject: string;
   unit: string;
+  subsection?: string;
   difficulty: string;
   status: string;
   cognitive_level: string;
   primary_skills: string[];
 }
 
+interface Subsection {
+  subsection: string;
+  problem_count: number;
+  problems: AbstractProblem[];
+}
+
+interface UnitGroup {
+  unit: string;
+  level: string;
+  subject: string;
+  total_problems: number;
+  subsections: Subsection[];
+  problems_without_subsection: AbstractProblem[];
+}
+
+interface GroupedResponse {
+  success: boolean;
+  total_units: number;
+  total_problems: number;
+  units: UnitGroup[];
+}
+
 export default function AbstractProblemsTab() {
-  const [problems, setProblems] = useState<AbstractProblem[]>([]);
+  const [groupedData, setGroupedData] = useState<UnitGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [showGenerateModal, setShowGenerateModal] = useState(false);
+  const [expandedUnits, setExpandedUnits] = useState<Set<string>>(new Set());
+  const [expandedSubsections, setExpandedSubsections] = useState<Set<string>>(new Set());
   const [filters, setFilters] = useState({
     level: 'all',
     subject: 'all',
     status: 'all',
-    difficulty: 'all',
   });
-  const [page, setPage] = useState(1);
-  const itemsPerPage = 25;
 
   useEffect(() => {
     fetchProblems();
@@ -43,12 +65,12 @@ export default function AbstractProblemsTab() {
       if (filters.level !== 'all') params.append('level', filters.level);
       if (filters.subject !== 'all') params.append('subject', filters.subject);
       if (filters.status !== 'all') params.append('status', filters.status);
-      if (filters.difficulty !== 'all') params.append('difficulty', filters.difficulty);
 
-      const res = await api.get(`/api/abstract-problems?${params}`);
+      const res = await api.get(`/api/abstract-problems/grouped?${params}`);
 
       if (res.data) {
-        setProblems((res.data as any).problems || []);
+        const data = res.data as GroupedResponse;
+        setGroupedData(data.units || []);
       }
     } catch (error) {
       console.error('Error fetching problems:', error);
@@ -92,8 +114,44 @@ export default function AbstractProblemsTab() {
     }
   };
 
-  const paginatedProblems = problems.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-  const totalPages = Math.ceil(problems.length / itemsPerPage);
+  const toggleUnit = (unitKey: string) => {
+    const newExpanded = new Set(expandedUnits);
+    if (newExpanded.has(unitKey)) {
+      newExpanded.delete(unitKey);
+    } else {
+      newExpanded.add(unitKey);
+    }
+    setExpandedUnits(newExpanded);
+  };
+
+  const toggleSubsection = (subsectionKey: string) => {
+    const newExpanded = new Set(expandedSubsections);
+    if (newExpanded.has(subsectionKey)) {
+      newExpanded.delete(subsectionKey);
+    } else {
+      newExpanded.add(subsectionKey);
+    }
+    setExpandedSubsections(newExpanded);
+  };
+
+  const expandAll = () => {
+    const allUnits = new Set(groupedData.map((_, i) => `unit-${i}`));
+    const allSubsections = new Set<string>();
+    groupedData.forEach((unit, unitIdx) => {
+      unit.subsections.forEach((_, subIdx) => {
+        allSubsections.add(`${unitIdx}-${subIdx}`);
+      });
+    });
+    setExpandedUnits(allUnits);
+    setExpandedSubsections(allSubsections);
+  };
+
+  const collapseAll = () => {
+    setExpandedUnits(new Set());
+    setExpandedSubsections(new Set());
+  };
+
+  const totalProblems = groupedData.reduce((sum, unit) => sum + unit.total_problems, 0);
 
   return (
     <div className="space-y-4">
@@ -132,17 +190,19 @@ export default function AbstractProblemsTab() {
           <option value="deprecated">Deprecated</option>
         </select>
 
-        <select
-          value={filters.difficulty}
-          onChange={(e) => setFilters({ ...filters, difficulty: e.target.value })}
-          className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+        <button
+          onClick={expandAll}
+          className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
         >
-          <option value="all">All Difficulties</option>
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-          <option value="extreme">Extreme</option>
-        </select>
+          Expand All
+        </button>
+
+        <button
+          onClick={collapseAll}
+          className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+        >
+          Collapse All
+        </button>
 
         <div className="flex-1"></div>
 
@@ -154,89 +214,172 @@ export default function AbstractProblemsTab() {
         </button>
       </div>
 
-      {/* Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Essence
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  L
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Subject
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Diff
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-              {loading ? (
-                <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                    Loading...
-                  </td>
-                </tr>
-              ) : paginatedProblems.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                    No problems found. Click "Generate New" to create some!
-                  </td>
-                </tr>
-              ) : (
-                paginatedProblems.map((problem) => (
-                  <AbstractProblemRow
-                    key={problem.id}
-                    problem={problem}
-                    onActivate={handleActivate}
-                    onDelete={handleDelete}
-                    onRefresh={fetchProblems}
-                  />
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+      {/* Stats */}
+      <div className="text-sm text-gray-600 dark:text-gray-400">
+        {totalProblems} problems across {groupedData.length} thematic units
       </div>
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between px-4">
-          <div className="text-sm text-gray-600 dark:text-gray-400">
-            Showing {(page - 1) * itemsPerPage + 1} to{' '}
-            {Math.min(page * itemsPerPage, problems.length)} of {problems.length} problems
+      {/* Grouped View */}
+      <div className="space-y-3">
+        {loading ? (
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-12 text-center text-gray-500">
+            Loading...
           </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setPage(Math.max(1, page - 1))}
-              disabled={page === 1}
-              className="px-3 py-1 rounded border border-gray-300 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-            >
-              ← Previous
-            </button>
-            <span className="px-3 py-1 text-sm text-gray-600 dark:text-gray-400">
-              Page {page} of {totalPages}
-            </span>
-            <button
-              onClick={() => setPage(Math.min(totalPages, page + 1))}
-              disabled={page === totalPages}
-              className="px-3 py-1 rounded border border-gray-300 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-            >
-              Next →
-            </button>
+        ) : groupedData.length === 0 ? (
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-12 text-center text-gray-500">
+            No problems found. Click "Generate New" to create some!
           </div>
-        </div>
-      )}
+        ) : (
+          groupedData.map((unit, unitIdx) => {
+            const unitKey = `unit-${unitIdx}`;
+            const isUnitExpanded = expandedUnits.has(unitKey);
+
+            return (
+              <div
+                key={unitKey}
+                className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
+              >
+                {/* Unit Header */}
+                <button
+                  onClick={() => toggleUnit(unitKey)}
+                  className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg">
+                      {isUnitExpanded ? '▼' : '▶'}
+                    </span>
+                    <div className="text-left">
+                      <div className="font-semibold text-gray-900 dark:text-white">
+                        {unit.unit}
+                      </div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {unit.level} • {unit.subject} • {unit.total_problems} problems
+                      </div>
+                    </div>
+                  </div>
+                </button>
+
+                {/* Unit Content */}
+                {isUnitExpanded && (
+                  <div className="border-t border-gray-200 dark:border-gray-700">
+                    {/* Subsections */}
+                    {unit.subsections.map((subsection, subIdx) => {
+                      const subsectionKey = `${unitIdx}-${subIdx}`;
+                      const isSubsectionExpanded = expandedSubsections.has(subsectionKey);
+
+                      return (
+                        <div key={subsectionKey} className="border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+                          {/* Subsection Header */}
+                          <button
+                            onClick={() => toggleSubsection(subsectionKey)}
+                            className="w-full px-8 py-3 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors bg-gray-50/50 dark:bg-gray-900/30"
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm">
+                                {isSubsectionExpanded ? '▼' : '▶'}
+                              </span>
+                              <div className="text-left">
+                                <div className="font-medium text-gray-800 dark:text-gray-200">
+                                  {subsection.subsection}
+                                </div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                  {subsection.problem_count} problems
+                                </div>
+                              </div>
+                            </div>
+                          </button>
+
+                          {/* Subsection Problems */}
+                          {isSubsectionExpanded && (
+                            <div className="overflow-x-auto">
+                              <table className="w-full">
+                                <thead className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
+                                  <tr>
+                                    <th className="px-10 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                      Essence
+                                    </th>
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                      Diff
+                                    </th>
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                      Status
+                                    </th>
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                      Actions
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                  {subsection.problems.map((problem) => (
+                                    <AbstractProblemRow
+                                      key={problem.id}
+                                      problem={problem}
+                                      onActivate={handleActivate}
+                                      onDelete={handleDelete}
+                                      onRefresh={fetchProblems}
+                                      compact={true}
+                                    />
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+
+                    {/* Problems without subsection */}
+                    {unit.problems_without_subsection.length > 0 && (
+                      <div className="border-t border-gray-200 dark:border-gray-700">
+                        <div className="px-8 py-3 bg-gray-50/50 dark:bg-gray-900/30">
+                          <div className="font-medium text-gray-800 dark:text-gray-200">
+                            Other Problems
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            {unit.problems_without_subsection.length} problems
+                          </div>
+                        </div>
+                        <div className="overflow-x-auto">
+                          <table className="w-full">
+                            <thead className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
+                              <tr>
+                                <th className="px-10 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                  Essence
+                                </th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                  Diff
+                                </th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                  Status
+                                </th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                  Actions
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                              {unit.problems_without_subsection.map((problem) => (
+                                <AbstractProblemRow
+                                  key={problem.id}
+                                  problem={problem}
+                                  onActivate={handleActivate}
+                                  onDelete={handleDelete}
+                                  onRefresh={fetchProblems}
+                                  compact={true}
+                                />
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
+      </div>
 
       {/* Generate Modal */}
       {showGenerateModal && (
