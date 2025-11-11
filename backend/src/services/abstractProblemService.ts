@@ -27,13 +27,13 @@ export async function createAbstractProblem(
 
   const query = `
     INSERT INTO abstract_problems (
-      essence, cognitive_level, level, subject, unit,
+      essence, cognitive_level, level, subject, unit, subsection,
       difficulty, difficulty_score, primary_skills, secondary_skills,
       generation_method, generated_by, generation_prompt,
       answer_type, expected_steps, common_errors,
       status, review_notes, created_at, updated_at
     ) VALUES (
-      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20
     ) RETURNING *
   `;
 
@@ -43,6 +43,7 @@ export async function createAbstractProblem(
     input.level,
     input.subject,
     input.unit,
+    input.subsection || null,
     input.difficulty,
     difficulty_score,
     input.primary_skills,
@@ -88,6 +89,7 @@ export async function listAbstractProblems(
     level,
     subject,
     unit,
+    subsection,
     difficulty,
     status,
     cognitive_level,
@@ -116,6 +118,11 @@ export async function listAbstractProblems(
   if (unit) {
     conditions.push(`unit = $${paramCount++}`);
     values.push(unit);
+  }
+
+  if (subsection) {
+    conditions.push(`subsection = $${paramCount++}`);
+    values.push(subsection);
   }
 
   if (difficulty) {
@@ -196,6 +203,11 @@ export async function updateAbstractProblem(
   if (input.unit !== undefined) {
     updates.push(`unit = $${paramCount++}`);
     values.push(input.unit);
+  }
+
+  if (input.subsection !== undefined) {
+    updates.push(`subsection = $${paramCount++}`);
+    values.push(input.subsection);
   }
 
   if (input.difficulty !== undefined) {
@@ -341,6 +353,7 @@ function mapRowToAbstractProblem(row: any): AbstractProblem {
     level: row.level,
     subject: row.subject,
     unit: row.unit,
+    subsection: row.subsection || undefined,
     difficulty: row.difficulty,
     difficulty_score: row.difficulty_score,
     primary_skills: row.primary_skills,

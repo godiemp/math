@@ -58,6 +58,7 @@ export const generateAbstractProblemsController = async (req: Request, res: Resp
       level,
       subject,
       unit,
+      subsection,
       difficulty,
       cognitive_level,
       primary_skills,
@@ -122,6 +123,7 @@ export const generateAbstractProblemsController = async (req: Request, res: Resp
       level,
       subject,
       unit,
+      subsection,
       difficulty,
       cognitive_level,
       primary_skills,
@@ -140,6 +142,7 @@ export const generateAbstractProblemsController = async (req: Request, res: Resp
             level,
             subject,
             unit,
+            subsection,
             difficulty,
             difficulty_score: genProb.suggested_difficulty_score,
             primary_skills,
@@ -234,6 +237,7 @@ export const listAbstractProblemsController = async (req: Request, res: Response
       level,
       subject,
       unit,
+      subsection,
       difficulty,
       status,
       cognitive_level,
@@ -250,6 +254,7 @@ export const listAbstractProblemsController = async (req: Request, res: Response
     if (level) filters.level = level;
     if (subject) filters.subject = subject;
     if (unit) filters.unit = unit;
+    if (subsection) filters.subsection = subsection;
     if (difficulty) filters.difficulty = difficulty;
     if (status) filters.status = status;
     if (cognitive_level) filters.cognitive_level = cognitive_level;
@@ -801,6 +806,124 @@ export const getCoverageStatsController = async (req: Request, res: Response) =>
     res.status(500).json({
       success: false,
       error: error.message || 'Failed to get coverage statistics',
+    });
+  }
+};
+
+/**
+ * Generate problems for a unit with subsections
+ * POST /api/abstract-problems/generate-by-subsections
+ */
+export const generateBySubsectionsController = async (req: Request, res: Response) => {
+  try {
+    const { unit_code, problem_counts } = req.body;
+
+    if (!unit_code) {
+      return res.status(400).json({
+        success: false,
+        error: 'unit_code is required',
+      });
+    }
+
+    // Get unit configuration
+    const unit = THEMATIC_UNITS.find(u => u.code === unit_code);
+    if (!unit) {
+      return res.status(404).json({
+        success: false,
+        error: 'Unit not found',
+      });
+    }
+
+    if (!unit.subsections || unit.subsections.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Unit does not have subsections defined',
+      });
+    }
+
+    const { generateSubsectionProblems } = await import('../services/abstractProblemGenerator');
+    const { formatSubsectionName } = await import('../config/thematic-units');
+
+    console.log(`\n🎯 Generating problems for unit: ${unit.name}`);
+    console.log(`📚 Subsections: ${unit.subsections.length}`);
+
+    const results = [];
+    let totalGenerated = 0;
+
+    for (const subsection of unit.subsections) {
+      console.log(`\n  Processing subsection: ${formatSubsectionName(subsection)}`);
+
+      try {
+        const result = await generateSubsectionProblems(
+          unit.level,
+          unit.subject,
+          unit.name,
+          subsection.code,
+          subsection.name,
+          subsection.primary_skills,
+          problem_counts || { easy: 3, medium: 3, hard: 2 }
+        );
+
+        // Save to database
+        const savedProblems = [];
+        for (const problem of result.problems) {
+          const input: CreateAbstractProblemInput = {
+            essence: problem.essence,
+            cognitive_level: 'apply' as CognitiveLevel,
+            level: unit.level,
+            subject: unit.subject,
+            unit: unit.name,
+            subsection: result.subsection,
+            difficulty: 'medium' as DifficultyLevel,
+            difficulty_score: problem.suggested_difficulty_score,
+            primary_skills: subsection.primary_skills,
+            generation_method: 'openai',
+            generated_by: (req as any).user?.id || 'system',
+            answer_type: problem.answer_type,
+            expected_steps: problem.expected_steps,
+            common_errors: problem.common_errors,
+            status: 'draft',
+          };
+
+          const saved = await createAbstractProblem(input);
+          savedProblems.push(saved);
+        }
+
+        results.push({
+          subsection: result.subsection,
+          generated: result.problems.length,
+          saved: savedProblems.length,
+        });
+
+        totalGenerated += result.problems.length;
+        console.log(`    ✓ Generated ${result.problems.length} problems`);
+      } catch (error: any) {
+        console.error(`    ❌ Failed: ${error.message}`);
+        results.push({
+          subsection: formatSubsectionName(subsection),
+          error: error.message,
+        });
+      }
+    }
+
+    console.log(`\n✅ Complete! Generated ${totalGenerated} problems across ${unit.subsections.length} subsections`);
+
+    res.json({
+      success: true,
+      unit: {
+        code: unit.code,
+        name: unit.name,
+        level: unit.level,
+        subject: unit.subject,
+      },
+      totalGenerated,
+      subsections: results,
+    });
+  } catch (error: any) {
+    console.error('Error generating by subsections:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to generate problems by subsections',
     });
   }
 };

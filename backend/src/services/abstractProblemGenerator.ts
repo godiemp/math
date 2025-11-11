@@ -97,6 +97,7 @@ export async function generateAbstractProblems(
     level,
     subject,
     unit,
+    subsection,
     difficulty,
     cognitive_level,
     primary_skills,
@@ -110,6 +111,7 @@ export async function generateAbstractProblems(
 - Level: ${level} (${level === 'M1' ? 'Basic/foundational' : 'Advanced for science/engineering careers'})
 - Subject: ${subject}
 - Unit: ${unit}
+${subsection ? `- Subsection: ${subsection}` : ''}
 - Difficulty: ${difficulty}
 - Cognitive Level: ${cognitive_level}
 - Primary Skills: ${primary_skills.join(', ')}
@@ -322,4 +324,94 @@ export async function generateNumerosM1Problems(): Promise<GenerateAbstractProbl
   ];
 
   return generateUnitProblems('M1', 'números', 'enteros-racionales', skillGroups, 10);
+}
+
+/**
+ * Generate problems for a specific subsection within a unit
+ */
+export async function generateSubsectionProblems(
+  level: 'M1' | 'M2',
+  subject: string,
+  unit: string,
+  subsectionCode: string,
+  subsectionName: string,
+  skills: string[],
+  problemCounts: {
+    easy?: number;
+    medium?: number;
+    hard?: number;
+    extreme?: number;
+  } = { easy: 3, medium: 3, hard: 2 }
+): Promise<{ subsection: string; problems: GenerateAbstractProblemResponse[] }> {
+  const allProblems: GenerateAbstractProblemResponse[] = [];
+  const subsectionLabel = `${subsectionCode}. ${subsectionName}`;
+
+  // Generate easy problems
+  if (problemCounts.easy && problemCounts.easy > 0) {
+    const easyProblems = await generateAbstractProblems({
+      level,
+      subject: subject as any,
+      unit,
+      subsection: subsectionLabel,
+      difficulty: 'easy',
+      cognitive_level: 'understand',
+      primary_skills: skills,
+      count: problemCounts.easy,
+    });
+    allProblems.push(...easyProblems);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+
+  // Generate medium problems
+  if (problemCounts.medium && problemCounts.medium > 0) {
+    const mediumProblems = await generateAbstractProblems({
+      level,
+      subject: subject as any,
+      unit,
+      subsection: subsectionLabel,
+      difficulty: 'medium',
+      cognitive_level: 'apply',
+      primary_skills: skills,
+      count: problemCounts.medium,
+    });
+    allProblems.push(...mediumProblems);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+
+  // Generate hard problems
+  if (problemCounts.hard && problemCounts.hard > 0) {
+    const hardProblems = await generateAbstractProblems({
+      level,
+      subject: subject as any,
+      unit,
+      subsection: subsectionLabel,
+      difficulty: 'hard',
+      cognitive_level: 'analyze',
+      primary_skills: skills,
+      count: problemCounts.hard,
+    });
+    allProblems.push(...hardProblems);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+
+  // Generate extreme problems
+  if (problemCounts.extreme && problemCounts.extreme > 0) {
+    const extremeProblems = await generateAbstractProblems({
+      level,
+      subject: subject as any,
+      unit,
+      subsection: subsectionLabel,
+      difficulty: 'extreme',
+      cognitive_level: 'evaluate',
+      primary_skills: skills,
+      count: problemCounts.extreme,
+    });
+    allProblems.push(...extremeProblems);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+
+  return {
+    subsection: subsectionLabel,
+    problems: allProblems,
+  };
 }

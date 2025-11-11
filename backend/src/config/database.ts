@@ -644,12 +644,27 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
+    // Migration: Add subsection column if it doesn't exist
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'abstract_problems' AND column_name = 'subsection'
+        ) THEN
+          ALTER TABLE abstract_problems
+          ADD COLUMN subsection VARCHAR(100);
+        END IF;
+      END $$;
+    `);
+
     // Abstract problems indexes
     await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_level ON abstract_problems(level)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_subject ON abstract_problems(subject)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_difficulty ON abstract_problems(difficulty)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_difficulty_score ON abstract_problems(difficulty_score)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_unit ON abstract_problems(unit)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_subsection ON abstract_problems(subsection)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_status ON abstract_problems(status)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_skills ON abstract_problems USING GIN(primary_skills)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_abstract_problems_cognitive_level ON abstract_problems(cognitive_level)');
@@ -695,6 +710,7 @@ export const initializeDatabase = async (): Promise<void> => {
         ap.level,
         ap.subject,
         ap.unit,
+        ap.subsection,
         ap.difficulty,
         ap.difficulty_score,
         ap.primary_skills,
@@ -718,6 +734,7 @@ export const initializeDatabase = async (): Promise<void> => {
         ap.level,
         ap.subject,
         ap.unit,
+        ap.subsection,
         ap.difficulty,
         COUNT(DISTINCT ap.id) as abstract_count,
         COUNT(cp.id) as context_count,
@@ -726,8 +743,8 @@ export const initializeDatabase = async (): Promise<void> => {
       FROM abstract_problems ap
       LEFT JOIN context_problems cp ON ap.id = cp.abstract_problem_id
       WHERE ap.status = 'active'
-      GROUP BY ap.level, ap.subject, ap.unit, ap.difficulty
-      ORDER BY ap.level, ap.subject, ap.unit, ap.difficulty
+      GROUP BY ap.level, ap.subject, ap.unit, ap.subsection, ap.difficulty
+      ORDER BY ap.level, ap.subject, ap.unit, ap.subsection, ap.difficulty
     `);
 
     await client.query('COMMIT');

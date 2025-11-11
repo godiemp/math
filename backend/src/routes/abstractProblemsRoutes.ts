@@ -6,6 +6,7 @@ import express from 'express';
 import {
   generateAbstractProblemsController,
   generateNumerosM1Controller,
+  generateBySubsectionsController,
   listAbstractProblemsController,
   getAbstractProblemController,
   updateAbstractProblemController,
@@ -45,6 +46,19 @@ router.post(
   authenticate,
   requireAdmin,
   generateNumerosM1Controller
+);
+
+/**
+ * POST /api/abstract-problems/generate-by-subsections
+ * Generate problems for a unit organized by subsections
+ * Body: { unit_code: string, problem_counts?: { easy?: number, medium?: number, hard?: number, extreme?: number } }
+ * Requires: Admin authentication
+ */
+router.post(
+  '/generate-by-subsections',
+  authenticate,
+  requireAdmin,
+  generateBySubsectionsController
 );
 
 /**
