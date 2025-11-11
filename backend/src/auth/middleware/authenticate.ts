@@ -42,20 +42,20 @@ export function authenticate(
   }
 
   try {
-    const authHeader = req.headers.authorization;
+    // SECURITY: Read token from HttpOnly cookie instead of Authorization header
+    const token = req.cookies.accessToken;
 
-    console.log('🔐 Auth middleware - Authorization header:', authHeader ? 'present' : 'missing');
-    console.log('🔐 Auth middleware - Full headers:', JSON.stringify(req.headers, null, 2));
+    console.log('🔐 Auth middleware - Access token cookie:', token ? 'present' : 'missing');
+    console.log('🔐 Auth middleware - Cookies:', Object.keys(req.cookies));
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
       console.log('❌ Auth failed: No token provided');
       console.log('   Sending 401 response...');
       res.status(401).json({ error: 'No token provided' });
       return;
     }
 
-    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
-    console.log('🔑 Token extracted, length:', token.length);
+    console.log('🔑 Token extracted from cookie, length:', token.length);
 
     const payload = verifyAccessToken(token);
 

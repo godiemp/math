@@ -132,6 +132,7 @@ async function refreshAccessToken(): Promise<string | null> {
 
 /**
  * Make an authenticated API request
+ * SECURITY: Authentication now uses HttpOnly cookies instead of Authorization header
  */
 export async function apiRequest<T>(
   endpoint: string,
@@ -139,9 +140,6 @@ export async function apiRequest<T>(
 ): Promise<ApiResponse<T>> {
   const backendUrl = await getApiUrl();
   const url = `${backendUrl}${endpoint}`;
-
-  // Add access token to headers if available
-  let accessToken = getToken();
 
   // Don't set Content-Type for FormData - browser will set it with boundary
   const isFormData = options.body instanceof FormData;
@@ -155,34 +153,31 @@ export async function apiRequest<T>(
     headers['Content-Type'] = 'application/json';
   }
 
-  if (accessToken) {
-    headers['Authorization'] = `Bearer ${accessToken}`;
-  }
-
   console.log('🌐 API Request:', {
     url,
     method: options.method || 'GET',
-    hasAccessToken: !!accessToken,
     isFormData,
     headers: Object.keys(headers),
+    credentials: 'include', // Using cookies for auth
   });
 
   try {
     let response = await fetch(url, {
       ...options,
       headers,
+      credentials: 'include', // SECURITY: Send HttpOnly cookies with every request
     });
 
-    // If unauthorized and we have a refresh token, try to refresh
-    if (response.status === 401 && getRefresh()) {
-      const newAccessToken = await refreshAccessToken();
+    // If unauthorized, try to refresh the token
+    if (response.status === 401) {
+      const refreshSuccess = await refreshAccessToken();
 
-      if (newAccessToken) {
-        // Retry the request with the new token
-        headers['Authorization'] = `Bearer ${newAccessToken}`;
+      if (refreshSuccess) {
+        // Retry the request - new access token cookie is automatically sent
         response = await fetch(url, {
           ...options,
           headers,
+          credentials: 'include',
         });
       } else {
         // Refresh failed, user needs to login again

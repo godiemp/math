@@ -66,13 +66,16 @@ export interface RefreshToken {
  */
 
 /**
- * Authentication response with user and tokens
+ * Authentication response with user data
+ * SECURITY UPDATE: Tokens are no longer in response (stored as HttpOnly cookies)
  * Returned on successful login or registration
  */
 export interface AuthResponse {
   user: User;
-  accessToken: string;
-  refreshToken: string;
+  message?: string;
+  // DEPRECATED: Tokens are now HttpOnly cookies, not in response body
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 /**

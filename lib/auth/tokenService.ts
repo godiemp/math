@@ -3,13 +3,13 @@
  * TOKEN SERVICE
  * ============================================================================
  *
- * Handles all token-related operations:
- * - Token storage and retrieval
- * - Token refresh
- * - Token validation
+ * SECURITY UPDATE: Tokens are now stored in HttpOnly cookies (backend-managed)
+ * instead of localStorage to prevent XSS attacks.
+ *
+ * This service now provides compatibility functions that work with cookie-based auth.
  */
 
-import { STORAGE_KEYS, AUTH_ENDPOINTS } from './constants';
+import { AUTH_ENDPOINTS } from './constants';
 
 /**
  * Check if code is running in browser
@@ -19,86 +19,81 @@ function isBrowser(): boolean {
 }
 
 /**
- * Get stored access token
+ * SECURITY: Tokens are stored in HttpOnly cookies and cannot be accessed by JavaScript.
+ * This function exists for backward compatibility but always returns null.
+ * Use API requests with credentials: 'include' instead.
  */
 export function getAccessToken(): string | null {
-  if (!isBrowser()) return null;
-  return localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+  // Tokens are in HttpOnly cookies - not accessible from JavaScript
+  return null;
 }
 
 /**
- * Get stored refresh token
+ * SECURITY: Tokens are stored in HttpOnly cookies and cannot be accessed by JavaScript.
+ * This function exists for backward compatibility but always returns null.
  */
 export function getRefreshToken(): string | null {
-  if (!isBrowser()) return null;
-  return localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+  // Tokens are in HttpOnly cookies - not accessible from JavaScript
+  return null;
 }
 
 /**
- * Store authentication tokens
+ * SECURITY: Tokens are automatically set as HttpOnly cookies by the backend.
+ * This function exists for backward compatibility but does nothing.
  */
 export function setTokens(accessToken: string, refreshToken: string): void {
-  if (!isBrowser()) return;
-  localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
-  localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
+  // Tokens are managed as HttpOnly cookies by the backend
+  // No action needed on frontend
+  console.log('Tokens are now stored in HttpOnly cookies (managed by backend)');
 }
 
 /**
- * Clear stored tokens
+ * SECURITY: Tokens are automatically cleared by calling the logout endpoint.
+ * This function exists for backward compatibility but does nothing.
  */
 export function clearTokens(): void {
-  if (!isBrowser()) return;
-  localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-  localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+  // Tokens are cleared by the backend logout endpoint
+  // No action needed on frontend
+  console.log('Tokens will be cleared by backend logout endpoint');
 }
 
 /**
- * Check if user has valid tokens
+ * Check if user appears to be authenticated
+ * SECURITY: Since we can't access HttpOnly cookies, we rely on API responses
  */
 export function hasValidTokens(): boolean {
-  return getAccessToken() !== null && getRefreshToken() !== null;
+  // We can't check HttpOnly cookies from JavaScript
+  // Authentication status should be determined by API responses
+  return false; // Frontend should check auth status via /api/auth/me endpoint
 }
 
 /**
  * Refresh the access token using the refresh token
- * This function is used internally by the API client
+ * SECURITY: Tokens are now in HttpOnly cookies, automatically sent by browser
  *
  * @param backendUrl - The backend API URL
- * @returns New access token or null if refresh failed
+ * @returns True if refresh succeeded, false otherwise
  */
 export async function refreshAccessToken(backendUrl: string): Promise<string | null> {
-  const refreshToken = getRefreshToken();
-  if (!refreshToken) return null;
-
   try {
     const response = await fetch(`${backendUrl}${AUTH_ENDPOINTS.REFRESH}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ refreshToken }),
+      credentials: 'include', // SECURITY: Send HttpOnly cookies
     });
 
     if (!response.ok) {
       // Refresh token is invalid or expired
-      clearTokens();
       return null;
     }
 
-    const data = await response.json();
-
-    // Update stored access token
-    if (data.accessToken) {
-      if (isBrowser()) {
-        localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.accessToken);
-      }
-      return data.accessToken;
-    }
-
-    return null;
+    // Backend sets new access token as HttpOnly cookie
+    // Return a dummy value to indicate success
+    return 'cookie-based-auth';
   } catch (error) {
     console.error('Token refresh failed:', error);
-    clearTokens();
     return null;
   }
 }

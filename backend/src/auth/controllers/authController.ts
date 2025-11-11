@@ -6,7 +6,7 @@
  * HTTP handlers for authentication endpoints
  */
 
-import { Request, Response } from 'express';
+import { Request, Response, CookieOptions } from 'express';
 import {
   registerUser as registerUserService,
   loginUser as loginUserService,
@@ -18,13 +18,45 @@ import { RegisterRequest, LoginRequest, RefreshTokenRequest } from '../types';
 import { SubscriptionService } from '../../services/subscriptionService';
 
 /**
+ * SECURITY: Cookie options for JWT tokens
+ * - httpOnly: Prevents JavaScript access (XSS protection)
+ * - secure: Only sent over HTTPS in production
+ * - sameSite: CSRF protection
+ * - path: Cookie scope
+ */
+const getAccessTokenCookieOptions = (): CookieOptions => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'strict',
+  maxAge: 60 * 60 * 1000, // 1 hour
+  path: '/',
+});
+
+const getRefreshTokenCookieOptions = (): CookieOptions => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'strict',
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  path: '/',
+});
+
+/**
  * Register a new user
  */
 export async function register(req: Request, res: Response): Promise<void> {
   try {
     const data = req.body as RegisterRequest;
     const result = await registerUserService(data);
-    res.status(201).json(result);
+
+    // SECURITY: Set tokens as HttpOnly cookies instead of returning in response
+    res.cookie('accessToken', result.accessToken, getAccessTokenCookieOptions());
+    res.cookie('refreshToken', result.refreshToken, getRefreshTokenCookieOptions());
+
+    // Return user data without tokens (tokens are in cookies now)
+    res.status(201).json({
+      user: result.user,
+      message: 'Registration successful',
+    });
   } catch (error) {
     console.error('Register error:', error);
     const message = error instanceof Error ? error.message : 'Registration failed';
@@ -53,12 +85,17 @@ export async function login(req: Request, res: Response): Promise<void> {
       ? await SubscriptionService.getUserSubscription(result.user.id)
       : null;
 
+    // SECURITY: Set tokens as HttpOnly cookies instead of returning in response
+    res.cookie('accessToken', result.accessToken, getAccessTokenCookieOptions());
+    res.cookie('refreshToken', result.refreshToken, getRefreshTokenCookieOptions());
+
+    // Return user data without tokens (tokens are in cookies now)
     res.json({
-      ...result,
       user: {
         ...result.user,
         subscription,
       },
+      message: 'Login successful',
     });
   } catch (error) {
     console.error('Login error:', error);
@@ -78,9 +115,20 @@ export async function login(req: Request, res: Response): Promise<void> {
  */
 export async function refresh(req: Request, res: Response): Promise<void> {
   try {
-    const { refreshToken } = req.body as RefreshTokenRequest;
+    // SECURITY: Get refresh token from cookie instead of request body
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      res.status(401).json({ error: 'No refresh token provided' });
+      return;
+    }
+
     const result = await refreshAccessToken(refreshToken);
-    res.json(result);
+
+    // SECURITY: Set new access token as HttpOnly cookie
+    res.cookie('accessToken', result.accessToken, getAccessTokenCookieOptions());
+
+    res.json({ message: 'Token refreshed successfully' });
   } catch (error) {
     console.error('Refresh token error:', error);
     res.status(401).json({ error: 'Invalid refresh token' });
@@ -92,18 +140,26 @@ export async function refresh(req: Request, res: Response): Promise<void> {
  */
 export async function logout(req: Request, res: Response): Promise<void> {
   try {
-    const { refreshToken } = req.body as RefreshTokenRequest;
-    await logoutUserService(refreshToken);
+    // SECURITY: Get refresh token from cookie instead of request body
+    const refreshToken = req.cookies.refreshToken;
+
+    if (refreshToken) {
+      await logoutUserService(refreshToken);
+    }
+
+    // SECURITY: Clear authentication cookies
+    res.clearCookie('accessToken', { path: '/' });
+    res.clearCookie('refreshToken', { path: '/' });
+
     res.json({ message: 'Logged out successfully' });
   } catch (error) {
     console.error('Logout error:', error);
-    const message = error instanceof Error ? error.message : 'Logout failed';
 
-    if (message.includes('required')) {
-      res.status(400).json({ error: message });
-    } else {
-      res.status(500).json({ error: 'Logout failed' });
-    }
+    // Still clear cookies even if logout fails
+    res.clearCookie('accessToken', { path: '/' });
+    res.clearCookie('refreshToken', { path: '/' });
+
+    res.status(500).json({ error: 'Logout failed' });
   }
 }
 
