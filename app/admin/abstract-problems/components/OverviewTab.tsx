@@ -31,6 +31,21 @@ interface SeedOptions {
   dryRun: boolean;
 }
 
+interface ProgressStatus {
+  message: string;
+  detail?: string;
+  timestamp: Date;
+}
+
+interface ActivityLog {
+  id: string;
+  type: 'seed' | 'activate' | 'info';
+  message: string;
+  timestamp: Date;
+  status: 'success' | 'error' | 'running';
+  details?: any;
+}
+
 export default function OverviewTab() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -43,10 +58,53 @@ export default function OverviewTab() {
   });
   const [seedResult, setSeedResult] = useState<any>(null);
   const [activating, setActivating] = useState(false);
+  const [progressStatus, setProgressStatus] = useState<ProgressStatus | null>(null);
+  const [activityLog, setActivityLog] = useState<ActivityLog[]>([]);
+  const [startTime, setStartTime] = useState<Date | null>(null);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   useEffect(() => {
     fetchStats();
   }, []);
+
+  // Timer for elapsed time
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (startTime) {
+      interval = setInterval(() => {
+        setElapsedSeconds(Math.floor((new Date().getTime() - startTime.getTime()) / 1000));
+      }, 1000);
+    } else {
+      setElapsedSeconds(0);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [startTime]);
+
+  const addActivityLog = (log: Omit<ActivityLog, 'id' | 'timestamp'>) => {
+    const newLog: ActivityLog = {
+      ...log,
+      id: Date.now().toString(),
+      timestamp: new Date(),
+    };
+    setActivityLog((prev) => [newLog, ...prev].slice(0, 10)); // Keep last 10 logs
+  };
+
+  const updateProgressStatus = (message: string, detail?: string) => {
+    setProgressStatus({
+      message,
+      detail,
+      timestamp: new Date(),
+    });
+  };
+
+  const formatElapsedTime = (seconds: number): string => {
+    if (seconds < 60) return `${seconds}s`;
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}m ${remainingSeconds}s`;
+  };
 
   const fetchStats = async () => {
     try {
@@ -113,6 +171,28 @@ export default function OverviewTab() {
   const handleSeed = async () => {
     setSeeding(true);
     setSeedResult(null);
+    setStartTime(new Date());
+    setProgressStatus(null);
+
+    const filterDesc = [
+      seedOptions.level && `Level: ${seedOptions.level}`,
+      seedOptions.subject && `Subject: ${seedOptions.subject}`,
+      seedOptions.limit && `Limit: ${seedOptions.limit} units`,
+    ]
+      .filter(Boolean)
+      .join(', ') || 'All units';
+
+    addActivityLog({
+      type: 'seed',
+      message: `Started ${seedOptions.dryRun ? 'dry run' : 'seeding'} (${filterDesc})`,
+      status: 'running',
+    });
+
+    updateProgressStatus(
+      `Initializing ${seedOptions.dryRun ? 'dry run' : 'seeding'}...`,
+      filterDesc
+    );
+
     try {
       const payload: any = {
         dryRun: seedOptions.dryRun,
@@ -121,18 +201,48 @@ export default function OverviewTab() {
       if (seedOptions.subject) payload.subject = seedOptions.subject;
       if (seedOptions.limit) payload.limit = parseInt(seedOptions.limit.toString());
 
+      updateProgressStatus('Sending request to server...', 'Please wait...');
+
       const res = await api.post('/api/abstract-problems/seed', payload);
       setSeedResult(res.data);
 
+      const resultData = res.data as any;
+      if (resultData.success) {
+        addActivityLog({
+          type: 'seed',
+          message: `${seedOptions.dryRun ? 'Dry run' : 'Seeding'} completed successfully`,
+          status: 'success',
+          details: resultData,
+        });
+      } else {
+        addActivityLog({
+          type: 'seed',
+          message: `${seedOptions.dryRun ? 'Dry run' : 'Seeding'} failed`,
+          status: 'error',
+        });
+      }
+
       // Refresh stats after seeding (if not dry run)
       if (!seedOptions.dryRun) {
+        updateProgressStatus('Refreshing statistics...', 'Almost done');
         await fetchStats();
       }
+
+      updateProgressStatus('Operation completed', '');
     } catch (error: any) {
       console.error('Error seeding:', error);
-      setSeedResult({ success: false, error: error.response?.data?.error || error.message });
+      const errorMsg = error.response?.data?.error || error.message;
+      setSeedResult({ success: false, error: errorMsg });
+      addActivityLog({
+        type: 'seed',
+        message: `Seeding failed: ${errorMsg}`,
+        status: 'error',
+      });
+      updateProgressStatus('Operation failed', errorMsg);
     } finally {
       setSeeding(false);
+      setStartTime(null);
+      setTimeout(() => setProgressStatus(null), 5000); // Clear progress after 5 seconds
     }
   };
 
@@ -142,15 +252,48 @@ export default function OverviewTab() {
     }
 
     setActivating(true);
+    setStartTime(new Date());
+
+    const draftCount = stats?.abstract.draft || 0;
+    addActivityLog({
+      type: 'activate',
+      message: `Activating ${draftCount} draft problems...`,
+      status: 'running',
+    });
+
+    updateProgressStatus('Activating draft problems...', `Processing ${draftCount} problems`);
+
     try {
       const res = await api.post('/api/abstract-problems/activate-all');
-      alert((res.data as { message: string }).message);
+      const message = (res.data as { message: string }).message;
+
+      addActivityLog({
+        type: 'activate',
+        message: `Activation completed: ${message}`,
+        status: 'success',
+      });
+
+      updateProgressStatus('Refreshing statistics...', 'Almost done');
       await fetchStats();
+
+      updateProgressStatus('Activation completed', message);
+      setTimeout(() => alert(message), 100);
     } catch (error: any) {
       console.error('Error activating:', error);
-      alert('Failed to activate: ' + (error.response?.data?.error || error.message));
+      const errorMsg = error.response?.data?.error || error.message;
+
+      addActivityLog({
+        type: 'activate',
+        message: `Activation failed: ${errorMsg}`,
+        status: 'error',
+      });
+
+      updateProgressStatus('Operation failed', errorMsg);
+      alert('Failed to activate: ' + errorMsg);
     } finally {
       setActivating(false);
+      setStartTime(null);
+      setTimeout(() => setProgressStatus(null), 5000);
     }
   };
 
@@ -258,24 +401,49 @@ export default function OverviewTab() {
           )}
         </div>
 
+        {/* Progress Indicator */}
+        {progressStatus && (seeding || activating) && (
+          <div className="mt-4 p-4 rounded-md bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-3">
+                <div className="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+                <h4 className="font-semibold text-gray-900 dark:text-white">
+                  {progressStatus.message}
+                </h4>
+              </div>
+              {startTime && (
+                <span className="text-sm font-mono text-blue-600 dark:text-blue-400">
+                  {formatElapsedTime(elapsedSeconds)}
+                </span>
+              )}
+            </div>
+            {progressStatus.detail && (
+              <p className="text-sm text-gray-600 dark:text-gray-400 ml-8">
+                {progressStatus.detail}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Seed Result */}
         {seedResult && (
           <div className={`mt-4 p-4 rounded-md ${seedResult.success ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' : 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800'}`}>
             <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
               {seedResult.success ? (seedResult.dryRun ? 'Plan Preview' : 'Seeding Complete') : 'Error'}
             </h4>
             {seedResult.success && seedResult.dryRun && seedResult.plan && (
-              <div className="text-sm text-gray-700 dark:text-gray-300">
-                <p>Units to process: {seedResult.plan.units}</p>
-                <p>Total problems to generate: {seedResult.plan.totalProblems}</p>
+              <div className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
+                <p><span className="font-medium">Units to process:</span> {seedResult.plan.units}</p>
+                <p><span className="font-medium">Total problems to generate:</span> {seedResult.plan.totalProblems}</p>
               </div>
             )}
             {seedResult.success && !seedResult.dryRun && seedResult.results && (
-              <div className="text-sm text-gray-700 dark:text-gray-300">
-                <p>Units processed: {seedResult.results.unitsProcessed}</p>
-                <p>Problems created: {seedResult.results.problemsCreated}</p>
-                <p>Problems failed: {seedResult.results.problemsFailed}</p>
-                <p>Success rate: {seedResult.results.successRate}</p>
-                <p>Duration: {seedResult.results.durationMinutes} minutes</p>
+              <div className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
+                <p><span className="font-medium">Units processed:</span> {seedResult.results.unitsProcessed}</p>
+                <p><span className="font-medium">Problems created:</span> {seedResult.results.problemsCreated}</p>
+                <p><span className="font-medium">Problems failed:</span> {seedResult.results.problemsFailed}</p>
+                <p><span className="font-medium">Success rate:</span> {seedResult.results.successRate}</p>
+                <p><span className="font-medium">Duration:</span> {seedResult.results.durationMinutes} minutes</p>
               </div>
             )}
             {!seedResult.success && (
@@ -284,6 +452,56 @@ export default function OverviewTab() {
           </div>
         )}
       </div>
+
+      {/* Activity Log */}
+      {activityLog.length > 0 && (
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            Recent Activity
+          </h3>
+          <div className="space-y-3">
+            {activityLog.map((log) => (
+              <div
+                key={log.id}
+                className="flex items-start gap-3 p-3 rounded-md bg-gray-50 dark:bg-gray-700/50"
+              >
+                <div className="flex-shrink-0 mt-0.5">
+                  {log.status === 'running' && (
+                    <div className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+                  )}
+                  {log.status === 'success' && (
+                    <div className="h-4 w-4 rounded-full bg-green-500 flex items-center justify-center">
+                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  )}
+                  {log.status === 'error' && (
+                    <div className="h-4 w-4 rounded-full bg-red-500 flex items-center justify-center">
+                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      {log.message}
+                    </p>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                      {log.timestamp.toLocaleTimeString()}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                    {log.type === 'seed' ? 'Bulk Seeding' : log.type === 'activate' ? 'Activation' : 'Info'}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Abstract Problems Stats */}
       <div>
