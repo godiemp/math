@@ -15,9 +15,9 @@ import { ShareModal } from "@/components/ShareModal";
 import { Share2 } from "lucide-react";
 
 function DashboardContent() {
-  const { user, setUser, isAdmin, isPaidUser } = useAuth();
+  const { user, setUser, isAdmin, isPaidUser, isLoading: authLoading } = useAuth();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
   const [nextSession, setNextSession] = useState<LiveSession | null>(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
@@ -25,9 +25,8 @@ function DashboardContent() {
   useEffect(() => {
     const loadDashboardData = async () => {
       if (!user) {
-        // No user yet (still loading from auth), or user is not authenticated
-        // ProtectedRoute will handle redirect if needed
-        setIsLoading(false);
+        // No user yet, stop data loading
+        setIsLoadingData(false);
         return;
       }
 
@@ -60,7 +59,7 @@ function DashboardContent() {
       setNextSession(allUpcoming[0] || null);
 
       // Mark loading as complete
-      setIsLoading(false);
+      setIsLoadingData(false);
     };
 
     loadDashboardData();
@@ -96,8 +95,8 @@ function DashboardContent() {
     }
   };
 
-  // Show loading screen while data is being fetched
-  if (isLoading) {
+  // Show loading screen while auth or data is being loaded
+  if (authLoading || isLoadingData) {
     return <LoadingScreen message="Preparando tu panel..." />;
   }
 
