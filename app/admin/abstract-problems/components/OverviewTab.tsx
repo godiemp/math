@@ -182,6 +182,10 @@ export default function OverviewTab() {
       .filter(Boolean)
       .join(', ') || 'All units';
 
+    // Estimate based on operation type
+    const estimatedUnits = seedOptions.limit || (seedOptions.level && seedOptions.subject ? 10 : seedOptions.level ? 40 : 80);
+    const estimatedTime = seedOptions.dryRun ? '5-10 seconds' : `${Math.ceil(estimatedUnits * 0.5)}-${Math.ceil(estimatedUnits * 1)} minutes`;
+
     addActivityLog({
       type: 'seed',
       message: `Started ${seedOptions.dryRun ? 'dry run' : 'seeding'} (${filterDesc})`,
@@ -190,8 +194,38 @@ export default function OverviewTab() {
 
     updateProgressStatus(
       `Initializing ${seedOptions.dryRun ? 'dry run' : 'seeding'}...`,
-      filterDesc
+      `${filterDesc} • Estimated time: ${estimatedTime}`
     );
+
+    // Create rotating status messages to show progress
+    const progressMessages = seedOptions.dryRun
+      ? [
+          { msg: 'Analyzing curriculum units...', detail: 'Fetching unit data from database' },
+          { msg: 'Calculating generation plan...', detail: 'Determining problems needed per unit' },
+          { msg: 'Preparing preview...', detail: 'This should complete shortly' },
+        ]
+      : [
+          { msg: 'Fetching curriculum units...', detail: `Processing ~${estimatedUnits} units` },
+          { msg: 'Generating problems with OpenAI...', detail: 'This may take several minutes depending on API rate limits' },
+          { msg: 'Still processing...', detail: 'Each unit generates 10-15 problems with OpenAI GPT-4' },
+          { msg: 'Making progress...', detail: 'Please keep this tab open - do not refresh' },
+          { msg: 'Almost there...', detail: 'Finalizing generation and saving to database' },
+        ];
+
+    let messageIndex = 0;
+    const progressInterval = setInterval(() => {
+      if (messageIndex < progressMessages.length) {
+        const { msg, detail } = progressMessages[messageIndex];
+        updateProgressStatus(msg, detail);
+        messageIndex++;
+      } else {
+        // Cycle back with generic message
+        updateProgressStatus(
+          'Still processing...',
+          'This operation is taking longer than expected but is still running'
+        );
+      }
+    }, seedOptions.dryRun ? 2000 : 10000); // Update every 2s for dry run, 10s for live
 
     try {
       const payload: any = {
@@ -201,9 +235,8 @@ export default function OverviewTab() {
       if (seedOptions.subject) payload.subject = seedOptions.subject;
       if (seedOptions.limit) payload.limit = parseInt(seedOptions.limit.toString());
 
-      updateProgressStatus('Sending request to server...', 'Please wait...');
-
       const res = await api.post('/api/abstract-problems/seed', payload);
+      clearInterval(progressInterval);
       setSeedResult(res.data);
 
       const resultData = res.data as any;
@@ -230,6 +263,7 @@ export default function OverviewTab() {
 
       updateProgressStatus('Operation completed', '');
     } catch (error: any) {
+      clearInterval(progressInterval);
       console.error('Error seeding:', error);
       const errorMsg = error.response?.data?.error || error.message;
       setSeedResult({ success: false, error: errorMsg });
@@ -240,6 +274,7 @@ export default function OverviewTab() {
       });
       updateProgressStatus('Operation failed', errorMsg);
     } finally {
+      clearInterval(progressInterval);
       setSeeding(false);
       setStartTime(null);
       setTimeout(() => setProgressStatus(null), 5000); // Clear progress after 5 seconds
@@ -403,25 +438,46 @@ export default function OverviewTab() {
 
         {/* Progress Indicator */}
         {progressStatus && (seeding || activating) && (
-          <div className="mt-4 p-4 rounded-md bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-            <div className="flex items-center justify-between mb-2">
+          <div className="mt-4 p-5 rounded-md bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-300 dark:border-blue-700 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-3">
-                <div className="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full"></div>
-                <h4 className="font-semibold text-gray-900 dark:text-white">
-                  {progressStatus.message}
-                </h4>
+                <div className="relative">
+                  <div className="animate-spin h-6 w-6 border-3 border-blue-600 border-t-transparent rounded-full"></div>
+                  <div className="absolute inset-0 animate-ping h-6 w-6 border border-blue-400 rounded-full opacity-20"></div>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900 dark:text-white text-base">
+                    {progressStatus.message}
+                  </h4>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Operation in progress - please wait
+                  </p>
+                </div>
               </div>
               {startTime && (
-                <span className="text-sm font-mono text-blue-600 dark:text-blue-400">
-                  {formatElapsedTime(elapsedSeconds)}
-                </span>
+                <div className="text-right">
+                  <span className="text-lg font-mono font-semibold text-blue-600 dark:text-blue-400 block">
+                    {formatElapsedTime(elapsedSeconds)}
+                  </span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">elapsed</span>
+                </div>
               )}
             </div>
             {progressStatus.detail && (
-              <p className="text-sm text-gray-600 dark:text-gray-400 ml-8">
-                {progressStatus.detail}
-              </p>
+              <div className="ml-9 p-3 bg-white dark:bg-gray-800/50 rounded border border-blue-200 dark:border-blue-800">
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  {progressStatus.detail}
+                </p>
+              </div>
             )}
+            <div className="mt-3 ml-9">
+              <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Do not close or refresh this page</span>
+              </div>
+            </div>
           </div>
         )}
 
