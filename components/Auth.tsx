@@ -94,6 +94,7 @@ export default function Auth({ onSuccess }: AuthProps) {
       {/* Header */}
       <div className="mb-6 md:mb-8">
         <h2
+          data-testid="auth-heading"
           className="text-center font-semibold mb-2"
           style={{
             fontFamily: 'var(--font-heading)',
@@ -115,6 +116,7 @@ export default function Auth({ onSuccess }: AuthProps) {
           {isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}
           {' '}
           <button
+            data-testid="auth-toggle-button"
             onClick={() => {
               setIsLogin(!isLogin);
               setError('');
@@ -154,6 +156,7 @@ export default function Auth({ onSuccess }: AuthProps) {
             <input
               id="username"
               name="username"
+              data-testid="auth-username-input"
               type="text"
               required
               value={username}
@@ -203,6 +206,7 @@ export default function Auth({ onSuccess }: AuthProps) {
             <input
               id="password"
               name="password"
+              data-testid="auth-password-input"
               type="password"
               required
               value={password}
@@ -253,6 +257,7 @@ export default function Auth({ onSuccess }: AuthProps) {
               <input
                 id="email"
                 name="email"
+                data-testid="auth-email-input"
                 type="email"
                 required
                 value={email}
@@ -304,6 +309,7 @@ export default function Auth({ onSuccess }: AuthProps) {
               <input
                 id="displayName"
                 name="displayName"
+                data-testid="auth-displayname-input"
                 type="text"
                 required
                 value={displayName}
@@ -343,6 +349,7 @@ export default function Auth({ onSuccess }: AuthProps) {
               <input
                 id="acceptedTerms"
                 name="acceptedTerms"
+                data-testid="auth-terms-checkbox"
                 type="checkbox"
                 checked={acceptedTerms}
                 onChange={(e) => setAcceptedTerms(e.target.checked)}
@@ -366,6 +373,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                 Acepto los{' '}
                 <a
                   href="/legal/terminos"
+                  data-testid="auth-terms-link"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
@@ -380,6 +388,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                 {' '}y la{' '}
                 <a
                   href="/legal/privacidad"
+                  data-testid="auth-privacy-link"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
@@ -398,6 +407,7 @@ export default function Auth({ onSuccess }: AuthProps) {
           {/* Error Message */}
           {error && (
             <div
+              data-testid="auth-error-message"
               className="spring-motion"
               style={{
                 fontSize: '15px',
@@ -416,6 +426,7 @@ export default function Auth({ onSuccess }: AuthProps) {
           {/* Submit Button */}
           <button
             type="submit"
+            data-testid="auth-submit-button"
             disabled={isLoading}
             className="spring-emphasized"
             style={{

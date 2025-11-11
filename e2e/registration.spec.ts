@@ -12,6 +12,8 @@ import { test, expect } from '@playwright/test';
  * - Terms and conditions acceptance
  * - Duplicate user handling
  * - UI state management (switching between login/register)
+ *
+ * Uses data-testid attributes for consistent, maintainable selectors
  */
 
 test.describe('User Registration', () => {
@@ -25,19 +27,19 @@ test.describe('User Registration', () => {
     });
 
     // Switch to register mode
-    await page.click('button:has-text("Regístrate gratis")');
+    await page.getByTestId('auth-toggle-button').click();
     await page.waitForTimeout(500);
   });
 
   test('should display registration form', async ({ page }) => {
     // Verify registration form elements are visible
-    await expect(page.locator('h2')).toContainText('Crear Cuenta');
-    await expect(page.locator('input[name="username"]')).toBeVisible();
-    await expect(page.locator('input[name="email"]')).toBeVisible();
-    await expect(page.locator('input[name="password"]')).toBeVisible();
-    await expect(page.locator('input[name="displayName"]')).toBeVisible();
-    await expect(page.locator('input[name="acceptedTerms"]')).toBeVisible();
-    await expect(page.locator('button[type="submit"]')).toContainText('Crear Cuenta Gratis');
+    await expect(page.getByTestId('auth-heading')).toContainText('Crear Cuenta');
+    await expect(page.getByTestId('auth-username-input')).toBeVisible();
+    await expect(page.getByTestId('auth-email-input')).toBeVisible();
+    await expect(page.getByTestId('auth-password-input')).toBeVisible();
+    await expect(page.getByTestId('auth-displayname-input')).toBeVisible();
+    await expect(page.getByTestId('auth-terms-checkbox')).toBeVisible();
+    await expect(page.getByTestId('auth-submit-button')).toContainText('Crear Cuenta Gratis');
   });
 
   test('should successfully register a new user', async ({ page }) => {
@@ -46,14 +48,14 @@ test.describe('User Registration', () => {
     const email = `testuser${timestamp}@example.com`;
 
     // Fill in registration form
-    await page.fill('input[name="username"]', username);
-    await page.fill('input[name="email"]', email);
-    await page.fill('input[name="password"]', 'password123');
-    await page.fill('input[name="displayName"]', 'Test User');
-    await page.check('input[name="acceptedTerms"]');
+    await page.getByTestId('auth-username-input').fill(username);
+    await page.getByTestId('auth-email-input').fill(email);
+    await page.getByTestId('auth-password-input').fill('password123');
+    await page.getByTestId('auth-displayname-input').fill('Test User');
+    await page.getByTestId('auth-terms-checkbox').check();
 
     // Submit form
-    await page.click('button[type="submit"]');
+    await page.getByTestId('auth-submit-button').click();
 
     // Wait for redirect to dashboard
     await page.waitForTimeout(3000);
@@ -69,14 +71,14 @@ test.describe('User Registration', () => {
 
   test('should show error for username less than 3 characters', async ({ page }) => {
     // Fill form with short username
-    await page.fill('input[name="username"]', 'ab');
-    await page.fill('input[name="email"]', 'test@example.com');
-    await page.fill('input[name="password"]', 'password123');
-    await page.fill('input[name="displayName"]', 'Test User');
-    await page.check('input[name="acceptedTerms"]');
+    await page.getByTestId('auth-username-input').fill('ab');
+    await page.getByTestId('auth-email-input').fill('test@example.com');
+    await page.getByTestId('auth-password-input').fill('password123');
+    await page.getByTestId('auth-displayname-input').fill('Test User');
+    await page.getByTestId('auth-terms-checkbox').check();
 
     // Submit form
-    await page.click('button[type="submit"]');
+    await page.getByTestId('auth-submit-button').click();
 
     // Wait for error message
     await page.waitForTimeout(1500);
@@ -94,14 +96,14 @@ test.describe('User Registration', () => {
     const timestamp = Date.now();
 
     // Fill form with invalid email
-    await page.fill('input[name="username"]', `user${timestamp}`);
-    await page.fill('input[name="email"]', 'invalid-email');
-    await page.fill('input[name="password"]', 'password123');
-    await page.fill('input[name="displayName"]', 'Test User');
-    await page.check('input[name="acceptedTerms"]');
+    await page.getByTestId('auth-username-input').fill(`user${timestamp}`);
+    await page.getByTestId('auth-email-input').fill('invalid-email');
+    await page.getByTestId('auth-password-input').fill('password123');
+    await page.getByTestId('auth-displayname-input').fill('Test User');
+    await page.getByTestId('auth-terms-checkbox').check();
 
     // Submit form
-    await page.click('button[type="submit"]');
+    await page.getByTestId('auth-submit-button').click();
 
     // Wait for error message
     await page.waitForTimeout(1500);
@@ -119,14 +121,14 @@ test.describe('User Registration', () => {
     const timestamp = Date.now();
 
     // Fill form with short password
-    await page.fill('input[name="username"]', `user${timestamp}`);
-    await page.fill('input[name="email"]', `user${timestamp}@example.com`);
-    await page.fill('input[name="password"]', '12345');
-    await page.fill('input[name="displayName"]', 'Test User');
-    await page.check('input[name="acceptedTerms"]');
+    await page.getByTestId('auth-username-input').fill(`user${timestamp}`);
+    await page.getByTestId('auth-email-input').fill(`user${timestamp}@example.com`);
+    await page.getByTestId('auth-password-input').fill('12345');
+    await page.getByTestId('auth-displayname-input').fill('Test User');
+    await page.getByTestId('auth-terms-checkbox').check();
 
     // Submit form
-    await page.click('button[type="submit"]');
+    await page.getByTestId('auth-submit-button').click();
 
     // Wait for error message
     await page.waitForTimeout(1500);
@@ -142,10 +144,10 @@ test.describe('User Registration', () => {
 
   test('should show error when required fields are missing', async ({ page }) => {
     // Only fill username, leave others empty
-    await page.fill('input[name="username"]', 'testuser');
+    await page.getByTestId('auth-username-input').fill('testuser');
 
     // Submit form
-    await page.click('button[type="submit"]');
+    await page.getByTestId('auth-submit-button').click();
 
     // Wait for error message
     await page.waitForTimeout(1500);
@@ -163,14 +165,14 @@ test.describe('User Registration', () => {
     const timestamp = Date.now();
 
     // Fill all fields but don't check terms
-    await page.fill('input[name="username"]', `user${timestamp}`);
-    await page.fill('input[name="email"]', `user${timestamp}@example.com`);
-    await page.fill('input[name="password"]', 'password123');
-    await page.fill('input[name="displayName"]', 'Test User');
-    // Don't check acceptedTerms
+    await page.getByTestId('auth-username-input').fill(`user${timestamp}`);
+    await page.getByTestId('auth-email-input').fill(`user${timestamp}@example.com`);
+    await page.getByTestId('auth-password-input').fill('password123');
+    await page.getByTestId('auth-displayname-input').fill('Test User');
+    // Don't check terms checkbox
 
     // Submit form
-    await page.click('button[type="submit"]');
+    await page.getByTestId('auth-submit-button').click();
 
     // Wait for error message
     await page.waitForTimeout(1500);
@@ -186,14 +188,14 @@ test.describe('User Registration', () => {
 
   test('should show error for duplicate username/email', async ({ page }) => {
     // Try to register with existing test user credentials
-    await page.fill('input[name="username"]', 'teststudent');
-    await page.fill('input[name="email"]', 'student@test.com');
-    await page.fill('input[name="password"]', 'password123');
-    await page.fill('input[name="displayName"]', 'Test User');
-    await page.check('input[name="acceptedTerms"]');
+    await page.getByTestId('auth-username-input').fill('teststudent');
+    await page.getByTestId('auth-email-input').fill('student@test.com');
+    await page.getByTestId('auth-password-input').fill('password123');
+    await page.getByTestId('auth-displayname-input').fill('Test User');
+    await page.getByTestId('auth-terms-checkbox').check();
 
     // Submit form
-    await page.click('button[type="submit"]');
+    await page.getByTestId('auth-submit-button').click();
 
     // Wait for error message
     await page.waitForTimeout(1500);
@@ -209,52 +211,50 @@ test.describe('User Registration', () => {
 
   test('should switch between login and register modes', async ({ page }) => {
     // Should be in register mode
-    await expect(page.locator('h2')).toContainText('Crear Cuenta');
-    await expect(page.locator('input[name="email"]')).toBeVisible();
-    await expect(page.locator('input[name="displayName"]')).toBeVisible();
-    await expect(page.locator('input[name="acceptedTerms"]')).toBeVisible();
+    await expect(page.getByTestId('auth-heading')).toContainText('Crear Cuenta');
+    await expect(page.getByTestId('auth-email-input')).toBeVisible();
+    await expect(page.getByTestId('auth-displayname-input')).toBeVisible();
+    await expect(page.getByTestId('auth-terms-checkbox')).toBeVisible();
 
     // Switch to login mode
-    await page.click('button:has-text("Inicia sesión")');
+    await page.getByTestId('auth-toggle-button').click();
     await page.waitForTimeout(500);
 
     // Verify login mode
-    await expect(page.locator('h2')).toContainText('Iniciar Sesión');
-    await expect(page.locator('input[name="email"]')).not.toBeVisible();
-    await expect(page.locator('input[name="displayName"]')).not.toBeVisible();
-    await expect(page.locator('input[name="acceptedTerms"]')).not.toBeVisible();
+    await expect(page.getByTestId('auth-heading')).toContainText('Iniciar Sesión');
+    await expect(page.getByTestId('auth-email-input')).not.toBeVisible();
+    await expect(page.getByTestId('auth-displayname-input')).not.toBeVisible();
+    await expect(page.getByTestId('auth-terms-checkbox')).not.toBeVisible();
 
     // Switch back to register mode
-    await page.click('button:has-text("Regístrate gratis")');
+    await page.getByTestId('auth-toggle-button').click();
     await page.waitForTimeout(500);
 
     // Verify register mode again
-    await expect(page.locator('h2')).toContainText('Crear Cuenta');
-    await expect(page.locator('input[name="email"]')).toBeVisible();
+    await expect(page.getByTestId('auth-heading')).toContainText('Crear Cuenta');
+    await expect(page.getByTestId('auth-email-input')).toBeVisible();
   });
 
   test('should show loading state during registration', async ({ page }) => {
     const timestamp = Date.now();
 
     // Fill in registration form
-    await page.fill('input[name="username"]', `user${timestamp}`);
-    await page.fill('input[name="email"]', `user${timestamp}@example.com`);
-    await page.fill('input[name="password"]', 'password123');
-    await page.fill('input[name="displayName"]', 'Test User');
-    await page.check('input[name="acceptedTerms"]');
+    await page.getByTestId('auth-username-input').fill(`user${timestamp}`);
+    await page.getByTestId('auth-email-input').fill(`user${timestamp}@example.com`);
+    await page.getByTestId('auth-password-input').fill('password123');
+    await page.getByTestId('auth-displayname-input').fill('Test User');
+    await page.getByTestId('auth-terms-checkbox').check();
 
     // Submit form
-    await page.click('button[type="submit"]');
+    await page.getByTestId('auth-submit-button').click();
 
     // Immediately check for loading state
-    const loadingButton = page.locator('button[type="submit"]:has-text("Cargando")');
-
-    // Give it a moment to show loading state (this is fast, so we check quickly)
     await page.waitForTimeout(100);
 
-    // Button text should change to "Cargando..." or button should be disabled
-    const isDisabled = await page.locator('button[type="submit"]').isDisabled();
-    const hasLoadingText = await page.locator('button:has-text("Cargando")').count() > 0;
+    // Button should be disabled or show loading text
+    const submitButton = page.getByTestId('auth-submit-button');
+    const isDisabled = await submitButton.isDisabled();
+    const hasLoadingText = await page.getByText('Cargando').count() > 0;
 
     expect(isDisabled || hasLoadingText).toBeTruthy();
   });
@@ -275,9 +275,9 @@ test.describe('User Registration', () => {
   });
 
   test('should have links to terms and privacy policy', async ({ page }) => {
-    // Check that terms and privacy links are present in the registration form
-    const termsLink = page.locator('form a[href="/legal/terminos"]');
-    const privacyLink = page.locator('form a[href="/legal/privacidad"]');
+    // Check that terms and privacy links are present using test IDs
+    const termsLink = page.getByTestId('auth-terms-link');
+    const privacyLink = page.getByTestId('auth-privacy-link');
 
     await expect(termsLink).toBeVisible();
     await expect(privacyLink).toBeVisible();
