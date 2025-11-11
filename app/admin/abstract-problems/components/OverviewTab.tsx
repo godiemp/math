@@ -144,7 +144,7 @@ export default function OverviewTab() {
     setActivating(true);
     try {
       const res = await api.post('/api/abstract-problems/activate-all');
-      alert(res.data.message);
+      alert((res.data as { message: string }).message);
       await fetchStats();
     } catch (error: any) {
       console.error('Error activating:', error);
