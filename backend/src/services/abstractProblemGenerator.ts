@@ -142,19 +142,39 @@ ${existingEssences.length > 50 ? `\n... and ${existingEssences.length - 50} more
 
 **IMPORTANT GUIDELINES:**
 
-1. **Abstract Nature**: Create problems that represent the PURE MATHEMATICAL ESSENCE, NOT a contextual story.
-   - ✅ GOOD: "Ordena de menor a mayor: -5, 3, 0, -1, 2"
-   - ✅ GOOD: "Calcula: (-3) × 4"
-   - ✅ GOOD: "Resuelve: x - 5 = -2"
+1. **LaTeX Format**: ALL mathematical expressions MUST use proper LaTeX notation.
+   - Use $...$ for inline math: "Calcula: $(-3) \\times 4$"
+   - Use $$...$$ for display math (standalone equations)
+   - Common LaTeX symbols:
+     * Multiplication: \\times (not × or *)
+     * Division: \\div or \\frac{a}{b}
+     * Exponents: x^2, x^{10}
+     * Fractions: \\frac{numerator}{denominator}
+     * Radicals: \\sqrt{x}, \\sqrt[n]{x}
+     * Inequalities: <, >, \\leq, \\geq, \\neq
+     * Absolute value: |x| or \\lvert x \\rvert
+     * Sets: \\{1, 2, 3\\}
+   - ✅ GOOD: "Ordena de menor a mayor: $-5, 3, 0, -1, 2$"
+   - ✅ GOOD: "Calcula: $(-3) \\times 4$"
+   - ✅ GOOD: "Resuelve: $x - 5 = -2$"
+   - ✅ GOOD: "Simplifica: $\\frac{2x + 4}{2}$"
+   - ❌ BAD: "Calcula: (-3) × 4" (no LaTeX format)
+
+2. **Abstract Nature**: Create problems that represent the PURE MATHEMATICAL ESSENCE, NOT a contextual story.
+   - ✅ GOOD: "Ordena de menor a mayor: $-5, 3, 0, -1, 2$"
+   - ✅ GOOD: "Calcula: $(-3) \\times 4$"
+   - ✅ GOOD: "Resuelve: $x - 5 = -2$"
    - ❌ BAD: "María tiene -5 grados en el termómetro..." (This is contextual, not abstract!)
 
-2. **Examples of Abstract Problems** (use these as inspiration, but create NEW variations):
-   - "Compara: -7 __ -3" (orden y valor absoluto)
-   - "Evalúa: |-6|, |3|, |-2|+|-5|" (valor absoluto)
-   - "Determina: signo de (a×b×c) según el número de negativos" (multiplicación)
-   - "Resuelve: (-4) × x = -16" (ecuaciones)
-   - "Evalúa: 2+(-3)×(-4)" (jerarquía de operaciones)
-   - "Si a<b<0, compara a+b con a-b" (razonamiento con desigualdades)
+3. **Examples of Abstract Problems** (use these as inspiration, but create NEW variations with LaTeX):
+   - "Compara: $-7$ __ $-3$" (orden y valor absoluto)
+   - "Evalúa: $|-6|$, $|3|$, $|-2|+|-5|$" (valor absoluto)
+   - "Determina: signo de $(a \\times b \\times c)$ según el número de negativos" (multiplicación)
+   - "Resuelve: $(-4) \\times x = -16$" (ecuaciones)
+   - "Evalúa: $2+(-3) \\times (-4)$" (jerarquía de operaciones)
+   - "Si $a<b<0$, compara $a+b$ con $a-b$" (razonamiento con desigualdades)
+   - "Simplifica: $\\frac{x^2 - 4}{x - 2}$" (álgebra)
+   - "Calcula el área: triángulo con base $b=5$ y altura $h=3$" (geometría)
 
    **For variety, explore:**
    - Different number ranges (small vs. large numbers)
@@ -165,50 +185,52 @@ ${existingEssences.length > 50 ? `\n... and ${existingEssences.length - 50} more
    - Absolute value combinations
    - Mixed operations with different priorities
 
-3. **Cognitive Levels**:
+4. **Cognitive Levels** (all examples must use LaTeX):
    - **remember**: Recall facts, definitions (e.g., "Define valor absoluto")
-   - **understand**: Explain concepts (e.g., "Explica cuándo |a|<|b| implica a<b")
-   - **apply**: Use procedures (e.g., "Calcula: (-12)÷3")
-   - **analyze**: Break down, compare (e.g., "Compara (-a)×(-b) con a×b")
-   - **evaluate**: Judge, verify (e.g., "Determina si a+b=c+d implica a+c=b+d")
-   - **create**: Construct new solutions (e.g., "Encuentra dos enteros cuyo producto sea -24 y cuya suma sea -5")
+   - **understand**: Explain concepts (e.g., "Explica cuándo $|a|<|b|$ implica $a<b$")
+   - **apply**: Use procedures (e.g., "Calcula: $(-12) \\div 3$")
+   - **analyze**: Break down, compare (e.g., "Compara $(-a) \\times (-b)$ con $a \\times b$")
+   - **evaluate**: Judge, verify (e.g., "Determina si $a+b=c+d$ implica $a+c=b+d$")
+   - **create**: Construct new solutions (e.g., "Encuentra dos enteros cuyo producto sea $-24$ y cuya suma sea $-5$")
 
-4. **Difficulty Levels**:
+5. **Difficulty Levels**:
    - **easy**: Direct recall or single-step operations
    - **medium**: Multi-step operations or basic reasoning
    - **hard**: Complex reasoning or multiple concepts combined
    - **extreme**: Advanced abstract reasoning or proof-like questions
 
-5. **Answer Types**:
+6. **Answer Types**:
    - multiple_choice: Most common (4 options, 1 correct)
    - numeric: Direct numerical answer
    - algebraic: Algebraic expression answer
    - true_false: True/false statement
 
-6. **Expected Steps**: List the solution steps a student should follow
+7. **Expected Steps**: List the solution steps a student should follow
 
-7. **Common Errors**: Anticipate typical student mistakes
+8. **Common Errors**: Anticipate typical student mistakes
 
 **Output Format (JSON object with problems array):**
 {
   "problems": [
     {
-      "essence": "Calcula: (-3) × 4",
+      "essence": "Calcula: $(-3) \\times 4$",
       "answer_type": "multiple_choice",
       "expected_steps": [
-        "Identificar signos: negativo × positivo",
-        "Multiplicar valores absolutos: 3 × 4 = 12",
+        "Identificar signos: negativo $\\times$ positivo",
+        "Multiplicar valores absolutos: $3 \\times 4 = 12$",
         "Aplicar regla de signos: resultado es negativo",
-        "Respuesta: -12"
+        "Respuesta: $-12$"
       ],
       "common_errors": [
-        "Olvidar cambiar el signo (responder 12 en lugar de -12)",
-        "Aplicar incorrectamente la regla de signos (pensar que negativo × positivo = positivo)"
+        "Olvidar cambiar el signo (responder $12$ en lugar de $-12$)",
+        "Aplicar incorrectamente la regla de signos (pensar que negativo $\\times$ positivo = positivo)"
       ],
       "suggested_difficulty_score": 20
     }
   ]
 }
+
+**IMPORTANT**: The "essence" field MUST contain LaTeX-formatted mathematical expressions using $...$ delimiters.
 
 CRITICAL: You MUST generate exactly ${count} problem(s). The "problems" array MUST contain ${count} items. Return ONLY valid JSON, no additional text.`;
 

@@ -30,8 +30,8 @@ function getOpenAIClient(): OpenAI {
   return openaiClient;
 }
 
-// Use latest model
-const MODEL = 'gpt-4-turbo-preview';
+// Use latest model (GPT-5 released August 2025)
+const MODEL = 'gpt-5';
 
 /**
  * Generate context problems from an abstract problem
@@ -82,24 +82,26 @@ export async function generateContextProblems(
 
 **IMPORTANT GUIDELINES:**
 
-1. **Create a Realistic Story**: Transform the abstract problem into a real-world scenario using the specified context type.
+1. **LaTeX in Essence**: The abstract problem essence contains LaTeX math expressions (e.g., $(-3) \\times 4$). You can preserve these in your contextual problem or adapt them as needed.
 
-2. **Maintain Mathematical Essence**: The core mathematical concept must remain the same, just wrapped in context.
+2. **Create a Realistic Story**: Transform the abstract problem into a real-world scenario using the specified context type.
 
-3. **Chilean/Latin American Context**: Use names, currency (pesos chilenos), and situations familiar to Chilean students.
+3. **Maintain Mathematical Essence**: The core mathematical concept must remain the same, just wrapped in context.
 
-4. **Multiple Choice Format**:
+4. **Chilean/Latin American Context**: Use names, currency (pesos chilenos), and situations familiar to Chilean students.
+
+5. **Multiple Choice Format**:
    - Create 4 options (labeled A, B, C, D)
    - 1 correct answer
    - 3 plausible distractors based on common errors
 
-5. **Clear Explanation**: Provide step-by-step solution explanation
+6. **Clear Explanation**: Provide step-by-step solution explanation
 
-6. **Variable Values**: Assign concrete values to variables used in the problem
+7. **Variable Values**: Assign concrete values to variables used in the problem
 
 **Example Transformation:**
 
-Abstract: "Calcula: (-3) × 4"
+Abstract: "Calcula: $(-3) \\times 4$"
 
 Contextual (shopping): "María debe $3.000 a su amiga. Si ella tiene 4 deudas iguales con diferentes personas, ¿cuál es su saldo total considerando las deudas como números negativos?"
 
