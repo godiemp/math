@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Check, X, Award, Sparkles } from 'lucide-react';
-import { InlineMath } from 'react-katex';
-import 'katex/dist/katex.min.css';
+import { InlineMath } from './MathDisplay';
 
 interface Problem {
   level: number;
@@ -260,7 +259,7 @@ export default function OperationsPractice({
         <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-12 mb-8 text-center">
           <div className="text-5xl font-bold text-gray-900 mb-2">
             {problem.expressionLatex ? (
-              <InlineMath math={problem.expressionLatex} />
+              <InlineMath latex={problem.expressionLatex} />
             ) : (
               problem.expression
             )}
