@@ -31,6 +31,7 @@ export interface OperationLevel {
     minValue?: number;
     maxValue?: number;
     allowNegatives?: boolean;
+    forceNegative?: boolean;
     allowDecimals?: boolean;
     numberOfOperands?: number;
     mixedOperations?: OperationType[];
@@ -154,7 +155,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
-    config: { minValue: 1, maxValue: 50, allowNegatives: true }
+    config: { minValue: 1, maxValue: 50, forceNegative: true }
   },
 
   // Multiplicación (11-17)
