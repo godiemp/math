@@ -113,6 +113,59 @@ export const PaesPredictionCard: React.FC = () => {
     return null;
   }
 
+  const MIN_ATTEMPTS_FOR_PREDICTION = 20;
+  const totalAttempts = prediction.factors.totalAttempts || 0;
+  const hasEnoughData = totalAttempts >= MIN_ATTEMPTS_FOR_PREDICTION;
+
+  // Show "not enough data" message
+  if (!hasEnoughData) {
+    const attemptsNeeded = MIN_ATTEMPTS_FOR_PREDICTION - totalAttempts;
+    const progressPercentage = Math.min((totalAttempts / MIN_ATTEMPTS_FOR_PREDICTION) * 100, 100);
+
+    return (
+      <Card className="relative overflow-hidden">
+        {/* Decorative gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 pointer-events-none" />
+
+        <div className="relative space-y-6 text-center">
+          {/* Header */}
+          <div>
+            <div className="text-5xl mb-4">📊</div>
+            <Heading level={3} size="md" className="mb-2">
+              🎯 Predicción PAES
+            </Heading>
+            <Text size="sm" variant="secondary">
+              Necesitas más práctica para generar tu predicción
+            </Text>
+          </div>
+
+          {/* Progress */}
+          <div className="space-y-3">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-500"
+                style={{ width: `${progressPercentage}%` }}
+              />
+            </div>
+            <Text size="sm" className="font-semibold">
+              {totalAttempts} de {MIN_ATTEMPTS_FOR_PREDICTION} preguntas completadas
+            </Text>
+            <Text size="xs" variant="secondary">
+              Completa {attemptsNeeded} pregunta{attemptsNeeded !== 1 ? 's' : ''} más para obtener tu predicción personalizada
+            </Text>
+          </div>
+
+          {/* CTA */}
+          <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <Text size="xs" variant="secondary">
+              💡 Mientras más practiques, más precisa será tu predicción
+            </Text>
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
   const lowRange = prediction.systemPrediction - prediction.confidenceRange;
   const highRange = prediction.systemPrediction + prediction.confidenceRange;
 
