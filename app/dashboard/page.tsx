@@ -245,96 +245,88 @@ function DashboardContent() {
         </div>
 
         {/* Practice Section - Operations, M1, and M2 */}
-        <Card hover className="p-6 mb-8 sm:mb-10 md:mb-12 relative">
+        <Card hover className="p-4 mb-8 sm:mb-10 md:mb-12 relative">
           {!isPaidUser && (
-            <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
-              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+            <div className="absolute top-2 right-2 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-1">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
               </svg>
               Premium
             </div>
           )}
 
-          <div className={user?.targetLevel === 'M1_ONLY' ? 'space-y-8' : 'space-y-10'}>
+          <div className="space-y-4">
             {/* Operations Practice Section */}
-            <div className="text-center">
-              <div className="text-4xl mb-3">🎯</div>
-              <Heading level={3} size="sm" className="mb-3">
-                Práctica de Operaciones Progresiva
-              </Heading>
-              <Text size="sm" variant="secondary" className="mb-6 max-w-2xl mx-auto">
-                Progresa desde lo básico hasta convertirte en un maestro de las operaciones matemáticas.
-              </Text>
-              <Button asChild className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 flex-1">
+                <span className="text-xl">🎯</span>
+                <div>
+                  <Heading level={3} size="xs" className="text-sm">
+                    Práctica de Operaciones
+                  </Heading>
+                </div>
+              </div>
+              <Button asChild size="sm" className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-xs">
                 <Link href="/practice/operations">
-                  Comenzar →
+                  Comenzar
                 </Link>
               </Button>
             </div>
 
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-8"></div>
+            <div className="border-t border-gray-200 dark:border-gray-700"></div>
 
-            {/* Competencia Matemática Header */}
-            <div className="text-center mb-6">
-              <Heading level={3} size="sm" className="mb-2">
-                Competencia Matemática
-              </Heading>
-              <Text size="sm" variant="secondary">
-                Practica para la PAES de Matemática
-              </Text>
-            </div>
-
-            {/* M1 Section */}
-            <div className="text-center">
-              <div className="text-3xl mb-3">📐</div>
-              <Heading level={4} size="xs" className="mb-2">
-                M1 - Competencia Básica
-              </Heading>
-              <Text size="xs" variant="secondary" className="mb-4">
-                Números, álgebra, geometría y probabilidades
-              </Text>
-              {isPaidUser ? (
-                <Button asChild className="w-full sm:w-auto sm:px-8">
-                  <Link href="/practice/m1">
-                    Practicar M1
-                  </Link>
-                </Button>
-              ) : (
-                <Button disabled className="w-full sm:w-auto sm:px-8 opacity-60">
-                  <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                  </svg>
-                  Practicar M1
-                </Button>
-              )}
-            </div>
-
-            {/* M2 Section - Only show if not M1_ONLY */}
-            {user?.targetLevel !== 'M1_ONLY' && (
-              <div className="text-center">
-                <div className="text-3xl mb-3">🎓</div>
-                <Heading level={4} size="xs" className="mb-2">
-                  M2 - Competencia Avanzada
-                </Heading>
-                <Text size="xs" variant="secondary" className="mb-4">
-                  Contenidos para carreras científicas y de ingeniería
-                </Text>
+            {/* M1 and M2 in grid */}
+            <div className={user?.targetLevel === 'M1_ONLY' ? '' : 'grid sm:grid-cols-2 gap-3'}>
+              {/* M1 Section */}
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 flex-1">
+                  <span className="text-xl">📐</span>
+                  <Heading level={4} size="xs" className="text-sm">
+                    M1
+                  </Heading>
+                </div>
                 {isPaidUser ? (
-                  <Button asChild className="w-full sm:w-auto sm:px-8">
-                    <Link href="/practice/m2">
-                      Practicar M2
+                  <Button asChild size="sm" className="text-xs">
+                    <Link href="/practice/m1">
+                      Practicar
                     </Link>
                   </Button>
                 ) : (
-                  <Button disabled className="w-full sm:w-auto sm:px-8 opacity-60">
-                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <Button disabled size="sm" className="opacity-60 text-xs">
+                    <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                     </svg>
-                    Practicar M2
+                    Practicar
                   </Button>
                 )}
               </div>
-            )}
+
+              {/* M2 Section - Only show if not M1_ONLY */}
+              {user?.targetLevel !== 'M1_ONLY' && (
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 flex-1">
+                    <span className="text-xl">🎓</span>
+                    <Heading level={4} size="xs" className="text-sm">
+                      M2
+                    </Heading>
+                  </div>
+                  {isPaidUser ? (
+                    <Button asChild size="sm" className="text-xs">
+                      <Link href="/practice/m2">
+                        Practicar
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button disabled size="sm" className="opacity-60 text-xs">
+                      <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                      </svg>
+                      Practicar
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </Card>
 
