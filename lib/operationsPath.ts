@@ -1,7 +1,14 @@
 /**
  * Operations Practice Path Configuration
  * Defines the progressive path from easiest to hardest operations
- * 150 levels organized in 5 phases: Arithmetic, Algebra, Logic, Structural, Algorithmic
+ * 120 levels organized in 5 phases, all mapped to PAES M1/M2 thematic units
+ *
+ * Phases:
+ * - Arithmetic (1-30): Basic number operations
+ * - Algebraic (31-60): Equations, expressions, and simplification
+ * - Logical (61-80): Comparisons and compound conditions
+ * - Structural (81-100): Sets and functions
+ * - Algorithmic (101-120): Sorting and counting
  */
 
 export type OperationType =
@@ -10,11 +17,11 @@ export type OperationType =
   // Algebraic (Phase 2)
   | 'simple-equation' | 'expression-evaluation' | 'simplification'
   // Logical (Phase 3)
-  | 'comparison' | 'logical-operators' | 'compound-conditions'
+  | 'comparison' | 'compound-conditions'
   // Structural (Phase 4)
-  | 'sequences' | 'sets' | 'functions'
+  | 'sets' | 'functions'
   // Algorithmic (Phase 5)
-  | 'sorting' | 'counting' | 'composition';
+  | 'sorting' | 'counting';
 
 export type DifficultyLevel = 'basic' | 'intermediate' | 'advanced' | 'expert';
 export type PhaseType = 'arithmetic' | 'algebraic' | 'logical' | 'structural' | 'algorithmic';
@@ -48,7 +55,8 @@ export interface OperationLevel {
 }
 
 /**
- * The complete operations path - 150 progressive levels
+ * The complete operations path - 120 progressive levels
+ * All levels are mapped to PAES M1/M2 thematic units
  */
 export const OPERATIONS_PATH: OperationLevel[] = [
   // ==========================================
@@ -786,7 +794,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
   },
 
   // ==========================================
-  // PHASE 3: OPERACIONES LÓGICAS (61-90)
+  // PHASE 3: OPERACIONES LÓGICAS (61-80)
   // ==========================================
 
   // Comparaciones (61-70)
@@ -911,121 +919,9 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { operators: ['<', '>', '=', '≤', '≥'], minValue: 1, maxValue: 20, variables: ['x'] }
   },
 
-  // Operadores Lógicos (71-80)
+  // Condiciones Compuestas (71-80)
   {
     level: 71,
-    title: 'Operador AND Básico',
-    description: '¿Verdadero AND Verdadero?',
-    operationType: 'logical-operators',
-    phase: 'logical',
-    difficulty: 'basic',
-    problemsToComplete: 3,
-
-    config: { operators: ['AND'] }
-  },
-  {
-    level: 72,
-    title: 'Operador OR Básico',
-    description: '¿Verdadero OR Falso?',
-    operationType: 'logical-operators',
-    phase: 'logical',
-    difficulty: 'basic',
-    problemsToComplete: 3,
-
-    config: { operators: ['OR'] }
-  },
-  {
-    level: 73,
-    title: 'Operador NOT Básico',
-    description: '¿NOT Verdadero?',
-    operationType: 'logical-operators',
-    phase: 'logical',
-    difficulty: 'basic',
-    problemsToComplete: 3,
-
-    config: { operators: ['NOT'] }
-  },
-  {
-    level: 74,
-    title: 'AND con Comparaciones',
-    description: '¿(5>3) AND (2<4)?',
-    operationType: 'logical-operators',
-    phase: 'logical',
-    difficulty: 'intermediate',
-    problemsToComplete: 3,
-
-    config: { operators: ['AND'], minValue: 1, maxValue: 10 }
-  },
-  {
-    level: 75,
-    title: 'OR con Comparaciones',
-    description: '¿(5<3) OR (2<4)?',
-    operationType: 'logical-operators',
-    phase: 'logical',
-    difficulty: 'intermediate',
-    problemsToComplete: 3,
-
-    config: { operators: ['OR'], minValue: 1, maxValue: 10 }
-  },
-  {
-    level: 76,
-    title: 'NOT con Comparaciones',
-    description: '¿NOT(5<3)?',
-    operationType: 'logical-operators',
-    phase: 'logical',
-    difficulty: 'intermediate',
-    problemsToComplete: 3,
-
-    config: { operators: ['NOT'], minValue: 1, maxValue: 10 }
-  },
-  {
-    level: 77,
-    title: 'AND y OR Combinados',
-    description: '¿(V AND F) OR V?',
-    operationType: 'logical-operators',
-    phase: 'logical',
-    difficulty: 'advanced',
-    problemsToComplete: 3,
-
-    config: { operators: ['AND', 'OR'] }
-  },
-  {
-    level: 78,
-    title: 'Expresiones con Paréntesis',
-    description: '¿(V OR F) AND (V OR V)?',
-    operationType: 'logical-operators',
-    phase: 'logical',
-    difficulty: 'advanced',
-    problemsToComplete: 3,
-
-    config: { operators: ['AND', 'OR'] }
-  },
-  {
-    level: 79,
-    title: 'NOT con AND y OR',
-    description: '¿NOT((V AND F) OR F)?',
-    operationType: 'logical-operators',
-    phase: 'logical',
-    difficulty: 'advanced',
-    problemsToComplete: 3,
-
-    config: { operators: ['AND', 'OR', 'NOT'] }
-  },
-  {
-    level: 80,
-    title: 'Expresiones Lógicas Complejas',
-    description: 'Evalúa: (A AND B) OR (NOT C)',
-    operationType: 'logical-operators',
-    phase: 'logical',
-    difficulty: 'expert',
-    problemsToComplete: 3,
-
-    config: { operators: ['AND', 'OR', 'NOT'] }
-  },
-
-  // Condiciones Compuestas (81-90)
-  {
-    level: 81,
     title: 'Condición Simple',
     description: 'Si x>5, ¿x=7 cumple?',
     operationType: 'compound-conditions',
@@ -1037,7 +933,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 82,
+    level: 72,
     title: 'Condición con AND',
     description: 'Si x>5 AND x<10, ¿x=7 cumple?',
     operationType: 'compound-conditions',
@@ -1049,7 +945,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { operators: ['AND'], variables: ['x'], minValue: 1, maxValue: 15 }
   },
   {
-    level: 83,
+    level: 73,
     title: 'Condición con OR',
     description: 'Si x<3 OR x>8, ¿x=5 cumple?',
     operationType: 'compound-conditions',
@@ -1061,7 +957,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { operators: ['OR'], variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 84,
+    level: 74,
     title: 'Rangos Numéricos',
     description: '¿5 está en el rango [3, 8]?',
     operationType: 'compound-conditions',
@@ -1073,7 +969,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { minValue: 1, maxValue: 20 }
   },
   {
-    level: 85,
+    level: 75,
     title: 'Condiciones con Variables',
     description: 'Si x=4, ¿cumple 2<x<7?',
     operationType: 'compound-conditions',
@@ -1085,7 +981,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 86,
+    level: 76,
     title: 'Dos Variables con AND',
     description: 'Si x=3 y y=5, ¿x<y AND x>0?',
     operationType: 'compound-conditions',
@@ -1097,7 +993,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { operators: ['AND'], variables: ['x', 'y'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 87,
+    level: 77,
     title: 'Dos Variables con OR',
     description: 'Si x=2 y y=8, ¿x>5 OR y>5?',
     operationType: 'compound-conditions',
@@ -1109,7 +1005,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { operators: ['OR'], variables: ['x', 'y'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 88,
+    level: 78,
     title: 'Condiciones con NOT',
     description: 'Si x=4, ¿cumple NOT(x<3)?',
     operationType: 'compound-conditions',
@@ -1121,7 +1017,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { operators: ['NOT'], variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 89,
+    level: 79,
     title: 'Condiciones Múltiples',
     description: 'Si x=5, ¿(x>3 AND x<8) OR x=10?',
     operationType: 'compound-conditions',
@@ -1133,7 +1029,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { operators: ['AND', 'OR'], variables: ['x'], minValue: 1, maxValue: 15 }
   },
   {
-    level: 90,
+    level: 80,
     title: 'Condiciones Expertas',
     description: 'Evalúa: (x>y AND y>z) OR (x=z)',
     operationType: 'compound-conditions',
@@ -1146,124 +1042,12 @@ export const OPERATIONS_PATH: OperationLevel[] = [
   },
 
   // ==========================================
-  // PHASE 4: OPERACIONES ESTRUCTURALES (91-120)
+  // PHASE 4: OPERACIONES ESTRUCTURALES (81-100)
   // ==========================================
 
-  // Secuencias (91-100)
+  // Conjuntos (81-90)
   {
-    level: 91,
-    title: 'Secuencia +1',
-    description: 'Continúa: 2, 3, 4, __',
-    operationType: 'sequences',
-    phase: 'structural',
-    difficulty: 'basic',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
-  },
-  {
-    level: 92,
-    title: 'Secuencia +2',
-    description: 'Continúa: 2, 4, 6, __',
-    operationType: 'sequences',
-    phase: 'structural',
-    difficulty: 'basic',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 4, minValue: 1, maxValue: 20 }
-  },
-  {
-    level: 93,
-    title: 'Secuencia +5',
-    description: 'Continúa: 5, 10, 15, __',
-    operationType: 'sequences',
-    phase: 'structural',
-    difficulty: 'basic',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 4, minValue: 5, maxValue: 50 }
-  },
-  {
-    level: 94,
-    title: 'Secuencia -1',
-    description: 'Continúa: 10, 9, 8, __',
-    operationType: 'sequences',
-    phase: 'structural',
-    difficulty: 'basic',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
-  },
-  {
-    level: 95,
-    title: 'Secuencia ×2',
-    description: 'Continúa: 2, 4, 8, __',
-    operationType: 'sequences',
-    phase: 'structural',
-    difficulty: 'intermediate',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 4, minValue: 1, maxValue: 50 }
-  },
-  {
-    level: 96,
-    title: 'Secuencia Cuadrados',
-    description: 'Continúa: 1, 4, 9, __',
-    operationType: 'sequences',
-    phase: 'structural',
-    difficulty: 'intermediate',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 4, minValue: 1, maxValue: 100 }
-  },
-  {
-    level: 97,
-    title: 'Fibonacci Básico',
-    description: 'Continúa: 1, 1, 2, 3, 5, __',
-    operationType: 'sequences',
-    phase: 'structural',
-    difficulty: 'advanced',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 6, minValue: 1, maxValue: 50 }
-  },
-  {
-    level: 98,
-    title: 'Secuencia Alternada',
-    description: 'Continúa: 1, 4, 2, 5, 3, __',
-    operationType: 'sequences',
-    phase: 'structural',
-    difficulty: 'advanced',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 6, minValue: 1, maxValue: 20 }
-  },
-  {
-    level: 99,
-    title: 'Secuencia con Dos Reglas',
-    description: 'Continúa: 1, 2, 4, 5, 7, __',
-    operationType: 'sequences',
-    phase: 'structural',
-    difficulty: 'expert',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 6, minValue: 1, maxValue: 30 }
-  },
-  {
-    level: 100,
-    title: 'Secuencia Compleja',
-    description: 'Encuentra el patrón',
-    operationType: 'sequences',
-    phase: 'structural',
-    difficulty: 'expert',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 5, minValue: 1, maxValue: 50 }
-  },
-
-  // Conjuntos (101-110)
-  {
-    level: 101,
+    level: 81,
     title: 'Unión de Conjuntos',
     description: '{1,2} ∪ {2,3} = ?',
     operationType: 'sets',
@@ -1275,7 +1059,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { setSize: 2, operators: ['∪'], minValue: 1, maxValue: 5 }
   },
   {
-    level: 102,
+    level: 82,
     title: 'Intersección de Conjuntos',
     description: '{1,2,3} ∩ {2,3,4} = ?',
     operationType: 'sets',
@@ -1287,7 +1071,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { setSize: 3, operators: ['∩'], minValue: 1, maxValue: 5 }
   },
   {
-    level: 103,
+    level: 83,
     title: 'Diferencia de Conjuntos',
     description: '{1,2,3} - {2,4} = ?',
     operationType: 'sets',
@@ -1299,7 +1083,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { setSize: 3, operators: ['-'], minValue: 1, maxValue: 5 }
   },
   {
-    level: 104,
+    level: 84,
     title: 'Pertenencia a Conjunto',
     description: '¿3 ∈ {1,2,3,4}?',
     operationType: 'sets',
@@ -1311,7 +1095,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { setSize: 4, operators: ['∈'], minValue: 1, maxValue: 5 }
   },
   {
-    level: 105,
+    level: 85,
     title: 'Cardinalidad',
     description: '|{1,2,3,4,5}| = ?',
     operationType: 'sets',
@@ -1323,7 +1107,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { setSize: 5, operators: ['|'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 106,
+    level: 86,
     title: 'Subconjuntos',
     description: '¿{1,2} ⊆ {1,2,3}?',
     operationType: 'sets',
@@ -1335,7 +1119,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { setSize: 3, operators: ['⊆'], minValue: 1, maxValue: 5 }
   },
   {
-    level: 107,
+    level: 87,
     title: 'Unión e Intersección',
     description: '({1,2} ∪ {3}) ∩ {2,3}',
     operationType: 'sets',
@@ -1347,7 +1131,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { setSize: 3, operators: ['∪', '∩'], minValue: 1, maxValue: 5 }
   },
   {
-    level: 108,
+    level: 88,
     title: 'Complemento',
     description: 'Si U={1,2,3,4,5}, A={1,2}, A\' = ?',
     operationType: 'sets',
@@ -1357,7 +1141,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { setSize: 5, operators: ['\''], minValue: 1, maxValue: 10 }
   },
   {
-    level: 109,
+    level: 89,
     title: 'Producto Cartesiano',
     description: '{1,2} × {a,b}',
     operationType: 'sets',
@@ -1369,7 +1153,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { setSize: 2, operators: ['×'], minValue: 1, maxValue: 3 }
   },
   {
-    level: 110,
+    level: 90,
     title: 'Operaciones Mixtas de Conjuntos',
     description: '(A ∪ B) ∩ (A - C)',
     operationType: 'sets',
@@ -1381,9 +1165,9 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { setSize: 4, operators: ['∪', '∩', '-'], minValue: 1, maxValue: 5 }
   },
 
-  // Funciones (111-120)
+  // Funciones (91-100)
   {
-    level: 111,
+    level: 91,
     title: 'Función Suma',
     description: 'f(x) = x+2, f(3) = ?',
     operationType: 'functions',
@@ -1395,7 +1179,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 112,
+    level: 92,
     title: 'Función Multiplicación',
     description: 'f(x) = 2x, f(4) = ?',
     operationType: 'functions',
@@ -1407,7 +1191,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 113,
+    level: 93,
     title: 'Función Lineal',
     description: 'f(x) = 2x+1, f(3) = ?',
     operationType: 'functions',
@@ -1419,7 +1203,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 114,
+    level: 94,
     title: 'Función Cuadrática',
     description: 'f(x) = x², f(5) = ?',
     operationType: 'functions',
@@ -1431,7 +1215,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 115,
+    level: 95,
     title: 'Función con Dos Términos',
     description: 'f(x) = x²+2x, f(3) = ?',
     operationType: 'functions',
@@ -1443,7 +1227,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 116,
+    level: 96,
     title: 'Función de Dos Variables',
     description: 'f(x,y) = x+y, f(2,3) = ?',
     operationType: 'functions',
@@ -1455,7 +1239,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 117,
+    level: 97,
     title: 'Función Producto',
     description: 'f(x,y) = xy, f(3,4) = ?',
     operationType: 'functions',
@@ -1467,7 +1251,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 118,
+    level: 98,
     title: 'Composición de Funciones',
     description: 'f(x)=x+1, g(x)=2x, f(g(3))=?',
     operationType: 'functions',
@@ -1479,7 +1263,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 119,
+    level: 99,
     title: 'Función Inversa',
     description: 'Si f(x)=2x, ¿f⁻¹(6)=?',
     operationType: 'functions',
@@ -1491,7 +1275,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
-    level: 120,
+    level: 100,
     title: 'Funciones Complejas',
     description: 'f(x,y)=x²+y², f(3,4)=?',
     operationType: 'functions',
@@ -1504,12 +1288,12 @@ export const OPERATIONS_PATH: OperationLevel[] = [
   },
 
   // ==========================================
-  // PHASE 5: OPERACIONES ALGORÍTMICAS (121-150)
+  // PHASE 5: OPERACIONES ALGORÍTMICAS (101-120)
   // ==========================================
 
-  // Ordenamiento (121-130)
+  // Ordenamiento (101-110)
   {
-    level: 121,
+    level: 101,
     title: 'Ordenar 3 Números',
     description: 'Ordena: [3, 1, 2]',
     operationType: 'sorting',
@@ -1521,7 +1305,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 3, minValue: 1, maxValue: 10 }
   },
   {
-    level: 122,
+    level: 102,
     title: 'Ordenar 4 Números',
     description: 'Ordena: [4, 2, 1, 3]',
     operationType: 'sorting',
@@ -1533,7 +1317,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
   },
   {
-    level: 123,
+    level: 103,
     title: 'Ordenar 5 Números',
     description: 'Ordena: [5, 2, 8, 1, 4]',
     operationType: 'sorting',
@@ -1545,7 +1329,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 5, minValue: 1, maxValue: 10 }
   },
   {
-    level: 124,
+    level: 104,
     title: 'Ordenar Descendente',
     description: 'Ordena mayor a menor: [2, 5, 1]',
     operationType: 'sorting',
@@ -1557,7 +1341,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 3, minValue: 1, maxValue: 10 }
   },
   {
-    level: 125,
+    level: 105,
     title: 'Encontrar el Mínimo',
     description: 'Mínimo de [4, 2, 7, 1]',
     operationType: 'sorting',
@@ -1569,7 +1353,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
   },
   {
-    level: 126,
+    level: 106,
     title: 'Encontrar el Máximo',
     description: 'Máximo de [3, 9, 2, 5]',
     operationType: 'sorting',
@@ -1581,7 +1365,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
   },
   {
-    level: 127,
+    level: 107,
     title: 'Encontrar la Mediana',
     description: 'Mediana de [1, 3, 5]',
     operationType: 'sorting',
@@ -1593,7 +1377,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 5, minValue: 1, maxValue: 10 }
   },
   {
-    level: 128,
+    level: 108,
     title: 'Ordenar con Duplicados',
     description: 'Ordena: [3, 1, 2, 1, 3]',
     operationType: 'sorting',
@@ -1605,7 +1389,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 5, minValue: 1, maxValue: 5 }
   },
   {
-    level: 129,
+    level: 109,
     title: 'Ordenar 6 Números',
     description: 'Ordena: [6, 2, 9, 1, 4, 7]',
     operationType: 'sorting',
@@ -1617,7 +1401,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 6, minValue: 1, maxValue: 10 }
   },
   {
-    level: 130,
+    level: 110,
     title: 'Ordenar con Negativos',
     description: 'Ordena: [-3, 5, -1, 2]',
     operationType: 'sorting',
@@ -1629,9 +1413,9 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { arraySize: 4, minValue: -10, maxValue: 10, allowNegatives: true }
   },
 
-  // Conteo (131-140)
+  // Conteo (111-120)
   {
-    level: 131,
+    level: 111,
     title: 'Contar Elementos',
     description: 'Cuenta: [1, 2, 3, 4]',
     operationType: 'counting',
@@ -1643,7 +1427,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
   },
   {
-    level: 132,
+    level: 112,
     title: 'Contar Pares',
     description: '¿Cuántos pares en [1,2,3,4]?',
     operationType: 'counting',
@@ -1655,7 +1439,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
   },
   {
-    level: 133,
+    level: 113,
     title: 'Contar Impares',
     description: '¿Cuántos impares en [1,2,3,4,5]?',
     operationType: 'counting',
@@ -1667,7 +1451,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 5, minValue: 1, maxValue: 10 }
   },
   {
-    level: 134,
+    level: 114,
     title: 'Contar Mayores que N',
     description: '¿Cuántos >5 en [3,6,2,7,1]?',
     operationType: 'counting',
@@ -1679,7 +1463,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 5, minValue: 1, maxValue: 10 }
   },
   {
-    level: 135,
+    level: 115,
     title: 'Contar Múltiplos',
     description: '¿Cuántos múltiplos de 3?',
     operationType: 'counting',
@@ -1691,7 +1475,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 5, minValue: 1, maxValue: 15 }
   },
   {
-    level: 136,
+    level: 116,
     title: 'Contar con Condición',
     description: 'Cuenta si x>3 AND x<8',
     operationType: 'counting',
@@ -1703,7 +1487,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 6, minValue: 1, maxValue: 10 }
   },
   {
-    level: 137,
+    level: 117,
     title: 'Contar Duplicados',
     description: '¿Cuántas veces aparece 3?',
     operationType: 'counting',
@@ -1715,7 +1499,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 6, minValue: 1, maxValue: 5 }
   },
   {
-    level: 138,
+    level: 118,
     title: 'Contar Únicos',
     description: '¿Cuántos números diferentes?',
     operationType: 'counting',
@@ -1727,7 +1511,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 6, minValue: 1, maxValue: 5 }
   },
   {
-    level: 139,
+    level: 119,
     title: 'Suma Condicional',
     description: 'Suma solo los pares',
     operationType: 'counting',
@@ -1739,7 +1523,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     config: { sequenceLength: 5, minValue: 1, maxValue: 10 }
   },
   {
-    level: 140,
+    level: 120,
     title: 'Conteo Complejo',
     description: 'Cuenta si x%2=0 OR x>7',
     operationType: 'counting',
@@ -1752,115 +1536,15 @@ export const OPERATIONS_PATH: OperationLevel[] = [
   },
 
   // Composición (141-150)
-  {
-    level: 141,
-    title: 'Transformación Simple',
-    description: 'Aplica +2 a cada: [1,2,3]',
-    operationType: 'composition',
-    phase: 'algorithmic',
-    difficulty: 'intermediate',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 3, minValue: 1, maxValue: 10, algorithmSteps: 1 }
   },
-  {
-    level: 142,
-    title: 'Multiplicar por 2',
-    description: 'Aplica ×2 a cada: [2,3,4]',
-    operationType: 'composition',
-    phase: 'algorithmic',
-    difficulty: 'intermediate',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 3, minValue: 1, maxValue: 10, algorithmSteps: 1 }
   },
-  {
-    level: 143,
-    title: 'Dos Transformaciones',
-    description: 'Aplica +1 luego ×2',
-    operationType: 'composition',
-    phase: 'algorithmic',
-    difficulty: 'advanced',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 3, minValue: 1, maxValue: 10, algorithmSteps: 2 }
   },
-  {
-    level: 144,
-    title: 'Filtrar y Transformar',
-    description: 'Toma pares, luego ÷2',
-    operationType: 'composition',
-    phase: 'algorithmic',
-    difficulty: 'advanced',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 4, minValue: 1, maxValue: 10, algorithmSteps: 2 }
   },
-  {
-    level: 145,
-    title: 'Tres Transformaciones',
-    description: 'Aplica ×2, +1, -3',
-    operationType: 'composition',
-    phase: 'algorithmic',
-    difficulty: 'advanced',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 3, minValue: 1, maxValue: 10, algorithmSteps: 3 }
   },
-  {
-    level: 146,
-    title: 'Reducción',
-    description: 'Suma todos los elementos',
-    operationType: 'composition',
-    phase: 'algorithmic',
-    difficulty: 'advanced',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 4, minValue: 1, maxValue: 10, algorithmSteps: 1 }
   },
-  {
-    level: 147,
-    title: 'Map y Reduce',
-    description: 'Aplica ×2 luego suma todo',
-    operationType: 'composition',
-    phase: 'algorithmic',
-    difficulty: 'expert',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 4, minValue: 1, maxValue: 10, algorithmSteps: 2 }
   },
-  {
-    level: 148,
-    title: 'Algoritmo con Condición',
-    description: 'Si x>5 aplica ×2, sino +1',
-    operationType: 'composition',
-    phase: 'algorithmic',
-    difficulty: 'expert',
-    problemsToComplete: 3,
-
-    config: { sequenceLength: 4, minValue: 1, maxValue: 10, algorithmSteps: 2 }
   },
-  {
-    level: 149,
-    title: 'Pipeline Completo',
-    description: 'Filtra, transforma y reduce',
-    operationType: 'composition',
-    phase: 'algorithmic',
-    difficulty: 'expert',
-    problemsToComplete: 5,
-
-    config: { sequenceLength: 5, minValue: 1, maxValue: 10, algorithmSteps: 3 }
   },
-  {
-    level: 150,
-    title: 'Gran Maestro Computacional',
-    description: 'El desafío algorítmico definitivo',
-    operationType: 'composition',
-    phase: 'algorithmic',
-    difficulty: 'expert',
-    problemsToComplete: 5,
-
-    config: { sequenceLength: 6, minValue: 1, maxValue: 20, algorithmSteps: 4 }
   }
 ];
 
@@ -1909,18 +1593,18 @@ export function getPhaseInfo(phase: PhaseType): { name: string; range: string; d
     },
     logical: {
       name: 'Operaciones Lógicas',
-      range: 'Niveles 61-90',
+      range: 'Niveles 61-80',
       description: 'Razonamiento y condiciones'
     },
     structural: {
       name: 'Operaciones Estructurales',
-      range: 'Niveles 91-120',
-      description: 'Patrones y transformaciones'
+      range: 'Niveles 81-100',
+      description: 'Conjuntos y funciones'
     },
     algorithmic: {
       name: 'Operaciones Algorítmicas',
-      range: 'Niveles 121-150',
-      description: 'Procesos de múltiples pasos'
+      range: 'Niveles 101-120',
+      description: 'Ordenamiento y conteo'
     }
   };
   return phases[phase];
