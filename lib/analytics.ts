@@ -42,7 +42,10 @@ export function initAnalytics(): void {
 
   try {
     posthog.init(apiKey, {
-      api_host: apiHost,
+      // Use reverse proxy to bypass ad-blockers
+      // This sends events to /api/ingest/* on our domain, which forwards to PostHog
+      api_host: typeof window !== 'undefined' ? window.location.origin : apiHost,
+      ui_host: apiHost, // PostHog dashboard URL for links
 
       // Automatically capture pageviews
       capture_pageview: true,
@@ -65,6 +68,7 @@ export function initAnalytics(): void {
       loaded: (posthog) => {
         if (process.env.NODE_ENV === 'development') {
           console.log('PostHog initialized successfully')
+          console.log('PostHog proxy enabled: events will be sent to /api/ingest/*')
         }
       },
 
