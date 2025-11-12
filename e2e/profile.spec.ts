@@ -5,8 +5,13 @@ test.describe('Student Profile Page', () => {
   // Authentication is handled via storageState in playwright.config.ts
 
   test('should navigate to profile page from dashboard', async ({ page }) => {
+    // First navigate to dashboard
+    await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
+
     // Click on "Mi Perfil" button in dashboard
-    await page.getByRole('button', { name: /Mi Perfil/i }).click();
+    const profileButton = page.getByRole('button', { name: /Mi Perfil/i });
+    await expect(profileButton).toBeVisible({ timeout: 10000 });
+    await profileButton.click();
 
     // Should navigate to profile page
     await page.waitForURL('/profile', { timeout: 5000 });
