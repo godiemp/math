@@ -7,8 +7,9 @@
     "dev": "nodemon --exec tsx src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "migrate": "npx tsx src/scripts/run-migrations.ts",
-    "migrate:003": "npx tsx src/scripts/run-migration-003.ts",
+    "migrate": "npx sequelize-cli db:migrate",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo",
+    "migrate:status": "npx sequelize-cli db:migrate:status",
     "seed:admin": "node scripts/seed-admin.js",
     "seed:admin:dev": "npx tsx src/scripts/seed-admin.ts",
     "seed:plans": "npx tsx src/scripts/seed-plans.ts",
@@ -66,6 +67,8 @@
     "@types/node": "^24.10.0",
     "@types/pg": "^8.15.6",
     "nodemon": "^3.1.10",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.3",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   }
