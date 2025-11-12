@@ -5,6 +5,7 @@ import { api } from '@/lib/api-client';
 import { Card, Button, Text, Heading } from './ui';
 import { MessageCircle, X, Send, Sparkles, Loader2 } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
+import { StreakData } from '@/lib/types';
 
 interface GreetingData {
   greeting: string;
@@ -22,9 +23,10 @@ interface Message {
 
 interface StudyBuddyProps {
   className?: string;
+  initialStreak?: StreakData;
 }
 
-export function StudyBuddy({ className = '' }: StudyBuddyProps) {
+export function StudyBuddy({ className = '', initialStreak }: StudyBuddyProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [greetingData, setGreetingData] = useState<GreetingData | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -33,6 +35,7 @@ export function StudyBuddy({ className = '' }: StudyBuddyProps) {
   const [inputValue, setInputValue] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [contextData, setContextData] = useState<any>(null);
+  const [streak, setStreak] = useState<StreakData | null>(initialStreak || null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -335,6 +338,13 @@ export function StudyBuddy({ className = '' }: StudyBuddyProps) {
     }
   };
 
+  const getStreakEmoji = (currentStreak: number) => {
+    if (currentStreak === 0) return '🎯';
+    if (currentStreak < 7) return '🔥';
+    if (currentStreak < 30) return '⚡';
+    return '🏆';
+  };
+
   if (isLoading) {
     return (
       <Card className={`p-6 ${className}`}>
@@ -354,44 +364,92 @@ export function StudyBuddy({ className = '' }: StudyBuddyProps) {
       {!isExpanded && (
         <Card
           hover
-          className={`p-5 sm:p-6 cursor-pointer transition-all hover:shadow-lg ${className}`}
+          className={`p-5 sm:p-6 cursor-pointer transition-all hover:shadow-lg relative overflow-hidden ${className}`}
           onClick={() => setIsExpanded(true)}
         >
-          <div className="flex items-start gap-4">
-            <div className="flex-shrink-0">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-2xl shadow-lg">
-                🤖
-              </div>
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-2">
-                <Heading level={3} size="xs" className="text-[17px]">
-                  Tu Compañero de Estudio
-                </Heading>
-                <Sparkles className="w-4 h-4 text-teal-500" />
-              </div>
+          {/* Decorative gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 via-orange-500/5 to-cyan-500/5 pointer-events-none" />
 
-              <div className="space-y-2 mb-3">
-                <Text size="sm" className="font-medium">
-                  {greetingData.greeting}
-                </Text>
-                {greetingData.insights.length > 0 && (
-                  <div className="space-y-1">
-                    {greetingData.insights.slice(0, 2).map((insight, i) => (
-                      <Text key={i} size="sm" variant="secondary" className="flex items-start gap-2">
-                        <span className="text-teal-500 mt-0.5">•</span>
-                        <span>{insight}</span>
-                      </Text>
-                    ))}
+          <div className="relative">
+            {/* Streak Section - Top Banner */}
+            {streak && (
+              <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl" role="img" aria-label="streak">
+                    {getStreakEmoji(streak.currentStreak)}
                   </div>
-                )}
-              </div>
+                  <div className="flex gap-6">
+                    {/* Current Streak */}
+                    <div>
+                      <Text size="xs" variant="secondary" className="mb-0.5">
+                        Racha diaria
+                      </Text>
+                      <div className="flex items-baseline gap-1.5">
+                        <Heading level={4} size="sm" className="font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500">
+                          {streak.currentStreak}
+                        </Heading>
+                        <Text size="xs" variant="secondary">
+                          {streak.currentStreak === 1 ? 'día' : 'días'}
+                        </Text>
+                      </div>
+                    </div>
 
-              <div className="flex items-center gap-2 text-teal-600 dark:text-teal-400">
-                <MessageCircle className="w-4 h-4" />
-                <Text size="xs" className="font-semibold">
-                  Click para conversar →
-                </Text>
+                    {/* Best Streak */}
+                    <div>
+                      <Text size="xs" variant="secondary" className="mb-0.5">
+                        Mejor racha
+                      </Text>
+                      <div className="flex items-baseline gap-1.5">
+                        <Heading level={4} size="sm" className="font-bold text-gray-900 dark:text-white">
+                          {streak.longestStreak}
+                        </Heading>
+                        <Text size="xs" variant="secondary">
+                          {streak.longestStreak === 1 ? 'día' : 'días'}
+                        </Text>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Study Buddy Greeting */}
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-2xl shadow-lg">
+                  🤖
+                </div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-2">
+                  <Heading level={3} size="xs" className="text-[17px]">
+                    Tu Compañero de Estudio
+                  </Heading>
+                  <Sparkles className="w-4 h-4 text-teal-500" />
+                </div>
+
+                <div className="space-y-2 mb-3">
+                  <Text size="sm" className="font-medium">
+                    {greetingData.greeting}
+                  </Text>
+                  {greetingData.insights.length > 0 && (
+                    <div className="space-y-1">
+                      {greetingData.insights.slice(0, 2).map((insight, i) => (
+                        <Text key={i} size="sm" variant="secondary" className="flex items-start gap-2">
+                          <span className="text-teal-500 mt-0.5">•</span>
+                          <span>{insight}</span>
+                        </Text>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2 text-teal-600 dark:text-teal-400">
+                  <MessageCircle className="w-4 h-4" />
+                  <Text size="xs" className="font-semibold">
+                    Click para conversar →
+                  </Text>
+                </div>
               </div>
             </div>
           </div>
