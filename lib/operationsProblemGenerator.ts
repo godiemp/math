@@ -1,9 +1,13 @@
 /**
  * Client-side Operations Problem Generator
- * Generates problems locally (similar to backend but simpler)
+ * Generates problems locally using mathjs for robust evaluation
  */
 
 import { OperationLevel } from './operationsPath';
+import { create, all } from 'mathjs';
+
+// Initialize mathjs
+const math = create(all);
 
 export interface GeneratedProblem {
   expression: string;
@@ -253,75 +257,37 @@ export function generateProblem(levelConfig: OperationLevel): GeneratedProblem {
 
         if (variables.length === 1) {
           const x = getRandomInt(min, max);
-          const evalTypes = ['x+a', 'ax', 'ax+b', 'x²', 'ax²+b'];
-          const type = evalTypes[Math.floor(Math.random() * evalTypes.length)];
+          const evalExpressions = [
+            { expr: `x+${getRandomInt(min, max)}`, latex: 'x+a' },
+            { expr: `${getRandomInt(2, 5)}*x`, latex: 'ax' },
+            { expr: `${getRandomInt(2, 5)}*x+${getRandomInt(1, 5)}`, latex: 'ax+b' },
+            { expr: 'x^2', latex: 'x²' },
+            { expr: `${getRandomInt(1, 3)}*x^2+${getRandomInt(1, 5)}`, latex: 'ax²+b' }
+          ];
+          const chosen = evalExpressions[Math.floor(Math.random() * evalExpressions.length)];
 
-          if (type === 'x+a') {
-            const a = getRandomInt(min, max);
-            correctAnswer = x + a;
-            expression = `Si x=${x}, ¿x+${a}?`;
-            expressionLatex = `x=${x}, \\; x+${a}=?`;
-            problemKey = `eval:x=${x},x+${a}`;
-          } else if (type === 'ax') {
-            const a = getRandomInt(2, 5);
-            correctAnswer = a * x;
-            expression = `Si x=${x}, ¿${a}x?`;
-            expressionLatex = `x=${x}, \\; ${a}x=?`;
-            problemKey = `eval:x=${x},${a}x`;
-          } else if (type === 'ax+b') {
-            const a = getRandomInt(2, 5);
-            const b = getRandomInt(1, 5);
-            correctAnswer = a * x + b;
-            expression = `Si x=${x}, ¿${a}x+${b}?`;
-            expressionLatex = `x=${x}, \\; ${a}x+${b}=?`;
-            problemKey = `eval:x=${x},${a}x+${b}`;
-          } else if (type === 'x²') {
-            correctAnswer = x * x;
-            expression = `Si x=${x}, ¿x²?`;
-            expressionLatex = `x=${x}, \\; x^2=?`;
-            problemKey = `eval:x=${x},x²`;
-          } else { // 'ax²+b'
-            const a = getRandomInt(1, 3);
-            const b = getRandomInt(1, 5);
-            correctAnswer = a * x * x + b;
-            expression = `Si x=${x}, ¿${a}x²+${b}?`;
-            expressionLatex = `x=${x}, \\; ${a}x^2+${b}=?`;
-            problemKey = `eval:x=${x},${a}x²+${b}`;
-          }
+          // Use mathjs to evaluate the expression
+          correctAnswer = math.evaluate(chosen.expr, { x });
+          expression = `Si x=${x}, ¿${chosen.expr.replace(/\*/g, '').replace(/\^2/g, '²')}?`;
+          expressionLatex = `x=${x}, \\; ${chosen.expr.replace(/\*/g, '').replace(/\^/g, '^')}=?`;
+          problemKey = `eval:x=${x},${chosen.expr}`;
         } else { // two variables
           const x = getRandomInt(min, max);
           const y = getRandomInt(min, max);
-          const evalTypes = ['x+y', 'xy', 'ax+by', 'x²+y²', '(x+y)²'];
-          const type = evalTypes[Math.floor(Math.random() * evalTypes.length)];
+          const evalExpressions = [
+            { expr: 'x+y', latex: 'x+y' },
+            { expr: 'x*y', latex: 'xy' },
+            { expr: `${getRandomInt(2, 4)}*x+${getRandomInt(2, 4)}*y`, latex: 'ax+by' },
+            { expr: 'x^2+y^2', latex: 'x²+y²' },
+            { expr: '(x+y)^2', latex: '(x+y)²' }
+          ];
+          const chosen = evalExpressions[Math.floor(Math.random() * evalExpressions.length)];
 
-          if (type === 'x+y') {
-            correctAnswer = x + y;
-            expression = `Si x=${x}, y=${y}, ¿x+y?`;
-            expressionLatex = `x=${x}, y=${y}, \\; x+y=?`;
-            problemKey = `eval:x=${x},y=${y},x+y`;
-          } else if (type === 'xy') {
-            correctAnswer = x * y;
-            expression = `Si x=${x}, y=${y}, ¿xy?`;
-            expressionLatex = `x=${x}, y=${y}, \\; xy=?`;
-            problemKey = `eval:x=${x},y=${y},xy`;
-          } else if (type === 'ax+by') {
-            const a = getRandomInt(2, 4);
-            const b = getRandomInt(2, 4);
-            correctAnswer = a * x + b * y;
-            expression = `Si x=${x}, y=${y}, ¿${a}x+${b}y?`;
-            expressionLatex = `x=${x}, y=${y}, \\; ${a}x+${b}y=?`;
-            problemKey = `eval:x=${x},y=${y},${a}x+${b}y`;
-          } else if (type === 'x²+y²') {
-            correctAnswer = x * x + y * y;
-            expression = `Si x=${x}, y=${y}, ¿x²+y²?`;
-            expressionLatex = `x=${x}, y=${y}, \\; x^2+y^2=?`;
-            problemKey = `eval:x=${x},y=${y},x²+y²`;
-          } else { // '(x+y)²'
-            correctAnswer = (x + y) * (x + y);
-            expression = `Si x=${x}, y=${y}, ¿(x+y)²?`;
-            expressionLatex = `x=${x}, y=${y}, \\; (x+y)^2=?`;
-            problemKey = `eval:x=${x},y=${y},(x+y)²`;
-          }
+          // Use mathjs to evaluate the expression
+          correctAnswer = math.evaluate(chosen.expr, { x, y });
+          expression = `Si x=${x}, y=${y}, ¿${chosen.expr.replace(/\*/g, '').replace(/\^2/g, '²')}?`;
+          expressionLatex = `x=${x}, y=${y}, \\; ${chosen.expr.replace(/\*/g, '').replace(/\^/g, '^')}=?`;
+          problemKey = `eval:x=${x},y=${y},${chosen.expr}`;
         }
         break;
       }
@@ -330,84 +296,37 @@ export function generateProblem(levelConfig: OperationLevel): GeneratedProblem {
         const variables = config.variables || ['x'];
 
         if (variables.length === 1) {
-          const types = ['x+x', 'ax+bx', 'ax-bx', 'x+x+x', 'ax+x-x', 'a(x+b)+x'];
-          const type = types[Math.floor(Math.random() * types.length)];
+          const expressions = [
+            'x+x',
+            `${getRandomInt(2, 5)}*x+${getRandomInt(2, 5)}*x`,
+            `${getRandomInt(3, 7)}*x-${getRandomInt(1, 3)}*x`,
+            'x+x+x',
+            `${getRandomInt(2, 5)}*x+x-x`,
+            `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 5)})+x`
+          ];
+          const expr = expressions[Math.floor(Math.random() * expressions.length)];
 
-          if (type === 'x+x') {
-            correctAnswer = '2x';
-            expression = 'Simplifica: x+x';
-            expressionLatex = 'x+x';
-            problemKey = 'simp:x+x';
-          } else if (type === 'ax+bx') {
-            const a = getRandomInt(2, 5);
-            const b = getRandomInt(2, 5);
-            correctAnswer = `${a + b}x`;
-            expression = `Simplifica: ${a}x+${b}x`;
-            expressionLatex = `${a}x+${b}x`;
-            problemKey = `simp:${a}x+${b}x`;
-          } else if (type === 'ax-bx') {
-            const a = getRandomInt(3, 7);
-            const b = getRandomInt(1, a - 1);
-            correctAnswer = `${a - b}x`;
-            expression = `Simplifica: ${a}x-${b}x`;
-            expressionLatex = `${a}x-${b}x`;
-            problemKey = `simp:${a}x-${b}x`;
-          } else if (type === 'x+x+x') {
-            correctAnswer = '3x';
-            expression = 'Simplifica: x+x+x';
-            expressionLatex = 'x+x+x';
-            problemKey = 'simp:x+x+x';
-          } else if (type === 'ax+x-x') {
-            const a = getRandomInt(2, 5);
-            correctAnswer = `${a}x`;
-            expression = `Simplifica: ${a}x+x-x`;
-            expressionLatex = `${a}x+x-x`;
-            problemKey = `simp:${a}x+x-x`;
-          } else { // 'a(x+b)+x'
-            const a = getRandomInt(2, 4);
-            const b = getRandomInt(1, 5);
-            const coef = a + 1;
-            const const_term = a * b;
-            correctAnswer = `${coef}x+${const_term}`;
-            expression = `Simplifica: ${a}(x+${b})+x`;
-            expressionLatex = `${a}(x+${b})+x`;
-            problemKey = `simp:${a}(x+${b})+x`;
-          }
+          // Use mathjs to simplify the expression
+          const simplified = math.simplify(expr);
+          correctAnswer = simplified.toString().replace(/\*/g, '').replace(/\s+/g, '');
+          expression = `Simplifica: ${expr.replace(/\*/g, '')}`;
+          expressionLatex = expr.replace(/\*/g, '');
+          problemKey = `simp:${expr}`;
         } else { // two variables
-          const types = ['ax+by+x', 'ax+by-x', 'ax+by+cx-dy', 'a(x+b)+y'];
-          const type = types[Math.floor(Math.random() * types.length)];
+          const expressions = [
+            `${getRandomInt(2, 4)}*x+${getRandomInt(2, 4)}*y+x`,
+            `${getRandomInt(2, 5)}*x+${getRandomInt(2, 4)}*y-x`,
+            `${getRandomInt(2, 5)}*x+${getRandomInt(2, 5)}*y+${getRandomInt(1, 3)}*x-${getRandomInt(1, 2)}*y`,
+            `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 4)})+y`
+          ];
+          const expr = expressions[Math.floor(Math.random() * expressions.length)];
 
-          if (type === 'ax+by+x') {
-            const a = getRandomInt(2, 4);
-            const b = getRandomInt(2, 4);
-            correctAnswer = `${a + 1}x+${b}y`;
-            expression = `Simplifica: ${a}x+${b}y+x`;
-            expressionLatex = `${a}x+${b}y+x`;
-            problemKey = `simp:${a}x+${b}y+x`;
-          } else if (type === 'ax+by-x') {
-            const a = getRandomInt(2, 5);
-            const b = getRandomInt(2, 4);
-            correctAnswer = `${a - 1}x+${b}y`;
-            expression = `Simplifica: ${a}x+${b}y-x`;
-            expressionLatex = `${a}x+${b}y-x`;
-            problemKey = `simp:${a}x+${b}y-x`;
-          } else if (type === 'ax+by+cx-dy') {
-            const a = getRandomInt(2, 5);
-            const b = getRandomInt(2, 5);
-            const c = getRandomInt(1, 3);
-            const d = getRandomInt(1, b);
-            correctAnswer = `${a + c}x+${b - d}y`;
-            expression = `Simplifica: ${a}x+${b}y+${c}x-${d}y`;
-            expressionLatex = `${a}x+${b}y+${c}x-${d}y`;
-            problemKey = `simp:${a}x+${b}y+${c}x-${d}y`;
-          } else { // 'a(x+b)+y'
-            const a = getRandomInt(2, 4);
-            const b = getRandomInt(1, 4);
-            correctAnswer = `${a}x+${a * b}+y`;
-            expression = `Simplifica: ${a}(x+${b})+y`;
-            expressionLatex = `${a}(x+${b})+y`;
-            problemKey = `simp:${a}(x+${b})+y`;
-          }
+          // Use mathjs to simplify the expression
+          const simplified = math.simplify(expr);
+          correctAnswer = simplified.toString().replace(/\*/g, '').replace(/\s+/g, '');
+          expression = `Simplifica: ${expr.replace(/\*/g, '')}`;
+          expressionLatex = expr.replace(/\*/g, '');
+          problemKey = `simp:${expr}`;
         }
         break;
       }
@@ -716,21 +635,17 @@ export function generateProblem(levelConfig: OperationLevel): GeneratedProblem {
           expressionLatex = `[${arr.join(', ')}]`;
           problemKey = `sort:desc:${arr.join(',')}`;
         } else if (type === 'min') {
-          correctAnswer = Math.min(...arr);
+          correctAnswer = math.min(arr);
           expression = `Mínimo de [${arr.join(', ')}]`;
           expressionLatex = `\\min\\{${arr.join(', ')}\\}`;
           problemKey = `sort:min:${arr.join(',')}`;
         } else if (type === 'max') {
-          correctAnswer = Math.max(...arr);
+          correctAnswer = math.max(arr);
           expression = `Máximo de [${arr.join(', ')}]`;
           expressionLatex = `\\max\\{${arr.join(', ')}\\}`;
           problemKey = `sort:max:${arr.join(',')}`;
         } else { // median
-          const sorted = [...arr].sort((a, b) => a - b);
-          const mid = Math.floor(sorted.length / 2);
-          correctAnswer = sorted.length % 2 === 0
-            ? (sorted[mid - 1] + sorted[mid]) / 2
-            : sorted[mid];
+          correctAnswer = math.median(arr);
           expression = `Mediana de [${arr.join(', ')}]`;
           expressionLatex = `\\text{mediana}\\{${arr.join(', ')}\\}`;
           problemKey = `sort:median:${arr.join(',')}`;
@@ -779,7 +694,8 @@ export function generateProblem(levelConfig: OperationLevel): GeneratedProblem {
           expressionLatex = `|\\{x \\mid ${divisor}|x\\}|`;
           problemKey = `count:mult${divisor}:${arr.join(',')}`;
         } else { // sum-even
-          correctAnswer = arr.filter(x => x % 2 === 0).reduce((sum, x) => sum + x, 0);
+          const evens = arr.filter(x => x % 2 === 0);
+          correctAnswer = evens.length > 0 ? math.sum(evens) : 0;
           expression = `Suma los pares: [${arr.join(', ')}]`;
           expressionLatex = `\\sum(\\text{pares})`;
           problemKey = `count:sum-even:${arr.join(',')}`;
@@ -816,8 +732,8 @@ export function generateProblem(levelConfig: OperationLevel): GeneratedProblem {
           problemKey = `comp:*${n}:${arr.join(',')}`;
         } else if (type === 'map-then-reduce') {
           const n = getRandomInt(2, 3);
-          const result = arr.map(x => x * n).reduce((sum, x) => sum + x, 0);
-          correctAnswer = result;
+          const mapped = arr.map(x => x * n);
+          correctAnswer = math.sum(mapped);
           expression = `Aplica ×${n} luego suma: [${arr.join(', ')}]`;
           expressionLatex = `\\sum(${n}x)`;
           problemKey = `comp:*${n}+sum:${arr.join(',')}`;
