@@ -263,159 +263,209 @@ export default function OperationsPath({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8">
-      {/* Legend - Organized by Phases */}
-      <div className="mb-8 p-6 bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl">
-        <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">
-          5 Fases del Camino de Operaciones
-        </h3>
+    <div className="space-y-6">
+      {/* Simple Next Levels View */}
+      {!showFullPath && (
+        <div>
+          {/* Next Levels Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {visibleLevels.map((level) => {
+              const status = getLevelStatus(level.level);
+              const colorClass = operationTypeColors[level.operationType] || 'bg-gray-500';
 
-        <div className="space-y-6">
-          {/* Phase 1: Arithmetic */}
-          <div>
-            <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
-              Fase 1: Aritmética (Niveles 1-30)
-            </h4>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-              {['addition', 'subtraction', 'multiplication', 'division', 'mixed-arithmetic'].map((type) => (
-                <div key={type} className="flex items-center space-x-2">
-                  <div
-                    className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
-                  >
-                    {operationTypeIcons[type]}
+              return (
+                <div
+                  key={level.level}
+                  onClick={() => status !== 'locked' && onLevelSelect(level.level)}
+                  className={`bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all ${
+                    status === 'locked' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:scale-102'
+                  } ${status === 'current' ? 'ring-2 ring-blue-500' : ''}`}
+                >
+                  {/* Level Header */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`${colorClass} w-10 h-10 rounded-full flex items-center justify-center text-white font-bold`}>
+                        {level.level}
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900">{level.title}</h3>
+                        <p className="text-xs text-gray-500">{difficultyEmojis[level.difficulty]}</p>
+                      </div>
+                    </div>
+                    {status === 'completed' && <Check className="text-green-500" size={24} />}
+                    {status === 'current' && <PlayCircle className="text-blue-500" size={24} />}
+                    {status === 'locked' && <Lock className="text-gray-400" size={24} />}
                   </div>
-                  <span className="text-xs text-gray-700">
-                    {type === 'addition' ? 'Suma' :
-                     type === 'subtraction' ? 'Resta' :
-                     type === 'multiplication' ? 'Multiplicación' :
-                     type === 'division' ? 'División' : 'Mixto'}
-                  </span>
+
+                  {/* Description */}
+                  <p className="text-sm text-gray-600 mb-3">{level.description}</p>
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-between text-xs text-gray-500">
+                    <span>{operationTypeIcons[level.operationType]} {level.operationType}</span>
+                    <span>{level.problemsToComplete} problemas</span>
+                  </div>
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
 
-          {/* Phase 2: Algebraic */}
-          <div>
-            <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
-              Fase 2: Algebraica (Niveles 31-60)
-            </h4>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {['simple-equation', 'expression-evaluation', 'simplification'].map((type) => (
-                <div key={type} className="flex items-center space-x-2">
-                  <div
-                    className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
-                  >
-                    {operationTypeIcons[type]}
-                  </div>
-                  <span className="text-xs text-gray-700">
-                    {type === 'simple-equation' ? 'Ecuaciones' :
-                     type === 'expression-evaluation' ? 'Evaluación' : 'Simplificación'}
-                  </span>
-                </div>
-              ))}
+          {/* Toggle to Full Path */}
+          {hiddenCount > 0 && (
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => setShowFullPath(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+              >
+                <ChevronDown size={16} />
+                Ver camino completo ({levels.length} niveles)
+              </button>
             </div>
-          </div>
-
-          {/* Phase 3: Logical */}
-          <div>
-            <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
-              Fase 3: Lógica (Niveles 61-90)
-            </h4>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {['comparison', 'logical-operators', 'compound-conditions'].map((type) => (
-                <div key={type} className="flex items-center space-x-2">
-                  <div
-                    className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
-                  >
-                    {operationTypeIcons[type]}
-                  </div>
-                  <span className="text-xs text-gray-700">
-                    {type === 'comparison' ? 'Comparación' :
-                     type === 'logical-operators' ? 'Operadores' : 'Condiciones'}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Phase 4: Structural */}
-          <div>
-            <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
-              Fase 4: Estructural (Niveles 91-120)
-            </h4>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {['sequences', 'sets', 'functions'].map((type) => (
-                <div key={type} className="flex items-center space-x-2">
-                  <div
-                    className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
-                  >
-                    {operationTypeIcons[type]}
-                  </div>
-                  <span className="text-xs text-gray-700">
-                    {type === 'sequences' ? 'Secuencias' :
-                     type === 'sets' ? 'Conjuntos' : 'Funciones'}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Phase 5: Algorithmic */}
-          <div>
-            <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
-              Fase 5: Algorítmica (Niveles 121-150)
-            </h4>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {['sorting', 'counting', 'composition'].map((type) => (
-                <div key={type} className="flex items-center space-x-2">
-                  <div
-                    className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
-                  >
-                    {operationTypeIcons[type]}
-                  </div>
-                  <span className="text-xs text-gray-700">
-                    {type === 'sorting' ? 'Ordenamiento' :
-                     type === 'counting' ? 'Conteo' : 'Composición'}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Toggle Button */}
-      {hiddenCount > 0 && (
-        <div className="mb-6 text-center">
-          <button
-            onClick={() => setShowFullPath(!showFullPath)}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 font-semibold"
-          >
-            {showFullPath ? (
-              <>
-                <ChevronUp size={20} />
-                Mostrar solo próximos niveles
-                <ChevronUp size={20} />
-              </>
-            ) : (
-              <>
-                <ChevronDown size={20} />
-                Ver camino completo ({hiddenCount} niveles más)
-                <ChevronDown size={20} />
-              </>
-            )}
-          </button>
+          )}
         </div>
       )}
 
-      {/* Path */}
-      <div className="relative">
-        {visibleLevels.map((level) => {
-          const originalIndex = levels.findIndex(l => l.level === level.level);
-          return renderLevelNode(level, originalIndex);
-        })}
-      </div>
+      {/* Full Path View */}
+      {showFullPath && (
+        <div className="bg-white rounded-xl shadow-lg p-8">
+          {/* Collapse Button */}
+          <div className="mb-6 text-center">
+            <button
+              onClick={() => setShowFullPath(false)}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+            >
+              <ChevronUp size={16} />
+              Mostrar solo próximos niveles
+            </button>
+          </div>
+
+          {/* Legend - Organized by Phases */}
+          <div className="mb-8 p-6 bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl">
+            <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">
+              5 Fases del Camino de Operaciones
+            </h3>
+
+            <div className="space-y-6">
+              {/* Phase 1: Arithmetic */}
+              <div>
+                <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
+                  Fase 1: Aritmética (Niveles 1-30)
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                  {['addition', 'subtraction', 'multiplication', 'division', 'mixed-arithmetic'].map((type) => (
+                    <div key={type} className="flex items-center space-x-2">
+                      <div
+                        className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
+                      >
+                        {operationTypeIcons[type]}
+                      </div>
+                      <span className="text-xs text-gray-700">
+                        {type === 'addition' ? 'Suma' :
+                         type === 'subtraction' ? 'Resta' :
+                         type === 'multiplication' ? 'Multiplicación' :
+                         type === 'division' ? 'División' : 'Mixto'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Phase 2: Algebraic */}
+              <div>
+                <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
+                  Fase 2: Algebraica (Niveles 31-60)
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {['simple-equation', 'expression-evaluation', 'simplification'].map((type) => (
+                    <div key={type} className="flex items-center space-x-2">
+                      <div
+                        className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
+                      >
+                        {operationTypeIcons[type]}
+                      </div>
+                      <span className="text-xs text-gray-700">
+                        {type === 'simple-equation' ? 'Ecuaciones' :
+                         type === 'expression-evaluation' ? 'Evaluación' : 'Simplificación'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Phase 3: Logical */}
+              <div>
+                <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
+                  Fase 3: Lógica (Niveles 61-90)
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {['comparison', 'logical-operators', 'compound-conditions'].map((type) => (
+                    <div key={type} className="flex items-center space-x-2">
+                      <div
+                        className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
+                      >
+                        {operationTypeIcons[type]}
+                      </div>
+                      <span className="text-xs text-gray-700">
+                        {type === 'comparison' ? 'Comparación' :
+                         type === 'logical-operators' ? 'Operadores' : 'Condiciones'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Phase 4: Structural */}
+              <div>
+                <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
+                  Fase 4: Estructural (Niveles 91-120)
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {['sequences', 'sets', 'functions'].map((type) => (
+                    <div key={type} className="flex items-center space-x-2">
+                      <div
+                        className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
+                      >
+                        {operationTypeIcons[type]}
+                      </div>
+                      <span className="text-xs text-gray-700">
+                        {type === 'sequences' ? 'Secuencias' :
+                         type === 'sets' ? 'Conjuntos' : 'Funciones'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Phase 5: Algorithmic */}
+              <div>
+                <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
+                  Fase 5: Algorítmica (Niveles 121-150)
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {['sorting', 'counting', 'composition'].map((type) => (
+                    <div key={type} className="flex items-center space-x-2">
+                      <div
+                        className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
+                      >
+                        {operationTypeIcons[type]}
+                      </div>
+                      <span className="text-xs text-gray-700">
+                        {type === 'sorting' ? 'Ordenamiento' :
+                         type === 'counting' ? 'Conteo' : 'Composición'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Path - Zigzag Layout */}
+          <div className="relative">
+            {levels.map((level, index) => renderLevelNode(level, index))}
+          </div>
+        </div>
+      )}
 
       {/* Completion Message */}
       {levels.length > 0 && currentLevel > levels.length && (
