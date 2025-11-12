@@ -8,13 +8,32 @@ export async function register() {
   }
 }
 
-export async function onRequestError(err: unknown, request: {
-  path: string;
-}, context: {
-  routerKind: string;
-  routeType: string;
-}) {
+export async function onRequestError(
+  err: unknown,
+  request: {
+    path: string;
+    method: string;
+    headers: Headers;
+  },
+  context: {
+    routerKind: string;
+    routeType: string;
+    routePath?: string;
+  }
+) {
   await import('@sentry/nextjs').then((Sentry) => {
-    Sentry.captureRequestError(err, request, context);
+    // Convert Headers object to plain object for Sentry
+    const headersObj: Record<string, string | string[] | undefined> = {};
+    request.headers.forEach((value, key) => {
+      headersObj[key] = value;
+    });
+
+    Sentry.captureRequestError(err, {
+      ...request,
+      headers: headersObj,
+    }, {
+      ...context,
+      routePath: context.routePath || request.path,
+    });
   });
 }
