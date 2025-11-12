@@ -71,6 +71,7 @@ export default function RapidFireQuiz({
     currentQuestion,
     handleAnswerSelect: baseHandleAnswerSelect,
     resetQuiz,
+    isLoadingQuestions,
   } = useQuizState({
     level,
     subject,
@@ -85,6 +86,13 @@ export default function RapidFireQuiz({
     setCurrentQuestionIndex,
     quizQuestions.length
   );
+
+  // Scroll to top when questions are loaded to prevent viewport issues
+  useEffect(() => {
+    if (!isLoadingQuestions && quizQuestions.length > 0) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [isLoadingQuestions, quizQuestions.length]);
 
   // Initialize rapid fire state when quiz questions load
   useEffect(() => {
@@ -319,6 +327,19 @@ export default function RapidFireQuiz({
     return (
       <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
         <p className="text-center text-gray-600 dark:text-gray-400">Cargando preguntas...</p>
+      </div>
+    );
+  }
+
+  // Loading state while fetching questions
+  if (isLoadingQuestions) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 overflow-hidden">
+        <div className="text-center">
+          <div className="text-6xl mb-6 animate-pulse">🧠</div>
+          <h2 className="text-3xl font-bold text-white mb-3">Seleccionando preguntas...</h2>
+          <p className="text-lg text-white/90">Personalizando tu práctica</p>
+        </div>
       </div>
     );
   }
