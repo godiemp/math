@@ -134,6 +134,18 @@ export function resetOperationsProgress(): void {
 }
 
 /**
+ * Unlock all levels (for advanced users or testing)
+ */
+export function unlockAllOperationsLevels(totalLevels: number): OperationsProgress {
+  const progress = getOperationsProgress();
+
+  progress.highestLevelReached = totalLevels;
+
+  saveOperationsProgress(progress);
+  return progress;
+}
+
+/**
  * Check if a level is unlocked
  */
 export function isLevelUnlocked(level: number): boolean {

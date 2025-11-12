@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Check, X, Award, Sparkles } from 'lucide-react';
+import { ArrowLeft, Check, X, Award, Sparkles, SkipForward } from 'lucide-react';
 import { InlineMath } from './MathDisplay';
 import { OPERATIONS_PATH } from '@/lib/operationsPath';
-import { generateProblem, validateAnswer } from '@/lib/operationsProblemGenerator';
+import { generateProblem, validateAnswer, clearProblemHistory } from '@/lib/operationsProblemGenerator';
 import { recordCorrectAnswer, recordIncorrectAnswer, completeLevel } from '@/lib/operationsProgress';
 
 interface Problem {
@@ -130,12 +130,25 @@ export default function OperationsPractice({
       setShowLevelComplete(false);
       setCorrectCount(0);
       setAttemptCount(0);
+      // Clear problem history for this level
+      clearProblemHistory(level);
       // Go back to level selection
       onBack();
     } else {
       loadProblem();
     }
   };
+
+  const handleSkipLevel = () => {
+    // Mark level as completed and clear history
+    completeLevel(level);
+    clearProblemHistory(level);
+    setShowLevelComplete(true);
+    onLevelComplete();
+  };
+
+  // Calculate if user can skip (80%+ accuracy after 3+ attempts)
+  const canSkip = attemptCount >= 3 && correctCount / attemptCount >= 0.8;
 
   if (showLevelComplete) {
     return (
@@ -206,6 +219,16 @@ export default function OperationsPractice({
           <div className="text-sm text-gray-600">
             Progreso: {correctCount} / {problem.problemsToComplete}
           </div>
+          {canSkip && (
+            <button
+              onClick={handleSkipLevel}
+              className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition-all shadow-md transform hover:scale-105"
+              title="Saltar al siguiente nivel (80%+ precisión)"
+            >
+              <SkipForward size={16} />
+              <span>Saltar Nivel</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -219,7 +242,7 @@ export default function OperationsPractice({
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-3 mb-8">
+      <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
         <div
           className="bg-gradient-to-r from-blue-600 to-purple-600 h-3 rounded-full transition-all duration-500"
           style={{
@@ -227,6 +250,21 @@ export default function OperationsPractice({
           }}
         />
       </div>
+
+      {/* Skip hint */}
+      {attemptCount >= 2 && !canSkip && correctCount / attemptCount >= 0.7 && (
+        <div className="text-center text-sm text-gray-600 mb-6">
+          Mantén un 80% de precisión para poder saltar al siguiente nivel
+        </div>
+      )}
+      {canSkip && (
+        <div className="text-center text-sm text-green-600 font-semibold mb-6">
+          ¡Excelente trabajo! Puedes saltar al siguiente nivel
+        </div>
+      )}
+      {!canSkip && attemptCount > 0 && (
+        <div className="mb-6"></div>
+      )}
 
       {/* Problem Display */}
       <div className="max-w-xl mx-auto">

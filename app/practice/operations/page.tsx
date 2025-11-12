@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import OperationsPath from '@/components/OperationsPath';
 import OperationsPractice from '@/components/OperationsPractice';
 import { OPERATIONS_PATH } from '@/lib/operationsPath';
-import { getOperationsProgress } from '@/lib/operationsProgress';
+import { getOperationsProgress, unlockAllOperationsLevels } from '@/lib/operationsProgress';
 
 interface OperationLevel {
   level: number;
@@ -59,6 +59,11 @@ export default function OperationsPracticePage() {
 
   const handleLevelComplete = () => {
     loadProgress(); // Refresh progress when level is completed
+  };
+
+  const handleUnlockAllLevels = () => {
+    unlockAllOperationsLevels(OPERATIONS_PATH.length);
+    loadProgress(); // Refresh progress to show all unlocked levels
   };
 
   if (isLoading) {
@@ -127,6 +132,7 @@ export default function OperationsPracticePage() {
             levels={OPERATIONS_PATH}
             userProgress={userProgress}
             onLevelSelect={handleLevelSelect}
+            onUnlockAllLevels={handleUnlockAllLevels}
           />
         )}
       </div>
