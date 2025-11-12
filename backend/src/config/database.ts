@@ -783,7 +783,7 @@ export const initializeDatabase = async (): Promise<void> => {
         id SERIAL PRIMARY KEY,
         user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         level INTEGER NOT NULL,
-        operation_type VARCHAR(20) NOT NULL CHECK (operation_type IN ('addition', 'subtraction', 'multiplication', 'division', 'mixed')),
+        operation_type VARCHAR(30) NOT NULL,
         difficulty VARCHAR(20) NOT NULL CHECK (difficulty IN ('basic', 'intermediate', 'advanced', 'expert')),
         problem_data JSONB NOT NULL,
         user_answer TEXT,
@@ -792,6 +792,17 @@ export const initializeDatabase = async (): Promise<void> => {
         time_spent_seconds INTEGER,
         attempted_at BIGINT NOT NULL
       )
+    `);
+
+    // Migrate: Update operation_type constraint to support new types
+    await client.query(`
+      DO $$
+      BEGIN
+        -- Drop old constraint if it exists
+        ALTER TABLE operations_practice_attempts DROP CONSTRAINT IF EXISTS operations_practice_attempts_operation_type_check;
+      EXCEPTION
+        WHEN undefined_table THEN NULL;
+      END $$;
     `);
 
     // Operations practice indexes
