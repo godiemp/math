@@ -9,6 +9,7 @@ import { Payment } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { analytics } from '@/lib/analytics';
 
 function PaymentSuccessContent() {
   const router = useRouter();
@@ -44,6 +45,15 @@ function PaymentSuccessContent() {
           setError(result.error.error || 'Error al obtener información del pago');
         } else if (result.data?.payment) {
           setPayment(result.data.payment);
+
+          // Track successful payment
+          analytics.track('payment_completed', {
+            amount: result.data.payment.transactionAmount || result.data.payment.amount,
+            currency: result.data.payment.currency,
+            paymentMethod: result.data.payment.paymentMethod,
+            gatewayPaymentId: result.data.payment.gatewayPaymentId,
+          });
+
           // Refresh user data to update subscription status
           await refreshUser();
         }

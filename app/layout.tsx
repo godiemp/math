@@ -4,6 +4,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { SWRProvider } from "@/lib/swr-config";
 import { Toaster } from "sonner";
 import CookieConsent from "@/components/CookieConsent";
+import { PostHogProvider } from "@/components/PostHogProvider";
 
 export const metadata: Metadata = {
   title: "SimplePAES - Preparación Matemática",
@@ -18,13 +19,15 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="antialiased">
-        <SWRProvider>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
-        </SWRProvider>
-        <Toaster position="top-right" richColors />
-        <CookieConsent />
+        <PostHogProvider>
+          <SWRProvider>
+            <AuthProvider>
+              {children}
+            </AuthProvider>
+          </SWRProvider>
+          <Toaster position="top-right" richColors />
+          <CookieConsent />
+        </PostHogProvider>
       </body>
     </html>
   );

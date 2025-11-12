@@ -6,6 +6,7 @@ import { MathText, SmartLatexRenderer } from './MathDisplay';
 import { GeometryCanvas, GeometryFigure } from './GeometryCanvas';
 import { MarkdownViewer } from './MarkdownViewer';
 import { api } from '@/lib/api-client';
+import { analytics } from '@/lib/analytics';
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -40,6 +41,15 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
 
   useEffect(() => {
     if (isOpen) {
+      // Track AI tutor opened
+      analytics.track('ai_tutor_opened', {
+        questionId: question.id,
+        context: userAnswer === question.correctAnswer ? 'correct_answer' : 'wrong_answer',
+        quizMode,
+        subject: question.subject,
+        difficulty: question.difficulty,
+      });
+
       // Initialize with welcome message
       setMessages([
         {
@@ -53,7 +63,7 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
       // Focus input
       setTimeout(() => inputRef.current?.focus(), 100);
     }
-  }, [isOpen, question, userAnswer]);
+  }, [isOpen, question, userAnswer, quizMode]);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
@@ -67,6 +77,14 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsLoading(true);
+
+    // Track AI message sent
+    analytics.track('ai_message_sent', {
+      questionId: question.id,
+      messageLength: inputValue.length,
+      turnNumber: Math.floor(messages.length / 2) + 1, // Approximate conversation turn
+      quizMode,
+    });
 
     try {
       const response = await api.post<{ response: string; success: boolean }>('/api/ai/chat', {
