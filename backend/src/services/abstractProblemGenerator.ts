@@ -246,7 +246,8 @@ CRITICAL: You MUST generate exactly ${count} problem(s). The "problems" array MU
         },
         { role: 'user', content: prompt },
       ],
-      temperature: 0.8, // Higher temperature for more variety
+      // Note: GPT-5 does not support custom temperature - it only supports default (1.0)
+      // This is by design as GPT-5 uses multi-pass reasoning
       max_completion_tokens: 2000, // GPT-5 uses max_completion_tokens instead of max_tokens
       response_format: { type: 'json_object' },
     });

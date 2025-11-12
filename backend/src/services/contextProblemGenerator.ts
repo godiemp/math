@@ -188,7 +188,8 @@ Generate ${count} problem(s) now. Return ONLY the JSON object with a "problems" 
         },
         { role: 'user', content: prompt },
       ],
-      temperature: 0.9, // Higher temperature for creative contexts
+      // Note: GPT-5 does not support custom temperature - it only supports default (1.0)
+      // This is by design as GPT-5 uses multi-pass reasoning
       max_completion_tokens: 3000, // GPT-5 uses max_completion_tokens instead of max_tokens
       response_format: { type: 'json_object' },
     });
