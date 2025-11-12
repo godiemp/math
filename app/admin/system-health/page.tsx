@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import AdminLayout from '@/components/AdminLayout';
 import { Card, Heading, Text, Badge } from '@/components/ui';
+import { apiRequest } from '@/lib/api-client';
 
 interface ServiceStatus {
   status: string;
@@ -41,24 +42,22 @@ function SystemHealthContent() {
       setIsLoading(true);
       setError(null);
 
-      // Fetch from health/ready endpoint
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-      const response = await fetch(`${apiUrl}/health/ready`, {
+      // Use the API client to get the health status
+      // This properly handles backend URL resolution
+      const response = await apiRequest<HealthStatus>('/health/ready', {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
       });
 
-      if (!response.ok) {
-        throw new Error(`Health check failed: ${response.status}`);
+      if (response.error) {
+        throw new Error(response.error.error || 'Health check failed');
       }
 
-      const data = await response.json();
-      setHealthData(data);
-      setLastUpdate(new Date());
+      if (response.data) {
+        setHealthData(response.data);
+        setLastUpdate(new Date());
+      }
     } catch (err: any) {
-      setError(err.message || 'Failed to fetch health status');
+      setError(err.message || 'Failed to fetch health status. Make sure the backend server is running.');
       console.error('Health check error:', err);
     } finally {
       setIsLoading(false);
