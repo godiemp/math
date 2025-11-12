@@ -247,7 +247,7 @@ CRITICAL: You MUST generate exactly ${count} problem(s). The "problems" array MU
         { role: 'user', content: prompt },
       ],
       temperature: 0.8, // Higher temperature for more variety
-      max_tokens: 2000,
+      max_completion_tokens: 2000, // GPT-5 uses max_completion_tokens instead of max_tokens
       response_format: { type: 'json_object' },
     });
 

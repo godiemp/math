@@ -189,7 +189,7 @@ Generate ${count} problem(s) now. Return ONLY the JSON object with a "problems" 
         { role: 'user', content: prompt },
       ],
       temperature: 0.9, // Higher temperature for creative contexts
-      max_tokens: 3000,
+      max_completion_tokens: 3000, // GPT-5 uses max_completion_tokens instead of max_tokens
       response_format: { type: 'json_object' },
     });
 
