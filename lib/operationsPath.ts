@@ -1138,6 +1138,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-004"],
+
     config: { setSize: 5, operators: ['\''], minValue: 1, maxValue: 10 }
   },
   {
@@ -1533,18 +1535,6 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     thematicUnits: ["M2-PROB-003"],
 
     config: { sequenceLength: 6, minValue: 1, maxValue: 10 }
-  },
-
-  // Composición (141-150)
-  },
-  },
-  },
-  },
-  },
-  },
-  },
-  },
-  },
   }
 ];
 
