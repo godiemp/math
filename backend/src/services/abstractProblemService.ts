@@ -28,12 +28,13 @@ export async function createAbstractProblem(
   const query = `
     INSERT INTO abstract_problems (
       essence, cognitive_level, level, subject, unit, subsection,
+      sequence_order, pedagogy_notes, prerequisite_sequence, generation_rules,
       difficulty, difficulty_score, primary_skills, secondary_skills,
       generation_method, generated_by, generation_prompt,
       answer_type, expected_steps, common_errors,
       status, review_notes, created_at, updated_at
     ) VALUES (
-      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24
     ) RETURNING *
   `;
 
@@ -44,6 +45,10 @@ export async function createAbstractProblem(
     input.subject,
     input.unit,
     input.subsection || null,
+    input.sequence_order || null,
+    input.pedagogy_notes || null,
+    input.prerequisite_sequence || null,
+    input.generation_rules ? JSON.stringify(input.generation_rules) : null,
     input.difficulty,
     difficulty_score,
     input.primary_skills,
@@ -354,6 +359,10 @@ function mapRowToAbstractProblem(row: any): AbstractProblem {
     subject: row.subject,
     unit: row.unit,
     subsection: row.subsection || undefined,
+    sequence_order: row.sequence_order || undefined,
+    pedagogy_notes: row.pedagogy_notes || undefined,
+    prerequisite_sequence: row.prerequisite_sequence || undefined,
+    generation_rules: safeParseJSON(row.generation_rules, undefined),
     difficulty: row.difficulty,
     difficulty_score: row.difficulty_score,
     primary_skills: row.primary_skills,

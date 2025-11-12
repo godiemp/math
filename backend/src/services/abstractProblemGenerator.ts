@@ -144,97 +144,162 @@ ${existingEssences.length > 50 ? `\n... and ${existingEssences.length - 50} more
 
 **IMPORTANT GUIDELINES:**
 
-1. **LaTeX Format**: ALL mathematical expressions MUST use proper LaTeX notation.
-   - Use $...$ for inline math: "Calcula: $(-3) \\times 4$"
+1. **Maximum Abstraction**: Create problems as GENERAL MATHEMATICAL TEMPLATES with placeholders {like_this}.
+   - Use {placeholders} for values that can vary in context generation
+   - Focus on the MATHEMATICAL STRUCTURE, not specific numbers
+   - ✅ GOOD: "Ordena de {criterio} $n$ números enteros dados"
+   - ✅ GOOD: "Calcula: $(a) \\{op\\} (b)$ donde {condiciones_signos}"
+   - ✅ GOOD: "Si {condición}, compara {expresión_1} con {expresión_2}"
+   - ❌ BAD: "Ordena de menor a mayor: $-5, 3, 0, -1, 2$" (too specific, should use placeholders)
+
+2. **LaTeX Format**: ALL mathematical expressions MUST use proper LaTeX notation.
+   - Use $...$ for inline math
    - Use $$...$$ for display math (standalone equations)
-   - Common LaTeX symbols:
-     * Multiplication: \\times (not × or *)
-     * Division: \\div or \\frac{a}{b}
-     * Exponents: x^2, x^{10}
-     * Fractions: \\frac{numerator}{denominator}
-     * Radicals: \\sqrt{x}, \\sqrt[n]{x}
-     * Inequalities: <, >, \\leq, \\geq, \\neq
-     * Absolute value: |x| or \\lvert x \\rvert
-     * Sets: \\{1, 2, 3\\}
-   - ✅ GOOD: "Ordena de menor a mayor: $-5, 3, 0, -1, 2$"
-   - ✅ GOOD: "Calcula: $(-3) \\times 4$"
-   - ✅ GOOD: "Resuelve: $x - 5 = -2$"
-   - ✅ GOOD: "Simplifica: $\\frac{2x + 4}{2}$"
-   - ❌ BAD: "Calcula: (-3) × 4" (no LaTeX format)
+   - Common LaTeX symbols: \\times, \\div, \\frac{a}{b}, x^2, \\sqrt{x}, \\leq, \\geq, |x|, \\{set\\}
+   - Variables and placeholders: Use $a, b, c, n, x$ for mathematical variables
+   - Placeholders for variation: Use {criterio}, {op}, {condición} outside of $ $
 
-2. **Abstract Nature**: Create problems that represent the PURE MATHEMATICAL ESSENCE, NOT a contextual story.
-   - ✅ GOOD: "Ordena de menor a mayor: $-5, 3, 0, -1, 2$"
-   - ✅ GOOD: "Calcula: $(-3) \\times 4$"
-   - ✅ GOOD: "Resuelve: $x - 5 = -2$"
-   - ❌ BAD: "María tiene -5 grados en el termómetro..." (This is contextual, not abstract!)
+3. **Pedagogical Examples** (sequence 1-12 for "A. Orden y valor absoluto"):
 
-3. **Examples of Abstract Problems** (use these as inspiration, but create NEW variations with LaTeX):
-   - "Compara: $-7$ __ $-3$" (orden y valor absoluto)
-   - "Evalúa: $|-6|$, $|3|$, $|-2|+|-5|$" (valor absoluto)
-   - "Determina: signo de $(a \\times b \\times c)$ según el número de negativos" (multiplicación)
-   - "Resuelve: $(-4) \\times x = -16$" (ecuaciones)
-   - "Evalúa: $2+(-3) \\times (-4)$" (jerarquía de operaciones)
-   - "Si $a<b<0$, compara $a+b$ con $a-b$" (razonamiento con desigualdades)
-   - "Simplifica: $\\frac{x^2 - 4}{x - 2}$" (álgebra)
-   - "Calcula el área: triángulo con base $b=5$ y altura $h=3$" (geometría)
+   SEQUENCE 1 (easy/apply):
+   {
+     "essence": "Ordena de {criterio} $n$ números enteros dados",
+     "generation_rules": {
+       "criterio": ["menor a mayor", "mayor a menor"],
+       "n": [3, 4, 5],
+       "value_range": [-10, 10]
+     },
+     "pedagogy_notes": "Concepto base: ordenamiento de enteros"
+   }
 
-   **For variety, explore:**
-   - Different number ranges (small vs. large numbers)
-   - Different operations or combinations
-   - Variables vs. concrete numbers
-   - Inequalities vs. equations
-   - Comparison problems
-   - Absolute value combinations
-   - Mixed operations with different priorities
+   SEQUENCE 2 (easy/apply):
+   {
+     "essence": "Compara usando $<$, $>$ o $=$: $a$ __ $b$ donde $a, b \\in \\mathbb{Z}$",
+     "generation_rules": {
+       "value_range": [-10, 10],
+       "sign_combinations": ["ambos_negativos", "ambos_positivos", "signos_diferentes"]
+     },
+     "pedagogy_notes": "Comparación directa sin valor absoluto"
+   }
 
-4. **Cognitive Levels** (all examples must use LaTeX):
-   - **remember**: Recall facts, definitions (e.g., "Define valor absoluto")
-   - **understand**: Explain concepts (e.g., "Explica cuándo $|a|<|b|$ implica $a<b$")
-   - **apply**: Use procedures (e.g., "Calcula: $(-12) \\div 3$")
-   - **analyze**: Break down, compare (e.g., "Compara $(-a) \\times (-b)$ con $a \\times b$")
-   - **evaluate**: Judge, verify (e.g., "Determina si $a+b=c+d$ implica $a+c=b+d$")
-   - **create**: Construct new solutions (e.g., "Encuentra dos enteros cuyo producto sea $-24$ y cuya suma sea $-5$")
+   SEQUENCE 4 (easy/apply):
+   {
+     "essence": "Calcula: $|a|$ donde $a \\in \\mathbb{Z}$",
+     "generation_rules": {
+       "value_range": [-10, 10],
+       "prefer_negatives": true
+     },
+     "pedagogy_notes": "Introducción al concepto de valor absoluto"
+   }
 
-5. **Difficulty Levels**:
+   SEQUENCE 6 (medium/apply):
+   {
+     "essence": "Compara: $|a|$ __ $|b|$",
+     "generation_rules": {
+       "value_range": [-10, 10],
+       "sign_combinations": ["ambos_negativos", "ambos_positivos", "signos_diferentes"]
+     },
+     "pedagogy_notes": "Combina valor absoluto con comparación",
+     "prerequisite_sequence": [2, 4]
+   }
+
+   SEQUENCE 9 (medium/apply):
+   {
+     "essence": "Resuelve: $|x| = n$ donde $n \\in \\mathbb{Z}^+$",
+     "generation_rules": {
+       "n_range": [1, 10]
+     },
+     "pedagogy_notes": "Ecuaciones simples con valor absoluto (dos soluciones)"
+   }
+
+   SEQUENCE 10 (hard/apply):
+   {
+     "essence": "Resuelve: $|x| {comparador} n$ donde $n \\in \\mathbb{Z}^+$, $x \\in \\mathbb{Z}$",
+     "generation_rules": {
+       "comparador": ["<", ">", "\\leq", "\\geq"],
+       "n_range": [1, 5]
+     },
+     "pedagogy_notes": "Inecuaciones con valor absoluto",
+     "prerequisite_sequence": [9]
+   }
+
+   SEQUENCE 12 (extreme/create):
+   {
+     "essence": "Minimiza: $|x - a| + |x - b|$ donde $x \\in \\mathbb{Z}$",
+     "generation_rules": {
+       "a_range": [-10, 10],
+       "b_range": [-10, 10],
+       "distance_between": [3, 15]
+     },
+     "pedagogy_notes": "Optimización: suma de distancias (mediana)",
+     "prerequisite_sequence": [11]
+   }
+
+4. **Key Placeholder Types**:
+   - {criterio}, {criterio_orden}: "menor a mayor", "mayor a menor"
+   - {comparador}: "<", ">", "\\leq", "\\geq"
+   - {op}: "\\times", "\\div", "+", "-"
+   - {condición}, {condiciones_signos}: "$a < 0, b > 0$", "$a < b < 0$"
+   - {expresión_1}, {expresión_2}: "$a + b$", "$|a|$", "$-a$"
+
+5. **Cognitive Levels** (Bloom's Taxonomy):
+   - **remember**: Recall facts (e.g., "Define {concepto}")
+   - **understand**: Explain (e.g., "Explica cuándo {condición} implica {resultado}")
+   - **apply**: Use procedures (e.g., "Calcula: {operación}")
+   - **analyze**: Compare (e.g., "Si {condición}, compara {expr_1} con {expr_2}")
+   - **evaluate**: Judge (e.g., "Determina si {proposición} es válida")
+   - **create**: Construct (e.g., "Encuentra valores que cumplan {restricciones}")
+
+6. **Difficulty Levels**:
    - **easy**: Direct recall or single-step operations
    - **medium**: Multi-step operations or basic reasoning
    - **hard**: Complex reasoning or multiple concepts combined
    - **extreme**: Advanced abstract reasoning or proof-like questions
 
-6. **Answer Types**:
+7. **Answer Types**:
    - multiple_choice: Most common (4 options, 1 correct)
    - numeric: Direct numerical answer
    - algebraic: Algebraic expression answer
    - true_false: True/false statement
 
-7. **Expected Steps**: List the solution steps a student should follow
-
-8. **Common Errors**: Anticipate typical student mistakes
-
 **Output Format (JSON object with problems array):**
 {
   "problems": [
     {
-      "essence": "Calcula: $(-3) \\times 4$",
+      "essence": "Ordena de {criterio} $n$ números enteros dados",
       "answer_type": "multiple_choice",
       "expected_steps": [
-        "Identificar signos: negativo $\\times$ positivo",
-        "Multiplicar valores absolutos: $3 \\times 4 = 12$",
-        "Aplicar regla de signos: resultado es negativo",
-        "Respuesta: $-12$"
+        "Identificar el criterio de ordenamiento",
+        "Comparar los números según su valor",
+        "Ordenar de acuerdo al criterio solicitado"
       ],
       "common_errors": [
-        "Olvidar cambiar el signo (responder $12$ en lugar de $-12$)",
-        "Aplicar incorrectamente la regla de signos (pensar que negativo $\\times$ positivo = positivo)"
+        "Confundir menor con mayor",
+        "No considerar los signos negativos correctamente"
       ],
-      "suggested_difficulty_score": 20
+      "suggested_difficulty_score": 15,
+      "generation_rules": {
+        "criterio": ["menor a mayor", "mayor a menor"],
+        "n": [3, 4, 5],
+        "value_range": [-10, 10],
+        "ensure_distinct": true
+      },
+      "sequence_order": 1,
+      "pedagogy_notes": "Concepto base: ordenamiento de enteros",
+      "prerequisite_sequence": []
     }
   ]
 }
 
-**IMPORTANT**: The "essence" field MUST contain LaTeX-formatted mathematical expressions using $...$ delimiters.
+**CRITICAL REQUIREMENTS:**
+- The "essence" field MUST use {placeholders} for maximum abstraction
+- MUST include "generation_rules" object with ALL placeholder values and constraints
+- MUST include "sequence_order" (pedagogical order within subsection)
+- MUST include "pedagogy_notes" (why this problem comes at this sequence)
+- MUST include "prerequisite_sequence" (array of prior sequence numbers needed, or empty [])
+- ALL mathematical expressions MUST use LaTeX with $ $ delimiters
 
-CRITICAL: You MUST generate exactly ${count} problem(s). The "problems" array MUST contain ${count} items. Return ONLY valid JSON, no additional text.`;
+You MUST generate exactly ${count} problem(s). The "problems" array MUST contain ${count} items. Return ONLY valid JSON, no additional text.`;
 
   try {
     const openai = getOpenAIClient();
@@ -277,6 +342,10 @@ CRITICAL: You MUST generate exactly ${count} problem(s). The "problems" array MU
       suggested_difficulty_score:
         p.suggested_difficulty_score ||
         calculateDifficultyScore(cognitive_level, primary_skills, 2),
+      generation_rules: p.generation_rules || null,
+      sequence_order: p.sequence_order || null,
+      pedagogy_notes: p.pedagogy_notes || null,
+      prerequisite_sequence: p.prerequisite_sequence || [],
     }));
   } catch (error: any) {
     console.error('Error generating abstract problems:', error);
