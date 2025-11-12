@@ -5,6 +5,7 @@ import { SWRProvider } from "@/lib/swr-config";
 import { Toaster } from "sonner";
 import CookieConsent from "@/components/CookieConsent";
 import { PostHogProvider } from "@/components/PostHogProvider";
+import { IntercomProvider } from "@/components/IntercomProvider";
 
 export const metadata: Metadata = {
   title: "SimplePAES - Preparación Matemática",
@@ -23,6 +24,7 @@ export default function RootLayout({
           <SWRProvider>
             <AuthProvider>
               {children}
+              <IntercomProvider />
             </AuthProvider>
           </SWRProvider>
           <Toaster position="top-right" richColors />
