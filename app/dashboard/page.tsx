@@ -245,7 +245,7 @@ function DashboardContent() {
         </div>
 
         {/* Practice Section - Operations, M1, and M2 */}
-        <Card hover className="p-4 mb-8 sm:mb-10 md:mb-12 relative">
+        <Card hover className="p-5 mb-8 sm:mb-10 md:mb-12 relative">
           {!isPaidUser && (
             <div className="absolute top-2 right-2 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-1">
               <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -255,18 +255,21 @@ function DashboardContent() {
             </div>
           )}
 
-          <div className="space-y-4">
+          <div className="space-y-5">
             {/* Operations Practice Section */}
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2 flex-1">
-                <span className="text-xl">🎯</span>
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3 flex-1">
+                <span className="text-2xl">🎯</span>
                 <div>
-                  <Heading level={3} size="xs" className="text-sm">
+                  <Heading level={3} size="xs" className="text-sm mb-0.5">
                     Práctica de Operaciones
                   </Heading>
+                  <Text size="xs" variant="secondary" className="text-[11px]">
+                    Domina operaciones básicas progresivamente
+                  </Text>
                 </div>
               </div>
-              <Button asChild size="sm" className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-xs">
+              <Button asChild size="sm" className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-xs shrink-0">
                 <Link href="/practice/operations">
                   Comenzar
                 </Link>
@@ -276,23 +279,28 @@ function DashboardContent() {
             <div className="border-t border-gray-200 dark:border-gray-700"></div>
 
             {/* M1 and M2 in grid */}
-            <div className={user?.targetLevel === 'M1_ONLY' ? '' : 'grid sm:grid-cols-2 gap-3'}>
+            <div className={user?.targetLevel === 'M1_ONLY' ? '' : 'grid sm:grid-cols-2 gap-4'}>
               {/* M1 Section */}
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 flex-1">
                   <span className="text-xl">📐</span>
-                  <Heading level={4} size="xs" className="text-sm">
-                    M1
-                  </Heading>
+                  <div>
+                    <Heading level={4} size="xs" className="text-sm mb-0.5">
+                      M1
+                    </Heading>
+                    <Text size="xs" variant="secondary" className="text-[11px]">
+                      Competencia básica
+                    </Text>
+                  </div>
                 </div>
                 {isPaidUser ? (
-                  <Button asChild size="sm" className="text-xs">
+                  <Button asChild size="sm" className="text-xs shrink-0">
                     <Link href="/practice/m1">
                       Practicar
                     </Link>
                   </Button>
                 ) : (
-                  <Button disabled size="sm" className="opacity-60 text-xs">
+                  <Button disabled size="sm" className="opacity-60 text-xs shrink-0">
                     <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                     </svg>
@@ -306,18 +314,23 @@ function DashboardContent() {
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2 flex-1">
                     <span className="text-xl">🎓</span>
-                    <Heading level={4} size="xs" className="text-sm">
-                      M2
-                    </Heading>
+                    <div>
+                      <Heading level={4} size="xs" className="text-sm mb-0.5">
+                        M2
+                      </Heading>
+                      <Text size="xs" variant="secondary" className="text-[11px]">
+                        Competencia avanzada
+                      </Text>
+                    </div>
                   </div>
                   {isPaidUser ? (
-                    <Button asChild size="sm" className="text-xs">
+                    <Button asChild size="sm" className="text-xs shrink-0">
                       <Link href="/practice/m2">
                         Practicar
                       </Link>
                     </Button>
                   ) : (
-                    <Button disabled size="sm" className="opacity-60 text-xs">
+                    <Button disabled size="sm" className="opacity-60 text-xs shrink-0">
                       <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                       </svg>
