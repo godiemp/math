@@ -46,6 +46,57 @@ export type ContextType =
   | 'other';
 
 // ========================================
+// Generation Rules Types
+// ========================================
+
+export interface GenerationRules {
+  // Placeholders in essence can be filled with these values
+  [key: string]: any;
+
+  // Common generation constraints
+  value_range?: number[];
+  n?: number[];
+  ensure_distinct?: boolean;
+  ensure_different?: boolean;
+  include_zero?: boolean | 'sometimes';
+  prefer_negatives?: boolean;
+  avoid_zero?: boolean;
+  sign_combinations?: string[];
+
+  // For ordering problems
+  criterio?: string[];
+  criterio_orden?: string[];
+  criterio_absoluto?: string[];
+
+  // For comparison problems
+  comparador?: string[];
+  expresión_1?: string[];
+  expresión_2?: string[];
+
+  // For operation problems
+  op?: string[];
+  condiciones_signos?: string[];
+
+  // For equation/optimization problems
+  criterio_opt?: string[];
+  criterio_optimización?: string[];
+
+  // Additional constraints
+  approach?: string;
+  may_include_conditions?: string;
+  may_include_numeric_example?: boolean;
+  include_counterexample?: boolean;
+  focus_on_sign_analysis?: boolean;
+  solution_format?: string;
+  max_elements_shown?: number;
+  distance_between?: number[];
+  result_range?: number[];
+  hint_median?: boolean;
+  present_as_set?: boolean;
+  include_distractors?: string[];
+}
+
+// ========================================
 // Abstract Problem Types
 // ========================================
 
@@ -60,6 +111,15 @@ export interface AbstractProblem {
   level: Level;
   subject: Subject;
   unit: string;
+  subsection?: string;
+
+  // Pedagogical ordering
+  sequence_order?: number;
+  pedagogy_notes?: string;
+  prerequisite_sequence?: number[];
+
+  // Generation rules for maximum abstraction
+  generation_rules?: GenerationRules;
 
   // Difficulty
   difficulty: DifficultyLevel;
@@ -94,6 +154,11 @@ export interface CreateAbstractProblemInput {
   level: Level;
   subject: Subject;
   unit: string;
+  subsection?: string;
+  sequence_order?: number;
+  pedagogy_notes?: string;
+  prerequisite_sequence?: number[];
+  generation_rules?: GenerationRules;
   difficulty: DifficultyLevel;
   difficulty_score?: number; // Auto-calculated if not provided
   primary_skills: string[];
@@ -112,6 +177,11 @@ export interface UpdateAbstractProblemInput {
   essence?: string;
   cognitive_level?: CognitiveLevel;
   unit?: string;
+  subsection?: string;
+  sequence_order?: number;
+  pedagogy_notes?: string;
+  prerequisite_sequence?: number[];
+  generation_rules?: GenerationRules;
   difficulty?: DifficultyLevel;
   difficulty_score?: number;
   primary_skills?: string[];
@@ -270,12 +340,14 @@ export interface AbstractProblemFilters {
   level?: Level;
   subject?: Subject;
   unit?: string;
+  subsection?: string;
   difficulty?: DifficultyLevel;
   status?: ProblemStatus;
   cognitive_level?: CognitiveLevel;
   skills?: string[]; // Contains any of these skills
   min_difficulty_score?: number;
   max_difficulty_score?: number;
+  sequence_order?: number;
 }
 
 export interface ContextProblemFilters {
@@ -302,11 +374,15 @@ export interface GenerateAbstractProblemRequest {
   level: Level;
   subject: Subject;
   unit: string;
+  subsection?: string;
   difficulty: DifficultyLevel;
   cognitive_level: CognitiveLevel;
   primary_skills: string[];
   secondary_skills?: string[];
   count?: number; // Number of problems to generate
+  sequence_order?: number; // For pedagogical ordering
+  pedagogy_notes?: string;
+  prerequisite_sequence?: number[];
 }
 
 export interface GenerateAbstractProblemResponse {
@@ -315,6 +391,10 @@ export interface GenerateAbstractProblemResponse {
   expected_steps: string[];
   common_errors: string[];
   suggested_difficulty_score: number;
+  generation_rules?: GenerationRules;
+  sequence_order?: number;
+  pedagogy_notes?: string;
+  prerequisite_sequence?: number[];
 }
 
 export interface GenerateContextProblemRequest {

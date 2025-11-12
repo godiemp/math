@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { MathText } from '@/components/MathDisplay';
 
 interface AbstractProblemRowProps {
   problem: any;
@@ -38,7 +39,7 @@ export default function AbstractProblemRow({
     <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
       <td className={compact ? "px-10 py-3" : "px-6 py-4"}>
         <div className="text-sm text-gray-900 dark:text-white font-medium line-clamp-2">
-          {problem.essence}
+          <MathText content={problem.essence} />
         </div>
       </td>
       {!compact && (

@@ -7,6 +7,7 @@
     "dev": "nodemon --exec tsx src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "migrate:003": "npx tsx src/scripts/run-migration-003.ts",
     "seed:admin": "node scripts/seed-admin.js",
     "seed:admin:dev": "npx tsx src/scripts/seed-admin.ts",
     "seed:plans": "npx tsx src/scripts/seed-plans.ts",
