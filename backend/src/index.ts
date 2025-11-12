@@ -35,6 +35,10 @@ import { serveImage } from './controllers/adminController';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust proxy - required for Railway and other proxies to correctly identify client IP
+// This allows Express to trust X-Forwarded-For headers from the proxy
+app.set('trust proxy', true);
+
 // CORS configuration for Vercel production and preview deployments
 const corsOptions = {
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
