@@ -348,26 +348,36 @@ function ProgressPageContent() {
             <Heading level={3} size="xs" className="mb-4">
               Competencia Matemática M1
             </Heading>
-            <div className="mb-4">
-              <div className="flex justify-between mb-2">
-                <Text size="xs" variant="secondary">Últimas {recentQuestionsCount} preguntas</Text>
-                <Text size="xs" variant="secondary" className="font-semibold">{m1RecentStats.total > 0 ? calculatePercentage(m1RecentStats) : 0}%</Text>
+            {m1RecentStats.total > 0 ? (
+              <>
+                <div className="mb-4">
+                  <div className="flex justify-between mb-2">
+                    <Text size="xs" variant="secondary">Últimas {recentQuestionsCount} preguntas</Text>
+                    <Text size="xs" variant="secondary" className="font-semibold">{calculatePercentage(m1RecentStats)}%</Text>
+                  </div>
+                  <div className="w-full bg-black/[0.04] dark:bg-white/[0.06] rounded-full h-2 overflow-hidden">
+                    <div
+                      className="bg-[#0A84FF] h-2 rounded-full transition-all duration-[300ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
+                      style={{ width: `${calculatePercentage(m1RecentStats)}%` }}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Heading level={4} size="md" className="text-center">
+                    {m1RecentStats.correct}/{m1RecentStats.total}
+                  </Heading>
+                  <Text size="xs" variant="secondary" className="text-center">
+                    Respuestas correctas en las últimas {m1RecentStats.total} preguntas
+                  </Text>
+                </div>
+              </>
+            ) : (
+              <div className="py-8">
+                <Text size="sm" variant="secondary" className="text-center">
+                  No has practicado M1 aún
+                </Text>
               </div>
-              <div className="w-full bg-black/[0.04] dark:bg-white/[0.06] rounded-full h-2 overflow-hidden">
-                <div
-                  className="bg-[#0A84FF] h-2 rounded-full transition-all duration-[300ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
-                  style={{ width: `${m1RecentStats.total > 0 ? calculatePercentage(m1RecentStats) : 0}%` }}
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Heading level={4} size="md" className="text-center">
-                {m1RecentStats.correct}/{m1RecentStats.total}
-              </Heading>
-              <Text size="xs" variant="secondary" className="text-center">
-                Respuestas correctas en las últimas {m1RecentStats.total} preguntas
-              </Text>
-            </div>
+            )}
             <Button asChild className="mt-4 w-full">
               <Link href="/practice/m1">
                 {m1RecentStats.total === 0 ? 'Comenzar Práctica' : 'Continuar Práctica'}
@@ -380,26 +390,36 @@ function ProgressPageContent() {
             <Heading level={3} size="xs" className="mb-4">
               Competencia Matemática M2
             </Heading>
-            <div className="mb-4">
-              <div className="flex justify-between mb-2">
-                <Text size="xs" variant="secondary">Últimas {recentQuestionsCount} preguntas</Text>
-                <Text size="xs" variant="secondary" className="font-semibold">{m2RecentStats.total > 0 ? calculatePercentage(m2RecentStats) : 0}%</Text>
+            {m2RecentStats.total > 0 ? (
+              <>
+                <div className="mb-4">
+                  <div className="flex justify-between mb-2">
+                    <Text size="xs" variant="secondary">Últimas {recentQuestionsCount} preguntas</Text>
+                    <Text size="xs" variant="secondary" className="font-semibold">{calculatePercentage(m2RecentStats)}%</Text>
+                  </div>
+                  <div className="w-full bg-black/[0.04] dark:bg-white/[0.06] rounded-full h-2 overflow-hidden">
+                    <div
+                      className="bg-[#0A84FF] h-2 rounded-full transition-all duration-[300ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
+                      style={{ width: `${calculatePercentage(m2RecentStats)}%` }}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Heading level={4} size="md" className="text-center">
+                    {m2RecentStats.correct}/{m2RecentStats.total}
+                  </Heading>
+                  <Text size="xs" variant="secondary" className="text-center">
+                    Respuestas correctas en las últimas {m2RecentStats.total} preguntas
+                  </Text>
+                </div>
+              </>
+            ) : (
+              <div className="py-8">
+                <Text size="sm" variant="secondary" className="text-center">
+                  No has practicado M2 aún
+                </Text>
               </div>
-              <div className="w-full bg-black/[0.04] dark:bg-white/[0.06] rounded-full h-2 overflow-hidden">
-                <div
-                  className="bg-[#0A84FF] h-2 rounded-full transition-all duration-[300ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
-                  style={{ width: `${m2RecentStats.total > 0 ? calculatePercentage(m2RecentStats) : 0}%` }}
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Heading level={4} size="md" className="text-center">
-                {m2RecentStats.correct}/{m2RecentStats.total}
-              </Heading>
-              <Text size="xs" variant="secondary" className="text-center">
-                Respuestas correctas en las últimas {m2RecentStats.total} preguntas
-              </Text>
-            </div>
+            )}
             <Button asChild className="mt-4 w-full">
               <Link href="/practice/m2">
                 {m2RecentStats.total === 0 ? 'Comenzar Práctica' : 'Continuar Práctica'}
