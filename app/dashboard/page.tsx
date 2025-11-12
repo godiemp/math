@@ -9,8 +9,7 @@ import { getAllAvailableSessions, updateSessionStatuses } from "@/lib/sessionApi
 import { useEffect, useState } from "react";
 import { LiveSession } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar } from "@/components/ui";
-import { Streak } from "@/components/Streak";
-import { StudyBuddy } from "@/components/StudyBuddy";
+import { StreakAndBuddy } from "@/components/StreakAndBuddy";
 import { ShareModal } from "@/components/ShareModal";
 import { Share2 } from "lucide-react";
 
@@ -177,18 +176,13 @@ function DashboardContent() {
       </Navbar>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-8 md:py-12">
-        {/* Streak Section */}
+        {/* Streak and Study Buddy Combined Section */}
         <div className="mb-8">
-          <Streak initialStreak={user ? {
+          <StreakAndBuddy initialStreak={user ? {
             currentStreak: user.currentStreak || 0,
             longestStreak: user.longestStreak || 0,
             lastPracticeDate: user.lastPracticeDate || null
           } : undefined} />
-        </div>
-
-        {/* Study Buddy Section */}
-        <div className="mb-8">
-          <StudyBuddy />
         </div>
 
         {/* Live Practice Featured Card with gradient */}
@@ -250,156 +244,79 @@ function DashboardContent() {
           </div>
         </div>
 
-        {/* Operations Practice Featured Card */}
-        <Card hover className="p-6 mb-8 sm:mb-10 md:mb-12 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950/30 dark:to-blue-950/30 border-green-200 dark:border-green-800">
-          <div className="text-center">
-            <div className="text-5xl mb-4">🎯</div>
-            <Heading level={3} size="sm" className="mb-3">
-              Práctica de Operaciones Progresiva
-            </Heading>
-            <Text size="sm" variant="secondary" className="mb-6 max-w-2xl mx-auto">
-              ¡Nueva característica! Progresa desde lo más básico hasta convertirte en un maestro de las operaciones matemáticas.
-              Resuelve problemas y desbloquea niveles cada vez más desafiantes en un camino visual progresivo.
-            </Text>
-            <Button asChild className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700">
-              <Link href="/practice/operations">
-                Comenzar Práctica de Operaciones →
-              </Link>
-            </Button>
-          </div>
-        </Card>
+        {/* Operations Practice and Math Competence Row */}
+        <div className="grid md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mb-8 sm:mb-10 md:mb-12">
+          {/* Operations Practice Card */}
+          <Card hover className="p-6 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950/30 dark:to-blue-950/30 border-green-200 dark:border-green-800">
+            <div className="text-center">
+              <div className="text-4xl mb-3">🎯</div>
+              <Heading level={3} size="sm" className="mb-3">
+                Práctica de Operaciones Progresiva
+              </Heading>
+              <Text size="sm" variant="secondary" className="mb-6">
+                Progresa desde lo básico hasta convertirte en un maestro de las operaciones matemáticas.
+              </Text>
+              <Button asChild className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 w-full">
+                <Link href="/practice/operations">
+                  Comenzar →
+                </Link>
+              </Button>
+            </div>
+          </Card>
 
-        {/* Practice and Temario Cards */}
-        {user?.targetLevel === 'M1_ONLY' ? (
-          /* Single card layout for M1 only users */
-          <div className="mb-8 sm:mb-10 md:mb-12">
-            <Card hover className="p-3 sm:p-4 md:p-5 relative">
-              {!isPaidUser && (
-                <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
-                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                  </svg>
-                  Premium
-                </div>
-              )}
-              <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-                {/* M1 Practice Section */}
-                <div className="text-center flex flex-col justify-center">
-                  <div className="text-5xl mb-4">📐</div>
-                  <Heading level={3} size="sm" className="mb-3">
-                    Competencia Matemática M1
-                  </Heading>
-                  <Text size="sm" variant="secondary" className="mb-6">
-                    Contenidos básicos: números, álgebra, geometría y probabilidades
-                  </Text>
-                  {isPaidUser ? (
-                    <Button asChild className="w-full" size="lg">
-                      <Link href="/practice/m1">
-                        Practicar M1 →
-                      </Link>
-                    </Button>
-                  ) : (
-                    <Button disabled className="w-full opacity-60" size="lg">
-                      <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                      </svg>
-                      Practicar M1 →
-                    </Button>
-                  )}
-                </div>
-
-                {/* M1 Curriculum Section */}
-                <div className="text-center flex flex-col justify-center">
-                  <div className="text-5xl mb-4">📚</div>
-                  <Heading level={3} size="sm" className="mb-3">
-                    Temario PAES M1
-                  </Heading>
-                  <Text size="sm" variant="secondary" className="mb-6">
-                    Revisa los contenidos oficiales evaluados en la PAES de Matemática M1
-                  </Text>
-
-                  <div className="space-y-3">
-                    {isPaidUser ? (
-                      <>
-                        <Button asChild variant="primary" className="w-full">
-                          <Link href="/curriculum/m1">
-                            📋 Ver Currículo M1
-                          </Link>
-                        </Button>
-                        <Button asChild variant="secondary" className="w-full">
-                          <Link href="/curriculum/m1/docs">
-                            📖 Documentación M1
-                          </Link>
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button disabled variant="primary" className="w-full opacity-60">
-                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                          </svg>
-                          📋 Currículo M1
-                        </Button>
-                        <Button disabled variant="secondary" className="w-full opacity-60">
-                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                          </svg>
-                          📖 Docs M1
-                        </Button>
-                      </>
-                    )}
-                  </div>
-                </div>
+          {/* Math Competence Card - M1 and M2 */}
+          <Card hover className="p-6 relative">
+            {!isPaidUser && (
+              <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+                Premium
               </div>
-            </Card>
-          </div>
-        ) : (
-          /* Two card layout for M1+M2 users */
-          <div className="grid md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mb-8 sm:mb-10 md:mb-12">
-            {/* Practice Card */}
-            <Card hover className="p-3 sm:p-4 md:p-5 relative">
-              {!isPaidUser && (
-                <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
-                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                  </svg>
-                  Premium
-                </div>
-              )}
-              <div className="space-y-6">
-                {/* M1 Section */}
-                <div className="text-center">
-                  <div className="text-3xl mb-3">📐</div>
-                  <Heading level={3} size="xs" className="mb-2">
-                    Competencia Matemática M1
-                  </Heading>
-                  <Text size="sm" variant="secondary" className="mb-4">
-                    Contenidos básicos: números, álgebra, geometría y probabilidades
-                  </Text>
-                  {isPaidUser ? (
-                    <Button asChild className="w-full">
-                      <Link href="/practice/m1">
-                        Practicar M1
-                      </Link>
-                    </Button>
-                  ) : (
-                    <Button disabled className="w-full opacity-60">
-                      <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                      </svg>
+            )}
+            <div className="text-center mb-6">
+              <Heading level={3} size="sm" className="mb-2">
+                Competencia Matemática
+              </Heading>
+              <Text size="sm" variant="secondary">
+                Practica para la PAES de Matemática
+              </Text>
+            </div>
+            <div className={user?.targetLevel === 'M1_ONLY' ? 'space-y-4' : 'space-y-6'}>
+              {/* M1 Section */}
+              <div className="text-center">
+                <div className="text-3xl mb-3">📐</div>
+                <Heading level={4} size="xs" className="mb-2">
+                  M1 - Competencia Básica
+                </Heading>
+                <Text size="xs" variant="secondary" className="mb-4">
+                  Números, álgebra, geometría y probabilidades
+                </Text>
+                {isPaidUser ? (
+                  <Button asChild className="w-full">
+                    <Link href="/practice/m1">
                       Practicar M1
-                    </Button>
-                  )}
-                </div>
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button disabled className="w-full opacity-60">
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                    </svg>
+                    Practicar M1
+                  </Button>
+                )}
+              </div>
 
-                {/* M2 Section */}
+              {/* M2 Section - Only show if not M1_ONLY */}
+              {user?.targetLevel !== 'M1_ONLY' && (
                 <div className="text-center">
                   <div className="text-3xl mb-3">🎓</div>
-                  <Heading level={3} size="xs" className="mb-2">
-                    Competencia Matemática M2
+                  <Heading level={4} size="xs" className="mb-2">
+                    M2 - Competencia Avanzada
                   </Heading>
-                  <Text size="sm" variant="secondary" className="mb-4">
-                    Contenidos avanzados para carreras científicas y de ingeniería
+                  <Text size="xs" variant="secondary" className="mb-4">
+                    Contenidos para carreras científicas y de ingeniería
                   </Text>
                   {isPaidUser ? (
                     <Button asChild className="w-full">
@@ -416,145 +333,15 @@ function DashboardContent() {
                     </Button>
                   )}
                 </div>
-              </div>
-            </Card>
-
-            {/* Temario Card */}
-            <Card hover className="p-3 sm:p-4 md:p-5 relative">
-              {!isPaidUser && (
-                <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
-                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                  </svg>
-                  Premium
-                </div>
               )}
-              <div className="text-center h-full flex flex-col justify-center">
-                <div className="text-5xl mb-4">📚</div>
-                <Heading level={3} size="sm" className="mb-3">
-                  Temario PAES Matemática
-                </Heading>
-                <Text size="sm" variant="secondary" className="mb-6">
-                  Revisa los contenidos oficiales evaluados en la PAES de Matemática. Navega entre M1 y M2 para conocer todos los temas.
-                </Text>
-
-                {/* Curriculum Buttons */}
-                <div className="mb-4">
-                  <Text size="xs" variant="secondary" className="mb-2 font-semibold">
-                    📋 Currículo Oficial
-                  </Text>
-                  <div className="flex gap-3 justify-center flex-wrap">
-                    {isPaidUser ? (
-                      <>
-                        <Button asChild variant="primary">
-                          <Link href="/curriculum/m1">
-                            Ver Currículo M1
-                          </Link>
-                        </Button>
-                        <Button asChild variant="secondary">
-                          <Link href="/curriculum/m2">
-                            Ver Currículo M2
-                          </Link>
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button disabled variant="primary" className="opacity-60">
-                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                          </svg>
-                          Currículo M1
-                        </Button>
-                        <Button disabled variant="secondary" className="opacity-60">
-                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                          </svg>
-                          Currículo M2
-                        </Button>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {/* Documentation Buttons */}
-                <div>
-                  <Text size="xs" variant="secondary" className="mb-2 font-semibold">
-                    📖 Documentación Completa
-                  </Text>
-                  <div className="flex gap-3 justify-center flex-wrap">
-                    {isPaidUser ? (
-                      <>
-                        <Button asChild variant="primary">
-                          <Link href="/curriculum/m1/docs">
-                            Docs M1
-                          </Link>
-                        </Button>
-                        <Button asChild variant="secondary">
-                          <Link href="/curriculum/m2/docs">
-                            Docs M2
-                          </Link>
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button disabled variant="primary" className="opacity-60">
-                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                          </svg>
-                          Docs M1
-                        </Button>
-                        <Button disabled variant="secondary" className="opacity-60">
-                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                          </svg>
-                          Docs M2
-                        </Button>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
-        )}
-
-        {/* Registered Sessions Section */}
-        {registeredSessions.length > 0 && (
-          <div className="mb-8 sm:mb-10 md:mb-12">
-            <Heading level={3} size="sm" className="mb-4 sm:mb-5 md:mb-6 text-base sm:text-lg">
-              Mis Próximos Ensayos
-            </Heading>
-            <div className="grid gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {registeredSessions.map(session => (
-                <Card key={session.id} hover className="p-3 sm:p-4">
-                  <div className="flex justify-between items-start mb-3 gap-2">
-                    <Heading level={4} size="xs" className="text-[17px] flex-1">
-                      {session.name}
-                    </Heading>
-                    {getStatusBadge(session.status)}
-                  </div>
-                  <div className="space-y-2 mb-4">
-                    <Text size="xs" variant="secondary">📅 {formatDate(session.scheduledStartTime)}</Text>
-                    <Text size="xs" variant="secondary">📊 {session.level} - {session.questions.length} preguntas</Text>
-                  </div>
-                  <Button
-                    asChild
-                    variant={session.status === 'lobby' || session.status === 'active' ? 'success' : 'primary'}
-                    className="w-full"
-                  >
-                    <Link href="/live-practice">
-                      {session.status === 'lobby' ? 'Entrar al Lobby' : session.status === 'active' ? 'Unirse Ahora' : 'Ver Detalles'}
-                    </Link>
-                  </Button>
-                </Card>
-              ))}
             </div>
-          </div>
-        )}
+          </Card>
+        </div>
 
-        {/* Progress Tracking Card */}
-        <div className="mt-8 sm:mt-10 md:mt-12 text-center">
-          <Card hover className="p-3 sm:p-4 md:p-5 max-w-md mx-auto rounded-2xl sm:rounded-3xl relative">
+        {/* Temario and Progress Row */}
+        <div className="grid md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mb-8 sm:mb-10 md:mb-12">
+          {/* Temario Card */}
+          <Card hover className="p-6 relative">
             {!isPaidUser && (
               <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
@@ -563,27 +350,134 @@ function DashboardContent() {
                 Premium
               </div>
             )}
-            <div className="text-4xl mb-4">📊</div>
-            <Heading level={3} size="sm" className="mb-3">
-              Seguimiento de Progreso
-            </Heading>
-            <Text size="sm" variant="secondary" className="mb-6">
-              Revisa tu desempeño, estadísticas y mejora continua
-            </Text>
-            {isPaidUser ? (
-              <Button asChild>
-                <Link href="/progress">
-                  Ver Mi Progreso →
-                </Link>
-              </Button>
-            ) : (
-              <Button disabled className="opacity-60">
-                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <div className="text-center">
+              <div className="text-4xl mb-4">📚</div>
+              <Heading level={3} size="sm" className="mb-3">
+                Temario PAES Matemática
+              </Heading>
+              <Text size="sm" variant="secondary" className="mb-6">
+                Revisa los contenidos oficiales evaluados en la PAES
+              </Text>
+
+              {/* Curriculum Buttons */}
+              <div className="mb-4">
+                <Text size="xs" variant="secondary" className="mb-2 font-semibold">
+                  📋 Currículo Oficial
+                </Text>
+                <div className="flex gap-3 justify-center flex-wrap">
+                  {isPaidUser ? (
+                    <>
+                      <Button asChild variant="primary" size="sm">
+                        <Link href="/curriculum/m1">
+                          M1
+                        </Link>
+                      </Button>
+                      {user?.targetLevel !== 'M1_ONLY' && (
+                        <Button asChild variant="secondary" size="sm">
+                          <Link href="/curriculum/m2">
+                            M2
+                          </Link>
+                        </Button>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <Button disabled variant="primary" size="sm" className="opacity-60">
+                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                        </svg>
+                        M1
+                      </Button>
+                      {user?.targetLevel !== 'M1_ONLY' && (
+                        <Button disabled variant="secondary" size="sm" className="opacity-60">
+                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          </svg>
+                          M2
+                        </Button>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Documentation Buttons */}
+              <div>
+                <Text size="xs" variant="secondary" className="mb-2 font-semibold">
+                  📖 Documentación Completa
+                </Text>
+                <div className="flex gap-3 justify-center flex-wrap">
+                  {isPaidUser ? (
+                    <>
+                      <Button asChild variant="primary" size="sm">
+                        <Link href="/curriculum/m1/docs">
+                          Docs M1
+                        </Link>
+                      </Button>
+                      {user?.targetLevel !== 'M1_ONLY' && (
+                        <Button asChild variant="secondary" size="sm">
+                          <Link href="/curriculum/m2/docs">
+                            Docs M2
+                          </Link>
+                        </Button>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <Button disabled variant="primary" size="sm" className="opacity-60">
+                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                        </svg>
+                        Docs M1
+                      </Button>
+                      {user?.targetLevel !== 'M1_ONLY' && (
+                        <Button disabled variant="secondary" size="sm" className="opacity-60">
+                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          </svg>
+                          Docs M2
+                        </Button>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Progress Tracking Card */}
+          <Card hover className="p-6 relative">
+            {!isPaidUser && (
+              <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
-                Ver Mi Progreso →
-              </Button>
+                Premium
+              </div>
             )}
+            <div className="text-center h-full flex flex-col justify-center">
+              <div className="text-4xl mb-4">📊</div>
+              <Heading level={3} size="sm" className="mb-3">
+                Seguimiento de Progreso
+              </Heading>
+              <Text size="sm" variant="secondary" className="mb-6">
+                Revisa tu desempeño, estadísticas y mejora continua
+              </Text>
+              {isPaidUser ? (
+                <Button asChild className="w-full">
+                  <Link href="/progress">
+                    Ver Mi Progreso →
+                  </Link>
+                </Button>
+              ) : (
+                <Button disabled className="w-full opacity-60">
+                  <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                  </svg>
+                  Ver Mi Progreso →
+                </Button>
+              )}
+            </div>
           </Card>
         </div>
 
