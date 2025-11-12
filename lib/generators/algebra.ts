@@ -161,7 +161,7 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
 
     const simplified = math.simplify(expr);
     const correctAnswer = simplified.toString().replace(/\*/g, '').replace(/\s+/g, '');
-    const expression = `Simplifica: ${expr.replace(/\*/g, '')}`;
+    const expression = expr.replace(/\*/g, '');
     const expressionLatex = expr.replace(/\*/g, '');
     const problemKey = `simp:${expr}`;
 
@@ -177,7 +177,7 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
 
     const simplified = math.simplify(expr);
     const correctAnswer = simplified.toString().replace(/\*/g, '').replace(/\s+/g, '');
-    const expression = `Simplifica: ${expr.replace(/\*/g, '')}`;
+    const expression = expr.replace(/\*/g, '');
     const expressionLatex = expr.replace(/\*/g, '');
     const problemKey = `simp:${expr}`;
 
