@@ -67,8 +67,8 @@ export const PaesPredictionCard: React.FC = () => {
   const handleSaveUserPrediction = async () => {
     const value = parseInt(userInput, 10);
 
-    if (isNaN(value) || value < 500 || value > 850) {
-      setError('El puntaje debe estar entre 500 y 850');
+    if (isNaN(value) || value < 150 || value > 1000) {
+      setError('El puntaje debe estar entre 150 y 1000');
       return;
     }
 
@@ -162,8 +162,8 @@ export const PaesPredictionCard: React.FC = () => {
           <div className="flex gap-2">
             <input
               type="number"
-              min="500"
-              max="850"
+              min="150"
+              max="1000"
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
               placeholder="Ej: 700"

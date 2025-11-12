@@ -149,8 +149,8 @@ export class PredictionService {
    */
   static async updateUserPrediction(userId: string, userPrediction: number): Promise<PaesPrediction> {
     // Validate range
-    if (userPrediction < 500 || userPrediction > 850) {
-      throw new Error('User prediction must be between 500 and 850');
+    if (userPrediction < 150 || userPrediction > 1000) {
+      throw new Error('User prediction must be between 150 and 1000');
     }
 
     // Check if prediction exists, if not create one first
@@ -238,11 +238,11 @@ export class PredictionService {
 
   /**
    * Calculate PAES score from factors
-   * PAES scale: 500-850
+   * PAES scale: 150-1000
    */
   private static calculateScore(factors: PredictionFactors): number {
-    const minScore = 500;
-    const maxScore = 850;
+    const minScore = 150;
+    const maxScore = 1000;
     const range = maxScore - minScore;
 
     // Weighted formula
@@ -303,8 +303,8 @@ export class PredictionService {
     return {
       id: '',
       userId,
-      systemPrediction: 650, // Conservative middle estimate
-      confidenceRange: 50, // High uncertainty
+      systemPrediction: 575, // Conservative middle estimate (middle of 150-1000 range)
+      confidenceRange: 100, // High uncertainty
       userPrediction: null,
       factors: {
         overallAccuracy: 0,

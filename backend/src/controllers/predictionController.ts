@@ -87,8 +87,8 @@ export const updateUserPrediction = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ error: 'Prediction value is required and must be a number' });
     }
 
-    if (prediction < 500 || prediction > 850) {
-      return res.status(400).json({ error: 'Prediction must be between 500 and 850' });
+    if (prediction < 150 || prediction > 1000) {
+      return res.status(400).json({ error: 'Prediction must be between 150 and 1000' });
     }
 
     const updated = await PredictionService.updateUserPrediction(userId, prediction);

@@ -9,6 +9,9 @@ CREATE TABLE IF NOT EXISTS paes_predictions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 
+  -- Level (M1, M2, or M1+M2)
+  level VARCHAR(10),
+
   -- System prediction
   system_prediction INTEGER NOT NULL,
   confidence_range INTEGER NOT NULL,
@@ -23,18 +26,20 @@ CREATE TABLE IF NOT EXISTS paes_predictions (
   calculated_at BIGINT NOT NULL,
   updated_at BIGINT NOT NULL,
 
-  -- Constraints
-  CHECK (system_prediction >= 500 AND system_prediction <= 850),
-  CHECK (user_prediction IS NULL OR (user_prediction >= 500 AND user_prediction <= 850)),
-  CHECK (confidence_range >= 0 AND confidence_range <= 100)
+  -- Constraints (PAES scale: 150-1000)
+  CHECK (system_prediction >= 150 AND system_prediction <= 1000),
+  CHECK (user_prediction IS NULL OR (user_prediction >= 150 AND user_prediction <= 1000)),
+  CHECK (confidence_range >= 0 AND confidence_range <= 150),
+  CHECK (level IS NULL OR level IN ('M1', 'M2', 'M1+M2'))
 );
 
--- Index for quick user lookup
+-- Indexes for quick lookup
 CREATE INDEX idx_paes_predictions_user ON paes_predictions(user_id);
+CREATE INDEX idx_paes_predictions_level ON paes_predictions(level);
 CREATE INDEX idx_paes_predictions_calculated_at ON paes_predictions(calculated_at);
 
--- Ensure only one prediction per user (latest wins)
-CREATE UNIQUE INDEX idx_paes_predictions_user_unique ON paes_predictions(user_id);
+-- Ensure only one prediction per user per level
+CREATE UNIQUE INDEX idx_paes_predictions_user_level_unique ON paes_predictions(user_id, level);
 
 -- Comments
 COMMENT ON TABLE paes_predictions IS 'Stores PAES score predictions - both system-generated and user-provided';

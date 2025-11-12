@@ -11,7 +11,6 @@ import { LiveSession } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar } from "@/components/ui";
 import { Streak } from "@/components/Streak";
 import { StudyBuddy } from "@/components/StudyBuddy";
-import { PaesPredictionCard } from "@/components/PaesPredictionCard";
 import { ShareModal } from "@/components/ShareModal";
 import { Share2 } from "lucide-react";
 
@@ -148,11 +147,6 @@ function DashboardContent() {
         {/* Study Buddy Section */}
         <div className="mb-8">
           <StudyBuddy />
-        </div>
-
-        {/* PAES Prediction Section */}
-        <div className="mb-8">
-          <PaesPredictionCard />
         </div>
 
         {/* Live Practice Featured Card with gradient */}
