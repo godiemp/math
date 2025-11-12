@@ -27,6 +27,7 @@ export interface OperationLevel {
   phase: PhaseType;
   difficulty: DifficultyLevel;
   problemsToComplete: number;
+  thematicUnits?: string[]; // Array of thematic unit codes (e.g., ['M1-NUM-001', 'M1-NUM-002'])
   config: {
     minValue?: number;
     maxValue?: number;
@@ -63,6 +64,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ['M1-NUM-001'],
     config: { minValue: 1, maxValue: 5, numberOfOperands: 2 }
   },
   {
@@ -73,6 +75,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ['M1-NUM-001'],
     config: { minValue: 1, maxValue: 10, numberOfOperands: 2 }
   },
   {
@@ -83,6 +86,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ['M1-NUM-001'],
     config: { minValue: 1, maxValue: 20, numberOfOperands: 2 }
   },
   {
@@ -93,6 +97,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ['M1-NUM-001'],
     config: { minValue: 1, maxValue: 10, numberOfOperands: 3 }
   },
   {
@@ -103,6 +108,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ['M1-NUM-001'],
     config: { minValue: 1, maxValue: 50, numberOfOperands: 2 }
   },
 
@@ -115,6 +121,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ['M1-NUM-001'],
     config: { minValue: 1, maxValue: 10 }
   },
   {
@@ -125,6 +132,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ['M1-NUM-001'],
     config: { minValue: 1, maxValue: 20 }
   },
   {
@@ -135,6 +143,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ['M1-NUM-001'],
     config: { minValue: 1, maxValue: 50 }
   },
   {
@@ -145,6 +154,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ['M1-NUM-001'],
     config: { minValue: 1, maxValue: 100 }
   },
   {
@@ -155,6 +165,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ['M1-NUM-001'],
     config: { minValue: 1, maxValue: 50, forceNegative: true }
   },
 
@@ -167,6 +178,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001"],
+
     config: { specificTables: [2], minValue: 1, maxValue: 10 }
   },
   {
@@ -177,6 +190,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001"],
+
     config: { specificTables: [3], minValue: 1, maxValue: 10 }
   },
   {
@@ -187,6 +202,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001"],
+
     config: { specificTables: [4, 5], minValue: 1, maxValue: 10 }
   },
   {
@@ -197,6 +214,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001"],
+
     config: { specificTables: [6, 7, 8], minValue: 1, maxValue: 10 }
   },
   {
@@ -207,6 +226,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001"],
+
     config: { specificTables: [9], minValue: 1, maxValue: 10 }
   },
   {
@@ -217,6 +238,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001"],
+
     config: { minValue: 2, maxValue: 20, numberOfOperands: 2 }
   },
   {
@@ -227,6 +250,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001"],
+
     config: { minValue: 10, maxValue: 99, numberOfOperands: 2 }
   },
 
@@ -239,6 +264,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-NUM-002"],
+
     config: { specificTables: [2, 3, 4, 5], minValue: 1, maxValue: 10 }
   },
   {
@@ -249,6 +276,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-NUM-002"],
+
     config: { specificTables: [6, 7, 8, 9], minValue: 1, maxValue: 10 }
   },
   {
@@ -259,6 +288,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-NUM-002"],
+
     config: { minValue: 2, maxValue: 10, numberOfOperands: 2 }
   },
   {
@@ -269,6 +300,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-NUM-002"],
+
     config: { minValue: 2, maxValue: 100 }
   },
   {
@@ -279,6 +312,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-NUM-002"],
+
     config: { minValue: 10, maxValue: 99 }
   },
   {
@@ -289,6 +324,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-NUM-002"],
+
     config: { minValue: 1, maxValue: 50, allowDecimals: true }
   },
 
@@ -301,6 +338,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-NUM-002"],
+
     config: { mixedOperations: ['addition', 'subtraction'], minValue: 1, maxValue: 20, numberOfOperands: 2 }
   },
   {
@@ -311,6 +350,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-NUM-002"],
+
     config: { mixedOperations: ['addition', 'subtraction', 'multiplication'], minValue: 1, maxValue: 20, numberOfOperands: 2 }
   },
   {
@@ -321,6 +362,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-NUM-002"],
+
     config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 20, numberOfOperands: 2 }
   },
   {
@@ -331,6 +374,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-NUM-002"],
+
     config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 50, numberOfOperands: 2 }
   },
   {
@@ -341,6 +386,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-NUM-002"],
+
     config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 50, numberOfOperands: 3 }
   },
   {
@@ -351,6 +398,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'expert',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-NUM-002"],
+
     config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 50, numberOfOperands: 2, allowDecimals: true }
   },
   {
@@ -361,6 +410,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'expert',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-NUM-002"],
+
     config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 100, numberOfOperands: 4 }
   },
 
@@ -377,6 +428,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -387,6 +440,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -397,6 +452,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -407,6 +464,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -417,6 +476,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { variables: ['x'], minValue: 2, maxValue: 20 }
   },
   {
@@ -427,6 +488,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { variables: ['x'], minValue: 10, maxValue: 50 }
   },
   {
@@ -437,6 +500,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 20 }
   },
   {
@@ -447,6 +512,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 20 }
   },
   {
@@ -457,6 +524,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 20 }
   },
   {
@@ -467,6 +536,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 20 }
   },
 
@@ -479,6 +550,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-002"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -489,6 +562,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-002"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -499,6 +574,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-002"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -509,6 +586,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-002"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -519,6 +598,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-002"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -529,6 +610,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-002"],
+
     config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
   },
   {
@@ -539,6 +622,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-002"],
+
     config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
   },
   {
@@ -549,6 +634,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-002"],
+
     config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
   },
   {
@@ -559,6 +646,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-002"],
+
     config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
   },
   {
@@ -569,6 +658,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-002"],
+
     config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
   },
 
@@ -581,6 +672,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
     config: { variables: ['x'] }
   },
   {
@@ -591,6 +684,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
     config: { variables: ['x'] }
   },
   {
@@ -601,6 +696,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
     config: { variables: ['x'] }
   },
   {
@@ -611,6 +708,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
     config: { variables: ['x'] }
   },
   {
@@ -621,6 +720,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
     config: { variables: ['x'] }
   },
   {
@@ -631,6 +732,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
     config: { variables: ['x', 'y'] }
   },
   {
@@ -641,6 +744,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
     config: { variables: ['x', 'y'] }
   },
   {
@@ -651,6 +756,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
     config: { variables: ['x', 'y'] }
   },
   {
@@ -661,6 +768,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
     config: { variables: ['x'] }
   },
   {
@@ -671,6 +780,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algebraic',
     difficulty: 'expert',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
     config: { variables: ['x', 'y'] }
   },
 
@@ -687,6 +798,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-ALG-006"],
+
     config: { operators: ['>'], minValue: 1, maxValue: 10 }
   },
   {
@@ -697,6 +810,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-ALG-006"],
+
     config: { operators: ['<'], minValue: 1, maxValue: 10 }
   },
   {
@@ -707,6 +822,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-ALG-006"],
+
     config: { operators: ['='], minValue: 1, maxValue: 10 }
   },
   {
@@ -717,6 +834,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-ALG-006"],
+
     config: { operators: ['≥'], minValue: 1, maxValue: 10 }
   },
   {
@@ -727,6 +846,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-ALG-006"],
+
     config: { operators: ['≤'], minValue: 1, maxValue: 10 }
   },
   {
@@ -737,7 +858,9 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'intermediate',
     problemsToComplete: 3,
-    config: { operators: ['<', '>'], minValue: -10, maxValue: 10 }
+    thematicUnits: ["M1-NUM-001","M1-ALG-006"],
+
+    config: { operators: ['<', '>'], minValue: -10, maxValue: 10, allowNegatives: true }
   },
   {
     level: 67,
@@ -747,6 +870,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-ALG-006"],
+
     config: { operators: ['<', '>', '='], minValue: 1, maxValue: 20 }
   },
   {
@@ -757,6 +882,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-ALG-006"],
+
     config: { operators: ['<', '>', '='], minValue: 1, maxValue: 10 }
   },
   {
@@ -767,6 +894,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-ALG-006"],
+
     config: { operators: ['<', '>', '='], minValue: 1, maxValue: 10, variables: ['x'] }
   },
   {
@@ -777,6 +906,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-NUM-001","M1-ALG-006"],
+
     config: { operators: ['<', '>', '=', '≤', '≥'], minValue: 1, maxValue: 20, variables: ['x'] }
   },
 
@@ -789,6 +920,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'basic',
     problemsToComplete: 3,
+
     config: { operators: ['AND'] }
   },
   {
@@ -799,6 +931,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'basic',
     problemsToComplete: 3,
+
     config: { operators: ['OR'] }
   },
   {
@@ -809,6 +942,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'basic',
     problemsToComplete: 3,
+
     config: { operators: ['NOT'] }
   },
   {
@@ -819,6 +953,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+
     config: { operators: ['AND'], minValue: 1, maxValue: 10 }
   },
   {
@@ -829,6 +964,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+
     config: { operators: ['OR'], minValue: 1, maxValue: 10 }
   },
   {
@@ -839,6 +975,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+
     config: { operators: ['NOT'], minValue: 1, maxValue: 10 }
   },
   {
@@ -849,6 +986,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'advanced',
     problemsToComplete: 3,
+
     config: { operators: ['AND', 'OR'] }
   },
   {
@@ -859,6 +997,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'advanced',
     problemsToComplete: 3,
+
     config: { operators: ['AND', 'OR'] }
   },
   {
@@ -869,6 +1008,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'advanced',
     problemsToComplete: 3,
+
     config: { operators: ['AND', 'OR', 'NOT'] }
   },
   {
@@ -879,6 +1019,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'expert',
     problemsToComplete: 3,
+
     config: { operators: ['AND', 'OR', 'NOT'] }
   },
 
@@ -891,6 +1032,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -901,6 +1044,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { operators: ['AND'], variables: ['x'], minValue: 1, maxValue: 15 }
   },
   {
@@ -911,6 +1056,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { operators: ['OR'], variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -921,6 +1068,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { minValue: 1, maxValue: 20 }
   },
   {
@@ -931,6 +1080,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -941,6 +1092,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { operators: ['AND'], variables: ['x', 'y'], minValue: 1, maxValue: 10 }
   },
   {
@@ -951,6 +1104,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { operators: ['OR'], variables: ['x', 'y'], minValue: 1, maxValue: 10 }
   },
   {
@@ -961,6 +1116,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { operators: ['NOT'], variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -971,6 +1128,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'expert',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { operators: ['AND', 'OR'], variables: ['x'], minValue: 1, maxValue: 15 }
   },
   {
@@ -981,6 +1140,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'expert',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-006"],
+
     config: { operators: ['AND', 'OR'], variables: ['x', 'y', 'z'], minValue: 1, maxValue: 10 }
   },
 
@@ -997,6 +1158,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
+
     config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
   },
   {
@@ -1007,6 +1169,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
+
     config: { sequenceLength: 4, minValue: 1, maxValue: 20 }
   },
   {
@@ -1017,6 +1180,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
+
     config: { sequenceLength: 4, minValue: 5, maxValue: 50 }
   },
   {
@@ -1027,6 +1191,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
+
     config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
   },
   {
@@ -1037,6 +1202,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+
     config: { sequenceLength: 4, minValue: 1, maxValue: 50 }
   },
   {
@@ -1047,6 +1213,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+
     config: { sequenceLength: 4, minValue: 1, maxValue: 100 }
   },
   {
@@ -1057,6 +1224,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'advanced',
     problemsToComplete: 3,
+
     config: { sequenceLength: 6, minValue: 1, maxValue: 50 }
   },
   {
@@ -1067,6 +1235,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'advanced',
     problemsToComplete: 3,
+
     config: { sequenceLength: 6, minValue: 1, maxValue: 20 }
   },
   {
@@ -1077,6 +1246,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'expert',
     problemsToComplete: 3,
+
     config: { sequenceLength: 6, minValue: 1, maxValue: 30 }
   },
   {
@@ -1087,6 +1257,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'expert',
     problemsToComplete: 3,
+
     config: { sequenceLength: 5, minValue: 1, maxValue: 50 }
   },
 
@@ -1099,6 +1270,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-004"],
+
     config: { setSize: 2, operators: ['∪'], minValue: 1, maxValue: 5 }
   },
   {
@@ -1109,6 +1282,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-004"],
+
     config: { setSize: 3, operators: ['∩'], minValue: 1, maxValue: 5 }
   },
   {
@@ -1119,6 +1294,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-004"],
+
     config: { setSize: 3, operators: ['-'], minValue: 1, maxValue: 5 }
   },
   {
@@ -1129,6 +1306,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-004"],
+
     config: { setSize: 4, operators: ['∈'], minValue: 1, maxValue: 5 }
   },
   {
@@ -1139,6 +1318,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-004"],
+
     config: { setSize: 5, operators: ['|'], minValue: 1, maxValue: 10 }
   },
   {
@@ -1149,6 +1330,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-004"],
+
     config: { setSize: 3, operators: ['⊆'], minValue: 1, maxValue: 5 }
   },
   {
@@ -1159,6 +1342,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-004"],
+
     config: { setSize: 3, operators: ['∪', '∩'], minValue: 1, maxValue: 5 }
   },
   {
@@ -1179,6 +1364,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'expert',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-004"],
+
     config: { setSize: 2, operators: ['×'], minValue: 1, maxValue: 3 }
   },
   {
@@ -1189,6 +1376,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'expert',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-004"],
+
     config: { setSize: 4, operators: ['∪', '∩', '-'], minValue: 1, maxValue: 5 }
   },
 
@@ -1201,6 +1390,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-009","M1-ALG-012"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -1211,6 +1402,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-009","M1-ALG-012"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -1221,6 +1414,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-009","M1-ALG-012"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -1231,6 +1426,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-009","M1-ALG-012"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -1241,6 +1438,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-009","M1-ALG-012"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -1251,6 +1450,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-009","M1-ALG-012"],
+
     config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
   },
   {
@@ -1261,6 +1462,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-009","M1-ALG-012"],
+
     config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
   },
   {
@@ -1271,6 +1474,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-009","M1-ALG-012"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -1281,6 +1486,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-009","M1-ALG-012"],
+
     config: { variables: ['x'], minValue: 1, maxValue: 10 }
   },
   {
@@ -1291,6 +1498,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'structural',
     difficulty: 'expert',
     problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-009","M1-ALG-012"],
+
     config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
   },
 
@@ -1307,6 +1516,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-002"],
+
     config: { sequenceLength: 3, minValue: 1, maxValue: 10 }
   },
   {
@@ -1317,6 +1528,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-002"],
+
     config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
   },
   {
@@ -1327,6 +1540,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-002"],
+
     config: { sequenceLength: 5, minValue: 1, maxValue: 10 }
   },
   {
@@ -1337,6 +1552,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-002"],
+
     config: { sequenceLength: 3, minValue: 1, maxValue: 10 }
   },
   {
@@ -1347,6 +1564,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-002"],
+
     config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
   },
   {
@@ -1357,6 +1576,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-002"],
+
     config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
   },
   {
@@ -1367,6 +1588,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-002"],
+
     config: { sequenceLength: 5, minValue: 1, maxValue: 10 }
   },
   {
@@ -1377,6 +1600,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-002"],
+
     config: { sequenceLength: 5, minValue: 1, maxValue: 5 }
   },
   {
@@ -1387,6 +1612,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M1-PROB-002"],
+
     config: { sequenceLength: 6, minValue: 1, maxValue: 10 }
   },
   {
@@ -1397,7 +1624,9 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'expert',
     problemsToComplete: 3,
-    config: { arraySize: 5, minValue: -10, maxValue: 10 }
+    thematicUnits: ["M1-PROB-002"],
+
+    config: { arraySize: 4, minValue: -10, maxValue: 10, allowNegatives: true }
   },
 
   // Conteo (131-140)
@@ -1409,6 +1638,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M2-PROB-003"],
+
     config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
   },
   {
@@ -1419,6 +1650,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M2-PROB-003"],
+
     config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
   },
   {
@@ -1429,6 +1662,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'basic',
     problemsToComplete: 3,
+    thematicUnits: ["M2-PROB-003"],
+
     config: { sequenceLength: 5, minValue: 1, maxValue: 10 }
   },
   {
@@ -1439,6 +1674,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M2-PROB-003"],
+
     config: { sequenceLength: 5, minValue: 1, maxValue: 10 }
   },
   {
@@ -1449,6 +1686,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M2-PROB-003"],
+
     config: { sequenceLength: 5, minValue: 1, maxValue: 15 }
   },
   {
@@ -1459,6 +1698,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+    thematicUnits: ["M2-PROB-003"],
+
     config: { sequenceLength: 6, minValue: 1, maxValue: 10 }
   },
   {
@@ -1469,6 +1710,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M2-PROB-003"],
+
     config: { sequenceLength: 6, minValue: 1, maxValue: 5 }
   },
   {
@@ -1479,6 +1722,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M2-PROB-003"],
+
     config: { sequenceLength: 6, minValue: 1, maxValue: 5 }
   },
   {
@@ -1489,6 +1734,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+    thematicUnits: ["M2-PROB-003"],
+
     config: { sequenceLength: 5, minValue: 1, maxValue: 10 }
   },
   {
@@ -1499,6 +1746,8 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'expert',
     problemsToComplete: 3,
+    thematicUnits: ["M2-PROB-003"],
+
     config: { sequenceLength: 6, minValue: 1, maxValue: 10 }
   },
 
@@ -1511,6 +1760,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+
     config: { sequenceLength: 3, minValue: 1, maxValue: 10, algorithmSteps: 1 }
   },
   {
@@ -1521,6 +1771,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
+
     config: { sequenceLength: 3, minValue: 1, maxValue: 10, algorithmSteps: 1 }
   },
   {
@@ -1531,6 +1782,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+
     config: { sequenceLength: 3, minValue: 1, maxValue: 10, algorithmSteps: 2 }
   },
   {
@@ -1541,6 +1793,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+
     config: { sequenceLength: 4, minValue: 1, maxValue: 10, algorithmSteps: 2 }
   },
   {
@@ -1551,6 +1804,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+
     config: { sequenceLength: 3, minValue: 1, maxValue: 10, algorithmSteps: 3 }
   },
   {
@@ -1561,6 +1815,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'advanced',
     problemsToComplete: 3,
+
     config: { sequenceLength: 4, minValue: 1, maxValue: 10, algorithmSteps: 1 }
   },
   {
@@ -1571,6 +1826,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'expert',
     problemsToComplete: 3,
+
     config: { sequenceLength: 4, minValue: 1, maxValue: 10, algorithmSteps: 2 }
   },
   {
@@ -1581,6 +1837,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'expert',
     problemsToComplete: 3,
+
     config: { sequenceLength: 4, minValue: 1, maxValue: 10, algorithmSteps: 2 }
   },
   {
@@ -1591,6 +1848,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'expert',
     problemsToComplete: 5,
+
     config: { sequenceLength: 5, minValue: 1, maxValue: 10, algorithmSteps: 3 }
   },
   {
@@ -1601,6 +1859,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'expert',
     problemsToComplete: 5,
+
     config: { sequenceLength: 6, minValue: 1, maxValue: 20, algorithmSteps: 4 }
   }
 ];

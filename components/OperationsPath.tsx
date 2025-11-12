@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Lock, Check, PlayCircle, Trophy, Star, ChevronLeft, ChevronRight, Unlock } from 'lucide-react';
+import { Lock, Check, PlayCircle, Trophy, Star, ChevronLeft, ChevronRight, Unlock, BookOpen } from 'lucide-react';
+import { getUnitByCode } from '@/backend/src/config/thematic-units';
 
 interface OperationLevel {
   level: number;
@@ -10,6 +11,7 @@ interface OperationLevel {
   operationType: string;
   difficulty: string;
   problemsToComplete: number;
+  thematicUnits?: string[];
 }
 
 interface UserProgress {
@@ -201,6 +203,39 @@ export default function OperationsPath({
 
               {/* Description */}
               <p className="text-sm text-gray-600 mb-3">{level.description}</p>
+
+              {/* Thematic Units */}
+              {level.thematicUnits && level.thematicUnits.length > 0 && (
+                <div className="mb-3 space-y-1">
+                  <div className="flex items-center gap-1 text-xs font-semibold text-blue-700">
+                    <BookOpen size={12} />
+                    <span>Unidades temáticas:</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {level.thematicUnits.map((unitCode) => {
+                      const unit = getUnitByCode(unitCode);
+                      return (
+                        <span
+                          key={unitCode}
+                          className="inline-block px-2 py-1 text-xs bg-blue-50 text-blue-700 rounded-md border border-blue-200"
+                          title={unit?.name || unitCode}
+                        >
+                          {unitCode}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Warning for unmapped operations */}
+              {(!level.thematicUnits || level.thematicUnits.length === 0) && (
+                <div className="mb-3 px-2 py-1 bg-amber-50 border border-amber-200 rounded-md">
+                  <p className="text-xs text-amber-700">
+                    ⚠️ Sin unidad temática relacionada
+                  </p>
+                </div>
+              )}
 
               {/* Footer */}
               <div className="flex items-center justify-between text-xs text-gray-500">
