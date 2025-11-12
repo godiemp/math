@@ -40,6 +40,8 @@ export interface OperationLevel {
     sequenceLength?: number;
     setSize?: number;
     algorithmSteps?: number;
+    complexity?: number; // For algebraic expressions (1-4 indicating complexity level)
+    arraySize?: number; // For algorithmic operations (sorting, counting)
   };
 }
 

@@ -330,10 +330,11 @@ function generateSimpleEquationProblem(levelConfig: OperationLevel): OperationPr
   const minVal = config.minValue || 1;
   const maxVal = config.maxValue || 20;
 
-  let expression: string;
-  let expressionLatex: string;
-  let answer: number;
-  let a: number, b: number;
+  let expression: string = '';
+  let expressionLatex: string = '';
+  let answer: number = 0;
+  let a: number = 0;
+  let b: number = 0;
 
   switch (type) {
     case 'addition': // x + a = b
@@ -367,9 +368,6 @@ function generateSimpleEquationProblem(levelConfig: OperationLevel): OperationPr
       expression = `${variable}/${a} = ${b}`;
       expressionLatex = `\\frac{${variable}}{${a}} = ${b}`;
       break;
-
-    default:
-      a = 0; b = 0; answer = 0;
   }
 
   return {
@@ -401,9 +399,9 @@ function generateExpressionEvaluationProblem(levelConfig: OperationLevel): Opera
   const types = ['linear-add', 'linear-sub', 'simple-mult', 'complex'];
   const type = types[Math.floor(Math.random() * Math.min(types.length, config.complexity || 2))];
 
-  let expression: string;
-  let expressionLatex: string;
-  let answer: number;
+  let expression: string = '';
+  let expressionLatex: string = '';
+  let answer: number = 0;
 
   switch (type) {
     case 'linear-add': // 2x + 3
@@ -461,9 +459,9 @@ function generateSimplificationProblem(levelConfig: OperationLevel): OperationPr
   const types = ['like-terms', 'distributive', 'combine'];
   const type = types[Math.floor(Math.random() * types.length)];
 
-  let expression: string;
-  let expressionLatex: string;
-  let answer: string;
+  let expression: string = '';
+  let expressionLatex: string = '';
+  let answer: string = '';
 
   const variable = 'x';
 
@@ -594,12 +592,14 @@ function generateLogicalOperatorsProblem(levelConfig: OperationLevel): Operation
  */
 function generateCompoundConditionsProblem(levelConfig: OperationLevel): OperationProblem {
   const { config } = levelConfig;
-  const x = randomNumber(config.minValue || 1, config.maxValue || 20);
+  const minVal = config.minValue || 1;
+  const maxVal = config.maxValue || 20;
+  const x = randomNumber(minVal, maxVal);
 
   // Generate random condition like "x > 5 AND x < 15"
-  const midPoint = Math.floor((config.minValue || 1 + config.maxValue || 20) / 2);
-  const lower = randomNumber(config.minValue || 1, midPoint);
-  const upper = randomNumber(midPoint, config.maxValue || 20);
+  const midPoint = Math.floor((minVal + maxVal) / 2);
+  const lower = randomNumber(minVal, midPoint);
+  const upper = randomNumber(midPoint, maxVal);
 
   const operators = ['AND', 'OR'];
   const operator = operators[Math.floor(Math.random() * operators.length)];
@@ -643,8 +643,8 @@ function generateSequenceProblem(levelConfig: OperationLevel): OperationProblem 
   const type = types[Math.floor(Math.random() * types.length)];
 
   let sequence: number[] = [];
-  let answer: number;
-  let pattern: string;
+  let answer: number = 0;
+  let pattern: string = '';
 
   switch (type) {
     case 'arithmetic': { // a, a+d, a+2d, ...
@@ -717,8 +717,8 @@ function generateSetsProblem(levelConfig: OperationLevel): OperationProblem {
   const operations = ['union', 'intersection', 'difference'];
   const operation = operations[Math.floor(Math.random() * operations.length)];
 
-  let answer: string;
-  let symbol: string;
+  let answer: string = '';
+  let symbol: string = '';
 
   switch (operation) {
     case 'union': {
@@ -774,11 +774,11 @@ function generateFunctionsProblem(levelConfig: OperationLevel): OperationProblem
   const types = ['simple', 'quadratic', 'piecewise'];
   const type = types[Math.floor(Math.random() * Math.min(types.length, config.complexity || 1))];
 
-  let expression: string;
-  let expressionLatex: string;
-  let answer: number;
-  let functionDef: string;
-  let functionDefLatex: string;
+  let expression: string = '';
+  let expressionLatex: string = '';
+  let answer: number = 0;
+  let functionDef: string = '';
+  let functionDefLatex: string = '';
 
   switch (type) {
     case 'simple': { // f(x) = 2x + 3
@@ -854,8 +854,8 @@ function generateSortingProblem(levelConfig: OperationLevel): OperationProblem {
   const types = ['ascending', 'descending'];
   const type = types[Math.floor(Math.random() * types.length)];
 
-  let sorted: number[];
-  let orderText: string;
+  let sorted: number[] = [];
+  let orderText: string = '';
 
   if (type === 'ascending') {
     sorted = [...array].sort((a, b) => a - b);
@@ -894,8 +894,8 @@ function generateCountingProblem(levelConfig: OperationLevel): OperationProblem 
   const types = ['count-specific', 'count-greater', 'count-even'];
   const type = types[Math.floor(Math.random() * types.length)];
 
-  let answer: number;
-  let question: string;
+  let answer: number = 0;
+  let question: string = '';
 
   switch (type) {
     case 'count-specific': {
@@ -946,9 +946,9 @@ function generateCompositionProblem(levelConfig: OperationLevel): OperationProbl
   const types = ['simple', 'triple'];
   const type = types[Math.floor(Math.random() * types.length)];
 
-  let expression: string;
-  let expressionLatex: string;
-  let answer: number;
+  let expression: string = '';
+  let expressionLatex: string = '';
+  let answer: number = 0;
 
   if (type === 'simple') {
     const m1 = randomNumber(2, 5);
