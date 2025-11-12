@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import OperationsPath from '@/components/OperationsPath';
 import OperationsPractice from '@/components/OperationsPractice';
+import { OPERATIONS_PATH } from '@/lib/operationsPath';
+import { getOperationsProgress } from '@/lib/operationsProgress';
 
 interface OperationLevel {
   level: number;
@@ -25,10 +27,8 @@ interface UserProgress {
 export default function OperationsPracticePage() {
   const router = useRouter();
   const { user, isLoading } = useAuth();
-  const [operationsPath, setOperationsPath] = useState<OperationLevel[]>([]);
-  const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
-  const [loadingData, setLoadingData] = useState(true);
+  const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -38,42 +38,14 @@ export default function OperationsPracticePage() {
 
   useEffect(() => {
     if (user) {
-      fetchData();
+      loadProgress();
     }
   }, [user]);
 
-  const fetchData = async () => {
-    try {
-      setLoadingData(true);
-
-      // Fetch operations path
-      const pathResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/operations-practice/path`, {
-        credentials: 'include',
-      });
-
-      if (!pathResponse.ok) {
-        throw new Error('Error al cargar el camino de operaciones');
-      }
-
-      const pathData = await pathResponse.json();
-      setOperationsPath(pathData.path);
-
-      // Fetch user progress
-      const progressResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/operations-practice/progress`, {
-        credentials: 'include',
-      });
-
-      if (!progressResponse.ok) {
-        throw new Error('Error al cargar el progreso del usuario');
-      }
-
-      const progressData = await progressResponse.json();
-      setUserProgress(progressData.progress);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setLoadingData(false);
-    }
+  const loadProgress = () => {
+    // Load progress from localStorage
+    const progress = getOperationsProgress();
+    setUserProgress(progress);
   };
 
   const handleLevelSelect = (level: number) => {
@@ -82,14 +54,14 @@ export default function OperationsPracticePage() {
 
   const handleBackToPath = () => {
     setSelectedLevel(null);
-    fetchData(); // Refresh progress
+    loadProgress(); // Refresh progress
   };
 
   const handleLevelComplete = () => {
-    fetchData(); // Refresh progress when level is completed
+    loadProgress(); // Refresh progress when level is completed
   };
 
-  if (isLoading || loadingData) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
@@ -152,7 +124,7 @@ export default function OperationsPracticePage() {
           />
         ) : (
           <OperationsPath
-            levels={operationsPath}
+            levels={OPERATIONS_PATH}
             userProgress={userProgress}
             onLevelSelect={handleLevelSelect}
           />
