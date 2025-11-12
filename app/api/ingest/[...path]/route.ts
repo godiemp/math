@@ -23,9 +23,9 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: { params: Promise<{ path: string[] }> }
 ) {
-  const { path } = params
+  const { path } = await context.params
 
   // Get PostHog host from environment
   const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'
@@ -81,9 +81,9 @@ export async function OPTIONS() {
 // Also support GET requests for static assets like decide endpoint
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: { params: Promise<{ path: string[] }> }
 ) {
-  const { path } = params
+  const { path } = await context.params
   const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'
   const posthogUrl = `${posthogHost}/${path.join('/')}`
 
