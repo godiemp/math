@@ -12,6 +12,8 @@ interface Problem {
   expressionLatex: string;
   difficulty: string;
   problemsToComplete: number;
+  answerType?: 'number' | 'string' | 'multipleChoice' | 'array';
+  choices?: string[];
 }
 
 interface OperationsPracticeProps {
@@ -269,21 +271,67 @@ export default function OperationsPractice({
 
         {/* Answer Input */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Tu respuesta:
-            </label>
-            <input
-              ref={inputRef}
-              type="text"
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              disabled={isSubmitting || feedback.show}
-              className="w-full px-6 py-4 text-2xl text-center border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all disabled:bg-gray-100"
-              placeholder="Escribe tu respuesta"
-              autoComplete="off"
-            />
-          </div>
+          {problem.answerType === 'multipleChoice' && problem.choices ? (
+            // Multiple Choice Buttons
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-4 text-center">
+                Selecciona tu respuesta:
+              </label>
+              <div className="grid grid-cols-3 gap-4">
+                {problem.choices.map((choice, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => {
+                      setUserAnswer(choice);
+                      // Auto-submit after selection
+                      setTimeout(() => {
+                        if (!isSubmitting && !feedback.show) {
+                          handleSubmit(new Event('submit') as any);
+                        }
+                      }, 100);
+                    }}
+                    disabled={isSubmitting || feedback.show}
+                    className={`py-6 px-4 text-2xl font-bold rounded-xl border-2 transition-all transform hover:scale-105 ${
+                      userAnswer === choice
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-lg'
+                        : 'bg-white text-gray-900 border-gray-300 hover:border-blue-400'
+                    } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
+                  >
+                    {choice}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            // Text Input (for numbers, strings, and arrays)
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Tu respuesta:
+              </label>
+              <input
+                ref={inputRef}
+                type="text"
+                value={userAnswer}
+                onChange={(e) => setUserAnswer(e.target.value)}
+                disabled={isSubmitting || feedback.show}
+                className="w-full px-6 py-4 text-2xl text-center border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all disabled:bg-gray-100"
+                placeholder={
+                  problem.answerType === 'array'
+                    ? 'Ej: 1,2,3,4,5'
+                    : problem.answerType === 'string'
+                    ? 'Escribe tu respuesta'
+                    : 'Escribe tu respuesta'
+                }
+                autoComplete="off"
+              />
+              {problem.answerType === 'array' && (
+                <p className="text-xs text-gray-500 mt-2 text-center">
+                  Separa los números con comas (,)
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Feedback */}
           {feedback.show && (
@@ -324,14 +372,16 @@ export default function OperationsPractice({
             </div>
           )}
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isSubmitting || feedback.show || !userAnswer.trim()}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 shadow-lg"
-          >
-            {isSubmitting ? 'Verificando...' : 'Verificar Respuesta'}
-          </button>
+          {/* Submit Button (hidden for multiple choice since it auto-submits) */}
+          {problem.answerType !== 'multipleChoice' && (
+            <button
+              type="submit"
+              disabled={isSubmitting || feedback.show || !userAnswer.trim()}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 shadow-lg"
+            >
+              {isSubmitting ? 'Verificando...' : 'Verificar Respuesta'}
+            </button>
+          )}
 
           {/* Continue Button (after incorrect answer) */}
           {feedback.show && !feedback.isCorrect && (

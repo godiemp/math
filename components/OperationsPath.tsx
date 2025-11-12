@@ -24,19 +24,61 @@ interface OperationsPathProps {
 }
 
 const operationTypeColors: { [key: string]: string } = {
+  // Phase 1: Arithmetic
   addition: 'bg-green-500',
   subtraction: 'bg-blue-500',
   multiplication: 'bg-purple-500',
   division: 'bg-orange-500',
-  mixed: 'bg-gradient-to-r from-green-500 via-blue-500 to-purple-500',
+  'mixed-arithmetic': 'bg-gradient-to-r from-green-500 via-blue-500 to-purple-500',
+
+  // Phase 2: Algebraic
+  'simple-equation': 'bg-indigo-500',
+  'expression-evaluation': 'bg-violet-500',
+  'simplification': 'bg-purple-600',
+
+  // Phase 3: Logical
+  'comparison': 'bg-cyan-500',
+  'logical-operators': 'bg-teal-500',
+  'compound-conditions': 'bg-sky-500',
+
+  // Phase 4: Structural
+  'sequences': 'bg-pink-500',
+  'sets': 'bg-rose-500',
+  'functions': 'bg-fuchsia-500',
+
+  // Phase 5: Algorithmic
+  'sorting': 'bg-amber-500',
+  'counting': 'bg-yellow-500',
+  'composition': 'bg-lime-500',
 };
 
 const operationTypeIcons: { [key: string]: string } = {
+  // Phase 1: Arithmetic
   addition: '+',
   subtraction: '−',
   multiplication: '×',
   division: '÷',
-  mixed: '⊕',
+  'mixed-arithmetic': '⊕',
+
+  // Phase 2: Algebraic
+  'simple-equation': 'x',
+  'expression-evaluation': 'ƒ',
+  'simplification': '≡',
+
+  // Phase 3: Logical
+  'comparison': '≶',
+  'logical-operators': '∧',
+  'compound-conditions': '⊤',
+
+  // Phase 4: Structural
+  'sequences': '…',
+  'sets': '∪',
+  'functions': '→',
+
+  // Phase 5: Algorithmic
+  'sorting': '↕',
+  'counting': '#',
+  'composition': '∘',
 };
 
 const difficultyEmojis: { [key: string]: string } = {
@@ -193,30 +235,124 @@ export default function OperationsPath({
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-8">
-      {/* Legend */}
-      <div className="mb-8 p-4 bg-gray-50 rounded-lg">
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">Tipos de Operaciones:</h3>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-          {Object.entries(operationTypeIcons).map(([type, icon]) => (
-            <div key={type} className="flex items-center space-x-2">
-              <div
-                className={`${operationTypeColors[type]} w-8 h-8 rounded-full flex items-center justify-center text-white font-bold`}
-              >
-                {icon}
-              </div>
-              <span className="text-xs text-gray-600 capitalize">
-                {type === 'addition'
-                  ? 'Suma'
-                  : type === 'subtraction'
-                  ? 'Resta'
-                  : type === 'multiplication'
-                  ? 'Multiplicación'
-                  : type === 'division'
-                  ? 'División'
-                  : 'Mixto'}
-              </span>
+      {/* Legend - Organized by Phases */}
+      <div className="mb-8 p-6 bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl">
+        <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">
+          5 Fases del Camino de Operaciones
+        </h3>
+
+        <div className="space-y-6">
+          {/* Phase 1: Arithmetic */}
+          <div>
+            <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
+              Fase 1: Aritmética (Niveles 1-30)
+            </h4>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+              {['addition', 'subtraction', 'multiplication', 'division', 'mixed-arithmetic'].map((type) => (
+                <div key={type} className="flex items-center space-x-2">
+                  <div
+                    className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
+                  >
+                    {operationTypeIcons[type]}
+                  </div>
+                  <span className="text-xs text-gray-700">
+                    {type === 'addition' ? 'Suma' :
+                     type === 'subtraction' ? 'Resta' :
+                     type === 'multiplication' ? 'Multiplicación' :
+                     type === 'division' ? 'División' : 'Mixto'}
+                  </span>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          {/* Phase 2: Algebraic */}
+          <div>
+            <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
+              Fase 2: Algebraica (Niveles 31-60)
+            </h4>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {['simple-equation', 'expression-evaluation', 'simplification'].map((type) => (
+                <div key={type} className="flex items-center space-x-2">
+                  <div
+                    className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
+                  >
+                    {operationTypeIcons[type]}
+                  </div>
+                  <span className="text-xs text-gray-700">
+                    {type === 'simple-equation' ? 'Ecuaciones' :
+                     type === 'expression-evaluation' ? 'Evaluación' : 'Simplificación'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Phase 3: Logical */}
+          <div>
+            <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
+              Fase 3: Lógica (Niveles 61-90)
+            </h4>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {['comparison', 'logical-operators', 'compound-conditions'].map((type) => (
+                <div key={type} className="flex items-center space-x-2">
+                  <div
+                    className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
+                  >
+                    {operationTypeIcons[type]}
+                  </div>
+                  <span className="text-xs text-gray-700">
+                    {type === 'comparison' ? 'Comparación' :
+                     type === 'logical-operators' ? 'Operadores' : 'Condiciones'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Phase 4: Structural */}
+          <div>
+            <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
+              Fase 4: Estructural (Niveles 91-120)
+            </h4>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {['sequences', 'sets', 'functions'].map((type) => (
+                <div key={type} className="flex items-center space-x-2">
+                  <div
+                    className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
+                  >
+                    {operationTypeIcons[type]}
+                  </div>
+                  <span className="text-xs text-gray-700">
+                    {type === 'sequences' ? 'Secuencias' :
+                     type === 'sets' ? 'Conjuntos' : 'Funciones'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Phase 5: Algorithmic */}
+          <div>
+            <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
+              Fase 5: Algorítmica (Niveles 121-150)
+            </h4>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {['sorting', 'counting', 'composition'].map((type) => (
+                <div key={type} className="flex items-center space-x-2">
+                  <div
+                    className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
+                  >
+                    {operationTypeIcons[type]}
+                  </div>
+                  <span className="text-xs text-gray-700">
+                    {type === 'sorting' ? 'Ordenamiento' :
+                     type === 'counting' ? 'Conteo' : 'Composición'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
