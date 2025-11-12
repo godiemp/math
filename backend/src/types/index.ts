@@ -49,6 +49,7 @@ export interface User {
   currentStreak?: number;
   longestStreak?: number;
   lastPracticeDate?: string | null;
+  targetLevel?: 'M1_ONLY' | 'M1_AND_M2';
 }
 
 export interface PDFUpload {
