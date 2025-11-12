@@ -1,6 +1,7 @@
 'use client';
 
-import { Lock, Check, PlayCircle, Trophy, Star } from 'lucide-react';
+import { useState } from 'react';
+import { Lock, Check, PlayCircle, Trophy, Star, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface OperationLevel {
   level: number;
@@ -93,6 +94,7 @@ export default function OperationsPath({
   userProgress,
   onLevelSelect,
 }: OperationsPathProps) {
+  const [showFullPath, setShowFullPath] = useState(false);
   const highestLevel = userProgress?.highestLevelReached || 1;
   const currentLevel = userProgress?.currentLevel || 1;
 
@@ -103,10 +105,37 @@ export default function OperationsPath({
     return 'available';
   };
 
+  // Filter levels to show only relevant ones when not showing full path
+  const getVisibleLevels = () => {
+    if (showFullPath) {
+      return levels;
+    }
+
+    // Show: last 2 completed + current + next 7 available
+    const PREV_COUNT = 2;
+    const NEXT_COUNT = 7;
+
+    const currentIndex = levels.findIndex(l => l.level === currentLevel);
+
+    if (currentIndex === -1) {
+      // If current level not found, show first 10 levels
+      return levels.slice(0, 10);
+    }
+
+    const startIndex = Math.max(0, currentIndex - PREV_COUNT);
+    const endIndex = Math.min(levels.length, currentIndex + NEXT_COUNT + 1);
+
+    return levels.slice(startIndex, endIndex);
+  };
+
+  const visibleLevels = getVisibleLevels();
+  const hiddenCount = levels.length - visibleLevels.length;
+
   const renderLevelNode = (level: OperationLevel, index: number) => {
     const status = getLevelStatus(level.level);
     const isEven = index % 2 === 0;
     const colorClass = operationTypeColors[level.operationType] || 'bg-gray-500';
+    const isLastVisible = level.level === visibleLevels[visibleLevels.length - 1]?.level;
 
     return (
       <div
@@ -114,7 +143,7 @@ export default function OperationsPath({
         className={`flex items-center ${isEven ? 'flex-row' : 'flex-row-reverse'} mb-8 relative`}
       >
         {/* Connecting Line */}
-        {index < levels.length - 1 && (
+        {!isLastVisible && (
           <div
             className={`absolute ${isEven ? 'right-1/2 translate-x-1/2' : 'left-1/2 -translate-x-1/2'}
             top-16 w-1 h-16 ${status === 'locked' ? 'bg-gray-300' : 'bg-gradient-to-b from-blue-500 to-purple-500'}`}
@@ -356,9 +385,36 @@ export default function OperationsPath({
         </div>
       </div>
 
+      {/* Toggle Button */}
+      {hiddenCount > 0 && (
+        <div className="mb-6 text-center">
+          <button
+            onClick={() => setShowFullPath(!showFullPath)}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 font-semibold"
+          >
+            {showFullPath ? (
+              <>
+                <ChevronUp size={20} />
+                Mostrar solo próximos niveles
+                <ChevronUp size={20} />
+              </>
+            ) : (
+              <>
+                <ChevronDown size={20} />
+                Ver camino completo ({hiddenCount} niveles más)
+                <ChevronDown size={20} />
+              </>
+            )}
+          </button>
+        </div>
+      )}
+
       {/* Path */}
       <div className="relative">
-        {levels.map((level, index) => renderLevelNode(level, index))}
+        {visibleLevels.map((level) => {
+          const originalIndex = levels.findIndex(l => l.level === level.level);
+          return renderLevelNode(level, originalIndex);
+        })}
       </div>
 
       {/* Completion Message */}
