@@ -758,6 +758,49 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_paes_predictions_calculated_at ON paes_predictions(calculated_at)');
     await client.query('CREATE UNIQUE INDEX IF NOT EXISTS idx_paes_predictions_user_level_unique ON paes_predictions(user_id, level)');
 
+    // ========================================
+    // OPERATIONS PRACTICE SYSTEM TABLES
+    // ========================================
+
+    // Create operations_practice_progress table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS operations_practice_progress (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        current_level INTEGER DEFAULT 1 NOT NULL,
+        highest_level_reached INTEGER DEFAULT 1 NOT NULL,
+        total_operations_solved INTEGER DEFAULT 0 NOT NULL,
+        last_practice_at BIGINT,
+        created_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL,
+        UNIQUE(user_id)
+      )
+    `);
+
+    // Create operations_practice_attempts table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS operations_practice_attempts (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        level INTEGER NOT NULL,
+        operation_type VARCHAR(20) NOT NULL CHECK (operation_type IN ('addition', 'subtraction', 'multiplication', 'division', 'mixed')),
+        difficulty VARCHAR(20) NOT NULL CHECK (difficulty IN ('basic', 'intermediate', 'advanced', 'expert')),
+        problem_data JSONB NOT NULL,
+        user_answer TEXT,
+        correct_answer TEXT NOT NULL,
+        is_correct BOOLEAN NOT NULL,
+        time_spent_seconds INTEGER,
+        attempted_at BIGINT NOT NULL
+      )
+    `);
+
+    // Operations practice indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_operations_progress_user_id ON operations_practice_progress(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_operations_attempts_user_id ON operations_practice_attempts(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_operations_attempts_level ON operations_practice_attempts(level)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_operations_attempts_operation_type ON operations_practice_attempts(operation_type)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_operations_attempts_attempted_at ON operations_practice_attempts(attempted_at)');
+
     // Create views - Drop first to allow structure changes (e.g., adding subsection to GROUP BY)
     await client.query('DROP VIEW IF EXISTS active_problems_view CASCADE');
     await client.query('DROP VIEW IF EXISTS problem_stats_by_unit CASCADE');
