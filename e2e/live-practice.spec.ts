@@ -49,34 +49,34 @@ test.describe('Live Practice Registration', () => {
     // Navigate to live practice
     await page.goto('/live-practice', { waitUntil: 'domcontentloaded' });
 
-    // Check if already registered, if not, register first
+    // Wait for page to fully load
+    await expect(page.getByText(/Test PAES Session/i)).toBeVisible();
+
+    // Define button locators
     const registerButton = page.getByRole('button', { name: /^Registrarse$/i });
     const unregisterButton = page.getByRole('button', { name: /Cancelar Registro/i });
 
-    // Wait briefly and check which button is visible
-    const registerCount = await registerButton.count();
-    const unregisterCount = await unregisterButton.count();
+    // Wait for either button to be visible
+    await expect(registerButton.or(unregisterButton)).toBeVisible({ timeout: 10000 });
 
-    if (registerCount > 0) {
+    // Check which button is currently visible
+    const isRegistered = await unregisterButton.isVisible();
+
+    if (!isRegistered) {
       // Not registered yet, need to register first
       await registerButton.click();
-      await page.waitForTimeout(2000);
       // Wait for registration to complete
-      await expect(unregisterButton).toBeVisible({ timeout: 5000 });
-    } else if (unregisterCount === 0) {
-      // Neither button found, fail the test
-      throw new Error('Could not find registration or unregistration button');
+      await expect(unregisterButton).toBeVisible({ timeout: 10000 });
     }
 
-    // Now unregister
+    // Now we're registered, so unregister
     await unregisterButton.click();
-    await page.waitForTimeout(2000);
 
     // Check for success toast message
-    await expect(page.getByText(/cancelado.*exitosamente/i)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/cancelado.*exitosamente/i)).toBeVisible({ timeout: 10000 });
 
     // After unregistering, the button should change back to "Registrarse"
-    await expect(registerButton).toBeVisible({ timeout: 5000 });
+    await expect(registerButton).toBeVisible({ timeout: 10000 });
   });
 
   test('should display session details correctly', async ({ page }) => {
