@@ -701,6 +701,63 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_context_problem ON question_attempts(context_problem_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_question_attempts_abstract_problem ON question_attempts(abstract_problem_id)');
 
+    // Create paes_predictions table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS paes_predictions (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        level VARCHAR(10),
+        system_prediction INTEGER NOT NULL,
+        confidence_range INTEGER NOT NULL,
+        user_prediction INTEGER,
+        factors JSONB,
+        calculated_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL
+      )
+    `);
+
+    // Migrate: Add level column if it doesn't exist
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'paes_predictions' AND column_name = 'level'
+        ) THEN
+          ALTER TABLE paes_predictions ADD COLUMN level VARCHAR(10);
+        END IF;
+      END $$;
+    `);
+
+    // Migrate: Drop old constraints and add new ones with correct range (150-1000)
+    await client.query(`
+      DO $$
+      BEGIN
+        -- Drop old constraints if they exist
+        ALTER TABLE paes_predictions DROP CONSTRAINT IF EXISTS paes_predictions_system_prediction_check;
+        ALTER TABLE paes_predictions DROP CONSTRAINT IF EXISTS paes_predictions_user_prediction_check;
+        ALTER TABLE paes_predictions DROP CONSTRAINT IF EXISTS paes_predictions_confidence_range_check;
+
+        -- Add new constraints with correct range
+        ALTER TABLE paes_predictions ADD CONSTRAINT paes_predictions_system_prediction_check
+          CHECK (system_prediction >= 150 AND system_prediction <= 1000);
+        ALTER TABLE paes_predictions ADD CONSTRAINT paes_predictions_user_prediction_check
+          CHECK (user_prediction IS NULL OR (user_prediction >= 150 AND user_prediction <= 1000));
+        ALTER TABLE paes_predictions ADD CONSTRAINT paes_predictions_confidence_range_check
+          CHECK (confidence_range >= 0 AND confidence_range <= 150);
+        ALTER TABLE paes_predictions ADD CONSTRAINT paes_predictions_level_check
+          CHECK (level IS NULL OR level IN ('M1', 'M2', 'M1+M2'));
+      EXCEPTION
+        WHEN duplicate_object THEN NULL;
+      END $$;
+    `);
+
+    // Create indexes for paes_predictions
+    await client.query('CREATE INDEX IF NOT EXISTS idx_paes_predictions_user ON paes_predictions(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_paes_predictions_level ON paes_predictions(level)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_paes_predictions_calculated_at ON paes_predictions(calculated_at)');
+    await client.query('CREATE UNIQUE INDEX IF NOT EXISTS idx_paes_predictions_user_level_unique ON paes_predictions(user_id, level)');
+
     // Create views - Drop first to allow structure changes (e.g., adding subsection to GROUP BY)
     await client.query('DROP VIEW IF EXISTS active_problems_view CASCADE');
     await client.query('DROP VIEW IF EXISTS problem_stats_by_unit CASCADE');
