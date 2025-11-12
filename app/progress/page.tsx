@@ -370,7 +370,7 @@ function ProgressPageContent() {
             </div>
             <Button asChild className="mt-4 w-full">
               <Link href="/practice/m1">
-                Continuar Práctica
+                {m1RecentStats.total === 0 ? 'Comenzar Práctica' : 'Continuar Práctica'}
               </Link>
             </Button>
           </Card>
@@ -402,7 +402,7 @@ function ProgressPageContent() {
             </div>
             <Button asChild className="mt-4 w-full">
               <Link href="/practice/m2">
-                Continuar Práctica
+                {m2RecentStats.total === 0 ? 'Comenzar Práctica' : 'Continuar Práctica'}
               </Link>
             </Button>
           </Card>
