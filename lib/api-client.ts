@@ -44,6 +44,11 @@ function getApiBaseUrl(): string {
     }
   }
 
+  // Development environment
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:3001';
+  }
+
   // Default to production backend
   return 'https://paes-math-backend-production.up.railway.app';
 }
@@ -61,7 +66,9 @@ async function fetchBackendUrl(): Promise<string> {
   try {
     const response = await fetch('/api/config');
     if (!response.ok) {
-      throw new Error('Failed to fetch backend config');
+      const errorText = await response.text();
+      console.error('Failed to fetch backend config. Status:', response.status, 'Response:', errorText);
+      throw new Error(`Failed to fetch backend config: ${response.status}`);
     }
     const data = await response.json();
 
@@ -76,9 +83,11 @@ async function fetchBackendUrl(): Promise<string> {
 
     return data.backendUrl;
   } catch (error) {
-    console.error('Failed to fetch backend URL, using fallback:', error);
+    console.error('❌ Failed to fetch backend URL from /api/config, using fallback:', error);
     // Fallback to client-side detection if server config fails
-    return getApiBaseUrl();
+    const fallbackUrl = getApiBaseUrl();
+    console.warn('⚠️  Using fallback backend URL:', fallbackUrl);
+    return fallbackUrl;
   }
 }
 
@@ -193,7 +202,7 @@ export async function apiRequest<T>(
     if (!response.ok) {
       return {
         error: {
-          error: data.error || 'Request failed',
+          error: data.error || data.message || 'Request failed',
           statusCode: response.status,
         },
       };
@@ -202,9 +211,20 @@ export async function apiRequest<T>(
     return { data };
   } catch (error) {
     console.error('API request failed:', error);
+    console.error('Request URL:', url);
+    console.error('Backend URL:', backendUrl);
+
+    // Provide more detailed error information
+    let errorMessage = 'Network error. Please check your connection.';
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      errorMessage = `Unable to connect to server at ${backendUrl}. Please check if the backend is running.`;
+    } else if (error instanceof Error) {
+      errorMessage = `Network error: ${error.message}`;
+    }
+
     return {
       error: {
-        error: 'Network error. Please check your connection.',
+        error: errorMessage,
         statusCode: 0,
       },
     };

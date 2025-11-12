@@ -9,27 +9,35 @@ import * as Sentry from '@sentry/nextjs'
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart
 
 if (typeof window !== 'undefined') {
-  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
-    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
-    person_profiles: 'identified_only',
+  const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 
-    // Automatically capture events
-    capture_pageview: true,
-    capture_pageleave: true,
-    autocapture: true,
+  if (posthogKey) {
+    posthog.init(posthogKey, {
+      api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
+      person_profiles: 'identified_only',
 
-    // Session recording with privacy defaults
-    session_recording: {
-      maskAllInputs: true,
-      maskTextSelector: '[data-mask]',
-    },
+      // Automatically capture events
+      capture_pageview: true,
+      capture_pageleave: true,
+      autocapture: true,
 
-    loaded: (posthog) => {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('PostHog initialized successfully')
+      // Session recording with privacy defaults
+      session_recording: {
+        maskAllInputs: true,
+        maskTextSelector: '[data-mask]',
+      },
+
+      loaded: (posthog) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('PostHog initialized successfully')
+        }
       }
+    })
+  } else {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('PostHog API key not found. Analytics will be disabled.')
     }
-  })
+  }
 }
 
 // Sentry Client Configuration
