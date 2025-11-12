@@ -10,8 +10,11 @@ This document describes the performance optimizations applied to the e2e test su
 - **Time Saved**: ~160+ seconds
 - **Implementation**:
   - Created `e2e/auth.setup.ts` that runs once before all tests
-  - Configured `playwright.config.ts` with setup project dependency
+  - Configured `playwright.config.ts` with two separate projects:
+    - `chromium-authenticated`: Uses cached auth for most tests
+    - `chromium-unauthenticated`: No cached auth for auth/registration tests
   - Removed `setupAuthenticatedSession()` calls from test `beforeEach` hooks
+  - **Important**: Tests that verify login/registration flows run without cached auth
 
 ### 2. **Event-Based Waits** ✅
 - **Before**: 198 instances of `waitForTimeout` with hard-coded delays (300ms to 5000ms)
@@ -156,3 +159,34 @@ When adding new tests:
 - Automatically resets auto-increment sequences
 - CASCADE handles foreign key constraints
 - No row-by-row processing overhead
+
+## Troubleshooting
+
+### Tests timing out looking for login/register elements
+**Symptom**: Auth or registration tests timeout waiting for login form elements like `auth-toggle-button` or email input fields.
+
+**Cause**: Test is using cached authentication state when it should be testing the login/registration flow from an unauthenticated state.
+
+**Solution**: Ensure the test file is included in the `chromium-unauthenticated` project configuration:
+```typescript
+// In playwright.config.ts
+{
+  name: 'chromium-unauthenticated',
+  testMatch: ['**/auth.spec.ts', '**/registration.spec.ts'],
+}
+```
+
+### Tests starting at wrong page
+**Symptom**: Test expects to be on a certain page but is on a different page or blank.
+
+**Cause**: When using cached authentication, tests don't automatically navigate anywhere - they need explicit navigation.
+
+**Solution**: Add explicit navigation at the start of each test:
+```typescript
+test('should do something', async ({ page }) => {
+  // Explicitly navigate to starting page
+  await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
+
+  // Rest of test...
+});
+```
