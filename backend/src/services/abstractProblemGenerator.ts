@@ -252,8 +252,15 @@ CRITICAL: You MUST generate exactly ${count} problem(s). The "problems" array MU
       response_format: { type: 'json_object' },
     });
 
+    // Debug logging to understand response structure
+    console.log('OpenAI Response:', JSON.stringify(response, null, 2));
+    console.log('Choices:', response.choices);
+    console.log('First choice:', response.choices[0]);
+    console.log('Message:', response.choices[0]?.message);
+
     const content = response.choices[0]?.message?.content;
     if (!content) {
+      console.error('No content in response. Full response:', JSON.stringify(response, null, 2));
       throw new Error('No response from OpenAI');
     }
 
