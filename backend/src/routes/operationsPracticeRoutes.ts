@@ -11,12 +11,12 @@ import {
   getLevelStats,
   resetProgress
 } from '../controllers/operationsPracticeController';
-import { authenticateToken } from '../middleware/auth';
+import { authenticate } from '../auth/middleware';
 
 const router = express.Router();
 
 // All routes require authentication
-router.use(authenticateToken);
+router.use(authenticate);
 
 // Get the complete operations path
 router.get('/path', getOperationsPath);
