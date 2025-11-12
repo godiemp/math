@@ -43,6 +43,7 @@ function ProfilePageContent() {
   const [editForm, setEditForm] = useState({
     displayName: user?.displayName || '',
     email: user?.email || '',
+    targetLevel: user?.targetLevel || 'M1_AND_M2' as 'M1_ONLY' | 'M1_AND_M2',
   });
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [editError, setEditError] = useState<string>('');
@@ -86,6 +87,7 @@ function ProfilePageContent() {
       setEditForm({
         displayName: user.displayName || '',
         email: user.email || '',
+        targetLevel: user.targetLevel || 'M1_AND_M2',
       });
     }
   }, [user]);
@@ -195,6 +197,12 @@ function ProfilePageContent() {
                 <div className="flex items-center gap-2">
                   <Text size="sm" variant="secondary">Miembro desde:</Text>
                   <Text size="sm">{formatDate(user.createdAt)}</Text>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Text size="sm" variant="secondary">Nivel objetivo:</Text>
+                  <Badge variant={user.targetLevel === 'M1_ONLY' ? 'info' : 'success'}>
+                    {user.targetLevel === 'M1_ONLY' ? 'Solo M1' : 'M1 y M2'}
+                  </Badge>
                 </div>
               </div>
             </div>
@@ -382,11 +390,13 @@ function ProfilePageContent() {
               </Link>
             </Button>
 
-            <Button asChild variant="secondary">
-              <Link href="/practice/m2">
-                Practicar M2
-              </Link>
-            </Button>
+            {user?.targetLevel !== 'M1_ONLY' && (
+              <Button asChild variant="secondary">
+                <Link href="/practice/m2">
+                  Practicar M2
+                </Link>
+              </Button>
+            )}
 
             <Button asChild variant="ghost">
               <Link href="/payments/history">
@@ -434,6 +444,24 @@ function ProfilePageContent() {
               className="w-full h-11 px-3 rounded-xl text-[15px] bg-white dark:bg-[#121212] text-black dark:text-white border border-black/[0.12] dark:border-white/[0.16] focus:outline-none focus:ring-3 focus:ring-[#0A84FF]/50 focus:border-[#0A84FF] transition-all duration-[180ms]"
               placeholder="tu-email@ejemplo.com"
             />
+          </div>
+
+          <div>
+            <label htmlFor="targetLevel" className="block text-sm font-medium mb-2">
+              ¿Qué estás preparando?
+            </label>
+            <select
+              id="targetLevel"
+              value={editForm.targetLevel}
+              onChange={(e) => setEditForm({ ...editForm, targetLevel: e.target.value as 'M1_ONLY' | 'M1_AND_M2' })}
+              className="w-full h-11 px-3 rounded-xl text-[15px] bg-white dark:bg-[#121212] text-black dark:text-white border border-black/[0.12] dark:border-white/[0.16] focus:outline-none focus:ring-3 focus:ring-[#0A84FF]/50 focus:border-[#0A84FF] transition-all duration-[180ms]"
+            >
+              <option value="M1_AND_M2">M1 y M2 (carreras científicas/ingeniería)</option>
+              <option value="M1_ONLY">Solo M1 (otras carreras)</option>
+            </select>
+            <Text size="xs" variant="secondary" className="mt-2">
+              Si solo necesitas M1, ocultaremos las opciones de práctica de M2
+            </Text>
           </div>
 
           {editError && (
