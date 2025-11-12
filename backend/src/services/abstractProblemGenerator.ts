@@ -31,11 +31,12 @@ function getOpenAIClient(): OpenAI {
   return openaiClient;
 }
 
-// Use latest model (GPT-5 released August 2025)
-// GPT-5: Best quality, 94.6% on AIME 2025 math benchmark
-// GPT-4.1: More cost-effective alternative with 1M context window
-// GPT-5-mini: Budget option with good performance
-const MODEL = 'gpt-5';
+// Using GPT-4o - proven, reliable model with excellent math performance
+// GPT-4o supports temperature, max_tokens, and JSON mode
+// Alternative options:
+// - gpt-4-turbo: More cost-effective
+// - gpt-5: Newer but may have API compatibility issues
+const MODEL = 'gpt-4o';
 
 /**
  * Calculate difficulty score based on multiple factors
@@ -246,21 +247,13 @@ CRITICAL: You MUST generate exactly ${count} problem(s). The "problems" array MU
         },
         { role: 'user', content: prompt },
       ],
-      // Note: GPT-5 does not support custom temperature - it only supports default (1.0)
-      // This is by design as GPT-5 uses multi-pass reasoning
-      max_completion_tokens: 2000, // GPT-5 uses max_completion_tokens instead of max_tokens
+      temperature: 0.8, // Higher temperature for more variety
+      max_tokens: 2000,
       response_format: { type: 'json_object' },
     });
 
-    // Debug logging to understand response structure
-    console.log('OpenAI Response:', JSON.stringify(response, null, 2));
-    console.log('Choices:', response.choices);
-    console.log('First choice:', response.choices[0]);
-    console.log('Message:', response.choices[0]?.message);
-
     const content = response.choices[0]?.message?.content;
     if (!content) {
-      console.error('No content in response. Full response:', JSON.stringify(response, null, 2));
       throw new Error('No response from OpenAI');
     }
 
