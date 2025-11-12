@@ -226,7 +226,7 @@ export default function OperationsPath({
       </div>
 
       {/* Completion Message */}
-      {currentLevel > levels.length && (
+      {levels.length > 0 && currentLevel > levels.length && (
         <div className="text-center mt-12 p-8 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl">
           <Trophy size={64} className="mx-auto text-yellow-600 mb-4" />
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
