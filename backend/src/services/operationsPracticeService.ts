@@ -129,14 +129,43 @@ function generateAdditionProblem(levelConfig: OperationLevel): OperationProblem 
  */
 function generateSubtractionProblem(levelConfig: OperationLevel): OperationProblem {
   const { config } = levelConfig;
-  const a = randomNumber(config.minValue!, config.maxValue!, config.allowDecimals);
-  const b = randomNumber(config.minValue!, config.maxValue!, config.allowDecimals);
+  const allowNegatives = config.allowNegatives || false;
+  const forceNegative = config.forceNegative || false;
 
-  // Ensure positive result unless negatives are allowed
-  let num1 = a;
-  let num2 = b;
-  if (!config.allowNegatives && b > a) {
-    [num1, num2] = [num2, num1];
+  let num1: number;
+  let num2: number;
+
+  if (forceNegative) {
+    // Force negative result: ensure num2 > num1
+    const a = randomNumber(config.minValue!, config.maxValue!, config.allowDecimals);
+    const b = randomNumber(config.minValue!, config.maxValue!, config.allowDecimals);
+    // Ensure b > a for negative result
+    if (b > a) {
+      num1 = a;
+      num2 = b;
+    } else {
+      num1 = b;
+      num2 = a;
+    }
+    // Edge case: if they're equal, regenerate num2 to be larger
+    if (num1 === num2) {
+      num2 = randomNumber(num1 + 1, config.maxValue!, config.allowDecimals);
+    }
+  } else if (allowNegatives) {
+    // Allow negative results: both random
+    num1 = randomNumber(config.minValue!, config.maxValue!, config.allowDecimals);
+    num2 = randomNumber(config.minValue!, config.maxValue!, config.allowDecimals);
+  } else {
+    // No negatives: ensure num2 <= num1
+    const a = randomNumber(config.minValue!, config.maxValue!, config.allowDecimals);
+    const b = randomNumber(config.minValue!, config.maxValue!, config.allowDecimals);
+    if (b > a) {
+      num1 = b;
+      num2 = a;
+    } else {
+      num1 = a;
+      num2 = b;
+    }
   }
 
   const answer = config.allowDecimals
