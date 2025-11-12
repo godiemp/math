@@ -3,6 +3,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Check, X, Award, Sparkles } from 'lucide-react';
 import { InlineMath } from './MathDisplay';
+import { OPERATIONS_PATH } from '@/lib/operationsPath';
+import { generateProblem, validateAnswer } from '@/lib/operationsProblemGenerator';
+import { recordCorrectAnswer, recordIncorrectAnswer, completeLevel } from '@/lib/operationsProgress';
 
 interface Problem {
   level: number;
@@ -12,6 +15,7 @@ interface Problem {
   expressionLatex: string;
   difficulty: string;
   problemsToComplete: number;
+  correctAnswer: number | string;
   answerType?: 'number' | 'string' | 'multipleChoice' | 'array';
   choices?: string[];
 }
@@ -28,7 +32,6 @@ export default function OperationsPractice({
   onLevelComplete,
 }: OperationsPracticeProps) {
   const [problem, setProblem] = useState<Problem | null>(null);
-  const [problemId, setProblemId] = useState<string>('');
   const [userAnswer, setUserAnswer] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<{
@@ -40,7 +43,6 @@ export default function OperationsPractice({
   const [attemptCount, setAttemptCount] = useState(0);
   const [startTime, setStartTime] = useState<number>(Date.now());
   const [showLevelComplete, setShowLevelComplete] = useState(false);
-  const [nextLevel, setNextLevel] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -53,22 +55,20 @@ export default function OperationsPractice({
     }
   }, [problem, feedback.show]);
 
-  const loadProblem = async () => {
+  const loadProblem = () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/operations-practice/problem/${level}`,
-        {
-          credentials: 'include',
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Error al cargar el problema');
+      // Find level config
+      const levelConfig = OPERATIONS_PATH.find(l => l.level === level);
+      if (!levelConfig) {
+        console.error('Level not found:', level);
+        return;
       }
 
-      const data = await response.json();
-      setProblem(data.problem);
-      setProblemId(data.problemId);
+      // Generate problem locally
+      const generatedProblem = generateProblem(levelConfig);
+      setProblem({
+        ...generatedProblem,
+      });
       setUserAnswer('');
       setFeedback({ show: false, isCorrect: false });
       setStartTime(Date.now());
@@ -77,51 +77,36 @@ export default function OperationsPractice({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!userAnswer.trim() || isSubmitting) return;
+    if (!userAnswer.trim() || isSubmitting || !problem) return;
 
     setIsSubmitting(true);
-    const timeSpent = Math.floor((Date.now() - startTime) / 1000);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/operations-practice/submit`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            problemId,
-            answer: userAnswer.trim(),
-            timeSpent,
-            level,
-          }),
-        }
-      );
+      // Validate answer locally
+      const isCorrect = validateAnswer(userAnswer, problem.correctAnswer);
 
-      if (!response.ok) {
-        throw new Error('Error al enviar la respuesta');
-      }
-
-      const data = await response.json();
       setFeedback({
         show: true,
-        isCorrect: data.isCorrect,
-        correctAnswer: data.correctAnswer,
+        isCorrect,
+        correctAnswer: problem.correctAnswer.toString(),
       });
 
       setAttemptCount(attemptCount + 1);
 
-      if (data.isCorrect) {
-        setCorrectCount(correctCount + 1);
+      if (isCorrect) {
+        const newCorrectCount = correctCount + 1;
+        setCorrectCount(newCorrectCount);
 
-        if (data.levelCompleted) {
+        // Record correct answer
+        recordCorrectAnswer(level);
+
+        // Check if level is completed
+        if (newCorrectCount >= problem.problemsToComplete) {
+          completeLevel(level);
           setShowLevelComplete(true);
-          setNextLevel(data.nextLevel);
           onLevelComplete();
         } else {
           // Auto-load next problem after 1.5 seconds
@@ -129,6 +114,9 @@ export default function OperationsPractice({
             loadProblem();
           }, 1500);
         }
+      } else {
+        // Record incorrect answer
+        recordIncorrectAnswer(level);
       }
     } catch (error) {
       console.error('Error submitting answer:', error);
@@ -142,10 +130,8 @@ export default function OperationsPractice({
       setShowLevelComplete(false);
       setCorrectCount(0);
       setAttemptCount(0);
-      if (nextLevel) {
-        // Will trigger level change and reload
-        onBack();
-      }
+      // Go back to level selection
+      onBack();
     } else {
       loadProblem();
     }
@@ -183,26 +169,12 @@ export default function OperationsPractice({
               </div>
             </div>
           </div>
-          {nextLevel ? (
-            <button
-              onClick={handleContinue}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
-            >
-              Continuar al Siguiente Nivel →
-            </button>
-          ) : (
-            <div className="space-y-4">
-              <p className="text-gray-600">
-                ¡Has completado todos los niveles disponibles!
-              </p>
-              <button
-                onClick={onBack}
-                className="bg-gray-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-700 transition-all shadow-lg"
-              >
-                Volver al Camino
-              </button>
-            </div>
-          )}
+          <button
+            onClick={handleContinue}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
+          >
+            Continuar al Siguiente Nivel →
+          </button>
         </div>
       </div>
     );
