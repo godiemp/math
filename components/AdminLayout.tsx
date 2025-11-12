@@ -19,6 +19,7 @@ const navItems: NavItem[] = [
   { name: 'Users', path: '/admin/users', icon: '👥' },
   { name: 'Analytics', path: '/admin/analytics', icon: '📈' },
   { name: 'AI Analytics', path: '/admin/ai-analytics', icon: '🤖' },
+  { name: 'System Health', path: '/admin/system-health', icon: '💚' },
   { name: 'Problems', path: '/admin/problems', icon: '❓' },
   { name: 'Abstract Problems', path: '/admin/abstract-problems', icon: '📚' },
   { name: 'Generator', path: '/admin/qgen', icon: '🎲' },
