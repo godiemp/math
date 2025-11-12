@@ -8,17 +8,17 @@ import AdminLayout from '@/components/AdminLayout';
 
 interface AIAnalytics {
   overview: {
-    total_interactions: string;
-    unique_users: string;
-    interactions_last_24h: string;
-    interactions_last_7d: string;
+    total_interactions: number;
+    unique_users: number;
+    interactions_last_24h: number;
+    interactions_last_7d: number;
     avg_response_time_ms: number;
     max_response_time_ms: number;
   };
   interactionsByType: Array<{
     interaction_type: string;
-    count: string;
-    unique_users: string;
+    count: number;
+    unique_users: number;
     avg_response_time_ms: number;
   }>;
   topQuestions: Array<{
@@ -48,7 +48,7 @@ interface AIAnalytics {
     createdAt: string;
   }>;
   conversationStats: {
-    averageTurns: string;
+    averageTurns: number;
     longestConversations: Array<{
       sessionId: string;
       turns: number;
@@ -57,10 +57,10 @@ interface AIAnalytics {
   };
   timeSeries: Array<{
     date: string;
-    total_interactions: string;
-    unique_users: string;
-    chat_count: string;
-    help_count: string;
+    total_interactions: number;
+    unique_users: number;
+    chat_count: number;
+    help_count: number;
     avg_response_time: number;
   }>;
 }
@@ -177,8 +177,8 @@ function AIAnalyticsContent() {
     }
   }, [selectedTab]);
 
-  const formatNumber = (num: string | number) => {
-    return typeof num === 'string' ? parseInt(num).toLocaleString() : num.toLocaleString();
+  const formatNumber = (num: number) => {
+    return num.toLocaleString();
   };
 
   const formatDuration = (ms: number) => {

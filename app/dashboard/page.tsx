@@ -21,8 +21,12 @@ function DashboardContent() {
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
   const [nextSession, setNextSession] = useState<LiveSession | null>(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const abortController = new AbortController();
+    let isMounted = true;
+
     const loadDashboardData = async () => {
       if (!user) {
         // No user yet, stop data loading
@@ -30,39 +34,61 @@ function DashboardContent() {
         return;
       }
 
-      // Update session statuses
-      await updateSessionStatuses();
+      try {
+        // Update session statuses
+        const statusUpdateResult = await updateSessionStatuses();
+        if (!statusUpdateResult.success) {
+          console.warn('Failed to update session statuses:', statusUpdateResult.error);
+          // Continue anyway - this is not critical for dashboard loading
+        }
 
-      // Get all available sessions from API
-      const allAvailableSessions = await getAllAvailableSessions();
+        // Get all available sessions from API
+        const allAvailableSessions = await getAllAvailableSessions();
 
-      // Filter for user's registered sessions
-      const userRegisteredSessions = allAvailableSessions.filter(s =>
-        s.registeredUsers?.some(r => r.userId === user.id)
-      );
+        // Only update state if component is still mounted
+        if (!isMounted) return;
 
-      // Filter for upcoming sessions only (scheduled, lobby, active)
-      const upcomingSessions = userRegisteredSessions.filter(s =>
-        s.status === 'scheduled' || s.status === 'lobby' || s.status === 'active'
-      );
+        // Filter for user's registered sessions
+        const userRegisteredSessions = allAvailableSessions.filter(s =>
+          s.registeredUsers?.some(r => r.userId === user.id)
+        );
 
-      // Sort by scheduled start time
-      upcomingSessions.sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
+        // Filter for upcoming sessions only (scheduled, lobby, active)
+        const upcomingSessions = userRegisteredSessions.filter(s =>
+          s.status === 'scheduled' || s.status === 'lobby' || s.status === 'active'
+        );
 
-      setRegisteredSessions(upcomingSessions);
+        // Sort by scheduled start time
+        upcomingSessions.sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
 
-      // Get the next scheduled session (for all users, not just registered)
-      const allUpcoming = allAvailableSessions
-        .filter(s => s.status === 'scheduled' || s.status === 'lobby')
-        .sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
+        setRegisteredSessions(upcomingSessions);
 
-      setNextSession(allUpcoming[0] || null);
+        // Get the next scheduled session (for all users, not just registered)
+        const allUpcoming = allAvailableSessions
+          .filter(s => s.status === 'scheduled' || s.status === 'lobby')
+          .sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
 
-      // Mark loading as complete
-      setIsLoadingData(false);
+        setNextSession(allUpcoming[0] || null);
+
+        // Mark loading as complete
+        setIsLoadingData(false);
+        setError(null);
+      } catch (err) {
+        console.error('Error loading dashboard data:', err);
+        if (isMounted) {
+          setError('Error al cargar el panel. Por favor, intenta recargar la página.');
+          setIsLoadingData(false);
+        }
+      }
     };
 
     loadDashboardData();
+
+    // Cleanup function
+    return () => {
+      isMounted = false;
+      abortController.abort();
+    };
   }, [user]);
 
   const handleLogout = async () => {
@@ -100,6 +126,22 @@ function DashboardContent() {
     return <LoadingScreen message="Preparando tu panel..." />;
   }
 
+  // Show error UI if data loading failed
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] flex items-center justify-center p-4">
+        <Card className="max-w-md w-full p-6 text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <Heading level={2} size="sm" className="mb-3">Error al Cargar</Heading>
+          <Text variant="secondary" className="mb-6">{error}</Text>
+          <Button onClick={() => window.location.reload()} className="w-full">
+            Recargar Página
+          </Button>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">
       {/* Navbar with variableBlur material */}
@@ -110,7 +152,7 @@ function DashboardContent() {
           </Heading>
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <Text size="sm" variant="secondary" className="text-xs sm:text-sm">
-              Hola, {user?.displayName}
+              Hola, {user?.displayName || user?.username || 'Usuario'}
             </Text>
             <div className="flex gap-2 ml-auto sm:ml-0">
               <Button variant="ghost" onClick={() => router.push('/profile')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">

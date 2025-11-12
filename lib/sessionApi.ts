@@ -212,8 +212,18 @@ export async function unregisterFromSession(
 /**
  * Update session statuses based on time
  */
-export async function updateSessionStatuses(): Promise<void> {
-  await api.post<MessageResponse>('/api/sessions/update-statuses');
+export async function updateSessionStatuses(): Promise<{ success: boolean; error?: string }> {
+  const response = await api.post<MessageResponse>('/api/sessions/update-statuses');
+
+  if (response.error) {
+    console.error('Failed to update session statuses:', response.error);
+    return {
+      success: false,
+      error: response.error.error || 'Failed to update session statuses',
+    };
+  }
+
+  return { success: true };
 }
 
 /**
