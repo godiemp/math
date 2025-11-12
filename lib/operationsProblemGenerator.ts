@@ -1,9 +1,31 @@
 /**
  * Client-side Operations Problem Generator
- * Generates problems locally (similar to backend but simpler)
+ * Orchestrates problem generation using modular generators
  */
 
 import { OperationLevel } from './operationsPath';
+import {
+  getRandomInt,
+  GeneratorContext,
+  ProblemData,
+  generateAddition,
+  generateSubtraction,
+  generateMultiplication,
+  generateDivision,
+  generateMixedArithmetic,
+  generateSimpleEquation,
+  generateExpressionEvaluation,
+  generateSimplification,
+  generateComparison,
+  generateLogicalOperators,
+  generateCompoundConditions,
+  generateSequences,
+  generateSets,
+  generateFunctions,
+  generateSorting,
+  generateCounting,
+  generateComposition,
+} from './generators';
 
 export interface GeneratedProblem {
   expression: string;
@@ -18,11 +40,7 @@ export interface GeneratedProblem {
 
 // Track recently generated problems to avoid repeats (per level)
 const problemHistory: Map<number, string[]> = new Map();
-const MAX_HISTORY_SIZE = 10; // Remember last 10 problems per level
-
-function getRandomInt(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+const MAX_HISTORY_SIZE = 10;
 
 /**
  * Check if a problem was recently generated for this level
@@ -39,7 +57,6 @@ function addToHistory(level: number, problemKey: string): void {
   const history = problemHistory.get(level) || [];
   history.push(problemKey);
 
-  // Keep only the last MAX_HISTORY_SIZE problems
   if (history.length > MAX_HISTORY_SIZE) {
     history.shift();
   }
@@ -54,6 +71,32 @@ export function clearProblemHistory(level: number): void {
   problemHistory.delete(level);
 }
 
+/**
+ * Map operation types to their generator functions
+ */
+const generatorMap: Record<string, (ctx: GeneratorContext) => ProblemData> = {
+  'addition': generateAddition,
+  'subtraction': generateSubtraction,
+  'multiplication': generateMultiplication,
+  'division': generateDivision,
+  'mixed-arithmetic': generateMixedArithmetic,
+  'simple-equation': generateSimpleEquation,
+  'expression-evaluation': generateExpressionEvaluation,
+  'simplification': generateSimplification,
+  'comparison': generateComparison,
+  'logical-operators': generateLogicalOperators,
+  'compound-conditions': generateCompoundConditions,
+  'sequences': generateSequences,
+  'sets': generateSets,
+  'functions': generateFunctions,
+  'sorting': generateSorting,
+  'counting': generateCounting,
+  'composition': generateComposition,
+};
+
+/**
+ * Generate a problem for a given level configuration
+ */
 export function generateProblem(levelConfig: OperationLevel): GeneratedProblem {
   const { operationType, config, level, title, description, difficulty, problemsToComplete } = levelConfig;
 
@@ -64,123 +107,35 @@ export function generateProblem(levelConfig: OperationLevel): GeneratedProblem {
   while (attempts < maxAttempts) {
     attempts++;
 
-    let expression = '';
-    let expressionLatex = '';
-    let correctAnswer: number | string = 0;
-    let problemKey = '';
+    const generator = generatorMap[operationType];
 
-    switch (operationType) {
-      case 'addition': {
-        const min = config.minValue || 1;
-        const max = config.maxValue || 10;
-        const operands = config.numberOfOperands || 2;
-
-        const numbers: number[] = [];
-        for (let i = 0; i < operands; i++) {
-          numbers.push(getRandomInt(min, max));
-        }
-
-        correctAnswer = numbers.reduce((sum, num) => sum + num, 0);
-        expression = numbers.join(' + ');
-        expressionLatex = numbers.join(' + ');
-        problemKey = `add:${numbers.join(',')}`;
-        break;
-      }
-
-      case 'subtraction': {
-        const min = config.minValue || 1;
-        const max = config.maxValue || 10;
-        const allowNegatives = config.allowNegatives || false;
-
-        const a = getRandomInt(min, max);
-        const b = allowNegatives ? getRandomInt(min, max) : getRandomInt(min, a);
-
-        correctAnswer = a - b;
-        expression = `${a} - ${b}`;
-        expressionLatex = `${a} - ${b}`;
-        problemKey = `sub:${a},${b}`;
-        break;
-      }
-
-      case 'multiplication': {
-        const min = config.minValue || 1;
-        const max = config.maxValue || 10;
-        const tables = config.specificTables || [2, 3, 4, 5];
-
-        const table = tables[Math.floor(Math.random() * tables.length)];
-        const multiplier = getRandomInt(min, max);
-
-        correctAnswer = table * multiplier;
-        expression = `${table} × ${multiplier}`;
-        expressionLatex = `${table} \\times ${multiplier}`;
-        problemKey = `mul:${table},${multiplier}`;
-        break;
-      }
-
-      case 'division': {
-        const min = config.minValue || 1;
-        const max = config.maxValue || 10;
-        const tables = config.specificTables || [2, 3, 4, 5];
-
-        const divisor = tables[Math.floor(Math.random() * tables.length)];
-        const quotient = getRandomInt(min, max);
-        const dividend = divisor * quotient;
-
-        correctAnswer = quotient;
-        expression = `${dividend} ÷ ${divisor}`;
-        expressionLatex = `${dividend} \\div ${divisor}`;
-        problemKey = `div:${dividend},${divisor}`;
-        break;
-      }
-
-      case 'mixed-arithmetic': {
-        const min = config.minValue || 1;
-        const max = config.maxValue || 20;
-        const operations = ['+', '-', '×'];
-        const op = operations[Math.floor(Math.random() * operations.length)];
-
-        const a = getRandomInt(min, max);
-        const b = getRandomInt(min, op === '-' ? a : max);
-
-        if (op === '+') {
-          correctAnswer = a + b;
-          expression = `${a} + ${b}`;
-          expressionLatex = `${a} + ${b}`;
-          problemKey = `mix:${a},${b},+`;
-        } else if (op === '-') {
-          correctAnswer = a - b;
-          expression = `${a} - ${b}`;
-          expressionLatex = `${a} - ${b}`;
-          problemKey = `mix:${a},${b},-`;
-        } else {
-          correctAnswer = a * b;
-          expression = `${a} × ${b}`;
-          expressionLatex = `${a} \\times ${b}`;
-          problemKey = `mix:${a},${b},×`;
-        }
-        break;
-      }
-
-      default: {
-        // For other operation types, generate a simple addition problem as fallback
-        const a = getRandomInt(1, 10);
-        const b = getRandomInt(1, 10);
-        correctAnswer = a + b;
-        expression = `${a} + ${b}`;
-        expressionLatex = `${a} + ${b}`;
-        problemKey = `default:${a},${b}`;
-      }
+    if (!generator) {
+      // Fallback for unknown operation types
+      console.warn(`No generator found for operation type: ${operationType}`);
+      const a = getRandomInt(1, 10);
+      const b = getRandomInt(1, 10);
+      return {
+        expression: `${a} + ${b}`,
+        expressionLatex: `${a} + ${b}`,
+        correctAnswer: a + b,
+        title,
+        description,
+        level,
+        difficulty,
+        problemsToComplete
+      };
     }
 
+    const context: GeneratorContext = { config, level };
+    const problemData = generator(context);
+
     // Check if this problem was recently generated
-    if (!isProblemRecent(level, problemKey)) {
+    if (!isProblemRecent(level, problemData.problemKey)) {
       // This is a new problem, add it to history and return it
-      addToHistory(level, problemKey);
+      addToHistory(level, problemData.problemKey);
 
       return {
-        expression,
-        expressionLatex,
-        correctAnswer,
+        ...problemData,
         title,
         description,
         level,
@@ -193,26 +148,20 @@ export function generateProblem(levelConfig: OperationLevel): GeneratedProblem {
   }
 
   // If we couldn't find a unique problem after max attempts, just return the last one
-  // This shouldn't happen unless the problem space is very small
   console.warn(`Could not generate unique problem after ${maxAttempts} attempts for level ${level}`);
 
-  return generateFallbackProblem(levelConfig);
-}
-
-/**
- * Generate a fallback problem without history checking
- */
-function generateFallbackProblem(levelConfig: OperationLevel): GeneratedProblem {
-  const { operationType, config, level, title, description, difficulty, problemsToComplete } = levelConfig;
-
-  // Simple fallback generation without history
-  const a = getRandomInt(1, 10);
-  const b = getRandomInt(1, 10);
+  // Generate one more time without history check
+  const generator = generatorMap[operationType];
+  const context: GeneratorContext = { config, level };
+  const problemData = generator ? generator(context) : {
+    expression: '1 + 1',
+    expressionLatex: '1 + 1',
+    correctAnswer: 2,
+    problemKey: 'fallback'
+  };
 
   return {
-    expression: `${a} + ${b}`,
-    expressionLatex: `${a} + ${b}`,
-    correctAnswer: a + b,
+    ...problemData,
     title,
     description,
     level,
@@ -221,6 +170,9 @@ function generateFallbackProblem(levelConfig: OperationLevel): GeneratedProblem 
   };
 }
 
+/**
+ * Validate user's answer against the correct answer
+ */
 export function validateAnswer(userAnswer: string, correctAnswer: number | string): boolean {
   const trimmedAnswer = userAnswer.trim();
 
@@ -229,5 +181,32 @@ export function validateAnswer(userAnswer: string, correctAnswer: number | strin
     return !isNaN(numericAnswer) && Math.abs(numericAnswer - correctAnswer) < 0.001;
   }
 
-  return trimmedAnswer.toLowerCase() === correctAnswer.toString().toLowerCase();
+  // For string answers, handle special cases
+  const correctStr = correctAnswer.toString().toLowerCase();
+  const userStr = trimmedAnswer.toLowerCase();
+
+  // Handle boolean answers (Verdadero/Falso, True/False, V/F, Si/No)
+  if (correctStr === 'verdadero' || correctStr === 'falso') {
+    return (
+      userStr === correctStr ||
+      (correctStr === 'verdadero' && (userStr === 'true' || userStr === 'v' || userStr === 'si' || userStr === 'sí')) ||
+      (correctStr === 'falso' && (userStr === 'false' || userStr === 'f' || userStr === 'no'))
+    );
+  }
+
+  // Handle set notation - accept both {1,2,3} and 1,2,3
+  if (correctStr.includes(',')) {
+    // Remove spaces and braces for comparison
+    const normalizeSet = (str: string) => str.replace(/[\s\{\}]/g, '').split(',').sort().join(',');
+    return normalizeSet(userStr) === normalizeSet(correctStr);
+  }
+
+  // Handle empty set notation
+  if (correctStr === '∅' || correctStr === 'vacio' || correctStr === 'vacío') {
+    return userStr === '∅' || userStr === 'vacio' || userStr === 'vacío' || userStr === '' || userStr === '{}';
+  }
+
+  // Handle algebraic expressions - accept with or without spaces
+  const normalizeAlgebra = (str: string) => str.replace(/\s+/g, '');
+  return normalizeAlgebra(userStr) === normalizeAlgebra(correctStr);
 }
