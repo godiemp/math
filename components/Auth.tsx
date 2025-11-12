@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { Eye, EyeOff } from 'lucide-react';
 import { registerUser, loginUser } from '@/lib/auth';
 import { analytics } from '@/lib/analytics';
 
@@ -20,6 +21,7 @@ export default function Auth({ onSuccess }: AuthProps) {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -255,40 +257,76 @@ export default function Auth({ onSuccess }: AuthProps) {
                 </a>
               )}
             </div>
-            <input
-              id="password"
-              name="password"
-              data-testid="auth-password-input"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete={isLogin ? "current-password" : "new-password"}
-              className="spring-motion"
-              style={{
-                width: '100%',
-                height: '44px',
-                padding: '0 var(--spacing-6)',
-                fontSize: '17px',
-                fontFamily: 'var(--font-body)',
-                color: 'var(--color-label-primary)',
-                background: 'var(--color-surface)',
-                border: '1px solid var(--color-separator)',
-                borderRadius: 'var(--radius-sm)',
-                outline: 'none',
-              }}
-              placeholder={isLogin ? 'Tu contraseña' : 'Mínimo 6 caracteres'}
-              onFocus={(e) => {
-                e.target.style.borderColor = 'var(--color-tint)';
-                e.target.style.borderWidth = '2px';
-                e.target.style.boxShadow = 'var(--shadow-ambient)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = 'var(--color-separator)';
-                e.target.style.borderWidth = '1px';
-                e.target.style.boxShadow = 'none';
-              }}
-            />
+            <div style={{ position: 'relative' }}>
+              <input
+                id="password"
+                name="password"
+                data-testid="auth-password-input"
+                type={showPassword ? "text" : "password"}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete={isLogin ? "current-password" : "new-password"}
+                className="spring-motion"
+                style={{
+                  width: '100%',
+                  height: '44px',
+                  padding: '0 var(--spacing-6)',
+                  paddingRight: '44px',
+                  fontSize: '17px',
+                  fontFamily: 'var(--font-body)',
+                  color: 'var(--color-label-primary)',
+                  background: 'var(--color-surface)',
+                  border: '1px solid var(--color-separator)',
+                  borderRadius: 'var(--radius-sm)',
+                  outline: 'none',
+                }}
+                placeholder={isLogin ? 'Tu contraseña' : 'Mínimo 6 caracteres'}
+                onFocus={(e) => {
+                  e.target.style.borderColor = 'var(--color-tint)';
+                  e.target.style.borderWidth = '2px';
+                  e.target.style.boxShadow = 'var(--shadow-ambient)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'var(--color-separator)';
+                  e.target.style.borderWidth = '1px';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                className="spring-motion"
+                style={{
+                  position: 'absolute',
+                  right: '0',
+                  top: '0',
+                  height: '44px',
+                  width: '44px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: 'var(--color-label-tertiary)',
+                  transition: 'color 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--color-label-primary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--color-label-tertiary)';
+                }}
+              >
+                {showPassword ? (
+                  <EyeOff size={20} strokeWidth={2} />
+                ) : (
+                  <Eye size={20} strokeWidth={2} />
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Email Input (Register Only) */}
