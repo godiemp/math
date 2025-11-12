@@ -9,31 +9,31 @@ export const pool = new Pool({
 });
 
 /**
- * Clear all data from test database tables
+ * Clear all data from test database tables using TRUNCATE for better performance
  */
 export async function clearDatabase() {
   const client = await pool.connect();
   try {
-    await client.query('BEGIN');
-
-    // Delete in reverse order of dependencies
-    await client.query('DELETE FROM quiz_attempts');
-    await client.query('DELETE FROM quiz_sessions');
-    await client.query('DELETE FROM question_attempts');
-    await client.query('DELETE FROM session_participants');
-    await client.query('DELETE FROM session_registrations');
-    await client.query('DELETE FROM sessions');
-    await client.query('DELETE FROM pdf_uploads');
-    await client.query('DELETE FROM questions');
-    await client.query('DELETE FROM refresh_tokens');
-    await client.query('DELETE FROM subscriptions');
-    await client.query('DELETE FROM users');
-    await client.query('DELETE FROM plans');
-    await client.query('DELETE FROM last_quiz_config');
-
-    await client.query('COMMIT');
+    // Use TRUNCATE CASCADE for much faster clearing (resets sequences and removes all foreign key constraints)
+    // This is significantly faster than individual DELETE statements
+    await client.query(`
+      TRUNCATE TABLE
+        quiz_attempts,
+        quiz_sessions,
+        question_attempts,
+        session_participants,
+        session_registrations,
+        sessions,
+        pdf_uploads,
+        questions,
+        refresh_tokens,
+        subscriptions,
+        users,
+        plans,
+        last_quiz_config
+      CASCADE
+    `);
   } catch (error) {
-    await client.query('ROLLBACK');
     throw error;
   } finally {
     client.release();

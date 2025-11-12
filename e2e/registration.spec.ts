@@ -103,7 +103,7 @@ test.describe('User Registration', () => {
     await page.getByTestId('auth-submit-button').click();
 
     // Wait a moment
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Verify form was not submitted - should still be on landing page
     const url = page.url();
@@ -148,7 +148,7 @@ test.describe('User Registration', () => {
     await page.getByTestId('auth-submit-button').click();
 
     // Wait a moment
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Verify form was not submitted - should still be on landing page
     const url = page.url();
@@ -215,7 +215,7 @@ test.describe('User Registration', () => {
 
     // Switch to login mode
     await page.getByTestId('auth-toggle-button').click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Verify login mode
     await expect(page.getByTestId('auth-heading')).toContainText('Iniciar Sesión');
@@ -225,7 +225,7 @@ test.describe('User Registration', () => {
 
     // Switch back to register mode
     await page.getByTestId('auth-toggle-button').click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Verify register mode again
     await expect(page.getByTestId('auth-heading')).toContainText('Crear Cuenta');

@@ -22,14 +22,15 @@ export async function loginAsStudent(page: Page) {
   // Submit login
   await page.click('button[type="submit"]');
 
-  // Wait for navigation to complete
-  await page.waitForTimeout(2000);
+  // Wait for navigation to complete using event-based wait
+  await page.waitForURL(/\/(dashboard|$)/, { timeout: 10000 });
 
   // Verify we're authenticated (should be on dashboard or not on login page)
   const url = page.url();
   if (url === '/' || url.endsWith('/')) {
     // Check if we have dashboard content
-    const hasDashboardContent = await page.getByText(/dashboard|práctica|inicio/i).count() > 0;
+    const dashboardContent = page.getByText(/dashboard|práctica|inicio/i);
+    const hasDashboardContent = await dashboardContent.count() > 0;
     if (!hasDashboardContent) {
       throw new Error('Login failed - still on login page');
     }
@@ -41,8 +42,7 @@ export async function loginAsStudent(page: Page) {
  * This should be called after loginAsStudent() in a beforeAll or beforeEach hook.
  */
 export async function goToDashboard(page: Page) {
-  await page.goto('/dashboard');
-  await page.waitForTimeout(1000);
+  await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
 }
 
 /**

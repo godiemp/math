@@ -19,7 +19,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: 0,
-  /* Opt out of parallel tests on CI. */
+  /* Run tests sequentially on CI to avoid race conditions */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: process.env.CI
@@ -47,9 +47,32 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    // Setup project - runs once to authenticate and save state
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'setup',
+      testMatch: /.*\.setup\.ts/,
+    },
+    // Authenticated tests - use cached auth state (most tests)
+    {
+      name: 'chromium-authenticated',
+      use: {
+        ...devices['Desktop Chrome'],
+        // Use saved authentication state from setup
+        storageState: '.auth/student.json',
+      },
+      dependencies: ['setup'],
+      // Exclude auth and registration tests which need to start unauthenticated
+      testIgnore: ['**/auth.spec.ts', '**/registration.spec.ts'],
+    },
+    // Unauthenticated tests - for login/registration flows
+    {
+      name: 'chromium-unauthenticated',
+      use: {
+        ...devices['Desktop Chrome'],
+        // No storage state - start fresh
+      },
+      // Only run auth and registration tests
+      testMatch: ['**/auth.spec.ts', '**/registration.spec.ts'],
     },
 
     // Uncomment to test on more browsers
