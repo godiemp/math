@@ -9,7 +9,7 @@ import { getAllAvailableSessions, updateSessionStatuses } from "@/lib/sessionApi
 import { useEffect, useState } from "react";
 import { LiveSession } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar } from "@/components/ui";
-import { StreakAndBuddy } from "@/components/StreakAndBuddy";
+import { StudyBuddy } from "@/components/StudyBuddy";
 import { ShareModal } from "@/components/ShareModal";
 import { Share2 } from "lucide-react";
 
@@ -176,9 +176,9 @@ function DashboardContent() {
       </Navbar>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-8 md:py-12">
-        {/* Streak and Study Buddy Combined Section */}
+        {/* Study Buddy with Streak Information */}
         <div className="mb-8">
-          <StreakAndBuddy initialStreak={user ? {
+          <StudyBuddy initialStreak={user ? {
             currentStreak: user.currentStreak || 0,
             longestStreak: user.longestStreak || 0,
             lastPracticeDate: user.lastPracticeDate || null
