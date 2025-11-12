@@ -10,6 +10,7 @@ import { useQuizProgress } from '@/hooks/useQuizProgress';
 import { useQuizNavigation } from '@/hooks/useQuizNavigation';
 import { formatTime, getTimerColor, generateQuizSessionId } from '@/lib/quiz-utils';
 import { RAPIDFIRE_CONFIG } from '@/lib/constants';
+import { analytics } from '@/lib/analytics';
 
 interface RapidFireQuizProps {
   questions: Question[];
@@ -113,10 +114,21 @@ export default function RapidFireQuiz({
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
     } else {
-      const timer = setTimeout(() => setShowCountdown(false), 800);
+      const timer = setTimeout(() => {
+        setShowCountdown(false);
+        // Track quiz started when countdown ends
+        analytics.track('quiz_started', {
+          level,
+          mode: 'rapid-fire',
+          difficulty,
+          subject: subject || 'all',
+          questionCount: quizQuestions.length,
+          timeLimit: config.timeLimit,
+        });
+      }, 800);
       return () => clearTimeout(timer);
     }
-  }, [showCountdown, countdown]);
+  }, [showCountdown, countdown, level, difficulty, subject, quizQuestions.length, config.timeLimit]);
 
   // Timer effect
   useEffect(() => {
@@ -250,6 +262,27 @@ export default function RapidFireQuiz({
     setIsSubmitting(true);
     try {
       await submitQuiz(quizQuestions, userAnswers, quizSessionId, aiConversation);
+
+      // Calculate quiz metrics
+      const correctAnswers = userAnswers.filter((answer, idx) =>
+        answer === quizQuestions[idx].correctAnswer
+      ).length;
+      const accuracy = correctAnswers / quizQuestions.length;
+
+      // Track quiz completion
+      analytics.track('quiz_completed', {
+        level,
+        mode: 'rapid-fire',
+        difficulty,
+        subject: subject || 'all',
+        questionsAnswered: quizQuestions.length,
+        correctAnswers,
+        accuracy,
+        timeSpent: totalTimeElapsed,
+        timeRemaining,
+        quizSessionId,
+      });
+
       setQuizSubmitted(true);
       // Set to first answered question for review
       const firstAnswered = quizQuestions.findIndex((_, index) => userAnswers[index] !== null);

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { registerUser, loginUser } from '@/lib/auth';
+import { analytics } from '@/lib/analytics';
 
 interface AuthProps {
   onSuccess: () => void;
@@ -36,7 +37,24 @@ export default function Auth({ onSuccess }: AuthProps) {
         }
 
         const result = await loginUser(username, password);
-        if (result.success) {
+        if (result.success && result.user) {
+          // Track login event
+          analytics.track('user_logged_in', {
+            method: 'password',
+            username: result.user.username,
+          });
+
+          // Identify user for future events
+          analytics.identify(result.user.id, {
+            email: result.user.email,
+            username: result.user.username,
+            displayName: result.user.displayName,
+            role: result.user.role,
+            subscriptionStatus: result.user.subscription?.status || 'free',
+            currentStreak: result.user.currentStreak || 0,
+            longestStreak: result.user.longestStreak || 0,
+          });
+
           toast.success('Sesión iniciada correctamente');
           onSuccess();
         } else {
@@ -67,7 +85,25 @@ export default function Auth({ onSuccess }: AuthProps) {
         }
 
         const result = await registerUser(username, email, password, displayName, acceptedTerms);
-        if (result.success) {
+        if (result.success && result.user) {
+          // Track registration event
+          analytics.track('user_signed_up', {
+            source: 'organic',
+            method: 'password',
+            username: result.user.username,
+          });
+
+          // Identify user for future events
+          analytics.identify(result.user.id, {
+            email: result.user.email,
+            username: result.user.username,
+            displayName: result.user.displayName,
+            role: result.user.role,
+            subscriptionStatus: result.user.subscription?.status || 'free',
+            currentStreak: 0,
+            longestStreak: 0,
+          });
+
           toast.success('Cuenta creada exitosamente');
           onSuccess();
         } else {

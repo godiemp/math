@@ -10,6 +10,7 @@ import { useQuizState } from '@/hooks/useQuizState';
 import { useQuizProgress } from '@/hooks/useQuizProgress';
 import { useQuizNavigation } from '@/hooks/useQuizNavigation';
 import { generateQuizSessionId } from '@/lib/quiz-utils';
+import { analytics } from '@/lib/analytics';
 
 interface ZenQuizProps {
   questions: Question[];
@@ -70,10 +71,19 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
       const timer = setTimeout(() => setZenIntroPhase(2), 2500);
       return () => clearTimeout(timer);
     } else if (zenIntroPhase === 2) {
-      const timer = setTimeout(() => setShowZenIntro(false), 800);
+      const timer = setTimeout(() => {
+        setShowZenIntro(false);
+        // Track quiz started when intro ends
+        analytics.track('quiz_started', {
+          level,
+          mode: 'zen',
+          subject: subject || 'all',
+          questionCount: quizQuestions.length,
+        });
+      }, 800);
       return () => clearTimeout(timer);
     }
-  }, [showZenIntro, zenIntroPhase]);
+  }, [showZenIntro, zenIntroPhase, level, subject, quizQuestions.length]);
 
   const toggleQuickNav = () => {
     const newValue = !showQuickNav;
@@ -87,6 +97,24 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
     setIsSubmitting(true);
     try {
       await submitQuiz(quizQuestions, userAnswers, quizSessionId, aiConversation);
+
+      // Calculate quiz metrics
+      const correctAnswers = userAnswers.filter((answer, idx) =>
+        answer === quizQuestions[idx].correctAnswer
+      ).length;
+      const accuracy = correctAnswers / quizQuestions.length;
+
+      // Track quiz completion
+      analytics.track('quiz_completed', {
+        level,
+        mode: 'zen',
+        subject: subject || 'all',
+        questionsAnswered: quizQuestions.length,
+        correctAnswers,
+        accuracy,
+        quizSessionId,
+      });
+
       setQuizSubmitted(true);
       setCurrentQuestionIndex(0);
     } catch (error) {

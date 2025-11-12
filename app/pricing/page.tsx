@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { analytics } from '@/lib/analytics';
 
 export default function PricingPage() {
   const router = useRouter();
@@ -32,7 +33,24 @@ export default function PricingPage() {
 
   const plans = plansResponse?.plans || [];
 
+  // Track pricing page view
+  useEffect(() => {
+    analytics.track('pricing_viewed', {
+      source: 'direct',
+      plansAvailable: plans.length,
+    });
+  }, [plans.length]);
+
   const handleSubscribe = async (plan: Plan) => {
+    // Track checkout started
+    analytics.track('checkout_started', {
+      plan: plan.name,
+      planId: plan.id,
+      amount: plan.price,
+      hasTrial: plan.trialDurationDays > 0,
+      source: 'pricing_page',
+    });
+
     if (!isAuthenticated) {
       toast.error('Debes iniciar sesión para suscribirte');
       router.push('/login?redirect=/pricing');
