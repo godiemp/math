@@ -5,9 +5,6 @@
 import posthog from 'posthog-js'
 import * as Sentry from '@sentry/nextjs'
 
-// Export router transition hook for Sentry navigation instrumentation
-export const onRouterTransitionStart = Sentry.captureRouterTransitionStart
-
 if (typeof window !== 'undefined') {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
     api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
