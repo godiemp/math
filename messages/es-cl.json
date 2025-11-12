@@ -8,15 +8,18 @@
       "forgotPassword": "¿olvidaste tu contraseña?",
       "noAccount": "¿no tienes cuenta?",
       "register": "regístrate",
+      "registerFree": "regístrate gratis",
       "errors": {
         "completeFields": "por favor completa todos los campos",
         "invalidCredentials": "error al iniciar sesión",
-        "generic": "ocurrió un error. intenta de nuevo"
+        "generic": "ocurrió un error. intenta de nuevo",
+        "registration": "error al registrarse"
       },
       "success": "sesión iniciada correctamente"
     },
     "register": {
       "title": "crear cuenta",
+      "titleFree": "crear cuenta gratis",
       "displayName": "nombre para mostrar",
       "username": "usuario",
       "email": "email",
@@ -38,23 +41,36 @@
     },
     "forgotPassword": {
       "title": "recuperar contraseña",
-      "email": "email",
-      "submit": "enviar enlace",
+      "email": "correo electrónico",
+      "submit": "enviar enlace de recuperación",
       "backToLogin": "volver al inicio de sesión",
-      "success": "revisa tu email para recuperar tu contraseña",
-      "error": "error al enviar el enlace"
+      "success": "revisa tu correo",
+      "error": "error al enviar el enlace",
+      "errors": {
+        "emailRequired": "por favor ingresa tu correo electrónico",
+        "invalidToken": "token de restablecimiento inválido"
+      }
     },
     "resetPassword": {
       "title": "restablecer contraseña",
       "newPassword": "nueva contraseña",
       "confirmPassword": "confirmar contraseña",
-      "submit": "cambiar contraseña",
+      "submit": "restablecer contraseña",
+      "requestNewLink": "solicitar nuevo enlace",
+      "goToLogin": "ir al inicio de sesión",
+      "done": "¡listo!",
       "success": "contraseña actualizada correctamente",
-      "error": "error al actualizar la contraseña"
+      "error": "error al actualizar la contraseña",
+      "errors": {
+        "passwordMismatch": "las contraseñas no coinciden",
+        "passwordLength": "la contraseña debe tener al menos 6 caracteres"
+      }
     }
   },
   "dashboard": {
+    "title": "SimplePAES - Matemática",
     "greeting": "hola, {username}",
+    "hello": "hola",
     "menu": {
       "profile": "mi perfil",
       "premium": "premium",
@@ -64,71 +80,190 @@
     "liveSession": {
       "title": "ensayo PAES en vivo",
       "subtitle": "práctica con otros estudiantes en tiempo real",
-      "cta": "¡regístrate ahora!"
+      "nextSession": "próximo ensayo",
+      "cta": "¡regístrate ahora!",
+      "invite": "invitar amigos"
     },
     "operations": {
       "title": "práctica de operaciones",
-      "subtitle": "domina operaciones básicas progresivamente"
+      "subtitle": "domina operaciones básicas progresivamente",
+      "cta": "comenzar"
     },
     "curriculum": {
       "title": "temario PAES matemática",
       "subtitle": "revisa todo el contenido oficial",
-      "m1": "matemática 1",
-      "m2": "matemática 2"
+      "m1": "M1",
+      "m2": "M2",
+      "m1Full": "matemática 1",
+      "m2Full": "matemática 2",
+      "basicCompetence": "competencia básica",
+      "advancedCompetence": "competencia avanzada",
+      "practice": "practicar"
     },
     "progress": {
       "title": "seguimiento de progreso",
-      "subtitle": "ve tu evolución y estadísticas"
+      "subtitle": "ve tu evolución y estadísticas",
+      "cta": "ver mi progreso"
+    },
+    "improving": {
+      "title": "¡estamos mejorando!",
+      "backHome": "volver al inicio"
     }
   },
   "practice": {
     "loading": "cargando problema...",
+    "loadingQuestions": "cargando preguntas...",
     "verifying": "verificando...",
+    "processing": "procesando...",
+    "sending": "enviando...",
     "solve": "resuelve la operación",
     "selectAnswer": "selecciona tu respuesta",
     "yourAnswer": "tu respuesta",
     "writeAnswer": "escribe tu respuesta",
+    "separateWithCommas": "separa los números con comas",
     "verify": "verificar respuesta",
     "next": "siguiente problema",
+    "nextQuestion": "siguiente",
+    "previous": "anterior",
+    "back": "volver",
     "progress": "progreso: {current} / {total}",
+    "progressOf": "progreso",
     "accuracy": "precisión: {percent}%",
+    "accuracyLabel": "precisión",
     "accuracyRequirement": "mantén un 80% de precisión para poder saltar al siguiente nivel",
-    "skipLevel": "saltar al siguiente nivel",
+    "skipLevel": "saltar nivel",
+    "skipLevelFull": "saltar al siguiente nivel (80%+ precisión)",
+    "continueToNext": "continuar al siguiente nivel",
+    "levelCompleted": {
+      "title": "¡nivel completado!",
+      "message": "has completado el nivel",
+      "correctAnswers": "respuestas correctas",
+      "accuracy": "precisión"
+    },
+    "stats": {
+      "correct": "correctas",
+      "attempts": "intentos",
+      "accuracy": "precisión"
+    },
     "feedback": {
-      "correct": "¡correcto! 🎉 excelente trabajo, sigue así",
+      "correct": "¡correcto!",
+      "correctFull": "¡correcto! 🎉 excelente trabajo, sigue así",
       "wellDone": "¡bien hecho! 🌸 respondiste correctamente",
       "excellent": "¡excelente trabajo! puedes saltar al siguiente nivel",
-      "incorrect": "incorrecto. intenta de nuevo",
-      "tryAgain": "no te rindas, sigue intentando"
+      "incorrect": "incorrecto",
+      "incorrectAnswer": "la respuesta correcta es",
+      "tryAgain": "no te rindas, sigue intentando",
+      "answerSelected": "respuesta seleccionada. puedes cambiarla antes de enviar el quiz"
     },
     "modes": {
       "rapidFire": {
         "title": "modo rapid fire",
-        "description": "responde lo más rápido que puedas"
+        "titleShort": "rapid fire mode",
+        "description": "responde lo más rápido que puedas",
+        "getReady": "¡prepárate!",
+        "go": "¡GO!",
+        "noLives": "sin vidas",
+        "finishing": "finalizando quiz...",
+        "pause": "pausar",
+        "exit": "salir",
+        "paused": "quiz pausado",
+        "continue": "continuar quiz",
+        "pauseMessage": "puedes pausar las veces que necesites"
       },
       "zen": {
         "title": "modo zen",
-        "description": "practica sin presión de tiempo"
+        "description": "practica sin presión de tiempo",
+        "subtitle": "a tu ritmo, sin presión",
+        "quickNav": "navegación rápida",
+        "hide": "ocultar",
+        "show": "mostrar",
+        "answered": "respondida",
+        "sendQuiz": "enviar quiz",
+        "answeredCount": "{count} respondidas"
       }
+    },
+    "quiz": {
+      "completed": "¡quiz completado!",
+      "passed": "¡aprobado!",
+      "notPassed": "no aprobado",
+      "accuracy": "precisión",
+      "timeUsed": "usado",
+      "summary": "resumen de respuestas",
+      "correct": "correcta",
+      "incorrect": "incorrecta",
+      "unanswered": "sin responder",
+      "reviewAnswers": "revisar respuestas",
+      "newQuiz": "nuevo quiz",
+      "backHome": "volver al inicio",
+      "question": "pregunta",
+      "viewSummary": "ver resumen",
+      "unansweredQuestions": "preguntas sin responder",
+      "thinking": "pensando..."
     }
   },
   "studyBuddy": {
     "title": "tu compañero de estudio",
     "subtitle": "siempre aquí para ayudarte",
+    "preparing": "preparando tu compañero de estudio...",
     "greeting": "¡hola! 🌿 estoy aquí para ayudarte",
     "placeholder": "pregúntame lo que quieras...",
     "thinking": "pensando...",
     "error": "perdón, tuve un problema. ¿puedes intentar de nuevo?",
+    "clickToChat": "click para conversar",
     "context": {
       "title": "contexto del estudiante",
       "view": "ver qué sé de ti",
-      "description": "uso estos datos para darte recomendaciones personalizadas"
+      "viewLess": "ver menos",
+      "description": "uso estos datos para darte recomendaciones personalizadas",
+      "generalStats": "estadísticas generales",
+      "totalQuestions": "preguntas totales",
+      "overallAccuracy": "precisión general",
+      "performanceByTopic": "rendimiento por tema",
+      "recentSessions": "sesiones recientes",
+      "questionsShort": "preg.",
+      "toolsAvailable": "herramientas disponibles"
+    },
+    "streak": {
+      "daily": "racha diaria",
+      "best": "mejor racha",
+      "day": "día",
+      "days": "días"
+    }
+  },
+  "aiChat": {
+    "title": "tu tutor IA",
+    "tutorIA": "tutor IA",
+    "backHome": "volver al inicio",
+    "questionContext": "contexto de la pregunta",
+    "hideDetails": "haz clic para ocultar detalles",
+    "showDetails": "haz clic para ver detalles",
+    "question": "PREGUNTA",
+    "figure": "FIGURA GEOMÉTRICA",
+    "options": "OPCIONES",
+    "correctOption": "correcta",
+    "yourAnswer": "tu respuesta",
+    "placeholder": "escribe tu pregunta aquí...",
+    "send": "enviar",
+    "pressEnter": "presiona Enter para enviar",
+    "askQuestion": "pregunta lo que quieras sobre esta pregunta de",
+    "responses": {
+      "correct": "¡bien hecho! 🌸 respondiste correctamente. ¿hay algo que quieras profundizar sobre esta pregunta?",
+      "unanswered": "¡hola! 🌿 estoy aquí para ayudarte a entender esta pregunta. ¿qué te gustaría saber?",
+      "incorrect": "respondiste correctamente - ¡podemos profundizar en el concepto!",
+      "incorrectAlt": "no respondiste - ¡puedo ayudarte a resolverla!",
+      "incorrectError": "respuesta incorrecta - ¡aprendamos juntos del error!"
+    },
+    "errors": {
+      "response": "error en la respuesta",
+      "invalidResponse": "respuesta inválida del servidor",
+      "generic": "perdón, tuve un problema al procesar tu mensaje. ¿puedes intentar de nuevo?"
     }
   },
   "subscription": {
     "trial": {
       "title": "versión de prueba",
-      "active": "¡prueba gratuita activada! disfruta 7 días de acceso completo"
+      "active": "¡prueba gratuita activada! disfruta 7 días de acceso completo",
+      "message": "estás usando la versión de prueba de nuestra plataforma"
     },
     "content": {
       "available": "contenido disponible",
@@ -137,15 +272,83 @@
     "plans": {
       "title": "planes de suscripción",
       "subtitle": "elige el plan que mejor se adapte a tus necesidades",
-      "viewPlans": "ver planes premium"
+      "viewPlans": "ver planes premium",
+      "upgradeToPremium": "actualízate a Premium para desbloquear todo el contenido",
+      "noPlans": "no hay planes disponibles en este momento",
+      "currentStatus": "estado actual",
+      "active": "suscripción activa",
+      "freeUser": "usuario gratuito",
+      "premium": "premium",
+      "recommended": "recomendado",
+      "per": "por",
+      "freeDays": "días de prueba gratis",
+      "subscribe": "suscribirse",
+      "processing": "procesando...",
+      "alreadySubscribed": "ya tienes una suscripción"
     },
     "status": {
       "active": "estado actual: suscripción activa ✓",
       "inactive": "estado actual: sin suscripción"
+    },
+    "features": {
+      "liveSession": "ensayo PAES en vivo",
+      "fullAccess": "acceso completo y gratuito",
+      "practice": "ejercicios de práctica M1 y M2",
+      "curriculum": "temario completo PAES matemática",
+      "progress": "seguimiento de progreso personalizado"
+    },
+    "faq": {
+      "title": "preguntas frecuentes",
+      "trial": {
+        "question": "¿cómo funciona el período de prueba?",
+        "answer": "tienes 7 días gratis para probar todas las funciones premium"
+      },
+      "cancel": {
+        "question": "¿puedo cancelar en cualquier momento?",
+        "answer": "sí, puedes cancelar cuando quieras sin compromisos"
+      },
+      "payment": {
+        "question": "¿qué métodos de pago aceptan?",
+        "answer": "aceptamos tarjetas de crédito y débito"
+      }
+    },
+    "startOptions": {
+      "title": "elige cómo empezar",
+      "tryFirst": "probar y pagar después",
+      "payNow": "pagar ahora",
+      "cancel": "cancelar"
     }
   },
   "progress": {
-    "title": "tu progreso",
+    "title": "mi progreso",
+    "myQuizzes": "mis quizzes",
+    "showLast": "mostrar últimas",
+    "questions": "preguntas",
+    "generalSummary": "resumen general",
+    "skillsM1": "habilidades M1",
+    "skillsM2": "habilidades M2",
+    "paesPrediction": "predicción PAES",
+    "competenceM1": "competencia matemática M1",
+    "competenceM2": "competencia matemática M2",
+    "lastQuestions": "últimas {count} preguntas",
+    "correctInLast": "respuestas correctas en las últimas {count} preguntas",
+    "startPractice": "¡comienza a practicar {level}!",
+    "continuePractice": "continuar práctica",
+    "beginPractice": "comenzar práctica",
+    "recentHistory": "historial de preguntas recientes",
+    "total": "total",
+    "previous": "anterior",
+    "next": "siguiente",
+    "notStarted": "aún no has comenzado a practicar",
+    "loadingQuizzes": "cargando tus quizzes...",
+    "noQuizzes": "no has completado ningún quiz todavía",
+    "replayQuiz": "rejugar quiz",
+    "viewDetails": "ver detalles",
+    "reviewQuestion": "revisar pregunta",
+    "explanation": "explicación",
+    "close": "cerrar",
+    "noSessions": "aún no has completado ninguna sesión de práctica en vivo",
+    "joinSession": "¡únete a una sesión para comenzar a ver tus estadísticas!",
     "stats": {
       "correctAnswers": "respuestas correctas",
       "accuracy": "precisión",
@@ -154,12 +357,27 @@
       "dailyStreak": "racha diaria",
       "bestStreak": "mejor racha",
       "days": "{count} días",
+      "day": "{count} día",
       "totalQuestions": "preguntas totales",
-      "overallAccuracy": "precisión general"
+      "overallAccuracy": "precisión general",
+      "sessionsCompleted": "sesiones completadas",
+      "averageScore": "puntaje promedio",
+      "averageAccuracy": "precisión promedio",
+      "bestScore": "mejor puntaje",
+      "ranking": "ranking",
+      "firstPlace": "1er lugar",
+      "secondPlace": "2do lugar",
+      "thirdPlace": "3er lugar"
     },
     "performance": {
       "byTopic": "rendimiento por tema",
-      "recentSessions": "sesiones recientes"
+      "byLevel": "estadísticas por nivel",
+      "recentSessions": "sesiones recientes",
+      "session": "sesión",
+      "sessions": "sesiones",
+      "score": "puntaje",
+      "accuracy": "precisión",
+      "noSessions": "sin sesiones completadas"
     },
     "loading": "preparando tu panel...",
     "error": "error al cargar el panel. por favor, intenta recargar la página."
@@ -201,13 +419,25 @@
   "paywall": {
     "title": "contenido premium",
     "message": "este contenido requiere una suscripción activa",
-    "cta": "ver planes"
+    "cta": "ver planes",
+    "goToLive": "ir a ensayo en vivo",
+    "backToDashboard": "volver al dashboard"
   },
   "landing": {
+    "title": "SimplePAES",
+    "subtitle": "plataforma de preparación matemática",
+    "fullTitle": "preparación para la prueba de acceso a la educación superior",
     "hero": {
       "title": "prepara la PAES de matemática",
       "subtitle": "una plataforma donde practicas mate para la PAES. tienes ejercicios del temario oficial, feedback cuando te equivocas, y ves tu progreso en tiempo real. sin publicidad.",
       "cta": "comenzar ahora"
+    },
+    "sections": {
+      "howItWorks": "cómo funciona",
+      "whatIsThis": "qué es esto",
+      "whatIncludes": "qué incluye",
+      "pricing": "el precio",
+      "okUnderstood": "ok, entendido"
     },
     "howItWorks": {
       "title": "cómo funciona",
@@ -233,7 +463,75 @@
       "curriculum": "temario oficial completo"
     }
   },
+  "curriculum": {
+    "title": "temario PAES",
+    "titleFull": "SimplePAES - Matemática",
+    "backHome": "volver al inicio",
+    "level": "curriculum PAES - nivel",
+    "viewDocs": "ver documentación detallada",
+    "docs": "docs",
+    "m1Title": "competencia matemática 1 - contenidos básicos",
+    "m2Title": "competencia matemática 2 - contenidos avanzados",
+    "duration": "duración",
+    "questions": "preguntas",
+    "includesSufficiency": "incluye suficiencia de datos",
+    "thematicAxes": "ejes temáticos y unidades",
+    "thematicUnits": "unidades temáticas",
+    "practice": "practicar",
+    "subsections": "subsecciones",
+    "skills": "habilidades evaluadas",
+    "skillMatrix": "matriz habilidad-eje temático",
+    "skillsEvaluated": {
+      "problemSolving": "resolver problemas",
+      "modeling": "modelar",
+      "representing": "representar",
+      "arguing": "argumentar"
+    },
+    "startPractice": "comenzar práctica",
+    "loading": "cargando temario...",
+    "error": "error al cargar el temario"
+  },
+  "profile": {
+    "title": "mi perfil",
+    "editProfile": "editar perfil",
+    "displayName": "nombre para mostrar",
+    "email": "email",
+    "username": "usuario",
+    "role": {
+      "admin": "administrador",
+      "student": "estudiante"
+    },
+    "memberSince": "miembro desde",
+    "targetLevel": "nivel objetivo",
+    "onlyM1": "solo M1",
+    "m1AndM2": "M1 y M2",
+    "whatPreparing": "¿qué estás preparando?",
+    "subscription": "suscripción",
+    "status": "estado",
+    "statusTypes": {
+      "active": "activa",
+      "trial": "prueba gratuita",
+      "expired": "expirada",
+      "canceled": "cancelada"
+    },
+    "startDate": "fecha de inicio",
+    "autoRenewal": "renovación automática",
+    "enabled": "activada",
+    "disabled": "desactivada",
+    "practiceStreaks": "rachas de práctica",
+    "currentStreak": "racha actual",
+    "bestStreak": "mejor racha",
+    "generalStats": "estadísticas generales",
+    "totalQuestions": "total de preguntas",
+    "correctAnswers": "respuestas correctas",
+    "overallAccuracy": "precisión general",
+    "quickActions": "acciones rápidas",
+    "save": "guardar cambios",
+    "success": "perfil actualizado correctamente",
+    "error": "error al actualizar el perfil"
+  },
   "operations": {
+    "title": "práctica de operaciones",
     "levels": {
       "suma_basica": "suma básica - suma números del 1 al 5",
       "suma_hasta_10": "suma hasta 10 - suma números del 1 al 10",
@@ -252,6 +550,30 @@
       "div_completa": "división completa - divisiones con resto"
     }
   },
+  "share": {
+    "whatsapp": "WhatsApp",
+    "copyLink": "copiar link",
+    "forOtherPlatforms": "para Instagram, Discord, Telegram",
+    "shared": "compartido",
+    "copied": "copiado",
+    "error": "error",
+    "ago": "ya va",
+    "agoPlural": "ya van"
+  },
+  "docs": {
+    "home": "inicio",
+    "exportAll": "exportar todo",
+    "closeMenu": "cerrar menú",
+    "openMenu": "abrir menú",
+    "navigation": "navegación",
+    "controls": "controles",
+    "expandAll": "expandir todo",
+    "collapseAll": "colapsar todo",
+    "byLevel": "por nivel",
+    "expandH2": "expandir solo títulos principales (H2)",
+    "expandH3": "expandir hasta subtítulos (H3)",
+    "expandH4": "expandir hasta nivel 4 (H4)"
+  },
   "common": {
     "loading": "cargando...",
     "error": "error",
@@ -268,21 +590,7 @@
     "ok": "ok, entendido",
     "yes": "sí",
     "no": "no",
-    "connectionError": "error de conexión. por favor intenta de nuevo."
-  },
-  "curriculum": {
-    "title": "temario PAES",
-    "loading": "cargando temario...",
-    "error": "error al cargar el temario"
-  },
-  "profile": {
-    "title": "mi perfil",
-    "displayName": "nombre para mostrar",
-    "email": "email",
-    "username": "usuario",
-    "subscription": "suscripción",
-    "save": "guardar cambios",
-    "success": "perfil actualizado correctamente",
-    "error": "error al actualizar el perfil"
+    "connectionError": "error de conexión. por favor intenta de nuevo.",
+    "start": "comenzar"
   }
 }
