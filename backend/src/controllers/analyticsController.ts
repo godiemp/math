@@ -341,9 +341,37 @@ export const getAnalyticsDashboard = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Error fetching analytics:', error);
-    res.status(500).json({
+
+    // Determine error type and provide specific message
+    let errorMessage = 'Failed to fetch analytics data';
+    let statusCode = 500;
+
+    if (error instanceof Error) {
+      // Database connection errors
+      if (error.message.includes('connect') || error.message.includes('ECONNREFUSED')) {
+        errorMessage = 'Database connection failed. Please check database availability.';
+        statusCode = 503;
+      }
+      // Query timeout errors
+      else if (error.message.includes('timeout') || error.message.includes('deadlock')) {
+        errorMessage = 'Analytics query timed out. Please try again later.';
+        statusCode = 504;
+      }
+      // Permission errors
+      else if (error.message.includes('permission') || error.message.includes('access')) {
+        errorMessage = 'Database permission error. Please contact system administrator.';
+        statusCode = 500;
+      }
+      // Generic error with message
+      else if (error.message) {
+        errorMessage = `Analytics error: ${error.message}`;
+      }
+    }
+
+    res.status(statusCode).json({
       success: false,
-      error: 'Failed to fetch analytics data',
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.stack : String(error)) : undefined,
     });
   }
 };
@@ -389,9 +417,27 @@ export const getWeeklyTrends = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Error fetching weekly trends:', error);
-    res.status(500).json({
+
+    // Determine error type and provide specific message
+    let errorMessage = 'Failed to fetch weekly trends';
+    let statusCode = 500;
+
+    if (error instanceof Error) {
+      if (error.message.includes('connect') || error.message.includes('ECONNREFUSED')) {
+        errorMessage = 'Database connection failed. Please check database availability.';
+        statusCode = 503;
+      } else if (error.message.includes('timeout') || error.message.includes('deadlock')) {
+        errorMessage = 'Weekly trends query timed out. Please try again later.';
+        statusCode = 504;
+      } else if (error.message) {
+        errorMessage = `Weekly trends error: ${error.message}`;
+      }
+    }
+
+    res.status(statusCode).json({
       success: false,
-      error: 'Failed to fetch weekly trends',
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.stack : String(error)) : undefined,
     });
   }
 };

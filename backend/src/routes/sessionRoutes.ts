@@ -35,9 +35,9 @@ router.post('/', authenticate, requireAdmin, createSession);
 /**
  * @route   POST /api/sessions/update-statuses
  * @desc    Update session statuses based on time
- * @access  Public
+ * @access  Private
  */
-router.post('/update-statuses', updateSessionStatuses);
+router.post('/update-statuses', authenticate, updateSessionStatuses);
 
 /**
  * @route   GET /api/sessions/stats/me
