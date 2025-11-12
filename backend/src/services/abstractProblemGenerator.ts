@@ -31,12 +31,13 @@ function getOpenAIClient(): OpenAI {
   return openaiClient;
 }
 
-// Using GPT-4o - proven, reliable model with excellent math performance
-// GPT-4o supports temperature, max_tokens, and JSON mode
+// Using GPT-5 Chat Latest - Latest non-reasoning GPT-5 variant
+// gpt-5-chat-latest is the non-reasoning version used in ChatGPT
+// Supports: temperature, max_tokens, JSON mode
 // Alternative options:
-// - gpt-4-turbo: More cost-effective
-// - gpt-5: Newer but may have API compatibility issues
-const MODEL = 'gpt-4o';
+// - gpt-5-2025-08-07: Dated snapshot for strict reproducibility
+// - gpt-5-mini: Smaller, more cost-effective
+const MODEL = 'gpt-5-chat-latest';
 
 /**
  * Calculate difficulty score based on multiple factors

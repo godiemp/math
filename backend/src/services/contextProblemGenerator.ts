@@ -30,8 +30,8 @@ function getOpenAIClient(): OpenAI {
   return openaiClient;
 }
 
-// Using GPT-4o - proven, reliable model
-const MODEL = 'gpt-4o';
+// Using GPT-5 Chat Latest - Latest non-reasoning GPT-5 variant
+const MODEL = 'gpt-5-chat-latest';
 
 /**
  * Generate context problems from an abstract problem
