@@ -29,9 +29,30 @@ export function generateSubtraction(context: GeneratorContext): ProblemData {
   const min = config.minValue || 1;
   const max = config.maxValue || 10;
   const allowNegatives = config.allowNegatives || false;
+  const forceNegative = config.forceNegative || false;
 
-  const a = getRandomInt(min, max);
-  const b = allowNegatives ? getRandomInt(min, max) : getRandomInt(min, a);
+  let a: number;
+  let b: number;
+
+  if (forceNegative) {
+    // Force negative result: ensure b > a
+    a = getRandomInt(min, max);
+    b = getRandomInt(a + 1, max);
+    // If we can't get b > a (when a is already max), swap values
+    if (b <= a) {
+      const temp = a;
+      a = getRandomInt(min, max - 1);
+      b = getRandomInt(a + 1, max);
+    }
+  } else if (allowNegatives) {
+    // Allow negative results: both random
+    a = getRandomInt(min, max);
+    b = getRandomInt(min, max);
+  } else {
+    // No negatives: ensure b <= a
+    a = getRandomInt(min, max);
+    b = getRandomInt(min, a);
+  }
 
   const correctAnswer = a - b;
   const expression = `${a} - ${b}`;
