@@ -389,7 +389,7 @@ export class SubscriptionService {
     const result = await pool.query(`
       SELECT
         u.id, u.username, u.email, u.display_name, u.role,
-        u.created_at, u.updated_at, u.current_streak, u.longest_streak, u.last_practice_date,
+        u.created_at, u.updated_at, u.current_streak, u.longest_streak, u.last_practice_date, u.target_level,
         s.id as sub_id, s.plan_id, s.status, s.started_at as sub_started_at,
         s.expires_at, s.trial_ends_at, s.cancelled_at, s.auto_renew,
         s.payment_method, s.last_payment_at, s.created_at as sub_created_at, s.updated_at as sub_updated_at,
@@ -414,6 +414,7 @@ export class SubscriptionService {
         currentStreak: row.current_streak,
         longestStreak: row.longest_streak,
         lastPracticeDate: row.last_practice_date,
+        targetLevel: row.target_level,
       };
 
       if (row.sub_id) {

@@ -246,30 +246,32 @@ function DashboardContent() {
                 )}
               </div>
 
-              {/* M2 Section */}
-              <div className="text-center">
-                <div className="text-3xl mb-3">🎓</div>
-                <Heading level={3} size="xs" className="mb-2">
-                  Competencia Matemática M2
-                </Heading>
-                <Text size="sm" variant="secondary" className="mb-4">
-                  Contenidos avanzados para carreras científicas y de ingeniería
-                </Text>
-                {isPaidUser ? (
-                  <Button asChild className="w-full">
-                    <Link href="/practice/m2">
+              {/* M2 Section - Only show if user is preparing M1 and M2 */}
+              {user?.targetLevel !== 'M1_ONLY' && (
+                <div className="text-center">
+                  <div className="text-3xl mb-3">🎓</div>
+                  <Heading level={3} size="xs" className="mb-2">
+                    Competencia Matemática M2
+                  </Heading>
+                  <Text size="sm" variant="secondary" className="mb-4">
+                    Contenidos avanzados para carreras científicas y de ingeniería
+                  </Text>
+                  {isPaidUser ? (
+                    <Button asChild className="w-full">
+                      <Link href="/practice/m2">
+                        Practicar M2
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button disabled className="w-full opacity-60">
+                      <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                      </svg>
                       Practicar M2
-                    </Link>
-                  </Button>
-                ) : (
-                  <Button disabled className="w-full opacity-60">
-                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                    </svg>
-                    Practicar M2
-                  </Button>
-                )}
-              </div>
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
           </Card>
 
@@ -305,11 +307,13 @@ function DashboardContent() {
                           Ver Currículo M1
                         </Link>
                       </Button>
-                      <Button asChild variant="secondary">
-                        <Link href="/curriculum/m2">
-                          Ver Currículo M2
-                        </Link>
-                      </Button>
+                      {user?.targetLevel !== 'M1_ONLY' && (
+                        <Button asChild variant="secondary">
+                          <Link href="/curriculum/m2">
+                            Ver Currículo M2
+                          </Link>
+                        </Button>
+                      )}
                     </>
                   ) : (
                     <>
@@ -319,12 +323,14 @@ function DashboardContent() {
                         </svg>
                         Currículo M1
                       </Button>
-                      <Button disabled variant="secondary" className="opacity-60">
-                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                        </svg>
-                        Currículo M2
-                      </Button>
+                      {user?.targetLevel !== 'M1_ONLY' && (
+                        <Button disabled variant="secondary" className="opacity-60">
+                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          </svg>
+                          Currículo M2
+                        </Button>
+                      )}
                     </>
                   )}
                 </div>
@@ -343,11 +349,13 @@ function DashboardContent() {
                           Docs M1
                         </Link>
                       </Button>
-                      <Button asChild variant="secondary">
-                        <Link href="/curriculum/m2/docs">
-                          Docs M2
-                        </Link>
-                      </Button>
+                      {user?.targetLevel !== 'M1_ONLY' && (
+                        <Button asChild variant="secondary">
+                          <Link href="/curriculum/m2/docs">
+                            Docs M2
+                          </Link>
+                        </Button>
+                      )}
                     </>
                   ) : (
                     <>
@@ -357,12 +365,14 @@ function DashboardContent() {
                         </svg>
                         Docs M1
                       </Button>
-                      <Button disabled variant="secondary" className="opacity-60">
-                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                        </svg>
-                        Docs M2
-                      </Button>
+                      {user?.targetLevel !== 'M1_ONLY' && (
+                        <Button disabled variant="secondary" className="opacity-60">
+                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          </svg>
+                          Docs M2
+                        </Button>
+                      )}
                     </>
                   )}
                 </div>

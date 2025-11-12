@@ -42,6 +42,7 @@ function formatUserResponse(user: UserRecord): UserResponse {
     currentStreak: user.current_streak,
     longestStreak: user.longest_streak,
     lastPracticeDate: user.last_practice_date,
+    targetLevel: user.target_level,
     emailVerified: user.email_verified,
   };
 }

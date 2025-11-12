@@ -12,6 +12,7 @@ import { pool } from '../config/database';
 interface UpdateProfileRequest {
   displayName?: string;
   email?: string;
+  targetLevel?: 'M1_ONLY' | 'M1_AND_M2';
 }
 
 /**
@@ -25,11 +26,11 @@ export async function updateUserProfile(req: Request, res: Response): Promise<vo
     }
 
     const userId = req.user.userId;
-    const { displayName, email } = req.body as UpdateProfileRequest;
+    const { displayName, email, targetLevel } = req.body as UpdateProfileRequest;
 
     // Validate input
-    if (!displayName && !email) {
-      res.status(400).json({ error: 'At least one field (displayName or email) must be provided' });
+    if (!displayName && !email && !targetLevel) {
+      res.status(400).json({ error: 'At least one field (displayName, email, or targetLevel) must be provided' });
       return;
     }
 
@@ -68,6 +69,16 @@ export async function updateUserProfile(req: Request, res: Response): Promise<vo
 
       updates.push(`email = $${paramIndex++}`);
       values.push(email.toLowerCase().trim());
+    }
+
+    if (targetLevel !== undefined) {
+      // Validate targetLevel value
+      if (targetLevel !== 'M1_ONLY' && targetLevel !== 'M1_AND_M2') {
+        res.status(400).json({ error: 'Invalid target level. Must be M1_ONLY or M1_AND_M2' });
+        return;
+      }
+      updates.push(`target_level = $${paramIndex++}`);
+      values.push(targetLevel);
     }
 
     // Check if there are any updates to make

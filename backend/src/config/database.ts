@@ -65,6 +65,10 @@ export const initializeDatabase = async (): Promise<void> => {
                       WHERE table_name='users' AND column_name='last_practice_date') THEN
           ALTER TABLE users ADD COLUMN last_practice_date VARCHAR(10);
         END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='target_level') THEN
+          ALTER TABLE users ADD COLUMN target_level VARCHAR(20) DEFAULT 'M1_AND_M2' NOT NULL CHECK (target_level IN ('M1_ONLY', 'M1_AND_M2'));
+        END IF;
       END $$;
     `);
 
