@@ -374,7 +374,7 @@ function ProgressPageContent() {
             ) : (
               <div className="py-8">
                 <Text size="sm" variant="secondary" className="text-center">
-                  No has practicado M1 aún
+                  ¡Comienza a practicar M1!
                 </Text>
               </div>
             )}
@@ -416,7 +416,7 @@ function ProgressPageContent() {
             ) : (
               <div className="py-8">
                 <Text size="sm" variant="secondary" className="text-center">
-                  No has practicado M2 aún
+                  ¡Comienza a practicar M2!
                 </Text>
               </div>
             )}

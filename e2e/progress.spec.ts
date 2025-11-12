@@ -442,9 +442,9 @@ test.describe('Progress & Analytics Page', () => {
     await expect(page.getByRole('heading', { name: /Competencia Matemática M2/i })).toBeVisible();
 
     // Check for progress information
-    // If questions were answered, stats should be visible, otherwise "No has practicado" message
+    // If questions were answered, stats should be visible, otherwise "Comienza a practicar" message
     const hasProgressStats = await page.getByText(/Respuestas correctas/i).count();
-    const hasNoDataMessage = await page.getByText(/No has practicado/i).count();
+    const hasNoDataMessage = await page.getByText(/Comienza a practicar/i).count();
     // At least one of these should be present (either stats or no-data message)
     expect(hasProgressStats + hasNoDataMessage).toBeGreaterThan(0);
   });
