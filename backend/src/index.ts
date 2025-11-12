@@ -31,6 +31,7 @@ import contextProblemsRoutes from './routes/contextProblemsRoutes';
 import studyBuddyRoutes from './routes/studyBuddyRoutes';
 import paymentRoutes from './routes/paymentRoutes';
 import predictionRoutes from './routes/predictionRoutes';
+import operationsPracticeRoutes from './routes/operationsPracticeRoutes';
 import { serveImage } from './controllers/adminController';
 
 const app = express();
@@ -203,6 +204,7 @@ app.use('/api/abstract-problems', abstractProblemsRoutes);
 app.use('/api/context-problems', contextProblemsRoutes);
 app.use('/api/study-buddy', studyBuddyRoutes);
 app.use('/api/prediction', predictionRoutes);
+app.use('/api/operations-practice', operationsPracticeRoutes);
 
 // Public image serving route
 app.get('/api/images/:filename', serveImage);
@@ -223,6 +225,7 @@ console.log('✅ Context Problems routes registered at /api/context-problems');
 console.log('✅ Study Buddy routes registered at /api/study-buddy');
 console.log('✅ Payment routes registered at /api/payments');
 console.log('✅ Prediction routes registered at /api/prediction');
+console.log('✅ Operations Practice routes registered at /api/operations-practice');
 
 // 404 handler
 app.use((req: Request, res: Response) => {

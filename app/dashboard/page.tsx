@@ -250,6 +250,25 @@ function DashboardContent() {
           </div>
         </div>
 
+        {/* Operations Practice Featured Card */}
+        <Card hover className="p-6 mb-8 sm:mb-10 md:mb-12 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950/30 dark:to-blue-950/30 border-green-200 dark:border-green-800">
+          <div className="text-center">
+            <div className="text-5xl mb-4">🎯</div>
+            <Heading level={3} size="sm" className="mb-3">
+              Práctica de Operaciones Progresiva
+            </Heading>
+            <Text size="sm" variant="secondary" className="mb-6 max-w-2xl mx-auto">
+              ¡Nueva característica! Progresa desde lo más básico hasta convertirte en un maestro de las operaciones matemáticas.
+              Resuelve problemas y desbloquea niveles cada vez más desafiantes en un camino visual progresivo.
+            </Text>
+            <Button asChild className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700">
+              <Link href="/practice/operations">
+                Comenzar Práctica de Operaciones →
+              </Link>
+            </Button>
+          </div>
+        </Card>
+
         {/* Practice and Temario Cards */}
         {user?.targetLevel === 'M1_ONLY' ? (
           /* Single card layout for M1 only users */
