@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Lock, Check, PlayCircle, Trophy, Star, ChevronLeft, ChevronRight, Unlock, BookOpen } from 'lucide-react';
-import { getUnitByCode } from '@/backend/src/config/thematic-units';
+import { getUnitByCode } from '@/lib/thematicUnitsClient';
 
 interface OperationLevel {
   level: number;
