@@ -1,16 +1,11 @@
 import { test, expect } from '@playwright/test';
-import { setupAuthenticatedSession } from './helpers/auth';
 
 test.describe('Practice Mode - M1 Quiz Flow', () => {
-  test.beforeEach(async ({ page }) => {
-    // Setup authenticated session and navigate to dashboard
-    await setupAuthenticatedSession(page);
-  });
+  // No beforeEach needed - authentication is handled via storageState in playwright.config.ts
 
   test('should display M1 practice page with subject selection', async ({ page }) => {
     // Navigate to M1 practice
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     // Check that the page header is visible
     await expect(page.getByText(/Práctica PAES.*Competencia Matemática M1/i)).toBeVisible();
@@ -25,12 +20,10 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
   test('should allow subject and mode selection flow', async ({ page }) => {
     // Navigate to M1 practice
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     // Step 1: Select Zen mode
     await page.getByTestId('mode-zen').click();
-    await page.waitForTimeout(500);
 
     // After selecting mode, subject selection (Step 2) should appear
     await expect(page.getByText(/Paso 2.*Selecciona una materia/i)).toBeVisible();
@@ -42,16 +35,15 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
   test('should complete a Zen mode quiz', async ({ page }) => {
     // Navigate to M1 practice
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     // Step 1: Select Zen mode
     await page.getByTestId('mode-zen').click();
-    await page.waitForTimeout(500);
 
-    // Step 2: Select a subject (Todas las Materias)
-    await page.getByTestId('subject-all').click();
-    await page.waitForTimeout(500);
+    // Step 2: Select a subject (Todas las Materias) - wait for it to be enabled
+    const subjectAllButton = page.getByTestId('subject-all');
+    await expect(subjectAllButton).toBeVisible();
+    await subjectAllButton.click();
 
     // Should show "Comenzar Quiz" button
     const startButton = page.getByTestId('start-quiz-button');
@@ -59,40 +51,37 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
     // Click to start the quiz
     await startButton.click();
-    await page.waitForTimeout(2000);
 
-    // Wait for the Zen breathing animation to complete
-    await page.waitForTimeout(5000);
-
-    // Should see quiz questions
-    await expect(page.getByTestId('question-counter')).toBeVisible();
-    await expect(page.getByTestId('question-counter')).toContainText('Pregunta 1 de');
+    // Wait for the Zen breathing animation to complete by waiting for question counter
+    const questionCounter = page.getByTestId('question-counter');
+    await expect(questionCounter).toBeVisible({ timeout: 10000 });
+    await expect(questionCounter).toContainText('Pregunta 1 de');
 
     // Answer the first question (select any option)
     const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
+    await expect(firstOption).toBeVisible();
     await firstOption.click();
-    await page.waitForTimeout(500);
 
-    // Navigate to next question
-    await page.getByRole('button', { name: /Siguiente/i }).click();
-    await page.waitForTimeout(500);
+    // Navigate to next question - wait for button to be visible before clicking
+    const nextButton = page.getByRole('button', { name: /Siguiente/i });
+    await expect(nextButton).toBeVisible();
+    await nextButton.click();
 
-    // Should be on question 2
-    await expect(page.getByTestId('question-counter')).toContainText('Pregunta 2 de');
+    // Should be on question 2 - wait for counter to update
+    await expect(questionCounter).toContainText('Pregunta 2 de', { timeout: 5000 });
   });
 
   test('should show difficulty selection for Rapid Fire mode', async ({ page }) => {
     // Navigate to M1 practice
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     // Step 1: Select Rapid Fire mode
     await page.getByTestId('mode-rapidfire').click();
-    await page.waitForTimeout(500);
 
-    // Step 2: Select a subject
-    await page.getByTestId('subject-all').click();
-    await page.waitForTimeout(500);
+    // Step 2: Select a subject - wait for it to be visible
+    const subjectButton = page.getByTestId('subject-all');
+    await expect(subjectButton).toBeVisible();
+    await subjectButton.click();
 
     // Step 3: Should show difficulty selection
     await expect(page.getByText(/Paso 3.*Selecciona la dificultad/i)).toBeVisible();
@@ -106,20 +95,20 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
   test('should start Rapid Fire quiz with selected difficulty', async ({ page }) => {
     // Navigate to M1 practice
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     // Step 1: Select Rapid Fire mode
     await page.getByTestId('mode-rapidfire').click();
-    await page.waitForTimeout(500);
 
     // Step 2: Select a subject
-    await page.getByTestId('subject-all').click();
-    await page.waitForTimeout(500);
+    const subjectButton = page.getByTestId('subject-all');
+    await expect(subjectButton).toBeVisible();
+    await subjectButton.click();
 
     // Step 3: Select difficulty (Fácil)
-    await page.getByTestId('difficulty-easy').click();
-    await page.waitForTimeout(500);
+    const difficultyButton = page.getByTestId('difficulty-easy');
+    await expect(difficultyButton).toBeVisible();
+    await difficultyButton.click();
 
     // Should show "Comenzar Quiz" button
     const startButton = page.getByTestId('start-quiz-button');
@@ -127,59 +116,53 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
     // Click to start the quiz
     await startButton.click();
-    await page.waitForTimeout(2000);
 
-    // Wait for the countdown animation (3-2-1-GO!)
-    await page.waitForTimeout(5000);
-
-    // Should see quiz questions with timer
-    await expect(page.getByTestId('question-counter')).toBeVisible();
-    await expect(page.getByTestId('question-counter')).toContainText('1/');
+    // Wait for countdown animation to complete by waiting for question counter
+    const questionCounter = page.getByTestId('question-counter');
+    await expect(questionCounter).toBeVisible({ timeout: 10000 });
+    await expect(questionCounter).toContainText('1/');
   });
 
   test('should complete a Zen mode quiz and display accurate results', async ({ page }) => {
     // Navigate to M1 practice
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     // Step 1: Select Zen mode
     await page.getByTestId('mode-zen').click();
-    await page.waitForTimeout(500);
 
     // Step 2: Select a subject (Todas las Materias)
-    await page.getByTestId('subject-all').click();
-    await page.waitForTimeout(500);
+    const subjectButton = page.getByTestId('subject-all');
+    await expect(subjectButton).toBeVisible();
+    await subjectButton.click();
 
     // Start the quiz
     const startButton = page.getByTestId('start-quiz-button');
     await expect(startButton).toBeVisible();
     await startButton.click();
-    await page.waitForTimeout(2000);
 
-    // Wait for the Zen breathing animation to complete
-    await page.waitForTimeout(5000);
+    // Wait for the Zen breathing animation to complete by waiting for question counter
+    const questionCounter = page.getByTestId('question-counter');
+    await expect(questionCounter).toBeVisible({ timeout: 10000 });
 
     // Get the total number of questions from the counter
-    const questionCounterText = await page.getByTestId('question-counter').textContent();
+    const questionCounterText = await questionCounter.textContent();
     const totalQuestions = parseInt(questionCounterText?.match(/de (\d+)/)?.[1] || '10');
 
     // Answer all questions
     for (let i = 1; i <= totalQuestions; i++) {
       // Verify we're on the correct question
-      await expect(page.getByTestId('question-counter')).toContainText(`Pregunta ${i} de ${totalQuestions}`);
+      await expect(questionCounter).toContainText(`Pregunta ${i} de ${totalQuestions}`, { timeout: 5000 });
 
       // Select an answer (first option for consistency in testing)
       const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
       await expect(firstOption).toBeVisible();
       await firstOption.click();
-      await page.waitForTimeout(500);
 
       // Navigate to next question (except on last question)
       if (i < totalQuestions) {
         const nextButton = page.getByRole('button', { name: /Siguiente/i });
         await expect(nextButton).toBeVisible();
         await nextButton.click();
-        await page.waitForTimeout(500);
       }
     }
 
@@ -187,20 +170,19 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     const submitButton = page.getByRole('button', { name: /Enviar Quiz/i });
     await expect(submitButton).toBeVisible();
     await submitButton.click();
-    await page.waitForTimeout(2000);
 
     // After submission, quiz goes to review mode (question 0)
     // Navigate to last question to access "Ver Resumen" button
     for (let i = 1; i < totalQuestions; i++) {
-      await page.getByRole('button', { name: /Siguiente/i }).click();
-      await page.waitForTimeout(300);
+      const nextButton = page.getByRole('button', { name: /Siguiente/i });
+      await expect(nextButton).toBeVisible();
+      await nextButton.click();
     }
 
     // Click "Ver Resumen" to see the completion screen
     const verResumenButton = page.getByRole('button', { name: /Ver Resumen/i });
     await expect(verResumenButton).toBeVisible();
     await verResumenButton.click();
-    await page.waitForTimeout(1000);
 
     // Now verify completion screen elements are displayed
     await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible();
@@ -226,29 +208,29 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     // Increase timeout for this test since Rapid Fire takes longer
     test.setTimeout(60000);
     // Navigate to M1 practice
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     // Step 1: Select Rapid Fire mode
     await page.getByTestId('mode-rapidfire').click();
-    await page.waitForTimeout(500);
 
     // Step 2: Select a subject
-    await page.getByTestId('subject-all').click();
-    await page.waitForTimeout(500);
+    const subjectButton = page.getByTestId('subject-all');
+    await expect(subjectButton).toBeVisible();
+    await subjectButton.click();
 
     // Step 3: Select difficulty (Fácil for faster test)
-    await page.getByTestId('difficulty-easy').click();
-    await page.waitForTimeout(500);
+    const difficultyButton = page.getByTestId('difficulty-easy');
+    await expect(difficultyButton).toBeVisible();
+    await difficultyButton.click();
 
     // Start the quiz
     const startButton = page.getByTestId('start-quiz-button');
     await expect(startButton).toBeVisible();
     await startButton.click();
-    await page.waitForTimeout(2000);
 
-    // Wait for the countdown animation (3-2-1-GO!)
-    await page.waitForTimeout(5000);
+    // Wait for countdown animation by waiting for question counter to appear
+    const questionCounter = page.getByTestId('question-counter');
+    await expect(questionCounter).toBeVisible({ timeout: 10000 });
 
     // Get the total number of questions (format is "1/5")
     const questionCounterText = await page.getByTestId('question-counter').textContent();
@@ -287,37 +269,17 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
       // Break if we've answered all questions
       if (questionsAnswered >= totalQuestions) {
-        // Wait for auto-submit to process (1.5s for feedback + auto-submit)
-        await page.waitForTimeout(3000);
+        // Wait for auto-submit to complete by waiting for results or review mode
+        await expect(page.getByText(/¡Quiz Completado!/i).or(questionCounter)).toBeVisible({ timeout: 5000 });
         break;
       }
 
-      // Wait for auto-advance by checking when question number changes (max 3s)
-      let advanced = false;
-      for (let waitAttempt = 0; waitAttempt < 15; waitAttempt++) {
-        await page.waitForTimeout(200);
-        const afterCounterText = await questionCounter.textContent().catch(() => '');
-        const afterQuestionNum = parseInt(afterCounterText?.split('/')[0] || '0');
-
-        if (afterQuestionNum !== beforeQuestionNum && afterQuestionNum > 0) {
-          advanced = true;
-          break;
-        }
-
-        // Also check if quiz ended
-        if (!afterCounterText || !(await questionCounter.isVisible().catch(() => false))) {
-          break;
-        }
-      }
-
-      if (!advanced) {
-        // Didn't advance, quiz might have ended
-        break;
-      }
+      // Wait for auto-advance by waiting for question number to change
+      const nextQuestionNum = beforeQuestionNum + 1;
+      await expect(questionCounter).toContainText(`${nextQuestionNum}/`, { timeout: 3000 }).catch(() => {
+        // Might have ended
+      });
     }
-
-    // Wait for auto-submit to complete and quiz to enter review mode
-    await page.waitForTimeout(3000);
 
     // After auto-submit, quiz should be in review mode at question 0
     // Navigate to last question to access "Ver Resumen"
@@ -332,7 +294,8 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
           // Scroll into view before clicking to fix viewport issue
           await nextBtn.scrollIntoViewIfNeeded();
           await nextBtn.click({ force: true });
-          await page.waitForTimeout(300);
+          // Wait for navigation by checking question counter update
+          await expect(questionCounter).toContainText(`${i + 1}/`, { timeout: 2000 }).catch(() => {});
         }
       }
 
@@ -341,7 +304,6 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
       if (await verResumenButton.isVisible().catch(() => false)) {
         await verResumenButton.scrollIntoViewIfNeeded();
         await verResumenButton.click({ force: true });
-        await page.waitForTimeout(2000);
       }
     }
 
@@ -361,53 +323,60 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
   test('should allow reviewing answers after quiz completion', async ({ page }) => {
     // Navigate to M1 practice
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     // Start a quick Zen quiz
     await page.getByTestId('mode-zen').click();
-    await page.waitForTimeout(500);
-    await page.getByTestId('subject-all').click();
-    await page.waitForTimeout(500);
+
+    const subjectButton = page.getByTestId('subject-all');
+    await expect(subjectButton).toBeVisible();
+    await subjectButton.click();
 
     const startButton = page.getByTestId('start-quiz-button');
+    await expect(startButton).toBeVisible();
     await startButton.click();
-    await page.waitForTimeout(2000);
 
-    // Wait for Zen animation
-    await page.waitForTimeout(5000);
+    // Wait for Zen animation by waiting for question counter
+    const questionCounter = page.getByTestId('question-counter');
+    await expect(questionCounter).toBeVisible({ timeout: 10000 });
 
     // Get total questions
-    const questionCounterText = await page.getByTestId('question-counter').textContent();
+    const questionCounterText = await questionCounter.textContent();
     const totalQuestions = parseInt(questionCounterText?.match(/de (\d+)/)?.[1] || '10');
 
     // Answer all questions
     for (let i = 1; i <= totalQuestions; i++) {
+      await expect(questionCounter).toContainText(`Pregunta ${i} de`, { timeout: 3000 });
+
       const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
+      await expect(firstOption).toBeVisible();
       await firstOption.click();
-      await page.waitForTimeout(300);
 
       // Navigate to next question (except on last)
       if (i < totalQuestions) {
-        await page.getByRole('button', { name: /Siguiente/i }).click();
-        await page.waitForTimeout(300);
+        const nextButton = page.getByRole('button', { name: /Siguiente/i });
+        await expect(nextButton).toBeVisible();
+        await nextButton.click();
       }
     }
 
     // Submit the quiz
-    await page.getByRole('button', { name: /Enviar Quiz/i }).click();
-    await page.waitForTimeout(2000);
+    const submitButton = page.getByRole('button', { name: /Enviar Quiz/i });
+    await expect(submitButton).toBeVisible();
+    await submitButton.click();
 
     // After submission, navigate to completion screen
     // Quiz puts us in review mode at question 0, need to navigate to last question
     for (let i = 1; i < totalQuestions; i++) {
-      await page.getByRole('button', { name: /Siguiente/i }).click();
-      await page.waitForTimeout(300);
+      const nextButton = page.getByRole('button', { name: /Siguiente/i });
+      await expect(nextButton).toBeVisible();
+      await nextButton.click();
     }
 
     // Click "Ver Resumen" to see completion screen
-    await page.getByRole('button', { name: /Ver Resumen/i }).click();
-    await page.waitForTimeout(1000);
+    const verResumenButton = page.getByRole('button', { name: /Ver Resumen/i });
+    await expect(verResumenButton).toBeVisible();
+    await verResumenButton.click();
 
     // Should be on results page
     await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible();
@@ -416,7 +385,6 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     const reviewButton = page.getByRole('button', { name: /Revisar Respuestas/i });
     await expect(reviewButton).toBeVisible();
     await reviewButton.click();
-    await page.waitForTimeout(1000);
 
     // Should be back on question view in review mode
     // Verify we can see a question with feedback

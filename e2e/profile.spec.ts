@@ -1,12 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { setupAuthenticatedSession } from './helpers/auth';
 
 test.describe('Student Profile Page', () => {
   // Login before each test
-  test.beforeEach(async ({ page }) => {
-    // Setup authenticated session and navigate to dashboard
-    await setupAuthenticatedSession(page);
-  });
+  // Authentication is handled via storageState in playwright.config.ts
 
   test('should navigate to profile page from dashboard', async ({ page }) => {
     // Click on "Mi Perfil" button in dashboard
@@ -21,8 +17,7 @@ test.describe('Student Profile Page', () => {
 
   test('should display user information correctly', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(1000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Check user avatar circle with initial
     const avatarCircle = page.locator('div').filter({ hasText: /^[A-Z]$/ }).first();
@@ -41,8 +36,7 @@ test.describe('Student Profile Page', () => {
 
   test('should display subscription information', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(1000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Check subscription heading
     await expect(page.getByRole('heading', { name: /Suscripción/i })).toBeVisible();
@@ -59,8 +53,7 @@ test.describe('Student Profile Page', () => {
 
   test('should display practice streaks', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(1000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Check streaks heading
     await expect(page.getByRole('heading', { name: /Rachas de Práctica/i })).toBeVisible();
@@ -74,8 +67,7 @@ test.describe('Student Profile Page', () => {
 
   test('should display statistics dashboard', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(2000); // Give time for stats to load
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' }); // Give time for stats to load
 
     // Check statistics heading
     await expect(page.getByRole('heading', { name: /Estadísticas Generales/i })).toBeVisible();
@@ -96,8 +88,7 @@ test.describe('Student Profile Page', () => {
 
   test('should display quick action buttons', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(1000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Check quick actions heading
     await expect(page.getByRole('heading', { name: /Acciones Rápidas/i })).toBeVisible();
@@ -111,12 +102,11 @@ test.describe('Student Profile Page', () => {
 
   test('should open edit profile modal', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(1000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Click on "Editar Perfil" button
     await page.getByRole('button', { name: /Editar Perfil/i }).click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Modal should be visible with title
     await expect(page.getByRole('heading', { name: /Editar Perfil/i })).toBeVisible();
@@ -132,16 +122,15 @@ test.describe('Student Profile Page', () => {
 
   test('should close edit modal when clicking cancel', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(1000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Open edit modal
     await page.getByRole('button', { name: /Editar Perfil/i }).click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Click cancel
     await page.getByRole('button', { name: /Cancelar/i }).click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Modal should be closed (heading not visible)
     await expect(page.getByRole('heading', { name: /Editar Perfil/i })).not.toBeVisible();
@@ -149,12 +138,11 @@ test.describe('Student Profile Page', () => {
 
   test('should update display name successfully', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(1000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Open edit modal
     await page.getByRole('button', { name: /Editar Perfil/i }).click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Get the display name input
     const displayNameInput = page.getByLabel(/Nombre para mostrar/i);
@@ -176,12 +164,11 @@ test.describe('Student Profile Page', () => {
 
   test('should show error for empty display name', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(1000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Open edit modal
     await page.getByRole('button', { name: /Editar Perfil/i }).click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Get the display name input
     const displayNameInput = page.getByLabel(/Nombre para mostrar/i);
@@ -202,12 +189,11 @@ test.describe('Student Profile Page', () => {
 
   test('should show error for invalid email format', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(1000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Open edit modal
     await page.getByRole('button', { name: /Editar Perfil/i }).click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Get the email input
     const emailInput = page.getByLabel(/Email/i);
@@ -226,8 +212,7 @@ test.describe('Student Profile Page', () => {
 
   test('should navigate to progress page from quick actions', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(1000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Click "Ver Mi Progreso" button
     await page.getByRole('link', { name: /Ver Mi Progreso/i }).click();
@@ -239,8 +224,7 @@ test.describe('Student Profile Page', () => {
 
   test('should navigate to M1 practice from quick actions', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(1000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Click "Practicar M1" button
     await page.getByRole('link', { name: /Practicar M1/i }).click();
@@ -251,8 +235,7 @@ test.describe('Student Profile Page', () => {
 
   test('should navigate to M2 practice from quick actions', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(1000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Click "Practicar M2" button
     await page.getByRole('link', { name: /Practicar M2/i }).click();
@@ -263,8 +246,7 @@ test.describe('Student Profile Page', () => {
 
   test('should navigate back to dashboard', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(1000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Click "Volver al Inicio" link
     await page.getByRole('link', { name: /Volver al Inicio/i }).click();
@@ -293,8 +275,7 @@ test.describe('Student Profile Page', () => {
     await page.setViewportSize({ width: 375, height: 667 });
 
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(1000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Profile heading should still be visible
     await expect(page.getByRole('heading', { name: /Mi Perfil/i, level: 1 })).toBeVisible();
@@ -308,8 +289,7 @@ test.describe('Student Profile Page', () => {
 
   test('should show correct accuracy badge color based on percentage', async ({ page }) => {
     // Navigate to profile page
-    await page.goto('/profile');
-    await page.waitForTimeout(2000);
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Check if accuracy badge is visible
     const accuracySection = page.locator('text=Precisión general:').locator('..');

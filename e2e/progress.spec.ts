@@ -1,16 +1,11 @@
 import { test, expect } from '@playwright/test';
-import { setupAuthenticatedSession } from './helpers/auth';
 
 test.describe('Progress & Analytics Page', () => {
-  test.beforeEach(async ({ page }) => {
-    // Setup authenticated session and navigate to dashboard
-    await setupAuthenticatedSession(page);
-  });
+  // Authentication is handled via storageState in playwright.config.ts
 
   test('should display progress page with heading and tabs', async ({ page }) => {
     // Navigate to progress page
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Check page heading
     await expect(page.getByRole('heading', { name: /Mi Progreso/i })).toBeVisible();
@@ -27,8 +22,7 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should display M1 and M2 progress cards in overview tab', async ({ page }) => {
     // Navigate to progress page
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Should be on overview tab by default
     const overviewTab = page.getByRole('button', { name: /📊 Resumen General/i });
@@ -47,8 +41,7 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should allow changing recent questions count selector', async ({ page }) => {
     // Navigate to progress page
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Find the recent count selector
     const selector = page.locator('select#recent-count');
@@ -59,7 +52,6 @@ test.describe('Progress & Analytics Page', () => {
 
     // Change to 20 questions
     await selector.selectOption('20');
-    await page.waitForTimeout(500);
 
     // Verify it changed
     await expect(selector).toHaveValue('20');
@@ -70,8 +62,7 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should display question history with pagination', async ({ page }) => {
     // First complete a quiz to ensure there's history
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     // Quick Zen quiz
     await page.getByTestId('mode-zen').click();
@@ -88,14 +79,12 @@ test.describe('Progress & Analytics Page', () => {
     for (let i = 0; i < 3; i++) {
       const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
       await firstOption.click();
-      await page.waitForTimeout(300);
       await page.getByRole('button', { name: /Siguiente/i }).click();
       await page.waitForTimeout(300);
     }
 
     // Now go to progress page
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Check for history section
     const historyHeading = page.getByRole('heading', { name: /Historial de Preguntas Recientes/i });
@@ -119,8 +108,7 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should show question review modal when clicking on question', async ({ page }) => {
     // First complete at least one question
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     await page.getByTestId('mode-zen').click();
     await page.waitForTimeout(500);
@@ -133,13 +121,11 @@ test.describe('Progress & Analytics Page', () => {
     // Answer one question
     const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
     await firstOption.click();
-    await page.waitForTimeout(500);
     await page.getByRole('button', { name: /Siguiente/i }).click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Go to progress page
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Find and click the first question in history (look for the question item with cursor-pointer class)
     const firstQuestion = page.locator('.cursor-pointer').filter({ hasText: /M1|M2/ }).first();
@@ -163,8 +149,7 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should switch to quizzes tab and display quiz sessions', async ({ page }) => {
     // Navigate to progress page
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Click on "Mis Quizzes" tab
     await page.getByRole('button', { name: /🎯 Mis Quizzes/i }).click();
@@ -209,12 +194,11 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should display empty state in quizzes tab with practice links', async ({ page }) => {
     // Navigate directly to progress page for a fresh user scenario
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Switch to quizzes tab
     await page.getByRole('button', { name: /🎯 Mis Quizzes/i }).click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Check for empty state or quiz sessions
     const emptyState = await page.getByText(/No has completado ningún quiz todavía/i).isVisible().catch(() => false);
@@ -230,8 +214,7 @@ test.describe('Progress & Analytics Page', () => {
     test.setTimeout(90000); // Extend timeout for full quiz
 
     // Complete a full Zen quiz
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     await page.getByTestId('mode-zen').click();
     await page.waitForTimeout(500);
@@ -249,7 +232,6 @@ test.describe('Progress & Analytics Page', () => {
     for (let i = 1; i <= totalQuestions; i++) {
       const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
       await firstOption.click();
-      await page.waitForTimeout(300);
 
       if (i < totalQuestions) {
         await page.getByRole('button', { name: /Siguiente/i }).click();
@@ -262,8 +244,7 @@ test.describe('Progress & Analytics Page', () => {
     await page.waitForTimeout(2000);
 
     // Navigate to progress page
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Switch to quizzes tab
     await page.getByRole('button', { name: /🎯 Mis Quizzes/i }).click();
@@ -282,8 +263,7 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should open quiz details modal from quizzes tab', async ({ page }) => {
     // Complete a quiz first
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     await page.getByTestId('mode-zen').click();
     await page.waitForTimeout(500);
@@ -297,7 +277,6 @@ test.describe('Progress & Analytics Page', () => {
     for (let i = 0; i < 3; i++) {
       const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
       await firstOption.click();
-      await page.waitForTimeout(300);
       if (i < 2) {
         await page.getByRole('button', { name: /Siguiente/i }).click();
         await page.waitForTimeout(300);
@@ -308,8 +287,7 @@ test.describe('Progress & Analytics Page', () => {
     await page.waitForTimeout(2000);
 
     // Go to progress page
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Switch to quizzes tab
     await page.getByRole('button', { name: /🎯 Mis Quizzes/i }).click();
@@ -321,7 +299,6 @@ test.describe('Progress & Analytics Page', () => {
 
     if (hasQuizzes) {
       await verDetallesButton.click();
-      await page.waitForTimeout(500);
 
       // Modal should open with question counter
       await expect(page.getByText(/Pregunta \d+ de \d+/i)).toBeVisible();
@@ -339,8 +316,7 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should navigate between questions in quiz details modal', async ({ page }) => {
     // Complete a quiz with multiple questions
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     await page.getByTestId('mode-zen').click();
     await page.waitForTimeout(500);
@@ -354,7 +330,6 @@ test.describe('Progress & Analytics Page', () => {
     for (let i = 0; i < 5; i++) {
       const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
       await firstOption.click();
-      await page.waitForTimeout(300);
       if (i < 4) {
         await page.getByRole('button', { name: /Siguiente/i }).click();
         await page.waitForTimeout(300);
@@ -365,8 +340,7 @@ test.describe('Progress & Analytics Page', () => {
     await page.waitForTimeout(2000);
 
     // Go to progress and open quiz details
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
     await page.getByRole('button', { name: /🎯 Mis Quizzes/i }).click();
     await page.waitForTimeout(1000);
 
@@ -375,21 +349,20 @@ test.describe('Progress & Analytics Page', () => {
 
     if (hasQuizzes) {
       await verDetallesButton.click();
-      await page.waitForTimeout(500);
 
       // Should start at question 1
       await expect(page.getByText(/Pregunta 1 de/i)).toBeVisible();
 
       // Click "Siguiente" to go to question 2
       await page.getByRole('button', { name: /Siguiente →/i }).click();
-      await page.waitForTimeout(300);
+      // Removed: await page.waitForTimeout(300); - relying on auto-wait
 
       // Should now be on question 2
       await expect(page.getByText(/Pregunta 2 de/i)).toBeVisible();
 
       // Click "Anterior" to go back to question 1
       await page.getByRole('button', { name: /← Anterior/i }).click();
-      await page.waitForTimeout(300);
+      // Removed: await page.waitForTimeout(300); - relying on auto-wait
 
       // Should be back on question 1
       await expect(page.getByText(/Pregunta 1 de/i)).toBeVisible();
@@ -398,12 +371,11 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should switch to Skills M1 tab and display skills', async ({ page }) => {
     // Navigate to progress page
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Click on "Habilidades M1" tab
     await page.getByRole('button', { name: /📚 Habilidades M1/i }).click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Tab should be active
     const skillsM1Tab = page.getByRole('button', { name: /📚 Habilidades M1/i });
@@ -416,12 +388,11 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should switch to Skills M2 tab and display skills', async ({ page }) => {
     // Navigate to progress page
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Click on "Habilidades M2" tab
     await page.getByRole('button', { name: /📚 Habilidades M2/i }).click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Tab should be active
     const skillsM2Tab = page.getByRole('button', { name: /📚 Habilidades M2/i });
@@ -430,8 +401,7 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should navigate back to dashboard from progress page', async ({ page }) => {
     // Navigate to progress page
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Click "Volver al Inicio" link
     await page.getByRole('link', { name: /Volver al Inicio/i }).click();
@@ -444,8 +414,7 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should display progress bars with correct percentages', async ({ page }) => {
     // Complete a quiz to ensure there's data
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     await page.getByTestId('mode-zen').click();
     await page.waitForTimeout(500);
@@ -459,7 +428,6 @@ test.describe('Progress & Analytics Page', () => {
     for (let i = 0; i < 2; i++) {
       const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
       await firstOption.click();
-      await page.waitForTimeout(300);
       if (i < 1) {
         await page.getByRole('button', { name: /Siguiente/i }).click();
         await page.waitForTimeout(300);
@@ -467,8 +435,7 @@ test.describe('Progress & Analytics Page', () => {
     }
 
     // Go to progress page
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Check that M1 and M2 progress sections are visible
     await expect(page.getByRole('heading', { name: /Competencia Matemática M1/i })).toBeVisible();
@@ -481,8 +448,7 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should show correct answer/incorrect visual indicators in history', async ({ page }) => {
     // Complete a question
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     await page.getByTestId('mode-zen').click();
     await page.waitForTimeout(500);
@@ -495,11 +461,9 @@ test.describe('Progress & Analytics Page', () => {
     // Answer one question
     const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
     await firstOption.click();
-    await page.waitForTimeout(500);
 
     // Go to progress page
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Check if history section exists
     const hasHistory = await page.getByText(/Historial de Preguntas Recientes/i).isVisible().catch(() => false);
@@ -516,8 +480,7 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should display quiz session with question visual indicators', async ({ page }) => {
     // Complete a quiz
-    await page.goto('/practice/m1');
-    await page.waitForTimeout(1000);
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
 
     await page.getByTestId('mode-zen').click();
     await page.waitForTimeout(500);
@@ -531,7 +494,6 @@ test.describe('Progress & Analytics Page', () => {
     for (let i = 0; i < 3; i++) {
       const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
       await firstOption.click();
-      await page.waitForTimeout(300);
       if (i < 2) {
         await page.getByRole('button', { name: /Siguiente/i }).click();
         await page.waitForTimeout(300);
@@ -542,8 +504,7 @@ test.describe('Progress & Analytics Page', () => {
     await page.waitForTimeout(2000);
 
     // Go to progress page quizzes tab
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
     await page.getByRole('button', { name: /🎯 Mis Quizzes/i }).click();
     await page.waitForTimeout(1000);
 
@@ -563,12 +524,11 @@ test.describe('Progress & Analytics Page', () => {
 
   test('should maintain tab state when navigating within the page', async ({ page }) => {
     // Navigate to progress page
-    await page.goto('/progress');
-    await page.waitForTimeout(1500);
+    await page.goto('/progress', { waitUntil: 'domcontentloaded' });
 
     // Switch to quizzes tab
     await page.getByRole('button', { name: /🎯 Mis Quizzes/i }).click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Verify we're on quizzes tab
     const quizzesTab = page.getByRole('button', { name: /🎯 Mis Quizzes/i });
@@ -576,7 +536,7 @@ test.describe('Progress & Analytics Page', () => {
 
     // Switch to Skills M1 tab
     await page.getByRole('button', { name: /📚 Habilidades M1/i }).click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Verify we're on Skills M1 tab
     const skillsTab = page.getByRole('button', { name: /📚 Habilidades M1/i });
@@ -584,7 +544,7 @@ test.describe('Progress & Analytics Page', () => {
 
     // Switch back to overview
     await page.getByRole('button', { name: /📊 Resumen General/i }).click();
-    await page.waitForTimeout(500);
+    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Verify we're back on overview
     const overviewTab = page.getByRole('button', { name: /📊 Resumen General/i });

@@ -1,16 +1,11 @@
 import { test, expect } from '@playwright/test';
-import { setupAuthenticatedSession } from './helpers/auth';
 
 test.describe('Live Practice Registration', () => {
-  test.beforeEach(async ({ page }) => {
-    // Setup authenticated session and navigate to dashboard
-    await setupAuthenticatedSession(page);
-  });
+  // Authentication is handled via storageState in playwright.config.ts
 
   test('should display live practice page and available sessions', async ({ page }) => {
     // Navigate to live practice
-    await page.goto('/live-practice');
-    await page.waitForTimeout(1000);
+    await page.goto('/live-practice', { waitUntil: 'domcontentloaded' });
 
     // Check that the page header is visible
     await expect(page.getByText(/Ensayo PAES en Vivo/i)).toBeVisible();
@@ -21,8 +16,7 @@ test.describe('Live Practice Registration', () => {
 
   test('should register for a scheduled session', async ({ page }) => {
     // Navigate to live practice
-    await page.goto('/live-practice');
-    await page.waitForTimeout(1000);
+    await page.goto('/live-practice', { waitUntil: 'domcontentloaded' });
 
     const registerButton = page.getByRole('button', { name: /^Registrarse$/i });
     const unregisterButton = page.getByRole('button', { name: /Cancelar Registro/i });
@@ -53,8 +47,7 @@ test.describe('Live Practice Registration', () => {
 
   test('should unregister from a scheduled session', async ({ page }) => {
     // Navigate to live practice
-    await page.goto('/live-practice');
-    await page.waitForTimeout(1000);
+    await page.goto('/live-practice', { waitUntil: 'domcontentloaded' });
 
     // Check if already registered, if not, register first
     const registerButton = page.getByRole('button', { name: /^Registrarse$/i });
@@ -88,8 +81,7 @@ test.describe('Live Practice Registration', () => {
 
   test('should display session details correctly', async ({ page }) => {
     // Navigate to live practice
-    await page.goto('/live-practice');
-    await page.waitForTimeout(1000);
+    await page.goto('/live-practice', { waitUntil: 'domcontentloaded' });
 
     // Check session name
     await expect(page.getByText('Test PAES Session')).toBeVisible();
@@ -112,8 +104,7 @@ test.describe('Live Practice Registration', () => {
 
   test('should show user welcome message', async ({ page }) => {
     // Navigate to live practice
-    await page.goto('/live-practice');
-    await page.waitForTimeout(1000);
+    await page.goto('/live-practice', { waitUntil: 'domcontentloaded' });
 
     // Check that user's display name is shown
     await expect(page.getByText('Test Student')).toBeVisible();
@@ -124,8 +115,7 @@ test.describe('Live Practice Registration', () => {
 
   test('should navigate back to dashboard', async ({ page }) => {
     // Navigate to live practice
-    await page.goto('/live-practice');
-    await page.waitForTimeout(1000);
+    await page.goto('/live-practice', { waitUntil: 'domcontentloaded' });
 
     // Click the dashboard/Inicio button
     await page.getByRole('button', { name: /Inicio/i }).click();
