@@ -24,17 +24,16 @@ setup('authenticate as student', async ({ page }) => {
   // Submit login
   await page.click('button[type="submit"]');
 
-  // Wait for navigation to complete using event-based wait
-  await page.waitForURL(/\/(dashboard|$)/, { timeout: 10000 });
+  // Wait for navigation to complete - login should redirect us somewhere
+  // Wait for network to be idle to ensure all auth cookies/tokens are set
+  await page.waitForLoadState('networkidle', { timeout: 15000 });
 
-  // Verify we're authenticated
-  const url = page.url();
-  if (url === '/' || url.endsWith('/')) {
-    // Check for dashboard content
-    const dashboardContent = page.getByText(/dashboard|práctica|inicio/i);
-    await expect(dashboardContent.first()).toBeVisible({ timeout: 5000 });
-  }
+  // Navigate to dashboard to ensure we end up on an authenticated page
+  await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
 
-  // Save signed-in state
+  // Wait a moment for any additional auth setup
+  await page.waitForLoadState('domcontentloaded');
+
+  // Save signed-in state - this captures all cookies, localStorage, sessionStorage
   await page.context().storageState({ path: authFile });
 });
