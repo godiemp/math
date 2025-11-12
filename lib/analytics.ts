@@ -45,7 +45,7 @@ export function initAnalytics(): void {
       api_host: apiHost,
 
       // Automatically capture pageviews
-      capture_pageviews: true,
+      capture_pageview: true,
 
       // Automatically capture clicks, form submissions, etc.
       // Set to false if you want manual control
@@ -53,20 +53,11 @@ export function initAnalytics(): void {
 
       // Session recording configuration
       session_recording: {
-        enabled: true,
-
-        // Record only 10% of sessions to stay in free tier longer
-        // Increase to 1.0 (100%) if you need more coverage
-        sampling: 0.1,
-
-        // Don't record cross-origin iframes for security
-        recordCrossOriginIframes: false,
-
         // Mask all input fields by default for privacy
         // Users won't see typed passwords, emails, etc. in recordings
         maskAllInputs: true,
 
-        // Mask text content to protect PII
+        // Mask text content with specific selector to protect PII
         maskTextSelector: '[data-mask]',
       },
 
