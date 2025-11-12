@@ -5,9 +5,15 @@ import Intercom from '@intercom/messenger-js-sdk';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function IntercomProvider({ children }: { children: React.ReactNode }) {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
+    // Wait for auth to finish loading
+    if (isLoading) {
+      console.log('Intercom: Waiting for auth to load...');
+      return;
+    }
+
     // Only initialize Intercom if user is authenticated
     if (isAuthenticated && user) {
       console.log('Initializing Intercom for user:', {
@@ -30,9 +36,9 @@ export function IntercomProvider({ children }: { children: React.ReactNode }) {
 
       console.log('Intercom initialized successfully');
     } else {
-      console.log('Intercom not initialized - user not authenticated', { isAuthenticated, user: !!user });
+      console.log('Intercom not initialized - user not authenticated', { isAuthenticated, hasUser: !!user });
     }
-  }, [user, isAuthenticated]);
+  }, [user, isAuthenticated, isLoading]);
 
   return <>{children}</>;
 }
