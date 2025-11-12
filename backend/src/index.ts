@@ -14,6 +14,7 @@ import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
 import { testConnection, initializeDatabase, closeDatabase, pool } from './config/database';
 import { initImageStorage } from './services/imageStorageService';
+import healthRoutes from './routes/healthRoutes';
 import authRoutes from './auth/routes/authRoutes';
 import adminRoutes from './routes/adminRoutes';
 import userManagementRoutes from './routes/userManagementRoutes';
@@ -182,14 +183,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// Health check endpoint
-app.get('/health', (req: Request, res: Response) => {
-  res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-  });
-});
+// Health check routes (no rate limiting for monitoring)
+app.use('/', healthRoutes);
 
 // API routes with stricter rate limiting for auth and payments
 app.use('/api/auth', authLimiter, authRoutes);
@@ -212,6 +207,7 @@ app.use('/api/prediction', predictionRoutes);
 // Public image serving route
 app.get('/api/images/:filename', serveImage);
 
+console.log('✅ Health routes registered at /health');
 console.log('✅ Admin routes registered at /api/admin');
 console.log('✅ Auth routes registered at /api/auth');
 console.log('✅ User Profile routes registered at /api/user');
@@ -360,6 +356,8 @@ const startServer = async () => {
 ║      GET  /api/quiz/history        - Get quiz history     ║
 ║      GET  /api/quiz/stats          - Get quiz statistics  ║
 ║      GET  /health                  - Health check         ║
+║      GET  /health/ready            - Readiness check      ║
+║      GET  /health/metrics          - Service metrics      ║
 ║                                                            ║
 ╚════════════════════════════════════════════════════════════╝
       `);
