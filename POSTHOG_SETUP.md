@@ -39,8 +39,13 @@ NEXT_PUBLIC_POSTHOG_HOST=https://eu.posthog.com
 
 1. Start your development server: `npm run dev`
 2. Open your app in the browser
-3. Check browser console for: `PostHog initialized successfully` (in dev mode)
-4. Go to PostHog dashboard → **Activity** to see events flowing in
+3. Check browser console for:
+   - `PostHog initialized successfully` (in dev mode)
+   - `PostHog proxy enabled: events will be sent to /api/ingest/*`
+4. Open Network tab and verify requests go to `/api/ingest/*` (not blocked by ad-blockers)
+5. Go to PostHog dashboard → **Activity** to see events flowing in
+
+**Note:** PostHog events are sent through a reverse proxy at `/api/ingest/*` to bypass ad-blockers. This ensures reliable tracking even when users have ad-blocking extensions enabled.
 
 ---
 
