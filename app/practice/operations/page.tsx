@@ -24,17 +24,17 @@ interface UserProgress {
 
 export default function OperationsPracticePage() {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, isLoading } = useAuth();
   const [operationsPath, setOperationsPath] = useState<OperationLevel[]>([]);
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!isLoading && !user) {
       router.push('/login');
     }
-  }, [user, loading, router]);
+  }, [user, isLoading, router]);
 
   useEffect(() => {
     if (user) {
@@ -89,7 +89,7 @@ export default function OperationsPracticePage() {
     fetchData(); // Refresh progress when level is completed
   };
 
-  if (loading || loadingData) {
+  if (isLoading || loadingData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
