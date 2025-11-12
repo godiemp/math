@@ -22,7 +22,8 @@ export interface OperationProblem {
  */
 function randomNumber(min: number, max: number, allowDecimals: boolean = false): number {
   const num = Math.floor(Math.random() * (max - min + 1)) + min;
-  if (allowDecimals && Math.random() > 0.5) {
+  // Only add decimals if num < max to avoid exceeding max
+  if (allowDecimals && Math.random() > 0.5 && num < max) {
     const decimal = Math.floor(Math.random() * 10);
     return parseFloat(`${num}.${decimal}`);
   }
@@ -376,17 +377,19 @@ function generateSimpleEquationProblem(levelConfig: OperationLevel): OperationPr
 
   switch (type) {
     case 'addition': // x + a = b
-      answer = randomNumber(minVal, maxVal);
-      a = randomNumber(minVal, Math.floor((maxVal - answer) / 2));
+      // Ensure answer + a doesn't exceed maxVal
+      answer = randomNumber(minVal, Math.floor(maxVal / 2));
+      a = randomNumber(minVal, maxVal - answer);
       b = answer + a;
       expression = `${variable} + ${a} = ${b}`;
       expressionLatex = `${variable} + ${a} = ${b}`;
       break;
 
     case 'subtraction': // x - a = b
-      answer = randomNumber(Math.max(minVal * 2, minVal + 1), maxVal);
+      // Ensure answer >= a + minVal
+      answer = randomNumber(minVal * 2, maxVal);
       const maxA = Math.min(maxVal, answer - minVal);
-      a = randomNumber(minVal, maxA);
+      a = randomNumber(minVal, Math.max(minVal, maxA));
       b = answer - a;
       expression = `${variable} - ${a} = ${b}`;
       expressionLatex = `${variable} - ${a} = ${b}`;
@@ -395,15 +398,17 @@ function generateSimpleEquationProblem(levelConfig: OperationLevel): OperationPr
     case 'multiplication': // ax = b
       a = randomNumber(Math.max(2, minVal), Math.min(12, maxVal));
       const maxAnswer = Math.floor(maxVal / a);
-      answer = randomNumber(Math.max(1, minVal), maxAnswer);
+      answer = randomNumber(Math.max(1, minVal), Math.max(minVal, maxAnswer));
       b = a * answer;
       expression = `${a}${variable} = ${b}`;
       expressionLatex = `${a}${variable} = ${b}`;
       break;
 
     case 'division': // x/a = b
+      // Ensure b stays in range: b * a = answer must be <= maxVal
       a = randomNumber(Math.max(2, minVal), Math.min(10, maxVal));
-      b = randomNumber(Math.max(1, minVal), Math.floor(maxVal / a));
+      const maxB = Math.floor(maxVal / a);
+      b = randomNumber(Math.max(1, minVal), Math.max(minVal, maxB));
       answer = a * b;
       expression = `${variable}/${a} = ${b}`;
       expressionLatex = `\\frac{${variable}}{${a}} = ${b}`;
@@ -411,8 +416,9 @@ function generateSimpleEquationProblem(levelConfig: OperationLevel): OperationPr
 
     case 'linear-add': { // ax + b = c
       const coeff = randomNumber(Math.max(2, minVal), Math.min(10, maxVal));
-      answer = randomNumber(Math.max(1, minVal), Math.floor((maxVal - minVal) / coeff));
-      const constant = randomNumber(minVal, Math.min(maxVal, maxVal - coeff * answer));
+      const maxAnswerFromRange = Math.floor((maxVal - minVal) / coeff);
+      answer = randomNumber(Math.max(1, minVal), Math.max(minVal, maxAnswerFromRange));
+      const constant = randomNumber(minVal, Math.max(minVal, Math.min(maxVal, maxVal - coeff * answer)));
       c = coeff * answer + constant;
       expression = `${coeff}${variable} + ${constant} = ${c}`;
       expressionLatex = `${coeff}${variable} + ${constant} = ${c}`;
@@ -423,8 +429,10 @@ function generateSimpleEquationProblem(levelConfig: OperationLevel): OperationPr
 
     case 'linear-sub': { // ax - b = c
       const coeff = randomNumber(Math.max(2, minVal), Math.min(10, maxVal));
-      answer = randomNumber(Math.max(1, minVal), Math.floor(maxVal / coeff));
-      const constant = randomNumber(minVal, Math.min(maxVal, coeff * answer - minVal));
+      const maxAnswerFromCoeff = Math.floor(maxVal / coeff);
+      answer = randomNumber(Math.max(1, minVal), Math.max(minVal, maxAnswerFromCoeff));
+      const maxConstant = Math.max(minVal, Math.min(maxVal, coeff * answer - minVal));
+      const constant = randomNumber(minVal, maxConstant);
       c = coeff * answer - constant;
       expression = `${coeff}${variable} - ${constant} = ${c}`;
       expressionLatex = `${coeff}${variable} - ${constant} = ${c}`;
@@ -434,8 +442,16 @@ function generateSimpleEquationProblem(levelConfig: OperationLevel): OperationPr
     }
   }
 
-  // For linear equations, include all coefficients as operands
-  const operands = (type === 'linear-add' || type === 'linear-sub') ? [a, b, c] : [a, b];
+  // For simple equations, only include coefficients that should respect min/max
+  // Don't include calculated results (b in x+a=b) or the answer itself
+  let operands: number[];
+  if (type === 'linear-add' || type === 'linear-sub') {
+    // For ax+b=c or ax-b=c, only a and b are input coefficients
+    operands = [a, b];
+  } else {
+    // For x+a=b, x-a=b, ax=b, x/a=b, only a is an input coefficient
+    operands = [a];
+  }
 
   return {
     expression: `Resuelve para ${variable}: ${expression}`,

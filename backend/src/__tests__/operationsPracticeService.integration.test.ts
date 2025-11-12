@@ -139,27 +139,34 @@ describe('Operations Practice Service - All 150 Levels Integration', () => {
       l.config.allowNegatives === true && !l.config.forceNegative
     );
 
-    allowNegativeLevels.forEach(levelConfig => {
-      it(`Level ${levelConfig.level}: should allow but not force negative results`, () => {
-        const results: number[] = [];
-
-        // Generate many problems to check distribution
-        for (let i = 0; i < 50; i++) {
-          const problem = generateProblem(levelConfig);
-          if (typeof problem.answer === 'number') {
-            results.push(problem.answer);
-          }
-        }
-
-        // Should have mix of positive and negative (or all positive by chance)
-        // At minimum, should accept negative answers
-        const hasNegative = results.some(r => r < 0);
-        const hasPositive = results.some(r => r > 0);
-
-        // At least one should be true (could be all one type by random chance)
-        expect(hasNegative || hasPositive).toBe(true);
+    // Skip if no levels match this criteria
+    if (allowNegativeLevels.length === 0) {
+      it('should skip - no levels with allowNegatives flag', () => {
+        expect(true).toBe(true);
       });
-    });
+    } else {
+      allowNegativeLevels.forEach(levelConfig => {
+        it(`Level ${levelConfig.level}: should allow but not force negative results`, () => {
+          const results: number[] = [];
+
+          // Generate many problems to check distribution
+          for (let i = 0; i < 50; i++) {
+            const problem = generateProblem(levelConfig);
+            if (typeof problem.answer === 'number') {
+              results.push(problem.answer);
+            }
+          }
+
+          // Should have mix of positive and negative (or all positive by chance)
+          // At minimum, should accept negative answers
+          const hasNegative = results.some(r => r < 0);
+          const hasPositive = results.some(r => r > 0);
+
+          // At least one should be true (could be all one type by random chance)
+          expect(hasNegative || hasPositive).toBe(true);
+        });
+      });
+    }
   });
 
   // Test levels that should never have negatives
