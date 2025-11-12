@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Lock, Check, PlayCircle, Trophy, Star, ChevronDown, ChevronUp } from 'lucide-react';
+import { Lock, Check, PlayCircle, Trophy, Star, ChevronLeft, ChevronRight, Unlock } from 'lucide-react';
 
 interface OperationLevel {
   level: number;
@@ -22,6 +22,7 @@ interface OperationsPathProps {
   levels: OperationLevel[];
   userProgress: UserProgress | null;
   onLevelSelect: (level: number) => void;
+  onUnlockAllLevels?: () => void;
 }
 
 const operationTypeColors: { [key: string]: string } = {
@@ -93,8 +94,10 @@ export default function OperationsPath({
   levels,
   userProgress,
   onLevelSelect,
+  onUnlockAllLevels,
 }: OperationsPathProps) {
-  const [showFullPath, setShowFullPath] = useState(false);
+  const LEVELS_PER_PAGE = 12;
+  const [currentPage, setCurrentPage] = useState(0);
   const highestLevel = userProgress?.highestLevelReached || 1;
   const currentLevel = userProgress?.currentLevel || 1;
 
@@ -105,365 +108,146 @@ export default function OperationsPath({
     return 'available';
   };
 
-  // Filter levels to show only relevant ones when not showing full path
-  const getVisibleLevels = () => {
-    if (showFullPath) {
-      return levels;
+  // Calculate pages
+  const totalPages = Math.ceil(levels.length / LEVELS_PER_PAGE);
+  const startIndex = currentPage * LEVELS_PER_PAGE;
+  const endIndex = Math.min(startIndex + LEVELS_PER_PAGE, levels.length);
+  const visibleLevels = levels.slice(startIndex, endIndex);
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
     }
-
-    // Show: last 2 completed + current + next 7 available
-    const PREV_COUNT = 2;
-    const NEXT_COUNT = 7;
-
-    const currentIndex = levels.findIndex(l => l.level === currentLevel);
-
-    if (currentIndex === -1) {
-      // If current level not found, show first 10 levels
-      return levels.slice(0, 10);
-    }
-
-    const startIndex = Math.max(0, currentIndex - PREV_COUNT);
-    const endIndex = Math.min(levels.length, currentIndex + NEXT_COUNT + 1);
-
-    return levels.slice(startIndex, endIndex);
   };
 
-  const visibleLevels = getVisibleLevels();
-  const hiddenCount = levels.length - visibleLevels.length;
-
-  const renderLevelNode = (level: OperationLevel, index: number) => {
-    const status = getLevelStatus(level.level);
-    const isEven = index % 2 === 0;
-    const colorClass = operationTypeColors[level.operationType] || 'bg-gray-500';
-    const isLastVisible = level.level === visibleLevels[visibleLevels.length - 1]?.level;
-
-    return (
-      <div
-        key={level.level}
-        className={`flex items-center ${isEven ? 'flex-row' : 'flex-row-reverse'} mb-8 relative`}
-      >
-        {/* Connecting Line */}
-        {!isLastVisible && (
-          <div
-            className={`absolute ${isEven ? 'right-1/2 translate-x-1/2' : 'left-1/2 -translate-x-1/2'}
-            top-16 w-1 h-16 ${status === 'locked' ? 'bg-gray-300' : 'bg-gradient-to-b from-blue-500 to-purple-500'}`}
-          />
-        )}
-
-        {/* Level Content */}
-        <div className={`w-full ${isEven ? 'text-right pr-8' : 'text-left pl-8'}`}>
-          <div
-            className={`inline-block max-w-md ${
-              status === 'locked'
-                ? 'opacity-50 cursor-not-allowed'
-                : 'cursor-pointer hover:scale-105 transition-transform'
-            }`}
-            onClick={() => status !== 'locked' && onLevelSelect(level.level)}
-          >
-            <div
-              className={`relative rounded-xl p-6 shadow-lg ${
-                status === 'current'
-                  ? 'bg-gradient-to-br from-blue-500 to-purple-600 text-white ring-4 ring-blue-300 animate-pulse'
-                  : status === 'completed'
-                  ? 'bg-white border-2 border-green-500'
-                  : status === 'available'
-                  ? 'bg-white border-2 border-blue-300 hover:border-blue-500'
-                  : 'bg-gray-100 border-2 border-gray-300'
-              }`}
-            >
-              {/* Level Number Badge */}
-              <div
-                className={`absolute -top-3 ${isEven ? '-right-3' : '-left-3'}
-                ${colorClass} text-white rounded-full w-12 h-12 flex items-center justify-center
-                font-bold text-lg shadow-lg`}
-              >
-                {level.level}
-              </div>
-
-              {/* Status Icon */}
-              <div className={`absolute -top-3 ${isEven ? '-left-3' : '-right-3'}`}>
-                {status === 'completed' && (
-                  <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg">
-                    <Check size={16} />
-                  </div>
-                )}
-                {status === 'current' && (
-                  <div className="bg-yellow-500 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg">
-                    <PlayCircle size={16} />
-                  </div>
-                )}
-                {status === 'locked' && (
-                  <div className="bg-gray-400 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg">
-                    <Lock size={16} />
-                  </div>
-                )}
-              </div>
-
-              {/* Content */}
-              <div className="mt-2">
-                <div className="flex items-center justify-between mb-2">
-                  <h3
-                    className={`text-xl font-bold ${
-                      status === 'current' ? 'text-white' : 'text-gray-900'
-                    }`}
-                  >
-                    {level.title}
-                  </h3>
-                  <span className="text-2xl ml-2">
-                    {operationTypeIcons[level.operationType]}
-                  </span>
-                </div>
-                <p
-                  className={`text-sm mb-3 ${
-                    status === 'current' ? 'text-blue-100' : 'text-gray-600'
-                  }`}
-                >
-                  {level.description}
-                </p>
-                <div className="flex items-center justify-between text-xs">
-                  <span
-                    className={`${
-                      status === 'current' ? 'text-blue-100' : 'text-gray-500'
-                    }`}
-                  >
-                    {difficultyEmojis[level.difficulty]}
-                  </span>
-                  <span
-                    className={`${
-                      status === 'current' ? 'text-blue-100' : 'text-gray-500'
-                    }`}
-                  >
-                    {level.problemsToComplete} problemas para completar
-                  </span>
-                </div>
-              </div>
-
-              {/* Hover Effect for Available Levels */}
-              {status !== 'locked' && status !== 'current' && (
-                <div className="absolute inset-0 bg-blue-500 opacity-0 hover:opacity-10 rounded-xl transition-opacity" />
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Center Circle (Path Node) */}
-        <div
-          className={`absolute left-1/2 -translate-x-1/2 w-6 h-6 rounded-full border-4 ${
-            status === 'locked'
-              ? 'bg-gray-300 border-gray-400'
-              : status === 'completed'
-              ? 'bg-green-500 border-green-600'
-              : status === 'current'
-              ? 'bg-blue-500 border-blue-600 ring-4 ring-blue-300'
-              : 'bg-white border-blue-400'
-          } shadow-lg z-10`}
-        />
-      </div>
-    );
+  const goToPreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
   };
+
+  const goToCurrentLevel = () => {
+    const currentLevelIndex = levels.findIndex(l => l.level === currentLevel);
+    if (currentLevelIndex !== -1) {
+      setCurrentPage(Math.floor(currentLevelIndex / LEVELS_PER_PAGE));
+    }
+  };
+
 
   return (
     <div className="space-y-6">
-      {/* Simple Next Levels View */}
-      {!showFullPath && (
-        <div>
-          {/* Next Levels Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {visibleLevels.map((level) => {
-              const status = getLevelStatus(level.level);
-              const colorClass = operationTypeColors[level.operationType] || 'bg-gray-500';
+      {/* Header with Navigation and Actions */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-4">
+          <h2 className="text-2xl font-bold text-gray-900">
+            Niveles {startIndex + 1} - {endIndex}
+          </h2>
+          <span className="text-sm text-gray-500">
+            de {levels.length} totales
+          </span>
+        </div>
 
-              return (
-                <div
-                  key={level.level}
-                  onClick={() => status !== 'locked' && onLevelSelect(level.level)}
-                  className={`bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all ${
-                    status === 'locked' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:scale-102'
-                  } ${status === 'current' ? 'ring-2 ring-blue-500' : ''}`}
-                >
-                  {/* Level Header */}
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className={`${colorClass} w-10 h-10 rounded-full flex items-center justify-center text-white font-bold`}>
-                        {level.level}
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-gray-900">{level.title}</h3>
-                        <p className="text-xs text-gray-500">{difficultyEmojis[level.difficulty]}</p>
-                      </div>
-                    </div>
-                    {status === 'completed' && <Check className="text-green-500" size={24} />}
-                    {status === 'current' && <PlayCircle className="text-blue-500" size={24} />}
-                    {status === 'locked' && <Lock className="text-gray-400" size={24} />}
-                  </div>
+        <div className="flex items-center gap-2">
+          {/* Go to Current Level Button */}
+          <button
+            onClick={goToCurrentLevel}
+            className="px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
+          >
+            Ir a nivel actual
+          </button>
 
-                  {/* Description */}
-                  <p className="text-sm text-gray-600 mb-3">{level.description}</p>
-
-                  {/* Footer */}
-                  <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span>{operationTypeIcons[level.operationType]} {level.operationType}</span>
-                    <span>{level.problemsToComplete} problemas</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Toggle to Full Path */}
-          {hiddenCount > 0 && (
-            <div className="mt-6 text-center">
-              <button
-                onClick={() => setShowFullPath(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
-              >
-                <ChevronDown size={16} />
-                Ver camino completo ({levels.length} niveles)
-              </button>
-            </div>
+          {/* Unlock All Levels Button */}
+          {onUnlockAllLevels && highestLevel < levels.length && (
+            <button
+              onClick={onUnlockAllLevels}
+              className="flex items-center gap-2 px-3 py-2 text-sm bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors"
+            >
+              <Unlock size={16} />
+              Desbloquear todos
+            </button>
           )}
         </div>
-      )}
+      </div>
 
-      {/* Full Path View */}
-      {showFullPath && (
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          {/* Collapse Button */}
-          <div className="mb-6 text-center">
-            <button
-              onClick={() => setShowFullPath(false)}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+      {/* Levels Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {visibleLevels.map((level) => {
+          const status = getLevelStatus(level.level);
+          const colorClass = operationTypeColors[level.operationType] || 'bg-gray-500';
+
+          return (
+            <div
+              key={level.level}
+              onClick={() => status !== 'locked' && onLevelSelect(level.level)}
+              className={`bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all ${
+                status === 'locked' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:scale-102'
+              } ${status === 'current' ? 'ring-2 ring-blue-500' : ''}`}
             >
-              <ChevronUp size={16} />
-              Mostrar solo próximos niveles
-            </button>
-          </div>
-
-          {/* Legend - Organized by Phases */}
-          <div className="mb-8 p-6 bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl">
-            <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">
-              5 Fases del Camino de Operaciones
-            </h3>
-
-            <div className="space-y-6">
-              {/* Phase 1: Arithmetic */}
-              <div>
-                <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
-                  Fase 1: Aritmética (Niveles 1-30)
-                </h4>
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-                  {['addition', 'subtraction', 'multiplication', 'division', 'mixed-arithmetic'].map((type) => (
-                    <div key={type} className="flex items-center space-x-2">
-                      <div
-                        className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
-                      >
-                        {operationTypeIcons[type]}
-                      </div>
-                      <span className="text-xs text-gray-700">
-                        {type === 'addition' ? 'Suma' :
-                         type === 'subtraction' ? 'Resta' :
-                         type === 'multiplication' ? 'Multiplicación' :
-                         type === 'division' ? 'División' : 'Mixto'}
-                      </span>
-                    </div>
-                  ))}
+              {/* Level Header */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className={`${colorClass} w-10 h-10 rounded-full flex items-center justify-center text-white font-bold`}>
+                    {level.level}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900">{level.title}</h3>
+                    <p className="text-xs text-gray-500">{difficultyEmojis[level.difficulty]}</p>
+                  </div>
                 </div>
+                {status === 'completed' && <Check className="text-green-500" size={24} />}
+                {status === 'current' && <PlayCircle className="text-blue-500" size={24} />}
+                {status === 'locked' && <Lock className="text-gray-400" size={24} />}
               </div>
 
-              {/* Phase 2: Algebraic */}
-              <div>
-                <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
-                  Fase 2: Algebraica (Niveles 31-60)
-                </h4>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {['simple-equation', 'expression-evaluation', 'simplification'].map((type) => (
-                    <div key={type} className="flex items-center space-x-2">
-                      <div
-                        className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
-                      >
-                        {operationTypeIcons[type]}
-                      </div>
-                      <span className="text-xs text-gray-700">
-                        {type === 'simple-equation' ? 'Ecuaciones' :
-                         type === 'expression-evaluation' ? 'Evaluación' : 'Simplificación'}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {/* Description */}
+              <p className="text-sm text-gray-600 mb-3">{level.description}</p>
 
-              {/* Phase 3: Logical */}
-              <div>
-                <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
-                  Fase 3: Lógica (Niveles 61-90)
-                </h4>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {['comparison', 'logical-operators', 'compound-conditions'].map((type) => (
-                    <div key={type} className="flex items-center space-x-2">
-                      <div
-                        className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
-                      >
-                        {operationTypeIcons[type]}
-                      </div>
-                      <span className="text-xs text-gray-700">
-                        {type === 'comparison' ? 'Comparación' :
-                         type === 'logical-operators' ? 'Operadores' : 'Condiciones'}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Phase 4: Structural */}
-              <div>
-                <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
-                  Fase 4: Estructural (Niveles 91-120)
-                </h4>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {['sequences', 'sets', 'functions'].map((type) => (
-                    <div key={type} className="flex items-center space-x-2">
-                      <div
-                        className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
-                      >
-                        {operationTypeIcons[type]}
-                      </div>
-                      <span className="text-xs text-gray-700">
-                        {type === 'sequences' ? 'Secuencias' :
-                         type === 'sets' ? 'Conjuntos' : 'Funciones'}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Phase 5: Algorithmic */}
-              <div>
-                <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
-                  Fase 5: Algorítmica (Niveles 121-150)
-                </h4>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {['sorting', 'counting', 'composition'].map((type) => (
-                    <div key={type} className="flex items-center space-x-2">
-                      <div
-                        className={`${operationTypeColors[type]} w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-sm`}
-                      >
-                        {operationTypeIcons[type]}
-                      </div>
-                      <span className="text-xs text-gray-700">
-                        {type === 'sorting' ? 'Ordenamiento' :
-                         type === 'counting' ? 'Conteo' : 'Composición'}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+              {/* Footer */}
+              <div className="flex items-center justify-between text-xs text-gray-500">
+                <span>{operationTypeIcons[level.operationType]} {level.operationType}</span>
+                <span>{level.problemsToComplete} problemas</span>
               </div>
             </div>
+          );
+        })}
+      </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-4 mt-6">
+          <button
+            onClick={goToPreviousPage}
+            disabled={currentPage === 0}
+            className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          >
+            <ChevronLeft size={20} />
+            Anterior
+          </button>
+
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i)}
+                className={`w-10 h-10 rounded-lg font-semibold transition-all ${
+                  currentPage === i
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white border-2 border-gray-300 text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
           </div>
 
-          {/* Path - Zigzag Layout */}
-          <div className="relative">
-            {levels.map((level, index) => renderLevelNode(level, index))}
-          </div>
+          <button
+            onClick={goToNextPage}
+            disabled={currentPage === totalPages - 1}
+            className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          >
+            Siguiente
+            <ChevronRight size={20} />
+          </button>
         </div>
       )}
 
