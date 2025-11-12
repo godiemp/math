@@ -283,7 +283,7 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
     // After auto-submit, quiz should be in review mode at question 0
     // Navigate to last question to access "Ver Resumen"
-    const questionCounter = page.getByTestId('question-counter');
+    // Reuse questionCounter variable declared earlier in the function
     const stillHasCounter = await questionCounter.isVisible().catch(() => false);
 
     if (stillHasCounter) {
