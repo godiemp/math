@@ -118,6 +118,36 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 - Variedad infinita manteniendo calidad
 - Adaptable a diferentes niveles y temas
 
+### 📚 Sistema de Problemas Abstractos - Generación Masiva
+
+**Generación Automatizada a Escala** - Sistema para crear ~1000 problemas organizados por taxonomía PAES
+
+- **46 Unidades Temáticas**: 33 unidades M1 + 13 unidades M2
+- **Taxonomía Completa**: Organizadas por Números, Álgebra, Geometría, Probabilidad
+- **Generación Batch**: Capacidad de generar hasta 1000 problemas de una vez
+- **Integración OpenAI**: Utiliza GPT-4 para generación de problemas de alta calidad
+- **Control Granular**: Scripts con opciones --dry-run, --limit, --units para testing
+- **Scripts Helper**: Herramientas para visualizar taxonomía y planificar generación
+- **Distribución por Dificultad**: Generación balanceada de problemas fáciles, medios y difíciles
+- **Almacenamiento BD**: Problemas generados se guardan automáticamente en PostgreSQL
+
+**Comandos Disponibles:**
+```bash
+# Ver taxonomía de unidades sin generar
+npm run helpers:abstract-problems taxonomy
+
+# Test sin generar problemas reales
+npm run seed:abstract-problems -- --dry-run
+
+# Generar muestra de 3 unidades (~45 problemas)
+npm run seed:abstract-problems -- --limit=3
+
+# Generar todos los problemas (~1000)
+npm run seed:abstract-problems
+```
+
+**Guía Completa**: Ver [QUICK-START-ABSTRACT-PROBLEMS.md](./QUICK-START-ABSTRACT-PROBLEMS.md)
+
 ### 💳 Sistema de Suscripciones
 
 **Gestión Completa de Acceso** - Monetización y control de usuarios
@@ -178,6 +208,8 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 - **Sistema de Planes** - Crear y gestionar planes de suscripción
 - **QGen System** - Generador dinámico de preguntas con IA
 - **Debug Tools** - Páginas de debug para Zen y Rapid Fire
+- **System Health** - Monitoreo en tiempo real del estado del sistema
+- **Backup & Restore** - Sistema automatizado de respaldos de base de datos
 
 ### 📊 Analytics y Monitoring
 
@@ -201,6 +233,57 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 - Métricas de base de datos (queries, conexiones)
 - Uso de recursos del servidor
 - Logs de errores y warnings
+
+### 🔧 Sistema de Operaciones y Mantenimiento
+
+**System Health Monitoring** - Monitoreo completo del estado del sistema
+
+- **Health Check Endpoints**: Verificación de estado de API, base de datos y servicios externos
+- **Dashboard de Salud**: Interfaz visual en `/admin/system-health` para monitoreo en tiempo real
+- **Métricas Detalladas**: Uptime, latencia de BD, uso de conexiones, estado de Anthropic API
+- **Status Indicators**: Indicadores visuales de salud (healthy, degraded, down)
+- **Auto-refresh**: Actualización automática cada 30 segundos
+- **Alerts**: Sistema de alertas para degradación de servicios
+
+**Backup & Restore System** - Respaldos automáticos de base de datos
+
+- **Backup Automático**: Sistema de respaldos programables de PostgreSQL
+- **Compresión**: Backups comprimidos con gzip para optimizar almacenamiento
+- **Upload a Cloud**: Soporte para subir backups a servicios cloud (S3, GCS)
+- **Verificación**: Scripts de verificación de integridad de backups
+- **Restore Seguro**: Proceso de restauración con confirmación
+- **Monitoring**: Monitoreo del estado de backups recientes
+- **Retención**: Políticas configurables de retención de backups
+
+**Comandos Disponibles:**
+```bash
+# Backend - Sistema de Backup/Restore
+cd backend
+
+# Crear backup local
+npm run backup
+
+# Crear backup y subir a cloud
+npm run backup:upload
+
+# Listar backups disponibles
+npm run backup:list
+
+# Restaurar desde backup
+npm run restore
+
+# Verificar integridad de backup
+npm run verify-backup
+
+# Monitorear estado de backups
+npm run monitor-backups
+
+# Monitoreo con salida JSON
+npm run monitor-backups:json
+
+# Monitoreo con alertas
+npm run monitor-backups:alert
+```
 
 ## Stack Tecnológico
 
@@ -296,6 +379,7 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 │   │   ├── users/                # Gestión de usuarios y suscripciones
 │   │   ├── qgen/                 # Generador dinámico de preguntas
 │   │   ├── live-sessions/        # Gestión de sesiones en vivo
+│   │   ├── system-health/        # Monitoreo de salud del sistema
 │   │   ├── zen-debug/            # Debug del modo Zen
 │   │   └── rapidfire-debug/      # Debug del modo Rapid Fire
 │   └── api/                      # Next.js Route Handlers
@@ -669,20 +753,25 @@ El skill te guiará para crear:
 ### Para Administradores
 
 1. **Acceder al Panel Admin** - Navega a `/admin` (requiere rol admin)
-2. **Dashboard de Analytics** - Ve métricas generales de uso y desempeño en `/admin/analytics`
-3. **AI Analytics** - Analiza interacciones con el tutor IA en `/admin/ai-analytics`
-4. **Gestión de Usuarios** - CRUD completo de usuarios en `/admin/users`
+2. **System Health** - Monitorea el estado del sistema en `/admin/system-health`
+   - Ver estado de servicios (API, base de datos, Anthropic)
+   - Métricas de uptime, latencia y conexiones
+   - Auto-refresh cada 30 segundos
+3. **Dashboard de Analytics** - Ve métricas generales de uso y desempeño en `/admin/analytics`
+4. **AI Analytics** - Analiza interacciones con el tutor IA en `/admin/ai-analytics`
+5. **Gestión de Usuarios** - CRUD completo de usuarios en `/admin/users`
    - Ver, crear, editar y eliminar usuarios
    - Gestionar suscripciones y planes por usuario
    - Ver actividad y estadísticas de usuarios
-5. **Gestión de Planes** - Configurar planes de suscripción en `/admin/users`
-6. **Crear Sesiones en Vivo** - Programa nuevos ensayos en `/admin/live-sessions`
-7. **Navegar Problemas** - Ve y filtra el banco de preguntas en `/admin/problems`
-8. **Upload PDFs** - Sube PDFs y extrae preguntas automáticamente con IA en `/admin/upload`
-9. **QGen System** - Gestiona el generador dinámico de preguntas en `/admin/qgen`
-   - Administrar contextos, objetivos y templates
-   - Generar y validar preguntas dinámicas
-10. **Debug Tools** - Herramientas de debug en `/admin/zen-debug` y `/admin/rapidfire-debug`
+6. **Gestión de Planes** - Configurar planes de suscripción en `/admin/users`
+7. **Crear Sesiones en Vivo** - Programa nuevos ensayos en `/admin/live-sessions`
+8. **Navegar Problemas** - Ve y filtra el banco de preguntas en `/admin/problems`
+9. **Upload PDFs** - Sube PDFs y extrae preguntas automáticamente con IA en `/admin/upload`
+10. **QGen System** - Gestiona el generador dinámico de preguntas en `/admin/qgen`
+    - Administrar contextos, objetivos y templates
+    - Generar y validar preguntas dinámicas
+11. **Debug Tools** - Herramientas de debug en `/admin/zen-debug` y `/admin/rapidfire-debug`
+12. **Backup & Restore** - Ejecuta comandos de backup desde el backend (ver sección de Operaciones)
 
 ## API Endpoints
 
@@ -771,8 +860,12 @@ El skill te guiará para crear:
 - `POST /api/ai/summarize` - Resumir contenido educativo
 - `POST /api/ai/practice` - Generar problemas de práctica
 
-### Utilidades
-- `GET /health` - Health check del servidor
+### System Health & Monitoring
+- `GET /health` - Health check básico del servidor
+- `GET /api/health` - Health check completo con métricas detalladas
+- `GET /api/health/database` - Estado específico de base de datos
+- `GET /api/health/anthropic` - Estado de Anthropic API
+- `GET /api/health/system` - Métricas del sistema (uptime, memoria, CPU)
 
 ## Características Actuales
 
@@ -822,6 +915,23 @@ El skill te guiará para crear:
 - ✅ **Generador de Valores** - Creación inteligente de valores numéricos
 - ✅ **Algoritmo de Generación** - Combina contextos, objetivos y templates
 - ✅ **Admin Interface** - Panel para gestionar el sistema QGen
+
+**Sistema de Problemas Abstractos:**
+- ✅ **46 Unidades Temáticas** - Taxonomía completa de PAES M1 y M2
+- ✅ **Generación Masiva** - Capacidad de generar ~1000 problemas
+- ✅ **Integración OpenAI** - Generación de alta calidad con GPT-4
+- ✅ **Scripts Helper** - Herramientas de testing y visualización
+- ✅ **Dry Run Mode** - Testing sin consumir API o escribir a BD
+- ✅ **Control Granular** - Opciones --limit, --units para generación controlada
+
+**Sistema de Operaciones:**
+- ✅ **Health Monitoring** - Dashboard de salud del sistema en tiempo real
+- ✅ **Health Check API** - Endpoints para verificar estado de servicios
+- ✅ **Backup Automático** - Sistema de respaldos de PostgreSQL con compresión
+- ✅ **Cloud Upload** - Subida de backups a servicios cloud
+- ✅ **Restore System** - Proceso seguro de restauración desde backups
+- ✅ **Backup Verification** - Verificación de integridad de respaldos
+- ✅ **Backup Monitoring** - Monitoreo del estado de backups recientes
 
 **Analytics y Monitoring:**
 - ✅ **Analytics Dashboard** - Métricas de uso, tendencias y desempeño
@@ -886,30 +996,69 @@ El skill te guiará para crear:
 
 Para más información detallada, ver:
 
-### Documentación Técnica
-- [Visión General del Código](./CODEBASE_OVERVIEW.md) - Documentación técnica detallada
+### 🎯 Documentación de Inicio Rápido
+- **[START_HERE.md](./START_HERE.md)** - ⭐ **COMIENZA AQUÍ** - Guía de navegación de toda la documentación
+- [EXPLORATION_SUMMARY.md](./EXPLORATION_SUMMARY.md) - Resumen rápido del proyecto (5 min)
+- [QUICK-START-ABSTRACT-PROBLEMS.md](./QUICK-START-ABSTRACT-PROBLEMS.md) - Inicio rápido para sistema de problemas abstractos
+
+### 📖 Documentación Técnica
+- [CODEBASE_OVERVIEW.md](./CODEBASE_OVERVIEW.md) - Visión general del código
+- [CODEBASE_ANALYSIS_COMPREHENSIVE.md](./CODEBASE_ANALYSIS_COMPREHENSIVE.md) - Análisis técnico completo (45 min)
 - [Setup del Backend](./backend/README.md) - Instrucciones específicas del backend
 - [Documentación de Arquitectura](./docs/architecture/) - Documentos de planificación inicial
 
-### Testing
+### 🧪 Testing
 - [E2E Test Setup](./E2E_TEST_SETUP.md) - Guía de configuración de tests E2E
 - [E2E Test Analysis](./E2E_TEST_ANALYSIS.md) - Análisis de cobertura y estrategia de tests
 - [E2E Analysis Summary](./E2E_ANALYSIS_SUMMARY.md) - Resumen de análisis E2E
+- [E2E Test Coverage Summary](./E2E_TEST_COVERAGE_SUMMARY.md) - Cobertura visual de tests (10 min)
 
-### Claude Code Skills
+### 🛠️ Claude Code Skills
 - [Code Patterns Skill](./.claude/skills/code-patterns/SKILL.md) - Guía de patrones y estándares
 - [Endpoint Generator](./.claude/skills/endpoint/SKILL.md) - Generador de endpoints Express.js
 
-### Pagos y Suscripciones
-- [Integración de Pagos MercadoPago](./PAYMENT_INTEGRATION.md) - Guía completa de configuración de pagos
+### 💳 Pagos y Suscripciones
+- [PAYMENT_INTEGRATION.md](./PAYMENT_INTEGRATION.md) - Guía completa de integración de pagos MercadoPago
 
-### Otras Documentaciones
+### 🔒 Seguridad
+- [SECURITY_AUDIT_REPORT.md](./SECURITY_AUDIT_REPORT.md) - Reporte de auditoría de seguridad
+- [SECURITY_FIXES_HIGH_SEVERITY.md](./SECURITY_FIXES_HIGH_SEVERITY.md) - Fixes de seguridad de alta severidad
+
+### 🚀 Deployment y Operaciones
+- [DEPLOYMENT_GAPS_ANALYSIS.md](./DEPLOYMENT_GAPS_ANALYSIS.md) - Análisis de gaps para deployment a producción
+- [SENTRY_SETUP.md](./SENTRY_SETUP.md) - Configuración de Sentry para monitoreo de errores
+
+### 📚 Otras Documentaciones
 - [Análisis de Feature Ensayos](./docs/ENSAYOS_FEATURE_ANALYSIS.md) - Análisis de sesiones en vivo
 - [AI Setup](./docs/AI_SETUP.md) - Configuración del sistema de IA
 
 ## Mejoras Recientes
 
-### Integración de Pagos MercadoPago (NUEVO ⭐)
+### Sistema de Problemas Abstractos (NUEVO ⭐ Noviembre 2024)
+- ✅ Sistema completo de generación masiva de problemas
+- ✅ 46 unidades temáticas (33 M1 + 13 M2)
+- ✅ Integración con OpenAI GPT-4
+- ✅ Scripts helper con dry-run mode
+- ✅ Control granular de generación (--limit, --units)
+- ✅ Almacenamiento automático en PostgreSQL
+- ✅ Documentación completa en QUICK-START-ABSTRACT-PROBLEMS.md
+
+### Sistema de Operaciones y Monitoreo (NUEVO ⭐ Noviembre 2024)
+- ✅ Dashboard de System Health en `/admin/system-health`
+- ✅ Endpoints de health check detallados
+- ✅ Monitoreo de base de datos, API, y servicios externos
+- ✅ Sistema completo de backup/restore de PostgreSQL
+- ✅ Backups comprimidos con upload a cloud
+- ✅ Scripts de verificación y monitoreo de backups
+- ✅ Auto-refresh de métricas cada 30 segundos
+
+### Mejoras de Dashboard (Noviembre 2024)
+- ✅ Dashboard mejorado para usuarios M1-only
+- ✅ Correcciones de bugs en analytics
+- ✅ API client centralizado para mejor manejo de errores
+- ✅ Indicadores visuales de estado mejorados
+
+### Integración de Pagos MercadoPago
 - ✅ SDK oficial de MercadoPago integrado
 - ✅ Procesamiento completo de pagos para Chile
 - ✅ Webhooks automáticos para actualización de estados
@@ -992,9 +1141,9 @@ Para preguntas o soporte, por favor abre un issue en GitHub.
 
 ---
 
-**Última actualización**: Noviembre 11, 2025
+**Última actualización**: Noviembre 12, 2024
 
-**Estado del Proyecto**: En desarrollo activo con features principales implementadas, sistema de suscripciones completo con **integración de pagos MercadoPago**, quiz tracking en base de datos, generador dinámico de preguntas (QGen), analytics completo, testing E2E, y herramientas de desarrollo mejoradas con Claude Code skills.
+**Estado del Proyecto**: En desarrollo activo con features principales implementadas, sistema de suscripciones completo con **integración de pagos MercadoPago**, quiz tracking en base de datos, generador dinámico de preguntas (QGen), **sistema de problemas abstractos** para generación masiva de contenido, analytics completo, **monitoreo de salud del sistema**, **backup y restore automático**, testing E2E, y herramientas de desarrollo mejoradas con Claude Code skills.
 
 ## Tech Stack Summary
 
