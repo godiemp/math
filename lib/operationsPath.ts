@@ -737,7 +737,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'logical',
     difficulty: 'intermediate',
     problemsToComplete: 3,
-    config: { operators: ['<', '>'], minValue: -10, maxValue: 10, allowNegatives: true }
+    config: { operators: ['<', '>'], minValue: -10, maxValue: 10 }
   },
   {
     level: 67,
@@ -1397,7 +1397,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'algorithmic',
     difficulty: 'expert',
     problemsToComplete: 3,
-    config: { sequenceLength: 4, minValue: -10, maxValue: 10, allowNegatives: true }
+    config: { arraySize: 5, minValue: -10, maxValue: 10 }
   },
 
   // Conteo (131-140)
