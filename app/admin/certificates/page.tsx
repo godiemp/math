@@ -88,11 +88,8 @@ export default function CertificatesAdminPage() {
         type: 'live_session',
       });
 
-      const data = response.data as { certificate?: { id: string }, message?: string, isOwnSession?: boolean };
-      const message = data.isOwnSession
-        ? '✅ Certificado generado desde tu sesión completada'
-        : '✅ Certificado de prueba generado desde una sesión de ejemplo';
-      alert(`${message}\n\nID: ${data.certificate?.id || 'unknown'}`);
+      const data = response.data as { certificate?: { id: string }, message?: string, isMock?: boolean };
+      alert(`✅ ${data.message || 'Certificado generado exitosamente'}\n\nID: ${data.certificate?.id || 'unknown'}`);
       await loadCertificates();
     } catch (err: any) {
       console.error('Error generating test certificate:', err);
@@ -170,8 +167,8 @@ export default function CertificatesAdminPage() {
                   Generar Certificado Premium
                 </Heading>
                 <Text className="mb-4 text-gray-700">
-                  Genera un certificado premium para pruebas. Si has completado un ensayo, se usará tu sesión.
-                  Si no, se generará un certificado de ejemplo desde cualquier ensayo completado en el sistema.
+                  Genera un certificado premium de <strong>prueba con datos simulados</strong>.
+                  Perfecto para visualizar el diseño, formato y todas las características del certificado sin necesitar sesiones reales.
                 </Text>
                 <div className="flex gap-3 items-center">
                   <Button
@@ -188,7 +185,7 @@ export default function CertificatesAdminPage() {
                   )}
                 </div>
                 <Text className="mt-3 text-sm text-gray-600">
-                  💡 <strong>Nota:</strong> Debe existir al menos un ensayo completado en el sistema (por cualquier usuario).
+                  💡 <strong>Nota:</strong> Los datos del certificado son simulados - no requiere sesiones reales.
                 </Text>
               </div>
             </div>

@@ -23,6 +23,7 @@ import {
   deleteCertificate,
 } from '../services/certificateService';
 import { generateCertificatePdf } from '../services/certificatePdfService';
+import { generateMockCertificate, saveMockCertificate } from '../services/mockCertificateService';
 import { CertificateGenerationRequest } from '../lib/types/core';
 
 /**
@@ -331,9 +332,8 @@ export const deleteCertificateHandler = async (req: Request, res: Response): Pro
  * Generate a test certificate for demo purposes (admin only)
  * POST /api/admin/certificates/test
  *
- * This endpoint looks for ANY completed live session in the system and
- * generates a certificate for testing purposes. If none exist, it returns
- * a helpful error message.
+ * This endpoint generates a mock certificate with realistic data for testing.
+ * No real sessions or user data are required.
  */
 export const generateTestCertificateHandler = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -353,61 +353,21 @@ export const generateTestCertificateHandler = async (req: Request, res: Response
       return;
     }
 
-    // Find ANY completed live session with participants (for admin testing)
-    const { pool } = require('../config/database');
+    console.log('🎓 Generating mock certificate for admin testing...');
 
-    // First, try to find a session the admin participated in
-    let result = await pool.query(
-      `SELECT sp.session_id, sp.user_id, s.status, s.name
-       FROM session_participants sp
-       JOIN sessions s ON sp.session_id = s.id
-       WHERE sp.user_id = $1 AND s.status = 'completed'
-       ORDER BY sp.joined_at DESC
-       LIMIT 1`,
-      [userId]
-    );
+    // Generate mock certificate with realistic data
+    const certificate = await generateMockCertificate(userId);
 
-    // If admin hasn't participated in any sessions, find any completed session
-    if (result.rows.length === 0) {
-      result = await pool.query(
-        `SELECT sp.session_id, sp.user_id, s.status, s.name
-         FROM session_participants sp
-         JOIN sessions s ON sp.session_id = s.id
-         WHERE s.status = 'completed'
-         ORDER BY s.completed_at DESC
-         LIMIT 1`
-      );
+    // Save to database
+    await saveMockCertificate(certificate);
 
-      if (result.rows.length === 0) {
-        res.status(404).json({
-          error: 'No hay ensayos completados en el sistema',
-          message: 'Para generar un certificado de prueba, primero debe haber al menos un ensayo en vivo completado en el sistema. Puedes crear y completar un ensayo desde la sección de Live Sessions.',
-        });
-        return;
-      }
-
-      // Use the first participant from that session
-      console.log(`⚠️ Admin hasn't participated in any sessions. Using session: ${result.rows[0].name} with user: ${result.rows[0].user_id}`);
-    }
-
-    const sessionId = result.rows[0].session_id;
-    const targetUserId = result.rows[0].user_id;
-
-    const request: CertificateGenerationRequest = {
-      userId: targetUserId, // Use the target user (could be admin or another user)
-      certificateType: 'live_session',
-      sessionId: sessionId,
-    };
-
-    const certificate = await generateCertificate(request);
+    console.log(`✅ Mock certificate generated successfully: ${certificate.id}`);
 
     res.status(201).json({
       success: true,
       certificate,
-      message: targetUserId === userId
-        ? 'Certificado generado desde tu sesión completada'
-        : 'Certificado de prueba generado desde una sesión de ejemplo',
-      isOwnSession: targetUserId === userId,
+      message: 'Certificado de prueba generado con datos de ejemplo',
+      isMock: true,
     });
   } catch (error: any) {
     console.error('Error generating test certificate:', error);
