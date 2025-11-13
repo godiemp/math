@@ -8,7 +8,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   // Suma (1-5)
   {
     title: 'Suma Básica',
-    description: 'Suma números del 1 al 5',
     operationType: 'addition',
     phase: 'arithmetic',
     difficulty: 'basic',
@@ -18,7 +17,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Suma hasta 10',
-    description: 'Suma números del 1 al 10',
     operationType: 'addition',
     phase: 'arithmetic',
     difficulty: 'basic',
@@ -28,7 +26,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Suma hasta 20',
-    description: 'Suma números del 1 al 20',
     operationType: 'addition',
     phase: 'arithmetic',
     difficulty: 'basic',
@@ -38,7 +35,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Suma Tres Números',
-    description: 'Suma tres números del 1 al 10',
     operationType: 'addition',
     phase: 'arithmetic',
     difficulty: 'basic',
@@ -48,7 +44,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Suma hasta 50',
-    description: 'Suma números del 1 al 50',
     operationType: 'addition',
     phase: 'arithmetic',
     difficulty: 'intermediate',
@@ -60,7 +55,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   // Resta (6-10)
   {
     title: 'Resta Básica',
-    description: 'Resta números del 1 al 10',
     operationType: 'subtraction',
     phase: 'arithmetic',
     difficulty: 'basic',
@@ -70,7 +64,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Resta hasta 20',
-    description: 'Resta números del 1 al 20',
     operationType: 'subtraction',
     phase: 'arithmetic',
     difficulty: 'basic',
@@ -80,7 +73,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Resta hasta 50',
-    description: 'Resta números del 1 al 50',
     operationType: 'subtraction',
     phase: 'arithmetic',
     difficulty: 'intermediate',
@@ -90,7 +82,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Resta hasta 100',
-    description: 'Resta números del 1 al 100',
     operationType: 'subtraction',
     phase: 'arithmetic',
     difficulty: 'intermediate',
@@ -100,7 +91,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Resta con Negativos',
-    description: 'Resta que puede dar resultados negativos',
     operationType: 'subtraction',
     phase: 'arithmetic',
     difficulty: 'intermediate',
@@ -112,7 +102,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   // Multiplicación (11-17)
   {
     title: 'Tabla del 2',
-    description: 'Multiplicaciones de la tabla del 2',
     operationType: 'multiplication',
     phase: 'arithmetic',
     difficulty: 'basic',
@@ -123,7 +112,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Tabla del 3',
-    description: 'Multiplicaciones de la tabla del 3',
     operationType: 'multiplication',
     phase: 'arithmetic',
     difficulty: 'basic',
@@ -134,7 +122,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Tabla del 4',
-    description: 'Multiplicaciones de la tabla del 4',
     operationType: 'multiplication',
     phase: 'arithmetic',
     difficulty: 'basic',
@@ -145,7 +132,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Tablas del 6 al 8',
-    description: 'Multiplicaciones de las tablas del 6, 7 y 8',
     operationType: 'multiplication',
     phase: 'arithmetic',
     difficulty: 'intermediate',
@@ -156,7 +142,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Tabla del 9',
-    description: 'Multiplicaciones de la tabla del 9',
     operationType: 'multiplication',
     phase: 'arithmetic',
     difficulty: 'intermediate',
@@ -167,7 +152,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Multiplicación hasta 20',
-    description: 'Multiplicaciones con números hasta 20',
     operationType: 'multiplication',
     phase: 'arithmetic',
     difficulty: 'intermediate',
@@ -178,7 +162,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Multiplicación de Dos Cifras',
-    description: 'Multiplicaciones con números de hasta 2 cifras',
     operationType: 'multiplication',
     phase: 'arithmetic',
     difficulty: 'advanced',
@@ -191,7 +174,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   // División (18-23)
   {
     title: 'División Básica',
-    description: 'Divisiones exactas simples (tablas 2-5)',
     operationType: 'division',
     phase: 'arithmetic',
     difficulty: 'basic',
@@ -202,7 +184,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'División Tablas Medias',
-    description: 'Divisiones exactas de tablas del 6 al 9',
     operationType: 'division',
     phase: 'arithmetic',
     difficulty: 'intermediate',
@@ -213,7 +194,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Todas las Divisiones',
-    description: 'Divisiones exactas de todas las tablas',
     operationType: 'division',
     phase: 'arithmetic',
     difficulty: 'intermediate',
@@ -224,7 +204,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'División hasta 100',
-    description: 'Divisiones exactas con dividendos hasta 100',
     operationType: 'division',
     phase: 'arithmetic',
     difficulty: 'intermediate',
@@ -235,7 +214,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'División de Dos Cifras',
-    description: 'Divisiones exactas con números de 2 cifras',
     operationType: 'division',
     phase: 'arithmetic',
     difficulty: 'advanced',
@@ -246,7 +224,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'División con Decimales',
-    description: 'Divisiones que dan resultados decimales',
     operationType: 'division',
     phase: 'arithmetic',
     difficulty: 'advanced',
@@ -259,7 +236,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   // Operaciones Mixtas Aritméticas (24-30)
   {
     title: 'Suma y Resta Simples',
-    description: 'Combina suma y resta con números pequeños',
     operationType: 'mixed-arithmetic',
     phase: 'arithmetic',
     difficulty: 'intermediate',
@@ -270,7 +246,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Tres Operaciones Básicas',
-    description: 'Suma, resta y multiplicación',
     operationType: 'mixed-arithmetic',
     phase: 'arithmetic',
     difficulty: 'intermediate',
@@ -281,7 +256,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Cuatro Operaciones',
-    description: 'Suma, resta, multiplicación y división',
     operationType: 'mixed-arithmetic',
     phase: 'arithmetic',
     difficulty: 'intermediate',
@@ -292,7 +266,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Operaciones hasta 50',
-    description: 'Todas las operaciones con números hasta 50',
     operationType: 'mixed-arithmetic',
     phase: 'arithmetic',
     difficulty: 'advanced',
@@ -303,7 +276,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Expresiones de Tres Términos',
-    description: 'Expresiones con 3 números y 2 operaciones',
     operationType: 'mixed-arithmetic',
     phase: 'arithmetic',
     difficulty: 'advanced',
@@ -314,7 +286,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Operaciones con Decimales',
-    description: 'Operaciones mixtas con decimales',
     operationType: 'mixed-arithmetic',
     phase: 'arithmetic',
     difficulty: 'expert',
@@ -325,7 +296,6 @@ export const arithmeticLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Maestría Aritmética',
-    description: 'Expresiones complejas de 4 términos',
     operationType: 'mixed-arithmetic',
     phase: 'arithmetic',
     difficulty: 'expert',
