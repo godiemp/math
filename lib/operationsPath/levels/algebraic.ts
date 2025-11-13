@@ -40,7 +40,7 @@ export const algebraicLevels: OperationLevelDefinition[] = [
     config: { variables: ['x'], equationType: 'a-x=b', minValue: 1, maxValue: 10 }
   },
   {
-    title: 'Ecuación de Multiplicación',
+    title: 'Ecuación ax=b',
     description: 'Resuelve: 3x = 12',
     operationType: 'simple-equation',
     phase: 'algebraic',
@@ -51,7 +51,7 @@ export const algebraicLevels: OperationLevelDefinition[] = [
     config: { variables: ['x'], equationType: 'ax=b', minValue: 1, maxValue: 10 }
   },
   {
-    title: 'Ecuación de División',
+    title: 'Ecuación x/a=b',
     description: 'Resuelve: x/2 = 5',
     operationType: 'simple-equation',
     phase: 'algebraic',
@@ -70,7 +70,7 @@ export const algebraicLevels: OperationLevelDefinition[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { equationType: 'ax+b=c', variables: ['x'], minValue: 10, maxValue: 50 }
+    config: { equationType: 'x+a=b', variables: ['x'], minValue: 10, maxValue: 50 }
   },
   {
     title: 'Ecuaciones ax+b=c',
@@ -81,7 +81,7 @@ export const algebraicLevels: OperationLevelDefinition[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { equationType: 'ax-b=c', variables: ['x'], minValue: 1, maxValue: 20 }
+    config: { equationType: 'ax+b=c', variables: ['x'], minValue: 1, maxValue: 20 }
   },
   {
     title: 'Ecuaciones ax-b=c',
@@ -92,7 +92,7 @@ export const algebraicLevels: OperationLevelDefinition[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { equationType: 'a(x+b)=c', variables: ['x'], minValue: 1, maxValue: 20 }
+    config: { equationType: 'ax-b=c', variables: ['x'], minValue: 1, maxValue: 20 }
   },
   {
     title: 'Ecuaciones con Paréntesis',
@@ -103,7 +103,7 @@ export const algebraicLevels: OperationLevelDefinition[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { equationType: '2x+a=x+b', variables: ['x'], minValue: 1, maxValue: 20 }
+    config: { equationType: 'a(x+b)=c', variables: ['x'], minValue: 1, maxValue: 20 }
   },
   {
     title: 'Ecuaciones con x a Ambos Lados',
@@ -114,7 +114,7 @@ export const algebraicLevels: OperationLevelDefinition[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 20 }
+    config: { equationType: 'ax+b=cx+d', variables: ['x'], minValue: 1, maxValue: 20 }
   },
 
   // Evaluación de Expresiones (41-50)
