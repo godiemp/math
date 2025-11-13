@@ -22,6 +22,13 @@ interface UserProgress {
   highestLevelReached: number;
   totalOperationsSolved: number;
   lastPracticeAt?: number;
+  levelStats?: {
+    [level: number]: {
+      correctAnswers: number;
+      totalAttempts: number;
+      completedAt?: number;
+    };
+  };
 }
 
 export default function OperationsPracticePage() {

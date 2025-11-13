@@ -18,6 +18,13 @@ interface UserProgress {
   currentLevel: number;
   highestLevelReached: number;
   totalOperationsSolved: number;
+  levelStats?: {
+    [level: number]: {
+      correctAnswers: number;
+      totalAttempts: number;
+      completedAt?: number;
+    };
+  };
 }
 
 interface OperationsPathProps {
@@ -104,9 +111,12 @@ export default function OperationsPath({
   const currentLevel = userProgress?.currentLevel || 1;
 
   const getLevelStatus = (level: number): 'locked' | 'available' | 'current' | 'completed' => {
-    if (level > highestLevel) return 'locked';
-    if (level < currentLevel) return 'completed';
+    // Check if level is individually completed
+    const isCompleted = userProgress?.levelStats?.[level]?.completedAt !== undefined;
+
+    if (isCompleted) return 'completed';
     if (level === currentLevel) return 'current';
+    if (level > highestLevel) return 'locked';
     return 'available';
   };
 
