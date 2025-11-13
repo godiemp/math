@@ -40,7 +40,7 @@ describe('Algebra Generators', () => {
       };
 
       const equations = new Set();
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 50; i++) {
         const problem = generateSimpleEquation(context);
         // Extract pattern (x+a, x-a, etc)
         if (problem.expression.includes('x +')) equations.add('x+a');
