@@ -153,49 +153,6 @@ export default function OperationsPractice({
   // Calculate if user can skip (80%+ accuracy after 3+ attempts)
   const canSkip = attemptCount >= 3 && correctCount / attemptCount >= 0.8;
 
-  if (showLevelComplete) {
-    return (
-      <div className="bg-white rounded-xl shadow-lg p-8">
-        <div className="text-center max-w-2xl mx-auto">
-          <div className="mb-6">
-            <Award size={80} className="mx-auto text-yellow-500 animate-bounce" />
-          </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            ¡Nivel Completado! 🎉
-          </h2>
-          <p className="text-xl text-gray-600 mb-6">
-            Has completado el nivel {level}: <strong>{problem?.title}</strong>
-          </p>
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 mb-8">
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <div className="text-3xl font-bold text-blue-600 mb-1">
-                  {correctCount}
-                </div>
-                <div className="text-sm text-gray-600">Respuestas Correctas</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-green-600 mb-1">
-                  {attemptCount > 0
-                    ? Math.round((correctCount / attemptCount) * 100)
-                    : 0}
-                  %
-                </div>
-                <div className="text-sm text-gray-600">Precisión</div>
-              </div>
-            </div>
-          </div>
-          <button
-            onClick={handleContinue}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
-          >
-            Continuar al Siguiente Nivel →
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   if (!problem) {
     return (
       <div className="bg-white rounded-xl shadow-lg p-8">
@@ -426,6 +383,50 @@ export default function OperationsPractice({
           )}
         </div>
       </div>
+
+      {/* Level Complete Modal */}
+      {showLevelComplete && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-8">
+            <div className="text-center">
+              <div className="mb-6">
+                <Award size={80} className="mx-auto text-yellow-500 animate-bounce" />
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                ¡Nivel Completado! 🎉
+              </h2>
+              <p className="text-xl text-gray-600 mb-6">
+                Has completado el nivel {level}: <strong>{problem?.title}</strong>
+              </p>
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 mb-8">
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <div className="text-3xl font-bold text-blue-600 mb-1">
+                      {correctCount}
+                    </div>
+                    <div className="text-sm text-gray-600">Respuestas Correctas</div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-green-600 mb-1">
+                      {attemptCount > 0
+                        ? Math.round((correctCount / attemptCount) * 100)
+                        : 0}
+                      %
+                    </div>
+                    <div className="text-sm text-gray-600">Precisión</div>
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={handleContinue}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
+              >
+                Continuar al Siguiente Nivel →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
