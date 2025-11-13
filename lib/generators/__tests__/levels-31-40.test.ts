@@ -63,70 +63,63 @@ describe('Levels 31-40: Simple Equations (Algebra)', () => {
     }
   });
 
-  it('Level 36: Ecuación ax+b=c', () => {
+  it('Level 36: Ecuaciones con Números Grandes (x+a=b)', () => {
     const config = getLevelConfig(36);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
       const problem = generateProblem(config!);
-      expect(problem.expression).toMatch(/^\d+x [+\-] \d+ = \d+$/);
+      // x + large_number = large_number (10-50 range)
+      expect(problem.expression).toMatch(/^x \+ \d+ = \d+$/);
       expect(typeof problem.correctAnswer).toBe('number');
     }
   });
 
-  it('Level 37: Ecuación ax-b=c', () => {
+  it('Level 37: Ecuaciones ax+b=c', () => {
     const config = getLevelConfig(37);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
       const problem = generateProblem(config!);
-      expect(problem.expression).toMatch(/^\d+x - \d+ = -?\d+$/);
+      // Should match format: 2x + 5 = 13
+      expect(problem.expression).toMatch(/^\d+x [+\-] \d+ = \d+$/);
       expect(typeof problem.correctAnswer).toBe('number');
     }
   });
 
-  it('Level 38: Ecuación a(x+b)=c', () => {
+  it('Level 38: Ecuaciones ax-b=c', () => {
     const config = getLevelConfig(38);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
       const problem = generateProblem(config!);
-      expect(problem.expression).toMatch(/^\d+\(x [+\-] \d+\) = \d+$/);
+      // Should match format: 3x - 4 = 11
+      expect(problem.expression).toMatch(/^\d+x - \d+ = -?\d+$/);
       expect(typeof problem.correctAnswer).toBe('number');
     }
   });
 
-  it('Level 39: Ecuación 2x+a=x+b', () => {
+  it('Level 39: Ecuaciones con Paréntesis a(x+b)=c', () => {
     const config = getLevelConfig(39);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
       const problem = generateProblem(config!);
-      expect(problem.expression).toMatch(/^2x [+\-] \d+ = x [+\-] \d+$/);
+      // Should match format: 2(x+3) = 14 or 2(x-3) = 14
+      expect(problem.expression).toMatch(/^\d+\(x [+\-] \d+\) = \d+$/);
       expect(typeof problem.correctAnswer).toBe('number');
     }
   });
 
-  it('Level 40: Ecuaciones Variadas', () => {
+  it('Level 40: Ecuaciones con x a Ambos Lados (ax+b=cx+d)', () => {
     const config = getLevelConfig(40);
     expect(config).toBeDefined();
 
-    // Should generate variety of equation types
-    const types = new Set<string>();
-
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 10; i++) {
       const problem = generateProblem(config!);
-
-      // Classify equation type
-      if (problem.expression.match(/^x [+\-] \d+ = \d+$/)) types.add('x+a=b');
-      if (problem.expression.match(/^\d+x = \d+$/)) types.add('ax=b');
-      if (problem.expression.match(/^\d+x [+\-] \d+ = \d+$/)) types.add('ax+b=c');
-      if (problem.expression.match(/^\d+\(x [+\-] \d+\) = \d+$/)) types.add('a(x+b)=c');
-
+      // Should match format: 2x + 5 = x + 10 or 2x + 2 = x + 3 (coefficient can be implicit 1)
+      expect(problem.expression).toMatch(/^(\d+)?x [+\-] \d+ = (\d+)?x [+\-] \d+$/);
       expect(typeof problem.correctAnswer).toBe('number');
     }
-
-    // Should have variety (at least 2 different types)
-    expect(types.size).toBeGreaterThanOrEqual(2);
   });
 });
