@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Lock, Check, PlayCircle, Trophy, Star, ChevronLeft, ChevronRight, Unlock, BookOpen } from 'lucide-react';
 import { getUnitByCode } from '@/lib/thematicUnitsClient';
 
@@ -32,6 +32,9 @@ interface OperationsPathProps {
   userProgress: UserProgress | null;
   onLevelSelect: (level: number) => void;
   onUnlockAllLevels?: () => void;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+  autoNavigateOnMount?: boolean;
 }
 
 const operationTypeColors: { [key: string]: string } = {
@@ -133,11 +136,20 @@ export default function OperationsPath({
   userProgress,
   onLevelSelect,
   onUnlockAllLevels,
+  currentPage,
+  onPageChange,
+  autoNavigateOnMount = false,
 }: OperationsPathProps) {
   const LEVELS_PER_PAGE = 12;
-  const [currentPage, setCurrentPage] = useState(0);
   const highestLevel = userProgress?.highestLevelReached || 1;
   const currentLevel = userProgress?.currentLevel || 1;
+
+  // Auto-navigate to current level on mount
+  useEffect(() => {
+    if (autoNavigateOnMount && userProgress) {
+      goToCurrentLevel();
+    }
+  }, [autoNavigateOnMount, userProgress]);
 
   const getLevelStatus = (level: number): 'locked' | 'available' | 'current' | 'completed' => {
     // Check if level is individually completed
@@ -157,20 +169,20 @@ export default function OperationsPath({
 
   const goToNextPage = () => {
     if (currentPage < totalPages - 1) {
-      setCurrentPage(currentPage + 1);
+      onPageChange(currentPage + 1);
     }
   };
 
   const goToPreviousPage = () => {
     if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
+      onPageChange(currentPage - 1);
     }
   };
 
   const goToCurrentLevel = () => {
     const currentLevelIndex = levels.findIndex(l => l.level === currentLevel);
     if (currentLevelIndex !== -1) {
-      setCurrentPage(Math.floor(currentLevelIndex / LEVELS_PER_PAGE));
+      onPageChange(Math.floor(currentLevelIndex / LEVELS_PER_PAGE));
     }
   };
 
@@ -302,7 +314,7 @@ export default function OperationsPath({
             {Array.from({ length: totalPages }, (_, i) => (
               <button
                 key={i}
-                onClick={() => setCurrentPage(i)}
+                onClick={() => onPageChange(i)}
                 className={`w-10 h-10 rounded-lg font-semibold transition-all ${
                   currentPage === i
                     ? 'bg-blue-600 text-white'
