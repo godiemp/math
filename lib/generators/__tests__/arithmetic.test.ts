@@ -146,7 +146,7 @@ describe('Arithmetic Generators', () => {
 
       const problem = generateMixedArithmetic(context);
 
-      expect(problem.expression).toMatch(/^\d+ [+\-×] \d+$/);
+      expect(problem.expression).toMatch(/^\d+ [+\-×÷] \d+$/);
       expect(typeof problem.correctAnswer).toBe('number');
     });
 
