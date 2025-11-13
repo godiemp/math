@@ -24,12 +24,14 @@ interface OperationsPracticeProps {
   level: number;
   onBack: () => void;
   onLevelComplete: () => void;
+  onNextLevel: () => void;
 }
 
 export default function OperationsPractice({
   level,
   onBack,
   onLevelComplete,
+  onNextLevel,
 }: OperationsPracticeProps) {
   const [problem, setProblem] = useState<Problem | null>(null);
   const [userAnswer, setUserAnswer] = useState('');
@@ -132,8 +134,8 @@ export default function OperationsPractice({
       setAttemptCount(0);
       // Clear problem history for this level
       clearProblemHistory(level);
-      // Go back to level selection
-      onBack();
+      // Go to next level for smooth experience
+      onNextLevel();
     } else {
       loadProblem();
     }
