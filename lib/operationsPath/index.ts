@@ -13,7 +13,7 @@
 
 // Re-export types
 export * from './types';
-export type { OperationType, OperationLevel, DifficultyLevel, PhaseType } from './types';
+export type { OperationType, OperationLevel, OperationLevelDefinition, DifficultyLevel, PhaseType } from './types';
 
 // Import level arrays
 import { arithmeticLevels } from './levels/arithmetic';
@@ -27,6 +27,7 @@ import type { OperationLevel, PhaseType } from './types';
 /**
  * The complete operations path - 120 progressive levels
  * All levels are mapped to PAES M1/M2 thematic units
+ * Level numbers are automatically assigned based on array position
  */
 export const OPERATIONS_PATH: OperationLevel[] = [
   ...arithmeticLevels,
@@ -34,7 +35,10 @@ export const OPERATIONS_PATH: OperationLevel[] = [
   ...logicalLevels,
   ...structuralLevels,
   ...algorithmicLevels,
-];
+].map((levelDef, index) => ({
+  ...levelDef,
+  level: index + 1,
+}));
 
 /**
  * Get level configuration by level number

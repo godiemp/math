@@ -17,8 +17,11 @@ export type OperationType =
 export type DifficultyLevel = 'basic' | 'intermediate' | 'advanced' | 'expert';
 export type PhaseType = 'arithmetic' | 'algebraic' | 'logical' | 'structural' | 'algorithmic';
 
-export interface OperationLevel {
-  level: number;
+/**
+ * Operation level definition (without level number)
+ * Use this when defining problems - the level number is assigned automatically based on array position
+ */
+export interface OperationLevelDefinition {
   title: string;
   description: string;
   operationType: OperationType;
@@ -65,4 +68,12 @@ export interface OperationLevel {
     // Complexity indicator (1-4)
     complexity?: number;
   };
+}
+
+/**
+ * Operation level (with level number assigned)
+ * This is the final type used in OPERATIONS_PATH after level numbers are calculated
+ */
+export interface OperationLevel extends OperationLevelDefinition {
+  level: number;
 }
