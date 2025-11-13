@@ -4,6 +4,11 @@
 // Import from new curriculum subsection files
 import { m1Alg001Questions } from './m1-alg-001';
 import { m1Alg002Questions } from './m1-alg-002';
+import { m1Alg003Questions } from './m1-alg-003';
+import { m1Alg004Questions } from './m1-alg-004';
+import { m1Alg005Questions } from './m1-alg-005';
+import { m1Alg006Questions } from './m1-alg-006';
+import { m1Alg007Questions } from './m1-alg-007';
 
 // ============================================================================
 // LEGACY TOPIC-BASED EXPORTS (for backward compatibility)
@@ -29,6 +34,21 @@ export { m1Alg001Questions } from './m1-alg-001';
 
 // M1-ALG-002: Reducción de expresiones algebraicas
 export { m1Alg002Questions } from './m1-alg-002';
+
+// M1-ALG-003: Ecuaciones e inecuaciones de primer grado
+export { m1Alg003Questions } from './m1-alg-003';
+
+// M1-ALG-004: Sistemas de ecuaciones lineales 2x2
+export { m1Alg004Questions } from './m1-alg-004';
+
+// M1-ALG-005: Concepto de función
+export { m1Alg005Questions } from './m1-alg-005';
+
+// M1-ALG-006: Función lineal y afín
+export { m1Alg006Questions } from './m1-alg-006';
+
+// M1-ALG-007: Función cuadrática
+export { m1Alg007Questions } from './m1-alg-007';
 
 // ============================================================================
 // LEGACY TOPIC-BASED EXPORTS (for backward compatibility)
