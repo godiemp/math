@@ -101,16 +101,6 @@ export default function OperationsPracticePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Práctica de Operaciones
-          </h1>
-          <p className="text-gray-600 text-lg">
-            Progresa desde lo más básico hasta convertirte en un maestro de las operaciones matemáticas
-          </p>
-        </div>
-
         {/* Main Content */}
         {selectedLevel ? (
           <OperationsPractice
