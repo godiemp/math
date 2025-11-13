@@ -23,7 +23,7 @@ export type PhaseType = 'arithmetic' | 'algebraic' | 'logical' | 'structural' | 
  */
 export interface OperationLevelDefinition {
   title: string;
-  description: string;
+  description?: string;
   operationType: OperationType;
   phase: PhaseType;
   difficulty: DifficultyLevel;
