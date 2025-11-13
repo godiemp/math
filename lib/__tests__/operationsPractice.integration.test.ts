@@ -30,8 +30,13 @@ describe('Frontend Operations Practice - All 150 Levels Integration', () => {
         }
 
         // Verify problems are diverse (not all the same)
+        // Exception: Some levels have only 1 possible expression (e.g., "x+x", Fibonacci)
+        const singleExpressionLevels = [51, 54, 95]; // Levels with fixed/single expressions
         const uniqueExpressions = new Set(problems.map(p => p.expression));
-        expect(uniqueExpressions.size).toBeGreaterThan(1);
+
+        if (!singleExpressionLevels.includes(levelConfig.level)) {
+          expect(uniqueExpressions.size).toBeGreaterThan(1);
+        }
       });
 
       it('should validate correct answers', () => {
