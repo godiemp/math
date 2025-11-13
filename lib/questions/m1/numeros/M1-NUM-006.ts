@@ -1,0 +1,140 @@
+import { Question } from '../../../types';
+
+/**
+ * M1-NUM-006: Propiedades de potencias de base y exponente racional
+ *
+ * Topics covered:
+ * - Power operations (multiplication, division)
+ * - Properties of exponents (product rule, quotient rule)
+ * - Negative exponents and their interpretation
+ * - Fractional exponents as roots
+ * - Combining power properties
+ * - Rational exponents (a^(m/n))
+ */
+
+export const m1Num006Questions: Question[] = [
+  {
+    id: 'm1-12',
+    level: 'M1',
+    topic: 'Números y Operaciones',
+    subject: 'números',
+    operacionBase: '2^4',
+    question: 'Un biólogo está estudiando el crecimiento de una colonia de bacterias que se duplica en cada generación. Comenzó con 2 bacterias en la generación inicial, y las bacterias se han duplicado 4 veces consecutivas. Para calcular cuántas bacterias hay después de estas cuatro duplicaciones, debe calcular dos multiplicado por sí mismo cuatro veces. ¿Cuántas bacterias hay en total?',
+    questionLatex: '\\text{Un biólogo está estudiando el crecimiento de una colonia de bacterias que se duplica en cada generación. Comenzó con 2 bacterias en la generación inicial, y las bacterias se han duplicado 4 veces consecutivas. Para calcular cuántas bacterias hay después de estas cuatro duplicaciones, debe calcular dos multiplicado por sí mismo cuatro veces. ¿Cuántas bacterias hay en total?}',
+    options: ['8', '16', '24', '32'],
+    correctAnswer: 1,
+    explanation: 'Calculamos la potencia elevando 2 a la cuarta: multiplicamos 2 por sí mismo 4 veces: 2 × 2 × 2 × 2 = 16 bacterias.',
+    explanationLatex: '2^4 = 2 \\times 2 \\times 2 \\times 2 = 16',
+    difficulty: 'easy',
+    skills: ['numeros-potencias', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-29',
+    level: 'M1',
+    topic: 'Números y Operaciones',
+    subject: 'números',
+    operacionBase: '\\frac{2^3 \\times 2^2}{2^4}',
+    question: 'Un informático está optimizando el almacenamiento de datos en un servidor. Tiene dos grupos de archivos: el primer grupo ocupa el espacio equivalente a 2 elevado al cubo unidades, y el segundo grupo ocupa 2 al cuadrado unidades. Después de combinarlos, necesita dividir el espacio total entre 2 elevado a la cuarta unidades por restricciones del sistema. ¿Cuántas unidades de espacio resultan después de esta operación?',
+    questionLatex: '\\text{Un informático está optimizando el almacenamiento de datos en un servidor. Tiene dos grupos de archivos: el primer grupo ocupa el espacio equivalente a 2 elevado al cubo unidades, y el segundo grupo ocupa 2 al cuadrado unidades. Después de combinarlos, necesita dividir el espacio total entre 2 elevado a la cuarta unidades por restricciones del sistema. ¿Cuántas unidades de espacio resultan después de esta operación?}',
+    options: ['2', '4', '8', '16'],
+    correctAnswer: 0,
+    explanation: 'Aplicamos las propiedades de los exponentes. Al multiplicar sumamos exponentes: 2³ × 2² = 2^(3+2) = 2⁵. Al dividir restamos exponentes: 2⁵ / 2⁴ = 2^(5-4) = 2¹ = 2 unidades.',
+    explanationLatex: '\\frac{2^3 \\times 2^2}{2^4} = \\frac{2^{3+2}}{2^4} = \\frac{2^5}{2^4} = 2^{5-4} = 2^1 = 2',
+    difficulty: 'medium',
+    skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-69',
+    level: 'M1',
+    topic: 'Números y Operaciones',
+    subject: 'números',
+    operacionBase: '2^{-3}',
+    question: 'Un físico está calculando la intensidad de luz a diferentes distancias de una fuente. La fórmula indica que la intensidad se reduce según una potencia negativa: específicamente 2 elevado a la potencia menos 3. En matemáticas, un exponente negativo representa el inverso o recíproco de la potencia positiva. ¿Cuál es el valor numérico de esta expresión?',
+    questionLatex: '\\text{Un físico está calculando la intensidad de luz a diferentes distancias de una fuente. La fórmula indica que la intensidad se reduce según una potencia negativa: específicamente 2 elevado a la potencia menos 3. En matemáticas, un exponente negativo representa el inverso o recíproco de la potencia positiva. ¿Cuál es el valor numérico de esta expresión?}',
+    options: ['$-8$', '$-6$', '$\\frac{1}{8}$', '$\\frac{1}{6}$'],
+    optionsLatex: ['-8', '-6', '\\frac{1}{8}', '\\frac{1}{6}'],
+    correctAnswer: 2,
+    explanation: 'Un exponente negativo indica que debemos tomar el recíproco. Calculamos: 2^(-3) = 1 / 2³ = 1 / 8.',
+    explanationLatex: '2^{-3} = \\frac{1}{2^3} = \\frac{1}{8}',
+    difficulty: 'medium',
+    skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-70',
+    level: 'M1',
+    topic: 'Números y Operaciones',
+    subject: 'números',
+    operacionBase: '5^{-2} \\times 5^5',
+    question: 'Un químico está balanceando una ecuación que involucra concentraciones expresadas como potencias de 5. En el reactivo tiene una concentración de 5 elevado a menos 2, y en el producto tiene 5 elevado a 5. Para simplificar la expresión y encontrar la concentración neta, debe multiplicar ambas potencias. ¿Cuál es el resultado simplificado?',
+    questionLatex: '\\text{Un químico está balanceando una ecuación que involucra concentraciones expresadas como potencias de 5. En el reactivo tiene una concentración de 5 elevado a menos 2, y en el producto tiene 5 elevado a 5. Para simplificar la expresión y encontrar la concentración neta, debe multiplicar ambas potencias. ¿Cuál es el resultado simplificado?}',
+    options: ['$5^3$', '$5^{-7}$', '$5^{10}$', '$25$'],
+    optionsLatex: ['5^3', '5^{-7}', '5^{10}', '25'],
+    correctAnswer: 0,
+    explanation: 'Al multiplicar potencias de igual base, sumamos los exponentes: 5^(-2) × 5⁵ = 5^(-2+5) = 5³.',
+    explanationLatex: '5^{-2} \\times 5^5 = 5^{-2+5} = 5^3',
+    difficulty: 'medium',
+    skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-71',
+    level: 'M1',
+    topic: 'Números y Operaciones',
+    subject: 'números',
+    operacionBase: '\\frac{3^4}{3^6}',
+    question: 'Un astrónomo está calculando la relación de masas entre dos cuerpos celestes. La masa del primer cuerpo se expresa como 3 elevado a la cuarta potencia, y la del segundo como 3 elevado a la sexta potencia. Para encontrar la relación entre ambas masas, debe dividir la primera expresión entre la segunda y simplificar completamente el resultado. ¿Cuál es el valor simplificado de esta división?',
+    questionLatex: '\\text{Un astrónomo está calculando la relación de masas entre dos cuerpos celestes. La masa del primer cuerpo se expresa como 3 elevado a la cuarta potencia, y la del segundo como 3 elevado a la sexta potencia. Para encontrar la relación entre ambas masas, debe dividir la primera expresión entre la segunda y simplificar completamente el resultado. ¿Cuál es el valor simplificado de esta división?}',
+    options: ['$3^2$', '$3^{-2}$', '$9$', '$\\frac{1}{9}$'],
+    optionsLatex: ['3^2', '3^{-2}', '9', '\\frac{1}{9}'],
+    correctAnswer: 3,
+    explanation: 'Al dividir potencias de igual base, restamos los exponentes: 3⁴ / 3⁶ = 3^(4-6) = 3^(-2). Un exponente negativo indica recíproco: 3^(-2) = 1 / 3² = 1/9.',
+    explanationLatex: '\\frac{3^4}{3^6} = 3^{4-6} = 3^{-2} = \\frac{1}{3^2} = \\frac{1}{9}',
+    difficulty: 'hard',
+    skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-72',
+    level: 'M1',
+    topic: 'Números y Operaciones',
+    subject: 'números',
+    operacionBase: '16^{\\frac{1}{2}}',
+    question: 'Un ingeniero civil está diseñando un terreno cuadrado que debe tener un área de 16 metros cuadrados. Para determinar las dimensiones, necesita calcular la medida del lado. En notación matemática, esto se expresa como 16 elevado a la potencia un medio, que es equivalente a calcular la raíz cuadrada. ¿Cuántos metros mide cada lado del terreno?',
+    questionLatex: '\\text{Un ingeniero civil está diseñando un terreno cuadrado que debe tener un área de 16 metros cuadrados. Para determinar las dimensiones, necesita calcular la medida del lado. En notación matemática, esto se expresa como 16 elevado a la potencia un medio, que es equivalente a calcular la raíz cuadrada. ¿Cuántos metros mide cada lado del terreno?}',
+    options: ['4', '8', '2', '32'],
+    correctAnswer: 0,
+    explanation: 'Un exponente fraccionario 1/2 representa la raíz cuadrada. Calculamos: 16^(1/2) = √16 = 4 metros.',
+    explanationLatex: '16^{1/2} = \\sqrt{16} = 4',
+    difficulty: 'easy',
+    skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-raices', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-73',
+    level: 'M1',
+    topic: 'Números y Operaciones',
+    subject: 'números',
+    operacionBase: '8^{\\frac{1}{3}}',
+    question: 'Un diseñador industrial está trabajando con cubos de material. Tiene un cubo cuyo volumen es de 8 centímetros cúbicos y necesita determinar la medida de la arista. En notación matemática, esto se expresa como 8 elevado a la potencia un tercio, que representa la raíz cúbica del volumen. ¿Cuántos centímetros mide cada arista del cubo?',
+    questionLatex: '\\text{Un diseñador industrial está trabajando con cubos de material. Tiene un cubo cuyo volumen es de 8 centímetros cúbicos y necesita determinar la medida de la arista. En notación matemática, esto se expresa como 8 elevado a la potencia un tercio, que representa la raíz cúbica del volumen. ¿Cuántos centímetros mide cada arista del cubo?}',
+    options: ['2', '3', '4', '$\\frac{8}{3}$'],
+    optionsLatex: ['2', '3', '4', '\\frac{8}{3}'],
+    correctAnswer: 0,
+    explanation: 'Un exponente 1/3 representa la raíz cúbica. Calculamos: 8^(1/3) = ∛8 = 2, porque 2³ = 2 × 2 × 2 = 8 centímetros.',
+    explanationLatex: '8^{1/3} = \\sqrt[3]{8} = 2 \\text{ porque } 2^3 = 8',
+    difficulty: 'medium',
+    skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-raices', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-74',
+    level: 'M1',
+    topic: 'Números y Operaciones',
+    subject: 'números',
+    operacionBase: '27^{\\frac{2}{3}}',
+    question: 'Un matemático está resolviendo una expresión que involucra un exponente fraccionario complejo. Debe calcular 27 elevado a la potencia dos tercios. Este tipo de exponente se interpreta como primero calcular la raíz cúbica de 27, y luego elevar ese resultado al cuadrado. ¿Cuál es el valor numérico final de esta expresión?',
+    questionLatex: '\\text{Un matemático está resolviendo una expresión que involucra un exponente fraccionario complejo. Debe calcular 27 elevado a la potencia dos tercios. Este tipo de exponente se interpreta como primero calcular la raíz cúbica de 27, y luego elevar ese resultado al cuadrado. ¿Cuál es el valor numérico final de esta expresión?}',
+    options: ['3', '6', '9', '18'],
+    correctAnswer: 2,
+    explanation: 'Un exponente fraccionario 2/3 indica: primero raíz cúbica (denominador) y luego elevar al cuadrado (numerador). La raíz cúbica de 27 es 3, luego elevamos al cuadrado: 3² = 9.',
+    explanationLatex: '27^{2/3} = (\\sqrt[3]{27})^2 = 3^2 = 9',
+    difficulty: 'hard',
+    skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-raices', 'numeros-operaciones-basicas']
+  }
+];
