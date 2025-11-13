@@ -816,6 +816,68 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_operations_attempts_operation_type ON operations_practice_attempts(operation_type)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_operations_attempts_attempted_at ON operations_practice_attempts(attempted_at)');
 
+    // Create certificates table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS certificates (
+        id VARCHAR(100) PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        certificate_type VARCHAR(50) NOT NULL CHECK (certificate_type IN ('quiz_session', 'live_session')),
+        session_id VARCHAR(100),
+        student_name VARCHAR(255) NOT NULL,
+        student_photo_url TEXT,
+        certificate_code VARCHAR(50) UNIQUE NOT NULL,
+
+        -- Test information
+        test_name VARCHAR(255) NOT NULL,
+        test_date BIGINT NOT NULL,
+        test_duration_minutes INTEGER NOT NULL,
+        total_questions INTEGER NOT NULL,
+
+        -- Results
+        total_score INTEGER NOT NULL,
+        max_score INTEGER NOT NULL,
+        percentage DECIMAL(5,2) NOT NULL,
+        percentile INTEGER,
+
+        -- Section scores (JSONB for flexibility)
+        section_scores JSONB,
+
+        -- Question breakdown
+        correct_count INTEGER NOT NULL,
+        incorrect_count INTEGER NOT NULL,
+        omitted_count INTEGER DEFAULT 0,
+
+        -- Badges and achievements
+        badges JSONB DEFAULT '[]',
+
+        -- AI-generated personalized message
+        personalized_message TEXT,
+
+        -- Charts data (stored as base64 or references)
+        charts_data JSONB,
+
+        -- Metadata
+        issued_at BIGINT NOT NULL,
+        expires_at BIGINT,
+        verification_url TEXT,
+        pdf_url TEXT,
+
+        -- Tracking
+        view_count INTEGER DEFAULT 0,
+        last_viewed_at BIGINT,
+
+        created_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL
+      )
+    `);
+
+    // Create certificate indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_certificates_user_id ON certificates(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_certificates_code ON certificates(certificate_code)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_certificates_type ON certificates(certificate_type)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_certificates_session_id ON certificates(session_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_certificates_issued_at ON certificates(issued_at)');
+
     // Create views - Drop first to allow structure changes (e.g., adding subsection to GROUP BY)
     await client.query('DROP VIEW IF EXISTS active_problems_view CASCADE');
     await client.query('DROP VIEW IF EXISTS problem_stats_by_unit CASCADE');
