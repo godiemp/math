@@ -249,7 +249,7 @@ export default function CurriculumAdminPage() {
                   </Button>
                   <Button
                     onClick={() => downloadCurriculum()}
-                    variant="outline"
+                    variant="ghost"
                     className="w-full"
                     size="sm"
                   >
@@ -274,7 +274,7 @@ export default function CurriculumAdminPage() {
                   </Button>
                   <Button
                     onClick={() => downloadCurriculum('M1')}
-                    variant="outline"
+                    variant="ghost"
                     className="w-full"
                     size="sm"
                   >
@@ -299,7 +299,7 @@ export default function CurriculumAdminPage() {
                   </Button>
                   <Button
                     onClick={() => downloadCurriculum('M2')}
-                    variant="outline"
+                    variant="ghost"
                     className="w-full"
                     size="sm"
                   >
