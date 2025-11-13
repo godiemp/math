@@ -69,18 +69,32 @@ export default function CertificatesAdminPage() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get<{ certificates?: Certificate[] }>('/api/certificates/admin/all?limit=50');
+      console.log('📋 Loading certificates...');
+
+      const response = await api.get<{ success?: boolean; certificates?: Certificate[]; count?: number }>('/api/certificates/admin/all?limit=50');
+
+      console.log('📋 Response:', response);
 
       if (response.error) {
-        setError(response.error.error || 'Failed to load certificates');
+        console.error('❌ API Error:', response.error);
+        const errorMsg = `${response.error.error} (Status: ${response.error.statusCode})`;
+        setError(errorMsg);
         setCertificates([]);
         return;
       }
 
-      setCertificates(response.data?.certificates || []);
+      if (!response.data) {
+        console.error('❌ No data in response');
+        setError('No data received from server');
+        setCertificates([]);
+        return;
+      }
+
+      console.log('✅ Certificates loaded:', response.data.certificates?.length || 0);
+      setCertificates(response.data.certificates || []);
     } catch (err: any) {
-      console.error('Error loading certificates:', err);
-      setError('Failed to load certificates');
+      console.error('❌ Exception loading certificates:', err);
+      setError('Failed to load certificates: ' + (err.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
