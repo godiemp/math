@@ -15,6 +15,13 @@ import {
   getMyStatistics,
 } from '../controllers/sessionController';
 import { authenticate, requireAdmin } from '../auth/middleware';
+import { validateBody, validateParams } from '../middleware/validate';
+import {
+  createSessionSchema,
+  updateSessionSchema,
+  submitAnswerSchema,
+  sessionIdParamSchema,
+} from '../validators/session.validator';
 
 const router = Router();
 
@@ -30,7 +37,13 @@ router.get('/', getSessions);
  * @desc    Create a new session
  * @access  Private (Admin only)
  */
-router.post('/', authenticate, requireAdmin, createSession);
+router.post(
+  '/',
+  authenticate,
+  requireAdmin,
+  validateBody(createSessionSchema),
+  createSession
+);
 
 /**
  * @route   POST /api/sessions/update-statuses
@@ -58,7 +71,13 @@ router.get('/:id', getSession);
  * @desc    Update a scheduled session
  * @access  Private (Admin only)
  */
-router.patch('/:id', authenticate, requireAdmin, updateSession);
+router.patch(
+  '/:id',
+  authenticate,
+  requireAdmin,
+  validateBody(updateSessionSchema),
+  updateSession
+);
 
 /**
  * @route   DELETE /api/sessions/:id
@@ -100,7 +119,12 @@ router.post('/:id/join', authenticate, joinSession);
  * @desc    Submit an answer for a question
  * @access  Private
  */
-router.post('/:id/answers', authenticate, submitAnswer);
+router.post(
+  '/:id/answers',
+  authenticate,
+  validateBody(submitAnswerSchema),
+  submitAnswer
+);
 
 /**
  * @route   GET /api/sessions/:id/participants/me
