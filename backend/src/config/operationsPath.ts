@@ -323,7 +323,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
-    config: { mixedOperations: ['addition', 'subtraction'], minValue: 1, maxValue: 20, numberOfOperands: 2 }
+    config: { mixedOperations: ['addition', 'subtraction'], minValue: 1, maxValue: 20, numberOfOperands: 3 }
   },
   {
     level: 25,
@@ -333,7 +333,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
-    config: { mixedOperations: ['addition', 'subtraction', 'multiplication'], minValue: 1, maxValue: 20, numberOfOperands: 2 }
+    config: { mixedOperations: ['addition', 'subtraction', 'multiplication'], minValue: 1, maxValue: 20, numberOfOperands: 3 }
   },
   {
     level: 26,
@@ -343,7 +343,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
-    config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 20, numberOfOperands: 2 }
+    config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 20, numberOfOperands: 3 }
   },
   {
     level: 27,
@@ -353,7 +353,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     phase: 'arithmetic',
     difficulty: 'advanced',
     problemsToComplete: 3,
-    config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 50, numberOfOperands: 2 }
+    config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 50, numberOfOperands: 3 }
   },
   {
     level: 28,

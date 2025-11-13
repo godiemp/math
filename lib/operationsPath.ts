@@ -370,7 +370,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-NUM-001","M1-NUM-002"],
 
-    config: { mixedOperations: ['addition', 'subtraction'], minValue: 1, maxValue: 20, numberOfOperands: 2 }
+    config: { mixedOperations: ['addition', 'subtraction'], minValue: 1, maxValue: 20, numberOfOperands: 3 }
   },
   {
     level: 25,
@@ -382,7 +382,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-NUM-001","M1-NUM-002"],
 
-    config: { mixedOperations: ['addition', 'subtraction', 'multiplication'], minValue: 1, maxValue: 20, numberOfOperands: 2 }
+    config: { mixedOperations: ['addition', 'subtraction', 'multiplication'], minValue: 1, maxValue: 20, numberOfOperands: 3 }
   },
   {
     level: 26,
@@ -394,7 +394,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-NUM-001","M1-NUM-002"],
 
-    config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 20, numberOfOperands: 2 }
+    config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 20, numberOfOperands: 3 }
   },
   {
     level: 27,
@@ -406,7 +406,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-NUM-001","M1-NUM-002"],
 
-    config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 50, numberOfOperands: 2 }
+    config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 50, numberOfOperands: 3 }
   },
   {
     level: 28,

@@ -41,7 +41,7 @@ describe('Generator Integration Tests', () => {
           minValue: 1,
           maxValue: 20,
           mixedOperations: ['addition', 'subtraction'],
-          numberOfOperands: 2,
+          numberOfOperands: 3,
         },
         level: 24,
       };
@@ -56,6 +56,10 @@ describe('Generator Integration Tests', () => {
         if (problem.expression.includes('-') && !problem.expression.startsWith('-')) operations.add('-');
         if (problem.expression.includes('×')) operations.add('×');
         if (problem.expression.includes('÷')) operations.add('÷');
+
+        // Verify it has multiple operations (3 operands = 2 operations)
+        const opCount = (problem.expression.match(/[+\-×÷]/g) || []).length;
+        expect(opCount).toBe(2);
       }
 
       // Should only have + and -, not × or ÷
@@ -71,7 +75,7 @@ describe('Generator Integration Tests', () => {
           minValue: 1,
           maxValue: 20,
           mixedOperations: ['subtraction'],
-          numberOfOperands: 2,
+          numberOfOperands: 3,
         },
         level: 24,
       };
@@ -79,7 +83,8 @@ describe('Generator Integration Tests', () => {
       // Generate 20 problems and verify only subtraction is used
       for (let i = 0; i < 20; i++) {
         const problem = generateMixedArithmetic(context);
-        expect(problem.expression).toMatch(/^\d+ - \d+$/);
+        // Should have format: a - b - c (only subtraction operators)
+        expect(problem.expression).toMatch(/^\d+\s-\s\d+\s-\s\d+$/);
       }
     });
 
@@ -394,7 +399,7 @@ describe('Generator Integration Tests', () => {
       const contexts: Array<{ generator: Function; config: any }> = [
         {
           generator: generateMixedArithmetic,
-          config: { minValue: 1, maxValue: 20, numberOfOperands: 2 },
+          config: { minValue: 1, maxValue: 20 }, // Uses default numberOfOperands: 3
         },
         {
           generator: generateSimpleEquation,
@@ -439,28 +444,42 @@ describe('Generator Integration Tests', () => {
   });
 
   describe('Level 24 Specific Test', () => {
-    it('Level 24 should only generate addition and subtraction', () => {
+    it('Level 24 should COMBINE addition and subtraction in same expression', () => {
       // This is the specific bug that was reported
       const level24Config: GeneratorContext = {
         config: {
           mixedOperations: ['addition', 'subtraction'],
           minValue: 1,
           maxValue: 20,
-          numberOfOperands: 2,
+          numberOfOperands: 3, // 3 operands = 2 operations
         },
         level: 24,
       };
 
       const operations = new Set<string>();
+      let problemsWithBothOps = 0;
+      let problemsWithMultipleOps = 0;
 
       // Generate 100 problems to be very confident
       for (let i = 0; i < 100; i++) {
         const problem = generateMixedArithmetic(level24Config);
 
-        if (problem.expression.includes('+')) operations.add('+');
-        if (problem.expression.match(/\d+ - \d+/)) operations.add('-');
-        if (problem.expression.includes('×')) operations.add('×');
-        if (problem.expression.includes('÷')) operations.add('÷');
+        const hasAddition = problem.expression.includes('+');
+        const hasSubtraction = problem.expression.match(/\d+ - \d+/) !== null;
+        const hasMultiplication = problem.expression.includes('×');
+        const hasDivision = problem.expression.includes('÷');
+
+        if (hasAddition) operations.add('+');
+        if (hasSubtraction) operations.add('-');
+        if (hasMultiplication) operations.add('×');
+        if (hasDivision) operations.add('÷');
+
+        // Count how many operations in this expression
+        const opCount = (problem.expression.match(/[+\-×÷]/g) || []).length;
+        if (opCount >= 2) problemsWithMultipleOps++;
+
+        // Check if BOTH + and - appear in same expression
+        if (hasAddition && hasSubtraction) problemsWithBothOps++;
       }
 
       // Verify: should have + and -, should NOT have × or ÷
@@ -469,6 +488,29 @@ describe('Generator Integration Tests', () => {
       expect(operations.has('×')).toBe(false);
       expect(operations.has('÷')).toBe(false);
       expect(operations.size).toBe(2);
+
+      // Verify: ALL problems should have multiple operations (2 ops for 3 operands)
+      expect(problemsWithMultipleOps).toBe(100);
+
+      // Verify: Some problems should combine BOTH + and - in same expression
+      expect(problemsWithBothOps).toBeGreaterThan(10); // At least ~10% should have both
+    });
+
+    it('Level 24 expression format should be like "a + b - c"', () => {
+      const level24Config: GeneratorContext = {
+        config: {
+          mixedOperations: ['addition', 'subtraction'],
+          minValue: 1,
+          maxValue: 20,
+          numberOfOperands: 3,
+        },
+        level: 24,
+      };
+
+      const problem = generateMixedArithmetic(level24Config);
+
+      // Should have format: number operator number operator number
+      expect(problem.expression).toMatch(/^\d+\s[+\-]\s\d+\s[+\-]\s\d+$/);
     });
   });
 });

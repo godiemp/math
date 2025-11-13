@@ -101,6 +101,7 @@ export function generateMixedArithmetic(context: GeneratorContext): ProblemData 
   const { config } = context;
   const min = config.minValue || 1;
   const max = config.maxValue || 20;
+  const numOperands = config.numberOfOperands || 3; // Default to 3 for "mixed" operations
 
   // Use mixedOperations from config, or default to all operations
   const allowedOps = config.mixedOperations || ['addition', 'subtraction', 'multiplication', 'division'];
@@ -114,46 +115,86 @@ export function generateMixedArithmetic(context: GeneratorContext): ProblemData 
   };
 
   const operations = allowedOps.map(op => opMap[op]).filter(Boolean);
-  const op = operations[Math.floor(Math.random() * operations.length)];
 
-  let a = getRandomInt(min, max);
-  let b = getRandomInt(min, max);
-  let correctAnswer: number;
-  let expression: string;
-  let expressionLatex: string;
-  let problemKey: string;
+  // Generate multiple operands and operations
+  const numbers: number[] = [];
+  const ops: string[] = [];
 
-  if (op === '+') {
-    correctAnswer = a + b;
-    expression = `${a} + ${b}`;
-    expressionLatex = `${a} + ${b}`;
-    problemKey = `mix:${a},${b},+`;
-  } else if (op === '-') {
-    // Ensure non-negative result unless negatives are allowed
-    if (!config.allowNegatives && b > a) {
-      const temp = a;
-      a = b;
-      b = temp;
+  // Generate first number
+  numbers.push(getRandomInt(min, max));
+
+  // Generate remaining numbers and operations between them
+  for (let i = 1; i < numOperands; i++) {
+    const op = operations[Math.floor(Math.random() * operations.length)];
+    ops.push(op);
+
+    if (op === '÷') {
+      // For division, generate divisor and ensure it divides evenly
+      const divisor = getRandomInt(2, Math.min(10, max));
+      numbers.push(divisor);
+    } else if (op === '×') {
+      // For multiplication, use smaller numbers to avoid overflow
+      numbers.push(getRandomInt(2, Math.min(10, max)));
+    } else {
+      numbers.push(getRandomInt(min, max));
     }
-    correctAnswer = a - b;
-    expression = `${a} - ${b}`;
-    expressionLatex = `${a} - ${b}`;
-    problemKey = `mix:${a},${b},-`;
-  } else if (op === '×') {
-    correctAnswer = a * b;
-    expression = `${a} × ${b}`;
-    expressionLatex = `${a} \\times ${b}`;
-    problemKey = `mix:${a},${b},×`;
-  } else { // ÷
-    // For division, ensure exact division
-    const divisor = getRandomInt(2, Math.min(10, max));
-    const quotient = getRandomInt(min, Math.floor(max / divisor));
-    const dividend = divisor * quotient;
-    correctAnswer = quotient;
-    expression = `${dividend} ÷ ${divisor}`;
-    expressionLatex = `${dividend} \\div ${divisor}`;
-    problemKey = `mix:${dividend},${divisor},÷`;
   }
+
+  // Calculate the correct answer by evaluating left to right
+  let result = numbers[0];
+  for (let i = 0; i < ops.length; i++) {
+    const op = ops[i];
+    const nextNum = numbers[i + 1];
+
+    if (op === '+') {
+      result = result + nextNum;
+    } else if (op === '-') {
+      result = result - nextNum;
+      // If result becomes negative and negatives not allowed, adjust
+      if (!config.allowNegatives && result < 0) {
+        // Swap this subtraction to addition and recalculate from start
+        ops[i] = '+';
+        result = numbers[0];
+        for (let j = 0; j <= i; j++) {
+          const recalcOp = ops[j];
+          const recalcNum = numbers[j + 1];
+          if (recalcOp === '+') result = result + recalcNum;
+          else if (recalcOp === '-') result = result - recalcNum;
+        }
+      }
+    } else if (op === '×') {
+      result = result * nextNum;
+    } else if (op === '÷') {
+      result = result / nextNum;
+    }
+  }
+
+  // Build expression string
+  const expressionParts: string[] = [numbers[0].toString()];
+  const latexParts: string[] = [numbers[0].toString()];
+
+  for (let i = 0; i < ops.length; i++) {
+    const op = ops[i];
+    const num = numbers[i + 1];
+
+    expressionParts.push(op);
+    expressionParts.push(num.toString());
+
+    // LaTeX conversion for multiplication and division
+    if (op === '×') {
+      latexParts.push('\\times');
+    } else if (op === '÷') {
+      latexParts.push('\\div');
+    } else {
+      latexParts.push(op);
+    }
+    latexParts.push(num.toString());
+  }
+
+  const expression = expressionParts.join(' ');
+  const expressionLatex = latexParts.join(' ');
+  const correctAnswer = Math.round(result * 100) / 100; // Round to 2 decimals
+  const problemKey = `mix:${numbers.join(',')};${ops.join(',')}`;
 
   return { expression, expressionLatex, correctAnswer, problemKey };
 }
