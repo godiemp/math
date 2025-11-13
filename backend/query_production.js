@@ -1,8 +1,8 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  connectionString: 'postgresql://postgres:QDjziVCSkqYuKRlFbsMrXStAzWVJhhvM@postgres-hzd5.railway.internal:5432/railway',
-  ssl: false // Internal Railway connection
+  connectionString: 'postgresql://postgres:QDjziVCSkqYuKRlFbsMrXStAzWVJhhvM@trolley.proxy.rlwy.net:17475/railway',
+  ssl: { rejectUnauthorized: false } // Public Railway connection
 });
 
 async function queryProductionData() {
