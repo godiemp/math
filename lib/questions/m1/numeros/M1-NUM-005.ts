@@ -1,0 +1,155 @@
+import { Question } from '../../../types';
+
+/**
+ * M1-NUM-005: Problemas que involucren porcentajes en diversos contextos
+ *
+ * Topics covered:
+ * - Percentage problems in shopping and retail (discounts, sales)
+ * - Financial applications (interest, savings, investments)
+ * - Successive and compound percentages
+ * - Finding original values after percentage changes
+ * - Multi-step percentage problems
+ * - Real-world contexts:
+ *   - Shopping and discounts
+ *   - Banking and interest
+ *   - Inventory management
+ *   - Price adjustments
+ */
+
+export const m1Num005Questions: Question[] = [
+  {
+    id: 'm1-27',
+    level: 'M1',
+    topic: 'Números y Proporcionalidad',
+    subject: 'números',
+    operacionBase: '20000 - (15\\% \\text{ de } 20000)',
+    question: 'En una tienda de ropa, una camisa tiene un precio marcado de $20.000 pesos. Durante la liquidación de temporada, la tienda ofrece un descuento del 15% en todas las camisas. Un cliente interesado en comprar esta camisa quiere saber cuánto pagará finalmente después de aplicar el descuento promocional. ¿Cuál es el precio final de la camisa?',
+    questionLatex: '\\text{En una tienda de ropa, una camisa tiene un precio marcado de \\$20.000 pesos. Durante la liquidación de temporada, la tienda ofrece un descuento del 15\\% en todas las camisas. Un cliente interesado en comprar esta camisa quiere saber cuánto pagará finalmente después de aplicar el descuento promocional. ¿Cuál es el precio final de la camisa?}',
+    options: ['$15.000', '$17.000', '$17.500', '$18.000'],
+    correctAnswer: 1,
+    explanation: 'Calculamos el 15% de descuento: 20.000 × 0.15 = 3.000 pesos. Restamos el descuento del precio original: 20.000 - 3.000 = $17.000.',
+    explanationLatex: '20.000 \\times 0.15 = 3.000 \\quad \\Rightarrow \\quad 20.000 - 3.000 = 17.000',
+    difficulty: 'easy',
+    skills: ['numeros-porcentajes', 'numeros-porcentajes-descuentos', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-98',
+    level: 'M1',
+    topic: 'Números y Proporcionalidad',
+    subject: 'números',
+    operacionBase: '\\frac{560000}{1.12}',
+    question: 'Pedro trabaja en una empresa que acaba de otorgarle un aumento salarial del 12% por su excelente desempeño durante el año. Después del aumento, su nuevo sueldo es de $560.000 pesos mensuales. El departamento de recursos humanos necesita verificar cuál era su sueldo anterior antes del aumento para actualizar los registros históricos. ¿Cuánto ganaba Pedro antes del aumento?',
+    questionLatex: '\\text{Pedro trabaja en una empresa que acaba de otorgarle un aumento salarial del 12\\% por su excelente desempeño durante el año. Después del aumento, su nuevo sueldo es de \\$560.000 pesos mensuales. El departamento de recursos humanos necesita verificar cuál era su sueldo anterior antes del aumento para actualizar los registros históricos. ¿Cuánto ganaba Pedro antes del aumento?}',
+    options: ['$480.000', '$500.000', '$520.000', '$540.000'],
+    correctAnswer: 1,
+    explanation: 'Si el sueldo aumentó 12%, el nuevo sueldo representa el 112% del original (100% + 12%). Planteamos: 1.12x = 560.000. Despejamos: x = 560.000 / 1.12 = $500.000.',
+    explanationLatex: '1.12x = 560000 \\quad \\Rightarrow \\quad x = \\frac{560000}{1.12} = 500.000',
+    difficulty: 'hard',
+    skills: ['numeros-porcentajes', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-99',
+    level: 'M1',
+    topic: 'Números y Proporcionalidad',
+    subject: 'números',
+    operacionBase: '100000 + (5\\% \\text{ de } 100000)',
+    question: 'Una persona decide abrir una cuenta de ahorros en un banco que ofrece una tasa de interés simple del 5% anual. Deposita inicialmente $100.000 pesos y no realiza ningún movimiento adicional durante el año. Al cumplirse los doce meses, quiere saber cuánto dinero tendrá en total en su cuenta, incluyendo el capital inicial más los intereses generados. ¿Cuánto dinero habrá después de 1 año?',
+    questionLatex: '\\text{Una persona decide abrir una cuenta de ahorros en un banco que ofrece una tasa de interés simple del 5\\% anual. Deposita inicialmente \\$100.000 pesos y no realiza ningún movimiento adicional durante el año. Al cumplirse los doce meses, quiere saber cuánto dinero tendrá en total en su cuenta, incluyendo el capital inicial más los intereses generados. ¿Cuánto dinero habrá después de 1 año?}',
+    options: ['$105.000', '$110.000', '$115.000', '$120.000'],
+    correctAnswer: 0,
+    explanation: 'Calculamos el interés del 5% sobre el capital: 100.000 × 0.05 = 5.000. Sumamos al capital inicial: 100.000 + 5.000 = $105.000.',
+    explanationLatex: '100000 + (0.05 \\times 100000) = 100000 + 5000 = 105.000',
+    difficulty: 'easy',
+    skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-101',
+    level: 'M1',
+    topic: 'Números y Proporcionalidad',
+    subject: 'números',
+    operacionBase: '200000 + (8\\% \\text{ de } 200000 \\times 2)',
+    question: 'Una familia decide invertir $200.000 pesos en un instrumento financiero que paga un interés simple del 8% anual. Planean mantener su inversión durante exactamente 2 años sin realizar retiros ni depósitos adicionales. Al finalizar el segundo año, quieren saber cuánto dinero habrán acumulado en total, considerando el capital inicial más todos los intereses generados. ¿Cuánto dinero habrá después de 2 años?',
+    questionLatex: '\\text{Una familia decide invertir \\$200.000 pesos en un instrumento financiero que paga un interés simple del 8\\% anual. Planean mantener su inversión durante exactamente 2 años sin realizar retiros ni depósitos adicionales. Al finalizar el segundo año, quieren saber cuánto dinero habrán acumulado en total, considerando el capital inicial más todos los intereses generados. ¿Cuánto dinero habrá después de 2 años?}',
+    options: ['$216.000', '$224.000', '$232.000', '$240.000'],
+    correctAnswer: 2,
+    explanation: 'Calculamos el interés por 2 años: 8% × 2 = 16% del capital. Interés total: 200.000 × 0.16 = 32.000. Suma: 200.000 + 32.000 = $232.000.',
+    explanationLatex: '200000 + (0.08 \\times 200000 \\times 2) = 200000 + 32000 = 232.000',
+    difficulty: 'medium',
+    skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-102',
+    level: 'M1',
+    topic: 'Números y Proporcionalidad',
+    subject: 'números',
+    operacionBase: '20\\% \\text{ de } (50\\% \\text{ de } 200)',
+    question: 'Un almacén de granos tiene inicialmente 200 kilogramos de arroz. Durante la primera semana vende el 50% de su inventario. En la segunda semana, de lo que quedó después de la primera venta, vende un 20% adicional. El encargado del almacén necesita calcular cuántos kilogramos vendió en la segunda semana para actualizar su registro de inventario. ¿Cuántos kilogramos vendió en la segunda semana?',
+    questionLatex: '\\text{Un almacén de granos tiene inicialmente 200 kilogramos de arroz. Durante la primera semana vende el 50\\% de su inventario. En la segunda semana, de lo que quedó después de la primera venta, vende un 20\\% adicional. El encargado del almacén necesita calcular cuántos kilogramos vendió en la segunda semana para actualizar su registro de inventario. ¿Cuántos kilogramos vendió en la segunda semana?}',
+    options: ['10', '20', '30', '40'],
+    correctAnswer: 1,
+    explanation: 'Primero calculamos el 50% de 200: 0.50 × 200 = 100 kg quedan. Luego el 20% de lo que quedó: 0.20 × 100 = 20 kg vendidos en la segunda semana.',
+    explanationLatex: '50\\% \\text{ de } 200 = 100, \\quad 20\\% \\text{ de } 100 = 20',
+    difficulty: 'easy',
+    skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-103',
+    level: 'M1',
+    topic: 'Números y Proporcionalidad',
+    subject: 'números',
+    operacionBase: '100000 \\times 0.70 \\times 0.90',
+    question: 'Una tienda departamental anuncia una venta especial con descuentos sucesivos. Un televisor tiene un precio original de $100.000 pesos. Primero se aplica un descuento del 30%, y sobre el precio ya rebajado se aplica un descuento adicional del 10% por pago en efectivo. Un cliente que paga en efectivo quiere saber cuánto pagará finalmente después de aplicar ambos descuentos consecutivos. ¿Cuál es el precio final?',
+    questionLatex: '\\text{Una tienda departamental anuncia una venta especial con descuentos sucesivos. Un televisor tiene un precio original de \\$100.000 pesos. Primero se aplica un descuento del 30\\%, y sobre el precio ya rebajado se aplica un descuento adicional del 10\\% por pago en efectivo. Un cliente que paga en efectivo quiere saber cuánto pagará finalmente después de aplicar ambos descuentos consecutivos. ¿Cuál es el precio final?}',
+    options: ['$60.000', '$63.000', '$66.000', '$70.000'],
+    correctAnswer: 1,
+    explanation: 'Aplicamos los descuentos en secuencia. Después del primer descuento: 100.000 × 0.70 = 70.000. Después del segundo descuento: 70.000 × 0.90 = $63.000.',
+    explanationLatex: '100000 \\times 0.70 \\times 0.90 = 70000 \\times 0.90 = 63.000',
+    difficulty: 'hard',
+    skills: ['numeros-porcentajes', 'numeros-porcentajes-descuentos', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-104',
+    level: 'M1',
+    topic: 'Números y Proporcionalidad',
+    subject: 'números',
+    operacionBase: '25\\% \\text{ de } (40\\% \\text{ de } 800)',
+    question: 'Una empresa de logística tiene un almacén con 800 cajas de mercancía. Durante el primer turno del día, los trabajadores cargan el 40% de las cajas en camiones para distribución. En el segundo turno, de las cajas que fueron cargadas en el primer turno, el 25% requieren ser reubicadas por un cambio en las rutas de entrega. ¿Cuántas cajas deben reubicarse?',
+    questionLatex: '\\text{Una empresa de logística tiene un almacén con 800 cajas de mercancía. Durante el primer turno del día, los trabajadores cargan el 40\\% de las cajas en camiones para distribución. En el segundo turno, de las cajas que fueron cargadas en el primer turno, el 25\\% requieren ser reubicadas por un cambio en las rutas de entrega. ¿Cuántas cajas deben reubicarse?}',
+    options: ['60', '70', '80', '90'],
+    correctAnswer: 2,
+    explanation: 'Calculamos primero el 40% de 800: 0.40 × 800 = 320 cajas cargadas. Luego el 25% de estas: 0.25 × 320 = 80 cajas a reubicar.',
+    explanationLatex: '40\\% \\text{ de } 800 = 320, \\quad 25\\% \\text{ de } 320 = 80',
+    difficulty: 'medium',
+    skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-105',
+    level: 'M1',
+    topic: 'Números y Proporcionalidad',
+    subject: 'números',
+    operacionBase: '\\frac{24000}{0.80}',
+    question: 'En una liquidación de muebles, un sofá tiene un precio rebajado de $24.000 pesos después de aplicar un descuento del 20%. Un cliente curioso quiere saber cuál era el precio original del sofá antes de la rebaja, para calcular cuánto dinero está ahorrando realmente con la promoción. ¿Cuál era el precio original?',
+    questionLatex: '\\text{En una liquidación de muebles, un sofá tiene un precio rebajado de \\$24.000 pesos después de aplicar un descuento del 20\\%. Un cliente curioso quiere saber cuál era el precio original del sofá antes de la rebaja, para calcular cuánto dinero está ahorrando realmente con la promoción. ¿Cuál era el precio original?}',
+    options: ['$28.000', '$30.000', '$32.000', '$36.000'],
+    correctAnswer: 1,
+    explanation: 'Con 20% de descuento, el cliente paga el 80% del precio original. Planteamos: 0.80x = 24.000. Despejamos: x = 24.000 / 0.80 = $30.000.',
+    explanationLatex: '0.80x = 24000 \\quad \\Rightarrow \\quad x = \\frac{24000}{0.80} = 30.000',
+    difficulty: 'medium',
+    skills: ['numeros-porcentajes', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-106',
+    level: 'M1',
+    topic: 'Números y Proporcionalidad',
+    subject: 'números',
+    operacionBase: '\\frac{50000}{1.25}',
+    question: 'Una tienda de tecnología ajusta sus precios debido a la inflación. Un computador portátil que anteriormente tenía cierto precio, ahora cuesta $50.000 pesos después de un incremento del 25%. El vendedor necesita consultar en el sistema cuál era el precio original del computador antes del aumento para verificar un reclamo de un cliente. ¿Cuál era el precio original?',
+    questionLatex: '\\text{Una tienda de tecnología ajusta sus precios debido a la inflación. Un computador portátil que anteriormente tenía cierto precio, ahora cuesta \\$50.000 pesos después de un incremento del 25\\%. El vendedor necesita consultar en el sistema cuál era el precio original del computador antes del aumento para verificar un reclamo de un cliente. ¿Cuál era el precio original?}',
+    options: ['$37.500', '$40.000', '$42.500', '$45.000'],
+    correctAnswer: 1,
+    explanation: 'Con un aumento del 25%, el precio actual es el 125% del original (100% + 25%). Planteamos: 1.25x = 50.000. Despejamos: x = 50.000 / 1.25 = $40.000.',
+    explanationLatex: '1.25x = 50000 \\quad \\Rightarrow \\quad x = \\frac{50000}{1.25} = 40.000',
+    difficulty: 'medium',
+    skills: ['numeros-porcentajes', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
+  }
+];
