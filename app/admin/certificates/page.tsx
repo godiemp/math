@@ -59,7 +59,8 @@ export default function CertificatesAdminPage() {
       setLoading(true);
       setError(null);
       const response = await api.get('/api/certificates/admin/all?limit=50');
-      setCertificates(response.data.certificates || []);
+      const data = response.data as { certificates?: Certificate[] };
+      setCertificates(data.certificates || []);
     } catch (err: any) {
       console.error('Error loading certificates:', err);
       setError(err.response?.data?.error || 'Failed to load certificates');
@@ -76,7 +77,8 @@ export default function CertificatesAdminPage() {
         type: testType,
       });
 
-      alert('Test certificate generated successfully! Certificate ID: ' + response.data.certificate.id);
+      const data = response.data as { certificate?: { id: string } };
+      alert('Test certificate generated successfully! Certificate ID: ' + (data.certificate?.id || 'unknown'));
       await loadCertificates();
     } catch (err: any) {
       console.error('Error generating test certificate:', err);
