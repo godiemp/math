@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export default function CookieConsent() {
+  const t = useTranslations('cookies');
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
@@ -89,7 +91,7 @@ export default function CookieConsent() {
                 color: 'var(--color-label-secondary)',
               }}
             >
-              Usamos cookies para mejorar tu experiencia.{' '}
+              {t('message')}{' '}
               <Link
                 href="/legal/cookies"
                 style={{
@@ -97,7 +99,7 @@ export default function CookieConsent() {
                   textDecoration: 'underline',
                 }}
               >
-                Más información
+                {t('moreInfo')}
               </Link>
             </p>
           </div>
@@ -120,7 +122,7 @@ export default function CookieConsent() {
                 whiteSpace: 'nowrap',
               }}
             >
-              Solo Esenciales
+              {t('essentialOnly')}
             </button>
             <button
               onClick={handleAccept}
@@ -138,7 +140,7 @@ export default function CookieConsent() {
                 whiteSpace: 'nowrap',
               }}
             >
-              Aceptar Todas
+              {t('acceptAll')}
             </button>
           </div>
         </div>
