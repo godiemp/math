@@ -340,68 +340,40 @@ export const generateTestCertificateHandler = async (req: Request, res: Response
       return;
     }
 
-    // Get the user's most recent quiz session or live session
+    // Get the user's most recent live session (only live sessions supported for admin testing)
     const { type } = req.body;
 
-    if (!type || (type !== 'quiz_session' && type !== 'live_session')) {
+    if (!type || type !== 'live_session') {
       res.status(400).json({
-        error: 'Invalid type. Must be "quiz_session" or "live_session"',
+        error: 'Invalid type. Must be "live_session"',
       });
       return;
     }
 
-    // Try to find a recent session
-    let request: CertificateGenerationRequest;
+    // Find most recent completed live session
+    const { pool } = require('../config/database');
+    const result = await pool.query(
+      `SELECT sp.session_id, s.status
+       FROM session_participants sp
+       JOIN sessions s ON sp.session_id = s.id
+       WHERE sp.user_id = $1 AND s.status = 'completed'
+       ORDER BY sp.joined_at DESC
+       LIMIT 1`,
+      [userId]
+    );
 
-    if (type === 'quiz_session') {
-      // Find most recent quiz session
-      const { pool } = require('../config/database');
-      const result = await pool.query(
-        `SELECT DISTINCT quiz_session_id
-         FROM quiz_attempts
-         WHERE user_id = $1 AND quiz_session_id IS NOT NULL
-         ORDER BY MAX(attempted_at) DESC
-         LIMIT 1`,
-        [userId]
-      );
-
-      if (result.rows.length === 0) {
-        res.status(404).json({
-          error: 'No quiz sessions found for this user. Complete a quiz first.',
-        });
-        return;
-      }
-
-      request = {
-        userId,
-        certificateType: 'quiz_session',
-        quizSessionId: result.rows[0].quiz_session_id,
-      };
-    } else {
-      // Find most recent live session
-      const { pool } = require('../config/database');
-      const result = await pool.query(
-        `SELECT session_id
-         FROM session_participants
-         WHERE user_id = $1
-         ORDER BY joined_at DESC
-         LIMIT 1`,
-        [userId]
-      );
-
-      if (result.rows.length === 0) {
-        res.status(404).json({
-          error: 'No live sessions found for this user. Join a session first.',
-        });
-        return;
-      }
-
-      request = {
-        userId,
-        certificateType: 'live_session',
-        sessionId: result.rows[0].session_id,
-      };
+    if (result.rows.length === 0) {
+      res.status(404).json({
+        error: 'No completed live sessions found for this user. Complete a live session (ensayo) first.',
+      });
+      return;
     }
+
+    const request: CertificateGenerationRequest = {
+      userId,
+      certificateType: 'live_session',
+      sessionId: result.rows[0].session_id,
+    };
 
     const certificate = await generateCertificate(request);
 

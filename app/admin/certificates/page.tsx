@@ -60,7 +60,6 @@ export default function CertificatesAdminPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [generatingTest, setGeneratingTest] = useState(false);
-  const [testType, setTestType] = useState<'quiz_session' | 'live_session'>('quiz_session');
 
   useEffect(() => {
     loadCertificates();
@@ -86,16 +85,17 @@ export default function CertificatesAdminPage() {
       setGeneratingTest(true);
       setError(null);
       const response = await api.post('/api/certificates/admin/test', {
-        type: testType,
+        type: 'live_session',
       });
 
       const data = response.data as { certificate?: { id: string } };
-      alert('Test certificate generated successfully! Certificate ID: ' + (data.certificate?.id || 'unknown'));
+      alert('✅ Certificado generado exitosamente!\n\nID: ' + (data.certificate?.id || 'unknown'));
       await loadCertificates();
     } catch (err: any) {
       console.error('Error generating test certificate:', err);
-      setError(err.response?.data?.error || err.response?.data?.message || 'Failed to generate test certificate');
-      alert('Error: ' + (err.response?.data?.error || err.response?.data?.message || 'Failed to generate test certificate'));
+      const errorMsg = err.response?.data?.error || err.response?.data?.message || 'Failed to generate test certificate';
+      setError(errorMsg);
+      alert('❌ Error: ' + errorMsg);
     } finally {
       setGeneratingTest(false);
     }
@@ -159,29 +159,35 @@ export default function CertificatesAdminPage() {
           )}
 
           {/* Test Certificate Generation Section */}
-          <Card className="mb-8 p-6 bg-blue-50 border border-blue-200">
-            <Heading level={2} className="text-xl font-semibold mb-4">
-              Generar Certificado de Prueba
-            </Heading>
-            <Text className="mb-4 text-gray-700">
-              Genera un certificado basado en tu último ensayo completado. Asegúrate de haber completado al menos un ensayo antes.
-            </Text>
-            <div className="flex gap-4 items-center">
-              <select
-                value={testType}
-                onChange={(e) => setTestType(e.target.value as 'quiz_session' | 'live_session')}
-                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="quiz_session">Sesión de Quiz</option>
-                <option value="live_session">Sesión en Vivo</option>
-              </select>
-              <Button
-                onClick={generateTestCertificate}
-                disabled={generatingTest}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md disabled:opacity-50"
-              >
-                {generatingTest ? 'Generando...' : 'Generar Certificado de Prueba'}
-              </Button>
+          <Card className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200">
+            <div className="flex items-start gap-4">
+              <div className="text-4xl">🎓</div>
+              <div className="flex-1">
+                <Heading level={2} className="text-xl font-semibold mb-2">
+                  Generar Certificado Premium
+                </Heading>
+                <Text className="mb-4 text-gray-700">
+                  Genera un certificado premium basado en tu último <strong>ensayo en vivo completado</strong>.
+                  El certificado incluye análisis IA, medallas de logros, percentil nacional, y más.
+                </Text>
+                <div className="flex gap-3 items-center">
+                  <Button
+                    onClick={generateTestCertificate}
+                    disabled={generatingTest}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-semibold disabled:opacity-50 shadow-lg"
+                  >
+                    {generatingTest ? '⏳ Generando...' : '🎯 Generar Certificado de Ensayo'}
+                  </Button>
+                  {generatingTest && (
+                    <Text className="text-sm text-gray-600 animate-pulse">
+                      Analizando resultados y generando certificado...
+                    </Text>
+                  )}
+                </div>
+                <Text className="mt-3 text-sm text-gray-600">
+                  💡 <strong>Requisito:</strong> Debes haber completado al menos un ensayo en vivo (live session).
+                </Text>
+              </div>
             </div>
           </Card>
 
@@ -336,31 +342,26 @@ export default function CertificatesAdminPage() {
             )}
           </Card>
 
-          {/* Certificate Types Info */}
-          <Card className="mt-8 p-6 bg-gray-50">
-            <Heading level={3} className="text-lg font-semibold mb-4">
-              Tipos de Certificados
-            </Heading>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Certificate Info */}
+          <Card className="mt-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200">
+            <div className="flex items-start gap-4">
+              <div className="text-3xl">🏆</div>
               <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="info">Quiz</Badge>
-                  <Text className="font-semibold">Sesión de Quiz</Text>
-                </div>
-                <Text className="text-sm text-gray-600">
-                  Certificados generados para sesiones de práctica individual (modo Zen o Rapidfire).
-                  Incluye análisis por sección temática y evolución de puntajes.
+                <Heading level={3} className="text-lg font-semibold mb-2">
+                  Certificados para Ensayos en Vivo
+                </Heading>
+                <Text className="text-sm text-gray-700 mb-3">
+                  Los certificados premium se generan automáticamente para <strong>ensayos en vivo completados</strong>.
+                  Cada certificado incluye:
                 </Text>
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="success">En Vivo</Badge>
-                  <Text className="font-semibold">Sesión en Vivo</Text>
-                </div>
-                <Text className="text-sm text-gray-600">
-                  Certificados generados para ensayos en vivo. Incluye percentil comparativo
-                  con otros participantes del mismo ensayo.
-                </Text>
+                <ul className="text-sm text-gray-700 space-y-1 ml-4">
+                  <li>✅ Percentil comparativo con otros participantes del mismo ensayo</li>
+                  <li>✅ Análisis de desempeño por sección temática</li>
+                  <li>✅ Mensaje personalizado generado por IA</li>
+                  <li>✅ Medallas y logros automáticos</li>
+                  <li>✅ Código QR para verificación de autenticidad</li>
+                  <li>✅ Diseño profesional listo para compartir</li>
+                </ul>
               </div>
             </div>
           </Card>
