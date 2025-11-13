@@ -10,7 +10,7 @@ import { recordCorrectAnswer, recordIncorrectAnswer, completeLevel } from '@/lib
 interface Problem {
   level: number;
   title: string;
-  description: string;
+  description?: string;
   expression: string;
   expressionLatex: string;
   difficulty: string;
