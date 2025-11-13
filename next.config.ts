@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./i18n.ts');
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -10,7 +13,9 @@ const nextConfig: NextConfig = {
   // Instrumentation is enabled by default in Next.js 15
 };
 
-export default withSentryConfig(nextConfig, {
+const configWithIntl = withNextIntl(nextConfig);
+
+export default withSentryConfig(configWithIntl, {
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 

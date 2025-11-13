@@ -5,12 +5,15 @@ import { toast } from 'sonner';
 import { Eye, EyeOff } from 'lucide-react';
 import { registerUser, loginUser } from '@/lib/auth';
 import { analytics } from '@/lib/analytics';
+import { useTranslations } from 'next-intl';
 
 interface AuthProps {
   onSuccess: () => void;
 }
 
 export default function Auth({ onSuccess }: AuthProps) {
+  const t = useTranslations('auth');
+  const tCommon = useTranslations('common');
   const [isLogin, setIsLogin] = useState(true);
   // Auto-fill credentials in Vercel preview for faster testing
   const isPreview = process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
@@ -32,8 +35,9 @@ export default function Auth({ onSuccess }: AuthProps) {
       if (isLogin) {
         // Login
         if (!username || !password) {
-          setError('Por favor completa todos los campos');
-          toast.error('Por favor completa todos los campos');
+          const errorMsg = t('login.errors.completeFields');
+          setError(errorMsg);
+          toast.error(errorMsg);
           setIsLoading(false);
           return;
         }
@@ -57,31 +61,35 @@ export default function Auth({ onSuccess }: AuthProps) {
             longestStreak: result.user.longestStreak || 0,
           });
 
-          toast.success('Sesión iniciada correctamente');
+          toast.success(t('login.success'));
           onSuccess();
         } else {
-          setError(result.error || 'Error al iniciar sesión');
-          toast.error(result.error || 'Error al iniciar sesión');
+          const errorMsg = result.error || t('login.errors.invalidCredentials');
+          setError(errorMsg);
+          toast.error(errorMsg);
         }
       } else {
         // Register
         if (!username || !email || !password || !displayName) {
-          setError('Por favor completa todos los campos');
-          toast.error('Por favor completa todos los campos');
+          const errorMsg = t('register.errors.completeFields');
+          setError(errorMsg);
+          toast.error(errorMsg);
           setIsLoading(false);
           return;
         }
 
         if (password.length < 6) {
-          setError('La contraseña debe tener al menos 6 caracteres');
-          toast.error('La contraseña debe tener al menos 6 caracteres');
+          const errorMsg = t('register.errors.passwordLength');
+          setError(errorMsg);
+          toast.error(errorMsg);
           setIsLoading(false);
           return;
         }
 
         if (!acceptedTerms) {
-          setError('Debes aceptar los términos y condiciones');
-          toast.error('Debes aceptar los términos y condiciones');
+          const errorMsg = t('register.errors.acceptTerms');
+          setError(errorMsg);
+          toast.error(errorMsg);
           setIsLoading(false);
           return;
         }
@@ -106,16 +114,18 @@ export default function Auth({ onSuccess }: AuthProps) {
             longestStreak: 0,
           });
 
-          toast.success('Cuenta creada exitosamente');
+          toast.success(t('register.success'));
           onSuccess();
         } else {
-          setError(result.error || 'Error al registrarse');
-          toast.error(result.error || 'Error al registrarse');
+          const errorMsg = result.error || t('login.errors.registration');
+          setError(errorMsg);
+          toast.error(errorMsg);
         }
       }
     } catch (err) {
-      setError('Error de conexión. Por favor intenta de nuevo.');
-      toast.error('Error de conexión. Por favor intenta de nuevo.');
+      const errorMsg = tCommon('connectionError');
+      setError(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setIsLoading(false);
     }
@@ -142,7 +152,7 @@ export default function Auth({ onSuccess }: AuthProps) {
             color: 'var(--color-label-primary)',
           }}
         >
-          {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
+          {isLogin ? t('login.title') : t('register.title')}
         </h2>
         <p
           className="text-center"
@@ -151,7 +161,7 @@ export default function Auth({ onSuccess }: AuthProps) {
             color: 'var(--color-label-secondary)',
           }}
         >
-          {isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}
+          {isLogin ? t('login.noAccount') : t('register.hasAccount')}
           {' '}
           <button
             data-testid="auth-toggle-button"
@@ -169,7 +179,7 @@ export default function Auth({ onSuccess }: AuthProps) {
               padding: 0,
             }}
           >
-            {isLogin ? 'Regístrate gratis' : 'Inicia sesión'}
+            {isLogin ? t('login.registerFree') : t('register.login')}
           </button>
         </p>
       </div>
@@ -189,7 +199,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                 marginBottom: 'var(--spacing-2)',
               }}
             >
-              {isLogin ? 'Usuario o Email' : 'Nombre de Usuario'}
+              {isLogin ? t('login.userOrEmail') : t('register.username')}
             </label>
             <input
               id="username"
@@ -238,7 +248,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                   color: 'var(--color-label-primary)',
                 }}
               >
-                Contraseña
+                {t('login.password')}
               </label>
               {isLogin && (
                 <a
@@ -253,7 +263,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                   onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
                   onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
                 >
-                  ¿Olvidaste tu contraseña?
+                  {t('login.forgotPassword')}
                 </a>
               )}
             </div>
@@ -281,7 +291,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                   borderRadius: 'var(--radius-sm)',
                   outline: 'none',
                 }}
-                placeholder={isLogin ? 'Tu contraseña' : 'Mínimo 6 caracteres'}
+                placeholder={isLogin ? 'tu contraseña' : 'mínimo 6 caracteres'}
                 onFocus={(e) => {
                   e.target.style.borderColor = 'var(--color-tint)';
                   e.target.style.borderWidth = '2px';
@@ -296,7 +306,7 @@ export default function Auth({ onSuccess }: AuthProps) {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                aria-label={showPassword ? "ocultar contraseña" : "mostrar contraseña"}
                 className="spring-motion"
                 style={{
                   position: 'absolute',
@@ -342,7 +352,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                   marginBottom: 'var(--spacing-2)',
                 }}
               >
-                Email
+                {t('register.email')}
               </label>
               <input
                 id="email"
@@ -394,7 +404,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                   marginBottom: 'var(--spacing-2)',
                 }}
               >
-                Nombre para Mostrar
+                {t('register.displayName')}
               </label>
               <input
                 id="displayName"
@@ -418,7 +428,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                   borderRadius: 'var(--radius-sm)',
                   outline: 'none',
                 }}
-                placeholder="Tu Nombre"
+                placeholder="tu nombre"
                 onFocus={(e) => {
                   e.target.style.borderColor = 'var(--color-tint)';
                   e.target.style.borderWidth = '2px';
@@ -460,7 +470,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                   cursor: 'pointer',
                 }}
               >
-                Acepto los{' '}
+                {t('register.acceptTerms')}{' '}
                 <a
                   href="/legal/terminos"
                   data-testid="auth-terms-link"
@@ -473,22 +483,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                   onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
                   onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
                 >
-                  Términos y Condiciones
-                </a>
-                {' '}y la{' '}
-                <a
-                  href="/legal/privacidad"
-                  data-testid="auth-privacy-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    color: 'var(--color-link)',
-                    textDecoration: 'none',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
-                  onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
-                >
-                  Política de Privacidad
+                  {t('register.termsLink')}
                 </a>
               </label>
             </div>
@@ -558,22 +553,8 @@ export default function Auth({ onSuccess }: AuthProps) {
               }
             }}
           >
-            {isLoading ? 'Cargando...' : (isLogin ? 'Iniciar Sesión' : 'Crear Cuenta Gratis')}
+            {isLoading ? tCommon('loading') : (isLogin ? t('login.submit') : t('register.titleFree'))}
           </button>
-
-          {/* Footer Text */}
-          {!isLogin && (
-            <p
-              className="text-center"
-              style={{
-                fontSize: '13px',
-                color: 'var(--color-label-secondary)',
-                marginTop: 'var(--spacing-4)',
-              }}
-            >
-              Al crear una cuenta, aceptas practicar con otros estudiantes en sesiones en vivo
-            </p>
-          )}
         </div>
       </form>
     </div>

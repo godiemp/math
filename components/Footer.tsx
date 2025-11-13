@@ -3,8 +3,10 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslations } from 'next-intl';
 
 export default function Footer() {
+  const t = useTranslations('footer');
   const currentYear = new Date().getFullYear();
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -72,7 +74,7 @@ export default function Footer() {
                 color: '#000',
               }}
             >
-              Información Legal y Soporte
+              {t('subtitle')}
             </h2>
             <button
               onClick={handleCloseModal}
@@ -115,7 +117,7 @@ export default function Footer() {
                     onClick={handleCloseModal}
                     style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
                   >
-                    Términos y Condiciones
+                    {t('links.terms')}
                   </Link>
                 </li>
                 <li style={{ marginBottom: '8px' }}>
@@ -124,7 +126,7 @@ export default function Footer() {
                     onClick={handleCloseModal}
                     style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
                   >
-                    Política de Privacidad
+                    {t('links.privacy')}
                   </Link>
                 </li>
                 <li style={{ marginBottom: '8px' }}>
@@ -133,7 +135,7 @@ export default function Footer() {
                     onClick={handleCloseModal}
                     style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
                   >
-                    Política de Cookies
+                    {t('links.cookies')}
                   </Link>
                 </li>
                 <li style={{ marginBottom: '8px' }}>
@@ -142,7 +144,7 @@ export default function Footer() {
                     onClick={handleCloseModal}
                     style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
                   >
-                    Política de Reembolsos
+                    {t('links.refunds')}
                   </Link>
                 </li>
               </ul>
@@ -201,7 +203,7 @@ export default function Footer() {
             {/* Copyright */}
             <div style={{ paddingTop: '16px', borderTop: '1px solid #d1d1d6' }}>
               <p style={{ fontSize: '12px', color: '#8e8e93', textAlign: 'center', margin: 0 }}>
-                © {currentYear} PAES Chile. Todos los derechos reservados.
+                {t('copyright')}
               </p>
             </div>
           </div>
@@ -252,7 +254,7 @@ export default function Footer() {
             >
               i
             </span>
-            <span>Legal, Soporte y Contacto</span>
+            <span>{t('title')}</span>
           </button>
         </div>
       </footer>
@@ -321,7 +323,7 @@ export default function Footer() {
                   }}
                   className="hover:underline"
                 >
-                  Términos y Condiciones
+                  {t('links.terms')}
                 </Link>
               </li>
               <li style={{ marginBottom: '8px' }}>
@@ -334,7 +336,7 @@ export default function Footer() {
                   }}
                   className="hover:underline"
                 >
-                  Política de Privacidad
+                  {t('links.privacy')}
                 </Link>
               </li>
               <li style={{ marginBottom: '8px' }}>
@@ -347,7 +349,7 @@ export default function Footer() {
                   }}
                   className="hover:underline"
                 >
-                  Política de Cookies
+                  {t('links.cookies')}
                 </Link>
               </li>
               <li style={{ marginBottom: '8px' }}>
@@ -360,7 +362,7 @@ export default function Footer() {
                   }}
                   className="hover:underline"
                 >
-                  Política de Reembolsos
+                  {t('links.refunds')}
                 </Link>
               </li>
             </ul>
@@ -472,7 +474,7 @@ export default function Footer() {
                 margin: 0,
               }}
             >
-              © {currentYear} PAES Chile. Todos los derechos reservados.
+              {t('copyright')}
             </p>
             <p
               style={{
@@ -481,7 +483,7 @@ export default function Footer() {
                 margin: 0,
               }}
             >
-              Hecho con ❤️ en Chile
+              {t('madeIn')}
             </p>
           </div>
         </div>

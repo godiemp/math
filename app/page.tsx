@@ -5,8 +5,11 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Auth from "@/components/Auth";
 import Footer from "@/components/Footer";
+import { useTranslations } from 'next-intl';
 
 export default function Home() {
+  const t = useTranslations('landing');
+  const tCommon = useTranslations('common');
   const { isAuthenticated, isLoading, setUser } = useAuth();
   const router = useRouter();
   const [showInfoModal, setShowInfoModal] = useState(false);
@@ -77,7 +80,7 @@ export default function Home() {
                 color: 'var(--color-label-primary)',
               }}
             >
-              SimplePAES
+              {t('title')}
             </h1>
 
             <p
@@ -89,7 +92,7 @@ export default function Home() {
                 color: 'var(--color-label-secondary)',
               }}
             >
-              Plataforma de Preparación Matemática
+              {t('subtitle')}
             </p>
 
             {/* Info Button */}
@@ -105,7 +108,7 @@ export default function Home() {
                 textDecoration: 'underline',
               }}
             >
-              cómo funciona
+              {t('sections.howItWorks')}
             </button>
           </div>
 
@@ -125,7 +128,7 @@ export default function Home() {
               color: 'var(--color-label-secondary)',
             }}
           >
-            <p>Preparación para la Prueba de Acceso a la Educación Superior</p>
+            <p>{t('fullTitle')}</p>
           </div>
         </div>
 
@@ -158,7 +161,7 @@ export default function Home() {
                     color: 'var(--color-label-primary)',
                   }}
                 >
-                  cómo funciona esto
+                  {t('sections.howItWorks')}
                 </h2>
                 <button
                   onClick={() => setShowInfoModal(false)}
@@ -187,7 +190,7 @@ export default function Home() {
                       marginBottom: '8px',
                     }}
                   >
-                    qué es esto
+                    {t('sections.whatIsThis')}
                   </h3>
                   <p
                     style={{
@@ -196,7 +199,7 @@ export default function Home() {
                       color: 'var(--color-label-secondary)',
                     }}
                   >
-                    una plataforma donde practicas mate para la PAES. tienes ejercicios del temario oficial, feedback cuando te equivocas, y ves tu progreso en tiempo real. sin publicidad.
+                    {t('hero.subtitle')}
                   </p>
                 </div>
 
@@ -209,7 +212,7 @@ export default function Home() {
                       marginBottom: '8px',
                     }}
                   >
-                    qué incluye
+                    {t('sections.whatIncludes')}
                   </h3>
                   <div className="space-y-2">
                     {[
@@ -244,7 +247,7 @@ export default function Home() {
                       marginBottom: '8px',
                     }}
                   >
-                    el precio
+                    {t('sections.pricing')}
                   </h3>
                   <p
                     style={{
@@ -294,7 +297,7 @@ export default function Home() {
                   cursor: 'pointer',
                 }}
               >
-                ok, entendido
+                {t('sections.okUnderstood')}
               </button>
             </div>
           </div>
