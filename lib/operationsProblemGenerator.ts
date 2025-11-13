@@ -32,7 +32,7 @@ export interface GeneratedProblem {
   expressionLatex: string;
   correctAnswer: number | string;
   title: string;
-  description: string;
+  description?: string;
   level: number;
   difficulty: string;
   problemsToComplete: number;

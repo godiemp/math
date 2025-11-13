@@ -8,7 +8,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   // Ordenamiento (101-110)
   {
     title: 'Ordenar 3 Números',
-    description: 'Ordena: [3, 1, 2]',
     operationType: 'sorting',
     phase: 'algorithmic',
     difficulty: 'basic',
@@ -19,7 +18,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Ordenar 4 Números',
-    description: 'Ordena: [4, 2, 1, 3]',
     operationType: 'sorting',
     phase: 'algorithmic',
     difficulty: 'basic',
@@ -30,7 +28,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Ordenar 5 Números',
-    description: 'Ordena: [5, 2, 8, 1, 4]',
     operationType: 'sorting',
     phase: 'algorithmic',
     difficulty: 'basic',
@@ -41,7 +38,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Ordenar Descendente',
-    description: 'Ordena mayor a menor: [2, 5, 1]',
     operationType: 'sorting',
     phase: 'algorithmic',
     difficulty: 'intermediate',
@@ -52,7 +48,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Encontrar el Mínimo',
-    description: 'Mínimo de [4, 2, 7, 1]',
     operationType: 'sorting',
     phase: 'algorithmic',
     difficulty: 'intermediate',
@@ -63,7 +58,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Encontrar el Máximo',
-    description: 'Máximo de [3, 9, 2, 5]',
     operationType: 'sorting',
     phase: 'algorithmic',
     difficulty: 'intermediate',
@@ -74,7 +68,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Encontrar la Mediana',
-    description: 'Mediana de [1, 3, 5]',
     operationType: 'sorting',
     phase: 'algorithmic',
     difficulty: 'advanced',
@@ -85,7 +78,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Ordenar con Duplicados',
-    description: 'Ordena: [3, 1, 2, 1, 3]',
     operationType: 'sorting',
     phase: 'algorithmic',
     difficulty: 'advanced',
@@ -96,7 +88,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Ordenar 6 Números',
-    description: 'Ordena: [6, 2, 9, 1, 4, 7]',
     operationType: 'sorting',
     phase: 'algorithmic',
     difficulty: 'advanced',
@@ -107,7 +98,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Ordenar con Negativos',
-    description: 'Ordena: [-3, 5, -1, 2]',
     operationType: 'sorting',
     phase: 'algorithmic',
     difficulty: 'expert',
@@ -120,7 +110,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   // Conteo (111-120)
   {
     title: 'Contar Elementos',
-    description: 'Cuenta: [1, 2, 3, 4]',
     operationType: 'counting',
     phase: 'algorithmic',
     difficulty: 'basic',
@@ -131,7 +120,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Contar Pares',
-    description: '¿Cuántos pares en [1,2,3,4]?',
     operationType: 'counting',
     phase: 'algorithmic',
     difficulty: 'basic',
@@ -142,7 +130,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Contar Impares',
-    description: '¿Cuántos impares en [1,2,3,4,5]?',
     operationType: 'counting',
     phase: 'algorithmic',
     difficulty: 'basic',
@@ -153,7 +140,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Contar Mayores que N',
-    description: '¿Cuántos >5 en [3,6,2,7,1]?',
     operationType: 'counting',
     phase: 'algorithmic',
     difficulty: 'intermediate',
@@ -164,7 +150,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Contar Múltiplos',
-    description: '¿Cuántos múltiplos de 3?',
     operationType: 'counting',
     phase: 'algorithmic',
     difficulty: 'intermediate',
@@ -175,7 +160,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Contar con Condición',
-    description: 'Cuenta si x>3 AND x<8',
     operationType: 'counting',
     phase: 'algorithmic',
     difficulty: 'intermediate',
@@ -186,7 +170,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Aplicar Transformación +n',
-    description: 'Aplica +3 a: [1, 2, 3]',
     operationType: 'composition',
     phase: 'algorithmic',
     difficulty: 'advanced',
@@ -197,7 +180,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Aplicar Transformación ×n',
-    description: 'Aplica ×2 a: [1, 2, 3]',
     operationType: 'composition',
     phase: 'algorithmic',
     difficulty: 'advanced',
@@ -208,7 +190,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Transformar y Sumar',
-    description: 'Aplica ×2 luego suma: [1, 2, 3]',
     operationType: 'composition',
     phase: 'algorithmic',
     difficulty: 'advanced',
@@ -219,7 +200,6 @@ export const algorithmicLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Filtrar Pares',
-    description: 'Filtra pares: [1, 2, 3, 4]',
     operationType: 'composition',
     phase: 'algorithmic',
     difficulty: 'expert',

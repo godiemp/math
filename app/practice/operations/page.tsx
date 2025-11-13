@@ -11,7 +11,7 @@ import { getOperationsProgress, unlockAllOperationsLevels } from '@/lib/operatio
 interface OperationLevel {
   level: number;
   title: string;
-  description: string;
+  description?: string;
   operationType: string;
   difficulty: string;
   problemsToComplete: number;

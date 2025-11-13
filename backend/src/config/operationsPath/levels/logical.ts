@@ -8,7 +8,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   // Comparaciones (61-70)
   {
     title: 'Mayor que',
-    description: '¿5 > 3?',
     operationType: 'comparison',
     phase: 'logical',
     difficulty: 'basic',
@@ -19,7 +18,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Menor que',
-    description: '¿2 < 7?',
     operationType: 'comparison',
     phase: 'logical',
     difficulty: 'basic',
@@ -30,7 +28,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Igual a',
-    description: '¿5 = 5?',
     operationType: 'comparison',
     phase: 'logical',
     difficulty: 'basic',
@@ -41,7 +38,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Mayor o Igual',
-    description: '¿6 ≥ 4?',
     operationType: 'comparison',
     phase: 'logical',
     difficulty: 'basic',
@@ -52,7 +48,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Menor o Igual',
-    description: '¿3 ≤ 8?',
     operationType: 'comparison',
     phase: 'logical',
     difficulty: 'basic',
@@ -63,7 +58,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Comparaciones con Negativos',
-    description: '¿-3 < 2?',
     operationType: 'comparison',
     phase: 'logical',
     difficulty: 'intermediate',
@@ -74,7 +68,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Comparar Expresiones',
-    description: '¿5+3 > 7?',
     operationType: 'comparison',
     phase: 'logical',
     difficulty: 'intermediate',
@@ -85,7 +78,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Comparar Productos',
-    description: '¿2×4 = 8?',
     operationType: 'comparison',
     phase: 'logical',
     difficulty: 'intermediate',
@@ -96,7 +88,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Comparaciones con Variables',
-    description: 'Si x=5, ¿x > 3?',
     operationType: 'comparison',
     phase: 'logical',
     difficulty: 'advanced',
@@ -107,7 +98,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Comparaciones Complejas',
-    description: '¿2x+3 ≥ 11 cuando x=4?',
     operationType: 'comparison',
     phase: 'logical',
     difficulty: 'advanced',
@@ -120,7 +110,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   // Condiciones Compuestas (71-80)
   {
     title: 'Condición Simple',
-    description: 'Si x>5, ¿x=7 cumple?',
     operationType: 'compound-conditions',
     phase: 'logical',
     difficulty: 'intermediate',
@@ -131,7 +120,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Condición con AND',
-    description: 'Si x>5 AND x<10, ¿x=7 cumple?',
     operationType: 'compound-conditions',
     phase: 'logical',
     difficulty: 'intermediate',
@@ -142,7 +130,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Condición con OR',
-    description: 'Si x<3 OR x>8, ¿x=5 cumple?',
     operationType: 'compound-conditions',
     phase: 'logical',
     difficulty: 'intermediate',
@@ -153,7 +140,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Rangos Numéricos',
-    description: '¿5 está en el rango [3, 8]?',
     operationType: 'compound-conditions',
     phase: 'logical',
     difficulty: 'intermediate',
@@ -164,7 +150,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Operador AND',
-    description: '¿Verdadero AND Falso?',
     operationType: 'logical-operators',
     phase: 'logical',
     difficulty: 'advanced',
@@ -175,7 +160,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Operador OR',
-    description: '¿Verdadero OR Falso?',
     operationType: 'logical-operators',
     phase: 'logical',
     difficulty: 'advanced',
@@ -186,7 +170,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Operador NOT',
-    description: '¿NOT Verdadero?',
     operationType: 'logical-operators',
     phase: 'logical',
     difficulty: 'advanced',
@@ -197,7 +180,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Condiciones con NOT',
-    description: 'Si x=4, ¿cumple NOT(x<3)?',
     operationType: 'compound-conditions',
     phase: 'logical',
     difficulty: 'advanced',
@@ -208,7 +190,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Condiciones Múltiples',
-    description: 'Si x=5, ¿(x>3 AND x<8) OR x=10?',
     operationType: 'compound-conditions',
     phase: 'logical',
     difficulty: 'expert',
@@ -219,7 +200,6 @@ export const logicalLevels: OperationLevelDefinition[] = [
   },
   {
     title: 'Condiciones Expertas',
-    description: 'Evalúa: (x>y AND y>z) OR (x=z)',
     operationType: 'compound-conditions',
     phase: 'logical',
     difficulty: 'expert',

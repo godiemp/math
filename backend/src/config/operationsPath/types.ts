@@ -23,7 +23,7 @@ export type PhaseType = 'arithmetic' | 'algebraic' | 'logical' | 'structural' | 
  */
 export interface OperationLevelDefinition {
   title: string;
-  description: string;
+  description?: string;
   operationType: OperationType;
   phase: PhaseType;
   difficulty: DifficultyLevel;
@@ -44,7 +44,7 @@ export interface OperationLevelDefinition {
 
     // Algebraic
     variables?: string[];
-    equationType?: 'x+a=b' | 'x-a=b' | 'a-x=b' | 'ax=b' | 'x/a=b' | 'ax+b=c' | 'ax-b=c' | 'a(x+b)=c' | '2x+a=x+b';
+    equationType?: 'x+a=b' | 'x-a=b' | 'a-x=b' | 'ax=b' | 'x/a=b' | 'ax+b=c' | 'ax-b=c' | 'a(x+b)=c' | '2x+a=x+b' | 'ax+b=cx+d';
     expressionType?: 'x+a' | 'ax' | 'ax+b' | 'x²' | 'ax²+b' | 'x+y' | 'xy' | 'ax+by' | 'x²+y²' | '(x+y)²';
     simplificationType?: 'x+x' | 'ax+bx' | 'ax-bx' | 'x+x+x' | 'ax+x-x' | 'ax+by+x' | 'ax+by-x' | 'ax+by+cx-dy' | 'a(x+b)+x' | 'a(bx+y)-c(dx-y)';
 

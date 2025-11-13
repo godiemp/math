@@ -7,7 +7,7 @@ import { getUnitByCode } from '@/lib/thematicUnitsClient';
 interface OperationLevel {
   level: number;
   title: string;
-  description: string;
+  description?: string;
   operationType: string;
   difficulty: string;
   problemsToComplete: number;
