@@ -395,7 +395,7 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
 
     // Question breakdown
     const breakdownY = resultsBoxY + 15;
-    page.drawText(`✓ Correctas: ${certificate.correctCount}`, {
+    page.drawText(`Correctas: ${certificate.correctCount}`, {
       x: margin + 20,
       y: breakdownY,
       size: 9,
@@ -403,7 +403,7 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
       color: COLORS.success,
     });
 
-    page.drawText(`✗ Incorrectas: ${certificate.incorrectCount}`, {
+    page.drawText(`Incorrectas: ${certificate.incorrectCount}`, {
       x: margin + 150,
       y: breakdownY,
       size: 9,
@@ -412,7 +412,7 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
     });
 
     if (certificate.omittedCount > 0) {
-      page.drawText(`○ Omitidas: ${certificate.omittedCount}`, {
+      page.drawText(`Omitidas: ${certificate.omittedCount}`, {
         x: margin + 280,
         y: breakdownY,
         size: 9,
