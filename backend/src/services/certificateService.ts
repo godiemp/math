@@ -898,6 +898,24 @@ export async function getCertificateStats(userId: string): Promise<any> {
 }
 
 /**
+ * Helper function to safely parse JSON from database
+ * PostgreSQL can return JSON/JSONB as either strings or objects
+ */
+function safeJsonParse(value: any, fallback: any = undefined): any {
+  if (!value) return fallback;
+  if (typeof value === 'string') {
+    try {
+      return JSON.parse(value);
+    } catch (error) {
+      console.error('Error parsing JSON:', error);
+      return fallback;
+    }
+  }
+  // If it's already an object, return it as-is
+  return value;
+}
+
+/**
  * Parse certificate from database row
  */
 function parseCertificateFromDb(row: any): Certificate {
@@ -917,13 +935,13 @@ function parseCertificateFromDb(row: any): Certificate {
     maxScore: parseInt(row.max_score),
     percentage: parseFloat(row.percentage),
     percentile: row.percentile !== null ? parseInt(row.percentile) : undefined,
-    sectionScores: row.section_scores ? JSON.parse(row.section_scores) : undefined,
+    sectionScores: safeJsonParse(row.section_scores, undefined),
     correctCount: parseInt(row.correct_count),
     incorrectCount: parseInt(row.incorrect_count),
     omittedCount: parseInt(row.omitted_count),
-    badges: JSON.parse(row.badges || '[]'),
+    badges: safeJsonParse(row.badges, []),
     personalizedMessage: row.personalized_message || undefined,
-    chartsData: row.charts_data ? JSON.parse(row.charts_data) : undefined,
+    chartsData: safeJsonParse(row.charts_data, undefined),
     issuedAt: parseInt(row.issued_at),
     expiresAt: row.expires_at ? parseInt(row.expires_at) : undefined,
     verificationUrl: row.verification_url || undefined,
