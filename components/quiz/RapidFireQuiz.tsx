@@ -417,9 +417,10 @@ export default function RapidFireQuiz({
     .map(item => item.index);
 
   const questionContent = (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8 animate-fadeIn"
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8 animate-fadeIn overflow-y-auto"
       style={{
         boxShadow: '0 0 60px rgba(139, 92, 246, 0.3), 0 20px 40px rgba(0, 0, 0, 0.2)',
+        maxHeight: quizSubmitted ? '85vh' : undefined,
       }}>
       {/* Question topic and progress */}
       <div className="mb-6">
@@ -490,9 +491,9 @@ export default function RapidFireQuiz({
   return (
     <>
       {/* Background */}
-      <div className="fixed inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900">
-        {/* Centered Layout Container */}
-        <div className="min-h-screen flex items-center justify-center px-4 py-6">
+      <div className="fixed inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 overflow-y-auto">
+        {/* Centered Layout Container - use items-start in review mode to prevent viewport issues */}
+        <div className={`min-h-screen flex ${quizSubmitted ? 'items-start' : 'items-center'} justify-center px-4 py-6`}>
           <div className="w-full max-w-5xl">
             {/* Mobile: Timer and Menu in same row at top */}
             {!quizSubmitted && (
