@@ -221,6 +221,12 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
         case 'ax-bx':
           expr = `${getRandomInt(3, 7)}*x-${getRandomInt(1, 3)}*x`;
           break;
+        case '-ax-bx':
+          expr = `-${getRandomInt(2, 5)}*x-${getRandomInt(2, 5)}*x`;
+          break;
+        case '-ax+bx':
+          expr = `-${getRandomInt(2, 5)}*x+${getRandomInt(2, 5)}*x`;
+          break;
         case 'x+x+x':
           expr = 'x+x+x';
           break;

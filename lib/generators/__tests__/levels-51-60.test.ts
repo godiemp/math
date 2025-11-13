@@ -41,24 +41,25 @@ describe('Levels 51-60: Algebraic Simplification', () => {
     }
   });
 
-  it('Level 54: Simplificar x+x+x', () => {
+  it('Level 54: Simplificar -ax-bx', () => {
     const config = getLevelConfig(54);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
       const problem = generateProblem(config!);
-      expect(problem.expression).toBe('x+x+x');
-      expect(problem.correctAnswer).toBe('3x');
+      expect(problem.expression).toMatch(/^-\d+x-\d+x$/);
+      expect(typeof problem.correctAnswer).toBe('string');
+      expect(problem.correctAnswer).toMatch(/^-\d+x$/);
     }
   });
 
-  it('Level 55: Simplificar ax+x-x', () => {
+  it('Level 55: Simplificar -ax+bx', () => {
     const config = getLevelConfig(55);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
       const problem = generateProblem(config!);
-      expect(problem.expression).toMatch(/^\d+x\+x-x$/);
+      expect(problem.expression).toMatch(/^-\d+x\+\d+x$/);
       expect(typeof problem.correctAnswer).toBe('string');
     }
   });
