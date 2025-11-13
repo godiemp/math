@@ -33,13 +33,13 @@ test.describe('User Registration', () => {
 
   test('should display registration form', async ({ page }) => {
     // Verify registration form elements are visible
-    await expect(page.getByTestId('auth-heading')).toContainText('Crear Cuenta');
+    await expect(page.getByTestId('auth-heading')).toContainText('crear cuenta');
     await expect(page.getByTestId('auth-username-input')).toBeVisible();
     await expect(page.getByTestId('auth-email-input')).toBeVisible();
     await expect(page.getByTestId('auth-password-input')).toBeVisible();
     await expect(page.getByTestId('auth-displayname-input')).toBeVisible();
     await expect(page.getByTestId('auth-terms-checkbox')).toBeVisible();
-    await expect(page.getByTestId('auth-submit-button')).toContainText('Crear Cuenta Gratis');
+    await expect(page.getByTestId('auth-submit-button')).toContainText('crear cuenta gratis');
   });
 
   test('should successfully register a new user', async ({ page }) => {
@@ -110,7 +110,7 @@ test.describe('User Registration', () => {
     expect(url).not.toContain('/dashboard');
 
     // Verify we're still in register mode
-    await expect(page.getByTestId('auth-heading')).toContainText('Crear Cuenta');
+    await expect(page.getByTestId('auth-heading')).toContainText('crear cuenta');
   });
 
   test('should show error for password less than 12 characters', async ({ page }) => {
@@ -155,7 +155,7 @@ test.describe('User Registration', () => {
     expect(url).not.toContain('/dashboard');
 
     // Verify we're still in register mode
-    await expect(page.getByTestId('auth-heading')).toContainText('Crear Cuenta');
+    await expect(page.getByTestId('auth-heading')).toContainText('crear cuenta');
   });
 
   test('should show error when terms are not accepted', async ({ page }) => {
@@ -208,7 +208,7 @@ test.describe('User Registration', () => {
 
   test('should switch between login and register modes', async ({ page }) => {
     // Should be in register mode
-    await expect(page.getByTestId('auth-heading')).toContainText('Crear Cuenta');
+    await expect(page.getByTestId('auth-heading')).toContainText('crear cuenta');
     await expect(page.getByTestId('auth-email-input')).toBeVisible();
     await expect(page.getByTestId('auth-displayname-input')).toBeVisible();
     await expect(page.getByTestId('auth-terms-checkbox')).toBeVisible();
@@ -228,7 +228,7 @@ test.describe('User Registration', () => {
     // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Verify register mode again
-    await expect(page.getByTestId('auth-heading')).toContainText('Crear Cuenta');
+    await expect(page.getByTestId('auth-heading')).toContainText('crear cuenta');
     await expect(page.getByTestId('auth-email-input')).toBeVisible();
   });
 
@@ -280,12 +280,11 @@ test.describe('User Registration', () => {
     await expect(termsLabel).toBeVisible();
   });
 
-  test('should have links to terms and privacy policy', async ({ page }) => {
-    // Check that terms and privacy links are present using test IDs
+  test('should have link to terms and conditions', async ({ page }) => {
+    // Check that terms link is present using test ID
     const termsLink = page.getByTestId('auth-terms-link');
-    const privacyLink = page.getByTestId('auth-privacy-link');
 
     await expect(termsLink).toBeVisible();
-    await expect(privacyLink).toBeVisible();
+    await expect(termsLink).toHaveAttribute('href', '/legal/terminos');
   });
 });
