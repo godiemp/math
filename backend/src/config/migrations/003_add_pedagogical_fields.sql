@@ -19,8 +19,12 @@ COMMENT ON COLUMN abstract_problems.pedagogy_notes IS 'Explanation of why this p
 COMMENT ON COLUMN abstract_problems.prerequisite_sequence IS 'Array of sequence_order values that should be mastered before this problem';
 COMMENT ON COLUMN abstract_problems.generation_rules IS 'JSON object with placeholder values and generation constraints for maximum abstraction';
 
--- Update the active_problems_view to include new fields
-CREATE OR REPLACE VIEW active_problems_view AS
+-- Drop and recreate views to avoid column position conflicts
+DROP VIEW IF EXISTS problem_stats_by_unit;
+DROP VIEW IF EXISTS active_problems_view;
+
+-- Recreate active_problems_view with new fields
+CREATE VIEW active_problems_view AS
 SELECT
   ap.id as abstract_id,
   ap.essence,
@@ -48,8 +52,8 @@ FROM abstract_problems ap
 LEFT JOIN context_problems cp ON ap.id = cp.abstract_problem_id
 WHERE ap.status = 'active' AND (cp.status = 'active' OR cp.status IS NULL);
 
--- Update problem_stats_by_unit to include sequence info
-CREATE OR REPLACE VIEW problem_stats_by_unit AS
+-- Recreate problem_stats_by_unit with sequence info
+CREATE VIEW problem_stats_by_unit AS
 SELECT
   level,
   subject,
