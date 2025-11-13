@@ -61,6 +61,16 @@ export default function OperationsPracticePage() {
     loadProgress(); // Refresh progress when level is completed
   };
 
+  const handleNextLevel = () => {
+    if (selectedLevel !== null && selectedLevel < OPERATIONS_PATH.length) {
+      setSelectedLevel(selectedLevel + 1);
+      loadProgress(); // Refresh progress
+    } else {
+      // If it's the last level, go back to level selection
+      handleBackToPath();
+    }
+  };
+
   const handleUnlockAllLevels = () => {
     unlockAllOperationsLevels(OPERATIONS_PATH.length);
     loadProgress(); // Refresh progress to show all unlocked levels
@@ -126,6 +136,7 @@ export default function OperationsPracticePage() {
             level={selectedLevel}
             onBack={handleBackToPath}
             onLevelComplete={handleLevelComplete}
+            onNextLevel={handleNextLevel}
           />
         ) : (
           <OperationsPath
