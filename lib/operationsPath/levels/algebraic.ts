@@ -260,8 +260,41 @@ export const algebraicLevels: OperationLevelDefinition[] = [
 
     config: { variables: ['x'], simplificationType: '-ax+bx',}
   },
+  // Phase 2: Single Variable, 3 Terms (56-58)
   {
-    title: 'Simplificar con Dos Variables',
+    title: 'Simplificar x+x+x',
+    operationType: 'simplification',
+    phase: 'algebraic',
+    difficulty: 'basic',
+    problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
+    config: { variables: ['x'], simplificationType: 'x+x+x',}
+  },
+  {
+    title: 'Simplificar ax+bx+cx',
+    operationType: 'simplification',
+    phase: 'algebraic',
+    difficulty: 'intermediate',
+    problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
+    config: { variables: ['x'], simplificationType: 'ax+bx+cx',}
+  },
+  {
+    title: 'Simplificar ax+bx-cx',
+    operationType: 'simplification',
+    phase: 'algebraic',
+    difficulty: 'intermediate',
+    problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
+    config: { variables: ['x'], simplificationType: 'ax+bx-cx',}
+  },
+
+  // Phase 3: Two Variables, Basic (59-61)
+  {
+    title: 'Simplificar ax+by+x',
     operationType: 'simplification',
     phase: 'algebraic',
     difficulty: 'intermediate',
@@ -271,7 +304,7 @@ export const algebraicLevels: OperationLevelDefinition[] = [
     config: { variables: ['x', 'y'], simplificationType: 'ax+by+x',}
   },
   {
-    title: 'Simplificar 3x+2y-x',
+    title: 'Simplificar ax+by-x',
     operationType: 'simplification',
     phase: 'algebraic',
     difficulty: 'intermediate',
@@ -281,7 +314,19 @@ export const algebraicLevels: OperationLevelDefinition[] = [
     config: { variables: ['x', 'y'], simplificationType: 'ax+by-x',}
   },
   {
-    title: 'Simplificar con Coeficientes',
+    title: 'Simplificar ax-by+x',
+    operationType: 'simplification',
+    phase: 'algebraic',
+    difficulty: 'intermediate',
+    problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
+    config: { variables: ['x', 'y'], simplificationType: 'ax-by+x',}
+  },
+
+  // Phase 4: Two Variables, Complex (62-64)
+  {
+    title: 'Simplificar ax+by+cx-dy',
     operationType: 'simplification',
     phase: 'algebraic',
     difficulty: 'advanced',
@@ -291,7 +336,29 @@ export const algebraicLevels: OperationLevelDefinition[] = [
     config: { variables: ['x', 'y'], simplificationType: 'ax+by+cx-dy',}
   },
   {
-    title: 'Simplificar Paréntesis',
+    title: 'Simplificar ax+by-cx+dy',
+    operationType: 'simplification',
+    phase: 'algebraic',
+    difficulty: 'advanced',
+    problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
+    config: { variables: ['x', 'y'], simplificationType: 'ax+by-cx+dy',}
+  },
+  {
+    title: 'Simplificar ax-by+cx-dy',
+    operationType: 'simplification',
+    phase: 'algebraic',
+    difficulty: 'advanced',
+    problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
+    config: { variables: ['x', 'y'], simplificationType: 'ax-by+cx-dy',}
+  },
+
+  // Phase 5: Parenthesis, Single Variable (65-67)
+  {
+    title: 'Simplificar a(x+b)+x',
     operationType: 'simplification',
     phase: 'algebraic',
     difficulty: 'advanced',
@@ -301,13 +368,55 @@ export const algebraicLevels: OperationLevelDefinition[] = [
     config: { variables: ['x'], simplificationType: 'a(x+b)+x',}
   },
   {
-    title: 'Simplificación Compleja',
+    title: 'Simplificar a(x+b)+cx',
+    operationType: 'simplification',
+    phase: 'algebraic',
+    difficulty: 'advanced',
+    problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
+    config: { variables: ['x'], simplificationType: 'a(x+b)+cx',}
+  },
+  {
+    title: 'Simplificar a(x+b)-cx',
+    operationType: 'simplification',
+    phase: 'algebraic',
+    difficulty: 'advanced',
+    problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
+    config: { variables: ['x'], simplificationType: 'a(x+b)-cx',}
+  },
+
+  // Phase 6: Parenthesis, Advanced (68-70)
+  {
+    title: 'Simplificar a(x+b)+c(x+d)',
     operationType: 'simplification',
     phase: 'algebraic',
     difficulty: 'expert',
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-001","M1-ALG-002"],
 
-    config: { variables: ['x', 'y'] }
+    config: { variables: ['x'], simplificationType: 'a(x+b)+c(x+d)',}
+  },
+  {
+    title: 'Simplificar a(x+y)+bx',
+    operationType: 'simplification',
+    phase: 'algebraic',
+    difficulty: 'expert',
+    problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
+    config: { variables: ['x', 'y'], simplificationType: 'a(x+y)+bx',}
+  },
+  {
+    title: 'Simplificar a(x+b)+c(y+d)',
+    operationType: 'simplification',
+    phase: 'algebraic',
+    difficulty: 'expert',
+    problemsToComplete: 3,
+    thematicUnits: ["M1-ALG-001","M1-ALG-002"],
+
+    config: { variables: ['x', 'y'], simplificationType: 'a(x+b)+c(y+d)',}
   },
 ];

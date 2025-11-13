@@ -230,11 +230,23 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
         case 'x+x+x':
           expr = 'x+x+x';
           break;
-        case 'ax+x-x':
-          expr = `${getRandomInt(2, 5)}*x+x-x`;
+        case 'ax+bx+cx':
+          expr = `${getRandomInt(2, 4)}*x+${getRandomInt(2, 4)}*x+${getRandomInt(2, 4)}*x`;
+          break;
+        case 'ax+bx-cx':
+          expr = `${getRandomInt(3, 6)}*x+${getRandomInt(2, 4)}*x-${getRandomInt(1, 3)}*x`;
           break;
         case 'a(x+b)+x':
           expr = `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 5)})+x`;
+          break;
+        case 'a(x+b)+cx':
+          expr = `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 5)})+${getRandomInt(2, 4)}*x`;
+          break;
+        case 'a(x+b)-cx':
+          expr = `${getRandomInt(3, 5)}*(x+${getRandomInt(1, 4)})-${getRandomInt(1, 3)}*x`;
+          break;
+        case 'a(x+b)+c(x+d)':
+          expr = `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 4)})+${getRandomInt(2, 3)}*(x+${getRandomInt(1, 4)})`;
           break;
         default:
           expr = 'x+x';
@@ -270,14 +282,23 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
         case 'ax+by-x':
           expr = `${getRandomInt(2, 5)}*x+${getRandomInt(2, 4)}*y-x`;
           break;
+        case 'ax-by+x':
+          expr = `${getRandomInt(2, 4)}*x-${getRandomInt(2, 4)}*y+x`;
+          break;
         case 'ax+by+cx-dy':
           expr = `${getRandomInt(2, 5)}*x+${getRandomInt(2, 5)}*y+${getRandomInt(1, 3)}*x-${getRandomInt(1, 2)}*y`;
           break;
-        case 'a(x+b)+x':
-          expr = `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 4)})+y`;
+        case 'ax+by-cx+dy':
+          expr = `${getRandomInt(3, 5)}*x+${getRandomInt(2, 4)}*y-${getRandomInt(1, 2)}*x+${getRandomInt(1, 3)}*y`;
           break;
-        case 'a(bx+y)-c(dx-y)':
-          expr = `${getRandomInt(2, 4)}*(${getRandomInt(2, 3)}*x+y)-${getRandomInt(1, 3)}*(x-y)`;
+        case 'ax-by+cx-dy':
+          expr = `${getRandomInt(2, 4)}*x-${getRandomInt(2, 4)}*y+${getRandomInt(2, 3)}*x-${getRandomInt(1, 2)}*y`;
+          break;
+        case 'a(x+y)+bx':
+          expr = `${getRandomInt(2, 4)}*(x+y)+${getRandomInt(2, 3)}*x`;
+          break;
+        case 'a(x+b)+c(y+d)':
+          expr = `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 4)})+${getRandomInt(2, 3)}*(y+${getRandomInt(1, 4)})`;
           break;
         default:
           expr = `${getRandomInt(2, 4)}*x+${getRandomInt(2, 4)}*y+x`;
