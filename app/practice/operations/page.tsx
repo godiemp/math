@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import OperationsPath from '@/components/OperationsPath';
 import OperationsPractice from '@/components/OperationsPractice';
@@ -31,11 +31,14 @@ interface UserProgress {
   };
 }
 
-export default function OperationsPracticePage() {
+function OperationsPracticeContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, isLoading } = useAuth();
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -49,10 +52,31 @@ export default function OperationsPracticePage() {
     }
   }, [user]);
 
+  // Initialize page from URL params
+  useEffect(() => {
+    const pageParam = searchParams.get('page');
+    if (pageParam) {
+      const page = parseInt(pageParam, 10);
+      if (!isNaN(page) && page >= 0) {
+        setCurrentPage(page);
+        setIsInitialLoad(false);
+      }
+    }
+  }, [searchParams]);
+
   const loadProgress = () => {
     // Load progress from localStorage
     const progress = getOperationsProgress();
     setUserProgress(progress);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setIsInitialLoad(false);
+    // Update URL with new page
+    const url = new URL(window.location.href);
+    url.searchParams.set('page', page.toString());
+    router.push(url.pathname + url.search, { scroll: false });
   };
 
   const handleLevelSelect = (level: number) => {
@@ -62,6 +86,14 @@ export default function OperationsPracticePage() {
   const handleBackToPath = () => {
     setSelectedLevel(null);
     loadProgress(); // Refresh progress
+    // Restore page from URL params
+    const pageParam = searchParams.get('page');
+    if (pageParam) {
+      const page = parseInt(pageParam, 10);
+      if (!isNaN(page) && page >= 0) {
+        setCurrentPage(page);
+      }
+    }
   };
 
   const handleLevelComplete = () => {
@@ -115,9 +147,27 @@ export default function OperationsPracticePage() {
             userProgress={userProgress}
             onLevelSelect={handleLevelSelect}
             onUnlockAllLevels={handleUnlockAllLevels}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+            autoNavigateOnMount={isInitialLoad}
           />
         )}
       </div>
     </div>
+  );
+}
+
+export default function OperationsPracticePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Cargando...</p>
+        </div>
+      </div>
+    }>
+      <OperationsPracticeContent />
+    </Suspense>
   );
 }
