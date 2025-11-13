@@ -151,7 +151,7 @@ export default function CurriculumAdminPage() {
       <AdminLayout>
         <div className="max-w-6xl mx-auto space-y-6">
           <div className="flex justify-between items-center">
-            <Heading size="2xl">Curriculum Management</Heading>
+            <Heading size="xl">Curriculum Management</Heading>
           </div>
 
           {/* Summary Statistics */}
@@ -163,7 +163,7 @@ export default function CurriculumAdminPage() {
             </Card>
           ) : summary ? (
             <Card>
-              <Heading size="lg" className="mb-4">Curriculum Statistics</Heading>
+              <Heading size="md" className="mb-4">Curriculum Statistics</Heading>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
                   <Text className="text-sm text-gray-600 dark:text-gray-400">Total Units</Text>
@@ -187,7 +187,7 @@ export default function CurriculumAdminPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Heading size="sm" className="mb-2">By Level</Heading>
+                  <Heading size="xs" className="mb-2">By Level</Heading>
                   <div className="space-y-2">
                     <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-800 p-3 rounded">
                       <Text>M1 (Competencia Matemática 1)</Text>
@@ -201,7 +201,7 @@ export default function CurriculumAdminPage() {
                 </div>
 
                 <div>
-                  <Heading size="sm" className="mb-2">By Subject</Heading>
+                  <Heading size="xs" className="mb-2">By Subject</Heading>
                   <div className="space-y-2">
                     <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-800 p-3 rounded">
                       <Text>🔢 Números</Text>
@@ -227,7 +227,7 @@ export default function CurriculumAdminPage() {
 
           {/* Copy Actions */}
           <Card>
-            <Heading size="lg" className="mb-4">Copy Curriculum</Heading>
+            <Heading size="md" className="mb-4">Copy Curriculum</Heading>
             <Text className="text-gray-600 dark:text-gray-400 mb-6">
               Copy curriculum data as JSON to clipboard or download as a file.
             </Text>
@@ -235,7 +235,7 @@ export default function CurriculumAdminPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Copy All */}
               <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <Heading size="sm" className="mb-2">All Curriculum (M1 + M2)</Heading>
+                <Heading size="xs" className="mb-2">All Curriculum (M1 + M2)</Heading>
                 <Text className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                   {summary ? `${summary.totalUnits} units` : 'Loading...'}
                 </Text>
@@ -260,7 +260,7 @@ export default function CurriculumAdminPage() {
 
               {/* Copy M1 */}
               <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <Heading size="sm" className="mb-2">M1 Only</Heading>
+                <Heading size="xs" className="mb-2">M1 Only</Heading>
                 <Text className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                   {summary ? `${summary.byLevel.M1} units` : 'Loading...'}
                 </Text>
@@ -285,7 +285,7 @@ export default function CurriculumAdminPage() {
 
               {/* Copy M2 */}
               <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <Heading size="sm" className="mb-2">M2 Only</Heading>
+                <Heading size="xs" className="mb-2">M2 Only</Heading>
                 <Text className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                   {summary ? `${summary.byLevel.M2} units` : 'Loading...'}
                 </Text>
@@ -323,7 +323,7 @@ export default function CurriculumAdminPage() {
 
           {/* Usage Example */}
           <Card>
-            <Heading size="lg" className="mb-4">API Usage</Heading>
+            <Heading size="md" className="mb-4">API Usage</Heading>
             <Text className="text-gray-600 dark:text-gray-400 mb-4">
               You can also access curriculum data programmatically via the API:
             </Text>
