@@ -9,7 +9,7 @@ import { OPERATIONS_PATH } from '../operationsPath';
 describe('Operation Problem Generator (Integration)', () => {
   beforeEach(() => {
     // Clear history before each test
-    for (let i = 1; i <= 150; i++) {
+    for (let i = 1; i <= 120; i++) {
       clearProblemHistory(i);
     }
   });
@@ -17,7 +17,7 @@ describe('Operation Problem Generator (Integration)', () => {
   describe('generateProblem', () => {
     it('should generate problem for each level', () => {
       // Test a sample of levels
-      const testLevels = [1, 5, 15, 31, 51, 71, 91, 111, 131];
+      const testLevels = [1, 5, 15, 31, 51, 71, 91, 111];
 
       for (const levelNum of testLevels) {
         const levelConfig = OPERATIONS_PATH.find(l => l.level === levelNum);
@@ -162,11 +162,11 @@ describe('Operation Problem Generator (Integration)', () => {
     });
   });
 
-  describe('All 150 levels', () => {
-    it('should be able to generate problems for all 150 levels', () => {
+  describe('All 120 levels', () => {
+    it('should be able to generate problems for all 120 levels', () => {
       const failedLevels = [];
 
-      for (let i = 1; i <= 150; i++) {
+      for (let i = 1; i <= 120; i++) {
         const levelConfig = OPERATIONS_PATH.find(l => l.level === i);
 
         if (!levelConfig) {
