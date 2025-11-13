@@ -15,8 +15,9 @@ export function generateSorting(context: GeneratorContext): ProblemData {
   const max = config.maxValue || 10;
   const allowNegatives = config.allowNegatives || false;
 
-  const types = ['sort-asc', 'sort-desc', 'min', 'max', 'median'];
-  const type = types[Math.floor(Math.random() * types.length)];
+  // Use sortingType from config if specified, otherwise pick randomly
+  const allTypes: Array<'sort-asc' | 'sort-desc' | 'min' | 'max' | 'median'> = ['sort-asc', 'sort-desc', 'min', 'max', 'median'];
+  const type = config.sortingType || allTypes[Math.floor(Math.random() * allTypes.length)];
 
   const arr = [];
   for (let i = 0; i < length; i++) {
@@ -71,8 +72,10 @@ export function generateCounting(context: GeneratorContext): ProblemData {
     arr.push(getRandomInt(min, max));
   }
 
-  const types = ['count-all', 'count-even', 'count-odd', 'count-greater', 'count-multiples', 'sum-even'];
-  const type = types[Math.floor(Math.random() * types.length)];
+  // Use countingType from config if specified, otherwise pick randomly
+  const allTypes: Array<'count-all' | 'count-even' | 'count-odd' | 'count-greater' | 'count-multiples' | 'sum-even'> =
+    ['count-all', 'count-even', 'count-odd', 'count-greater', 'count-multiples', 'sum-even'];
+  const type = config.countingType || allTypes[Math.floor(Math.random() * allTypes.length)];
 
   let correctAnswer: number;
   let expression: string;
@@ -128,8 +131,10 @@ export function generateComposition(context: GeneratorContext): ProblemData {
     arr.push(getRandomInt(min, max));
   }
 
-  const types = ['map+n', 'map*n', 'map-then-reduce', 'filter-even', 'filter-map'];
-  const type = types[Math.floor(Math.random() * types.length)];
+  // Use compositionType from config if specified, otherwise pick randomly
+  const allTypes: Array<'map+n' | 'map*n' | 'map-then-reduce' | 'filter-even' | 'filter-map'> =
+    ['map+n', 'map*n', 'map-then-reduce', 'filter-even', 'filter-map'];
+  const type = config.compositionType || allTypes[Math.floor(Math.random() * allTypes.length)];
 
   let correctAnswer: number | string;
   let expression: string;

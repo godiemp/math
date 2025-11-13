@@ -11,8 +11,9 @@ export function generateSequences(context: GeneratorContext): ProblemData {
   const min = config.minValue || 1;
   const max = config.maxValue || 20;
 
-  const types = ['+n', '-n', '*n', 'squares', 'fibonacci'];
-  const type = types[Math.floor(Math.random() * types.length)];
+  // Use sequenceType from config if specified, otherwise pick randomly
+  const allTypes: Array<'+n' | '-n' | '*n' | 'squares' | 'fibonacci'> = ['+n', '-n', '*n', 'squares', 'fibonacci'];
+  const type = config.sequenceType || allTypes[Math.floor(Math.random() * allTypes.length)];
 
   let correctAnswer: number;
   let expression: string;
@@ -95,7 +96,7 @@ export function generateSets(context: GeneratorContext): ProblemData {
   const arrA = Array.from(setA).sort((a, b) => a - b);
   const arrB = Array.from(setB).sort((a, b) => a - b);
 
-  let correctAnswer: string;
+  let correctAnswer: string | number;
   let expression: string;
   let expressionLatex: string;
   let problemKey: string;
@@ -126,7 +127,7 @@ export function generateSets(context: GeneratorContext): ProblemData {
     expressionLatex = `${elem} \\in \\{${arrB.join(',')}\\}`;
     problemKey = `set:∈:${elem},${arrB.join(',')}`;
   } else { // '|'
-    correctAnswer = arrA.length.toString();
+    correctAnswer = arrA.length;
     expression = `|{${arrA.join(',')}}|`;
     expressionLatex = `|\\{${arrA.join(',')}\\}|`;
     problemKey = `set:|:${arrA.join(',')}`;
@@ -143,8 +144,10 @@ export function generateFunctions(context: GeneratorContext): ProblemData {
 
   if (variables.length === 1) {
     const x = getRandomInt(min, max);
-    const types = ['x+a', 'ax', 'ax+b', 'x²', 'x²+ax'];
-    const type = types[Math.floor(Math.random() * types.length)];
+
+    // Use functionType from config if specified, otherwise pick randomly
+    const allTypes: Array<'x+a' | 'ax' | 'ax+b' | 'x²' | 'x²+ax'> = ['x+a', 'ax', 'ax+b', 'x²', 'x²+ax'];
+    const type = config.functionType || allTypes[Math.floor(Math.random() * allTypes.length)];
 
     let correctAnswer: number;
     let expression: string;
@@ -187,8 +190,10 @@ export function generateFunctions(context: GeneratorContext): ProblemData {
   } else { // two variables
     const x = getRandomInt(min, max);
     const y = getRandomInt(min, max);
-    const types = ['x+y', 'xy', 'x²+y²'];
-    const type = types[Math.floor(Math.random() * types.length)];
+
+    // Use functionType from config if specified, otherwise pick randomly
+    const allTypes: Array<'x+y' | 'xy' | 'x²+y²'> = ['x+y', 'xy', 'x²+y²'];
+    const type = config.functionType || allTypes[Math.floor(Math.random() * allTypes.length)];
 
     let correctAnswer: number;
     let expression: string;

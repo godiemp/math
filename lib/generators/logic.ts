@@ -68,8 +68,9 @@ export function generateCompoundConditions(context: GeneratorContext): ProblemDa
   const max = config.maxValue || 10;
   const x = getRandomInt(min, max);
 
-  const types = ['x>a', 'x>a AND x<b', 'x<a OR x>b', 'range'];
-  const type = types[Math.floor(Math.random() * types.length)];
+  // Use conditionType from config if specified, otherwise pick randomly
+  const allTypes: Array<'x>a' | 'x>a AND x<b' | 'x<a OR x>b' | 'range'> = ['x>a', 'x>a AND x<b', 'x<a OR x>b', 'range'];
+  const type = config.conditionType || allTypes[Math.floor(Math.random() * allTypes.length)];
 
   let result: boolean;
   let correctAnswer: string;

@@ -22,25 +22,20 @@ describe('Algorithmic Generators', () => {
 
     it('should sort ascending correctly', () => {
       const context: GeneratorContext = {
-        config: { sequenceLength: 4, minValue: 1, maxValue: 10 },
+        config: { sequenceLength: 4, minValue: 1, maxValue: 10, sortingType: 'sort-asc' },
         level: 121,
       };
 
-      // Try multiple times to get an ascending sort
-      let foundAscending = false;
-      for (let i = 0; i < 20; i++) {
+      // Generate multiple ascending sort problems
+      for (let i = 0; i < 10; i++) {
         const problem = generateSorting(context);
-        if (problem.expression.includes('Ordena:') && !problem.expression.includes('mayor a menor')) {
-          const resultNums = problem.correctAnswer.toString().split(',').map(Number);
-          const isSorted = resultNums.every((val, idx, arr) => idx === 0 || arr[idx - 1] <= val);
-          if (isSorted) {
-            foundAscending = true;
-            break;
-          }
-        }
-      }
+        expect(problem.expression).toContain('Ordena:');
+        expect(problem.expression).not.toContain('mayor a menor');
 
-      expect(foundAscending).toBe(true);
+        const resultNums = problem.correctAnswer.toString().split(',').map(Number);
+        const isSorted = resultNums.every((val, idx, arr) => idx === 0 || arr[idx - 1] <= val);
+        expect(isSorted).toBe(true);
+      }
     });
 
     it('should find min/max correctly', () => {
