@@ -15,7 +15,7 @@ test.describe('Curriculum Pages', () => {
 
     // Check navbar elements
     await expect(page.getByText(/SimplePAES.*Matemática/i)).toBeVisible();
-    await expect(page.getByRole('link', { name: /Volver al Inicio/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Volver al Inicio/i }).first()).toBeVisible();
 
     // Check description text
     await expect(page.getByText(/Competencia Matemática 1.*Contenidos básicos/i)).toBeVisible();
@@ -119,10 +119,11 @@ test.describe('Curriculum Pages', () => {
     await expect(page.getByText(/🎯 Habilidades Evaluadas/i)).toBeVisible();
 
     // Check that all four skills are displayed
-    await expect(page.getByText('Resolver problemas')).toBeVisible();
-    await expect(page.getByText('Modelar')).toBeVisible();
-    await expect(page.getByText('Representar')).toBeVisible();
-    await expect(page.getByText('Argumentar')).toBeVisible();
+    // Note: Using .first() because some skills appear multiple times in the skill-topic matrix below
+    await expect(page.getByText('Resolver problemas').first()).toBeVisible();
+    await expect(page.getByText('Modelar').first()).toBeVisible();
+    await expect(page.getByText('Representar').first()).toBeVisible();
+    await expect(page.getByText('Argumentar').first()).toBeVisible();
   });
 
   test('should display skill-topic matrix section', async ({ page }) => {
