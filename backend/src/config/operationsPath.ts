@@ -1,6 +1,6 @@
 /**
  * Operations Practice Path Configuration (Backend)
- * This file re-exports from the shared lib to avoid code duplication
+ * Re-exports from the modularized operationsPath directory
  */
 
-export * from 'lib/operationsPath';
+export * from './operationsPath/index';
