@@ -249,8 +249,7 @@ export const m1GeometriaPerimetroAreaQuestions: Question[] = [
     difficulty: 'easy',
     skills: ['geometria-triangulos', 'geometria-area-triangulo', 'geometria-area', 'numeros-fracciones', 'numeros-operaciones-basicas'],
     operacionBase: 'A = \\frac{b \\times h}{2}'
-  }
-,
+  },
   {
     id: 'm1-132',
     level: 'M1',
@@ -475,8 +474,7 @@ export const m1GeometriaPerimetroAreaQuestions: Question[] = [
     explanationLatex: '\\text{Suma} = (4-2) \\times 180^\\circ = 360^\\circ',
     difficulty: 'easy',
     skills: ['geometria-cuadrilateros', 'geometria-angulos', 'geometria-suma-angulos', 'numeros-operaciones-basicas']
-  }
-,
+  },
 
   // Clasificación de triángulos por lados (3)
   {
@@ -711,7 +709,7 @@ export const m1GeometriaPerimetroAreaQuestions: Question[] = [
     explanationLatex: '|9 - 5| < x < 9 + 5 \\rightarrow 4 < x < 14 \\rightarrow x = 7 \\text{ cm es válido}',
     difficulty: 'hard',
     skills: ['geometria-triangulos', 'geometria-desigualdad-triangular']
-,
+  },
   {
     id: 'm1-162',
     level: 'M1',
@@ -936,8 +934,7 @@ export const m1GeometriaPerimetroAreaQuestions: Question[] = [
     difficulty: 'easy',
     skills: ['geometria-rectangulos', 'geometria-propiedades', 'geometria-diagonales'],
     operacionBase: 'Diagonales rectángulo: congruentes'
-  }
-,
+  },
   // m1-177: Área de paralelogramo
   {
     id: 'm1-177',
@@ -1176,8 +1173,7 @@ export const m1GeometriaPerimetroAreaQuestions: Question[] = [
     explanationLatex: '500 \\text{ m} = \\frac{500}{1000} = 0.5 \\text{ km}',
     difficulty: 'easy',
     skills: ['geometria-perimetro', 'geometria-unidades', 'numeros-decimales', 'numeros-fracciones', 'numeros-operaciones-basicas']
-  }
-,
+  },
   {
     id: 'm1-192',
     level: 'M1',
