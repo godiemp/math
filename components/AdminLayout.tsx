@@ -14,25 +14,79 @@ interface NavItem {
   icon: string;
 }
 
-const navItems: NavItem[] = [
-  { name: 'Live Sessions', path: '/admin/live-sessions', icon: '📊' },
-  { name: 'Users', path: '/admin/users', icon: '👥' },
-  { name: 'Analytics', path: '/admin/analytics', icon: '📈' },
-  { name: 'AI Analytics', path: '/admin/ai-analytics', icon: '🤖' },
-  { name: 'System Health', path: '/admin/system-health', icon: '💚' },
-  { name: 'Problems', path: '/admin/problems', icon: '❓' },
-  { name: 'Abstract Problems', path: '/admin/abstract-problems', icon: '📚' },
-  { name: 'Generator', path: '/admin/qgen', icon: '🎲' },
-  { name: 'Upload', path: '/admin/upload', icon: '📤' },
-  { name: 'Study Buddy Debug', path: '/admin/study-buddy-debug', icon: '🧠' },
-  { name: 'Rapid Fire Debug', path: '/admin/rapidfire-debug', icon: '⚡' },
-  { name: 'Zen Debug', path: '/admin/zen-debug', icon: '🧘' },
+interface MenuGroup {
+  name: string;
+  icon: string;
+  items: NavItem[];
+}
+
+const menuGroups: MenuGroup[] = [
+  {
+    name: 'Monitoring & Sessions',
+    icon: '📊',
+    items: [
+      { name: 'Live Sessions', path: '/admin/live-sessions', icon: '📊' },
+      { name: 'Analytics', path: '/admin/analytics', icon: '📈' },
+      { name: 'AI Analytics', path: '/admin/ai-analytics', icon: '🤖' },
+      { name: 'System Health', path: '/admin/system-health', icon: '💚' },
+    ],
+  },
+  {
+    name: 'User Management',
+    icon: '👥',
+    items: [
+      { name: 'Users', path: '/admin/users', icon: '👥' },
+    ],
+  },
+  {
+    name: 'Content Management',
+    icon: '📚',
+    items: [
+      { name: 'Problems', path: '/admin/problems', icon: '❓' },
+      { name: 'Abstract Problems', path: '/admin/abstract-problems', icon: '📚' },
+    ],
+  },
+  {
+    name: 'Tools',
+    icon: '🛠️',
+    items: [
+      { name: 'Generator', path: '/admin/qgen', icon: '🎲' },
+      { name: 'Upload', path: '/admin/upload', icon: '📤' },
+    ],
+  },
+  {
+    name: 'Debug Tools',
+    icon: '🔧',
+    items: [
+      { name: 'Study Buddy Debug', path: '/admin/study-buddy-debug', icon: '🧠' },
+      { name: 'Rapid Fire Debug', path: '/admin/rapidfire-debug', icon: '⚡' },
+      { name: 'Zen Debug', path: '/admin/zen-debug', icon: '🧘' },
+    ],
+  },
 ];
+
+// Flatten all items for header title lookup
+const allNavItems: NavItem[] = menuGroups.flatMap(group => group.items);
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
+    new Set(menuGroups.map(group => group.name))
+  );
+
+  const toggleGroup = (groupName: string) => {
+    setExpandedGroups(prev => {
+      const next = new Set(prev);
+      if (next.has(groupName)) {
+        next.delete(groupName);
+      } else {
+        next.add(groupName);
+      }
+      return next;
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -61,28 +115,63 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto py-4">
-            <ul className="space-y-1 px-2">
-              {navItems.map((item) => {
-                const isActive = pathname === item.path;
+            <div className="space-y-2 px-2">
+              {menuGroups.map((group) => {
+                const isExpanded = expandedGroups.has(group.name);
+                const hasActiveItem = group.items.some(item => pathname === item.path);
+
                 return (
-                  <li key={item.path}>
+                  <div key={group.name} className="space-y-1">
+                    {/* Group Header */}
                     <button
-                      onClick={() => router.push(item.path)}
-                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium'
-                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                      onClick={() => toggleGroup(group.name)}
+                      className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${
+                        hasActiveItem
+                          ? 'bg-blue-50/50 dark:bg-blue-900/10 text-blue-600 dark:text-blue-400'
+                          : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                       }`}
                     >
-                      <span className="text-xl">{item.icon}</span>
+                      <span className="text-lg">{group.icon}</span>
                       {sidebarOpen && (
-                        <span className="text-sm whitespace-nowrap">{item.name}</span>
+                        <>
+                          <span className="text-xs font-semibold uppercase tracking-wider flex-1 text-left">
+                            {group.name}
+                          </span>
+                          <span className={`text-xs transition-transform ${isExpanded ? 'rotate-90' : ''}`}>
+                            ▶
+                          </span>
+                        </>
                       )}
                     </button>
-                  </li>
+
+                    {/* Submenu Items */}
+                    {isExpanded && (
+                      <div className={`space-y-0.5 ${sidebarOpen ? 'ml-4' : ''}`}>
+                        {group.items.map((item) => {
+                          const isActive = pathname === item.path;
+                          return (
+                            <button
+                              key={item.path}
+                              onClick={() => router.push(item.path)}
+                              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${
+                                isActive
+                                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium'
+                                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                              }`}
+                            >
+                              <span className="text-lg">{item.icon}</span>
+                              {sidebarOpen && (
+                                <span className="text-sm">{item.name}</span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
-            </ul>
+            </div>
           </nav>
 
           {/* Bottom Actions */}
@@ -109,7 +198,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <div className="h-full px-6 flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {navItems.find((item) => item.path === pathname)?.name || 'Admin'}
+                {allNavItems.find((item) => item.path === pathname)?.name || 'Admin'}
               </h2>
             </div>
             <div className="flex items-center gap-3">
