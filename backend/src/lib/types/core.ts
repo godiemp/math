@@ -403,3 +403,130 @@ export interface ValueGeneratorConfig {
   avoidDuplicates?: boolean;
   preferSimpleValues?: boolean; // Prefer nice numbers (multiples of 5, 10, etc.)
 }
+
+/**
+ * ============================================================================
+ * CERTIFICATE TYPES
+ * ============================================================================
+ * Types for the premium certificate system that generates personalized
+ * certificates for quiz sessions and live practice sessions (ensayos).
+ */
+
+/**
+ * Certificate type
+ * - quiz_session: Certificate for individual quiz practice sessions
+ * - live_session: Certificate for live practice sessions (ensayos)
+ */
+export type CertificateType = 'quiz_session' | 'live_session';
+
+/**
+ * Badge type for achievements
+ */
+export interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  icon: string; // emoji or icon identifier
+  earnedAt: number;
+}
+
+/**
+ * Section score breakdown
+ */
+export interface SectionScore {
+  sectionName: string;
+  score: number;
+  maxScore: number;
+  percentage: number;
+  questionCount: number;
+}
+
+/**
+ * Chart data for performance visualization
+ */
+export interface ChartData {
+  type: 'pie' | 'bar' | 'line';
+  labels: string[];
+  values: number[];
+  colors?: string[];
+}
+
+/**
+ * Certificate entity
+ * Represents a premium certificate issued for completing a test/session
+ */
+export interface Certificate {
+  id: string;
+  userId: string;
+  certificateType: CertificateType;
+  sessionId?: string;
+
+  // Student information
+  studentName: string;
+  studentPhotoUrl?: string;
+  certificateCode: string;
+
+  // Test information
+  testName: string;
+  testDate: number;
+  testDurationMinutes: number;
+  totalQuestions: number;
+
+  // Results
+  totalScore: number;
+  maxScore: number;
+  percentage: number;
+  percentile?: number;
+
+  // Section scores (for multi-section tests)
+  sectionScores?: SectionScore[];
+
+  // Question breakdown
+  correctCount: number;
+  incorrectCount: number;
+  omittedCount: number;
+
+  // Achievements
+  badges: Badge[];
+
+  // AI-generated personalized message
+  personalizedMessage?: string;
+
+  // Charts data
+  chartsData?: ChartData[];
+
+  // Metadata
+  issuedAt: number;
+  expiresAt?: number;
+  verificationUrl?: string;
+  pdfUrl?: string;
+
+  // Tracking
+  viewCount: number;
+  lastViewedAt?: number;
+
+  createdAt: number;
+  updatedAt: number;
+}
+
+/**
+ * Certificate generation request
+ */
+export interface CertificateGenerationRequest {
+  userId: string;
+  certificateType: CertificateType;
+  sessionId?: string;
+  quizSessionId?: string;
+  includePhoto?: boolean;
+}
+
+/**
+ * Certificate statistics for a user
+ */
+export interface CertificateStats {
+  totalCertificates: number;
+  certificatesByType: Record<CertificateType, number>;
+  averagePercentile?: number;
+  totalBadges: number;
+  recentCertificates: Certificate[];
+}

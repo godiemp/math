@@ -1,0 +1,388 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { Card, Button, Heading, Text, Badge } from '@/components/ui';
+import { api } from '@/lib/api-client';
+import AdminLayout from '@/components/AdminLayout';
+
+interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  earnedAt: number;
+}
+
+interface Certificate {
+  id: string;
+  userId: string;
+  certificateType: 'quiz_session' | 'live_session';
+  sessionId?: string;
+  studentName: string;
+  certificateCode: string;
+  testName: string;
+  testDate: number;
+  testDurationMinutes: number;
+  totalQuestions: number;
+  totalScore: number;
+  maxScore: number;
+  percentage: number;
+  percentile?: number;
+  correctCount: number;
+  incorrectCount: number;
+  omittedCount: number;
+  badges: Badge[];
+  personalizedMessage?: string;
+  issuedAt: number;
+  verificationUrl?: string;
+  viewCount: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export default function CertificatesAdminPage() {
+  const router = useRouter();
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [generatingTest, setGeneratingTest] = useState(false);
+  const [testType, setTestType] = useState<'quiz_session' | 'live_session'>('quiz_session');
+
+  useEffect(() => {
+    loadCertificates();
+  }, []);
+
+  const loadCertificates = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await api.get('/api/certificates/admin/all?limit=50');
+      setCertificates(response.data.certificates || []);
+    } catch (err: any) {
+      console.error('Error loading certificates:', err);
+      setError(err.response?.data?.error || 'Failed to load certificates');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const generateTestCertificate = async () => {
+    try {
+      setGeneratingTest(true);
+      setError(null);
+      const response = await api.post('/api/certificates/admin/test', {
+        type: testType,
+      });
+
+      alert('Test certificate generated successfully! Certificate ID: ' + response.data.certificate.id);
+      await loadCertificates();
+    } catch (err: any) {
+      console.error('Error generating test certificate:', err);
+      setError(err.response?.data?.error || err.response?.data?.message || 'Failed to generate test certificate');
+      alert('Error: ' + (err.response?.data?.error || err.response?.data?.message || 'Failed to generate test certificate'));
+    } finally {
+      setGeneratingTest(false);
+    }
+  };
+
+  const downloadCertificate = (certificateId: string) => {
+    window.open(`${api.defaults.baseURL}/api/certificates/${certificateId}/download`, '_blank');
+  };
+
+  const previewCertificate = (certificateId: string) => {
+    window.open(`${api.defaults.baseURL}/api/certificates/${certificateId}/preview`, '_blank');
+  };
+
+  const formatDate = (timestamp: number) => {
+    return new Date(timestamp).toLocaleString('es-CL', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  return (
+    <ProtectedRoute requireAdmin>
+      <AdminLayout>
+        <div className="container mx-auto px-4 py-8">
+          <div className="mb-8">
+            <Heading level={1} className="text-3xl font-bold mb-2">
+              Gestión de Certificados
+            </Heading>
+            <Text className="text-gray-600">
+              Visualiza y gestiona certificados premium generados para ensayos completados
+            </Text>
+          </div>
+
+          {error && (
+            <Card className="mb-6 bg-red-50 border border-red-200 p-4">
+              <Text className="text-red-800">{error}</Text>
+            </Card>
+          )}
+
+          {/* Test Certificate Generation Section */}
+          <Card className="mb-8 p-6 bg-blue-50 border border-blue-200">
+            <Heading level={2} className="text-xl font-semibold mb-4">
+              Generar Certificado de Prueba
+            </Heading>
+            <Text className="mb-4 text-gray-700">
+              Genera un certificado basado en tu último ensayo completado. Asegúrate de haber completado al menos un ensayo antes.
+            </Text>
+            <div className="flex gap-4 items-center">
+              <select
+                value={testType}
+                onChange={(e) => setTestType(e.target.value as 'quiz_session' | 'live_session')}
+                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="quiz_session">Sesión de Quiz</option>
+                <option value="live_session">Sesión en Vivo</option>
+              </select>
+              <Button
+                onClick={generateTestCertificate}
+                disabled={generatingTest}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md disabled:opacity-50"
+              >
+                {generatingTest ? 'Generando...' : 'Generar Certificado de Prueba'}
+              </Button>
+            </div>
+          </Card>
+
+          {/* Certificates List */}
+          <Card className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <Heading level={2} className="text-xl font-semibold">
+                Certificados Emitidos ({certificates.length})
+              </Heading>
+              <Button
+                onClick={loadCertificates}
+                disabled={loading}
+                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md disabled:opacity-50"
+              >
+                {loading ? 'Cargando...' : 'Actualizar'}
+              </Button>
+            </div>
+
+            {loading && certificates.length === 0 ? (
+              <div className="text-center py-12">
+                <Text className="text-gray-500">Cargando certificados...</Text>
+              </div>
+            ) : certificates.length === 0 ? (
+              <div className="text-center py-12">
+                <Text className="text-gray-500">No hay certificados emitidos aún.</Text>
+                <Text className="text-gray-400 text-sm mt-2">
+                  Genera un certificado de prueba para comenzar.
+                </Text>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Código
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Estudiante
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Ensayo
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Tipo
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Resultado
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Percentil
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Medallas
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Vistas
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Emitido
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Acciones
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {certificates.map((cert) => (
+                      <tr key={cert.id} className="hover:bg-gray-50">
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <div className="text-sm font-mono text-gray-900">
+                            {cert.certificateCode}
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">{cert.studentName}</div>
+                        </td>
+                        <td className="px-4 py-4">
+                          <div className="text-sm text-gray-900 max-w-xs truncate">
+                            {cert.testName}
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <Badge
+                            variant={cert.certificateType === 'quiz_session' ? 'default' : 'success'}
+                          >
+                            {cert.certificateType === 'quiz_session' ? 'Quiz' : 'En Vivo'}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <div className="text-sm">
+                            <div className="font-medium text-gray-900">
+                              {cert.totalScore}/{cert.maxScore}
+                            </div>
+                            <div className="text-gray-500">{cert.percentage.toFixed(1)}%</div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          {cert.percentile !== undefined ? (
+                            <div className="text-sm font-medium text-gray-900">
+                              {cert.percentile}°
+                            </div>
+                          ) : (
+                            <div className="text-sm text-gray-400">-</div>
+                          )}
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <div className="flex gap-1">
+                            {cert.badges.slice(0, 3).map((badge) => (
+                              <span key={badge.id} title={badge.name}>
+                                {badge.icon}
+                              </span>
+                            ))}
+                            {cert.badges.length > 3 && (
+                              <span className="text-xs text-gray-500">
+                                +{cert.badges.length - 3}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">{cert.viewCount}</div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-500">
+                            {formatDate(cert.issuedAt)}
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => previewCertificate(cert.id)}
+                              className="text-blue-600 hover:text-blue-900"
+                              title="Vista Previa"
+                            >
+                              👁️
+                            </button>
+                            <button
+                              onClick={() => downloadCertificate(cert.id)}
+                              className="text-green-600 hover:text-green-900"
+                              title="Descargar PDF"
+                            >
+                              📥
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </Card>
+
+          {/* Certificate Types Info */}
+          <Card className="mt-8 p-6 bg-gray-50">
+            <Heading level={3} className="text-lg font-semibold mb-4">
+              Tipos de Certificados
+            </Heading>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Badge variant="default">Quiz</Badge>
+                  <Text className="font-semibold">Sesión de Quiz</Text>
+                </div>
+                <Text className="text-sm text-gray-600">
+                  Certificados generados para sesiones de práctica individual (modo Zen o Rapidfire).
+                  Incluye análisis por sección temática y evolución de puntajes.
+                </Text>
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Badge variant="success">En Vivo</Badge>
+                  <Text className="font-semibold">Sesión en Vivo</Text>
+                </div>
+                <Text className="text-sm text-gray-600">
+                  Certificados generados para ensayos en vivo. Incluye percentil comparativo
+                  con otros participantes del mismo ensayo.
+                </Text>
+              </div>
+            </div>
+          </Card>
+
+          {/* Features Info */}
+          <Card className="mt-8 p-6 bg-gradient-to-r from-purple-50 to-blue-50">
+            <Heading level={3} className="text-lg font-semibold mb-4">
+              Características del Certificado Premium
+            </Heading>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <div className="text-2xl mb-2">🎓</div>
+                <Text className="font-semibold mb-1">Información Completa</Text>
+                <Text className="text-sm text-gray-600">
+                  Nombre del estudiante, fecha, duración, y detalles del ensayo
+                </Text>
+              </div>
+              <div>
+                <div className="text-2xl mb-2">📊</div>
+                <Text className="font-semibold mb-1">Resultados Detallados</Text>
+                <Text className="text-sm text-gray-600">
+                  Puntaje total, porcentaje de logro, y desempeño por sección
+                </Text>
+              </div>
+              <div>
+                <div className="text-2xl mb-2">🏆</div>
+                <Text className="font-semibold mb-1">Medallas y Logros</Text>
+                <Text className="text-sm text-gray-600">
+                  Badges automáticos según desempeño y persistencia
+                </Text>
+              </div>
+              <div>
+                <div className="text-2xl mb-2">🤖</div>
+                <Text className="font-semibold mb-1">Mensaje IA</Text>
+                <Text className="text-sm text-gray-600">
+                  Análisis personalizado con fortalezas y áreas de mejora
+                </Text>
+              </div>
+              <div>
+                <div className="text-2xl mb-2">📈</div>
+                <Text className="font-semibold mb-1">Percentil Nacional</Text>
+                <Text className="text-sm text-gray-600">
+                  Comparación simulada con otros estudiantes
+                </Text>
+              </div>
+              <div>
+                <div className="text-2xl mb-2">🔐</div>
+                <Text className="font-semibold mb-1">Verificación QR</Text>
+                <Text className="text-sm text-gray-600">
+                  Código QR para verificar autenticidad del certificado
+                </Text>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </AdminLayout>
+    </ProtectedRoute>
+  );
+}
