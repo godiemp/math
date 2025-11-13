@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useMachine } from '@xstate/react';
 import type { Question, RapidFireState, RapidFireScore } from '@/lib/types';
 import { getRandomQuestions } from '@/lib/questions';
 import { QuestionRenderer } from '../QuestionRenderer';
-import { useQuizState } from '@/hooks/useQuizState';
 import { useQuizProgress } from '@/hooks/useQuizProgress';
-import { useQuizNavigation } from '@/hooks/useQuizNavigation';
 import { formatTime, getTimerColor, generateQuizSessionId } from '@/lib/quiz-utils';
 import { RAPIDFIRE_CONFIG } from '@/lib/constants';
 import { analytics } from '@/lib/analytics';
+import { rapidFireMachine, type RapidFireContext } from '@/lib/rapidfire-machine';
 
 interface RapidFireQuizProps {
   questions: Question[];
@@ -31,91 +31,69 @@ export default function RapidFireQuiz({
   const searchParams = useSearchParams();
   const isDebugMode = searchParams?.get('debug') === 'true';
 
-  const [showCountdown, setShowCountdown] = useState(!isDebugMode);
+  const [quizSessionId] = useState(generateQuizSessionId);
+  const [aiConversation] = useState<Array<{ role: string; message: string; timestamp: number }>>([]);
+
+  // Get initial questions
+  const initialQuestions = replayQuestions || getRandomQuestions(level, config.questionCount, subject);
+
+  // Initialize state machine
+  const [state, send] = useMachine(rapidFireMachine, {
+    input: {
+      quizQuestions: initialQuestions,
+      userAnswers: new Array(initialQuestions.length).fill(null),
+      currentQuestionIndex: 0,
+      wrongAnswerCount: 0,
+      timeRemaining: config.timeLimit,
+      totalTimeElapsed: 0,
+      maxWrongAnswers: config.maxWrongAnswers,
+      livesSystem: config.livesSystem,
+      timePerQuestion: new Array(initialQuestions.length).fill(0),
+      hintsUsed: [],
+      pausesUsed: 0,
+      currentStreak: 0,
+      longestStreak: 0,
+      quizSessionId,
+      config: config,
+    } as RapidFireContext,
+  });
+
   const [countdown, setCountdown] = useState(3);
   const [showTimer, setShowTimer] = useState(() => {
     const saved = localStorage.getItem('quiz-show-timer');
     return saved !== null ? saved === 'true' : true;
-  });
-  const [timeRemaining, setTimeRemaining] = useState(config.timeLimit);
-  const [totalTimeElapsed, setTotalTimeElapsed] = useState(0);
-  const [quizSessionId] = useState(generateQuizSessionId);
-  const [aiConversation] = useState<Array<{ role: string; message: string; timestamp: number }>>([]);
-
-  // Rapid Fire state
-  const [rapidFireState, setRapidFireState] = useState<RapidFireState>({
-    hintsUsed: [],
-    pausesUsed: 0,
-    pausesRemaining: config.pauseAllowed ? 1 : 0,
-    livesRemaining: config.livesSystem ? config.maxWrongAnswers : Infinity,
-    wrongAnswerCount: 0,
-    currentStreak: 0,
-    longestStreak: 0,
-    timePerQuestion: [],
-    isPaused: false,
-    pauseTimeRemaining: 0,
   });
 
   // Menu state
   const [showMenu, setShowMenu] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Use shared hooks
-  const {
-    quizQuestions,
-    currentQuestionIndex,
-    setCurrentQuestionIndex,
-    userAnswers,
-    quizSubmitted,
-    setQuizSubmitted,
-    currentQuestion,
-    handleAnswerSelect: baseHandleAnswerSelect,
-    resetQuiz,
-  } = useQuizState({
-    level,
-    subject,
-    questionCount: config.questionCount,
-    replayQuestions,
-  });
-
   const { score, submitQuiz } = useQuizProgress({ level });
 
-  const { handlePrevious, handleNext } = useQuizNavigation(
-    currentQuestionIndex,
-    setCurrentQuestionIndex,
-    quizQuestions.length
-  );
+  // Extract values from machine context
+  const quizQuestions = state.context.quizQuestions;
+  const currentQuestionIndex = state.context.currentQuestionIndex;
+  const userAnswers = state.context.userAnswers;
+  const timeRemaining = state.context.timeRemaining;
+  const totalTimeElapsed = state.context.totalTimeElapsed;
+  const wrongAnswerCount = state.context.wrongAnswerCount;
+  const currentQuestion = quizQuestions[currentQuestionIndex];
+  const quizSubmitted = ['reviewMode', 'summary', 'quizComplete'].includes(state.value as string);
 
-  // Initialize rapid fire state when quiz questions load
-  useEffect(() => {
-    if (quizQuestions.length > 0) {
-      setRapidFireState({
-        hintsUsed: [],
-        pausesUsed: 0,
-        pausesRemaining: config.pauseAllowed ? 1 : 0,
-        livesRemaining: config.livesSystem ? config.maxWrongAnswers : Infinity,
-        wrongAnswerCount: 0,
-        currentStreak: 0,
-        longestStreak: 0,
-        timePerQuestion: new Array(quizQuestions.length).fill(0),
-        isPaused: false,
-        pauseTimeRemaining: 0,
-      });
-      setTimeRemaining(config.timeLimit);
-      setTotalTimeElapsed(0);
-    }
-  }, [quizQuestions.length, config.timeLimit, config.pauseAllowed, config.livesSystem, config.maxWrongAnswers]);
+  // Derived state for rendering
+  const livesRemaining = config.maxWrongAnswers - wrongAnswerCount;
+  const isPaused = state.value === 'paused';
 
   // Countdown effect
   useEffect(() => {
-    if (!showCountdown) return;
+    if (state.value !== 'countdown') return;
 
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
     } else {
       const timer = setTimeout(() => {
-        setShowCountdown(false);
+        send({ type: 'START' });
         // Track quiz started when countdown ends
         analytics.track('quiz_started', {
           level,
@@ -128,34 +106,25 @@ export default function RapidFireQuiz({
       }, 800);
       return () => clearTimeout(timer);
     }
-  }, [showCountdown, countdown, level, difficulty, subject, quizQuestions.length, config.timeLimit]);
+  }, [state, countdown, level, difficulty, subject, quizQuestions.length, config.timeLimit, send]);
 
-  // Timer effect
+  // Timer effect - send TICK events to the machine
   useEffect(() => {
-    if (quizSubmitted || quizQuestions.length === 0 || showCountdown || rapidFireState.isPaused) {
+    if (state.value !== 'playing' && state.value !== 'answerFeedback') {
       return;
     }
 
     const timer = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 1) {
-          handleSubmitQuiz();
-          return 0;
-        }
-        return prev - 1;
-      });
-      setTotalTimeElapsed((prev) => prev + 1);
+      send({ type: 'TICK' });
 
-      // Track time per question
-      setRapidFireState(prev => {
-        const newTimePerQuestion = [...prev.timePerQuestion];
-        newTimePerQuestion[currentQuestionIndex] = (newTimePerQuestion[currentQuestionIndex] || 0) + 1;
-        return { ...prev, timePerQuestion: newTimePerQuestion };
-      });
+      // Check if time is up
+      if (timeRemaining <= 1) {
+        send({ type: 'TIME_UP' });
+      }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [quizSubmitted, quizQuestions.length, showCountdown, rapidFireState.isPaused, currentQuestionIndex]);
+  }, [state, timeRemaining, send]);
 
 
   const toggleTimer = () => {
@@ -167,40 +136,8 @@ export default function RapidFireQuiz({
   const handleAnswerSelect = (answerIndex: number) => {
     if (quizSubmitted) return;
 
-    baseHandleAnswerSelect(answerIndex);
-
-    const isCorrect = answerIndex === currentQuestion.correctAnswer;
-
-    // Update rapid fire state
-    setRapidFireState(prev => {
-      const newState = { ...prev };
-
-      if (!isCorrect) {
-        newState.wrongAnswerCount = prev.wrongAnswerCount + 1;
-
-        // Check lives system - GAME OVER
-        if (config.livesSystem && newState.wrongAnswerCount >= config.maxWrongAnswers) {
-          setTimeout(() => handleSubmitQuiz(), 2000);
-          return newState;
-        }
-      }
-
-      return newState;
-    });
-
-    // Auto-advance to next question after showing feedback
-    const willBeGameOver = !isCorrect && config.livesSystem &&
-      rapidFireState.wrongAnswerCount + 1 >= config.maxWrongAnswers;
-
-    if (!willBeGameOver) {
-      setTimeout(() => {
-        if (currentQuestionIndex < quizQuestions.length - 1) {
-          handleNext();
-        } else {
-          handleSubmitQuiz();
-        }
-      }, 1500);
-    }
+    // Send answer to state machine - it handles all the logic
+    send({ type: 'ANSWER', answerIndex });
   };
 
   // Hint feature removed for rapidfire mode
@@ -208,17 +145,11 @@ export default function RapidFireQuiz({
 
   const handlePause = () => {
     setShowMenu(false);
-    setRapidFireState(prev => ({
-      ...prev,
-      isPaused: true,
-    }));
+    send({ type: 'PAUSE' });
   };
 
   const handleUnpause = () => {
-    setRapidFireState(prev => ({
-      ...prev,
-      isPaused: false,
-    }));
+    send({ type: 'UNPAUSE' });
   };
 
   const handleExitSession = () => {
@@ -256,63 +187,54 @@ export default function RapidFireQuiz({
     };
   };
 
-  const handleSubmitQuiz = async () => {
-    if (isSubmitting) return; // Prevent double submission
-
-    setIsSubmitting(true);
-    try {
-      await submitQuiz(quizQuestions, userAnswers, quizSessionId, aiConversation);
-
-      // Calculate quiz metrics
-      const correctAnswers = userAnswers.filter((answer, idx) =>
-        answer === quizQuestions[idx].correctAnswer
-      ).length;
-      const accuracy = correctAnswers / quizQuestions.length;
-
-      // Track quiz completion
-      analytics.track('quiz_completed', {
-        level,
-        mode: 'rapid-fire',
-        difficulty,
-        subject: subject || 'all',
-        questionsAnswered: quizQuestions.length,
-        correctAnswers,
-        accuracy,
-        timeSpent: totalTimeElapsed,
-        timeRemaining,
-        quizSessionId,
-      });
-
-      setQuizSubmitted(true);
-      // Set to first answered question for review
-      const firstAnswered = quizQuestions.findIndex((_, index) => userAnswers[index] !== null);
-      setCurrentQuestionIndex(firstAnswered >= 0 ? firstAnswered : 0);
-    } catch (error) {
-      console.error('Error submitting quiz:', error);
-      // Reset submitting state on error so user can retry
-      setIsSubmitting(false);
+  // Submit quiz when entering quizComplete state
+  useEffect(() => {
+    if (!['quizComplete', 'reviewMode', 'summary'].includes(state.value as string)) {
+      return;
     }
-  };
+
+    // Only submit once
+    if (isSubmitting) return;
+
+    const submitQuizData = async () => {
+      setIsSubmitting(true);
+      try {
+        await submitQuiz(quizQuestions, userAnswers, quizSessionId, aiConversation);
+
+        // Calculate quiz metrics
+        const correctAnswers = userAnswers.filter((answer, idx) =>
+          answer === quizQuestions[idx].correctAnswer
+        ).length;
+        const accuracy = correctAnswers / quizQuestions.length;
+
+        // Track quiz completion
+        analytics.track('quiz_completed', {
+          level,
+          mode: 'rapid-fire',
+          difficulty,
+          subject: subject || 'all',
+          questionsAnswered: quizQuestions.length,
+          correctAnswers,
+          accuracy,
+          timeSpent: totalTimeElapsed,
+          timeRemaining,
+          quizSessionId,
+        });
+      } catch (error) {
+        console.error('Error submitting quiz:', error);
+        // Reset submitting state on error so user can retry
+        setIsSubmitting(false);
+      }
+    };
+
+    submitQuizData();
+  }, [state, isSubmitting, quizQuestions, userAnswers, quizSessionId, aiConversation, submitQuiz, level, difficulty, subject, totalTimeElapsed, timeRemaining]);
 
   const handleRestart = () => {
     const randomQuestions = getRandomQuestions(level, config.questionCount, subject);
-    resetQuiz(randomQuestions);
-    setTimeRemaining(config.timeLimit);
-    setTotalTimeElapsed(0);
-    setRapidFireState({
-      hintsUsed: [],
-      pausesUsed: 0,
-      pausesRemaining: config.pauseAllowed ? 1 : 0,
-      livesRemaining: config.livesSystem ? config.maxWrongAnswers : Infinity,
-      wrongAnswerCount: 0,
-      currentStreak: 0,
-      longestStreak: 0,
-      timePerQuestion: new Array(config.questionCount).fill(0),
-      isPaused: false,
-      pauseTimeRemaining: 0,
-    });
-    setShowCountdown(true);
+    send({ type: 'RESTART', questions: randomQuestions });
     setCountdown(3);
+    setIsSubmitting(false);
   };
 
   if (quizQuestions.length === 0) {
@@ -324,7 +246,7 @@ export default function RapidFireQuiz({
   }
 
   // Countdown intro screen
-  if (showCountdown) {
+  if (state.value === 'countdown') {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900">
         <div className="text-center">
@@ -386,7 +308,7 @@ export default function RapidFireQuiz({
   }
 
   // Completion screen
-  if (quizSubmitted && currentQuestionIndex === quizQuestions.length) {
+  if (state.value === 'summary') {
     const summary = calculateRapidFireSummary();
 
     return (
@@ -435,7 +357,10 @@ export default function RapidFireQuiz({
                   }`}
                 >
                   <button
-                    onClick={() => setCurrentQuestionIndex(index)}
+                    onClick={() => {
+                      send({ type: 'REVIEW' });
+                      send({ type: 'NAVIGATE_TO_QUESTION', questionIndex: index });
+                    }}
                     className="w-full text-left hover:opacity-80 transition-opacity"
                   >
                     <div className="flex items-center justify-between">
@@ -459,11 +384,7 @@ export default function RapidFireQuiz({
 
         <div className="space-y-4">
           <button
-            onClick={() => {
-              // Find first answered question
-              const firstAnswered = quizQuestions.findIndex((_, index) => userAnswers[index] !== null);
-              setCurrentQuestionIndex(firstAnswered >= 0 ? firstAnswered : 0);
-            }}
+            onClick={() => send({ type: 'REVIEW' })}
             className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
           >
             Revisar Respuestas
@@ -533,7 +454,7 @@ export default function RapidFireQuiz({
             onClick={() => {
               const currentPos = answeredQuestionIndices.indexOf(currentQuestionIndex);
               if (currentPos > 0) {
-                setCurrentQuestionIndex(answeredQuestionIndices[currentPos - 1]);
+                send({ type: 'NAVIGATE_TO_QUESTION', questionIndex: answeredQuestionIndices[currentPos - 1] });
               }
             }}
             disabled={answeredQuestionIndices.indexOf(currentQuestionIndex) === 0}
@@ -546,7 +467,7 @@ export default function RapidFireQuiz({
               onClick={() => {
                 const currentPos = answeredQuestionIndices.indexOf(currentQuestionIndex);
                 if (currentPos < answeredQuestionIndices.length - 1) {
-                  setCurrentQuestionIndex(answeredQuestionIndices[currentPos + 1]);
+                  send({ type: 'NAVIGATE_TO_QUESTION', questionIndex: answeredQuestionIndices[currentPos + 1] });
                 }
               }}
               className="flex-1 px-6 py-3 rounded-lg font-semibold transition-all bg-gradient-to-r from-indigo-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl"
@@ -555,7 +476,7 @@ export default function RapidFireQuiz({
             </button>
           ) : (
             <button
-              onClick={() => setCurrentQuestionIndex(quizQuestions.length)}
+              onClick={() => send({ type: 'VIEW_SUMMARY' })}
               className="flex-1 px-6 py-3 rounded-lg font-semibold transition-all bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl"
             >
               Ver Resumen
@@ -634,7 +555,7 @@ export default function RapidFireQuiz({
                     {Array.from({ length: config.maxWrongAnswers }).map((_, i) => (
                       <span
                         key={i}
-                        className={`text-2xl transition-all ${i < rapidFireState.livesRemaining ? 'text-red-500 scale-100' : 'text-gray-300 dark:text-gray-600 scale-75 opacity-50'}`}
+                        className={`text-2xl transition-all ${i < livesRemaining ? 'text-red-500 scale-100' : 'text-gray-300 dark:text-gray-600 scale-75 opacity-50'}`}
                       >
                         ❤️
                       </span>
@@ -744,7 +665,7 @@ export default function RapidFireQuiz({
       </div>
 
       {/* Pause Overlay */}
-      {rapidFireState.isPaused && (
+      {isPaused && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
             <div className="text-center">
@@ -770,7 +691,7 @@ export default function RapidFireQuiz({
       )}
 
       {/* Game Over Overlay - Simple version */}
-      {config.livesSystem && rapidFireState.livesRemaining === 0 && !quizSubmitted && (
+      {state.value === 'gameOver' && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
             <div className="text-center">
