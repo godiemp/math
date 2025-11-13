@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { CurriculumSidebar } from './ui/CurriculumSidebar';
 import { getGroupedUnits, type ThematicUnit } from '@/lib/services/thematicUnitsService';
 import type { Level } from '@/lib/types';
+import { api } from '@/lib/api-client';
 
 interface CurriculumProps {
   level: Level;
@@ -82,6 +83,7 @@ export default function Curriculum({ level }: CurriculumProps) {
     probabilidad: ThematicUnit[];
   } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'copying' | 'success' | 'error'>('idle');
 
   useEffect(() => {
     async function loadUnits() {
@@ -100,6 +102,26 @@ export default function Curriculum({ level }: CurriculumProps) {
       ...prev,
       [topicId]: !prev[topicId]
     }));
+  };
+
+  const copyCurriculum = async () => {
+    try {
+      setCopyStatus('copying');
+
+      const response = await api.get<{ units: ThematicUnit[] }>(`/api/thematic-units?level=${level}`);
+
+      if (response.data?.units) {
+        const jsonString = JSON.stringify(response.data.units, null, 2);
+        await navigator.clipboard.writeText(jsonString);
+        setCopyStatus('success');
+
+        setTimeout(() => setCopyStatus('idle'), 2000);
+      }
+    } catch (error) {
+      console.error('Error copying curriculum:', error);
+      setCopyStatus('error');
+      setTimeout(() => setCopyStatus('idle'), 2000);
+    }
   };
 
   if (loading) {
@@ -175,14 +197,38 @@ export default function Curriculum({ level }: CurriculumProps) {
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 text-transparent bg-clip-text">
                   Curriculum PAES - Nivel {level}
                 </h1>
-                {level === 'M1' && (
-                  <Link
-                    href="/curriculum/m1/docs"
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg transition-colors text-xs sm:text-sm flex items-center gap-2 whitespace-nowrap self-start"
+                <div className="flex gap-2">
+                  <button
+                    onClick={copyCurriculum}
+                    disabled={copyStatus === 'copying'}
+                    className={`font-medium py-2 px-3 sm:px-4 rounded-lg transition-colors text-xs sm:text-sm flex items-center gap-2 whitespace-nowrap self-start ${
+                      copyStatus === 'success'
+                        ? 'bg-green-600 text-white'
+                        : copyStatus === 'error'
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-600 hover:bg-gray-700 text-white'
+                    }`}
+                    title={`Copy ${level} curriculum to clipboard`}
                   >
-                    📖 <span className="hidden sm:inline">Ver Documentación Detallada</span><span className="sm:hidden">Docs</span>
-                  </Link>
-                )}
+                    {copyStatus === 'copying' ? (
+                      <>⏳ <span className="hidden sm:inline">Copying...</span></>
+                    ) : copyStatus === 'success' ? (
+                      <>✓ <span className="hidden sm:inline">Copied!</span></>
+                    ) : copyStatus === 'error' ? (
+                      <>✗ <span className="hidden sm:inline">Error</span></>
+                    ) : (
+                      <>📋 <span className="hidden sm:inline">Copy Curriculum</span></>
+                    )}
+                  </button>
+                  {level === 'M1' && (
+                    <Link
+                      href="/curriculum/m1/docs"
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg transition-colors text-xs sm:text-sm flex items-center gap-2 whitespace-nowrap self-start"
+                    >
+                      📖 <span className="hidden sm:inline">Ver Documentación Detallada</span><span className="sm:hidden">Docs</span>
+                    </Link>
+                  )}
+                </div>
               </div>
               <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base md:text-lg mb-2">
                 {level === 'M1'
