@@ -218,7 +218,7 @@ test.describe('User Registration', () => {
     // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Verify login mode
-    await expect(page.getByTestId('auth-heading')).toContainText('Iniciar Sesión');
+    await expect(page.getByTestId('auth-heading')).toContainText('iniciar sesión');
     await expect(page.getByTestId('auth-email-input')).not.toBeVisible();
     await expect(page.getByTestId('auth-displayname-input')).not.toBeVisible();
     await expect(page.getByTestId('auth-terms-checkbox')).not.toBeVisible();
@@ -247,7 +247,7 @@ test.describe('User Registration', () => {
       // Check if button gets disabled
       page.getByTestId('auth-submit-button').isDisabled({ timeout: 500 }).then(() => true).catch(() => false),
       // Check if loading text appears
-      page.getByText('Cargando').waitFor({ state: 'visible', timeout: 500 }).then(() => true).catch(() => false),
+      page.getByText('cargando...').waitFor({ state: 'visible', timeout: 500 }).then(() => true).catch(() => false),
       // Check if navigation happens (success case)
       page.waitForURL(/\/dashboard/, { timeout: 2000 }).then(() => 'navigated').catch(() => false)
     ]);
