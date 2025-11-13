@@ -5,10 +5,12 @@ import { m1NumerosPotenciasRaicesQuestions } from './potencias-raices';
 import { m1NumerosProporcionalidadQuestions } from './proporcionalidad';
 import { m1Num001Questions } from './M1-NUM-001';
 import { m1Num002Questions } from './M1-NUM-002';
+import { m1Num003Questions } from './M1-NUM-003';
 
 // Export individual curriculum subsections
 export { m1Num001Questions } from './M1-NUM-001';
 export { m1Num002Questions } from './M1-NUM-002';
+export { m1Num003Questions } from './M1-NUM-003';
 
 // Export individual modules (for backward compatibility)
 export { m1NumerosEnterosRacionalesQuestions } from './enteros-racionales';
@@ -20,7 +22,7 @@ export { m1NumerosProporcionalidadQuestions } from './proporcionalidad';
 export const m1NumerosQuestions: Question[] = [
   ...m1Num001Questions,
   ...m1Num002Questions,
+  ...m1Num003Questions,
   ...m1NumerosPorcentajeQuestions,
   ...m1NumerosPotenciasRaicesQuestions,
-  ...m1NumerosProporcionalidadQuestions,
 ];
