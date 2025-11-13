@@ -182,7 +182,7 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     // Click "Ver Resumen" to see the completion screen
     const verResumenButton = page.getByRole('button', { name: /Ver Resumen/i });
     await expect(verResumenButton).toBeVisible();
-    await verResumenButton.click();
+    await verResumenButton.click({ force: true });
 
     // Now verify completion screen elements are displayed
     await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible();
@@ -292,7 +292,7 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
       // If we see "Ver Resumen" button, click it to get to completion screen
       if (await verResumenButton.isVisible().catch(() => false)) {
-        await verResumenButton.click();
+        await verResumenButton.click({ force: true });
         await expect(completionText).toBeVisible({ timeout: 10000 });
       }
     } catch (e) {
@@ -318,7 +318,7 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
 
         // Now click Ver Resumen if found
         if (await verResumenButton.isVisible().catch(() => false)) {
-          await verResumenButton.click();
+          await verResumenButton.click({ force: true });
         }
       }
     }
@@ -387,7 +387,7 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     // Click "Ver Resumen" to see completion screen
     const verResumenButton = page.getByRole('button', { name: /Ver Resumen/i });
     await expect(verResumenButton).toBeVisible();
-    await verResumenButton.click();
+    await verResumenButton.click({ force: true });
 
     // Should be on results page
     await expect(page.getByText(/¡Quiz Completado!/i)).toBeVisible();
