@@ -3,6 +3,7 @@
 // ============================================================================
 // Import from new curriculum subsection files
 import { m1Alg001Questions } from './m1-alg-001';
+import { m1Alg002Questions } from './m1-alg-002';
 
 // ============================================================================
 // LEGACY TOPIC-BASED EXPORTS (for backward compatibility)
@@ -25,6 +26,9 @@ import { m1AlgebraFuncionesCuadraticasQuestions } from './funciones-cuadraticas'
 // ============================================================================
 // M1-ALG-001: Lenguaje algebraico y expresiones
 export { m1Alg001Questions } from './m1-alg-001';
+
+// M1-ALG-002: Reducción de expresiones algebraicas
+export { m1Alg002Questions } from './m1-alg-002';
 
 // ============================================================================
 // LEGACY TOPIC-BASED EXPORTS (for backward compatibility)
