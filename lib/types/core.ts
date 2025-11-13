@@ -117,6 +117,8 @@ export interface Question {
   difficulty: DifficultyLevel;
   // Subject area for better categorization
   subject: Subject;
+  // Base mathematical operation (in LaTeX format)
+  operacionBase?: string;
   // Skills required to solve this problem (from skillTaxonomy.ts)
   skills: string[];
   // Embedded images (diagrams, tables, etc.)
