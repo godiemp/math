@@ -22,6 +22,13 @@ interface UserProgress {
   highestLevelReached: number;
   totalOperationsSolved: number;
   lastPracticeAt?: number;
+  levelStats?: {
+    [level: number]: {
+      correctAnswers: number;
+      totalAttempts: number;
+      completedAt?: number;
+    };
+  };
 }
 
 export default function OperationsPracticePage() {
@@ -94,42 +101,6 @@ export default function OperationsPracticePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Práctica de Operaciones
-          </h1>
-          <p className="text-gray-600 text-lg">
-            Progresa desde lo más básico hasta convertirte en un maestro de las operaciones matemáticas
-          </p>
-        </div>
-
-        {/* Progress Summary */}
-        {userProgress && (
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-1">
-                  {userProgress.currentLevel}
-                </div>
-                <div className="text-sm text-gray-600">Nivel Actual</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600 mb-1">
-                  {userProgress.highestLevelReached}
-                </div>
-                <div className="text-sm text-gray-600">Nivel Más Alto Alcanzado</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-green-600 mb-1">
-                  {userProgress.totalOperationsSolved}
-                </div>
-                <div className="text-sm text-gray-600">Operaciones Resueltas</div>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Main Content */}
         {selectedLevel ? (
           <OperationsPractice

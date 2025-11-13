@@ -18,6 +18,13 @@ interface UserProgress {
   currentLevel: number;
   highestLevelReached: number;
   totalOperationsSolved: number;
+  levelStats?: {
+    [level: number]: {
+      correctAnswers: number;
+      totalAttempts: number;
+      completedAt?: number;
+    };
+  };
 }
 
 interface OperationsPathProps {
@@ -85,6 +92,35 @@ const operationTypeIcons: { [key: string]: string } = {
   'composition': '∘',
 };
 
+const operationTypeNames: { [key: string]: string } = {
+  // Phase 1: Arithmetic
+  addition: 'Suma',
+  subtraction: 'Resta',
+  multiplication: 'Multiplicación',
+  division: 'División',
+  'mixed-arithmetic': 'Aritmética Mixta',
+
+  // Phase 2: Algebraic
+  'simple-equation': 'Ecuación Simple',
+  'expression-evaluation': 'Evaluación de Expresiones',
+  'simplification': 'Simplificación',
+
+  // Phase 3: Logical
+  'comparison': 'Comparación',
+  'logical-operators': 'Operadores Lógicos',
+  'compound-conditions': 'Condiciones Compuestas',
+
+  // Phase 4: Structural
+  'sequences': 'Secuencias',
+  'sets': 'Conjuntos',
+  'functions': 'Funciones',
+
+  // Phase 5: Algorithmic
+  'sorting': 'Ordenamiento',
+  'counting': 'Conteo',
+  'composition': 'Composición',
+};
+
 const difficultyEmojis: { [key: string]: string } = {
   basic: '⭐',
   intermediate: '⭐⭐',
@@ -104,9 +140,12 @@ export default function OperationsPath({
   const currentLevel = userProgress?.currentLevel || 1;
 
   const getLevelStatus = (level: number): 'locked' | 'available' | 'current' | 'completed' => {
-    if (level > highestLevel) return 'locked';
-    if (level < currentLevel) return 'completed';
+    // Check if level is individually completed
+    const isCompleted = userProgress?.levelStats?.[level]?.completedAt !== undefined;
+
+    if (isCompleted) return 'completed';
     if (level === currentLevel) return 'current';
+    if (level > highestLevel) return 'locked';
     return 'available';
   };
 
@@ -218,9 +257,9 @@ export default function OperationsPath({
                         <span
                           key={unitCode}
                           className="inline-block px-2 py-1 text-xs bg-blue-50 text-blue-700 rounded-md border border-blue-200"
-                          title={unit?.name || unitCode}
+                          title={unitCode}
                         >
-                          {unitCode}
+                          {unit?.name || unitCode}
                         </span>
                       );
                     })}
@@ -239,7 +278,7 @@ export default function OperationsPath({
 
               {/* Footer */}
               <div className="flex items-center justify-between text-xs text-gray-500">
-                <span>{operationTypeIcons[level.operationType]} {level.operationType}</span>
+                <span>{operationTypeIcons[level.operationType]} {operationTypeNames[level.operationType] || level.operationType}</span>
                 <span>{level.problemsToComplete} problemas</span>
               </div>
             </div>

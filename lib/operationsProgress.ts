@@ -26,16 +26,21 @@ export function getOperationsProgress(): OperationsProgress {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      return JSON.parse(stored);
+      const progress = JSON.parse(stored);
+      // Ensure all levels are unlocked by default (for free practice)
+      if (progress.highestLevelReached < 999) {
+        progress.highestLevelReached = 999;
+      }
+      return progress;
     }
   } catch (error) {
     console.error('Error loading operations progress:', error);
   }
 
-  // Return default progress
+  // Return default progress with all levels unlocked
   return {
     currentLevel: 1,
-    highestLevelReached: 1,
+    highestLevelReached: 999, // All levels unlocked by default
     totalOperationsSolved: 0,
     levelStats: {}
   };
