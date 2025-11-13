@@ -101,12 +101,23 @@ export function generateMixedArithmetic(context: GeneratorContext): ProblemData 
   const { config } = context;
   const min = config.minValue || 1;
   const max = config.maxValue || 20;
-  const operations = ['+', '-', '×'];
+
+  // Use mixedOperations from config, or default to all operations
+  const allowedOps = config.mixedOperations || ['addition', 'subtraction', 'multiplication', 'division'];
+
+  // Map operation types to symbols
+  const opMap: Record<string, string> = {
+    'addition': '+',
+    'subtraction': '-',
+    'multiplication': '×',
+    'division': '÷'
+  };
+
+  const operations = allowedOps.map(op => opMap[op]).filter(Boolean);
   const op = operations[Math.floor(Math.random() * operations.length)];
 
-  const a = getRandomInt(min, max);
-  const b = getRandomInt(min, op === '-' ? a : max);
-
+  let a = getRandomInt(min, max);
+  let b = getRandomInt(min, max);
   let correctAnswer: number;
   let expression: string;
   let expressionLatex: string;
@@ -118,15 +129,30 @@ export function generateMixedArithmetic(context: GeneratorContext): ProblemData 
     expressionLatex = `${a} + ${b}`;
     problemKey = `mix:${a},${b},+`;
   } else if (op === '-') {
+    // Ensure non-negative result unless negatives are allowed
+    if (!config.allowNegatives && b > a) {
+      const temp = a;
+      a = b;
+      b = temp;
+    }
     correctAnswer = a - b;
     expression = `${a} - ${b}`;
     expressionLatex = `${a} - ${b}`;
     problemKey = `mix:${a},${b},-`;
-  } else {
+  } else if (op === '×') {
     correctAnswer = a * b;
     expression = `${a} × ${b}`;
     expressionLatex = `${a} \\times ${b}`;
     problemKey = `mix:${a},${b},×`;
+  } else { // ÷
+    // For division, ensure exact division
+    const divisor = getRandomInt(2, Math.min(10, max));
+    const quotient = getRandomInt(min, Math.floor(max / divisor));
+    const dividend = divisor * quotient;
+    correctAnswer = quotient;
+    expression = `${dividend} ÷ ${divisor}`;
+    expressionLatex = `${dividend} \\div ${divisor}`;
+    problemKey = `mix:${dividend},${divisor},÷`;
   }
 
   return { expression, expressionLatex, correctAnswer, problemKey };
