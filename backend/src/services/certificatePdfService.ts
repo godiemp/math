@@ -136,6 +136,16 @@ function drawFilledRoundedRect(
 }
 
 /**
+ * Remove emojis and other non-WinAnsi characters from text
+ * WinAnsi encoding can only handle Latin-1 characters (U+0000 to U+00FF)
+ */
+function stripUnicodeForPdf(text: string): string {
+  // Remove emojis and other Unicode characters that can't be encoded in WinAnsi
+  // Keep only ASCII and Latin-1 characters
+  return text.replace(/[^\u0000-\u00FF]/g, '').trim();
+}
+
+/**
  * Draw a simple badge/medal icon
  */
 function drawBadgeIcon(
@@ -235,7 +245,7 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
 
     currentY -= 25;
 
-    page.drawText(certificate.studentName, {
+    page.drawText(stripUnicodeForPdf(certificate.studentName), {
       x: margin,
       y: currentY,
       size: 18,
@@ -281,7 +291,7 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
     });
 
     const infoItems = [
-      { label: 'Ensayo:', value: certificate.testName },
+      { label: 'Ensayo:', value: stripUnicodeForPdf(certificate.testName) },
       { label: 'Fecha:', value: `${formattedDate} a las ${formattedTime}` },
       { label: 'Duración:', value: `${certificate.testDurationMinutes} minutos` },
       { label: 'Total de preguntas:', value: `${certificate.totalQuestions}` },
@@ -296,7 +306,7 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
         color: COLORS.text,
       });
 
-      page.drawText(item.value, {
+      page.drawText(stripUnicodeForPdf(item.value), {
         x: margin + 150,
         y: currentY,
         size: 10,
@@ -440,7 +450,7 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
 
       for (const section of certificate.sectionScores) {
         // Section name
-        page.drawText(section.sectionName, {
+        page.drawText(stripUnicodeForPdf(section.sectionName), {
           x: margin,
           y: currentY,
           size: 10,
@@ -526,17 +536,19 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
         const badgeX = margin + col * badgeWidth;
         const badgeY = currentY - row * 35;
 
-        // Draw badge icon (emoji)
-        page.drawText(badge.icon, {
+        // Draw badge bullet point (standard fonts can't render emojis)
+        page.drawText('•', {
           x: badgeX,
           y: badgeY,
-          size: 16,
-          font: helvetica,
+          size: 12,
+          font: helveticaBold,
+          color: COLORS.primary,
         });
 
-        // Draw badge name
-        page.drawText(badge.name, {
-          x: badgeX + 25,
+        // Draw badge name (strip emojis since standard fonts can't encode them)
+        const badgeName = stripUnicodeForPdf(badge.name);
+        page.drawText(badgeName, {
+          x: badgeX + 15,
           y: badgeY + 3,
           size: 9,
           font: helveticaBold,
@@ -587,9 +599,10 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
         rgb(0.98, 0.99, 1)
       );
 
-      // Wrap text and draw
+      // Wrap text and draw (strip Unicode characters for PDF compatibility)
+      const safeMessage = stripUnicodeForPdf(certificate.personalizedMessage);
       const maxCharsPerLine = 85;
-      const words = certificate.personalizedMessage.split(' ');
+      const words = safeMessage.split(' ');
       const lines: string[] = [];
       let currentLine = '';
 
