@@ -202,8 +202,12 @@ export function validateAnswer(userAnswer: string, correctAnswer: number | strin
   }
 
   // Handle empty set notation
-  if (correctStr === '∅' || correctStr === 'vacio' || correctStr === 'vacío') {
-    return userStr === '∅' || userStr === 'vacio' || userStr === 'vacío' || userStr === '' || userStr === '{}';
+  const emptySetVariants = ['∅', 'vacio', 'vacío', '', '{}'];
+  const isCorrectEmpty = emptySetVariants.includes(correctStr);
+  const isUserEmpty = emptySetVariants.includes(userStr);
+  if (isCorrectEmpty || isUserEmpty) {
+    // Both must be empty set variants
+    return isCorrectEmpty && isUserEmpty;
   }
 
   // Handle algebraic expressions - accept with or without spaces

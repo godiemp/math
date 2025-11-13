@@ -22,7 +22,8 @@ export interface OperationProblem {
  */
 function randomNumber(min: number, max: number, allowDecimals: boolean = false): number {
   const num = Math.floor(Math.random() * (max - min + 1)) + min;
-  if (allowDecimals && Math.random() > 0.5) {
+  // Only add decimals if num < max to avoid exceeding max
+  if (allowDecimals && Math.random() > 0.5 && num < max) {
     const decimal = Math.floor(Math.random() * 10);
     return parseFloat(`${num}.${decimal}`);
   }
@@ -234,8 +235,11 @@ function generateDivisionProblem(levelConfig: OperationLevel): OperationProblem 
   if (config.specificTables && config.specificTables.length > 0) {
     // Use specific division tables (inverse of multiplication tables)
     const table = config.specificTables[Math.floor(Math.random() * config.specificTables.length)];
-    quotient = randomNumber(config.minValue || 1, config.maxValue || 10);
     divisor = table;
+    // Constrain quotient so dividend doesn't exceed maxValue
+    const maxQuotient = Math.floor((config.maxValue || 10) / divisor);
+    const minQuotient = Math.max(1, Math.ceil((config.minValue || 1) / divisor));
+    quotient = randomNumber(minQuotient, Math.max(minQuotient, maxQuotient));
     dividend = divisor * quotient;
   } else if (config.allowDecimals) {
     // Division with decimal results
@@ -244,8 +248,12 @@ function generateDivisionProblem(levelConfig: OperationLevel): OperationProblem 
     quotient = roundToOneDecimal(dividend / divisor);
   } else {
     // Generate exact division
-    divisor = randomNumber(2, Math.min(12, config.maxValue || 12));
-    quotient = randomNumber(Math.ceil(config.minValue! / divisor), Math.floor(config.maxValue! / divisor));
+    const minDivisor = Math.max(2, config.minValue || 2);
+    const maxDivisor = Math.min(12, config.maxValue || 12);
+    divisor = randomNumber(minDivisor, maxDivisor);
+    const minQuotient = Math.max(1, Math.ceil((config.minValue || 1) / divisor));
+    const maxQuotient = Math.floor((config.maxValue || 100) / divisor);
+    quotient = randomNumber(minQuotient, Math.max(minQuotient, maxQuotient));
     dividend = divisor * quotient;
   }
 
@@ -335,8 +343,9 @@ function generateMixedProblem(levelConfig: OperationLevel): OperationProblem {
     expressionLatex,
     answer,
     operands,
-    operations,
-    difficulty: levelConfig.difficulty
+    operations: ['mixed-arithmetic', ...operations],
+    difficulty: levelConfig.difficulty,
+    answerType: 'number'
   };
 }
 
@@ -353,7 +362,7 @@ function generateSimpleEquationProblem(levelConfig: OperationLevel): OperationPr
   const variable = variables[0];
 
   // Randomly choose equation type
-  const types = ['addition', 'subtraction', 'multiplication', 'division'];
+  const types = ['addition', 'subtraction', 'multiplication', 'division', 'linear-add', 'linear-sub'];
   const type = types[Math.floor(Math.random() * types.length)];
 
   const minVal = config.minValue || 1;
@@ -364,46 +373,91 @@ function generateSimpleEquationProblem(levelConfig: OperationLevel): OperationPr
   let answer: number = 0;
   let a: number = 0;
   let b: number = 0;
+  let c: number = 0;
 
   switch (type) {
     case 'addition': // x + a = b
-      a = randomNumber(minVal, maxVal);
-      answer = randomNumber(minVal, maxVal);
+      // Ensure answer + a doesn't exceed maxVal
+      answer = randomNumber(minVal, Math.floor(maxVal / 2));
+      a = randomNumber(minVal, maxVal - answer);
       b = answer + a;
       expression = `${variable} + ${a} = ${b}`;
       expressionLatex = `${variable} + ${a} = ${b}`;
       break;
 
     case 'subtraction': // x - a = b
-      a = randomNumber(minVal, maxVal);
-      answer = randomNumber(minVal, maxVal);
+      // Ensure answer >= a + minVal
+      answer = randomNumber(minVal * 2, maxVal);
+      const maxA = Math.min(maxVal, answer - minVal);
+      a = randomNumber(minVal, Math.max(minVal, maxA));
       b = answer - a;
       expression = `${variable} - ${a} = ${b}`;
       expressionLatex = `${variable} - ${a} = ${b}`;
       break;
 
     case 'multiplication': // ax = b
-      a = randomNumber(2, 12);
-      answer = randomNumber(minVal, maxVal);
+      a = randomNumber(Math.max(2, minVal), Math.min(12, maxVal));
+      const maxAnswer = Math.floor(maxVal / a);
+      answer = randomNumber(Math.max(1, minVal), Math.max(minVal, maxAnswer));
       b = a * answer;
       expression = `${a}${variable} = ${b}`;
       expressionLatex = `${a}${variable} = ${b}`;
       break;
 
     case 'division': // x/a = b
-      a = randomNumber(2, 10);
-      b = randomNumber(minVal, Math.floor(maxVal / a));
+      // Ensure b stays in range: b * a = answer must be <= maxVal
+      a = randomNumber(Math.max(2, minVal), Math.min(10, maxVal));
+      const maxB = Math.floor(maxVal / a);
+      b = randomNumber(Math.max(1, minVal), Math.max(minVal, maxB));
       answer = a * b;
       expression = `${variable}/${a} = ${b}`;
       expressionLatex = `\\frac{${variable}}{${a}} = ${b}`;
       break;
+
+    case 'linear-add': { // ax + b = c
+      const coeff = randomNumber(Math.max(2, minVal), Math.min(10, maxVal));
+      const maxAnswerFromRange = Math.floor((maxVal - minVal) / coeff);
+      answer = randomNumber(Math.max(1, minVal), Math.max(minVal, maxAnswerFromRange));
+      const constant = randomNumber(minVal, Math.max(minVal, Math.min(maxVal, maxVal - coeff * answer)));
+      c = coeff * answer + constant;
+      expression = `${coeff}${variable} + ${constant} = ${c}`;
+      expressionLatex = `${coeff}${variable} + ${constant} = ${c}`;
+      a = coeff;
+      b = constant;
+      break;
+    }
+
+    case 'linear-sub': { // ax - b = c
+      const coeff = randomNumber(Math.max(2, minVal), Math.min(10, maxVal));
+      const maxAnswerFromCoeff = Math.floor(maxVal / coeff);
+      answer = randomNumber(Math.max(1, minVal), Math.max(minVal, maxAnswerFromCoeff));
+      const maxConstant = Math.max(minVal, Math.min(maxVal, coeff * answer - minVal));
+      const constant = randomNumber(minVal, maxConstant);
+      c = coeff * answer - constant;
+      expression = `${coeff}${variable} - ${constant} = ${c}`;
+      expressionLatex = `${coeff}${variable} - ${constant} = ${c}`;
+      a = coeff;
+      b = constant;
+      break;
+    }
+  }
+
+  // For simple equations, only include coefficients that should respect min/max
+  // Don't include calculated results (b in x+a=b) or the answer itself
+  let operands: number[];
+  if (type === 'linear-add' || type === 'linear-sub') {
+    // For ax+b=c or ax-b=c, only a and b are input coefficients
+    operands = [a, b];
+  } else {
+    // For x+a=b, x-a=b, ax=b, x/a=b, only a is an input coefficient
+    operands = [a];
   }
 
   return {
     expression: `Resuelve para ${variable}: ${expression}`,
     expressionLatex: `\\text{Resuelve para } ${variable}: ${expressionLatex}`,
     answer,
-    operands: [a, b],
+    operands,
     operations: ['simple-equation'],
     difficulty: levelConfig.difficulty,
     answerType: 'number',
@@ -677,8 +731,12 @@ function generateSequenceProblem(levelConfig: OperationLevel): OperationProblem 
 
   switch (type) {
     case 'arithmetic': { // a, a+d, a+2d, ...
-      const start = randomNumber(config.minValue || 1, config.maxValue || 10);
-      const diff = randomNumber(2, 10);
+      const maxVal = config.maxValue || 10;
+      const minVal = config.minValue || 1;
+      // Constrain start and diff so all sequence values stay within bounds
+      const maxDiff = Math.max(1, Math.floor((maxVal - minVal) / 4));
+      const diff = randomNumber(1, maxDiff);
+      const start = randomNumber(minVal, maxVal - 4 * diff);
       for (let i = 0; i < 4; i++) {
         sequence.push(start + i * diff);
       }
@@ -688,8 +746,12 @@ function generateSequenceProblem(levelConfig: OperationLevel): OperationProblem 
     }
 
     case 'geometric': { // a, ar, ar², ...
-      const start = randomNumber(1, 5);
-      const ratio = randomNumber(2, 3);
+      const maxVal = config.maxValue || 10;
+      const minVal = config.minValue || 1;
+      // Use ratio of 2 and constrain start so sequence doesn't exceed maxValue
+      const ratio = 2;
+      const maxStart = Math.floor(maxVal / Math.pow(ratio, 3));
+      const start = randomNumber(Math.max(1, minVal), Math.max(minVal, maxStart));
       for (let i = 0; i < 4; i++) {
         sequence.push(start * Math.pow(ratio, i));
       }
@@ -699,8 +761,14 @@ function generateSequenceProblem(levelConfig: OperationLevel): OperationProblem 
     }
 
     case 'fibonacci': { // a, b, a+b, b+(a+b), ...
-      const a = randomNumber(1, 5);
-      const b = randomNumber(1, 5);
+      const maxVal = config.maxValue || 10;
+      const minVal = config.minValue || 1;
+      // Constrain a and b so the sequence doesn't exceed maxValue
+      // Last value in sequence is (a+b) + (b+(a+b)) = 2a + 3b
+      const maxA = Math.floor(maxVal / 2);
+      const a = randomNumber(Math.max(1, minVal), Math.max(minVal, Math.min(3, maxA)));
+      const maxB = Math.floor((maxVal - 2 * a) / 3);
+      const b = randomNumber(Math.max(1, minVal), Math.max(minVal, Math.min(3, maxB)));
       sequence = [a, b, a + b, b + (a + b)];
       answer = (a + b) + (b + (a + b));
       pattern = 'Fibonacci';
@@ -737,10 +805,12 @@ function generateSetsProblem(levelConfig: OperationLevel): OperationProblem {
   // Generate two sets
   const setA: number[] = [];
   const setB: number[] = [];
+  const minVal = config.minValue || 1;
+  const maxVal = config.maxValue || 20;
 
   for (let i = 0; i < size; i++) {
-    setA.push(randomNumber(1, 20));
-    setB.push(randomNumber(1, 20));
+    setA.push(randomNumber(minVal, maxVal));
+    setB.push(randomNumber(minVal, maxVal));
   }
 
   const operations = ['union', 'intersection', 'difference'];
@@ -1041,7 +1111,15 @@ export function validateAnswer(problem: OperationProblem, userAnswer: string): b
 
     case 'string': {
       const correctAnswer = problem.answer as string;
-      // Normalize whitespace for string comparisons
+
+      // For comma-separated values (sets, arrays), strip all whitespace for flexible comparison
+      if (correctAnswer.includes(',') || normalized.includes(',')) {
+        const normalizedCorrect = correctAnswer.replace(/\s+/g, '').toLowerCase();
+        const normalizedUser = normalized.replace(/\s+/g, '').toLowerCase();
+        return normalizedUser === normalizedCorrect;
+      }
+
+      // For other strings, normalize whitespace
       const normalizedCorrect = correctAnswer.replace(/\s+/g, ' ').trim().toLowerCase();
       const normalizedUser = normalized.replace(/\s+/g, ' ').toLowerCase();
       return normalizedUser === normalizedCorrect;
@@ -1049,6 +1127,17 @@ export function validateAnswer(problem: OperationProblem, userAnswer: string): b
 
     case 'multipleChoice': {
       const correctAnswer = problem.answer as string;
+
+      // Handle boolean answer aliases (V/F, verdadero/falso, true/false)
+      if (correctAnswer === 'V' || correctAnswer === 'F') {
+        const normalizedLower = normalized.toLowerCase();
+        if (correctAnswer === 'V') {
+          return normalized === 'V' || normalizedLower === 'verdadero' || normalizedLower === 'true';
+        } else {
+          return normalized === 'F' || normalizedLower === 'falso' || normalizedLower === 'false';
+        }
+      }
+
       return normalized === correctAnswer;
     }
 
