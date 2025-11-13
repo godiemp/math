@@ -88,8 +88,11 @@ export default function CertificatesAdminPage() {
         type: 'live_session',
       });
 
-      const data = response.data as { certificate?: { id: string } };
-      alert('✅ Certificado generado exitosamente!\n\nID: ' + (data.certificate?.id || 'unknown'));
+      const data = response.data as { certificate?: { id: string }, message?: string, isOwnSession?: boolean };
+      const message = data.isOwnSession
+        ? '✅ Certificado generado desde tu sesión completada'
+        : '✅ Certificado de prueba generado desde una sesión de ejemplo';
+      alert(`${message}\n\nID: ${data.certificate?.id || 'unknown'}`);
       await loadCertificates();
     } catch (err: any) {
       console.error('Error generating test certificate:', err);
@@ -167,8 +170,8 @@ export default function CertificatesAdminPage() {
                   Generar Certificado Premium
                 </Heading>
                 <Text className="mb-4 text-gray-700">
-                  Genera un certificado premium basado en tu último <strong>ensayo en vivo completado</strong>.
-                  El certificado incluye análisis IA, medallas de logros, percentil nacional, y más.
+                  Genera un certificado premium para pruebas. Si has completado un ensayo, se usará tu sesión.
+                  Si no, se generará un certificado de ejemplo desde cualquier ensayo completado en el sistema.
                 </Text>
                 <div className="flex gap-3 items-center">
                   <Button
@@ -185,7 +188,7 @@ export default function CertificatesAdminPage() {
                   )}
                 </div>
                 <Text className="mt-3 text-sm text-gray-600">
-                  💡 <strong>Requisito:</strong> Debes haber completado al menos un ensayo en vivo (live session).
+                  💡 <strong>Nota:</strong> Debe existir al menos un ensayo completado en el sistema (por cualquier usuario).
                 </Text>
               </div>
             </div>

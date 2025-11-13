@@ -330,6 +330,10 @@ export const deleteCertificateHandler = async (req: Request, res: Response): Pro
 /**
  * Generate a test certificate for demo purposes (admin only)
  * POST /api/admin/certificates/test
+ *
+ * This endpoint looks for ANY completed live session in the system and
+ * generates a certificate for testing purposes. If none exist, it returns
+ * a helpful error message.
  */
 export const generateTestCertificateHandler = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -340,7 +344,6 @@ export const generateTestCertificateHandler = async (req: Request, res: Response
       return;
     }
 
-    // Get the user's most recent live session (only live sessions supported for admin testing)
     const { type } = req.body;
 
     if (!type || type !== 'live_session') {
@@ -350,10 +353,12 @@ export const generateTestCertificateHandler = async (req: Request, res: Response
       return;
     }
 
-    // Find most recent completed live session
+    // Find ANY completed live session with participants (for admin testing)
     const { pool } = require('../config/database');
-    const result = await pool.query(
-      `SELECT sp.session_id, s.status
+
+    // First, try to find a session the admin participated in
+    let result = await pool.query(
+      `SELECT sp.session_id, sp.user_id, s.status, s.name
        FROM session_participants sp
        JOIN sessions s ON sp.session_id = s.id
        WHERE sp.user_id = $1 AND s.status = 'completed'
@@ -362,17 +367,36 @@ export const generateTestCertificateHandler = async (req: Request, res: Response
       [userId]
     );
 
+    // If admin hasn't participated in any sessions, find any completed session
     if (result.rows.length === 0) {
-      res.status(404).json({
-        error: 'No completed live sessions found for this user. Complete a live session (ensayo) first.',
-      });
-      return;
+      result = await pool.query(
+        `SELECT sp.session_id, sp.user_id, s.status, s.name
+         FROM session_participants sp
+         JOIN sessions s ON sp.session_id = s.id
+         WHERE s.status = 'completed'
+         ORDER BY s.completed_at DESC
+         LIMIT 1`
+      );
+
+      if (result.rows.length === 0) {
+        res.status(404).json({
+          error: 'No hay ensayos completados en el sistema',
+          message: 'Para generar un certificado de prueba, primero debe haber al menos un ensayo en vivo completado en el sistema. Puedes crear y completar un ensayo desde la sección de Live Sessions.',
+        });
+        return;
+      }
+
+      // Use the first participant from that session
+      console.log(`⚠️ Admin hasn't participated in any sessions. Using session: ${result.rows[0].name} with user: ${result.rows[0].user_id}`);
     }
 
+    const sessionId = result.rows[0].session_id;
+    const targetUserId = result.rows[0].user_id;
+
     const request: CertificateGenerationRequest = {
-      userId,
+      userId: targetUserId, // Use the target user (could be admin or another user)
       certificateType: 'live_session',
-      sessionId: result.rows[0].session_id,
+      sessionId: sessionId,
     };
 
     const certificate = await generateCertificate(request);
@@ -380,7 +404,10 @@ export const generateTestCertificateHandler = async (req: Request, res: Response
     res.status(201).json({
       success: true,
       certificate,
-      message: 'Test certificate generated successfully',
+      message: targetUserId === userId
+        ? 'Certificado generado desde tu sesión completada'
+        : 'Certificado de prueba generado desde una sesión de ejemplo',
+      isOwnSession: targetUserId === userId,
     });
   } catch (error: any) {
     console.error('Error generating test certificate:', error);
