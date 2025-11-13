@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
 import { pool } from '../config/database';
+import { success, error, ErrorCodes } from '../types/result';
+import { Session, SessionRow, UserRow, rowToSession } from '../types/session';
+import { CreateSessionDto } from '../validators/session.validator';
 
 const LOBBY_OPEN_MINUTES = 15;
 
@@ -17,12 +20,14 @@ function generateSessionId(): string {
  */
 export const createSession = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = (req as any).user?.userId;
+    // Authentication check - no more (req as any)!
+    const userId = req.user?.userId;
     if (!userId) {
-      res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json(error('Unauthorized', ErrorCodes.AUTH_REQUIRED));
       return;
     }
 
+    // Type-safe body access - validated by Zod middleware
     const {
       name,
       description,
@@ -30,39 +35,30 @@ export const createSession = async (req: Request, res: Response): Promise<void> 
       scheduledStartTime,
       durationMinutes,
       questions,
-      maxParticipants = 1000000,
-    } = req.body;
+      maxParticipants,
+    } = req.body as CreateSessionDto;
 
-    // Validation
-    if (!name || !level || !scheduledStartTime || !durationMinutes || !questions) {
-      res.status(400).json({ error: 'Missing required fields' });
-      return;
-    }
-
-    if (!Array.isArray(questions) || questions.length === 0) {
-      res.status(400).json({ error: 'Questions must be a non-empty array' });
-      return;
-    }
-
-    // Get user info
-    const userResult = await pool.query(
-      'SELECT username, display_name FROM users WHERE id = $1',
+    // Get user info with typed query
+    const userResult = await pool.query<UserRow>(
+      'SELECT id, username, display_name, email, role FROM users WHERE id = $1',
       [userId]
     );
 
     if (userResult.rows.length === 0) {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json(error('User not found', ErrorCodes.NOT_FOUND));
       return;
     }
 
     const { display_name: hostName } = userResult.rows[0];
 
+    // Generate session data
     const sessionId = generateSessionId();
     const scheduledEndTime = scheduledStartTime + (durationMinutes * 60 * 1000);
     const lobbyOpenTime = scheduledStartTime - (LOBBY_OPEN_MINUTES * 60 * 1000);
     const createdAt = Date.now();
 
-    const result = await pool.query(
+    // Insert session with typed query
+    const result = await pool.query<SessionRow>(
       `INSERT INTO sessions (
         id, name, description, level, host_id, host_name, questions,
         status, current_question_index, created_at, scheduled_start_time,
@@ -88,39 +84,24 @@ export const createSession = async (req: Request, res: Response): Promise<void> 
       ]
     );
 
+    // Transform row to typed Session object
     const row = result.rows[0];
-    const session = {
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      level: row.level,
-      hostId: row.host_id,
-      hostName: row.host_name,
-      questions: row.questions,
-      status: row.status,
-      currentQuestionIndex: row.current_question_index,
-      createdAt: parseInt(row.created_at),
-      scheduledStartTime: parseInt(row.scheduled_start_time),
-      scheduledEndTime: parseInt(row.scheduled_end_time),
-      durationMinutes: row.duration_minutes,
-      lobbyOpenTime: parseInt(row.lobby_open_time),
-      maxParticipants: row.max_participants,
-      startedAt: row.started_at ? parseInt(row.started_at) : undefined,
-      completedAt: row.completed_at ? parseInt(row.completed_at) : undefined,
+    const session: Session = {
+      ...rowToSession(row),
       registeredUsers: [],
       participants: [],
     };
 
-    res.json({
-      success: true,
-      session,
-    });
-  } catch (error) {
-    console.error('Error creating session:', error);
-    res.status(500).json({
-      error: 'Failed to create session',
-      message: (error as Error).message,
-    });
+    res.status(201).json(success(session, 'Session created successfully'));
+  } catch (err) {
+    console.error('[createSession] Error:', err);
+    res.status(500).json(
+      error(
+        'Failed to create session',
+        ErrorCodes.INTERNAL_ERROR,
+        err instanceof Error ? err.message : 'Unknown error'
+      )
+    );
   }
 };
 
@@ -161,16 +142,17 @@ export const getSessions = async (req: Request, res: Response): Promise<void> =>
       WHERE 1=1
     `;
 
-    const params: any[] = [];
+    // Type-safe params array
+    const params: (string | number)[] = [];
     let paramCount = 1;
 
-    if (status) {
+    if (status && typeof status === 'string') {
       query += ` AND s.status = $${paramCount}`;
       params.push(status);
       paramCount++;
     }
 
-    if (level) {
+    if (level && typeof level === 'string') {
       query += ` AND s.level = $${paramCount}`;
       params.push(level);
       paramCount++;
@@ -178,47 +160,27 @@ export const getSessions = async (req: Request, res: Response): Promise<void> =>
 
     query += ' ORDER BY s.created_at DESC';
 
-    const result = await pool.query(query, params);
+    // Typed database query
+    const result = await pool.query<SessionRow>(query, params);
 
-    const sessions = result.rows.map((row: any) => ({
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      level: row.level,
-      hostId: row.host_id,
-      hostName: row.host_name,
-      questions: row.questions, // Already parsed by JSONB
-      status: row.status,
-      currentQuestionIndex: row.current_question_index,
-      createdAt: parseInt(row.created_at),
-      scheduledStartTime: parseInt(row.scheduled_start_time),
-      scheduledEndTime: parseInt(row.scheduled_end_time),
-      durationMinutes: row.duration_minutes,
-      lobbyOpenTime: parseInt(row.lobby_open_time),
-      maxParticipants: row.max_participants,
-      startedAt: row.started_at ? parseInt(row.started_at) : undefined,
-      completedAt: row.completed_at ? parseInt(row.completed_at) : undefined,
-      registeredUsers: (row.registered_users || []).map((u: any) => ({
-        ...u,
-        registeredAt: parseInt(u.registeredAt),
-      })),
-      participants: (row.participants || []).map((p: any) => ({
-        ...p,
-        joinedAt: parseInt(p.joinedAt),
-      })),
-    }));
+    // Transform rows to Session objects using helper function
+    const sessions: Session[] = result.rows.map(rowToSession);
 
-    res.json({
-      success: true,
-      count: sessions.length,
-      sessions,
-    });
-  } catch (error) {
-    console.error('Error fetching sessions:', error);
-    res.status(500).json({
-      error: 'Failed to fetch sessions',
-      message: (error as Error).message,
-    });
+    res.status(200).json(
+      success({
+        count: sessions.length,
+        sessions,
+      })
+    );
+  } catch (err) {
+    console.error('[getSessions] Error:', err);
+    res.status(500).json(
+      error(
+        'Failed to fetch sessions',
+        ErrorCodes.INTERNAL_ERROR,
+        err instanceof Error ? err.message : 'Unknown error'
+      )
+    );
   }
 };
 
@@ -231,7 +193,8 @@ export const getSession = async (req: Request, res: Response): Promise<void> => 
   try {
     const { id } = req.params;
 
-    const result = await pool.query(
+    // Typed database query
+    const result = await pool.query<SessionRow>(
       `SELECT s.*,
         COALESCE(
           (SELECT json_agg(json_build_object(
@@ -261,49 +224,23 @@ export const getSession = async (req: Request, res: Response): Promise<void> => 
     );
 
     if (result.rows.length === 0) {
-      res.status(404).json({ error: 'Session not found' });
+      res.status(404).json(error('Session not found', ErrorCodes.NOT_FOUND));
       return;
     }
 
-    const row = result.rows[0];
-    const session = {
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      level: row.level,
-      hostId: row.host_id,
-      hostName: row.host_name,
-      questions: row.questions,
-      status: row.status,
-      currentQuestionIndex: row.current_question_index,
-      createdAt: parseInt(row.created_at),
-      scheduledStartTime: parseInt(row.scheduled_start_time),
-      scheduledEndTime: parseInt(row.scheduled_end_time),
-      durationMinutes: row.duration_minutes,
-      lobbyOpenTime: parseInt(row.lobby_open_time),
-      maxParticipants: row.max_participants,
-      startedAt: row.started_at ? parseInt(row.started_at) : undefined,
-      completedAt: row.completed_at ? parseInt(row.completed_at) : undefined,
-      registeredUsers: (row.registered_users || []).map((u: any) => ({
-        ...u,
-        registeredAt: parseInt(u.registeredAt),
-      })),
-      participants: (row.participants || []).map((p: any) => ({
-        ...p,
-        joinedAt: parseInt(p.joinedAt),
-      })),
-    };
+    // Transform row to Session object
+    const session: Session = rowToSession(result.rows[0]);
 
-    res.json({
-      success: true,
-      session,
-    });
-  } catch (error) {
-    console.error('Error fetching session:', error);
-    res.status(500).json({
-      error: 'Failed to fetch session',
-      message: (error as Error).message,
-    });
+    res.status(200).json(success(session));
+  } catch (err) {
+    console.error('[getSession] Error:', err);
+    res.status(500).json(
+      error(
+        'Failed to fetch session',
+        ErrorCodes.INTERNAL_ERROR,
+        err instanceof Error ? err.message : 'Unknown error'
+      )
+    );
   }
 };
 
@@ -333,7 +270,7 @@ export const updateSession = async (req: Request, res: Response): Promise<void> 
     );
 
     if (sessionCheck.rows.length === 0) {
-      res.status(404).json({ error: 'Session not found' });
+      res.status(404).json(error('Session not found', ErrorCodes.NOT_FOUND));
       return;
     }
 
@@ -462,7 +399,7 @@ export const deleteSession = async (req: Request, res: Response): Promise<void> 
     );
 
     if (result.rows.length === 0) {
-      res.status(404).json({ error: 'Session not found' });
+      res.status(404).json(error('Session not found', ErrorCodes.NOT_FOUND));
       return;
     }
 
@@ -547,10 +484,10 @@ export const registerForSession = async (req: Request, res: Response): Promise<v
 
   try {
     const { id } = req.params;
-    const userId = (req as any).user?.userId;
+    const userId = req.user?.userId;
 
     if (!userId) {
-      res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json(error('Unauthorized', ErrorCodes.AUTH_REQUIRED));
       return;
     }
 
@@ -578,7 +515,7 @@ export const registerForSession = async (req: Request, res: Response): Promise<v
 
     if (sessionResult.rows.length === 0) {
       await client.query('ROLLBACK');
-      res.status(404).json({ error: 'Session not found' });
+      res.status(404).json(error('Session not found', ErrorCodes.NOT_FOUND));
       return;
     }
 
@@ -648,10 +585,10 @@ export const registerForSession = async (req: Request, res: Response): Promise<v
 export const unregisterFromSession = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const userId = (req as any).user?.userId;
+    const userId = req.user?.userId;
 
     if (!userId) {
-      res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json(error('Unauthorized', ErrorCodes.AUTH_REQUIRED));
       return;
     }
 
@@ -729,10 +666,10 @@ export const joinSession = async (req: Request, res: Response): Promise<void> =>
 
   try {
     const { id } = req.params;
-    const userId = (req as any).user?.userId;
+    const userId = req.user?.userId;
 
     if (!userId) {
-      res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json(error('Unauthorized', ErrorCodes.AUTH_REQUIRED));
       return;
     }
 
@@ -760,7 +697,7 @@ export const joinSession = async (req: Request, res: Response): Promise<void> =>
 
     if (sessionResult.rows.length === 0) {
       await client.query('ROLLBACK');
-      res.status(404).json({ error: 'Session not found' });
+      res.status(404).json(error('Session not found', ErrorCodes.NOT_FOUND));
       return;
     }
 
@@ -855,7 +792,7 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
     );
 
     if (sessionResult.rows.length === 0) {
-      res.status(404).json({ error: 'Session not found' });
+      res.status(404).json(error('Session not found', ErrorCodes.NOT_FOUND));
       return;
     }
 
@@ -923,10 +860,10 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
 export const getMyParticipation = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const userId = (req as any).user?.userId;
+    const userId = req.user?.userId;
 
     if (!userId) {
-      res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json(error('Unauthorized', ErrorCodes.AUTH_REQUIRED));
       return;
     }
 
@@ -965,10 +902,10 @@ export const getMyParticipation = async (req: Request, res: Response): Promise<v
  */
 export const getMyStatistics = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = (req as any).user?.userId;
+    const userId = req.user?.userId;
 
     if (!userId) {
-      res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json(error('Unauthorized', ErrorCodes.AUTH_REQUIRED));
       return;
     }
 
