@@ -7,6 +7,18 @@ import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { api } from '@/lib/api-client';
 import AdminLayout from '@/components/AdminLayout';
 
+// Get backend URL for direct download/preview links
+const getBackendUrl = async () => {
+  try {
+    const response = await fetch('/api/config');
+    const data = await response.json();
+    return data.backendUrl;
+  } catch (error) {
+    console.error('Failed to get backend URL:', error);
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+  }
+};
+
 interface Badge {
   id: string;
   name: string;
@@ -89,12 +101,32 @@ export default function CertificatesAdminPage() {
     }
   };
 
-  const downloadCertificate = (certificateId: string) => {
-    window.open(`${api.defaults.baseURL}/api/certificates/${certificateId}/download`, '_blank');
+  const downloadCertificate = async (certificateId: string) => {
+    try {
+      const backendUrl = await getBackendUrl();
+      const response = await fetch(`${backendUrl}/api/certificates/${certificateId}/download`, {
+        credentials: 'include',
+      });
+      if (!response.ok) throw new Error('Failed to download');
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `certificate_${certificateId}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error downloading certificate:', error);
+      alert('Failed to download certificate');
+    }
   };
 
-  const previewCertificate = (certificateId: string) => {
-    window.open(`${api.defaults.baseURL}/api/certificates/${certificateId}/preview`, '_blank');
+  const previewCertificate = async (certificateId: string) => {
+    const backendUrl = await getBackendUrl();
+    window.open(`${backendUrl}/api/certificates/${certificateId}/preview`, '_blank');
   };
 
   const formatDate = (timestamp: number) => {
