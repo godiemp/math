@@ -266,7 +266,7 @@ export default function CertificatesAdminPage() {
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap">
                           <Badge
-                            variant={cert.certificateType === 'quiz_session' ? 'default' : 'success'}
+                            variant={cert.certificateType === 'quiz_session' ? 'info' : 'success'}
                           >
                             {cert.certificateType === 'quiz_session' ? 'Quiz' : 'En Vivo'}
                           </Badge>
@@ -344,7 +344,7 @@ export default function CertificatesAdminPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="default">Quiz</Badge>
+                  <Badge variant="info">Quiz</Badge>
                   <Text className="font-semibold">Sesión de Quiz</Text>
                 </div>
                 <Text className="text-sm text-gray-600">
