@@ -69,12 +69,18 @@ export default function CertificatesAdminPage() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get('/api/certificates/admin/all?limit=50');
-      const data = response.data as { certificates?: Certificate[] };
-      setCertificates(data.certificates || []);
+      const response = await api.get<{ certificates?: Certificate[] }>('/api/certificates/admin/all?limit=50');
+
+      if (response.error) {
+        setError(response.error.error || 'Failed to load certificates');
+        setCertificates([]);
+        return;
+      }
+
+      setCertificates(response.data?.certificates || []);
     } catch (err: any) {
       console.error('Error loading certificates:', err);
-      setError(err.response?.data?.error || 'Failed to load certificates');
+      setError('Failed to load certificates');
     } finally {
       setLoading(false);
     }
@@ -84,16 +90,23 @@ export default function CertificatesAdminPage() {
     try {
       setGeneratingTest(true);
       setError(null);
-      const response = await api.post('/api/certificates/admin/test', {
+      const response = await api.post<{ certificate?: { id: string }, message?: string, isMock?: boolean }>('/api/certificates/admin/test', {
         type: 'live_session',
       });
 
-      const data = response.data as { certificate?: { id: string }, message?: string, isMock?: boolean };
-      alert(`✅ ${data.message || 'Certificado generado exitosamente'}\n\nID: ${data.certificate?.id || 'unknown'}`);
+      if (response.error) {
+        const errorMsg = response.error.error || 'Failed to generate test certificate';
+        setError(errorMsg);
+        alert('❌ Error: ' + errorMsg);
+        return;
+      }
+
+      const data = response.data;
+      alert(`✅ ${data?.message || 'Certificado generado exitosamente'}\n\nID: ${data?.certificate?.id || 'unknown'}`);
       await loadCertificates();
     } catch (err: any) {
       console.error('Error generating test certificate:', err);
-      const errorMsg = err.response?.data?.error || err.response?.data?.message || 'Failed to generate test certificate';
+      const errorMsg = 'Failed to generate test certificate';
       setError(errorMsg);
       alert('❌ Error: ' + errorMsg);
     } finally {
