@@ -6,13 +6,14 @@ export const m1GeometriaVolumenQuestions: Question[] = [
     level: 'M1',
     topic: 'Geometría',
     subject: 'geometría',
-    question: 'Un cubo tiene arista de 3 cm. ¿Cuál es su volumen?',
-    questionLatex: '\\text{Un cubo tiene arista de 3 cm. ¿Cuál es su volumen?}',
+    question: 'María trabaja en una empresa de embalaje y debe calcular cuánto espacio ocupará una caja cúbica en el almacén. La caja es perfectamente cuadrada en todas sus dimensiones, y cada arista mide 3 cm. El supervisor le pide que calcule el espacio total que ocupa la caja para optimizar el almacenamiento. Para completar el registro de inventario, necesita determinar el volumen de esta caja cúbica. ¿Cuál es el volumen en centímetros cúbicos?',
+    questionLatex: '\\text{María trabaja en una empresa de embalaje y debe calcular cuánto espacio ocupará una caja cúbica en el almacén. La caja es perfectamente cuadrada en todas sus dimensiones, y cada arista mide 3 cm. El supervisor le pide que calcule el espacio total que ocupa la caja para optimizar el almacenamiento. Para completar el registro de inventario, necesita determinar el volumen de esta caja cúbica. ¿Cuál es el volumen en centímetros cúbicos?}',
     options: ['9 cm³', '18 cm³', '27 cm³', '36 cm³'],
     correctAnswer: 2,
-    explanation: 'El volumen de un cubo es:',
-    explanationLatex: 'V = a^3 = 3^3 = 27 \\text{ cm}^3',
+    explanation: 'En un cubo, el volumen se calcula multiplicando la arista tres veces (largo × ancho × alto), y como todas las aristas son iguales, elevamos la arista al cubo:',
+    explanationLatex: 'V = a^3 = 3^3 = 3 \\times 3 \\times 3 = 27 \\text{ cm}^3',
     difficulty: 'easy',
-    skills: ['geometria-volumen', 'geometria-volumen-cubo', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['geometria-volumen', 'geometria-volumen-cubo', 'numeros-potencias', 'numeros-operaciones-basicas'],
+    operacionBase: 'a^3'
   }
 ];
