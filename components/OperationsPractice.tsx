@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Check, X, Award, Sparkles, SkipForward } from 'lucide-react';
+import { ArrowLeft, Check, X, Award, Sparkles, SkipForward, Lightbulb, BookOpen, ListChecks, RefreshCw } from 'lucide-react';
 import { InlineMath } from './MathDisplay';
 import { OPERATIONS_PATH } from '@/lib/operationsPath';
 import { generateProblem, validateAnswer, clearProblemHistory } from '@/lib/operationsProblemGenerator';
 import { recordCorrectAnswer, recordIncorrectAnswer, completeLevel } from '@/lib/operationsProgress';
+import { generateHelpContent, HelpContent } from '@/lib/operationsHelpGenerator';
 
 interface Problem {
   level: number;
@@ -45,6 +46,10 @@ export default function OperationsPractice({
   const [attemptCount, setAttemptCount] = useState(0);
   const [startTime, setStartTime] = useState<number>(Date.now());
   const [showLevelComplete, setShowLevelComplete] = useState(false);
+  const [helpContent, setHelpContent] = useState<HelpContent | null>(null);
+  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [helpType, setHelpType] = useState<'hint' | 'example' | 'solution' | null>(null);
+  const [currentHintIndex, setCurrentHintIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -71,9 +76,20 @@ export default function OperationsPractice({
       setProblem({
         ...generatedProblem,
       });
+
+      // Generate help content for this problem
+      const help = generateHelpContent(levelConfig, {
+        expression: generatedProblem.expression,
+        correctAnswer: generatedProblem.correctAnswer,
+      });
+      setHelpContent(help);
+
       setUserAnswer('');
       setFeedback({ show: false, isCorrect: false });
       setStartTime(Date.now());
+      setCurrentHintIndex(0);
+      setShowHelpModal(false);
+      setHelpType(null);
     } catch (error) {
       console.error('Error loading problem:', error);
     }
@@ -147,6 +163,36 @@ export default function OperationsPractice({
     clearProblemHistory(level);
     setShowLevelComplete(true);
     onLevelComplete();
+  };
+
+  const handleShowHint = () => {
+    setHelpType('hint');
+    setShowHelpModal(true);
+  };
+
+  const handleShowExample = () => {
+    setHelpType('example');
+    setShowHelpModal(true);
+  };
+
+  const handleShowSolution = () => {
+    setHelpType('solution');
+    setShowHelpModal(true);
+  };
+
+  const handleSimilarProblem = () => {
+    loadProblem();
+  };
+
+  const handleNextHint = () => {
+    if (helpContent && currentHintIndex < helpContent.hints.length - 1) {
+      setCurrentHintIndex(currentHintIndex + 1);
+    }
+  };
+
+  const handleCloseHelp = () => {
+    setShowHelpModal(false);
+    setHelpType(null);
   };
 
   // Calculate if user can skip (80%+ accuracy after 3+ attempts)
@@ -279,6 +325,38 @@ export default function OperationsPractice({
             )}
           </div>
           <div className="text-gray-500 text-sm mt-4">Resuelve la operación</div>
+        </div>
+
+        {/* Help Buttons - Always Available */}
+        <div className="grid grid-cols-2 gap-3 mb-8">
+          <button
+            onClick={handleShowHint}
+            className="flex items-center justify-center space-x-2 bg-amber-100 hover:bg-amber-200 text-amber-800 px-4 py-3 rounded-lg font-semibold transition-all border-2 border-amber-300 shadow-sm hover:shadow-md transform hover:scale-105"
+          >
+            <Lightbulb size={20} />
+            <span>Ver Pista</span>
+          </button>
+          <button
+            onClick={handleShowExample}
+            className="flex items-center justify-center space-x-2 bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-3 rounded-lg font-semibold transition-all border-2 border-blue-300 shadow-sm hover:shadow-md transform hover:scale-105"
+          >
+            <BookOpen size={20} />
+            <span>Ver Ejemplo</span>
+          </button>
+          <button
+            onClick={handleShowSolution}
+            className="flex items-center justify-center space-x-2 bg-green-100 hover:bg-green-200 text-green-800 px-4 py-3 rounded-lg font-semibold transition-all border-2 border-green-300 shadow-sm hover:shadow-md transform hover:scale-105"
+          >
+            <ListChecks size={20} />
+            <span>Ver Solución</span>
+          </button>
+          <button
+            onClick={handleSimilarProblem}
+            className="flex items-center justify-center space-x-2 bg-purple-100 hover:bg-purple-200 text-purple-800 px-4 py-3 rounded-lg font-semibold transition-all border-2 border-purple-300 shadow-sm hover:shadow-md transform hover:scale-105"
+          >
+            <RefreshCw size={20} />
+            <span>Otro Similar</span>
+          </button>
         </div>
 
         {/* Answer Input */}
@@ -425,6 +503,166 @@ export default function OperationsPractice({
           )}
         </div>
       </div>
+
+      {/* Help Modal */}
+      {showHelpModal && helpContent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl">
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-bold text-gray-900 flex items-center space-x-2">
+                  {helpType === 'hint' && (
+                    <>
+                      <Lightbulb className="text-amber-600" size={28} />
+                      <span>Pista</span>
+                    </>
+                  )}
+                  {helpType === 'example' && (
+                    <>
+                      <BookOpen className="text-blue-600" size={28} />
+                      <span>Ejemplo</span>
+                    </>
+                  )}
+                  {helpType === 'solution' && (
+                    <>
+                      <ListChecks className="text-green-600" size={28} />
+                      <span>Solución Paso a Paso</span>
+                    </>
+                  )}
+                </h3>
+                <button
+                  onClick={handleCloseHelp}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <X size={28} />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6">
+              {helpType === 'hint' && (
+                <div className="space-y-4">
+                  <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-6">
+                    <p className="text-lg text-amber-900">
+                      {helpContent.hints[currentHintIndex]}
+                    </p>
+                  </div>
+                  {currentHintIndex < helpContent.hints.length - 1 && (
+                    <button
+                      onClick={handleNextHint}
+                      className="w-full bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md"
+                    >
+                      Siguiente Pista ({currentHintIndex + 1}/{helpContent.hints.length})
+                    </button>
+                  )}
+                  {currentHintIndex === helpContent.hints.length - 1 && (
+                    <p className="text-center text-sm text-gray-600">
+                      Has visto todas las pistas
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {helpType === 'example' && (
+                <div className="space-y-4">
+                  <div className="bg-blue-50 border-2 border-blue-300 rounded-xl p-6">
+                    <h4 className="font-bold text-blue-900 text-lg mb-3">
+                      Problema de Ejemplo:
+                    </h4>
+                    <div className="bg-white rounded-lg p-4 mb-4 text-center">
+                      <p className="text-2xl font-bold text-gray-900">
+                        {helpContent.example.problem}
+                      </p>
+                    </div>
+                    <h4 className="font-bold text-blue-900 text-lg mb-3">
+                      Solución:
+                    </h4>
+                    <div className="space-y-2">
+                      {helpContent.example.solution.map((step, index) => (
+                        <div key={index} className="flex items-start space-x-3">
+                          <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                            {index + 1}
+                          </span>
+                          <p className="text-gray-800">{step}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-blue-200">
+                      <p className="text-lg font-bold text-blue-900">
+                        Respuesta: <span className="text-blue-600">{helpContent.example.answer}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {helpContent.tips && helpContent.tips.length > 0 && (
+                    <div className="bg-purple-50 border-2 border-purple-300 rounded-xl p-6">
+                      <h4 className="font-bold text-purple-900 text-lg mb-3">
+                        💡 Consejos:
+                      </h4>
+                      <ul className="space-y-2">
+                        {helpContent.tips.map((tip, index) => (
+                          <li key={index} className="flex items-start space-x-2">
+                            <span className="text-purple-600">•</span>
+                            <span className="text-gray-800">{tip}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {helpType === 'solution' && (
+                <div className="space-y-4">
+                  <div className="bg-green-50 border-2 border-green-300 rounded-xl p-6">
+                    <h4 className="font-bold text-green-900 text-lg mb-4">
+                      Pasos para resolver:
+                    </h4>
+                    <div className="space-y-3">
+                      {helpContent.stepByStep.map((step, index) => (
+                        <div key={index} className="flex items-start space-x-3">
+                          <span className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                            {index + 1}
+                          </span>
+                          <p className="text-gray-800 pt-1 text-lg">{step}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {helpContent.tips && helpContent.tips.length > 0 && (
+                    <div className="bg-purple-50 border-2 border-purple-300 rounded-xl p-6">
+                      <h4 className="font-bold text-purple-900 text-lg mb-3">
+                        💡 Consejos para el futuro:
+                      </h4>
+                      <ul className="space-y-2">
+                        {helpContent.tips.map((tip, index) => (
+                          <li key={index} className="flex items-start space-x-2">
+                            <span className="text-purple-600">•</span>
+                            <span className="text-gray-800">{tip}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 rounded-b-2xl">
+              <button
+                onClick={handleCloseHelp}
+                className="w-full bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
