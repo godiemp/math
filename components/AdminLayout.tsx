@@ -22,7 +22,6 @@ const navItems: NavItem[] = [
   { name: 'System Health', path: '/admin/system-health', icon: '💚' },
   { name: 'Problems', path: '/admin/problems', icon: '❓' },
   { name: 'Abstract Problems', path: '/admin/abstract-problems', icon: '📚' },
-  { name: 'Curriculum', path: '/admin/curriculum', icon: '📋' },
   { name: 'Generator', path: '/admin/qgen', icon: '🎲' },
   { name: 'Upload', path: '/admin/upload', icon: '📤' },
   { name: 'Study Buddy Debug', path: '/admin/study-buddy-debug', icon: '🧠' },
