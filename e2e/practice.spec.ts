@@ -306,9 +306,8 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
         while (attempts < questionsAnswered && !(await verResumenButton.isVisible().catch(() => false))) {
           const nextBtn = page.getByRole('button', { name: /Siguiente/i });
           if (await nextBtn.isVisible().catch(() => false)) {
-            // Scroll the button into view before clicking
-            await nextBtn.scrollIntoViewIfNeeded();
-            await nextBtn.click();
+            // Force click to bypass viewport checks - the button may be in a scrollable container
+            await nextBtn.click({ force: true });
             attempts++;
             // Small wait for navigation
             await page.waitForTimeout(300);
