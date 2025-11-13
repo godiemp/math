@@ -17,11 +17,11 @@ export type OperationType =
   // Algebraic (Phase 2)
   | 'simple-equation' | 'expression-evaluation' | 'simplification'
   // Logical (Phase 3)
-  | 'comparison' | 'compound-conditions'
+  | 'comparison' | 'logical-operators' | 'compound-conditions'
   // Structural (Phase 4)
-  | 'sets' | 'functions'
+  | 'sets' | 'sequences' | 'functions'
   // Algorithmic (Phase 5)
-  | 'sorting' | 'counting';
+  | 'sorting' | 'counting' | 'composition';
 
 export type DifficultyLevel = 'basic' | 'intermediate' | 'advanced' | 'expert';
 export type PhaseType = 'arithmetic' | 'algebraic' | 'logical' | 'structural' | 'algorithmic';
@@ -830,7 +830,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-NUM-001","M1-ALG-006"],
 
-    config: { operators: ['>'], minValue: 1, maxValue: 10, operators: ['>'],}
+    config: { operators: ['>'], minValue: 1, maxValue: 10,}
   },
   {
     level: 62,
@@ -842,7 +842,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-NUM-001","M1-ALG-006"],
 
-    config: { operators: ['<'], minValue: 1, maxValue: 10, operators: ['<'],}
+    config: { operators: ['<'], minValue: 1, maxValue: 10,}
   },
   {
     level: 63,
@@ -854,7 +854,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-NUM-001","M1-ALG-006"],
 
-    config: { operators: ['='], minValue: 1, maxValue: 10, operators: ['='],}
+    config: { operators: ['='], minValue: 1, maxValue: 10,}
   },
   {
     level: 64,

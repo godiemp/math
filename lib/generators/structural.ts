@@ -96,7 +96,7 @@ export function generateSets(context: GeneratorContext): ProblemData {
   const arrA = Array.from(setA).sort((a, b) => a - b);
   const arrB = Array.from(setB).sort((a, b) => a - b);
 
-  let correctAnswer: string;
+  let correctAnswer: string | number;
   let expression: string;
   let expressionLatex: string;
   let problemKey: string;
