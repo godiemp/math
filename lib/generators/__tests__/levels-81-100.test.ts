@@ -81,11 +81,11 @@ describe('Levels 91-95: Sequences', () => {
 
     for (let i = 0; i < 10; i++) {
       const problem = generateProblem(config!);
-      expect(problem.expression).toMatch(/Continúa: [\d, ]+, __/);
+      expect(problem.expression).toMatch(/Continúa: -?[\d, -]+, __/);
       expect(typeof problem.correctAnswer).toBe('number');
 
       // Verify arithmetic progression
-      const nums = problem.expression.match(/\d+/g)!.map(Number);
+      const nums = problem.expression.match(/-?\d+/g)!.map(Number);
       if (nums.length >= 3) {
         const diff1 = nums[1] - nums[0];
         const diff2 = nums[2] - nums[1];
@@ -213,7 +213,7 @@ describe('Levels 96-100: Functions', () => {
 
     for (let i = 0; i < 10; i++) {
       const problem = generateProblem(config!);
-      expect(problem.expression).toMatch(/f\(x[,y]?\)=/);
+      expect(problem.expression).toMatch(/f\(x(,y)?\)=/);
       expect(typeof problem.correctAnswer).toBe('number');
     }
   });

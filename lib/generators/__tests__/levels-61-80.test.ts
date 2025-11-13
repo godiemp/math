@@ -46,7 +46,7 @@ describe('Levels 61-70: Comparison Operations', () => {
       expect(config).toBeDefined();
 
       const problem = generateProblem(config!);
-      expect(problem.expression).toMatch(/¿\d+ [<>=≥≤] \d+\?/);
+      expect(problem.expression).toMatch(/¿-?\d+ [<>=≥≤] -?\d+\?/);
       expect(['Verdadero', 'Falso']).toContain(problem.correctAnswer as string);
     }
   });

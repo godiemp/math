@@ -226,15 +226,15 @@ export const OPERATIONS_PATH: OperationLevel[] = [
   },
   {
     level: 13,
-    title: 'Tabla del 4 y 5',
-    description: 'Multiplicaciones de las tablas del 4 y 5',
+    title: 'Tabla del 4',
+    description: 'Multiplicaciones de la tabla del 4',
     operationType: 'multiplication',
     phase: 'arithmetic',
     difficulty: 'basic',
     problemsToComplete: 3,
     thematicUnits: ["M1-NUM-001"],
 
-    config: { specificTables: [4, 5], minValue: 1, maxValue: 10 }
+    config: { specificTables: [4], minValue: 1, maxValue: 10 }
   },
   {
     level: 14,
@@ -430,7 +430,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-NUM-001","M1-NUM-002"],
 
-    config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 50, numberOfOperands: 2, allowDecimals: true }
+    config: { mixedOperations: ['addition', 'subtraction', 'multiplication', 'division'], minValue: 1, maxValue: 50, numberOfOperands: 4, allowDecimals: true }
   },
   {
     level: 30,
@@ -460,7 +460,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], equationType: 'x+a=b', minValue: 1, maxValue: 10 }
   },
   {
     level: 32,
@@ -472,7 +472,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], equationType: 'x-a=b', minValue: 1, maxValue: 10 }
   },
   {
     level: 33,
@@ -484,7 +484,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], equationType: 'a-x=b', minValue: 1, maxValue: 10 }
   },
   {
     level: 34,
@@ -496,7 +496,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], equationType: 'ax=b', minValue: 1, maxValue: 10 }
   },
   {
     level: 35,
@@ -508,7 +508,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { variables: ['x'], minValue: 2, maxValue: 20 }
+    config: { variables: ['x'], equationType: 'x/a=b', minValue: 2, maxValue: 20 }
   },
   {
     level: 36,
@@ -520,7 +520,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { variables: ['x'], minValue: 10, maxValue: 50 }
+    config: { equationType: 'ax+b=c', variables: ['x'], minValue: 10, maxValue: 50 }
   },
   {
     level: 37,
@@ -532,7 +532,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 20 }
+    config: { equationType: 'ax-b=c', variables: ['x'], minValue: 1, maxValue: 20 }
   },
   {
     level: 38,
@@ -544,7 +544,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 20 }
+    config: { equationType: 'a(x+b)=c', variables: ['x'], minValue: 1, maxValue: 20 }
   },
   {
     level: 39,
@@ -556,7 +556,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 20 }
+    config: { equationType: '2x+a=x+b', variables: ['x'], minValue: 1, maxValue: 20 }
   },
   {
     level: 40,
@@ -582,7 +582,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-002"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, expressionType: 'x+a',}
   },
   {
     level: 42,
@@ -594,7 +594,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-002"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, expressionType: 'ax',}
   },
   {
     level: 43,
@@ -606,7 +606,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-002"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, expressionType: 'ax+b',}
   },
   {
     level: 44,
@@ -618,7 +618,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-002"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, expressionType: 'x²',}
   },
   {
     level: 45,
@@ -630,7 +630,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-002"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, expressionType: 'ax²+b',}
   },
   {
     level: 46,
@@ -642,7 +642,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-002"],
 
-    config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x', 'y'], minValue: 1, maxValue: 10, expressionType: 'x+y',}
   },
   {
     level: 47,
@@ -654,7 +654,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-002"],
 
-    config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x', 'y'], minValue: 1, maxValue: 10, expressionType: 'xy',}
   },
   {
     level: 48,
@@ -666,7 +666,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-002"],
 
-    config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x', 'y'], minValue: 1, maxValue: 10, expressionType: 'ax+by',}
   },
   {
     level: 49,
@@ -678,7 +678,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-002"],
 
-    config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x', 'y'], minValue: 1, maxValue: 10, expressionType: 'x²+y²',}
   },
   {
     level: 50,
@@ -690,7 +690,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-002"],
 
-    config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x', 'y'], minValue: 1, maxValue: 10, expressionType: '(x+y)²',}
   },
 
   // Simplificación (51-60)
@@ -704,7 +704,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-001","M1-ALG-002"],
 
-    config: { variables: ['x'] }
+    config: { variables: ['x'], simplificationType: 'x+x',}
   },
   {
     level: 52,
@@ -716,7 +716,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-001","M1-ALG-002"],
 
-    config: { variables: ['x'] }
+    config: { variables: ['x'], simplificationType: 'ax+bx',}
   },
   {
     level: 53,
@@ -728,7 +728,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-001","M1-ALG-002"],
 
-    config: { variables: ['x'] }
+    config: { variables: ['x'], simplificationType: 'ax-bx',}
   },
   {
     level: 54,
@@ -740,7 +740,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-001","M1-ALG-002"],
 
-    config: { variables: ['x'] }
+    config: { variables: ['x'], simplificationType: 'x+x+x',}
   },
   {
     level: 55,
@@ -752,7 +752,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-001","M1-ALG-002"],
 
-    config: { variables: ['x'] }
+    config: { variables: ['x'], simplificationType: 'ax+x-x',}
   },
   {
     level: 56,
@@ -764,7 +764,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-001","M1-ALG-002"],
 
-    config: { variables: ['x', 'y'] }
+    config: { variables: ['x', 'y'], simplificationType: 'ax+by+x',}
   },
   {
     level: 57,
@@ -776,7 +776,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-001","M1-ALG-002"],
 
-    config: { variables: ['x', 'y'] }
+    config: { variables: ['x', 'y'], simplificationType: 'ax+by-x',}
   },
   {
     level: 58,
@@ -788,7 +788,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-001","M1-ALG-002"],
 
-    config: { variables: ['x', 'y'] }
+    config: { variables: ['x', 'y'], simplificationType: 'ax+by+cx-dy',}
   },
   {
     level: 59,
@@ -800,7 +800,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-001","M1-ALG-002"],
 
-    config: { variables: ['x'] }
+    config: { variables: ['x'], simplificationType: 'a(x+b)+x',}
   },
   {
     level: 60,
@@ -830,7 +830,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-NUM-001","M1-ALG-006"],
 
-    config: { operators: ['>'], minValue: 1, maxValue: 10 }
+    config: { operators: ['>'], minValue: 1, maxValue: 10, operators: ['>'],}
   },
   {
     level: 62,
@@ -842,7 +842,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-NUM-001","M1-ALG-006"],
 
-    config: { operators: ['<'], minValue: 1, maxValue: 10 }
+    config: { operators: ['<'], minValue: 1, maxValue: 10, operators: ['<'],}
   },
   {
     level: 63,
@@ -854,7 +854,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-NUM-001","M1-ALG-006"],
 
-    config: { operators: ['='], minValue: 1, maxValue: 10 }
+    config: { operators: ['='], minValue: 1, maxValue: 10, operators: ['='],}
   },
   {
     level: 64,
@@ -952,7 +952,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, conditionType: 'x>a',}
   },
   {
     level: 72,
@@ -964,7 +964,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { operators: ['AND'], variables: ['x'], minValue: 1, maxValue: 15 }
+    config: { operators: ['AND'], variables: ['x'], minValue: 1, maxValue: 15, conditionType: 'x>a AND x<b',}
   },
   {
     level: 73,
@@ -976,7 +976,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { operators: ['OR'], variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { operators: ['OR'], variables: ['x'], minValue: 1, maxValue: 10, conditionType: 'x<a OR x>b',}
   },
   {
     level: 74,
@@ -988,43 +988,43 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { minValue: 1, maxValue: 20 }
+    config: { minValue: 1, maxValue: 20, conditionType: 'range',}
   },
   {
     level: 75,
-    title: 'Condiciones con Variables',
-    description: 'Si x=4, ¿cumple 2<x<7?',
-    operationType: 'compound-conditions',
+    title: 'Operador AND',
+    description: '¿Verdadero AND Falso?',
+    operationType: 'logical-operators',
     phase: 'logical',
     difficulty: 'advanced',
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { operators: ['AND'], minValue: 1, maxValue: 10 }
   },
   {
     level: 76,
-    title: 'Dos Variables con AND',
-    description: 'Si x=3 y y=5, ¿x<y AND x>0?',
-    operationType: 'compound-conditions',
+    title: 'Operador OR',
+    description: '¿Verdadero OR Falso?',
+    operationType: 'logical-operators',
     phase: 'logical',
     difficulty: 'advanced',
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { operators: ['AND'], variables: ['x', 'y'], minValue: 1, maxValue: 10 }
+    config: { operators: ['OR'], minValue: 1, maxValue: 10 }
   },
   {
     level: 77,
-    title: 'Dos Variables con OR',
-    description: 'Si x=2 y y=8, ¿x>5 OR y>5?',
-    operationType: 'compound-conditions',
+    title: 'Operador NOT',
+    description: '¿NOT Verdadero?',
+    operationType: 'logical-operators',
     phase: 'logical',
     difficulty: 'advanced',
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-006"],
 
-    config: { operators: ['OR'], variables: ['x', 'y'], minValue: 1, maxValue: 10 }
+    config: { operators: ['NOT'], minValue: 1, maxValue: 10 }
   },
   {
     level: 78,
@@ -1192,87 +1192,87 @@ export const OPERATIONS_PATH: OperationLevel[] = [
   // Funciones (91-100)
   {
     level: 91,
-    title: 'Función Suma',
-    description: 'f(x) = x+2, f(3) = ?',
-    operationType: 'functions',
+    title: 'Secuencia Aritmética (+n)',
+    description: 'Continúa: 2, 4, 6, __',
+    operationType: 'sequences',
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-009","M1-ALG-012"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, sequenceType: '+n',}
   },
   {
     level: 92,
-    title: 'Función Multiplicación',
-    description: 'f(x) = 2x, f(4) = ?',
-    operationType: 'functions',
+    title: 'Secuencia Decreciente (-n)',
+    description: 'Continúa: 10, 8, 6, __',
+    operationType: 'sequences',
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-009","M1-ALG-012"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, sequenceType: '-n',}
   },
   {
     level: 93,
-    title: 'Función Lineal',
-    description: 'f(x) = 2x+1, f(3) = ?',
-    operationType: 'functions',
+    title: 'Secuencia Geométrica (*n)',
+    description: 'Continúa: 2, 4, 8, __',
+    operationType: 'sequences',
     phase: 'structural',
     difficulty: 'basic',
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-009","M1-ALG-012"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, sequenceType: '*n',}
   },
   {
     level: 94,
-    title: 'Función Cuadrática',
-    description: 'f(x) = x², f(5) = ?',
-    operationType: 'functions',
+    title: 'Secuencia de Cuadrados',
+    description: 'Continúa: 1, 4, 9, __',
+    operationType: 'sequences',
     phase: 'structural',
     difficulty: 'intermediate',
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-009","M1-ALG-012"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, sequenceType: 'squares',}
   },
   {
     level: 95,
-    title: 'Función con Dos Términos',
-    description: 'f(x) = x²+2x, f(3) = ?',
-    operationType: 'functions',
+    title: 'Fibonacci',
+    description: 'Continúa: 1, 1, 2, 3, 5, 8, __',
+    operationType: 'sequences',
     phase: 'structural',
     difficulty: 'intermediate',
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-009","M1-ALG-012"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, sequenceType: 'fibonacci', sequenceLength: 6,}
   },
   {
     level: 96,
-    title: 'Función de Dos Variables',
-    description: 'f(x,y) = x+y, f(2,3) = ?',
+    title: 'Función f(x)=x+a',
+    description: 'f(x)=x+3, f(5)=?',
     operationType: 'functions',
     phase: 'structural',
     difficulty: 'intermediate',
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-009","M1-ALG-012"],
 
-    config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, functionType: 'x+a',}
   },
   {
     level: 97,
-    title: 'Función Producto',
-    description: 'f(x,y) = xy, f(3,4) = ?',
+    title: 'Función f(x)=ax',
+    description: 'f(x)=3x, f(4)=?',
     operationType: 'functions',
     phase: 'structural',
     difficulty: 'intermediate',
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-009","M1-ALG-012"],
 
-    config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, functionType: 'ax',}
   },
   {
     level: 98,
@@ -1284,7 +1284,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-009","M1-ALG-012"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, functionType: 'ax+b',}
   },
   {
     level: 99,
@@ -1296,7 +1296,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-009","M1-ALG-012"],
 
-    config: { variables: ['x'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x'], minValue: 1, maxValue: 10, functionType: 'x²',}
   },
   {
     level: 100,
@@ -1308,7 +1308,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-009","M1-ALG-012"],
 
-    config: { variables: ['x', 'y'], minValue: 1, maxValue: 10 }
+    config: { variables: ['x', 'y'], minValue: 1, maxValue: 10, functionType: 'x²+y²' }
   },
 
   // ==========================================
@@ -1326,7 +1326,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-PROB-002"],
 
-    config: { sequenceLength: 3, minValue: 1, maxValue: 10 }
+    config: { sequenceLength: 3, minValue: 1, maxValue: 10, sortingType: 'sort-asc',}
   },
   {
     level: 102,
@@ -1338,7 +1338,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-PROB-002"],
 
-    config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
+    config: { sequenceLength: 4, minValue: 1, maxValue: 10, sortingType: 'sort-desc',}
   },
   {
     level: 103,
@@ -1350,7 +1350,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-PROB-002"],
 
-    config: { sequenceLength: 5, minValue: 1, maxValue: 10 }
+    config: { sequenceLength: 5, minValue: 1, maxValue: 10, sortingType: 'min',}
   },
   {
     level: 104,
@@ -1362,7 +1362,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-PROB-002"],
 
-    config: { sequenceLength: 3, minValue: 1, maxValue: 10 }
+    config: { sequenceLength: 3, minValue: 1, maxValue: 10, sortingType: 'max',}
   },
   {
     level: 105,
@@ -1374,7 +1374,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M1-PROB-002"],
 
-    config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
+    config: { sequenceLength: 4, minValue: 1, maxValue: 10, sortingType: 'median',}
   },
   {
     level: 106,
@@ -1448,7 +1448,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M2-PROB-003"],
 
-    config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
+    config: { sequenceLength: 4, minValue: 1, maxValue: 10, countingType: 'count-all',}
   },
   {
     level: 112,
@@ -1460,7 +1460,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M2-PROB-003"],
 
-    config: { sequenceLength: 4, minValue: 1, maxValue: 10 }
+    config: { sequenceLength: 4, minValue: 1, maxValue: 10, countingType: 'count-even',}
   },
   {
     level: 113,
@@ -1472,7 +1472,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M2-PROB-003"],
 
-    config: { sequenceLength: 5, minValue: 1, maxValue: 10 }
+    config: { sequenceLength: 5, minValue: 1, maxValue: 10, countingType: 'count-odd',}
   },
   {
     level: 114,
@@ -1484,7 +1484,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M2-PROB-003"],
 
-    config: { sequenceLength: 5, minValue: 1, maxValue: 10 }
+    config: { sequenceLength: 5, minValue: 1, maxValue: 10, countingType: 'count-greater',}
   },
   {
     level: 115,
@@ -1496,7 +1496,7 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M2-PROB-003"],
 
-    config: { sequenceLength: 5, minValue: 1, maxValue: 15 }
+    config: { sequenceLength: 5, minValue: 1, maxValue: 15, countingType: 'count-multiples',}
   },
   {
     level: 116,
@@ -1508,55 +1508,55 @@ export const OPERATIONS_PATH: OperationLevel[] = [
     problemsToComplete: 3,
     thematicUnits: ["M2-PROB-003"],
 
-    config: { sequenceLength: 6, minValue: 1, maxValue: 10 }
+    config: { sequenceLength: 6, minValue: 1, maxValue: 10, countingType: 'sum-even',}
   },
   {
     level: 117,
-    title: 'Contar Duplicados',
-    description: '¿Cuántas veces aparece 3?',
-    operationType: 'counting',
+    title: 'Aplicar Transformación +n',
+    description: 'Aplica +3 a: [1, 2, 3]',
+    operationType: 'composition',
     phase: 'algorithmic',
     difficulty: 'advanced',
     problemsToComplete: 3,
     thematicUnits: ["M2-PROB-003"],
 
-    config: { sequenceLength: 6, minValue: 1, maxValue: 5 }
+    config: { sequenceLength: 6, minValue: 1, maxValue: 5, compositionType: 'map+n',}
   },
   {
     level: 118,
-    title: 'Contar Únicos',
-    description: '¿Cuántos números diferentes?',
-    operationType: 'counting',
+    title: 'Aplicar Transformación ×n',
+    description: 'Aplica ×2 a: [1, 2, 3]',
+    operationType: 'composition',
     phase: 'algorithmic',
     difficulty: 'advanced',
     problemsToComplete: 3,
     thematicUnits: ["M2-PROB-003"],
 
-    config: { sequenceLength: 6, minValue: 1, maxValue: 5 }
+    config: { sequenceLength: 6, minValue: 1, maxValue: 5, compositionType: 'map*n',}
   },
   {
     level: 119,
-    title: 'Suma Condicional',
-    description: 'Suma solo los pares',
-    operationType: 'counting',
+    title: 'Transformar y Sumar',
+    description: 'Aplica ×2 luego suma: [1, 2, 3]',
+    operationType: 'composition',
     phase: 'algorithmic',
     difficulty: 'advanced',
     problemsToComplete: 3,
     thematicUnits: ["M2-PROB-003"],
 
-    config: { sequenceLength: 5, minValue: 1, maxValue: 10 }
+    config: { sequenceLength: 5, minValue: 1, maxValue: 10, compositionType: 'map-then-reduce',}
   },
   {
     level: 120,
-    title: 'Conteo Complejo',
-    description: 'Cuenta si x%2=0 OR x>7',
-    operationType: 'counting',
+    title: 'Filtrar Pares',
+    description: 'Filtra pares: [1, 2, 3, 4]',
+    operationType: 'composition',
     phase: 'algorithmic',
     difficulty: 'expert',
     problemsToComplete: 3,
     thematicUnits: ["M2-PROB-003"],
 
-    config: { sequenceLength: 6, minValue: 1, maxValue: 10 }
+    config: { sequenceLength: 6, minValue: 1, maxValue: 10, compositionType: 'filter-even',}
   }
 ];
 

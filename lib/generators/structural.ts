@@ -127,7 +127,7 @@ export function generateSets(context: GeneratorContext): ProblemData {
     expressionLatex = `${elem} \\in \\{${arrB.join(',')}\\}`;
     problemKey = `set:∈:${elem},${arrB.join(',')}`;
   } else { // '|'
-    correctAnswer = arrA.length.toString();
+    correctAnswer = arrA.length;
     expression = `|{${arrA.join(',')}}|`;
     expressionLatex = `|\\{${arrA.join(',')}\\}|`;
     problemKey = `set:|:${arrA.join(',')}`;

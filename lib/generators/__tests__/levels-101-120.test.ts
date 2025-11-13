@@ -88,8 +88,8 @@ describe('Levels 101-110: Sorting Operations', () => {
       expect(config).toBeDefined();
 
       const problem = generateProblem(config!);
-      // Should involve array/list operations
-      expect(problem.expression).toMatch(/\[[\d, ]+\]/);
+      // Should involve array/list operations (may include negative numbers)
+      expect(problem.expression).toMatch(/\[[-\d, ]+\]/);
     }
   });
 });
