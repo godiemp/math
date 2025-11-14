@@ -579,4 +579,5 @@ export const m1Alg002Questions: Question[] = [
     explanationLatex: '\\frac{2}{x} + \\frac{3}{x} = \\frac{2 + 3}{x} = \\frac{5}{x}',
     difficulty: 'easy',
     skills: ['algebra-expresiones-racionales', 'algebra-suma-fracciones', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  }
 ];
