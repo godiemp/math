@@ -106,6 +106,26 @@ export default function Curriculum({ level }: CurriculumProps) {
     }));
   };
 
+  const toggleAllInSubject = (subject: string, subjectUnits: ThematicUnit[]) => {
+    // Check if all units in this subject are expanded
+    const allExpanded = subjectUnits.every(unit => {
+      const topicId = `${subject}-${unit.code}`;
+      return expandedTopics[topicId];
+    });
+
+    // Toggle all units in this subject
+    const updates: Record<string, boolean> = {};
+    subjectUnits.forEach(unit => {
+      const topicId = `${subject}-${unit.code}`;
+      updates[topicId] = !allExpanded;
+    });
+
+    setExpandedTopics(prev => ({
+      ...prev,
+      ...updates
+    }));
+  };
+
   const copyCurriculum = async () => {
     try {
       setCopyStatus('copying');
@@ -305,6 +325,12 @@ export default function Curriculum({ level }: CurriculumProps) {
                   const config = subjectConfig[subject as keyof typeof subjectConfig];
                   if (!subjectUnits || subjectUnits.length === 0) return null;
 
+                  // Check if all units in this subject are expanded
+                  const allExpanded = subjectUnits.every(unit => {
+                    const topicId = `${subject}-${unit.code}`;
+                    return expandedTopics[topicId];
+                  });
+
                   return (
                     <div
                       key={subject}
@@ -325,12 +351,21 @@ export default function Curriculum({ level }: CurriculumProps) {
                             </div>
                           </div>
                         </div>
-                        <Link
-                          href={`/practice/${level.toLowerCase()}?subject=${mapSubjectToKey(subject)}`}
-                          className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium py-2 px-3 sm:px-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 transition-colors text-xs sm:text-sm whitespace-nowrap self-start"
-                        >
-                          {t('practice')} →
-                        </Link>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => toggleAllInSubject(subject, subjectUnits)}
+                            className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium py-2 px-3 sm:px-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 transition-colors text-xs sm:text-sm whitespace-nowrap self-start"
+                            title={allExpanded ? 'Contraer todas' : 'Expandir todas'}
+                          >
+                            {allExpanded ? '▲ Contraer todas' : '▼ Expandir todas'}
+                          </button>
+                          <Link
+                            href={`/practice/${level.toLowerCase()}?subject=${mapSubjectToKey(subject)}`}
+                            className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium py-2 px-3 sm:px-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 transition-colors text-xs sm:text-sm whitespace-nowrap self-start"
+                          >
+                            {t('practice')} →
+                          </Link>
+                        </div>
                       </div>
 
                       {/* Units list */}
