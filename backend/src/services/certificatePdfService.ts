@@ -641,6 +641,67 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
 
     // Digital signature (centered)
     const signatureX = (pageWidth - 200) / 2;
+
+    // Draw stylized signature graphic above the line
+    // This creates a simple handwritten-looking signature using curves
+    const sigY = footerY + 45;
+    const sigColor = rgb(0.2, 0.2, 0.4); // Dark blue ink color
+
+    // Draw a stylized "J. Martinez" signature using simple strokes
+    // First initial "J" - curved descender
+    page.drawLine({
+      start: { x: signatureX + 20, y: sigY + 10 },
+      end: { x: signatureX + 25, y: sigY + 15 },
+      color: sigColor,
+      thickness: 1.5,
+    });
+    page.drawLine({
+      start: { x: signatureX + 25, y: sigY + 15 },
+      end: { x: signatureX + 22, y: sigY + 5 },
+      color: sigColor,
+      thickness: 1.5,
+    });
+    page.drawLine({
+      start: { x: signatureX + 22, y: sigY + 5 },
+      end: { x: signatureX + 18, y: sigY + 3 },
+      color: sigColor,
+      thickness: 1.5,
+    });
+
+    // Last name - flowing line with curves
+    page.drawLine({
+      start: { x: signatureX + 35, y: sigY + 8 },
+      end: { x: signatureX + 50, y: sigY + 12 },
+      color: sigColor,
+      thickness: 1.2,
+    });
+    page.drawLine({
+      start: { x: signatureX + 50, y: sigY + 12 },
+      end: { x: signatureX + 65, y: sigY + 10 },
+      color: sigColor,
+      thickness: 1.2,
+    });
+    page.drawLine({
+      start: { x: signatureX + 65, y: sigY + 10 },
+      end: { x: signatureX + 75, y: sigY + 8 },
+      color: sigColor,
+      thickness: 1.2,
+    });
+    page.drawLine({
+      start: { x: signatureX + 75, y: sigY + 8 },
+      end: { x: signatureX + 85, y: sigY + 6 },
+      color: sigColor,
+      thickness: 1.2,
+    });
+
+    // Add underline flourish
+    page.drawLine({
+      start: { x: signatureX + 15, y: sigY },
+      end: { x: signatureX + 90, y: sigY - 2 },
+      color: sigColor,
+      thickness: 0.8,
+    });
+
     page.drawLine({
       start: { x: signatureX, y: footerY + 20 },
       end: { x: signatureX + 150, y: footerY + 20 },
