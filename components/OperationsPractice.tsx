@@ -57,6 +57,29 @@ export default function OperationsPractice({
     }
   }, [problem, feedback.show]);
 
+  // Keyboard shortcuts for boolean questions
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Only handle keyboard shortcuts for boolean questions
+      if (problem?.answerType !== 'boolean' || isSubmitting || feedback.show) {
+        return;
+      }
+
+      const key = e.key.toLowerCase();
+
+      if (key === 'v') {
+        setUserAnswer('Verdadero');
+        submitAnswer('Verdadero');
+      } else if (key === 'f') {
+        setUserAnswer('Falso');
+        submitAnswer('Falso');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [problem, isSubmitting, feedback.show]);
+
   const loadProblem = () => {
     try {
       // Find level config
@@ -265,7 +288,10 @@ export default function OperationsPractice({
                       : 'bg-white text-gray-900 border-gray-300 hover:border-green-400'
                   } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
                 >
-                  ✓ Verdadero
+                  <div className="flex flex-col items-center">
+                    <span>✓ Verdadero</span>
+                    <span className="text-sm font-normal opacity-70 mt-1">(Presiona V)</span>
+                  </div>
                 </button>
                 <button
                   type="button"
@@ -280,7 +306,10 @@ export default function OperationsPractice({
                       : 'bg-white text-gray-900 border-gray-300 hover:border-red-400'
                   } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
                 >
-                  ✗ Falso
+                  <div className="flex flex-col items-center">
+                    <span>✗ Falso</span>
+                    <span className="text-sm font-normal opacity-70 mt-1">(Presiona F)</span>
+                  </div>
                 </button>
               </div>
             </div>
