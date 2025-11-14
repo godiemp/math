@@ -358,11 +358,19 @@ export default function LearnPage() {
 
           <Button
             onClick={startLearning}
+            disabled={loading}
             fullWidth
             size="lg"
             className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700"
           >
-            ¡Empezar a Aprender! 🚀
+            {loading ? (
+              <div className="flex items-center gap-2">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                <span>Preparando tu pregunta...</span>
+              </div>
+            ) : (
+              '¡Empezar a Aprender! 🚀'
+            )}
           </Button>
 
           <button
