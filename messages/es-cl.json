@@ -649,6 +649,11 @@
       "joined": "te has unido al ensayo exitosamente",
       "joinError": "error al unirse al ensayo"
     },
+    "status": {
+      "scheduled": "programado",
+      "lobby": "lobby abierto",
+      "active": "en curso"
+    },
     "header": {
       "title": "ensayo PAES en vivo",
       "subtitle": "regístrate y practica ensayos PAES con otros estudiantes en tiempo real"
@@ -809,6 +814,7 @@
         "m1AndM2Option": "M1 y M2 (carreras científicas/ingeniería)",
         "m1OnlyOption": "solo M1 (otras carreras)",
         "m1Description": "si solo necesitas M1, ocultaremos las opciones de práctica de M2",
+        "cancel": "cancelar",
         "saving": "guardando...",
         "saveChanges": "guardar cambios"
       }
