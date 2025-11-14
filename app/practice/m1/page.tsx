@@ -310,14 +310,14 @@ function M1PracticeContent() {
 
     return (
       <div className="mb-4 p-4 rounded-xl bg-black/20 dark:bg-white/10 border border-white/20 shadow-xl">
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 flex-1 min-w-0">
             <span className="text-2xl flex-shrink-0">🔄</span>
             <div className="flex-1 min-w-0">
               <h2 className="text-base font-bold text-white">
                 Repetir Última Configuración
               </h2>
-              <p className="text-white/80 text-sm">
+              <p className="text-white/80 text-sm break-words">
                 {getConfigDisplayText(lastConfig)}
               </p>
             </div>
@@ -516,18 +516,18 @@ function M1PracticeContent() {
         </div>
 
         {difficulty && (
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <button
               data-testid="reset-selection-button"
               onClick={handleResetSelection}
-              className="px-4 py-2 rounded-lg bg-black/30 hover:bg-black/40 border border-white/30 text-white text-sm font-semibold transition-all"
+              className="px-4 py-2 rounded-lg bg-black/30 hover:bg-black/40 border border-white/30 text-white text-sm font-semibold transition-all whitespace-nowrap"
             >
               ← Cambiar
             </button>
             <button
               data-testid="start-quiz-button"
               onClick={handleStartQuiz}
-              className="flex-1 px-5 py-2.5 rounded-lg bg-white/25 hover:bg-white/35 border-2 border-white/50 text-white font-bold transition-all hover:scale-105 shadow-xl"
+              className="flex-1 min-w-[180px] px-5 py-2.5 rounded-lg bg-white/25 hover:bg-white/35 border-2 border-white/50 text-white font-bold transition-all hover:scale-105 shadow-xl"
             >
               Comenzar Quiz →
             </button>
@@ -543,18 +543,18 @@ function M1PracticeContent() {
 
     return (
       <div className="mb-4">
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <button
             data-testid="reset-selection-button"
             onClick={handleResetSelection}
-            className="px-4 py-2 rounded-lg bg-black/30 hover:bg-black/40 border border-white/30 text-white text-sm font-semibold transition-all"
+            className="px-4 py-2 rounded-lg bg-black/30 hover:bg-black/40 border border-white/30 text-white text-sm font-semibold transition-all whitespace-nowrap"
           >
             ← Cambiar
           </button>
           <button
             data-testid="start-quiz-button"
             onClick={handleStartQuiz}
-            className="flex-1 px-5 py-2.5 rounded-lg bg-white/25 hover:bg-white/35 border-2 border-white/50 text-white font-bold transition-all hover:scale-105 shadow-xl"
+            className="flex-1 min-w-[180px] px-5 py-2.5 rounded-lg bg-white/25 hover:bg-white/35 border-2 border-white/50 text-white font-bold transition-all hover:scale-105 shadow-xl"
           >
             Comenzar Quiz →
           </button>
