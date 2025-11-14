@@ -197,7 +197,7 @@ export default function LearnPage() {
             setDifficulty('medium');
           }
         } else {
-          // Wrong answer - reset streak
+          // Wrong answer - automatically start guided mode to help
           setStreak(0);
 
           // Lower difficulty after multiple failures
@@ -205,6 +205,13 @@ export default function LearnPage() {
           if (accuracy < 0.5 && difficulty !== 'easy') {
             setDifficulty(difficulty === 'hard' ? 'medium' : 'easy');
           }
+
+          // Auto-start guided mode after a brief moment
+          setTimeout(async () => {
+            setGuidedMode(true);
+            setMode('guided');
+            await loadNextStep(problem.problemId, 0);
+          }, 2000); // Wait 2 seconds to let them read the feedback
         }
       }
     } catch (err) {
@@ -544,17 +551,17 @@ export default function LearnPage() {
                     className={`p-4 rounded-xl border-2 transition-all ${
                       verification.correct
                         ? 'bg-green-50 dark:bg-green-950 border-green-300 dark:border-green-700'
-                        : 'bg-red-50 dark:bg-red-950 border-red-300 dark:border-red-700'
+                        : 'bg-orange-50 dark:bg-orange-950 border-orange-300 dark:border-orange-700'
                     }`}
                   >
                     <Text
                       className={`font-bold text-lg mb-2 ${
                         verification.correct
                           ? 'text-green-800 dark:text-green-200'
-                          : 'text-red-800 dark:text-red-200'
+                          : 'text-orange-800 dark:text-orange-200'
                       }`}
                     >
-                      {verification.correct ? '✅ ¡Excelente!' : '❌ No es correcto'}
+                      {verification.correct ? '✅ ¡Excelente!' : '💡 Vamos a intentarlo de otra manera'}
                     </Text>
                     <div className="prose prose-sm dark:prose-invert max-w-none">
                       <ReactMarkdown
@@ -565,8 +572,8 @@ export default function LearnPage() {
                       </ReactMarkdown>
                     </div>
                     {verification.correctAnswer && (
-                      <div className="mt-2 pt-2 border-t border-red-200 dark:border-red-800">
-                        <Text size="sm" className="font-semibold">
+                      <div className="mt-2 pt-2 border-t border-orange-200 dark:border-orange-800">
+                        <Text size="sm" className="font-semibold text-orange-700 dark:text-orange-300">
                           Respuesta correcta: {verification.correctAnswer}
                         </Text>
                       </div>
@@ -604,21 +611,16 @@ export default function LearnPage() {
                   )}
 
                   {!verification.correct && !guidedMode && (
-                    <div className="flex gap-3">
-                      <Button
-                        onClick={() => setVerification(null)}
-                        variant="secondary"
-                        fullWidth
-                      >
-                        🔄 Intentar de nuevo
-                      </Button>
-                      <Button
-                        onClick={handleRequestHelp}
-                        variant="secondary"
-                        fullWidth
-                      >
-                        🆘 Ayúdame paso a paso
-                      </Button>
+                    <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-950 border border-blue-300 dark:border-blue-700 rounded-xl">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                        <Text className="font-semibold text-blue-800 dark:text-blue-200">
+                          Te voy a ayudar paso a paso...
+                        </Text>
+                      </div>
+                      <Text size="sm" className="text-blue-700 dark:text-blue-300">
+                        Vamos a resolver esto juntos. Te guiaré en cada paso.
+                      </Text>
                     </div>
                   )}
 
