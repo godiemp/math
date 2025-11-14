@@ -114,9 +114,9 @@ export default function Home() {
 
           {/* Auth Component */}
           <Auth
-            onSuccess={() => {
+            onSuccess={(isNewUser) => {
               setUser(require('@/lib/auth').getCurrentUser());
-              router.push('/dashboard');
+              router.push(isNewUser ? '/dashboard?welcome=true' : '/dashboard');
             }}
           />
 

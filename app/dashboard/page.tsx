@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
 import { getAllAvailableSessions, updateSessionStatuses } from "@/lib/sessionApi";
 import { useEffect, useState } from "react";
@@ -12,12 +12,12 @@ import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar } from "@/com
 import { StudyBuddy } from "@/components/StudyBuddy";
 import { ShareModal } from "@/components/ShareModal";
 import { WelcomeMessage } from "@/components/WelcomeMessage";
-import { markWelcomeSeen } from "@/lib/userApi";
 import { Share2 } from "lucide-react";
 
 function DashboardContent() {
-  const { user, setUser, isAdmin, isPaidUser, isLoading: authLoading, refreshUser } = useAuth();
+  const { user, setUser, isAdmin, isPaidUser, isLoading: authLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
   const [nextSession, setNextSession] = useState<LiveSession | null>(null);
@@ -25,13 +25,13 @@ function DashboardContent() {
   const [isWelcomeOpen, setIsWelcomeOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Check if user should see welcome message
+  // Check if user should see welcome message (from query param)
   useEffect(() => {
-    if (user && user.hasSeenWelcome === false) {
-      // Show welcome message for first-time users
+    const welcomeParam = searchParams.get('welcome');
+    if (welcomeParam === 'true' && user) {
       setIsWelcomeOpen(true);
     }
-  }, [user]);
+  }, [searchParams, user]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -107,14 +107,10 @@ function DashboardContent() {
     router.push('/');
   };
 
-  const handleWelcomeClose = async () => {
+  const handleWelcomeClose = () => {
     setIsWelcomeOpen(false);
-    // Mark welcome as seen in backend
-    const success = await markWelcomeSeen();
-    if (success) {
-      // Refresh user data to update hasSeenWelcome flag
-      await refreshUser();
-    }
+    // Remove welcome query param from URL
+    router.replace('/dashboard');
   };
 
   const formatDate = (timestamp: number) => {

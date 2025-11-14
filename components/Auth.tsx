@@ -8,7 +8,7 @@ import { analytics } from '@/lib/analytics';
 import { useTranslations } from 'next-intl';
 
 interface AuthProps {
-  onSuccess: () => void;
+  onSuccess: (isNewUser?: boolean) => void;
 }
 
 export default function Auth({ onSuccess }: AuthProps) {
@@ -62,7 +62,7 @@ export default function Auth({ onSuccess }: AuthProps) {
           });
 
           toast.success(t('login.success'));
-          onSuccess();
+          onSuccess(false);
         } else {
           const errorMsg = result.error || t('login.errors.invalidCredentials');
           setError(errorMsg);
@@ -115,7 +115,7 @@ export default function Auth({ onSuccess }: AuthProps) {
           });
 
           toast.success(t('register.success'));
-          onSuccess();
+          onSuccess(true);
         } else {
           const errorMsg = result.error || t('login.errors.registration');
           setError(errorMsg);
