@@ -9,6 +9,7 @@ import { m1Alg004Questions } from './m1-alg-004';
 import { m1Alg005Questions } from './m1-alg-005';
 import { m1Alg006Questions } from './m1-alg-006';
 import { m1Alg007Questions } from './m1-alg-007';
+import { m1Alg008Questions } from './m1-alg-008';
 
 // ============================================================================
 // LEGACY TOPIC-BASED EXPORTS (for backward compatibility)
@@ -49,6 +50,9 @@ export { m1Alg006Questions } from './m1-alg-006';
 
 // M1-ALG-007: Función cuadrática
 export { m1Alg007Questions } from './m1-alg-007';
+
+// M1-ALG-008: Función potencia, raíz, valor absoluto (placeholder - no questions yet)
+export { m1Alg008Questions } from './m1-alg-008';
 
 // ============================================================================
 // LEGACY TOPIC-BASED EXPORTS (for backward compatibility)

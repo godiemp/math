@@ -1,99 +1,15 @@
-import { Question } from '../../../types';
+/**
+ * LEGACY FILE - Maintained for backward compatibility
+ *
+ * This file re-exports questions from the new curriculum-based structure.
+ * All rational expression questions have been moved to m1-alg-002.ts
+ *
+ * Please import from m1-alg-002.ts directly for new code:
+ * import { m1Alg002Questions } from './m1-alg-002';
+ */
 
-export const m1AlgebraExpresionesRacionalesQuestions: Question[] = [
-  {
-    id: 'm1-216',
-    level: 'M1',
-    topic: 'Álgebra y Funciones',
-    subject: 'álgebra',
-    operacionBase: '\\frac{6x^2}{3x}',
-    question: 'Un vivero vende plantas en macetas cuadradas. Tiene un terreno de 6x² metros cuadrados disponible para cultivar plantas, donde x representa una unidad de medida estándar. Necesita dividir este terreno en 3x hileras de igual longitud. El gerente necesita simplificar la expresión que representa la longitud de cada hilera. ¿Cuál es la expresión simplificada?',
-    questionLatex: '\\text{Un vivero vende plantas en macetas cuadradas. Tiene un terreno de } 6x^2 \\text{ metros cuadrados disponible para cultivar plantas, donde x representa una unidad de medida estándar. Necesita dividir este terreno en } 3x \\text{ hileras de igual longitud. El gerente necesita simplificar la expresión que representa la longitud de cada hilera. ¿Cuál es la expresión simplificada?}',
-    options: ['$2x$', '$3x$', '$2x^2$', '$\\frac{2}{x}$'],
-    optionsLatex: ['2x', '3x', '2x^2', '\\frac{2}{x}'],
-    correctAnswer: 0,
-    explanation: 'Dividimos el coeficiente (6 ÷ 3 = 2) y restamos los exponentes de x (2 - 1 = 1): 6x²/(3x) = 2x metros por hilera.',
-    explanationLatex: '\\frac{6x^2}{3x} = \\frac{6}{3} \\times x^{2-1} = 2x',
-    difficulty: 'easy',
-    skills: ['algebra-expresiones-racionales', 'algebra-simplificacion', 'numeros-operaciones-basicas']
-  },
-  {
-    id: 'm1-217',
-    level: 'M1',
-    topic: 'Álgebra y Funciones',
-    subject: 'álgebra',
-    operacionBase: '\\frac{x^2 - 4}{x + 2}',
-    question: 'Un ingeniero civil diseña una piscina rectangular. El área de la superficie es (x² - 4) metros cuadrados, y uno de los lados mide (x + 2) metros, donde x es un parámetro de diseño. Para calcular la longitud del otro lado, necesita dividir el área entre el lado conocido y simplificar la expresión racional resultante. ¿Cuál es la expresión simplificada del otro lado?',
-    questionLatex: '\\text{Un ingeniero civil diseña una piscina rectangular. El área de la superficie es } (x^2 - 4) \\text{ metros cuadrados, y uno de los lados mide } (x + 2) \\text{ metros, donde x es un parámetro de diseño. Para calcular la longitud del otro lado, necesita dividir el área entre el lado conocido y simplificar la expresión racional resultante. ¿Cuál es la expresión simplificada del otro lado?}',
-    options: ['$x - 2$', '$x + 2$', '$x^2 - 2$', '$\\frac{x - 4}{1}$'],
-    optionsLatex: ['x - 2', 'x + 2', 'x^2 - 2', '\\frac{x - 4}{1}'],
-    correctAnswer: 0,
-    explanation: 'Factorizamos el numerador como diferencia de cuadrados: (x² - 4) = (x - 2)(x + 2). Simplificamos: [(x - 2)(x + 2)]/(x + 2) = x - 2 metros.',
-    explanationLatex: '\\frac{x^2 - 4}{x + 2} = \\frac{(x - 2)(x + 2)}{x + 2} = x - 2',
-    difficulty: 'medium',
-    skills: ['algebra-expresiones-racionales', 'algebra-simplificacion', 'algebra-factorizacion', 'algebra-diferencia-cuadrados']
-  },
-  {
-    id: 'm1-218',
-    level: 'M1',
-    topic: 'Álgebra y Funciones',
-    subject: 'álgebra',
-    operacionBase: '\\frac{x^2 + 5x + 6}{x^2 + 3x + 2}',
-    question: 'Un economista compara dos índices de crecimiento económico. El índice de producción está dado por (x² + 5x + 6) puntos y el índice de consumo por (x² + 3x + 2) puntos, donde x representa trimestres. Para calcular la razón entre producción y consumo, necesita dividir ambas expresiones y simplificar completamente la fracción racional resultante. ¿Cuál es la expresión simplificada de esta razón?',
-    questionLatex: '\\text{Un economista compara dos índices de crecimiento económico. El índice de producción está dado por } (x^2 + 5x + 6) \\text{ puntos y el índice de consumo por } (x^2 + 3x + 2) \\text{ puntos, donde x representa trimestres. Para calcular la razón entre producción y consumo, necesita dividir ambas expresiones y simplificar completamente la fracción racional resultante. ¿Cuál es la expresión simplificada de esta razón?}',
-    options: ['$\\frac{x + 3}{x + 1}$', '$\\frac{x + 2}{x + 1}$', '$\\frac{x + 3}{x + 2}$', '$\\frac{x + 6}{x + 2}$'],
-    optionsLatex: ['\\frac{x + 3}{x + 1}', '\\frac{x + 2}{x + 1}', '\\frac{x + 3}{x + 2}', '\\frac{x + 6}{x + 2}'],
-    correctAnswer: 0,
-    explanation: 'Factorizamos numerador y denominador: (x² + 5x + 6) = (x + 2)(x + 3) y (x² + 3x + 2) = (x + 1)(x + 2). Simplificamos el factor común: [(x + 2)(x + 3)]/[(x + 1)(x + 2)] = (x + 3)/(x + 1).',
-    explanationLatex: '\\frac{(x + 2)(x + 3)}{(x + 1)(x + 2)} = \\frac{x + 3}{x + 1}',
-    difficulty: 'hard',
-    skills: ['algebra-expresiones-racionales', 'algebra-simplificacion', 'algebra-factorizacion', 'numeros-operaciones-basicas']
-  },
-  {
-    id: 'm1-219',
-    level: 'M1',
-    topic: 'Álgebra y Funciones',
-    subject: 'álgebra',
-    operacionBase: '\\frac{2x}{3} \\times \\frac{6}{x}',
-    question: 'Una fábrica de chocolates produce barras en lotes. Cada lote contiene (2x)/3 kilogramos de chocolate, donde x representa unidades de producción. Para empacar, multiplican esta cantidad por un factor de conversión de 6/x. El supervisor necesita simplificar la expresión que representa la cantidad final de chocolate por lote. ¿Cuál es el resultado simplificado?',
-    questionLatex: '\\text{Una fábrica de chocolates produce barras en lotes. Cada lote contiene } \\frac{2x}{3} \\text{ kilogramos de chocolate, donde x representa unidades de producción. Para empacar, multiplican esta cantidad por un factor de conversión de } \\frac{6}{x}. \\text{ El supervisor necesita simplificar la expresión que representa la cantidad final de chocolate por lote. ¿Cuál es el resultado simplificado?}',
-    options: ['4', '$\\frac{12x}{3x}$', '$\\frac{2x}{x}$', '12'],
-    correctAnswer: 0,
-    explanation: 'Multiplicamos numeradores y denominadores: (2x × 6)/(3 × x) = 12x/(3x). Simplificamos dividiendo numerador y denominador por 3x: 12x/(3x) = 4 kilogramos.',
-    explanationLatex: '\\frac{2x}{3} \\times \\frac{6}{x} = \\frac{2x \\times 6}{3 \\times x} = \\frac{12x}{3x} = 4',
-    difficulty: 'easy',
-    skills: ['algebra-expresiones-racionales', 'algebra-multiplicacion-fracciones', 'numeros-fracciones', 'numeros-operaciones-basicas']
-  },
-  {
-    id: 'm1-220',
-    level: 'M1',
-    topic: 'Álgebra y Funciones',
-    subject: 'álgebra',
-    operacionBase: '\\frac{x^2}{2} \\div \\frac{x}{4}',
-    question: 'Un agricultor tiene un terreno de área (x²)/2 hectáreas que desea dividir en parcelas. Cada parcela debe tener un ancho de x/4 hectáreas. Para calcular cuántas parcelas puede formar, necesita dividir el área total entre el ancho de cada parcela y simplificar la expresión resultante. ¿Cuántas parcelas puede formar?',
-    questionLatex: '\\text{Un agricultor tiene un terreno de área } \\frac{x^2}{2} \\text{ hectáreas que desea dividir en parcelas. Cada parcela debe tener un ancho de } \\frac{x}{4} \\text{ hectáreas. Para calcular cuántas parcelas puede formar, necesita dividir el área total entre el ancho de cada parcela y simplificar la expresión resultante. ¿Cuántas parcelas puede formar?}',
-    options: ['$2x$', '$\\frac{x^2}{8}$', '$\\frac{x}{2}$', '$4x$'],
-    optionsLatex: ['2x', '\\frac{x^2}{8}', '\\frac{x}{2}', '4x'],
-    correctAnswer: 0,
-    explanation: 'Para dividir fracciones, multiplicamos por el recíproco: (x²/2) ÷ (x/4) = (x²/2) × (4/x) = (4x²)/(2x). Simplificamos: 4x²/(2x) = 2x parcelas.',
-    explanationLatex: '\\frac{x^2}{2} \\div \\frac{x}{4} = \\frac{x^2}{2} \\times \\frac{4}{x} = \\frac{4x^2}{2x} = 2x',
-    difficulty: 'medium',
-    skills: ['algebra-expresiones-racionales', 'algebra-division-fracciones', 'numeros-fracciones', 'numeros-operaciones-basicas']
-  },
-  {
-    id: 'm1-221',
-    level: 'M1',
-    topic: 'Álgebra y Funciones',
-    subject: 'álgebra',
-    operacionBase: '\\frac{2}{x} + \\frac{3}{x}',
-    question: 'Un químico mezcla dos soluciones en un laboratorio. La primera solución tiene una concentración de 2/x moles por litro, y la segunda tiene 3/x moles por litro, donde x es un factor de dilución. Para calcular la concentración total de la mezcla, necesita sumar ambas fracciones racionales. ¿Cuál es la concentración total simplificada?',
-    questionLatex: '\\text{Un químico mezcla dos soluciones en un laboratorio. La primera solución tiene una concentración de } \\frac{2}{x} \\text{ moles por litro, y la segunda tiene } \\frac{3}{x} \\text{ moles por litro, donde x es un factor de dilución. Para calcular la concentración total de la mezcla, necesita sumar ambas fracciones racionales. ¿Cuál es la concentración total simplificada?}',
-    options: ['$\\frac{5}{x}$', '$\\frac{5}{2x}$', '$\\frac{2x + 3}{x}$', '$5x$'],
-    optionsLatex: ['\\frac{5}{x}', '\\frac{5}{2x}', '\\frac{2x + 3}{x}', '5x'],
-    correctAnswer: 0,
-    explanation: 'Como ambas fracciones tienen el mismo denominador x, sumamos los numeradores: 2/x + 3/x = (2 + 3)/x = 5/x moles por litro.',
-    explanationLatex: '\\frac{2}{x} + \\frac{3}{x} = \\frac{2 + 3}{x} = \\frac{5}{x}',
-    difficulty: 'easy',
-    skills: ['algebra-expresiones-racionales', 'algebra-suma-fracciones', 'numeros-fracciones', 'numeros-operaciones-basicas']
-  }
-];
+import { m1Alg002Questions } from './m1-alg-002';
+
+// Re-export only rational expression questions (m1-216 through m1-221)
+const expresionesRacionalesIds = ['m1-216', 'm1-217', 'm1-218', 'm1-219', 'm1-220', 'm1-221'];
+export const m1AlgebraExpresionesRacionalesQuestions = m1Alg002Questions.filter(q => expresionesRacionalesIds.includes(q.id));
