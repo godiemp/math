@@ -200,6 +200,30 @@
       "header": "¡estamos mejorando!",
       "message": "estamos mejorando los problemas para tener problemas estilo PAES. hasta ahora tenemos los temarios cubiertos pero no el formato. pronto tendrás una experiencia más cercana al examen real."
     },
+    "sessionHistory": {
+      "title": "mis ensayos",
+      "upcoming": "próximos ensayos",
+      "recent": "ensayos recientes",
+      "noUpcoming": "no tienes ensayos programados",
+      "noRecent": "aún no has completado ensayos",
+      "registered": "registrado",
+      "score": "puntaje",
+      "rank": "puesto",
+      "viewAll": "ver todos los ensayos",
+      "accuracy": "precisión"
+    },
+    "liveStats": {
+      "title": "estadísticas de ensayos",
+      "totalSessions": "ensayos completados",
+      "averageScore": "puntaje promedio",
+      "averageAccuracy": "precisión promedio",
+      "bestScore": "mejor puntaje",
+      "topRankings": "podios obtenidos",
+      "firstPlace": "1° lugar",
+      "secondPlace": "2° lugar",
+      "thirdPlace": "3° lugar",
+      "noStats": "completa ensayos para ver tus estadísticas"
+    },
     "footer": {
       "copyright": "© 2024 SimplePAES - plataforma de preparación matemática"
     }

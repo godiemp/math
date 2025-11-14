@@ -5,13 +5,15 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
-import { getAllAvailableSessions, updateSessionStatuses } from "@/lib/sessionApi";
+import { getAllAvailableSessions, updateSessionStatuses, getMyStatistics } from "@/lib/sessionApi";
 import { useEffect, useState, Suspense } from "react";
-import { LiveSession } from "@/lib/types";
+import { LiveSession, StudentStatistics } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar } from "@/components/ui";
 import { StudyBuddy } from "@/components/StudyBuddy";
 import { ShareModal } from "@/components/ShareModal";
 import { WelcomeMessage } from "@/components/WelcomeMessage";
+import { SessionHistory } from "@/components/SessionHistory";
+import { LiveSessionStats } from "@/components/LiveSessionStats";
 import { Share2 } from "lucide-react";
 import { useTranslations } from 'next-intl';
 
@@ -27,6 +29,7 @@ function DashboardContent() {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isWelcomeOpen, setIsWelcomeOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sessionStats, setSessionStats] = useState<StudentStatistics | null>(null);
 
   // Check if user should see welcome message (from query param)
   useEffect(() => {
@@ -48,15 +51,17 @@ function DashboardContent() {
       }
 
       try {
-        // Update session statuses
-        const statusUpdateResult = await updateSessionStatuses();
+        // Parallel data fetching
+        const [statusUpdateResult, allAvailableSessions, statsResult] = await Promise.all([
+          updateSessionStatuses(),
+          getAllAvailableSessions(),
+          getMyStatistics()
+        ]);
+
         if (!statusUpdateResult.success) {
           console.warn('Failed to update session statuses:', statusUpdateResult.error);
           // Continue anyway - this is not critical for dashboard loading
         }
-
-        // Get all available sessions from API
-        const allAvailableSessions = await getAllAvailableSessions();
 
         // Only update state if component is still mounted
         if (!isMounted) return;
@@ -82,6 +87,11 @@ function DashboardContent() {
           .sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
 
         setNextSession(allUpcoming[0] || null);
+
+        // Set session statistics
+        if (statsResult.success && statsResult.data) {
+          setSessionStats(statsResult.data);
+        }
 
         // Mark loading as complete
         setIsLoadingData(false);
@@ -262,6 +272,18 @@ function DashboardContent() {
               )}
             </div>
           </div>
+        </div>
+
+        {/* Session History and Stats Row */}
+        <div className="grid md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mb-8 sm:mb-10 md:mb-12">
+          {/* Session History */}
+          <SessionHistory
+            upcomingSessions={registeredSessions}
+            recentSessions={sessionStats?.recentSessions || []}
+          />
+
+          {/* Live Session Statistics */}
+          <LiveSessionStats stats={sessionStats} />
         </div>
 
         {/* Practice Section - Operations, M1, and M2 */}
