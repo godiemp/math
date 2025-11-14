@@ -12,8 +12,7 @@ import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar } from "@/com
 import { StudyBuddy } from "@/components/StudyBuddy";
 import { ShareModal } from "@/components/ShareModal";
 import { WelcomeMessage } from "@/components/WelcomeMessage";
-import { SessionHistory } from "@/components/SessionHistory";
-import { LiveSessionStats } from "@/components/LiveSessionStats";
+import { LiveSessionsCard } from "@/components/LiveSessionsCard";
 import { Share2 } from "lucide-react";
 import { useTranslations } from 'next-intl';
 
@@ -274,17 +273,11 @@ function DashboardContent() {
           </div>
         </div>
 
-        {/* Session History and Stats Row */}
-        <div className="grid md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mb-8 sm:mb-10 md:mb-12">
-          {/* Session History */}
-          <SessionHistory
-            upcomingSessions={registeredSessions}
-            recentSessions={sessionStats?.recentSessions || []}
-          />
-
-          {/* Live Session Statistics */}
-          <LiveSessionStats stats={sessionStats} />
-        </div>
+        {/* Live Sessions Card - Compact */}
+        <LiveSessionsCard
+          upcomingSessions={registeredSessions}
+          stats={sessionStats}
+        />
 
         {/* Practice Section - Operations, M1, and M2 */}
         <Card hover className="p-5 mb-8 sm:mb-10 md:mb-12 relative">
