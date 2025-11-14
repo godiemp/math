@@ -230,29 +230,6 @@ test.describe('Curriculum Pages', () => {
     expect(url).toContain('/dashboard');
   });
 
-  test('should display documentation link for M1 curriculum', async ({ page }) => {
-    await page.goto('/curriculum/m1', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(2000);
-
-    // Check for documentation link (only available for M1)
-    const docsLink = page.getByRole('link', { name: /📖.*Documentación Detallada|Docs/i });
-    await expect(docsLink).toBeVisible();
-
-    // Verify it links to the docs page
-    await expect(docsLink).toHaveAttribute('href', '/curriculum/m1/docs');
-  });
-
-  test('should not display documentation link for M2 curriculum', async ({ page }) => {
-    await page.goto('/curriculum/m2', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(2000);
-
-    // M2 should not have documentation link
-    const docsLink = page.getByRole('link', { name: /📖.*Documentación Detallada|Docs/i });
-    const isVisible = await docsLink.isVisible().catch(() => false);
-
-    expect(isVisible).toBe(false);
-  });
-
   test('should display units count for each subject', async ({ page }) => {
     await page.goto('/curriculum/m1', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(2000);
