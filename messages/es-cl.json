@@ -661,6 +661,7 @@
     "welcome": "bienvenido,",
     "actions": {
       "home": "inicio",
+      "admin": "administrador",
       "exit": "salir"
     },
     "available": {
@@ -895,7 +896,8 @@
       "zenDebug": "zen debug"
     },
     "button": {
-      "backToHome": "back to home"
+      "backToHome": "back to home",
+      "livePractice": "live practice"
     },
     "header": {
       "livePractice": "live practice"
