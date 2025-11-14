@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
 import { getAllAvailableSessions, updateSessionStatuses } from "@/lib/sessionApi";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { LiveSession } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar } from "@/components/ui";
 import { StudyBuddy } from "@/components/StudyBuddy";
@@ -565,7 +565,9 @@ function DashboardContent() {
 export default function Dashboard() {
   return (
     <ProtectedRoute>
-      <DashboardContent />
+      <Suspense fallback={<LoadingScreen message="Cargando panel..." />}>
+        <DashboardContent />
+      </Suspense>
     </ProtectedRoute>
   );
 }
