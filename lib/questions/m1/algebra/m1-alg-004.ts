@@ -157,4 +157,5 @@ export const m1Alg004Questions: Question[] = [
     explanationLatex: '\\begin{cases} 3a + 2m = 5000 \\\\ a + m = 1800 \\end{cases} \\rightarrow m = 1800 - a \\rightarrow 3a + 2(1800 - a) = 5000 \\rightarrow a = 1200',
     difficulty: 'hard',
     skills: ['algebra-sistemas-ecuaciones', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
+  }
 ];

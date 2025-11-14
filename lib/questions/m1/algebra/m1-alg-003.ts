@@ -314,4 +314,5 @@ export const m1Alg003Questions: Question[] = [
     explanationLatex: '|2x + 1| > 5 \\quad \\Leftrightarrow \\quad 2x + 1 < -5 \\text{ o } 2x + 1 > 5 \\quad \\Rightarrow \\quad x < -3 \\text{ o } x > 2',
     difficulty: 'hard',
     skills: ['algebra-desigualdades', 'algebra-valor-absoluto', 'numeros-operaciones-basicas']
+  }
 ];

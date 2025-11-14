@@ -217,4 +217,5 @@ export const m1Alg007Questions: Question[] = [
     explanationLatex: 'x^2 - 6x + 8 = (x - 2)(x - 4) = 0 \\quad \\Rightarrow \\quad x = 2 \\text{ o } x = 4',
     difficulty: 'hard',
     skills: ['algebra-ecuaciones-cuadraticas', 'algebra-factorizacion', 'algebra-funciones-cuadraticas', 'algebra-interceptos', 'numeros-operaciones-basicas']
+  }
 ];

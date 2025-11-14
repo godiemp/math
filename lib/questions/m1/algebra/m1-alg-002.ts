@@ -165,7 +165,7 @@ export const m1Alg002Questions: Question[] = [
     explanationLatex: 'P(2) = 2(2)^3 - 5(2)^2 + 3(2) - 2 = 16 - 20 + 6 - 2 = 0',
     difficulty: 'hard',
     skills: ['algebra-polinomios', 'algebra-division-polinomios', 'algebra-teorema-residuo', 'numeros-operaciones-basicas']
-,
+  },
   {
     id: 'm1-31',
     level: 'M1',

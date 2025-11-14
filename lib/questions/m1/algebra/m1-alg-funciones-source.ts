@@ -220,4 +220,5 @@ export const allFuncionesQuestions: Question[] = [
     explanationLatex: 'm = \\frac{9 - 5}{4 - 2} = \\frac{4}{2} = 2',
     difficulty: 'hard',
     skills: ['algebra-funciones', 'algebra-funciones-lineales', 'algebra-pendiente', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  }
 ];
