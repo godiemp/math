@@ -5,12 +5,7 @@ import { z } from 'zod';
 export const registerSchema = z.object({
   username: z.string().min(3, 'El nombre de usuario debe tener al menos 3 caracteres'),
   email: z.string().email('Correo electrónico inválido'),
-  password: z.string()
-    .min(12, 'La contraseña debe tener al menos 12 caracteres')
-    .regex(/[A-Z]/, 'La contraseña debe contener al menos una letra mayúscula')
-    .regex(/[a-z]/, 'La contraseña debe contener al menos una letra minúscula')
-    .regex(/[0-9]/, 'La contraseña debe contener al menos un número')
-    .regex(/[^A-Za-z0-9]/, 'La contraseña debe contener al menos un carácter especial (!@#$%^&*, etc.)'),
+  password: z.string().min(8, 'La contraseña debe tener al menos 8 caracteres'),
   displayName: z.string().min(1, 'El nombre es requerido'),
   acceptedTerms: z.boolean().refine((val) => val === true, {
     message: 'Debes aceptar los términos y condiciones',

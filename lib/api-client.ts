@@ -204,6 +204,7 @@ export async function apiRequest<T>(
         error: {
           error: data.error || data.message || 'Request failed',
           statusCode: response.status,
+          details: data.details, // Pass through detailed validation errors if available
         },
       };
     }

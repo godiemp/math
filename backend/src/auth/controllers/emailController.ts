@@ -99,8 +99,8 @@ export async function handleResetPassword(req: Request, res: Response): Promise<
     }
 
     // Validate password length
-    if (password.length < 6) {
-      res.status(400).json({ error: 'Password must be at least 6 characters' });
+    if (password.length < 8) {
+      res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres' });
       return;
     }
 

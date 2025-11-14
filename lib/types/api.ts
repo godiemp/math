@@ -10,11 +10,20 @@
  */
 
 /**
+ * Validation error details for specific fields
+ */
+export interface ValidationError {
+  field: string;
+  message: string;
+}
+
+/**
  * Generic API error structure
  */
 export interface ApiError {
   error: string;
   statusCode: number;
+  details?: ValidationError[];
 }
 
 /**

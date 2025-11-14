@@ -61,24 +61,8 @@ export async function registerUser(
   }
 
   // Password validation - must match Zod schema requirements
-  if (password.length < 12) {
-    throw new Error('Password must be at least 12 characters');
-  }
-
-  if (!/[A-Z]/.test(password)) {
-    throw new Error('Password must contain at least one uppercase letter');
-  }
-
-  if (!/[a-z]/.test(password)) {
-    throw new Error('Password must contain at least one lowercase letter');
-  }
-
-  if (!/[0-9]/.test(password)) {
-    throw new Error('Password must contain at least one number');
-  }
-
-  if (!/[^A-Za-z0-9]/.test(password)) {
-    throw new Error('Password must contain at least one special character');
+  if (password.length < 8) {
+    throw new Error('La contraseña debe tener al menos 8 caracteres');
   }
 
   // Check if user already exists

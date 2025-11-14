@@ -78,7 +78,8 @@ export default function Auth({ onSuccess }: AuthProps) {
           return;
         }
 
-        if (password.length < 6) {
+        // Validate password requirements
+        if (password.length < 8) {
           const errorMsg = t('register.errors.passwordLength');
           setError(errorMsg);
           toast.error(errorMsg);
@@ -291,7 +292,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                   borderRadius: 'var(--radius-sm)',
                   outline: 'none',
                 }}
-                placeholder={isLogin ? 'tu contraseña' : 'mínimo 6 caracteres'}
+                placeholder={isLogin ? 'tu contraseña' : 'mínimo 8 caracteres'}
                 onFocus={(e) => {
                   e.target.style.borderColor = 'var(--color-tint)';
                   e.target.style.borderWidth = '2px';
