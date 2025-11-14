@@ -101,7 +101,7 @@ export default function PricingPage() {
         toast.success(t('trial.activated'));
         router.push('/dashboard');
       } else {
-        // Proceed with payment - redirect to MercadoPago
+        // Proceed with payment - redirect to MercadoPago (or activate trial in MVP mode)
         const result = await createPaymentPreference(planId);
 
         if (result.error) {
@@ -109,6 +109,20 @@ export default function PricingPage() {
           return;
         }
 
+        // MVP MODE: If backend returns mvpMode, it activated the trial directly
+        if (result.data?.data?.mvpMode) {
+          if (result.data.data.alreadyHasSubscription) {
+            toast.info(result.data.data.message || 'Ya tienes una suscripción activa');
+          } else {
+            toast.success(result.data.data.message || '¡Prueba activada! Disfruta 7 días gratis.');
+            setTimeout(() => {
+              router.push('/dashboard');
+            }, 1000);
+          }
+          return;
+        }
+
+        // PRODUCTION MODE: Redirect to MercadoPago
         if (result.data?.data) {
           const checkoutUrl = process.env.NODE_ENV === 'production'
             ? result.data.data.initPoint
@@ -137,6 +151,7 @@ export default function PricingPage() {
   };
 
   const formatDuration = (days: number) => {
+    if (days === 7) return t('duration.oneWeek', { defaultValue: 'semana' });
     if (days === 30) return t('duration.oneMonth');
     if (days === 90) return t('duration.threeMonths');
     if (days === 180) return t('duration.sixMonths');

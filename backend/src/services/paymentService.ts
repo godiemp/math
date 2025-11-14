@@ -25,15 +25,56 @@ export class PaymentService {
 
   /**
    * Create a payment preference (checkout) for a plan
+   * MVP VERSION: Bypasses MercadoPago and activates 7-day trial directly
    */
   static async createPaymentPreference(userId: string, planId: string): Promise<any> {
     try {
+      // ============================================================================
+      // MVP: Activate trial instead of processing payment
+      // This gives 7 days to develop the real payment integration
+      // ============================================================================
+
+      console.log('🚀 MVP MODE: Activating 7-day trial instead of payment');
+
       // Get plan details
       const plan = await PlanService.getPlanById(planId);
       if (!plan) {
         throw new Error('Plan not found');
       }
 
+      // Check if user already has an active subscription
+      const existingSubscription = await SubscriptionService.getUserSubscription(userId);
+      if (existingSubscription) {
+        // User already has a subscription, return info about it
+        return {
+          mvpMode: true,
+          alreadyHasSubscription: true,
+          subscription: existingSubscription,
+          message: 'Ya tienes una suscripción activa',
+        };
+      }
+
+      // Create trial subscription (7 days free)
+      const subscription = await SubscriptionService.createSubscription({
+        userId,
+        planId,
+        startTrial: true,
+      });
+
+      console.log(`✅ MVP: Activated 7-day trial for plan "${plan.name}"`);
+
+      return {
+        mvpMode: true,
+        subscription,
+        trialDays: plan.trialDurationDays,
+        message: `¡Prueba activada! Tienes ${plan.trialDurationDays} días de acceso completo gratis.`,
+      };
+
+      // ============================================================================
+      // PRODUCTION CODE (Commented out for MVP)
+      // Uncomment this when ready to integrate with MercadoPago
+      // ============================================================================
+      /*
       // Get user details
       const userResult = await pool.query(
         'SELECT id, email, username, display_name FROM users WHERE id = $1',
@@ -117,6 +158,7 @@ export class PaymentService {
         sandboxInitPoint: result.sandbox_init_point,
         payment: this.mapRowToPayment(paymentRecord.rows[0]),
       };
+      */
     } catch (error) {
       console.error('Error creating payment preference:', error);
       throw error;

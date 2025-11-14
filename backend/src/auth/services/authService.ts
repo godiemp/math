@@ -26,6 +26,7 @@ import {
 } from '../types';
 import { emailService } from '../../services/emailService';
 import { sendEmailVerification } from './emailVerificationService';
+import { SubscriptionService } from '../../services/subscriptionService';
 
 /**
  * Convert database user record to API response format
@@ -91,6 +92,20 @@ export async function registerUser(
   );
 
   const user = result.rows[0];
+
+  // Auto-activate 7-day trial for all new users (MVP)
+  // This gives users immediate access while we develop the payment integration
+  try {
+    await SubscriptionService.createSubscription({
+      userId: user.id,
+      planId: 'weekly', // Default to weekly plan for MVP
+      startTrial: true, // Always start with trial
+    });
+    console.log(`✅ Auto-activated 7-day trial for new user: ${user.username}`);
+  } catch (error) {
+    console.error('⚠️  Failed to auto-activate trial for new user:', error);
+    // Don't throw - allow registration to complete even if trial creation fails
+  }
 
   // Send welcome email (non-blocking, don't wait for it)
   emailService
