@@ -713,7 +713,10 @@ export const initializeDatabase = async (): Promise<void> => {
         level VARCHAR(10),
         system_prediction INTEGER NOT NULL,
         confidence_range INTEGER NOT NULL,
-        user_prediction INTEGER,
+        user_initial_estimate INTEGER,
+        current_level VARCHAR(50),
+        score_min INTEGER,
+        score_max INTEGER,
         factors JSONB,
         calculated_at BIGINT NOT NULL,
         updated_at BIGINT NOT NULL
@@ -733,6 +736,55 @@ export const initializeDatabase = async (): Promise<void> => {
       END $$;
     `);
 
+    // Migrate: Add new user level system columns if they don't exist
+    await client.query(`
+      DO $$
+      BEGIN
+        -- Add current_level column
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'paes_predictions' AND column_name = 'current_level'
+        ) THEN
+          ALTER TABLE paes_predictions ADD COLUMN current_level VARCHAR(50);
+        END IF;
+
+        -- Add score_min column
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'paes_predictions' AND column_name = 'score_min'
+        ) THEN
+          ALTER TABLE paes_predictions ADD COLUMN score_min INTEGER;
+        END IF;
+
+        -- Add score_max column
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'paes_predictions' AND column_name = 'score_max'
+        ) THEN
+          ALTER TABLE paes_predictions ADD COLUMN score_max INTEGER;
+        END IF;
+
+        -- Rename user_prediction to user_initial_estimate if needed
+        IF EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'paes_predictions' AND column_name = 'user_prediction'
+        ) AND NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'paes_predictions' AND column_name = 'user_initial_estimate'
+        ) THEN
+          ALTER TABLE paes_predictions RENAME COLUMN user_prediction TO user_initial_estimate;
+        END IF;
+
+        -- Add user_initial_estimate if it doesn't exist (for fresh installs)
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'paes_predictions' AND column_name = 'user_initial_estimate'
+        ) THEN
+          ALTER TABLE paes_predictions ADD COLUMN user_initial_estimate INTEGER;
+        END IF;
+      END $$;
+    `);
+
     // Migrate: Drop old constraints and add new ones with correct range (150-1000)
     await client.query(`
       DO $$
@@ -740,13 +792,14 @@ export const initializeDatabase = async (): Promise<void> => {
         -- Drop old constraints if they exist
         ALTER TABLE paes_predictions DROP CONSTRAINT IF EXISTS paes_predictions_system_prediction_check;
         ALTER TABLE paes_predictions DROP CONSTRAINT IF EXISTS paes_predictions_user_prediction_check;
+        ALTER TABLE paes_predictions DROP CONSTRAINT IF EXISTS check_user_initial_estimate;
         ALTER TABLE paes_predictions DROP CONSTRAINT IF EXISTS paes_predictions_confidence_range_check;
 
         -- Add new constraints with correct range
         ALTER TABLE paes_predictions ADD CONSTRAINT paes_predictions_system_prediction_check
           CHECK (system_prediction >= 150 AND system_prediction <= 1000);
-        ALTER TABLE paes_predictions ADD CONSTRAINT paes_predictions_user_prediction_check
-          CHECK (user_prediction IS NULL OR (user_prediction >= 150 AND user_prediction <= 1000));
+        ALTER TABLE paes_predictions ADD CONSTRAINT check_user_initial_estimate
+          CHECK (user_initial_estimate IS NULL OR (user_initial_estimate >= 150 AND user_initial_estimate <= 1000));
         ALTER TABLE paes_predictions ADD CONSTRAINT paes_predictions_confidence_range_check
           CHECK (confidence_range >= 0 AND confidence_range <= 150);
         ALTER TABLE paes_predictions ADD CONSTRAINT paes_predictions_level_check
