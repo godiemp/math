@@ -68,14 +68,30 @@ export interface CreatePaymentPreferenceRequest {
  */
 
 /**
- * Payment preference response from MercadoPago
+ * Payment preference response from MercadoPago (Production mode)
  */
-export interface PaymentPreferenceResponse {
+export interface MercadoPagoPreferenceResponse {
   preferenceId: string;
   initPoint: string;
   sandboxInitPoint: string;
   payment: Payment;
 }
+
+/**
+ * MVP mode response - activates trial directly without payment
+ */
+export interface MVPModeResponse {
+  mvpMode: true;
+  subscription: any; // Subscription type from subscription.ts
+  trialDays: number;
+  message: string;
+  alreadyHasSubscription?: boolean;
+}
+
+/**
+ * Payment preference response - can be either MercadoPago or MVP mode
+ */
+export type PaymentPreferenceResponse = MercadoPagoPreferenceResponse | MVPModeResponse;
 
 /**
  * Create payment preference response

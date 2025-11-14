@@ -109,12 +109,18 @@ export default function PricingPage() {
           return;
         }
 
+        const data = result.data?.data;
+        if (!data) {
+          toast.error(t('errors.paymentError'));
+          return;
+        }
+
         // MVP MODE: If backend returns mvpMode, it activated the trial directly
-        if (result.data?.data?.mvpMode) {
-          if (result.data.data.alreadyHasSubscription) {
-            toast.info(result.data.data.message || 'Ya tienes una suscripción activa');
+        if ('mvpMode' in data && data.mvpMode) {
+          if (data.alreadyHasSubscription) {
+            toast.info(data.message || 'Ya tienes una suscripción activa');
           } else {
-            toast.success(result.data.data.message || '¡Prueba activada! Disfruta 7 días gratis.');
+            toast.success(data.message || '¡Prueba activada! Disfruta 7 días gratis.');
             setTimeout(() => {
               router.push('/dashboard');
             }, 1000);
@@ -123,10 +129,10 @@ export default function PricingPage() {
         }
 
         // PRODUCTION MODE: Redirect to MercadoPago
-        if (result.data?.data) {
+        if ('initPoint' in data) {
           const checkoutUrl = process.env.NODE_ENV === 'production'
-            ? result.data.data.initPoint
-            : result.data.data.sandboxInitPoint;
+            ? data.initPoint
+            : data.sandboxInitPoint;
 
           window.location.href = checkoutUrl;
         }
