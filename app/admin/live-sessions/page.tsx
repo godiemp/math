@@ -30,10 +30,10 @@ function AdminLiveSessionsContent() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showRegenerateModal, setShowRegenerateModal] = useState(false);
-  const [regenerateMode, setRegenerateMode] = useState<'all' | 'specific' | 'range'>('all');
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
-  const [rangeStart, setRangeStart] = useState<number>(0);
-  const [rangeEnd, setRangeEnd] = useState<number>(0);
+  const [showRangeModal, setShowRangeModal] = useState(false);
+  const [rangeStart, setRangeStart] = useState<string>('');
+  const [rangeEnd, setRangeEnd] = useState<string>('');
   const router = useRouter();
 
   // Form state
@@ -257,62 +257,22 @@ function AdminLiveSessionsContent() {
   const handleRegenerateQuestions = async () => {
     if (!viewingQuestionsSession) return;
 
+    if (selectedIndices.length === 0) {
+      toast.error('Selecciona al menos una pregunta');
+      return;
+    }
+
     try {
-      let newQuestions: Question[];
-      let options: any = {};
-
-      if (regenerateMode === 'all') {
-        // Regenerate all questions
-        const totalCount = viewingQuestionsSession.questions.length;
-        const level = viewingQuestionsSession.level;
-
-        // Check if it's an official PAES format
-        if ((level === 'M1' && totalCount === 60) || (level === 'M2' && totalCount === 50)) {
-          newQuestions = getOfficialPAESQuestions(level);
-        } else {
-          newQuestions = getRandomQuestions(level, totalCount);
-        }
-
-        options = {
-          regenerateAll: true,
-          newQuestions,
-        };
-      } else if (regenerateMode === 'specific') {
-        // Regenerate specific questions
-        if (selectedIndices.length === 0) {
-          toast.error('Selecciona al menos una pregunta');
-          return;
-        }
-
-        const level = viewingQuestionsSession.level;
-        newQuestions = getRandomQuestions(level, selectedIndices.length);
-
-        options = {
-          questionIndices: selectedIndices,
-          newQuestions,
-        };
-      } else if (regenerateMode === 'range') {
-        // Regenerate range of questions
-        if (rangeStart < 0 || rangeEnd >= viewingQuestionsSession.questions.length || rangeStart > rangeEnd) {
-          toast.error('Rango inválido');
-          return;
-        }
-
-        const level = viewingQuestionsSession.level;
-        const rangeLength = rangeEnd - rangeStart + 1;
-        newQuestions = getRandomQuestions(level, rangeLength);
-
-        options = {
-          rangeStart,
-          rangeEnd,
-          newQuestions,
-        };
-      }
+      const level = viewingQuestionsSession.level;
+      const newQuestions = getRandomQuestions(level, selectedIndices.length);
 
       toast.promise(
-        regenerateSessionQuestions(viewingQuestionsSession.id, options).then(async (result) => {
+        regenerateSessionQuestions(
+          viewingQuestionsSession.id,
+          selectedIndices,
+          newQuestions
+        ).then(async (result) => {
           if (result.success) {
-            // Update the viewing session
             setViewingQuestionsSession(result.session!);
             setShowRegenerateModal(false);
             setSelectedIndices([]);
@@ -341,6 +301,39 @@ function AdminLiveSessionsContent() {
         return [...prev, index].sort((a, b) => a - b);
       }
     });
+  };
+
+  const selectAllQuestions = () => {
+    if (!viewingQuestionsSession) return;
+    const allIndices = Array.from({ length: viewingQuestionsSession.questions.length }, (_, i) => i);
+    setSelectedIndices(allIndices);
+  };
+
+  const clearSelection = () => {
+    setSelectedIndices([]);
+  };
+
+  const handleSelectRange = () => {
+    if (!viewingQuestionsSession) return;
+
+    const start = parseInt(rangeStart);
+    const end = parseInt(rangeEnd);
+
+    if (isNaN(start) || isNaN(end)) {
+      toast.error('Ingresa índices válidos');
+      return;
+    }
+
+    if (start < 0 || end >= viewingQuestionsSession.questions.length || start > end) {
+      toast.error('Rango inválido');
+      return;
+    }
+
+    const indices = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    setSelectedIndices(indices);
+    setShowRangeModal(false);
+    setRangeStart('');
+    setRangeEnd('');
   };
 
   // If previewing session, show preview mode
@@ -882,138 +875,58 @@ function AdminLiveSessionsContent() {
         const session: LiveSession = viewingQuestionsSession;
         return (
           <div className="fixed inset-0 flex items-center justify-center p-4 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm">
-            <div className="absolute inset-0" onClick={() => setShowRegenerateModal(false)} />
+            <div className="absolute inset-0" onClick={() => { setShowRegenerateModal(false); setSelectedIndices([]); }} />
             <div onClick={(e) => e.stopPropagation()}>
-              <Card className="max-w-3xl w-full my-8 shadow-2xl relative z-10" padding="lg">
+              <Card className="max-w-4xl w-full my-8 shadow-2xl relative z-10" padding="lg">
                 <Heading level={2} size="sm" className="mb-4">
                   Regenerar Preguntas
                 </Heading>
 
                 <div className="space-y-4">
-                  <div>
-                    <Text size="sm" className="mb-3 font-medium">
-                      Selecciona el modo de regeneración:
-                    </Text>
-                    <div className="space-y-2">
-                      <label className="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
-                        <input
-                          type="radio"
-                          name="regenerateMode"
-                          value="all"
-                          checked={regenerateMode === 'all'}
-                          onChange={(e) => setRegenerateMode(e.target.value as any)}
-                          className="mr-3"
-                        />
-                        <div>
-                          <Text size="sm" className="font-medium">Regenerar todo el ensayo</Text>
-                          <Text size="xs" variant="secondary">Regenera todas las {session.questions.length} preguntas</Text>
-                        </div>
-                      </label>
-
-                    <label className="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
-                      <input
-                        type="radio"
-                        name="regenerateMode"
-                        value="specific"
-                        checked={regenerateMode === 'specific'}
-                        onChange={(e) => setRegenerateMode(e.target.value as any)}
-                        className="mr-3"
-                      />
-                      <div>
-                        <Text size="sm" className="font-medium">Regenerar preguntas específicas</Text>
-                        <Text size="xs" variant="secondary">Selecciona preguntas individuales para regenerar</Text>
-                      </div>
-                    </label>
-
-                    <label className="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
-                      <input
-                        type="radio"
-                        name="regenerateMode"
-                        value="range"
-                        checked={regenerateMode === 'range'}
-                        onChange={(e) => setRegenerateMode(e.target.value as any)}
-                        className="mr-3"
-                      />
-                      <div>
-                        <Text size="sm" className="font-medium">Regenerar un rango de preguntas</Text>
-                        <Text size="xs" variant="secondary">Define un rango de preguntas consecutivas</Text>
-                      </div>
-                    </label>
+                  {/* Helper Buttons */}
+                  <div className="flex gap-2 flex-wrap">
+                    <Button variant="secondary" size="sm" onClick={selectAllQuestions}>
+                      Seleccionar Todo ({session.questions.length})
+                    </Button>
+                    <Button variant="secondary" size="sm" onClick={() => setShowRangeModal(true)}>
+                      Seleccionar Rango...
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={clearSelection}>
+                      Limpiar ({selectedIndices.length})
+                    </Button>
                   </div>
-                </div>
 
-                  {regenerateMode === 'specific' && (
-                    <div>
-                      <Text size="sm" className="mb-2 font-medium">
-                        Preguntas seleccionadas: {selectedIndices.length}
-                      </Text>
-                      <div className="max-h-64 overflow-y-auto border border-gray-300 dark:border-gray-600 rounded-lg p-3">
-                        <div className="grid grid-cols-5 gap-2">
-                          {session.questions.map((q: any, index: number) => (
-                            <label
-                              key={index}
-                              className={`flex items-center justify-center p-2 border rounded cursor-pointer transition-colors ${
-                                selectedIndices.includes(index)
-                                  ? 'bg-indigo-100 dark:bg-indigo-900 border-indigo-500'
-                                  : 'border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800'
-                              }`}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={selectedIndices.includes(index)}
-                                onChange={() => toggleQuestionSelection(index)}
-                                className="mr-1"
-                              />
-                              <Text size="xs">#{index + 1}</Text>
-                            </label>
-                          ))}
-                        </div>
+                  {/* Question Grid */}
+                  <div>
+                    <Text size="sm" className="mb-2 font-medium">
+                      Preguntas seleccionadas: {selectedIndices.length} / {session.questions.length}
+                    </Text>
+                    <div className="max-h-80 overflow-y-auto border border-gray-300 dark:border-gray-600 rounded-lg p-3">
+                      <div className="grid grid-cols-6 md:grid-cols-10 gap-2">
+                        {session.questions.map((q: any, index: number) => (
+                          <label
+                            key={index}
+                            className={`flex items-center justify-center p-2 border rounded cursor-pointer transition-colors ${
+                              selectedIndices.includes(index)
+                                ? 'bg-indigo-100 dark:bg-indigo-900 border-indigo-500'
+                                : 'border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800'
+                            }`}
+                            title={`Pregunta ${index + 1}`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selectedIndices.includes(index)}
+                              onChange={() => toggleQuestionSelection(index)}
+                              className="sr-only"
+                            />
+                            <Text size="xs" className="font-mono">{index + 1}</Text>
+                          </label>
+                        ))}
                       </div>
                     </div>
-                  )}
+                  </div>
 
-                  {regenerateMode === 'range' && (
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          Desde (índice)
-                        </label>
-                        <input
-                          type="number"
-                          value={rangeStart}
-                          onChange={(e) => setRangeStart(Number(e.target.value))}
-                          min="0"
-                          max={session.questions.length - 1}
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                        />
-                        <Text size="xs" variant="secondary" className="mt-1">
-                          Pregunta #{rangeStart + 1}
-                        </Text>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          Hasta (índice)
-                        </label>
-                        <input
-                          type="number"
-                          value={rangeEnd}
-                          onChange={(e) => setRangeEnd(Number(e.target.value))}
-                          min="0"
-                          max={session.questions.length - 1}
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                        />
-                        <Text size="xs" variant="secondary" className="mt-1">
-                          Pregunta #{rangeEnd + 1}
-                        </Text>
-                      </div>
-                      <div className="col-span-2">
-                        <Text size="sm" variant="secondary">
-                          Se regenerarán {Math.max(0, rangeEnd - rangeStart + 1)} preguntas
-                        </Text>
-                      </div>
-                    </div>
-                  )}
-
+                  {/* Action Buttons */}
                   <div className="flex gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <Button
                       type="button"
@@ -1031,8 +944,64 @@ function AdminLiveSessionsContent() {
                       variant="primary"
                       onClick={handleRegenerateQuestions}
                       fullWidth
+                      disabled={selectedIndices.length === 0}
                     >
-                      Regenerar
+                      Regenerar {selectedIndices.length > 0 && `(${selectedIndices.length})`}
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Range Selection Modal */}
+      {showRangeModal && viewingQuestionsSession && (() => {
+        const session: LiveSession = viewingQuestionsSession;
+        return (
+          <div className="fixed inset-0 flex items-center justify-center p-4 z-[60] bg-black/50 backdrop-blur-sm">
+            <div className="absolute inset-0" onClick={() => setShowRangeModal(false)} />
+            <div onClick={(e) => e.stopPropagation()}>
+              <Card className="max-w-md w-full shadow-2xl relative z-10" padding="lg">
+                <Heading level={3} size="sm" className="mb-4">
+                  Seleccionar Rango
+                </Heading>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Desde (0-{session.questions.length - 1})
+                    </label>
+                    <input
+                      type="number"
+                      value={rangeStart}
+                      onChange={(e) => setRangeStart(e.target.value)}
+                      min="0"
+                      max={session.questions.length - 1}
+                      placeholder="0"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Hasta (0-{session.questions.length - 1})
+                    </label>
+                    <input
+                      type="number"
+                      value={rangeEnd}
+                      onChange={(e) => setRangeEnd(e.target.value)}
+                      min="0"
+                      max={session.questions.length - 1}
+                      placeholder={(session.questions.length - 1).toString()}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                  <div className="flex gap-3">
+                    <Button variant="ghost" onClick={() => setShowRangeModal(false)} fullWidth>
+                      Cancelar
+                    </Button>
+                    <Button variant="primary" onClick={handleSelectRange} fullWidth>
+                      Seleccionar
                     </Button>
                   </div>
                 </div>

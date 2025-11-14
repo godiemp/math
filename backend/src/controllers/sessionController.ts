@@ -1146,7 +1146,7 @@ export const getMyStatistics = async (req: Request, res: Response): Promise<void
 export const regenerateQuestions = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { newQuestions, questionIndices, rangeStart, rangeEnd, regenerateAll } = req.body;
+    const { newQuestions, questionIndices } = req.body;
 
     // Check if session exists and is scheduled
     const sessionResult = await pool.query(
@@ -1168,70 +1168,37 @@ export const regenerateQuestions = async (req: Request, res: Response): Promise<
 
     const currentQuestions = session.questions;
 
+    // Validate inputs
+    if (!questionIndices || !Array.isArray(questionIndices) || questionIndices.length === 0) {
+      res.status(400).json({ error: 'questionIndices array is required and must not be empty' });
+      return;
+    }
+
     if (!newQuestions || !Array.isArray(newQuestions) || newQuestions.length === 0) {
-      res.status(400).json({ error: 'newQuestions array is required' });
+      res.status(400).json({ error: 'newQuestions array is required and must not be empty' });
       return;
     }
 
-    let updatedQuestions = [...currentQuestions];
-
-    if (regenerateAll) {
-      // Regenerate all questions
-      if (newQuestions.length !== currentQuestions.length) {
-        res.status(400).json({
-          error: `newQuestions must have ${currentQuestions.length} questions to replace all`
-        });
-        return;
-      }
-      updatedQuestions = newQuestions;
-    } else if (questionIndices && Array.isArray(questionIndices)) {
-      // Regenerate specific questions by indices
-      if (newQuestions.length !== questionIndices.length) {
-        res.status(400).json({
-          error: `newQuestions must have ${questionIndices.length} questions to match questionIndices`
-        });
-        return;
-      }
-
-      // Validate indices
-      for (const index of questionIndices) {
-        if (index < 0 || index >= currentQuestions.length) {
-          res.status(400).json({ error: `Invalid question index: ${index}` });
-          return;
-        }
-      }
-
-      // Replace questions at specified indices
-      questionIndices.forEach((index: number, i: number) => {
-        updatedQuestions[index] = newQuestions[i];
-      });
-    } else if (rangeStart !== undefined && rangeEnd !== undefined) {
-      // Regenerate a range of questions
-      if (rangeStart < 0 || rangeEnd >= currentQuestions.length || rangeStart > rangeEnd) {
-        res.status(400).json({
-          error: `Invalid range: rangeStart=${rangeStart}, rangeEnd=${rangeEnd}`
-        });
-        return;
-      }
-
-      const rangeLength = rangeEnd - rangeStart + 1;
-      if (newQuestions.length !== rangeLength) {
-        res.status(400).json({
-          error: `newQuestions must have ${rangeLength} questions to match the range`
-        });
-        return;
-      }
-
-      // Replace questions in the specified range
-      for (let i = 0; i < rangeLength; i++) {
-        updatedQuestions[rangeStart + i] = newQuestions[i];
-      }
-    } else {
+    if (newQuestions.length !== questionIndices.length) {
       res.status(400).json({
-        error: 'Please specify regenerateAll: true, questionIndices array, or rangeStart/rangeEnd'
+        error: `newQuestions (${newQuestions.length}) must match questionIndices (${questionIndices.length}) length`
       });
       return;
     }
+
+    // Validate indices
+    for (const index of questionIndices) {
+      if (!Number.isInteger(index) || index < 0 || index >= currentQuestions.length) {
+        res.status(400).json({ error: `Invalid question index: ${index}` });
+        return;
+      }
+    }
+
+    // Replace questions at specified indices
+    const updatedQuestions = [...currentQuestions];
+    questionIndices.forEach((index: number, i: number) => {
+      updatedQuestions[index] = newQuestions[i];
+    });
 
     // Update the session with new questions
     const updateResult = await pool.query(
