@@ -69,7 +69,7 @@ export const calculatePrediction = async (req: AuthRequest, res: Response) => {
 };
 
 /**
- * Update user's own prediction
+ * Update user's initial estimate
  * POST /api/prediction/user
  * Body: { prediction: number }
  */
@@ -101,6 +101,65 @@ export const updateUserPrediction = async (req: AuthRequest, res: Response) => {
     console.error('Error updating user prediction:', error);
     res.status(500).json({
       error: 'Failed to update user prediction',
+      details: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};
+
+/**
+ * Set user's initial estimate (onboarding)
+ * POST /api/prediction/initial
+ * Body: { estimate: number }
+ */
+export const setInitialEstimate = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const { estimate } = req.body;
+
+    if (!estimate || typeof estimate !== 'number') {
+      return res.status(400).json({ error: 'Estimate value is required and must be a number' });
+    }
+
+    if (estimate < 150 || estimate > 1000) {
+      return res.status(400).json({ error: 'Estimate must be between 150 and 1000' });
+    }
+
+    const prediction = await PredictionService.setInitialEstimate(userId, estimate);
+
+    res.json({
+      success: true,
+      data: prediction,
+    });
+  } catch (error) {
+    console.error('Error setting initial estimate:', error);
+    res.status(500).json({
+      error: 'Failed to set initial estimate',
+      details: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};
+
+/**
+ * Get all score level definitions
+ * GET /api/prediction/levels
+ */
+export const getLevels = async (req: AuthRequest, res: Response) => {
+  try {
+    const levels = PredictionService.getLevels();
+
+    res.json({
+      success: true,
+      data: levels,
+    });
+  } catch (error) {
+    console.error('Error getting levels:', error);
+    res.status(500).json({
+      error: 'Failed to get levels',
       details: error instanceof Error ? error.message : 'Unknown error',
     });
   }
