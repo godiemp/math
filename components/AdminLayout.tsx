@@ -3,78 +3,81 @@
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from './ui/Button';
+import { useTranslations } from 'next-intl';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
 interface NavItem {
-  name: string;
+  nameKey: string;
   path: string;
   icon: string;
 }
 
 interface MenuGroup {
-  name: string;
+  nameKey: string;
   icon: string;
   items: NavItem[];
 }
 
-const menuGroups: MenuGroup[] = [
+const menuGroupsConfig: MenuGroup[] = [
   {
-    name: 'Monitoring & Sessions',
+    nameKey: 'monitoring',
     icon: '📊',
     items: [
-      { name: 'Live Sessions', path: '/admin/live-sessions', icon: '📊' },
-      { name: 'Certificates', path: '/admin/certificates', icon: '🎓' },
-      { name: 'Analytics', path: '/admin/analytics', icon: '📈' },
-      { name: 'AI Analytics', path: '/admin/ai-analytics', icon: '🤖' },
-      { name: 'System Health', path: '/admin/system-health', icon: '💚' },
+      { nameKey: 'liveSessions', path: '/admin/live-sessions', icon: '📊' },
+      { nameKey: 'certificates', path: '/admin/certificates', icon: '🎓' },
+      { nameKey: 'analytics', path: '/admin/analytics', icon: '📈' },
+      { nameKey: 'aiAnalytics', path: '/admin/ai-analytics', icon: '🤖' },
+      { nameKey: 'systemHealth', path: '/admin/system-health', icon: '💚' },
     ],
   },
   {
-    name: 'User Management',
+    nameKey: 'userManagement',
     icon: '👥',
     items: [
-      { name: 'Users', path: '/admin/users', icon: '👥' },
+      { nameKey: 'users', path: '/admin/users', icon: '👥' },
     ],
   },
   {
-    name: 'Content Management',
+    nameKey: 'contentManagement',
     icon: '📚',
     items: [
-      { name: 'Problems', path: '/admin/problems', icon: '❓' },
-      { name: 'Abstract Problems', path: '/admin/abstract-problems', icon: '📚' },
+      { nameKey: 'problems', path: '/admin/problems', icon: '❓' },
+      { nameKey: 'abstractProblems', path: '/admin/abstract-problems', icon: '📚' },
     ],
   },
   {
-    name: 'Tools',
+    nameKey: 'tools',
     icon: '🛠️',
     items: [
-      { name: 'Generator', path: '/admin/qgen', icon: '🎲' },
-      { name: 'Upload', path: '/admin/upload', icon: '📤' },
+      { nameKey: 'generator', path: '/admin/qgen', icon: '🎲' },
+      { nameKey: 'upload', path: '/admin/upload', icon: '📤' },
     ],
   },
   {
-    name: 'Debug Tools',
+    nameKey: 'debugTools',
     icon: '🔧',
     items: [
-      { name: 'Study Buddy Debug', path: '/admin/study-buddy-debug', icon: '🧠' },
-      { name: 'Rapid Fire Debug', path: '/admin/rapidfire-debug', icon: '⚡' },
-      { name: 'Zen Debug', path: '/admin/zen-debug', icon: '🧘' },
+      { nameKey: 'studyBuddyDebug', path: '/admin/study-buddy-debug', icon: '🧠' },
+      { nameKey: 'rapidFireDebug', path: '/admin/rapidfire-debug', icon: '⚡' },
+      { nameKey: 'zenDebug', path: '/admin/zen-debug', icon: '🧘' },
     ],
   },
 ];
 
-// Flatten all items for header title lookup
-const allNavItems: NavItem[] = menuGroups.flatMap(group => group.items);
-
 export default function AdminLayout({ children }: AdminLayoutProps) {
+  const tGroups = useTranslations('admin.groups');
+  const tItems = useTranslations('admin.items');
+  const tButton = useTranslations('admin.button');
+  const tSidebar = useTranslations('admin.sidebar');
+  const tHeader = useTranslations('admin.header');
   const router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
-    new Set(menuGroups.map(group => group.name))
+    new Set(menuGroupsConfig.map(group => group.nameKey))
   );
 
   const toggleGroup = (groupName: string) => {
@@ -102,7 +105,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <div className="h-16 flex items-center justify-between px-4 border-b border-gray-200 dark:border-gray-800">
             {sidebarOpen && (
               <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Admin Panel
+                {tSidebar('title')}
               </h1>
             )}
             <button
@@ -117,15 +120,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto py-4">
             <div className="space-y-2 px-2">
-              {menuGroups.map((group) => {
-                const isExpanded = expandedGroups.has(group.name);
+              {menuGroupsConfig.map((group) => {
+                const isExpanded = expandedGroups.has(group.nameKey);
                 const hasActiveItem = group.items.some(item => pathname === item.path);
 
                 return (
-                  <div key={group.name} className="space-y-1">
+                  <div key={group.nameKey} className="space-y-1">
                     {/* Group Header */}
                     <button
-                      onClick={() => toggleGroup(group.name)}
+                      onClick={() => toggleGroup(group.nameKey)}
                       className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${
                         hasActiveItem
                           ? 'bg-blue-50/50 dark:bg-blue-900/10 text-blue-600 dark:text-blue-400'
@@ -136,7 +139,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                       {sidebarOpen && (
                         <>
                           <span className="text-xs font-semibold uppercase tracking-wider flex-1 text-left">
-                            {group.name}
+                            {tGroups(group.nameKey)}
                           </span>
                           <span className={`text-xs transition-transform ${isExpanded ? 'rotate-90' : ''}`}>
                             ▶
@@ -162,7 +165,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                             >
                               <span className="text-lg">{item.icon}</span>
                               {sidebarOpen && (
-                                <span className="text-sm">{item.name}</span>
+                                <span className="text-sm">{tItems(item.nameKey)}</span>
                               )}
                             </button>
                           );
@@ -182,7 +185,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
               <span className="text-xl">🏠</span>
-              {sidebarOpen && <span className="text-sm">Back to Home</span>}
+              {sidebarOpen && <span className="text-sm">{tButton('backToHome')}</span>}
             </button>
           </div>
         </div>
@@ -199,7 +202,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <div className="h-full px-6 flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {allNavItems.find((item) => item.path === pathname)?.name || 'Admin'}
+                {(() => {
+                  const foundItem = menuGroupsConfig
+                    .flatMap(group => group.items)
+                    .find(item => item.path === pathname);
+                  return foundItem ? tItems(foundItem.nameKey) : tHeader('defaultTitle');
+                })()}
               </h2>
             </div>
             <div className="flex items-center gap-3">
@@ -207,7 +215,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 onClick={() => router.push('/live/lobby')}
                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               >
-                Live Practice
+                {tButton('livePractice')}
               </button>
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-medium">
                 A

@@ -4,8 +4,10 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { resetPassword } from '@/lib/auth';
+import { useTranslations } from 'next-intl';
 
 function ResetPasswordForm() {
+  const t = useTranslations('auth.resetPassword');
   const router = useRouter();
   const searchParams = useSearchParams();
   const [token, setToken] = useState('');
@@ -19,9 +21,9 @@ function ResetPasswordForm() {
     if (tokenFromUrl) {
       setToken(tokenFromUrl);
     } else {
-      toast.error('Token de restablecimiento inválido');
+      toast.error(t('errors.invalidToken'));
     }
-  }, [searchParams]);
+  }, [searchParams, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,25 +31,25 @@ function ResetPasswordForm() {
 
     try {
       if (!token) {
-        toast.error('Token de restablecimiento inválido');
+        toast.error(t('errors.invalidToken'));
         setIsLoading(false);
         return;
       }
 
       if (!password || !confirmPassword) {
-        toast.error('Por favor completa todos los campos');
+        toast.error(t('errors.completeFields'));
         setIsLoading(false);
         return;
       }
 
       if (password.length < 6) {
-        toast.error('La contraseña debe tener al menos 6 caracteres');
+        toast.error(t('errors.passwordLength'));
         setIsLoading(false);
         return;
       }
 
       if (password !== confirmPassword) {
-        toast.error('Las contraseñas no coinciden');
+        toast.error(t('errors.passwordMismatch'));
         setIsLoading(false);
         return;
       }
@@ -56,16 +58,16 @@ function ResetPasswordForm() {
 
       if (result.success) {
         setResetSuccess(true);
-        toast.success('Contraseña restablecida exitosamente');
+        toast.success(t('toast.success'));
         // Redirect to login after 2 seconds
         setTimeout(() => {
           router.push('/');
         }, 2000);
       } else {
-        toast.error(result.error || 'Error al restablecer la contraseña');
+        toast.error(result.error || t('toast.error'));
       }
     } catch (error) {
-      toast.error('Error de conexión. Por favor intenta de nuevo.');
+      toast.error(t('errors.connection'));
     } finally {
       setIsLoading(false);
     }
@@ -102,7 +104,7 @@ function ResetPasswordForm() {
               marginBottom: 'var(--spacing-4)',
             }}
           >
-            Enlace inválido
+            {t('invalid.title')}
           </h1>
           <p
             style={{
@@ -111,7 +113,7 @@ function ResetPasswordForm() {
               marginBottom: 'var(--spacing-8)',
             }}
           >
-            El enlace de restablecimiento es inválido o ha expirado.
+            {t('invalid.message')}
           </p>
           <button
             onClick={() => router.push('/forgot-password')}
@@ -131,7 +133,7 @@ function ResetPasswordForm() {
               cursor: 'pointer',
             }}
           >
-            Solicitar nuevo enlace
+            {t('button.requestNew')}
           </button>
         </div>
       </div>
@@ -171,7 +173,7 @@ function ResetPasswordForm() {
               color: 'var(--color-label-primary)',
             }}
           >
-            {resetSuccess ? '¡Listo!' : 'Nueva contraseña'}
+            {resetSuccess ? t('titleDone') : t('titleNewPassword')}
           </h1>
           <p
             className="text-center"
@@ -181,8 +183,8 @@ function ResetPasswordForm() {
             }}
           >
             {resetSuccess
-              ? 'Tu contraseña ha sido restablecida exitosamente.'
-              : 'Ingresa tu nueva contraseña.'}
+              ? t('subtitleSuccess')
+              : t('subtitleEnter')}
           </p>
         </div>
 
@@ -201,7 +203,7 @@ function ResetPasswordForm() {
                     marginBottom: 'var(--spacing-2)',
                   }}
                 >
-                  Nueva contraseña
+                  {t('label.newPassword')}
                 </label>
                 <input
                   id="password"
@@ -224,7 +226,7 @@ function ResetPasswordForm() {
                     borderRadius: 'var(--radius-sm)',
                     outline: 'none',
                   }}
-                  placeholder="Mínimo 6 caracteres"
+                  placeholder={t('placeholder.newPassword')}
                   onFocus={(e) => {
                     e.target.style.borderColor = 'var(--color-tint)';
                     e.target.style.borderWidth = '2px';
@@ -250,7 +252,7 @@ function ResetPasswordForm() {
                     marginBottom: 'var(--spacing-2)',
                   }}
                 >
-                  Confirmar contraseña
+                  {t('label.confirmPassword')}
                 </label>
                 <input
                   id="confirmPassword"
@@ -273,7 +275,7 @@ function ResetPasswordForm() {
                     borderRadius: 'var(--radius-sm)',
                     outline: 'none',
                   }}
-                  placeholder="Repite tu contraseña"
+                  placeholder={t('placeholder.confirmPassword')}
                   onFocus={(e) => {
                     e.target.style.borderColor = 'var(--color-tint)';
                     e.target.style.borderWidth = '2px';
@@ -297,7 +299,7 @@ function ResetPasswordForm() {
                   borderRadius: 'var(--radius-sm)',
                 }}
               >
-                La contraseña debe tener al menos 6 caracteres.
+                {t('requirement')}
               </div>
 
               {/* Submit Button */}
@@ -344,7 +346,7 @@ function ResetPasswordForm() {
                   }
                 }}
               >
-                {isLoading ? 'Restableciendo...' : 'Restablecer contraseña'}
+                {isLoading ? t('button.resetting') : t('button.reset')}
               </button>
             </div>
           </form>
@@ -364,7 +366,7 @@ function ResetPasswordForm() {
                 marginBottom: 'var(--spacing-8)',
               }}
             >
-              ✓ Tu contraseña ha sido restablecida exitosamente. Serás redirigido al inicio de sesión...
+              {t('successMessage')}
             </div>
 
             {/* Manual Redirect Button */}
@@ -394,7 +396,7 @@ function ResetPasswordForm() {
                 e.currentTarget.style.boxShadow = 'var(--shadow-ambient)';
               }}
             >
-              Ir al inicio de sesión
+              {t('button.goToLogin')}
             </button>
           </div>
         )}
@@ -404,6 +406,8 @@ function ResetPasswordForm() {
 }
 
 export default function ResetPasswordPage() {
+  const t = useTranslations('auth.resetPassword');
+
   return (
     <Suspense fallback={
       <div
@@ -416,7 +420,7 @@ export default function ResetPasswordPage() {
         }}
       >
         <div style={{ fontSize: '17px', color: 'var(--color-label-secondary)' }}>
-          Cargando...
+          {t('loading')}
         </div>
       </div>
     }>

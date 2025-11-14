@@ -875,6 +875,7 @@
     },
     "items": {
       "liveSessions": "live sessions",
+      "certificates": "certificates",
       "analytics": "analytics",
       "aiAnalytics": "AI analytics",
       "systemHealth": "system health",

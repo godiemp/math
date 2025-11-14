@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { requestPasswordReset } from '@/lib/auth';
+import { useTranslations } from 'next-intl';
 
 export default function ForgotPasswordPage() {
+  const t = useTranslations('auth.forgotPassword');
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +19,7 @@ export default function ForgotPasswordPage() {
 
     try {
       if (!email) {
-        toast.error('Por favor ingresa tu correo electrónico');
+        toast.error(t('errors.emailRequired'));
         setIsLoading(false);
         return;
       }
@@ -26,12 +28,12 @@ export default function ForgotPasswordPage() {
 
       if (result.success) {
         setEmailSent(true);
-        toast.success('Revisa tu correo para restablecer tu contraseña');
+        toast.success(t('toast.success'));
       } else {
-        toast.error(result.error || 'Error al enviar el correo de recuperación');
+        toast.error(result.error || t('toast.error'));
       }
     } catch (error) {
-      toast.error('Error de conexión. Por favor intenta de nuevo.');
+      toast.error(t('errors.connection'));
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +72,7 @@ export default function ForgotPasswordPage() {
               color: 'var(--color-label-primary)',
             }}
           >
-            {emailSent ? 'Revisa tu correo' : 'Recuperar contraseña'}
+            {emailSent ? t('titleSent') : t('titleRequest')}
           </h1>
           <p
             className="text-center"
@@ -80,8 +82,8 @@ export default function ForgotPasswordPage() {
             }}
           >
             {emailSent
-              ? 'Si existe una cuenta con ese correo, te hemos enviado un enlace para restablecer tu contraseña.'
-              : 'Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.'}
+              ? t('subtitleSent')
+              : t('subtitleRequest')}
           </p>
         </div>
 
@@ -100,7 +102,7 @@ export default function ForgotPasswordPage() {
                     marginBottom: 'var(--spacing-2)',
                   }}
                 >
-                  Correo electrónico
+                  {t('label.email')}
                 </label>
                 <input
                   id="email"
@@ -123,7 +125,7 @@ export default function ForgotPasswordPage() {
                     borderRadius: 'var(--radius-sm)',
                     outline: 'none',
                   }}
-                  placeholder="tu@email.com"
+                  placeholder={t('placeholder.email')}
                   onFocus={(e) => {
                     e.target.style.borderColor = 'var(--color-tint)';
                     e.target.style.borderWidth = '2px';
@@ -181,7 +183,7 @@ export default function ForgotPasswordPage() {
                   }
                 }}
               >
-                {isLoading ? 'Enviando...' : 'Enviar enlace de recuperación'}
+                {isLoading ? t('button.sending') : t('button.send')}
               </button>
 
               {/* Back to Login Link */}
@@ -200,7 +202,7 @@ export default function ForgotPasswordPage() {
                     padding: 0,
                   }}
                 >
-                  ← Volver al inicio de sesión
+                  {t('backToLogin')}
                 </button>
               </div>
             </div>
@@ -221,8 +223,7 @@ export default function ForgotPasswordPage() {
                 marginBottom: 'var(--spacing-8)',
               }}
             >
-              ✓ Si existe una cuenta con el correo {email}, recibirás un enlace para restablecer tu contraseña.
-              El enlace expirará en 1 hora.
+              {t('successMessage', { email })}
             </div>
 
             {/* Action Buttons */}
@@ -253,7 +254,7 @@ export default function ForgotPasswordPage() {
                   e.currentTarget.style.boxShadow = 'var(--shadow-ambient)';
                 }}
               >
-                Volver al inicio
+                {t('button.backToHome')}
               </button>
 
               <button
@@ -281,7 +282,7 @@ export default function ForgotPasswordPage() {
                   e.currentTarget.style.color = 'var(--color-label-secondary)';
                 }}
               >
-                Enviar de nuevo
+                {t('button.sendAgain')}
               </button>
             </div>
           </div>
