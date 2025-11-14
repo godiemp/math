@@ -5,14 +5,15 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Auth from "@/components/Auth";
 import Footer from "@/components/Footer";
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
+import { LearnSubjectDemo } from "@/components/LearnSubjectDemo";
 
 export default function Home() {
   const t = useTranslations('landing');
-  const tCommon = useTranslations('common');
   const { isAuthenticated, isLoading, setUser } = useAuth();
   const router = useRouter();
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showLearnSubjectDemo, setShowLearnSubjectDemo] = useState(false);
 
   useEffect(() => {
     // Only redirect if auth loading is complete and user is authenticated
@@ -247,6 +248,41 @@ export default function Home() {
                       marginBottom: '8px',
                     }}
                   >
+                    {t('sections.learnSubject')}
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: '15px',
+                      lineHeight: '1.6',
+                      color: 'var(--color-label-secondary)',
+                    }}
+                  >
+                    {t('learnSubject.description')}
+                  </p>
+                  <button
+                    onClick={() => {
+                      setShowInfoModal(false);
+                      setShowLearnSubjectDemo(true);
+                    }}
+                    className="mt-3 inline-flex items-center gap-2 rounded-full border border-transparent bg-[var(--color-tint)]/10 px-4 py-2 text-sm font-semibold text-[var(--color-tint)] hover:bg-[var(--color-tint)]/20 spring-motion"
+                    style={{
+                      boxShadow: 'var(--shadow-raised)',
+                    }}
+                  >
+                    {t('learnSubject.demoCta')}
+                    <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+
+                <div>
+                  <h3
+                    style={{
+                      fontSize: '17px',
+                      fontWeight: 600,
+                      color: 'var(--color-label-primary)',
+                      marginBottom: '8px',
+                    }}
+                  >
                     {t('sections.pricing')}
                   </h3>
                   <p
@@ -306,6 +342,10 @@ export default function Home() {
 
       {/* Footer */}
       <Footer />
+      <LearnSubjectDemo
+        isOpen={showLearnSubjectDemo}
+        onClose={() => setShowLearnSubjectDemo(false)}
+      />
     </div>
   );
 }

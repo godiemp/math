@@ -34,6 +34,7 @@ import paymentRoutes from './routes/paymentRoutes';
 import predictionRoutes from './routes/predictionRoutes';
 import operationsPracticeRoutes from './routes/operationsPracticeRoutes';
 import certificateRoutes from './routes/certificateRoutes';
+import subjectTutorRoutes from './routes/subjectTutorRoutes';
 import { serveImage } from './controllers/adminController';
 
 const app = express();
@@ -209,6 +210,7 @@ app.use('/api/study-buddy', studyBuddyRoutes);
 app.use('/api/prediction', predictionRoutes);
 app.use('/api/operations-practice', operationsPracticeRoutes);
 app.use('/api/certificates', certificateRoutes);
+app.use('/api/subject-tutor', subjectTutorRoutes);
 
 // Public image serving route
 app.get('/api/images/:filename', serveImage);
@@ -232,6 +234,7 @@ console.log('✅ Payment routes registered at /api/payments');
 console.log('✅ Prediction routes registered at /api/prediction');
 console.log('✅ Operations Practice routes registered at /api/operations-practice');
 console.log('✅ Certificate routes registered at /api/certificates');
+console.log('✅ Subject Tutor routes registered at /api/subject-tutor');
 
 // 404 handler
 app.use((req: Request, res: Response) => {
