@@ -186,13 +186,13 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
     // Margins
     const margin = 50;
     const contentWidth = pageWidth - 2 * margin;
-    let currentY = pageHeight - margin;
+    let currentY = pageHeight; // Start at the very top
 
     // ========================================================================
     // HEADER SECTION
     // ========================================================================
 
-    // Draw header background
+    // Draw header background at the very top
     page.drawRectangle({
       x: 0,
       y: currentY - 80,
@@ -634,43 +634,13 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
     }
 
     // ========================================================================
-    // FOOTER - QR CODE AND SIGNATURE
+    // FOOTER - SIGNATURE
     // ========================================================================
 
     const footerY = 100;
 
-    // QR Code
-    if (certificate.verificationUrl) {
-      try {
-        const qrDataUrl = await generateQRCode(certificate.verificationUrl);
-        const qrImageBytes = Buffer.from(
-          qrDataUrl.replace(/^data:image\/png;base64,/, ''),
-          'base64'
-        );
-        const qrImage = await pdfDoc.embedPng(qrImageBytes);
-
-        const qrSize = 60;
-        page.drawImage(qrImage, {
-          x: margin,
-          y: footerY - 10,
-          width: qrSize,
-          height: qrSize,
-        });
-
-        page.drawText('Verifica este certificado', {
-          x: margin,
-          y: footerY - 25,
-          size: 7,
-          font: helvetica,
-          color: COLORS.textLight,
-        });
-      } catch (error) {
-        console.error('Error embedding QR code:', error);
-      }
-    }
-
-    // Digital signature
-    const signatureX = pageWidth - margin - 150;
+    // Digital signature (centered)
+    const signatureX = (pageWidth - 200) / 2;
     page.drawLine({
       start: { x: signatureX, y: footerY + 20 },
       end: { x: signatureX + 150, y: footerY + 20 },
@@ -678,20 +648,12 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
       thickness: 1,
     });
 
-    page.drawText('Director Académico', {
-      x: signatureX + 15,
+    page.drawText('En representacion de simplePAES', {
+      x: signatureX,
       y: footerY + 5,
       size: 10,
-      font: helveticaBold,
-      color: COLORS.text,
-    });
-
-    page.drawText('PAES Matemáticas', {
-      x: signatureX + 25,
-      y: footerY - 10,
-      size: 8,
       font: helvetica,
-      color: COLORS.textLight,
+      color: COLORS.text,
     });
 
     // Issued date
