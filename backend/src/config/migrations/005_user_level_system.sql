@@ -17,6 +17,10 @@ ADD COLUMN IF NOT EXISTS score_min INTEGER;
 ALTER TABLE paes_predictions
 ADD COLUMN IF NOT EXISTS score_max INTEGER;
 
+-- Drop the old CHECK constraint on user_prediction BEFORE renaming
+ALTER TABLE paes_predictions
+DROP CONSTRAINT IF EXISTS paes_predictions_user_prediction_check;
+
 -- Rename user_prediction to user_initial_estimate for clarity
 ALTER TABLE paes_predictions
 RENAME COLUMN user_prediction TO user_initial_estimate;
@@ -73,10 +77,7 @@ ALTER TABLE paes_predictions
 ADD CONSTRAINT check_current_level_valid
 CHECK (current_level IN ('Pre-Básico', 'Básico', 'Medio Inicial', 'Medio Avanzado', 'Avanzado', 'Sobresaliente', 'Excelencia'));
 
--- Update user_initial_estimate constraint
-ALTER TABLE paes_predictions
-DROP CONSTRAINT IF EXISTS paes_predictions_user_prediction_check;
-
+-- Add user_initial_estimate constraint (constraint was already dropped before column rename)
 ALTER TABLE paes_predictions
 ADD CONSTRAINT check_user_initial_estimate
 CHECK (user_initial_estimate IS NULL OR (user_initial_estimate >= 150 AND user_initial_estimate <= 1000));
