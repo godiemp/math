@@ -26,6 +26,9 @@ export { m2GeometriaAreaCirculoQuestions } from './area-circulo';
 
 // Export combined array for backward compatibility
 export const m2GeometriaQuestions = [
+  ...m2Geo001Questions,
+  ...m2Geo002Questions,
+  ...m2Geo003Questions,
   ...m2GeometriaPerimetroAreaQuestions,
   ...m2GeometriaVolumenQuestions,
   ...m2GeometriaTeoremaDepitagorasQuestions,
