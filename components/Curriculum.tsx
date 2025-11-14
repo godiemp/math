@@ -113,8 +113,59 @@ export default function Curriculum({ level }: CurriculumProps) {
       const response = await api.get<{ units: ThematicUnit[] }>(`/api/thematic-units?level=${level}`);
 
       if (response.data?.units) {
-        const jsonString = JSON.stringify(response.data.units, null, 2);
-        await navigator.clipboard.writeText(jsonString);
+        // Formato estructurado legible
+        let formattedText = `════════════════════════════════════════════════════════════════\n`;
+        formattedText += `  TEMARIO PAES - COMPETENCIA MATEMÁTICA ${level}\n`;
+        formattedText += `════════════════════════════════════════════════════════════════\n\n`;
+
+        // Agrupar por materia
+        const bySubject: Record<string, ThematicUnit[]> = {
+          'números': [],
+          'álgebra': [],
+          'geometría': [],
+          'probabilidad': []
+        };
+
+        response.data.units.forEach(unit => {
+          if (bySubject[unit.subject]) {
+            bySubject[unit.subject].push(unit);
+          }
+        });
+
+        const subjectNames: Record<string, string> = {
+          'números': '🔢 NÚMEROS',
+          'álgebra': '📐 ÁLGEBRA Y FUNCIONES',
+          'geometría': '📏 GEOMETRÍA',
+          'probabilidad': '📊 PROBABILIDAD Y ESTADÍSTICA'
+        };
+
+        // Generar texto formateado
+        Object.entries(bySubject).forEach(([subject, units]) => {
+          if (units.length === 0) return;
+
+          formattedText += `\n${subjectNames[subject]}\n`;
+          formattedText += `${'─'.repeat(60)}\n\n`;
+
+          units.forEach((unit, idx) => {
+            formattedText += `${idx + 1}. ${unit.code} - ${unit.name}\n`;
+
+            if (unit.subsections && unit.subsections.length > 0) {
+              unit.subsections.forEach(subsection => {
+                formattedText += `   ${subsection.code}. ${subsection.name}\n`;
+                if (subsection.primary_skills && subsection.primary_skills.length > 0) {
+                  formattedText += `      Habilidades: ${subsection.primary_skills.join(', ')}\n`;
+                }
+              });
+            }
+            formattedText += '\n';
+          });
+        });
+
+        formattedText += `\n════════════════════════════════════════════════════════════════\n`;
+        formattedText += `Total de unidades: ${response.data.units.length}\n`;
+        formattedText += `════════════════════════════════════════════════════════════════\n`;
+
+        await navigator.clipboard.writeText(formattedText);
         setCopyStatus('success');
 
         setTimeout(() => setCopyStatus('idle'), 2000);
