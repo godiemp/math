@@ -34,6 +34,9 @@ export { m2NumerosRaicesRacionalizacionQuestions } from './raices-racionalizacio
 
 // Export combined array for backward compatibility
 export const m2NumerosQuestions: Question[] = [
+  ...m2Num001Questions,
+  ...m2Num002Questions,
+  ...m2Num003Questions,
   ...m2NumerosEnterosRacionalesQuestions,
   ...m2NumerosPorcentajeQuestions,
   ...m2NumerosPotenciasRaicesQuestions,

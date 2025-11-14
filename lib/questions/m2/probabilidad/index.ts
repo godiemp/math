@@ -28,6 +28,9 @@ export { m2ProbabilidadCombinatoriaQuestions } from './combinatoria';
 
 // Export combined array for backward compatibility
 export const m2ProbabilidadQuestions = [
+  ...m2Prob001Questions,
+  ...m2Prob002Questions,
+  ...m2Prob003Questions,
   ...m2ProbabilidadTendenciaCentralQuestions,
   ...m2ProbabilidadMedidasPosicionQuestions,
   ...m2ProbabilidadReglasProbabilidadQuestions,
