@@ -407,7 +407,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
         </div>
         {showQuickNav && (
           <>
-            <div className="grid grid-cols-10 gap-2">
+            <div className="grid grid-cols-15 gap-1.5">
               {quizQuestions.map((q, idx) => {
                 const answer = userAnswers[idx];
                 const isAnswered = answer !== null;
