@@ -80,16 +80,15 @@ export default function OperationsPractice({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!userAnswer.trim() || isSubmitting || !problem) return;
+  const submitAnswer = (answer?: string) => {
+    const answerToSubmit = answer || userAnswer;
+    if (!answerToSubmit.trim() || isSubmitting || !problem) return;
 
     setIsSubmitting(true);
 
     try {
       // Validate answer locally
-      const isCorrect = validateAnswer(userAnswer, problem.correctAnswer);
+      const isCorrect = validateAnswer(answerToSubmit, problem.correctAnswer);
 
       setFeedback({
         show: true,
@@ -126,6 +125,11 @@ export default function OperationsPractice({
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    submitAnswer();
   };
 
   const handleContinue = () => {
@@ -252,12 +256,7 @@ export default function OperationsPractice({
                   type="button"
                   onClick={() => {
                     setUserAnswer('Verdadero');
-                    // Auto-submit after selection
-                    setTimeout(() => {
-                      if (!isSubmitting && !feedback.show) {
-                        handleSubmit(new Event('submit') as any);
-                      }
-                    }, 100);
+                    submitAnswer('Verdadero');
                   }}
                   disabled={isSubmitting || feedback.show}
                   className={`py-8 px-6 text-3xl font-bold rounded-xl border-2 transition-all transform hover:scale-105 ${
@@ -272,12 +271,7 @@ export default function OperationsPractice({
                   type="button"
                   onClick={() => {
                     setUserAnswer('Falso');
-                    // Auto-submit after selection
-                    setTimeout(() => {
-                      if (!isSubmitting && !feedback.show) {
-                        handleSubmit(new Event('submit') as any);
-                      }
-                    }, 100);
+                    submitAnswer('Falso');
                   }}
                   disabled={isSubmitting || feedback.show}
                   className={`py-8 px-6 text-3xl font-bold rounded-xl border-2 transition-all transform hover:scale-105 ${
@@ -303,12 +297,7 @@ export default function OperationsPractice({
                     type="button"
                     onClick={() => {
                       setUserAnswer(choice);
-                      // Auto-submit after selection
-                      setTimeout(() => {
-                        if (!isSubmitting && !feedback.show) {
-                          handleSubmit(new Event('submit') as any);
-                        }
-                      }, 100);
+                      submitAnswer(choice);
                     }}
                     disabled={isSubmitting || feedback.show}
                     className={`py-6 px-4 text-2xl font-bold rounded-xl border-2 transition-all transform hover:scale-105 ${
