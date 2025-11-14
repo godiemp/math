@@ -78,8 +78,41 @@ export default function Auth({ onSuccess }: AuthProps) {
           return;
         }
 
-        if (password.length < 6) {
+        // Validate password requirements
+        if (password.length < 12) {
           const errorMsg = t('register.errors.passwordLength');
+          setError(errorMsg);
+          toast.error(errorMsg);
+          setIsLoading(false);
+          return;
+        }
+
+        if (!/[A-Z]/.test(password)) {
+          const errorMsg = t('register.errors.passwordUppercase');
+          setError(errorMsg);
+          toast.error(errorMsg);
+          setIsLoading(false);
+          return;
+        }
+
+        if (!/[a-z]/.test(password)) {
+          const errorMsg = t('register.errors.passwordLowercase');
+          setError(errorMsg);
+          toast.error(errorMsg);
+          setIsLoading(false);
+          return;
+        }
+
+        if (!/[0-9]/.test(password)) {
+          const errorMsg = t('register.errors.passwordNumber');
+          setError(errorMsg);
+          toast.error(errorMsg);
+          setIsLoading(false);
+          return;
+        }
+
+        if (!/[^A-Za-z0-9]/.test(password)) {
+          const errorMsg = t('register.errors.passwordSpecial');
           setError(errorMsg);
           toast.error(errorMsg);
           setIsLoading(false);
@@ -291,7 +324,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                   borderRadius: 'var(--radius-sm)',
                   outline: 'none',
                 }}
-                placeholder={isLogin ? 'tu contraseña' : 'mínimo 6 caracteres'}
+                placeholder={isLogin ? 'tu contraseña' : 'mínimo 12 caracteres, mayúscula, número y símbolo'}
                 onFocus={(e) => {
                   e.target.style.borderColor = 'var(--color-tint)';
                   e.target.style.borderWidth = '2px';

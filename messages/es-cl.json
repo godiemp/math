@@ -32,7 +32,11 @@
       "login": "inicia sesión",
       "errors": {
         "completeFields": "por favor completa todos los campos",
-        "passwordLength": "la contraseña debe tener al menos 6 caracteres",
+        "passwordLength": "la contraseña debe tener al menos 12 caracteres",
+        "passwordUppercase": "la contraseña debe contener al menos una letra mayúscula",
+        "passwordLowercase": "la contraseña debe contener al menos una letra minúscula",
+        "passwordNumber": "la contraseña debe contener al menos un número",
+        "passwordSpecial": "la contraseña debe contener al menos un carácter especial (!@#$%^&*, etc.)",
         "passwordMismatch": "las contraseñas no coinciden",
         "acceptTerms": "debes aceptar los términos y condiciones",
         "generic": "error al crear la cuenta"
@@ -63,7 +67,7 @@
       "error": "error al actualizar la contraseña",
       "errors": {
         "passwordMismatch": "las contraseñas no coinciden",
-        "passwordLength": "la contraseña debe tener al menos 6 caracteres"
+        "passwordLength": "la contraseña debe tener al menos 12 caracteres"
       }
     }
   },

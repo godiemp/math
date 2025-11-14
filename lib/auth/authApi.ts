@@ -39,6 +39,10 @@ export async function registerUser(
   });
 
   if (response.error) {
+    // If there are detailed validation errors, return the first specific error
+    if (response.error.details && response.error.details.length > 0) {
+      return { success: false, error: response.error.details[0].message };
+    }
     return { success: false, error: response.error.error };
   }
 
@@ -67,6 +71,10 @@ export async function loginUser(
   });
 
   if (response.error) {
+    // If there are detailed validation errors, return the first specific error
+    if (response.error.details && response.error.details.length > 0) {
+      return { success: false, error: response.error.details[0].message };
+    }
     return { success: false, error: response.error.error };
   }
 
@@ -143,6 +151,10 @@ export async function resetPassword(
   });
 
   if (response.error) {
+    // If there are detailed validation errors, return the first specific error
+    if (response.error.details && response.error.details.length > 0) {
+      return { success: false, error: response.error.details[0].message };
+    }
     return { success: false, error: response.error.error || 'Failed to reset password' };
   }
 
