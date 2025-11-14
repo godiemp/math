@@ -7,6 +7,7 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Button, Card, Badge, Heading, Text, Navbar, NavbarLink, Modal } from '@/components/ui';
 import { QuizHistoryResponse } from '@/lib/types';
 import { api } from '@/lib/api-client';
+import { useTranslations } from 'next-intl';
 
 interface ProfileStats {
   totalQuestions: number;
@@ -30,6 +31,7 @@ interface UpdateProfileResponse {
 }
 
 function ProfilePageContent() {
+  const t = useTranslations('profile');
   const { user, refreshUser } = useAuth();
   const [stats, setStats] = useState<ProfileStats>({
     totalQuestions: 0,
@@ -103,20 +105,20 @@ function ProfilePageContent() {
 
   const getSubscriptionBadge = () => {
     if (!user?.subscription) {
-      return <Badge variant="neutral">Sin Suscripción</Badge>;
+      return <Badge variant="neutral">{t('subscriptionSection.none')}</Badge>;
     }
 
     switch (user.subscription.status) {
       case 'active':
-        return <Badge variant="success">Activa</Badge>;
+        return <Badge variant="success">{t('subscriptionSection.active')}</Badge>;
       case 'trial':
-        return <Badge variant="info">Prueba Gratuita</Badge>;
+        return <Badge variant="info">{t('subscriptionSection.trial')}</Badge>;
       case 'expired':
-        return <Badge variant="danger">Expirada</Badge>;
+        return <Badge variant="danger">{t('subscriptionSection.expired')}</Badge>;
       case 'cancelled':
-        return <Badge variant="warning">Cancelada</Badge>;
+        return <Badge variant="warning">{t('subscriptionSection.canceled')}</Badge>;
       default:
-        return <Badge variant="neutral">Desconocida</Badge>;
+        return <Badge variant="neutral">{t('subscriptionSection.unknown')}</Badge>;
     }
   };
 
@@ -132,11 +134,11 @@ function ProfilePageContent() {
         await refreshUser();
         setIsEditModalOpen(false);
       } else {
-        setEditError(response.data?.message || 'Error al actualizar el perfil');
+        setEditError(response.data?.message || t('error'));
       }
     } catch (error: any) {
       console.error('Failed to update profile:', error);
-      setEditError(error.response?.data?.message || 'Error al actualizar el perfil');
+      setEditError(error.response?.data?.message || t('error'));
     } finally {
       setIsSaving(false);
     }
@@ -151,7 +153,7 @@ function ProfilePageContent() {
       {/* Navbar */}
       <Navbar>
         <NavbarLink href="/dashboard">
-          ← Volver al Inicio
+          {t('navigation.backHome')}
         </NavbarLink>
       </Navbar>
 
@@ -159,10 +161,10 @@ function ProfilePageContent() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <Heading level={1} size="lg">
-            Mi Perfil
+            {t('title')}
           </Heading>
           <Button onClick={() => setIsEditModalOpen(true)}>
-            Editar Perfil
+            {t('header.edit')}
           </Button>
         </div>
 
@@ -185,23 +187,23 @@ function ProfilePageContent() {
 
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <Text size="sm" variant="secondary">Email:</Text>
+                  <Text size="sm" variant="secondary">{t('info.email')}</Text>
                   <Text size="sm">{user.email}</Text>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Text size="sm" variant="secondary">Rol:</Text>
+                  <Text size="sm" variant="secondary">{t('info.role')}</Text>
                   <Badge variant={user.role === 'admin' ? 'info' : 'neutral'}>
-                    {user.role === 'admin' ? 'Administrador' : 'Estudiante'}
+                    {user.role === 'admin' ? t('role.admin') : t('role.student')}
                   </Badge>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Text size="sm" variant="secondary">Miembro desde:</Text>
+                  <Text size="sm" variant="secondary">{t('info.memberSince')}</Text>
                   <Text size="sm">{formatDate(user.createdAt)}</Text>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Text size="sm" variant="secondary">Nivel objetivo:</Text>
+                  <Text size="sm" variant="secondary">{t('info.targetLevel')}</Text>
                   <Badge variant={user.targetLevel === 'M1_ONLY' ? 'info' : 'success'}>
-                    {user.targetLevel === 'M1_ONLY' ? 'Solo M1' : 'M1 y M2'}
+                    {user.targetLevel === 'M1_ONLY' ? t('onlyM1') : t('m1AndM2')}
                   </Badge>
                 </div>
               </div>
@@ -212,41 +214,41 @@ function ProfilePageContent() {
         {/* Subscription Card */}
         <Card className="p-6 mb-6">
           <Heading level={3} size="xs" className="mb-4">
-            Suscripción
+            {t('subscriptionSection.title')}
           </Heading>
 
           {user.subscription ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Text size="sm" variant="secondary">Estado:</Text>
+                <Text size="sm" variant="secondary">{t('subscriptionSection.state')}</Text>
                 {getSubscriptionBadge()}
               </div>
 
               {user.subscription.startedAt && (
                 <div className="flex items-center justify-between">
-                  <Text size="sm" variant="secondary">Fecha de inicio:</Text>
+                  <Text size="sm" variant="secondary">{t('subscriptionSection.startDate')}</Text>
                   <Text size="sm">{formatDate(user.subscription.startedAt)}</Text>
                 </div>
               )}
 
               {user.subscription.expiresAt && (
                 <div className="flex items-center justify-between">
-                  <Text size="sm" variant="secondary">Fecha de expiración:</Text>
+                  <Text size="sm" variant="secondary">{t('subscriptionSection.expirationDate')}</Text>
                   <Text size="sm">{formatDate(user.subscription.expiresAt)}</Text>
                 </div>
               )}
 
               {user.subscription.trialEndsAt && user.subscription.status === 'trial' && (
                 <div className="flex items-center justify-between">
-                  <Text size="sm" variant="secondary">Prueba gratuita hasta:</Text>
+                  <Text size="sm" variant="secondary">{t('subscriptionSection.trialUntil')}</Text>
                   <Text size="sm">{formatDate(user.subscription.trialEndsAt)}</Text>
                 </div>
               )}
 
               <div className="flex items-center justify-between">
-                <Text size="sm" variant="secondary">Renovación automática:</Text>
+                <Text size="sm" variant="secondary">{t('subscriptionSection.autoRenew')}</Text>
                 <Badge variant={user.subscription.autoRenew ? 'success' : 'warning'}>
-                  {user.subscription.autoRenew ? 'Activada' : 'Desactivada'}
+                  {user.subscription.autoRenew ? t('subscriptionSection.enabled') : t('subscriptionSection.disabled')}
                 </Badge>
               </div>
 
@@ -254,7 +256,7 @@ function ProfilePageContent() {
                 <div className="mt-4">
                   <Button asChild className="w-full">
                     <Link href="/pricing">
-                      Renovar Suscripción
+                      {t('subscriptionSection.renew')}
                     </Link>
                   </Button>
                 </div>
@@ -263,11 +265,11 @@ function ProfilePageContent() {
           ) : (
             <div className="text-center py-6">
               <Text size="sm" variant="secondary" className="mb-4">
-                No tienes una suscripción activa
+                {t('subscriptionSection.noActive')}
               </Text>
               <Button asChild>
                 <Link href="/pricing">
-                  Ver Planes
+                  {t('subscriptionSection.viewPlans')}
                 </Link>
               </Button>
             </div>
@@ -277,7 +279,7 @@ function ProfilePageContent() {
         {/* Streaks Card */}
         <Card className="p-6 mb-6">
           <Heading level={3} size="xs" className="mb-4">
-            Rachas de Práctica
+            {t('streaks.practice')}
           </Heading>
 
           <div className="grid grid-cols-2 gap-4">
@@ -286,7 +288,7 @@ function ProfilePageContent() {
                 {user.currentStreak || 0}
               </Heading>
               <Text size="xs" variant="secondary">
-                Racha Actual
+                {t('currentStreak')}
               </Text>
             </div>
 
@@ -295,7 +297,7 @@ function ProfilePageContent() {
                 {user.longestStreak || 0}
               </Heading>
               <Text size="xs" variant="secondary">
-                Mejor Racha
+                {t('bestStreak')}
               </Text>
             </div>
           </div>
@@ -303,7 +305,7 @@ function ProfilePageContent() {
           {user.lastPracticeDate && (
             <div className="mt-4 text-center">
               <Text size="xs" variant="secondary">
-                Última práctica: {new Date(user.lastPracticeDate).toLocaleDateString('es-ES', {
+                {t('streaks.lastPractice')} {new Date(user.lastPracticeDate).toLocaleDateString('es-ES', {
                   day: '2-digit',
                   month: 'long',
                   year: 'numeric'
@@ -316,7 +318,7 @@ function ProfilePageContent() {
         {/* Statistics Card */}
         <Card className="p-6 mb-6">
           <Heading level={3} size="xs" className="mb-4">
-            Estadísticas Generales
+            {t('stats.title')}
           </Heading>
 
           {isLoading ? (
@@ -326,17 +328,17 @@ function ProfilePageContent() {
           ) : (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Text size="sm" variant="secondary">Total de preguntas:</Text>
+                <Text size="sm" variant="secondary">{t('stats.totalQuestions')}</Text>
                 <Text size="sm" className="font-semibold">{stats.totalQuestions}</Text>
               </div>
 
               <div className="flex items-center justify-between">
-                <Text size="sm" variant="secondary">Respuestas correctas:</Text>
+                <Text size="sm" variant="secondary">{t('stats.correctAnswers')}</Text>
                 <Text size="sm" className="font-semibold">{stats.correctAnswers}</Text>
               </div>
 
               <div className="flex items-center justify-between">
-                <Text size="sm" variant="secondary">Precisión general:</Text>
+                <Text size="sm" variant="secondary">{t('stats.generalAccuracy')}</Text>
                 <Badge variant={
                   stats.accuracy >= 80 ? 'success' :
                   stats.accuracy >= 60 ? 'warning' :
@@ -353,7 +355,7 @@ function ProfilePageContent() {
                       {stats.m1Questions}
                     </Text>
                     <Text size="xs" variant="secondary">
-                      Preguntas M1
+                      {t('stats.questionsM1')}
                     </Text>
                   </div>
 
@@ -362,7 +364,7 @@ function ProfilePageContent() {
                       {stats.m2Questions}
                     </Text>
                     <Text size="xs" variant="secondary">
-                      Preguntas M2
+                      {t('stats.questionsM2')}
                     </Text>
                   </div>
                 </div>
@@ -374,33 +376,33 @@ function ProfilePageContent() {
         {/* Quick Actions */}
         <Card className="p-6">
           <Heading level={3} size="xs" className="mb-4">
-            Acciones Rápidas
+            {t('quickActionsSection.title')}
           </Heading>
 
           <div className="grid sm:grid-cols-2 gap-3">
             <Button asChild variant="primary">
               <Link href="/progress">
-                Ver Mi Progreso
+                {t('quickActionsSection.viewProgress')}
               </Link>
             </Button>
 
             <Button asChild variant="secondary">
               <Link href="/practice/m1">
-                Practicar M1
+                {t('quickActionsSection.practiceM1')}
               </Link>
             </Button>
 
             {user?.targetLevel !== 'M1_ONLY' && (
               <Button asChild variant="secondary">
                 <Link href="/practice/m2">
-                  Practicar M2
+                  {t('quickActionsSection.practiceM2')}
                 </Link>
               </Button>
             )}
 
             <Button asChild variant="ghost">
               <Link href="/payments/history">
-                Historial de Pagos
+                {t('quickActionsSection.paymentHistory')}
               </Link>
             </Button>
           </div>
@@ -414,13 +416,13 @@ function ProfilePageContent() {
           setIsEditModalOpen(false);
           setEditError('');
         }}
-        title="Editar Perfil"
+        title={t('edit.modal.title')}
         maxWidth="md"
       >
         <div className="space-y-4">
           <div>
             <label htmlFor="displayName" className="block text-sm font-medium mb-2">
-              Nombre para mostrar
+              {t('edit.modal.displayName')}
             </label>
             <input
               id="displayName"
@@ -428,13 +430,13 @@ function ProfilePageContent() {
               value={editForm.displayName}
               onChange={(e) => setEditForm({ ...editForm, displayName: e.target.value })}
               className="w-full h-11 px-3 rounded-xl text-[15px] bg-white dark:bg-[#121212] text-black dark:text-white border border-black/[0.12] dark:border-white/[0.16] focus:outline-none focus:ring-3 focus:ring-[#0A84FF]/50 focus:border-[#0A84FF] transition-all duration-[180ms]"
-              placeholder="Ej: Juan Pérez"
+              placeholder={t('edit.modal.displayNamePlaceholder')}
             />
           </div>
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-2">
-              Email
+              {t('email')}
             </label>
             <input
               id="email"
@@ -442,13 +444,13 @@ function ProfilePageContent() {
               value={editForm.email}
               onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
               className="w-full h-11 px-3 rounded-xl text-[15px] bg-white dark:bg-[#121212] text-black dark:text-white border border-black/[0.12] dark:border-white/[0.16] focus:outline-none focus:ring-3 focus:ring-[#0A84FF]/50 focus:border-[#0A84FF] transition-all duration-[180ms]"
-              placeholder="tu-email@ejemplo.com"
+              placeholder={t('edit.modal.emailPlaceholder')}
             />
           </div>
 
           <div>
             <label htmlFor="targetLevel" className="block text-sm font-medium mb-2">
-              ¿Qué estás preparando?
+              {t('edit.modal.targetLevelQuestion')}
             </label>
             <select
               id="targetLevel"
@@ -456,11 +458,11 @@ function ProfilePageContent() {
               onChange={(e) => setEditForm({ ...editForm, targetLevel: e.target.value as 'M1_ONLY' | 'M1_AND_M2' })}
               className="w-full h-11 px-3 rounded-xl text-[15px] bg-white dark:bg-[#121212] text-black dark:text-white border border-black/[0.12] dark:border-white/[0.16] focus:outline-none focus:ring-3 focus:ring-[#0A84FF]/50 focus:border-[#0A84FF] transition-all duration-[180ms]"
             >
-              <option value="M1_AND_M2">M1 y M2 (carreras científicas/ingeniería)</option>
-              <option value="M1_ONLY">Solo M1 (otras carreras)</option>
+              <option value="M1_AND_M2">{t('edit.modal.m1AndM2Option')}</option>
+              <option value="M1_ONLY">{t('edit.modal.m1OnlyOption')}</option>
             </select>
             <Text size="xs" variant="secondary" className="mt-2">
-              Si solo necesitas M1, ocultaremos las opciones de práctica de M2
+              {t('edit.modal.m1Description')}
             </Text>
           </div>
 
@@ -481,14 +483,14 @@ function ProfilePageContent() {
               }}
               className="flex-1"
             >
-              Cancelar
+              {t('edit.modal.cancel')}
             </Button>
             <Button
               onClick={handleSaveProfile}
               disabled={isSaving}
               className="flex-1"
             >
-              {isSaving ? 'Guardando...' : 'Guardar Cambios'}
+              {isSaving ? t('edit.modal.saving') : t('edit.modal.saveChanges')}
             </Button>
           </div>
         </div>

@@ -11,8 +11,10 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { analytics } from '@/lib/analytics';
+import { useTranslations } from 'next-intl';
 
 export default function PricingPage() {
+  const t = useTranslations('pricing');
   const router = useRouter();
   const { isAuthenticated, isPaidUser } = useAuth();
   const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
@@ -52,13 +54,13 @@ export default function PricingPage() {
     });
 
     if (!isAuthenticated) {
-      toast.error('Debes iniciar sesión para suscribirte');
+      toast.error(t('errors.mustLogin'));
       router.push('/login?redirect=/pricing');
       return;
     }
 
     if (isPaidUser) {
-      toast.info('Ya tienes una suscripción activa');
+      toast.info(t('errors.alreadySubscribed'));
       return;
     }
 
@@ -92,18 +94,18 @@ export default function PricingPage() {
         const result = await response.json();
 
         if (!response.ok || result.error) {
-          toast.error(result.error || 'Error al iniciar la prueba gratuita');
+          toast.error(result.error || t('errors.trialError'));
           return;
         }
 
-        toast.success('¡Prueba gratuita activada! Disfruta 7 días de acceso completo');
+        toast.success(t('trial.activated'));
         router.push('/dashboard');
       } else {
         // Proceed with payment - redirect to MercadoPago
         const result = await createPaymentPreference(planId);
 
         if (result.error) {
-          toast.error(result.error.error || 'Error al crear la preferencia de pago');
+          toast.error(result.error.error || t('errors.paymentError'));
           return;
         }
 
@@ -117,7 +119,7 @@ export default function PricingPage() {
       }
     } catch (error) {
       console.error('Error processing subscription:', error);
-      toast.error('Error al procesar la suscripción');
+      toast.error(t('errors.processingError'));
     } finally {
       setLoadingPlanId(null);
     }
@@ -135,11 +137,11 @@ export default function PricingPage() {
   };
 
   const formatDuration = (days: number) => {
-    if (days === 30) return '1 mes';
-    if (days === 90) return '3 meses';
-    if (days === 180) return '6 meses';
-    if (days === 365) return '1 año';
-    return `${days} días`;
+    if (days === 30) return t('duration.oneMonth');
+    if (days === 90) return t('duration.threeMonths');
+    if (days === 180) return t('duration.sixMonths');
+    if (days === 365) return t('duration.oneYear');
+    return t('duration.days', { days });
   };
 
   if (isLoading) {
@@ -169,9 +171,9 @@ export default function PricingPage() {
     <div className="container mx-auto px-4 py-16">
       {/* Header */}
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">Planes de Suscripción</h1>
+        <h1 className="text-4xl font-bold mb-4">{t('header.title')}</h1>
         <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Elige el plan que mejor se adapte a tus necesidades y mejora tu preparación para la PAES
+          {t('header.subtitle')}
         </p>
       </div>
 
@@ -181,17 +183,17 @@ export default function PricingPage() {
           <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Estado actual:</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{t('currentStatus.label')}</p>
                 <p className="font-semibold">
                   {isPaidUser ? (
-                    <span className="text-green-500">Suscripción Activa ✓</span>
+                    <span className="text-green-500">{t('currentStatus.active')}</span>
                   ) : (
-                    <span className="text-gray-500">Usuario Gratuito</span>
+                    <span className="text-gray-500">{t('currentStatus.free')}</span>
                   )}
                 </p>
               </div>
               {isPaidUser && (
-                <Badge variant="success">Premium</Badge>
+                <Badge variant="success">{t('badge.premium')}</Badge>
               )}
             </div>
           </Card>
@@ -213,7 +215,7 @@ export default function PricingPage() {
               {/* Recommended Badge */}
               {plan.displayOrder === 1 && (
                 <div className="absolute top-0 right-0 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-1 text-sm font-semibold rounded-bl-lg">
-                  Recomendado
+                  {t('badge.recommended')}
                 </div>
               )}
 
@@ -235,11 +237,11 @@ export default function PricingPage() {
                   </span>
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  por {formatDuration(plan.durationDays)}
+                  {t('plan.per')} {formatDuration(plan.durationDays)}
                 </p>
                 {hasFreeTrial && (
                   <Badge variant="success" className="mt-2">
-                    {plan.trialDurationDays} días de prueba gratis
+                    {t('plan.trialDays', { days: plan.trialDurationDays })}
                   </Badge>
                 )}
               </div>
@@ -297,12 +299,12 @@ export default function PricingPage() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Procesando...
+                    {t('button.processing')}
                   </span>
                 ) : isPaidUser ? (
-                  'Ya tienes una suscripción'
+                  t('button.subscribed')
                 ) : (
-                  'Suscribirse'
+                  t('button.subscribe')
                 )}
               </Button>
             </Card>
@@ -315,7 +317,7 @@ export default function PricingPage() {
         <div className="text-center py-12">
           <Card padding="lg">
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              No hay planes disponibles en este momento
+              {t('noPlans')}
             </p>
           </Card>
         </div>
@@ -324,27 +326,24 @@ export default function PricingPage() {
       {/* Additional Info */}
       <div className="max-w-4xl mx-auto mt-16 text-center">
         <Card padding="lg">
-          <h3 className="text-xl font-bold mb-4">Preguntas Frecuentes</h3>
+          <h3 className="text-xl font-bold mb-4">{t('faqSection.header')}</h3>
           <div className="text-left space-y-4">
             <div>
-              <p className="font-semibold mb-1">¿Cómo funciona el período de prueba?</p>
+              <p className="font-semibold mb-1">{t('faqSection.trial.question')}</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Tendrás acceso completo a todas las funciones premium durante el período de prueba.
-                Si cancelas antes de que termine, no se te cobrará nada.
+                {t('faqSection.trial.answer')}
               </p>
             </div>
             <div>
-              <p className="font-semibold mb-1">¿Puedo cancelar en cualquier momento?</p>
+              <p className="font-semibold mb-1">{t('faqSection.cancel.question')}</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Sí, puedes cancelar tu suscripción en cualquier momento desde tu perfil.
-                Mantendrás el acceso hasta el final del período pagado.
+                {t('faqSection.cancel.answer')}
               </p>
             </div>
             <div>
-              <p className="font-semibold mb-1">¿Qué métodos de pago aceptan?</p>
+              <p className="font-semibold mb-1">{t('faqSection.payment.question')}</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Aceptamos todos los métodos de pago disponibles en MercadoPago, incluyendo
-                tarjetas de crédito, débito, y transferencias bancarias.
+                {t('faqSection.payment.answer')}
               </p>
             </div>
           </div>
@@ -356,7 +355,7 @@ export default function PricingPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-white rounded-lg shadow-xl max-w-lg w-full p-8">
             <div className="mb-6">
-              <h3 className="text-2xl font-bold mb-2 text-gray-900">Elige cómo empezar</h3>
+              <h3 className="text-2xl font-bold mb-2 text-gray-900">{t('modal.title')}</h3>
               <p className="text-gray-600">
                 {selectedPlan.name} - {formatPrice(selectedPlan.price, selectedPlan.currency)}/mes
               </p>
@@ -371,17 +370,17 @@ export default function PricingPage() {
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
-                    <h4 className="text-lg font-semibold mb-1 text-gray-900">Probar y pagar después</h4>
+                    <h4 className="text-lg font-semibold mb-1 text-gray-900">{t('modal.tryFirst.title')}</h4>
                     <p className="text-sm text-gray-600">
-                      Comienza tu prueba gratuita de 7 días ahora. No se requiere tarjeta.
+                      {t('modal.tryFirst.description')}
                     </p>
                   </div>
-                  <Badge variant="success" className="ml-2">Recomendado</Badge>
+                  <Badge variant="success" className="ml-2">{t('badge.recommended')}</Badge>
                 </div>
                 <ul className="text-sm text-gray-600 space-y-1 mt-3">
-                  <li>✓ Sin tarjeta requerida</li>
-                  <li>✓ 7 días de acceso completo gratis</li>
-                  <li>✓ Paga solo si decides continuar</li>
+                  <li>{t('modal.tryFirst.benefit1')}</li>
+                  <li>{t('modal.tryFirst.benefit2')}</li>
+                  <li>{t('modal.tryFirst.benefit3')}</li>
                 </ul>
               </button>
 
@@ -392,15 +391,15 @@ export default function PricingPage() {
                 className="w-full p-6 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-left"
               >
                 <div className="flex-1">
-                  <h4 className="text-lg font-semibold mb-1 text-gray-900">Pagar ahora</h4>
+                  <h4 className="text-lg font-semibold mb-1 text-gray-900">{t('modal.payNow.title')}</h4>
                   <p className="text-sm text-gray-600">
-                    Paga hoy y obtén acceso inmediato. Tu prueba de 7 días comienza ahora.
+                    {t('modal.payNow.description')}
                   </p>
                 </div>
                 <ul className="text-sm text-gray-600 space-y-1 mt-3">
-                  <li>✓ Tu cargo comienza en 7 días</li>
-                  <li>✓ Acceso completo inmediato</li>
-                  <li>✓ Cancela en cualquier momento</li>
+                  <li>{t('modal.payNow.benefit1')}</li>
+                  <li>{t('modal.payNow.benefit2')}</li>
+                  <li>{t('modal.payNow.benefit3')}</li>
                 </ul>
               </button>
             </div>
@@ -415,13 +414,13 @@ export default function PricingPage() {
               disabled={loadingPlanId === selectedPlan.id}
               className="w-full"
             >
-              Cancelar
+              {t('modal.cancel')}
             </Button>
 
             {loadingPlanId === selectedPlan.id && (
               <div className="mt-4 text-center">
                 <p className="text-sm text-gray-600">
-                  Procesando...
+                  {t('button.processing')}
                 </p>
               </div>
             )}

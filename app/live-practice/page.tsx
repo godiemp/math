@@ -12,8 +12,10 @@ import StudentStatisticsComponent from '@/components/StudentStatistics';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
+import { useTranslations } from 'next-intl';
 
 function LivePracticePageContent() {
+  const t = useTranslations('liveSession');
   const { user: currentUser, setUser, isAdmin } = useAuth();
   const { sessions, isLoading, refresh } = useAvailableSessions();
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
@@ -36,15 +38,15 @@ function LivePracticePageContent() {
           await refresh();
           return result;
         } else {
-          throw new Error(result.error || 'Error al registrarse');
+          throw new Error(result.error || t('toast.registerError'));
         }
       }),
       {
-        loading: 'Registrando...',
-        success: 'Te has registrado al ensayo exitosamente',
+        loading: t('toast.registering'),
+        success: t('toast.registered'),
         error: (err) => {
           setError(err.message);
-          return err.message || 'Error al registrarse';
+          return err.message || t('toast.registerError');
         },
       }
     );
@@ -60,15 +62,15 @@ function LivePracticePageContent() {
           await refresh();
           return result;
         } else {
-          throw new Error(result.error || 'Error al cancelar registro');
+          throw new Error(result.error || t('toast.cancelError'));
         }
       }),
       {
-        loading: 'Cancelando registro...',
-        success: 'Registro cancelado exitosamente',
+        loading: t('toast.canceling'),
+        success: t('toast.canceled'),
         error: (err) => {
           setError(err.message);
-          return err.message || 'Error al cancelar registro';
+          return err.message || t('toast.cancelError');
         },
       }
     );
@@ -84,15 +86,15 @@ function LivePracticePageContent() {
           setError('');
           return result;
         } else {
-          throw new Error(result.error || 'Error al unirse al ensayo');
+          throw new Error(result.error || t('toast.joinError'));
         }
       }),
       {
-        loading: 'Uniéndote al ensayo...',
-        success: 'Te has unido al ensayo exitosamente',
+        loading: t('toast.joining'),
+        success: t('toast.joined'),
         error: (err) => {
           setError(err.message);
-          return err.message || 'Error al unirse al ensayo';
+          return err.message || t('toast.joinError');
         },
       }
     );
@@ -125,31 +127,31 @@ function LivePracticePageContent() {
           <div className="flex flex-col space-y-3 sm:space-y-4">
             <div>
               <Heading level={1} size="md" className="mb-1 sm:mb-2 text-lg sm:text-xl md:text-2xl">
-                Ensayo PAES en Vivo
+                {t('header.title')}
               </Heading>
               <Text variant="secondary" className="text-xs sm:text-sm">
-                Regístrate y practica ensayos PAES con otros estudiantes en tiempo real
+                {t('header.subtitle')}
               </Text>
             </div>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <div className="flex items-center gap-2">
-                <Text size="xs" variant="secondary" className="text-xs">Bienvenido,</Text>
+                <Text size="xs" variant="secondary" className="text-xs">{t('welcome')}</Text>
                 <Text className="font-medium text-sm">{currentUser?.displayName}</Text>
                 {isAdmin && (
-                  <Badge variant="info" size="sm" className="text-[10px] sm:text-xs">Admin</Badge>
+                  <Badge variant="info" size="sm" className="text-[10px] sm:text-xs">{t('actions.admin')}</Badge>
                 )}
               </div>
               <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                 <Button variant="ghost" onClick={() => router.push('/dashboard')} className="flex-1 sm:flex-none text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2">
-                  Inicio
+                  {t('actions.home')}
                 </Button>
                 {isAdmin && (
                   <Button variant="secondary" onClick={() => router.push('/admin')} className="flex-1 sm:flex-none text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2">
-                    Admin
+                    {t('actions.admin')}
                   </Button>
                 )}
                 <Button variant="danger" onClick={handleLogout} className="flex-1 sm:flex-none text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2">
-                  Salir
+                  {t('actions.exit')}
                 </Button>
               </div>
             </div>
@@ -166,16 +168,16 @@ function LivePracticePageContent() {
         {/* Available Ensayos */}
         <Card padding="md" className="mb-4 sm:mb-5 md:mb-6">
           <Heading level={2} size="xs" className="mb-3 sm:mb-4 text-base sm:text-lg">
-            Ensayos Disponibles ({sessions.length})
+            {t('available.title')} ({sessions.length})
           </Heading>
 
           {sessions.length === 0 ? (
             <div className="text-center py-8 sm:py-10 md:py-12">
               <Text variant="secondary" className="mb-3 sm:mb-4 text-sm sm:text-base">
-                No hay ensayos disponibles en este momento
+                {t('available.none')}
               </Text>
               <Text size="xs" variant="secondary" className="text-xs sm:text-sm">
-                Espera a que un administrador cree un nuevo ensayo
+                {t('available.wait')}
               </Text>
             </div>
           ) : (
@@ -196,7 +198,7 @@ function LivePracticePageContent() {
                         </Text>
                       )}
                       <Text size="xs" variant="secondary" className="text-[10px] sm:text-xs">
-                        por {session.hostName}
+                        {t('card.by')} {session.hostName}
                       </Text>
                     </div>
                     <Badge
@@ -208,16 +210,16 @@ function LivePracticePageContent() {
                       size="sm"
                       className="text-[10px] sm:text-xs whitespace-nowrap flex-shrink-0"
                     >
-                      {session.status === 'scheduled' ? 'Programado' :
-                       session.status === 'lobby' ? 'Lobby' :
-                       session.status === 'active' ? 'En Curso' : session.status}
+                      {session.status === 'scheduled' ? t('status.scheduled') :
+                       session.status === 'lobby' ? t('status.lobby') :
+                       session.status === 'active' ? t('status.active') : session.status}
                     </Badge>
                   </div>
 
                   <div className="space-y-1.5 sm:space-y-2 mb-3 sm:mb-4">
                     {session.scheduledStartTime && (
                       <div className="flex items-start sm:items-center flex-col sm:flex-row gap-0.5 sm:gap-0">
-                        <Text size="xs" variant="secondary" className="font-medium mr-2 text-[10px] sm:text-xs">📅 Fecha:</Text>
+                        <Text size="xs" variant="secondary" className="font-medium mr-2 text-[10px] sm:text-xs">{t('card.date')}</Text>
                         <Text size="xs" variant="secondary" className="text-[10px] sm:text-xs">
                           {new Date(session.scheduledStartTime).toLocaleString('es-CL', {
                             dateStyle: 'medium',
@@ -227,11 +229,11 @@ function LivePracticePageContent() {
                       </div>
                     )}
                     <div className="flex items-center flex-wrap gap-1">
-                      <Text size="xs" variant="secondary" className="font-medium mr-1 text-[10px] sm:text-xs">Nivel:</Text>
+                      <Text size="xs" variant="secondary" className="font-medium mr-1 text-[10px] sm:text-xs">{t('card.level')}</Text>
                       <Badge variant="info" size="sm" className="text-[10px] sm:text-xs">{session.level}</Badge>
                     </div>
                     <div className="flex items-center">
-                      <Text size="xs" variant="secondary" className="font-medium mr-2 text-[10px] sm:text-xs">Preguntas:</Text>
+                      <Text size="xs" variant="secondary" className="font-medium mr-2 text-[10px] sm:text-xs">{t('card.questions')}</Text>
                       <Text size="xs" variant="secondary" className="text-[10px] sm:text-xs">{session.questions.length}</Text>
                     </div>
                   </div>
@@ -245,7 +247,7 @@ function LivePracticePageContent() {
                         fullWidth
                         className="text-xs sm:text-sm py-2"
                       >
-                        Cancelar Registro
+                        {t('buttons.cancelRegistration')}
                       </Button>
                     ) : (
                       <Button
@@ -254,7 +256,7 @@ function LivePracticePageContent() {
                         fullWidth
                         className="text-xs sm:text-sm py-2"
                       >
-                        Registrarse
+                        {t('buttons.register')}
                       </Button>
                     )
                   ) : session.status === 'lobby' ? (
@@ -264,7 +266,7 @@ function LivePracticePageContent() {
                       fullWidth
                       className="bg-[#FF9F0A] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] text-xs sm:text-sm py-2"
                     >
-                      {isUserInSession(session) ? 'Volver al Lobby' : 'Entrar al Lobby'}
+                      {isUserInSession(session) ? t('buttons.returnToLobby') : t('buttons.enterLobby')}
                     </Button>
                   ) : session.status === 'active' ? (
                     <Button
@@ -273,7 +275,7 @@ function LivePracticePageContent() {
                       fullWidth
                       className="text-xs sm:text-sm py-2"
                     >
-                      {isUserInSession(session) ? 'Volver a Entrar' : 'Unirse Ahora'}
+                      {isUserInSession(session) ? t('buttons.returnToSession') : t('buttons.joinNow')}
                     </Button>
                   ) : null}
                 </div>
