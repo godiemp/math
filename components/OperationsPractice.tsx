@@ -57,6 +57,41 @@ export default function OperationsPractice({
     }
   }, [problem, feedback.show]);
 
+  // Keyboard shortcuts for boolean questions
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Only handle keyboard shortcuts for boolean questions
+      if (problem?.answerType !== 'boolean' || isSubmitting || feedback.show) {
+        return;
+      }
+
+      const key = e.key.toLowerCase();
+
+      if (key === 'v') {
+        setUserAnswer('Verdadero');
+        submitAnswer('Verdadero');
+      } else if (key === 'f') {
+        setUserAnswer('Falso');
+        submitAnswer('Falso');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [problem, isSubmitting, feedback.show]);
+
+  // Keyboard shortcut for Continue button (Enter key when level is complete)
+  useEffect(() => {
+    const handleEnterPress = (e: KeyboardEvent) => {
+      if (showLevelComplete && e.key === 'Enter') {
+        handleContinue();
+      }
+    };
+
+    window.addEventListener('keydown', handleEnterPress);
+    return () => window.removeEventListener('keydown', handleEnterPress);
+  }, [showLevelComplete]);
+
   const loadProblem = () => {
     try {
       // Find level config
@@ -169,7 +204,7 @@ export default function OperationsPractice({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8">
+    <div className="w-full max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <button
@@ -231,9 +266,9 @@ export default function OperationsPractice({
       )}
 
       {/* Problem Display */}
-      <div className="max-w-xl mx-auto">
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-12 mb-8 text-center">
-          <div className="text-5xl font-bold text-gray-900 mb-2">
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-8 mb-8 text-center">
+          <div className="text-4xl font-bold text-gray-900 mb-2">
             {problem.expressionLatex ? (
               <InlineMath latex={problem.expressionLatex} />
             ) : (
@@ -265,7 +300,14 @@ export default function OperationsPractice({
                       : 'bg-white text-gray-900 border-gray-300 hover:border-green-400'
                   } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
                 >
-                  ✓ Verdadero
+                  {problem.level === 1 ? (
+                    <div className="flex flex-col items-center">
+                      <span>✓ Verdadero</span>
+                      <span className="text-sm font-normal opacity-70 mt-1">(Presiona V)</span>
+                    </div>
+                  ) : (
+                    <span>✓ Verdadero</span>
+                  )}
                 </button>
                 <button
                   type="button"
@@ -280,7 +322,14 @@ export default function OperationsPractice({
                       : 'bg-white text-gray-900 border-gray-300 hover:border-red-400'
                   } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
                 >
-                  ✗ Falso
+                  {problem.level === 1 ? (
+                    <div className="flex flex-col items-center">
+                      <span>✗ Falso</span>
+                      <span className="text-sm font-normal opacity-70 mt-1">(Presiona F)</span>
+                    </div>
+                  ) : (
+                    <span>✗ Falso</span>
+                  )}
                 </button>
               </div>
             </div>
@@ -459,7 +508,14 @@ export default function OperationsPractice({
                 onClick={handleContinue}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
               >
-                Continuar al Siguiente Nivel →
+                {level === 1 ? (
+                  <div className="flex flex-col items-center">
+                    <span>Continuar al Siguiente Nivel →</span>
+                    <span className="text-sm font-normal opacity-70 mt-1">(Presiona Enter)</span>
+                  </div>
+                ) : (
+                  <span>Continuar al Siguiente Nivel →</span>
+                )}
               </button>
             </div>
           </div>

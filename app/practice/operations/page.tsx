@@ -132,16 +132,17 @@ function OperationsPracticeContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="container mx-auto px-4 py-8">
-        {/* Main Content */}
-        {selectedLevel ? (
+      {selectedLevel ? (
+        <div className="min-h-screen flex items-center px-4 py-8">
           <OperationsPractice
             level={selectedLevel}
             onBack={handleBackToPath}
             onLevelComplete={handleLevelComplete}
             onNextLevel={handleNextLevel}
           />
-        ) : (
+        </div>
+      ) : (
+        <div className="container mx-auto px-4 py-8">
           <OperationsPath
             levels={OPERATIONS_PATH}
             userProgress={userProgress}
@@ -151,8 +152,8 @@ function OperationsPracticeContent() {
             onPageChange={handlePageChange}
             autoNavigateOnMount={isInitialLoad}
           />
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
