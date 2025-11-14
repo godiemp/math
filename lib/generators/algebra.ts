@@ -219,13 +219,14 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
           expr = `${getRandomInt(2, 5)}*x+${getRandomInt(2, 5)}*x`;
           break;
         case 'ax-bx':
-          expr = `${getRandomInt(3, 7)}*x-${getRandomInt(1, 3)}*x`;
+          expr = `${getRandomInt(4, 7)}*x-${getRandomInt(1, 3)}*x`; // Ensure first > second
           break;
         case '-ax-bx':
           expr = `-${getRandomInt(2, 5)}*x-${getRandomInt(2, 5)}*x`;
           break;
         case '-ax+bx':
-          expr = `-${getRandomInt(2, 5)}*x+${getRandomInt(2, 5)}*x`;
+          // Ensure positive coefficient > negative coefficient to avoid 0
+          expr = `-${getRandomInt(2, 4)}*x+${getRandomInt(5, 8)}*x`;
           break;
         case 'x±x±x': {
           // Randomly generate x with + or - operators
@@ -237,7 +238,8 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
         }
         case 'ax±bx±cx': {
           // Generate 3 coefficients with random + or - operators
-          const a = getRandomInt(2, 4);
+          // Use ranges that ensure non-zero result for all sign combinations
+          const a = getRandomInt(5, 8);
           const b = getRandomInt(2, 4);
           const c = getRandomInt(2, 4);
           const signs = ['+', '-'];
@@ -269,7 +271,7 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
       const expressions = [
         'x+x',
         `${getRandomInt(2, 5)}*x+${getRandomInt(2, 5)}*x`,
-        `${getRandomInt(3, 7)}*x-${getRandomInt(1, 3)}*x`,
+        `${getRandomInt(4, 7)}*x-${getRandomInt(1, 3)}*x`, // Ensure first > second
         'x+x+x',
         `${getRandomInt(2, 5)}*x+x-x`,
         `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 5)})+x`
