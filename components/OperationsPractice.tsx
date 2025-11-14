@@ -16,7 +16,7 @@ interface Problem {
   difficulty: string;
   problemsToComplete: number;
   correctAnswer: number | string;
-  answerType?: 'number' | 'string' | 'multipleChoice' | 'array';
+  answerType?: 'number' | 'string' | 'multipleChoice' | 'array' | 'boolean';
   choices?: string[];
 }
 
@@ -241,7 +241,56 @@ export default function OperationsPractice({
 
         {/* Answer Input */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          {problem.answerType === 'multipleChoice' && problem.choices ? (
+          {problem.answerType === 'boolean' ? (
+            // Boolean (True/False) Buttons
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-4 text-center">
+                Selecciona tu respuesta:
+              </label>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUserAnswer('Verdadero');
+                    // Auto-submit after selection
+                    setTimeout(() => {
+                      if (!isSubmitting && !feedback.show) {
+                        handleSubmit(new Event('submit') as any);
+                      }
+                    }, 100);
+                  }}
+                  disabled={isSubmitting || feedback.show}
+                  className={`py-8 px-6 text-3xl font-bold rounded-xl border-2 transition-all transform hover:scale-105 ${
+                    userAnswer === 'Verdadero'
+                      ? 'bg-green-600 text-white border-green-600 shadow-lg'
+                      : 'bg-white text-gray-900 border-gray-300 hover:border-green-400'
+                  } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
+                >
+                  ✓ Verdadero
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUserAnswer('Falso');
+                    // Auto-submit after selection
+                    setTimeout(() => {
+                      if (!isSubmitting && !feedback.show) {
+                        handleSubmit(new Event('submit') as any);
+                      }
+                    }, 100);
+                  }}
+                  disabled={isSubmitting || feedback.show}
+                  className={`py-8 px-6 text-3xl font-bold rounded-xl border-2 transition-all transform hover:scale-105 ${
+                    userAnswer === 'Falso'
+                      ? 'bg-red-600 text-white border-red-600 shadow-lg'
+                      : 'bg-white text-gray-900 border-gray-300 hover:border-red-400'
+                  } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
+                >
+                  ✗ Falso
+                </button>
+              </div>
+            </div>
+          ) : problem.answerType === 'multipleChoice' && problem.choices ? (
             // Multiple Choice Buttons
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-4 text-center">
@@ -342,8 +391,8 @@ export default function OperationsPractice({
             </div>
           )}
 
-          {/* Submit Button (hidden for multiple choice since it auto-submits) */}
-          {problem.answerType !== 'multipleChoice' && (
+          {/* Submit Button (hidden for multiple choice and boolean since they auto-submit) */}
+          {problem.answerType !== 'multipleChoice' && problem.answerType !== 'boolean' && (
             <button
               type="submit"
               disabled={isSubmitting || feedback.show || !userAnswer.trim()}

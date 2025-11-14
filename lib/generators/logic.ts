@@ -27,7 +27,7 @@ export function generateComparison(context: GeneratorContext): ProblemData {
   const expressionLatex = `${a} ${op} ${b}`;
   const problemKey = `comp:${a}${op}${b}`;
 
-  return { expression, expressionLatex, correctAnswer, problemKey };
+  return { expression, expressionLatex, correctAnswer, problemKey, answerType: 'boolean' };
 }
 
 export function generateLogicalOperators(context: GeneratorContext): ProblemData {
@@ -42,7 +42,7 @@ export function generateLogicalOperators(context: GeneratorContext): ProblemData
     const expressionLatex = `\\neg ${val ? 'V' : 'F'}`;
     const problemKey = `log:NOT ${val}`;
 
-    return { expression, expressionLatex, correctAnswer, problemKey };
+    return { expression, expressionLatex, correctAnswer, problemKey, answerType: 'boolean' };
   } else {
     const a = Math.random() > 0.5;
     const b = Math.random() > 0.5;
@@ -58,7 +58,7 @@ export function generateLogicalOperators(context: GeneratorContext): ProblemData
     const expressionLatex = `${a ? 'V' : 'F'} ${op === 'AND' ? '\\land' : '\\lor'} ${b ? 'V' : 'F'}`;
     const problemKey = `log:${a}${op}${b}`;
 
-    return { expression, expressionLatex, correctAnswer, problemKey };
+    return { expression, expressionLatex, correctAnswer, problemKey, answerType: 'boolean' };
   }
 }
 
@@ -111,5 +111,5 @@ export function generateCompoundConditions(context: GeneratorContext): ProblemDa
     problemKey = `cond:x=${x},x∈[${a},${b}]`;
   }
 
-  return { expression, expressionLatex, correctAnswer, problemKey };
+  return { expression, expressionLatex, correctAnswer, problemKey, answerType: 'boolean' };
 }

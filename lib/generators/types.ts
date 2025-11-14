@@ -9,6 +9,8 @@ export interface ProblemData {
   expressionLatex: string;
   correctAnswer: number | string;
   problemKey: string;
+  answerType?: 'number' | 'string' | 'multipleChoice' | 'array' | 'boolean';
+  choices?: string[];
 }
 
 export interface GeneratorContext {
