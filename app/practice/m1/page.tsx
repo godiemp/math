@@ -348,7 +348,7 @@ function M1PracticeContent() {
             Elige el área que quieres practicar
           </p>
         </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 px-2">
         {subjects.map((subject) => (
           <button
             key={subject.label}
@@ -357,19 +357,19 @@ function M1PracticeContent() {
               setSelectedSubject(subject.value);
               setDifficulty(null);
             }}
-            className={`p-3 rounded-xl border-2 transition-all duration-300 text-left ${
+            className={`p-3 rounded-xl border-2 transition-all duration-300 text-left overflow-hidden ${
               selectedSubject === subject.value
-                ? 'border-white/60 bg-white/25 shadow-[0_0_40px_rgba(255,255,255,0.3)] transform scale-105'
-                : 'border-white/20 bg-black/20 hover:bg-white/10 hover:border-white/40 hover:shadow-xl hover:scale-102'
+                ? 'border-white/60 bg-white/25 shadow-[0_0_40px_rgba(255,255,255,0.3)]'
+                : 'border-white/20 bg-black/20 hover:bg-white/10 hover:border-white/40 hover:shadow-xl'
             }`}
           >
             <div className="flex items-center gap-2.5">
-              <div className="text-3xl">{subject.emoji}</div>
+              <div className="text-3xl flex-shrink-0">{subject.emoji}</div>
               <div className="flex-1 min-w-0">
-                <p className="text-base font-bold text-white mb-0.5">
+                <p className="text-base font-bold text-white mb-0.5 truncate">
                   {subject.label}
                 </p>
-                <p className="text-xs text-white/70">
+                <p className="text-xs text-white/70 line-clamp-2">
                   {subject.description}
                 </p>
               </div>
@@ -395,7 +395,7 @@ function M1PracticeContent() {
           Elige cómo quieres practicar
         </p>
       </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 px-2">
           {modes.map((mode) => {
             const isZen = mode.value === 'zen';
             const modeGradient = isZen
@@ -414,8 +414,8 @@ function M1PracticeContent() {
                 }}
                 className={`relative overflow-hidden p-4 rounded-xl border-2 transition-all duration-500 text-left ${
                   isSelected
-                    ? 'border-white/60 shadow-[0_0_50px_rgba(255,255,255,0.4)] transform scale-105'
-                    : 'border-white/20 bg-black/20 hover:bg-white/10 hover:border-white/40 hover:shadow-2xl hover:scale-102'
+                    ? 'border-white/60 shadow-[0_0_50px_rgba(255,255,255,0.4)]'
+                    : 'border-white/20 bg-black/20 hover:bg-white/10 hover:border-white/40 hover:shadow-2xl'
                 }`}
               >
                 {/* Gradient background - always visible but stronger when selected */}
@@ -424,15 +424,15 @@ function M1PracticeContent() {
                 {/* Content */}
                 <div className="relative z-10">
                   <div className="flex items-start gap-3">
-                    <div className="text-5xl drop-shadow-2xl">{mode.emoji}</div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-white mb-1">
+                    <div className="text-5xl drop-shadow-2xl flex-shrink-0">{mode.emoji}</div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-xl font-bold text-white mb-1 truncate">
                         {mode.label}
                       </h3>
-                      <p className="text-sm font-semibold text-white/90 mb-1">
+                      <p className="text-sm font-semibold text-white/90 mb-1 line-clamp-2">
                         {mode.description}
                       </p>
-                      <p className="text-xs text-white/70">
+                      <p className="text-xs text-white/70 line-clamp-2">
                         {mode.details}
                       </p>
                     </div>
@@ -465,7 +465,7 @@ function M1PracticeContent() {
             Cada dificultad tiene mecánicas únicas
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4 px-2">
           {difficulties.map((diff) => {
             const isSelected = difficulty === diff.value;
             return (
@@ -473,27 +473,27 @@ function M1PracticeContent() {
                 key={diff.value}
                 data-testid={`difficulty-${diff.value}`}
                 onClick={() => setDifficulty(diff.value)}
-                className={`p-3.5 rounded-xl border-2 transition-all duration-300 text-left ${
+                className={`p-3.5 rounded-xl border-2 transition-all duration-300 text-left overflow-hidden ${
                   isSelected
-                    ? 'border-white/60 bg-white/25 shadow-[0_0_40px_rgba(255,255,255,0.3)] transform scale-105'
-                    : 'border-white/20 bg-black/20 hover:bg-white/10 hover:border-white/40 hover:shadow-xl hover:scale-102'
+                    ? 'border-white/60 bg-white/25 shadow-[0_0_40px_rgba(255,255,255,0.3)]'
+                    : 'border-white/20 bg-black/20 hover:bg-white/10 hover:border-white/40 hover:shadow-xl'
                 }`}
               >
                 <div className="flex items-start gap-2.5 mb-2">
-                  <div className="text-3xl">{diff.emoji}</div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <h3 className="text-base font-bold text-white">
+                  <div className="text-3xl flex-shrink-0">{diff.emoji}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                      <h3 className="text-base font-bold text-white truncate">
                         {diff.label}
                       </h3>
-                      <span className="text-xs font-bold text-white/90 bg-white/20 px-1.5 py-0.5 rounded">
+                      <span className="text-xs font-bold text-white/90 bg-white/20 px-1.5 py-0.5 rounded whitespace-nowrap">
                         {diff.time} min
                       </span>
                     </div>
-                    <p className="text-xs text-white/70 mb-0.5">
+                    <p className="text-xs text-white/70 mb-0.5 line-clamp-2">
                       {diff.description}
                     </p>
-                    <p className="text-xs font-medium text-white/80">
+                    <p className="text-xs font-medium text-white/80 line-clamp-2">
                       {diff.details}
                     </p>
                   </div>
@@ -501,7 +501,7 @@ function M1PracticeContent() {
 
                 <div className="space-y-0.5 pl-0.5">
                   {diff.features.map((feature, idx) => (
-                    <p key={idx} className="text-[11px] text-white/65 leading-relaxed">
+                    <p key={idx} className="text-[11px] text-white/65 leading-relaxed truncate">
                       {feature}
                     </p>
                   ))}
