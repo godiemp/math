@@ -192,7 +192,7 @@ export default function OperationsPractice({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8">
+    <div className="w-full max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <button
@@ -288,10 +288,14 @@ export default function OperationsPractice({
                       : 'bg-white text-gray-900 border-gray-300 hover:border-green-400'
                   } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
                 >
-                  <div className="flex flex-col items-center">
+                  {problem.level === 1 ? (
+                    <div className="flex flex-col items-center">
+                      <span>✓ Verdadero</span>
+                      <span className="text-sm font-normal opacity-70 mt-1">(Presiona V)</span>
+                    </div>
+                  ) : (
                     <span>✓ Verdadero</span>
-                    <span className="text-sm font-normal opacity-70 mt-1">(Presiona V)</span>
-                  </div>
+                  )}
                 </button>
                 <button
                   type="button"
@@ -306,10 +310,14 @@ export default function OperationsPractice({
                       : 'bg-white text-gray-900 border-gray-300 hover:border-red-400'
                   } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
                 >
-                  <div className="flex flex-col items-center">
+                  {problem.level === 1 ? (
+                    <div className="flex flex-col items-center">
+                      <span>✗ Falso</span>
+                      <span className="text-sm font-normal opacity-70 mt-1">(Presiona F)</span>
+                    </div>
+                  ) : (
                     <span>✗ Falso</span>
-                    <span className="text-sm font-normal opacity-70 mt-1">(Presiona F)</span>
-                  </div>
+                  )}
                 </button>
               </div>
             </div>
