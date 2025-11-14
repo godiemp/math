@@ -1,11 +1,11 @@
 import { OperationLevelDefinition } from '../types';
 
 /**
- * PHASE 3: OPERACIONES LÓGICAS (Levels 61-80)
+ * PHASE 3: OPERACIONES LÓGICAS (Levels 71-90)
  * Reasoning and conditions: comparisons and compound conditions
  */
 export const logicalLevels: OperationLevelDefinition[] = [
-  // Comparaciones (61-70)
+  // Comparaciones (71-80)
   {
     title: 'Mayor que',
     operationType: 'comparison',
@@ -107,7 +107,7 @@ export const logicalLevels: OperationLevelDefinition[] = [
     config: { operators: ['<', '>', '=', '≤', '≥'], minValue: 1, maxValue: 20, variables: ['x'] }
   },
 
-  // Condiciones Compuestas (71-80)
+  // Condiciones Compuestas (81-90)
   {
     title: 'Condición Simple',
     operationType: 'compound-conditions',

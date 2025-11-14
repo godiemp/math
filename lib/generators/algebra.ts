@@ -278,7 +278,9 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
     }
 
     const simplified = math.simplify(expr);
-    const correctAnswer = simplified.toString().replace(/\*/g, '').replace(/\s+/g, '');
+    let correctAnswer = simplified.toString().replace(/\*/g, '').replace(/\s+/g, '');
+    // Fix MathJS formatting: convert "-(6x)" to "-6x"
+    correctAnswer = correctAnswer.replace(/-\((\d+x)\)/g, '-$1');
     const expression = expr.replace(/\*/g, '');
     const expressionLatex = expr.replace(/\*/g, '');
     const problemKey = `simp:${expr}`;
@@ -328,7 +330,9 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
     }
 
     const simplified = math.simplify(expr);
-    const correctAnswer = simplified.toString().replace(/\*/g, '').replace(/\s+/g, '');
+    let correctAnswer = simplified.toString().replace(/\*/g, '').replace(/\s+/g, '');
+    // Fix MathJS formatting: convert "-(6x)" to "-6x" and similar patterns
+    correctAnswer = correctAnswer.replace(/-\((\d+[xy])\)/g, '-$1');
     const expression = expr.replace(/\*/g, '');
     const expressionLatex = expr.replace(/\*/g, '');
     const problemKey = `simp:${expr}`;

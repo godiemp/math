@@ -1,11 +1,11 @@
 import { OperationLevelDefinition } from '../types';
 
 /**
- * PHASE 4: OPERACIONES ESTRUCTURALES (Levels 81-100)
+ * PHASE 4: OPERACIONES ESTRUCTURALES (Levels 91-110)
  * Sets and functions
  */
 export const structuralLevels: OperationLevelDefinition[] = [
-  // Conjuntos (81-90)
+  // Conjuntos (91-100)
   {
     title: 'Unión de Conjuntos',
     operationType: 'sets',
@@ -107,7 +107,7 @@ export const structuralLevels: OperationLevelDefinition[] = [
     config: { setSize: 4, operators: ['∪', '∩', '-'], minValue: 1, maxValue: 5 }
   },
 
-  // Funciones (91-100)
+  // Secuencias y Funciones (101-110)
   {
     title: 'Secuencia Aritmética (+n)',
     operationType: 'sequences',
