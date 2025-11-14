@@ -7,6 +7,7 @@ import { m1GeometriaTransformacionesQuestions } from './transformaciones';
 // Curriculum-based imports (M1-GEO-###)
 import { m1Geo001Questions } from './m1-geo-001';
 import { m1Geo002Questions } from './m1-geo-002';
+import { m1Geo003Questions } from './m1-geo-003';
 
 // Export curriculum subsections
 // M1-GEO-001: Teorema de Pitágoras
@@ -14,6 +15,9 @@ export { m1Geo001Questions } from './m1-geo-001';
 
 // M1-GEO-002: Perímetros y áreas de triángulos, paralelogramos, trapecios y círculos
 export { m1Geo002Questions } from './m1-geo-002';
+
+// M1-GEO-003: Área y volumen de prismas rectos y cilindros
+export { m1Geo003Questions } from './m1-geo-003';
 
 // Export individual topic arrays (LEGACY - for backward compatibility)
 export { m1GeometriaPitagorasQuestions } from './teorema-pitagoras';
