@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api-client';
 import { Card, Button, Text, Heading } from './ui';
 import { MessageCircle, X, Send, Sparkles, Loader2 } from 'lucide-react';
@@ -27,6 +28,7 @@ interface StudyBuddyProps {
 }
 
 export function StudyBuddy({ className = '', initialStreak }: StudyBuddyProps) {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [greetingData, setGreetingData] = useState<GreetingData | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -354,7 +356,7 @@ export function StudyBuddy({ className = '', initialStreak }: StudyBuddyProps) {
         <Card
           hover
           className={`p-5 sm:p-6 cursor-pointer transition-all hover:shadow-lg relative overflow-hidden ${className}`}
-          onClick={() => setIsExpanded(true)}
+          onClick={() => router.push('/learn')}
         >
           {/* Decorative gradient background */}
           <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 via-orange-500/5 to-cyan-500/5 pointer-events-none" />
@@ -434,9 +436,9 @@ export function StudyBuddy({ className = '', initialStreak }: StudyBuddyProps) {
                 </div>
 
                 <div className="flex items-center gap-2 text-teal-600 dark:text-teal-400">
-                  <MessageCircle className="w-4 h-4" />
+                  <Sparkles className="w-4 h-4" />
                   <Text size="xs" className="font-semibold">
-                    Click para conversar →
+                    Click para aprender paso a paso →
                   </Text>
                 </div>
               </div>
