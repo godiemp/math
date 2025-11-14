@@ -426,7 +426,8 @@ function DashboardContent() {
                 </div>
               </div>
 
-              {/* Documentation Buttons */}
+              {/* Documentation Buttons - Hidden for now */}
+              {/* TODO: Re-enable documentation section later
               <div>
                 <Text size="xs" variant="secondary" className="mb-2 font-semibold">
                   {t('curriculum.documentation')}
@@ -467,6 +468,7 @@ function DashboardContent() {
                   )}
                 </div>
               </div>
+              */}
             </div>
           </Card>
 
