@@ -103,7 +103,7 @@ if (result.data?.data?.mvpMode) {
 
 ## 🚀 Cómo Usar
 
-### 1. Ejecutar el Seed de Planes
+### 1. Ejecutar la Migración de Base de Datos
 
 Primero, asegúrate de que tu base de datos PostgreSQL está corriendo:
 
@@ -116,15 +116,28 @@ sudo service postgresql start
 docker start postgres-container-name
 ```
 
-Luego ejecuta el seed para crear el plan semanal:
+Luego ejecuta la migración para crear el plan semanal:
 
 ```bash
 cd backend
 npm install  # Si no lo has hecho ya
-npm run seed:plans
+npm run migrate
 ```
 
-Esto creará/actualizará los planes en la base de datos, incluyendo el nuevo plan semanal.
+Esto ejecutará la migración `006_weekly_plan.sql` que:
+- ✅ Crea el plan semanal ($2.900 CLP)
+- ✅ Actualiza el orden de los demás planes
+- ✅ Es idempotente (no falla si ya existe)
+
+**Verificar estado de migraciones:**
+```bash
+npm run migrate:status
+```
+
+**Revertir migración (si es necesario):**
+```bash
+npm run migrate:undo
+```
 
 ### 2. Iniciar el Backend
 
@@ -193,15 +206,24 @@ auto_renew           | true
 
 ### Backend
 
-1. **`backend/src/scripts/seed-plans.ts`**
-   - ✅ Agregado plan `weekly` con precio $2.900 CLP
+1. **`backend/src/config/migrations/006_weekly_plan.sql`**
+   - ✅ Migración para crear plan `weekly` ($2.900 CLP)
+   - ✅ Actualiza display_order de todos los planes
+   - ✅ Idempotente (usa INSERT ON CONFLICT)
+
+2. **`backend/src/config/migrations/20251114000001-weekly-plan.js`**
+   - ✅ Migración Sequelize que ejecuta 006_weekly_plan.sql
+   - ✅ Incluye rollback (down) para revertir cambios
+
+3. **`backend/src/scripts/seed-plans.ts`**
+   - ✅ Agregado plan `weekly` en seed (para desarrollo)
    - ✅ Actualizado display_order de otros planes
 
-2. **`backend/src/auth/services/authService.ts`**
+4. **`backend/src/auth/services/authService.ts`**
    - ✅ Importado `SubscriptionService`
    - ✅ Auto-activación de trial en registro (líneas 96-108)
 
-3. **`backend/src/services/paymentService.ts`**
+5. **`backend/src/services/paymentService.ts`**
    - ✅ Modificado `createPaymentPreference` para modo MVP
    - ✅ Código original de MercadoPago comentado
    - ✅ Retorna `mvpMode: true` cuando activa trial
@@ -306,16 +328,40 @@ Usa las [tarjetas de prueba de MercadoPago](https://www.mercadopago.com.ar/devel
 ### El plan semanal no aparece
 
 ```bash
-# Verificar que el seed se ejecutó correctamente
+# Verificar que la migración se ejecutó
 cd backend
+npm run migrate:status
+
+# Si no se ejecutó, ejecutar migración
+npm run migrate
+
+# Alternativamente, puedes ejecutar el seed
 npm run seed:plans
+```
+
+### Error al ejecutar migración
+
+```bash
+# Ver estado de migraciones
+npm run migrate:status
+
+# Si hay error, verifica que PostgreSQL esté corriendo
+# Y que la conexión a la BD sea correcta
+
+# Verificar manualmente si el plan existe
+psql -d tu_base_de_datos -c "SELECT * FROM plans WHERE id = 'weekly';"
 ```
 
 ### Los usuarios no obtienen trial al registrarse
 
-1. Verifica que el plan 'weekly' existe en la BD
+1. Verifica que el plan 'weekly' existe en la BD:
+   ```bash
+   npm run migrate:status
+   # Debe mostrar que 006_weekly_plan está aplicada
+   ```
 2. Revisa los logs del backend durante el registro
 3. Verifica que no haya errores en la consola
+4. Asegúrate de que el backend está usando la última versión del código
 
 ### Error al "pagar"
 
