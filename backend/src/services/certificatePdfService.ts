@@ -136,6 +136,16 @@ function drawFilledRoundedRect(
 }
 
 /**
+ * Remove emojis and other non-WinAnsi characters from text
+ * WinAnsi encoding can only handle Latin-1 characters (U+0000 to U+00FF)
+ */
+function stripUnicodeForPdf(text: string): string {
+  // Remove emojis and other Unicode characters that can't be encoded in WinAnsi
+  // Keep only ASCII and Latin-1 characters
+  return text.replace(/[^\u0000-\u00FF]/g, '').trim();
+}
+
+/**
  * Draw a simple badge/medal icon
  */
 function drawBadgeIcon(
@@ -176,13 +186,13 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
     // Margins
     const margin = 50;
     const contentWidth = pageWidth - 2 * margin;
-    let currentY = pageHeight - margin;
+    let currentY = pageHeight; // Start at the very top
 
     // ========================================================================
     // HEADER SECTION
     // ========================================================================
 
-    // Draw header background
+    // Draw header background at the very top
     page.drawRectangle({
       x: 0,
       y: currentY - 80,
@@ -235,7 +245,7 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
 
     currentY -= 25;
 
-    page.drawText(certificate.studentName, {
+    page.drawText(stripUnicodeForPdf(certificate.studentName), {
       x: margin,
       y: currentY,
       size: 18,
@@ -281,7 +291,7 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
     });
 
     const infoItems = [
-      { label: 'Ensayo:', value: certificate.testName },
+      { label: 'Ensayo:', value: stripUnicodeForPdf(certificate.testName) },
       { label: 'Fecha:', value: `${formattedDate} a las ${formattedTime}` },
       { label: 'Duración:', value: `${certificate.testDurationMinutes} minutos` },
       { label: 'Total de preguntas:', value: `${certificate.totalQuestions}` },
@@ -296,7 +306,7 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
         color: COLORS.text,
       });
 
-      page.drawText(item.value, {
+      page.drawText(stripUnicodeForPdf(item.value), {
         x: margin + 150,
         y: currentY,
         size: 10,
@@ -395,7 +405,7 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
 
     // Question breakdown
     const breakdownY = resultsBoxY + 15;
-    page.drawText(`✓ Correctas: ${certificate.correctCount}`, {
+    page.drawText(`Correctas: ${certificate.correctCount}`, {
       x: margin + 20,
       y: breakdownY,
       size: 9,
@@ -403,7 +413,7 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
       color: COLORS.success,
     });
 
-    page.drawText(`✗ Incorrectas: ${certificate.incorrectCount}`, {
+    page.drawText(`Incorrectas: ${certificate.incorrectCount}`, {
       x: margin + 150,
       y: breakdownY,
       size: 9,
@@ -412,7 +422,7 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
     });
 
     if (certificate.omittedCount > 0) {
-      page.drawText(`○ Omitidas: ${certificate.omittedCount}`, {
+      page.drawText(`Omitidas: ${certificate.omittedCount}`, {
         x: margin + 280,
         y: breakdownY,
         size: 9,
@@ -440,7 +450,7 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
 
       for (const section of certificate.sectionScores) {
         // Section name
-        page.drawText(section.sectionName, {
+        page.drawText(stripUnicodeForPdf(section.sectionName), {
           x: margin,
           y: currentY,
           size: 10,
@@ -526,17 +536,19 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
         const badgeX = margin + col * badgeWidth;
         const badgeY = currentY - row * 35;
 
-        // Draw badge icon (emoji)
-        page.drawText(badge.icon, {
+        // Draw badge bullet point (standard fonts can't render emojis)
+        page.drawText('•', {
           x: badgeX,
           y: badgeY,
-          size: 16,
-          font: helvetica,
+          size: 12,
+          font: helveticaBold,
+          color: COLORS.primary,
         });
 
-        // Draw badge name
-        page.drawText(badge.name, {
-          x: badgeX + 25,
+        // Draw badge name (strip emojis since standard fonts can't encode them)
+        const badgeName = stripUnicodeForPdf(badge.name);
+        page.drawText(badgeName, {
+          x: badgeX + 15,
           y: badgeY + 3,
           size: 9,
           font: helveticaBold,
@@ -587,9 +599,10 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
         rgb(0.98, 0.99, 1)
       );
 
-      // Wrap text and draw
+      // Wrap text and draw (strip Unicode characters for PDF compatibility)
+      const safeMessage = stripUnicodeForPdf(certificate.personalizedMessage);
       const maxCharsPerLine = 85;
-      const words = certificate.personalizedMessage.split(' ');
+      const words = safeMessage.split(' ');
       const lines: string[] = [];
       let currentLine = '';
 
@@ -621,43 +634,74 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
     }
 
     // ========================================================================
-    // FOOTER - QR CODE AND SIGNATURE
+    // FOOTER - SIGNATURE
     // ========================================================================
 
     const footerY = 100;
 
-    // QR Code
-    if (certificate.verificationUrl) {
-      try {
-        const qrDataUrl = await generateQRCode(certificate.verificationUrl);
-        const qrImageBytes = Buffer.from(
-          qrDataUrl.replace(/^data:image\/png;base64,/, ''),
-          'base64'
-        );
-        const qrImage = await pdfDoc.embedPng(qrImageBytes);
+    // Digital signature (centered)
+    const signatureX = (pageWidth - 200) / 2;
 
-        const qrSize = 60;
-        page.drawImage(qrImage, {
-          x: margin,
-          y: footerY - 10,
-          width: qrSize,
-          height: qrSize,
-        });
+    // Draw stylized signature graphic above the line
+    // This creates a simple handwritten-looking signature using curves
+    const sigY = footerY + 45;
+    const sigColor = rgb(0.2, 0.2, 0.4); // Dark blue ink color
 
-        page.drawText('Verifica este certificado', {
-          x: margin,
-          y: footerY - 25,
-          size: 7,
-          font: helvetica,
-          color: COLORS.textLight,
-        });
-      } catch (error) {
-        console.error('Error embedding QR code:', error);
-      }
-    }
+    // Draw a stylized "J. Martinez" signature using simple strokes
+    // First initial "J" - curved descender
+    page.drawLine({
+      start: { x: signatureX + 20, y: sigY + 10 },
+      end: { x: signatureX + 25, y: sigY + 15 },
+      color: sigColor,
+      thickness: 1.5,
+    });
+    page.drawLine({
+      start: { x: signatureX + 25, y: sigY + 15 },
+      end: { x: signatureX + 22, y: sigY + 5 },
+      color: sigColor,
+      thickness: 1.5,
+    });
+    page.drawLine({
+      start: { x: signatureX + 22, y: sigY + 5 },
+      end: { x: signatureX + 18, y: sigY + 3 },
+      color: sigColor,
+      thickness: 1.5,
+    });
 
-    // Digital signature
-    const signatureX = pageWidth - margin - 150;
+    // Last name - flowing line with curves
+    page.drawLine({
+      start: { x: signatureX + 35, y: sigY + 8 },
+      end: { x: signatureX + 50, y: sigY + 12 },
+      color: sigColor,
+      thickness: 1.2,
+    });
+    page.drawLine({
+      start: { x: signatureX + 50, y: sigY + 12 },
+      end: { x: signatureX + 65, y: sigY + 10 },
+      color: sigColor,
+      thickness: 1.2,
+    });
+    page.drawLine({
+      start: { x: signatureX + 65, y: sigY + 10 },
+      end: { x: signatureX + 75, y: sigY + 8 },
+      color: sigColor,
+      thickness: 1.2,
+    });
+    page.drawLine({
+      start: { x: signatureX + 75, y: sigY + 8 },
+      end: { x: signatureX + 85, y: sigY + 6 },
+      color: sigColor,
+      thickness: 1.2,
+    });
+
+    // Add underline flourish
+    page.drawLine({
+      start: { x: signatureX + 15, y: sigY },
+      end: { x: signatureX + 90, y: sigY - 2 },
+      color: sigColor,
+      thickness: 0.8,
+    });
+
     page.drawLine({
       start: { x: signatureX, y: footerY + 20 },
       end: { x: signatureX + 150, y: footerY + 20 },
@@ -665,20 +709,12 @@ export async function generateCertificatePdf(certificate: Certificate): Promise<
       thickness: 1,
     });
 
-    page.drawText('Director Académico', {
-      x: signatureX + 15,
+    page.drawText('En representacion de simplePAES', {
+      x: signatureX,
       y: footerY + 5,
       size: 10,
-      font: helveticaBold,
-      color: COLORS.text,
-    });
-
-    page.drawText('PAES Matemáticas', {
-      x: signatureX + 25,
-      y: footerY - 10,
-      size: 8,
       font: helvetica,
-      color: COLORS.textLight,
+      color: COLORS.text,
     });
 
     // Issued date

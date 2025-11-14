@@ -26,6 +26,7 @@ const menuGroups: MenuGroup[] = [
     icon: '📊',
     items: [
       { name: 'Live Sessions', path: '/admin/live-sessions', icon: '📊' },
+      { name: 'Certificates', path: '/admin/certificates', icon: '🎓' },
       { name: 'Analytics', path: '/admin/analytics', icon: '📈' },
       { name: 'AI Analytics', path: '/admin/ai-analytics', icon: '🤖' },
       { name: 'System Health', path: '/admin/system-health', icon: '💚' },
