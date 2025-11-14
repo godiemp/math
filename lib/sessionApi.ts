@@ -331,3 +331,42 @@ export async function getMyStatistics(): Promise<{
     data: response.data,
   };
 }
+
+/**
+ * Regenerate questions for a session (admin only)
+ *
+ * @param sessionId - The ID of the session
+ * @param options - Options for regeneration
+ * @param options.regenerateAll - If true, regenerate all questions
+ * @param options.questionIndices - Array of question indices to regenerate
+ * @param options.rangeStart - Start index of range to regenerate (inclusive)
+ * @param options.rangeEnd - End index of range to regenerate (inclusive)
+ * @param options.newQuestions - Array of new questions to replace with
+ */
+export async function regenerateSessionQuestions(
+  sessionId: string,
+  options: {
+    regenerateAll?: boolean;
+    questionIndices?: number[];
+    rangeStart?: number;
+    rangeEnd?: number;
+    newQuestions: Question[];
+  }
+): Promise<{ success: boolean; session?: LiveSession; error?: string }> {
+  const response = await api.post<SessionResponse>(
+    `/api/sessions/${sessionId}/regenerate-questions`,
+    options
+  );
+
+  if (response.error) {
+    return {
+      success: false,
+      error: response.error.error || 'Failed to regenerate questions',
+    };
+  }
+
+  return {
+    success: true,
+    session: response.data?.session,
+  };
+}

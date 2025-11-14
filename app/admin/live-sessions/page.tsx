@@ -8,6 +8,7 @@ import {
   updateScheduledSession,
   deleteSession,
   cancelSession,
+  regenerateSessionQuestions,
 } from '@/lib/sessionApi';
 import { useAvailableSessions } from '@/lib/hooks/useSessions';
 import { getRandomQuestions, getOfficialPAESQuestions } from '@/lib/questions';
@@ -28,6 +29,11 @@ function AdminLiveSessionsContent() {
   const [previewingSession, setPreviewingSession] = useState<LiveSession | null>(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showRegenerateModal, setShowRegenerateModal] = useState(false);
+  const [regenerateMode, setRegenerateMode] = useState<'all' | 'specific' | 'range'>('all');
+  const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
+  const [rangeStart, setRangeStart] = useState<number>(0);
+  const [rangeEnd, setRangeEnd] = useState<number>(0);
   const router = useRouter();
 
   // Form state
@@ -248,6 +254,95 @@ function AdminLiveSessionsContent() {
     });
   };
 
+  const handleRegenerateQuestions = async () => {
+    if (!viewingQuestionsSession) return;
+
+    try {
+      let newQuestions: Question[];
+      let options: any = {};
+
+      if (regenerateMode === 'all') {
+        // Regenerate all questions
+        const totalCount = viewingQuestionsSession.questions.length;
+        const level = viewingQuestionsSession.level;
+
+        // Check if it's an official PAES format
+        if ((level === 'M1' && totalCount === 60) || (level === 'M2' && totalCount === 50)) {
+          newQuestions = getOfficialPAESQuestions(level);
+        } else {
+          newQuestions = getRandomQuestions(level, totalCount);
+        }
+
+        options = {
+          regenerateAll: true,
+          newQuestions,
+        };
+      } else if (regenerateMode === 'specific') {
+        // Regenerate specific questions
+        if (selectedIndices.length === 0) {
+          toast.error('Selecciona al menos una pregunta');
+          return;
+        }
+
+        const level = viewingQuestionsSession.level;
+        newQuestions = getRandomQuestions(level, selectedIndices.length);
+
+        options = {
+          questionIndices: selectedIndices,
+          newQuestions,
+        };
+      } else if (regenerateMode === 'range') {
+        // Regenerate range of questions
+        if (rangeStart < 0 || rangeEnd >= viewingQuestionsSession.questions.length || rangeStart > rangeEnd) {
+          toast.error('Rango inválido');
+          return;
+        }
+
+        const level = viewingQuestionsSession.level;
+        const rangeLength = rangeEnd - rangeStart + 1;
+        newQuestions = getRandomQuestions(level, rangeLength);
+
+        options = {
+          rangeStart,
+          rangeEnd,
+          newQuestions,
+        };
+      }
+
+      toast.promise(
+        regenerateSessionQuestions(viewingQuestionsSession.id, options).then(async (result) => {
+          if (result.success) {
+            // Update the viewing session
+            setViewingQuestionsSession(result.session!);
+            setShowRegenerateModal(false);
+            setSelectedIndices([]);
+            await refresh();
+            return result;
+          } else {
+            throw new Error(result.error || 'Error al regenerar preguntas');
+          }
+        }),
+        {
+          loading: 'Regenerando preguntas...',
+          success: 'Preguntas regeneradas exitosamente',
+          error: (err) => err.message || 'Error al regenerar preguntas',
+        }
+      );
+    } catch (error: any) {
+      toast.error(error.message || 'Error al regenerar preguntas');
+    }
+  };
+
+  const toggleQuestionSelection = (index: number) => {
+    setSelectedIndices(prev => {
+      if (prev.includes(index)) {
+        return prev.filter(i => i !== index);
+      } else {
+        return [...prev, index].sort((a, b) => a - b);
+      }
+    });
+  };
+
   // If previewing session, show preview mode
   if (previewingSession) {
     return <PreviewSession session={previewingSession} onClose={() => setPreviewingSession(null)} />;
@@ -284,11 +379,23 @@ function AdminLiveSessionsContent() {
                 <Badge variant="neutral" size="sm">
                   {viewingQuestionsSession.questions.length} questions
                 </Badge>
+                {viewingQuestionsSession.status === 'scheduled' && (
+                  <Badge variant="success" size="sm">
+                    Can regenerate
+                  </Badge>
+                )}
               </div>
             </div>
-            <Button variant="ghost" onClick={() => setViewingQuestionsSession(null)}>
-              ← Back to Dashboard
-            </Button>
+            <div className="flex gap-2">
+              {viewingQuestionsSession.status === 'scheduled' && (
+                <Button variant="primary" onClick={() => setShowRegenerateModal(true)}>
+                  🔄 Regenerar Preguntas
+                </Button>
+              )}
+              <Button variant="ghost" onClick={() => setViewingQuestionsSession(null)}>
+                ← Back to Dashboard
+              </Button>
+            </div>
           </div>
 
           {/* Distribution Statistics */}
@@ -769,6 +876,171 @@ function AdminLiveSessionsContent() {
           </div>
         </div>
       )}
+
+      {/* Regenerate Questions Modal */}
+      {showRegenerateModal && viewingQuestionsSession && (() => {
+        const session: LiveSession = viewingQuestionsSession;
+        return (
+          <div className="fixed inset-0 flex items-center justify-center p-4 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm">
+            <div className="absolute inset-0" onClick={() => setShowRegenerateModal(false)} />
+            <div onClick={(e) => e.stopPropagation()}>
+              <Card className="max-w-3xl w-full my-8 shadow-2xl relative z-10" padding="lg">
+                <Heading level={2} size="sm" className="mb-4">
+                  Regenerar Preguntas
+                </Heading>
+
+                <div className="space-y-4">
+                  <div>
+                    <Text size="sm" className="mb-3 font-medium">
+                      Selecciona el modo de regeneración:
+                    </Text>
+                    <div className="space-y-2">
+                      <label className="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <input
+                          type="radio"
+                          name="regenerateMode"
+                          value="all"
+                          checked={regenerateMode === 'all'}
+                          onChange={(e) => setRegenerateMode(e.target.value as any)}
+                          className="mr-3"
+                        />
+                        <div>
+                          <Text size="sm" className="font-medium">Regenerar todo el ensayo</Text>
+                          <Text size="xs" variant="secondary">Regenera todas las {session.questions.length} preguntas</Text>
+                        </div>
+                      </label>
+
+                    <label className="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <input
+                        type="radio"
+                        name="regenerateMode"
+                        value="specific"
+                        checked={regenerateMode === 'specific'}
+                        onChange={(e) => setRegenerateMode(e.target.value as any)}
+                        className="mr-3"
+                      />
+                      <div>
+                        <Text size="sm" className="font-medium">Regenerar preguntas específicas</Text>
+                        <Text size="xs" variant="secondary">Selecciona preguntas individuales para regenerar</Text>
+                      </div>
+                    </label>
+
+                    <label className="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <input
+                        type="radio"
+                        name="regenerateMode"
+                        value="range"
+                        checked={regenerateMode === 'range'}
+                        onChange={(e) => setRegenerateMode(e.target.value as any)}
+                        className="mr-3"
+                      />
+                      <div>
+                        <Text size="sm" className="font-medium">Regenerar un rango de preguntas</Text>
+                        <Text size="xs" variant="secondary">Define un rango de preguntas consecutivas</Text>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                  {regenerateMode === 'specific' && (
+                    <div>
+                      <Text size="sm" className="mb-2 font-medium">
+                        Preguntas seleccionadas: {selectedIndices.length}
+                      </Text>
+                      <div className="max-h-64 overflow-y-auto border border-gray-300 dark:border-gray-600 rounded-lg p-3">
+                        <div className="grid grid-cols-5 gap-2">
+                          {session.questions.map((q: any, index: number) => (
+                            <label
+                              key={index}
+                              className={`flex items-center justify-center p-2 border rounded cursor-pointer transition-colors ${
+                                selectedIndices.includes(index)
+                                  ? 'bg-indigo-100 dark:bg-indigo-900 border-indigo-500'
+                                  : 'border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800'
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectedIndices.includes(index)}
+                                onChange={() => toggleQuestionSelection(index)}
+                                className="mr-1"
+                              />
+                              <Text size="xs">#{index + 1}</Text>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {regenerateMode === 'range' && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          Desde (índice)
+                        </label>
+                        <input
+                          type="number"
+                          value={rangeStart}
+                          onChange={(e) => setRangeStart(Number(e.target.value))}
+                          min="0"
+                          max={session.questions.length - 1}
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                        />
+                        <Text size="xs" variant="secondary" className="mt-1">
+                          Pregunta #{rangeStart + 1}
+                        </Text>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          Hasta (índice)
+                        </label>
+                        <input
+                          type="number"
+                          value={rangeEnd}
+                          onChange={(e) => setRangeEnd(Number(e.target.value))}
+                          min="0"
+                          max={session.questions.length - 1}
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                        />
+                        <Text size="xs" variant="secondary" className="mt-1">
+                          Pregunta #{rangeEnd + 1}
+                        </Text>
+                      </div>
+                      <div className="col-span-2">
+                        <Text size="sm" variant="secondary">
+                          Se regenerarán {Math.max(0, rangeEnd - rangeStart + 1)} preguntas
+                        </Text>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => {
+                        setShowRegenerateModal(false);
+                        setSelectedIndices([]);
+                      }}
+                      fullWidth
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="primary"
+                      onClick={handleRegenerateQuestions}
+                      fullWidth
+                    >
+                      Regenerar
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        );
+      })()}
     </AdminLayout>
   );
 }
