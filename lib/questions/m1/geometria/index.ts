@@ -8,6 +8,7 @@ import { m1GeometriaTransformacionesQuestions } from './transformaciones';
 import { m1Geo001Questions } from './m1-geo-001';
 import { m1Geo002Questions } from './m1-geo-002';
 import { m1Geo003Questions } from './m1-geo-003';
+import { m1Geo005Questions } from './m1-geo-005';
 
 // Export curriculum subsections
 // M1-GEO-001: Teorema de Pitágoras
@@ -18,6 +19,9 @@ export { m1Geo002Questions } from './m1-geo-002';
 
 // M1-GEO-003: Área y volumen de prismas rectos y cilindros
 export { m1Geo003Questions } from './m1-geo-003';
+
+// M1-GEO-005: Rotación, traslación y reflexión de figuras geométricas
+export { m1Geo005Questions } from './m1-geo-005';
 
 // Export individual topic arrays (LEGACY - for backward compatibility)
 export { m1GeometriaPitagorasQuestions } from './teorema-pitagoras';

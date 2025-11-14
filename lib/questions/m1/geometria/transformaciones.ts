@@ -1,6 +1,10 @@
-import { Question } from '../../../types';
+/**
+ * LEGACY FILE - Maintained for backward compatibility
+ * All questions have been moved to M1-GEO-005: Transformaciones
+ *
+ * Please use m1Geo005Questions from './m1-geo-005' for new code.
+ */
 
-export const m1GeometriaTransformacionesQuestions: Question[] = [
-  // No transformation questions in current M1 geometry dataset
-  // This file is prepared for future additions
-];
+import { m1Geo005Questions } from './m1-geo-005';
+
+export const m1GeometriaTransformacionesQuestions = m1Geo005Questions;
