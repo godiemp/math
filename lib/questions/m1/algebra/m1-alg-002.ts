@@ -324,7 +324,7 @@ export const m1Alg002Questions: Question[] = [
     explanationLatex: '(2x + 1)^3 = (2x)^3 + 3(2x)^2(1) + 3(2x)(1)^2 + 1^3 = 8x^3 + 12x^2 + 6x + 1',
     difficulty: 'hard',
     skills: ['algebra-productos-notables', 'algebra-expansion', 'numeros-potencias', 'numeros-operaciones-basicas']
-,
+  },
   {
     id: 'm1-14',
     level: 'M1',
@@ -484,7 +484,7 @@ export const m1Alg002Questions: Question[] = [
     explanationLatex: 'x^2 + 2x - 15 = (x + 5)(x - 3) \\quad \\text{porque } 5 + (-3) = 2 \\text{ y } 5(-3) = -15',
     difficulty: 'hard',
     skills: ['algebra-factorizacion', 'numeros-enteros', 'numeros-operaciones-basicas']
-,
+  },
   {
     id: 'm1-216',
     level: 'M1',
