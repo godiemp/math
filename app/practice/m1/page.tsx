@@ -599,7 +599,7 @@ function M1PracticeContent() {
   // Selection View
   return (
     <div className={`min-h-screen ${themeColors.background} py-6 px-4 transition-all duration-700`}>
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[1600px] mx-auto">
         <div className="mb-6">
           <div className="flex justify-between items-start mb-4">
             <Link
