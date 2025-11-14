@@ -231,9 +231,9 @@ export default function OperationsPractice({
       )}
 
       {/* Problem Display */}
-      <div className="max-w-xl mx-auto">
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-12 mb-8 text-center">
-          <div className="text-5xl font-bold text-gray-900 mb-2">
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-8 mb-8 text-center">
+          <div className="text-4xl font-bold text-gray-900 mb-2">
             {problem.expressionLatex ? (
               <InlineMath latex={problem.expressionLatex} />
             ) : (
