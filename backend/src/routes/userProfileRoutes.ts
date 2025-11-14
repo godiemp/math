@@ -8,7 +8,7 @@
 
 import { Router } from 'express';
 import { authenticate } from '../auth/middleware/authenticate';
-import { updateUserProfile } from '../controllers/userProfileController';
+import { updateUserProfile, markWelcomeSeen } from '../controllers/userProfileController';
 
 const router = Router();
 
@@ -21,5 +21,12 @@ router.use(authenticate);
  * @access  Private
  */
 router.put('/profile', updateUserProfile);
+
+/**
+ * @route   POST /api/user/welcome-seen
+ * @desc    Mark welcome message as seen for current user
+ * @access  Private
+ */
+router.post('/welcome-seen', markWelcomeSeen);
 
 export default router;

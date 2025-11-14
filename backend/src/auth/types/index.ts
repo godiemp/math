@@ -51,6 +51,7 @@ export interface UserRecord {
   longest_streak: number;
   last_practice_date: string | null;
   target_level: 'M1_ONLY' | 'M1_AND_M2';
+  has_seen_welcome: boolean;
   email_verified: boolean;
   email_verified_at: number | null;
   verification_token: string | null;
@@ -74,6 +75,7 @@ export interface UserResponse {
   longestStreak?: number;
   lastPracticeDate?: string | null;
   targetLevel?: 'M1_ONLY' | 'M1_AND_M2';
+  hasSeenWelcome?: boolean;
   emailVerified?: boolean;
 }
 

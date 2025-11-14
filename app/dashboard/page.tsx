@@ -11,16 +11,27 @@ import { LiveSession } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar } from "@/components/ui";
 import { StudyBuddy } from "@/components/StudyBuddy";
 import { ShareModal } from "@/components/ShareModal";
+import { WelcomeMessage } from "@/components/WelcomeMessage";
+import { markWelcomeSeen } from "@/lib/userApi";
 import { Share2 } from "lucide-react";
 
 function DashboardContent() {
-  const { user, setUser, isAdmin, isPaidUser, isLoading: authLoading } = useAuth();
+  const { user, setUser, isAdmin, isPaidUser, isLoading: authLoading, refreshUser } = useAuth();
   const router = useRouter();
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
   const [nextSession, setNextSession] = useState<LiveSession | null>(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isWelcomeOpen, setIsWelcomeOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Check if user should see welcome message
+  useEffect(() => {
+    if (user && user.hasSeenWelcome === false) {
+      // Show welcome message for first-time users
+      setIsWelcomeOpen(true);
+    }
+  }, [user]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -94,6 +105,16 @@ function DashboardContent() {
     await logoutUser();
     setUser(null);
     router.push('/');
+  };
+
+  const handleWelcomeClose = async () => {
+    setIsWelcomeOpen(false);
+    // Mark welcome as seen in backend
+    const success = await markWelcomeSeen();
+    if (success) {
+      // Refresh user data to update hasSeenWelcome flag
+      await refreshUser();
+    }
   };
 
   const formatDate = (timestamp: number) => {
@@ -503,6 +524,9 @@ function DashboardContent() {
           </Card>
         </div>
       </main>
+
+      {/* Welcome Modal */}
+      <WelcomeMessage isOpen={isWelcomeOpen} onClose={handleWelcomeClose} />
 
       {/* Share Modal */}
       {nextSession && (
