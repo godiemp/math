@@ -293,6 +293,7 @@ export default function Curriculum({ level }: CurriculumProps) {
                       <>📋 <span className="hidden sm:inline">{t('copy')}</span></>
                     )}
                   </button>
+                  {/* Documentation link hidden for now - will work on it later
                   {level === 'M1' && (
                     <Link
                       href="/curriculum/m1/docs"
@@ -301,6 +302,7 @@ export default function Curriculum({ level }: CurriculumProps) {
                       📖 <span className="hidden sm:inline">{t('viewDocs')}</span><span className="sm:hidden">{t('docs')}</span>
                     </Link>
                   )}
+                  */}
                 </div>
               </div>
               <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base md:text-lg mb-2">
