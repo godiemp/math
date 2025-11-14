@@ -227,8 +227,12 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
         case '-ax+bx':
           expr = `-${getRandomInt(2, 5)}*x+${getRandomInt(2, 5)}*x`;
           break;
-        case 'x+x+x':
-          expr = 'x+x+x';
+        case 'x±x±x':
+          // Randomly generate x with + or - operators
+          const signs = ['+', '-'];
+          const sign1 = signs[Math.floor(Math.random() * signs.length)];
+          const sign2 = signs[Math.floor(Math.random() * signs.length)];
+          expr = `x${sign1}x${sign2}x`;
           break;
         case 'ax+bx+cx':
           expr = `${getRandomInt(2, 4)}*x+${getRandomInt(2, 4)}*x+${getRandomInt(2, 4)}*x`;

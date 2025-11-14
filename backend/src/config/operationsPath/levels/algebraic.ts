@@ -262,14 +262,14 @@ export const algebraicLevels: OperationLevelDefinition[] = [
   },
   // Phase 2: Single Variable, 3 Terms (56-58)
   {
-    title: 'Simplificar x+x+x',
+    title: 'Simplificar x±x±x',
     operationType: 'simplification',
     phase: 'algebraic',
-    difficulty: 'basic',
+    difficulty: 'intermediate',
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-001","M1-ALG-002"],
 
-    config: { variables: ['x'], simplificationType: 'x+x+x',}
+    config: { variables: ['x'], simplificationType: 'x±x±x',}
   },
   {
     title: 'Simplificar ax+bx+cx',
