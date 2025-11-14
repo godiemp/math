@@ -80,6 +80,18 @@ export default function OperationsPractice({
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [problem, isSubmitting, feedback.show]);
 
+  // Keyboard shortcut for Continue button (Enter key when level is complete)
+  useEffect(() => {
+    const handleEnterPress = (e: KeyboardEvent) => {
+      if (showLevelComplete && e.key === 'Enter') {
+        handleContinue();
+      }
+    };
+
+    window.addEventListener('keydown', handleEnterPress);
+    return () => window.removeEventListener('keydown', handleEnterPress);
+  }, [showLevelComplete]);
+
   const loadProblem = () => {
     try {
       // Find level config
@@ -496,7 +508,10 @@ export default function OperationsPractice({
                 onClick={handleContinue}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
               >
-                Continuar al Siguiente Nivel →
+                <div className="flex flex-col items-center">
+                  <span>Continuar al Siguiente Nivel →</span>
+                  <span className="text-sm font-normal opacity-70 mt-1">(Presiona Enter)</span>
+                </div>
               </button>
             </div>
           </div>
