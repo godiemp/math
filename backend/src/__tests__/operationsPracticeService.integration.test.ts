@@ -1,13 +1,13 @@
 /**
  * Integration Tests for Operations Practice Service
- * Tests all 150 levels end-to-end: generation + validation
+ * Tests all 130 levels end-to-end: generation + validation
  */
 
 import { describe, it, expect } from 'vitest';
 import { generateProblem, validateAnswer } from '../services/operationsPracticeService';
 import { OPERATIONS_PATH } from '../config/operationsPath';
 
-describe('Operations Practice Service - All 150 Levels Integration', () => {
+describe('Operations Practice Service - All 130 Levels Integration', () => {
   // Test each level individually
   OPERATIONS_PATH.forEach((levelConfig) => {
     describe(`Level ${levelConfig.level}: ${levelConfig.title}`, () => {

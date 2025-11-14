@@ -221,14 +221,45 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
         case 'ax-bx':
           expr = `${getRandomInt(3, 7)}*x-${getRandomInt(1, 3)}*x`;
           break;
-        case 'x+x+x':
-          expr = 'x+x+x';
+        case '-ax-bx':
+          expr = `-${getRandomInt(2, 5)}*x-${getRandomInt(2, 5)}*x`;
           break;
-        case 'ax+x-x':
-          expr = `${getRandomInt(2, 5)}*x+x-x`;
+        case '-ax+bx':
+          expr = `-${getRandomInt(2, 5)}*x+${getRandomInt(2, 5)}*x`;
+          break;
+        case 'x±x±x': {
+          // Randomly generate x with + or - operators
+          const signs = ['+', '-'];
+          const sign1 = signs[Math.floor(Math.random() * signs.length)];
+          const sign2 = signs[Math.floor(Math.random() * signs.length)];
+          expr = `x${sign1}x${sign2}x`;
+          break;
+        }
+        case 'ax±bx±cx': {
+          // Generate 3 coefficients with random + or - operators
+          const a = getRandomInt(2, 4);
+          const b = getRandomInt(2, 4);
+          const c = getRandomInt(2, 4);
+          const signs = ['+', '-'];
+          const sign1 = signs[Math.floor(Math.random() * signs.length)];
+          const sign2 = signs[Math.floor(Math.random() * signs.length)];
+          expr = `${a}*x${sign1}${b}*x${sign2}${c}*x`;
+          break;
+        }
+        case 'ax+bx-cx':
+          expr = `${getRandomInt(3, 6)}*x+${getRandomInt(2, 4)}*x-${getRandomInt(1, 3)}*x`;
           break;
         case 'a(x+b)+x':
           expr = `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 5)})+x`;
+          break;
+        case 'a(x+b)+cx':
+          expr = `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 5)})+${getRandomInt(2, 4)}*x`;
+          break;
+        case 'a(x+b)-cx':
+          expr = `${getRandomInt(3, 5)}*(x+${getRandomInt(1, 4)})-${getRandomInt(1, 3)}*x`;
+          break;
+        case 'a(x+b)+c(x+d)':
+          expr = `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 4)})+${getRandomInt(2, 3)}*(x+${getRandomInt(1, 4)})`;
           break;
         default:
           expr = 'x+x';
@@ -247,7 +278,9 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
     }
 
     const simplified = math.simplify(expr);
-    const correctAnswer = simplified.toString().replace(/\*/g, '').replace(/\s+/g, '');
+    let correctAnswer = simplified.toString().replace(/\*/g, '').replace(/\s+/g, '');
+    // Fix MathJS formatting: convert "-(6x)" to "-6x"
+    correctAnswer = correctAnswer.replace(/-\((\d+x)\)/g, '-$1');
     const expression = expr.replace(/\*/g, '');
     const expressionLatex = expr.replace(/\*/g, '');
     const problemKey = `simp:${expr}`;
@@ -264,14 +297,23 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
         case 'ax+by-x':
           expr = `${getRandomInt(2, 5)}*x+${getRandomInt(2, 4)}*y-x`;
           break;
+        case 'ax-by+x':
+          expr = `${getRandomInt(2, 4)}*x-${getRandomInt(2, 4)}*y+x`;
+          break;
         case 'ax+by+cx-dy':
           expr = `${getRandomInt(2, 5)}*x+${getRandomInt(2, 5)}*y+${getRandomInt(1, 3)}*x-${getRandomInt(1, 2)}*y`;
           break;
-        case 'a(x+b)+x':
-          expr = `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 4)})+y`;
+        case 'ax+by-cx+dy':
+          expr = `${getRandomInt(3, 5)}*x+${getRandomInt(2, 4)}*y-${getRandomInt(1, 2)}*x+${getRandomInt(1, 3)}*y`;
           break;
-        case 'a(bx+y)-c(dx-y)':
-          expr = `${getRandomInt(2, 4)}*(${getRandomInt(2, 3)}*x+y)-${getRandomInt(1, 3)}*(x-y)`;
+        case 'ax-by+cx-dy':
+          expr = `${getRandomInt(2, 4)}*x-${getRandomInt(2, 4)}*y+${getRandomInt(2, 3)}*x-${getRandomInt(1, 2)}*y`;
+          break;
+        case 'a(x+y)+bx':
+          expr = `${getRandomInt(2, 4)}*(x+y)+${getRandomInt(2, 3)}*x`;
+          break;
+        case 'a(x+b)+c(y+d)':
+          expr = `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 4)})+${getRandomInt(2, 3)}*(y+${getRandomInt(1, 4)})`;
           break;
         default:
           expr = `${getRandomInt(2, 4)}*x+${getRandomInt(2, 4)}*y+x`;
@@ -288,7 +330,9 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
     }
 
     const simplified = math.simplify(expr);
-    const correctAnswer = simplified.toString().replace(/\*/g, '').replace(/\s+/g, '');
+    let correctAnswer = simplified.toString().replace(/\*/g, '').replace(/\s+/g, '');
+    // Fix MathJS formatting: convert "-(6x)" to "-6x" and similar patterns
+    correctAnswer = correctAnswer.replace(/-\((\d+[xy])\)/g, '-$1');
     const expression = expr.replace(/\*/g, '');
     const expressionLatex = expr.replace(/\*/g, '');
     const problemKey = `simp:${expr}`;

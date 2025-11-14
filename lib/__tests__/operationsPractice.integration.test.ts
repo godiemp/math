@@ -1,6 +1,6 @@
 /**
  * Integration Tests for Frontend Operations Practice
- * Tests all 150 levels end-to-end: generation + validation
+ * Tests all 130 levels end-to-end: generation + validation
  * Ensures frontend matches backend behavior
  */
 
@@ -8,7 +8,7 @@ import { describe, it, expect } from 'vitest';
 import { generateProblem, validateAnswer } from '../operationsProblemGenerator';
 import { OPERATIONS_PATH } from '../operationsPath';
 
-describe('Frontend Operations Practice - All 150 Levels Integration', () => {
+describe('Frontend Operations Practice - All 130 Levels Integration', () => {
   // Test each level individually
   OPERATIONS_PATH.forEach((levelConfig) => {
     describe(`Level ${levelConfig.level}: ${levelConfig.title}`, () => {
@@ -31,7 +31,7 @@ describe('Frontend Operations Practice - All 150 Levels Integration', () => {
 
         // Verify problems are diverse (not all the same)
         // Exception: Some levels have only 1 possible expression (e.g., "x+x", Fibonacci)
-        const singleExpressionLevels = [51, 54, 95]; // Levels with fixed/single expressions
+        const singleExpressionLevels = [51, 105]; // Levels with fixed/single expressions (51: x+x, 105: Fibonacci sequence)
         const uniqueExpressions = new Set(problems.map(p => p.expression));
 
         if (!singleExpressionLevels.includes(levelConfig.level)) {

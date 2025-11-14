@@ -1,14 +1,14 @@
 /**
- * Integration tests for levels 61-80 (Comparison and Logic)
+ * Integration tests for levels 71-90 (Logical Operations)
  */
 
 import { describe, it, expect } from 'vitest';
 import { getLevelConfig } from '../../operationsPath';
 import { generateProblem } from '../../operationsProblemGenerator';
 
-describe('Levels 61-70: Comparison Operations', () => {
-  it('Level 61: Comparación >', () => {
-    const config = getLevelConfig(61);
+describe('Levels 71-80: Comparison Operations', () => {
+  it('Level 71: Mayor que', () => {
+    const config = getLevelConfig(71);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -18,8 +18,8 @@ describe('Levels 61-70: Comparison Operations', () => {
     }
   });
 
-  it('Level 62: Comparación <', () => {
-    const config = getLevelConfig(62);
+  it('Level 72: Menor que', () => {
+    const config = getLevelConfig(72);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -29,8 +29,8 @@ describe('Levels 61-70: Comparison Operations', () => {
     }
   });
 
-  it('Level 63: Comparación =', () => {
-    const config = getLevelConfig(63);
+  it('Level 73: Igual a', () => {
+    const config = getLevelConfig(73);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -40,21 +40,42 @@ describe('Levels 61-70: Comparison Operations', () => {
     }
   });
 
-  it('Level 64-70: Mixed Comparisons', () => {
-    for (let level = 64; level <= 70; level++) {
+  it('Level 74: Mayor o Igual', () => {
+    const config = getLevelConfig(74);
+    expect(config).toBeDefined();
+
+    for (let i = 0; i < 10; i++) {
+      const problem = generateProblem(config!);
+      expect(problem.expression).toMatch(/¿\d+ ≥ \d+\?/);
+      expect(['Verdadero', 'Falso']).toContain(problem.correctAnswer as string);
+    }
+  });
+
+  it('Level 75: Menor o Igual', () => {
+    const config = getLevelConfig(75);
+    expect(config).toBeDefined();
+
+    for (let i = 0; i < 10; i++) {
+      const problem = generateProblem(config!);
+      expect(problem.expression).toMatch(/¿\d+ ≤ \d+\?/);
+      expect(['Verdadero', 'Falso']).toContain(problem.correctAnswer as string);
+    }
+  });
+
+  it('Level 76-80: Advanced Comparisons', () => {
+    for (let level = 76; level <= 80; level++) {
       const config = getLevelConfig(level);
       expect(config).toBeDefined();
 
       const problem = generateProblem(config!);
-      expect(problem.expression).toMatch(/¿-?\d+ [<>=≥≤] -?\d+\?/);
       expect(['Verdadero', 'Falso']).toContain(problem.correctAnswer as string);
     }
   });
 });
 
-describe('Levels 71-80: Logical Conditions and Operators', () => {
-  it('Level 71: Condición x>a', () => {
-    const config = getLevelConfig(71);
+describe('Levels 81-90: Compound Conditions and Logical Operators', () => {
+  it('Level 81: Condición Simple (x>a)', () => {
+    const config = getLevelConfig(81);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -64,8 +85,8 @@ describe('Levels 71-80: Logical Conditions and Operators', () => {
     }
   });
 
-  it('Level 72: Condición x>a AND x<b', () => {
-    const config = getLevelConfig(72);
+  it('Level 82: Condición con AND', () => {
+    const config = getLevelConfig(82);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -75,8 +96,8 @@ describe('Levels 71-80: Logical Conditions and Operators', () => {
     }
   });
 
-  it('Level 73: Condición x<a OR x>b', () => {
-    const config = getLevelConfig(73);
+  it('Level 83: Condición con OR', () => {
+    const config = getLevelConfig(83);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -86,8 +107,8 @@ describe('Levels 71-80: Logical Conditions and Operators', () => {
     }
   });
 
-  it('Level 74: Rango x∈[a,b]', () => {
-    const config = getLevelConfig(74);
+  it('Level 84: Rangos Numéricos', () => {
+    const config = getLevelConfig(84);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -97,8 +118,8 @@ describe('Levels 71-80: Logical Conditions and Operators', () => {
     }
   });
 
-  it('Level 75: Operador AND', () => {
-    const config = getLevelConfig(75);
+  it('Level 85: Operador AND', () => {
+    const config = getLevelConfig(85);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -108,8 +129,8 @@ describe('Levels 71-80: Logical Conditions and Operators', () => {
     }
   });
 
-  it('Level 76: Operador OR', () => {
-    const config = getLevelConfig(76);
+  it('Level 86: Operador OR', () => {
+    const config = getLevelConfig(86);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -119,8 +140,8 @@ describe('Levels 71-80: Logical Conditions and Operators', () => {
     }
   });
 
-  it('Level 77: Operador NOT', () => {
-    const config = getLevelConfig(77);
+  it('Level 87: Operador NOT', () => {
+    const config = getLevelConfig(87);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -130,8 +151,8 @@ describe('Levels 71-80: Logical Conditions and Operators', () => {
     }
   });
 
-  it('Level 78-80: Complex Logical Operations', () => {
-    for (let level = 78; level <= 80; level++) {
+  it('Level 88-90: Complex Logical Operations', () => {
+    for (let level = 88; level <= 90; level++) {
       const config = getLevelConfig(level);
       expect(config).toBeDefined();
 

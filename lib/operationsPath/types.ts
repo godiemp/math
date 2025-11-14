@@ -46,7 +46,14 @@ export interface OperationLevelDefinition {
     variables?: string[];
     equationType?: 'x+a=b' | 'x-a=b' | 'a-x=b' | 'ax=b' | 'x/a=b' | 'ax+b=c' | 'ax-b=c' | 'a(x+b)=c' | '2x+a=x+b' | 'ax+b=cx+d';
     expressionType?: 'x+a' | 'ax' | 'ax+b' | 'x²' | 'ax²+b' | 'x+y' | 'xy' | 'ax+by' | 'x²+y²' | '(x+y)²';
-    simplificationType?: 'x+x' | 'ax+bx' | 'ax-bx' | 'x+x+x' | 'ax+x-x' | 'ax+by+x' | 'ax+by-x' | 'ax+by+cx-dy' | 'a(x+b)+x' | 'a(bx+y)-c(dx-y)';
+    simplificationType?:
+      | 'x+x' | 'ax+bx' | 'ax-bx' | '-ax-bx' | '-ax+bx'
+      | 'x±x±x' | 'ax±bx±cx' | 'x+x+x' | 'ax+bx-cx' | 'ax+x-x'
+      | 'ax+by+x' | 'ax+by-x' | 'ax-by+x'
+      | 'ax+by+cx-dy' | 'ax+by-cx+dy' | 'ax-by+cx-dy'
+      | 'a(x+b)+x' | 'a(x+b)+cx' | 'a(x+b)-cx' | 'a(x+b)+c(x+d)'
+      | 'a(x+y)+bx' | 'a(x+b)+c(y+d)'
+      | 'a(bx+y)-c(dx-y)';
 
     // Logical
     operators?: string[];

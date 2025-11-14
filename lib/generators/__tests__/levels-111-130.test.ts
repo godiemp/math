@@ -1,14 +1,14 @@
 /**
- * Integration tests for levels 101-120 (Sorting, Counting, and Algorithmic)
+ * Integration tests for levels 111-130 (Sorting, Counting, and Algorithmic)
  */
 
 import { describe, it, expect } from 'vitest';
 import { getLevelConfig } from '../../operationsPath';
 import { generateProblem } from '../../operationsProblemGenerator';
 
-describe('Levels 101-110: Sorting Operations', () => {
-  it('Level 101: Ordenar Ascendente', () => {
-    const config = getLevelConfig(101);
+describe('Levels 111-120: Sorting Operations', () => {
+  it('Level 111: Ordenar Ascendente', () => {
+    const config = getLevelConfig(111);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -23,8 +23,8 @@ describe('Levels 101-110: Sorting Operations', () => {
     }
   });
 
-  it('Level 102: Ordenar Descendente', () => {
-    const config = getLevelConfig(102);
+  it('Level 112: Ordenar Descendente', () => {
+    const config = getLevelConfig(112);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -39,8 +39,8 @@ describe('Levels 101-110: Sorting Operations', () => {
     }
   });
 
-  it('Level 103: Encontrar Mínimo', () => {
-    const config = getLevelConfig(103);
+  it('Level 113: Encontrar Mínimo', () => {
+    const config = getLevelConfig(113);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -55,8 +55,8 @@ describe('Levels 101-110: Sorting Operations', () => {
     }
   });
 
-  it('Level 104: Encontrar Máximo', () => {
-    const config = getLevelConfig(104);
+  it('Level 114: Encontrar Máximo', () => {
+    const config = getLevelConfig(114);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -71,8 +71,8 @@ describe('Levels 101-110: Sorting Operations', () => {
     }
   });
 
-  it('Level 105: Calcular Mediana', () => {
-    const config = getLevelConfig(105);
+  it('Level 115: Calcular Mediana', () => {
+    const config = getLevelConfig(115);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -82,8 +82,8 @@ describe('Levels 101-110: Sorting Operations', () => {
     }
   });
 
-  it('Level 106-110: Mixed Sorting Operations', () => {
-    for (let level = 106; level <= 110; level++) {
+  it('Level 116-120: Mixed Sorting Operations', () => {
+    for (let level = 116; level <= 120; level++) {
       const config = getLevelConfig(level);
       expect(config).toBeDefined();
 
@@ -94,9 +94,9 @@ describe('Levels 101-110: Sorting Operations', () => {
   });
 });
 
-describe('Levels 111-120: Counting and Algorithmic Operations', () => {
-  it('Level 111: Contar Todos los Elementos', () => {
-    const config = getLevelConfig(111);
+describe('Levels 121-130: Counting and Algorithmic Operations', () => {
+  it('Level 121: Contar Todos los Elementos', () => {
+    const config = getLevelConfig(121);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -110,8 +110,8 @@ describe('Levels 111-120: Counting and Algorithmic Operations', () => {
     }
   });
 
-  it('Level 112: Contar Pares', () => {
-    const config = getLevelConfig(112);
+  it('Level 122: Contar Pares', () => {
+    const config = getLevelConfig(122);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -126,8 +126,8 @@ describe('Levels 111-120: Counting and Algorithmic Operations', () => {
     }
   });
 
-  it('Level 113: Contar Impares', () => {
-    const config = getLevelConfig(113);
+  it('Level 123: Contar Impares', () => {
+    const config = getLevelConfig(123);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -142,8 +142,8 @@ describe('Levels 111-120: Counting and Algorithmic Operations', () => {
     }
   });
 
-  it('Level 114: Contar Mayores que N', () => {
-    const config = getLevelConfig(114);
+  it('Level 124: Contar Mayores que N', () => {
+    const config = getLevelConfig(124);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -153,8 +153,8 @@ describe('Levels 111-120: Counting and Algorithmic Operations', () => {
     }
   });
 
-  it('Level 115: Contar Múltiplos', () => {
-    const config = getLevelConfig(115);
+  it('Level 125: Contar Múltiplos', () => {
+    const config = getLevelConfig(125);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -164,8 +164,8 @@ describe('Levels 111-120: Counting and Algorithmic Operations', () => {
     }
   });
 
-  it('Level 116: Sumar Pares', () => {
-    const config = getLevelConfig(116);
+  it('Level 126: Sumar Pares', () => {
+    const config = getLevelConfig(126);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -180,8 +180,8 @@ describe('Levels 111-120: Counting and Algorithmic Operations', () => {
     }
   });
 
-  it('Level 117: Aplicar Transformación +n', () => {
-    const config = getLevelConfig(117);
+  it('Level 127: Aplicar Transformación +n', () => {
+    const config = getLevelConfig(127);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -191,8 +191,8 @@ describe('Levels 111-120: Counting and Algorithmic Operations', () => {
     }
   });
 
-  it('Level 118: Aplicar Transformación ×n', () => {
-    const config = getLevelConfig(118);
+  it('Level 128: Aplicar Transformación ×n', () => {
+    const config = getLevelConfig(128);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -202,8 +202,8 @@ describe('Levels 111-120: Counting and Algorithmic Operations', () => {
     }
   });
 
-  it('Level 119: Transformar y Sumar', () => {
-    const config = getLevelConfig(119);
+  it('Level 129: Transformar y Sumar', () => {
+    const config = getLevelConfig(129);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -213,8 +213,8 @@ describe('Levels 111-120: Counting and Algorithmic Operations', () => {
     }
   });
 
-  it('Level 120: Filtrar Pares', () => {
-    const config = getLevelConfig(120);
+  it('Level 130: Filtrar Pares', () => {
+    const config = getLevelConfig(130);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -233,8 +233,8 @@ describe('Levels 111-120: Counting and Algorithmic Operations', () => {
 });
 
 describe('All Levels: Basic Validation', () => {
-  it('All 120 levels should generate valid problems', () => {
-    for (let level = 1; level <= 120; level++) {
+  it('All 130 levels should generate valid problems', () => {
+    for (let level = 1; level <= 130; level++) {
       const config = getLevelConfig(level);
       expect(config, `Level ${level} config should exist`).toBeDefined();
 
