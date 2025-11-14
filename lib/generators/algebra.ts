@@ -227,23 +227,25 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
         case '-ax+bx':
           expr = `-${getRandomInt(2, 5)}*x+${getRandomInt(2, 5)}*x`;
           break;
-        case 'x±x±x':
+        case 'x±x±x': {
           // Randomly generate x with + or - operators
           const signs = ['+', '-'];
           const sign1 = signs[Math.floor(Math.random() * signs.length)];
           const sign2 = signs[Math.floor(Math.random() * signs.length)];
           expr = `x${sign1}x${sign2}x`;
           break;
-        case 'ax±bx±cx':
+        }
+        case 'ax±bx±cx': {
           // Generate 3 coefficients with random + or - operators
           const a = getRandomInt(2, 4);
           const b = getRandomInt(2, 4);
           const c = getRandomInt(2, 4);
-          const signs2 = ['+', '-'];
-          const sign1_2 = signs2[Math.floor(Math.random() * signs2.length)];
-          const sign2_2 = signs2[Math.floor(Math.random() * signs2.length)];
-          expr = `${a}*x${sign1_2}${b}*x${sign2_2}${c}*x`;
+          const signs = ['+', '-'];
+          const sign1 = signs[Math.floor(Math.random() * signs.length)];
+          const sign2 = signs[Math.floor(Math.random() * signs.length)];
+          expr = `${a}*x${sign1}${b}*x${sign2}${c}*x`;
           break;
+        }
         case 'ax+bx-cx':
           expr = `${getRandomInt(3, 6)}*x+${getRandomInt(2, 4)}*x-${getRandomInt(1, 3)}*x`;
           break;
