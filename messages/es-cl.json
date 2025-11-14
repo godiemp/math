@@ -489,7 +489,12 @@
     },
     "startPractice": "comenzar práctica",
     "loading": "cargando temario...",
-    "error": "error al cargar el temario"
+    "error": "error al cargar el temario",
+    "copy": "copiar temario",
+    "copying": "copiando...",
+    "copied": "¡copiado!",
+    "copyError": "error",
+    "copyTooltip": "copiar temario {level} al portapapeles"
   },
   "profile": {
     "title": "mi perfil",

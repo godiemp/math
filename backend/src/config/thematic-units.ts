@@ -1540,3 +1540,117 @@ export function getUnitStats() {
     },
   };
 }
+
+/**
+ * Deep copy a subsection
+ */
+function copySubsection(subsection: UnitSubsection): UnitSubsection {
+  return {
+    code: subsection.code,
+    name: subsection.name,
+    description: subsection.description,
+    primary_skills: [...subsection.primary_skills],
+  };
+}
+
+/**
+ * Deep copy a thematic unit
+ */
+export function copyThematicUnit(unit: ThematicUnit): ThematicUnit {
+  return {
+    code: unit.code,
+    name: unit.name,
+    level: unit.level,
+    subject: unit.subject,
+    description: unit.description,
+    subsections: unit.subsections?.map(copySubsection),
+  };
+}
+
+/**
+ * Copy the entire curriculum or specific level
+ *
+ * @param level - Optional: 'M1' or 'M2' to copy only that level. If not provided, copies both.
+ * @returns Deep copy of the curriculum units
+ *
+ * @example
+ * // Copy entire curriculum (M1 and M2)
+ * const allUnits = copyCurriculum();
+ *
+ * // Copy only M1 curriculum
+ * const m1Units = copyCurriculum('M1');
+ *
+ * // Copy only M2 curriculum
+ * const m2Units = copyCurriculum('M2');
+ */
+export function copyCurriculum(level?: Level): ThematicUnit[] {
+  const unitsToCopy = level
+    ? THEMATIC_UNITS.filter(u => u.level === level)
+    : THEMATIC_UNITS;
+
+  return unitsToCopy.map(copyThematicUnit);
+}
+
+/**
+ * Export curriculum as JSON string
+ *
+ * @param level - Optional: 'M1' or 'M2' to export only that level
+ * @param pretty - If true, formats JSON with indentation (default: true)
+ * @returns JSON string representation of the curriculum
+ *
+ * @example
+ * // Export entire curriculum as formatted JSON
+ * const json = exportCurriculumAsJSON();
+ *
+ * // Export only M1 as compact JSON
+ * const m1Json = exportCurriculumAsJSON('M1', false);
+ */
+export function exportCurriculumAsJSON(level?: Level, pretty: boolean = true): string {
+  const curriculum = copyCurriculum(level);
+  return pretty
+    ? JSON.stringify(curriculum, null, 2)
+    : JSON.stringify(curriculum);
+}
+
+/**
+ * Get a summary of the curriculum structure
+ *
+ * @param level - Optional: 'M1' or 'M2' to get summary for that level only
+ * @returns Object with curriculum statistics including units, subsections, and skills count
+ *
+ * @example
+ * const summary = getCurriculumSummary();
+ * // Returns: { totalUnits: 41, totalSubsections: 180, totalSkills: 180, byLevel: {...}, bySubject: {...} }
+ */
+export function getCurriculumSummary(level?: Level) {
+  const units = level ? copyCurriculum(level) : copyCurriculum();
+
+  const totalSubsections = units.reduce((sum, unit) =>
+    sum + (unit.subsections?.length || 0), 0
+  );
+
+  const totalSkills = units.reduce((sum, unit) =>
+    sum + (unit.subsections?.reduce((subSum, subsection) =>
+      subSum + subsection.primary_skills.length, 0) || 0), 0
+  );
+
+  const byLevel = {
+    M1: units.filter(u => u.level === 'M1').length,
+    M2: units.filter(u => u.level === 'M2').length,
+  };
+
+  const bySubject = {
+    números: units.filter(u => u.subject === 'números').length,
+    álgebra: units.filter(u => u.subject === 'álgebra').length,
+    geometría: units.filter(u => u.subject === 'geometría').length,
+    probabilidad: units.filter(u => u.subject === 'probabilidad').length,
+  };
+
+  return {
+    totalUnits: units.length,
+    totalSubsections,
+    totalSkills,
+    byLevel,
+    bySubject,
+  };
+}

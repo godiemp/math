@@ -2,9 +2,11 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { CurriculumSidebar } from './ui/CurriculumSidebar';
 import { getGroupedUnits, type ThematicUnit } from '@/lib/services/thematicUnitsService';
 import type { Level } from '@/lib/types';
+import { api } from '@/lib/api-client';
 
 interface CurriculumProps {
   level: Level;
@@ -74,6 +76,7 @@ const skillTopicMatrix = {
 };
 
 export default function Curriculum({ level }: CurriculumProps) {
+  const t = useTranslations('curriculum');
   const [expandedTopics, setExpandedTopics] = useState<Record<string, boolean>>({});
   const [units, setUnits] = useState<{
     números: ThematicUnit[];
@@ -82,6 +85,7 @@ export default function Curriculum({ level }: CurriculumProps) {
     probabilidad: ThematicUnit[];
   } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'copying' | 'success' | 'error'>('idle');
 
   useEffect(() => {
     async function loadUnits() {
@@ -102,10 +106,81 @@ export default function Curriculum({ level }: CurriculumProps) {
     }));
   };
 
+  const copyCurriculum = async () => {
+    try {
+      setCopyStatus('copying');
+
+      const response = await api.get<{ units: ThematicUnit[] }>(`/api/thematic-units?level=${level}`);
+
+      if (response.data?.units) {
+        // Formato estructurado legible
+        let formattedText = `════════════════════════════════════════════════════════════════\n`;
+        formattedText += `  TEMARIO PAES - COMPETENCIA MATEMÁTICA ${level}\n`;
+        formattedText += `════════════════════════════════════════════════════════════════\n\n`;
+
+        // Agrupar por materia
+        const bySubject: Record<string, ThematicUnit[]> = {
+          'números': [],
+          'álgebra': [],
+          'geometría': [],
+          'probabilidad': []
+        };
+
+        response.data.units.forEach(unit => {
+          if (bySubject[unit.subject]) {
+            bySubject[unit.subject].push(unit);
+          }
+        });
+
+        const subjectNames: Record<string, string> = {
+          'números': '🔢 NÚMEROS',
+          'álgebra': '📐 ÁLGEBRA Y FUNCIONES',
+          'geometría': '📏 GEOMETRÍA',
+          'probabilidad': '📊 PROBABILIDAD Y ESTADÍSTICA'
+        };
+
+        // Generar texto formateado
+        Object.entries(bySubject).forEach(([subject, units]) => {
+          if (units.length === 0) return;
+
+          formattedText += `\n${subjectNames[subject]}\n`;
+          formattedText += `${'─'.repeat(60)}\n\n`;
+
+          units.forEach((unit, idx) => {
+            formattedText += `${idx + 1}. ${unit.code} - ${unit.name}\n`;
+
+            if (unit.subsections && unit.subsections.length > 0) {
+              unit.subsections.forEach(subsection => {
+                formattedText += `   ${subsection.code}. ${subsection.name}\n`;
+                if (subsection.primary_skills && subsection.primary_skills.length > 0) {
+                  formattedText += `      Habilidades: ${subsection.primary_skills.join(', ')}\n`;
+                }
+              });
+            }
+            formattedText += '\n';
+          });
+        });
+
+        formattedText += `\n════════════════════════════════════════════════════════════════\n`;
+        formattedText += `Total de unidades: ${response.data.units.length}\n`;
+        formattedText += `════════════════════════════════════════════════════════════════\n`;
+
+        await navigator.clipboard.writeText(formattedText);
+        setCopyStatus('success');
+
+        setTimeout(() => setCopyStatus('idle'), 2000);
+      }
+    } catch (error) {
+      console.error('Error copying curriculum:', error);
+      setCopyStatus('error');
+      setTimeout(() => setCopyStatus('idle'), 2000);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] flex items-center justify-center">
-        <div className="text-lg text-gray-600 dark:text-gray-400">Cargando currículo...</div>
+        <div className="text-lg text-gray-600 dark:text-gray-400">{t('loading')}</div>
       </div>
     );
   }
@@ -113,7 +188,7 @@ export default function Curriculum({ level }: CurriculumProps) {
   if (!units) {
     return (
       <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] flex items-center justify-center">
-        <div className="text-lg text-red-600 dark:text-red-400">Error al cargar el currículo</div>
+        <div className="text-lg text-red-600 dark:text-red-400">{t('error')}</div>
       </div>
     );
   }
@@ -124,13 +199,13 @@ export default function Curriculum({ level }: CurriculumProps) {
       <nav className="sticky top-0 z-30 min-h-14 backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-b border-black/[0.12] dark:border-white/[0.16] saturate-[1.2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-0 sm:h-14 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
           <h1 className="text-sm sm:text-base lg:text-lg font-semibold text-[#0A84FF]">
-            SimplePAES - Matemática
+            {t('titleFull')}
           </h1>
           <Link
             href="/dashboard"
             className="text-xs sm:text-sm text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors"
           >
-            ← Volver al Inicio
+            ← {t('backHome')}
           </Link>
         </div>
       </nav>
@@ -173,34 +248,56 @@ export default function Curriculum({ level }: CurriculumProps) {
             <div className="mb-6 sm:mb-8">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 text-transparent bg-clip-text">
-                  Curriculum PAES - Nivel {level}
+                  {t('level')} {level}
                 </h1>
-                {level === 'M1' && (
-                  <Link
-                    href="/curriculum/m1/docs"
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg transition-colors text-xs sm:text-sm flex items-center gap-2 whitespace-nowrap self-start"
+                <div className="flex gap-2">
+                  <button
+                    onClick={copyCurriculum}
+                    disabled={copyStatus === 'copying'}
+                    className={`font-medium py-2 px-3 sm:px-4 rounded-lg transition-colors text-xs sm:text-sm flex items-center gap-2 whitespace-nowrap self-start ${
+                      copyStatus === 'success'
+                        ? 'bg-green-600 text-white'
+                        : copyStatus === 'error'
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-600 hover:bg-gray-700 text-white'
+                    }`}
+                    title={t('copyTooltip', { level })}
                   >
-                    📖 <span className="hidden sm:inline">Ver Documentación Detallada</span><span className="sm:hidden">Docs</span>
-                  </Link>
-                )}
+                    {copyStatus === 'copying' ? (
+                      <>⏳ <span className="hidden sm:inline">{t('copying')}</span></>
+                    ) : copyStatus === 'success' ? (
+                      <>✓ <span className="hidden sm:inline">{t('copied')}</span></>
+                    ) : copyStatus === 'error' ? (
+                      <>✗ <span className="hidden sm:inline">{t('copyError')}</span></>
+                    ) : (
+                      <>📋 <span className="hidden sm:inline">{t('copy')}</span></>
+                    )}
+                  </button>
+                  {level === 'M1' && (
+                    <Link
+                      href="/curriculum/m1/docs"
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg transition-colors text-xs sm:text-sm flex items-center gap-2 whitespace-nowrap self-start"
+                    >
+                      📖 <span className="hidden sm:inline">{t('viewDocs')}</span><span className="sm:hidden">{t('docs')}</span>
+                    </Link>
+                  )}
+                </div>
               </div>
               <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base md:text-lg mb-2">
-                {level === 'M1'
-                  ? 'Competencia Matemática 1 - Contenidos básicos'
-                  : 'Competencia Matemática 2 - Contenidos avanzados'}
+                {level === 'M1' ? t('m1Title') : t('m2Title')}
               </p>
               <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 flex flex-wrap gap-1">
-                <span><span className="font-semibold">Duración:</span> 2h 20min</span>
+                <span><span className="font-semibold">{t('duration')}:</span> 2h 20min</span>
                 <span className="hidden sm:inline">|</span>
-                <span><span className="font-semibold">Preguntas:</span> {level === 'M1' ? '65 (60 para puntaje)' : '55 (50 para puntaje)'}</span>
-                {level === 'M2' && <><span className="hidden sm:inline">|</span><span>Incluye Suficiencia de Datos</span></>}
+                <span><span className="font-semibold">{t('questions')}:</span> {level === 'M1' ? '65 (60 para puntaje)' : '55 (50 para puntaje)'}</span>
+                {level === 'M2' && <><span className="hidden sm:inline">|</span><span>{t('includesSufficiency')}</span></>}
               </div>
             </div>
 
             {/* Thematic Units */}
             <div className="mb-6 sm:mb-8">
               <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-800 dark:text-gray-100">
-                📚 Ejes Temáticos y Unidades
+                📚 {t('thematicAxes')}
               </h2>
 
               <div className="space-y-3 sm:space-y-4 mb-6">
@@ -223,7 +320,7 @@ export default function Curriculum({ level }: CurriculumProps) {
                             </h3>
                             <div className="flex items-center gap-2 sm:gap-3 mt-1">
                               <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                {subjectUnits.length} unidades temáticas
+                                {subjectUnits.length} {t('thematicUnits')}
                               </span>
                             </div>
                           </div>
@@ -232,7 +329,7 @@ export default function Curriculum({ level }: CurriculumProps) {
                           href={`/practice/${level.toLowerCase()}?subject=${mapSubjectToKey(subject)}`}
                           className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium py-2 px-3 sm:px-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 transition-colors text-xs sm:text-sm whitespace-nowrap self-start"
                         >
-                          Practicar →
+                          {t('practice')} →
                         </Link>
                       </div>
 
@@ -262,7 +359,7 @@ export default function Curriculum({ level }: CurriculumProps) {
                                       <div className="mt-2 pl-2 sm:pl-4 space-y-1.5 sm:space-y-2">
                                         <div className="bg-white/50 dark:bg-gray-800/50 rounded p-2">
                                           <p className="font-semibold text-xs sm:text-sm text-gray-700 dark:text-gray-300 mb-2">
-                                            📋 Subsecciones:
+                                            📋 {t('subsections')}:
                                           </p>
                                           <ul className="space-y-1">
                                             {unit.subsections.map((subsection) => (
@@ -292,10 +389,15 @@ export default function Curriculum({ level }: CurriculumProps) {
               {/* Habilidades */}
               <div className="mb-4 sm:mb-6 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-4 sm:p-5 md:p-6 border-2 border-indigo-200 dark:border-indigo-700">
                 <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-indigo-900 dark:text-indigo-100">
-                  🎯 Habilidades Evaluadas
+                  🎯 {t('skills')}
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
-                  {['Resolver problemas', 'Modelar', 'Representar', 'Argumentar'].map((skill) => (
+                  {[
+                    t('skillsEvaluated.problemSolving'),
+                    t('skillsEvaluated.modeling'),
+                    t('skillsEvaluated.representing'),
+                    t('skillsEvaluated.arguing')
+                  ].map((skill) => (
                     <div key={skill} className="bg-white dark:bg-gray-800 rounded-lg p-2 sm:p-3 text-center">
                       <span className="text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200">{skill}</span>
                     </div>
@@ -306,7 +408,7 @@ export default function Curriculum({ level }: CurriculumProps) {
               {/* Skill-Topic Matrix */}
               <div className="mb-4 sm:mb-6 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-4 sm:p-5 md:p-6 border-2 border-purple-200 dark:border-purple-700">
                 <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-purple-900 dark:text-purple-100">
-                  🧩 Matriz Habilidad-Eje Temático
+                  🧩 {t('skillMatrix')}
                 </h3>
                 <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-3 sm:mb-4">
                   Cada eje temático evalúa diferentes habilidades. Esta matriz muestra qué habilidades se requieren en cada área.
@@ -335,13 +437,13 @@ export default function Curriculum({ level }: CurriculumProps) {
                 href={`/practice/${level.toLowerCase()}`}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 sm:py-3 px-6 sm:px-8 rounded-lg transition-colors text-sm sm:text-base text-center"
               >
-                Comenzar Práctica
+                {t('startPractice')}
               </Link>
               <Link
                 href="/dashboard"
                 className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2.5 sm:py-3 px-6 sm:px-8 rounded-lg transition-colors text-sm sm:text-base text-center"
               >
-                Volver al Inicio
+                {t('backHome')}
               </Link>
             </div>
           </div>
