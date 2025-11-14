@@ -491,10 +491,8 @@ export default function LearnPage() {
                   {showHint ? '🙈 Ocultar pista' : '💡 Ver una pista primero'}
                 </button>
                 {showHint && (
-                  <div className="mt-3 p-3 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-                    <Text size="sm" className="text-yellow-900 dark:text-yellow-100">
-                      {problem.hint}
-                    </Text>
+                  <div className="mt-3 p-3 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-lg text-sm text-yellow-900 dark:text-yellow-100">
+                    <MarkdownViewer content={problem.hint} />
                   </div>
                 )}
               </div>
@@ -612,10 +610,8 @@ export default function LearnPage() {
                     {showHint ? '🙈 Ocultar pista' : '💡 ¿Necesitas una pista?'}
                   </button>
                   {showHint && (
-                    <div className="mt-2 p-3 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-                      <Text size="sm" className="text-yellow-900 dark:text-yellow-100">
-                        {problem.hint}
-                      </Text>
+                    <div className="mt-2 p-3 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-lg text-sm text-yellow-900 dark:text-yellow-100">
+                      <MarkdownViewer content={problem.hint} />
                     </div>
                   )}
                 </div>
@@ -693,9 +689,9 @@ export default function LearnPage() {
                     </div>
                     {verification.correctAnswer && (
                       <div className="mt-2 pt-2 border-t border-orange-200 dark:border-orange-800">
-                        <Text size="sm" className="font-semibold text-orange-700 dark:text-orange-300">
-                          Respuesta correcta: {verification.correctAnswer}
-                        </Text>
+                        <div className="text-sm font-semibold text-orange-700 dark:text-orange-300">
+                          Respuesta correcta: <MarkdownViewer content={verification.correctAnswer} />
+                        </div>
                       </div>
                     )}
                   </div>

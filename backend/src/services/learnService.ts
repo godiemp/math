@@ -81,7 +81,14 @@ IMPORTANTE:
 - Debe tener una solución clara paso a paso
 - Cada paso debe ser verificable
 - Los números deben dar resultados "limpios"
-- Responde SOLO con JSON válido`;
+- Responde SOLO con JSON válido
+
+FORMATO LATEX:
+- Usa $...$ para matemáticas en línea (ejemplo: $x + 5 = 10$)
+- Usa $$...$$ para ecuaciones centradas en su propia línea
+- Siempre usa LaTeX para expresiones matemáticas, fracciones: $\\frac{a}{b}$, raíces: $\\sqrt{x}$, exponentes: $x^2$
+- Para multiplicación usa $\\times$ o $\\cdot$, para división usa $\\div$ o fracciones
+- Ejemplos: $2x + 3 = 7$, $\\frac{3}{4}$, $x^2 + 2x - 8 = 0$, $\\sqrt{16}$`;
 
   const userPrompt = `Genera un problema de práctica de matemáticas con estas especificaciones:
 
@@ -91,23 +98,23 @@ IMPORTANTE:
 
 El problema debe resolverse en 3-5 pasos claros.
 
-Responde con este formato JSON:
+Responde con este formato JSON (asegúrate de usar LaTeX para todas las expresiones matemáticas):
 {
-  "question": "Texto del problema",
-  "questionLatex": "Texto con $LaTeX$ si es necesario",
+  "question": "Texto simple del problema (sin LaTeX)",
+  "questionLatex": "Texto del problema con expresiones matemáticas en LaTeX. Ejemplo: Resuelve la ecuación $2x + 5 = 13$ y encuentra el valor de $x$.",
   "topic": "${topicFocus}",
   "difficulty": "media",
   "steps": [
     {
       "number": 1,
-      "description": "¿Qué debes hacer primero?",
-      "guidance": "Pista o guía para este paso",
-      "correctAnswer": "respuesta esperada",
-      "explanation": "Por qué es así"
+      "description": "Descripción breve del paso (puede incluir LaTeX si es necesario)",
+      "guidance": "Guía para resolver este paso (usa LaTeX para las expresiones matemáticas)",
+      "correctAnswer": "respuesta esperada (usa LaTeX si es matemática, ejemplo: $x = 4$ o $\\frac{3}{4}$)",
+      "explanation": "Explicación clara con LaTeX donde sea necesario"
     }
   ],
-  "finalAnswer": "Respuesta completa del problema",
-  "hint": "Pista inicial para empezar"
+  "finalAnswer": "Respuesta completa del problema (usa LaTeX para expresiones matemáticas)",
+  "hint": "Pista inicial para empezar (usa LaTeX si es necesario)"
 }`;
 
   try {
@@ -242,10 +249,15 @@ export async function verifyStep(
 
 ¿La respuesta del estudiante es correcta? Considera que puede estar en diferente notación pero ser equivalente.
 
+FORMATO DEL FEEDBACK:
+- Usa LaTeX para todas las expresiones matemáticas en el feedback
+- Inline math: $expresión$
+- Ejemplos: $x = 5$, $\\frac{2}{3}$, $2x + 3$
+
 Responde con JSON:
 {
   "correct": true o false,
-  "feedback": "Retroalimentación para el estudiante (2-3 oraciones)"
+  "feedback": "Retroalimentación para el estudiante (2-3 oraciones, usa LaTeX para matemáticas)"
 }`;
 
   try {
