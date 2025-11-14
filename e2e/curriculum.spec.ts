@@ -73,8 +73,9 @@ test.describe('Curriculum Pages', () => {
     await page.goto('/curriculum/m1', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(2000);
 
-    // Find a topic button (they have ▶ or ▼ indicators)
-    const firstTopicButton = page.locator('button').filter({ hasText: /▶|▼/ }).first();
+    // Find an individual topic button (not the "Expandir todas" button)
+    // Individual topic buttons are inside <li> elements
+    const firstTopicButton = page.locator('li button').filter({ hasText: /▶|▼/ }).first();
     await expect(firstTopicButton).toBeVisible();
 
     // Check initial state (collapsed, showing ▶)
@@ -108,6 +109,51 @@ test.describe('Curriculum Pages', () => {
       expect(finalText).toContain('▶');
     } else {
       expect(finalText).toContain('▼');
+    }
+  });
+
+  test('should expand and collapse all topics in a subject', async ({ page }) => {
+    await page.goto('/curriculum/m1', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(2000);
+
+    // Find the "Expandir todas" / "Contraer todas" button for the first subject
+    const expandAllButton = page.locator('button').filter({ hasText: /Expandir todas|Contraer todas/i }).first();
+    await expect(expandAllButton).toBeVisible();
+
+    // Check initial state
+    const initialText = await expandAllButton.textContent();
+    const allInitiallyCollapsed = initialText?.includes('Expandir todas');
+
+    // Click to expand/collapse all
+    await expandAllButton.click();
+    await page.waitForTimeout(500);
+
+    // Check that the button text changed
+    const afterClickText = await expandAllButton.textContent();
+    if (allInitiallyCollapsed) {
+      // Should now show "Contraer todas" (all expanded)
+      expect(afterClickText).toContain('Contraer todas');
+      // Verify that multiple topics are expanded
+      const expandedTopics = await page.locator('li button').filter({ hasText: '▼' }).count();
+      expect(expandedTopics).toBeGreaterThan(0);
+    } else {
+      // Should now show "Expandir todas" (all collapsed)
+      expect(afterClickText).toContain('Expandir todas');
+      // Verify that topics are collapsed
+      const collapsedTopics = await page.locator('li button').filter({ hasText: '▶' }).count();
+      expect(collapsedTopics).toBeGreaterThan(0);
+    }
+
+    // Click again to toggle back
+    await expandAllButton.click();
+    await page.waitForTimeout(500);
+
+    // Should return to original state
+    const finalText = await expandAllButton.textContent();
+    if (allInitiallyCollapsed) {
+      expect(finalText).toContain('Expandir todas');
+    } else {
+      expect(finalText).toContain('Contraer todas');
     }
   });
 
