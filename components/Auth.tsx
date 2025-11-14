@@ -224,7 +224,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                 borderRadius: 'var(--radius-sm)',
                 outline: 'none',
               }}
-              placeholder={isLogin ? 'usuario o email@ejemplo.com' : 'usuario123'}
+              placeholder={isLogin ? t('placeholders.usernameOrEmail') : t('placeholders.username')}
               onFocus={(e) => {
                 e.target.style.borderColor = 'var(--color-tint)';
                 e.target.style.borderWidth = '2px';
@@ -292,7 +292,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                   borderRadius: 'var(--radius-sm)',
                   outline: 'none',
                 }}
-                placeholder={isLogin ? 'tu contraseña' : 'mínimo 8 caracteres'}
+                placeholder={isLogin ? t('placeholders.password') : t('placeholders.passwordMin')}
                 onFocus={(e) => {
                   e.target.style.borderColor = 'var(--color-tint)';
                   e.target.style.borderWidth = '2px';
@@ -307,7 +307,7 @@ export default function Auth({ onSuccess }: AuthProps) {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "ocultar contraseña" : "mostrar contraseña"}
+                aria-label={showPassword ? t('aria.hidePassword') : t('aria.showPassword')}
                 className="spring-motion"
                 style={{
                   position: 'absolute',
@@ -377,7 +377,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                   borderRadius: 'var(--radius-sm)',
                   outline: 'none',
                 }}
-                placeholder="email@ejemplo.com"
+                placeholder={t('placeholders.email')}
                 onFocus={(e) => {
                   e.target.style.borderColor = 'var(--color-tint)';
                   e.target.style.borderWidth = '2px';
@@ -429,7 +429,7 @@ export default function Auth({ onSuccess }: AuthProps) {
                   borderRadius: 'var(--radius-sm)',
                   outline: 'none',
                 }}
-                placeholder="tu nombre"
+                placeholder={t('placeholders.displayName')}
                 onFocus={(e) => {
                   e.target.style.borderColor = 'var(--color-tint)';
                   e.target.style.borderWidth = '2px';

@@ -121,8 +121,8 @@ test.describe('Student Profile Page', () => {
     await expect(page.getByLabel(/Email/i)).toBeVisible();
 
     // Check for buttons
-    await expect(page.getByRole('button', { name: /Cancelar/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Guardar Cambios/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /cancelar/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /guardar cambios/i })).toBeVisible();
   });
 
   test('should close edit modal when clicking cancel', async ({ page }) => {
@@ -134,7 +134,7 @@ test.describe('Student Profile Page', () => {
     // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Click cancel
-    await page.getByRole('button', { name: /Cancelar/i }).click();
+    await page.getByRole('button', { name: /cancelar/i }).click();
     // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Modal should be closed (heading not visible)

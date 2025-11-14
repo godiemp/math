@@ -93,7 +93,7 @@ test.describe('Live Practice Registration', () => {
     await expect(page.getByText(/por Test Admin/i)).toBeVisible();
 
     // Check status badge
-    await expect(page.getByText('Programado')).toBeVisible();
+    await expect(page.getByText('programado')).toBeVisible();
 
     // Check level badge
     await expect(page.getByText('M1')).toBeVisible();

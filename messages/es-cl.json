@@ -1,5 +1,17 @@
 {
   "auth": {
+    "placeholders": {
+      "usernameOrEmail": "usuario o email@ejemplo.com",
+      "username": "usuario123",
+      "password": "tu contraseña",
+      "passwordMin": "mínimo 6 caracteres",
+      "email": "email@ejemplo.com",
+      "displayName": "tu nombre"
+    },
+    "aria": {
+      "hidePassword": "ocultar contraseña",
+      "showPassword": "mostrar contraseña"
+    },
     "login": {
       "title": "iniciar sesión",
       "userOrEmail": "usuario o email",
@@ -48,8 +60,30 @@
       "error": "error al enviar el enlace",
       "errors": {
         "emailRequired": "por favor ingresa tu correo electrónico",
-        "invalidToken": "token de restablecimiento inválido"
-      }
+        "invalidToken": "token de restablecimiento inválido",
+        "connection": "error de conexión. por favor intenta de nuevo."
+      },
+      "toast": {
+        "success": "revisa tu correo para restablecer tu contraseña",
+        "error": "error al enviar el correo de recuperación"
+      },
+      "titleSent": "revisa tu correo",
+      "titleRequest": "recuperar contraseña",
+      "subtitleSent": "si existe una cuenta con ese correo, te hemos enviado un enlace para restablecer tu contraseña.",
+      "subtitleRequest": "ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.",
+      "label": {
+        "email": "correo electrónico"
+      },
+      "placeholder": {
+        "email": "tu@email.com"
+      },
+      "button": {
+        "sending": "enviando...",
+        "send": "enviar enlace de recuperación",
+        "backToHome": "volver al inicio",
+        "sendAgain": "enviar de nuevo"
+      },
+      "successMessage": "✓ si existe una cuenta con el correo {email}, recibirás un enlace para restablecer tu contraseña. el enlace expirará en 1 hora."
     },
     "resetPassword": {
       "title": "restablecer contraseña",
@@ -63,35 +97,88 @@
       "error": "error al actualizar la contraseña",
       "errors": {
         "passwordMismatch": "las contraseñas no coinciden",
-        "passwordLength": "la contraseña debe tener al menos 8 caracteres"
-      }
+        "passwordLength": "la contraseña debe tener al menos 8 caracteres",
+        "invalidToken": "token de restablecimiento inválido",
+        "completeFields": "por favor completa todos los campos",
+        "connection": "error de conexión. por favor intenta de nuevo."
+      },
+      "toast": {
+        "success": "contraseña restablecida exitosamente",
+        "error": "error al restablecer la contraseña"
+      },
+      "invalid": {
+        "title": "enlace inválido",
+        "message": "el enlace de restablecimiento es inválido o ha expirado."
+      },
+      "button": {
+        "requestNew": "solicitar nuevo enlace",
+        "resetting": "restableciendo...",
+        "reset": "restablecer contraseña",
+        "goToLogin": "ir al inicio de sesión"
+      },
+      "titleDone": "¡listo!",
+      "titleNewPassword": "nueva contraseña",
+      "subtitleSuccess": "tu contraseña ha sido restablecida exitosamente.",
+      "subtitleEnter": "ingresa tu nueva contraseña.",
+      "label": {
+        "newPassword": "nueva contraseña",
+        "confirmPassword": "confirmar contraseña"
+      },
+      "placeholder": {
+        "newPassword": "mínimo 8 caracteres",
+        "confirmPassword": "repite tu contraseña"
+      },
+      "requirement": "la contraseña debe tener al menos 8 caracteres.",
+      "successMessage": "✓ tu contraseña ha sido restablecida exitosamente. serás redirigido al inicio de sesión...",
+      "loading": "cargando..."
     }
   },
   "dashboard": {
     "title": "SimplePAES - Matemática",
     "greeting": "hola, {username}",
     "hello": "hola",
+    "loading": "preparando tu panel...",
     "menu": {
       "profile": "mi perfil",
       "premium": "premium",
       "admin": "admin",
       "logout": "cerrar sesión"
     },
+    "errors": {
+      "loadError": "error al cargar el panel. por favor, intenta recargar la página.",
+      "title": "error al cargar",
+      "reload": "recargar página"
+    },
+    "status": {
+      "scheduled": "programado",
+      "lobbyOpen": "lobby abierto",
+      "active": "en curso"
+    },
     "liveSession": {
       "title": "ensayo PAES en vivo",
       "subtitle": "práctica con otros estudiantes en tiempo real",
+      "header": "ensayo PAES en vivo",
       "nextSession": "próximo ensayo",
       "cta": "¡regístrate ahora!",
-      "invite": "invitar amigos"
+      "invite": "invitar amigos",
+      "registerNow": "¡regístrate ahora! →",
+      "viewAvailable": "ver ensayos disponibles →",
+      "registerDescription": "¡regístrate ahora! practica con ensayos PAES en tiempo real y compite con otros estudiantes.",
+      "newDescription": "¡nuevo! practica con ensayos PAES en tiempo real. regístrate, únete al lobby antes de comenzar y compite con otros estudiantes."
     },
     "operations": {
       "title": "práctica de operaciones",
       "subtitle": "domina operaciones básicas progresivamente",
+      "header": "práctica de operaciones",
+      "description": "domina operaciones básicas progresivamente",
       "cta": "comenzar"
     },
     "curriculum": {
       "title": "temario PAES matemática",
       "subtitle": "revisa todo el contenido oficial",
+      "curriculumOfficial": "📋 currículo oficial",
+      "documentation": "📖 documentación completa",
+      "reviewOfficial": "revisa los contenidos oficiales evaluados en la PAES",
       "m1": "M1",
       "m2": "M2",
       "m1Full": "matemática 1",
@@ -108,6 +195,13 @@
     "improving": {
       "title": "¡estamos mejorando!",
       "backHome": "volver al inicio"
+    },
+    "improvement": {
+      "header": "¡estamos mejorando!",
+      "message": "estamos mejorando los problemas para tener problemas estilo PAES. hasta ahora tenemos los temarios cubiertos pero no el formato. pronto tendrás una experiencia más cercana al examen real."
+    },
+    "footer": {
+      "copyright": "© 2024 SimplePAES - plataforma de preparación matemática"
     }
   },
   "practice": {
@@ -385,7 +479,76 @@
   "pricing": {
     "title": "el precio",
     "description": "8.000 al mes. es menos que un preu, menos que una salida al cine. cuando pagas, te comprometes de verdad. y puede ser la diferencia para entrar a la u que quieres.",
-    "cta": "elegir plan"
+    "cta": "elegir plan",
+    "errors": {
+      "mustLogin": "debes iniciar sesión para suscribirte",
+      "alreadySubscribed": "ya tienes una suscripción activa"
+    },
+    "trial": {
+      "activated": "¡prueba gratuita activada! disfruta 7 días de acceso completo"
+    },
+    "duration": {
+      "oneMonth": "1 mes",
+      "threeMonths": "3 meses",
+      "sixMonths": "6 meses",
+      "oneYear": "1 año",
+      "days": "{days} días"
+    },
+    "header": {
+      "title": "planes de suscripción",
+      "subtitle": "elige el plan que mejor se adapte a tus necesidades y mejora tu preparación para la PAES"
+    },
+    "currentStatus": {
+      "label": "estado actual:",
+      "active": "suscripción activa ✓",
+      "free": "usuario gratuito"
+    },
+    "badge": {
+      "recommended": "recomendado",
+      "premium": "premium"
+    },
+    "plan": {
+      "per": "por",
+      "trialDays": "{days} días de prueba gratis"
+    },
+    "button": {
+      "processing": "procesando...",
+      "subscribed": "ya tienes una suscripción",
+      "subscribe": "suscribirse"
+    },
+    "noPlans": "no hay planes disponibles en este momento",
+    "faqSection": {
+      "header": "preguntas frecuentes",
+      "trial": {
+        "question": "¿cómo funciona el período de prueba?",
+        "answer": "tendrás acceso completo a todas las funciones premium durante el período de prueba. si cancelas antes de que termine, no se te cobrará nada."
+      },
+      "cancel": {
+        "question": "¿puedo cancelar en cualquier momento?",
+        "answer": "sí, puedes cancelar tu suscripción en cualquier momento desde tu perfil. mantendrás el acceso hasta el final del período pagado."
+      },
+      "payment": {
+        "question": "¿qué métodos de pago aceptan?",
+        "answer": "aceptamos todos los métodos de pago disponibles en MercadoPago, incluyendo tarjetas de crédito, débito, y transferencias bancarias."
+      }
+    },
+    "modal": {
+      "title": "elige cómo empezar",
+      "tryFirst": {
+        "title": "probar y pagar después",
+        "description": "comienza tu prueba gratuita de 7 días ahora. no se requiere tarjeta.",
+        "benefit1": "✓ sin tarjeta requerida",
+        "benefit2": "✓ 7 días de acceso completo gratis",
+        "benefit3": "✓ paga solo si decides continuar"
+      },
+      "payNow": {
+        "title": "pagar ahora",
+        "description": "paga hoy y obtén acceso inmediato. tu prueba de 7 días comienza ahora.",
+        "benefit1": "✓ tu cargo comienza en 7 días",
+        "benefit2": "✓ acceso completo inmediato",
+        "benefit3": "✓ cancela en cualquier momento"
+      }
+    }
   },
   "contact": {
     "title": "contacto",
@@ -439,6 +602,14 @@
       "pricing": "el precio",
       "okUnderstood": "ok, entendido"
     },
+    "whatIncludes": {
+      "items": [
+        "problemas del temario oficial PAES",
+        "explicaciones cuando te equivocas",
+        "seguimiento de tu progreso",
+        "sesiones de práctica en vivo"
+      ]
+    },
     "howItWorks": {
       "title": "cómo funciona",
       "step1": {
@@ -461,6 +632,55 @@
       "progress": "seguimiento de progreso",
       "ai": "compañero de estudio AI",
       "curriculum": "temario oficial completo"
+    },
+    "pricingSection": {
+      "details": "8.000 CLP/mes • cancela cuando quieras • sin permanencia"
+    }
+  },
+  "liveSession": {
+    "toast": {
+      "registering": "registrando...",
+      "registered": "te has registrado al ensayo exitosamente",
+      "registerError": "error al registrarse",
+      "canceling": "cancelando registro...",
+      "canceled": "registro cancelado exitosamente",
+      "cancelError": "error al cancelar registro",
+      "joining": "uniéndote al ensayo...",
+      "joined": "te has unido al ensayo exitosamente",
+      "joinError": "error al unirse al ensayo"
+    },
+    "status": {
+      "scheduled": "programado",
+      "lobby": "lobby abierto",
+      "active": "en curso"
+    },
+    "header": {
+      "title": "ensayo PAES en vivo",
+      "subtitle": "regístrate y practica ensayos PAES con otros estudiantes en tiempo real"
+    },
+    "welcome": "bienvenido,",
+    "actions": {
+      "home": "inicio",
+      "exit": "salir"
+    },
+    "available": {
+      "title": "ensayos disponibles",
+      "none": "no hay ensayos disponibles en este momento",
+      "wait": "espera a que un administrador cree un nuevo ensayo"
+    },
+    "card": {
+      "by": "por",
+      "date": "📅 fecha:",
+      "level": "nivel:",
+      "questions": "preguntas:"
+    },
+    "buttons": {
+      "cancelRegistration": "cancelar registro",
+      "register": "registrarse",
+      "returnToLobby": "volver al lobby",
+      "enterLobby": "entrar al lobby",
+      "returnToSession": "volver a entrar",
+      "joinNow": "unirse ahora"
     }
   },
   "curriculum": {
@@ -502,6 +722,18 @@
     "displayName": "nombre para mostrar",
     "email": "email",
     "username": "usuario",
+    "navigation": {
+      "backHome": "← volver al inicio"
+    },
+    "header": {
+      "edit": "editar perfil"
+    },
+    "info": {
+      "email": "email:",
+      "role": "rol:",
+      "memberSince": "miembro desde:",
+      "targetLevel": "nivel objetivo:"
+    },
     "role": {
       "admin": "administrador",
       "student": "estudiante"
@@ -510,6 +742,8 @@
     "targetLevel": "nivel objetivo",
     "onlyM1": "solo M1",
     "m1AndM2": "M1 y M2",
+    "m1Only": "solo M1",
+    "m1AndM2Full": "M1 y M2",
     "whatPreparing": "¿qué estás preparando?",
     "subscription": "suscripción",
     "status": "estado",
@@ -517,20 +751,74 @@
       "active": "activa",
       "trial": "prueba gratuita",
       "expired": "expirada",
-      "canceled": "cancelada"
+      "canceled": "cancelada",
+      "unknown": "desconocida"
+    },
+    "subscriptionSection": {
+      "title": "suscripción",
+      "state": "estado:",
+      "none": "sin suscripción",
+      "active": "activa",
+      "trial": "prueba gratuita",
+      "expired": "expirada",
+      "canceled": "cancelada",
+      "unknown": "desconocida",
+      "startDate": "fecha de inicio:",
+      "expirationDate": "fecha de expiración:",
+      "trialUntil": "prueba gratuita hasta:",
+      "autoRenew": "renovación automática:",
+      "enabled": "activada",
+      "disabled": "desactivada",
+      "renew": "renovar suscripción",
+      "noActive": "no tienes una suscripción activa",
+      "viewPlans": "ver planes"
     },
     "startDate": "fecha de inicio",
     "autoRenewal": "renovación automática",
     "enabled": "activada",
     "disabled": "desactivada",
     "practiceStreaks": "rachas de práctica",
+    "streaks": {
+      "practice": "rachas de práctica",
+      "lastPractice": "última práctica:"
+    },
     "currentStreak": "racha actual",
     "bestStreak": "mejor racha",
     "generalStats": "estadísticas generales",
+    "stats": {
+      "title": "estadísticas generales",
+      "totalQuestions": "total de preguntas:",
+      "correctAnswers": "respuestas correctas:",
+      "generalAccuracy": "precisión general:",
+      "questionsM1": "preguntas M1",
+      "questionsM2": "preguntas M2"
+    },
     "totalQuestions": "total de preguntas",
     "correctAnswers": "respuestas correctas",
     "overallAccuracy": "precisión general",
     "quickActions": "acciones rápidas",
+    "quickActionsSection": {
+      "title": "acciones rápidas",
+      "viewProgress": "ver mi progreso",
+      "practiceM1": "practicar M1",
+      "practiceM2": "practicar M2",
+      "paymentHistory": "historial de pagos"
+    },
+    "edit": {
+      "modal": {
+        "title": "editar perfil",
+        "displayName": "nombre para mostrar",
+        "displayNamePlaceholder": "ej: Juan Pérez",
+        "emailPlaceholder": "tu-email@ejemplo.com",
+        "targetLevelQuestion": "¿qué estás preparando?",
+        "m1AndM2Option": "M1 y M2 (carreras científicas/ingeniería)",
+        "m1OnlyOption": "solo M1 (otras carreras)",
+        "m1Description": "si solo necesitas M1, ocultaremos las opciones de práctica de M2",
+        "cancel": "cancelar",
+        "saving": "guardando...",
+        "saveChanges": "guardar cambios"
+      }
+    },
     "save": "guardar cambios",
     "success": "perfil actualizado correctamente",
     "error": "error al actualizar el perfil"
@@ -578,6 +866,43 @@
     "expandH2": "expandir solo títulos principales (H2)",
     "expandH3": "expandir hasta subtítulos (H3)",
     "expandH4": "expandir hasta nivel 4 (H4)"
+  },
+  "admin": {
+    "sidebar": {
+      "title": "admin panel",
+      "toggleLabel": "toggle sidebar"
+    },
+    "groups": {
+      "monitoring": "monitoring & sessions",
+      "userManagement": "user management",
+      "contentManagement": "content management",
+      "tools": "tools",
+      "debugTools": "debug tools"
+    },
+    "items": {
+      "liveSessions": "live sessions",
+      "certificates": "certificates",
+      "analytics": "analytics",
+      "aiAnalytics": "AI analytics",
+      "systemHealth": "system health",
+      "users": "users",
+      "problems": "problems",
+      "abstractProblems": "abstract problems",
+      "generator": "generator",
+      "upload": "upload",
+      "studyBuddyDebug": "study buddy debug",
+      "rapidFireDebug": "rapid fire debug",
+      "zenDebug": "zen debug"
+    },
+    "button": {
+      "backToHome": "back to home"
+    },
+    "header": {
+      "livePractice": "live practice"
+    },
+    "redirect": {
+      "message": "redirecting to live sessions..."
+    }
   },
   "common": {
     "loading": "cargando...",

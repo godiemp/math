@@ -12,8 +12,11 @@ import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar } from "@/com
 import { StudyBuddy } from "@/components/StudyBuddy";
 import { ShareModal } from "@/components/ShareModal";
 import { Share2 } from "lucide-react";
+import { useTranslations } from 'next-intl';
 
 function DashboardContent() {
+  const t = useTranslations('dashboard');
+  const tCommon = useTranslations('common');
   const { user, setUser, isAdmin, isPaidUser, isLoading: authLoading } = useAuth();
   const router = useRouter();
   const [isLoadingData, setIsLoadingData] = useState(true);
@@ -75,7 +78,7 @@ function DashboardContent() {
       } catch (err) {
         console.error('Error loading dashboard data:', err);
         if (isMounted) {
-          setError('Error al cargar el panel. Por favor, intenta recargar la página.');
+          setError(t('errors.loadError'));
           setIsLoadingData(false);
         }
       }
@@ -110,11 +113,11 @@ function DashboardContent() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'scheduled':
-        return <Badge variant="info">Programado</Badge>;
+        return <Badge variant="info">{t('status.scheduled')}</Badge>;
       case 'lobby':
-        return <Badge variant="warning">Lobby Abierto</Badge>;
+        return <Badge variant="warning">{t('status.lobbyOpen')}</Badge>;
       case 'active':
-        return <Badge variant="success">En Curso</Badge>;
+        return <Badge variant="success">{t('status.active')}</Badge>;
       default:
         return null;
     }
@@ -122,7 +125,7 @@ function DashboardContent() {
 
   // Show loading screen while auth or data is being loaded
   if (authLoading || isLoadingData) {
-    return <LoadingScreen message="Preparando tu panel..." />;
+    return <LoadingScreen message={t('loading')} />;
   }
 
   // Show error UI if data loading failed
@@ -131,10 +134,10 @@ function DashboardContent() {
       <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] flex items-center justify-center p-4">
         <Card className="max-w-md w-full p-6 text-center">
           <div className="text-4xl mb-4">⚠️</div>
-          <Heading level={2} size="sm" className="mb-3">Error al Cargar</Heading>
+          <Heading level={2} size="sm" className="mb-3">{t('errors.title')}</Heading>
           <Text variant="secondary" className="mb-6">{error}</Text>
           <Button onClick={() => window.location.reload()} className="w-full">
-            Recargar Página
+            {t('errors.reload')}
           </Button>
         </Card>
       </div>
@@ -147,28 +150,28 @@ function DashboardContent() {
       <Navbar className="min-h-14">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 py-0 sm:h-10">
           <Heading level={1} size="xs" className="text-[#0A84FF] text-sm sm:text-base">
-            SimplePAES - Matemática
+            {t('title')}
           </Heading>
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <Text size="sm" variant="secondary" className="text-xs sm:text-sm">
-              Hola, {user?.displayName || user?.username || 'Usuario'}
+              {t('greeting', { username: user?.displayName || user?.username || 'Usuario' })}
             </Text>
             <div className="flex gap-2 ml-auto sm:ml-0">
               <Button variant="ghost" onClick={() => router.push('/profile')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
-                Mi Perfil
+                {t('menu.profile')}
               </Button>
               {!isPaidUser && (
                 <Button variant="primary" onClick={() => router.push('/pricing')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
-                  ⭐ Premium
+                  ⭐ {t('menu.premium')}
                 </Button>
               )}
               {isAdmin && (
                 <Button variant="secondary" onClick={() => router.push('/admin')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
-                  Admin
+                  {t('menu.admin')}
                 </Button>
               )}
               <Button variant="danger" onClick={handleLogout} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
-                Cerrar Sesión
+                {t('menu.logout')}
               </Button>
             </div>
           </div>
@@ -190,13 +193,13 @@ function DashboardContent() {
           <div className="text-center relative z-10">
             <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">📝</div>
             <Heading level={3} size="sm" className="mb-2 sm:mb-3 text-white text-lg sm:text-xl">
-              Ensayo PAES en Vivo
+              {t('liveSession.header')}
             </Heading>
             {nextSession ? (
               <>
                 <div className="bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-3 sm:mb-4 inline-block w-full sm:w-auto">
                   <Text size="xs" className="text-white/80 font-semibold uppercase tracking-wider mb-1 text-[10px] sm:text-xs">
-                    Próximo Ensayo
+                    {t('liveSession.nextSession')}
                   </Text>
                   <div className="text-xl sm:text-2xl font-bold text-white mb-1">
                     {new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', {
@@ -216,18 +219,18 @@ function DashboardContent() {
                   </Text>
                 </div>
                 <Text size="md" className="mb-4 sm:mb-6 max-w-2xl mx-auto text-white/90 text-sm sm:text-base px-2">
-                  ¡Regístrate ahora! Practica con ensayos PAES en tiempo real y compite con otros estudiantes.
+                  {t('liveSession.registerDescription')}
                 </Text>
               </>
             ) : (
               <Text size="md" className="mb-4 sm:mb-6 max-w-2xl mx-auto text-white/90 text-sm sm:text-base px-2">
-                ¡Nuevo! Practica con ensayos PAES en tiempo real. Regístrate, únete al lobby antes de comenzar y compite con otros estudiantes.
+                {t('liveSession.newDescription')}
               </Text>
             )}
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-center justify-center px-2 sm:px-0">
               <Button asChild className="bg-white text-[#5E5CE6] hover:bg-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] w-full sm:w-auto text-sm sm:text-base">
                 <Link href="/live-practice">
-                  {nextSession ? '¡Regístrate Ahora! →' : 'Ver Ensayos Disponibles →'}
+                  {nextSession ? t('liveSession.registerNow') : t('liveSession.viewAvailable')}
                 </Link>
               </Button>
               {nextSession && (
@@ -237,7 +240,7 @@ function DashboardContent() {
                   className="bg-white/20 hover:bg-white/30 text-white border border-white/40 gap-2 w-full sm:w-auto text-sm sm:text-base"
                 >
                   <Share2 className="w-4 h-4" />
-                  Invitar amigos
+                  {t('liveSession.invite')}
                 </Button>
               )}
             </div>
@@ -251,7 +254,7 @@ function DashboardContent() {
               <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
               </svg>
-              Premium
+              {t('menu.premium')}
             </div>
           )}
 
@@ -262,16 +265,16 @@ function DashboardContent() {
                 <span className="text-2xl">🎯</span>
                 <div>
                   <Heading level={3} size="xs" className="text-sm mb-0.5">
-                    Práctica de Operaciones
+                    {t('operations.header')}
                   </Heading>
                   <Text size="xs" variant="secondary" className="text-[11px]">
-                    Domina operaciones básicas progresivamente
+                    {t('operations.description')}
                   </Text>
                 </div>
               </div>
               <Button asChild size="sm" className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-xs shrink-0">
                 <Link href="/practice/operations">
-                  Comenzar
+                  {t('operations.cta')}
                 </Link>
               </Button>
             </div>
@@ -286,17 +289,17 @@ function DashboardContent() {
                   <span className="text-xl">📐</span>
                   <div>
                     <Heading level={4} size="xs" className="text-sm mb-0.5">
-                      M1
+                      {t('curriculum.m1')}
                     </Heading>
                     <Text size="xs" variant="secondary" className="text-[11px]">
-                      Competencia básica
+                      {t('curriculum.basicCompetence')}
                     </Text>
                   </div>
                 </div>
                 {isPaidUser ? (
                   <Button asChild size="sm" className="text-xs shrink-0">
                     <Link href="/practice/m1">
-                      Practicar
+                      {t('curriculum.practice')}
                     </Link>
                   </Button>
                 ) : (
@@ -304,7 +307,7 @@ function DashboardContent() {
                     <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                     </svg>
-                    Practicar
+                    {t('curriculum.practice')}
                   </Button>
                 )}
               </div>
@@ -316,17 +319,17 @@ function DashboardContent() {
                     <span className="text-xl">🎓</span>
                     <div>
                       <Heading level={4} size="xs" className="text-sm mb-0.5">
-                        M2
+                        {t('curriculum.m2')}
                       </Heading>
                       <Text size="xs" variant="secondary" className="text-[11px]">
-                        Competencia avanzada
+                        {t('curriculum.advancedCompetence')}
                       </Text>
                     </div>
                   </div>
                   {isPaidUser ? (
                     <Button asChild size="sm" className="text-xs shrink-0">
                       <Link href="/practice/m2">
-                        Practicar
+                        {t('curriculum.practice')}
                       </Link>
                     </Button>
                   ) : (
@@ -334,7 +337,7 @@ function DashboardContent() {
                       <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                       </svg>
-                      Practicar
+                      {t('curriculum.practice')}
                     </Button>
                   )}
                 </div>
@@ -352,35 +355,35 @@ function DashboardContent() {
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
-                Premium
+                {t('menu.premium')}
               </div>
             )}
             <div className="text-center">
               <div className="text-4xl mb-4">📚</div>
               <Heading level={3} size="sm" className="mb-3">
-                Temario PAES Matemática
+                {t('curriculum.title')}
               </Heading>
               <Text size="sm" variant="secondary" className="mb-6">
-                Revisa los contenidos oficiales evaluados en la PAES
+                {t('curriculum.reviewOfficial')}
               </Text>
 
               {/* Curriculum Buttons */}
               <div className="mb-4">
                 <Text size="xs" variant="secondary" className="mb-2 font-semibold">
-                  📋 Currículo Oficial
+                  {t('curriculum.curriculumOfficial')}
                 </Text>
                 <div className="flex gap-3 justify-center flex-wrap">
                   {isPaidUser ? (
                     <>
                       <Button asChild variant="primary" size="sm">
                         <Link href="/curriculum/m1">
-                          M1
+                          {t('curriculum.m1')}
                         </Link>
                       </Button>
                       {user?.targetLevel !== 'M1_ONLY' && (
                         <Button asChild variant="secondary" size="sm">
                           <Link href="/curriculum/m2">
-                            M2
+                            {t('curriculum.m2')}
                           </Link>
                         </Button>
                       )}
@@ -391,14 +394,14 @@ function DashboardContent() {
                         <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                         </svg>
-                        M1
+                        {t('curriculum.m1')}
                       </Button>
                       {user?.targetLevel !== 'M1_ONLY' && (
                         <Button disabled variant="secondary" size="sm" className="opacity-60">
                           <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                           </svg>
-                          M2
+                          {t('curriculum.m2')}
                         </Button>
                       )}
                     </>
@@ -409,20 +412,20 @@ function DashboardContent() {
               {/* Documentation Buttons */}
               <div>
                 <Text size="xs" variant="secondary" className="mb-2 font-semibold">
-                  📖 Documentación Completa
+                  {t('curriculum.documentation')}
                 </Text>
                 <div className="flex gap-3 justify-center flex-wrap">
                   {isPaidUser ? (
                     <>
                       <Button asChild variant="primary" size="sm">
                         <Link href="/curriculum/m1/docs">
-                          Docs M1
+                          {t('curriculum.docs')} {t('curriculum.m1')}
                         </Link>
                       </Button>
                       {user?.targetLevel !== 'M1_ONLY' && (
                         <Button asChild variant="secondary" size="sm">
                           <Link href="/curriculum/m2/docs">
-                            Docs M2
+                            {t('curriculum.docs')} {t('curriculum.m2')}
                           </Link>
                         </Button>
                       )}
@@ -433,14 +436,14 @@ function DashboardContent() {
                         <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                         </svg>
-                        Docs M1
+                        {t('curriculum.docs')} {t('curriculum.m1')}
                       </Button>
                       {user?.targetLevel !== 'M1_ONLY' && (
                         <Button disabled variant="secondary" size="sm" className="opacity-60">
                           <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                           </svg>
-                          Docs M2
+                          {t('curriculum.docs')} {t('curriculum.m2')}
                         </Button>
                       )}
                     </>
@@ -457,21 +460,21 @@ function DashboardContent() {
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
-                Premium
+                {t('menu.premium')}
               </div>
             )}
             <div className="text-center h-full flex flex-col justify-center">
               <div className="text-4xl mb-4">📊</div>
               <Heading level={3} size="sm" className="mb-3">
-                Seguimiento de Progreso
+                {t('progress.title')}
               </Heading>
               <Text size="sm" variant="secondary" className="mb-6">
-                Revisa tu desempeño, estadísticas y mejora continua
+                {t('progress.subtitle')}
               </Text>
               {isPaidUser ? (
                 <Button asChild className="w-full">
                   <Link href="/progress">
-                    Ver Mi Progreso →
+                    {t('progress.cta')}
                   </Link>
                 </Button>
               ) : (
@@ -479,7 +482,7 @@ function DashboardContent() {
                   <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                   </svg>
-                  Ver Mi Progreso →
+                  {t('progress.cta')}
                 </Button>
               )}
             </div>
@@ -493,10 +496,10 @@ function DashboardContent() {
               <div className="text-2xl sm:text-3xl flex-shrink-0">🚀</div>
               <div className="flex-1">
                 <Heading level={3} size="xs" className="mb-2 text-amber-900 dark:text-amber-100">
-                  ¡Estamos Mejorando!
+                  {t('improvement.header')}
                 </Heading>
                 <Text size="sm" className="text-amber-800 dark:text-amber-200">
-                  Estamos mejorando los problemas para tener problemas estilo PAES. Hasta ahora tenemos los temarios cubiertos pero no el formato. Pronto tendrás una experiencia más cercana al examen real.
+                  {t('improvement.message')}
                 </Text>
               </div>
             </div>
@@ -534,7 +537,7 @@ function DashboardContent() {
       <footer className="backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-t border-black/[0.12] dark:border-white/[0.16] mt-8 sm:mt-10 md:mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-4 sm:py-5 md:py-6 text-center">
           <Text size="xs" variant="secondary">
-            © 2024 SimplePAES - Plataforma de Preparación Matemática
+            {t('footer.copyright')}
           </Text>
         </div>
       </footer>

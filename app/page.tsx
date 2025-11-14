@@ -215,12 +215,7 @@ export default function Home() {
                     {t('sections.whatIncludes')}
                   </h3>
                   <div className="space-y-2">
-                    {[
-                      'problemas del temario oficial PAES',
-                      'explicaciones cuando te equivocas',
-                      'seguimiento de tu progreso',
-                      'sesiones de práctica en vivo',
-                    ].map((item, i) => (
+                    {(t.raw('whatIncludes.items') as string[]).map((item: string, i: number) => (
                       <div key={i} className="flex items-start gap-2">
                         <span style={{ color: 'var(--color-tint)', marginTop: '4px', fontSize: '18px' }}>•</span>
                         <p
@@ -256,7 +251,7 @@ export default function Home() {
                       color: 'var(--color-label-secondary)',
                     }}
                   >
-                    8.000 al mes. es menos que un preu, menos que una salida al cine. cuando pagas, te comprometes de verdad. y puede ser la diferencia para entrar a la u que quieres.
+                    {t('description')}
                   </p>
                 </div>
 
@@ -276,7 +271,7 @@ export default function Home() {
                       textAlign: 'center',
                     }}
                   >
-                    <strong>8.000 CLP/mes</strong> • cancela cuando quieras • sin permanencia
+                    {t('pricingSection.details')}
                   </p>
                 </div>
               </div>
