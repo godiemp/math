@@ -15,6 +15,10 @@ interface UpdateProfileRequest {
   targetLevel?: 'M1_ONLY' | 'M1_AND_M2';
 }
 
+interface MarkWelcomeSeenRequest {
+  hasSeenWelcome: boolean;
+}
+
 /**
  * Update current user's profile
  */
@@ -126,5 +130,43 @@ export async function updateUserProfile(req: Request, res: Response): Promise<vo
   } catch (error) {
     console.error('Update profile error:', error);
     res.status(500).json({ error: 'Failed to update profile' });
+  }
+}
+
+/**
+ * Mark welcome message as seen for current user
+ */
+export async function markWelcomeSeen(req: Request, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
+
+    const userId = req.user.userId;
+
+    // Update has_seen_welcome flag
+    const query = `
+      UPDATE users
+      SET has_seen_welcome = TRUE, updated_at = $1
+      WHERE id = $2
+      RETURNING has_seen_welcome
+    `;
+
+    const result = await pool.query(query, [Date.now(), userId]);
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      message: 'Welcome message marked as seen',
+      hasSeenWelcome: result.rows[0].has_seen_welcome,
+    });
+  } catch (error) {
+    console.error('Mark welcome seen error:', error);
+    res.status(500).json({ error: 'Failed to mark welcome as seen' });
   }
 }

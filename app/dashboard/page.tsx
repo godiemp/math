@@ -3,14 +3,15 @@
 import Link from "next/link";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
 import { getAllAvailableSessions, updateSessionStatuses } from "@/lib/sessionApi";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { LiveSession } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar } from "@/components/ui";
 import { StudyBuddy } from "@/components/StudyBuddy";
 import { ShareModal } from "@/components/ShareModal";
+import { WelcomeMessage } from "@/components/WelcomeMessage";
 import { Share2 } from "lucide-react";
 import { useTranslations } from 'next-intl';
 
@@ -19,11 +20,21 @@ function DashboardContent() {
   const tCommon = useTranslations('common');
   const { user, setUser, isAdmin, isPaidUser, isLoading: authLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
   const [nextSession, setNextSession] = useState<LiveSession | null>(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isWelcomeOpen, setIsWelcomeOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Check if user should see welcome message (from query param)
+  useEffect(() => {
+    const welcomeParam = searchParams.get('welcome');
+    if (welcomeParam === 'true' && user) {
+      setIsWelcomeOpen(true);
+    }
+  }, [searchParams, user]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -97,6 +108,12 @@ function DashboardContent() {
     await logoutUser();
     setUser(null);
     router.push('/');
+  };
+
+  const handleWelcomeClose = () => {
+    setIsWelcomeOpen(false);
+    // Remove welcome query param from URL
+    router.replace('/dashboard');
   };
 
   const formatDate = (timestamp: number) => {
@@ -507,6 +524,9 @@ function DashboardContent() {
         </div>
       </main>
 
+      {/* Welcome Modal */}
+      <WelcomeMessage isOpen={isWelcomeOpen} onClose={handleWelcomeClose} />
+
       {/* Share Modal */}
       {nextSession && (
         <ShareModal
@@ -548,7 +568,9 @@ function DashboardContent() {
 export default function Dashboard() {
   return (
     <ProtectedRoute>
-      <DashboardContent />
+      <Suspense fallback={<LoadingScreen message="Cargando panel..." />}>
+        <DashboardContent />
+      </Suspense>
     </ProtectedRoute>
   );
 }
