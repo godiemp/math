@@ -527,7 +527,7 @@ export default function LearnPage() {
                     {!guidedMode && (
                       <Button
                         onClick={handleRequestHelp}
-                        variant="outline"
+                        variant="secondary"
                         className="whitespace-nowrap"
                       >
                         🆘 Ayúdame
@@ -607,14 +607,14 @@ export default function LearnPage() {
                     <div className="flex gap-3">
                       <Button
                         onClick={() => setVerification(null)}
-                        variant="outline"
+                        variant="secondary"
                         fullWidth
                       >
                         🔄 Intentar de nuevo
                       </Button>
                       <Button
                         onClick={handleRequestHelp}
-                        variant="outline"
+                        variant="secondary"
                         fullWidth
                       >
                         🆘 Ayúdame paso a paso
@@ -625,7 +625,7 @@ export default function LearnPage() {
                   {!verification.correct && guidedMode && (
                     <Button
                       onClick={() => setVerification(null)}
-                      variant="outline"
+                      variant="secondary"
                       fullWidth
                     >
                       🔄 Intentar de nuevo
