@@ -7,13 +7,37 @@ dotenv.config();
  * Seed initial subscription plans
  *
  * Plan types:
+ * - Weekly: Weekly subscription at 2.900 CLP with 7 days trial (MVP)
  * - Free: Basic access, limited features
- * - Trial: 7 days trial of premium features
- * - Basic: Monthly subscription at 8.000 CLP
+ * - Trial: 7 days trial of premium features (inactive)
+ * - Student: Monthly subscription at 8.000 CLP
+ * - Basic: Monthly subscription at 8.000 CLP (inactive - replaced by student)
  * - Premium: Future premium plan (not active yet)
  */
 
 const plans = [
+  {
+    id: 'weekly',
+    name: 'Plan Semanal',
+    description: 'Suscripción semanal con acceso completo + 7 días gratis',
+    price: 2900,
+    currency: 'CLP',
+    duration_days: 7,
+    trial_duration_days: 7, // 7 days trial before first payment
+    features: JSON.stringify([
+      '7 días gratis de prueba',
+      'Acceso completo a todas las preguntas',
+      'Sesiones de práctica en vivo',
+      'Tutor AI con método socrático',
+      'Analytics detallado de progreso',
+      'Generación de preguntas personalizadas',
+      'Sin límite de intentos',
+      'Cancela cuando quieras',
+      'Ideal para prueba rápida',
+    ]),
+    is_active: true,
+    display_order: 0, // First in the list
+  },
   {
     id: 'free',
     name: 'Gratis',
@@ -26,7 +50,7 @@ const plans = [
       'Acceso a ensayos en vivo',
     ]),
     is_active: true,
-    display_order: 2,
+    display_order: 3,
   },
   {
     id: 'trial',
@@ -44,8 +68,8 @@ const plans = [
       'Generación de preguntas personalizadas',
       'Sin límite de intentos',
     ]),
-    is_active: false, // Replaced by trial included in student plan
-    display_order: 2,
+    is_active: false, // Replaced by trial included in plans
+    display_order: 4,
   },
   {
     id: 'student',
@@ -86,7 +110,7 @@ const plans = [
       'Cancela cuando quieras',
     ]),
     is_active: false, // Replaced by student plan
-    display_order: 4,
+    display_order: 5,
   },
   {
     id: 'premium',
@@ -105,7 +129,7 @@ const plans = [
       'Soporte prioritario',
     ]),
     is_active: false, // Not active yet
-    display_order: 5,
+    display_order: 6,
   },
 ];
 
