@@ -4,7 +4,14 @@ import { m1GeometriaPerimetroAreaQuestions } from './perimetro-area';
 import { m1GeometriaVolumenQuestions } from './volumen';
 import { m1GeometriaTransformacionesQuestions } from './transformaciones';
 
-// Export individual topic arrays
+// Curriculum-based imports (M1-GEO-###)
+import { m1Geo001Questions } from './m1-geo-001';
+
+// Export curriculum subsections
+// M1-GEO-001: Teorema de Pitágoras
+export { m1Geo001Questions } from './m1-geo-001';
+
+// Export individual topic arrays (LEGACY - for backward compatibility)
 export { m1GeometriaPitagorasQuestions } from './teorema-pitagoras';
 export { m1GeometriaPerimetroAreaQuestions } from './perimetro-area';
 export { m1GeometriaVolumenQuestions } from './volumen';
