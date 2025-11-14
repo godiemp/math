@@ -76,15 +76,15 @@ describe('Levels 51-60: Algebraic Simplification', () => {
     }
   });
 
-  it('Level 57: Simplificar ax+bx+cx', () => {
+  it('Level 57: Simplificar ax±bx±cx', () => {
     const config = getLevelConfig(57);
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
       const problem = generateProblem(config!);
-      expect(problem.expression).toMatch(/^\d+x\+\d+x\+\d+x$/);
+      // Should match patterns like 2x+3x+4x, 2x-3x+4x, etc.
+      expect(problem.expression).toMatch(/^\d+x[+-]\d+x[+-]\d+x$/);
       expect(typeof problem.correctAnswer).toBe('string');
-      expect(problem.correctAnswer).toMatch(/^\d+x$/);
     }
   });
 

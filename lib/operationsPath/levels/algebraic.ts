@@ -272,14 +272,14 @@ export const algebraicLevels: OperationLevelDefinition[] = [
     config: { variables: ['x'], simplificationType: 'x±x±x',}
   },
   {
-    title: 'Simplificar ax+bx+cx',
+    title: 'Simplificar ax±bx±cx',
     operationType: 'simplification',
     phase: 'algebraic',
     difficulty: 'intermediate',
     problemsToComplete: 3,
     thematicUnits: ["M1-ALG-001","M1-ALG-002"],
 
-    config: { variables: ['x'], simplificationType: 'ax+bx+cx',}
+    config: { variables: ['x'], simplificationType: 'ax±bx±cx',}
   },
   {
     title: 'Simplificar ax+bx-cx',
