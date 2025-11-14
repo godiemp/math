@@ -31,7 +31,7 @@ interface VerificationResult {
   canProceed: boolean;
 }
 
-type GameMode = 'setup' | 'solving' | 'guided' | 'feedback';
+type GameMode = 'setup' | 'choosing' | 'solving' | 'guided' | 'feedback';
 type DifficultyLevel = 'easy' | 'medium' | 'hard';
 
 export default function LearnPage() {
@@ -105,7 +105,7 @@ export default function LearnPage() {
       }
 
       setProblem(response.data!);
-      setMode('solving');
+      setMode('choosing'); // Show question first, let student choose approach
     } catch (err) {
       setError('Error al generar problema. Por favor intenta de nuevo.');
       console.error(err);
@@ -217,6 +217,19 @@ export default function LearnPage() {
     } finally {
       setIsVerifying(false);
     }
+  };
+
+  const handleTryAlone = () => {
+    setGuidedMode(false);
+    setMode('solving');
+  };
+
+  const handleGetHelp = async () => {
+    if (!problem) return;
+
+    setGuidedMode(true);
+    setMode('guided');
+    await loadNextStep(problem.problemId, 0);
   };
 
   const handleRequestHelp = async () => {
@@ -390,6 +403,123 @@ export default function LearnPage() {
           <Text className="mt-4 text-slate-600 dark:text-slate-400">
             {questionsAnswered === 0 ? 'Preparando tu primera pregunta...' : 'Generando siguiente problema...'}
           </Text>
+        </div>
+      </div>
+    );
+  }
+
+  // Choosing approach - show question and let student decide
+  if (mode === 'choosing' && problem) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-8 px-4">
+        <div className="max-w-3xl mx-auto">
+          {/* Stats Header */}
+          <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-3">
+              <div className="px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900">
+                <Text size="sm" className="font-semibold">⭐ {xp} XP</Text>
+              </div>
+              {streak > 0 && (
+                <div className="px-3 py-1 rounded-full bg-orange-100 dark:bg-orange-900 animate-pulse">
+                  <Text size="sm" className="font-semibold">🔥 {streak}</Text>
+                </div>
+              )}
+            </div>
+            <Button
+              onClick={() => setMode('setup')}
+              variant="ghost"
+              size="sm"
+            >
+              ← Cambiar tema
+            </Button>
+          </div>
+
+          {/* Question Card */}
+          <Card className="mb-6 shadow-xl">
+            <div className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-t-xl -m-6 mb-6 p-6">
+              <div className="flex items-center justify-between">
+                <Heading level={2} className="text-white">
+                  Aquí está tu problema
+                </Heading>
+                <Text size="sm" className="text-white/90">
+                  {problem.topic} • {problem.difficulty}
+                </Text>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <MarkdownViewer content={problem.questionLatex || problem.question} />
+            </div>
+
+            <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-6 -mx-6 -mb-6">
+              <Heading level={3} className="text-center mb-4">
+                ¿Cómo quieres abordarlo?
+              </Heading>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Try Alone Button */}
+                <button
+                  onClick={handleTryAlone}
+                  className="group p-6 rounded-xl border-2 border-teal-300 dark:border-teal-700 bg-white dark:bg-slate-900 hover:border-teal-500 hover:bg-teal-50 dark:hover:bg-teal-950 transition-all hover:shadow-lg hover:scale-105"
+                >
+                  <div className="text-4xl mb-3">🚀</div>
+                  <Text className="font-bold text-lg mb-2">Puedo resolverlo</Text>
+                  <Text size="sm" variant="secondary">
+                    Intentaré por mi cuenta y obtendré más XP
+                  </Text>
+                </button>
+
+                {/* Get Help Button */}
+                <button
+                  onClick={handleGetHelp}
+                  className="group p-6 rounded-xl border-2 border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-900 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all hover:shadow-lg hover:scale-105"
+                >
+                  <div className="text-4xl mb-3">🤝</div>
+                  <Text className="font-bold text-lg mb-2">Ayúdame paso a paso</Text>
+                  <Text size="sm" variant="secondary">
+                    Guíame a través de la solución
+                  </Text>
+                </button>
+              </div>
+
+              {/* Optional Hint */}
+              <div className="mt-4 text-center">
+                <button
+                  onClick={() => setShowHint(!showHint)}
+                  className="text-sm text-slate-600 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+                >
+                  {showHint ? '🙈 Ocultar pista' : '💡 Ver una pista primero'}
+                </button>
+                {showHint && (
+                  <div className="mt-3 p-3 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                    <Text size="sm" className="text-yellow-900 dark:text-yellow-100">
+                      {problem.hint}
+                    </Text>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Card>
+
+          {/* Session Stats */}
+          <div className="grid grid-cols-3 gap-4">
+            <Card className="text-center">
+              <Text size="sm" variant="secondary">Preguntas</Text>
+              <Text className="text-2xl font-bold">{questionsAnswered}</Text>
+            </Card>
+            <Card className="text-center">
+              <Text size="sm" variant="secondary">Correctas</Text>
+              <Text className="text-2xl font-bold text-green-600 dark:text-green-400">
+                {correctCount}
+              </Text>
+            </Card>
+            <Card className="text-center">
+              <Text size="sm" variant="secondary">Precisión</Text>
+              <Text className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                {questionsAnswered > 0 ? Math.round((correctCount / questionsAnswered) * 100) : 0}%
+              </Text>
+            </Card>
+          </div>
         </div>
       </div>
     );
