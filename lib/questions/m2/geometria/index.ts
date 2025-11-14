@@ -1,3 +1,9 @@
+// Curriculum-based imports
+import { m2Geo001Questions } from './m2-geo-001';
+import { m2Geo002Questions } from './m2-geo-002';
+import { m2Geo003Questions } from './m2-geo-003';
+
+// Legacy topic-based imports (backward compatibility)
 import { m2GeometriaPerimetroAreaQuestions } from './perimetro-area';
 import { m2GeometriaVolumenQuestions } from './volumen';
 import { m2GeometriaTeoremaDepitagorasQuestions } from './teorema-pitagoras';
@@ -5,7 +11,12 @@ import { m2GeometriaTransformacionesQuestions } from './transformaciones';
 import { m2GeometriaPlanoCartesianoQuestions } from './plano-cartesiano';
 import { m2GeometriaAreaCirculoQuestions } from './area-circulo';
 
-// Export individual topic arrays
+// Export curriculum subsections
+export { m2Geo001Questions } from './m2-geo-001';
+export { m2Geo002Questions } from './m2-geo-002';
+export { m2Geo003Questions } from './m2-geo-003';
+
+// Export legacy topic-based modules (backward compatibility)
 export { m2GeometriaPerimetroAreaQuestions } from './perimetro-area';
 export { m2GeometriaVolumenQuestions } from './volumen';
 export { m2GeometriaTeoremaDepitagorasQuestions } from './teorema-pitagoras';
