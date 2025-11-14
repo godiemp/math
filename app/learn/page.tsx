@@ -4,10 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api-client';
 import { Card, Button, Heading, Text } from '@/components/ui';
-import ReactMarkdown from 'react-markdown';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import 'katex/dist/katex.min.css';
+import { MarkdownViewer } from '@/components/MarkdownViewer';
 
 interface ProblemData {
   problemId: string;
@@ -459,13 +456,8 @@ export default function LearnPage() {
                 </div>
               </div>
 
-              <div className="prose dark:prose-invert max-w-none mb-6">
-                <ReactMarkdown
-                  remarkPlugins={[remarkMath]}
-                  rehypePlugins={[rehypeKatex]}
-                >
-                  {problem.questionLatex || problem.question}
-                </ReactMarkdown>
+              <div className="mb-6">
+                <MarkdownViewer content={problem.questionLatex || problem.question} />
               </div>
 
               {/* Guided Mode Step */}
@@ -474,13 +466,8 @@ export default function LearnPage() {
                   <Heading level={4} className="mb-2 text-blue-900 dark:text-blue-100">
                     {currentStep.stepDescription}
                   </Heading>
-                  <div className="prose prose-sm dark:prose-invert max-w-none">
-                    <ReactMarkdown
-                      remarkPlugins={[remarkMath]}
-                      rehypePlugins={[rehypeKatex]}
-                    >
-                      {currentStep.stepGuidance}
-                    </ReactMarkdown>
+                  <div className="text-sm">
+                    <MarkdownViewer content={currentStep.stepGuidance} />
                   </div>
                 </div>
               )}
@@ -571,13 +558,8 @@ export default function LearnPage() {
                     >
                       {verification.correct ? '✅ ¡Excelente!' : '💡 Vamos a intentarlo de otra manera'}
                     </Text>
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
-                      <ReactMarkdown
-                        remarkPlugins={[remarkMath]}
-                        rehypePlugins={[rehypeKatex]}
-                      >
-                        {verification.feedback}
-                      </ReactMarkdown>
+                    <div className="text-sm">
+                      <MarkdownViewer content={verification.feedback} />
                     </div>
                     {verification.correctAnswer && (
                       <div className="mt-2 pt-2 border-t border-orange-200 dark:border-orange-800">
@@ -652,13 +634,8 @@ export default function LearnPage() {
                     <Heading level={3} className="text-green-800 dark:text-green-200 mb-2">
                       ¡Problema Completado!
                     </Heading>
-                    <div className="prose prose-sm dark:prose-invert max-w-none mb-4">
-                      <ReactMarkdown
-                        remarkPlugins={[remarkMath]}
-                        rehypePlugins={[rehypeKatex]}
-                      >
-                        {currentStep.stepGuidance}
-                      </ReactMarkdown>
+                    <div className="text-sm mb-4">
+                      <MarkdownViewer content={currentStep.stepGuidance} />
                     </div>
                     <Text className="text-green-700 dark:text-green-300">
                       +15 XP por completar en modo guiado
