@@ -244,3 +244,48 @@ export function SmartLatexRenderer({ latex, displayMode = false, className = '' 
     </span>
   );
 }
+
+/**
+ * Unified LaTeX renderer that handles multiple formats:
+ * 1. Raw LaTeX with \text{} blocks (e.g., "\\text{Question} x^2")
+ * 2. Text with $...$ or $$...$$ delimiters (e.g., "Answer is $6x$")
+ * 3. Pure LaTeX expressions (e.g., "6x", "x^2 + 3")
+ * 4. Plain text (e.g., "15", "Option A")
+ *
+ * This provides a single abstraction for rendering math content across the app.
+ */
+export function UnifiedLatexRenderer({
+  content,
+  displayMode = false,
+  className = ''
+}: {
+  content: string;
+  displayMode?: boolean;
+  className?: string
+}) {
+  if (!content) {
+    return <span className={className}></span>;
+  }
+
+  // Check if content has \text{} blocks - use SmartLatexRenderer logic
+  if (content.includes('\\text{')) {
+    return <SmartLatexRenderer latex={content} displayMode={displayMode} className={className} />;
+  }
+
+  // Check if content has $...$ or $$...$$ delimiters - use MathText logic
+  if (content.includes('$')) {
+    return <MathText content={content} className={className} />;
+  }
+
+  // Check if content looks like pure LaTeX (has LaTeX commands or math symbols)
+  // Common patterns: backslash commands, ^, _, {}, etc.
+  const looksLikeLaTeX = /[\\^_{}]|[a-zA-Z]+\s*\(|[a-zA-Z]\s*[+\-*/=<>]/.test(content);
+
+  if (looksLikeLaTeX) {
+    // Render as pure LaTeX
+    return <MathDisplay latex={content} displayMode={displayMode} className={className} />;
+  }
+
+  // Plain text - render as-is
+  return <span className={className}>{content}</span>;
+}

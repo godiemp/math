@@ -1,7 +1,7 @@
 'use client';
 
 import type { Question, QuestionRendererProps } from '@/lib/types';
-import { MathText, BlockMath, InlineMath, SmartLatexRenderer } from './MathDisplay';
+import { MathText, BlockMath, InlineMath, SmartLatexRenderer, UnifiedLatexRenderer } from './MathDisplay';
 import { GeometryCanvas, GeometryFigure } from './GeometryCanvas';
 
 // Re-export for convenience
@@ -86,11 +86,7 @@ export function QuestionRenderer({
               >
                 <span className="font-semibold shrink-0">{String.fromCharCode(65 + index)}.</span>
                 <span className="flex-1 min-w-0 break-words">
-                  {question.optionsLatex && question.optionsLatex[index] ? (
-                    <SmartLatexRenderer latex={question.optionsLatex[index]} displayMode={false} />
-                  ) : (
-                    <MathText content={option} />
-                  )}
+                  <UnifiedLatexRenderer content={question.optionsLatex?.[index] || option} displayMode={false} />
                 </span>
                 {showFeedback && isCorrectAnswer && <span className="shrink-0 ml-auto">✓</span>}
                 {showFeedback && isSelected && !isCorrectAnswer && <span className="shrink-0 ml-auto">✗</span>}
@@ -179,6 +175,258 @@ export function QuestionPreview({ question, maxLength = 100 }: { question: Quest
   return (
     <div className="text-sm text-gray-700 dark:text-gray-300">
       <MathText content={getQuestionText()} />
+    </div>
+  );
+}
+
+// ============================================================================
+// Composable Question Components
+// ============================================================================
+
+interface QuestionTextProps {
+  question: Question;
+  className?: string;
+  size?: 'sm' | 'base' | 'lg';
+}
+
+/**
+ * Renders the question text (enunciado) with LaTeX support
+ */
+export function QuestionText({ question, className = '', size = 'base' }: QuestionTextProps) {
+  const sizeClasses = {
+    sm: 'text-sm',
+    base: 'text-base',
+    lg: 'text-lg font-semibold',
+  };
+
+  return (
+    <div className={`${sizeClasses[size]} text-gray-900 dark:text-white ${className}`}>
+      <SmartLatexRenderer latex={question.questionLatex} displayMode={false} />
+    </div>
+  );
+}
+
+interface QuestionOptionsProps {
+  question: Question;
+  layout?: 'grid' | 'list';
+  size?: 'sm' | 'base';
+  showLabels?: boolean;
+  highlightCorrect?: boolean;
+  className?: string;
+}
+
+/**
+ * Renders question options/alternatives with LaTeX support
+ */
+export function QuestionOptions({
+  question,
+  layout = 'list',
+  size = 'base',
+  showLabels = true,
+  highlightCorrect = false,
+  className = '',
+}: QuestionOptionsProps) {
+  const containerClass = layout === 'grid'
+    ? 'grid grid-cols-2 gap-2'
+    : 'space-y-2';
+
+  const sizeClasses = {
+    sm: 'text-sm p-2',
+    base: 'text-base p-3',
+  };
+
+  return (
+    <div className={`${containerClass} ${className}`}>
+      {question.options.map((option, index) => {
+        const isCorrectAnswer = index === question.correctAnswer;
+        const optionClass = highlightCorrect && isCorrectAnswer
+          ? 'bg-green-50 dark:bg-green-900/30 border-green-500'
+          : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700';
+
+        return (
+          <div
+            key={index}
+            className={`${sizeClasses[size]} rounded border ${optionClass}`}
+          >
+            {showLabels && (
+              <span className="font-semibold mr-1">
+                {String.fromCharCode(65 + index)})
+              </span>
+            )}
+            <UnifiedLatexRenderer
+              content={question.optionsLatex?.[index] || option}
+              displayMode={false}
+            />
+            {highlightCorrect && isCorrectAnswer && (
+              <span className="ml-2 text-green-600 dark:text-green-400 font-semibold">✓</span>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+interface QuestionOptionsWithFeedbackProps {
+  question: Question;
+  userAnswer: number | null;
+  size?: 'sm' | 'base';
+  className?: string;
+}
+
+/**
+ * Renders question options with user answer and correct answer highlighting
+ * Used in contexts like AI chat modal where we need to show what the user selected
+ */
+export function QuestionOptionsWithFeedback({
+  question,
+  userAnswer,
+  size = 'sm',
+  className = '',
+}: QuestionOptionsWithFeedbackProps) {
+  const sizeClasses = {
+    sm: 'text-xs p-2',
+    base: 'text-sm p-3',
+  };
+
+  return (
+    <div className={`space-y-1.5 ${className}`}>
+      {question.options.map((option, index) => {
+        const isUserAnswer = userAnswer === index;
+        const isCorrectAnswer = index === question.correctAnswer;
+
+        const optionClass = isCorrectAnswer
+          ? 'bg-green-100 dark:bg-green-900/30 border-2 border-green-500 text-green-900 dark:text-green-100'
+          : isUserAnswer
+          ? 'bg-amber-100 dark:bg-amber-900/30 border-2 border-amber-500 text-amber-900 dark:text-amber-100'
+          : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300';
+
+        return (
+          <div
+            key={index}
+            className={`${sizeClasses[size]} rounded-lg flex items-start gap-2 ${optionClass}`}
+          >
+            <span className="font-bold shrink-0">{String.fromCharCode(65 + index)}.</span>
+            <span className="flex-1">
+              <UnifiedLatexRenderer
+                content={question.optionsLatex?.[index] || option}
+                displayMode={false}
+              />
+            </span>
+            {isCorrectAnswer && <span className="shrink-0 font-bold">✓ Correcta</span>}
+            {isUserAnswer && !isCorrectAnswer && <span className="shrink-0 font-bold">Tu respuesta</span>}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+interface QuestionExplanationProps {
+  question: Question;
+  variant?: 'neutral' | 'success' | 'error';
+  compact?: boolean;
+  className?: string;
+}
+
+/**
+ * Renders the question explanation/solution with LaTeX support
+ */
+export function QuestionExplanation({
+  question,
+  variant = 'neutral',
+  compact = false,
+  className = '',
+}: QuestionExplanationProps) {
+  const variantClasses = {
+    neutral: 'bg-blue-50 dark:bg-blue-900/20 border-blue-500 text-blue-900 dark:text-blue-100',
+    success: 'bg-green-50 dark:bg-green-900/20 border-green-500 text-green-900 dark:text-green-100',
+    error: 'bg-red-50 dark:bg-red-900/20 border-red-500 text-red-900 dark:text-red-100',
+  };
+
+  return (
+    <div
+      className={`border-l-4 ${compact ? 'p-2 text-sm' : 'p-4'} ${variantClasses[variant]} ${className}`}
+    >
+      <p className={`font-semibold ${compact ? 'mb-0.5 text-xs' : 'mb-1'}`}>
+        Explicación:
+      </p>
+      <div className={variant === 'success' ? 'text-green-800 dark:text-green-200' : variant === 'error' ? 'text-red-800 dark:text-red-200' : 'text-blue-800 dark:text-blue-200'}>
+        <MathText content={question.explanation} />
+        {question.explanationLatex && (
+          <div className={compact ? 'mt-1' : 'mt-2'}>
+            <SmartLatexRenderer latex={question.explanationLatex} displayMode={false} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+interface QuestionDisplayProps {
+  question: Question;
+  showOptions?: boolean;
+  showExplanation?: boolean;
+  optionsLayout?: 'grid' | 'list';
+  highlightCorrectAnswer?: boolean;
+  compact?: boolean;
+  className?: string;
+}
+
+/**
+ * Complete question display component that combines:
+ * - Question text (enunciado)
+ * - Options/alternatives
+ * - Explanation/solution
+ *
+ * Use this for read-only question display. For interactive quizzes, use QuestionRenderer.
+ */
+export function QuestionDisplay({
+  question,
+  showOptions = true,
+  showExplanation = false,
+  optionsLayout = 'grid',
+  highlightCorrectAnswer = false,
+  compact = false,
+  className = '',
+}: QuestionDisplayProps) {
+  return (
+    <div className={`${compact ? 'space-y-2' : 'space-y-4'} ${className}`}>
+      {/* Question Text */}
+      <QuestionText
+        question={question}
+        size={compact ? 'sm' : 'base'}
+      />
+
+      {/* Visual Data (Geometry/Graphs) */}
+      {question.visualData && question.visualData.type === 'geometry' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <GeometryCanvas
+            figures={question.visualData.data as GeometryFigure[]}
+            width={compact ? 300 : 400}
+            height={compact ? 225 : 300}
+          />
+        </div>
+      )}
+
+      {/* Options */}
+      {showOptions && (
+        <QuestionOptions
+          question={question}
+          layout={optionsLayout}
+          size={compact ? 'sm' : 'base'}
+          highlightCorrect={highlightCorrectAnswer}
+        />
+      )}
+
+      {/* Explanation */}
+      {showExplanation && (
+        <QuestionExplanation
+          question={question}
+          variant="neutral"
+          compact={compact}
+        />
+      )}
     </div>
   );
 }

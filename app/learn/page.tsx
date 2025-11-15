@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api-client';
 import { Card, Button, Heading, Text } from '@/components/ui';
 import { MarkdownViewer } from '@/components/MarkdownViewer';
-import { SmartLatexRenderer } from '@/components/MathDisplay';
+import { QuestionDisplay } from '@/components/QuestionRenderer';
 import type { Question } from '@/lib/types/core';
 import { getQuestionsBySubject } from '@/lib/questions';
 import { fetchWithRetry, formatErrorMessage } from '@/lib/utils/retry';
@@ -409,17 +409,13 @@ export default function LearnPage() {
                          question.difficulty === 'hard' ? 'Difícil' : 'Extremo'}
                       </span>
                     </div>
-                    <div className="text-slate-700 dark:text-slate-300">
-                      <SmartLatexRenderer latex={question.questionLatex} displayMode={false} />
-                    </div>
-                    <div className="mt-3 grid grid-cols-2 gap-2">
-                      {question.options.map((option, optIdx) => (
-                        <div key={optIdx} className="text-sm p-2 bg-slate-50 dark:bg-slate-800 rounded">
-                          <span className="font-semibold mr-1">{['A', 'B', 'C', 'D'][optIdx]})</span>
-                          <SmartLatexRenderer latex={question.optionsLatex?.[optIdx] || option} displayMode={false} />
-                        </div>
-                      ))}
-                    </div>
+                    <QuestionDisplay
+                      question={question}
+                      showOptions={true}
+                      showExplanation={false}
+                      optionsLayout="grid"
+                      compact={true}
+                    />
                   </div>
                 </div>
               </Card>
@@ -474,17 +470,13 @@ export default function LearnPage() {
                 <span className="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
-                <div className="text-slate-700 dark:text-slate-300 mb-4">
-                  <SmartLatexRenderer latex={selectedQuestion.questionLatex} displayMode={false} />
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {selectedQuestion.options.map((option, idx) => (
-                    <div key={idx} className="text-sm p-2 bg-slate-50 dark:bg-slate-800 rounded">
-                      <span className="font-semibold mr-1">{['A', 'B', 'C', 'D'][idx]})</span>
-                      <SmartLatexRenderer latex={selectedQuestion.optionsLatex?.[idx] || option} displayMode={false} />
-                    </div>
-                  ))}
-                </div>
+                <QuestionDisplay
+                  question={selectedQuestion}
+                  showOptions={true}
+                  showExplanation={false}
+                  optionsLayout="grid"
+                  compact={true}
+                />
               </div>
             </details>
           </Card>
