@@ -30,13 +30,28 @@ test.describe('Authentication', () => {
     // Click login button
     await page.click('button[type="submit"]');
 
-    // Wait for redirect or dashboard content
-    await page.waitForTimeout(3000);
+    // Wait for navigation to complete
+    await page.waitForURL(/\/dashboard/, { timeout: 5000 });
 
-    // Should not be on login page anymore OR should show dashboard content
-    const url = page.url();
-    const hasDashboardContent = await page.getByText(/dashboard|práctica|inicio/i).count() > 0;
+    // Verify all dashboard cards are rendered
 
-    expect(url !== '/' || hasDashboardContent).toBeTruthy();
+    // 1. Live Practice Featured Card (gradient card with 📝)
+    await expect(page.getByText('📝')).toBeVisible();
+
+    // 2. Practice Section Card - Check for Operations, M1, and M2
+    await expect(page.getByText('🎯')).toBeVisible(); // Operations
+    await expect(page.getByText('📐')).toBeVisible(); // M1
+
+    // 3. Temario/Curriculum Card
+    await expect(page.getByText('📚')).toBeVisible();
+
+    // 4. Progress Tracking Card
+    await expect(page.getByText('📊')).toBeVisible();
+
+    // 5. Improvement Notice
+    await expect(page.getByText('🚀')).toBeVisible();
+
+    // Verify we're on the dashboard page
+    expect(page.url()).toContain('/dashboard');
   });
 });
