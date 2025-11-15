@@ -934,6 +934,7 @@
     "yes": "sí",
     "no": "no",
     "connectionError": "error de conexión. por favor intenta de nuevo.",
-    "start": "comenzar"
+    "start": "comenzar",
+    "howItWorks": "cómo funciona"
   }
 }
