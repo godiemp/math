@@ -1,7 +1,6 @@
 import { useMachine } from '@xstate/react';
 import { liveSessionMachine } from '../live-session-machine';
 import type { LiveSession } from '../types';
-import { isInspectorAvailable } from '../xstate-inspector';
 
 /**
  * Hook to manage live session state with XState
@@ -36,7 +35,6 @@ import { isInspectorAvailable } from '../xstate-inspector';
 export function useLiveSession(sessionId: string) {
   const [state, send] = useMachine(liveSessionMachine, {
     input: { sessionId },
-    inspect: isInspectorAvailable(),
   });
 
   const { context } = state;
