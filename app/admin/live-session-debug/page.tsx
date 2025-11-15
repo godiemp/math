@@ -588,7 +588,7 @@ function MockPreview({ session, state }: { session: LiveSession; state: string }
 
 export default function LiveSessionDebugPage() {
   return (
-    <ProtectedRoute requiredRole="admin">
+    <ProtectedRoute requireAdmin>
       <LiveSessionDebugContent />
     </ProtectedRoute>
   );
