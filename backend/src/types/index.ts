@@ -51,6 +51,7 @@ export interface User {
   lastPracticeDate?: string | null;
   targetLevel?: 'M1_ONLY' | 'M1_AND_M2';
   hasSeenWelcome?: boolean;
+  emailVerified?: boolean;
 }
 
 export interface PDFUpload {

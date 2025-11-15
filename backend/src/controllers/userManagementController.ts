@@ -338,7 +338,7 @@ export const deleteUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     // Prevent deleting own account
-    if (req.user && req.user.id === userId) {
+    if (req.user && req.user.userId === userId) {
       return res.status(400).json({
         success: false,
         message: 'No puedes eliminar tu propia cuenta',
