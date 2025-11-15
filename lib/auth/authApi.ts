@@ -160,3 +160,16 @@ export async function resetPassword(
 
   return { success: true };
 }
+
+/**
+ * Send verification email (for authenticated users)
+ */
+export async function sendVerificationEmail(): Promise<{ success: boolean; error?: string }> {
+  const response = await api.post<{ message: string }>(AUTH_ENDPOINTS.SEND_VERIFICATION, {});
+
+  if (response.error) {
+    return { success: false, error: response.error.error || 'Failed to send verification email' };
+  }
+
+  return { success: true };
+}

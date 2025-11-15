@@ -16,3 +16,5 @@ export { Navbar, NavbarLink } from './Navbar';
 export { CurriculumSidebar } from './CurriculumSidebar';
 
 export { Spinner, LoadingScreen } from './Spinner';
+
+export { Callout } from './Callout';
