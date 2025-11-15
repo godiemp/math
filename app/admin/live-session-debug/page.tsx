@@ -12,7 +12,7 @@ const createMockQuestion = (index: number): Question => ({
   id: `mock-q-${index}`,
   topic: `Pregunta ${index + 1} de Prueba`,
   level: 'M1',
-  question: `Esta es la pregunta ${index + 1}. Resuelve: ${index + 2} + ${index + 3} = ?`,
+  questionLatex: `Esta es la pregunta ${index + 1}. Resuelve: ${index + 2} + ${index + 3} = ?`,
   options: [
     `${index + 4}`,
     `${index + 5}`,
@@ -295,7 +295,7 @@ function LiveSessionDebugContent() {
             </div>
 
             <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
-              <Text size="sm" weight="medium">{session.questions[currentQuestionIndex].question}</Text>
+              <Text size="sm" className="font-medium">{session.questions[currentQuestionIndex].questionLatex}</Text>
             </div>
 
             {/* Answer Options */}
@@ -335,7 +335,7 @@ function LiveSessionDebugContent() {
                   {getAnswerStats()?.map((stat, idx) => (
                     <div key={idx} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
                       <div>
-                        <Text size="sm" weight="medium">{stat.name}</Text>
+                        <Text size="sm" className="font-medium">{stat.name}</Text>
                         <Text size="xs" variant="secondary">
                           {stat.answered}/{stat.total} respondidas
                         </Text>
@@ -431,7 +431,7 @@ function LiveSessionDebugContent() {
                           <span className="font-bold">
                             {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `${idx + 1}.`}
                           </span>
-                          <Text size="sm" weight="medium">{p.displayName}</Text>
+                          <Text size="sm" className="font-medium">{p.displayName}</Text>
                         </div>
                         <Badge variant={idx === 0 ? 'success' : 'info'} size="sm">
                           {p.score}/{session.questions.length}
@@ -451,7 +451,7 @@ function LiveSessionDebugContent() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <Text variant="secondary">Nombre:</Text>
-                    <Text weight="medium">{session.name}</Text>
+                    <Text className="font-medium">{session.name}</Text>
                   </div>
                   <div className="flex justify-between">
                     <Text variant="secondary">Estado:</Text>
@@ -459,11 +459,11 @@ function LiveSessionDebugContent() {
                   </div>
                   <div className="flex justify-between">
                     <Text variant="secondary">Preguntas:</Text>
-                    <Text weight="medium">{session.questions.length}</Text>
+                    <Text className="font-medium">{session.questions.length}</Text>
                   </div>
                   <div className="flex justify-between">
                     <Text variant="secondary">Participantes:</Text>
-                    <Text weight="medium">{session.participants.length}</Text>
+                    <Text className="font-medium">{session.participants.length}</Text>
                   </div>
                 </div>
               </Card>
