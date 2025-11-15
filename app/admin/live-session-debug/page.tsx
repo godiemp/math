@@ -124,7 +124,8 @@ function LiveSessionDebugContent() {
 
   const handleEventSend = (eventType: string, payload?: Record<string, unknown>) => {
     const event = payload ? { type: eventType, ...payload } : { type: eventType };
-    send(event);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    send(event as any);
     logEvent(eventType, payload ? JSON.stringify(payload) : undefined);
   };
 
