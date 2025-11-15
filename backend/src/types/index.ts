@@ -51,6 +51,7 @@ export interface User {
   targetLevel?: 'M1_ONLY' | 'M1_AND_M2';
   hasSeenWelcome?: boolean;
   emailVerified?: boolean;
+  cookieConsent?: 'accepted' | 'declined' | null;
 }
 
 export interface PDFUpload {

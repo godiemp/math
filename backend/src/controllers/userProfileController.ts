@@ -19,6 +19,10 @@ interface MarkWelcomeSeenRequest {
   hasSeenWelcome: boolean;
 }
 
+interface UpdateCookieConsentRequest {
+  cookieConsent: 'accepted' | 'declined';
+}
+
 /**
  * Update current user's profile
  */
@@ -168,5 +172,50 @@ export async function markWelcomeSeen(req: Request, res: Response): Promise<void
   } catch (error) {
     console.error('Mark welcome seen error:', error);
     res.status(500).json({ error: 'Failed to mark welcome as seen' });
+  }
+}
+
+/**
+ * Update current user's cookie consent preference
+ */
+export async function updateCookieConsent(req: Request, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
+
+    const userId = req.user.userId;
+    const { cookieConsent } = req.body as UpdateCookieConsentRequest;
+
+    // Validate input
+    if (!cookieConsent || (cookieConsent !== 'accepted' && cookieConsent !== 'declined')) {
+      res.status(400).json({ error: 'Cookie consent must be either "accepted" or "declined"' });
+      return;
+    }
+
+    // Update cookie_consent field
+    const query = `
+      UPDATE users
+      SET cookie_consent = $1, updated_at = $2
+      WHERE id = $3
+      RETURNING cookie_consent
+    `;
+
+    const result = await pool.query(query, [cookieConsent, Date.now(), userId]);
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      message: 'Cookie consent preference updated successfully',
+      cookieConsent: result.rows[0].cookie_consent,
+    });
+  } catch (error) {
+    console.error('Update cookie consent error:', error);
+    res.status(500).json({ error: 'Failed to update cookie consent' });
   }
 }

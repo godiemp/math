@@ -31,6 +31,13 @@ export function initAnalytics(): void {
     return
   }
 
+  // Check cookie consent before initializing
+  const cookieConsent = localStorage.getItem('cookie-consent')
+  if (cookieConsent !== 'accepted') {
+    console.log('PostHog analytics disabled: User has not accepted cookies')
+    return
+  }
+
   // Check for required environment variables
   const apiKey = process.env.NEXT_PUBLIC_POSTHOG_KEY
   const apiHost = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://eu.posthog.com'

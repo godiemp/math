@@ -13,6 +13,12 @@ export function IntercomProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    // Check cookie consent before initializing Intercom
+    const cookieConsent = localStorage.getItem('cookie-consent');
+    if (cookieConsent !== 'accepted') {
+      return; // Don't initialize Intercom if user hasn't accepted cookies
+    }
+
     // Only initialize Intercom if user is authenticated
     if (isAuthenticated && user) {
       Intercom({
