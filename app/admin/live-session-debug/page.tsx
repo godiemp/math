@@ -303,7 +303,7 @@ function LiveSessionDebugContent() {
                       className="bg-gray-50 dark:bg-gray-800 p-2 rounded text-xs"
                     >
                       <div className="flex justify-between items-center">
-                        <Badge variant="default" size="sm">
+                        <Badge variant="info" size="sm">
                           {event.type}
                         </Badge>
                         <span className="text-gray-500 text-[10px]">
