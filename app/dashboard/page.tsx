@@ -126,9 +126,9 @@ function DashboardContent() {
     const result = await sendVerificationEmail();
 
     if (result.success) {
-      setEmailSentMessage('Verification email sent! Please check your inbox.');
+      setEmailSentMessage(t('emailVerification.sentSuccess'));
     } else {
-      setEmailSentMessage(result.error || 'Failed to send email. Please try again.');
+      setEmailSentMessage(result.error || t('emailVerification.sentError'));
     }
 
     setIsResendingEmail(false);
@@ -221,10 +221,10 @@ function DashboardContent() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-8 md:py-12">
         {/* Email Verification Notification */}
         {user && user.emailVerified === false && (
-          <Callout type="warning" title="Email Not Verified">
+          <Callout type="warning" title={t('emailVerification.title')}>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <p className="text-sm">
-                Please verify your email address to ensure you don't lose access to your account.
+                {t('emailVerification.message')}
                 {emailSentMessage && (
                   <span className="block mt-2 font-semibold">{emailSentMessage}</span>
                 )}
@@ -236,7 +236,7 @@ function DashboardContent() {
                 disabled={isResendingEmail}
                 className="whitespace-nowrap"
               >
-                {isResendingEmail ? 'Sending...' : 'Resend Email'}
+                {isResendingEmail ? t('emailVerification.sending') : t('emailVerification.resendButton')}
               </Button>
             </div>
           </Callout>
