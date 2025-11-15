@@ -8,12 +8,13 @@ import { logoutUser } from "@/lib/auth";
 import { getAllAvailableSessions, updateSessionStatuses } from "@/lib/sessionApi";
 import { useEffect, useState, Suspense } from "react";
 import { LiveSession } from "@/lib/types";
-import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar } from "@/components/ui";
+import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar, Callout } from "@/components/ui";
 import { StudyBuddy } from "@/components/StudyBuddy";
 import { ShareModal } from "@/components/ShareModal";
 import { WelcomeMessage } from "@/components/WelcomeMessage";
 import { Share2 } from "lucide-react";
 import { useTranslations } from 'next-intl';
+import { sendVerificationEmail } from "@/lib/auth/authApi";
 
 function DashboardContent() {
   const t = useTranslations('dashboard');
@@ -27,6 +28,8 @@ function DashboardContent() {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isWelcomeOpen, setIsWelcomeOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isResendingEmail, setIsResendingEmail] = useState(false);
+  const [emailSentMessage, setEmailSentMessage] = useState<string | null>(null);
 
   // Check if user should see welcome message (from query param)
   useEffect(() => {
@@ -116,6 +119,26 @@ function DashboardContent() {
     router.replace('/dashboard');
   };
 
+  const handleResendEmail = async () => {
+    setIsResendingEmail(true);
+    setEmailSentMessage(null);
+
+    const result = await sendVerificationEmail();
+
+    if (result.success) {
+      setEmailSentMessage('Verification email sent! Please check your inbox.');
+    } else {
+      setEmailSentMessage(result.error || 'Failed to send email. Please try again.');
+    }
+
+    setIsResendingEmail(false);
+
+    // Clear message after 5 seconds
+    setTimeout(() => {
+      setEmailSentMessage(null);
+    }, 5000);
+  };
+
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString('es-CL', {
@@ -196,6 +219,29 @@ function DashboardContent() {
       </Navbar>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-8 md:py-12">
+        {/* Email Verification Notification */}
+        {user && user.emailVerified === false && (
+          <Callout type="warning" title="Email Not Verified">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <p className="text-sm">
+                Please verify your email address to ensure you don't lose access to your account.
+                {emailSentMessage && (
+                  <span className="block mt-2 font-semibold">{emailSentMessage}</span>
+                )}
+              </p>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleResendEmail}
+                disabled={isResendingEmail}
+                className="whitespace-nowrap"
+              >
+                {isResendingEmail ? 'Sending...' : 'Resend Email'}
+              </Button>
+            </div>
+          </Callout>
+        )}
+
         {/* Study Buddy with Streak Information - Only visible to admins */}
         {isAdmin && (
           <div className="mb-8">

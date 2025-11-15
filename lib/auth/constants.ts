@@ -34,4 +34,7 @@ export const AUTH_ENDPOINTS = {
   ME: '/api/auth/me',
   FORGOT_PASSWORD: '/api/auth/forgot-password',
   RESET_PASSWORD: '/api/auth/reset-password',
+  SEND_VERIFICATION: '/api/auth/send-verification',
+  RESEND_VERIFICATION: '/api/auth/resend-verification',
+  VERIFY_EMAIL: '/api/auth/verify-email',
 } as const;
