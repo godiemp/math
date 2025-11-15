@@ -903,7 +903,8 @@
       "upload": "upload",
       "studyBuddyDebug": "study buddy debug",
       "rapidFireDebug": "rapid fire debug",
-      "zenDebug": "zen debug"
+      "zenDebug": "zen debug",
+      "liveSessionDebug": "live session debug"
     },
     "button": {
       "backToHome": "back to home",
