@@ -7,9 +7,9 @@ import { Question } from '../../../types';
  * A. Concepto de probabilidad condicional
  *    Habilidades: probabilidad-condicional-concepto
  * B. Teorema de Bayes
- *    Habilidades: probabilidad-teorema-bayes
+ *    Habilidades: probabilidad-bayes
  * C. Eventos independientes y dependientes
- *    Habilidades: probabilidad-eventos-independientes
+ *    Habilidades: probabilidad-eventos-dependientes
  * D. Aplicaciones de probabilidad condicional
  *    Habilidades: probabilidad-condicional-aplicaciones
  */
@@ -42,7 +42,7 @@ export const m2Prob002Questions: Question[] = [
     explanation: 'Usando teorema de Bayes: P(E|+) = P(+|E)×P(E) / [P(+|E)×P(E) + P(+|S)×P(S)]',
     explanationLatex: 'P(E|+) = \\frac{0.95 \\times 0.02}{0.95 \\times 0.02 + 0.10 \\times 0.98} = \\frac{0.019}{0.117} \\approx 0.16',
     difficulty: 'extreme',
-    skills: ['probabilidad-teorema-bayes', 'probabilidad-condicional', 'probabilidad-reglas-multiplicacion', 'numeros-decimales', 'numeros-porcentaje', 'numeros-operaciones-basicas']
+    skills: ['probabilidad-bayes', 'probabilidad-teorema-bayes', 'probabilidad-condicional', 'probabilidad-reglas-multiplicacion', 'numeros-decimales', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-prob-cond-1',
@@ -87,6 +87,37 @@ export const m2Prob002Questions: Question[] = [
     explanation: 'P(M∩D) = 0.6×0.3 = 0.18. P(H∩D) = 0.4×0.5 = 0.20. P(D) = 0.38. P(M|D) = 0.18/0.38 = 9/19',
     explanationLatex: 'P(M|D) = \\frac{P(M \\cap D)}{P(D)} = \\frac{0.6 \\times 0.3}{0.6 \\times 0.3 + 0.4 \\times 0.5} = \\frac{0.18}{0.38} = \\frac{9}{19}',
     difficulty: 'extreme',
-    skills: ['probabilidad-teorema-bayes', 'probabilidad-condicional', 'probabilidad-condicional-aplicaciones', 'numeros-decimales', 'numeros-fracciones', 'numeros-porcentaje', 'numeros-operaciones-basicas']
+    skills: ['probabilidad-bayes', 'probabilidad-teorema-bayes', 'probabilidad-condicional', 'probabilidad-condicional-aplicaciones', 'numeros-decimales', 'numeros-fracciones', 'numeros-porcentaje', 'numeros-operaciones-basicas']
+  },
+  // Subsection C: Eventos independientes y dependientes
+  {
+    id: 'm2-prob-dep-1',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    question: 'Se lanzan dos monedas. ¿Los eventos "la primera moneda sale cara" y "la segunda moneda sale sello" son independientes?',
+    questionLatex: '\\text{Dos monedas. ¿Son independientes "primera cara" y "segunda sello"?}',
+    options: ['Sí, porque el resultado de una no afecta a la otra', 'No, porque ambas son del mismo experimento', 'Depende del tipo de moneda', 'No se puede determinar'],
+    optionsLatex: ['\\text{Sí, resultado independiente}', '\\text{No, mismo experimento}', '\\text{Depende del tipo de moneda}', '\\text{No se puede determinar}'],
+    correctAnswer: 0,
+    explanation: 'Dos eventos son independientes si P(A∩B) = P(A)×P(B). Aquí, el resultado de cada moneda no afecta al otro',
+    explanationLatex: 'P(\\text{cara}_1 \\cap \\text{sello}_2) = \\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{4} \\Rightarrow \\text{independientes}',
+    difficulty: 'medium',
+    skills: ['probabilidad-eventos-dependientes', 'probabilidad-eventos-independientes', 'probabilidad-condicional', 'numeros-fracciones']
+  },
+  {
+    id: 'm2-prob-dep-2',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    question: 'En una baraja de 52 cartas, se extraen dos cartas sin reposición. ¿Los eventos "la primera es un as" y "la segunda es un as" son independientes?',
+    questionLatex: '\\text{Baraja, 2 cartas sin reposición. ¿Son independientes "primera as" y "segunda as"?}',
+    options: ['Sí, porque hay 4 ases en cada extracción', 'No, porque la primera extracción afecta la probabilidad de la segunda', 'Sí, porque cada carta tiene la misma probabilidad', 'No se puede determinar sin más información'],
+    optionsLatex: ['\\text{Sí, 4 ases siempre}', '\\text{No, primera afecta segunda}', '\\text{Sí, misma probabilidad}', '\\text{No se puede determinar}'],
+    correctAnswer: 1,
+    explanation: 'Sin reposición, si la primera es as, quedan 3 ases de 51 cartas. La probabilidad cambia, por lo tanto son eventos dependientes',
+    explanationLatex: 'P(\\text{2°as}|\\text{1°as}) = \\frac{3}{51} \\neq P(\\text{2°as}) = \\frac{4}{52} \\Rightarrow \\text{dependientes}',
+    difficulty: 'hard',
+    skills: ['probabilidad-eventos-dependientes', 'probabilidad-sin-reposicion', 'probabilidad-condicional', 'numeros-fracciones']
   }
 ];
