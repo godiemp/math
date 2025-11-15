@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
-import { MathText } from '@/components/MathDisplay';
+import { UnifiedLatexRenderer } from '@/components/MathDisplay';
 import { MarkdownViewer } from '@/components/MarkdownViewer';
 import type { Level, Subject } from '@/lib/types/core';
 import AdminLayout from '@/components/AdminLayout';
@@ -296,7 +296,7 @@ function QGenAdminContent() {
                     ❓ Pregunta
                   </Heading>
                   <div className="mb-4 text-base">
-                    <MathText content={result.questionLatex} />
+                    <UnifiedLatexRenderer content={result.questionLatex} />
                   </div>
 
                   {/* Options */}
@@ -318,7 +318,7 @@ function QGenAdminContent() {
                             {String.fromCharCode(65 + index)}
                           </Badge>
                           <div className="flex-1">
-                            <MathText
+                            <UnifiedLatexRenderer
                               content={result.optionsLatex?.[index] || option}
                             />
                           </div>

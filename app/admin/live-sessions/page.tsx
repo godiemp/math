@@ -16,7 +16,7 @@ import { LiveSession, Question } from '@/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
-import { MathText, BlockMath } from '@/components/MathDisplay';
+import { QuestionDisplay } from '@/components/QuestionRenderer';
 import AdminLayout from '@/components/AdminLayout';
 import PreviewSession from '@/components/PreviewSession';
 
@@ -551,69 +551,13 @@ function AdminLiveSessionsContent() {
                     {question.topic}
                   </Text>
 
-                  {/* Question Text */}
-                  <div className="text-sm text-gray-900 dark:text-white mb-4">
-                    <MathText content={question.questionLatex} />
-                  </div>
-
-                  {/* Answer Options */}
-                  <div className="space-y-2 mb-4">
-                    <Text size="sm" className="font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Opciones:
-                    </Text>
-                    {question.options.map((option, optIndex) => {
-                      const isCorrect = optIndex === question.correctAnswer;
-                      return (
-                        <div
-                          key={optIndex}
-                          className={`p-3 rounded-lg border-2 ${
-                            isCorrect
-                              ? 'bg-green-50 dark:bg-green-900/20 border-green-500 dark:border-green-600'
-                              : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700'
-                          }`}
-                        >
-                          <div className="flex items-start gap-3">
-                            <span className={`font-semibold shrink-0 ${
-                              isCorrect ? 'text-green-700 dark:text-green-400' : 'text-gray-700 dark:text-gray-300'
-                            }`}>
-                              {String.fromCharCode(65 + optIndex)}.
-                            </span>
-                            <span className={`flex-1 text-sm ${
-                              isCorrect ? 'text-green-900 dark:text-green-100' : 'text-gray-900 dark:text-gray-100'
-                            }`}>
-                              <MathText content={option} />
-                            </span>
-                            {isCorrect && (
-                              <span className="shrink-0 text-green-600 dark:text-green-400 font-bold">✓</span>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* Correct Answer Label */}
-                  <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                    <Text size="sm" className="font-medium text-green-800 dark:text-green-300">
-                      Respuesta correcta: {String.fromCharCode(65 + question.correctAnswer)}
-                    </Text>
-                  </div>
-
-                  {/* Explanation */}
-                  {(question.explanationLatex || question.explanation) && (
-                    <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                      <Text size="sm" className="font-medium text-blue-800 dark:text-blue-300 mb-2">
-                        Explicación:
-                      </Text>
-                      <div className="text-blue-900 dark:text-blue-100">
-                        {question.explanationLatex ? (
-                          <BlockMath latex={question.explanationLatex} />
-                        ) : (
-                          <MathText content={question.explanation} />
-                        )}
-                      </div>
-                    </div>
-                  )}
+                  <QuestionDisplay
+                    question={question}
+                    showOptions={true}
+                    showExplanation={true}
+                    optionsLayout="list"
+                    highlightCorrectAnswer={true}
+                  />
                 </Card>
               ))}
             </div>

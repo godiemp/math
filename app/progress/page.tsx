@@ -6,7 +6,7 @@ import { QuestionAttempt, QuizHistoryResponse } from '@/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { ModuleAccessGuard } from '@/components/ModuleAccessGuard';
 import { Button, Card, Badge, Heading, Text, Modal, Navbar, NavbarLink } from '@/components/ui';
-import { MathText } from '@/components/MathDisplay';
+import { MathText, UnifiedLatexRenderer } from '@/components/MathDisplay';
 import { SkillsDisplay } from '@/components/SkillsDisplay';
 import { PaesPredictionCard } from '@/components/PaesPredictionCard';
 import { api } from '@/lib/api-client';
@@ -498,7 +498,7 @@ function ProgressPageContent() {
                         </Text>
                       </div>
                       <div className="text-sm font-medium mb-1">
-                        <MathText content={attempt.questionLatex} />
+                        <UnifiedLatexRenderer content={attempt.questionLatex} />
                       </div>
                       <Text size="xs" variant="secondary">
                         {formatDate(attempt.timestamp)}
@@ -785,7 +785,7 @@ function ProgressPageContent() {
 
                 <div className="mb-6">
                   <div className="text-[17px] mb-4">
-                    <MathText content={attempt.questionLatex} />
+                    <UnifiedLatexRenderer content={attempt.questionLatex} />
                   </div>
                   <div className="space-y-3">
                     {attempt.options.map((option, index) => {
@@ -807,7 +807,7 @@ function ProgressPageContent() {
                           <span className="text-sm inline font-semibold mr-2">
                             {String.fromCharCode(65 + index)}.
                           </span>
-                          <span className="text-sm inline"><MathText content={option} /></span>
+                          <span className="text-sm inline"><UnifiedLatexRenderer content={option} /></span>
                           {isCorrectAnswer && <Text size="xs" className="float-right">✓ Correcta</Text>}
                           {isUserAnswer && !isCorrectAnswer && <Text size="xs" className="float-right">✗ Tu respuesta</Text>}
                         </div>
@@ -821,7 +821,7 @@ function ProgressPageContent() {
                     Explicación:
                   </Text>
                   <div className="text-sm text-black/80 dark:text-white/80">
-                    <MathText content={attempt.explanation} />
+                    <UnifiedLatexRenderer content={attempt.explanation} />
                   </div>
                 </div>
 
