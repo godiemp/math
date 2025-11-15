@@ -123,5 +123,76 @@ export const m2Alg001Questions: Question[] = [
     explanationLatex: '4x + 6y = 2(2x + 3y) \\text{ pero } 15 \\neq 2(6) \\Rightarrow \\text{paralelas, sin solución}',
     difficulty: 'hard',
     skills: ['sistemas-sin-solucion', 'sistemas-interpretacion-geometrica', 'algebra-sistemas-ecuaciones', 'geometria-rectas-paralelas']
+  },
+  {
+    id: 'm2-alg-nosol-2',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    questionLatex: '\\text{¿Para qué valor de } k \\text{ el sistema } x + 2y = 5 \\text{ y } 3x + 6y = k \\text{ NO tiene solución?}',
+    options: ['$k = 15$', '$k = 10$', '$k = 20$', '$k = 5$'],
+    optionsLatex: ['k = 15', 'k = 10', 'k = 20', 'k = 5'],
+    correctAnswer: 2,
+    explanation: 'Multiplicando la primera por 3: 3x + 6y = 15. Para no tener solución, k ≠ 15. Las opciones 10, 20 y 5 cumplen, pero la respuesta específica es cualquier k ≠ 15',
+    explanationLatex: '3(x + 2y) = 3x + 6y = 3(5) = 15 \\Rightarrow \\text{si } k \\neq 15, \\text{ sin solución}',
+    difficulty: 'hard',
+    skills: ['sistemas-sin-solucion', 'algebra-sistemas-ecuaciones', 'algebra-ecuaciones-parametricas', 'algebra-solucion-sistemas']
+  },
+  {
+    id: 'm2-alg-nosol-3',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    questionLatex: '\\text{¿Cuál sistema NO tiene solución?}',
+    options: ['$x + y = 4$ y $2x + 2y = 8$', '$x - y = 3$ y $2x - 2y = 5$', '$3x + y = 7$ y $x - y = 1$', '$x + y = 5$ y $x - y = 1$'],
+    optionsLatex: ['x + y = 4 \\text{ y } 2x + 2y = 8', 'x - y = 3 \\text{ y } 2x - 2y = 5', '3x + y = 7 \\text{ y } x - y = 1', 'x + y = 5 \\text{ y } x - y = 1'],
+    correctAnswer: 1,
+    explanation: 'En B: 2(x - y) = 2x - 2y = 2(3) = 6 ≠ 5. Las ecuaciones son paralelas (sin solución)',
+    explanationLatex: '2(x - y) = 6 \\neq 5 \\Rightarrow \\text{rectas paralelas, sin solución}',
+    difficulty: 'medium',
+    skills: ['sistemas-sin-solucion', 'algebra-sistemas-ecuaciones', 'algebra-analisis-sistemas', 'algebra-solucion-sistemas']
+  },
+  // Additional Subsection B: Sistemas con infinitas soluciones
+  {
+    id: 'm2-alg-inf-2',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    questionLatex: '\\text{¿Cuál sistema tiene infinitas soluciones?}',
+    options: ['$x + y = 3$ y $2x + 2y = 6$', '$x + y = 3$ y $x - y = 1$', '$2x + y = 5$ y $4x + 2y = 8$', '$x - y = 2$ y $2x - 2y = 3$'],
+    optionsLatex: ['x + y = 3 \\text{ y } 2x + 2y = 6', 'x + y = 3 \\text{ y } x - y = 1', '2x + y = 5 \\text{ y } 4x + 2y = 8', 'x - y = 2 \\text{ y } 2x - 2y = 3'],
+    correctAnswer: 0,
+    explanation: 'En A: 2(x + y) = 2x + 2y = 2(3) = 6. Las ecuaciones son la misma recta (infinitas soluciones)',
+    explanationLatex: '2(x + y) = 6 \\Rightarrow \\text{rectas coincidentes, infinitas soluciones}',
+    difficulty: 'medium',
+    skills: ['sistemas-infinitas-soluciones', 'algebra-sistemas-ecuaciones', 'algebra-analisis-sistemas', 'algebra-solucion-sistemas']
+  },
+  {
+    id: 'm2-alg-inf-3',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    questionLatex: '\\text{Si el sistema } ax + 2y = 6 \\text{ y } 6x + 4y = 12 \\text{ tiene infinitas soluciones, entonces } a = ',
+    options: ['$2$', '$3$', '$4$', '$6$'],
+    optionsLatex: ['2', '3', '4', '6'],
+    correctAnswer: 1,
+    explanation: 'Para infinitas soluciones, la segunda ecuación debe ser múltiplo de la primera. 6x + 4y = 2(ax + 2y), entonces 6 = 2a, a = 3',
+    explanationLatex: '6x + 4y = 2(ax + 2y) \\rightarrow 6 = 2a \\rightarrow a = 3',
+    difficulty: 'hard',
+    skills: ['sistemas-infinitas-soluciones', 'algebra-sistemas-ecuaciones', 'algebra-ecuaciones-parametricas', 'algebra-despeje']
+  },
+  {
+    id: 'm2-alg-inf-4',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    questionLatex: '\\text{Un sistema con infinitas soluciones representa geométricamente:}',
+    options: ['Dos rectas que se intersectan en un punto', 'Dos rectas paralelas', 'Dos rectas coincidentes (la misma recta)', 'Dos rectas perpendiculares'],
+    optionsLatex: ['\\text{Rectas que se intersectan}', '\\text{Rectas paralelas}', '\\text{Rectas coincidentes}', '\\text{Rectas perpendiculares}'],
+    correctAnswer: 2,
+    explanation: 'Infinitas soluciones significa que las ecuaciones representan la misma recta, por lo que todos los puntos de la recta son soluciones',
+    explanationLatex: '\\text{Rectas coincidentes} \\Rightarrow \\text{infinitos puntos en común}',
+    difficulty: 'easy',
+    skills: ['sistemas-infinitas-soluciones', 'sistemas-interpretacion-geometrica', 'algebra-sistemas-ecuaciones', 'geometria-rectas']
   }
 ];

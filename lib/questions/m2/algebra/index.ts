@@ -25,6 +25,8 @@ export { m2AlgebraEcuacionesCuadraticasQuestions } from './ecuaciones-cuadratica
 // Export combined array for backward compatibility
 export const m2AlgebraQuestions = [
   ...m2Alg001Questions,
+  ...m2Alg002Questions,
+  ...m2Alg003Questions,
   ...m2AlgebraExpresionesAlgebraicasQuestions,
   ...m2AlgebraEcuacionesInecuacionesQuestions,
   ...m2AlgebraSistemasEcuacionesQuestions,
