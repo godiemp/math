@@ -186,15 +186,15 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-green-500/15 to-blue-500/15 rounded-full blur-3xl pointer-events-none" />
 
         {/* Content */}
-        <div className="relative z-10 p-8 sm:p-12">
+        <div className="relative z-10 p-4 sm:p-8 md:p-12">
           {step === 'year-selection' ? (
             // Year Selection Step
             <div className="text-center">
-              <div className="mb-8">
-                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+              <div className="mb-6 sm:mb-8">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">
                   ¡bienvenido! 🌿
                 </h2>
-                <p className="text-lg text-gray-700 dark:text-gray-300">
+                <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300">
                   ¿para qué paes te estás preparando?
                 </p>
               </div>
@@ -205,7 +205,7 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
                   onClick={() => handleYearSelection('2025')}
                   className={cn(
                     'group relative overflow-hidden',
-                    'p-6 sm:p-8 rounded-2xl',
+                    'p-4 sm:p-6 md:p-8 rounded-2xl',
                     'bg-gradient-to-br from-orange-500 to-red-500',
                     'hover:from-orange-600 hover:to-red-600',
                     'text-white font-semibold text-xl',
@@ -217,9 +217,9 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
                   )}
                 >
                   <div className="relative z-10">
-                    <div className="text-3xl mb-2">🔥</div>
-                    <div className="font-bold text-2xl mb-1">PAES 2025</div>
-                    <div className="text-sm text-white/90 font-normal">
+                    <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">🔥</div>
+                    <div className="font-bold text-xl sm:text-2xl mb-1">PAES 2025</div>
+                    <div className="text-xs sm:text-sm text-white/90 font-normal">
                       ¡está cerca! preparación intensiva
                     </div>
                   </div>
@@ -230,7 +230,7 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
                   onClick={() => handleYearSelection('2026')}
                   className={cn(
                     'group relative overflow-hidden',
-                    'p-6 sm:p-8 rounded-2xl',
+                    'p-4 sm:p-6 md:p-8 rounded-2xl',
                     'bg-gradient-to-br from-blue-500 to-indigo-500',
                     'hover:from-blue-600 hover:to-indigo-600',
                     'text-white font-semibold text-xl',
@@ -242,9 +242,9 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
                   )}
                 >
                   <div className="relative z-10">
-                    <div className="text-3xl mb-2">🌱</div>
-                    <div className="font-bold text-2xl mb-1">PAES 2026</div>
-                    <div className="text-sm text-white/90 font-normal">
+                    <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">🌱</div>
+                    <div className="font-bold text-xl sm:text-2xl mb-1">PAES 2026</div>
+                    <div className="text-xs sm:text-sm text-white/90 font-normal">
                       junio 2026 • tienes tiempo
                     </div>
                   </div>
@@ -254,12 +254,12 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
           ) : (
             // Message Step with Typewriter
             <div>
-              {/* Message text with typewriter effect - Fixed height to prevent overlap */}
-              <div className="mb-8" style={{ minHeight: '320px' }}>
-                <p className="text-base sm:text-lg md:text-xl lg:text-[22px] leading-[1.6] text-gray-900 dark:text-gray-100 font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif] whitespace-pre-wrap">
+              {/* Message text with typewriter effect - Responsive height to prevent overlap */}
+              <div className="mb-6 sm:mb-8 min-h-[240px] sm:min-h-[280px] md:min-h-[320px]">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-gray-900 dark:text-gray-100 font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif] whitespace-pre-wrap break-words">
                   {displayedText}
                   {!isComplete && showCursor && (
-                    <span className="inline-block w-[2px] sm:w-[3px] h-[20px] sm:h-[24px] md:h-[26px] lg:h-[28px] bg-blue-500 ml-[2px] animate-pulse" />
+                    <span className="inline-block w-[2px] sm:w-[2.5px] md:w-[3px] h-[18px] sm:h-[20px] md:h-[24px] lg:h-[26px] bg-blue-500 ml-[1px] sm:ml-[2px] animate-pulse" />
                   )}
                 </p>
               </div>
@@ -270,10 +270,10 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
                   <button
                     onClick={handleComplete}
                     className={cn(
-                      'px-8 py-4 rounded-2xl',
+                      'px-6 sm:px-8 py-3 sm:py-4 rounded-2xl',
                       'bg-gradient-to-r from-blue-600 to-blue-500',
                       'hover:from-blue-700 hover:to-blue-600',
-                      'text-white font-semibold text-lg',
+                      'text-white font-semibold text-base sm:text-lg',
                       'shadow-[0_8px_24px_rgba(37,99,235,0.35)]',
                       'hover:shadow-[0_12px_32px_rgba(37,99,235,0.45)]',
                       'transition-all duration-300',
