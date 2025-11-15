@@ -266,7 +266,7 @@ export const saveQuestions = async (req: Request, res: Response): Promise<void> 
             question.level,
             question.topic,
             question.subject,
-            question.question,
+            question.questionLatex, // Use questionLatex for the question field too
             question.questionLatex,
             JSON.stringify(question.options),
             JSON.stringify(question.optionsLatex || question.options),
