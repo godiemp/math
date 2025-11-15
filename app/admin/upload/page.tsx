@@ -19,11 +19,11 @@ interface QuestionImage {
 interface ExtractedQuestion {
   question: string;
   questionLatex?: string;
+  // Options in LaTeX format (pure LaTeX without $ delimiters)
   options: string[];
-  optionsLatex?: string[];
   correctAnswer?: number;
+  // Explanation in LaTeX format
   explanation?: string;
-  explanationLatex?: string;
   images?: QuestionImage[];
   hasLatex?: boolean;
 }
@@ -35,11 +35,11 @@ interface QuestionToSave {
   subject: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
   question: string;
   questionLatex?: string;
+  // Options in LaTeX format
   options: string[];
-  optionsLatex?: string[];
   correctAnswer: number;
+  // Explanation in LaTeX format
   explanation: string;
-  explanationLatex?: string;
   difficulty: 'easy' | 'medium' | 'hard';
   skills: string[];
   images?: QuestionImage[];
@@ -130,11 +130,11 @@ export default function UploadPDFPage() {
         topic: 'Tema por definir',
         subject: 'números' as const,
         questionLatex: q.questionLatex,
+        // Options are already in LaTeX format
         options: q.options,
-        optionsLatex: q.optionsLatex || q.options,
         correctAnswer: q.correctAnswer ?? 0,
+        // Explanation is already in LaTeX format
         explanation: q.explanation || 'Sin explicación',
-        explanationLatex: q.explanationLatex || q.explanation || 'Sin explicación',
         difficulty: 'medium' as const,
         skills: [],
         images: q.images,

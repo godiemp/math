@@ -168,7 +168,7 @@ export class QGenAlgorithm {
         : undefined;
 
       // Generate answer options (placeholder - should be context-specific)
-      const { options, optionsLatex, correctAnswer, explanation, explanationLatex } =
+      const { options, correctAnswer, explanation } =
         this.generateAnswerOptions(template, values, questionText);
 
       // Create the progressive question
@@ -180,11 +180,11 @@ export class QGenAlgorithm {
         questionIndex: i + 1,
         question: questionText,
         questionLatex,
+        // Options are now in LaTeX format directly
         options,
-        optionsLatex,
         correctAnswer,
+        // Explanation is now in LaTeX format directly
         explanation,
-        explanationLatex,
         difficulty: this.determineDifficulty(currentSkills.length, i),
         skillsTested: currentSkills,
         buildsOn: previousQuestionId,
@@ -207,19 +207,21 @@ export class QGenAlgorithm {
     values: Record<string, any>,
     questionText: string
   ): {
+    // Options in LaTeX format
     options: string[];
-    optionsLatex?: string[];
     correctAnswer: number;
+    // Explanation in LaTeX format
     explanation: string;
-    explanationLatex?: string;
   } {
     // This is a simplified placeholder
     // Real implementation would calculate the correct answer based on the template and values
 
     return {
-      options: ['Opción A', 'Opción B', 'Opción C', 'Opción D'],
+      // Options are now in LaTeX format directly
+      options: ['\\text{Opción A}', '\\text{Opción B}', '\\text{Opción C}', '\\text{Opción D}'],
       correctAnswer: 0,
-      explanation: 'Explicación de la respuesta correcta.',
+      // Explanation is now in LaTeX format directly
+      explanation: '\\text{Explicación de la respuesta correcta.}',
     };
   }
 

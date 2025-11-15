@@ -158,11 +158,11 @@ export function convertToQuestionFormat(
     topic: metadata.topic,
     subject: metadata.subject,
     questionLatex: extracted.questionLatex,
+    // Options are already in LaTeX format
     options: extracted.options,
-    optionsLatex: extracted.options,
     correctAnswer: extracted.correctAnswer ?? 0,
+    // Explanation is already in LaTeX format
     explanation: extracted.explanation ?? 'No explanation provided.',
-    explanationLatex: extracted.explanation ?? 'No explanation provided.',
     difficulty: metadata.difficulty,
     skills: metadata.skills,
     createdAt: now,

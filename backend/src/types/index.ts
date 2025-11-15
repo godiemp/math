@@ -19,11 +19,11 @@ export interface Question {
   topic: string;
   level: 'M1' | 'M2';
   questionLatex: string;
+  // Options in LaTeX format (pure LaTeX without $ delimiters)
   options: string[];
-  optionsLatex?: string[];
   correctAnswer: number;
+  // Explanation in LaTeX format (full explanation with LaTeX)
   explanation: string;
-  explanationLatex?: string;
   difficulty: 'easy' | 'medium' | 'hard' | 'extreme';
   subject: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
   skills: string[];

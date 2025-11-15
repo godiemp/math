@@ -190,11 +190,11 @@ export const generateSingleQuestion = async (req: Request, res: Response) => {
       topic: subject,
       question: aiResponse.question,
       questionLatex: aiResponse.questionLatex,
+      // Options are now in LaTeX format directly
       options: aiResponse.options,
-      optionsLatex: aiResponse.optionsLatex,
       correctAnswer: aiResponse.correctAnswer,
+      // Explanation is now in LaTeX format directly
       explanation: aiResponse.explanation,
-      explanationLatex: aiResponse.explanationLatex,
       difficulty,
       skills: targetSkills,
       context: {

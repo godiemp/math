@@ -52,11 +52,11 @@ interface QGenResult {
   subject: Subject;
   topic: string;
   questionLatex: string;
+  // Options in LaTeX format
   options: string[];
-  optionsLatex?: string[];
   correctAnswer: number;
+  // Explanation in LaTeX format
   explanation: string;
-  explanationLatex?: string;
   difficulty: 'easy' | 'medium' | 'hard';
   skills: string[];
   context: {
@@ -319,7 +319,7 @@ function QGenAdminContent() {
                           </Badge>
                           <div className="flex-1">
                             <UnifiedLatexRenderer
-                              content={result.optionsLatex?.[index] || option}
+                              content={option}
                             />
                           </div>
                           {index === result.correctAnswer && (
@@ -337,7 +337,7 @@ function QGenAdminContent() {
                     </Heading>
                     <div className="text-sm prose-sm">
                       <MarkdownViewer
-                        content={result.explanationLatex || result.explanation}
+                        content={result.explanation}
                       />
                     </div>
                   </div>
