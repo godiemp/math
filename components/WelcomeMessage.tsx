@@ -254,8 +254,8 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
           ) : (
             // Message Step with Typewriter
             <div>
-              {/* Message text with typewriter effect - Responsive height to prevent overlap */}
-              <div className="mb-6 sm:mb-8 min-h-[240px] sm:min-h-[280px] md:min-h-[320px]">
+              {/* Message text with typewriter effect - Fixed height prevents reflow during animation */}
+              <div className="mb-6 sm:mb-8 h-[340px] sm:h-[320px] md:h-[300px] lg:h-[280px] overflow-y-auto">
                 <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-gray-900 dark:text-gray-100 font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif] whitespace-pre-wrap break-words">
                   {displayedText}
                   {!isComplete && showCursor && (
