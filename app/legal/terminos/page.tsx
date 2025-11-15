@@ -1,30 +1,14 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { PageHeader } from '@/components/PageHeader';
 
 export default function TerminosPage() {
-  const router = useRouter();
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--color-bg)', padding: '40px 20px' }}>
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <button
-          onClick={() => router.back()}
-          className="mb-8 flex items-center gap-2 spring-motion"
-          style={{
-            fontSize: '15px',
-            color: 'var(--color-tint)',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            position: 'relative',
-            zIndex: 10,
-            pointerEvents: 'auto',
-          }}
-        >
-          ← Volver
-        </button>
+    <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
+      {/* Page Header */}
+      <PageHeader showBackButton showUserInfo={false} showLogout={false} showAdmin={false} />
+      <div className="max-w-4xl mx-auto" style={{ padding: '40px 20px' }}>
 
         <div className="translucent" style={{
           padding: 'var(--spacing-16)',

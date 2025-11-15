@@ -509,6 +509,13 @@ export default function LearnPage() {
               </div>
             </div>
           )}
+
+          <button
+            onClick={() => router.back()}
+            className="w-full mt-4 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
+          >
+            <Text size="sm">← Volver</Text>
+          </button>
         </Card>
       </div>
     );

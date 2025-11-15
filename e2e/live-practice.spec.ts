@@ -7,8 +7,8 @@ test.describe('Live Practice Registration', () => {
     // Navigate to live practice
     await page.goto('/live-practice', { waitUntil: 'domcontentloaded' });
 
-    // Check that the page header is visible
-    await expect(page.getByText(/Ensayo PAES en Vivo/i)).toBeVisible();
+    // Check that the page header is visible (title is now in PageHeader)
+    await expect(page.getByText('ensayo PAES en vivo')).toBeVisible();
 
     // Check that the test session is displayed
     await expect(page.getByText(/Test PAES Session/i)).toBeVisible();
@@ -102,26 +102,29 @@ test.describe('Live Practice Registration', () => {
     await expect(page.getByText(/📅 Fecha:/i)).toBeVisible();
   });
 
-  test('should show user welcome message', async ({ page }) => {
+  test('should show user information in header', async ({ page }) => {
     // Navigate to live practice
     await page.goto('/live-practice', { waitUntil: 'domcontentloaded' });
 
-    // Check that user's display name is shown
+    // Check that user's display name is shown in the PageHeader
     await expect(page.getByText('Test Student')).toBeVisible();
 
-    // Check welcome text
-    await expect(page.getByText(/Bienvenido/i)).toBeVisible();
+    // Check that the page title is visible
+    await expect(page.getByText('ensayo PAES en vivo')).toBeVisible();
   });
 
-  test('should navigate back to dashboard', async ({ page }) => {
-    // Navigate to live practice
+  test('should navigate back using browser history', async ({ page }) => {
+    // First navigate to dashboard
+    await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
+
+    // Then navigate to live practice (this creates history)
     await page.goto('/live-practice', { waitUntil: 'domcontentloaded' });
 
-    // Click the dashboard/Inicio button
-    await page.getByRole('button', { name: /Inicio/i }).click();
+    // Click the back button
+    await page.getByRole('button', { name: /Volver/i }).click();
     await page.waitForTimeout(1000);
 
-    // Should be redirected to dashboard
+    // Should be back to dashboard (using browser history)
     expect(page.url()).toContain('/dashboard');
   });
 });
