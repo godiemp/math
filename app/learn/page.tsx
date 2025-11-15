@@ -8,6 +8,7 @@ import { MarkdownViewer } from '@/components/MarkdownViewer';
 import { SmartLatexRenderer } from '@/components/MathDisplay';
 import type { Question } from '@/lib/types/core';
 import { getQuestionsBySubject } from '@/lib/questions';
+import { fetchWithRetry, formatErrorMessage } from '@/lib/utils/retry';
 
 // ============================================================================
 // Types
@@ -16,6 +17,7 @@ import { getQuestionsBySubject } from '@/lib/questions';
 interface SocraticMessage {
   role: 'assistant' | 'user';
   content: string;
+  failed?: boolean;
 }
 
 type GameMode = 'setup' | 'selecting' | 'learning';
@@ -45,6 +47,10 @@ export default function LearnPage() {
   const [userInput, setUserInput] = useState('');
   const [isThinking, setIsThinking] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+
+  // Retry state
+  const [retryCount, setRetryCount] = useState(0);
+  const [lastFailedMessage, setLastFailedMessage] = useState<string | null>(null);
 
   // Session stats
   const [questionsCompleted, setQuestionsCompleted] = useState(0);
@@ -104,20 +110,27 @@ export default function LearnPage() {
     setSelectedQuestion(question);
     setError(null);
     setIsThinking(true);
+    setRetryCount(0);
 
     try {
-      // Start Socratic session with backend
-      const response = await api.post<{
-        sessionId: string;
-        initialMessage: string;
-      }>('/api/learn/start-socratic', {
-        question,
-        level: selectedLevel,
-        subject: selectedSubject,
-      });
+      // Start Socratic session with backend (with retry)
+      const response = await fetchWithRetry(
+        () => api.post<{
+          sessionId: string;
+          initialMessage: string;
+        }>('/api/learn/start-socratic', {
+          question,
+          level: selectedLevel,
+          subject: selectedSubject,
+        }),
+        {
+          maxRetries: 3,
+          onRetry: (attempt) => setRetryCount(attempt)
+        }
+      );
 
       if (response.error) {
-        setError(response.error.error);
+        setError(formatErrorMessage(response.error));
         setIsThinking(false);
         return;
       }
@@ -126,10 +139,11 @@ export default function LearnPage() {
       setMessages([{ role: 'assistant', content: response.data!.initialMessage }]);
       setMode('learning');
     } catch (err) {
-      setError('Error al iniciar la sesión de aprendizaje.');
+      setError('Error de conexión. Por favor verifica tu internet e intenta de nuevo.');
       console.error(err);
     } finally {
       setIsThinking(false);
+      setRetryCount(0);
     }
   };
 
@@ -137,41 +151,86 @@ export default function LearnPage() {
   // Phase 3: Socratic Interaction
   // ============================================================================
 
-  const sendMessage = async () => {
-    if (!userInput.trim() || !sessionId || isThinking) return;
+  const sendMessageInternal = async (messageToSend: string) => {
+    if (!messageToSend.trim() || !sessionId || isThinking) return;
 
-    const userMessage = userInput.trim();
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
-    setUserInput('');
+    setError(null);
     setIsThinking(true);
+    setRetryCount(0);
+    setLastFailedMessage(null);
+
+    // Add user message to chat (or mark existing failed message as not failed)
+    const existingFailedIndex = messages.findIndex(
+      m => m.role === 'user' && m.content === messageToSend && m.failed
+    );
+
+    if (existingFailedIndex >= 0) {
+      // Update existing failed message
+      setMessages(prev => prev.map((m, i) =>
+        i === existingFailedIndex ? { ...m, failed: false } : m
+      ));
+    } else {
+      // Add new message
+      setMessages(prev => [...prev, { role: 'user', content: messageToSend }]);
+    }
 
     try {
-      const response = await api.post<{
-        message: string;
-        isComplete: boolean;
-        summary?: string;
-      }>('/api/learn/continue-socratic', {
-        sessionId,
-        userMessage,
-      });
+      const response = await fetchWithRetry(
+        () => api.post<{
+          message: string;
+          isComplete: boolean;
+          summary?: string;
+        }>('/api/learn/continue-socratic', {
+          sessionId,
+          userMessage: messageToSend,
+        }),
+        {
+          maxRetries: 3,
+          onRetry: (attempt) => setRetryCount(attempt)
+        }
+      );
 
       if (response.error) {
-        setError(response.error.error);
+        // Mark message as failed
+        setMessages(prev => prev.map((m, i) =>
+          i === prev.length - 1 && m.role === 'user' ? { ...m, failed: true } : m
+        ));
+        setLastFailedMessage(messageToSend);
+        setError(formatErrorMessage(response.error));
         return;
       }
 
       setMessages(prev => [...prev, { role: 'assistant', content: response.data!.message }]);
+      setLastFailedMessage(null);
 
       if (response.data!.isComplete) {
         setIsComplete(true);
         setQuestionsCompleted(prev => prev + 1);
       }
     } catch (err) {
-      setError('Error en la conversación');
+      // Mark message as failed
+      setMessages(prev => prev.map((m, i) =>
+        i === prev.length - 1 && m.role === 'user' ? { ...m, failed: true } : m
+      ));
+      setLastFailedMessage(messageToSend);
+      setError('Error de conexión. Verifica tu internet e intenta de nuevo.');
       console.error(err);
     } finally {
       setIsThinking(false);
+      setRetryCount(0);
     }
+  };
+
+  const sendMessage = async () => {
+    if (!userInput.trim() || isThinking) return;
+    const messageToSend = userInput.trim();
+    setUserInput('');
+    await sendMessageInternal(messageToSend);
+  };
+
+  const retryLastMessage = async () => {
+    if (!lastFailedMessage) return;
+    await sendMessageInternal(lastFailedMessage);
   };
 
   const handleNextQuestion = () => {
@@ -181,6 +240,8 @@ export default function LearnPage() {
     setMessages([]);
     setIsComplete(false);
     setError(null);
+    setLastFailedMessage(null);
+    setRetryCount(0);
     setMode('selecting');
   };
 
@@ -192,6 +253,8 @@ export default function LearnPage() {
     setMessages([]);
     setIsComplete(false);
     setError(null);
+    setLastFailedMessage(null);
+    setRetryCount(0);
   };
 
   // ============================================================================
@@ -368,7 +431,11 @@ export default function LearnPage() {
               <Card className="text-center p-8">
                 <div className="animate-pulse">
                   <div className="text-4xl mb-4">🧠</div>
-                  <Text className="font-semibold">Preparando tu sesión de aprendizaje...</Text>
+                  <Text className="font-semibold">
+                    {retryCount > 0
+                      ? `Reintentando... (intento ${retryCount + 1}/3)`
+                      : 'Preparando tu sesión de aprendizaje...'}
+                  </Text>
                 </div>
               </Card>
             </div>
@@ -440,24 +507,47 @@ export default function LearnPage() {
                   key={idx}
                   className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div
-                    className={`max-w-[85%] p-4 rounded-xl ${
-                      msg.role === 'user'
-                        ? 'bg-teal-600 text-white'
-                        : 'bg-slate-100 dark:bg-slate-800'
-                    }`}
-                  >
-                    <MarkdownViewer content={msg.content} />
+                  <div className="max-w-[85%]">
+                    <div
+                      className={`p-4 rounded-xl ${
+                        msg.role === 'user'
+                          ? msg.failed
+                            ? 'bg-red-500 text-white'
+                            : 'bg-teal-600 text-white'
+                          : 'bg-slate-100 dark:bg-slate-800'
+                      }`}
+                    >
+                      <MarkdownViewer content={msg.content} />
+                    </div>
+                    {msg.failed && (
+                      <div className="mt-1 flex items-center justify-end gap-2">
+                        <Text size="xs" className="text-red-600 dark:text-red-400">
+                          Error al enviar
+                        </Text>
+                        <button
+                          onClick={retryLastMessage}
+                          disabled={isThinking}
+                          className="text-xs text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200 underline disabled:opacity-50"
+                        >
+                          Reintentar
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
               {isThinking && (
                 <div className="flex justify-start">
                   <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-xl">
-                    <div className="flex space-x-2">
+                    <div className="flex items-center space-x-2">
                       <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
                       <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
                       <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                      {retryCount > 0 && (
+                        <Text size="xs" className="text-slate-500 ml-2">
+                          Reintento {retryCount}/3
+                        </Text>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -519,6 +609,17 @@ export default function LearnPage() {
             {error && (
               <div className="mt-4 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg">
                 <Text className="text-red-700 dark:text-red-300">{error}</Text>
+                {lastFailedMessage && (
+                  <Button
+                    onClick={retryLastMessage}
+                    disabled={isThinking}
+                    size="sm"
+                    variant="danger"
+                    className="mt-3"
+                  >
+                    {isThinking ? 'Reintentando...' : 'Reintentar mensaje'}
+                  </Button>
+                )}
               </div>
             )}
           </Card>
