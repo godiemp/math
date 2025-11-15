@@ -16,7 +16,7 @@ import { LiveSession, Question } from '@/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
-import { MathText } from '@/components/MathDisplay';
+import { MathText, SmartLatexRenderer } from '@/components/MathDisplay';
 import AdminLayout from '@/components/AdminLayout';
 import PreviewSession from '@/components/PreviewSession';
 
@@ -600,14 +600,21 @@ function AdminLiveSessionsContent() {
                   </div>
 
                   {/* Explanation */}
-                  {question.explanation && (
+                  {(question.explanation || question.explanationLatex) && (
                     <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                       <Text size="sm" className="font-medium text-blue-800 dark:text-blue-300 mb-2">
                         Explicación:
                       </Text>
-                      <div className="text-sm text-blue-900 dark:text-blue-100">
-                        <MathText content={question.explanation} />
-                      </div>
+                      {question.explanation && (
+                        <div className="text-sm text-blue-900 dark:text-blue-100 mb-2">
+                          <MathText content={question.explanation} />
+                        </div>
+                      )}
+                      {question.explanationLatex && (
+                        <div className="text-sm text-blue-900 dark:text-blue-100">
+                          <SmartLatexRenderer latex={question.explanationLatex} />
+                        </div>
+                      )}
                     </div>
                   )}
                 </Card>
