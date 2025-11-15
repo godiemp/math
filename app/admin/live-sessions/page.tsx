@@ -558,7 +558,7 @@ function AdminLiveSessionsContent() {
 
                   {/* Answer Options */}
                   <div className="space-y-2 mb-4">
-                    <Text size="sm" weight="medium" className="text-gray-700 dark:text-gray-300 mb-2">
+                    <Text size="sm" className="font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Opciones:
                     </Text>
                     {question.options.map((option, optIndex) => {
@@ -594,7 +594,7 @@ function AdminLiveSessionsContent() {
 
                   {/* Correct Answer Label */}
                   <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                    <Text size="sm" weight="medium" className="text-green-800 dark:text-green-300">
+                    <Text size="sm" className="font-medium text-green-800 dark:text-green-300">
                       Respuesta correcta: {String.fromCharCode(65 + question.correctAnswer)}
                     </Text>
                   </div>
@@ -602,7 +602,7 @@ function AdminLiveSessionsContent() {
                   {/* Explanation */}
                   {question.explanation && (
                     <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                      <Text size="sm" weight="medium" className="text-blue-800 dark:text-blue-300 mb-2">
+                      <Text size="sm" className="font-medium text-blue-800 dark:text-blue-300 mb-2">
                         Explicación:
                       </Text>
                       <div className="text-sm text-blue-900 dark:text-blue-100">
