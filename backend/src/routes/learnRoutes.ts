@@ -9,6 +9,8 @@ import {
   verifyStep,
   getProblemStatus,
   getAssessmentSession,
+  startSocraticSession,
+  continueSocraticSession,
 } from '../services/learnService';
 import { authenticate } from '../auth/middleware';
 
@@ -265,6 +267,69 @@ router.get('/status/:problemId', authenticate, async (req, res) => {
     console.error('Problem status endpoint error:', error);
     res.status(500).json({
       error: error instanceof Error ? error.message : 'Error al obtener estado del problema',
+    });
+  }
+});
+
+// ============================================================================
+// NEW: Socratic Method Learning Routes
+// ============================================================================
+
+/**
+ * POST /api/learn/start-socratic
+ * Start a Socratic learning session with a selected question
+ */
+router.post('/start-socratic', authenticate, async (req, res) => {
+  try {
+    const { question, level, subject } = req.body;
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    if (!question || !level || !subject) {
+      return res.status(400).json({ error: 'question, level y subject son requeridos' });
+    }
+
+    const response = await startSocraticSession({
+      userId,
+      question,
+      level,
+      subject,
+    });
+
+    res.json(response);
+  } catch (error) {
+    console.error('Start Socratic endpoint error:', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Error al iniciar sesión socrática',
+    });
+  }
+});
+
+/**
+ * POST /api/learn/continue-socratic
+ * Continue the Socratic conversation
+ */
+router.post('/continue-socratic', authenticate, async (req, res) => {
+  try {
+    const { sessionId, userMessage } = req.body;
+
+    if (!sessionId || !userMessage) {
+      return res.status(400).json({ error: 'sessionId y userMessage son requeridos' });
+    }
+
+    const response = await continueSocraticSession({
+      sessionId,
+      userMessage,
+    });
+
+    res.json(response);
+  } catch (error) {
+    console.error('Continue Socratic endpoint error:', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Error en la conversación socrática',
     });
   }
 });
