@@ -13,13 +13,9 @@ export function IntercomProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Check cookie consent before initializing Intercom
-    const cookieConsent = localStorage.getItem('cookie-consent');
-    if (cookieConsent !== 'accepted') {
-      return; // Don't initialize Intercom if user hasn't accepted cookies
-    }
-
     // Only initialize Intercom if user is authenticated
+    // Note: Intercom is customer support, not analytics, so it doesn't require cookie consent
+    // Users should always be able to get help
     if (isAuthenticated && user) {
       Intercom({
         app_id: 'uzabsd5b',
