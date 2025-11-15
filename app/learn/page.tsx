@@ -6,6 +6,7 @@ import { api } from '@/lib/api-client';
 import { Card, Button, Heading, Text } from '@/components/ui';
 import { MarkdownViewer } from '@/components/MarkdownViewer';
 import type { Question } from '@/lib/types/core';
+import { getQuestionsBySubject } from '@/lib/questions';
 
 // ============================================================================
 // Types
@@ -119,7 +120,7 @@ export default function LearnPage() {
     setError(null);
 
     try {
-      const response = await api.post('/api/learn/start-assessment', {
+      const response = await api.post<{ sessionId: string; message: string; questions: string[] }>('/api/learn/start-assessment', {
         level: selectedLevel,
         subject: selectedSubject,
       });
@@ -129,8 +130,8 @@ export default function LearnPage() {
         return;
       }
 
-      setSessionId(response.data.sessionId);
-      setMessages([{ role: 'assistant', content: response.data.message }]);
+      setSessionId(response.data!.sessionId);
+      setMessages([{ role: 'assistant', content: response.data!.message }]);
       setMode('assessment');
     } catch (err) {
       setError('Error al iniciar evaluación. Por favor intenta de nuevo.');
@@ -157,7 +158,7 @@ export default function LearnPage() {
     setIsAssessing(true);
 
     try {
-      const response = await api.post('/api/learn/continue-assessment', {
+      const response = await api.post<{ message: string; isComplete: boolean; assessment?: StudentAssessment }>('/api/learn/continue-assessment', {
         sessionId,
         userMessage: userInput.trim(),
       });
@@ -169,17 +170,17 @@ export default function LearnPage() {
 
       const newAssistantMessage: AssessmentMessage = {
         role: 'assistant',
-        content: response.data.message
+        content: response.data!.message
       };
 
       setMessages(prev => [...prev, newAssistantMessage]);
 
       // Check if assessment is complete
-      if (response.data.isComplete && response.data.assessment) {
-        setAssessment(response.data.assessment);
+      if (response.data!.isComplete && response.data!.assessment) {
+        setAssessment(response.data!.assessment);
         // Wait a moment then select question
         setTimeout(() => {
-          selectQuestionAndGenerateGuidance(response.data.assessment);
+          selectQuestionAndGenerateGuidance(response.data!.assessment!);
         }, 1500);
       }
     } catch (err) {
@@ -199,9 +200,18 @@ export default function LearnPage() {
     setError(null);
 
     try {
+      // Fetch available questions from lib
+      const availableQuestions = getQuestionsBySubject(selectedSubject, selectedLevel);
+
+      if (availableQuestions.length === 0) {
+        setError('No hay preguntas disponibles para esta materia y nivel.');
+        return;
+      }
+
       // Step 1: Select question from lib/questions
-      const selectionResponse = await api.post('/api/learn/select-question', {
+      const selectionResponse = await api.post<{ problemId: string; question: Question; rationale: string }>('/api/learn/select-question', {
         sessionId,
+        availableQuestions,
       });
 
       if (selectionResponse.error) {
@@ -209,10 +219,10 @@ export default function LearnPage() {
         return;
       }
 
-      const { problemId: newProblemId, question: selectedQuestion, rationale } = selectionResponse.data;
+      const { problemId: newProblemId, question: selectedQuestion, rationale } = selectionResponse.data!;
 
       // Step 2: Generate personalized guidance
-      const guidanceResponse = await api.post('/api/learn/generate-guidance', {
+      const guidanceResponse = await api.post<{ problemId: string; steps: GuidanceStep[]; personalizedHint: string }>('/api/learn/generate-guidance', {
         sessionId,
         problemId: newProblemId,
         question: selectedQuestion,
@@ -223,10 +233,10 @@ export default function LearnPage() {
         return;
       }
 
-      const { steps: guidanceSteps, personalizedHint: hint } = guidanceResponse.data;
+      const { steps: guidanceSteps, personalizedHint: hint } = guidanceResponse.data!;
 
       // Step 3: Start learning session
-      const sessionResponse = await api.post('/api/learn/start-session', {
+      const sessionResponse = await api.post<{ success: boolean; problemId: string; question: Question; totalSteps: number; hint: string }>('/api/learn/start-session', {
         sessionId,
         problemId: newProblemId,
         question: selectedQuestion,

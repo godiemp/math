@@ -7,8 +7,23 @@
  * 4. Guide student through solving
  */
 
-import { getQuestionsBySubject, getQuestionsByLevel } from '../../../lib/questions';
-import type { Question } from '../../../lib/types/core';
+// Question type (from lib/types/core)
+interface Question {
+  id: string;
+  topic: string;
+  level: 'M1' | 'M2';
+  subject: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
+  question: string;
+  questionLatex?: string;
+  options: string[];
+  optionsLatex?: string[];
+  correctAnswer: number;
+  explanation: string;
+  explanationLatex?: string;
+  difficulty: 'easy' | 'medium' | 'hard' | 'extreme';
+  operacionBase?: string;
+  skills: string[];
+}
 
 // ============================================================================
 // Types & Interfaces
@@ -51,6 +66,7 @@ interface SelectQuestionOptions {
   assessment: StudentAssessment;
   level: 'M1' | 'M2';
   subject: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
+  availableQuestions: Question[];
 }
 
 interface SelectQuestionResponse {
@@ -350,24 +366,21 @@ Genera una pregunta de seguimiento amigable y breve (1-2 oraciones) para entende
 export async function selectQuestion(
   options: SelectQuestionOptions
 ): Promise<SelectQuestionResponse> {
-  const { sessionId, assessment, level, subject } = options;
+  const { sessionId, assessment, level, subject, availableQuestions } = options;
 
-  // Get all questions for this level and subject
-  const allQuestions = getQuestionsBySubject(subject, level);
-
-  if (allQuestions.length === 0) {
+  if (availableQuestions.length === 0) {
     throw new Error(`No questions found for ${subject} at level ${level}`);
   }
 
   // Filter by difficulty
-  const candidateQuestions = allQuestions.filter(
-    q => q.difficulty === assessment.recommendedDifficulty
+  const candidateQuestions = availableQuestions.filter(
+    (q: Question) => q.difficulty === assessment.recommendedDifficulty
   );
 
   // If no questions at recommended difficulty, expand search
   const questionsToConsider = candidateQuestions.length > 0
     ? candidateQuestions
-    : allQuestions;
+    : availableQuestions;
 
   // Use AI to select the most appropriate question
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -376,7 +389,7 @@ export async function selectQuestion(
   }
 
   // Prepare question summaries for AI
-  const questionSummaries = questionsToConsider.slice(0, 20).map(q => ({
+  const questionSummaries = questionsToConsider.slice(0, 20).map((q: Question) => ({
     id: q.id,
     topic: q.topic,
     difficulty: q.difficulty,
@@ -443,7 +456,7 @@ Responde con JSON:
 
   // Find the selected question
   const selectedQuestion = questionsToConsider.find(
-    q => q.id === selection.selectedQuestionId
+    (q: Question) => q.id === selection.selectedQuestionId
   );
 
   if (!selectedQuestion) {

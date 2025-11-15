@@ -78,10 +78,14 @@ router.post('/continue-assessment', authenticate, async (req, res) => {
  */
 router.post('/select-question', authenticate, async (req, res) => {
   try {
-    const { sessionId } = req.body;
+    const { sessionId, availableQuestions } = req.body;
 
     if (!sessionId) {
       return res.status(400).json({ error: 'sessionId es requerido' });
+    }
+
+    if (!availableQuestions || !Array.isArray(availableQuestions)) {
+      return res.status(400).json({ error: 'availableQuestions es requerido' });
     }
 
     // Get assessment from session
@@ -95,6 +99,7 @@ router.post('/select-question', authenticate, async (req, res) => {
       assessment: session.assessment,
       level: session.level,
       subject: session.subject as 'números' | 'álgebra' | 'geometría' | 'probabilidad',
+      availableQuestions,
     });
 
     res.json(selection);
