@@ -3,30 +3,24 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { logoutUser } from '@/lib/auth';
 import { registerForSession, unregisterFromSession, joinSessionAPI } from '@/lib/sessionApi';
 import { useAvailableSessions } from '@/lib/hooks/useSessions';
 import { LiveSession } from '@/lib/types';
 import LiveSessionComponent from '@/components/LiveSession';
 import StudentStatisticsComponent from '@/components/StudentStatistics';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { PageHeader } from '@/components/PageHeader';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { useTranslations } from 'next-intl';
 
 function LivePracticePageContent() {
   const t = useTranslations('liveSession');
-  const { user: currentUser, setUser, isAdmin } = useAuth();
+  const { user: currentUser } = useAuth();
   const { sessions, isLoading, refresh } = useAvailableSessions();
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [error, setError] = useState('');
   const router = useRouter();
-
-  const handleLogout = async () => {
-    await logoutUser();
-    setUser(null);
-    router.push('/');
-  };
 
   const handleRegisterSession = async (sessionId: string) => {
     if (!currentUser) return;
@@ -120,43 +114,17 @@ function LivePracticePageContent() {
 
   // Show lobby
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-3 sm:p-4 md:p-6 lg:p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <Card className="mb-4 sm:mb-5 md:mb-6" padding="md">
-          <div className="flex flex-col space-y-3 sm:space-y-4">
-            <div>
-              <Heading level={1} size="md" className="mb-1 sm:mb-2 text-lg sm:text-xl md:text-2xl">
-                {t('header.title')}
-              </Heading>
-              <Text variant="secondary" className="text-xs sm:text-sm">
-                {t('header.subtitle')}
-              </Text>
-            </div>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-              <div className="flex items-center gap-2">
-                <Text size="xs" variant="secondary" className="text-xs sm:text-sm">{t('welcome')}</Text>
-                <Text className="font-medium text-sm sm:text-base">{currentUser?.displayName}</Text>
-                {isAdmin && (
-                  <Badge variant="info" size="sm" className="text-xs">{t('actions.admin')}</Badge>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-                <Button variant="ghost" onClick={() => router.back()} className="flex-1 sm:flex-none text-sm px-3 py-2">
-                  ← Volver
-                </Button>
-                {isAdmin && (
-                  <Button variant="secondary" onClick={() => router.push('/admin')} className="flex-1 sm:flex-none text-sm px-3 py-2">
-                    {t('actions.admin')}
-                  </Button>
-                )}
-                <Button variant="danger" onClick={handleLogout} className="flex-1 sm:flex-none text-sm px-3 py-2">
-                  {t('actions.exit')}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </Card>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+      {/* Page Header */}
+      <PageHeader showBackButton title={t('header.title')} />
+
+      <div className="max-w-6xl mx-auto p-3 sm:p-4 md:p-6 lg:p-8">
+        {/* Subtitle */}
+        <div className="mb-4 sm:mb-6">
+          <Text variant="secondary" className="text-xs sm:text-sm">
+            {t('header.subtitle')}
+          </Text>
+        </div>
 
         {/* Error Message */}
         {error && (
@@ -197,7 +165,7 @@ function LivePracticePageContent() {
                           {session.description}
                         </Text>
                       )}
-                      <Text size="xs" variant="secondary" className="text-xs">
+                      <Text size="xs" variant="secondary" className="text-[10px] sm:text-xs">
                         {t('card.by')} {session.hostName}
                       </Text>
                     </div>
@@ -208,7 +176,7 @@ function LivePracticePageContent() {
                         session.status === 'active' ? 'success' : 'neutral'
                       }
                       size="sm"
-                      className="text-xs whitespace-nowrap flex-shrink-0"
+                      className="text-[10px] sm:text-xs whitespace-nowrap flex-shrink-0"
                     >
                       {session.status === 'scheduled' ? t('status.scheduled') :
                        session.status === 'lobby' ? t('status.lobby') :
@@ -219,8 +187,8 @@ function LivePracticePageContent() {
                   <div className="space-y-1.5 sm:space-y-2 mb-3 sm:mb-4">
                     {session.scheduledStartTime && (
                       <div className="flex items-start sm:items-center flex-col sm:flex-row gap-0.5 sm:gap-0">
-                        <Text size="xs" variant="secondary" className="font-medium mr-2 text-xs">{t('card.date')}</Text>
-                        <Text size="xs" variant="secondary" className="text-xs">
+                        <Text size="xs" variant="secondary" className="font-medium mr-2 text-[10px] sm:text-xs">{t('card.date')}</Text>
+                        <Text size="xs" variant="secondary" className="text-[10px] sm:text-xs">
                           {new Date(session.scheduledStartTime).toLocaleString('es-CL', {
                             dateStyle: 'medium',
                             timeStyle: 'short',
@@ -229,12 +197,12 @@ function LivePracticePageContent() {
                       </div>
                     )}
                     <div className="flex items-center flex-wrap gap-1">
-                      <Text size="xs" variant="secondary" className="font-medium mr-1 text-xs">{t('card.level')}</Text>
-                      <Badge variant="info" size="sm" className="text-xs">{session.level}</Badge>
+                      <Text size="xs" variant="secondary" className="font-medium mr-1 text-[10px] sm:text-xs">{t('card.level')}</Text>
+                      <Badge variant="info" size="sm" className="text-[10px] sm:text-xs">{session.level}</Badge>
                     </div>
                     <div className="flex items-center">
-                      <Text size="xs" variant="secondary" className="font-medium mr-2 text-xs">{t('card.questions')}</Text>
-                      <Text size="xs" variant="secondary" className="text-xs">{session.questions.length}</Text>
+                      <Text size="xs" variant="secondary" className="font-medium mr-2 text-[10px] sm:text-xs">{t('card.questions')}</Text>
+                      <Text size="xs" variant="secondary" className="text-[10px] sm:text-xs">{session.questions.length}</Text>
                     </div>
                   </div>
 
@@ -245,7 +213,7 @@ function LivePracticePageContent() {
                         variant="danger"
                         onClick={() => handleUnregisterSession(session.id)}
                         fullWidth
-                        className="text-sm py-2"
+                        className="text-xs sm:text-sm py-2"
                       >
                         {t('buttons.cancelRegistration')}
                       </Button>
@@ -254,7 +222,7 @@ function LivePracticePageContent() {
                         variant="primary"
                         onClick={() => handleRegisterSession(session.id)}
                         fullWidth
-                        className="text-sm py-2"
+                        className="text-xs sm:text-sm py-2"
                       >
                         {t('buttons.register')}
                       </Button>
@@ -264,7 +232,7 @@ function LivePracticePageContent() {
                       variant="primary"
                       onClick={() => handleJoinSession(session.id)}
                       fullWidth
-                      className="bg-[#FF9F0A] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] text-sm py-2"
+                      className="bg-[#FF9F0A] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] text-xs sm:text-sm py-2"
                     >
                       {isUserInSession(session) ? t('buttons.returnToLobby') : t('buttons.enterLobby')}
                     </Button>
@@ -273,7 +241,7 @@ function LivePracticePageContent() {
                       variant="success"
                       onClick={() => handleJoinSession(session.id)}
                       fullWidth
-                      className="text-sm py-2"
+                      className="text-xs sm:text-sm py-2"
                     >
                       {isUserInSession(session) ? t('buttons.returnToSession') : t('buttons.joinNow')}
                     </Button>

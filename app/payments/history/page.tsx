@@ -6,6 +6,7 @@ import useSWR from 'swr';
 import { Payment, PaymentStatus } from '@/lib/types';
 import { getMyPayments } from '@/lib/api/payments';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { PageHeader } from '@/components/PageHeader';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -106,24 +107,18 @@ function PaymentHistoryContent() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Historial de Pagos</h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Revisa todas tus transacciones y estados de pago
-            </p>
-          </div>
-          <Button
-            variant="ghost"
-            onClick={() => router.back()}
-          >
-            ← Volver
-          </Button>
+    <div className="min-h-screen">
+      {/* Page Header */}
+      <PageHeader showBackButton showUserInfo={false} showAdmin={false} />
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Page Title */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Historial de Pagos</h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Revisa todas tus transacciones y estados de pago
+          </p>
         </div>
-      </div>
 
       {/* Payments List */}
       {payments.length === 0 ? (
@@ -273,6 +268,7 @@ function PaymentHistoryContent() {
           </div>
         </Card>
       )}
+      </div>
     </div>
   );
 }
