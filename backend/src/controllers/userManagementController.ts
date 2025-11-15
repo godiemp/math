@@ -332,6 +332,7 @@ export const updateExpiredSubscriptions = async (req: Request, res: Response) =>
 /**
  * Delete a user and all their data
  * DELETE /api/admin/users/:userId
+ * Includes cascade deletion of subscriptions, progress, and practice history
  */
 export const deleteUser = async (req: Request, res: Response) => {
   try {
