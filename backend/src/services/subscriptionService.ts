@@ -473,34 +473,14 @@ export class SubscriptionService {
 
   /**
    * Delete a user and all their related data
+   * Note: Related data in subscriptions, question_attempts, quiz_sessions,
+   * refresh_tokens, etc. will be automatically deleted via ON DELETE CASCADE
    */
   static async deleteUser(userId: string): Promise<boolean> {
-    const client = await pool.connect();
+    // Delete the user - cascade deletes will handle related records
+    const result = await pool.query('DELETE FROM users WHERE id = $1', [userId]);
 
-    try {
-      await client.query('BEGIN');
-
-      // Delete user's subscriptions
-      await client.query('DELETE FROM subscriptions WHERE user_id = $1', [userId]);
-
-      // Delete user's progress
-      await client.query('DELETE FROM user_progress WHERE user_id = $1', [userId]);
-
-      // Delete user's practice history
-      await client.query('DELETE FROM practice_history WHERE user_id = $1', [userId]);
-
-      // Delete the user
-      const result = await client.query('DELETE FROM users WHERE id = $1', [userId]);
-
-      await client.query('COMMIT');
-
-      return result.rowCount !== null && result.rowCount > 0;
-    } catch (error) {
-      await client.query('ROLLBACK');
-      throw error;
-    } finally {
-      client.release();
-    }
+    return result.rowCount !== null && result.rowCount > 0;
   }
 
   /**
