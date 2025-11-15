@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
+import { User } from '@/lib/types/core';
 
 export default function CookieConsent() {
   const t = useTranslations('cookies');
@@ -11,16 +12,18 @@ export default function CookieConsent() {
   const [mounted, setMounted] = useState(false);
 
   // Safely get auth context - will be undefined during SSR
-  let user, isAuthenticated, isLoading;
+  let user: User | null = null;
+  let isAuthenticated = false;
+  let isLoading = true;
+
   try {
     const auth = useAuth();
     user = auth.user;
     isAuthenticated = auth.isAuthenticated;
     isLoading = auth.isLoading;
-  } catch (e) {
+  } catch {
     // AuthProvider not available (SSR/SSG) - use defaults
-    isAuthenticated = false;
-    isLoading = true;
+    // Variables already initialized with safe defaults above
   }
 
   // Only run on client side
