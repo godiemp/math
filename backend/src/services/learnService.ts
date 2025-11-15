@@ -1,11 +1,19 @@
 /**
  * Learn Service - AI-guided problem solving with personalized guidance
+ * Optimized with OpenAI for speed: model routing, compact prompts, JSON mode
+ *
  * Flow:
  * 1. Assessment conversation to understand student's knowledge
  * 2. Select curated question from lib/questions
  * 3. Generate personalized step-by-step guidance
  * 4. Guide student through solving
  */
+
+import {
+  completion,
+  optimizeConversationHistory,
+  type ChatMessage,
+} from './openaiService';
 
 // Question type (from lib/types/core)
 interface Question {
@@ -197,6 +205,7 @@ No te preocupes si hay cosas que no entiendes, ¡estoy aquí para ayudarte! 😊
 
 /**
  * Continue the assessment conversation
+ * Optimized with OpenAI JSON mode and fast model for follow-ups
  */
 export async function continueAssessment(
   options: ContinueAssessmentOptions
@@ -208,80 +217,52 @@ export async function continueAssessment(
     throw new Error('Assessment session not found or expired');
   }
 
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY not configured');
+  }
+
   // Add user message to history
   session.conversationHistory.push({
     role: 'user',
     content: userMessage
   });
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY not configured');
-  }
-
   // Determine if we have enough information or need more conversation
   const conversationTurns = session.conversationHistory.filter(m => m.role === 'user').length;
 
   if (conversationTurns >= 2) {
     // We have enough information, analyze and provide assessment
-    const analysisPrompt = `Eres un tutor de matemáticas experto. Has conversado con un estudiante sobre ${session.subject} de nivel ${session.level}.
+    // COMPACT prompt with JSON mode
+    const conversationSummary = session.conversationHistory
+      .map(m => `${m.role === 'user' ? 'E' : 'T'}: ${m.content}`)
+      .join('\n');
 
-Aquí está la conversación:
-${session.conversationHistory.map(m => `${m.role === 'user' ? 'Estudiante' : 'Tutor'}: ${m.content}`).join('\n\n')}
-
-Analiza la conversación y genera un perfil del estudiante. Responde con JSON:
-{
-  "knownConcepts": ["conceptos que el estudiante mencionó que conoce"],
-  "uncertainConcepts": ["conceptos donde muestra incertidumbre"],
-  "gaps": ["áreas donde claramente tiene dificultades o desconocimiento"],
-  "confidenceLevel": "low" | "medium" | "high",
-  "recommendedDifficulty": "easy" | "medium" | "hard" | "extreme",
-  "recommendedSkills": ["habilidades específicas a practicar basado en sus gaps"],
-  "nextMessage": "Mensaje personalizado de 2-3 oraciones confirmando lo que entendiste de su nivel y qué tipo de problema vas a darle"
-}`;
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 1024,
-        temperature: 0.7,
-        messages: [
-          {
-            role: 'user',
-            content: analysisPrompt,
-          },
-        ],
-      }),
+    const result = await completion({
+      messages: [
+        {
+          role: 'system',
+          content: `Analiza conversación estudiante-tutor sobre ${session.subject} (${session.level}). Genera perfil del estudiante en JSON.`,
+        },
+        {
+          role: 'user',
+          content: `Conversación:\n${conversationSummary}\n\nResponde JSON con: knownConcepts, uncertainConcepts, gaps, confidenceLevel (low/medium/high), recommendedDifficulty (easy/medium/hard/extreme), recommendedSkills, nextMessage (2-3 oraciones confirmando nivel y tipo de problema a dar).`,
+        },
+      ],
+      taskType: 'assessment_analysis',
+      jsonMode: true,
+      temperature: 0.7,
     });
 
-    if (!response.ok) {
-      throw new Error('AI assessment analysis failed');
-    }
-
-    const data = await response.json() as { content: Array<{ text: string }> };
-    const responseText = data.content[0].text;
-    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-
-    if (!jsonMatch) {
-      throw new Error('Failed to parse assessment');
-    }
-
-    const analysis = JSON.parse(jsonMatch[0]);
+    const analysis = JSON.parse(result.content);
 
     // Store assessment in session
     session.assessment = {
-      knownConcepts: analysis.knownConcepts,
-      uncertainConcepts: analysis.uncertainConcepts,
-      gaps: analysis.gaps,
-      confidenceLevel: analysis.confidenceLevel,
-      recommendedDifficulty: analysis.recommendedDifficulty,
-      recommendedSkills: analysis.recommendedSkills,
+      knownConcepts: analysis.knownConcepts || [],
+      uncertainConcepts: analysis.uncertainConcepts || [],
+      gaps: analysis.gaps || [],
+      confidenceLevel: analysis.confidenceLevel || 'medium',
+      recommendedDifficulty: analysis.recommendedDifficulty || 'medium',
+      recommendedSkills: analysis.recommendedSkills || [],
     };
 
     session.conversationHistory.push({
@@ -291,56 +272,36 @@ Analiza la conversación y genera un perfil del estudiante. Responde con JSON:
 
     assessmentSessions.set(sessionId, session);
 
+    console.log(`✅ Assessment analysis: ${result.model}, ${result.totalTokens} tokens, ${result.latencyMs}ms`);
+
     return {
       message: analysis.nextMessage,
       isComplete: true,
       assessment: session.assessment
     };
   } else {
-    // Need more conversation - ask follow-up
-    const followUpPrompt = `Eres un tutor de matemáticas Socratiano. Estás evaluando el conocimiento de un estudiante sobre ${session.subject} de nivel ${session.level}.
+    // Need more conversation - ask follow-up (use FAST model)
+    const conversationSummary = session.conversationHistory
+      .map(m => `${m.role === 'user' ? 'E' : 'T'}: ${m.content}`)
+      .join('\n');
 
-Conversación hasta ahora:
-${session.conversationHistory.map(m => `${m.role === 'user' ? 'Estudiante' : 'Tutor'}: ${m.content}`).join('\n\n')}
-
-Genera una pregunta de seguimiento amigable y breve (1-2 oraciones) para entender mejor su nivel. Enfócate en identificar conceptos específicos que conoce o le cuestan. Responde con JSON:
-{
-  "message": "tu pregunta de seguimiento"
-}`;
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 256,
-        temperature: 0.8,
-        messages: [
-          {
-            role: 'user',
-            content: followUpPrompt,
-          },
-        ],
-      }),
+    const result = await completion({
+      messages: [
+        {
+          role: 'system',
+          content: `Tutor PAES evaluando conocimiento de ${session.subject} (${session.level}). Genera pregunta de seguimiento breve (1-2 oraciones).`,
+        },
+        {
+          role: 'user',
+          content: `Conversación:\n${conversationSummary}\n\nResponde JSON con: message (pregunta de seguimiento para entender mejor su nivel).`,
+        },
+      ],
+      taskType: 'follow_up_question',
+      jsonMode: true,
+      temperature: 0.8,
     });
 
-    if (!response.ok) {
-      throw new Error('AI follow-up generation failed');
-    }
-
-    const data = await response.json() as { content: Array<{ text: string }> };
-    const responseText = data.content[0].text;
-    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-
-    if (!jsonMatch) {
-      throw new Error('Failed to parse follow-up');
-    }
-
-    const followUp = JSON.parse(jsonMatch[0]);
+    const followUp = JSON.parse(result.content);
 
     session.conversationHistory.push({
       role: 'assistant',
@@ -348,6 +309,8 @@ Genera una pregunta de seguimiento amigable y breve (1-2 oraciones) para entende
     });
 
     assessmentSessions.set(sessionId, session);
+
+    console.log(`✅ Follow-up: ${result.model}, ${result.totalTokens} tokens, ${result.latencyMs}ms`);
 
     return {
       message: followUp.message,
@@ -362,6 +325,7 @@ Genera una pregunta de seguimiento amigable y breve (1-2 oraciones) para entende
 
 /**
  * Select a curated question from lib/questions based on student assessment
+ * Optimized with OpenAI JSON mode and compact prompts
  */
 export async function selectQuestion(
   options: SelectQuestionOptions
@@ -370,6 +334,10 @@ export async function selectQuestion(
 
   if (availableQuestions.length === 0) {
     throw new Error(`No questions found for ${subject} at level ${level}`);
+  }
+
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY not configured');
   }
 
   // Filter by difficulty
@@ -382,77 +350,37 @@ export async function selectQuestion(
     ? candidateQuestions
     : availableQuestions;
 
-  // Use AI to select the most appropriate question
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY not configured');
-  }
-
-  // Prepare question summaries for AI
-  const questionSummaries = questionsToConsider.slice(0, 20).map((q: Question) => ({
+  // Prepare COMPACT question summaries (reduced data)
+  const questionSummaries = questionsToConsider.slice(0, 15).map((q: Question) => ({
     id: q.id,
-    topic: q.topic,
-    difficulty: q.difficulty,
-    skills: q.skills,
-    operacionBase: q.operacionBase || 'N/A'
+    skills: q.skills.join(','),
+    diff: q.difficulty,
   }));
 
-  const selectionPrompt = `Eres un tutor de matemáticas. Necesitas seleccionar LA MEJOR pregunta para este estudiante.
+  // COMPACT prompt for question selection
+  const result = await completion({
+    messages: [
+      {
+        role: 'system',
+        content: `Selecciona la mejor pregunta para el estudiante. Considera sus gaps y nivel de confianza.`,
+      },
+      {
+        role: 'user',
+        content: `Estudiante: conoce [${assessment.knownConcepts.join(',')}], gaps [${assessment.gaps.join(',')}], confianza ${assessment.confidenceLevel}, dificultad ${assessment.recommendedDifficulty}.
 
-**Perfil del estudiante:**
-- Conceptos que conoce: ${assessment.knownConcepts.join(', ')}
-- Conceptos con incertidumbre: ${assessment.uncertainConcepts.join(', ')}
-- Gaps/dificultades: ${assessment.gaps.join(', ')}
-- Nivel de confianza: ${assessment.confidenceLevel}
-- Dificultad recomendada: ${assessment.recommendedDifficulty}
+Preguntas: ${JSON.stringify(questionSummaries)}
 
-**Preguntas disponibles:**
-${JSON.stringify(questionSummaries, null, 2)}
-
-Selecciona UNA pregunta que:
-1. Aborde sus gaps sin ser demasiado abrumadora
-2. Construya sobre lo que ya conoce
-3. Sea apropiada para su nivel de confianza
-
-Responde con JSON:
-{
-  "selectedQuestionId": "id de la pregunta elegida",
-  "rationale": "Breve explicación (2-3 oraciones) de por qué elegiste esta pregunta para este estudiante específico"
-}`;
-
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-5-20250929',
-      max_tokens: 512,
-      temperature: 0.7,
-      messages: [
-        {
-          role: 'user',
-          content: selectionPrompt,
-        },
-      ],
-    }),
+Responde JSON con: selectedQuestionId, rationale (2-3 oraciones breves).`,
+      },
+    ],
+    taskType: 'json_parsing',
+    jsonMode: true,
+    temperature: 0.7,
   });
 
-  if (!response.ok) {
-    throw new Error('AI question selection failed');
-  }
+  const selection = JSON.parse(result.content);
 
-  const data = await response.json() as { content: Array<{ text: string }> };
-  const responseText = data.content[0].text;
-  const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-
-  if (!jsonMatch) {
-    throw new Error('Failed to parse question selection');
-  }
-
-  const selection = JSON.parse(jsonMatch[0]);
+  console.log(`✅ Question selection: ${result.model}, ${result.totalTokens} tokens, ${result.latencyMs}ms`);
 
   // Find the selected question
   const selectedQuestion = questionsToConsider.find(
@@ -486,108 +414,49 @@ Responde con JSON:
 
 /**
  * Generate personalized step-by-step guidance for the selected question
+ * Optimized with OpenAI JSON mode and compact prompts
  */
 export async function generatePersonalizedGuidance(
   options: GenerateGuidanceOptions
 ): Promise<GenerateGuidanceResponse> {
   const { problemId, question, assessment } = options;
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY not configured');
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY not configured');
   }
 
-  const systemPrompt = `Eres un tutor experto en matemáticas PAES de Chile. Tu especialidad es crear guías paso a paso PERSONALIZADAS.
+  // COMPACT system prompt (reduced from ~300 tokens to ~100 tokens)
+  const systemPrompt = `Tutor PAES. Genera 3-5 pasos personalizados para resolver el problema. Usa LaTeX: $expresión$. Cada paso debe ser verificable.`;
 
-IMPORTANTE:
-- Genera 3-5 pasos claros para resolver el problema
-- PERSONALIZA la guía basándote en lo que el estudiante sabe y sus gaps
-- Si tiene gaps en conceptos básicos, refuérzalos en los pasos
-- Si ya conoce ciertos conceptos, no los sobre-expliques
-- Usa LaTeX para todas las expresiones matemáticas: $expresión$
-- Cada paso debe ser verificable con una respuesta específica
+  // COMPACT user prompt
+  const userPrompt = `Estudiante: conoce [${assessment.knownConcepts.join(',')}], gaps [${assessment.gaps.join(',')}], confianza ${assessment.confidenceLevel}.
 
-FORMATO LATEX:
-- Inline: $x + 5 = 10$
-- Fracciones: $\\frac{a}{b}$
-- Raíces: $\\sqrt{x}$
-- Exponentes: $x^2$`;
+Pregunta: ${question.questionLatex || question.question}
+Correcta: ${question.optionsLatex?.[question.correctAnswer] || question.options[question.correctAnswer]}
 
-  const userPrompt = `Genera una guía paso a paso PERSONALIZADA para este estudiante.
-
-**Perfil del estudiante:**
-- Conoce: ${assessment.knownConcepts.join(', ')}
-- Tiene dudas en: ${assessment.uncertainConcepts.join(', ')}
-- Gaps: ${assessment.gaps.join(', ')}
-- Confianza: ${assessment.confidenceLevel}
-
-**Pregunta seleccionada:**
-${question.questionLatex}
-
-**Respuesta correcta:** ${question.options[question.correctAnswer]}
-
-**Explicación oficial:**
-${question.explanation}
-
-Crea pasos personalizados que:
-1. Aborden sus gaps específicos
-2. No asuman conocimiento que no tiene
-3. Construyan sobre lo que ya sabe
-
-Responde con JSON:
-{
-  "steps": [
-    {
-      "number": 1,
-      "description": "Descripción del paso (con LaTeX si es necesario)",
-      "guidance": "Guía personalizada que considera sus gaps (con LaTeX)",
-      "correctAnswer": "respuesta esperada para este paso (con LaTeX)",
-      "explanation": "Por qué este paso es importante (con LaTeX)"
-    }
-  ],
-  "personalizedHint": "Pista inicial personalizada basada en sus conocimientos actuales (con LaTeX)"
-}`;
+Genera JSON con:
+- steps: [{number, description, guidance (personalizada), correctAnswer, explanation}]
+- personalizedHint: pista inicial basada en sus conocimientos`;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 2048,
-        temperature: 0.7,
-        messages: [
-          {
-            role: 'user',
-            content: userPrompt,
-          },
-        ],
-        system: systemPrompt,
-      }),
+    const result = await completion({
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+      taskType: 'guidance_generation',
+      jsonMode: true,
+      temperature: 0.7,
     });
 
-    if (!response.ok) {
-      throw new Error('AI guidance generation failed');
-    }
+    const guidance = JSON.parse(result.content);
 
-    const data = await response.json() as { content: Array<{ text: string }> };
-    const responseText = data.content[0].text;
-    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-
-    if (!jsonMatch) {
-      throw new Error('Failed to parse guidance');
-    }
-
-    const guidance = JSON.parse(jsonMatch[0]);
+    console.log(`✅ Guidance generation: ${result.model}, ${result.totalTokens} tokens, ${result.latencyMs}ms`);
 
     return {
       problemId,
-      steps: guidance.steps,
-      personalizedHint: guidance.personalizedHint
+      steps: guidance.steps || [],
+      personalizedHint: guidance.personalizedHint || 'Comienza identificando los datos del problema.'
     };
   } catch (error) {
     console.error('Error generating personalized guidance:', error);
@@ -660,6 +529,7 @@ export async function getNextStep(
 
 /**
  * Verify user's answer for a specific step
+ * Optimized with OpenAI fast model for quick verification
  */
 export async function verifyStep(
   options: VerifyStepOptions
@@ -676,63 +546,35 @@ export async function verifyStep(
     throw new Error('Invalid step number');
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY not configured');
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY not configured');
   }
 
-  const verificationPrompt = `Eres un tutor de matemáticas. Verifica si la respuesta del estudiante es correcta.
-
-**Paso del problema:** ${step.description}
-**Respuesta esperada:** ${step.correctAnswer}
-**Respuesta del estudiante:** ${userAnswer}
-
-¿La respuesta del estudiante es correcta? Considera que puede estar en diferente notación pero ser equivalente.
-
-FORMATO DEL FEEDBACK:
-- Usa LaTeX para todas las expresiones matemáticas en el feedback
-- Inline math: $expresión$
-- Ejemplos: $x = 5$, $\\frac{2}{3}$, $2x + 3$
-
-Responde con JSON:
-{
-  "correct": true o false,
-  "feedback": "Retroalimentación para el estudiante (2-3 oraciones, usa LaTeX para matemáticas)"
-}`;
-
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 512,
-        messages: [
-          {
-            role: 'user',
-            content: verificationPrompt,
-          },
-        ],
-      }),
+    // COMPACT verification prompt using FAST model
+    const result = await completion({
+      messages: [
+        {
+          role: 'system',
+          content: 'Verifica respuesta matemática. Considera notación equivalente. Usa LaTeX: $expresión$.',
+        },
+        {
+          role: 'user',
+          content: `Paso: ${step.description}
+Esperada: ${step.correctAnswer}
+Estudiante: ${userAnswer}
+
+Responde JSON con: correct (boolean), feedback (2-3 oraciones con LaTeX).`,
+        },
+      ],
+      taskType: 'step_verification',
+      jsonMode: true,
+      temperature: 0.3,
     });
 
-    if (!response.ok) {
-      throw new Error('AI verification failed');
-    }
+    const verification = JSON.parse(result.content);
 
-    const data = await response.json() as { content: Array<{ text: string }> };
-    const responseText = data.content[0].text;
-    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-
-    if (!jsonMatch) {
-      throw new Error('Failed to parse verification response');
-    }
-
-    const verification = JSON.parse(jsonMatch[0]);
+    console.log(`✅ Step verification: ${result.model}, ${result.totalTokens} tokens, ${result.latencyMs}ms`);
 
     // Update problem progress if correct
     if (verification.correct) {
@@ -816,6 +658,7 @@ const socraticSessions = new Map<string, SocraticSession>();
 
 /**
  * Start a Socratic learning session with a selected question
+ * Optimized with OpenAI JSON mode and compact prompts
  */
 export async function startSocraticSession(
   options: StartSocraticOptions
@@ -823,88 +666,35 @@ export async function startSocraticSession(
   const { userId, question, level, subject } = options;
   const sessionId = `socratic_${userId}_${Date.now()}`;
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY not configured');
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY not configured');
   }
 
-  const systemPrompt = `Eres un tutor de matemáticas que usa el MÉTODO SOCRÁTICO. Tu rol es guiar al estudiante a descubrir la respuesta por sí mismo a través de preguntas estratégicas.
+  // COMPACT Socratic prompt
+  const systemPrompt = `Tutor PAES con método socrático. NUNCA des la respuesta directamente. Guía con preguntas. LaTeX: $expresión$. Respuestas concisas (2-4 oraciones + 1-2 preguntas).`;
 
-REGLAS IMPORTANTES:
-1. NUNCA des la respuesta directamente
-2. Haz preguntas que guíen el pensamiento del estudiante
-3. Comienza con preguntas sencillas y ve aumentando la complejidad
-4. Si el estudiante se equivoca, haz preguntas que le ayuden a identificar su error
-5. Celebra los pequeños avances
-6. Usa LaTeX para expresiones matemáticas: $expresión$
-7. Mantén respuestas concisas (2-4 oraciones + 1-2 preguntas)
-8. Sé paciente y alentador
+  const optionsText = question.options.map((opt, i) => `${String.fromCharCode(65+i)}) ${question.optionsLatex?.[i] || opt}`).join(' | ');
 
-FORMATO LATEX:
-- Inline: $x + 5 = 10$
-- Fracciones: $\\frac{a}{b}$
-- Raíces: $\\sqrt{x}$`;
+  const userPrompt = `Problema: ${question.questionLatex || question.question}
+Opciones: ${optionsText}
+Correcta: ${String.fromCharCode(65 + question.correctAnswer)} | Tema: ${subject} (${level})
 
-  const userPrompt = `El estudiante ha seleccionado este problema porque se siente menos confiado con él:
-
-**Problema:**
-${question.questionLatex}
-
-**Opciones:**
-A) ${question.options[0]}
-B) ${question.options[1]}
-C) ${question.options[2]}
-D) ${question.options[3]}
-
-**Respuesta correcta:** ${['A', 'B', 'C', 'D'][question.correctAnswer]}
-**Tema:** ${subject}
-**Nivel:** ${level}
-
-Genera tu PRIMERA pregunta socrática para comenzar a guiar al estudiante. Debes:
-1. Saludar brevemente y reconocer que eligió este problema
-2. Hacer una pregunta inicial que le ayude a entender qué se le está pidiendo
-3. NO menciones la respuesta ni des pistas obvias
-
-Responde con JSON:
-{
-  "message": "Tu saludo y primera pregunta socrática (usa LaTeX para matemáticas)"
-}`;
+Genera primera pregunta socrática: saluda brevemente, pregunta qué se pide (NO des pistas). Responde JSON con: message.`;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 512,
-        temperature: 0.8,
-        messages: [
-          {
-            role: 'user',
-            content: userPrompt,
-          },
-        ],
-        system: systemPrompt,
-      }),
+    const result = await completion({
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+      taskType: 'socratic_response',
+      jsonMode: true,
+      temperature: 0.8,
     });
 
-    if (!response.ok) {
-      throw new Error('AI Socratic start failed');
-    }
+    const parsed = JSON.parse(result.content);
 
-    const data = await response.json() as { content: Array<{ text: string }> };
-    const responseText = data.content[0].text;
-    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-
-    if (!jsonMatch) {
-      throw new Error('Failed to parse Socratic start');
-    }
-
-    const result = JSON.parse(jsonMatch[0]);
+    console.log(`✅ Socratic start: ${result.model}, ${result.totalTokens} tokens, ${result.latencyMs}ms`);
 
     // Store session
     socraticSessions.set(sessionId, {
@@ -913,7 +703,7 @@ Responde con JSON:
       level,
       subject,
       conversationHistory: [
-        { role: 'assistant', content: result.message }
+        { role: 'assistant', content: parsed.message }
       ],
       isComplete: false,
       createdAt: Date.now()
@@ -921,7 +711,7 @@ Responde con JSON:
 
     return {
       sessionId,
-      initialMessage: result.message
+      initialMessage: parsed.message
     };
   } catch (error) {
     console.error('Error starting Socratic session:', error);
@@ -931,6 +721,7 @@ Responde con JSON:
 
 /**
  * Continue the Socratic conversation
+ * Optimized with OpenAI, conversation summarization, and JSON mode
  */
 export async function continueSocraticSession(
   options: ContinueSocraticOptions
@@ -946,111 +737,75 @@ export async function continueSocraticSession(
     throw new Error('This learning session has already been completed');
   }
 
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY not configured');
+  }
+
   // Add user message to history
   session.conversationHistory.push({
     role: 'user',
     content: userMessage
   });
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY not configured');
-  }
+  // COMPACT Socratic system prompt
+  const correctLetter = String.fromCharCode(65 + session.question.correctAnswer);
+  const systemPrompt = `Tutor PAES socrático. NUNCA des respuesta directa. Guía con preguntas. LaTeX: $expresión$. Conciso: 2-4 oraciones + 1-2 preguntas. Si estudiante dice "${correctLetter}", marca isComplete=true y resume.`;
 
-  const systemPrompt = `Eres un tutor de matemáticas que usa el MÉTODO SOCRÁTICO. Tu rol es guiar al estudiante a descubrir la respuesta por sí mismo.
+  // Build optimized context
+  const optionsText = session.question.options.map((opt, i) =>
+    `${String.fromCharCode(65+i)}) ${session.question.optionsLatex?.[i] || opt}`
+  ).join(' | ');
 
-REGLAS:
-1. NUNCA des la respuesta directamente hasta que el estudiante la descubra
-2. Haz preguntas que guíen su pensamiento
-3. Si se equivoca, pregunta qué le llevó a esa conclusión
-4. Si va por buen camino, aliéntalo con más preguntas
-5. Usa LaTeX: $expresión$
-6. Sé conciso: 2-4 oraciones + 1-2 preguntas
-7. Si el estudiante llega a la respuesta correcta, celebra y confirma
+  const conversationSummary = session.conversationHistory
+    .map(m => `${m.role === 'user' ? 'E' : 'T'}: ${m.content}`)
+    .join('\n');
 
-IMPORTANTE: Si el estudiante encuentra la respuesta correcta (${['A', 'B', 'C', 'D'][session.question.correctAnswer]}), marca isComplete como true y da un resumen final de lo aprendido.`;
+  // COMPACT user prompt
+  const userPrompt = `Problema: ${session.question.questionLatex || session.question.question}
+Opciones: ${optionsText}
+Correcta: ${correctLetter}
 
-  const userPrompt = `**Problema que el estudiante está resolviendo:**
-${session.question.questionLatex}
+Conversación:
+${conversationSummary}
 
-**Opciones:**
-A) ${session.question.options[0]}
-B) ${session.question.options[1]}
-C) ${session.question.options[2]}
-D) ${session.question.options[3]}
-
-**Respuesta correcta:** ${['A', 'B', 'C', 'D'][session.question.correctAnswer]} (${session.question.options[session.question.correctAnswer]})
-
-**Explicación oficial:** ${session.question.explanation}
-
-**Conversación hasta ahora:**
-${session.conversationHistory.map(m => `${m.role === 'user' ? 'Estudiante' : 'Tutor'}: ${m.content}`).join('\n\n')}
-
-Continúa la conversación socrática. Analiza la respuesta del estudiante y:
-- Si está confundido, haz preguntas clarificadoras
-- Si va por mal camino, pregunta sobre sus suposiciones
-- Si va bien, guíalo al siguiente paso con preguntas
-- Si llegó a la respuesta correcta, celebra y resume
-
-Responde con JSON:
-{
-  "message": "Tu siguiente pregunta o retroalimentación socrática (usa LaTeX)",
-  "isComplete": false (o true si el estudiante llegó a la respuesta correcta),
-  "summary": "Resumen de lo aprendido (solo si isComplete es true)"
-}`;
+Continúa guiando. Responde JSON con: message (LaTeX), isComplete (boolean), summary (solo si isComplete).`;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 1024,
-        temperature: 0.7,
-        messages: [
-          {
-            role: 'user',
-            content: userPrompt,
-          },
-        ],
-        system: systemPrompt,
-      }),
+    // Use optimized conversation history if too long
+    const messages: ChatMessage[] = await optimizeConversationHistory(
+      systemPrompt,
+      [{ role: 'user', content: userPrompt }],
+      5,
+      2000
+    );
+
+    const result = await completion({
+      messages,
+      taskType: 'socratic_response',
+      jsonMode: true,
+      temperature: 0.7,
     });
 
-    if (!response.ok) {
-      throw new Error('AI Socratic continuation failed');
-    }
+    const parsed = JSON.parse(result.content);
 
-    const data = await response.json() as { content: Array<{ text: string }> };
-    const responseText = data.content[0].text;
-    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-
-    if (!jsonMatch) {
-      throw new Error('Failed to parse Socratic response');
-    }
-
-    const result = JSON.parse(jsonMatch[0]);
+    console.log(`✅ Socratic continue: ${result.model}, ${result.totalTokens} tokens, ${result.latencyMs}ms`);
 
     // Update session
     session.conversationHistory.push({
       role: 'assistant',
-      content: result.message
+      content: parsed.message
     });
 
-    if (result.isComplete) {
+    if (parsed.isComplete) {
       session.isComplete = true;
     }
 
     socraticSessions.set(sessionId, session);
 
     return {
-      message: result.message,
-      isComplete: result.isComplete,
-      summary: result.summary
+      message: parsed.message,
+      isComplete: parsed.isComplete || false,
+      summary: parsed.summary
     };
   } catch (error) {
     console.error('Error continuing Socratic session:', error);

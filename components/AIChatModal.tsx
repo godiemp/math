@@ -28,6 +28,8 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [streamingContent, setStreamingContent] = useState('');
   const [isContextExpanded, setIsContextExpanded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -38,7 +40,7 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, streamingContent]); // Also scroll when streaming content updates
 
   useEffect(() => {
     if (isOpen) {
@@ -67,7 +69,7 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
   }, [isOpen, question, userAnswer, quizMode]);
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || isLoading) return;
+    if (!inputValue.trim() || isLoading || isStreaming) return;
 
     const userMessage: Message = {
       role: 'user',
@@ -75,48 +77,116 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
       timestamp: Date.now()
     };
 
+    const currentInput = inputValue;
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsLoading(true);
+    setStreamingContent('');
 
     // Track AI message sent
     analytics.track('ai_message_sent', {
       questionId: question.id,
-      messageLength: inputValue.length,
-      turnNumber: Math.floor(messages.length / 2) + 1, // Approximate conversation turn
+      messageLength: currentInput.length,
+      turnNumber: Math.floor(messages.length / 2) + 1,
       quizMode,
     });
 
     try {
-      const response = await api.post<{ response: string; success: boolean }>('/api/ai/chat', {
-        questionLatex: question.questionLatex,
-        userAnswer: userAnswer,
-        correctAnswer: question.correctAnswer,
-        explanation: question.explanation,
-        options: question.options,
-        topic: question.topic,
-        difficulty: question.difficulty,
-        visualData: question.visualData,
-        messages: messages.map(m => ({ role: m.role, content: m.content })),
-        userMessage: inputValue,
-        quizSessionId: quizSessionId,
-        questionId: question.id,
+      // Use streaming endpoint for faster perceived response
+      const token = localStorage.getItem('auth_token');
+      const response = await fetch('/api/ai/chat/stream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          question: question.question,
+          questionLatex: question.questionLatex,
+          userAnswer: userAnswer,
+          correctAnswer: question.correctAnswer,
+          explanation: question.explanation,
+          options: question.options,
+          topic: question.topic,
+          difficulty: question.difficulty,
+          visualData: question.visualData,
+          messages: messages.map(m => ({ role: m.role, content: m.content })),
+          userMessage: currentInput,
+          quizSessionId: quizSessionId,
+          questionId: question.id,
+        }),
       });
 
-      if (response.error) {
-        console.error('API error response:', response.error);
-        throw new Error(response.error.error || 'Error en la respuesta');
+      if (!response.ok) {
+        throw new Error('Stream request failed');
       }
 
-      if (response.data && response.data.success && response.data.response) {
+      // Handle Server-Sent Events
+      setIsLoading(false);
+      setIsStreaming(true);
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (!reader) {
+        throw new Error('No response body');
+      }
+
+      let accumulatedContent = '';
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // Process complete SSE events
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || ''; // Keep incomplete line in buffer
+
+        for (const line of lines) {
+          if (line.startsWith('event: ')) {
+            // Event type line, skip
+            continue;
+          }
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.token) {
+                accumulatedContent += parsed.token;
+                setStreamingContent(accumulatedContent);
+              } else if (parsed.complete) {
+                // Streaming complete, add final message
+                const assistantMessage: Message = {
+                  role: 'assistant',
+                  content: parsed.response || accumulatedContent,
+                  timestamp: Date.now()
+                };
+                setMessages(prev => [...prev, assistantMessage]);
+                setStreamingContent('');
+                setIsStreaming(false);
+              } else if (parsed.error) {
+                throw new Error(parsed.error);
+              }
+            } catch {
+              // Ignore parsing errors for incomplete data
+            }
+          }
+        }
+      }
+
+      // If we exit without complete event, use accumulated content
+      if (isStreaming && accumulatedContent) {
         const assistantMessage: Message = {
           role: 'assistant',
-          content: response.data.response,
+          content: accumulatedContent,
           timestamp: Date.now()
         };
         setMessages(prev => [...prev, assistantMessage]);
-      } else {
-        throw new Error('Respuesta inválida del servidor');
+        setStreamingContent('');
+        setIsStreaming(false);
       }
     } catch (error) {
       console.error('Error fetching AI response:', error);
@@ -126,6 +196,8 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
         timestamp: Date.now()
       };
       setMessages(prev => [...prev, errorMessage]);
+      setStreamingContent('');
+      setIsStreaming(false);
     } finally {
       setIsLoading(false);
     }
@@ -361,12 +433,28 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
             </div>
           ))}
 
+          {/* Show streaming content as it arrives */}
+          {isStreaming && streamingContent && (
+            <div className="flex justify-start">
+              <div className="max-w-[80%] rounded-2xl px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">🤖</span>
+                  <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">Tutor IA</span>
+                  <span className="animate-pulse text-teal-500 text-xs">● escribiendo</span>
+                </div>
+                <div className="text-sm leading-relaxed markdown-chat-message">
+                  <MarkdownViewer content={streamingContent} />
+                </div>
+              </div>
+            </div>
+          )}
+
           {isLoading && (
             <div className="flex justify-start">
               <div className="bg-gray-100 dark:bg-gray-700 rounded-2xl px-4 py-3">
                 <div className="flex items-center gap-2">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-teal-600"></div>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Pensando...</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Conectando...</span>
                 </div>
               </div>
             </div>
@@ -390,7 +478,7 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
             />
             <button
               onClick={handleSendMessage}
-              disabled={!inputValue.trim() || isLoading}
+              disabled={!inputValue.trim() || isLoading || isStreaming}
               className="px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 disabled:from-gray-400 disabled:to-gray-400 text-white rounded-xl font-semibold transition-all shadow-md hover:shadow-lg disabled:cursor-not-allowed flex items-center gap-2"
             >
               <span>Enviar</span>
