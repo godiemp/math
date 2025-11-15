@@ -60,6 +60,12 @@ router.get('/users', userManagementController.getUsers);
 router.get('/users/:userId/subscriptions', userManagementController.getUserSubscriptions);
 
 /**
+ * DELETE /api/admin/users/:userId
+ * Delete a user and all their data
+ */
+router.delete('/users/:userId', userManagementController.deleteUser);
+
+/**
  * POST /api/admin/subscriptions
  * Create a subscription for a user
  */
