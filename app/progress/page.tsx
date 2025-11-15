@@ -464,7 +464,7 @@ function ProgressPageContent() {
                         </Text>
                       </div>
                       <div className="text-sm font-medium mb-1">
-                        <MathText content={attempt.question} />
+                        <MathText content={attempt.questionLatex} />
                       </div>
                       <Text size="xs" variant="secondary">
                         {formatDate(attempt.timestamp)}
@@ -751,7 +751,7 @@ function ProgressPageContent() {
 
                 <div className="mb-6">
                   <div className="text-[17px] mb-4">
-                    <MathText content={attempt.question} />
+                    <MathText content={attempt.questionLatex} />
                   </div>
                   <div className="space-y-3">
                     {attempt.options.map((option, index) => {

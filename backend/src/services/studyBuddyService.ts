@@ -469,7 +469,7 @@ async function executeGetRecentQuestions(
         qa.quiz_mode,
         qa.time_spent_seconds,
         qa.attempted_at,
-        q.question as question_text,
+        q.question_latex as question_text,
         q.options,
         q.explanation
       FROM question_attempts qa

@@ -20,8 +20,7 @@ export interface ExtractedImage {
 }
 
 export interface ExtractedQuestionWithVision {
-  question: string;
-  questionLatex?: string;
+  questionLatex: string;
   options: string[];
   optionsLatex?: string[];
   correctAnswer?: number;
@@ -133,8 +132,7 @@ If no questions are found, return {"totalPages": 1, "questions": []}`,
       if (jsonMatch) {
         const parsed = JSON.parse(jsonMatch[0]);
         const questions: ExtractedQuestionWithVision[] = parsed.questions.map((q: any) => ({
-          question: q.question || '',
-          questionLatex: q.questionLatex,
+          questionLatex: q.questionLatex || q.question || '',
           options: q.options || [],
           optionsLatex: q.optionsLatex,
           correctAnswer: q.correctAnswer,

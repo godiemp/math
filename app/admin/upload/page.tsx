@@ -129,8 +129,7 @@ export default function UploadPDFPage() {
         level: 'M1' as const,
         topic: 'Tema por definir',
         subject: 'números' as const,
-        question: q.question,
-        questionLatex: q.questionLatex || q.question,
+        questionLatex: q.questionLatex,
         options: q.options,
         optionsLatex: q.optionsLatex || q.options,
         correctAnswer: q.correctAnswer ?? 0,
@@ -357,12 +356,12 @@ export default function UploadPDFPage() {
                           Pregunta *
                         </label>
                         <textarea
-                          value={q.question}
-                          onChange={(e) => updateQuestion(index, 'question', e.target.value)}
+                          value={q.questionLatex}
+                          onChange={(e) => updateQuestion(index, 'questionLatex', e.target.value)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md"
                           rows={3}
                         />
-                        {q.questionLatex && q.questionLatex !== q.question && (
+                        {q.questionLatex && (
                           <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded">
                             <p className="text-xs font-medium text-blue-700 mb-1">LaTeX detectado:</p>
                             <code className="text-xs text-blue-900">{q.questionLatex}</code>

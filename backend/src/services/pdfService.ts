@@ -1,7 +1,7 @@
 import { QuestionWithMetadata } from '../types';
 
 export interface ExtractedQuestion {
-  question: string;
+  questionLatex: string;
   options: string[];
   correctAnswer?: number;
   explanation?: string;
@@ -157,8 +157,7 @@ export function convertToQuestionFormat(
     level: metadata.level,
     topic: metadata.topic,
     subject: metadata.subject,
-    question: extracted.question,
-    questionLatex: extracted.question, // You may want to convert this
+    questionLatex: extracted.questionLatex,
     options: extracted.options,
     optionsLatex: extracted.options,
     correctAnswer: extracted.correctAnswer ?? 0,

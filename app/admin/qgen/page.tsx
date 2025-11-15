@@ -51,8 +51,7 @@ interface QGenResult {
   level: Level;
   subject: Subject;
   topic: string;
-  question: string;
-  questionLatex?: string;
+  questionLatex: string;
   options: string[];
   optionsLatex?: string[];
   correctAnswer: number;
@@ -297,7 +296,7 @@ function QGenAdminContent() {
                     ❓ Pregunta
                   </Heading>
                   <div className="mb-4 text-base">
-                    <MathText content={result.question} />
+                    <MathText content={result.questionLatex} />
                   </div>
 
                   {/* Options */}

@@ -149,7 +149,7 @@ export interface User {
 export interface QuestionAttempt {
   questionId: string;
   quizSessionId?: string | null; // ID of the quiz session this attempt belongs to
-  question: string;
+  questionLatex: string;
   topic: string;
   level: Level;
   userAnswer: number;
