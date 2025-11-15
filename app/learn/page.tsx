@@ -470,7 +470,6 @@ export default function LearnPage() {
                 <span className="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
-<<<<<<< HEAD
                 <QuestionDisplay
                   question={selectedQuestion}
                   showOptions={true}
@@ -478,19 +477,6 @@ export default function LearnPage() {
                   optionsLayout="grid"
                   compact={true}
                 />
-=======
-                <div className="text-slate-700 dark:text-slate-300 mb-4">
-                  <SmartLatexRenderer latex={selectedQuestion.questionLatex} displayMode={false} />
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {selectedQuestion.options.map((option, idx) => (
-                    <div key={idx} className="text-sm p-2 bg-slate-50 dark:bg-slate-800 rounded">
-                      <span className="font-semibold mr-1">{['A', 'B', 'C', 'D'][idx]})</span>
-                      <SmartLatexRenderer latex={option} displayMode={false} />
-                    </div>
-                  ))}
-                </div>
->>>>>>> c4fd61a (Consolidate LaTeX fields in Question interface)
               </div>
             </details>
           </Card>
