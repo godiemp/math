@@ -256,10 +256,10 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
             <div>
               {/* Message text with typewriter effect - Fixed height to prevent overlap */}
               <div className="mb-8" style={{ minHeight: '320px' }}>
-                <p className="text-[22px] leading-[1.6] text-gray-900 dark:text-gray-100 font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif] whitespace-pre-wrap">
+                <p className="text-base sm:text-lg md:text-xl lg:text-[22px] leading-[1.6] text-gray-900 dark:text-gray-100 font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif] whitespace-pre-wrap">
                   {displayedText}
                   {!isComplete && showCursor && (
-                    <span className="inline-block w-[3px] h-[28px] bg-blue-500 ml-[2px] animate-pulse" />
+                    <span className="inline-block w-[2px] sm:w-[3px] h-[20px] sm:h-[24px] md:h-[26px] lg:h-[28px] bg-blue-500 ml-[2px] animate-pulse" />
                   )}
                 </p>
               </div>
