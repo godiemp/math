@@ -56,7 +56,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          {/* Left side - Title or Back Button */}
+          {/* Left side - Title and/or Back Button */}
           <div className="flex items-center gap-3">
             {showBackButton && (
               <button
@@ -66,7 +66,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
                 ← Volver
               </button>
             )}
-            {title && !showBackButton && (
+            {title && (
               <Heading level={1} size="xs" className="text-[#0A84FF] text-sm sm:text-base">
                 {title}
               </Heading>
