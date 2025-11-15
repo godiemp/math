@@ -173,6 +173,24 @@ function UserManagementContent() {
     }
   };
 
+  const handleDeleteUser = async (userId: string, userName: string) => {
+    if (!confirm(`¿Estás seguro de que quieres eliminar al usuario "${userName}"? Esta acción no se puede deshacer y eliminará todos sus datos.`)) return;
+
+    try {
+      const response = await api.delete(`/api/admin/users/${userId}`);
+
+      if (response.error) {
+        throw new Error(response.error.error || 'Error al eliminar usuario');
+      }
+
+      // Refresh data
+      await fetchData();
+    } catch (err) {
+      console.error('Error deleting user:', err);
+      alert(err instanceof Error ? err.message : 'Error al eliminar usuario');
+    }
+  };
+
   const formatDate = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString('es-CL', {
       year: 'numeric',
@@ -312,6 +330,9 @@ function UserManagementContent() {
                     Email
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Verified
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Tipo
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -348,6 +369,17 @@ function UserManagementContent() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${
+                            user.emailVerified
+                              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                              : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                          }`}
+                        >
+                          {user.emailVerified ? '✓ Verified' : '✗ Not Verified'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
                           className={`px-2 py-1 text-xs font-medium rounded-full ${getUserTypeColor(
                             userType
                           )}`}
@@ -379,11 +411,17 @@ function UserManagementContent() {
                               user.subscription.status === 'trial') && (
                               <button
                                 onClick={() => handleCancelSubscription(user.subscription!.id)}
-                                className="px-3 py-1.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-md hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors font-medium"
+                                className="px-3 py-1.5 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-md hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors font-medium"
                               >
                                 Cancel
                               </button>
                             )}
+                          <button
+                            onClick={() => handleDeleteUser(user.id, user.displayName)}
+                            className="px-3 py-1.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-md hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors font-medium"
+                          >
+                            Delete
+                          </button>
                         </div>
                       </td>
                     </tr>

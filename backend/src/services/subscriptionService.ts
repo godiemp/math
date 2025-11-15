@@ -388,7 +388,7 @@ export class SubscriptionService {
   static async getAllUsersWithSubscriptions(): Promise<UserWithSubscription[]> {
     const result = await pool.query(`
       SELECT
-        u.id, u.username, u.email, u.display_name, u.role,
+        u.id, u.username, u.email, u.display_name, u.role, u.email_verified,
         u.created_at, u.updated_at, u.current_streak, u.longest_streak, u.last_practice_date, u.target_level,
         s.id as sub_id, s.plan_id, s.status, s.started_at as sub_started_at,
         s.expires_at, s.trial_ends_at, s.cancelled_at, s.auto_renew,
@@ -409,6 +409,7 @@ export class SubscriptionService {
         email: row.email,
         displayName: row.display_name,
         role: row.role,
+        emailVerified: row.email_verified,
         createdAt: row.created_at,
         updatedAt: row.updated_at,
         currentStreak: row.current_streak,
@@ -468,6 +469,38 @@ export class SubscriptionService {
     );
 
     return result.rowCount || 0;
+  }
+
+  /**
+   * Delete a user and all their related data
+   */
+  static async deleteUser(userId: string): Promise<boolean> {
+    const client = await pool.connect();
+
+    try {
+      await client.query('BEGIN');
+
+      // Delete user's subscriptions
+      await client.query('DELETE FROM subscriptions WHERE user_id = $1', [userId]);
+
+      // Delete user's progress
+      await client.query('DELETE FROM user_progress WHERE user_id = $1', [userId]);
+
+      // Delete user's practice history
+      await client.query('DELETE FROM practice_history WHERE user_id = $1', [userId]);
+
+      // Delete the user
+      const result = await client.query('DELETE FROM users WHERE id = $1', [userId]);
+
+      await client.query('COMMIT');
+
+      return result.rowCount !== null && result.rowCount > 0;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   /**

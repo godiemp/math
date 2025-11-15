@@ -328,3 +328,42 @@ export const updateExpiredSubscriptions = async (req: Request, res: Response) =>
     });
   }
 };
+
+/**
+ * Delete a user and all their data
+ * DELETE /api/admin/users/:userId
+ */
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    // Prevent deleting own account
+    if (req.user && req.user.id === userId) {
+      return res.status(400).json({
+        success: false,
+        message: 'No puedes eliminar tu propia cuenta',
+      });
+    }
+
+    const success = await SubscriptionService.deleteUser(userId);
+
+    if (!success) {
+      return res.status(404).json({
+        success: false,
+        message: 'Usuario no encontrado',
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Usuario eliminado exitosamente',
+    });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al eliminar el usuario',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};
