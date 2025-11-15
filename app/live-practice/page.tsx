@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { registerForSession, unregisterFromSession, joinSessionAPI } from '@/lib/sessionApi';
 import { useAvailableSessions } from '@/lib/hooks/useSessions';
 import { LiveSession } from '@/lib/types';
-import LiveSessionComponent from '@/components/LiveSession';
+import LiveSessionComponent from '@/components/LiveSessionXState';
 import StudentStatisticsComponent from '@/components/StudentStatistics';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { PageHeader } from '@/components/PageHeader';
