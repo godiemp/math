@@ -30,6 +30,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
     const saved = localStorage.getItem('quiz-show-quick-nav');
     return saved !== null ? saved === 'true' : true;
   });
+  const [showMobileNav, setShowMobileNav] = useState(false);
   const [quizSessionId] = useState(generateQuizSessionId);
   const [aiConversation] = useState<Array<{ role: string; message: string; timestamp: number }>>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -365,11 +366,9 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
   const showFeedback = quizSubmitted;
 
   const questionContent = (
-    <div className="w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8 animate-fadeIn"
+    <div className="w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 md:p-8 animate-fadeIn"
       style={{
         boxShadow: '0 0 60px rgba(20, 184, 166, 0.3), 0 20px 40px rgba(0, 0, 0, 0.2)',
-        minHeight: '600px',
-        maxHeight: '85vh',
       }}>
       {/* Progress bar */}
       <div className="mb-6">
@@ -392,8 +391,8 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
         </div>
       </div>
 
-      {/* Quick Navigation Panel */}
-      <div className="mb-6">
+      {/* Quick Navigation - Desktop (hidden on mobile) */}
+      <div className="mb-6 hidden md:block">
         <div className="flex items-center justify-between mb-3">
           <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
             Navegación rápida:
@@ -478,6 +477,17 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
         )}
       </div>
 
+      {/* Mobile Navigation Button - Fixed at top right */}
+      <button
+        onClick={() => setShowMobileNav(true)}
+        className="md:hidden fixed top-4 right-4 z-40 bg-white dark:bg-gray-800 rounded-full p-3 shadow-lg border border-teal-200 dark:border-teal-700"
+        title="Navegación rápida"
+      >
+        <svg className="w-5 h-5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
       {/* Question answered indicator */}
       {!quizSubmitted && userAnswer !== null && (
         <div className="mb-6 p-3 rounded-lg border bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 border-teal-300 dark:border-teal-700 shadow-md">
@@ -551,10 +561,132 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
   return (
     <>
       <div className="fixed inset-0 bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500 dark:from-teal-800 dark:via-cyan-900 dark:to-blue-900 overflow-y-auto">
-        <div className="min-h-full py-6 px-4 sm:py-8 sm:px-6 flex items-center justify-center">
+        <div className="min-h-full py-6 px-4 sm:py-8 sm:px-6 flex items-start md:items-center justify-center">
           {questionContent}
         </div>
       </div>
+
+      {/* Mobile Slide-out Navigation Menu */}
+      {showMobileNav && (
+        <div className="md:hidden fixed inset-0 z-50">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowMobileNav(false)}
+          />
+
+          {/* Slide-out Panel */}
+          <div className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-800 shadow-2xl animate-slideInRight">
+            <div className="p-4 h-full flex flex-col">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-bold text-teal-600 dark:text-teal-400">
+                  Navegación Rápida
+                </h3>
+                <button
+                  onClick={() => setShowMobileNav(false)}
+                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Progress Summary */}
+              <div className="mb-4 p-3 bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 rounded-lg">
+                <p className="text-sm font-medium text-teal-700 dark:text-teal-300">
+                  {userAnswers.filter(a => a !== null).length} de {quizQuestions.length} respondidas
+                </p>
+                <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div
+                    className="h-2 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500"
+                    style={{ width: `${(userAnswers.filter(a => a !== null).length / quizQuestions.length) * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Question Grid */}
+              <div className="flex-1 overflow-y-auto">
+                <div className="grid grid-cols-5 gap-3">
+                  {quizQuestions.map((q, idx) => {
+                    const answer = userAnswers[idx];
+                    const isAnswered = answer !== null;
+                    const isCurrentQuestion = idx === currentQuestionIndex;
+                    const isQuestionCorrect = isAnswered && answer === q.correctAnswer;
+
+                    let buttonClass = 'w-full aspect-square rounded-lg text-sm font-bold transition-all flex items-center justify-center min-h-[44px] ';
+
+                    if (isCurrentQuestion) {
+                      buttonClass += 'ring-2 ring-teal-500 ring-offset-2 dark:ring-offset-gray-800 ';
+                    }
+
+                    if (quizSubmitted) {
+                      if (!isAnswered) {
+                        buttonClass += 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400';
+                      } else if (isQuestionCorrect) {
+                        buttonClass += 'bg-green-500 text-white';
+                      } else {
+                        buttonClass += 'bg-amber-400 text-white';
+                      }
+                    } else {
+                      if (isAnswered) {
+                        buttonClass += 'bg-teal-500 text-white';
+                      } else {
+                        buttonClass += 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400';
+                      }
+                    }
+
+                    buttonClass += ' hover:opacity-80 active:scale-95 cursor-pointer';
+
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          navigateToQuestion(idx);
+                          setShowMobileNav(false);
+                        }}
+                        className={buttonClass}
+                      >
+                        {idx + 1}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Legend */}
+              <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex flex-wrap gap-3 text-xs text-gray-600 dark:text-gray-400">
+                  {!quizSubmitted && (
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 rounded bg-teal-500"></div>
+                      <span>Respondida</span>
+                    </div>
+                  )}
+                  {quizSubmitted && (
+                    <>
+                      <div className="flex items-center gap-1">
+                        <div className="w-3 h-3 rounded bg-green-500"></div>
+                        <span>Correcta</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <div className="w-3 h-3 rounded bg-amber-400"></div>
+                        <span>Incorrecta</span>
+                      </div>
+                    </>
+                  )}
+                  <div className="flex items-center gap-1">
+                    <div className="w-3 h-3 rounded bg-gray-200 dark:bg-gray-700"></div>
+                    <span>Sin responder</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <AIChatModal
         isOpen={isChatModalOpen}
         onClose={() => setIsChatModalOpen(false)}
