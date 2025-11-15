@@ -202,6 +202,14 @@
       "header": "¡estamos mejorando!",
       "message": "estamos mejorando los problemas para tener problemas estilo PAES. hasta ahora tenemos los temarios cubiertos pero no el formato. pronto tendrás una experiencia más cercana al examen real."
     },
+    "emailVerification": {
+      "title": "email no verificado",
+      "message": "por favor verifica tu correo electrónico para asegurar que no pierdas acceso a tu cuenta.",
+      "resendButton": "reenviar email",
+      "sending": "enviando...",
+      "sentSuccess": "¡email de verificación enviado! por favor revisa tu bandeja de entrada.",
+      "sentError": "error al enviar el email. por favor intenta de nuevo."
+    },
     "footer": {
       "copyright": "© 2024 SimplePAES - plataforma de preparación matemática"
     }
