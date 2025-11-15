@@ -635,7 +635,7 @@ export default function LearnPage() {
             </div>
 
             <div className="mb-6">
-              <MarkdownViewer content={question.questionLatex || question.question} />
+              <MarkdownViewer content={question.questionLatex} />
             </div>
 
             {/* Multiple choice options */}
@@ -743,7 +743,7 @@ export default function LearnPage() {
             </div>
 
             <div className="mb-6">
-              <MarkdownViewer content={question.questionLatex || question.question} />
+              <MarkdownViewer content={question.questionLatex} />
             </div>
 
             {/* Multiple choice options */}

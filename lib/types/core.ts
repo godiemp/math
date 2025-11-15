@@ -104,9 +104,10 @@ export interface Question {
   id: string;
   topic: string;
   level: Level;
-  question: string;
-  // LaTeX version of question (optional, if present will render as math)
-  questionLatex?: string;
+  // Plain text version of question (deprecated, use questionLatex)
+  question?: string;
+  // LaTeX version of question (required)
+  questionLatex: string;
   options: string[];
   // LaTeX versions of options (optional)
   optionsLatex?: string[];

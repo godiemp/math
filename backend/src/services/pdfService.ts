@@ -129,7 +129,7 @@ function parseQuestionsFromText(text: string): ExtractedQuestion[] {
  */
 export function validateQuestion(question: ExtractedQuestion): boolean {
   return (
-    question.question.length > 0 &&
+    question.questionLatex.length > 0 &&
     question.options.length === 4 &&
     question.options.every(opt => opt.length > 0)
   );

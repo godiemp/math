@@ -522,7 +522,7 @@ FORMATO LATEX:
 - Confianza: ${assessment.confidenceLevel}
 
 **Pregunta seleccionada:**
-${question.questionLatex || question.question}
+${question.questionLatex}
 
 **Respuesta correcta:** ${question.optionsLatex?.[question.correctAnswer] || question.options[question.correctAnswer]}
 

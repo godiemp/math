@@ -553,7 +553,7 @@ function AdminLiveSessionsContent() {
 
                   {/* Question Text */}
                   <div className="text-sm text-gray-900 dark:text-white mb-4">
-                    <MathText content={question.question} />
+                    <MathText content={question.questionLatex} />
                   </div>
 
                   {/* Answer Options */}

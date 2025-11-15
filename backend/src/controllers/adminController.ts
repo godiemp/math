@@ -232,7 +232,7 @@ export const saveQuestions = async (req: Request, res: Response): Promise<void> 
     for (const question of questions) {
       try {
         // Validate required fields
-        if (!question.id || !question.level || !question.subject || !question.question ||
+        if (!question.id || !question.level || !question.subject || !question.questionLatex ||
             !question.options || !question.difficulty || !question.skills) {
           console.warn('Skipping invalid question:', question);
           continue;
@@ -267,7 +267,7 @@ export const saveQuestions = async (req: Request, res: Response): Promise<void> 
             question.topic,
             question.subject,
             question.question,
-            question.questionLatex || question.question,
+            question.questionLatex,
             JSON.stringify(question.options),
             JSON.stringify(question.optionsLatex || question.options),
             question.correctAnswer,

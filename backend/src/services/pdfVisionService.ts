@@ -228,7 +228,7 @@ export async function extractQuestionsWithVision(
  */
 export function validateVisionQuestion(question: ExtractedQuestionWithVision): boolean {
   return (
-    question.question.length > 0 &&
+    question.questionLatex.length > 0 &&
     question.options.length === 4 &&
     question.options.every((opt) => opt.length > 0)
   );

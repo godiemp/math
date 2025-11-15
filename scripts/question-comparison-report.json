@@ -1,11 +1,11 @@
 {
   "stats": {
     "totalQuestions": 664,
-    "questionsWithLatex": 649,
-    "questionsMissingLatex": 15,
-    "questionsWithDifferences": 415,
-    "percentWithLatex": "97.74",
-    "percentWithDifferences": "62.50"
+    "questionsWithLatex": 664,
+    "questionsMissingLatex": 0,
+    "questionsWithDifferences": 417,
+    "percentWithLatex": "100.00",
+    "percentWithDifferences": "62.80"
   },
   "reports": [
     {
@@ -3853,165 +3853,180 @@
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Un arquitecto paisajista está diseñando un cantero con forma de paralelogramo para un parque público. Después de medir el terreno disponible, determina que la base del cantero debe ser de 12 cm en la maqueta (escala 1:100) y la altura perpendicular desde la base es de 7 cm. Necesita calcular el área exacta de la maqueta para comprender cómo lucirá el proyecto final. ¿Cuál es el área del paralelogramo en la maqueta?",
+      "questionLatex": "\\text{Un arquitecto paisajista está diseñando un cantero con forma de paralelogramo para un parque público. Después de medir el terreno disponible, determina que la base del cantero debe ser de 12 cm en la maqueta (escala 1:100) y la altura perpendicular desde la base es de 7 cm. Necesita calcular el área exacta de la maqueta para comprender cómo lucirá el proyecto final. ¿Cuál es el área del paralelogramo en la maqueta?}",
       "isDifferent": false,
       "questionLength": 418,
-      "questionLatexLength": 0
+      "questionLatexLength": 425
     },
     {
       "id": "m1-178",
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Un artista está creando un mural en forma de paralelogramo en una pared de una galería de arte. El mural debe ocupar exactamente 60 cm² de área según el contrato. El cliente especifica que la base del mural debe medir 10 cm de ancho. Para planificar correctamente la altura del mural y distribuir los elementos visuales, el artista necesita calcular la altura perpendicular del paralelogramo. ¿Cuál debe ser la altura del mural?",
+      "questionLatex": "\\text{Un artista está creando un mural en forma de paralelogramo en una pared de una galería de arte. El mural debe ocupar exactamente 60 cm² de área según el contrato. El cliente especifica que la base del mural debe medir 10 cm de ancho. Para planificar correctamente la altura del mural y distribuir los elementos visuales, el artista necesita calcular la altura perpendicular del paralelogramo. ¿Cuál debe ser la altura del mural?}",
       "isDifferent": false,
       "questionLength": 428,
-      "questionLatexLength": 0
+      "questionLatexLength": 435
     },
     {
       "id": "m1-179",
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Un desarrollador inmobiliario está evaluando dos terrenos con forma de paralelogramo para un proyecto. Ambos terrenos tienen exactamente la misma base de frente a la calle. Sin embargo, el segundo terreno tiene el doble de profundidad (altura) que el primero. Para decidir cuál comprar, necesita comparar sus áreas. ¿Cuál es la relación entre los áreas de estos dos terrenos?",
+      "questionLatex": "\\text{Un desarrollador inmobiliario está evaluando dos terrenos con forma de paralelogramo para un proyecto. Ambos terrenos tienen exactamente la misma base de frente a la calle. Sin embargo, el segundo terreno tiene el doble de profundidad (altura) que el primero. Para decidir cuál comprar, necesita comparar sus áreas. ¿Cuál es la relación entre los áreas de estos dos terrenos?}",
       "isDifferent": false,
       "questionLength": 375,
-      "questionLatexLength": 0
+      "questionLatexLength": 382
     },
     {
       "id": "m1-180",
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Un constructor está diseñando una cubierta con forma de trapecio para una cabaña de montaña. La base más ancha (inferior) debe medir 12 cm en la maqueta, la base más angosta (superior) debe medir 8 cm, y la altura vertical entre las dos bases es de 5 cm. Antes de comenzar la construcción real, necesita calcular el área exacta del diseño en la maqueta. ¿Cuál es el área del trapecio?",
+      "questionLatex": "\\text{Un constructor está diseñando una cubierta con forma de trapecio para una cabaña de montaña. La base más ancha (inferior) debe medir 12 cm en la maqueta, la base más angosta (superior) debe medir 8 cm, y la altura vertical entre las dos bases es de 5 cm. Antes de comenzar la construcción real, necesita calcular el área exacta del diseño en la maqueta. ¿Cuál es el área del trapecio?}",
       "isDifferent": false,
       "questionLength": 384,
-      "questionLatexLength": 0
+      "questionLatexLength": 391
     },
     {
       "id": "m1-181",
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Un diseñador de jardines está creando un cantero con forma de trapecio. El cliente especifica que el cantero debe tener un área de 72 cm². Las medidas de las bases ya están determinadas: 10 cm para la base menor y 14 cm para la base mayor. Sin embargo, falta establecer la altura perpendicular del trapecio. ¿Cuál debe ser la altura del cantero?",
+      "questionLatex": "\\text{Un diseñador de jardines está creando un cantero con forma de trapecio. El cliente especifica que el cantero debe tener un área de 72 cm². Las medidas de las bases ya están determinadas: 10 cm para la base menor y 14 cm para la base mayor. Sin embargo, falta establecer la altura perpendicular del trapecio. ¿Cuál debe ser la altura del cantero?}",
       "isDifferent": false,
       "questionLength": 345,
-      "questionLatexLength": 0
+      "questionLatexLength": 352
     },
     {
       "id": "m1-182",
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Un fabricante de marcos está diseñando un marco decorativo con forma de trapecio isósceles para una obra de arte. El cliente especifica que los lados paralelos (bases) del marco deben medir 16 cm (base mayor) y 10 cm (base menor), mientras que los dos lados iguales no paralelos deben medir 5 cm cada uno. Para ordenar la cantidad exacta de material de borde decorativo, el fabricante necesita calcular el perímetro total del trapecio. ¿Cuál es el perímetro?",
+      "questionLatex": "\\text{Un fabricante de marcos está diseñando un marco decorativo con forma de trapecio isósceles para una obra de arte. El cliente especifica que los lados paralelos (bases) del marco deben medir 16 cm (base mayor) y 10 cm (base menor), mientras que los dos lados iguales no paralelos deben medir 5 cm cada uno. Para ordenar la cantidad exacta de material de borde decorativo, el fabricante necesita calcular el perímetro total del trapecio. ¿Cuál es el perímetro?}",
       "isDifferent": false,
       "questionLength": 458,
-      "questionLatexLength": 0
+      "questionLatexLength": 465
     },
     {
       "id": "m1-183",
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Un arquitecto está diseñando el techo de una casa que consiste en dos partes: la base es un cuadrado con lado de 6 cm en la maqueta, y sobre él se coloca un triángulo isósceles (forma de tejado puntiagudo) que tiene la misma base de 6 cm y una altura de 4 cm. Para estimar la cantidad de materiales necesarios, el arquitecto debe calcular el área total del diseño. ¿Cuál es el área total de la figura compuesta?",
+      "questionLatex": "\\text{Un arquitecto está diseñando el techo de una casa que consiste en dos partes: la base es un cuadrado con lado de 6 cm en la maqueta, y sobre él se coloca un triángulo isósceles (forma de tejado puntiagudo) que tiene la misma base de 6 cm y una altura de 4 cm. Para estimar la cantidad de materiales necesarios, el arquitecto debe calcular el área total del diseño. ¿Cuál es el área total de la figura compuesta?}",
       "isDifferent": false,
       "questionLength": 411,
-      "questionLatexLength": 0
+      "questionLatexLength": 418
     },
     {
       "id": "m1-184",
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Un carpintero está creando una bandeja de madera con forma rectangular de 10 cm × 8 cm. Sin embargo, necesita hacer un recorte rectangular en una esquina para instalar un mecanismo. El recorte tendrá dimensiones de 4 cm × 3 cm. Para estimar la cantidad de pintura o barniz que necesitará, debe calcular el área útil (visible) que quedará después del recorte. ¿Cuál es el área restante de la bandeja?",
-      "isDifferent": false,
+      "questionLatex": "\\text{Un carpintero está creando una bandeja de madera con forma rectangular de 10 cm } \\times \\text{ 8 cm. Sin embargo, necesita hacer un recorte rectangular en una esquina para instalar un mecanismo. El recorte tendrá dimensiones de 4 cm } \\times \\text{ 3 cm. Para estimar la cantidad de pintura o barniz que necesitará, debe calcular el área útil (visible) que quedará después del recorte. ¿Cuál es el área restante de la bandeja?}",
+      "isDifferent": true,
       "questionLength": 399,
-      "questionLatexLength": 0
+      "questionLatexLength": 434
     },
     {
       "id": "m1-185",
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Un paisajista está diseñando un parque con un terreno rectangular de 20 m × 15 m. Alrededor de toda la perímetro del terreno, se construirá un camino de acceso de 2 m de ancho. Para presupuestar los materiales para el camino (grava, cemento, etc.), el paisajista necesita calcular exactamente cuánta área ocupará el camino. ¿Cuál es el área del camino?",
-      "isDifferent": false,
+      "questionLatex": "\\text{Un paisajista está diseñando un parque con un terreno rectangular de 20 m } \\times \\text{ 15 m. Alrededor de toda la perímetro del terreno, se construirá un camino de acceso de 2 m de ancho. Para presupuestar los materiales para el camino (grava, cemento, etc.), el paisajista necesita calcular exactamente cuánta área ocupará el camino. ¿Cuál es el área del camino?}",
+      "isDifferent": true,
       "questionLength": 352,
-      "questionLatexLength": 0
+      "questionLatexLength": 373
     },
     {
       "id": "m1-186",
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Un agrónomo está comparando dos parcelas rectangulares para cultivo. La segunda parcela tiene exactamente el doble de largo y el doble de ancho que la primera. Necesita entender cómo afecta este cambio proporcional al área total disponible para plantar. ¿Qué sucede con el área cuando se duplican ambas dimensiones de un rectángulo?",
+      "questionLatex": "\\text{Un agrónomo está comparando dos parcelas rectangulares para cultivo. La segunda parcela tiene exactamente el doble de largo y el doble de ancho que la primera. Necesita entender cómo afecta este cambio proporcional al área total disponible para plantar. ¿Qué sucede con el área cuando se duplican ambas dimensiones de un rectángulo?}",
       "isDifferent": false,
       "questionLength": 332,
-      "questionLatexLength": 0
+      "questionLatexLength": 339
     },
     {
       "id": "m1-187",
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Una constructora está evaluando dos terrenos cuadrados para un proyecto. El primer terreno tiene un lado de 10 m, mientras que el segundo terreno tiene un lado de 30 m. Un consultor inmobiliario le pide que determine la relación entre sus áreas para entender cómo escalan los costos de desarrollo según el tamaño. Si los lados están en razón 1:3, ¿en qué razón están sus áreas?",
+      "questionLatex": "\\text{Una constructora está evaluando dos terrenos cuadrados para un proyecto. El primer terreno tiene un lado de 10 m, mientras que el segundo terreno tiene un lado de 30 m. Un consultor inmobiliario le pide que determine la relación entre sus áreas para entender cómo escalan los costos de desarrollo según el tamaño. Si los lados están en razón 1:3, ¿en qué razón están sus áreas?}",
       "isDifferent": false,
       "questionLength": 377,
-      "questionLatexLength": 0
+      "questionLatexLength": 384
     },
     {
       "id": "m1-188",
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Un granjero tiene dos parcelas con el mismo perímetro de 40 m para elegir donde cultivar. Una parcela es un cuadrado perfecto, mientras que la otra es rectangular con 12 m de largo. El granjero necesita determinar cuál parcela ofrece más espacio para maximizar su producción. ¿Cuál de las dos parcelas tiene mayor área?",
+      "questionLatex": "\\text{Un granjero tiene dos parcelas con el mismo perímetro de 40 m para elegir donde cultivar. Una parcela es un cuadrado perfecto, mientras que la otra es rectangular con 12 m de largo. El granjero necesita determinar cuál parcela ofrece más espacio para maximizar su producción. ¿Cuál de las dos parcelas tiene mayor área?}",
       "isDifferent": false,
       "questionLength": 319,
-      "questionLatexLength": 0
+      "questionLatexLength": 326
     },
     {
       "id": "m1-189",
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Un fabricante de azulejos está recibiendo un pedido especificado en metros cuadrados, pero su sistema de inventario funciona en centímetros cuadrados. Para asegurar que tiene suficiente material en stock, debe convertir las medidas. ¿Cuántos centímetros cuadrados hay en 1 metro cuadrado?",
+      "questionLatex": "\\text{Un fabricante de azulejos está recibiendo un pedido especificado en metros cuadrados, pero su sistema de inventario funciona en centímetros cuadrados. Para asegurar que tiene suficiente material en stock, debe convertir las medidas. ¿Cuántos centímetros cuadrados hay en 1 metro cuadrado?}",
       "isDifferent": false,
       "questionLength": 288,
-      "questionLatexLength": 0
+      "questionLatexLength": 295
     },
     {
       "id": "m1-190",
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Un artesano necesita encargo de tela especial de 2.5 m² para un proyecto de costura, pero el proveedor internacional muestra el precio por centímetro cuadrado. Para calcular el costo total, el artesano necesita convertir el área a centímetros cuadrados. ¿Cuántos centímetros cuadrados representan 2.5 m²?",
+      "questionLatex": "\\text{Un artesano necesita encargo de tela especial de 2.5 m² para un proyecto de costura, pero el proveedor internacional muestra el precio por centímetro cuadrado. Para calcular el costo total, el artesano necesita convertir el área a centímetros cuadrados. ¿Cuántos centímetros cuadrados representan 2.5 m²?}",
       "isDifferent": false,
       "questionLength": 304,
-      "questionLatexLength": 0
+      "questionLatexLength": 311
     },
     {
       "id": "m1-191",
       "level": "M1",
       "topic": "Geometría",
       "subject": "geometría",
-      "hasQuestionLatex": false,
+      "hasQuestionLatex": true,
       "question": "Un entrenador está diseñando una ruta de entrenamiento para maratonistas. El perímetro total del circuito de entrenamiento en el parque es de 500 metros. Para elaborar un plan de entrenamiento estructurado en kilómetros (completar múltiples vueltas), necesita convertir esta medida. ¿Cuántos kilómetros es el perímetro de 500 metros?",
+      "questionLatex": "\\text{Un entrenador está diseñando una ruta de entrenamiento para maratonistas. El perímetro total del circuito de entrenamiento en el parque es de 500 metros. Para elaborar un plan de entrenamiento estructurado en kilómetros (completar múltiples vueltas), necesita convertir esta medida. ¿Cuántos kilómetros es el perímetro de 500 metros?}",
       "isDifferent": false,
       "questionLength": 333,
-      "questionLatexLength": 0
+      "questionLatexLength": 340
     },
     {
       "id": "m1-192",
