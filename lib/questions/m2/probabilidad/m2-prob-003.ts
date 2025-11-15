@@ -174,6 +174,115 @@ export const m2Prob003Questions: Question[] = [
     explanationLatex: '6^3 = 216',
     difficulty: 'medium',
     skills: ['combinatoria-problemas-probabilidad', 'combinatoria-principio-multiplicativo', 'numeros-potencias', 'numeros-operaciones-basicas']
+  },
+  // Additional Subsection B: Permutaciones
+  {
+    id: 'm2-prob-perm-2',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{¿De cuántas formas se pueden sentar 5 personas en una fila de 5 sillas?}',
+    options: ['25', '60', '100', '120'],
+    correctAnswer: 3,
+    explanation: 'Permutaciones de 5 elementos: P(5) = 5! = 5 × 4 × 3 × 2 × 1 = 120',
+    explanationLatex: 'P(5) = 5! = 120',
+    difficulty: 'easy',
+    skills: ['conteo-permutaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-prob-perm-3',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Una contraseña de 4 dígitos usa solo 0-9 sin repetir. ¿Cuántas contraseñas hay?}',
+    options: ['$5{,}040$', '$10{,}000$', '$24$', '$210$'],
+    optionsLatex: ['5{,}040', '10{,}000', '24', '210'],
+    correctAnswer: 0,
+    explanation: 'Permutaciones de 10 tomados de 4: P(10,4) = 10!/6! = 10 × 9 × 8 × 7 = 5.040',
+    explanationLatex: 'P(10,4) = 10 \\times 9 \\times 8 \\times 7 = 5{,}040',
+    difficulty: 'medium',
+    skills: ['conteo-permutaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-prob-perm-4',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{¿Cuántos anagramas tiene la palabra CASA?}',
+    options: ['4', '6', '12', '24'],
+    correctAnswer: 2,
+    explanation: 'CASA tiene 4 letras, pero la A se repite 2 veces. Anagramas = 4!/2! = 24/2 = 12',
+    explanationLatex: '\\frac{4!}{2!} = \\frac{24}{2} = 12',
+    difficulty: 'hard',
+    skills: ['conteo-permutaciones', 'probabilidad-factorial', 'probabilidad-permutaciones-repeticion', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-prob-perm-5',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En un torneo, 8 equipos juegan eliminatorias. ¿De cuántas formas se pueden asignar los 2 primeros lugares?}',
+    options: ['16', '28', '56', '64'],
+    correctAnswer: 2,
+    explanation: 'Permutaciones de 8 tomados de 2: P(8,2) = 8 × 7 = 56',
+    explanationLatex: 'P(8,2) = 8 \\times 7 = 56',
+    difficulty: 'medium',
+    skills: ['conteo-permutaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
+  },
+  // Additional Subsection C: Combinaciones
+  {
+    id: 'm2-prob-comb-6',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{De 10 jugadores, ¿de cuántas formas se puede elegir un equipo de 4?}',
+    options: ['40', '210', '$5{,}040$', '$151{,}200$'],
+    optionsLatex: ['40', '210', '5{,}040', '151{,}200'],
+    correctAnswer: 1,
+    explanation: 'Combinaciones: C(10,4) = 10!/(4!×6!) = (10×9×8×7)/(4×3×2×1) = 210',
+    explanationLatex: 'C(10,4) = \\frac{10!}{4! \\times 6!} = 210',
+    difficulty: 'medium',
+    skills: ['conteo-combinaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-prob-comb-7',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{¿Cuántos subconjuntos de 2 elementos tiene el conjunto } \\{a, b, c, d, e\\}?',
+    options: ['5', '10', '20', '25'],
+    correctAnswer: 1,
+    explanation: 'Combinaciones: C(5,2) = 5!/(2!×3!) = (5×4)/(2×1) = 10',
+    explanationLatex: 'C(5,2) = \\frac{5 \\times 4}{2} = 10',
+    difficulty: 'easy',
+    skills: ['conteo-combinaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-prob-comb-8',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En una pizza se pueden elegir 3 ingredientes de 7 disponibles. ¿Cuántas combinaciones hay?}',
+    options: ['21', '35', '42', '210'],
+    correctAnswer: 1,
+    explanation: 'Combinaciones: C(7,3) = 7!/(3!×4!) = (7×6×5)/(3×2×1) = 35',
+    explanationLatex: 'C(7,3) = \\frac{7 \\times 6 \\times 5}{6} = 35',
+    difficulty: 'medium',
+    skills: ['conteo-combinaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-prob-comb-9',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{¿Cuál es la diferencia entre permutación y combinación?}',
+    options: ['En permutación importa el orden, en combinación no', 'En combinación importa el orden, en permutación no', 'Son lo mismo', 'Depende del contexto'],
+    optionsLatex: ['\\text{Permutación: orden importa}', '\\text{Combinación: orden importa}', '\\text{Son lo mismo}', '\\text{Depende del contexto}'],
+    correctAnswer: 0,
+    explanation: 'En permutaciones el orden importa (ABC ≠ BAC), en combinaciones no importa ({A,B,C} = {B,A,C})',
+    explanationLatex: '\\text{Permutación: } ABC \\neq BAC; \\quad \\text{Combinación: } \\{A,B,C\\} = \\{B,A,C\\}',
+    difficulty: 'easy',
+    skills: ['conteo-permutaciones', 'conteo-combinaciones', 'probabilidad-conceptos']
   }
 ];
 
