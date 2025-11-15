@@ -26,9 +26,18 @@ const config: Config = {
             transform: 'translateY(0)',
           },
         },
+        slideInRight: {
+          'from': {
+            transform: 'translateX(100%)',
+          },
+          'to': {
+            transform: 'translateX(0)',
+          },
+        },
       },
       animation: {
         fadeIn: 'fadeIn 0.6s ease-out forwards',
+        slideInRight: 'slideInRight 0.3s ease-out forwards',
       },
     },
   },
