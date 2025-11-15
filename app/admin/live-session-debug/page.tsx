@@ -1,12 +1,10 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useMachine } from '@xstate/react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import AdminLayout from '@/components/AdminLayout';
-import { liveSessionMachine } from '@/lib/live-session-machine';
-import type { LiveSession, Question } from '@/lib/types';
+import type { LiveSession, Question, SessionParticipant } from '@/lib/types';
 import { getCurrentUser } from '@/lib/auth';
 
 // Mock data for testing
@@ -28,6 +26,46 @@ const createMockQuestion = (index: number): Question => ({
   skills: ['arithmetic'],
 });
 
+const createMockParticipants = (questionCount: number): SessionParticipant[] => {
+  const user = getCurrentUser();
+  const now = Date.now();
+
+  return [
+    {
+      userId: user?.id || 'admin',
+      username: user?.username || 'admin',
+      displayName: user?.displayName || 'Admin User',
+      answers: new Array(questionCount).fill(null),
+      score: 0,
+      joinedAt: now - 60000,
+    },
+    {
+      userId: 'user-2',
+      username: 'maria_g',
+      displayName: 'María García',
+      answers: new Array(questionCount).fill(null),
+      score: 0,
+      joinedAt: now - 50000,
+    },
+    {
+      userId: 'user-3',
+      username: 'pedro_s',
+      displayName: 'Pedro Soto',
+      answers: new Array(questionCount).fill(null),
+      score: 0,
+      joinedAt: now - 40000,
+    },
+    {
+      userId: 'user-4',
+      username: 'ana_m',
+      displayName: 'Ana Martínez',
+      answers: new Array(questionCount).fill(null),
+      score: 0,
+      joinedAt: now - 30000,
+    },
+  ];
+};
+
 const createMockSession = (status: string, questionCount: number = 5): LiveSession => {
   const now = Date.now();
   const user = getCurrentUser();
@@ -41,36 +79,11 @@ const createMockSession = (status: string, questionCount: number = 5): LiveSessi
     hostName: user?.displayName || 'Admin',
     questions: Array.from({ length: questionCount }, (_, i) => createMockQuestion(i)),
     registeredUsers: [],
-    participants: [
-      {
-        userId: user?.id || 'admin',
-        username: user?.username || 'admin',
-        displayName: user?.displayName || 'Admin User',
-        answers: new Array(questionCount).fill(null),
-        score: 3,
-        joinedAt: now - 60000,
-      },
-      {
-        userId: 'user-2',
-        username: 'student1',
-        displayName: 'Estudiante 1',
-        answers: new Array(questionCount).fill(null),
-        score: 4,
-        joinedAt: now - 50000,
-      },
-      {
-        userId: 'user-3',
-        username: 'student2',
-        displayName: 'Estudiante 2',
-        answers: new Array(questionCount).fill(null),
-        score: 2,
-        joinedAt: now - 40000,
-      },
-    ],
+    participants: createMockParticipants(questionCount),
     status: status as LiveSession['status'],
     currentQuestionIndex: 0,
     createdAt: now - 3600000,
-    scheduledStartTime: now + 600000, // 10 minutes from now
+    scheduledStartTime: now + 600000,
     scheduledEndTime: now + 4200000,
     durationMinutes: 60,
     lobbyOpenTime: now - 600000,
@@ -80,510 +93,406 @@ const createMockSession = (status: string, questionCount: number = 5): LiveSessi
   };
 };
 
-type StateValue = string | { [key: string]: StateValue };
+type EssayState = 'idle' | 'loading' | 'scheduled' | 'lobby' | 'active' | 'completed';
 
-function getStateString(value: StateValue): string {
-  if (typeof value === 'string') {
-    return value;
-  }
-  const entries = Object.entries(value);
-  if (entries.length === 0) return 'unknown';
-  const [key, nested] = entries[0];
-  const nestedStr = getStateString(nested);
-  return `${key}.${nestedStr}`;
-}
+const stateFlow: EssayState[] = ['idle', 'loading', 'scheduled', 'lobby', 'active', 'completed'];
+
+const stateInfo: Record<EssayState, { label: string; icon: string; description: string }> = {
+  idle: { label: 'Inicial', icon: '🎯', description: 'Presiona "Run Essay" para comenzar' },
+  loading: { label: 'Cargando', icon: '⏳', description: 'Cargando datos de la sesión...' },
+  scheduled: { label: 'Programado', icon: '📅', description: 'Sesión programada, esperando lobby' },
+  lobby: { label: 'Lobby', icon: '🚪', description: 'Lobby abierto, usuarios entrando' },
+  active: { label: 'Activo', icon: '🎮', description: 'Ensayo en progreso, usuarios respondiendo' },
+  completed: { label: 'Completado', icon: '🏆', description: 'Ensayo finalizado, resultados disponibles' },
+};
 
 function LiveSessionDebugContent() {
-  const [mockSession, setMockSession] = useState<LiveSession>(createMockSession('active'));
-  const [selectedState, setSelectedState] = useState<string>('active');
-  const [questionCount, setQuestionCount] = useState(5);
-  const [showPreview, setShowPreview] = useState(false);
+  const [currentState, setCurrentState] = useState<EssayState>('idle');
+  const [session, setSession] = useState<LiveSession | null>(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [stateHistory, setStateHistory] = useState<{ state: EssayState; timestamp: number }[]>([]);
 
-  // Use the actual state machine for debugging
-  const [state, send] = useMachine(liveSessionMachine, {
-    input: { sessionId: 'mock-session-debug' },
-  });
-
-  // Event history
-  const [eventHistory, setEventHistory] = useState<{ type: string; timestamp: number; details?: string }[]>([]);
-
-  const logEvent = useCallback((type: string, details?: string) => {
-    setEventHistory((prev: { type: string; timestamp: number; details?: string }[]) => [
-      { type, timestamp: Date.now(), details },
-      ...prev.slice(0, 19), // Keep last 20 events
+  const logStateChange = useCallback((state: EssayState) => {
+    setStateHistory(prev => [
+      { state, timestamp: Date.now() },
+      ...prev.slice(0, 9),
     ]);
   }, []);
 
-  // State manipulation functions
-  const handleStateChange = (newState: string) => {
-    setSelectedState(newState);
-    const newSession = createMockSession(newState, questionCount);
-    setMockSession(newSession);
-    logEvent('STATE_CHANGE', `Changed to ${newState}`);
+  // Simulate user answers as the essay progresses
+  const simulateAnswers = useCallback((participants: SessionParticipant[], questionIndex: number) => {
+    return participants.map((p, pIdx) => {
+      const newAnswers = [...p.answers];
+      // Simulate that some users have answered up to the current question
+      for (let i = 0; i <= questionIndex; i++) {
+        if (newAnswers[i] === null && Math.random() > 0.3) {
+          // Random answer for simulation
+          newAnswers[i] = Math.floor(Math.random() * 4);
+        }
+      }
+      // Calculate score based on correct answers (option 2 is always correct in mock)
+      const score = newAnswers.filter((ans, idx) => ans === 2 && idx <= questionIndex).length;
+      return { ...p, answers: newAnswers, score };
+    });
+  }, []);
+
+  const handleNextState = () => {
+    const currentIndex = stateFlow.indexOf(currentState);
+    if (currentIndex < stateFlow.length - 1) {
+      const nextState = stateFlow[currentIndex + 1];
+      setCurrentState(nextState);
+      logStateChange(nextState);
+
+      // Create or update session based on state
+      if (nextState === 'loading') {
+        setSession(null);
+        setCurrentQuestionIndex(0);
+      } else if (nextState === 'scheduled') {
+        setSession(createMockSession('scheduled'));
+      } else if (nextState === 'lobby') {
+        setSession(createMockSession('lobby'));
+      } else if (nextState === 'active') {
+        setSession(createMockSession('active'));
+        setCurrentQuestionIndex(0);
+      } else if (nextState === 'completed') {
+        if (session) {
+          const updatedParticipants = simulateAnswers(session.participants, session.questions.length - 1);
+          setSession({ ...session, status: 'completed', participants: updatedParticipants });
+        }
+      }
+    }
   };
 
-  const handleEventSend = (eventType: string, payload?: Record<string, unknown>) => {
-    const event = payload ? { type: eventType, ...payload } : { type: eventType };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    send(event as any);
-    logEvent(eventType, payload ? JSON.stringify(payload) : undefined);
+  const handleNextQuestion = () => {
+    if (session && currentQuestionIndex < session.questions.length - 1) {
+      const nextIndex = currentQuestionIndex + 1;
+      setCurrentQuestionIndex(nextIndex);
+      // Simulate more answers as we progress
+      const updatedParticipants = simulateAnswers(session.participants, nextIndex);
+      setSession({ ...session, participants: updatedParticipants });
+    }
   };
 
-  const handleQuestionCountChange = (count: number) => {
-    setQuestionCount(count);
-    const newSession = createMockSession(selectedState, count);
-    setMockSession(newSession);
+  const handleReset = () => {
+    setCurrentState('idle');
+    setSession(null);
+    setCurrentQuestionIndex(0);
+    setStateHistory([]);
   };
 
-  const stateOptions = [
-    { value: 'loading', label: 'Loading', icon: '⏳', color: 'bg-gray-500' },
-    { value: 'scheduled', label: 'Scheduled', icon: '📅', color: 'bg-blue-500' },
-    { value: 'lobby', label: 'Lobby', icon: '🎯', color: 'bg-yellow-500' },
-    { value: 'active', label: 'Active', icon: '🎮', color: 'bg-green-500' },
-    { value: 'completed', label: 'Completed', icon: '🏆', color: 'bg-purple-500' },
-    { value: 'error', label: 'Error', icon: '❌', color: 'bg-red-500' },
-  ];
+  const getAnswerStats = () => {
+    if (!session) return null;
 
-  const eventButtons = [
-    { type: 'NEXT_QUESTION', label: 'Next Question', icon: '➡️' },
-    { type: 'PREVIOUS_QUESTION', label: 'Previous Question', icon: '⬅️' },
-    { type: 'SELECT_ANSWER', label: 'Select Answer (0)', icon: '✅', payload: { answerIndex: 0 } },
-    { type: 'SELECT_ANSWER', label: 'Select Answer (1)', icon: '✅', payload: { answerIndex: 1 } },
-    { type: 'SELECT_ANSWER', label: 'Select Answer (2)', icon: '✅', payload: { answerIndex: 2 } },
-    { type: 'SELECT_ANSWER', label: 'Select Answer (3)', icon: '✅', payload: { answerIndex: 3 } },
-    { type: 'RETRY', label: 'Retry', icon: '🔄' },
-    { type: 'EXIT', label: 'Exit', icon: '🚪' },
-  ];
+    const stats = session.participants.map(p => ({
+      name: p.displayName,
+      answered: p.answers.filter(a => a !== null).length,
+      total: session.questions.length,
+      currentAnswer: p.answers[currentQuestionIndex],
+      score: p.score,
+    }));
+
+    return stats;
+  };
+
+  const getCurrentQuestionAnswers = () => {
+    if (!session) return [];
+
+    return session.participants.map(p => ({
+      name: p.displayName,
+      answer: p.answers[currentQuestionIndex],
+      answerLabel: p.answers[currentQuestionIndex] !== null
+        ? String.fromCharCode(65 + p.answers[currentQuestionIndex]!)
+        : '-',
+      isCorrect: p.answers[currentQuestionIndex] === 2,
+    }));
+  };
+
+  const isLastState = currentState === 'completed';
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div>
           <Heading level={1} size="md" className="mb-2">
-            🔧 Live Session State Debugger
+            Live Session Debug
           </Heading>
           <Text variant="secondary">
-            Herramienta para debuggear y visualizar estados de la máquina de estados XState
+            Simula el flujo de un ensayo paso a paso
           </Text>
         </div>
 
-        {/* Info Card */}
-        <Card className="bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800" padding="lg">
-          <div className="flex items-start gap-3">
-            <span className="text-2xl">🎯</span>
+        {/* State Progress */}
+        <Card padding="lg">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <Heading level={3} size="xs" className="mb-1 text-indigo-900 dark:text-indigo-100">
-                XState Live Session Machine
-              </Heading>
-              <Text size="sm" className="text-indigo-800 dark:text-indigo-200">
-                Esta herramienta te permite controlar manualmente el estado de la máquina, enviar eventos,
-                y ver exactamente lo que el estudiante vería en cada estado. Perfecto para debugging y QA.
-              </Text>
+              <Text size="sm" variant="secondary" className="mb-1">Estado Actual</Text>
+              <div className="flex items-center gap-2">
+                <span className="text-3xl">{stateInfo[currentState].icon}</span>
+                <div>
+                  <Heading level={2} size="sm">{stateInfo[currentState].label}</Heading>
+                  <Text size="sm" variant="secondary">{stateInfo[currentState].description}</Text>
+                </div>
+              </div>
             </div>
+            <div className="flex gap-2">
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={handleNextState}
+                disabled={isLastState}
+              >
+                {currentState === 'idle' ? 'Run Essay' : 'Next State'}
+              </Button>
+              {currentState !== 'idle' && (
+                <Button variant="secondary" size="lg" onClick={handleReset}>
+                  Reset
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {/* State Flow Indicator */}
+          <div className="flex items-center gap-2">
+            {stateFlow.map((state, idx) => (
+              <div key={state} className="flex items-center">
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                    stateFlow.indexOf(currentState) >= idx
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-gray-200 text-gray-500'
+                  }`}
+                >
+                  {idx + 1}
+                </div>
+                {idx < stateFlow.length - 1 && (
+                  <div
+                    className={`w-12 h-1 ${
+                      stateFlow.indexOf(currentState) > idx ? 'bg-indigo-600' : 'bg-gray-200'
+                    }`}
+                  />
+                )}
+              </div>
+            ))}
           </div>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column: Controls */}
-          <div className="space-y-6">
-            {/* Current State Display */}
-            <Card padding="lg">
-              <Heading level={3} size="xs" className="mb-4">
-                📍 Estado Actual
+        {/* Active State: Question Navigation */}
+        {currentState === 'active' && session && (
+          <Card padding="lg">
+            <div className="flex items-center justify-between mb-4">
+              <Heading level={3} size="xs">
+                Pregunta {currentQuestionIndex + 1} de {session.questions.length}
               </Heading>
-              <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                <div className="text-2xl font-mono font-bold text-indigo-600 dark:text-indigo-400">
-                  {getStateString(state.value)}
-                </div>
-                <Text size="xs" variant="secondary" className="mt-2">
-                  Machine ID: {state.machine?.id || 'liveSession'}
-                </Text>
-              </div>
-            </Card>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleNextQuestion}
+                disabled={currentQuestionIndex >= session.questions.length - 1}
+              >
+                Next Question
+              </Button>
+            </div>
 
-            {/* State Selector */}
-            <Card padding="lg">
-              <Heading level={3} size="xs" className="mb-4">
-                🎛️ Cambiar Estado Mock
-              </Heading>
-              <div className="grid grid-cols-2 gap-2">
-                {stateOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => handleStateChange(option.value)}
-                    className={`p-3 rounded-lg text-left transition-all ${
-                      selectedState === option.value
-                        ? 'ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/30'
-                        : 'bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700'
-                    }`}
-                  >
+            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+              <Text size="sm" weight="medium">{session.questions[currentQuestionIndex].question}</Text>
+            </div>
+
+            {/* Answer Options */}
+            <div className="space-y-2">
+              {session.questions[currentQuestionIndex].options.map((option, idx) => (
+                <div
+                  key={idx}
+                  className={`p-3 rounded-lg border ${
+                    idx === 2 ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-200'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-xl">{option.icon}</span>
+                      <span className="font-medium">{String.fromCharCode(65 + idx)})</span>
+                      <span>{option}</span>
+                    </div>
+                    {idx === 2 && (
+                      <Badge variant="success" size="sm">Correcta</Badge>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
+
+        {/* State-Specific Data */}
+        {currentState !== 'idle' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* User Answers */}
+            {(currentState === 'active' || currentState === 'completed') && session && (
+              <Card padding="lg">
+                <Heading level={3} size="xs" className="mb-4">
+                  Respuestas de Usuarios
+                </Heading>
+                <div className="space-y-3">
+                  {getAnswerStats()?.map((stat, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
                       <div>
-                        <div className="font-medium text-sm">{option.label}</div>
-                        <div className={`w-2 h-2 rounded-full ${option.color} inline-block`} />
+                        <Text size="sm" weight="medium">{stat.name}</Text>
+                        <Text size="xs" variant="secondary">
+                          {stat.answered}/{stat.total} respondidas
+                        </Text>
+                      </div>
+                      <div className="text-right">
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: stat.total }).map((_, i) => (
+                            <div
+                              key={i}
+                              className={`w-2 h-2 rounded-full ${
+                                i < stat.answered ? 'bg-green-500' : 'bg-gray-300'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <Text size="xs" variant="secondary" className="mt-1">
+                          Score: {stat.score}
+                        </Text>
                       </div>
                     </div>
-                  </button>
-                ))}
-              </div>
-            </Card>
-
-            {/* Event Buttons */}
-            <Card padding="lg">
-              <Heading level={3} size="xs" className="mb-4">
-                📤 Enviar Eventos
-              </Heading>
-              <div className="grid grid-cols-1 gap-2">
-                {eventButtons.map((btn, idx) => (
-                  <Button
-                    key={idx}
-                    variant="secondary"
-                    size="sm"
-                    className="justify-start"
-                    onClick={() => handleEventSend(btn.type, btn.payload as Record<string, unknown>)}
-                  >
-                    <span className="mr-2">{btn.icon}</span>
-                    {btn.label}
-                  </Button>
-                ))}
-              </div>
-            </Card>
-
-            {/* Mock Data Config */}
-            <Card padding="lg">
-              <Heading level={3} size="xs" className="mb-4">
-                ⚙️ Configuración Mock
-              </Heading>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Número de Preguntas: {questionCount}
-                  </label>
-                  <input
-                    type="range"
-                    min="1"
-                    max="20"
-                    value={questionCount}
-                    onChange={(e) => handleQuestionCountChange(parseInt(e.target.value))}
-                    className="w-full"
-                  />
+                  ))}
                 </div>
-              </div>
-            </Card>
-          </div>
+              </Card>
+            )}
 
-          {/* Middle Column: Context & History */}
-          <div className="space-y-6">
-            {/* Context Inspector */}
-            <Card padding="lg" className="h-fit">
-              <Heading level={3} size="xs" className="mb-4">
-                📊 Contexto Actual
-              </Heading>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-xs overflow-auto max-h-96">
-                <pre>{JSON.stringify(state.context, null, 2)}</pre>
-              </div>
-            </Card>
-
-            {/* Event History */}
-            <Card padding="lg">
-              <Heading level={3} size="xs" className="mb-4">
-                📜 Historial de Eventos
-              </Heading>
-              <div className="space-y-2 max-h-64 overflow-auto">
-                {eventHistory.length === 0 ? (
-                  <Text size="xs" variant="secondary">
-                    Sin eventos. Envía eventos usando los botones.
-                  </Text>
-                ) : (
-                  eventHistory.map((event, idx) => (
+            {/* Current Question Answers */}
+            {currentState === 'active' && session && (
+              <Card padding="lg">
+                <Heading level={3} size="xs" className="mb-4">
+                  Pregunta Actual: Respuestas
+                </Heading>
+                <div className="space-y-2">
+                  {getCurrentQuestionAnswers().map((answer, idx) => (
                     <div
                       key={idx}
-                      className="bg-gray-50 dark:bg-gray-800 p-2 rounded text-xs"
+                      className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded"
                     >
-                      <div className="flex justify-between items-center">
-                        <Badge variant="info" size="sm">
-                          {event.type}
+                      <Text size="sm">{answer.name}</Text>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant={answer.answer !== null ? (answer.isCorrect ? 'success' : 'danger') : 'info'}
+                          size="sm"
+                        >
+                          {answer.answerLabel}
                         </Badge>
-                        <span className="text-gray-500 text-[10px]">
-                          {new Date(event.timestamp).toLocaleTimeString()}
-                        </span>
+                        {answer.answer !== null && (
+                          <span className="text-sm">
+                            {answer.isCorrect ? '✓' : '✗'}
+                          </span>
+                        )}
                       </div>
-                      {event.details && (
-                        <div className="mt-1 text-gray-600 dark:text-gray-400 font-mono">
-                          {event.details}
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            {/* Lobby Participants */}
+            {currentState === 'lobby' && session && (
+              <Card padding="lg">
+                <Heading level={3} size="xs" className="mb-4">
+                  Usuarios en Lobby
+                </Heading>
+                <div className="space-y-2">
+                  {session.participants.map((p, idx) => (
+                    <div key={idx} className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                      <div className="w-2 h-2 bg-green-500 rounded-full" />
+                      <Text size="sm">{p.displayName}</Text>
+                      <Text size="xs" variant="secondary">@{p.username}</Text>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            {/* Final Results */}
+            {currentState === 'completed' && session && (
+              <Card padding="lg">
+                <Heading level={3} size="xs" className="mb-4">
+                  Resultados Finales
+                </Heading>
+                <div className="space-y-2">
+                  {[...session.participants]
+                    .sort((a, b) => b.score - a.score)
+                    .map((p, idx) => (
+                      <div
+                        key={idx}
+                        className={`flex items-center justify-between p-3 rounded ${
+                          idx === 0 ? 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200' : 'bg-gray-50 dark:bg-gray-800'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold">
+                            {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `${idx + 1}.`}
+                          </span>
+                          <Text size="sm" weight="medium">{p.displayName}</Text>
                         </div>
-                      )}
-                    </div>
-                  ))
-                )}
-              </div>
-            </Card>
+                        <Badge variant={idx === 0 ? 'success' : 'info'} size="sm">
+                          {p.score}/{session.questions.length}
+                        </Badge>
+                      </div>
+                    ))}
+                </div>
+              </Card>
+            )}
 
-            {/* Quick Actions */}
-            <Card padding="lg">
-              <Heading level={3} size="xs" className="mb-4">
-                ⚡ Acciones Rápidas
-              </Heading>
-              <div className="space-y-2">
-                <Button
-                  variant="primary"
-                  size="sm"
-                  className="w-full"
-                  onClick={() => setShowPreview(!showPreview)}
-                >
-                  {showPreview ? '🙈 Ocultar Preview' : '👁️ Mostrar Preview Estudiante'}
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="w-full"
-                  onClick={() => {
-                    setEventHistory([]);
-                    logEvent('HISTORY_CLEARED', 'Event history reset');
-                  }}
-                >
-                  🗑️ Limpiar Historial
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="w-full"
-                  onClick={() => {
-                    navigator.clipboard.writeText(JSON.stringify(state.context, null, 2));
-                    logEvent('CONTEXT_COPIED', 'Context copied to clipboard');
-                  }}
-                >
-                  📋 Copiar Contexto
-                </Button>
-              </div>
-            </Card>
-          </div>
-
-          {/* Right Column: Preview */}
-          <div className="space-y-6">
-            <Card padding="lg">
-              <Heading level={3} size="xs" className="mb-4">
-                👁️ Vista Previa del Estudiante
-              </Heading>
-              <Text size="xs" variant="secondary" className="mb-4">
-                Lo que el estudiante vería en el estado &quot;{selectedState}&quot;
-              </Text>
-
-              {showPreview ? (
-                <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-900">
-                  <div className="transform scale-75 origin-top-left">
-                    <div className="w-[133%]">
-                      <MockPreview session={mockSession} state={selectedState} />
-                    </div>
+            {/* Session Info */}
+            {session && (
+              <Card padding="lg">
+                <Heading level={3} size="xs" className="mb-4">
+                  Info Sesión
+                </Heading>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <Text variant="secondary">Nombre:</Text>
+                    <Text weight="medium">{session.name}</Text>
+                  </div>
+                  <div className="flex justify-between">
+                    <Text variant="secondary">Estado:</Text>
+                    <Badge variant="info" size="sm">{session.status}</Badge>
+                  </div>
+                  <div className="flex justify-between">
+                    <Text variant="secondary">Preguntas:</Text>
+                    <Text weight="medium">{session.questions.length}</Text>
+                  </div>
+                  <div className="flex justify-between">
+                    <Text variant="secondary">Participantes:</Text>
+                    <Text weight="medium">{session.participants.length}</Text>
                   </div>
                 </div>
-              ) : (
-                <div className="bg-gray-100 dark:bg-gray-800 p-8 rounded-lg text-center">
-                  <Text variant="secondary">
-                    Click &quot;Mostrar Preview&quot; para ver la vista del estudiante
+              </Card>
+            )}
+          </div>
+        )}
+
+        {/* State History */}
+        {stateHistory.length > 0 && (
+          <Card padding="lg">
+            <Heading level={3} size="xs" className="mb-4">
+              Historial de Estados
+            </Heading>
+            <div className="flex flex-wrap gap-2">
+              {stateHistory.map((entry, idx) => (
+                <div key={idx} className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
+                  <span>{stateInfo[entry.state].icon}</span>
+                  <Text size="xs">{stateInfo[entry.state].label}</Text>
+                  <Text size="xs" variant="secondary">
+                    {new Date(entry.timestamp).toLocaleTimeString()}
                   </Text>
                 </div>
-              )}
-            </Card>
-
-            {/* State Machine Diagram */}
-            <Card padding="lg">
-              <Heading level={3} size="xs" className="mb-4">
-                🗺️ Diagrama de Estados
-              </Heading>
-              <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg text-xs font-mono">
-                <div className="space-y-1">
-                  <div className={selectedState === 'loading' ? 'text-indigo-600 font-bold' : ''}>
-                    ● loading
-                  </div>
-                  <div className="pl-4">↓</div>
-                  <div className={selectedState === 'scheduled' ? 'text-indigo-600 font-bold' : ''}>
-                    ● scheduled (polling)
-                  </div>
-                  <div className="pl-4">↓</div>
-                  <div className={selectedState === 'lobby' ? 'text-indigo-600 font-bold' : ''}>
-                    ● lobby (polling)
-                  </div>
-                  <div className="pl-4">↓</div>
-                  <div className={selectedState === 'active' ? 'text-indigo-600 font-bold' : ''}>
-                    ● active
-                  </div>
-                  <div className="pl-6">├─ idle</div>
-                  <div className="pl-6">├─ navigating</div>
-                  <div className="pl-6">└─ submittingAnswer</div>
-                  <div className="pl-4">↓</div>
-                  <div className={selectedState === 'completed' ? 'text-indigo-600 font-bold' : ''}>
-                    ● completed
-                  </div>
-                  <div className="pl-4">↓</div>
-                  <div className={selectedState === 'error' ? 'text-red-600 font-bold' : ''}>
-                    ● error → RETRY → loading
-                  </div>
-                  <div className="pl-4">↓</div>
-                  <div>● exited (final)</div>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
+              ))}
+            </div>
+          </Card>
+        )}
       </div>
     </AdminLayout>
   );
-}
-
-// Mock preview component that shows what student sees based on state
-function MockPreview({ session, state }: { session: LiveSession; state: string }) {
-  const currentUser = getCurrentUser();
-
-  if (state === 'loading') {
-    return (
-      <div className="min-h-[400px] flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg">
-        <div className="text-center">
-          <div className="text-4xl mb-4">⏳</div>
-          <h2 className="text-xl font-bold">Cargando sesión...</h2>
-        </div>
-      </div>
-    );
-  }
-
-  if (state === 'error') {
-    return (
-      <div className="min-h-[400px] flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg">
-        <div className="text-center">
-          <div className="text-4xl mb-4">❌</div>
-          <h2 className="text-xl font-bold text-red-600">Error</h2>
-          <p className="text-gray-600 mb-4">Error al cargar la sesión</p>
-          <Button>Reintentar</Button>
-        </div>
-      </div>
-    );
-  }
-
-  if (state === 'scheduled') {
-    const startTime = new Date(session.scheduledStartTime);
-    return (
-      <div className="min-h-[400px] bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4 rounded-lg">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-          <h1 className="text-lg font-bold mb-4">{session.name}</h1>
-          <div className="text-center py-6">
-            <div className="text-4xl mb-4">⏰</div>
-            <h2 className="text-lg font-bold mb-2">Ensayo Programado</h2>
-            <p className="text-sm text-gray-600 mb-4">El ensayo comenzará el:</p>
-            <div className="text-base font-semibold text-indigo-600">
-              {startTime.toLocaleString('es-CL')}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (state === 'lobby') {
-    return (
-      <div className="min-h-[400px] bg-gradient-to-br from-yellow-50 to-orange-100 dark:from-gray-900 dark:to-gray-800 p-4 rounded-lg">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-          <h1 className="text-lg font-bold mb-4">{session.name}</h1>
-          <div className="text-center py-6">
-            <div className="text-4xl mb-4 animate-pulse">🎯</div>
-            <h2 className="text-lg font-bold mb-2">¡Bienvenido al Lobby!</h2>
-            <p className="text-sm text-gray-600 mb-4">El ensayo comenzará en:</p>
-            <div className="text-3xl font-bold text-yellow-600">10 minutos</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (state === 'active') {
-    const currentQuestion = session.questions[0];
-    return (
-      <div className="min-h-[400px] bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4 rounded-lg">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-          <h2 className="text-lg font-bold mb-2">{session.name}</h2>
-          <p className="text-xs text-gray-600 mb-4">Pregunta 1 de {session.questions.length}</p>
-
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-            <div
-              className="bg-indigo-600 h-2 rounded-full"
-              style={{ width: `${(1 / session.questions.length) * 100}%` }}
-            />
-          </div>
-
-          <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded mb-3">
-            <h3 className="text-sm font-medium">{currentQuestion.topic}</h3>
-          </div>
-
-          <p className="text-sm mb-3">{currentQuestion.question}</p>
-
-          <div className="space-y-2">
-            {currentQuestion.options.map((option, idx) => (
-              <button
-                key={idx}
-                className="w-full p-2 text-left text-sm rounded bg-gray-100 hover:bg-indigo-50 border"
-              >
-                {String.fromCharCode(65 + idx)}) {option}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex gap-2 mt-4">
-            <Button variant="secondary" size="sm" disabled>
-              Anterior
-            </Button>
-            <Button size="sm" className="flex-1">
-              Siguiente
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (state === 'completed') {
-    const sortedParticipants = [...session.participants].sort((a, b) => b.score - a.score);
-    return (
-      <div className="min-h-[400px] bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4 rounded-lg">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-          <h1 className="text-lg font-bold text-center mb-4">Resultados del Ensayo</h1>
-
-          <h2 className="text-base font-bold mb-3">Tabla de Posiciones</h2>
-          <div className="space-y-2">
-            {sortedParticipants.map((participant, index) => (
-              <div
-                key={participant.userId}
-                className={`flex items-center justify-between p-2 rounded ${
-                  index === 0 ? 'bg-yellow-100 border border-yellow-400' : 'bg-gray-50'
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-lg font-bold">
-                    {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`}
-                  </span>
-                  <span className="text-sm font-medium">
-                    {participant.displayName}
-                    {participant.userId === currentUser?.id && ' (Tú)'}
-                  </span>
-                </div>
-                <div className="text-right">
-                  <div className="text-base font-bold text-indigo-600">
-                    {participant.score}/{session.questions.length}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <Button className="w-full mt-4" size="sm">
-            Volver al Lobby
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  return null;
 }
 
 export default function LiveSessionDebugPage() {
