@@ -73,11 +73,22 @@ export function isInspectorAvailable(): boolean {
 }
 
 /**
+ * Get the inspector's inspect function for use with useMachine
+ * Returns undefined if inspector is not available (production mode)
+ */
+export function getInspectFunction() {
+  if (inspector && process.env.NODE_ENV === 'development') {
+    return inspector.inspect;
+  }
+  return undefined;
+}
+
+/**
  * Hook to conditionally enable inspection based on environment
  */
 export function useInspectorConfig() {
   return {
-    inspect: isInspectorAvailable(),
+    inspect: getInspectFunction(),
   };
 }
 
