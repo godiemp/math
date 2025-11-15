@@ -101,7 +101,7 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
-          question: question.question,
+          question: question.questionLatex, // Backend expects 'question', we have 'questionLatex'
           questionLatex: question.questionLatex,
           userAnswer: userAnswer,
           correctAnswer: question.correctAnswer,
