@@ -8,24 +8,60 @@ import type { LiveSession, Question, SessionParticipant } from '@/lib/types';
 import { getCurrentUser } from '@/lib/auth';
 import { QuestionRenderer } from '@/components/QuestionRenderer';
 
-// Mock data for testing
-const createMockQuestion = (index: number): Question => ({
-  id: `mock-q-${index}`,
-  topic: `Pregunta ${index + 1} de Prueba`,
-  level: 'M1',
-  questionLatex: `Esta es la pregunta ${index + 1}. Resuelve: ${index + 2} + ${index + 3} = ?`,
-  options: [
-    `${index + 4}`,
-    `${index + 5}`,
-    `${(index + 2) + (index + 3)}`,
-    `${index + 7}`,
-  ],
-  correctAnswer: 2,
-  explanation: `La respuesta correcta es ${(index + 2) + (index + 3)} porque ${index + 2} + ${index + 3} = ${(index + 2) + (index + 3)}.`,
-  difficulty: 'easy',
-  subject: 'álgebra',
-  skills: ['arithmetic'],
-});
+// Mock data for testing with real LaTeX
+const createMockQuestion = (index: number): Question => {
+  const questions = [
+    {
+      topic: 'Raíces y Potencias',
+      questionLatex: '\\text{Un arquitecto está diseñando un jardín cuadrado para un parque municipal. El área total del jardín es de } 49 \\text{ metros cuadrados. Sabiendo que en un cuadrado el área es el lado multiplicado por sí mismo, ¿cuántos metros mide cada lado?}',
+      options: ['5', '6', '7', '8'],
+      correctAnswer: 2,
+      explanation: '\\text{El lado del cuadrado es } \\sqrt{49} = 7 \\text{ metros.}',
+    },
+    {
+      topic: 'Operaciones con Fracciones',
+      questionLatex: '\\text{María tiene } \\frac{3}{4} \\text{ de pizza y Juan tiene } \\frac{1}{2} \\text{ de la misma pizza. Si juntan sus porciones, ¿cuánta pizza tienen en total?}',
+      options: ['\\frac{5}{6}', '\\frac{5}{4}', '\\frac{4}{6}', '\\frac{2}{3}'],
+      correctAnswer: 1,
+      explanation: '\\frac{3}{4} + \\frac{1}{2} = \\frac{3}{4} + \\frac{2}{4} = \\frac{5}{4}',
+    },
+    {
+      topic: 'Ecuaciones Lineales',
+      questionLatex: '\\text{Si } 2x + 5 = 13\\text{, ¿cuál es el valor de } x\\text{?}',
+      options: ['3', '4', '5', '6'],
+      correctAnswer: 1,
+      explanation: '2x + 5 = 13 \\Rightarrow 2x = 8 \\Rightarrow x = 4',
+    },
+    {
+      topic: 'Teorema de Pitágoras',
+      questionLatex: '\\text{En un triángulo rectángulo, un cateto mide } 3 \\text{ cm y el otro cateto mide } 4 \\text{ cm. ¿Cuánto mide la hipotenusa?}',
+      options: ['5 \\text{ cm}', '6 \\text{ cm}', '7 \\text{ cm}', '\\sqrt{25} \\text{ cm}'],
+      correctAnswer: 0,
+      explanation: 'c = \\sqrt{3^2 + 4^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5 \\text{ cm}',
+    },
+    {
+      topic: 'Porcentajes',
+      questionLatex: '\\text{Una tienda ofrece un descuento del } 20\\% \\text{ en un artículo que cuesta } \\$50.000\\text{. ¿Cuál es el precio final?}',
+      options: ['\\$40.000', '\\$45.000', '\\$35.000', '\\$42.000'],
+      correctAnswer: 0,
+      explanation: '\\text{Descuento: } 50.000 \\times 0.20 = 10.000 \\text{. Precio final: } 50.000 - 10.000 = \\$40.000',
+    },
+  ];
+
+  const q = questions[index % questions.length];
+  return {
+    id: `mock-q-${index}`,
+    topic: q.topic,
+    level: 'M1',
+    questionLatex: q.questionLatex,
+    options: q.options,
+    correctAnswer: q.correctAnswer,
+    explanation: q.explanation,
+    difficulty: 'easy',
+    subject: 'álgebra',
+    skills: ['arithmetic'],
+  };
+};
 
 const createMockParticipants = (questionCount: number): SessionParticipant[] => {
   const user = getCurrentUser();
@@ -388,11 +424,11 @@ function LiveSessionDebugContent() {
 
     // Simulate completed scores
     if (status === 'completed') {
-      newSession.participants = newSession.participants.map(p => ({
-        ...p,
-        answers: newSession.questions.map(() => Math.floor(Math.random() * 4)),
-        score: Math.floor(Math.random() * newSession.questions.length),
-      }));
+      newSession.participants = newSession.participants.map(p => {
+        const answers = newSession.questions.map(() => Math.floor(Math.random() * 4));
+        const score = answers.filter((ans, idx) => ans === newSession.questions[idx].correctAnswer).length;
+        return { ...p, answers, score };
+      });
     }
 
     setSession(newSession);
