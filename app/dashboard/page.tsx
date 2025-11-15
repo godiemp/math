@@ -606,9 +606,18 @@ function DashboardContent() {
       {/* Footer with hairline border */}
       <footer className="backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-t border-black/[0.12] dark:border-white/[0.16] mt-8 sm:mt-10 md:mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-4 sm:py-5 md:py-6 text-center">
-          <Text size="xs" variant="secondary">
-            {t('footer.copyright')}
-          </Text>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+            <Link
+              href="/como-funciona"
+              className="text-xs text-[#0A84FF] hover:underline"
+            >
+              {tCommon('howItWorks')}
+            </Link>
+            <span className="hidden sm:inline text-gray-300 dark:text-gray-600">•</span>
+            <Text size="xs" variant="secondary">
+              {t('footer.copyright')}
+            </Text>
+          </div>
         </div>
       </footer>
     </div>

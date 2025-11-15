@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import Auth from "@/components/Auth";
 import Footer from "@/components/Footer";
@@ -98,9 +99,9 @@ export default function Home() {
             </p>
 
             {/* Info Button */}
-            <button
-              onClick={() => setShowInfoModal(true)}
-              className="spring-motion mt-4"
+            <Link
+              href="/como-funciona"
+              className="spring-motion mt-4 inline-block"
               style={{
                 fontSize: '14px',
                 color: 'var(--color-tint)',
@@ -111,7 +112,7 @@ export default function Home() {
               }}
             >
               {t('sections.howItWorks')}
-            </button>
+            </Link>
           </div>
 
           {/* Auth Component */}
