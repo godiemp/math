@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import type { LiveSession } from '@/lib/types';
-import { getSession, submitAnswerAPI, getMyParticipationAPI } from '@/lib/sessionApi';
+import { getSession, submitAnswerAPI, getMyParticipationAPI, updateCurrentQuestionAPI } from '@/lib/sessionApi';
 import { getCurrentUser } from '@/lib/auth';
 import { QuestionRenderer } from './QuestionRenderer';
 
@@ -17,6 +17,7 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [myAnswers, setMyAnswers] = useState<(number | null)[]>([]);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const refreshSession = async () => {
     try {
@@ -25,11 +26,17 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
       if (updatedSession) {
         setSession(updatedSession);
 
-        // Fetch my participation data to get my answers
+        // Fetch my participation data to get my answers and current question index
         if (updatedSession.status === 'active' || updatedSession.status === 'completed') {
           const participationResult = await getMyParticipationAPI(sessionId);
           if (participationResult.success && participationResult.data) {
             setMyAnswers(participationResult.data.answers);
+
+            // Restore current question index on initial load
+            if (isInitialLoad && participationResult.data.currentQuestionIndex !== undefined) {
+              setCurrentQuestionIndex(participationResult.data.currentQuestionIndex);
+              setIsInitialLoad(false);
+            }
           }
         }
       }
@@ -50,6 +57,15 @@ export default function LiveSessionComponent({ sessionId, onExit }: LiveSessionP
       setSelectedAnswer(myAnswers[currentQuestionIndex]);
     }
   }, [currentQuestionIndex, myAnswers]);
+
+  // Persist current question index when it changes (but not on initial load)
+  useEffect(() => {
+    if (!isInitialLoad && session?.status === 'active') {
+      updateCurrentQuestionAPI(sessionId, currentQuestionIndex).catch((error) => {
+        console.error('Error updating current question index:', error);
+      });
+    }
+  }, [currentQuestionIndex, isInitialLoad, session?.status, sessionId]);
 
   const handleAnswerSelect = async (answerIndex: number) => {
     if (!currentUser || !session || session.status !== 'active') return;
