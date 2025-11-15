@@ -112,5 +112,62 @@ export const m2Num006Questions: Question[] = [
     explanationLatex: '2^{x+1} = 128 = 2^7 \\rightarrow x+1 = 7 \\rightarrow x = 6',
     difficulty: 'medium',
     skills: ['numeros-logaritmos', 'logaritmos-ecuaciones-exponenciales', 'algebra-despeje', 'numeros-potencias', 'numeros-operaciones-basicas']
+  },
+  // Additional: Aplicaciones en ciencias naturales
+  {
+    id: 'm2-num-log-cienc-1',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    questionLatex: '\\text{Crecimiento bacteriano: } N = N_0 \\cdot 2^t. \\text{ Si } N_0 = 100 \\text{ y } N = 3200, \\text{ ¿t en horas?}',
+    options: ['$t = 3$', '$t = 4$', '$t = 5$', '$t = 6$'],
+    optionsLatex: ['t = 3', 't = 4', 't = 5', 't = 6'],
+    correctAnswer: 2,
+    explanation: '3200 = 100·2ᵗ → 32 = 2ᵗ → 2⁵ = 2ᵗ → t = 5',
+    explanationLatex: '3200 = 100 \\cdot 2^t \\rightarrow 32 = 2^t \\rightarrow t = 5',
+    difficulty: 'medium',
+    skills: ['logaritmos-problemas-ciencias', 'logaritmos-ecuaciones-exponenciales', 'numeros-potencias', 'algebra-despeje']
+  },
+  {
+    id: 'm2-num-log-cienc-2',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    questionLatex: '\\text{Decaimiento radiactivo: } N = N_0 e^{-kt}. \\text{ Si queda } \\frac{1}{e} \\text{ del original, } kt = ?',
+    options: ['$1$', '$e$', '$-1$', '$\\frac{1}{e}$'],
+    optionsLatex: ['1', 'e', '-1', '\\frac{1}{e}'],
+    correctAnswer: 0,
+    explanation: 'N/N₀ = 1/e = e⁻¹ = e^(-kt), entonces -kt = -1, kt = 1',
+    explanationLatex: '\\frac{N}{N_0} = \\frac{1}{e} = e^{-1} = e^{-kt} \\rightarrow kt = 1',
+    difficulty: 'hard',
+    skills: ['logaritmos-problemas-ciencias', 'logaritmos-tipos', 'numeros-potencias', 'algebra-despeje']
+  },
+  {
+    id: 'm2-num-log-cienc-3',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    questionLatex: '\\text{Ley de enfriamiento de Newton: } T = T_0 e^{-0.1t}. \\text{ Si } T_0 = 100°C \\text{ y } T = 36.8°C, \\text{ ¿t?}',
+    options: ['$t = 1$', '$t = 5$', '$t = 10$', '$t = 20$'],
+    optionsLatex: ['t = 1', 't = 5', 't = 10', 't = 20'],
+    correctAnswer: 2,
+    explanation: '36.8/100 ≈ 1/e ≈ 0.368. Entonces e^(-0.1t) = e^(-1), -0.1t = -1, t = 10',
+    explanationLatex: '\\frac{36.8}{100} \\approx e^{-1} \\rightarrow -0.1t = -1 \\rightarrow t = 10',
+    difficulty: 'extreme',
+    skills: ['logaritmos-problemas-ciencias', 'logaritmos-tipos', 'numeros-decimales', 'algebra-despeje']
+  },
+  {
+    id: 'm2-num-log-cienc-4',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    questionLatex: '\\text{Vida media de C-14: 5730 años. Fórmula: } t = \\frac{\\ln(N_0/N)}{0.000121}. \\text{ Si queda 25\\%, ¿edad aproximada?}',
+    options: ['$\\approx 5730$ años', '$\\approx 11460$ años', '$\\approx 17190$ años', '$\\approx 22920$ años'],
+    optionsLatex: ['\\approx 5730\\text{ años}', '\\approx 11460\\text{ años}', '\\approx 17190\\text{ años}', '\\approx 22920\\text{ años}'],
+    correctAnswer: 1,
+    explanation: 'Si queda 25% = 1/4, han pasado 2 vidas medias. t ≈ 2 × 5730 = 11460 años',
+    explanationLatex: '25\\% = \\frac{1}{4} = \\frac{1}{2^2} \\rightarrow 2 \\text{ vidas medias} \\rightarrow t \\approx 11460\\text{ años}',
+    difficulty: 'hard',
+    skills: ['logaritmos-problemas-ciencias', 'logaritmos-tipos', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   }
 ];

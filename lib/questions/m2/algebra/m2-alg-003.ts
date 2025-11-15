@@ -127,5 +127,47 @@ export const m2Alg003Questions: Question[] = [
     explanationLatex: 'x^{-2} = \\frac{1}{x^2} \\text{ decrece, } \\lim_{x \\to \\infty} \\frac{1}{x^2} = 0',
     difficulty: 'medium',
     skills: ['funcion-potencia-problemas-interpretacion', 'funcion-potencia-graficos', 'algebra-funcion-potencia', 'algebra-interpretacion-graficos', 'algebra-limites']
+  },
+  {
+    id: 'm2-alg-graf-2',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    questionLatex: '\\text{Un gráfico muestra que al duplicar } x, \\text{ } y \\text{ se multiplica por 4. ¿Qué función representa?}',
+    options: ['$y = kx$', '$y = kx^2$', '$y = k\\sqrt{x}$', '$y = kx^3$'],
+    optionsLatex: ['y = kx', 'y = kx^2', 'y = k\\sqrt{x}', 'y = kx^3'],
+    correctAnswer: 1,
+    explanation: 'Si y = kx², cuando x → 2x: y = k(2x)² = 4kx². El valor se multiplica por 4',
+    explanationLatex: 'y = kx^2: \\quad k(2x)^2 = 4kx^2 = 4y',
+    difficulty: 'hard',
+    skills: ['funcion-potencia-problemas-interpretacion', 'funcion-potencia-problemas-variacion', 'algebra-funcion-potencia', 'algebra-interpretacion-graficos']
+  },
+  {
+    id: 'm2-alg-graf-3',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    questionLatex: '\\text{El gráfico de } f(x) = x^3 \\text{ pasa por:}',
+    options: ['Solo cuadrante I', 'Cuadrantes I y III', 'Cuadrantes I y II', 'Todos los cuadrantes'],
+    optionsLatex: ['\\text{Solo cuadrante I}', '\\text{Cuadrantes I y III}', '\\text{Cuadrantes I y II}', '\\text{Todos los cuadrantes}'],
+    correctAnswer: 1,
+    explanation: 'x³ es positivo cuando x > 0 (cuadrante I) y negativo cuando x < 0 (cuadrante III)',
+    explanationLatex: 'x > 0 \\Rightarrow x^3 > 0 \\text{ (I)}; \\quad x < 0 \\Rightarrow x^3 < 0 \\text{ (III)}',
+    difficulty: 'medium',
+    skills: ['funcion-potencia-problemas-interpretacion', 'funcion-potencia-grafica', 'algebra-funcion-potencia', 'algebra-interpretacion-graficos', 'geometria-plano-cartesiano']
+  },
+  {
+    id: 'm2-alg-graf-4',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    questionLatex: '\\text{Si el gráfico de } y = x^n \\text{ es simétrico respecto al eje Y, } n \\text{ es:}',
+    options: ['Impar', 'Par', 'Cualquier entero', 'Solo positivo'],
+    optionsLatex: ['\\text{Impar}', '\\text{Par}', '\\text{Cualquier entero}', '\\text{Solo positivo}'],
+    correctAnswer: 1,
+    explanation: 'Si n es par, (-x)ⁿ = xⁿ, lo que significa simetría respecto al eje Y',
+    explanationLatex: 'n \\text{ par: } (-x)^n = x^n \\Rightarrow \\text{simetría con eje Y}',
+    difficulty: 'hard',
+    skills: ['funcion-potencia-problemas-interpretacion', 'funcion-potencia-grafica', 'algebra-funcion-potencia', 'algebra-simetria', 'algebra-interpretacion-graficos']
   }
 ];
