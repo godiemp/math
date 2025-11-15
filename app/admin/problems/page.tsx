@@ -45,7 +45,7 @@ function ProblemsExplorerContent() {
       if (selectedDifficulty !== 'all' && q.difficulty !== selectedDifficulty) return false
       if (selectedSkills.length > 0 && !selectedSkills.every(skill => q.skills?.includes(skill))) return false
       if (showOnlyWithImages && !q.visualData) return false
-      if (searchQuery && !q.question.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      if (searchQuery && !q.questionLatex.toLowerCase().includes(searchQuery.toLowerCase()) &&
           !q.topic.toLowerCase().includes(searchQuery.toLowerCase()) &&
           !q.id.toLowerCase().includes(searchQuery.toLowerCase())) return false
       return true

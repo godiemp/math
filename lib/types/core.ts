@@ -104,9 +104,7 @@ export interface Question {
   id: string;
   topic: string;
   level: Level;
-  question: string;
-  // LaTeX version of question (optional, if present will render as math)
-  questionLatex?: string;
+  questionLatex: string;
   options: string[];
   // LaTeX versions of options (optional)
   optionsLatex?: string[];
@@ -171,7 +169,7 @@ export interface User {
 export interface QuestionAttempt {
   questionId: string;
   quizSessionId?: string | null; // ID of the quiz session this attempt belongs to
-  question: string;
+  questionLatex: string;
   topic: string;
   level: Level;
   userAnswer: number;

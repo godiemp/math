@@ -33,11 +33,7 @@ export function QuestionRenderer({
     <div className={compact ? 'space-y-2' : 'space-y-4'}>
       {/* Question Text */}
       <div className={compact ? 'text-base' : 'text-xl font-semibold text-gray-900 dark:text-white'}>
-        {question.questionLatex ? (
-          <SmartLatexRenderer latex={question.questionLatex} displayMode={false} />
-        ) : (
-          <MathText content={question.question} />
-        )}
+        <SmartLatexRenderer latex={question.questionLatex} displayMode={false} />
       </div>
 
       {/* Visual Data (Geometry/Graphs) */}
@@ -175,24 +171,14 @@ export function QuestionRenderer({
 export function QuestionPreview({ question, maxLength = 100 }: { question: Question; maxLength?: number }) {
   // Extract plain text from question for preview
   const getQuestionText = () => {
-    if (question.questionLatex) {
-      // For LaTeX, just show a truncated version
-      return question.questionLatex.length > maxLength
-        ? question.questionLatex.substring(0, maxLength) + '...'
-        : question.questionLatex;
-    }
-    return question.question.length > maxLength
-      ? question.question.substring(0, maxLength) + '...'
-      : question.question;
+    return question.questionLatex.length > maxLength
+      ? question.questionLatex.substring(0, maxLength) + '...'
+      : question.questionLatex;
   };
 
   return (
     <div className="text-sm text-gray-700 dark:text-gray-300">
-      {question.questionLatex ? (
-        <MathText content={getQuestionText()} />
-      ) : (
-        <span>{getQuestionText()}</span>
-      )}
+      <MathText content={getQuestionText()} />
     </div>
   );
 }

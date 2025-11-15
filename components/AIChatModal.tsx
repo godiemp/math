@@ -88,7 +88,6 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
 
     try {
       const response = await api.post<{ response: string; success: boolean }>('/api/ai/chat', {
-        question: question.question,
         questionLatex: question.questionLatex,
         userAnswer: userAnswer,
         correctAnswer: question.correctAnswer,
@@ -268,11 +267,7 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
               📝 PREGUNTA:
             </div>
             <div className="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-800 p-3 rounded-lg">
-              {question.questionLatex ? (
-                <SmartLatexRenderer latex={question.questionLatex} displayMode={false} />
-              ) : (
-                <MathText content={question.question} />
-              )}
+              <SmartLatexRenderer latex={question.questionLatex} displayMode={false} />
             </div>
           </div>
 

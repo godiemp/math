@@ -1,7 +1,7 @@
 import { QuestionWithMetadata } from '../types';
 
 export interface ExtractedQuestion {
-  question: string;
+  questionLatex: string;
   options: string[];
   correctAnswer?: number;
   explanation?: string;
@@ -115,7 +115,7 @@ function parseQuestionsFromText(text: string): ExtractedQuestion[] {
       const questionOnly = questionText.split(/[A-Da-d][\).]/)[0].trim();
 
       questions.push({
-        question: questionOnly,
+        questionLatex: questionOnly,
         options,
       });
     }
@@ -129,7 +129,7 @@ function parseQuestionsFromText(text: string): ExtractedQuestion[] {
  */
 export function validateQuestion(question: ExtractedQuestion): boolean {
   return (
-    question.question.length > 0 &&
+    question.questionLatex.length > 0 &&
     question.options.length === 4 &&
     question.options.every(opt => opt.length > 0)
   );
@@ -157,8 +157,7 @@ export function convertToQuestionFormat(
     level: metadata.level,
     topic: metadata.topic,
     subject: metadata.subject,
-    question: extracted.question,
-    questionLatex: extracted.question, // You may want to convert this
+    questionLatex: extracted.questionLatex,
     options: extracted.options,
     optionsLatex: extracted.options,
     correctAnswer: extracted.correctAnswer ?? 0,

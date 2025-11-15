@@ -209,7 +209,7 @@ export function SkillsAnalytics() {
                       </Badge>
                     </div>
                     <Text size="sm" className="line-clamp-2">
-                      {question.question.replace(/\$/g, '')}
+                      {question.questionLatex.replace(/\$/g, '')}
                     </Text>
                   </div>
                   <div className="ml-4 flex-shrink-0">
