@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { pool } from '../config/database';
+import { AuthRequest } from '../types';
+import { success, error, errorResponses, getErrorMessage } from '../lib/response-helpers';
 
 const LOBBY_OPEN_MINUTES = 15;
 
@@ -15,11 +17,11 @@ function generateSessionId(): string {
  * @route   POST /api/sessions
  * @access  Private (Admin only)
  */
-export const createSession = async (req: Request, res: Response): Promise<void> => {
+export const createSession = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const userId = (req as any).user?.userId;
+    const userId = req.user?.userId;
     if (!userId) {
-      res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json(errorResponses.unauthorized());
       return;
     }
 
@@ -33,14 +35,25 @@ export const createSession = async (req: Request, res: Response): Promise<void> 
       maxParticipants = 1000000,
     } = req.body;
 
-    // Validation
-    if (!name || !level || !scheduledStartTime || !durationMinutes || !questions) {
-      res.status(400).json({ error: 'Missing required fields' });
+    // Validation - consolidated
+    const missingFields = [];
+    if (!name) missingFields.push('name');
+    if (!level) missingFields.push('level');
+    if (!scheduledStartTime) missingFields.push('scheduledStartTime');
+    if (!durationMinutes) missingFields.push('durationMinutes');
+    if (!questions) missingFields.push('questions');
+
+    if (missingFields.length > 0) {
+      res.status(400).json(errorResponses.badRequest(
+        `Missing required fields: ${missingFields.join(', ')}`
+      ));
       return;
     }
 
     if (!Array.isArray(questions) || questions.length === 0) {
-      res.status(400).json({ error: 'Questions must be a non-empty array' });
+      res.status(400).json(errorResponses.badRequest(
+        'Questions must be a non-empty array'
+      ));
       return;
     }
 
@@ -51,7 +64,7 @@ export const createSession = async (req: Request, res: Response): Promise<void> 
     );
 
     if (userResult.rows.length === 0) {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json(errorResponses.notFound('User'));
       return;
     }
 
@@ -111,16 +124,10 @@ export const createSession = async (req: Request, res: Response): Promise<void> 
       participants: [],
     };
 
-    res.json({
-      success: true,
-      session,
-    });
-  } catch (error) {
-    console.error('Error creating session:', error);
-    res.status(500).json({
-      error: 'Failed to create session',
-      message: (error as Error).message,
-    });
+    res.json(success(session, 'Session created successfully'));
+  } catch (err) {
+    console.error('[createSession] Error:', err);
+    res.status(500).json(error('Failed to create session', getErrorMessage(err)));
   }
 };
 
@@ -161,7 +168,7 @@ export const getSessions = async (req: Request, res: Response): Promise<void> =>
       WHERE 1=1
     `;
 
-    const params: any[] = [];
+    const params: (string | number)[] = [];
     let paramCount = 1;
 
     if (status) {
@@ -180,7 +187,29 @@ export const getSessions = async (req: Request, res: Response): Promise<void> =>
 
     const result = await pool.query(query, params);
 
-    const sessions = result.rows.map((row: any) => ({
+    interface SessionRow {
+      id: string;
+      name: string;
+      description: string;
+      level: string;
+      host_id: string;
+      host_name: string;
+      questions: any;
+      status: string;
+      current_question_index: number;
+      created_at: string;
+      scheduled_start_time: string;
+      scheduled_end_time: string;
+      duration_minutes: number;
+      lobby_open_time: string;
+      max_participants: number;
+      started_at: string | null;
+      completed_at: string | null;
+      registered_users: any[];
+      participants: any[];
+    }
+
+    const sessions = result.rows.map((row: SessionRow) => ({
       id: row.id,
       name: row.name,
       description: row.description,
@@ -208,17 +237,13 @@ export const getSessions = async (req: Request, res: Response): Promise<void> =>
       })),
     }));
 
-    res.json({
-      success: true,
+    res.json(success({
       count: sessions.length,
       sessions,
-    });
-  } catch (error) {
-    console.error('Error fetching sessions:', error);
-    res.status(500).json({
-      error: 'Failed to fetch sessions',
-      message: (error as Error).message,
-    });
+    }));
+  } catch (err) {
+    console.error('[getSessions] Error:', err);
+    res.status(500).json(error('Failed to fetch sessions', getErrorMessage(err)));
   }
 };
 
@@ -261,7 +286,7 @@ export const getSession = async (req: Request, res: Response): Promise<void> => 
     );
 
     if (result.rows.length === 0) {
-      res.status(404).json({ error: 'Session not found' });
+      res.status(404).json(errorResponses.notFound('Session'));
       return;
     }
 
@@ -294,16 +319,10 @@ export const getSession = async (req: Request, res: Response): Promise<void> => 
       })),
     };
 
-    res.json({
-      success: true,
-      session,
-    });
-  } catch (error) {
-    console.error('Error fetching session:', error);
-    res.status(500).json({
-      error: 'Failed to fetch session',
-      message: (error as Error).message,
-    });
+    res.json(success(session));
+  } catch (err) {
+    console.error('[getSession] Error:', err);
+    res.status(500).json(error('Failed to fetch session', getErrorMessage(err)));
   }
 };
 
