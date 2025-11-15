@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at BIGINT NOT NULL,
   current_streak INTEGER DEFAULT 0 NOT NULL,
   longest_streak INTEGER DEFAULT 0 NOT NULL,
-  last_practice_date VARCHAR(10) -- Format: YYYY-MM-DD
+  last_practice_date VARCHAR(10), -- Format: YYYY-MM-DD
+  cookie_consent VARCHAR(20) CHECK (cookie_consent IN ('accepted', 'declined')) -- User cookie consent preference
 );
 
 -- Refresh tokens table (for JWT refresh token rotation)

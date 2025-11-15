@@ -46,6 +46,7 @@ function formatUserResponse(user: UserRecord): UserResponse {
     targetLevel: user.target_level,
     hasSeenWelcome: user.has_seen_welcome,
     emailVerified: user.email_verified,
+    cookieConsent: user.cookie_consent,
   };
 }
 

@@ -8,7 +8,7 @@
 
 import { Router } from 'express';
 import { authenticate } from '../auth/middleware/authenticate';
-import { updateUserProfile, markWelcomeSeen } from '../controllers/userProfileController';
+import { updateUserProfile, markWelcomeSeen, updateCookieConsent } from '../controllers/userProfileController';
 
 const router = Router();
 
@@ -28,5 +28,12 @@ router.put('/profile', updateUserProfile);
  * @access  Private
  */
 router.post('/welcome-seen', markWelcomeSeen);
+
+/**
+ * @route   PATCH /api/user/cookie-consent
+ * @desc    Update current user's cookie consent preference
+ * @access  Private
+ */
+router.patch('/cookie-consent', updateCookieConsent);
 
 export default router;

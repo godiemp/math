@@ -142,6 +142,7 @@ export interface User {
   currentStreak?: number;
   longestStreak?: number;
   lastPracticeDate?: string | null;
+  cookieConsent?: 'accepted' | 'declined' | null;
 }
 
 /**
