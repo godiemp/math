@@ -12,6 +12,7 @@ import {
   joinSession,
   submitAnswer,
   getMyParticipation,
+  updateCurrentQuestion,
   getMyStatistics,
   regenerateQuestions,
 } from '../controllers/sessionController';
@@ -116,5 +117,12 @@ router.post('/:id/answers', authenticate, submitAnswer);
  * @access  Private
  */
 router.get('/:id/participants/me', authenticate, getMyParticipation);
+
+/**
+ * @route   PUT /api/sessions/:id/current-question
+ * @desc    Update current question index for a participant
+ * @access  Private
+ */
+router.put('/:id/current-question', authenticate, updateCurrentQuestion);
 
 export default router;

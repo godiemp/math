@@ -284,6 +284,7 @@ export async function getMyParticipationAPI(
     answers: (number | null)[];
     score: number;
     joinedAt: number;
+    currentQuestionIndex: number;
   };
   error?: string;
 }> {
@@ -294,6 +295,7 @@ export async function getMyParticipationAPI(
     answers: (number | null)[];
     score: number;
     joinedAt: number;
+    currentQuestionIndex: number;
   }>(`/api/sessions/${sessionId}/participants/me`);
 
   if (response.error) {
@@ -306,6 +308,36 @@ export async function getMyParticipationAPI(
   return {
     success: true,
     data: response.data,
+  };
+}
+
+/**
+ * Update current question index for a participant
+ */
+export async function updateCurrentQuestionAPI(
+  sessionId: string,
+  currentQuestionIndex: number
+): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  const response = await api.put<{
+    success: boolean;
+    message: string;
+    currentQuestionIndex: number;
+  }>(`/api/sessions/${sessionId}/current-question`, {
+    currentQuestionIndex,
+  });
+
+  if (response.error) {
+    return {
+      success: false,
+      error: response.error.error || 'Failed to update current question',
+    };
+  }
+
+  return {
+    success: true,
   };
 }
 

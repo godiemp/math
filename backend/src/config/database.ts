@@ -211,8 +211,20 @@ export const initializeDatabase = async (): Promise<void> => {
         answers JSONB NOT NULL,
         score INTEGER DEFAULT 0,
         joined_at BIGINT NOT NULL,
+        current_question_index INTEGER DEFAULT 0,
         UNIQUE(session_id, user_id)
       )
+    `);
+
+    // Add current_question_index column if it doesn't exist (migration for existing tables)
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='session_participants' AND column_name='current_question_index') THEN
+          ALTER TABLE session_participants ADD COLUMN current_question_index INTEGER DEFAULT 0;
+        END IF;
+      END $$;
     `);
 
     // Create question_attempts table for tracking individual practice

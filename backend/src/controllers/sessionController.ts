@@ -931,7 +931,7 @@ export const getMyParticipation = async (req: Request, res: Response): Promise<v
     }
 
     const result = await pool.query(
-      'SELECT user_id, username, display_name, answers, score, joined_at FROM session_participants WHERE session_id = $1 AND user_id = $2',
+      'SELECT user_id, username, display_name, answers, score, joined_at, current_question_index FROM session_participants WHERE session_id = $1 AND user_id = $2',
       [id, userId]
     );
 
@@ -948,11 +948,64 @@ export const getMyParticipation = async (req: Request, res: Response): Promise<v
       answers: typeof row.answers === 'string' ? JSON.parse(row.answers) : row.answers,
       score: row.score,
       joinedAt: row.joined_at,
+      currentQuestionIndex: row.current_question_index || 0,
     });
   } catch (error) {
     console.error('Error getting participation:', error);
     res.status(500).json({
       error: 'Failed to get participation',
+      message: (error as Error).message,
+    });
+  }
+};
+
+/**
+ * Update current question index for a participant
+ * @route   PUT /api/sessions/:id/current-question
+ * @access  Private
+ */
+export const updateCurrentQuestion = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userId = (req as any).user?.userId;
+    const { currentQuestionIndex } = req.body;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    if (currentQuestionIndex === undefined || currentQuestionIndex < 0) {
+      res.status(400).json({ error: 'Invalid currentQuestionIndex' });
+      return;
+    }
+
+    // Verify participant exists
+    const participantResult = await pool.query(
+      'SELECT id FROM session_participants WHERE session_id = $1 AND user_id = $2',
+      [id, userId]
+    );
+
+    if (participantResult.rows.length === 0) {
+      res.status(404).json({ error: 'Not a participant of this session' });
+      return;
+    }
+
+    // Update current question index
+    await pool.query(
+      'UPDATE session_participants SET current_question_index = $1 WHERE session_id = $2 AND user_id = $3',
+      [currentQuestionIndex, id, userId]
+    );
+
+    res.json({
+      success: true,
+      message: 'Current question index updated',
+      currentQuestionIndex,
+    });
+  } catch (error) {
+    console.error('Error updating current question:', error);
+    res.status(500).json({
+      error: 'Failed to update current question',
       message: (error as Error).message,
     });
   }
