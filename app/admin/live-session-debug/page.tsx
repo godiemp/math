@@ -239,7 +239,7 @@ function LiveSessionDebugContent() {
                 {eventButtons.map((btn, idx) => (
                   <Button
                     key={idx}
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     className="justify-start"
                     onClick={() => handleEventSend(btn.type, btn.payload as Record<string, unknown>)}
@@ -336,7 +336,7 @@ function LiveSessionDebugContent() {
                   {showPreview ? '🙈 Ocultar Preview' : '👁️ Mostrar Preview Estudiante'}
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   className="w-full"
                   onClick={() => {
@@ -347,7 +347,7 @@ function LiveSessionDebugContent() {
                   🗑️ Limpiar Historial
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   className="w-full"
                   onClick={() => {
@@ -529,7 +529,7 @@ function MockPreview({ session, state }: { session: LiveSession; state: string }
           </div>
 
           <div className="flex gap-2 mt-4">
-            <Button variant="outline" size="sm" disabled>
+            <Button variant="secondary" size="sm" disabled>
               Anterior
             </Button>
             <Button size="sm" className="flex-1">
