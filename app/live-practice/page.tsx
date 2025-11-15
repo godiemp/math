@@ -135,22 +135,22 @@ function LivePracticePageContent() {
             </div>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <div className="flex items-center gap-2">
-                <Text size="xs" variant="secondary" className="text-xs">{t('welcome')}</Text>
-                <Text className="font-medium text-sm">{currentUser?.displayName}</Text>
+                <Text size="xs" variant="secondary" className="text-xs sm:text-sm">{t('welcome')}</Text>
+                <Text className="font-medium text-sm sm:text-base">{currentUser?.displayName}</Text>
                 {isAdmin && (
-                  <Badge variant="info" size="sm" className="text-[10px] sm:text-xs">{t('actions.admin')}</Badge>
+                  <Badge variant="info" size="sm" className="text-xs">{t('actions.admin')}</Badge>
                 )}
               </div>
               <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-                <Button variant="ghost" onClick={() => router.push('/dashboard')} className="flex-1 sm:flex-none text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2">
+                <Button variant="ghost" onClick={() => router.push('/dashboard')} className="flex-1 sm:flex-none text-sm px-3 py-2">
                   {t('actions.home')}
                 </Button>
                 {isAdmin && (
-                  <Button variant="secondary" onClick={() => router.push('/admin')} className="flex-1 sm:flex-none text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2">
+                  <Button variant="secondary" onClick={() => router.push('/admin')} className="flex-1 sm:flex-none text-sm px-3 py-2">
                     {t('actions.admin')}
                   </Button>
                 )}
-                <Button variant="danger" onClick={handleLogout} className="flex-1 sm:flex-none text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2">
+                <Button variant="danger" onClick={handleLogout} className="flex-1 sm:flex-none text-sm px-3 py-2">
                   {t('actions.exit')}
                 </Button>
               </div>
@@ -197,7 +197,7 @@ function LivePracticePageContent() {
                           {session.description}
                         </Text>
                       )}
-                      <Text size="xs" variant="secondary" className="text-[10px] sm:text-xs">
+                      <Text size="xs" variant="secondary" className="text-xs">
                         {t('card.by')} {session.hostName}
                       </Text>
                     </div>
@@ -208,7 +208,7 @@ function LivePracticePageContent() {
                         session.status === 'active' ? 'success' : 'neutral'
                       }
                       size="sm"
-                      className="text-[10px] sm:text-xs whitespace-nowrap flex-shrink-0"
+                      className="text-xs whitespace-nowrap flex-shrink-0"
                     >
                       {session.status === 'scheduled' ? t('status.scheduled') :
                        session.status === 'lobby' ? t('status.lobby') :
@@ -219,8 +219,8 @@ function LivePracticePageContent() {
                   <div className="space-y-1.5 sm:space-y-2 mb-3 sm:mb-4">
                     {session.scheduledStartTime && (
                       <div className="flex items-start sm:items-center flex-col sm:flex-row gap-0.5 sm:gap-0">
-                        <Text size="xs" variant="secondary" className="font-medium mr-2 text-[10px] sm:text-xs">{t('card.date')}</Text>
-                        <Text size="xs" variant="secondary" className="text-[10px] sm:text-xs">
+                        <Text size="xs" variant="secondary" className="font-medium mr-2 text-xs">{t('card.date')}</Text>
+                        <Text size="xs" variant="secondary" className="text-xs">
                           {new Date(session.scheduledStartTime).toLocaleString('es-CL', {
                             dateStyle: 'medium',
                             timeStyle: 'short',
@@ -229,12 +229,12 @@ function LivePracticePageContent() {
                       </div>
                     )}
                     <div className="flex items-center flex-wrap gap-1">
-                      <Text size="xs" variant="secondary" className="font-medium mr-1 text-[10px] sm:text-xs">{t('card.level')}</Text>
-                      <Badge variant="info" size="sm" className="text-[10px] sm:text-xs">{session.level}</Badge>
+                      <Text size="xs" variant="secondary" className="font-medium mr-1 text-xs">{t('card.level')}</Text>
+                      <Badge variant="info" size="sm" className="text-xs">{session.level}</Badge>
                     </div>
                     <div className="flex items-center">
-                      <Text size="xs" variant="secondary" className="font-medium mr-2 text-[10px] sm:text-xs">{t('card.questions')}</Text>
-                      <Text size="xs" variant="secondary" className="text-[10px] sm:text-xs">{session.questions.length}</Text>
+                      <Text size="xs" variant="secondary" className="font-medium mr-2 text-xs">{t('card.questions')}</Text>
+                      <Text size="xs" variant="secondary" className="text-xs">{session.questions.length}</Text>
                     </div>
                   </div>
 
@@ -245,7 +245,7 @@ function LivePracticePageContent() {
                         variant="danger"
                         onClick={() => handleUnregisterSession(session.id)}
                         fullWidth
-                        className="text-xs sm:text-sm py-2"
+                        className="text-sm py-2"
                       >
                         {t('buttons.cancelRegistration')}
                       </Button>
@@ -254,7 +254,7 @@ function LivePracticePageContent() {
                         variant="primary"
                         onClick={() => handleRegisterSession(session.id)}
                         fullWidth
-                        className="text-xs sm:text-sm py-2"
+                        className="text-sm py-2"
                       >
                         {t('buttons.register')}
                       </Button>
@@ -264,7 +264,7 @@ function LivePracticePageContent() {
                       variant="primary"
                       onClick={() => handleJoinSession(session.id)}
                       fullWidth
-                      className="bg-[#FF9F0A] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] text-xs sm:text-sm py-2"
+                      className="bg-[#FF9F0A] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)] text-sm py-2"
                     >
                       {isUserInSession(session) ? t('buttons.returnToLobby') : t('buttons.enterLobby')}
                     </Button>
@@ -273,7 +273,7 @@ function LivePracticePageContent() {
                       variant="success"
                       onClick={() => handleJoinSession(session.id)}
                       fullWidth
-                      className="text-xs sm:text-sm py-2"
+                      className="text-sm py-2"
                     >
                       {isUserInSession(session) ? t('buttons.returnToSession') : t('buttons.joinNow')}
                     </Button>

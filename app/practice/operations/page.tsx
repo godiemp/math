@@ -133,7 +133,7 @@ function OperationsPracticeContent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {selectedLevel ? (
-        <div className="min-h-screen flex items-center px-4 py-8">
+        <div className="min-h-screen flex items-center px-3 sm:px-4 py-6 sm:py-8">
           <OperationsPractice
             level={selectedLevel}
             onBack={handleBackToPath}
@@ -142,7 +142,7 @@ function OperationsPracticeContent() {
           />
         </div>
       ) : (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
           <OperationsPath
             levels={OPERATIONS_PATH}
             userProgress={userProgress}
