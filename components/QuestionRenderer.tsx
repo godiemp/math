@@ -1,7 +1,7 @@
 'use client';
 
 import type { Question, QuestionRendererProps } from '@/lib/types';
-import { MathText, BlockMath, InlineMath, SmartLatexRenderer } from './MathDisplay';
+import { MathText, BlockMath, InlineMath, SmartLatexRenderer, UnifiedLatexRenderer } from './MathDisplay';
 import { GeometryCanvas, GeometryFigure } from './GeometryCanvas';
 
 // Re-export for convenience
@@ -86,11 +86,7 @@ export function QuestionRenderer({
               >
                 <span className="font-semibold shrink-0">{String.fromCharCode(65 + index)}.</span>
                 <span className="flex-1 min-w-0 break-words">
-                  {question.optionsLatex && question.optionsLatex[index] ? (
-                    <SmartLatexRenderer latex={question.optionsLatex[index]} displayMode={false} />
-                  ) : (
-                    <MathText content={option} />
-                  )}
+                  <UnifiedLatexRenderer content={question.optionsLatex?.[index] || option} displayMode={false} />
                 </span>
                 {showFeedback && isCorrectAnswer && <span className="shrink-0 ml-auto">✓</span>}
                 {showFeedback && isSelected && !isCorrectAnswer && <span className="shrink-0 ml-auto">✗</span>}
