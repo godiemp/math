@@ -118,7 +118,7 @@ function PaymentHistoryContent() {
           </div>
           <Button
             variant="ghost"
-            onClick={() => router.push('/dashboard')}
+            onClick={() => router.back()}
           >
             ← Volver
           </Button>

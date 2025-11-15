@@ -142,8 +142,8 @@ function LivePracticePageContent() {
                 )}
               </div>
               <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-                <Button variant="ghost" onClick={() => router.push('/dashboard')} className="flex-1 sm:flex-none text-sm px-3 py-2">
-                  {t('actions.home')}
+                <Button variant="ghost" onClick={() => router.back()} className="flex-1 sm:flex-none text-sm px-3 py-2">
+                  ← Volver
                 </Button>
                 {isAdmin && (
                   <Button variant="secondary" onClick={() => router.push('/admin')} className="flex-1 sm:flex-none text-sm px-3 py-2">
