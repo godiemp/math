@@ -14,6 +14,8 @@ export function IntercomProvider({ children }: { children: React.ReactNode }) {
     }
 
     // Only initialize Intercom if user is authenticated
+    // Note: Intercom is customer support, not analytics, so it doesn't require cookie consent
+    // Users should always be able to get help
     if (isAuthenticated && user) {
       Intercom({
         app_id: 'uzabsd5b',

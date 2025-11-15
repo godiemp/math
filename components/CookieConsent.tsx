@@ -3,28 +3,102 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { useAuth } from '@/contexts/AuthContext';
+import { User } from '@/lib/types/core';
 
 export default function CookieConsent() {
   const t = useTranslations('cookies');
   const [showBanner, setShowBanner] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Safely get auth context - will be undefined during SSR
+  let user: User | null = null;
+  let isAuthenticated = false;
+  let isLoading = true;
+
+  try {
+    const auth = useAuth();
+    user = auth.user;
+    isAuthenticated = auth.isAuthenticated;
+    isLoading = auth.isLoading;
+  } catch {
+    // AuthProvider not available (SSR/SSG) - use defaults
+    // Variables already initialized with safe defaults above
+  }
+
+  // Only run on client side
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
-    // Check if user has already accepted cookies
+    // Don't run until mounted on client
+    if (!mounted) {
+      return;
+    }
+
+    // Wait for auth to finish loading
+    if (isLoading) {
+      return;
+    }
+
+    // For authenticated users, sync from backend if available
+    if (isAuthenticated && user?.cookieConsent) {
+      // Sync backend preference to localStorage
+      localStorage.setItem('cookie-consent', user.cookieConsent);
+      return; // Don't show banner if user already has a preference
+    }
+
+    // Check localStorage for existing consent
     const consent = localStorage.getItem('cookie-consent');
     if (!consent) {
       // Show banner after a short delay for better UX
       setTimeout(() => setShowBanner(true), 1000);
     }
-  }, []);
+  }, [mounted, isAuthenticated, user, isLoading]);
 
-  const handleAccept = () => {
-    localStorage.setItem('cookie-consent', 'accepted');
-    setShowBanner(false);
+  const updateBackendConsent = async (consent: 'accepted' | 'declined') => {
+    if (!isAuthenticated) {
+      return; // Only sync to backend if user is authenticated
+    }
+
+    try {
+      const response = await fetch('/api/user/cookie-consent', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Include cookies for authentication
+        body: JSON.stringify({ cookieConsent: consent }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to update cookie consent in backend');
+      }
+    } catch (error) {
+      console.error('Error updating cookie consent:', error);
+    }
   };
 
-  const handleDecline = () => {
+  const handleAccept = async () => {
+    // Save to localStorage immediately
+    localStorage.setItem('cookie-consent', 'accepted');
+    setShowBanner(false);
+
+    // Sync to backend if authenticated
+    await updateBackendConsent('accepted');
+
+    // Reload page to initialize analytics
+    window.location.reload();
+  };
+
+  const handleDecline = async () => {
+    // Save to localStorage immediately
     localStorage.setItem('cookie-consent', 'declined');
     setShowBanner(false);
+
+    // Sync to backend if authenticated
+    await updateBackendConsent('declined');
   };
 
   if (!showBanner) return null;

@@ -58,6 +58,7 @@ export interface UserRecord {
   verification_token_expires_at: number | null;
   password_reset_token: string | null;
   password_reset_token_expires_at: number | null;
+  cookie_consent: 'accepted' | 'declined' | null;
 }
 
 /**
@@ -77,6 +78,7 @@ export interface UserResponse {
   targetLevel?: 'M1_ONLY' | 'M1_AND_M2';
   hasSeenWelcome?: boolean;
   emailVerified?: boolean;
+  cookieConsent?: 'accepted' | 'declined' | null;
 }
 
 /**
