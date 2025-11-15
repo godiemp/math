@@ -336,6 +336,40 @@ function AdminLiveSessionsContent() {
     setRangeEnd('');
   };
 
+  const handleRegenerateSingleQuestion = async (questionIndex: number) => {
+    if (!viewingQuestionsSession) return;
+
+    if (confirm(`¿Regenerar pregunta #${questionIndex + 1}?`)) {
+      try {
+        const level = viewingQuestionsSession.level;
+        const newQuestions = getRandomQuestions(level, 1);
+
+        toast.promise(
+          regenerateSessionQuestions(
+            viewingQuestionsSession.id,
+            [questionIndex],
+            newQuestions
+          ).then(async (result) => {
+            if (result.success) {
+              setViewingQuestionsSession(result.session!);
+              await refresh();
+              return result;
+            } else {
+              throw new Error(result.error || 'Error al regenerar pregunta');
+            }
+          }),
+          {
+            loading: 'Regenerando pregunta...',
+            success: `Pregunta #${questionIndex + 1} regenerada exitosamente`,
+            error: (err) => err.message || 'Error al regenerar pregunta',
+          }
+        );
+      } catch (error: any) {
+        toast.error(error.message || 'Error al regenerar pregunta');
+      }
+    }
+  };
+
   // If previewing session, show preview mode
   if (previewingSession) {
     return <PreviewSession session={previewingSession} onClose={() => setPreviewingSession(null)} />;
@@ -452,9 +486,21 @@ function AdminLiveSessionsContent() {
                         {question.difficulty}
                       </Badge>
                     </div>
-                    <Text size="xs" variant="secondary" className="font-mono">
-                      {question.id}
-                    </Text>
+                    <div className="flex gap-2 items-center">
+                      {viewingQuestionsSession.status === 'scheduled' && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRegenerateSingleQuestion(index)}
+                          title="Regenerar esta pregunta"
+                        >
+                          🔄
+                        </Button>
+                      )}
+                      <Text size="xs" variant="secondary" className="font-mono">
+                        {question.id}
+                      </Text>
+                    </div>
                   </div>
                   <Text size="xs" variant="secondary" className="mb-2">
                     {question.topic}
