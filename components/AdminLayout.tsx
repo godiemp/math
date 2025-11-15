@@ -63,6 +63,7 @@ const menuGroupsConfig: MenuGroup[] = [
       { nameKey: 'studyBuddyDebug', path: '/admin/study-buddy-debug', icon: '🧠' },
       { nameKey: 'rapidFireDebug', path: '/admin/rapidfire-debug', icon: '⚡' },
       { nameKey: 'zenDebug', path: '/admin/zen-debug', icon: '🧘' },
+      { nameKey: 'liveSessionDebug', path: '/admin/live-session-debug', icon: '🎮' },
     ],
   },
 ];
