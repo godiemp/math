@@ -1,4 +1,4 @@
-import { Question } from '../types';
+import { Question, DifficultyLevel } from '../types';
 import { m1NumerosQuestions } from './m1/numeros';
 import { m1AlgebraQuestions } from './m1/algebra';
 import { m1GeometriaQuestions } from './m1/geometria';
@@ -62,6 +62,47 @@ export function getRandomQuestions(level: 'M1' | 'M2', count: number = 10, subje
   // Filter by subject if specified
   if (subject) {
     levelQuestions = levelQuestions.filter(q => q.subject === subject);
+  }
+
+  // If there are fewer questions than requested, return all of them
+  if (levelQuestions.length <= count) {
+    return [...levelQuestions].sort(() => Math.random() - 0.5);
+  }
+
+  // Fisher-Yates shuffle algorithm to get random questions
+  const shuffled = [...levelQuestions];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled.slice(0, count);
+}
+
+/**
+ * Get random questions matching specific criteria
+ * Useful for regenerating questions while maintaining structure
+ */
+export function getRandomQuestionsByFilter(
+  level: 'M1' | 'M2',
+  count: number,
+  filters: {
+    subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
+    difficulty?: DifficultyLevel;
+    topic?: string;
+  }
+): Question[] {
+  let levelQuestions = getQuestionsByLevel(level);
+
+  // Apply filters
+  if (filters.subject) {
+    levelQuestions = levelQuestions.filter(q => q.subject === filters.subject);
+  }
+  if (filters.difficulty) {
+    levelQuestions = levelQuestions.filter(q => q.difficulty === filters.difficulty);
+  }
+  if (filters.topic) {
+    levelQuestions = levelQuestions.filter(q => q.topic === filters.topic);
   }
 
   // If there are fewer questions than requested, return all of them

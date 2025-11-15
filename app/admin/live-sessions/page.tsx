@@ -11,7 +11,7 @@ import {
   regenerateSessionQuestions,
 } from '@/lib/sessionApi';
 import { useAvailableSessions } from '@/lib/hooks/useSessions';
-import { getRandomQuestions, getOfficialPAESQuestions } from '@/lib/questions';
+import { getRandomQuestions, getOfficialPAESQuestions, getRandomQuestionsByFilter } from '@/lib/questions';
 import { LiveSession, Question } from '@/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
@@ -264,7 +264,32 @@ function AdminLiveSessionsContent() {
 
     try {
       const level = viewingQuestionsSession.level;
-      const newQuestions = getRandomQuestions(level, selectedIndices.length);
+
+      // Generate new questions maintaining the structure of each original question
+      const newQuestions: Question[] = [];
+      for (const index of selectedIndices) {
+        const originalQuestion = viewingQuestionsSession.questions[index];
+
+        // Try to get a question with the same subject and difficulty
+        let replacementQuestions = getRandomQuestionsByFilter(level, 1, {
+          subject: originalQuestion.subject,
+          difficulty: originalQuestion.difficulty,
+        });
+
+        // Fallback to same subject if no match with difficulty
+        if (replacementQuestions.length === 0) {
+          replacementQuestions = getRandomQuestionsByFilter(level, 1, {
+            subject: originalQuestion.subject,
+          });
+        }
+
+        // Fallback to any question of the same level
+        if (replacementQuestions.length === 0) {
+          replacementQuestions = getRandomQuestions(level, 1);
+        }
+
+        newQuestions.push(replacementQuestions[0]);
+      }
 
       toast.promise(
         regenerateSessionQuestions(
@@ -339,10 +364,30 @@ function AdminLiveSessionsContent() {
   const handleRegenerateSingleQuestion = async (questionIndex: number) => {
     if (!viewingQuestionsSession) return;
 
-    if (confirm(`¿Regenerar pregunta #${questionIndex + 1}?`)) {
+    const originalQuestion = viewingQuestionsSession.questions[questionIndex];
+    const questionInfo = `#${questionIndex + 1} (${originalQuestion.subject}, ${originalQuestion.difficulty})`;
+
+    if (confirm(`¿Regenerar pregunta ${questionInfo}?`)) {
       try {
         const level = viewingQuestionsSession.level;
-        const newQuestions = getRandomQuestions(level, 1);
+
+        // Try to get a question with the same subject and difficulty
+        let newQuestions = getRandomQuestionsByFilter(level, 1, {
+          subject: originalQuestion.subject,
+          difficulty: originalQuestion.difficulty,
+        });
+
+        // Fallback to same subject if no match with difficulty
+        if (newQuestions.length === 0) {
+          newQuestions = getRandomQuestionsByFilter(level, 1, {
+            subject: originalQuestion.subject,
+          });
+        }
+
+        // Fallback to any question of the same level
+        if (newQuestions.length === 0) {
+          newQuestions = getRandomQuestions(level, 1);
+        }
 
         toast.promise(
           regenerateSessionQuestions(
@@ -360,7 +405,7 @@ function AdminLiveSessionsContent() {
           }),
           {
             loading: 'Regenerando pregunta...',
-            success: `Pregunta #${questionIndex + 1} regenerada exitosamente`,
+            success: `Pregunta ${questionInfo} regenerada exitosamente`,
             error: (err) => err.message || 'Error al regenerar pregunta',
           }
         );
