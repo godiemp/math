@@ -1137,3 +1137,136 @@ export const getMyStatistics = async (req: Request, res: Response): Promise<void
     });
   }
 };
+
+/**
+ * Regenerate questions for a session
+ * @route   POST /api/sessions/:id/regenerate-questions
+ * @access  Private (Admin only)
+ */
+export const regenerateQuestions = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { newQuestions, questionIndices } = req.body;
+
+    // Check if session exists and is scheduled
+    const sessionResult = await pool.query(
+      'SELECT * FROM sessions WHERE id = $1',
+      [id]
+    );
+
+    if (sessionResult.rows.length === 0) {
+      res.status(404).json({ error: 'Session not found' });
+      return;
+    }
+
+    const session = sessionResult.rows[0];
+
+    if (session.status !== 'scheduled') {
+      res.status(400).json({ error: 'Can only regenerate questions for scheduled sessions' });
+      return;
+    }
+
+    const currentQuestions = session.questions;
+
+    // Validate inputs
+    if (!questionIndices || !Array.isArray(questionIndices) || questionIndices.length === 0) {
+      res.status(400).json({ error: 'questionIndices array is required and must not be empty' });
+      return;
+    }
+
+    if (!newQuestions || !Array.isArray(newQuestions) || newQuestions.length === 0) {
+      res.status(400).json({ error: 'newQuestions array is required and must not be empty' });
+      return;
+    }
+
+    if (newQuestions.length !== questionIndices.length) {
+      res.status(400).json({
+        error: `newQuestions (${newQuestions.length}) must match questionIndices (${questionIndices.length}) length`
+      });
+      return;
+    }
+
+    // Validate indices
+    for (const index of questionIndices) {
+      if (!Number.isInteger(index) || index < 0 || index >= currentQuestions.length) {
+        res.status(400).json({ error: `Invalid question index: ${index}` });
+        return;
+      }
+    }
+
+    // Replace questions at specified indices
+    const updatedQuestions = [...currentQuestions];
+    questionIndices.forEach((index: number, i: number) => {
+      updatedQuestions[index] = newQuestions[i];
+    });
+
+    // Update the session with new questions
+    const updateResult = await pool.query(
+      'UPDATE sessions SET questions = $1 WHERE id = $2 RETURNING *',
+      [JSON.stringify(updatedQuestions), id]
+    );
+
+    const row = updateResult.rows[0];
+
+    // Fetch related data
+    const registrationsResult = await pool.query(
+      `SELECT json_agg(json_build_object(
+        'userId', user_id,
+        'username', username,
+        'displayName', display_name,
+        'registeredAt', registered_at
+      )) as registered_users
+      FROM session_registrations
+      WHERE session_id = $1`,
+      [id]
+    );
+
+    const participantsResult = await pool.query(
+      `SELECT json_agg(json_build_object(
+        'userId', user_id,
+        'username', username,
+        'displayName', display_name,
+        'answers', answers,
+        'score', score,
+        'joinedAt', joined_at
+      )) as participants
+      FROM session_participants
+      WHERE session_id = $1`,
+      [id]
+    );
+
+    const session_updated = {
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      level: row.level,
+      hostId: row.host_id,
+      hostName: row.host_name,
+      questions: row.questions,
+      status: row.status,
+      currentQuestionIndex: row.current_question_index,
+      createdAt: parseInt(row.created_at),
+      scheduledStartTime: parseInt(row.scheduled_start_time),
+      scheduledEndTime: parseInt(row.scheduled_end_time),
+      durationMinutes: row.duration_minutes,
+      lobbyOpenTime: parseInt(row.lobby_open_time),
+      maxParticipants: row.max_participants,
+      startedAt: row.started_at ? parseInt(row.started_at) : undefined,
+      completedAt: row.completed_at ? parseInt(row.completed_at) : undefined,
+      registeredUsers: registrationsResult.rows[0]?.registered_users || [],
+      participants: participantsResult.rows[0]?.participants || [],
+    };
+
+    res.json({
+      success: true,
+      session: session_updated,
+      message: 'Questions regenerated successfully'
+    });
+  } catch (error) {
+    console.error('Error regenerating questions:', error);
+    res.status(500).json({
+      error: 'Failed to regenerate questions',
+      message: (error as Error).message,
+    });
+  }
+};

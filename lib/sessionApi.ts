@@ -331,3 +331,33 @@ export async function getMyStatistics(): Promise<{
     data: response.data,
   };
 }
+
+/**
+ * Regenerate questions for a session (admin only)
+ *
+ * @param sessionId - The ID of the session
+ * @param questionIndices - Array of question indices to regenerate (0-based)
+ * @param newQuestions - Array of new questions to replace with (must match length of questionIndices)
+ */
+export async function regenerateSessionQuestions(
+  sessionId: string,
+  questionIndices: number[],
+  newQuestions: Question[]
+): Promise<{ success: boolean; session?: LiveSession; error?: string }> {
+  const response = await api.post<SessionResponse>(
+    `/api/sessions/${sessionId}/regenerate-questions`,
+    { questionIndices, newQuestions }
+  );
+
+  if (response.error) {
+    return {
+      success: false,
+      error: response.error.error || 'Failed to regenerate questions',
+    };
+  }
+
+  return {
+    success: true,
+    session: response.data?.session,
+  };
+}

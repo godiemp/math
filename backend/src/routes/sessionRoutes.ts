@@ -13,6 +13,7 @@ import {
   submitAnswer,
   getMyParticipation,
   getMyStatistics,
+  regenerateQuestions,
 } from '../controllers/sessionController';
 import { authenticate, requireAdmin } from '../auth/middleware';
 
@@ -73,6 +74,13 @@ router.delete('/:id', authenticate, requireAdmin, deleteSession);
  * @access  Private (Admin only)
  */
 router.post('/:id/cancel', authenticate, requireAdmin, cancelSession);
+
+/**
+ * @route   POST /api/sessions/:id/regenerate-questions
+ * @desc    Regenerate questions for a session
+ * @access  Private (Admin only)
+ */
+router.post('/:id/regenerate-questions', authenticate, requireAdmin, regenerateQuestions);
 
 /**
  * @route   POST /api/sessions/:id/register
