@@ -28,7 +28,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Encontramos común denominador (12) y operamos:',
     explanationLatex: '\\frac{8}{12} - \\frac{9}{12} + \\frac{2}{12} = \\frac{8 - 9 + 2}{12} = \\frac{1}{12}',
     difficulty: 'medium',
-    skills: ['numeros-fracciones', 'numeros-fracciones-comun-denominador', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-fracciones', 'numeros-fracciones-comun-denominador', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-ent-2',
@@ -43,7 +43,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Multiplicamos: (-3) × (-2) = 6, luego 6 × 5 = 30, finalmente 30 × (-1) = -30',
     explanationLatex: '(-3) \\times (-2) \\times 5 \\times (-1) = 6 \\times 5 \\times (-1) = 30 \\times (-1) = -30',
     difficulty: 'medium',
-    skills: ['numeros-enteros', 'numeros-multiplicacion-enteros', 'numeros-signos', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-enteros', 'numeros-multiplicacion-enteros', 'numeros-signos', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-ent-3',
@@ -58,7 +58,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Numerador: 8/12 + 3/12 = 11/12. Denominador: 5/6 - 2/6 = 3/6 = 1/2. División: (11/12)÷(1/2) = 11/6',
     explanationLatex: '\\frac{\\frac{11}{12}}{\\frac{1}{2}} = \\frac{11}{12} \\times \\frac{2}{1} = \\frac{11}{6}',
     difficulty: 'extreme',
-    skills: ['numeros-fracciones', 'numeros-fracciones-complejas', 'numeros-division-fracciones', 'numeros-comun-denominador', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-fracciones', 'numeros-fracciones-complejas', 'numeros-division-fracciones', 'numeros-comun-denominador', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-pot-1',
@@ -73,7 +73,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Aplicamos propiedades de potencias:',
     explanationLatex: '(2^3)^2 \\cdot 2^{-4} = 2^6 \\cdot 2^{-4} = 2^{6-4} = 2^2',
     difficulty: 'medium',
-    skills: ['numeros-potencias', 'numeros-propiedades-potencias', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-potencias', 'numeros-propiedades-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-pot-2',
@@ -88,7 +88,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Factorizamos 72 = 36 × 2, entonces √72 = √(36×2) = √36 × √2 = 6√2',
     explanationLatex: '\\sqrt{72} = \\sqrt{36 \\times 2} = \\sqrt{36} \\times \\sqrt{2} = 6\\sqrt{2}',
     difficulty: 'hard',
-    skills: ['numeros-raices', 'numeros-simplificacion-raices', 'numeros-factorizacion', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-irracionales', 'numeros-raices', 'numeros-simplificacion-raices', 'numeros-factorizacion', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-pot-3',
@@ -103,7 +103,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Un exponente negativo invierte la base: (1/2)⁻³ = 2³ = 8',
     explanationLatex: '\\left(\\frac{1}{2}\\right)^{-3} = \\left(\\frac{2}{1}\\right)^{3} = 2^3 = 8',
     difficulty: 'hard',
-    skills: ['numeros-potencias', 'numeros-exponentes-negativos', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-potencias', 'numeros-exponentes-negativos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-pot-4',
@@ -118,7 +118,7 @@ export const m2Num001Questions: Question[] = [
     explanation: '√50 = 5√2, √32 = 4√2, √18 = 3√2. Entonces: 5√2 + 4√2 - 3√2 = 6√2',
     explanationLatex: '5\\sqrt{2} + 4\\sqrt{2} - 3\\sqrt{2} = (5+4-3)\\sqrt{2} = 6\\sqrt{2}',
     difficulty: 'extreme',
-    skills: ['numeros-raices', 'numeros-simplificacion-raices', 'numeros-suma-radicales', 'numeros-factorizacion', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-irracionales', 'numeros-raices', 'numeros-simplificacion-raices', 'numeros-suma-radicales', 'numeros-factorizacion', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-1',
@@ -132,7 +132,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Factorizando: 12 = 2² × 3, 18 = 2 × 3², 24 = 2³ × 3. MCM = 2³ × 3² = 8 × 9 = 72',
     explanationLatex: '12 = 2^2 \\times 3, \\quad 18 = 2 \\times 3^2, \\quad 24 = 2^3 \\times 3 \\quad \\Rightarrow \\quad \\text{MCM} = 2^3 \\times 3^2 = 8 \\times 9 = 72',
     difficulty: 'medium',
-    skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-mcd-1',
@@ -146,7 +146,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Factorizando: 48 = 2⁴ × 3, 72 = 2³ × 3², 120 = 2³ × 3 × 5. MCD = 2³ × 3 = 24',
     explanationLatex: '48 = 2^4 \\times 3, \\quad 72 = 2^3 \\times 3^2, \\quad 120 = 2^3 \\times 3 \\times 5 \\quad \\Rightarrow \\quad \\text{MCD} = 2^3 \\times 3 = 24',
     difficulty: 'hard',
-    skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-mcd-2',
@@ -160,7 +160,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Factorizando: 15 = 3 × 5, 20 = 2² × 5, 25 = 5². MCM = 2² × 3 × 5² = 4 × 3 × 25 = 300',
     explanationLatex: '15 = 3 \\times 5, \\quad 20 = 2^2 \\times 5, \\quad 25 = 5^2 \\quad \\Rightarrow \\quad \\text{MCM} = 2^2 \\times 3 \\times 5^2 = 300',
     difficulty: 'hard',
-    skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-mcd-3',
@@ -174,7 +174,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Factorizando: 36 = 2² × 3², 48 = 2⁴ × 3. MCD = 2² × 3 = 12',
     explanationLatex: '36 = 2^2 \\times 3^2, \\quad 48 = 2^4 \\times 3 \\quad \\Rightarrow \\quad \\text{MCD} = 2^2 \\times 3 = 12',
     difficulty: 'medium',
-    skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-mcd-4',
@@ -188,7 +188,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Usamos la fórmula: MCD × MCM = producto de los números',
     explanationLatex: '6 \\times 72 = 18 \\times b \\quad \\Rightarrow \\quad b = \\frac{432}{18} = 24',
     difficulty: 'extreme',
-    skills: ['numeros-mcd-mcm', 'numeros-relacion-mcd-mcm', 'numeros-operaciones-basicas', 'algebra-despeje']
+    skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-relacion-mcd-mcm', 'numeros-operaciones-basicas', 'algebra-despeje']
   },
   {
     id: 'm2-9',
@@ -203,7 +203,7 @@ export const m2Num001Questions: Question[] = [
     explanation: '6/√3 = (6/√3) × (√3/√3) = 6√3/3 = 2√3',
     explanationLatex: '\\frac{6}{\\sqrt{3}} = \\frac{6}{\\sqrt{3}} \\times \\frac{\\sqrt{3}}{\\sqrt{3}} = \\frac{6\\sqrt{3}}{3} = 2\\sqrt{3}',
     difficulty: 'medium',
-    skills: ['numeros-racionalizacion', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-rac-1',
@@ -218,7 +218,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Multiplicamos por el conjugado (√5 - √3)/(√5 - √3):',
     explanationLatex: '\\frac{10}{\\sqrt{5} + \\sqrt{3}} \\times \\frac{\\sqrt{5} - \\sqrt{3}}{\\sqrt{5} - \\sqrt{3}} = \\frac{10(\\sqrt{5} - \\sqrt{3})}{5 - 3} = \\frac{10(\\sqrt{5} - \\sqrt{3})}{2} = 5(\\sqrt{5} - \\sqrt{3})',
     difficulty: 'extreme',
-    skills: ['numeros-racionalizacion', 'numeros-racionalizacion-conjugado', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-racionalizacion-conjugado', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-rac-2',
@@ -233,7 +233,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Simplificamos y racionalizamos:',
     explanationLatex: '\\frac{12}{2\\sqrt{3}} = \\frac{6}{\\sqrt{3}} \\times \\frac{\\sqrt{3}}{\\sqrt{3}} = \\frac{6\\sqrt{3}}{3} = 2\\sqrt{3}',
     difficulty: 'medium',
-    skills: ['numeros-racionalizacion', 'numeros-raices', 'numeros-fracciones', 'numeros-simplificacion', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-raices', 'numeros-fracciones', 'numeros-simplificacion', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-rac-3',
@@ -248,7 +248,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Podemos simplificar directamente:',
     explanationLatex: '\\frac{\\sqrt{8}}{\\sqrt{2}} = \\sqrt{\\frac{8}{2}} = \\sqrt{4} = 2',
     difficulty: 'medium',
-    skills: ['numeros-racionalizacion', 'numeros-raices', 'numeros-simplificacion-raices', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-raices', 'numeros-simplificacion-raices', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-rac-4',
@@ -263,6 +263,6 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Multiplicamos por el conjugado (√2 + 1)/(√2 + 1):',
     explanationLatex: '\\frac{6}{\\sqrt{2} - 1} \\times \\frac{\\sqrt{2} + 1}{\\sqrt{2} + 1} = \\frac{6(\\sqrt{2} + 1)}{2 - 1} = 6(\\sqrt{2} + 1)',
     difficulty: 'hard',
-    skills: ['numeros-racionalizacion', 'numeros-racionalizacion-conjugado', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-racionalizacion-conjugado', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
   }
 ];
