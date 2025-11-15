@@ -47,7 +47,7 @@ export const useQuizProgress = ({ level }: UseQuizProgressProps) => {
       const attempt: QuestionAttempt = {
         questionId: question.id,
         quizSessionId: quizSessionId, // Add session ID to track quiz sessions
-        question: question.question,
+        questionLatex: question.questionLatex,
         topic: question.topic,
         level: level,
         userAnswer: userAnswer !== null ? userAnswer : -1,

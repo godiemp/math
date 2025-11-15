@@ -115,7 +115,7 @@ function parseQuestionsFromText(text: string): ExtractedQuestion[] {
       const questionOnly = questionText.split(/[A-Da-d][\).]/)[0].trim();
 
       questions.push({
-        question: questionOnly,
+        questionLatex: questionOnly,
         options,
       });
     }

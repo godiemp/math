@@ -18,8 +18,7 @@ export interface Question {
   id: string;
   topic: string;
   level: 'M1' | 'M2';
-  question: string;
-  questionLatex?: string;
+  questionLatex: string;
   options: string[];
   optionsLatex?: string[];
   correctAnswer: number;
