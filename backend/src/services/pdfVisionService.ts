@@ -21,11 +21,11 @@ export interface ExtractedImage {
 
 export interface ExtractedQuestionWithVision {
   questionLatex: string;
+  // Options in LaTeX format (pure LaTeX without $ delimiters)
   options: string[];
-  optionsLatex?: string[];
   correctAnswer?: number;
+  // Explanation in LaTeX format
   explanation?: string;
-  explanationLatex?: string;
   images: ExtractedImage[];
   hasLatex: boolean;
 }
@@ -97,12 +97,10 @@ Return the data in this JSON format:
   "questions": [
     {
       "question": "Question text here",
-      "questionLatex": "Question with $LaTeX$ formulas",
-      "options": ["Option A", "Option B", "Option C", "Option D"],
-      "optionsLatex": ["Option A with $x^2$", "Option B", "Option C", "Option D"],
+      "questionLatex": "Question with LaTeX formulas",
+      "options": ["Option A in pure LaTeX", "Option B in pure LaTeX", "Option C", "Option D"],
       "correctAnswer": 0,
-      "explanation": "Explanation text",
-      "explanationLatex": "Explanation with $LaTeX$",
+      "explanation": "Explanation in LaTeX format (use \\\\text{} for narrative text)",
       "images": [
         {
           "description": "Triangle diagram showing sides a, b, c with angle theta",
@@ -114,6 +112,11 @@ Return the data in this JSON format:
     }
   ]
 }
+
+IMPORTANT:
+- options should be in pure LaTeX format WITHOUT $ delimiters (e.g., "\\\\frac{1}{2}" not "$\\\\frac{1}{2}$")
+- explanation should be in full LaTeX format, use \\\\text{} for narrative parts
+- questionLatex should use LaTeX for all mathematical expressions
 
 If no questions are found, return {"totalPages": 1, "questions": []}`,
             },
@@ -133,11 +136,11 @@ If no questions are found, return {"totalPages": 1, "questions": []}`,
         const parsed = JSON.parse(jsonMatch[0]);
         const questions: ExtractedQuestionWithVision[] = parsed.questions.map((q: any) => ({
           questionLatex: q.questionLatex || q.question || '',
+          // Options are already in LaTeX format
           options: q.options || [],
-          optionsLatex: q.optionsLatex,
           correctAnswer: q.correctAnswer,
+          // Explanation is already in LaTeX format
           explanation: q.explanation,
-          explanationLatex: q.explanationLatex,
           images: (q.images || []).map((img: any) => ({
             id: '',
             url: '',

@@ -86,7 +86,7 @@ export function QuestionRenderer({
               >
                 <span className="font-semibold shrink-0">{String.fromCharCode(65 + index)}.</span>
                 <span className="flex-1 min-w-0 break-words">
-                  <UnifiedLatexRenderer content={question.optionsLatex?.[index] || option} displayMode={false} />
+                  <UnifiedLatexRenderer content={option} displayMode={false} />
                 </span>
                 {showFeedback && isCorrectAnswer && <span className="shrink-0 ml-auto">✓</span>}
                 {showFeedback && isSelected && !isCorrectAnswer && <span className="shrink-0 ml-auto">✗</span>}
@@ -132,12 +132,7 @@ export function QuestionRenderer({
             }`}
           >
             <p className={`font-semibold ${compact ? 'mb-0.5 text-xs' : 'mb-1'}`}>Explicación:</p>
-            <MathText content={question.explanation} />
-            {question.explanationLatex && (
-              <div className={compact ? 'mt-1' : 'mt-2'}>
-                <SmartLatexRenderer latex={question.explanationLatex} displayMode={false} />
-              </div>
-            )}
+            <SmartLatexRenderer latex={question.explanation} displayMode={false} />
           </div>
 
           {/* AI Help Button - Always available in zen mode after quiz submission */}
@@ -254,7 +249,7 @@ export function QuestionOptions({
               </span>
             )}
             <UnifiedLatexRenderer
-              content={question.optionsLatex?.[index] || option}
+              content={option}
               displayMode={false}
             />
             {highlightCorrect && isCorrectAnswer && (
@@ -309,7 +304,7 @@ export function QuestionOptionsWithFeedback({
             <span className="font-bold shrink-0">{String.fromCharCode(65 + index)}.</span>
             <span className="flex-1">
               <UnifiedLatexRenderer
-                content={question.optionsLatex?.[index] || option}
+                content={option}
                 displayMode={false}
               />
             </span>
@@ -352,12 +347,7 @@ export function QuestionExplanation({
         Explicación:
       </p>
       <div className={variant === 'success' ? 'text-green-800 dark:text-green-200' : variant === 'error' ? 'text-red-800 dark:text-red-200' : 'text-blue-800 dark:text-blue-200'}>
-        <MathText content={question.explanation} />
-        {question.explanationLatex && (
-          <div className={compact ? 'mt-1' : 'mt-2'}>
-            <SmartLatexRenderer latex={question.explanationLatex} displayMode={false} />
-          </div>
-        )}
+        <UnifiedLatexRenderer content={question.explanation} displayMode={false} />
       </div>
     </div>
   );

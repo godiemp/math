@@ -22,8 +22,7 @@ export const m1Geo003Questions: Question[] = [
     questionLatex: '\\text{María trabaja en una empresa de embalaje y debe calcular cuánto espacio ocupará una caja cúbica en el almacén. La caja es perfectamente cuadrada en todas sus dimensiones, y cada arista mide 3 cm. El supervisor le pide que calcule el espacio total que ocupa la caja para optimizar el almacenamiento. Para completar el registro de inventario, necesita determinar el volumen de esta caja cúbica. ¿Cuál es el volumen en centímetros cúbicos?}',
     options: ['9 cm³', '18 cm³', '27 cm³', '36 cm³'],
     correctAnswer: 2,
-    explanation: 'En un cubo, el volumen se calcula multiplicando la arista tres veces (largo × ancho × alto), y como todas las aristas son iguales, elevamos la arista al cubo:',
-    explanationLatex: 'V = a^3 = 3^3 = 3 \\times 3 \\times 3 = 27 \\text{ cm}^3',
+    explanation: 'V = a^3 = 3^3 = 3 \\times 3 \\times 3 = 27 \\text{ cm}^3',
     difficulty: 'easy',
     skills: ['geometria-volumen', 'geometria-volumen-cubo', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'a^3'
@@ -37,8 +36,7 @@ export const m1Geo003Questions: Question[] = [
     questionLatex: '\\text{El volumen de un cilindro con radio 3 cm y altura 4 cm es (usar } \\pi \\approx 3.14):',
     options: ['37.68 cm³', '75.36 cm³', '113.04 cm³', '150.72 cm³'],
     correctAnswer: 2,
-    explanation: 'V = πr²h = 3.14 × 3² × 4 = 3.14 × 9 × 4 = 113.04 cm³',
-    explanationLatex: 'V = \\pi r^2 h = 3.14 \\times 3^2 \\times 4 = 3.14 \\times 9 \\times 4 = 113.04 \\text{ cm}^3',
+    explanation: 'V = \\pi r^2 h = 3.14 \\times 3^2 \\times 4 = 3.14 \\times 9 \\times 4 = 113.04 \\text{ cm}^3',
     difficulty: 'medium',
     skills: ['geometria-volumen', 'geometria-volumen-cilindro', 'numeros-potencias', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
@@ -50,8 +48,7 @@ export const m1Geo003Questions: Question[] = [
     questionLatex: '\\text{El volumen de una esfera con radio 6 cm es (usar } \\pi \\approx 3.14):',
     options: ['452.16 cm³', '678.24 cm³', '904.32 cm³', '1130.4 cm³'],
     correctAnswer: 2,
-    explanation: 'V = (4/3)πr³ = (4/3) × 3.14 × 6³ = (4/3) × 3.14 × 216 ≈ 904.32 cm³',
-    explanationLatex: 'V = \\frac{4}{3}\\pi r^3 = \\frac{4}{3} \\times 3.14 \\times 6^3 = \\frac{4}{3} \\times 3.14 \\times 216 \\approx 904.32 \\text{ cm}^3',
+    explanation: 'V = \\frac{4}{3}\\pi r^3 = \\frac{4}{3} \\times 3.14 \\times 6^3 = \\frac{4}{3} \\times 3.14 \\times 216 \\approx 904.32 \\text{ cm}^3',
     difficulty: 'hard',
     skills: ['geometria-volumen', 'geometria-volumen-esfera', 'numeros-potencias', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
@@ -63,8 +60,7 @@ export const m1Geo003Questions: Question[] = [
     questionLatex: '\\text{Un cono tiene radio de base 4 cm y altura 9 cm. Su volumen es (usar } \\pi \\approx 3.14):',
     options: ['113.04 cm³', '150.72 cm³', '226.08 cm³', '301.44 cm³'],
     correctAnswer: 1,
-    explanation: 'V = (1/3)πr²h = (1/3) × 3.14 × 4² × 9 = (1/3) × 3.14 × 16 × 9 ≈ 150.72 cm³',
-    explanationLatex: 'V = \\frac{1}{3}\\pi r^2 h = \\frac{1}{3} \\times 3.14 \\times 4^2 \\times 9 \\approx 150.72 \\text{ cm}^3',
+    explanation: 'V = \\frac{1}{3}\\pi r^2 h = \\frac{1}{3} \\times 3.14 \\times 4^2 \\times 9 \\approx 150.72 \\text{ cm}^3',
     difficulty: 'hard',
     skills: ['geometria-volumen', 'geometria-volumen-cono', 'numeros-potencias', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
@@ -76,8 +72,7 @@ export const m1Geo003Questions: Question[] = [
     questionLatex: '\\text{Tanque cilíndrico r=5m, h=12m, lleno 3/4. ¿Volumen de agua? (usar } \\pi \\approx 3.14)',
     options: ['235.5 m³', '471 m³', '706.5 m³', '942 m³'],
     correctAnswer: 2,
-    explanation: 'V_total = πr²h = 3.14 × 5² × 12 = 942 m³. V_agua = (3/4) × 942 = 706.5 m³',
-    explanationLatex: 'V_{total} = 3.14 \\times 25 \\times 12 = 942 \\text{ m}^3, \\quad V_{agua} = \\frac{3}{4} \\times 942 = 706.5 \\text{ m}^3',
+    explanation: 'V_{total} = 3.14 \\times 25 \\times 12 = 942 \\text{ m}^3, \\quad V_{agua} = \\frac{3}{4} \\times 942 = 706.5 \\text{ m}^3',
     difficulty: 'extreme',
     skills: ['geometria-volumen', 'geometria-volumen-cilindro', 'geometria-aplicaciones', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   }
