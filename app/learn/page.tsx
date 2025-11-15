@@ -507,7 +507,7 @@ export default function LearnPage() {
                   <Button
                     onClick={handleBackToSetup}
                     fullWidth
-                    variant="outline"
+                    variant="secondary"
                   >
                     Cambiar Tema
                   </Button>
