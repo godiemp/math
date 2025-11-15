@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { TypeAnimation } from 'react-type-animation';
 import { cn } from '@/lib/utils';
 
 interface WelcomeMessageProps {
@@ -13,53 +14,49 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
   const router = useRouter();
   const [step, setStep] = useState<'year-selection' | 'message'>('year-selection');
   const [selectedYear, setSelectedYear] = useState<'2025' | '2026' | null>(null);
-  const [displayedText, setDisplayedText] = useState('');
-  const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
-  const [showCursor, setShowCursor] = useState(true);
   const [isComplete, setIsComplete] = useState(false);
   const [canSkip, setCanSkip] = useState(false);
+  const [key, setKey] = useState(0);
 
-  // Message lines based on selected year
-  const getLines = (year: '2025' | '2026') => {
+  // Message sequences for TypeAnimation
+  const getSequence = (year: '2025' | '2026') => {
     if (year === '2025') {
       return [
-        { text: '¡bienvenido! 🌿', pause: 600 },
-        { text: '', pause: 0 },
-        { text: '¡la paes está cerca! pero no te preocupes,', pause: 400 },
-        { text: 'estamos acá para ayudarte en estos últimos días.', pause: 400 },
-        { text: '', pause: 0 },
-        { text: 'vamos a las sesiones en vivo donde puedes practicar', pause: 0 },
-        { text: 'ensayos completos con otros estudiantes.', pause: 400 },
-        { text: '', pause: 0 },
-        { text: '¡vamos con todo! 💪', pause: 0 },
+        '¡bienvenido! 🌿',
+        600,
+        '¡bienvenido! 🌿\n\n¡la paes está cerca! pero no te preocupes,',
+        400,
+        '¡bienvenido! 🌿\n\n¡la paes está cerca! pero no te preocupes,\nestamos acá para ayudarte en estos últimos días.',
+        400,
+        '¡bienvenido! 🌿\n\n¡la paes está cerca! pero no te preocupes,\nestamos acá para ayudarte en estos últimos días.\n\nvamos a las sesiones en vivo donde puedes practicar\nensayos completos con otros estudiantes.',
+        400,
+        '¡bienvenido! 🌿\n\n¡la paes está cerca! pero no te preocupes,\nestamos acá para ayudarte en estos últimos días.\n\nvamos a las sesiones en vivo donde puedes practicar\nensayos completos con otros estudiantes.\n\n¡vamos con todo! 💪',
+        () => setIsComplete(true)
       ];
     } else {
       return [
-        { text: '¡bienvenido! 🌿', pause: 600 },
-        { text: '', pause: 0 },
-        { text: 'acabas de dar el primer paso para tu paes de junio 2026.', pause: 400 },
-        { text: 'tienes tiempo, tienes apoyo, y tienes todo lo que necesitas', pause: 0 },
-        { text: 'para llegar preparado.', pause: 400 },
-        { text: '', pause: 0 },
-        { text: 'vamos paso a paso, sin presión.', pause: 400 },
-        { text: '¡esto recién comienza! 🎉', pause: 0 },
+        '¡bienvenido! 🌿',
+        600,
+        '¡bienvenido! 🌿\n\nacabas de dar el primer paso para tu paes de junio 2026.',
+        400,
+        '¡bienvenido! 🌿\n\nacabas de dar el primer paso para tu paes de junio 2026.\ntienes tiempo, tienes apoyo, y tienes todo lo que necesitas\npara llegar preparado.',
+        400,
+        '¡bienvenido! 🌿\n\nacabas de dar el primer paso para tu paes de junio 2026.\ntienes tiempo, tienes apoyo, y tienes todo lo que necesitas\npara llegar preparado.\n\nvamos paso a paso, sin presión.',
+        400,
+        '¡bienvenido! 🌿\n\nacabas de dar el primer paso para tu paes de junio 2026.\ntienes tiempo, tienes apoyo, y tienes todo lo que necesitas\npara llegar preparado.\n\nvamos paso a paso, sin presión.\n\n¡esto recién comienza! 🎉',
+        () => setIsComplete(true)
       ];
     }
   };
-
-  const lines = selectedYear ? getLines(selectedYear) : [];
 
   // Reset when modal opens
   useEffect(() => {
     if (isOpen) {
       setStep('year-selection');
       setSelectedYear(null);
-      setDisplayedText('');
-      setCurrentLineIndex(0);
-      setCurrentCharIndex(0);
       setIsComplete(false);
       setCanSkip(false);
+      setKey(prev => prev + 1);
     }
   }, [isOpen]);
 
@@ -71,91 +68,22 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
     }
   }, [isOpen, step]);
 
-  // Cursor blinking effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setShowCursor((prev) => !prev);
-    }, 530);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Typewriter effect with human-like timing
-  useEffect(() => {
-    if (!isOpen || step !== 'message' || !selectedYear) {
-      return;
-    }
-
-    if (isComplete || currentLineIndex >= lines.length) {
-      setIsComplete(true);
-      return;
-    }
-
-    const currentLine = lines[currentLineIndex];
-
-    // Handle empty lines (spacing)
-    if (currentLine.text === '') {
-      setDisplayedText((prev) => prev + '\n');
-      setTimeout(() => {
-        setCurrentLineIndex((prev) => prev + 1);
-        setCurrentCharIndex(0);
-      }, 100);
-      return;
-    }
-
-    // If we've finished this line, move to next
-    if (currentCharIndex >= currentLine.text.length) {
-      setTimeout(() => {
-        setDisplayedText((prev) => prev + '\n');
-        setCurrentLineIndex((prev) => prev + 1);
-        setCurrentCharIndex(0);
-      }, currentLine.pause);
-      return;
-    }
-
-    // Type the next character
-    const char = currentLine.text[currentCharIndex];
-
-    // Variable speed for human-like typing
-    let delay = 30;
-
-    if (char === '.' || char === '!' || char === '?') {
-      delay = 150;
-    } else if (char === ',' || char === ';') {
-      delay = 100;
-    } else if (char === ' ') {
-      delay = 40;
-    } else {
-      delay = 25 + Math.random() * 35;
-    }
-
-    const timeout = setTimeout(() => {
-      setDisplayedText((prev) => prev + char);
-      setCurrentCharIndex((prev) => prev + 1);
-    }, delay);
-
-    return () => clearTimeout(timeout);
-  }, [isOpen, step, selectedYear, currentLineIndex, currentCharIndex, isComplete, lines]);
-
   const handleYearSelection = (year: '2025' | '2026') => {
     setSelectedYear(year);
     setStep('message');
+    setIsComplete(false);
   };
 
   const handleSkip = () => {
     if (!canSkip || !selectedYear) return;
-
-    const fullText = lines.map(line => line.text).join('\n');
-    setDisplayedText(fullText);
     setIsComplete(true);
   };
 
   const handleComplete = () => {
     if (selectedYear === '2025') {
-      // Redirect to live practice for 2025
       onClose();
       router.push('/live-practice');
     } else {
-      // Just close for 2026
       onClose();
     }
   };
@@ -252,19 +180,24 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
               </div>
             </div>
           ) : (
-            // Message Step with Typewriter
+            // Message Step with TypeAnimation
             <div>
-              {/* Message text with typewriter effect - Fixed height prevents reflow during animation */}
-              <div className="mb-6 sm:mb-8 h-[340px] sm:h-[320px] md:h-[300px] lg:h-[280px] overflow-y-auto">
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-gray-900 dark:text-gray-100 font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif] whitespace-pre-wrap break-words">
-                  {displayedText}
-                  {!isComplete && showCursor && (
-                    <span className="inline-block w-[2px] sm:w-[2.5px] md:w-[3px] h-[18px] sm:h-[20px] md:h-[24px] lg:h-[26px] bg-blue-500 ml-[1px] sm:ml-[2px] animate-pulse" />
-                  )}
-                </p>
+              {/* Message text with typewriter effect using library */}
+              <div className="mb-6 sm:mb-8 min-h-[280px] sm:min-h-[260px] md:min-h-[240px]">
+                {selectedYear && (
+                  <TypeAnimation
+                    key={key}
+                    sequence={getSequence(selectedYear)}
+                    wrapper="p"
+                    speed={75}
+                    className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-gray-900 dark:text-gray-100 font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif] whitespace-pre-wrap"
+                    cursor={true}
+                    repeat={0}
+                  />
+                )}
               </div>
 
-              {/* Button - only show when complete - Now has proper spacing */}
+              {/* Button - only show when complete */}
               {isComplete && (
                 <div className="flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <button
@@ -286,10 +219,10 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
                 </div>
               )}
 
-              {/* Skip hint - Now positioned relative to avoid overlap */}
+              {/* Skip hint */}
               {!isComplete && canSkip && (
-                <div className="mt-8 text-center animate-in fade-in duration-1000">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                <div className="mt-6 text-center animate-in fade-in duration-1000">
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                     (haz clic en cualquier parte para saltar)
                   </p>
                 </div>
