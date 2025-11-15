@@ -28,7 +28,7 @@ export const m2Alg002Questions: Question[] = [
     explanation: 'Sustituimos x = 4 en la función: f(4) = 4³ = 64',
     explanationLatex: 'f(4) = 4^3 = 64',
     difficulty: 'easy',
-    skills: ['algebra-funcion-potencia', 'algebra-evaluacion-funciones', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['funcion-potencia-exponente-entero', 'algebra-funcion-potencia', 'algebra-evaluacion-funciones', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-alg-pot-2',
@@ -43,7 +43,7 @@ export const m2Alg002Questions: Question[] = [
     explanation: 'Un exponente negativo indica el recíproco: f(2) = 2⁻² = 1/(2²) = 1/4',
     explanationLatex: 'f(2) = 2^{-2} = \\frac{1}{2^2} = \\frac{1}{4}',
     difficulty: 'medium',
-    skills: ['algebra-funcion-potencia', 'algebra-evaluacion-funciones', 'numeros-exponentes-negativos', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['funcion-potencia-exponente-entero', 'algebra-funcion-potencia', 'algebra-evaluacion-funciones', 'numeros-exponentes-negativos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-alg-pot-3',
@@ -58,7 +58,7 @@ export const m2Alg002Questions: Question[] = [
     explanation: 'La función raíz cuadrada (exponente 1/2) solo está definida para números no negativos',
     explanationLatex: 'f(x) = x^{1/2} = \\sqrt{x} \\text{ requiere } x \\geq 0',
     difficulty: 'medium',
-    skills: ['algebra-funcion-potencia', 'algebra-dominio-funciones', 'numeros-raices', 'numeros-reales']
+    skills: ['funcion-potencia-dominio-recorrido', 'funcion-potencia-exponente-fraccionario', 'algebra-funcion-potencia', 'algebra-dominio-funciones', 'numeros-raices', 'numeros-reales']
   },
   {
     id: 'm2-alg-pot-4',
@@ -73,7 +73,7 @@ export const m2Alg002Questions: Question[] = [
     explanation: 'f(8) = 8^(2/3) = (∛8)² = 2² = 4',
     explanationLatex: 'f(8) = 8^{2/3} = (\\sqrt[3]{8})^2 = 2^2 = 4',
     difficulty: 'hard',
-    skills: ['algebra-funcion-potencia', 'algebra-evaluacion-funciones', 'numeros-exponentes-fraccionarios', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['funcion-potencia-exponente-fraccionario', 'algebra-funcion-potencia', 'algebra-evaluacion-funciones', 'numeros-exponentes-fraccionarios', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-alg-pot-5',
@@ -88,7 +88,7 @@ export const m2Alg002Questions: Question[] = [
     explanation: 'Las funciones con exponente negativo decrecen. Para x > 0, f(x) = x⁻¹ = 1/x decrece',
     explanationLatex: 'f(x) = x^{-1} = \\frac{1}{x} \\text{ decrece para } x > 0',
     difficulty: 'hard',
-    skills: ['algebra-funcion-potencia', 'algebra-grafica-funciones', 'algebra-crecimiento-decrecimiento', 'algebra-analisis-funciones']
+    skills: ['funcion-potencia-graficos', 'algebra-funcion-potencia', 'algebra-grafica-funciones', 'algebra-crecimiento-decrecimiento', 'algebra-analisis-funciones']
   },
   {
     id: 'm2-alg-pot-6',
@@ -103,7 +103,7 @@ export const m2Alg002Questions: Question[] = [
     explanation: 'Cualquier número elevado a una potencia par es no negativo. x⁴ ≥ 0 para todo x',
     explanationLatex: 'x^4 \\geq 0 \\text{ para todo } x \\in \\mathbb{R}',
     difficulty: 'medium',
-    skills: ['algebra-funcion-potencia', 'algebra-recorrido-funciones', 'numeros-potencias', 'algebra-analisis-funciones']
+    skills: ['funcion-potencia-dominio-recorrido', 'funcion-potencia-exponente-entero', 'algebra-funcion-potencia', 'algebra-recorrido-funciones', 'numeros-potencias', 'algebra-analisis-funciones']
   },
   {
     id: 'm2-alg-pot-7',
@@ -118,6 +118,6 @@ export const m2Alg002Questions: Question[] = [
     explanation: 'a⁻³ = 1/27 = 1/3³. Por lo tanto, a³ = 27, entonces a = 3',
     explanationLatex: 'a^{-3} = \\frac{1}{27} \\rightarrow a^3 = 27 \\rightarrow a = 3',
     difficulty: 'hard',
-    skills: ['algebra-funcion-potencia', 'algebra-ecuaciones', 'algebra-despeje', 'numeros-exponentes-negativos', 'numeros-raices', 'numeros-operaciones-basicas']
+    skills: ['funcion-potencia-exponente-entero', 'algebra-funcion-potencia', 'algebra-ecuaciones', 'algebra-despeje', 'numeros-exponentes-negativos', 'numeros-raices', 'numeros-operaciones-basicas']
   }
 ];
