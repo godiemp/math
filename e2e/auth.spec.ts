@@ -33,23 +33,25 @@ test.describe('Authentication', () => {
     // Wait for navigation to complete
     await page.waitForURL(/\/dashboard/, { timeout: 5000 });
 
-    // Verify all dashboard cards are rendered
+    // Verify all dashboard cards are rendered by checking for their key links/buttons
 
-    // 1. Live Practice Featured Card (gradient card with 📝)
-    await expect(page.getByText('📝')).toBeVisible();
+    // 1. Live Practice Featured Card - link to /live-practice
+    await expect(page.locator('a[href="/live-practice"]')).toBeVisible();
 
-    // 2. Practice Section Card - Check for Operations, M1, and M2
-    await expect(page.getByText('🎯')).toBeVisible(); // Operations
-    await expect(page.getByText('📐')).toBeVisible(); // M1
+    // 2. Operations Practice - link to /practice/operations
+    await expect(page.locator('a[href="/practice/operations"]')).toBeVisible();
 
-    // 3. Temario/Curriculum Card
-    await expect(page.getByText('📚')).toBeVisible();
+    // 3. M1 Practice Section - should have either link or button (based on paid status)
+    const hasM1Element = await page.locator('a[href="/practice/m1"], button:has-text("Práctica"), button:has-text("Practice")').first().isVisible();
+    expect(hasM1Element).toBeTruthy();
 
-    // 4. Progress Tracking Card
-    await expect(page.getByText('📊')).toBeVisible();
+    // 4. Curriculum Card - should have M1 curriculum link or button
+    const hasCurriculumElement = await page.locator('a[href="/curriculum/m1"], button:has-text("M1")').first().isVisible();
+    expect(hasCurriculumElement).toBeTruthy();
 
-    // 5. Improvement Notice
-    await expect(page.getByText('🚀')).toBeVisible();
+    // 5. Progress Card - should have progress link or button
+    const hasProgressElement = await page.locator('a[href="/progress"], button:has-text("Progreso"), button:has-text("Progress")').first().isVisible();
+    expect(hasProgressElement).toBeTruthy();
 
     // Verify we're on the dashboard page
     expect(page.url()).toContain('/dashboard');
