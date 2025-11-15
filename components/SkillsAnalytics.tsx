@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { questions as allQuestions } from '@/lib/questions';
 import { SKILLS } from '@/lib/skillTaxonomy';
 import { Card, Badge, Heading, Text, Button } from '@/components/ui';
+import { QuestionPreview } from '@/components/QuestionRenderer';
 import type { Question } from '@/lib/types';
 
 export function SkillsAnalytics() {
@@ -208,9 +209,9 @@ export function SkillsAnalytics() {
                         {question.difficulty}
                       </Badge>
                     </div>
-                    <Text size="sm" className="line-clamp-2">
-                      {question.questionLatex.replace(/\$/g, '')}
-                    </Text>
+                    <div className="line-clamp-2">
+                      <QuestionPreview question={question} maxLength={150} />
+                    </div>
                   </div>
                   <div className="ml-4 flex-shrink-0">
                     <div className="text-center">
