@@ -57,11 +57,11 @@ export default function StudentStatisticsComponent() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <h2 className="text-2xl font-bold text-purple-800 mb-6">Mis Estadísticas</h2>
+    <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
+      <h2 className="text-xl sm:text-2xl font-bold text-purple-800 mb-4 sm:mb-6">Mis Estadísticas</h2>
 
       {/* Overall Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
         <StatCard
           title="Sesiones Completadas"
           value={stats.totalSessions}
@@ -87,31 +87,31 @@ export default function StudentStatisticsComponent() {
       </div>
 
       {/* Top Rankings */}
-      <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
-        <h3 className="text-lg font-bold text-purple-800 mb-3">Ranking</h3>
-        <div className="grid grid-cols-3 gap-4 text-center">
+      <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
+        <h3 className="text-base sm:text-lg font-bold text-purple-800 mb-2 sm:mb-3">Ranking</h3>
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
           <div>
-            <div className="text-3xl mb-1">🥇</div>
-            <div className="text-2xl font-bold text-yellow-600">{stats.topRankings.first}</div>
-            <div className="text-sm text-gray-600">1er Lugar</div>
+            <div className="text-2xl sm:text-3xl mb-1">🥇</div>
+            <div className="text-lg sm:text-xl md:text-2xl font-bold text-yellow-600">{stats.topRankings.first}</div>
+            <div className="text-xs sm:text-sm text-gray-600">1er Lugar</div>
           </div>
           <div>
-            <div className="text-3xl mb-1">🥈</div>
-            <div className="text-2xl font-bold text-gray-400">{stats.topRankings.second}</div>
-            <div className="text-sm text-gray-600">2do Lugar</div>
+            <div className="text-2xl sm:text-3xl mb-1">🥈</div>
+            <div className="text-lg sm:text-xl md:text-2xl font-bold text-gray-400">{stats.topRankings.second}</div>
+            <div className="text-xs sm:text-sm text-gray-600">2do Lugar</div>
           </div>
           <div>
-            <div className="text-3xl mb-1">🥉</div>
-            <div className="text-2xl font-bold text-orange-600">{stats.topRankings.third}</div>
-            <div className="text-sm text-gray-600">3er Lugar</div>
+            <div className="text-2xl sm:text-3xl mb-1">🥉</div>
+            <div className="text-lg sm:text-xl md:text-2xl font-bold text-orange-600">{stats.topRankings.third}</div>
+            <div className="text-xs sm:text-sm text-gray-600">3er Lugar</div>
           </div>
         </div>
       </div>
 
       {/* Level Statistics */}
-      <div className="mb-6">
-        <h3 className="text-lg font-bold text-purple-800 mb-3">Estadísticas por Nivel</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="mb-4 sm:mb-6">
+        <h3 className="text-base sm:text-lg font-bold text-purple-800 mb-2 sm:mb-3">Estadísticas por Nivel</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
           <LevelStatsCard
             level="M1"
             sessions={stats.byLevel.M1.sessions}
@@ -130,43 +130,81 @@ export default function StudentStatisticsComponent() {
       {/* Recent Sessions */}
       {stats.recentSessions.length > 0 && (
         <div>
-          <h3 className="text-lg font-bold text-purple-800 mb-3">Sesiones Recientes</h3>
-          <div className="space-y-2">
+          <h3 className="text-base sm:text-lg font-bold text-purple-800 mb-2 sm:mb-3">Sesiones Recientes</h3>
+          <div className="space-y-2 sm:space-y-3">
             {stats.recentSessions.map((session) => (
               <div
                 key={session.sessionId}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
               >
-                <div className="flex-1">
-                  <div className="font-semibold text-gray-800">{session.sessionName}</div>
-                  <div className="text-sm text-gray-600">
-                    {new Date(session.completedAt).toLocaleDateString('es-CL', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                    })}
+                {/* Mobile layout: stacked */}
+                <div className="sm:hidden space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold text-sm text-gray-800 truncate">{session.sessionName}</div>
+                      <div className="text-xs text-gray-600">
+                        {new Date(session.completedAt).toLocaleDateString('es-CL', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric',
+                        })}
+                      </div>
+                    </div>
+                    <div className="text-xs font-medium text-purple-600 bg-purple-100 px-2 py-1 rounded flex-shrink-0">
+                      {session.level}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div>
+                      <div className="text-base font-bold text-gray-800">
+                        {session.score}/{session.totalQuestions}
+                      </div>
+                      <div className="text-xs text-gray-600">Puntaje</div>
+                    </div>
+                    <div>
+                      <div className={`text-base font-bold ${getAccuracyColor(session.accuracy)}`}>
+                        {session.accuracy}%
+                      </div>
+                      <div className="text-xs text-gray-600">Precisión</div>
+                    </div>
+                    <div>
+                      <div className="text-base font-bold text-purple-600">#{session.rank}</div>
+                      <div className="text-xs text-gray-600">Ranking</div>
+                    </div>
                   </div>
                 </div>
-                <div className="text-center mx-4">
-                  <div className="text-sm font-medium text-purple-600">{session.level}</div>
-                </div>
-                <div className="text-center mx-4">
-                  <div className="text-lg font-bold text-gray-800">
-                    {session.score}/{session.totalQuestions}
+
+                {/* Desktop layout: horizontal */}
+                <div className="hidden sm:flex items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-sm sm:text-base text-gray-800 truncate">{session.sessionName}</div>
+                    <div className="text-xs sm:text-sm text-gray-600">
+                      {new Date(session.completedAt).toLocaleDateString('es-CL', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-600">Puntaje</div>
-                </div>
-                <div className="text-center mx-4">
-                  <div
-                    className={`text-lg font-bold ${getAccuracyColor(session.accuracy)}`}
-                  >
-                    {session.accuracy}%
+                  <div className="text-center mx-2 sm:mx-4">
+                    <div className="text-xs sm:text-sm font-medium text-purple-600">{session.level}</div>
                   </div>
-                  <div className="text-xs text-gray-600">Precisión</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-purple-600">#{session.rank}</div>
-                  <div className="text-xs text-gray-600">Ranking</div>
+                  <div className="text-center mx-2 sm:mx-4">
+                    <div className="text-base sm:text-lg font-bold text-gray-800">
+                      {session.score}/{session.totalQuestions}
+                    </div>
+                    <div className="text-xs text-gray-600">Puntaje</div>
+                  </div>
+                  <div className="text-center mx-2 sm:mx-4">
+                    <div className={`text-base sm:text-lg font-bold ${getAccuracyColor(session.accuracy)}`}>
+                      {session.accuracy}%
+                    </div>
+                    <div className="text-xs text-gray-600">Precisión</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-base sm:text-lg font-bold text-purple-600">#{session.rank}</div>
+                    <div className="text-xs text-gray-600">Ranking</div>
+                  </div>
                 </div>
               </div>
             ))}
@@ -186,12 +224,12 @@ interface StatCardProps {
 
 function StatCard({ title, value, icon, color = 'text-purple-600' }: StatCardProps) {
   return (
-    <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg p-4">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-2xl">{icon}</span>
+    <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg p-3 sm:p-4">
+      <div className="flex items-center justify-between mb-1 sm:mb-2">
+        <span className="text-xl sm:text-2xl">{icon}</span>
       </div>
-      <div className={`text-3xl font-bold ${color} mb-1`}>{value}</div>
-      <div className="text-sm text-gray-600">{title}</div>
+      <div className={`text-2xl sm:text-3xl font-bold ${color} mb-0.5 sm:mb-1`}>{value}</div>
+      <div className="text-xs sm:text-sm text-gray-600">{title}</div>
     </div>
   );
 }
@@ -206,31 +244,31 @@ interface LevelStatsCardProps {
 function LevelStatsCard({ level, sessions, averageScore, averageAccuracy }: LevelStatsCardProps) {
   if (sessions === 0) {
     return (
-      <div className="p-4 bg-gray-50 rounded-lg">
+      <div className="p-3 sm:p-4 bg-gray-50 rounded-lg">
         <div className="flex items-center justify-between mb-2">
-          <h4 className="text-lg font-bold text-purple-800">{level}</h4>
+          <h4 className="text-base sm:text-lg font-bold text-purple-800">{level}</h4>
         </div>
-        <div className="text-sm text-gray-600">Sin sesiones completadas</div>
+        <div className="text-xs sm:text-sm text-gray-600">Sin sesiones completadas</div>
       </div>
     );
   }
 
   return (
-    <div className="p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg">
-      <div className="flex items-center justify-between mb-3">
-        <h4 className="text-lg font-bold text-purple-800">{level}</h4>
-        <span className="text-sm bg-purple-100 text-purple-700 px-2 py-1 rounded">
+    <div className="p-3 sm:p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg">
+      <div className="flex items-center justify-between mb-2 sm:mb-3">
+        <h4 className="text-base sm:text-lg font-bold text-purple-800">{level}</h4>
+        <span className="text-xs sm:text-sm bg-purple-100 text-purple-700 px-2 py-1 rounded">
           {sessions} {sessions === 1 ? 'sesión' : 'sesiones'}
         </span>
       </div>
-      <div className="space-y-2">
+      <div className="space-y-1.5 sm:space-y-2">
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Puntaje Promedio:</span>
-          <span className="font-bold text-purple-600">{averageScore.toFixed(1)}</span>
+          <span className="text-xs sm:text-sm text-gray-600">Puntaje Promedio:</span>
+          <span className="font-bold text-sm sm:text-base text-purple-600">{averageScore.toFixed(1)}</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Precisión Promedio:</span>
-          <span className={`font-bold ${getAccuracyColor(averageAccuracy)}`}>
+          <span className="text-xs sm:text-sm text-gray-600">Precisión Promedio:</span>
+          <span className={`font-bold text-sm sm:text-base ${getAccuracyColor(averageAccuracy)}`}>
             {averageAccuracy.toFixed(1)}%
           </span>
         </div>
