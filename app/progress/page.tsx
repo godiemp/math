@@ -44,23 +44,57 @@ function ProgressPageContent() {
             api.get<QuizHistoryResponse>('/api/quiz/history?level=M2'),
           ]);
 
-          if (m1Response.data?.history) {
-            const m1Data = m1Response.data.history;
-            setM1History(m1Data);
+          let m1DataFromBackend: QuestionAttempt[] = [];
+          let m2DataFromBackend: QuestionAttempt[] = [];
 
-            // Calculate progress from history
-            const m1Correct = m1Data.filter((a: QuestionAttempt) => a.isCorrect).length;
-            setM1Progress({ correct: m1Correct, total: m1Data.length });
+          if (m1Response.data?.history) {
+            m1DataFromBackend = m1Response.data.history;
           }
 
           if (m2Response.data?.history) {
-            const m2Data = m2Response.data.history;
-            setM2History(m2Data);
-
-            // Calculate progress from history
-            const m2Correct = m2Data.filter((a: QuestionAttempt) => a.isCorrect).length;
-            setM2Progress({ correct: m2Correct, total: m2Data.length });
+            m2DataFromBackend = m2Response.data.history;
           }
+
+          // Also load from localStorage to catch any data not yet synced to backend
+          // This handles race conditions where quiz was just submitted
+          const m1HistoryLocal = localStorage.getItem('paes-history-M1');
+          const m2HistoryLocal = localStorage.getItem('paes-history-M2');
+
+          let m1DataFromLocal: QuestionAttempt[] = m1HistoryLocal ? JSON.parse(m1HistoryLocal) : [];
+          let m2DataFromLocal: QuestionAttempt[] = m2HistoryLocal ? JSON.parse(m2HistoryLocal) : [];
+
+          // Merge backend and localStorage data, preferring localStorage for recent data
+          // This ensures we don't lose data that hasn't synced to backend yet
+          const mergeHistories = (backend: QuestionAttempt[], local: QuestionAttempt[]): QuestionAttempt[] => {
+            if (backend.length === 0) return local;
+            if (local.length === 0) return backend;
+
+            // Create a set of question IDs from backend (using composite key)
+            const backendKeys = new Set(
+              backend.map(a => `${a.questionId}-${a.timestamp}`)
+            );
+
+            // Add local items that aren't in backend (recent submissions not yet synced)
+            const localOnlyItems = local.filter(
+              a => !backendKeys.has(`${a.questionId}-${a.timestamp}`)
+            );
+
+            // Merge and sort by timestamp (most recent first)
+            return [...localOnlyItems, ...backend].sort((a, b) => b.timestamp - a.timestamp);
+          };
+
+          const m1Data = mergeHistories(m1DataFromBackend, m1DataFromLocal);
+          const m2Data = mergeHistories(m2DataFromBackend, m2DataFromLocal);
+
+          setM1History(m1Data);
+          setM2History(m2Data);
+
+          // Calculate progress from merged history
+          const m1Correct = m1Data.filter((a: QuestionAttempt) => a.isCorrect).length;
+          setM1Progress({ correct: m1Correct, total: m1Data.length });
+
+          const m2Correct = m2Data.filter((a: QuestionAttempt) => a.isCorrect).length;
+          setM2Progress({ correct: m2Correct, total: m2Data.length });
         } catch (error) {
           console.error('Failed to load quiz history from backend:', error);
           // Fall back to localStorage
