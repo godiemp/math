@@ -1,39 +1,82 @@
 /**
- * Learn Service - Step-by-step AI-guided problem solving
- * Provides controlled, incremental learning experiences
+ * Learn Service - AI-guided problem solving with personalized guidance
+ * Flow:
+ * 1. Assessment conversation to understand student's knowledge
+ * 2. Select curated question from lib/questions
+ * 3. Generate personalized step-by-step guidance
+ * 4. Guide student through solving
  */
 
-interface GenerateProblemOptions {
+import { getQuestionsBySubject, getQuestionsByLevel } from '../../../lib/questions';
+import type { Question } from '../../../lib/types/core';
+
+// ============================================================================
+// Types & Interfaces
+// ============================================================================
+
+interface AssessmentOptions {
   userId: string;
-  weakTopics?: string[];
-  level?: string;
-  subject?: string;
+  level: 'M1' | 'M2';
+  subject: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
 }
 
-interface GenerateProblemResponse {
-  problemId: string;
-  question: string;
-  questionLatex?: string;
-  topic: string;
-  difficulty: string;
-  totalSteps: number;
-  hint: string;
+interface AssessmentResponse {
+  sessionId: string;
+  message: string;
+  questions: string[];
 }
 
-interface GetNextStepOptions {
-  problemId: string;
-  currentStep: number;
-  userAnswer?: string;
+interface ContinueAssessmentOptions {
+  sessionId: string;
+  userMessage: string;
 }
 
-interface GetNextStepResponse {
-  stepNumber: number;
-  stepDescription: string;
-  stepGuidance: string;
-  isCorrect?: boolean;
-  feedback?: string;
+interface ContinueAssessmentResponse {
+  message: string;
   isComplete: boolean;
-  nextAction?: string;
+  assessment?: StudentAssessment;
+}
+
+interface StudentAssessment {
+  knownConcepts: string[];
+  uncertainConcepts: string[];
+  gaps: string[];
+  confidenceLevel: 'low' | 'medium' | 'high';
+  recommendedDifficulty: 'easy' | 'medium' | 'hard' | 'extreme';
+  recommendedSkills: string[];
+}
+
+interface SelectQuestionOptions {
+  sessionId: string;
+  assessment: StudentAssessment;
+  level: 'M1' | 'M2';
+  subject: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
+}
+
+interface SelectQuestionResponse {
+  problemId: string;
+  question: Question;
+  rationale: string;
+}
+
+interface GenerateGuidanceOptions {
+  problemId: string;
+  question: Question;
+  assessment: StudentAssessment;
+}
+
+interface GenerateGuidanceResponse {
+  problemId: string;
+  steps: GuidanceStep[];
+  personalizedHint: string;
+}
+
+interface GuidanceStep {
+  number: number;
+  description: string;
+  guidance: string;
+  correctAnswer: string;
+  explanation: string;
 }
 
 interface VerifyStepOptions {
@@ -49,72 +92,447 @@ interface VerifyStepResponse {
   canProceed: boolean;
 }
 
-// In-memory problem storage (in production, use database)
-const activeLearningProblems = new Map<string, any>();
+interface GetNextStepOptions {
+  problemId: string;
+  currentStep: number;
+}
+
+interface GetNextStepResponse {
+  stepNumber: number;
+  stepDescription: string;
+  stepGuidance: string;
+  isComplete: boolean;
+  finalAnswer?: string;
+}
+
+// ============================================================================
+// In-memory storage (in production, use database)
+// ============================================================================
+
+interface AssessmentSession {
+  userId: string;
+  level: 'M1' | 'M2';
+  subject: string;
+  conversationHistory: Array<{ role: 'assistant' | 'user'; content: string }>;
+  assessment?: StudentAssessment;
+  createdAt: number;
+}
+
+interface LearningProblem {
+  userId: string;
+  question: Question;
+  assessment: StudentAssessment;
+  steps: GuidanceStep[];
+  personalizedHint: string;
+  currentStep: number;
+  createdAt: number;
+}
+
+const assessmentSessions = new Map<string, AssessmentSession>();
+const activeLearningProblems = new Map<string, LearningProblem>();
+
+// ============================================================================
+// Phase 1: Assessment Conversation
+// ============================================================================
 
 /**
- * Generate a new practice problem based on user's weak areas
+ * Start an assessment conversation with the student
  */
-export async function generatePracticeProblem(
-  options: GenerateProblemOptions
-): Promise<GenerateProblemResponse> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+export async function assessStudent(
+  options: AssessmentOptions
+): Promise<AssessmentResponse> {
+  const { userId, level, subject } = options;
+  const sessionId = `assess_${userId}_${Date.now()}`;
 
+  const initialMessage = `¡Hola! Vamos a trabajar en **${subject}** de nivel **${level}**.
+
+Antes de empezar, quiero entender mejor cómo te sientes con este tema para elegir el problema perfecto para ti.
+
+Cuéntame:
+- ¿Qué sabes sobre ${subject}?
+- ¿Hay algo específico que te cueste o te confunda?
+- ¿Te sientes cómodo/a con este tema o es algo nuevo para ti?
+
+No te preocupes si hay cosas que no entiendes, ¡estoy aquí para ayudarte! 😊`;
+
+  const questions = [
+    `¿Qué conceptos de ${subject} ya conoces o has practicado?`,
+    `¿Hay algo específico de ${subject} que te resulte difícil o confuso?`,
+    `Del 1 al 5, ¿qué tan cómodo/a te sientes con ${subject}?`
+  ];
+
+  // Store session
+  assessmentSessions.set(sessionId, {
+    userId,
+    level,
+    subject,
+    conversationHistory: [
+      { role: 'assistant', content: initialMessage }
+    ],
+    createdAt: Date.now()
+  });
+
+  return {
+    sessionId,
+    message: initialMessage,
+    questions
+  };
+}
+
+/**
+ * Continue the assessment conversation
+ */
+export async function continueAssessment(
+  options: ContinueAssessmentOptions
+): Promise<ContinueAssessmentResponse> {
+  const { sessionId, userMessage } = options;
+
+  const session = assessmentSessions.get(sessionId);
+  if (!session) {
+    throw new Error('Assessment session not found or expired');
+  }
+
+  // Add user message to history
+  session.conversationHistory.push({
+    role: 'user',
+    content: userMessage
+  });
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     throw new Error('ANTHROPIC_API_KEY not configured');
   }
 
-  const { userId, weakTopics = [], level = 'M1', subject = 'Números' } = options;
+  // Determine if we have enough information or need more conversation
+  const conversationTurns = session.conversationHistory.filter(m => m.role === 'user').length;
 
-  // Determine topic focus based on weak areas
-  const topicFocus = weakTopics.length > 0
-    ? weakTopics[0]
-    : subject;
+  if (conversationTurns >= 2) {
+    // We have enough information, analyze and provide assessment
+    const analysisPrompt = `Eres un tutor de matemáticas experto. Has conversado con un estudiante sobre ${session.subject} de nivel ${session.level}.
 
-  const systemPrompt = `Eres un tutor experto en matemáticas PAES de Chile. Tu especialidad es crear problemas paso a paso para ayudar a estudiantes a aprender.
+Aquí está la conversación:
+${session.conversationHistory.map(m => `${m.role === 'user' ? 'Estudiante' : 'Tutor'}: ${m.content}`).join('\n\n')}
 
-Tu tarea es crear un problema de práctica que pueda resolverse en 3-5 pasos claros y manejables.
+Analiza la conversación y genera un perfil del estudiante. Responde con JSON:
+{
+  "knownConcepts": ["conceptos que el estudiante mencionó que conoce"],
+  "uncertainConcepts": ["conceptos donde muestra incertidumbre"],
+  "gaps": ["áreas donde claramente tiene dificultades o desconocimiento"],
+  "confidenceLevel": "low" | "medium" | "high",
+  "recommendedDifficulty": "easy" | "medium" | "hard" | "extreme",
+  "recommendedSkills": ["habilidades específicas a practicar basado en sus gaps"],
+  "nextMessage": "Mensaje personalizado de 2-3 oraciones confirmando lo que entendiste de su nivel y qué tipo de problema vas a darle"
+}`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 1024,
+        temperature: 0.7,
+        messages: [
+          {
+            role: 'user',
+            content: analysisPrompt,
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('AI assessment analysis failed');
+    }
+
+    const data = await response.json() as { content: Array<{ text: string }> };
+    const responseText = data.content[0].text;
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+
+    if (!jsonMatch) {
+      throw new Error('Failed to parse assessment');
+    }
+
+    const analysis = JSON.parse(jsonMatch[0]);
+
+    // Store assessment in session
+    session.assessment = {
+      knownConcepts: analysis.knownConcepts,
+      uncertainConcepts: analysis.uncertainConcepts,
+      gaps: analysis.gaps,
+      confidenceLevel: analysis.confidenceLevel,
+      recommendedDifficulty: analysis.recommendedDifficulty,
+      recommendedSkills: analysis.recommendedSkills,
+    };
+
+    session.conversationHistory.push({
+      role: 'assistant',
+      content: analysis.nextMessage
+    });
+
+    assessmentSessions.set(sessionId, session);
+
+    return {
+      message: analysis.nextMessage,
+      isComplete: true,
+      assessment: session.assessment
+    };
+  } else {
+    // Need more conversation - ask follow-up
+    const followUpPrompt = `Eres un tutor de matemáticas Socratiano. Estás evaluando el conocimiento de un estudiante sobre ${session.subject} de nivel ${session.level}.
+
+Conversación hasta ahora:
+${session.conversationHistory.map(m => `${m.role === 'user' ? 'Estudiante' : 'Tutor'}: ${m.content}`).join('\n\n')}
+
+Genera una pregunta de seguimiento amigable y breve (1-2 oraciones) para entender mejor su nivel. Enfócate en identificar conceptos específicos que conoce o le cuestan. Responde con JSON:
+{
+  "message": "tu pregunta de seguimiento"
+}`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 256,
+        temperature: 0.8,
+        messages: [
+          {
+            role: 'user',
+            content: followUpPrompt,
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('AI follow-up generation failed');
+    }
+
+    const data = await response.json() as { content: Array<{ text: string }> };
+    const responseText = data.content[0].text;
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+
+    if (!jsonMatch) {
+      throw new Error('Failed to parse follow-up');
+    }
+
+    const followUp = JSON.parse(jsonMatch[0]);
+
+    session.conversationHistory.push({
+      role: 'assistant',
+      content: followUp.message
+    });
+
+    assessmentSessions.set(sessionId, session);
+
+    return {
+      message: followUp.message,
+      isComplete: false
+    };
+  }
+}
+
+// ============================================================================
+// Phase 2: Question Selection from lib/questions
+// ============================================================================
+
+/**
+ * Select a curated question from lib/questions based on student assessment
+ */
+export async function selectQuestion(
+  options: SelectQuestionOptions
+): Promise<SelectQuestionResponse> {
+  const { sessionId, assessment, level, subject } = options;
+
+  // Get all questions for this level and subject
+  const allQuestions = getQuestionsBySubject(subject, level);
+
+  if (allQuestions.length === 0) {
+    throw new Error(`No questions found for ${subject} at level ${level}`);
+  }
+
+  // Filter by difficulty
+  const candidateQuestions = allQuestions.filter(
+    q => q.difficulty === assessment.recommendedDifficulty
+  );
+
+  // If no questions at recommended difficulty, expand search
+  const questionsToConsider = candidateQuestions.length > 0
+    ? candidateQuestions
+    : allQuestions;
+
+  // Use AI to select the most appropriate question
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error('ANTHROPIC_API_KEY not configured');
+  }
+
+  // Prepare question summaries for AI
+  const questionSummaries = questionsToConsider.slice(0, 20).map(q => ({
+    id: q.id,
+    topic: q.topic,
+    difficulty: q.difficulty,
+    skills: q.skills,
+    operacionBase: q.operacionBase || 'N/A'
+  }));
+
+  const selectionPrompt = `Eres un tutor de matemáticas. Necesitas seleccionar LA MEJOR pregunta para este estudiante.
+
+**Perfil del estudiante:**
+- Conceptos que conoce: ${assessment.knownConcepts.join(', ')}
+- Conceptos con incertidumbre: ${assessment.uncertainConcepts.join(', ')}
+- Gaps/dificultades: ${assessment.gaps.join(', ')}
+- Nivel de confianza: ${assessment.confidenceLevel}
+- Dificultad recomendada: ${assessment.recommendedDifficulty}
+
+**Preguntas disponibles:**
+${JSON.stringify(questionSummaries, null, 2)}
+
+Selecciona UNA pregunta que:
+1. Aborde sus gaps sin ser demasiado abrumadora
+2. Construya sobre lo que ya conoce
+3. Sea apropiada para su nivel de confianza
+
+Responde con JSON:
+{
+  "selectedQuestionId": "id de la pregunta elegida",
+  "rationale": "Breve explicación (2-3 oraciones) de por qué elegiste esta pregunta para este estudiante específico"
+}`;
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 512,
+      temperature: 0.7,
+      messages: [
+        {
+          role: 'user',
+          content: selectionPrompt,
+        },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('AI question selection failed');
+  }
+
+  const data = await response.json() as { content: Array<{ text: string }> };
+  const responseText = data.content[0].text;
+  const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+
+  if (!jsonMatch) {
+    throw new Error('Failed to parse question selection');
+  }
+
+  const selection = JSON.parse(jsonMatch[0]);
+
+  // Find the selected question
+  const selectedQuestion = questionsToConsider.find(
+    q => q.id === selection.selectedQuestionId
+  );
+
+  if (!selectedQuestion) {
+    // Fallback: pick first question
+    const fallbackQuestion = questionsToConsider[0];
+    const problemId = `learn_${sessionId}_${Date.now()}`;
+
+    return {
+      problemId,
+      question: fallbackQuestion,
+      rationale: 'Seleccioné esta pregunta para comenzar tu práctica.'
+    };
+  }
+
+  const problemId = `learn_${sessionId}_${Date.now()}`;
+
+  return {
+    problemId,
+    question: selectedQuestion,
+    rationale: selection.rationale
+  };
+}
+
+// ============================================================================
+// Phase 3: Generate Personalized Guidance for Selected Question
+// ============================================================================
+
+/**
+ * Generate personalized step-by-step guidance for the selected question
+ */
+export async function generatePersonalizedGuidance(
+  options: GenerateGuidanceOptions
+): Promise<GenerateGuidanceResponse> {
+  const { problemId, question, assessment } = options;
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error('ANTHROPIC_API_KEY not configured');
+  }
+
+  const systemPrompt = `Eres un tutor experto en matemáticas PAES de Chile. Tu especialidad es crear guías paso a paso PERSONALIZADAS.
 
 IMPORTANTE:
-- El problema debe ser apropiado para nivel ${level}
-- Debe enfocarse en: ${topicFocus}
-- Debe tener una solución clara paso a paso
-- Cada paso debe ser verificable
-- Los números deben dar resultados "limpios"
-- Responde SOLO con JSON válido
+- Genera 3-5 pasos claros para resolver el problema
+- PERSONALIZA la guía basándote en lo que el estudiante sabe y sus gaps
+- Si tiene gaps en conceptos básicos, refuérzalos en los pasos
+- Si ya conoce ciertos conceptos, no los sobre-expliques
+- Usa LaTeX para todas las expresiones matemáticas: $expresión$
+- Cada paso debe ser verificable con una respuesta específica
 
 FORMATO LATEX:
-- Usa $...$ para matemáticas en línea (ejemplo: $x + 5 = 10$)
-- Usa $$...$$ para ecuaciones centradas en su propia línea
-- Siempre usa LaTeX para expresiones matemáticas, fracciones: $\\frac{a}{b}$, raíces: $\\sqrt{x}$, exponentes: $x^2$
-- Para multiplicación usa $\\times$ o $\\cdot$, para división usa $\\div$ o fracciones
-- Ejemplos: $2x + 3 = 7$, $\\frac{3}{4}$, $x^2 + 2x - 8 = 0$, $\\sqrt{16}$`;
+- Inline: $x + 5 = 10$
+- Fracciones: $\\frac{a}{b}$
+- Raíces: $\\sqrt{x}$
+- Exponentes: $x^2$`;
 
-  const userPrompt = `Genera un problema de práctica de matemáticas con estas especificaciones:
+  const userPrompt = `Genera una guía paso a paso PERSONALIZADA para este estudiante.
 
-**Nivel:** ${level}
-**Tema:** ${topicFocus}
-**Dificultad:** media
+**Perfil del estudiante:**
+- Conoce: ${assessment.knownConcepts.join(', ')}
+- Tiene dudas en: ${assessment.uncertainConcepts.join(', ')}
+- Gaps: ${assessment.gaps.join(', ')}
+- Confianza: ${assessment.confidenceLevel}
 
-El problema debe resolverse en 3-5 pasos claros.
+**Pregunta seleccionada:**
+${question.questionLatex || question.question}
 
-Responde con este formato JSON (asegúrate de usar LaTeX para todas las expresiones matemáticas):
+**Respuesta correcta:** ${question.optionsLatex?.[question.correctAnswer] || question.options[question.correctAnswer]}
+
+**Explicación oficial:**
+${question.explanationLatex || question.explanation}
+
+Crea pasos personalizados que:
+1. Aborden sus gaps específicos
+2. No asuman conocimiento que no tiene
+3. Construyan sobre lo que ya sabe
+
+Responde con JSON:
 {
-  "question": "Texto simple del problema (sin LaTeX)",
-  "questionLatex": "Texto del problema con expresiones matemáticas en LaTeX. Ejemplo: Resuelve la ecuación $2x + 5 = 13$ y encuentra el valor de $x$.",
-  "topic": "${topicFocus}",
-  "difficulty": "media",
   "steps": [
     {
       "number": 1,
-      "description": "Descripción breve del paso (puede incluir LaTeX si es necesario)",
-      "guidance": "Guía para resolver este paso (usa LaTeX para las expresiones matemáticas)",
-      "correctAnswer": "respuesta esperada (usa LaTeX si es matemática, ejemplo: $x = 4$ o $\\frac{3}{4}$)",
-      "explanation": "Explicación clara con LaTeX donde sea necesario"
+      "description": "Descripción del paso (con LaTeX si es necesario)",
+      "guidance": "Guía personalizada que considera sus gaps (con LaTeX)",
+      "correctAnswer": "respuesta esperada para este paso (con LaTeX)",
+      "explanation": "Por qué este paso es importante (con LaTeX)"
     }
   ],
-  "finalAnswer": "Respuesta completa del problema (usa LaTeX para expresiones matemáticas)",
-  "hint": "Pista inicial para empezar (usa LaTeX si es necesario)"
+  "personalizedHint": "Pista inicial personalizada basada en sus conocimientos actuales (con LaTeX)"
 }`;
 
   try {
@@ -140,47 +558,55 @@ Responde con este formato JSON (asegúrate de usar LaTeX para todas las expresio
     });
 
     if (!response.ok) {
-      const error = await response.text();
-      console.error('Anthropic API error:', error);
-      throw new Error(`AI service error: ${response.statusText}`);
+      throw new Error('AI guidance generation failed');
     }
 
     const data = await response.json() as { content: Array<{ text: string }> };
     const responseText = data.content[0].text;
-
-    // Extract JSON from response
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+
     if (!jsonMatch) {
-      throw new Error('Failed to extract JSON from AI response');
+      throw new Error('Failed to parse guidance');
     }
 
-    const problemData = JSON.parse(jsonMatch[0]);
-
-    // Generate unique problem ID
-    const problemId = `learn_${userId}_${Date.now()}`;
-
-    // Store problem data
-    activeLearningProblems.set(problemId, {
-      ...problemData,
-      userId,
-      createdAt: Date.now(),
-      currentStep: 0,
-    });
+    const guidance = JSON.parse(jsonMatch[0]);
 
     return {
       problemId,
-      question: problemData.question,
-      questionLatex: problemData.questionLatex,
-      topic: problemData.topic,
-      difficulty: problemData.difficulty,
-      totalSteps: problemData.steps.length,
-      hint: problemData.hint,
+      steps: guidance.steps,
+      personalizedHint: guidance.personalizedHint
     };
   } catch (error) {
-    console.error('Error generating practice problem:', error);
+    console.error('Error generating personalized guidance:', error);
     throw error;
   }
 }
+
+/**
+ * Start a learning session with selected question and personalized guidance
+ */
+export async function startLearningSession(
+  userId: string,
+  problemId: string,
+  question: Question,
+  assessment: StudentAssessment,
+  steps: GuidanceStep[],
+  personalizedHint: string
+): Promise<void> {
+  activeLearningProblems.set(problemId, {
+    userId,
+    question,
+    assessment,
+    steps,
+    personalizedHint,
+    currentStep: 0,
+    createdAt: Date.now()
+  });
+}
+
+// ============================================================================
+// Phase 4: Guide Through Solving
+// ============================================================================
 
 /**
  * Get the next step in the problem-solving process
@@ -200,11 +626,15 @@ export async function getNextStep(
 
   if (!step) {
     // Problem is complete
+    const correctAnswer = problemData.question.optionsLatex?.[problemData.question.correctAnswer]
+      || problemData.question.options[problemData.question.correctAnswer];
+
     return {
       stepNumber: nextStep,
-      stepDescription: '¡Felicidades! Has completado el problema.',
-      stepGuidance: `La respuesta final es: ${problemData.finalAnswer}`,
+      stepDescription: '¡Felicidades! Has completado todos los pasos.',
+      stepGuidance: problemData.question.explanationLatex || problemData.question.explanation,
       isComplete: true,
+      finalAnswer: correctAnswer
     };
   }
 
@@ -212,8 +642,7 @@ export async function getNextStep(
     stepNumber: nextStep,
     stepDescription: step.description,
     stepGuidance: step.guidance,
-    isComplete: false,
-    nextAction: 'Escribe tu respuesta para este paso',
+    isComplete: false
   };
 }
 
@@ -235,7 +664,6 @@ export async function verifyStep(
     throw new Error('Invalid step number');
   }
 
-  // Use AI to verify if the answer is correct (allows for variations in notation)
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     throw new Error('ANTHROPIC_API_KEY not configured');
@@ -326,4 +754,11 @@ export async function getProblemStatus(problemId: string) {
     totalSteps: problemData.steps.length,
     isComplete: problemData.currentStep >= problemData.steps.length,
   };
+}
+
+/**
+ * Get assessment session
+ */
+export function getAssessmentSession(sessionId: string): AssessmentSession | undefined {
+  return assessmentSessions.get(sessionId);
 }

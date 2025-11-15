@@ -1,39 +1,187 @@
 import { Router } from 'express';
 import {
-  generatePracticeProblem,
+  assessStudent,
+  continueAssessment,
+  selectQuestion,
+  generatePersonalizedGuidance,
+  startLearningSession,
   getNextStep,
   verifyStep,
   getProblemStatus,
+  getAssessmentSession,
 } from '../services/learnService';
 import { authenticate } from '../auth/middleware';
 
 const router = Router();
 
 /**
- * POST /api/learn/generate
- * Generate a new practice problem for step-by-step learning
+ * POST /api/learn/start-assessment
+ * Start an assessment conversation with the student
  */
-router.post('/generate', authenticate, async (req, res) => {
+router.post('/start-assessment', authenticate, async (req, res) => {
   try {
-    const { weakTopics, level, subject } = req.body;
+    const { level, subject } = req.body;
     const userId = req.user?.userId;
 
     if (!userId) {
       return res.status(401).json({ error: 'User not authenticated' });
     }
 
-    const problem = await generatePracticeProblem({
+    if (!level || !subject) {
+      return res.status(400).json({ error: 'level y subject son requeridos' });
+    }
+
+    const assessment = await assessStudent({
       userId,
-      weakTopics,
       level,
       subject,
     });
 
-    res.json(problem);
+    res.json(assessment);
   } catch (error) {
-    console.error('Generate problem endpoint error:', error);
+    console.error('Start assessment endpoint error:', error);
     res.status(500).json({
-      error: error instanceof Error ? error.message : 'Error al generar problema',
+      error: error instanceof Error ? error.message : 'Error al iniciar evaluación',
+    });
+  }
+});
+
+/**
+ * POST /api/learn/continue-assessment
+ * Continue the assessment conversation
+ */
+router.post('/continue-assessment', authenticate, async (req, res) => {
+  try {
+    const { sessionId, userMessage } = req.body;
+
+    if (!sessionId || !userMessage) {
+      return res.status(400).json({ error: 'sessionId y userMessage son requeridos' });
+    }
+
+    const response = await continueAssessment({
+      sessionId,
+      userMessage,
+    });
+
+    res.json(response);
+  } catch (error) {
+    console.error('Continue assessment endpoint error:', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Error en la evaluación',
+    });
+  }
+});
+
+/**
+ * POST /api/learn/select-question
+ * Select a question from lib/questions based on assessment
+ */
+router.post('/select-question', authenticate, async (req, res) => {
+  try {
+    const { sessionId } = req.body;
+
+    if (!sessionId) {
+      return res.status(400).json({ error: 'sessionId es requerido' });
+    }
+
+    // Get assessment from session
+    const session = getAssessmentSession(sessionId);
+    if (!session || !session.assessment) {
+      return res.status(400).json({ error: 'Assessment no completado o sesión inválida' });
+    }
+
+    const selection = await selectQuestion({
+      sessionId,
+      assessment: session.assessment,
+      level: session.level,
+      subject: session.subject as 'números' | 'álgebra' | 'geometría' | 'probabilidad',
+    });
+
+    res.json(selection);
+  } catch (error) {
+    console.error('Select question endpoint error:', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Error al seleccionar pregunta',
+    });
+  }
+});
+
+/**
+ * POST /api/learn/generate-guidance
+ * Generate personalized guidance for selected question
+ */
+router.post('/generate-guidance', authenticate, async (req, res) => {
+  try {
+    const { sessionId, problemId, question } = req.body;
+
+    if (!sessionId || !problemId || !question) {
+      return res.status(400).json({ error: 'sessionId, problemId y question son requeridos' });
+    }
+
+    const session = getAssessmentSession(sessionId);
+    if (!session || !session.assessment) {
+      return res.status(400).json({ error: 'Assessment no completado o sesión inválida' });
+    }
+
+    const guidance = await generatePersonalizedGuidance({
+      problemId,
+      question,
+      assessment: session.assessment,
+    });
+
+    res.json(guidance);
+  } catch (error) {
+    console.error('Generate guidance endpoint error:', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Error al generar guía',
+    });
+  }
+});
+
+/**
+ * POST /api/learn/start-session
+ * Start learning session with question and guidance
+ */
+router.post('/start-session', authenticate, async (req, res) => {
+  try {
+    const { problemId, question, steps, personalizedHint, sessionId } = req.body;
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    if (!problemId || !question || !steps || !personalizedHint || !sessionId) {
+      return res.status(400).json({
+        error: 'problemId, question, steps, personalizedHint y sessionId son requeridos',
+      });
+    }
+
+    const session = getAssessmentSession(sessionId);
+    if (!session || !session.assessment) {
+      return res.status(400).json({ error: 'Assessment no completado o sesión inválida' });
+    }
+
+    await startLearningSession(
+      userId,
+      problemId,
+      question,
+      session.assessment,
+      steps,
+      personalizedHint
+    );
+
+    res.json({
+      success: true,
+      problemId,
+      question,
+      totalSteps: steps.length,
+      hint: personalizedHint,
+    });
+  } catch (error) {
+    console.error('Start session endpoint error:', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Error al iniciar sesión de aprendizaje',
     });
   }
 });
