@@ -113,5 +113,47 @@ export const m2Prob004Questions: Question[] = [
     explanationLatex: 'P = \\frac{20}{100} = \\frac{1}{5} \\text{ (distribución uniforme discreta)}',
     difficulty: 'medium',
     skills: ['probabilidad-otros-modelos', 'probabilidad-uniforme', 'numeros-multiplos', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-prob-geom-1',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Lanzar dado hasta obtener 6. ¿P(primer 6 en intento 3)?}',
+    options: ['$\\frac{1}{6}$', '$\\frac{25}{216}$', '$\\frac{5}{36}$', '$\\frac{1}{36}$'],
+    optionsLatex: ['\\frac{1}{6}', '\\frac{25}{216}', '\\frac{5}{36}', '\\frac{1}{36}'],
+    correctAnswer: 1,
+    explanation: 'P = (5/6)²×(1/6) = 25/36×1/6 = 25/216 (distribución geométrica)',
+    explanationLatex: 'P = \\left(\\frac{5}{6}\\right)^2 \\times \\frac{1}{6} = \\frac{25}{216}',
+    difficulty: 'hard',
+    skills: ['probabilidad-otros-modelos', 'probabilidad-geometrica', 'numeros-fracciones', 'numeros-potencias']
+  },
+  {
+    id: 'm2-prob-poisson-1',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En promedio llegan 3 clientes/hora. Si } P(k) = \\frac{\\lambda^k e^{-\\lambda}}{k!}, \\text{ ¿P(0 clientes)?}',
+    options: ['$e^{-3} \\approx 0.05$', '$\\frac{1}{3}$', '$0$', '$1$'],
+    optionsLatex: ['e^{-3} \\approx 0.05', '\\frac{1}{3}', '0', '1'],
+    correctAnswer: 0,
+    explanation: 'P(0) = (3⁰e⁻³)/0! = e⁻³ ≈ 0.05 (distribución de Poisson)',
+    explanationLatex: 'P(0) = \\frac{3^0 e^{-3}}{0!} = e^{-3} \\approx 0.05',
+    difficulty: 'extreme',
+    skills: ['probabilidad-otros-modelos', 'probabilidad-poisson', 'numeros-potencias', 'numeros-factorial']
+  },
+  {
+    id: 'm2-prob-modelo-1',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{¿Cuándo usar distribución binomial vs geométrica?}',
+    options: ['Binomial: número fijo de ensayos; Geométrica: hasta primer éxito', 'Son iguales', 'Binomial: sin reposición; Geométrica: con reposición', 'Depende del tamaño de la muestra'],
+    optionsLatex: ['\\text{Binomial: n fijo; Geométrica: hasta éxito}', '\\text{Son iguales}', '\\text{Binomial: sin rep.; Geométrica: con rep.}', '\\text{Depende de n}'],
+    correctAnswer: 0,
+    explanation: 'Binomial cuenta éxitos en n ensayos. Geométrica cuenta ensayos hasta el primer éxito',
+    explanationLatex: '\\text{Binomial: } P(X=k) \\text{ en } n \\text{ ensayos}; \\quad \\text{Geométrica: ensayos hasta éxito}',
+    difficulty: 'medium',
+    skills: ['probabilidad-otros-modelos', 'probabilidad-conceptos', 'probabilidad-distribucion-binomial']
   }
 ];
