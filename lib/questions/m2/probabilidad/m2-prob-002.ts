@@ -112,5 +112,62 @@ export const m2Prob002Questions: Question[] = [
     explanationLatex: 'P(\\text{2°as}|\\text{1°as}) = \\frac{3}{51} \\neq P(\\text{2°as}) = \\frac{4}{52} \\Rightarrow \\text{dependientes}',
     difficulty: 'hard',
     skills: ['probabilidad-eventos-dependientes', 'probabilidad-sin-reposicion', 'probabilidad-condicional', 'numeros-fracciones']
+  },
+  // Additional Subsection A: Probabilidad condicional concepto
+  {
+    id: 'm2-prob-cond-4',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{La fórmula de probabilidad condicional } P(A|B) \\text{ es:}',
+    options: ['$P(A) \\times P(B)$', '$\\frac{P(A \\cap B)}{P(B)}$', '$P(A) + P(B)$', '$\\frac{P(A)}{P(B)}$'],
+    optionsLatex: ['P(A) \\times P(B)', '\\frac{P(A \\cap B)}{P(B)}', 'P(A) + P(B)', '\\frac{P(A)}{P(B)}'],
+    correctAnswer: 1,
+    explanation: 'La probabilidad condicional P(A|B) es la probabilidad de A dado que B ocurrió, calculada como la intersección dividida por P(B)',
+    explanationLatex: 'P(A|B) = \\frac{P(A \\cap B)}{P(B)}',
+    difficulty: 'easy',
+    skills: ['probabilidad-condicional-concepto', 'probabilidad-formulas', 'numeros-fracciones']
+  },
+  {
+    id: 'm2-prob-cond-5',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{P(A) = 0.4, P(B) = 0.5, P(A} \\cap \\text{B) = 0.2. Calcular P(A|B):}',
+    options: ['$0.2$', '$0.4$', '$0.5$', '$0.8$'],
+    optionsLatex: ['0.2', '0.4', '0.5', '0.8'],
+    correctAnswer: 1,
+    explanation: 'P(A|B) = P(A∩B)/P(B) = 0.2/0.5 = 0.4',
+    explanationLatex: 'P(A|B) = \\frac{P(A \\cap B)}{P(B)} = \\frac{0.2}{0.5} = 0.4',
+    difficulty: 'medium',
+    skills: ['probabilidad-condicional-concepto', 'probabilidad-condicional', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-prob-cond-6',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En una clase, 60\\% son mujeres. De las mujeres, 40\\% usan lentes. ¿P(mujer y usa lentes)?}',
+    options: ['$0.20$', '$0.24$', '$0.40$', '$0.60$'],
+    optionsLatex: ['0.20', '0.24', '0.40', '0.60'],
+    correctAnswer: 1,
+    explanation: 'P(M ∩ L) = P(M) × P(L|M) = 0.6 × 0.4 = 0.24',
+    explanationLatex: 'P(M \\cap L) = P(M) \\times P(L|M) = 0.6 \\times 0.4 = 0.24',
+    difficulty: 'medium',
+    skills: ['probabilidad-condicional-aplicaciones', 'probabilidad-condicional', 'numeros-decimales', 'numeros-porcentaje']
+  },
+  {
+    id: 'm2-prob-cond-7',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{De 100 estudiantes: 30 estudian matemáticas, 25 física, 10 ambas. P(física|matemáticas)?}',
+    options: ['$\\frac{1}{3}$', '$\\frac{2}{5}$', '$\\frac{1}{10}$', '$\\frac{1}{4}$'],
+    optionsLatex: ['\\frac{1}{3}', '\\frac{2}{5}', '\\frac{1}{10}', '\\frac{1}{4}'],
+    correctAnswer: 0,
+    explanation: 'P(F|M) = P(F∩M)/P(M) = (10/100)/(30/100) = 10/30 = 1/3',
+    explanationLatex: 'P(F|M) = \\frac{P(F \\cap M)}{P(M)} = \\frac{10/100}{30/100} = \\frac{10}{30} = \\frac{1}{3}',
+    difficulty: 'hard',
+    skills: ['probabilidad-condicional-aplicaciones', 'probabilidad-condicional-concepto', 'numeros-fracciones', 'numeros-operaciones-basicas']
   }
 ];
