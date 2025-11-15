@@ -104,5 +104,21 @@ export const m2Prob004Questions: Question[] = [
     explanationLatex: 'P(0 \\text{ defectuosos}) = (0.95)^3 \\approx 0.857',
     difficulty: 'medium',
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-calculo-binomial', 'probabilidad-modelos-aplicaciones', 'numeros-decimales', 'numeros-potencias', 'numeros-operaciones-basicas']
+  },
+  // Subsection C: Otros modelos probabilísticos
+  {
+    id: 'm2-prob-unif-1',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    question: 'Se selecciona al azar un número del 1 al 100. ¿Cuál es la probabilidad de que el número seleccionado sea múltiplo de 5?',
+    questionLatex: '\\text{Número del 1 al 100 al azar. ¿P(múltiplo de 5)?}',
+    options: ['$\\frac{1}{5}$', '$\\frac{1}{4}$', '$\\frac{1}{10}$', '$\\frac{3}{20}$'],
+    optionsLatex: ['\\frac{1}{5}', '\\frac{1}{4}', '\\frac{1}{10}', '\\frac{3}{20}'],
+    correctAnswer: 0,
+    explanation: 'Hay 20 múltiplos de 5 del 1 al 100 (5,10,15,...,100). P = 20/100 = 1/5',
+    explanationLatex: 'P = \\frac{20}{100} = \\frac{1}{5} \\text{ (distribución uniforme discreta)}',
+    difficulty: 'medium',
+    skills: ['probabilidad-otros-modelos', 'probabilidad-uniforme', 'numeros-multiplos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   }
 ];

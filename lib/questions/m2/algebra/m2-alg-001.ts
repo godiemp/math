@@ -115,5 +115,21 @@ export const m2Alg001Questions: Question[] = [
     explanationLatex: 'x + y = 15, \\; x - y = 3 \\rightarrow 2x = 18 \\rightarrow x = 9, y = 6',
     difficulty: 'medium',
     skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-problemas-aplicados', 'algebra-planteamiento-ecuaciones', 'numeros-operaciones-basicas']
+  },
+  // Subsection C: Sistemas sin solución
+  {
+    id: 'm2-alg-nosol-1',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'El sistema $2x + 3y = 6$ y $4x + 6y = 15$ no tiene solución porque:',
+    questionLatex: '\\text{Sistema } 2x + 3y = 6 \\text{ y } 4x + 6y = 15 \\text{ no tiene solución porque:}',
+    options: ['Las rectas son paralelas', 'Las rectas son perpendiculares', 'Las rectas son coincidentes', 'Las pendientes son diferentes'],
+    optionsLatex: ['\\text{Rectas paralelas}', '\\text{Rectas perpendiculares}', '\\text{Rectas coincidentes}', '\\text{Pendientes diferentes}'],
+    correctAnswer: 0,
+    explanation: 'La segunda ecuación es 2×(primera) en los coeficientes de x,y pero no en el término constante (12 ≠ 15). Son rectas paralelas',
+    explanationLatex: '4x + 6y = 2(2x + 3y) \\text{ pero } 15 \\neq 2(6) \\Rightarrow \\text{paralelas, sin solución}',
+    difficulty: 'hard',
+    skills: ['sistemas-sin-solucion', 'sistemas-interpretacion-geometrica', 'algebra-sistemas-ecuaciones', 'geometria-rectas-paralelas']
   }
 ];

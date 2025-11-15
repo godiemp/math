@@ -119,5 +119,21 @@ export const m2Alg003Questions: Question[] = [
     explanationLatex: 'F(3r) = \\frac{Gm_1m_2}{(3r)^2} = \\frac{Gm_1m_2}{9r^2} = \\frac{F(r)}{9}',
     difficulty: 'hard',
     skills: ['funcion-potencia-problemas-fisica', 'funcion-potencia-problemas-variacion', 'algebra-funcion-potencia', 'algebra-modelamiento', 'algebra-variacion', 'numeros-potencias', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  // Subsection D: Interpretación de gráficos
+  {
+    id: 'm2-alg-graf-1',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'La gráfica de $f(x) = x^{-2}$ (donde x > 0) se caracteriza por:',
+    questionLatex: '\\text{La gráfica de } f(x) = x^{-2} \\text{ (x > 0) se caracteriza por:}',
+    options: ['Crece continuamente', 'Decrece y se acerca al eje x cuando x aumenta', 'Es una línea recta', 'Tiene un punto máximo'],
+    optionsLatex: ['\\text{Crece continuamente}', '\\text{Decrece hacia eje x}', '\\text{Línea recta}', '\\text{Punto máximo}'],
+    correctAnswer: 1,
+    explanation: 'f(x) = 1/x² decrece cuando x > 0. A medida que x → ∞, f(x) → 0 (se acerca al eje x)',
+    explanationLatex: 'x^{-2} = \\frac{1}{x^2} \\text{ decrece, } \\lim_{x \\to \\infty} \\frac{1}{x^2} = 0',
+    difficulty: 'medium',
+    skills: ['funcion-potencia-problemas-interpretacion', 'funcion-potencia-graficos', 'algebra-funcion-potencia', 'algebra-interpretacion-graficos', 'algebra-limites']
   }
 ];

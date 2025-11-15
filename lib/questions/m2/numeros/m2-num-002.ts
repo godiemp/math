@@ -87,5 +87,37 @@ export const m2Num002Questions: Question[] = [
     explanationLatex: 'A = \\pi r^2 = \\pi(\\sqrt{50})^2 = 50\\pi\\text{ cm}^2',
     difficulty: 'medium',
     skills: ['numeros-reales', 'numeros-reales-problemas-raices', 'geometria-area-circulo', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas']
+  },
+  // Subsection B: Problemas de medición con irracionales
+  {
+    id: 'm2-num-med-1',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'Un terreno cuadrado tiene un área de 50 m². ¿Cuál es la longitud de cada lado del terreno?',
+    questionLatex: '\\text{Terreno cuadrado, área 50 m}^2\\text{. ¿Longitud lado?}',
+    options: ['$5$ m', '$5\\sqrt{2}$ m', '$10$ m', '$25$ m'],
+    optionsLatex: ['5\\text{ m}', '5\\sqrt{2}\\text{ m}', '10\\text{ m}', '25\\text{ m}'],
+    correctAnswer: 1,
+    explanation: 'Si área = lado², entonces lado = √50 = √(25×2) = 5√2 m',
+    explanationLatex: 'l = \\sqrt{50} = \\sqrt{25 \\times 2} = 5\\sqrt{2}\\text{ m}',
+    difficulty: 'medium',
+    skills: ['numeros-reales-problemas-medicion', 'geometria-area', 'numeros-raices', 'numeros-simplificacion-raices', 'numeros-operaciones-basicas']
+  },
+  // Subsection D: Aplicaciones en ciencias y tecnología
+  {
+    id: 'm2-num-cienc-1',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'La intensidad del sonido se mide en decibeles (dB). Si la intensidad de un sonido es $I = 10^{-6}$ W/m², su nivel en decibeles es $dB = 10\\log_{10}(I/I_0)$ donde $I_0 = 10^{-12}$ W/m². ¿Cuántos decibeles tiene este sonido?',
+    questionLatex: '\\text{Si } I = 10^{-6}\\text{ y } I_0 = 10^{-12}, dB = 10\\log_{10}(I/I_0). \\text{ ¿dB?}',
+    options: ['40 dB', '50 dB', '60 dB', '70 dB'],
+    optionsLatex: ['40\\text{ dB}', '50\\text{ dB}', '60\\text{ dB}', '70\\text{ dB}'],
+    correctAnswer: 2,
+    explanation: 'dB = 10×log₁₀(10⁻⁶/10⁻¹²) = 10×log₁₀(10⁶) = 10×6 = 60 dB',
+    explanationLatex: 'dB = 10\\log_{10}\\left(\\frac{10^{-6}}{10^{-12}}\\right) = 10\\log_{10}(10^6) = 10 \\times 6 = 60\\text{ dB}',
+    difficulty: 'hard',
+    skills: ['numeros-reales-problemas-ciencias', 'logaritmos-problemas-escalas', 'logaritmos-propiedades', 'numeros-potencias', 'numeros-operaciones-basicas']
   }
 ];

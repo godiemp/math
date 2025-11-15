@@ -15,6 +15,22 @@ import { Question } from '../../../types';
  */
 
 export const m2Geo001Questions: Question[] = [
+  // Subsection A: Concepto de homotecia
+  {
+    id: 'm2-geo-hom-conc-1',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    question: 'Una homotecia es una transformación geométrica que:',
+    questionLatex: '\\text{Una homotecia es una transformación que:}',
+    options: ['Rota una figura alrededor de un punto', 'Cambia el tamaño de una figura manteniendo su forma', 'Refleja una figura respecto a una recta', 'Traslada una figura sin cambiar su tamaño'],
+    optionsLatex: ['\\text{Rota figura}', '\\text{Cambia tamaño, mantiene forma}', '\\text{Refleja figura}', '\\text{Traslada sin cambiar tamaño}'],
+    correctAnswer: 1,
+    explanation: 'La homotecia amplía o reduce una figura manteniendo su forma (semejanza), con un centro y una razón de homotecia',
+    explanationLatex: '\\text{Homotecia: cambio de tamaño con factor } k, \\text{ manteniendo forma}',
+    difficulty: 'easy',
+    skills: ['geometria-homotecia-concepto', 'geometria-transformaciones', 'geometria-semejanza']
+  },
   {
     id: 'm2-geo-trans-5',
     level: 'M2',
