@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, GraduationCap, Users, School, Bot, Clock, Target, Trophy, BookOpen, BarChart3, Shield, Zap, MessageCircle, Brain, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, GraduationCap, Users, School, BarChart3, Target, TrendingUp, Clock, CheckCircle2, LineChart, Brain, Gauge } from 'lucide-react';
 
 type AudienceType = 'estudiantes' | 'padres' | 'profesores';
 
@@ -39,7 +39,7 @@ export default function ComoFuncionaPage() {
             SimplePAES
           </h1>
           <Link
-            href="/dashboard"
+            href="/"
             className="spring-motion"
             style={{
               padding: '8px 16px',
@@ -58,17 +58,30 @@ export default function ComoFuncionaPage() {
       {/* Hero Section */}
       <section className="py-16 px-4 text-center">
         <div className="max-w-4xl mx-auto">
+          <div
+            className="inline-block px-4 py-2 mb-6"
+            style={{
+              background: 'var(--color-tint)',
+              color: 'white',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '14px',
+              fontWeight: 600
+            }}
+          >
+            PREPARACIÓN BASADA EN DATOS
+          </div>
           <h1
-            className="mb-4"
+            className="mb-6"
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(36px, 6vw, 56px)',
+              fontSize: 'clamp(32px, 5vw, 48px)',
               fontWeight: 700,
-              lineHeight: 1.1,
+              lineHeight: 1.2,
               color: 'var(--color-label-primary)'
             }}
           >
-            Tu compañero inteligente para dominar la PAES
+            La PAES es una prueba estandarizada.<br />
+            Aquí te preparamos exactamente para eso.
           </h1>
           <p
             className="mb-8"
@@ -76,21 +89,21 @@ export default function ComoFuncionaPage() {
               fontSize: '18px',
               lineHeight: 1.6,
               color: 'var(--color-label-secondary)',
-              maxWidth: '600px',
+              maxWidth: '700px',
               margin: '0 auto'
             }}
           >
-            Inteligencia artificial + metodología Socrática + 616 problemas reales =
-            la preparación matemática más completa de Chile
+            No estudias "por si acaso". Estudias lo que realmente viene y mejoras donde importa.
+            Así subes tu puntaje.
           </p>
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
             {[
-              { number: '616', label: 'problemas' },
-              { number: '500+', label: 'habilidades' },
-              { number: '24/7', label: 'disponible' },
-              { number: 'IA', label: 'Socrática' }
+              { number: '616', label: 'problemas reales' },
+              { number: '500+', label: 'habilidades medidas' },
+              { number: '100%', label: 'personalizado' },
+              { number: 'Datos', label: 'no intuición' }
             ].map((stat, i) => (
               <div
                 key={i}
@@ -101,10 +114,10 @@ export default function ComoFuncionaPage() {
                   border: '1px solid var(--color-separator)'
                 }}
               >
-                <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--color-tint)' }}>
+                <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--color-tint)' }}>
                   {stat.number}
                 </div>
-                <div style={{ fontSize: '14px', color: 'var(--color-label-secondary)' }}>
+                <div style={{ fontSize: '13px', color: 'var(--color-label-secondary)' }}>
                   {stat.label}
                 </div>
               </div>
@@ -171,12 +184,12 @@ export default function ComoFuncionaPage() {
             className="mb-4"
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: '32px',
+              fontSize: '28px',
               fontWeight: 600,
               color: 'var(--color-label-primary)'
             }}
           >
-            Empieza a dominar la PAES hoy
+            Sube tu puntaje con datos, no con suerte
           </h2>
           <p
             className="mb-6"
@@ -185,7 +198,7 @@ export default function ComoFuncionaPage() {
               color: 'var(--color-label-secondary)'
             }}
           >
-            Regístrate gratis y descubre por qué SimplePAES es la mejor preparación matemática
+            Comienza a entrenar para la PAES con práctica personalizada y métricas reales
           </p>
           <Link
             href="/"
@@ -214,7 +227,7 @@ export default function ComoFuncionaPage() {
           fontSize: '14px'
         }}
       >
-        SimplePAES - Preparando estudiantes chilenos para el éxito universitario
+        SimplePAES - Preparación basada en datos para la PAES
       </footer>
     </div>
   );
@@ -223,91 +236,40 @@ export default function ComoFuncionaPage() {
 function EstudiantesContent() {
   return (
     <div className="space-y-12">
-      {/* AI Tutor Section */}
-      <div>
-        <div className="flex items-center gap-3 mb-6">
-          <div
-            className="p-3"
-            style={{
-              background: 'var(--color-tint)',
-              borderRadius: 'var(--radius-md)',
-              color: 'white'
-            }}
-          >
-            <Bot size={24} />
-          </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
-            Tutor IA que Realmente Enseña
-          </h2>
-        </div>
-
-        <div
-          className="p-6"
+      {/* Main Message */}
+      <div
+        className="p-8"
+        style={{
+          background: 'linear-gradient(135deg, var(--color-tint) 0%, #5E5CE6 100%)',
+          borderRadius: 'var(--radius-lg)',
+          color: 'white'
+        }}
+      >
+        <h2
+          className="mb-6"
           style={{
-            background: 'var(--color-fill)',
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--color-separator)'
+            fontSize: '28px',
+            fontWeight: 700,
+            lineHeight: 1.3
           }}
         >
-          <p className="mb-4" style={{ fontSize: '16px', lineHeight: 1.6, color: 'var(--color-label-secondary)' }}>
-            <strong style={{ color: 'var(--color-label-primary)' }}>Metodología Socrática</strong> - No te damos la respuesta, te ayudamos a descubrirla.
-          </p>
-
-          <div className="space-y-3 mb-4">
-            {[
-              'Te pregunta sobre tu razonamiento - "¿Por qué elegiste esa opción?"',
-              'Te guía con preguntas - "¿Qué pasaría si...?"',
-              'Construye tu comprensión paso a paso',
-              'Se adapta a tu nivel de entendimiento'
-            ].map((item, i) => (
-              <div key={i} className="flex items-start gap-2">
-                <CheckCircle2 size={18} style={{ color: 'var(--color-tint)', marginTop: '2px', flexShrink: 0 }} />
-                <span style={{ fontSize: '15px', color: 'var(--color-label-secondary)' }}>{item}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Example conversation */}
-          <div
-            className="p-4 mt-4"
-            style={{
-              background: 'white',
-              borderRadius: 'var(--radius-md)',
-              border: '1px solid var(--color-separator)'
-            }}
-          >
-            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-label-secondary)', marginBottom: '12px' }}>
-              EJEMPLO DE CONVERSACIÓN
-            </div>
-            <div className="space-y-3">
-              <div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-label-secondary)' }}>Estudiante:</div>
-                <div style={{ fontSize: '14px', color: 'var(--color-label-primary)' }}>No entiendo por qué la respuesta es 9 días</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-tint)' }}>Tutor IA:</div>
-                <div style={{ fontSize: '14px', color: 'var(--color-label-primary)' }}>
-                  ¿Qué tipo de relación ves entre el número de obreros y los días necesarios?
-                  Si aumentan los obreros, ¿qué crees que pasa con el tiempo?
-                </div>
-              </div>
-              <div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-label-secondary)' }}>Estudiante:</div>
-                <div style={{ fontSize: '14px', color: 'var(--color-label-primary)' }}>¿Disminuye?</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-tint)' }}>Tutor IA:</div>
-                <div style={{ fontSize: '14px', color: 'var(--color-label-primary)' }}>
-                  ¡Exacto! Es una proporción inversa. Ahora, si 3 obreros tardan 12 días,
-                  el trabajo total es 3×12 = 36 "días-obrero". Con 4 obreros, ¿cómo calcularías los días?
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          La PAES es una prueba estandarizada.<br />
+          Aquí te preparamos exactamente para eso.
+        </h2>
+        <p
+          style={{
+            fontSize: '17px',
+            lineHeight: 1.7,
+            opacity: 0.95
+          }}
+        >
+          La PAES no mide "si eres bueno en matemáticas": mide cómo respondes un tipo específico de preguntas estandarizadas.
+          En SimplePAES entrenas exactamente ese formato usando <strong>datos reales</strong>: estadísticas de tus errores,
+          tu tiempo de respuesta, tus temas débiles y fuertes, y ejercicios adaptados a tu nivel.
+        </p>
       </div>
 
-      {/* Practice Modes */}
+      {/* How it works */}
       <div>
         <div className="flex items-center gap-3 mb-6">
           <div
@@ -320,130 +282,39 @@ function EstudiantesContent() {
           >
             <Target size={24} />
           </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
-            Dos Modos de Práctica
-          </h2>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          <div
-            className="p-6"
-            style={{
-              background: 'var(--color-fill)',
-              borderRadius: 'var(--radius-lg)',
-              border: '1px solid var(--color-separator)'
-            }}
-          >
-            <h3 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '12px', color: 'var(--color-label-primary)' }}>
-              Modo Zen
-            </h3>
-            <p style={{ fontSize: '14px', color: 'var(--color-tint)', marginBottom: '12px', fontWeight: 500 }}>
-              Aprende sin presión
-            </p>
-            <ul className="space-y-2">
-              {[
-                'Sin límite de tiempo',
-                'Explicaciones inmediatas',
-                'Tutor IA disponible siempre',
-                'Enfócate en entender'
-              ].map((item, i) => (
-                <li key={i} className="flex items-center gap-2" style={{ fontSize: '14px', color: 'var(--color-label-secondary)' }}>
-                  <Clock size={14} style={{ color: 'var(--color-tint)' }} />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div
-            className="p-6"
-            style={{
-              background: 'var(--color-fill)',
-              borderRadius: 'var(--radius-lg)',
-              border: '1px solid var(--color-separator)'
-            }}
-          >
-            <h3 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '12px', color: 'var(--color-label-primary)' }}>
-              Modo Rapid Fire
-            </h3>
-            <p style={{ fontSize: '14px', color: 'var(--color-tint)', marginBottom: '12px', fontWeight: 500 }}>
-              Simula el examen real
-            </p>
-            <ul className="space-y-2">
-              {[
-                '10 preguntas cronometradas',
-                'Dificultad: 25/20/15/10 min',
-                'Navega entre preguntas',
-                'Mide tu velocidad'
-              ].map((item, i) => (
-                <li key={i} className="flex items-center gap-2" style={{ fontSize: '14px', color: 'var(--color-label-secondary)' }}>
-                  <Zap size={14} style={{ color: 'var(--color-tint)' }} />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      {/* Question Bank */}
-      <div>
-        <div className="flex items-center gap-3 mb-6">
-          <div
-            className="p-3"
-            style={{
-              background: 'var(--color-tint)',
-              borderRadius: 'var(--radius-md)',
-              color: 'white'
-            }}
-          >
-            <BookOpen size={24} />
-          </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
-            616 Problemas que Cubren Todo
-          </h2>
+          <h3 style={{ fontSize: '22px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
+            Práctica Personalizada con Datos
+          </h3>
         </div>
 
         <div
-          className="overflow-x-auto"
+          className="p-6"
           style={{
             background: 'var(--color-fill)',
             borderRadius: 'var(--radius-lg)',
             border: '1px solid var(--color-separator)'
           }}
         >
-          <table className="w-full">
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--color-separator)' }}>
-                <th className="p-4 text-left" style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-label-primary)' }}>Área</th>
-                <th className="p-4 text-center" style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-label-primary)' }}>M1 (Básico)</th>
-                <th className="p-4 text-center" style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-label-primary)' }}>M2 (Avanzado)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { area: 'Números', m1: 91, m2: 88 },
-                { area: 'Álgebra', m1: 109, m2: 31 },
-                { area: 'Geometría', m1: 106, m2: 37 },
-                { area: 'Probabilidad', m1: 100, m2: 54 },
-              ].map((row, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid var(--color-separator)' }}>
-                  <td className="p-4" style={{ fontSize: '14px', color: 'var(--color-label-primary)', fontWeight: 500 }}>{row.area}</td>
-                  <td className="p-4 text-center" style={{ fontSize: '14px', color: 'var(--color-label-secondary)' }}>{row.m1}</td>
-                  <td className="p-4 text-center" style={{ fontSize: '14px', color: 'var(--color-label-secondary)' }}>{row.m2}</td>
-                </tr>
-              ))}
-              <tr style={{ background: 'white' }}>
-                <td className="p-4" style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-label-primary)' }}>Total</td>
-                <td className="p-4 text-center" style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-tint)' }}>406</td>
-                <td className="p-4 text-center" style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-tint)' }}>210</td>
-              </tr>
-            </tbody>
-          </table>
+          <p className="mb-6" style={{ fontSize: '16px', lineHeight: 1.7, color: 'var(--color-label-secondary)' }}>
+            Cada sesión es <strong style={{ color: 'var(--color-label-primary)' }}>personalizada</strong>:
+          </p>
+          <div className="grid md:grid-cols-2 gap-4">
+            {[
+              { icon: '📊', text: 'Si fallas en álgebra, te reforzamos álgebra' },
+              { icon: '⚡', text: 'Si vas rápido en geometría, subimos la dificultad' },
+              { icon: '🎯', text: 'Ensayas exactamente lo que viene en la PAES' },
+              { icon: '📈', text: 'Ves tu progreso con números, no con intuición' }
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <span style={{ fontSize: '24px' }}>{item.icon}</span>
+                <span style={{ fontSize: '15px', color: 'var(--color-label-primary)', lineHeight: 1.5 }}>{item.text}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Gamification */}
+      {/* What you get */}
       <div>
         <div className="flex items-center gap-3 mb-6">
           <div
@@ -454,38 +325,55 @@ function EstudiantesContent() {
               color: 'white'
             }}
           >
-            <Trophy size={24} />
+            <BarChart3 size={24} />
           </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
-            Mantén tu Motivación
-          </h2>
+          <h3 style={{ fontSize: '22px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
+            Métricas Reales de tu Desempeño
+          </h3>
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">
           {[
-            { title: 'Rachas Diarias', desc: 'Días consecutivos de práctica', icon: '🔥' },
-            { title: '500+ Habilidades', desc: 'Tracking de maestría detallado', icon: '🎯' },
-            { title: 'Sesiones en Vivo', desc: 'Practica con otros estudiantes', icon: '🏆' }
+            { icon: Clock, title: 'Tiempo por pregunta', desc: 'Mide tu velocidad real vs. tiempo PAES' },
+            { icon: Target, title: 'Temas débiles', desc: 'Identifica exactamente dónde fallas' },
+            { icon: TrendingUp, title: 'Curva de progreso', desc: 'Ve tu mejora semana a semana' }
           ].map((item, i) => (
             <div
               key={i}
-              className="p-4 text-center"
+              className="p-5"
               style={{
                 background: 'var(--color-fill)',
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--color-separator)'
               }}
             >
-              <div style={{ fontSize: '32px', marginBottom: '8px' }}>{item.icon}</div>
-              <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-label-primary)', marginBottom: '4px' }}>
+              <item.icon size={28} style={{ color: 'var(--color-tint)', marginBottom: '12px' }} />
+              <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-label-primary)', marginBottom: '6px' }}>
                 {item.title}
               </div>
-              <div style={{ fontSize: '13px', color: 'var(--color-label-secondary)' }}>
+              <div style={{ fontSize: '14px', color: 'var(--color-label-secondary)', lineHeight: 1.5 }}>
                 {item.desc}
               </div>
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Closing */}
+      <div
+        className="p-6 text-center"
+        style={{
+          background: '#DCFCE7',
+          borderRadius: 'var(--radius-lg)',
+          border: '1px solid #BBF7D0'
+        }}
+      >
+        <h3 style={{ fontSize: '20px', fontWeight: 600, color: '#166534', marginBottom: '8px' }}>
+          No estudias "por si acaso"
+        </h3>
+        <p style={{ fontSize: '16px', color: '#14532D', lineHeight: 1.6 }}>
+          Estudias lo que realmente viene y mejoras donde importa. <strong>Así subes tu puntaje.</strong>
+        </p>
       </div>
     </div>
   );
@@ -494,7 +382,87 @@ function EstudiantesContent() {
 function PadresContent() {
   return (
     <div className="space-y-12">
-      {/* Real Learning */}
+      {/* Main Message */}
+      <div
+        className="p-8"
+        style={{
+          background: 'linear-gradient(135deg, var(--color-tint) 0%, #5E5CE6 100%)',
+          borderRadius: 'var(--radius-lg)',
+          color: 'white'
+        }}
+      >
+        <h2
+          className="mb-6"
+          style={{
+            fontSize: '28px',
+            fontWeight: 700,
+            lineHeight: 1.3
+          }}
+        >
+          La PAES es una prueba estandarizada.<br />
+          Nosotros preparamos a su hijo con datos, no con suerte.
+        </h2>
+        <p
+          style={{
+            fontSize: '17px',
+            lineHeight: 1.7,
+            opacity: 0.95
+          }}
+        >
+          Hoy la PAES de matemáticas exige responder bajo un formato estandarizado: tipos de preguntas repetitivos,
+          habilidades específicas y tiempos medidos. SimplePAES entrena a su hijo justo para eso, usando
+          <strong> análisis de desempeño</strong>, <strong>seguimiento por habilidad</strong> y <strong>prácticas personalizadas</strong> según sus resultados.
+        </p>
+      </div>
+
+      {/* No guessing */}
+      <div>
+        <div className="flex items-center gap-3 mb-6">
+          <div
+            className="p-3"
+            style={{
+              background: 'var(--color-tint)',
+              borderRadius: 'var(--radius-md)',
+              color: 'white'
+            }}
+          >
+            <LineChart size={24} />
+          </div>
+          <h3 style={{ fontSize: '22px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
+            Métricas Claras, No Adivinanzas
+          </h3>
+        </div>
+
+        <div
+          className="p-6"
+          style={{
+            background: 'var(--color-fill)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-separator)'
+          }}
+        >
+          <p className="mb-6" style={{ fontSize: '16px', lineHeight: 1.7, color: 'var(--color-label-secondary)' }}>
+            <strong style={{ color: 'var(--color-label-primary)' }}>Usted no tiene que adivinar si su hijo va bien.</strong> Aquí verá:
+          </p>
+          <div className="grid md:grid-cols-2 gap-4">
+            {[
+              'Métricas claras de rendimiento',
+              'Mejoras reales medibles',
+              'Reportes detallados por tema',
+              'Identificación automática de debilidades',
+              'Ajuste automático de práctica',
+              'Fortalecimiento de áreas específicas'
+            ].map((item, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <CheckCircle2 size={18} style={{ color: 'var(--color-tint)', flexShrink: 0 }} />
+                <span style={{ fontSize: '15px', color: 'var(--color-label-primary)' }}>{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* How platform identifies */}
       <div>
         <div className="flex items-center gap-3 mb-6">
           <div
@@ -507,201 +475,42 @@ function PadresContent() {
           >
             <Brain size={24} />
           </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
-            Aprendizaje Real, No Memorización
-          </h2>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          <div
-            className="p-6"
-            style={{
-              background: '#FEE2E2',
-              borderRadius: 'var(--radius-lg)',
-              border: '1px solid #FECACA'
-            }}
-          >
-            <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '12px', color: '#991B1B' }}>
-              Métodos Tradicionales
-            </h3>
-            <ul className="space-y-2">
-              {[
-                'Memorizar fórmulas sin entenderlas',
-                'Practicar sin retroalimentación útil',
-                'No saber dónde están las debilidades',
-                'Estudiar solo sin guía personalizada'
-              ].map((item, i) => (
-                <li key={i} style={{ fontSize: '14px', color: '#7F1D1D' }}>• {item}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div
-            className="p-6"
-            style={{
-              background: '#DCFCE7',
-              borderRadius: 'var(--radius-lg)',
-              border: '1px solid #BBF7D0'
-            }}
-          >
-            <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '12px', color: '#166534' }}>
-              Con SimplePAES
-            </h3>
-            <ul className="space-y-2">
-              {[
-                'Metodología Socrática - aprende a PENSAR',
-                'Tutor IA personalizado 24/7',
-                'Retroalimentación inmediata en cada error',
-                'Diagnóstico preciso de áreas débiles'
-              ].map((item, i) => (
-                <li key={i} style={{ fontSize: '14px', color: '#14532D' }}>✓ {item}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      {/* Technology */}
-      <div>
-        <div className="flex items-center gap-3 mb-6">
-          <div
-            className="p-3"
-            style={{
-              background: 'var(--color-tint)',
-              borderRadius: 'var(--radius-md)',
-              color: 'white'
-            }}
-          >
-            <Bot size={24} />
-          </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
-            Tecnología de Punta
-          </h2>
-        </div>
-
-        <div
-          className="p-6"
-          style={{
-            background: 'var(--color-fill)',
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--color-separator)'
-          }}
-        >
-          <p className="mb-4" style={{ fontSize: '16px', lineHeight: 1.6, color: 'var(--color-label-secondary)' }}>
-            Usamos <strong style={{ color: 'var(--color-label-primary)' }}>Claude Sonnet 4.5</strong> de Anthropic,
-            la inteligencia artificial más avanzada del mundo. No es un chatbot simple:
-          </p>
-          <div className="grid md:grid-cols-2 gap-4">
-            {[
-              'Entiende el contexto de cada problema',
-              'Adapta explicaciones al nivel de comprensión',
-              'Hace preguntas inteligentes para guiar',
-              'Nunca se frustra ni se cansa',
-              'Disponible 24/7 cuando necesite ayuda',
-              'Registra progreso para análisis'
-            ].map((item, i) => (
-              <div key={i} className="flex items-start gap-2">
-                <CheckCircle2 size={18} style={{ color: 'var(--color-tint)', marginTop: '2px', flexShrink: 0 }} />
-                <span style={{ fontSize: '14px', color: 'var(--color-label-secondary)' }}>{item}</span>
-              </div>
-            ))}
-          </div>
-          <p className="mt-4" style={{ fontSize: '15px', fontStyle: 'italic', color: 'var(--color-tint)' }}>
-            Es como tener un tutor particular de matemáticas siempre disponible
-          </p>
-        </div>
-      </div>
-
-      {/* Transparency */}
-      <div>
-        <div className="flex items-center gap-3 mb-6">
-          <div
-            className="p-3"
-            style={{
-              background: 'var(--color-tint)',
-              borderRadius: 'var(--radius-md)',
-              color: 'white'
-            }}
-          >
-            <BarChart3 size={24} />
-          </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
-            Transparencia Total del Progreso
-          </h2>
-        </div>
-
-        <div
-          className="p-6"
-          style={{
-            background: 'var(--color-fill)',
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--color-separator)'
-          }}
-        >
-          <p className="mb-4" style={{ fontSize: '15px', color: 'var(--color-label-secondary)' }}>
-            Como padre, puedes ver:
-          </p>
-          <div className="grid md:grid-cols-2 gap-3">
-            {[
-              'Cuántas sesiones ha completado',
-              'Qué temas domina y cuáles reforzar',
-              'Tiempo dedicado al estudio',
-              'Racha de días consecutivos',
-              'Evolución del rendimiento',
-              'Predicción de puntaje PAES'
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-tint)' }} />
-                <span style={{ fontSize: '14px', color: 'var(--color-label-primary)' }}>{item}</span>
-              </div>
-            ))}
-          </div>
-          <p className="mt-4" style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-tint)' }}>
-            No más "¿Estudiaste hoy?" - los datos hablan
-          </p>
-        </div>
-      </div>
-
-      {/* Security */}
-      <div>
-        <div className="flex items-center gap-3 mb-6">
-          <div
-            className="p-3"
-            style={{
-              background: 'var(--color-tint)',
-              borderRadius: 'var(--radius-md)',
-              color: 'white'
-            }}
-          >
-            <Shield size={24} />
-          </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
-            Seguridad y Privacidad
-          </h2>
+          <h3 style={{ fontSize: '22px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
+            Sistema Inteligente de Diagnóstico
+          </h3>
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">
           {[
-            { title: 'Autenticación JWT', desc: 'Estándar bancario de seguridad' },
-            { title: 'Contraseñas encriptadas', desc: 'Con bcryptjs industrial' },
-            { title: 'Datos en Chile', desc: 'Servidor y pagos locales' },
-            { title: 'Sin publicidad', desc: 'Experiencia limpia de estudio' },
-            { title: 'HTTPS en todo', desc: 'Conexiones 100% encriptadas' },
-            { title: 'MercadoPago', desc: 'Plataforma de pagos confiable' }
+            { step: '1', title: 'Analiza', desc: 'Detecta patrones de error en cada tema' },
+            { step: '2', title: 'Identifica', desc: 'Encuentra habilidades débiles automáticamente' },
+            { step: '3', title: 'Ajusta', desc: 'Personaliza práctica para fortalecer esas áreas' }
           ].map((item, i) => (
             <div
               key={i}
-              className="p-4"
+              className="p-5 text-center"
               style={{
                 background: 'var(--color-fill)',
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--color-separator)'
               }}
             >
-              <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-label-primary)', marginBottom: '4px' }}>
-                ✓ {item.title}
+              <div
+                className="inline-flex items-center justify-center w-10 h-10 mb-3"
+                style={{
+                  background: 'var(--color-tint)',
+                  color: 'white',
+                  borderRadius: '50%',
+                  fontWeight: 700,
+                  fontSize: '18px'
+                }}
+              >
+                {item.step}
               </div>
-              <div style={{ fontSize: '12px', color: 'var(--color-label-secondary)' }}>
+              <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-label-primary)', marginBottom: '6px' }}>
+                {item.title}
+              </div>
+              <div style={{ fontSize: '14px', color: 'var(--color-label-secondary)', lineHeight: 1.5 }}>
                 {item.desc}
               </div>
             </div>
@@ -709,65 +518,20 @@ function PadresContent() {
         </div>
       </div>
 
-      {/* Value Comparison */}
-      <div>
-        <div className="flex items-center gap-3 mb-6">
-          <div
-            className="p-3"
-            style={{
-              background: 'var(--color-tint)',
-              borderRadius: 'var(--radius-md)',
-              color: 'white'
-            }}
-          >
-            <Target size={24} />
-          </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
-            Valor Incomparable
-          </h2>
-        </div>
-
-        <div
-          className="overflow-x-auto"
-          style={{
-            background: 'var(--color-fill)',
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--color-separator)'
-          }}
-        >
-          <table className="w-full">
-            <thead>
-              <tr style={{ borderBottom: '2px solid var(--color-separator)' }}>
-                <th className="p-4 text-left" style={{ fontSize: '14px', fontWeight: 600 }}>Servicio</th>
-                <th className="p-4 text-center" style={{ fontSize: '14px', fontWeight: 600 }}>Costo/mes</th>
-                <th className="p-4 text-center" style={{ fontSize: '14px', fontWeight: 600 }}>Disponibilidad</th>
-                <th className="p-4 text-center" style={{ fontSize: '14px', fontWeight: 600 }}>Personalización</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style={{ borderBottom: '1px solid var(--color-separator)' }}>
-                <td className="p-4" style={{ fontSize: '14px' }}>Preuniversitario</td>
-                <td className="p-4 text-center" style={{ fontSize: '14px' }}>$150.000+</td>
-                <td className="p-4 text-center" style={{ fontSize: '14px' }}>Horarios fijos</td>
-                <td className="p-4 text-center" style={{ fontSize: '14px' }}>1 prof / 30 alumnos</td>
-              </tr>
-              <tr style={{ borderBottom: '1px solid var(--color-separator)' }}>
-                <td className="p-4" style={{ fontSize: '14px' }}>Clases particulares</td>
-                <td className="p-4 text-center" style={{ fontSize: '14px' }}>$200.000+</td>
-                <td className="p-4 text-center" style={{ fontSize: '14px' }}>Coordinar agendas</td>
-                <td className="p-4 text-center" style={{ fontSize: '14px' }}>Depende del tutor</td>
-              </tr>
-              <tr style={{ background: '#DCFCE7' }}>
-                <td className="p-4" style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-tint)' }}>SimplePAES</td>
-                <td className="p-4 text-center" style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-tint)' }}>$8.000</td>
-                <td className="p-4 text-center" style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-tint)' }}>24/7</td>
-                <td className="p-4 text-center" style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-tint)' }}>IA adapta cada sesión</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p className="mt-4 text-center" style={{ fontSize: '15px', fontStyle: 'italic', color: 'var(--color-label-secondary)' }}>
-          Más barato que un preuniversitario, más disponible que un tutor particular, más inteligente que ambos
+      {/* Closing */}
+      <div
+        className="p-6 text-center"
+        style={{
+          background: '#DCFCE7',
+          borderRadius: 'var(--radius-lg)',
+          border: '1px solid #BBF7D0'
+        }}
+      >
+        <h3 style={{ fontSize: '20px', fontWeight: 600, color: '#166534', marginBottom: '8px' }}>
+          No es estudiar más
+        </h3>
+        <p style={{ fontSize: '16px', color: '#14532D', lineHeight: 1.6 }}>
+          Es estudiar <strong>mejor</strong>, con datos y personalización para subir el puntaje de verdad.
         </p>
       </div>
     </div>
@@ -777,152 +541,40 @@ function PadresContent() {
 function ProfesoresContent() {
   return (
     <div className="space-y-12">
-      {/* Pedagogical Foundation */}
-      <div>
-        <div className="flex items-center gap-3 mb-6">
-          <div
-            className="p-3"
-            style={{
-              background: 'var(--color-tint)',
-              borderRadius: 'var(--radius-md)',
-              color: 'white'
-            }}
-          >
-            <BookOpen size={24} />
-          </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
-            Fundamento Pedagógico Sólido
-          </h2>
-        </div>
-
-        <div
-          className="p-6"
+      {/* Main Message */}
+      <div
+        className="p-8"
+        style={{
+          background: 'linear-gradient(135deg, var(--color-tint) 0%, #5E5CE6 100%)',
+          borderRadius: 'var(--radius-lg)',
+          color: 'white'
+        }}
+      >
+        <h2
+          className="mb-6"
           style={{
-            background: 'var(--color-fill)',
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--color-separator)'
+            fontSize: '28px',
+            fontWeight: 700,
+            lineHeight: 1.3
           }}
         >
-          <p className="mb-4" style={{ fontSize: '16px', lineHeight: 1.6, color: 'var(--color-label-secondary)' }}>
-            <strong style={{ color: 'var(--color-label-primary)' }}>Metodología Socrática + Inteligencia Artificial:</strong>
-          </p>
-          <div className="grid md:grid-cols-2 gap-4 mb-6">
-            {[
-              'No damos respuestas directas - el estudiante construye conocimiento',
-              'Preguntas adaptativas según respuestas del alumno',
-              'Metacognición - reflexión sobre el propio razonamiento',
-              'Transferencia de conocimiento - aplicar, no memorizar'
-            ].map((item, i) => (
-              <div key={i} className="flex items-start gap-2">
-                <div style={{ color: 'var(--color-tint)', marginTop: '2px' }}>{i + 1}.</div>
-                <span style={{ fontSize: '14px', color: 'var(--color-label-secondary)' }}>{item}</span>
-              </div>
-            ))}
-          </div>
-          <div
-            className="p-4"
-            style={{
-              background: 'white',
-              borderRadius: 'var(--radius-md)',
-              border: '1px solid var(--color-separator)'
-            }}
-          >
-            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-label-secondary)', marginBottom: '8px' }}>
-              BASE TEÓRICA
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {[
-                'Constructivismo (Piaget, Vygotsky)',
-                'Zona de Desarrollo Próximo',
-                'Aprendizaje significativo (Ausubel)',
-                'Taxonomía de Bloom'
-              ].map((item, i) => (
-                <div key={i} style={{ fontSize: '12px', color: 'var(--color-label-primary)' }}>• {item}</div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Curriculum Alignment */}
-      <div>
-        <div className="flex items-center gap-3 mb-6">
-          <div
-            className="p-3"
-            style={{
-              background: 'var(--color-tint)',
-              borderRadius: 'var(--radius-md)',
-              color: 'white'
-            }}
-          >
-            <Target size={24} />
-          </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
-            Alineación Curricular PAES
-          </h2>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          <div
-            className="p-6"
-            style={{
-              background: 'var(--color-fill)',
-              borderRadius: 'var(--radius-lg)',
-              border: '1px solid var(--color-separator)'
-            }}
-          >
-            <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '12px', color: 'var(--color-tint)' }}>
-              Competencia Matemática 1 (M1)
-            </h3>
-            <ul className="space-y-2">
-              {[
-                'Números: Enteros, racionales, porcentajes, potencias, raíces',
-                'Álgebra: Expresiones, ecuaciones, funciones lineales, sistemas',
-                'Geometría: Perímetro, área, volumen, transformaciones',
-                'Probabilidad: Tablas, gráficos, tendencia central, reglas'
-              ].map((item, i) => (
-                <li key={i} style={{ fontSize: '13px', color: 'var(--color-label-secondary)' }}>• {item}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div
-            className="p-6"
-            style={{
-              background: 'var(--color-fill)',
-              borderRadius: 'var(--radius-lg)',
-              border: '1px solid var(--color-separator)'
-            }}
-          >
-            <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '12px', color: 'var(--color-tint)' }}>
-              Competencia Matemática 2 (M2)
-            </h3>
-            <ul className="space-y-2">
-              {[
-                'Operaciones avanzadas con números reales',
-                'Funciones cuadráticas y exponenciales',
-                'Geometría analítica y transformaciones complejas',
-                'Probabilidad condicional y distribuciones'
-              ].map((item, i) => (
-                <li key={i} style={{ fontSize: '13px', color: 'var(--color-label-secondary)' }}>• {item}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div
-          className="mt-4 p-4 text-center"
+          La PAES es una prueba estandarizada.<br />
+          SimplePAES entrena justo lo que mide.
+        </h2>
+        <p
           style={{
-            background: 'var(--color-tint)',
-            color: 'white',
-            borderRadius: 'var(--radius-md)'
+            fontSize: '17px',
+            lineHeight: 1.7,
+            opacity: 0.95
           }}
         >
-          <strong>46 unidades temáticas</strong> organizadas según taxonomía PAES oficial
-        </div>
+          La PAES evalúa contenidos y habilidades de manera estandarizada. SimplePAES permite a los profesores reforzar
+          la preparación de sus estudiantes con práctica altamente focalizada: <strong>estadísticas por habilidad</strong>,
+          <strong> diagnósticos automáticos</strong>, <strong>seguimiento por curso</strong> y <strong>ejercicios adaptativos</strong> basados en rendimiento.
+        </p>
       </div>
 
-      {/* Analytics */}
+      {/* Data-driven */}
       <div>
         <div className="flex items-center gap-3 mb-6">
           <div
@@ -935,154 +587,9 @@ function ProfesoresContent() {
           >
             <BarChart3 size={24} />
           </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
-            Analytics Educativo Avanzado
-          </h2>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          <div
-            className="p-6"
-            style={{
-              background: 'var(--color-fill)',
-              borderRadius: 'var(--radius-lg)',
-              border: '1px solid var(--color-separator)'
-            }}
-          >
-            <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px', color: 'var(--color-label-primary)' }}>
-              Para el Estudiante Individual
-            </h3>
-            <ul className="space-y-2">
-              {[
-                'Rendimiento por eje temático',
-                'Habilidades dominadas vs. en desarrollo',
-                'Patrones de error comunes',
-                'Tiempo de respuesta por dificultad',
-                'Evolución temporal del aprendizaje'
-              ].map((item, i) => (
-                <li key={i} style={{ fontSize: '13px', color: 'var(--color-label-secondary)' }}>• {item}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div
-            className="p-6"
-            style={{
-              background: 'var(--color-fill)',
-              borderRadius: 'var(--radius-lg)',
-              border: '1px solid var(--color-separator)'
-            }}
-          >
-            <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px', color: 'var(--color-label-primary)' }}>
-              Para el Grupo
-            </h3>
-            <ul className="space-y-2">
-              {[
-                'Distribución de rendimiento del curso',
-                'Temas más desafiantes colectivamente',
-                'Comparativa con otros grupos',
-                'Identificación de estudiantes en riesgo',
-                'Efectividad de intervenciones'
-              ].map((item, i) => (
-                <li key={i} style={{ fontSize: '13px', color: 'var(--color-label-secondary)' }}>• {item}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div
-          className="mt-4 p-4"
-          style={{
-            background: '#FEF3C7',
-            borderRadius: 'var(--radius-md)',
-            border: '1px solid #FDE68A'
-          }}
-        >
-          <div style={{ fontSize: '13px', fontWeight: 600, color: '#92400E', marginBottom: '4px' }}>
-            EJEMPLO DE INSIGHT
-          </div>
-          <div style={{ fontSize: '14px', color: '#78350F', fontStyle: 'italic' }}>
-            "El 73% de los estudiantes tiene dificultades con proporcionalidad inversa, pero domina proporcionalidad directa.
-            Recomendación: Sesión de contraste conceptual."
-          </div>
-        </div>
-      </div>
-
-      {/* Admin Tools */}
-      <div>
-        <div className="flex items-center gap-3 mb-6">
-          <div
-            className="p-3"
-            style={{
-              background: 'var(--color-tint)',
-              borderRadius: 'var(--radius-md)',
-              color: 'white'
-            }}
-          >
-            <MessageCircle size={24} />
-          </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
-            Integración con Práctica Docente
-          </h2>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            { step: '1', title: 'Diagnóstico inicial', desc: 'Asigna práctica para identificar nivel base' },
-            { step: '2', title: 'Tarea diferenciada', desc: 'Modo Zen para aprender, Rapid Fire para evaluar' },
-            { step: '3', title: 'Flipped Classroom', desc: 'Estudian en casa, clase para profundizar' },
-            { step: '4', title: 'Refuerzo específico', desc: 'Asigna temas según debilidades identificadas' },
-            { step: '5', title: 'Ensayos simulados', desc: 'Sesiones en vivo como preparación final' },
-            { step: '6', title: 'Análisis de errores', desc: 'Revisa patrones comunes en sesiones grupales' }
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="p-4"
-              style={{
-                background: 'var(--color-fill)',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--color-separator)'
-              }}
-            >
-              <div
-                className="inline-block px-2 py-1 mb-2"
-                style={{
-                  background: 'var(--color-tint)',
-                  color: 'white',
-                  borderRadius: 'var(--radius-xs)',
-                  fontSize: '12px',
-                  fontWeight: 600
-                }}
-              >
-                Paso {item.step}
-              </div>
-              <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-label-primary)', marginBottom: '4px' }}>
-                {item.title}
-              </div>
-              <div style={{ fontSize: '12px', color: 'var(--color-label-secondary)' }}>
-                {item.desc}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* AI Assistant */}
-      <div>
-        <div className="flex items-center gap-3 mb-6">
-          <div
-            className="p-3"
-            style={{
-              background: 'var(--color-tint)',
-              borderRadius: 'var(--radius-md)',
-              color: 'white'
-            }}
-          >
-            <Bot size={24} />
-          </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
-            El Tutor IA Como Asistente Docente
-          </h2>
+          <h3 style={{ fontSize: '22px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
+            El Estudio Convertido en Datos
+          </h3>
         </div>
 
         <div
@@ -1093,22 +600,106 @@ function ProfesoresContent() {
             border: '1px solid var(--color-separator)'
           }}
         >
+          <p className="mb-6" style={{ fontSize: '16px', lineHeight: 1.7, color: 'var(--color-label-secondary)' }}>
+            La plataforma convierte el estudio en <strong style={{ color: 'var(--color-label-primary)' }}>datos accionables</strong>:
+          </p>
           <div className="grid md:grid-cols-2 gap-4">
             {[
-              'Responde 24/7 las dudas fuera de clase',
-              'No reemplaza al profesor, lo complementa',
-              'Identifica patrones de error',
-              'Escala personalmente a cada estudiante',
-              'Registra interacciones para análisis',
-              'Libera tiempo para enseñanza de alto valor'
+              { icon: Clock, text: 'Tiempo por pregunta de cada estudiante' },
+              { icon: Target, text: 'Porcentajes de acierto por contenido' },
+              { icon: TrendingUp, text: 'Curvas de progreso individuales' },
+              { icon: Gauge, text: 'Reportes listos para planificación' }
             ].map((item, i) => (
-              <div key={i} className="flex items-start gap-2">
-                <CheckCircle2 size={18} style={{ color: 'var(--color-tint)', marginTop: '2px', flexShrink: 0 }} />
-                <span style={{ fontSize: '14px', color: 'var(--color-label-secondary)' }}>{item}</span>
+              <div key={i} className="flex items-start gap-3">
+                <item.icon size={20} style={{ color: 'var(--color-tint)', marginTop: '2px', flexShrink: 0 }} />
+                <span style={{ fontSize: '15px', color: 'var(--color-label-primary)', lineHeight: 1.5 }}>{item.text}</span>
               </div>
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Complements pedagogy */}
+      <div>
+        <div className="flex items-center gap-3 mb-6">
+          <div
+            className="p-3"
+            style={{
+              background: 'var(--color-tint)',
+              borderRadius: 'var(--radius-md)',
+              color: 'white'
+            }}
+          >
+            <School size={24} />
+          </div>
+          <h3 style={{ fontSize: '22px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
+            Potencia tu Pedagogía
+          </h3>
+        </div>
+
+        <div
+          className="p-6"
+          style={{
+            background: '#FEF3C7',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid #FDE68A'
+          }}
+        >
+          <p style={{ fontSize: '16px', lineHeight: 1.7, color: '#78350F' }}>
+            Todo esto <strong>sin reemplazar la pedagogía del profesor</strong>; la potencia.
+            Los datos te permiten identificar exactamente dónde necesitan más apoyo tus estudiantes
+            y ajustar tu enseñanza en consecuencia.
+          </p>
+        </div>
+      </div>
+
+      {/* Use cases */}
+      <div>
+        <h3 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--color-label-primary)', marginBottom: '16px' }}>
+          Cómo usar SimplePAES en tu planificación
+        </h3>
+        <div className="grid md:grid-cols-2 gap-4">
+          {[
+            { title: 'Diagnóstico inicial', desc: 'Identifica nivel base de cada estudiante' },
+            { title: 'Reforzamiento focalizado', desc: 'Asigna práctica por tema débil detectado' },
+            { title: 'Seguimiento de curso', desc: 'Monitorea progreso grupal en tiempo real' },
+            { title: 'Planificación informada', desc: 'Usa reportes para ajustar clases' }
+          ].map((item, i) => (
+            <div
+              key={i}
+              className="p-4"
+              style={{
+                background: 'var(--color-fill)',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--color-separator)'
+              }}
+            >
+              <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-label-primary)', marginBottom: '4px' }}>
+                {item.title}
+              </div>
+              <div style={{ fontSize: '14px', color: 'var(--color-label-secondary)' }}>
+                {item.desc}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Closing */}
+      <div
+        className="p-6 text-center"
+        style={{
+          background: '#DCFCE7',
+          borderRadius: 'var(--radius-lg)',
+          border: '1px solid #BBF7D0'
+        }}
+      >
+        <h3 style={{ fontSize: '20px', fontWeight: 600, color: '#166534', marginBottom: '8px' }}>
+          En vez de preparar "en general"
+        </h3>
+        <p style={{ fontSize: '16px', color: '#14532D', lineHeight: 1.6 }}>
+          SimplePAES prepara para la prueba que realmente rendirán, con <strong>precisión, datos y personalización</strong>.
+        </p>
       </div>
     </div>
   );
