@@ -28,7 +28,7 @@ export const m2Alg003Questions: Question[] = [
     explanation: 'Sustituimos l = 5 en la función: A(5) = 5² = 25 cm²',
     explanationLatex: 'A(5) = 5^2 = 25\\text{ cm}^2',
     difficulty: 'easy',
-    skills: ['algebra-funcion-potencia', 'algebra-modelamiento', 'geometria-area', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['funcion-potencia-modelamiento', 'algebra-funcion-potencia', 'algebra-modelamiento', 'geometria-area', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-alg-pot-prob-2',
@@ -43,7 +43,7 @@ export const m2Alg003Questions: Question[] = [
     explanation: 'V(2a) = (2a)³ = 8a³ = 8·V(a). El volumen se multiplica por 8',
     explanationLatex: 'V(2a) = (2a)^3 = 8a^3 = 8 \\cdot V(a)',
     difficulty: 'medium',
-    skills: ['algebra-funcion-potencia', 'algebra-modelamiento', 'geometria-volumen', 'numeros-potencias', 'algebra-variacion']
+    skills: ['funcion-potencia-modelamiento', 'funcion-potencia-problemas-variacion', 'algebra-funcion-potencia', 'algebra-modelamiento', 'geometria-volumen', 'numeros-potencias', 'algebra-variacion']
   },
   {
     id: 'm2-alg-pot-prob-3',
@@ -58,7 +58,7 @@ export const m2Alg003Questions: Question[] = [
     explanation: '100 = k/2², entonces k = 100 × 4 = 400',
     explanationLatex: '100 = \\frac{k}{2^2} \\rightarrow k = 100 \\times 4 = 400',
     difficulty: 'hard',
-    skills: ['algebra-funcion-potencia', 'algebra-modelamiento', 'algebra-despeje', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['funcion-potencia-modelamiento', 'funcion-potencia-problemas-fisica', 'algebra-funcion-potencia', 'algebra-modelamiento', 'algebra-despeje', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-alg-pot-prob-4',
@@ -73,7 +73,7 @@ export const m2Alg003Questions: Question[] = [
     explanation: 'T(4L) = 2π√(4L/g) = 2π·2√(L/g) = 2·T(L). El período se duplica',
     explanationLatex: 'T(4L) = 2\\pi\\sqrt{\\frac{4L}{g}} = 2\\pi \\cdot 2\\sqrt{\\frac{L}{g}} = 2 \\cdot T(L)',
     difficulty: 'extreme',
-    skills: ['algebra-funcion-potencia', 'algebra-modelamiento', 'algebra-variacion', 'numeros-raices', 'numeros-operaciones-basicas']
+    skills: ['funcion-potencia-problemas-fisica', 'funcion-potencia-problemas-variacion', 'algebra-funcion-potencia', 'algebra-modelamiento', 'algebra-variacion', 'numeros-raices', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-alg-pot-prob-5',
@@ -88,7 +88,7 @@ export const m2Alg003Questions: Question[] = [
     explanation: 'E(v/2) = ½m(v/2)² = ¼·(½mv²) = ¼E(v). Queda 25% de energía, se pierde 75%',
     explanationLatex: 'E\\left(\\frac{v}{2}\\right) = \\frac{1}{2}m\\left(\\frac{v}{2}\\right)^2 = \\frac{1}{4}E(v) \\rightarrow \\text{pierde } 75\\%',
     difficulty: 'hard',
-    skills: ['algebra-funcion-potencia', 'algebra-modelamiento', 'algebra-variacion', 'numeros-porcentaje', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['funcion-potencia-problemas-fisica', 'funcion-potencia-problemas-variacion', 'algebra-funcion-potencia', 'algebra-modelamiento', 'algebra-variacion', 'numeros-porcentaje', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-alg-pot-prob-6',
@@ -103,7 +103,7 @@ export const m2Alg003Questions: Question[] = [
     explanation: 'S(6) = 4π(6²) = 4π·36 y S(3) = 4π(3²) = 4π·9. Razón: 36/9 = 4',
     explanationLatex: '\\frac{S(6)}{S(3)} = \\frac{4\\pi \\cdot 36}{4\\pi \\cdot 9} = \\frac{36}{9} = 4',
     difficulty: 'medium',
-    skills: ['algebra-funcion-potencia', 'algebra-modelamiento', 'geometria-superficie-esfera', 'numeros-potencias', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['funcion-potencia-modelamiento', 'funcion-potencia-problemas-variacion', 'algebra-funcion-potencia', 'algebra-modelamiento', 'geometria-superficie-esfera', 'numeros-potencias', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-alg-pot-prob-7',
@@ -118,6 +118,22 @@ export const m2Alg003Questions: Question[] = [
     explanation: 'F(3r) = Gm₁m₂/(3r)² = Gm₁m₂/(9r²) = F(r)/9. La fuerza se divide por 9',
     explanationLatex: 'F(3r) = \\frac{Gm_1m_2}{(3r)^2} = \\frac{Gm_1m_2}{9r^2} = \\frac{F(r)}{9}',
     difficulty: 'hard',
-    skills: ['algebra-funcion-potencia', 'algebra-modelamiento', 'algebra-variacion', 'numeros-potencias', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['funcion-potencia-problemas-fisica', 'funcion-potencia-problemas-variacion', 'algebra-funcion-potencia', 'algebra-modelamiento', 'algebra-variacion', 'numeros-potencias', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  // Subsection D: Interpretación de gráficos
+  {
+    id: 'm2-alg-graf-1',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'La gráfica de $f(x) = x^{-2}$ (donde x > 0) se caracteriza por:',
+    questionLatex: '\\text{La gráfica de } f(x) = x^{-2} \\text{ (x > 0) se caracteriza por:}',
+    options: ['Crece continuamente', 'Decrece y se acerca al eje x cuando x aumenta', 'Es una línea recta', 'Tiene un punto máximo'],
+    optionsLatex: ['\\text{Crece continuamente}', '\\text{Decrece hacia eje x}', '\\text{Línea recta}', '\\text{Punto máximo}'],
+    correctAnswer: 1,
+    explanation: 'f(x) = 1/x² decrece cuando x > 0. A medida que x → ∞, f(x) → 0 (se acerca al eje x)',
+    explanationLatex: 'x^{-2} = \\frac{1}{x^2} \\text{ decrece, } \\lim_{x \\to \\infty} \\frac{1}{x^2} = 0',
+    difficulty: 'medium',
+    skills: ['funcion-potencia-problemas-interpretacion', 'funcion-potencia-graficos', 'algebra-funcion-potencia', 'algebra-interpretacion-graficos', 'algebra-limites']
   }
 ];

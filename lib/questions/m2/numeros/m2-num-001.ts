@@ -28,7 +28,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Encontramos común denominador (12) y operamos:',
     explanationLatex: '\\frac{8}{12} - \\frac{9}{12} + \\frac{2}{12} = \\frac{8 - 9 + 2}{12} = \\frac{1}{12}',
     difficulty: 'medium',
-    skills: ['numeros-fracciones', 'numeros-fracciones-comun-denominador', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-fracciones', 'numeros-fracciones-comun-denominador', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-ent-2',
@@ -43,7 +43,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Multiplicamos: (-3) × (-2) = 6, luego 6 × 5 = 30, finalmente 30 × (-1) = -30',
     explanationLatex: '(-3) \\times (-2) \\times 5 \\times (-1) = 6 \\times 5 \\times (-1) = 30 \\times (-1) = -30',
     difficulty: 'medium',
-    skills: ['numeros-enteros', 'numeros-multiplicacion-enteros', 'numeros-signos', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-enteros', 'numeros-multiplicacion-enteros', 'numeros-signos', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-ent-3',
@@ -58,7 +58,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Numerador: 8/12 + 3/12 = 11/12. Denominador: 5/6 - 2/6 = 3/6 = 1/2. División: (11/12)÷(1/2) = 11/6',
     explanationLatex: '\\frac{\\frac{11}{12}}{\\frac{1}{2}} = \\frac{11}{12} \\times \\frac{2}{1} = \\frac{11}{6}',
     difficulty: 'extreme',
-    skills: ['numeros-fracciones', 'numeros-fracciones-complejas', 'numeros-division-fracciones', 'numeros-comun-denominador', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-fracciones', 'numeros-fracciones-complejas', 'numeros-division-fracciones', 'numeros-comun-denominador', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-pot-1',
@@ -73,7 +73,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Aplicamos propiedades de potencias:',
     explanationLatex: '(2^3)^2 \\cdot 2^{-4} = 2^6 \\cdot 2^{-4} = 2^{6-4} = 2^2',
     difficulty: 'medium',
-    skills: ['numeros-potencias', 'numeros-propiedades-potencias', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-potencias', 'numeros-propiedades-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-pot-2',
@@ -88,7 +88,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Factorizamos 72 = 36 × 2, entonces √72 = √(36×2) = √36 × √2 = 6√2',
     explanationLatex: '\\sqrt{72} = \\sqrt{36 \\times 2} = \\sqrt{36} \\times \\sqrt{2} = 6\\sqrt{2}',
     difficulty: 'hard',
-    skills: ['numeros-raices', 'numeros-simplificacion-raices', 'numeros-factorizacion', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-irracionales', 'numeros-raices', 'numeros-simplificacion-raices', 'numeros-factorizacion', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-pot-3',
@@ -103,7 +103,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Un exponente negativo invierte la base: (1/2)⁻³ = 2³ = 8',
     explanationLatex: '\\left(\\frac{1}{2}\\right)^{-3} = \\left(\\frac{2}{1}\\right)^{3} = 2^3 = 8',
     difficulty: 'hard',
-    skills: ['numeros-potencias', 'numeros-exponentes-negativos', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-potencias', 'numeros-exponentes-negativos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-pot-4',
@@ -118,7 +118,7 @@ export const m2Num001Questions: Question[] = [
     explanation: '√50 = 5√2, √32 = 4√2, √18 = 3√2. Entonces: 5√2 + 4√2 - 3√2 = 6√2',
     explanationLatex: '5\\sqrt{2} + 4\\sqrt{2} - 3\\sqrt{2} = (5+4-3)\\sqrt{2} = 6\\sqrt{2}',
     difficulty: 'extreme',
-    skills: ['numeros-raices', 'numeros-simplificacion-raices', 'numeros-suma-radicales', 'numeros-factorizacion', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-irracionales', 'numeros-raices', 'numeros-simplificacion-raices', 'numeros-suma-radicales', 'numeros-factorizacion', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-1',
@@ -132,7 +132,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Factorizando: 12 = 2² × 3, 18 = 2 × 3², 24 = 2³ × 3. MCM = 2³ × 3² = 8 × 9 = 72',
     explanationLatex: '12 = 2^2 \\times 3, \\quad 18 = 2 \\times 3^2, \\quad 24 = 2^3 \\times 3 \\quad \\Rightarrow \\quad \\text{MCM} = 2^3 \\times 3^2 = 8 \\times 9 = 72',
     difficulty: 'medium',
-    skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-mcd-1',
@@ -146,7 +146,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Factorizando: 48 = 2⁴ × 3, 72 = 2³ × 3², 120 = 2³ × 3 × 5. MCD = 2³ × 3 = 24',
     explanationLatex: '48 = 2^4 \\times 3, \\quad 72 = 2^3 \\times 3^2, \\quad 120 = 2^3 \\times 3 \\times 5 \\quad \\Rightarrow \\quad \\text{MCD} = 2^3 \\times 3 = 24',
     difficulty: 'hard',
-    skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-mcd-2',
@@ -160,7 +160,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Factorizando: 15 = 3 × 5, 20 = 2² × 5, 25 = 5². MCM = 2² × 3 × 5² = 4 × 3 × 25 = 300',
     explanationLatex: '15 = 3 \\times 5, \\quad 20 = 2^2 \\times 5, \\quad 25 = 5^2 \\quad \\Rightarrow \\quad \\text{MCM} = 2^2 \\times 3 \\times 5^2 = 300',
     difficulty: 'hard',
-    skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-mcd-3',
@@ -174,7 +174,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Factorizando: 36 = 2² × 3², 48 = 2⁴ × 3. MCD = 2² × 3 = 12',
     explanationLatex: '36 = 2^2 \\times 3^2, \\quad 48 = 2^4 \\times 3 \\quad \\Rightarrow \\quad \\text{MCD} = 2^2 \\times 3 = 12',
     difficulty: 'medium',
-    skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-mcd-4',
@@ -188,7 +188,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Usamos la fórmula: MCD × MCM = producto de los números',
     explanationLatex: '6 \\times 72 = 18 \\times b \\quad \\Rightarrow \\quad b = \\frac{432}{18} = 24',
     difficulty: 'extreme',
-    skills: ['numeros-mcd-mcm', 'numeros-relacion-mcd-mcm', 'numeros-operaciones-basicas', 'algebra-despeje']
+    skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-relacion-mcd-mcm', 'numeros-operaciones-basicas', 'algebra-despeje']
   },
   {
     id: 'm2-9',
@@ -203,7 +203,7 @@ export const m2Num001Questions: Question[] = [
     explanation: '6/√3 = (6/√3) × (√3/√3) = 6√3/3 = 2√3',
     explanationLatex: '\\frac{6}{\\sqrt{3}} = \\frac{6}{\\sqrt{3}} \\times \\frac{\\sqrt{3}}{\\sqrt{3}} = \\frac{6\\sqrt{3}}{3} = 2\\sqrt{3}',
     difficulty: 'medium',
-    skills: ['numeros-racionalizacion', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-rac-1',
@@ -218,7 +218,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Multiplicamos por el conjugado (√5 - √3)/(√5 - √3):',
     explanationLatex: '\\frac{10}{\\sqrt{5} + \\sqrt{3}} \\times \\frac{\\sqrt{5} - \\sqrt{3}}{\\sqrt{5} - \\sqrt{3}} = \\frac{10(\\sqrt{5} - \\sqrt{3})}{5 - 3} = \\frac{10(\\sqrt{5} - \\sqrt{3})}{2} = 5(\\sqrt{5} - \\sqrt{3})',
     difficulty: 'extreme',
-    skills: ['numeros-racionalizacion', 'numeros-racionalizacion-conjugado', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-racionalizacion-conjugado', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-rac-2',
@@ -233,7 +233,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Simplificamos y racionalizamos:',
     explanationLatex: '\\frac{12}{2\\sqrt{3}} = \\frac{6}{\\sqrt{3}} \\times \\frac{\\sqrt{3}}{\\sqrt{3}} = \\frac{6\\sqrt{3}}{3} = 2\\sqrt{3}',
     difficulty: 'medium',
-    skills: ['numeros-racionalizacion', 'numeros-raices', 'numeros-fracciones', 'numeros-simplificacion', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-raices', 'numeros-fracciones', 'numeros-simplificacion', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-rac-3',
@@ -248,7 +248,7 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Podemos simplificar directamente:',
     explanationLatex: '\\frac{\\sqrt{8}}{\\sqrt{2}} = \\sqrt{\\frac{8}{2}} = \\sqrt{4} = 2',
     difficulty: 'medium',
-    skills: ['numeros-racionalizacion', 'numeros-raices', 'numeros-simplificacion-raices', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-raices', 'numeros-simplificacion-raices', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-num-rac-4',
@@ -263,6 +263,113 @@ export const m2Num001Questions: Question[] = [
     explanation: 'Multiplicamos por el conjugado (√2 + 1)/(√2 + 1):',
     explanationLatex: '\\frac{6}{\\sqrt{2} - 1} \\times \\frac{\\sqrt{2} + 1}{\\sqrt{2} + 1} = \\frac{6(\\sqrt{2} + 1)}{2 - 1} = 6(\\sqrt{2} + 1)',
     difficulty: 'hard',
-    skills: ['numeros-racionalizacion', 'numeros-racionalizacion-conjugado', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-racionalizacion-conjugado', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  // Subsection C: Aproximaciones y redondeo
+  {
+    id: 'm2-num-aprox-1',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'El valor de π es aproximadamente 3.14159265. Si lo redondeamos a 2 decimales, obtenemos:',
+    questionLatex: '\\text{Si } \\pi \\approx 3.14159265 \\text{ se redondea a 2 decimales:}',
+    options: ['3.14', '3.15', '3.1', '3.2'],
+    optionsLatex: ['3.14', '3.15', '3.1', '3.2'],
+    correctAnswer: 0,
+    explanation: 'Al redondear 3.14159... a 2 decimales, miramos el tercer decimal (1). Como 1 < 5, no aumentamos: 3.14',
+    explanationLatex: '3.14159... \\rightarrow 3.14 \\text{ (el tercer decimal es 1 < 5)}',
+    difficulty: 'easy',
+    skills: ['numeros-reales-aproximaciones', 'numeros-redondeo', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-aprox-2',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'Un científico mide la masa de un objeto como 45.678 gramos. Si debe reportar la medida con 3 cifras significativas, ¿qué valor debe usar?',
+    questionLatex: '\\text{Masa: 45.678 g. Con 3 cifras significativas:}',
+    options: ['45.6 g', '45.7 g', '46.0 g', '45.0 g'],
+    optionsLatex: ['45.6\\text{ g}', '45.7\\text{ g}', '46.0\\text{ g}', '45.0\\text{ g}'],
+    correctAnswer: 1,
+    explanation: 'Con 3 cifras significativas redondeamos 45.678 → 45.7 (el 4to dígito es 7 ≥ 5)',
+    explanationLatex: '45.678 \\rightarrow 45.7 \\text{ g (3 cifras significativas)}',
+    difficulty: 'medium',
+    skills: ['numeros-reales-aproximaciones', 'numeros-cifras-significativas', 'numeros-redondeo', 'numeros-decimales']
+  },
+  {
+    id: 'm2-num-aprox-3',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'La raíz cuadrada de 2 es √2 ≈ 1.414213... Si aproximamos √2 por 1.4, ¿cuál es el error absoluto de esta aproximación?',
+    questionLatex: '\\text{Si } \\sqrt{2} \\approx 1.414 \\text{ se aproxima por 1.4, ¿error absoluto?}',
+    options: ['0.014', '0.014213', '0.01', '0.1'],
+    optionsLatex: ['0.014', '0.014213', '0.01', '0.1'],
+    correctAnswer: 0,
+    explanation: 'Error absoluto = |valor real - valor aproximado| = |1.414 - 1.4| ≈ 0.014',
+    explanationLatex: '\\text{Error} = |1.414 - 1.4| \\approx 0.014',
+    difficulty: 'medium',
+    skills: ['numeros-reales-aproximaciones', 'numeros-error-absoluto', 'numeros-raices', 'numeros-operaciones-basicas']
+  },
+  // Subsection D: Intervalos y conjuntos en la recta real
+  {
+    id: 'm2-num-int-1',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'El intervalo [2, 5) representa el conjunto de números reales x tales que:',
+    questionLatex: '\\text{El intervalo } [2, 5) \\text{ representa:}',
+    options: ['2 < x < 5', '2 ≤ x < 5', '2 < x ≤ 5', '2 ≤ x ≤ 5'],
+    optionsLatex: ['2 < x < 5', '2 \\leq x < 5', '2 < x \\leq 5', '2 \\leq x \\leq 5'],
+    correctAnswer: 1,
+    explanation: 'El corchete [ indica que 2 está incluido (≤), el paréntesis ) indica que 5 no está incluido (<)',
+    explanationLatex: '[2, 5) = \\{x \\in \\mathbb{R} : 2 \\leq x < 5\\}',
+    difficulty: 'easy',
+    skills: ['numeros-reales-intervalos', 'numeros-notacion-intervalos', 'numeros-desigualdades']
+  },
+  {
+    id: 'm2-num-int-2',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'La desigualdad x > -3 se representa en notación de intervalos como:',
+    questionLatex: '\\text{La desigualdad } x > -3 \\text{ en notación de intervalos:}',
+    options: ['[-3, ∞)', '(-3, ∞)', '(-∞, -3)', '(-∞, -3]'],
+    optionsLatex: ['[-3, \\infty)', '(-3, \\infty)', '(-\\infty, -3)', '(-\\infty, -3]'],
+    correctAnswer: 1,
+    explanation: 'x > -3 significa x mayor que -3 (no incluye -3) hasta infinito: (-3, ∞)',
+    explanationLatex: 'x > -3 \\Leftrightarrow x \\in (-3, \\infty)',
+    difficulty: 'medium',
+    skills: ['numeros-reales-intervalos', 'numeros-notacion-intervalos', 'numeros-desigualdades', 'numeros-recta-numerica']
+  },
+  {
+    id: 'm2-num-int-3',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'La intersección de los intervalos [1, 6] y [4, 9] es:',
+    questionLatex: '\\text{La intersección } [1, 6] \\cap [4, 9] \\text{ es:}',
+    options: ['[1, 9]', '[4, 6]', '[1, 4]', '[6, 9]'],
+    optionsLatex: ['[1, 9]', '[4, 6]', '[1, 4]', '[6, 9]'],
+    correctAnswer: 1,
+    explanation: 'La intersección contiene los números que están en ambos intervalos: desde 4 hasta 6',
+    explanationLatex: '[1, 6] \\cap [4, 9] = [4, 6]',
+    difficulty: 'medium',
+    skills: ['numeros-reales-intervalos', 'numeros-operaciones-intervalos', 'numeros-interseccion-intervalos', 'numeros-conjuntos']
+  },
+  {
+    id: 'm2-num-int-4',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    question: 'La unión de los intervalos (-∞, 2] y (5, ∞) se representa como:',
+    questionLatex: '\\text{La unión } (-\\infty, 2] \\cup (5, \\infty) \\text{ es:}',
+    options: ['(-∞, ∞)', '(-∞, 2] ∪ (5, ∞)', '[2, 5]', '(2, 5)'],
+    optionsLatex: ['(-\\infty, \\infty)', '(-\\infty, 2] \\cup (5, \\infty)', '[2, 5]', '(2, 5)'],
+    correctAnswer: 1,
+    explanation: 'Los intervalos no se superponen (hay un espacio entre 2 y 5), por lo que la unión se mantiene como dos intervalos separados',
+    explanationLatex: '(-\\infty, 2] \\cup (5, \\infty) \\text{ (intervalos disjuntos)}',
+    difficulty: 'hard',
+    skills: ['numeros-reales-intervalos', 'numeros-operaciones-intervalos', 'numeros-union-intervalos', 'numeros-conjuntos']
   }
 ];

@@ -27,7 +27,7 @@ export const m2Alg001Questions: Question[] = [
     explanation: 'Sumando las ecuaciones: 3x = 9, entonces x = 3. Sustituyendo: 3 - y = 1, entonces y = 2',
     explanationLatex: '3x = 9 \\rightarrow x = 3. \\quad \\text{Sustituyendo: } 3 - y = 1 \\rightarrow y = 2',
     difficulty: 'medium',
-    skills: ['algebra-sistemas-ecuaciones', 'algebra-metodo-eliminacion', 'algebra-metodo-sustitucion', 'algebra-despeje', 'numeros-operaciones-basicas']
+    skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-metodo-eliminacion', 'algebra-metodo-sustitucion', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-alg-sist-1',
@@ -41,7 +41,7 @@ export const m2Alg001Questions: Question[] = [
     explanation: 'Multiplicamos la segunda ecuación por 2 y sumamos:',
     explanationLatex: '3x + 2y = 12 \\text{ y } 10x - 2y = 22 \\rightarrow 13x = 34 \\rightarrow x = 2, y = 3',
     difficulty: 'hard',
-    skills: ['algebra-sistemas-ecuaciones', 'algebra-metodo-eliminacion', 'algebra-despeje', 'numeros-operaciones-basicas']
+    skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-metodo-eliminacion', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-alg-sist-2',
@@ -55,7 +55,7 @@ export const m2Alg001Questions: Question[] = [
     explanation: 'Un sistema tiene solución única cuando las rectas se intersectan en exactamente un punto',
     explanationLatex: '\\text{Las rectas se intersectan en un punto único} \\rightarrow \\text{una solución}',
     difficulty: 'medium',
-    skills: ['algebra-sistemas-ecuaciones', 'algebra-interpretacion-geometrica', 'geometria-rectas', 'algebra-solucion-sistemas']
+    skills: ['sistemas-interpretacion-geometrica', 'sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-interpretacion-geometrica', 'geometria-rectas', 'algebra-solucion-sistemas']
   },
   {
     id: 'm2-alg-sist-3',
@@ -70,7 +70,7 @@ export const m2Alg001Questions: Question[] = [
     explanation: 'Resolviendo por eliminación gaussiana: de las ecuaciones 1 y 3: z = 1, luego x = 2, y = 1',
     explanationLatex: '\\text{Sistema 3×3: eliminación gaussiana} \\rightarrow x = 2, y = 1, z = 1',
     difficulty: 'extreme',
-    skills: ['algebra-sistemas-ecuaciones', 'algebra-sistemas-3x3', 'algebra-eliminacion-gaussiana', 'algebra-despeje', 'numeros-operaciones-basicas']
+    skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-sistemas-3x3', 'algebra-eliminacion-gaussiana', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-alg-sist-4',
@@ -85,7 +85,7 @@ export const m2Alg001Questions: Question[] = [
     explanation: 'Sustituimos y = 2x - 1 en la segunda ecuación:',
     explanationLatex: '3x + 4(2x - 1) = 20 \\rightarrow 3x + 8x - 4 = 20 \\rightarrow 11x = 24 \\rightarrow x = 2, y = 3',
     difficulty: 'medium',
-    skills: ['algebra-sistemas-ecuaciones', 'algebra-metodo-sustitucion', 'algebra-despeje', 'numeros-operaciones-basicas']
+    skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-metodo-sustitucion', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
     id: 'm2-alg-sist-5',
@@ -100,7 +100,7 @@ export const m2Alg001Questions: Question[] = [
     explanation: 'Para infinitas soluciones, la segunda ecuación debe ser múltiplo de la primera:',
     explanationLatex: '4x + 6y = 2(2x + 3y) = 2(6) = 12 \\rightarrow k = 12',
     difficulty: 'hard',
-    skills: ['algebra-sistemas-ecuaciones', 'algebra-solucion-sistemas', 'algebra-ecuaciones-parametricas', 'algebra-interpretacion-geometrica']
+    skills: ['sistemas-infinitas-soluciones', 'algebra-sistemas-ecuaciones', 'algebra-solucion-sistemas', 'algebra-ecuaciones-parametricas', 'algebra-interpretacion-geometrica']
   },
   {
     id: 'm2-alg-sist-6',
@@ -114,6 +114,22 @@ export const m2Alg001Questions: Question[] = [
     explanation: 'Planteamos x + y = 15 y x - y = 3. Sumando: 2x = 18, x = 9. Entonces y = 6',
     explanationLatex: 'x + y = 15, \\; x - y = 3 \\rightarrow 2x = 18 \\rightarrow x = 9, y = 6',
     difficulty: 'medium',
-    skills: ['algebra-sistemas-ecuaciones', 'algebra-problemas-aplicados', 'algebra-planteamiento-ecuaciones', 'numeros-operaciones-basicas']
+    skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-problemas-aplicados', 'algebra-planteamiento-ecuaciones', 'numeros-operaciones-basicas']
+  },
+  // Subsection C: Sistemas sin solución
+  {
+    id: 'm2-alg-nosol-1',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    question: 'El sistema $2x + 3y = 6$ y $4x + 6y = 15$ no tiene solución porque:',
+    questionLatex: '\\text{Sistema } 2x + 3y = 6 \\text{ y } 4x + 6y = 15 \\text{ no tiene solución porque:}',
+    options: ['Las rectas son paralelas', 'Las rectas son perpendiculares', 'Las rectas son coincidentes', 'Las pendientes son diferentes'],
+    optionsLatex: ['\\text{Rectas paralelas}', '\\text{Rectas perpendiculares}', '\\text{Rectas coincidentes}', '\\text{Pendientes diferentes}'],
+    correctAnswer: 0,
+    explanation: 'La segunda ecuación es 2×(primera) en los coeficientes de x,y pero no en el término constante (12 ≠ 15). Son rectas paralelas',
+    explanationLatex: '4x + 6y = 2(2x + 3y) \\text{ pero } 15 \\neq 2(6) \\Rightarrow \\text{paralelas, sin solución}',
+    difficulty: 'hard',
+    skills: ['sistemas-sin-solucion', 'sistemas-interpretacion-geometrica', 'algebra-sistemas-ecuaciones', 'geometria-rectas-paralelas']
   }
 ];
