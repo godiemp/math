@@ -71,10 +71,10 @@ interface GenerateQuestionAnswerInput {
 
 interface GenerateQuestionAnswerResponse {
   correctAnswer: number; // Index 0-3
+  // Options in LaTeX format (pure LaTeX without $ delimiters)
   options: string[];
-  optionsLatex?: string[];
+  // Explanation in LaTeX format
   explanation: string;
-  explanationLatex?: string;
 }
 
 interface GenerateCompleteQuestionInput {
@@ -88,11 +88,11 @@ interface GenerateCompleteQuestionInput {
 interface GenerateCompleteQuestionResponse {
   question: string;
   questionLatex?: string;
+  // Options in LaTeX format
   options: string[];
-  optionsLatex?: string[];
   correctAnswer: number;
+  // Explanation in LaTeX format
   explanation: string;
-  explanationLatex?: string;
   context: string;
   variables?: Record<string, any>;
 }
@@ -272,14 +272,14 @@ ${Object.entries(input.variables).map(([k, v]) => `- ${k}: ${v}`).join('\n')}
 Responde con este formato JSON exacto:
 {
   "correctAnswer": 0,
-  "options": ["opción correcta", "distractor 1", "distractor 2", "distractor 3"],
-  "optionsLatex": ["$respuesta$ correcta", "$distractor$ 1", "$distractor$ 2", "$distractor$ 3"],
-  "explanation": "Explicación paso a paso",
-  "explanationLatex": "Explicación con $LaTeX$"
+  "options": ["respuesta correcta en LaTeX", "distractor 1 en LaTeX", "distractor 2 en LaTeX", "distractor 3 en LaTeX"],
+  "explanation": "Explicación paso a paso con LaTeX. Usa \\\\text{} para texto y notación matemática directa para fórmulas"
 }
 
 IMPORTANTE:
 - correctAnswer debe ser el índice (0-3) donde está la respuesta correcta en el array options
+- Las opciones deben ser en formato LaTeX puro (sin delimitadores $), ejemplo: "\\\\frac{1}{2}" o "6x" o "\\\\text{9 metros}"
+- La explicación debe ser en formato LaTeX completo
 - Mezcla la respuesta correcta entre los distractores (no siempre en posición 0)
 - Los distractores deben ser errores comunes: olvidos de pasos, errores de signo, confusión de fórmulas, etc.`;
 
@@ -769,17 +769,18 @@ IMPORTANTE:
 Responde con este formato JSON exacto:
 {
   "question": "Texto de la pregunta",
-  "questionLatex": "Texto de la pregunta con $LaTeX$",
-  "options": ["opción A", "opción B", "opción C", "opción D"],
-  "optionsLatex": ["opción A con $LaTeX$", "opción B", "opción C", "opción D"],
+  "questionLatex": "Texto de la pregunta con LaTeX",
+  "options": ["opción A en LaTeX", "opción B en LaTeX", "opción C en LaTeX", "opción D en LaTeX"],
   "correctAnswer": 0,
-  "explanation": "**Paso 1:** ...\n\n**Paso 2:** ...\n\n**Errores comunes:**\n- Error 1\n- Error 2",
-  "explanationLatex": "**Paso 1:** $formula$ ...\n\n**Paso 2:** ...",
+  "explanation": "\\\\text{Paso 1:} formula \\\\quad \\\\text{Paso 2:} ... Explicación completa en LaTeX",
   "context": "Breve descripción del contexto usado",
   "variables": {"variable1": valor1, "variable2": valor2}
 }
 
-NOTA: correctAnswer debe ser el índice (0-3) de la opción correcta. Mezcla la posición de la respuesta correcta.`;
+NOTA:
+- correctAnswer debe ser el índice (0-3) de la opción correcta. Mezcla la posición de la respuesta correcta.
+- Las opciones deben ser en formato LaTeX puro (sin delimitadores $), ejemplo: "\\\\frac{1}{2}" o "6x" o "\\\\text{9 metros}"
+- La explicación debe ser en formato LaTeX completo, usa \\\\text{} para texto narrativo`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {

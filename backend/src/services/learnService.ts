@@ -15,11 +15,11 @@ interface Question {
   subject: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
   question: string;
   questionLatex?: string;
+  // Options in LaTeX format
   options: string[];
-  optionsLatex?: string[];
   correctAnswer: number;
+  // Explanation in LaTeX format
   explanation: string;
-  explanationLatex?: string;
   difficulty: 'easy' | 'medium' | 'hard' | 'extreme';
   operacionBase?: string;
   skills: string[];
@@ -524,10 +524,10 @@ FORMATO LATEX:
 **Pregunta seleccionada:**
 ${question.questionLatex}
 
-**Respuesta correcta:** ${question.optionsLatex?.[question.correctAnswer] || question.options[question.correctAnswer]}
+**Respuesta correcta:** ${question.options[question.correctAnswer]}
 
 **Explicación oficial:**
-${question.explanationLatex || question.explanation}
+${question.explanation}
 
 Crea pasos personalizados que:
 1. Aborden sus gaps específicos
@@ -639,13 +639,12 @@ export async function getNextStep(
 
   if (!step) {
     // Problem is complete
-    const correctAnswer = problemData.question.optionsLatex?.[problemData.question.correctAnswer]
-      || problemData.question.options[problemData.question.correctAnswer];
+    const correctAnswer = problemData.question.options[problemData.question.correctAnswer];
 
     return {
       stepNumber: nextStep,
       stepDescription: '¡Felicidades! Has completado todos los pasos.',
-      stepGuidance: problemData.question.explanationLatex || problemData.question.explanation,
+      stepGuidance: problemData.question.explanation,
       isComplete: true,
       finalAnswer: correctAnswer
     };
@@ -852,10 +851,10 @@ FORMATO LATEX:
 ${question.questionLatex}
 
 **Opciones:**
-A) ${question.optionsLatex?.[0] || question.options[0]}
-B) ${question.optionsLatex?.[1] || question.options[1]}
-C) ${question.optionsLatex?.[2] || question.options[2]}
-D) ${question.optionsLatex?.[3] || question.options[3]}
+A) ${question.options[0]}
+B) ${question.options[1]}
+C) ${question.options[2]}
+D) ${question.options[3]}
 
 **Respuesta correcta:** ${['A', 'B', 'C', 'D'][question.correctAnswer]}
 **Tema:** ${subject}
@@ -975,14 +974,14 @@ IMPORTANTE: Si el estudiante encuentra la respuesta correcta (${['A', 'B', 'C', 
 ${session.question.questionLatex}
 
 **Opciones:**
-A) ${session.question.optionsLatex?.[0] || session.question.options[0]}
-B) ${session.question.optionsLatex?.[1] || session.question.options[1]}
-C) ${session.question.optionsLatex?.[2] || session.question.options[2]}
-D) ${session.question.optionsLatex?.[3] || session.question.options[3]}
+A) ${session.question.options[0]}
+B) ${session.question.options[1]}
+C) ${session.question.options[2]}
+D) ${session.question.options[3]}
 
-**Respuesta correcta:** ${['A', 'B', 'C', 'D'][session.question.correctAnswer]} (${session.question.optionsLatex?.[session.question.correctAnswer] || session.question.options[session.question.correctAnswer]})
+**Respuesta correcta:** ${['A', 'B', 'C', 'D'][session.question.correctAnswer]} (${session.question.options[session.question.correctAnswer]})
 
-**Explicación oficial:** ${session.question.explanationLatex || session.question.explanation}
+**Explicación oficial:** ${session.question.explanation}
 
 **Conversación hasta ahora:**
 ${session.conversationHistory.map(m => `${m.role === 'user' ? 'Estudiante' : 'Tutor'}: ${m.content}`).join('\n\n')}

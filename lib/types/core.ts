@@ -105,13 +105,11 @@ export interface Question {
   topic: string;
   level: Level;
   questionLatex: string;
+  // Options in LaTeX format (pure LaTeX without $ delimiters)
   options: string[];
-  // LaTeX versions of options (optional)
-  optionsLatex?: string[];
   correctAnswer: number;
+  // Explanation in LaTeX format (full explanation with LaTeX)
   explanation: string;
-  // LaTeX version of explanation (optional)
-  explanationLatex?: string;
   difficulty: DifficultyLevel;
   // Subject area for better categorization
   subject: Subject;
@@ -177,7 +175,9 @@ export interface QuestionAttempt {
   correctAnswer: number;
   isCorrect: boolean;
   timestamp: number;
+  // Options in LaTeX format
   options: string[];
+  // Explanation in LaTeX format
   explanation: string;
   difficulty: DifficultyLevel;
   subject: Subject;
@@ -381,11 +381,11 @@ export interface ProgressiveQuestion {
   questionIndex: number; // 1, 2, 3, ... for n₁, n₂, n₃
   question: string;
   questionLatex?: string;
+  // Options in LaTeX format
   options: string[];
-  optionsLatex?: string[];
   correctAnswer: number;
+  // Explanation in LaTeX format
   explanation?: string;
-  explanationLatex?: string;
   difficulty?: DifficultyLevel;
   skillsTested: string[]; // Skills this specific question tests
   buildsOn?: string; // ID of previous question this builds upon

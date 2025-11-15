@@ -269,10 +269,12 @@ export const saveQuestions = async (req: Request, res: Response): Promise<void> 
             question.questionLatex, // Use questionLatex for the question field too
             question.questionLatex,
             JSON.stringify(question.options),
-            JSON.stringify(question.optionsLatex || question.options),
+            // options_latex now stores the same as options (consolidated LaTeX)
+            JSON.stringify(question.options),
             question.correctAnswer,
             question.explanation,
-            question.explanationLatex || question.explanation,
+            // explanation_latex now stores the same as explanation (consolidated LaTeX)
+            question.explanation,
             question.difficulty,
             JSON.stringify(question.skills),
             question.images ? JSON.stringify(question.images) : null,
@@ -341,8 +343,10 @@ export const getQuestions = async (req: Request, res: Response): Promise<void> =
     // Parse JSON fields
     const questions = result.rows.map(row => ({
       ...row,
-      options: JSON.parse(row.options),
-      optionsLatex: row.options_latex ? JSON.parse(row.options_latex) : null,
+      // Options are now in LaTeX format directly
+      options: row.options_latex ? JSON.parse(row.options_latex) : JSON.parse(row.options),
+      // Explanation is now in LaTeX format directly
+      explanation: row.explanation_latex || row.explanation,
       skills: JSON.parse(row.skills),
       images: row.images ? JSON.parse(row.images) : null,
       visualData: row.visual_data ? JSON.parse(row.visual_data) : null,

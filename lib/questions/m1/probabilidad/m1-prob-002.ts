@@ -23,8 +23,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{La media aritmética de los números 4, 6, 8 y 10 es:}',
     options: ['6', '7', '8', '9'],
     correctAnswer: 1,
-    explanation: 'Calculamos la media:',
-    explanationLatex: '\\bar{x} = \\frac{4 + 6 + 8 + 10}{4} = \\frac{28}{4} = 7',
+    explanation: '\\bar{x} = \\frac{4 + 6 + 8 + 10}{4} = \\frac{28}{4} = 7',
     difficulty: 'easy',
     skills: ['estadistica-media', 'numeros-operaciones-basicas', 'numeros-fracciones']
   },
@@ -36,8 +35,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{¿Cuál es la mediana del conjunto de datos: 3, 7, 5, 9, 11?}',
     options: ['5', '7', '9', '11'],
     correctAnswer: 1,
-    explanation: 'Primero ordenamos los datos: 3, 5, 7, 9, 11. La mediana es el valor central:',
-    explanationLatex: '\\text{Mediana} = 7',
+    explanation: '\\text{Mediana} = 7',
     difficulty: 'easy',
     skills: ['estadistica-mediana', 'numeros-operaciones-basicas']
   },
@@ -49,8 +47,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{¿Cuál es la moda del conjunto: 2, 3, 3, 5, 7, 3, 9?}',
     options: ['2', '3', '5', '7'],
     correctAnswer: 1,
-    explanation: 'La moda es el valor que más se repite:',
-    explanationLatex: '\\text{Moda} = 3 \\text{ (aparece 3 veces)}',
+    explanation: '\\text{Moda} = 3 \\text{ (aparece 3 veces)}',
     difficulty: 'easy',
     skills: ['estadistica-moda']
   },
@@ -62,8 +59,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{El rango del conjunto de datos 12, 8, 15, 20, 9 es:}',
     options: ['8', '9', '12', '12'],
     correctAnswer: 2,
-    explanation: 'El rango es la diferencia entre el valor máximo y mínimo:',
-    explanationLatex: '\\text{Rango} = 20 - 8 = 12',
+    explanation: '\\text{Rango} = 20 - 8 = 12',
     difficulty: 'easy',
     skills: ['estadistica-rango', 'numeros-operaciones-basicas']
   },
@@ -75,8 +71,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{La media de 5, 8, 10 y 13 es:}',
     options: ['8', '9', '10', '11'],
     correctAnswer: 1,
-    explanation: 'Sumamos todos los valores y dividimos por la cantidad:',
-    explanationLatex: '\\bar{x} = \\frac{5 + 8 + 10 + 13}{4} = \\frac{36}{4} = 9',
+    explanation: '\\bar{x} = \\frac{5 + 8 + 10 + 13}{4} = \\frac{36}{4} = 9',
     difficulty: 'easy',
     skills: ['estadistica-media', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
@@ -88,8 +83,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Datos: 3, 7, 3, 9, 5, 3, 7, 5. ¿Dato más frecuente?}',
     options: ['3', '5', '7', '9'],
     correctAnswer: 0,
-    explanation: 'El dato 3 aparece 3 veces (más que cualquier otro):',
-    explanationLatex: '\\text{Dato más frecuente (moda)} = 3',
+    explanation: '\\text{Dato más frecuente (moda)} = 3',
     difficulty: 'easy',
     skills: ['estadistica-moda', 'estadistica-frecuencia']
   },
@@ -101,8 +95,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Valor mínimo: 12, máximo: 48. ¿Rango?}',
     options: ['12', '24', '36', '48'],
     correctAnswer: 2,
-    explanation: 'El rango es la diferencia entre el máximo y el mínimo:',
-    explanationLatex: '\\text{Rango} = 48 - 12 = 36',
+    explanation: '\\text{Rango} = 48 - 12 = 36',
     difficulty: 'easy',
     skills: ['estadistica-rango', 'numeros-operaciones-basicas']
   },
@@ -114,8 +107,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Datos: 2, 4, 6, 8, 10, 12. ¿Mediana?}',
     options: ['6', '7', '8', '9'],
     correctAnswer: 1,
-    explanation: 'Con cantidad par de datos, la mediana es el promedio de los dos centrales:',
-    explanationLatex: '\\text{Mediana} = \\frac{6 + 8}{2} = 7',
+    explanation: '\\text{Mediana} = \\frac{6 + 8}{2} = 7',
     difficulty: 'easy',
     skills: ['estadistica-mediana', 'numeros-operaciones-basicas']
   },
@@ -127,8 +119,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Notas: 5.5, 6.0, 4.5, 6.5. ¿Promedio?}',
     options: ['5.0', '5.5', '5.625', '6.0'],
     correctAnswer: 2,
-    explanation: 'Sumamos y dividimos por la cantidad:',
-    explanationLatex: '\\bar{x} = \\frac{5.5 + 6.0 + 4.5 + 6.5}{4} = \\frac{22.5}{4} = 5.625',
+    explanation: '\\bar{x} = \\frac{5.5 + 6.0 + 4.5 + 6.5}{4} = \\frac{22.5}{4} = 5.625',
     difficulty: 'medium',
     skills: ['estadistica-media', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
@@ -140,8 +131,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Promedio de 3 números es 12. Dos son 10 y 15. ¿Tercer número?}',
     options: ['9', '11', '13', '15'],
     correctAnswer: 1,
-    explanation: 'Si la media es 12, la suma es 36:',
-    explanationLatex: '10 + 15 + x = 36 \\rightarrow x = 36 - 25 = 11',
+    explanation: '10 + 15 + x = 36 \\rightarrow x = 36 - 25 = 11',
     difficulty: 'medium',
     skills: ['estadistica-media', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
@@ -153,8 +143,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{5 personas: 20, 22, 24, 26, 28. Entra una 6ta. Nuevo promedio: 25. ¿Edad de la nueva?}',
     options: ['28', '30', '32', '34'],
     correctAnswer: 1,
-    explanation: 'Suma inicial: 120. Nueva suma debe ser 25 × 6 = 150:',
-    explanationLatex: 'x = 150 - 120 = 30',
+    explanation: 'x = 150 - 120 = 30',
     difficulty: 'hard',
     skills: ['estadistica-media', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
@@ -166,8 +155,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Datos: 15, 8, 23, 12, 19. ¿Mediana?}',
     options: ['12', '15', '17', '19'],
     correctAnswer: 1,
-    explanation: 'Ordenamos: 8, 12, 15, 19, 23. La mediana es el valor central:',
-    explanationLatex: '\\text{Mediana} = 15',
+    explanation: '\\text{Mediana} = 15',
     difficulty: 'easy',
     skills: ['estadistica-mediana', 'numeros-orden']
   },
@@ -179,8 +167,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Datos: 4, 7, 9, 11, 13, 15. ¿Mediana?}',
     options: ['9', '10', '11', '12'],
     correctAnswer: 1,
-    explanation: 'Con 6 datos, promediamos los dos centrales:',
-    explanationLatex: '\\text{Mediana} = \\frac{9 + 11}{2} = 10',
+    explanation: '\\text{Mediana} = \\frac{9 + 11}{2} = 10',
     difficulty: 'easy',
     skills: ['estadistica-mediana', 'numeros-operaciones-basicas']
   },
@@ -192,8 +179,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Sueldos: 500, 520, 540, 560, 580, 600, 1200. ¿Medida más representativa?}',
     options: ['Media', 'Mediana', 'Moda', 'Rango'],
     correctAnswer: 1,
-    explanation: 'La mediana es menos afectada por valores extremos:',
-    explanationLatex: '\\text{Mediana} = 560 \\text{ (más representativa que media} \\approx 643)',
+    explanation: '\\text{Mediana} = 560 \\text{ (más representativa que media} \\approx 643)',
     difficulty: 'hard',
     skills: ['estadistica-mediana', 'estadistica-media', 'estadistica-interpretacion']
   },
@@ -205,8 +191,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Datos: 1, 2, 2, 3, 3, 3, 4, 4, 5. ¿Moda?}',
     options: ['2', '3', '4', 'No hay moda'],
     correctAnswer: 1,
-    explanation: 'El valor que más se repite es 3 (aparece 3 veces):',
-    explanationLatex: '\\text{Moda} = 3',
+    explanation: '\\text{Moda} = 3',
     difficulty: 'easy',
     skills: ['estadistica-moda', 'estadistica-frecuencia']
   },
@@ -218,8 +203,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Datos: 5, 7, 5, 9, 7, 3, 5, 7. ¿Cuántas modas?}',
     options: ['0', '1', '2', '3'],
     correctAnswer: 2,
-    explanation: 'Tanto 5 como 7 aparecen 3 veces (bimodal):',
-    explanationLatex: '\\text{Dos modas: 5 y 7}',
+    explanation: '\\text{Dos modas: 5 y 7}',
     difficulty: 'medium',
     skills: ['estadistica-moda', 'estadistica-frecuencia']
   },
@@ -231,8 +215,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Si todos los valores aparecen una vez, ¿moda?}',
     options: ['El mayor', 'El menor', 'El promedio', 'No hay moda'],
     correctAnswer: 3,
-    explanation: 'Si no hay valores repetidos, no hay moda:',
-    explanationLatex: '\\text{No hay moda cuando todos tienen la misma frecuencia}',
+    explanation: '\\text{No hay moda cuando todos tienen la misma frecuencia}',
     difficulty: 'easy',
     skills: ['estadistica-moda', 'estadistica-conceptos']
   },
@@ -244,8 +227,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Datos: 10, 10, 10, 10, 10. ¿Afirmación verdadera?}',
     options: ['Media = Mediana = Moda', 'Solo Media = Moda', 'Solo Media = Mediana', 'Todas son diferentes'],
     correctAnswer: 0,
-    explanation: 'Cuando todos los datos son iguales:',
-    explanationLatex: '\\text{Media} = \\text{Mediana} = \\text{Moda} = 10',
+    explanation: '\\text{Media} = \\text{Mediana} = \\text{Moda} = 10',
     difficulty: 'easy',
     skills: ['estadistica-media', 'estadistica-mediana', 'estadistica-moda', 'estadistica-conceptos']
   },
@@ -257,8 +239,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Datos: 2, 3, 4, 5, 6. ¿Correcto?}',
     options: ['Media = Mediana = 4', 'Media = 4, Mediana = 5', 'Media = 5, Mediana = 4', 'Media = Mediana = 5'],
     correctAnswer: 0,
-    explanation: 'Para datos simétricos:',
-    explanationLatex: '\\text{Media} = \\frac{20}{5} = 4, \\quad \\text{Mediana} = 4',
+    explanation: '\\text{Media} = \\frac{20}{5} = 4, \\quad \\text{Mediana} = 4',
     difficulty: 'easy',
     skills: ['estadistica-media', 'estadistica-mediana', 'numeros-operaciones-basicas']
   },
@@ -270,8 +251,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Si media >> mediana, ¿qué indica?}',
     options: ['Datos simétricos', 'Datos sesgados hacia la izquierda', 'Datos sesgados hacia la derecha', 'No se puede determinar'],
     correctAnswer: 2,
-    explanation: 'Una media mayor que la mediana indica sesgo positivo:',
-    explanationLatex: '\\text{Hay valores extremos altos que elevan la media}',
+    explanation: '\\text{Hay valores extremos altos que elevan la media}',
     difficulty: 'hard',
     skills: ['estadistica-media', 'estadistica-mediana', 'estadistica-interpretacion']
   },
@@ -283,8 +263,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Notas: 50, 60, 70, 80, 90. Se agrega 100. ¿Qué pasa con la media?}',
     options: ['Disminuye', 'Se mantiene', 'Aumenta', 'Se duplica'],
     correctAnswer: 2,
-    explanation: 'La nueva nota (100) es mayor que la media original (70):',
-    explanationLatex: '\\text{Media original} = 70, \\quad \\text{Nueva media} = \\frac{450}{6} = 75',
+    explanation: '\\text{Media original} = 70, \\quad \\text{Nueva media} = \\frac{450}{6} = 75',
     difficulty: 'medium',
     skills: ['estadistica-media', 'estadistica-interpretacion', 'numeros-operaciones-basicas']
   },
@@ -296,8 +275,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Promedios parciales: 5.0, 6.0, 7.0. Promedio final?}',
     options: ['5.5', '6.0', '6.5', '7.0'],
     correctAnswer: 1,
-    explanation: 'Promedio de promedios con igual ponderación:',
-    explanationLatex: '\\bar{x} = \\frac{5.0 + 6.0 + 7.0}{3} = 6.0',
+    explanation: '\\bar{x} = \\frac{5.0 + 6.0 + 7.0}{3} = 6.0',
     difficulty: 'easy',
     skills: ['estadistica-media', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
@@ -309,8 +287,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Temperaturas: 20, 22, 21, 23, 22, 24, 22. ¿Más frecuente?}',
     options: ['20°C', '21°C', '22°C', '23°C'],
     correctAnswer: 2,
-    explanation: '22°C aparece 3 veces:',
-    explanationLatex: '\\text{Moda} = 22°C',
+    explanation: '\\text{Moda} = 22°C',
     difficulty: 'easy',
     skills: ['estadistica-moda', 'estadistica-frecuencia']
   },
@@ -322,8 +299,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Datos: 15, 23, 18, 32, 27, 19. ¿Rango?}',
     options: ['15', '17', '19', '32'],
     correctAnswer: 1,
-    explanation: 'Rango = máximo - mínimo:',
-    explanationLatex: '\\text{Rango} = 32 - 15 = 17',
+    explanation: '\\text{Rango} = 32 - 15 = 17',
     difficulty: 'easy',
     skills: ['estadistica-rango', 'numeros-operaciones-basicas']
   },
@@ -335,8 +311,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{Si el rango es 0, ¿qué significa?}',
     options: ['Todos los datos son 0', 'Todos los datos son iguales', 'No hay datos', 'Hay un error'],
     correctAnswer: 1,
-    explanation: 'Rango 0 implica que máximo = mínimo:',
-    explanationLatex: '\\text{Todos los datos tienen el mismo valor}',
+    explanation: '\\text{Todos los datos tienen el mismo valor}',
     difficulty: 'easy',
     skills: ['estadistica-rango', 'estadistica-conceptos']
   },
@@ -348,8 +323,7 @@ export const m1Prob002Questions: Question[] = [
     questionLatex: '\\text{A = \\{10, 15, 20\\}, B = \\{5, 15, 30\\}. ¿Mayor dispersión?}',
     options: ['A', 'B', 'Igual dispersión', 'No se puede determinar'],
     correctAnswer: 1,
-    explanation: 'Comparamos rangos:',
-    explanationLatex: '\\text{Rango}_A = 10, \\quad \\text{Rango}_B = 25',
+    explanation: '\\text{Rango}_A = 10, \\quad \\text{Rango}_B = 25',
     difficulty: 'medium',
     skills: ['estadistica-rango', 'estadistica-dispersion', 'numeros-operaciones-basicas']
   }

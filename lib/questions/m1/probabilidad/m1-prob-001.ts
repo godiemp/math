@@ -23,8 +23,7 @@ export const m1Prob001Questions: Question[] = [
     questionLatex: '\\text{En una clase hay 12 niños y 18 niñas. ¿Qué porcentaje son niños?}',
     options: ['30%', '40%', '50%', '60%'],
     correctAnswer: 1,
-    explanation: 'Calculamos el porcentaje:',
-    explanationLatex: '\\frac{12}{12 + 18} = \\frac{12}{30} = 0.4 = 40\\%',
+    explanation: '\\frac{12}{12 + 18} = \\frac{12}{30} = 0.4 = 40\\%',
     difficulty: 'easy',
     skills: ['estadistica-porcentajes', 'numeros-porcentajes', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
@@ -36,8 +35,7 @@ export const m1Prob001Questions: Question[] = [
     questionLatex: '\\text{Edades: 15, 16, 15, 17, 16, 15, 16, 17, 15, 16. Frecuencia absoluta de 16?}',
     options: ['3', '4', '5', '6'],
     correctAnswer: 1,
-    explanation: 'Contamos cuántas veces aparece 16:',
-    explanationLatex: '\\text{Frecuencia de 16} = 4',
+    explanation: '\\text{Frecuencia de 16} = 4',
     difficulty: 'easy',
     skills: ['estadistica-frecuencia', 'estadistica-tablas']
   },
@@ -49,8 +47,7 @@ export const m1Prob001Questions: Question[] = [
     questionLatex: '\\text{20 personas: 8 azul, 7 rojo, 5 verde. Frecuencia relativa de azul?}',
     options: ['0.35', '0.40', '0.45', '0.50'],
     correctAnswer: 1,
-    explanation: 'Frecuencia relativa es el cociente entre frecuencia absoluta y total:',
-    explanationLatex: 'f_r = \\frac{8}{20} = 0.40',
+    explanation: 'f_r = \\frac{8}{20} = 0.40',
     difficulty: 'easy',
     skills: ['estadistica-frecuencia', 'estadistica-tablas', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
@@ -62,8 +59,7 @@ export const m1Prob001Questions: Question[] = [
     questionLatex: '\\text{Notas: 4, 5, 6, 5, 7, 4, 5, 6, 5, 4. Frecuencia porcentual de 5?}',
     options: ['30%', '40%', '50%', '60%'],
     correctAnswer: 1,
-    explanation: 'La nota 5 aparece 4 veces de 10:',
-    explanationLatex: 'f_\\% = \\frac{4}{10} \\times 100\\% = 40\\%',
+    explanation: 'f_\\% = \\frac{4}{10} \\times 100\\% = 40\\%',
     difficulty: 'easy',
     skills: ['estadistica-frecuencia', 'estadistica-tablas', 'numeros-porcentajes', 'numeros-operaciones-basicas']
   },
@@ -75,8 +71,7 @@ export const m1Prob001Questions: Question[] = [
     questionLatex: '\\text{Edades: 15 (3), 16 (5), 17 (2). Frecuencia acumulada hasta 16?}',
     options: ['3', '5', '8', '10'],
     correctAnswer: 2,
-    explanation: 'Sumamos las frecuencias hasta 16 años:',
-    explanationLatex: 'F_{16} = 3 + 5 = 8',
+    explanation: 'F_{16} = 3 + 5 = 8',
     difficulty: 'easy',
     skills: ['estadistica-frecuencia', 'estadistica-frecuencia-acumulada', 'numeros-operaciones-basicas']
   },
@@ -88,8 +83,7 @@ export const m1Prob001Questions: Question[] = [
     questionLatex: '\\text{Valor 1 (f=4), Valor 2 (f=6), Valor 3 (f=5). Frecuencia acumulada de 2?}',
     options: ['4', '6', '10', '15'],
     correctAnswer: 2,
-    explanation: 'Frecuencia acumulada suma hasta el valor indicado:',
-    explanationLatex: 'F_2 = 4 + 6 = 10',
+    explanation: 'F_2 = 4 + 6 = 10',
     difficulty: 'easy',
     skills: ['estadistica-frecuencia', 'estadistica-frecuencia-acumulada', 'numeros-operaciones-basicas']
   },
@@ -101,8 +95,7 @@ export const m1Prob001Questions: Question[] = [
     questionLatex: '\\text{Si } F = 20 \\text{ y total} = 50, \\text{ ¿qué porcentaje es } \\leq \\text{ese valor?}',
     options: ['20%', '30%', '40%', '50%'],
     correctAnswer: 2,
-    explanation: 'Porcentaje acumulado:',
-    explanationLatex: '\\frac{20}{50} \\times 100\\% = 40\\%',
+    explanation: '\\frac{20}{50} \\times 100\\% = 40\\%',
     difficulty: 'medium',
     skills: ['estadistica-frecuencia', 'estadistica-frecuencia-acumulada', 'numeros-porcentajes', 'numeros-operaciones-basicas']
   },
@@ -114,8 +107,7 @@ export const m1Prob001Questions: Question[] = [
     questionLatex: '\\text{Ventas: Lunes (30), Martes (45), Miércoles (35). Total?}',
     options: ['100', '105', '110', '115'],
     correctAnswer: 2,
-    explanation: 'Sumamos todas las ventas:',
-    explanationLatex: '30 + 45 + 35 = 110',
+    explanation: '30 + 45 + 35 = 110',
     difficulty: 'easy',
     skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-operaciones-basicas']
   },
@@ -127,8 +119,7 @@ export const m1Prob001Questions: Question[] = [
     questionLatex: '\\text{Deportes: fútbol (40), básquet (25), tenis (15). ¿Porcentaje fútbol?}',
     options: ['40%', '50%', '60%', '75%'],
     correctAnswer: 1,
-    explanation: 'Total de votos: 40 + 25 + 15 = 80:',
-    explanationLatex: '\\frac{40}{80} \\times 100\\% = 50\\%',
+    explanation: '\\frac{40}{80} \\times 100\\% = 50\\%',
     difficulty: 'medium',
     skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas']
   },
@@ -140,8 +131,7 @@ export const m1Prob001Questions: Question[] = [
     questionLatex: '\\text{Temperaturas: Enero (25°C), Febrero (28°C), Marzo (23°C). Diferencia máx-mín?}',
     options: ['3°C', '5°C', '8°C', '10°C'],
     correctAnswer: 1,
-    explanation: 'Diferencia entre máxima y mínima:',
-    explanationLatex: '28 - 23 = 5°C',
+    explanation: '28 - 23 = 5°C',
     difficulty: 'easy',
     skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-operaciones-basicas']
   },
@@ -153,8 +143,7 @@ export const m1Prob001Questions: Question[] = [
     questionLatex: '\\text{Gráfico circular: 50% azul, 30% rojo, 20% verde. De 200, ¿cuántos azules?}',
     options: ['50', '75', '100', '120'],
     correctAnswer: 2,
-    explanation: 'Calculamos el 50% de 200:',
-    explanationLatex: '0.50 \\times 200 = 100',
+    explanation: '0.50 \\times 200 = 100',
     difficulty: 'easy',
     skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas']
   },
@@ -166,8 +155,7 @@ export const m1Prob001Questions: Question[] = [
     questionLatex: '\\text{Gráfico circular de 360°, deportes ocupa 90°. ¿Qué porcentaje?}',
     options: ['20%', '25%', '30%', '35%'],
     correctAnswer: 1,
-    explanation: 'El porcentaje es proporcional al ángulo:',
-    explanationLatex: '\\frac{90}{360} \\times 100\\% = 25\\%',
+    explanation: '\\frac{90}{360} \\times 100\\% = 25\\%',
     difficulty: 'medium',
     skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'geometria-angulos', 'numeros-operaciones-basicas']
   },
@@ -179,8 +167,7 @@ export const m1Prob001Questions: Question[] = [
     questionLatex: '\\text{Gastos: 40% alimentos, 25% vivienda, 20% transporte, 15% otros. De \\$1000, vivienda?}',
     options: ['$200', '$250', '$300', '$400'],
     correctAnswer: 1,
-    explanation: 'Calculamos el 25% del total:',
-    explanationLatex: '0.25 \\times 1000 = 250',
+    explanation: '0.25 \\times 1000 = 250',
     difficulty: 'easy',
     skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas']
   }

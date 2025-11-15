@@ -23,8 +23,7 @@ export const m2Prob001Questions: Question[] = [
     questionLatex: '\\text{En el conjunto de datos } \\{2, 4, 5, 7, 9, 10, 12\\}\\text{, el rango intercuartílico (IQR) es:}',
     options: ['4', '5', '6', '7'],
     correctAnswer: 2,
-    explanation: 'Q1 = 4, Q3 = 10. IQR = Q3 - Q1 = 10 - 4 = 6',
-    explanationLatex: 'Q_1 = 4, \\quad Q_3 = 10 \\quad \\Rightarrow \\quad \\text{IQR} = Q_3 - Q_1 = 10 - 4 = 6',
+    explanation: 'Q_1 = 4, \\quad Q_3 = 10 \\quad \\Rightarrow \\quad \\text{IQR} = Q_3 - Q_1 = 10 - 4 = 6',
     difficulty: 'hard',
     skills: ['estadistica-cuartiles', 'estadistica-rango-intercuartilico', 'estadistica-mediana', 'numeros-operaciones-basicas']
   },
@@ -36,8 +35,7 @@ export const m2Prob001Questions: Question[] = [
     questionLatex: '\\text{En el conjunto } \\{10, 10, 15, 20, 30\\}\\text{, ¿cuál es el rango?}',
     options: ['10', '15', '20', '25'],
     correctAnswer: 2,
-    explanation: 'El rango es la diferencia entre el valor máximo y el mínimo:',
-    explanationLatex: '\\text{Rango} = \\text{Máx} - \\text{Mín} = 30 - 10 = 20',
+    explanation: '\\text{Rango} = \\text{Máx} - \\text{Mín} = 30 - 10 = 20',
     difficulty: 'medium',
     skills: ['estadistica-rango', 'estadistica-medidas-dispersion', 'numeros-operaciones-basicas']
   },
@@ -49,8 +47,7 @@ export const m2Prob001Questions: Question[] = [
     questionLatex: '\\text{En } \\{3, 5, 7, 9, 11\\}\\text{, ¿desviación media absoluta? (media=7)}',
     options: ['2', '2.4', '3', '3.2'],
     correctAnswer: 1,
-    explanation: 'Desviaciones: |3-7|=4, |5-7|=2, |7-7|=0, |9-7|=2, |11-7|=4. Media: (4+2+0+2+4)/5 = 2.4',
-    explanationLatex: '\\text{DMA} = \\frac{|3-7|+|5-7|+|7-7|+|9-7|+|11-7|}{5} = \\frac{12}{5} = 2.4',
+    explanation: '\\text{DMA} = \\frac{|3-7|+|5-7|+|7-7|+|9-7|+|11-7|}{5} = \\frac{12}{5} = 2.4',
     difficulty: 'hard',
     skills: ['estadistica-desviacion-media', 'estadistica-medidas-dispersion', 'estadistica-media', 'numeros-valor-absoluto', 'numeros-operaciones-basicas']
   },
@@ -62,8 +59,7 @@ export const m2Prob001Questions: Question[] = [
     questionLatex: '\\text{Conjunto con varianza 5. Al sumar 3 a cada dato, ¿nueva varianza?}',
     options: ['5', '8', '10', '15'],
     correctAnswer: 0,
-    explanation: 'La varianza es invariante ante traslaciones (sumar una constante):',
-    explanationLatex: '\\text{Var}(X + c) = \\text{Var}(X) = 5',
+    explanation: '\\text{Var}(X + c) = \\text{Var}(X) = 5',
     difficulty: 'hard',
     skills: ['estadistica-varianza', 'estadistica-medidas-dispersion', 'estadistica-propiedades-varianza']
   },
@@ -75,8 +71,7 @@ export const m2Prob001Questions: Question[] = [
     questionLatex: '\\text{En } \\{4, 8, 10, 15, 18, 22, 25\\}\\text{, el primer cuartil } Q_1 \\text{ es:}',
     options: ['6', '8', '9', '10'],
     correctAnswer: 1,
-    explanation: 'Q₁ es la mediana de la primera mitad: {4, 8, 10}. Q₁ = 8',
-    explanationLatex: 'Q_1 = \\text{mediana}(\\{4, 8, 10\\}) = 8',
+    explanation: 'Q_1 = \\text{mediana}(\\{4, 8, 10\\}) = 8',
     difficulty: 'medium',
     skills: ['estadistica-cuartiles', 'estadistica-mediana', 'estadistica-medidas-posicion', 'numeros-operaciones-basicas']
   },
@@ -89,8 +84,7 @@ export const m2Prob001Questions: Question[] = [
     questionLatex: '\\text{Un profesor calcula las notas de un curso pequeño: } \\{4, 5, 6, 7, 8\\}\\text{. La media es 6. ¿Cuál es la varianza de estas notas? (Usa la fórmula: Varianza = promedio de los cuadrados de las desviaciones)}',
     options: ['1', '2', '4', '5'],
     correctAnswer: 1,
-    explanation: 'Desviaciones al cuadrado: (4-6)²=4, (5-6)²=1, (6-6)²=0, (7-6)²=1, (8-6)²=4. Varianza = (4+1+0+1+4)/5 = 10/5 = 2',
-    explanationLatex: '\\text{Var} = \\frac{(4-6)^2+(5-6)^2+(6-6)^2+(7-6)^2+(8-6)^2}{5} = \\frac{10}{5} = 2',
+    explanation: '\\text{Var} = \\frac{(4-6)^2+(5-6)^2+(6-6)^2+(7-6)^2+(8-6)^2}{5} = \\frac{10}{5} = 2',
     difficulty: 'medium',
     skills: ['estadistica-varianza-desviacion', 'estadistica-varianza', 'estadistica-media', 'numeros-operaciones-basicas']
   },
@@ -102,8 +96,7 @@ export const m2Prob001Questions: Question[] = [
     questionLatex: '\\text{Un conjunto de datos tiene varianza igual a 16. ¿Cuál es su desviación estándar?}',
     options: ['2', '4', '8', '256'],
     correctAnswer: 1,
-    explanation: 'La desviación estándar es la raíz cuadrada de la varianza: √16 = 4',
-    explanationLatex: '\\sigma = \\sqrt{\\text{Var}} = \\sqrt{16} = 4',
+    explanation: '\\sigma = \\sqrt{\\text{Var}} = \\sqrt{16} = 4',
     difficulty: 'easy',
     skills: ['estadistica-varianza-desviacion', 'estadistica-desviacion-estandar', 'numeros-raices', 'numeros-operaciones-basicas']
   },
@@ -116,8 +109,7 @@ export const m2Prob001Questions: Question[] = [
     questionLatex: '\\text{Las notas de matemáticas de Ana tienen media 60 y desviación estándar 12. Sus notas de historia tienen media 50 y desviación estándar 8. ¿En qué asignatura es mayor la variabilidad relativa? (Usa coeficiente de variación: CV = desviación estándar / media)}',
     options: ['Matemáticas', 'Historia', 'Iguales', 'No se puede determinar'],
     correctAnswer: 0,
-    explanation: 'CV(Mates) = 12/60 = 0.20 = 20%. CV(Historia) = 8/50 = 0.16 = 16%. Mayor variabilidad relativa en Matemáticas',
-    explanationLatex: 'CV_{\\text{mates}} = \\frac{12}{60} = 0.20 > CV_{\\text{hist}} = \\frac{8}{50} = 0.16',
+    explanation: 'CV_{\\text{mates}} = \\frac{12}{60} = 0.20 > CV_{\\text{hist}} = \\frac{8}{50} = 0.16',
     difficulty: 'hard',
     skills: ['estadistica-coeficiente-variacion', 'estadistica-comparacion-dispersion', 'numeros-division', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
@@ -129,8 +121,7 @@ export const m2Prob001Questions: Question[] = [
     questionLatex: '\\text{Un grupo de datos tiene media 40 y desviación estándar 8. ¿Cuál es su coeficiente de variación expresado como porcentaje?}',
     options: ['5%', '10%', '20%', '32%'],
     correctAnswer: 2,
-    explanation: 'CV = (desviación estándar / media) × 100% = (8/40) × 100% = 0.20 × 100% = 20%',
-    explanationLatex: 'CV = \\frac{8}{40} \\times 100\\% = 20\\%',
+    explanation: 'CV = \\frac{8}{40} \\times 100\\% = 20\\%',
     difficulty: 'medium',
     skills: ['estadistica-coeficiente-variacion', 'numeros-porcentaje', 'numeros-division', 'numeros-operaciones-basicas']
   },
@@ -143,8 +134,7 @@ export const m2Prob001Questions: Question[] = [
     questionLatex: '\\text{Dos grupos de estudiantes rindieron una prueba. Grupo A: media=70, desviación=10. Grupo B: media=70, desviación=15. ¿Qué grupo presenta mayor dispersión en sus notas?}',
     options: ['Grupo A', 'Grupo B', 'Igual dispersión', 'No se puede determinar'],
     correctAnswer: 1,
-    explanation: 'Mayor desviación estándar indica mayor dispersión. 15 > 10, por lo tanto Grupo B tiene mayor dispersión',
-    explanationLatex: '\\sigma_B = 15 > \\sigma_A = 10 \\Rightarrow \\text{Grupo B más disperso}',
+    explanation: '\\sigma_B = 15 > \\sigma_A = 10 \\Rightarrow \\text{Grupo B más disperso}',
     difficulty: 'easy',
     skills: ['estadistica-comparacion-dispersion', 'estadistica-desviacion-estandar', 'estadistica-interpretacion-dispersion', 'numeros-comparacion']
   },
@@ -156,8 +146,7 @@ export const m2Prob001Questions: Question[] = [
     questionLatex: '\\text{Los salarios en empresa X tienen rango de \\$400.000. Los salarios en empresa Y tienen rango de \\$250.000. ¿Qué indica esto sobre la dispersión salarial?}',
     options: ['X más dispersa que Y', 'Y más dispersa que X', 'Igual dispersión', 'El rango no mide dispersión'],
     correctAnswer: 0,
-    explanation: 'Mayor rango indica mayor dispersión entre el valor mínimo y máximo. X tiene mayor rango, por lo tanto mayor dispersión',
-    explanationLatex: '\\text{Rango}_X > \\text{Rango}_Y \\Rightarrow \\text{X más dispersa}',
+    explanation: '\\text{Rango}_X > \\text{Rango}_Y \\Rightarrow \\text{X más dispersa}',
     difficulty: 'medium',
     skills: ['estadistica-comparacion-dispersion', 'estadistica-rango', 'estadistica-interpretacion-dispersion', 'numeros-comparacion']
   },
@@ -170,8 +159,7 @@ export const m2Prob001Questions: Question[] = [
     questionLatex: '\\text{Un conjunto de datos tiene desviación estándar cercana a cero. ¿Qué se puede concluir sobre los datos?}',
     options: ['Los datos están muy dispersos', 'Los datos son todos iguales o muy similares', 'La media es cero', 'Los datos son negativos'],
     correctAnswer: 1,
-    explanation: 'Una desviación estándar cercana a cero indica que los datos están muy concentrados alrededor de la media, es decir, son muy similares entre sí',
-    explanationLatex: '\\sigma \\approx 0 \\Rightarrow \\text{datos muy homogéneos}',
+    explanation: '\\sigma \\approx 0 \\Rightarrow \\text{datos muy homogéneos}',
     difficulty: 'medium',
     skills: ['estadistica-interpretacion-dispersion', 'estadistica-desviacion-estandar', 'estadistica-analisis-datos']
   },
@@ -183,8 +171,7 @@ export const m2Prob001Questions: Question[] = [
     questionLatex: '\\text{Dos empresas tienen la misma media salarial de \\$600.000. La empresa A tiene desviación estándar de \\$50.000 y la empresa B de \\$200.000. ¿Qué implica esto sobre la equidad salarial?}',
     options: ['A tiene salarios más equitativos', 'B tiene salarios más equitativos', 'Ambas son igualmente equitativas', 'No se puede determinar'],
     correctAnswer: 0,
-    explanation: 'Menor desviación estándar indica que los salarios están más concentrados cerca de la media, lo que sugiere mayor equidad. A tiene menor dispersión, por lo tanto es más equitativa',
-    explanationLatex: '\\sigma_A < \\sigma_B \\Rightarrow \\text{A más equitativa}',
+    explanation: '\\sigma_A < \\sigma_B \\Rightarrow \\text{A más equitativa}',
     difficulty: 'hard',
     skills: ['estadistica-interpretacion-dispersion', 'estadistica-desviacion-estandar', 'estadistica-comparacion-dispersion', 'estadistica-aplicaciones-contexto']
   }

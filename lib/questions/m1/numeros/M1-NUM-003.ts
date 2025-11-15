@@ -25,8 +25,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{En una obra de construcción, un grupo de 3 obreros trabaja durante 12 días completos para construir un muro perimetral. El jefe de obra recibe una orden urgente para acelerar el proyecto y decide contratar a un obrero adicional, formando así un equipo de 4 obreros con la misma eficiencia. Necesita calcular en cuántos días este nuevo equipo completará un muro idéntico. ¿Cuántos días tardarán 4 obreros?}',
     options: ['8 días', '9 días', '10 días', '16 días'],
     correctAnswer: 1,
-    explanation: 'Este es un caso de proporcionalidad inversa: más obreros implica menos días. Planteamos la ecuación: 3 obreros × 12 días = 4 obreros × x días. Despejamos: x = (3 × 12) / 4 = 36 / 4 = 9 días.',
-    explanationLatex: '3 \\times 12 = 4 \\times x \\text{, entonces } x = \\frac{36}{4} = 9 \\text{ días}',
+    explanation: '3 \\times 12 = 4 \\times x \\text{, entonces } x = \\frac{36}{4} = 9 \\text{ días}',
     difficulty: 'easy',
     skills: ['numeros-proporcionalidad', 'numeros-proporcionalidad-inversa', 'numeros-operaciones-basicas']
   },
@@ -39,8 +38,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{Una papelería está realizando un inventario de sus productos escolares. La dueña sabe que 5 cuadernos idénticos tienen un costo total de \\$7.500 pesos. Un cliente se acerca y solicita comprar 8 cuadernos del mismo tipo. La dueña necesita calcular cuánto debe cobrar por los 8 cuadernos, manteniendo el mismo precio unitario. ¿Cuánto costarán 8 cuadernos?}',
     options: ['$10.000', '$11.000', '$12.000', '$13.500'],
     correctAnswer: 2,
-    explanation: 'Esta es una proporción directa: más cuadernos implica mayor costo. Planteamos: 5 cuadernos / $7.500 = 8 cuadernos / x. Despejamos: x = (8 × 7.500) / 5 = 60.000 / 5 = $12.000.',
-    explanationLatex: '\\frac{5}{7500} = \\frac{8}{x} \\quad \\Rightarrow \\quad x = \\frac{8 \\times 7500}{5} = 12.000',
+    explanation: '\\frac{5}{7500} = \\frac{8}{x} \\quad \\Rightarrow \\quad x = \\frac{8 \\times 7500}{5} = 12.000',
     difficulty: 'easy',
     skills: ['numeros-proporcionalidad', 'numeros-proporcionalidad-directa', 'numeros-operaciones-basicas']
   },
@@ -53,8 +51,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{Un conductor está realizando un viaje por carretera y mantiene una velocidad constante durante todo el trayecto. En las primeras 3 horas de viaje, el odómetro registra que ha recorrido 240 kilómetros. El conductor planea continuar manejando durante 5 horas en total y quiere calcular cuántos kilómetros habrá recorrido al finalizar. ¿Cuántos kilómetros recorrerá en 5 horas?}',
     options: ['360 km', '400 km', '420 km', '480 km'],
     correctAnswer: 1,
-    explanation: 'A velocidad constante, la distancia es directamente proporcional al tiempo. Planteamos: 240 km / 3 horas = x km / 5 horas. Despejamos: x = (240 × 5) / 3 = 1.200 / 3 = 400 kilómetros.',
-    explanationLatex: '\\frac{240}{3} = \\frac{x}{5} \\quad \\Rightarrow \\quad x = \\frac{240 \\times 5}{3} = 400 \\text{ km}',
+    explanation: '\\frac{240}{3} = \\frac{x}{5} \\quad \\Rightarrow \\quad x = \\frac{240 \\times 5}{3} = 400 \\text{ km}',
     difficulty: 'medium',
     skills: ['numeros-proporcionalidad', 'numeros-proporcionalidad-directa', 'numeros-operaciones-basicas']
   },
@@ -67,8 +64,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{Una repostera está ajustando la receta de una torta según el número de invitados. Su receta base está diseñada para 6 personas y requiere 4 huevos. Para una celebración más grande, necesita preparar una torta que alcance para 15 personas, manteniendo exactamente las mismas proporciones de todos los ingredientes. ¿Cuántos huevos necesitará para la torta de 15 personas?}',
     options: ['8 huevos', '9 huevos', '10 huevos', '12 huevos'],
     correctAnswer: 2,
-    explanation: 'La cantidad de huevos es directamente proporcional al número de personas. Planteamos: 6 personas / 4 huevos = 15 personas / x huevos. Despejamos: x = (15 × 4) / 6 = 60 / 6 = 10 huevos.',
-    explanationLatex: '\\frac{6}{4} = \\frac{15}{x} \\quad \\Rightarrow \\quad x = \\frac{15 \\times 4}{6} = 10 \\text{ huevos}',
+    explanation: '\\frac{6}{4} = \\frac{15}{x} \\quad \\Rightarrow \\quad x = \\frac{15 \\times 4}{6} = 10 \\text{ huevos}',
     difficulty: 'medium',
     skills: ['numeros-proporcionalidad', 'numeros-proporcionalidad-directa', 'numeros-operaciones-basicas']
   },
@@ -81,8 +77,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{En un curso de matemática hay exactamente 30 estudiantes matriculados. El profesor realiza una encuesta y descubre que la razón entre estudiantes hombres y mujeres es de 2 a 3, lo que significa que por cada 2 hombres hay 3 mujeres. Para organizar actividades grupales diferenciadas, necesita determinar cuántos estudiantes hombres hay en el curso. ¿Cuántos hombres hay?}',
     options: ['10', '12', '15', '18'],
     correctAnswer: 1,
-    explanation: 'La razón 2:3 significa que de cada 5 partes del total (2 + 3 = 5), 2 partes son hombres. Calculamos: (2/5) × 30 = 60/5 = 12 hombres.',
-    explanationLatex: '\\text{Hombres} = \\frac{2}{5} \\times 30 = 12',
+    explanation: '\\text{Hombres} = \\frac{2}{5} \\times 30 = 12',
     difficulty: 'medium',
     skills: ['numeros-proporcionalidad', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
@@ -95,8 +90,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{Dos hermanos, Ana y Pedro, reciben una herencia familiar de \\$60.000 pesos que debe repartirse según las instrucciones del testamento. El documento especifica que el dinero debe dividirse en la razón de 3 a 2, donde Ana recibe la parte correspondiente al 3 y Pedro la parte correspondiente al 2. El notario debe calcular exactamente cuánto dinero recibirá Ana. ¿Cuánto recibe Ana?}',
     options: ['$24.000', '$30.000', '$36.000', '$40.000'],
     correctAnswer: 2,
-    explanation: 'La razón 3:2 indica 5 partes totales (3 + 2). Ana recibe 3 de esas 5 partes. Calculamos: (3/5) × $60.000 = $180.000/5 = $36.000.',
-    explanationLatex: '\\text{Ana} = \\frac{3}{5} \\times 60.000 = 36.000',
+    explanation: '\\text{Ana} = \\frac{3}{5} \\times 60.000 = 36.000',
     difficulty: 'medium',
     skills: ['numeros-proporcionalidad', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
@@ -109,8 +103,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{Un triángulo tiene sus tres lados en una razón particular: las longitudes están en razón 3 a 4 a 5. El perímetro completo del triángulo mide exactamente 48 centímetros. Un estudiante de geometría necesita determinar la medida del lado más largo, que corresponde a la parte con valor 5 en la razón. ¿Cuánto mide el lado más largo?}',
     options: ['12 cm', '16 cm', '20 cm', '24 cm'],
     correctAnswer: 2,
-    explanation: 'La razón 3:4:5 suma 12 partes totales (3 + 4 + 5). El lado más largo tiene 5 partes de esas 12. Calculamos: (5/12) × 48 = 240/12 = 20 centímetros.',
-    explanationLatex: '\\text{Lado más largo} = \\frac{5}{12} \\times 48 = 20 \\text{ cm}',
+    explanation: '\\text{Lado más largo} = \\frac{5}{12} \\times 48 = 20 \\text{ cm}',
     difficulty: 'hard',
     skills: ['numeros-proporcionalidad', 'numeros-fracciones', 'geometria-perimetro', 'numeros-operaciones-basicas']
   },
@@ -123,8 +116,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{Tres socios inician un negocio conjunto con un capital inicial y después de un año obtienen ganancias de \\$90.000 pesos que deben repartirse. El contrato estipula que las ganancias se dividen en la razón 2 a 3 a 4, donde cada número representa la participación de cada socio. El socio que aportó más capital recibe la parte correspondiente al número 4. ¿Cuánto recibe el socio que más gana?}',
     options: ['$20.000', '$30.000', '$40.000', '$50.000'],
     correctAnswer: 2,
-    explanation: 'La razón 2:3:4 suma 9 partes totales (2 + 3 + 4 = 9). El socio que más gana recibe 4 de esas 9 partes. Calculamos: (4/9) × $90.000 = $360.000/9 = $40.000.',
-    explanationLatex: '\\frac{4}{2+3+4} \\times 90.000 = \\frac{4}{9} \\times 90.000 = 40.000',
+    explanation: '\\frac{4}{2+3+4} \\times 90.000 = \\frac{4}{9} \\times 90.000 = 40.000',
     difficulty: 'medium',
     skills: ['numeros-proporcionalidad', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
@@ -137,8 +129,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{En una familia hay tres hermanos: Juan, María y Pedro. Un tío les cuenta que sus edades actuales están en la razón 1 a 2 a 3, es decir, por cada año que tiene Juan, María tiene 2 y Pedro tiene 3. Si la suma de las edades de los tres hermanos es exactamente 36 años, los padres quieren determinar cuántos años tiene María. ¿Cuántos años tiene María?}',
     options: ['6 años', '12 años', '18 años', '24 años'],
     correctAnswer: 1,
-    explanation: 'La razón 1:2:3 suma 6 partes totales (1 + 2 + 3). María corresponde a 2 de esas 6 partes. Calculamos: (2/6) × 36 = 72/6 = 12 años.',
-    explanationLatex: '\\text{María} = \\frac{2}{6} \\times 36 = 12 \\text{ años}',
+    explanation: '\\text{María} = \\frac{2}{6} \\times 36 = 12 \\text{ años}',
     difficulty: 'medium',
     skills: ['numeros-proporcionalidad', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
@@ -151,8 +142,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{Una cafetería especializada está preparando una mezcla especial de café para un cliente importante. La mezcla combina tres tipos diferentes de café en la razón 5 a 3 a 2. El barista necesita preparar exactamente 100 kilogramos de esta mezcla personalizada para un pedido corporativo. Para organizar el inventario correctamente, debe calcular cuántos kilogramos del primer tipo de café necesitará. ¿Cuántos kilogramos se usan del primer tipo?}',
     options: ['20 kg', '30 kg', '50 kg', '60 kg'],
     correctAnswer: 2,
-    explanation: 'La razón 5:3:2 suma 10 partes totales (5 + 3 + 2 = 10). El primer tipo representa 5 de esas 10 partes. Calculamos: (5/10) × 100 = 500/10 = 50 kilogramos.',
-    explanationLatex: '\\frac{5}{10} \\times 100 = 50 \\text{ kg}',
+    explanation: '\\frac{5}{10} \\times 100 = 50 \\text{ kg}',
     difficulty: 'hard',
     skills: ['numeros-proporcionalidad', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
@@ -163,11 +153,9 @@ export const m1Num003Questions: Question[] = [
     subject: 'números',
     operacionBase: '\\frac{3}{3+2}',
     questionLatex: '\\text{En una planta procesadora de jugos, un técnico está preparando una bebida natural. Mezcla 3 litros de jugo puro recién exprimido con 2 litros de agua filtrada para obtener la concentración deseada. El control de calidad necesita determinar qué fracción del total de la mezcla final corresponde al jugo puro. ¿Qué fracción de la mezcla es jugo?}',
-    options: ['$\\frac{2}{5}$', '$\\frac{3}{5}$', '$\\frac{2}{3}$', '$\\frac{3}{2}$'],
-    optionsLatex: ['\\frac{2}{5}', '\\frac{3}{5}', '\\frac{2}{3}', '\\frac{3}{2}'],
+    options: ['\\frac{2}{5}', '\\frac{3}{5}', '\\frac{2}{3}', '\\frac{3}{2}'],
     correctAnswer: 1,
-    explanation: 'La mezcla total tiene 5 litros (3 + 2 = 5). De estos 5 litros, 3 litros son jugo puro. La fracción de jugo es: 3/5 de la mezcla.',
-    explanationLatex: '\\frac{3}{5} \\text{ de la mezcla es jugo}',
+    explanation: '\\frac{3}{5} \\text{ de la mezcla es jugo}',
     difficulty: 'easy',
     skills: ['numeros-proporcionalidad', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
@@ -180,8 +168,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{Un comerciante mayorista está combinando dos calidades diferentes de arroz para vender una mezcla homogénea. Mezcla 6 kilogramos de arroz de primera calidad que cuesta \\$1.200 por kilogramo, con 4 kilogramos de arroz de calidad premium que cuesta \\$1.800 por kilogramo. Para fijar el precio de venta de la mezcla resultante, necesita calcular el precio promedio por kilogramo. ¿Cuál es el precio promedio por kilogramo?}',
     options: ['$1.320', '$1.440', '$1.500', '$1.560'],
     correctAnswer: 1,
-    explanation: 'Calculamos el costo total de cada tipo: 6 kg × $1.200 = $7.200 y 4 kg × $1.800 = $7.200. Costo total: $14.400. Peso total: 10 kg. Precio promedio: $14.400 / 10 = $1.440 por kilogramo.',
-    explanationLatex: '\\frac{6(1200) + 4(1800)}{10} = \\frac{7200 + 7200}{10} = \\frac{14400}{10} = 1.440',
+    explanation: '\\frac{6(1200) + 4(1800)}{10} = \\frac{7200 + 7200}{10} = \\frac{14400}{10} = 1.440',
     difficulty: 'hard',
     skills: ['numeros-proporcionalidad', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
@@ -194,8 +181,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{Un excursionista está planificando una ruta de trekking usando un mapa topográfico con escala 1:50.000. En el mapa, mide con una regla la distancia entre dos refugios de montaña y obtiene 4 centímetros. Para estimar el tiempo de caminata, necesita saber la distancia real entre los refugios. ¿Cuál es la distancia real entre los refugios?}',
     options: ['500 m', '1 km', '2 km', '5 km'],
     correctAnswer: 2,
-    explanation: 'La escala 1:50.000 significa que 1 cm en el mapa representa 50.000 cm en la realidad. Si en el mapa hay 4 cm, entonces la distancia real es: 4 × 50.000 = 200.000 cm = 2.000 m = 2 km.',
-    explanationLatex: '4 \\text{ cm} \\times 50.000 = 200.000 \\text{ cm} = 2.000 \\text{ m} = 2 \\text{ km}',
+    explanation: '4 \\text{ cm} \\times 50.000 = 200.000 \\text{ cm} = 2.000 \\text{ m} = 2 \\text{ km}',
     difficulty: 'easy',
     skills: ['numeros-proporcionalidad', 'numeros-escalas', 'numeros-conversiones-unidades', 'numeros-operaciones-basicas']
   },
@@ -208,8 +194,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{Una profesora de geografía está preparando material didáctico y necesita usar un mapa regional con escala 1:200.000. Quiere marcar en el mapa dos ciudades que en la realidad están separadas por 15 kilómetros en línea recta. Para dibujar correctamente la distancia en el mapa, debe calcular cuántos centímetros debe medir entre ambas ciudades. ¿Qué distancia debe marcar en el mapa?}',
     options: ['5 cm', '7,5 cm', '10 cm', '15 cm'],
     correctAnswer: 1,
-    explanation: 'Primero convertimos la distancia real a centímetros: 15 km = 15.000 m = 1.500.000 cm. La escala 1:200.000 significa que 1 cm en el mapa representa 200.000 cm reales. Entonces: 1.500.000 ÷ 200.000 = 7,5 cm en el mapa.',
-    explanationLatex: '\\frac{1.500.000 \\text{ cm}}{200.000} = 7{,}5 \\text{ cm en el mapa}',
+    explanation: '\\frac{1.500.000 \\text{ cm}}{200.000} = 7{,}5 \\text{ cm en el mapa}',
     difficulty: 'medium',
     skills: ['numeros-proporcionalidad', 'numeros-escalas', 'numeros-conversiones-unidades', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
@@ -222,8 +207,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{Un arquitecto está mostrando a sus clientes el plano de una casa que diseñó. El plano está dibujado a escala 1:100. En el plano, el largo del salón principal mide 6 centímetros. Los clientes quieren saber cuánto medirá el salón real cuando la casa esté construida. ¿Cuál será el largo real del salón?}',
     options: ['60 cm', '6 m', '60 m', '600 m'],
     correctAnswer: 1,
-    explanation: 'La escala 1:100 significa que 1 cm en el plano representa 100 cm (= 1 m) en la realidad. Si el plano muestra 6 cm, entonces el largo real será: 6 × 100 = 600 cm = 6 metros.',
-    explanationLatex: '6 \\text{ cm} \\times 100 = 600 \\text{ cm} = 6 \\text{ m}',
+    explanation: '6 \\text{ cm} \\times 100 = 600 \\text{ cm} = 6 \\text{ m}',
     difficulty: 'easy',
     skills: ['numeros-proporcionalidad', 'numeros-escalas', 'numeros-conversiones-unidades', 'numeros-operaciones-basicas']
   },
@@ -236,8 +220,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{Un cartógrafo está elaborando un nuevo mapa turístico de una región. Midió que en su mapa de prueba, 8 cm representan una distancia real de 2{,}4 km. Para etiquetar correctamente el mapa, necesita determinar cuál es la escala que está utilizando. ¿Cuál es la escala del mapa?}',
     options: ['1:3.000', '1:30.000', '1:300.000', '1:3.000.000'],
     correctAnswer: 1,
-    explanation: 'Convertimos la distancia real a centímetros: 2,4 km = 2.400 m = 240.000 cm. La escala es la razón entre la distancia en el mapa y la distancia real: 8 cm : 240.000 cm. Simplificando (dividiendo ambos por 8): 1 : 30.000.',
-    explanationLatex: '\\frac{8 \\text{ cm}}{240.000 \\text{ cm}} = \\frac{1}{30.000} \\quad \\Rightarrow \\quad \\text{Escala: } 1:30.000',
+    explanation: '\\frac{8 \\text{ cm}}{240.000 \\text{ cm}} = \\frac{1}{30.000} \\quad \\Rightarrow \\quad \\text{Escala: } 1:30.000',
     difficulty: 'hard',
     skills: ['numeros-proporcionalidad', 'numeros-escalas', 'numeros-conversiones-unidades', 'numeros-simplificacion', 'numeros-operaciones-basicas']
   },
@@ -250,8 +233,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{Un ciclista está preparando una ruta en bicicleta y consulta un mapa de carreteras con escala 1:250.000. Traza su recorrido en el mapa y mide que la ruta total tiene una longitud de 12 centímetros. Para planificar cuántas horas necesitará, debe calcular la distancia real que recorrerá. ¿Cuál es la distancia real de la ruta?}',
     options: ['3 km', '12 km', '30 km', '120 km'],
     correctAnswer: 2,
-    explanation: 'La escala 1:250.000 indica que 1 cm en el mapa representa 250.000 cm en la realidad. Con 12 cm en el mapa: 12 × 250.000 = 3.000.000 cm = 30.000 m = 30 km.',
-    explanationLatex: '12 \\text{ cm} \\times 250.000 = 3.000.000 \\text{ cm} = 30 \\text{ km}',
+    explanation: '12 \\text{ cm} \\times 250.000 = 3.000.000 \\text{ cm} = 30 \\text{ km}',
     difficulty: 'medium',
     skills: ['numeros-proporcionalidad', 'numeros-escalas', 'numeros-conversiones-unidades', 'numeros-operaciones-basicas']
   },
@@ -264,8 +246,7 @@ export const m1Num003Questions: Question[] = [
     questionLatex: '\\text{Un modelista ferroviario está construyendo una réplica a escala de una estación de trenes. Usa escala 1:50 para su maqueta, lo que significa que cada elemento es 50 veces más pequeño que el real. Si el edificio real de la estación tiene 42 metros de largo, necesita calcular qué longitud debe tener el modelo. ¿Cuánto medirá el modelo de la estación?}',
     options: ['42 cm', '84 cm', '2,1 m', '4,2 m'],
     correctAnswer: 1,
-    explanation: 'La escala 1:50 significa que el modelo es 50 veces más pequeño. Convertimos a la misma unidad: 42 m = 4.200 cm. Dividimos por la escala: 4.200 ÷ 50 = 84 cm en el modelo.',
-    explanationLatex: '\\frac{4.200 \\text{ cm}}{50} = 84 \\text{ cm en el modelo}',
+    explanation: '\\frac{4.200 \\text{ cm}}{50} = 84 \\text{ cm en el modelo}',
     difficulty: 'medium',
     skills: ['numeros-proporcionalidad', 'numeros-escalas', 'numeros-conversiones-unidades', 'numeros-decimales', 'numeros-operaciones-basicas']
   }
