@@ -249,7 +249,7 @@ export function QuestionOptions({
               </span>
             )}
             <UnifiedLatexRenderer
-              content={question.optionsLatex?.[index] || option}
+              content={option}
               displayMode={false}
             />
             {highlightCorrect && isCorrectAnswer && (
@@ -304,7 +304,7 @@ export function QuestionOptionsWithFeedback({
             <span className="font-bold shrink-0">{String.fromCharCode(65 + index)}.</span>
             <span className="flex-1">
               <UnifiedLatexRenderer
-                content={question.optionsLatex?.[index] || option}
+                content={option}
                 displayMode={false}
               />
             </span>
@@ -347,12 +347,7 @@ export function QuestionExplanation({
         Explicación:
       </p>
       <div className={variant === 'success' ? 'text-green-800 dark:text-green-200' : variant === 'error' ? 'text-red-800 dark:text-red-200' : 'text-blue-800 dark:text-blue-200'}>
-        <MathText content={question.explanation} />
-        {question.explanationLatex && (
-          <div className={compact ? 'mt-1' : 'mt-2'}>
-            <SmartLatexRenderer latex={question.explanationLatex} displayMode={false} />
-          </div>
-        )}
+        <UnifiedLatexRenderer content={question.explanation} displayMode={false} />
       </div>
     </div>
   );
