@@ -8,9 +8,32 @@ import { useAuth } from '@/contexts/AuthContext';
 export default function CookieConsent() {
   const t = useTranslations('cookies');
   const [showBanner, setShowBanner] = useState(false);
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const [mounted, setMounted] = useState(false);
+
+  // Safely get auth context - will be undefined during SSR
+  let user, isAuthenticated, isLoading;
+  try {
+    const auth = useAuth();
+    user = auth.user;
+    isAuthenticated = auth.isAuthenticated;
+    isLoading = auth.isLoading;
+  } catch (e) {
+    // AuthProvider not available (SSR/SSG) - use defaults
+    isAuthenticated = false;
+    isLoading = true;
+  }
+
+  // Only run on client side
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
+    // Don't run until mounted on client
+    if (!mounted) {
+      return;
+    }
+
     // Wait for auth to finish loading
     if (isLoading) {
       return;
@@ -29,7 +52,7 @@ export default function CookieConsent() {
       // Show banner after a short delay for better UX
       setTimeout(() => setShowBanner(true), 1000);
     }
-  }, [isAuthenticated, user, isLoading]);
+  }, [mounted, isAuthenticated, user, isLoading]);
 
   const updateBackendConsent = async (consent: 'accepted' | 'declined') => {
     if (!isAuthenticated) {
