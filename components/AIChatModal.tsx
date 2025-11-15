@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Question } from '@/lib/types';
-import { MathText, SmartLatexRenderer, UnifiedLatexRenderer } from './MathDisplay';
+import { SmartLatexRenderer } from './MathDisplay';
+import { QuestionText, QuestionOptionsWithFeedback } from './QuestionRenderer';
 import { GeometryCanvas, GeometryFigure } from './GeometryCanvas';
 import { MarkdownViewer } from './MarkdownViewer';
 import { api } from '@/lib/api-client';
@@ -266,8 +267,8 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
             <div className="text-xs font-semibold text-teal-700 dark:text-teal-300 mb-1.5">
               📝 PREGUNTA:
             </div>
-            <div className="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-800 p-3 rounded-lg">
-              <SmartLatexRenderer latex={question.questionLatex} displayMode={false} />
+            <div className="bg-white dark:bg-gray-800 p-3 rounded-lg">
+              <QuestionText question={question} size="sm" />
             </div>
           </div>
 
@@ -292,32 +293,10 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
             <div className="text-xs font-semibold text-teal-700 dark:text-teal-300 mb-1.5">
               🔤 OPCIONES:
             </div>
-            <div className="space-y-1.5">
-              {question.options.map((option, index) => {
-                const isUserAnswer = userAnswer === index;
-                const isCorrectAnswer = index === question.correctAnswer;
-
-                return (
-                  <div
-                    key={index}
-                    className={`text-xs p-2 rounded-lg flex items-start gap-2 ${
-                      isCorrectAnswer
-                        ? 'bg-green-100 dark:bg-green-900/30 border-2 border-green-500 text-green-900 dark:text-green-100'
-                        : isUserAnswer
-                        ? 'bg-amber-100 dark:bg-amber-900/30 border-2 border-amber-500 text-amber-900 dark:text-amber-100'
-                        : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300'
-                    }`}
-                  >
-                    <span className="font-bold shrink-0">{String.fromCharCode(65 + index)}.</span>
-                    <span className="flex-1">
-                      <UnifiedLatexRenderer content={question.optionsLatex?.[index] || option} displayMode={false} />
-                    </span>
-                    {isCorrectAnswer && <span className="shrink-0 font-bold">✓ Correcta</span>}
-                    {isUserAnswer && !isCorrectAnswer && <span className="shrink-0 font-bold">Tu respuesta</span>}
-                  </div>
-                );
-              })}
-            </div>
+            <QuestionOptionsWithFeedback
+              question={question}
+              userAnswer={userAnswer}
+            />
           </div>
 
           {/* Status Summary */}
