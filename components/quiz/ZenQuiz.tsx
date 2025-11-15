@@ -365,7 +365,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
   const showFeedback = quizSubmitted;
 
   const questionContent = (
-    <div className="w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8 animate-fadeIn"
+    <div className="w-full max-w-5xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8 animate-fadeIn"
       style={{
         boxShadow: '0 0 60px rgba(20, 184, 166, 0.3), 0 20px 40px rgba(0, 0, 0, 0.2)',
         minHeight: '600px',
@@ -407,7 +407,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
         </div>
         {showQuickNav && (
           <>
-            <div className="grid grid-cols-10 gap-2">
+            <div className="grid grid-cols-15 gap-1.5">
               {quizQuestions.map((q, idx) => {
                 const answer = userAnswers[idx];
                 const isAnswered = answer !== null;

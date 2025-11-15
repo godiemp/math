@@ -53,7 +53,7 @@ export function QuestionRenderer({
 
       {/* Options */}
       {(mode === 'with-options' || mode === 'full') && (
-        <div className={compact ? 'space-y-2' : 'space-y-3'}>
+        <div className={compact ? 'grid grid-cols-2 gap-2' : 'grid grid-cols-2 gap-3'}>
           {question.options.map((option, index) => {
             const isSelected = selectedAnswer === index;
             const isCorrectAnswer = index === question.correctAnswer;
