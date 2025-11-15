@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api-client';
 import { Card, Button, Heading, Text } from '@/components/ui';
 import { MarkdownViewer } from '@/components/MarkdownViewer';
-import { SmartLatexRenderer } from '@/components/MathDisplay';
+import { SmartLatexRenderer, UnifiedLatexRenderer } from '@/components/MathDisplay';
 import type { Question } from '@/lib/types/core';
 import { getQuestionsBySubject } from '@/lib/questions';
 import { fetchWithRetry, formatErrorMessage } from '@/lib/utils/retry';
@@ -416,7 +416,7 @@ export default function LearnPage() {
                       {question.options.map((option, optIdx) => (
                         <div key={optIdx} className="text-sm p-2 bg-slate-50 dark:bg-slate-800 rounded">
                           <span className="font-semibold mr-1">{['A', 'B', 'C', 'D'][optIdx]})</span>
-                          <SmartLatexRenderer latex={question.optionsLatex?.[optIdx] || option} displayMode={false} />
+                          <UnifiedLatexRenderer content={question.optionsLatex?.[optIdx] || option} displayMode={false} />
                         </div>
                       ))}
                     </div>
@@ -481,7 +481,7 @@ export default function LearnPage() {
                   {selectedQuestion.options.map((option, idx) => (
                     <div key={idx} className="text-sm p-2 bg-slate-50 dark:bg-slate-800 rounded">
                       <span className="font-semibold mr-1">{['A', 'B', 'C', 'D'][idx]})</span>
-                      <SmartLatexRenderer latex={selectedQuestion.optionsLatex?.[idx] || option} displayMode={false} />
+                      <UnifiedLatexRenderer content={selectedQuestion.optionsLatex?.[idx] || option} displayMode={false} />
                     </div>
                   ))}
                 </div>

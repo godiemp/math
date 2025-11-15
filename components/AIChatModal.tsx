@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Question } from '@/lib/types';
-import { MathText, SmartLatexRenderer } from './MathDisplay';
+import { MathText, SmartLatexRenderer, UnifiedLatexRenderer } from './MathDisplay';
 import { GeometryCanvas, GeometryFigure } from './GeometryCanvas';
 import { MarkdownViewer } from './MarkdownViewer';
 import { api } from '@/lib/api-client';
@@ -310,11 +310,7 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
                   >
                     <span className="font-bold shrink-0">{String.fromCharCode(65 + index)}.</span>
                     <span className="flex-1">
-                      {question.optionsLatex && question.optionsLatex[index] ? (
-                        <SmartLatexRenderer latex={question.optionsLatex[index]} displayMode={false} />
-                      ) : (
-                        <MathText content={option} />
-                      )}
+                      <UnifiedLatexRenderer content={question.optionsLatex?.[index] || option} displayMode={false} />
                     </span>
                     {isCorrectAnswer && <span className="shrink-0 font-bold">✓ Correcta</span>}
                     {isUserAnswer && !isCorrectAnswer && <span className="shrink-0 font-bold">Tu respuesta</span>}
