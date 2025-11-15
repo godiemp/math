@@ -237,59 +237,29 @@ export default function LiveSessionXState({ sessionId, onExit }: LiveSessionProp
    * Completed state - Showing results
    */
   if (isCompleted) {
-    const sortedParticipants = [...session.participants].sort((a, b) => b.score - a.score);
-
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-3 sm:p-4 md:p-6 lg:p-8">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-900 dark:to-gray-800 p-3 sm:p-4 md:p-6 lg:p-8">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 md:p-8">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-4 sm:mb-6 text-gray-900 dark:text-white px-2">
-              Resultados del Ensayo
-            </h1>
+            <div className="text-center py-6 sm:py-8 md:py-12">
+              <div className="text-4xl sm:text-5xl md:text-6xl mb-4 sm:mb-6">✅</div>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 text-gray-900 dark:text-white px-2">
+                Ensayo Completado
+              </h1>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-6 sm:mb-8 px-2">
+                ¡Gracias por participar en este ensayo!
+              </p>
 
-            <div className="mb-6 sm:mb-8">
-              <h2 className="text-base sm:text-lg md:text-xl font-bold mb-3 sm:mb-4 text-gray-900 dark:text-white">
-                Tabla de Posiciones
-              </h2>
-              <div className="space-y-2 sm:space-y-3">
-                {sortedParticipants.map((participant, index) => (
-                  <div
-                    key={participant.userId}
-                    className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 p-3 sm:p-4 rounded-lg ${
-                      index === 0
-                        ? 'bg-yellow-100 dark:bg-yellow-900/30 border-2 border-yellow-400'
-                        : 'bg-gray-50 dark:bg-gray-700'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
-                      <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white flex-shrink-0">
-                        {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-sm sm:text-base text-gray-900 dark:text-white truncate">
-                          {participant.displayName}
-                          {participant.userId === currentUser.id && ' (Tú)'}
-                        </div>
-                      </div>
-                      <div className="text-right sm:hidden flex-shrink-0">
-                        <div className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
-                          {participant.score}/{session.questions.length}
-                        </div>
-                        <div className="text-xs text-gray-600 dark:text-gray-400">
-                          {Math.round((participant.score / session.questions.length) * 100)}%
-                        </div>
-                      </div>
-                    </div>
-                    <div className="hidden sm:block text-right">
-                      <div className="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400">
-                        {participant.score}/{session.questions.length}
-                      </div>
-                      <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                        {Math.round((participant.score / session.questions.length) * 100)}%
-                      </div>
-                    </div>
-                  </div>
-                ))}
+              <div className="space-y-1.5 sm:space-y-2 mb-6 sm:mb-8 text-xs sm:text-sm text-gray-600 dark:text-gray-400 px-2">
+                <p>
+                  <strong>Sesión:</strong> {session.name}
+                </p>
+                <p>
+                  <strong>Nivel:</strong> {session.level}
+                </p>
+                <p>
+                  <strong>Total de preguntas:</strong> {session.questions.length}
+                </p>
               </div>
             </div>
 

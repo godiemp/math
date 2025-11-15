@@ -280,49 +280,29 @@ function MockLiveSession({
 
   // COMPLETED STATE
   if (session.status === 'completed') {
-    const sortedParticipants = [...session.participants].sort((a, b) => b.score - a.score);
-
     return (
-      <div className="min-h-[600px] bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4 rounded-xl">
+      <div className="min-h-[600px] bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-900 dark:to-gray-800 p-4 rounded-xl">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-            <h1 className="text-3xl font-bold text-center mb-6 text-gray-900 dark:text-white">
-              Resultados del Ensayo
-            </h1>
+            <div className="text-center py-12">
+              <div className="text-6xl mb-6">✅</div>
+              <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
+                Ensayo Completado
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 mb-8">
+                ¡Gracias por participar en este ensayo!
+              </p>
 
-            <div className="mb-8">
-              <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-                Tabla de Posiciones
-              </h2>
-              <div className="space-y-3">
-                {sortedParticipants.map((participant, index) => (
-                  <div
-                    key={participant.userId}
-                    className={`flex items-center justify-between p-4 rounded-lg ${
-                      index === 0
-                        ? 'bg-yellow-100 dark:bg-yellow-900/30 border-2 border-yellow-400'
-                        : 'bg-gray-50 dark:bg-gray-700'
-                    }`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                        {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`}
-                      </div>
-                      <div className="font-medium text-gray-900 dark:text-white">
-                        {participant.displayName}
-                        {participant.userId === currentUser?.id && ' (Tú)'}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
-                        {participant.score}/{session.questions.length}
-                      </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        {Math.round((participant.score / session.questions.length) * 100)}%
-                      </div>
-                    </div>
-                  </div>
-                ))}
+              <div className="space-y-2 mb-8 text-sm text-gray-600 dark:text-gray-400">
+                <p>
+                  <strong>Sesión:</strong> {session.name}
+                </p>
+                <p>
+                  <strong>Nivel:</strong> {session.level}
+                </p>
+                <p>
+                  <strong>Total de preguntas:</strong> {session.questions.length}
+                </p>
               </div>
             </div>
 
