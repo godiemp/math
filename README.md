@@ -18,8 +18,23 @@ SimplePAES es una plataforma de práctica completa que incluye:
 - **Analytics Completo** - Métricas de uso, desempeño y análisis de interacciones con IA
 - **Panel de Administración** - Gestiona sesiones en vivo, usuarios, planes, y el banco de preguntas
 - **Sistema de Documentación** - Accede a material de estudio completo con LaTeX
+- **Módulo de Aprendizaje Interactivo** - Aprende con metodología Socrática proactiva
 
 ## Características Principales
+
+### 📖 Módulo de Aprendizaje Interactivo (Learn)
+
+**Experiencia de Aprendizaje Socrática** - Tutor IA que te guía paso a paso
+
+- **Selección de Tema**: Elige nivel (M1/M2) y materia (números, álgebra, geometría, probabilidad)
+- **Preguntas Diversas**: Sistema presenta 5 preguntas variadas para elegir
+- **Metodología Socrática Proactiva**: El tutor inicia preguntando sobre tu razonamiento
+- **Conversación Interactiva**: Chat en tiempo real con el tutor IA
+- **Retroalimentación Inmediata**: Respuestas adaptadas a tu nivel de comprensión
+- **SmartLatexRenderer**: Renderizado inteligente de fórmulas matemáticas
+- **Reintentos Automáticos**: Sistema de retry con backoff exponencial para robustez
+- **Seguimiento de Sesión**: Contador de preguntas completadas por sesión
+- **Manejo de Errores**: Mensajes claros y opciones de reintento
 
 ### 🎯 Modos de Práctica
 
@@ -67,7 +82,7 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 ### 🎓 Dos Niveles de Competencia
 
 - **M1 (Competencia Matemática 1)** - 406 problemas cubriendo conceptos matemáticos básicos para todos los programas universitarios
-- **M2 (Competencia Matemática 2)** - 26 problemas avanzados para carreras de ciencia e ingeniería
+- **M2 (Competencia Matemática 2)** - 210 problemas avanzados para carreras de ciencia e ingeniería (expandido masivamente)
 
 ### 📚 Sistema de Documentación Completo
 
@@ -288,13 +303,16 @@ npm run monitor-backups:alert
 ## Stack Tecnológico
 
 ### Frontend
-- **Framework**: Next.js 15.0.0 con React 19
+- **Framework**: Next.js 16.0.2 con React 19
 - **Lenguaje**: TypeScript 5.9.3
 - **Estilos**: Tailwind CSS con sistema de diseño personalizado (inspirado en Apple)
-- **Renderizado Matemático**: KaTeX para expresiones LaTeX
-- **Gestión de Estado**: React Context API
+- **Renderizado Matemático**: KaTeX para expresiones LaTeX con SmartLatexRenderer
+- **Gestión de Estado**: React Context API + XState para máquinas de estado
 - **IA**: Anthropic SDK (Claude Sonnet 4.5)
 - **UI Components**: Radix UI + Lucide Icons
+- **Analytics**: PostHog para product analytics
+- **Soporte al Cliente**: Intercom Messenger SDK
+- **Internacionalización**: next-intl para soporte multi-idioma
 
 ### Backend
 - **Runtime**: Node.js con Express
@@ -314,6 +332,7 @@ npm run monitor-backups:alert
 
 ### Testing & Quality
 - **E2E Testing**: Playwright con TypeScript
+- **Unit Testing**: Vitest con UI interactivo
 - **Test Environment**: Docker Compose para PostgreSQL de pruebas
 - **Code Standards**: Claude Code skills para patrones consistentes
 - **Development Tools**: Claude Code integration con skills personalizados
@@ -330,10 +349,15 @@ npm run monitor-backups:alert
 - `@anthropic-ai/sdk` - Integración con Claude AI
 - `bcryptjs` - Hashing de contraseñas
 - `@playwright/test` - Testing E2E
+- `vitest` - Testing unitario moderno
 - `sonner` - Toast notifications
 - `@sentry/nextjs` - Error tracking y performance monitoring (frontend)
 - `@sentry/node` - Error tracking y APM (backend)
 - `swr` - Data fetching y cache
+- `xstate` & `@xstate/react` - Máquinas de estado para lógica compleja
+- `posthog-js` - Product analytics y feature flags
+- `@intercom/messenger-js-sdk` - Soporte al cliente en tiempo real
+- `next-intl` - Internacionalización y soporte multi-idioma
 - `pdf-parse`, `pdf-lib`, `pdfjs-dist` - Procesamiento y extracción de PDFs
 - `sharp` - Optimización de imágenes
 - `multer` - Manejo de file uploads
@@ -344,6 +368,7 @@ npm run monitor-backups:alert
 - `helmet` - Seguridad HTTP headers
 - `express-rate-limit` - Rate limiting y protección
 - `openai` - Integración con OpenAI (opcional)
+- `mathjs` - Biblioteca matemática avanzada
 
 ## Estructura del Proyecto
 
@@ -356,6 +381,7 @@ npm run monitor-backups:alert
 ├── app/                          # Páginas Next.js App Router
 │   ├── page.tsx                  # Landing page con autenticación
 │   ├── dashboard/                # Dashboard principal del estudiante
+│   ├── learn/                    # Módulo de aprendizaje interactivo Socrático
 │   ├── practice/                 # Páginas de práctica (M1/M2)
 │   ├── curriculum/               # Páginas de curriculum overview
 │   │   ├── m1/                   # Curriculum M1
@@ -500,12 +526,12 @@ npm run monitor-backups:alert
 
 ## Banco de Preguntas
 
-**Total: 432 Problemas**
+**Total: 616 Problemas**
 
 | Nivel | Cantidad | Cobertura |
 |-------|----------|-----------|
 | M1 | 406 | Números (91), Álgebra (109), Geometría (106), Probabilidad (100) |
-| M2 | 26 | Números (6), Álgebra (6), Geometría (7), Probabilidad (7) |
+| M2 | 210 | Números (88), Álgebra (31), Geometría (37), Probabilidad (54) |
 
 ### Formato de Preguntas
 
@@ -655,6 +681,22 @@ npm run dev
 - Backend API: http://localhost:3001
 
 ## Testing
+
+### Tests Unitarios con Vitest
+
+El proyecto ahora incluye tests unitarios modernos con Vitest:
+
+**Ejecutar tests unitarios:**
+```bash
+# Ejecutar todos los tests unitarios
+npm run test
+
+# Ejecutar en modo watch
+npm run test:watch
+
+# UI interactivo de Vitest
+npm run test:ui
+```
 
 ### Tests End-to-End con Playwright
 
@@ -954,19 +996,18 @@ El skill te guiará para crear:
 
 ### 🚧 Limitaciones Actuales
 
-- **Cobertura M2**: Solo 26 problemas (necesita expansión a 200+)
 - **Sin Aprendizaje Adaptativo**: Generación de quiz es aleatoria, no ajustada por dificultad del usuario
-- **Tests Unitarios**: No hay tests unitarios (solo E2E con Playwright)
 - **QGen en Desarrollo**: Sistema de generación dinámica necesita más contextos, objetivos y templates
 - **Analytics en Tiempo Real**: Dashboard de analytics sin actualización en tiempo real
 - **Notificaciones Email**: Sistema de email configurado pero necesita más templates
+- **Coverage de Tests Unitarios**: Tests unitarios disponibles pero cobertura puede expandirse
 
 ## Mejoras Futuras
 
 ### Alta Prioridad
-- [ ] Expandir banco de preguntas M2 a 200+ problemas
+- [x] ~~Expandir banco de preguntas M2 a 200+ problemas~~ ✅ (210 preguntas)
 - [ ] Implementar algoritmo de aprendizaje adaptativo basado en desempeño
-- [ ] Agregar tests unitarios (vitest/jest) para componentes y servicios
+- [x] ~~Agregar tests unitarios (vitest/jest) para componentes y servicios~~ ✅ (Vitest configurado)
 - [ ] Expandir biblioteca QGen (más contextos, objetivos y templates)
 - [ ] Sistema de recomendaciones personalizado basado en habilidades débiles
 - [ ] Templates de email para confirmaciones y notificaciones
@@ -1034,7 +1075,40 @@ Para más información detallada, ver:
 
 ## Mejoras Recientes
 
-### Sistema de Problemas Abstractos (NUEVO ⭐ Noviembre 2024)
+### Módulo de Aprendizaje Interactivo (NUEVO ⭐ Noviembre 2025)
+- ✅ Experiencia de aprendizaje con metodología Socrática proactiva
+- ✅ Selección de tema por nivel (M1/M2) y materia
+- ✅ Presentación de 5 preguntas diversas para elegir
+- ✅ Chat interactivo en tiempo real con tutor IA
+- ✅ SmartLatexRenderer para renderizado inteligente de fórmulas
+- ✅ Sistema de retry con backoff exponencial
+- ✅ Seguimiento de sesión y estadísticas
+
+### Expansión Masiva de M2 (NUEVO ⭐ Noviembre 2025)
+- ✅ **210 preguntas M2** (antes 26) - incremento de 700%+
+- ✅ Números: 88 preguntas (operaciones, potencias, racionalización, intervalos)
+- ✅ Álgebra: 31 preguntas (ecuaciones, funciones, factorización)
+- ✅ Geometría: 37 preguntas (transformaciones, coordenadas, volumen)
+- ✅ Probabilidad: 54 preguntas (tendencia central, reglas, tablas y gráficos)
+- ✅ Cobertura completa del currículum PAES M2
+
+### Nuevas Integraciones (NUEVO ⭐ Noviembre 2025)
+- ✅ **PostHog** - Product analytics y feature flags
+- ✅ **Intercom** - Soporte al cliente en tiempo real (independiente de cookies)
+- ✅ **XState** - Máquinas de estado para lógica compleja
+- ✅ **next-intl** - Soporte multi-idioma (internacionalización)
+- ✅ **mathjs** - Biblioteca matemática avanzada
+- ✅ **Vitest** - Testing unitario moderno con UI interactivo
+
+### Mejoras de Infraestructura (Noviembre 2025)
+- ✅ Next.js actualizado a v16.0.2
+- ✅ Cookie Consent con gestión de preferencias
+- ✅ SmartLatexRenderer para mejor renderizado de fórmulas
+- ✅ Sistema de retry con backoff exponencial para robustez
+- ✅ Limpieza de archivos legacy en lib/questions (31 archivos de re-export eliminados)
+- ✅ Mejoras en el panel de administración para sesiones en vivo
+
+### Sistema de Problemas Abstractos (Noviembre 2024)
 - ✅ Sistema completo de generación masiva de problemas
 - ✅ 46 unidades temáticas (33 M1 + 13 M2)
 - ✅ Integración con OpenAI GPT-4
@@ -1043,7 +1117,7 @@ Para más información detallada, ver:
 - ✅ Almacenamiento automático en PostgreSQL
 - ✅ Documentación completa en QUICK-START-ABSTRACT-PROBLEMS.md
 
-### Sistema de Operaciones y Monitoreo (NUEVO ⭐ Noviembre 2024)
+### Sistema de Operaciones y Monitoreo (Noviembre 2024)
 - ✅ Dashboard de System Health en `/admin/system-health`
 - ✅ Endpoints de health check detallados
 - ✅ Monitoreo de base de datos, API, y servicios externos
@@ -1141,15 +1215,15 @@ Para preguntas o soporte, por favor abre un issue en GitHub.
 
 ---
 
-**Última actualización**: Noviembre 12, 2024
+**Última actualización**: Noviembre 15, 2025
 
-**Estado del Proyecto**: En desarrollo activo con features principales implementadas, sistema de suscripciones completo con **integración de pagos MercadoPago**, quiz tracking en base de datos, generador dinámico de preguntas (QGen), **sistema de problemas abstractos** para generación masiva de contenido, analytics completo, **monitoreo de salud del sistema**, **backup y restore automático**, testing E2E, y herramientas de desarrollo mejoradas con Claude Code skills.
+**Estado del Proyecto**: En desarrollo activo con features principales implementadas, sistema de suscripciones completo con **integración de pagos MercadoPago**, **banco expandido de 616 preguntas** (210 M2), **módulo de aprendizaje interactivo con metodología Socrática**, quiz tracking en base de datos, generador dinámico de preguntas (QGen), sistema de problemas abstractos para generación masiva de contenido, analytics completo con **PostHog e Intercom**, **monitoreo de salud del sistema**, backup y restore automático, testing E2E y unitario con **Vitest**, soporte multi-idioma con **next-intl**, y herramientas de desarrollo mejoradas con Claude Code skills y **XState** para máquinas de estado.
 
 ## Tech Stack Summary
 
 | Categoría | Tecnologías |
 |-----------|------------|
-| **Frontend** | Next.js 15, React 19, TypeScript 5.9, Tailwind CSS, KaTeX |
+| **Frontend** | Next.js 16, React 19, TypeScript 5.9, Tailwind CSS, KaTeX |
 | **Backend** | Express.js, Node.js, TypeScript, PostgreSQL |
 | **Autenticación** | JWT, bcryptjs |
 | **Pagos** | MercadoPago SDK (Chile) |
@@ -1157,10 +1231,14 @@ Para preguntas o soporte, por favor abre un issue en GitHub.
 | **Validación** | Zod |
 | **Seguridad** | Helmet, express-rate-limit |
 | **IA** | Anthropic Claude Sonnet 4.5, OpenAI |
-| **Testing** | Playwright (E2E), Docker Compose |
+| **Testing** | Playwright (E2E), Vitest (unitario), Docker Compose |
 | **Developer Tools** | Claude Code Skills, ESLint, Prettier |
 | **UI/UX** | Radix UI, Lucide Icons, Sonner (toasts) |
 | **Data Fetching** | SWR, Centralized API Client |
+| **Analytics** | PostHog, Sentry |
+| **Soporte** | Intercom Messenger SDK |
+| **Estado** | XState (máquinas de estado) |
+| **i18n** | next-intl |
 
 ## Quick Links
 
