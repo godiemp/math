@@ -775,3 +775,293 @@ export async function getProblemStatus(problemId: string) {
 export function getAssessmentSession(sessionId: string): AssessmentSession | undefined {
   return assessmentSessions.get(sessionId);
 }
+
+// ============================================================================
+// NEW: Socratic Method Learning (Proactive Question Selection)
+// ============================================================================
+
+interface SocraticSession {
+  userId: string;
+  question: Question;
+  level: 'M1' | 'M2';
+  subject: string;
+  conversationHistory: Array<{ role: 'assistant' | 'user'; content: string }>;
+  isComplete: boolean;
+  createdAt: number;
+}
+
+interface StartSocraticOptions {
+  userId: string;
+  question: Question;
+  level: 'M1' | 'M2';
+  subject: string;
+}
+
+interface StartSocraticResponse {
+  sessionId: string;
+  initialMessage: string;
+}
+
+interface ContinueSocraticOptions {
+  sessionId: string;
+  userMessage: string;
+}
+
+interface ContinueSocraticResponse {
+  message: string;
+  isComplete: boolean;
+  summary?: string;
+}
+
+const socraticSessions = new Map<string, SocraticSession>();
+
+/**
+ * Start a Socratic learning session with a selected question
+ */
+export async function startSocraticSession(
+  options: StartSocraticOptions
+): Promise<StartSocraticResponse> {
+  const { userId, question, level, subject } = options;
+  const sessionId = `socratic_${userId}_${Date.now()}`;
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error('ANTHROPIC_API_KEY not configured');
+  }
+
+  const systemPrompt = `Eres un tutor de matemáticas que usa el MÉTODO SOCRÁTICO. Tu rol es guiar al estudiante a descubrir la respuesta por sí mismo a través de preguntas estratégicas.
+
+REGLAS IMPORTANTES:
+1. NUNCA des la respuesta directamente
+2. Haz preguntas que guíen el pensamiento del estudiante
+3. Comienza con preguntas sencillas y ve aumentando la complejidad
+4. Si el estudiante se equivoca, haz preguntas que le ayuden a identificar su error
+5. Celebra los pequeños avances
+6. Usa LaTeX para expresiones matemáticas: $expresión$
+7. Mantén respuestas concisas (2-4 oraciones + 1-2 preguntas)
+8. Sé paciente y alentador
+
+FORMATO LATEX:
+- Inline: $x + 5 = 10$
+- Fracciones: $\\frac{a}{b}$
+- Raíces: $\\sqrt{x}$`;
+
+  const userPrompt = `El estudiante ha seleccionado este problema porque se siente menos confiado con él:
+
+**Problema:**
+${question.questionLatex}
+
+**Opciones:**
+A) ${question.optionsLatex?.[0] || question.options[0]}
+B) ${question.optionsLatex?.[1] || question.options[1]}
+C) ${question.optionsLatex?.[2] || question.options[2]}
+D) ${question.optionsLatex?.[3] || question.options[3]}
+
+**Respuesta correcta:** ${['A', 'B', 'C', 'D'][question.correctAnswer]}
+**Tema:** ${subject}
+**Nivel:** ${level}
+
+Genera tu PRIMERA pregunta socrática para comenzar a guiar al estudiante. Debes:
+1. Saludar brevemente y reconocer que eligió este problema
+2. Hacer una pregunta inicial que le ayude a entender qué se le está pidiendo
+3. NO menciones la respuesta ni des pistas obvias
+
+Responde con JSON:
+{
+  "message": "Tu saludo y primera pregunta socrática (usa LaTeX para matemáticas)"
+}`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 512,
+        temperature: 0.8,
+        messages: [
+          {
+            role: 'user',
+            content: userPrompt,
+          },
+        ],
+        system: systemPrompt,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('AI Socratic start failed');
+    }
+
+    const data = await response.json() as { content: Array<{ text: string }> };
+    const responseText = data.content[0].text;
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+
+    if (!jsonMatch) {
+      throw new Error('Failed to parse Socratic start');
+    }
+
+    const result = JSON.parse(jsonMatch[0]);
+
+    // Store session
+    socraticSessions.set(sessionId, {
+      userId,
+      question,
+      level,
+      subject,
+      conversationHistory: [
+        { role: 'assistant', content: result.message }
+      ],
+      isComplete: false,
+      createdAt: Date.now()
+    });
+
+    return {
+      sessionId,
+      initialMessage: result.message
+    };
+  } catch (error) {
+    console.error('Error starting Socratic session:', error);
+    throw error;
+  }
+}
+
+/**
+ * Continue the Socratic conversation
+ */
+export async function continueSocraticSession(
+  options: ContinueSocraticOptions
+): Promise<ContinueSocraticResponse> {
+  const { sessionId, userMessage } = options;
+
+  const session = socraticSessions.get(sessionId);
+  if (!session) {
+    throw new Error('Socratic session not found or expired');
+  }
+
+  if (session.isComplete) {
+    throw new Error('This learning session has already been completed');
+  }
+
+  // Add user message to history
+  session.conversationHistory.push({
+    role: 'user',
+    content: userMessage
+  });
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error('ANTHROPIC_API_KEY not configured');
+  }
+
+  const systemPrompt = `Eres un tutor de matemáticas que usa el MÉTODO SOCRÁTICO. Tu rol es guiar al estudiante a descubrir la respuesta por sí mismo.
+
+REGLAS:
+1. NUNCA des la respuesta directamente hasta que el estudiante la descubra
+2. Haz preguntas que guíen su pensamiento
+3. Si se equivoca, pregunta qué le llevó a esa conclusión
+4. Si va por buen camino, aliéntalo con más preguntas
+5. Usa LaTeX: $expresión$
+6. Sé conciso: 2-4 oraciones + 1-2 preguntas
+7. Si el estudiante llega a la respuesta correcta, celebra y confirma
+
+IMPORTANTE: Si el estudiante encuentra la respuesta correcta (${['A', 'B', 'C', 'D'][session.question.correctAnswer]}), marca isComplete como true y da un resumen final de lo aprendido.`;
+
+  const userPrompt = `**Problema que el estudiante está resolviendo:**
+${session.question.questionLatex}
+
+**Opciones:**
+A) ${session.question.optionsLatex?.[0] || session.question.options[0]}
+B) ${session.question.optionsLatex?.[1] || session.question.options[1]}
+C) ${session.question.optionsLatex?.[2] || session.question.options[2]}
+D) ${session.question.optionsLatex?.[3] || session.question.options[3]}
+
+**Respuesta correcta:** ${['A', 'B', 'C', 'D'][session.question.correctAnswer]} (${session.question.optionsLatex?.[session.question.correctAnswer] || session.question.options[session.question.correctAnswer]})
+
+**Explicación oficial:** ${session.question.explanationLatex || session.question.explanation}
+
+**Conversación hasta ahora:**
+${session.conversationHistory.map(m => `${m.role === 'user' ? 'Estudiante' : 'Tutor'}: ${m.content}`).join('\n\n')}
+
+Continúa la conversación socrática. Analiza la respuesta del estudiante y:
+- Si está confundido, haz preguntas clarificadoras
+- Si va por mal camino, pregunta sobre sus suposiciones
+- Si va bien, guíalo al siguiente paso con preguntas
+- Si llegó a la respuesta correcta, celebra y resume
+
+Responde con JSON:
+{
+  "message": "Tu siguiente pregunta o retroalimentación socrática (usa LaTeX)",
+  "isComplete": false (o true si el estudiante llegó a la respuesta correcta),
+  "summary": "Resumen de lo aprendido (solo si isComplete es true)"
+}`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 1024,
+        temperature: 0.7,
+        messages: [
+          {
+            role: 'user',
+            content: userPrompt,
+          },
+        ],
+        system: systemPrompt,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('AI Socratic continuation failed');
+    }
+
+    const data = await response.json() as { content: Array<{ text: string }> };
+    const responseText = data.content[0].text;
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+
+    if (!jsonMatch) {
+      throw new Error('Failed to parse Socratic response');
+    }
+
+    const result = JSON.parse(jsonMatch[0]);
+
+    // Update session
+    session.conversationHistory.push({
+      role: 'assistant',
+      content: result.message
+    });
+
+    if (result.isComplete) {
+      session.isComplete = true;
+    }
+
+    socraticSessions.set(sessionId, session);
+
+    return {
+      message: result.message,
+      isComplete: result.isComplete,
+      summary: result.summary
+    };
+  } catch (error) {
+    console.error('Error continuing Socratic session:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get Socratic session
+ */
+export function getSocraticSession(sessionId: string): SocraticSession | undefined {
+  return socraticSessions.get(sessionId);
+}
