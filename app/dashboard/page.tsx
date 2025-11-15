@@ -196,14 +196,16 @@ function DashboardContent() {
       </Navbar>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-8 md:py-12">
-        {/* Study Buddy with Streak Information */}
-        <div className="mb-8">
-          <StudyBuddy initialStreak={user ? {
-            currentStreak: user.currentStreak || 0,
-            longestStreak: user.longestStreak || 0,
-            lastPracticeDate: user.lastPracticeDate || null
-          } : undefined} />
-        </div>
+        {/* Study Buddy with Streak Information - Only visible to admins */}
+        {isAdmin && (
+          <div className="mb-8">
+            <StudyBuddy initialStreak={user ? {
+              currentStreak: user.currentStreak || 0,
+              longestStreak: user.longestStreak || 0,
+              lastPracticeDate: user.lastPracticeDate || null
+            } : undefined} />
+          </div>
+        )}
 
         {/* Live Practice Featured Card with gradient */}
         <div className="relative overflow-hidden backdrop-blur-[20px] bg-gradient-to-r from-[#5E5CE6] to-[#0A84FF] dark:from-[#9A99FF] dark:to-[#0A84FF] rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 mb-8 sm:mb-10 md:mb-12 shadow-[0_14px_36px_rgba(0,0,0,0.22)]">
