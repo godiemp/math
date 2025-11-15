@@ -32,7 +32,7 @@ interface UpdateProfileResponse {
 
 function ProfilePageContent() {
   const t = useTranslations('profile');
-  const { user, refreshUser } = useAuth();
+  const { user, refreshUser, isPaidUser } = useAuth();
   const [stats, setStats] = useState<ProfileStats>({
     totalQuestions: 0,
     correctAnswers: 0,
@@ -217,42 +217,44 @@ function ProfilePageContent() {
             {t('subscriptionSection.title')}
           </Heading>
 
-          {user.subscription ? (
+          {isPaidUser ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <Text size="sm" variant="secondary">{t('subscriptionSection.state')}</Text>
-                {getSubscriptionBadge()}
+                {user.subscription ? getSubscriptionBadge() : <Badge variant="success">{t('subscriptionSection.active')}</Badge>}
               </div>
 
-              {user.subscription.startedAt && (
+              {user.subscription?.startedAt && (
                 <div className="flex items-center justify-between">
                   <Text size="sm" variant="secondary">{t('subscriptionSection.startDate')}</Text>
                   <Text size="sm">{formatDate(user.subscription.startedAt)}</Text>
                 </div>
               )}
 
-              {user.subscription.expiresAt && (
+              {user.subscription?.expiresAt && (
                 <div className="flex items-center justify-between">
                   <Text size="sm" variant="secondary">{t('subscriptionSection.expirationDate')}</Text>
                   <Text size="sm">{formatDate(user.subscription.expiresAt)}</Text>
                 </div>
               )}
 
-              {user.subscription.trialEndsAt && user.subscription.status === 'trial' && (
+              {user.subscription?.trialEndsAt && user.subscription.status === 'trial' && (
                 <div className="flex items-center justify-between">
                   <Text size="sm" variant="secondary">{t('subscriptionSection.trialUntil')}</Text>
                   <Text size="sm">{formatDate(user.subscription.trialEndsAt)}</Text>
                 </div>
               )}
 
-              <div className="flex items-center justify-between">
-                <Text size="sm" variant="secondary">{t('subscriptionSection.autoRenew')}</Text>
-                <Badge variant={user.subscription.autoRenew ? 'success' : 'warning'}>
-                  {user.subscription.autoRenew ? t('subscriptionSection.enabled') : t('subscriptionSection.disabled')}
-                </Badge>
-              </div>
+              {user.subscription && (
+                <div className="flex items-center justify-between">
+                  <Text size="sm" variant="secondary">{t('subscriptionSection.autoRenew')}</Text>
+                  <Badge variant={user.subscription.autoRenew ? 'success' : 'warning'}>
+                    {user.subscription.autoRenew ? t('subscriptionSection.enabled') : t('subscriptionSection.disabled')}
+                  </Badge>
+                </div>
+              )}
 
-              {user.subscription.status === 'expired' && (
+              {user.subscription?.status === 'expired' && (
                 <div className="mt-4">
                   <Button asChild className="w-full">
                     <Link href="/pricing">
