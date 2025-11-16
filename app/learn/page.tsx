@@ -619,7 +619,7 @@ export default function LearnPage() {
           {/* Session Stats */}
           <Card className="text-center">
             <Text size="sm" variant="secondary">Problemas completados esta sesión</Text>
-            <Text className="text-2xl font-bold text-white">{questionsCompleted}</Text>
+            <Text className="text-2xl font-bold text-teal-600">{questionsCompleted}</Text>
           </Card>
         </div>
       </div>
