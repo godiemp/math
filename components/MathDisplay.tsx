@@ -93,6 +93,23 @@ interface MathTextProps {
 }
 
 /**
+ * Unescape LaTeX special characters in text content
+ * Converts LaTeX escapes to their actual characters
+ */
+function unescapeLatexText(text: string): string {
+  return text
+    .replace(/\\\$/g, '$')      // \$ → $
+    .replace(/\\%/g, '%')       // \% → %
+    .replace(/\\&/g, '&')       // \& → &
+    .replace(/\\#/g, '#')       // \# → #
+    .replace(/\\_/g, '_')       // \_ → _
+    .replace(/\\\{/g, '{')      // \{ → {
+    .replace(/\\\}/g, '}')      // \} → }
+    .replace(/\\~/g, '~')       // \~ → ~
+    .replace(/\\\^/g, '^');     // \^ → ^
+}
+
+/**
  * Parse LaTeX content to separate \text{} blocks from actual math
  * Returns parts with text rendered as HTML and math as LaTeX
  */
@@ -129,9 +146,9 @@ function parseLatexContent(latex: string): { type: 'text' | 'math'; content: str
     }
 
     if (braceCount === 0) {
-      // Extract the text content (without \text{})
+      // Extract the text content (without \text{}) and unescape LaTeX characters
       const textContent = remaining.slice(startIndex + 6, i - 1);
-      parts.push({ type: 'text', content: textContent });
+      parts.push({ type: 'text', content: unescapeLatexText(textContent) });
       lastIndex = i;
     } else {
       // Malformed \text{}, treat as math
