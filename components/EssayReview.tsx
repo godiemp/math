@@ -97,9 +97,9 @@ export default function EssayReview({ sessionId, onClose }: EssayReviewProps) {
 
   const currentQuestion = session.questions[currentQuestionIndex];
   const userAnswer = participation.answers[currentQuestionIndex];
-  const isCorrect = userAnswer === currentQuestion.correctOption;
+  const isCorrect = userAnswer === currentQuestion.correctAnswer;
   const totalCorrect = participation.answers.filter(
-    (ans, idx) => ans === session.questions[idx].correctOption
+    (ans, idx) => ans === session.questions[idx].correctAnswer
   ).length;
 
   const goToQuestion = (index: number) => {
@@ -163,7 +163,7 @@ export default function EssayReview({ sessionId, onClose }: EssayReviewProps) {
                 <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
                   {session.questions.map((q, idx) => {
                     const ans = participation.answers[idx];
-                    const correct = ans === q.correctOption;
+                    const correct = ans === q.correctAnswer;
                     return (
                       <button
                         key={idx}
@@ -242,7 +242,7 @@ export default function EssayReview({ sessionId, onClose }: EssayReviewProps) {
             <div className="space-y-6">
               {session.questions.map((question, idx) => {
                 const ans = participation.answers[idx];
-                const correct = ans === question.correctOption;
+                const correct = ans === question.correctAnswer;
                 return (
                   <div key={idx} className="bg-white border rounded-lg p-4">
                     <div className="flex items-center justify-between mb-4">
