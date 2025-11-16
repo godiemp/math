@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import type { LiveSession } from '@/lib/types';
 import { getCurrentUser } from '@/lib/auth';
 import { QuestionRenderer } from './QuestionRenderer';
@@ -26,6 +27,7 @@ export default function LiveSessionXState({ sessionId, onExit }: LiveSessionProp
     currentQuestion,
     currentQuestionIndex,
     selectedAnswer,
+    myAnswers,
     error,
 
     // Navigation
@@ -36,11 +38,30 @@ export default function LiveSessionXState({ sessionId, onExit }: LiveSessionProp
     selectAnswer,
     nextQuestion,
     previousQuestion,
+    navigateToQuestion,
     retry,
     exit,
   } = useLiveSession(sessionId);
 
   const currentUser = getCurrentUser();
+
+  // Quick navigation state
+  const [showQuickNav, setShowQuickNav] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('live-practice-show-quick-nav');
+      return saved !== null ? saved === 'true' : true;
+    }
+    return true;
+  });
+  const [showMobileNav, setShowMobileNav] = useState(false);
+
+  const toggleQuickNav = () => {
+    const newValue = !showQuickNav;
+    setShowQuickNav(newValue);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('live-practice-show-quick-nav', String(newValue));
+    }
+  };
 
   // ============================================================================
   // RENDER STATES
@@ -280,70 +301,266 @@ export default function LiveSessionXState({ sessionId, onExit }: LiveSessionProp
    */
   if (isActive && currentQuestion) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-3 sm:p-4 md:p-6 lg:p-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 md:p-8">
-            {/* Header */}
-            <div className="mb-4 sm:mb-6">
-              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
-                {session.name}
-              </h2>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                Pregunta {currentQuestionIndex + 1} de {session.questions.length}
-              </p>
-            </div>
+      <>
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-3 sm:p-4 md:p-6 lg:p-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 md:p-8">
+              {/* Header */}
+              <div className="mb-4 sm:mb-6">
+                <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+                  {session.name}
+                </h2>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                  Pregunta {currentQuestionIndex + 1} de {session.questions.length}
+                </p>
+              </div>
 
-            {/* Progress bar */}
-            <div className="mb-4 sm:mb-6">
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div
-                  className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
-                  style={{
-                    width: `${((currentQuestionIndex + 1) / session.questions.length) * 100}%`,
-                  }}
+              {/* Progress bar */}
+              <div className="mb-4 sm:mb-6">
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div
+                    className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+                    style={{
+                      width: `${((currentQuestionIndex + 1) / session.questions.length) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Quick Navigation - Desktop (hidden on mobile) */}
+              <div className="mb-4 sm:mb-6 hidden md:block">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    Navegación rápida:
+                  </span>
+                  <button
+                    onClick={toggleQuickNav}
+                    className="text-xs px-3 py-1 rounded-md transition-colors text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30"
+                  >
+                    {showQuickNav ? '▲ Ocultar' : '▼ Mostrar'}
+                  </button>
+                </div>
+                {showQuickNav && (
+                  <>
+                    <div className="grid grid-cols-10 gap-2">
+                      {session.questions.map((_, idx) => {
+                        const isAnswered = myAnswers[idx] !== undefined;
+                        const isCurrentQuestion = idx === currentQuestionIndex;
+
+                        let buttonClass =
+                          'w-full aspect-square rounded-lg text-xs font-bold transition-all flex items-center justify-center ';
+
+                        if (isCurrentQuestion) {
+                          buttonClass +=
+                            'ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-gray-800 ';
+                        }
+
+                        if (isAnswered) {
+                          buttonClass += 'bg-indigo-500 text-white';
+                        } else {
+                          buttonClass +=
+                            'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400';
+                        }
+
+                        buttonClass += ' hover:opacity-80 cursor-pointer';
+
+                        return (
+                          <button
+                            key={idx}
+                            onClick={() => navigateToQuestion(idx)}
+                            className={buttonClass}
+                            title={`Pregunta ${idx + 1}${isAnswered ? ' (respondida)' : ''}`}
+                          >
+                            {idx + 1}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className="flex items-center gap-4 mt-2 text-xs text-gray-600 dark:text-gray-400">
+                      <div className="flex items-center gap-1">
+                        <div className="w-3 h-3 rounded bg-indigo-500"></div>
+                        <span>Respondida</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <div className="w-3 h-3 rounded bg-gray-200 dark:bg-gray-700"></div>
+                        <span>Sin responder</span>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Mobile Navigation Button - Fixed at top right */}
+              <button
+                onClick={() => setShowMobileNav(true)}
+                className="md:hidden fixed top-4 right-4 z-40 bg-white dark:bg-gray-800 rounded-full p-3 shadow-lg border border-indigo-200 dark:border-indigo-700"
+                title="Navegación rápida"
+              >
+                <svg
+                  className="w-5 h-5 text-indigo-600 dark:text-indigo-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
+
+              {/* Question */}
+              <div className="mb-4 sm:mb-6">
+                <div className="bg-gray-50 dark:bg-gray-700 p-3 sm:p-4 rounded-lg mb-3 sm:mb-4">
+                  <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white">
+                    {currentQuestion.topic}
+                  </h3>
+                </div>
+
+                {/* Use centralized QuestionRenderer */}
+                <QuestionRenderer
+                  question={currentQuestion}
+                  mode="with-options"
+                  selectedAnswer={selectedAnswer}
+                  onAnswerSelect={selectAnswer}
+                  disabled={isSubmitting}
                 />
               </div>
-            </div>
 
-            {/* Question */}
-            <div className="mb-4 sm:mb-6">
-              <div className="bg-gray-50 dark:bg-gray-700 p-3 sm:p-4 rounded-lg mb-3 sm:mb-4">
-                <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white">
-                  {currentQuestion.topic}
-                </h3>
+              {/* Navigation */}
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <button
+                  onClick={previousQuestion}
+                  disabled={!canGoPrevious}
+                  className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
+                >
+                  Anterior
+                </button>
+
+                <button
+                  onClick={nextQuestion}
+                  disabled={!canGoNext}
+                  className="flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
+                >
+                  {canGoNext ? 'Siguiente' : 'Última pregunta'}
+                </button>
               </div>
-
-              {/* Use centralized QuestionRenderer */}
-              <QuestionRenderer
-                question={currentQuestion}
-                mode="with-options"
-                selectedAnswer={selectedAnswer}
-                onAnswerSelect={selectAnswer}
-                disabled={isSubmitting}
-              />
-            </div>
-
-            {/* Navigation */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <button
-                onClick={previousQuestion}
-                disabled={!canGoPrevious}
-                className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
-              >
-                Anterior
-              </button>
-
-              <button
-                onClick={nextQuestion}
-                disabled={!canGoNext}
-                className="flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
-              >
-                {canGoNext ? 'Siguiente' : 'Última pregunta'}
-              </button>
             </div>
           </div>
         </div>
-      </div>
+
+        {/* Mobile Slide-out Navigation Menu */}
+        {showMobileNav && (
+          <div className="md:hidden fixed inset-0 z-50">
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={() => setShowMobileNav(false)}
+            />
+
+            {/* Slide-out Panel */}
+            <div className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-800 shadow-2xl animate-slideInRight">
+              <div className="p-4 h-full flex flex-col">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                  <h3 className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
+                    Navegación Rápida
+                  </h3>
+                  <button
+                    onClick={() => setShowMobileNav(false)}
+                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <svg
+                      className="w-5 h-5 text-gray-600 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Progress Summary */}
+                <div className="mb-4 p-3 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/30 dark:to-blue-900/30 rounded-lg">
+                  <p className="text-sm font-medium text-indigo-700 dark:text-indigo-300">
+                    {Object.keys(myAnswers).length} de {session.questions.length} respondidas
+                  </p>
+                  <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div
+                      className="h-2 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500"
+                      style={{
+                        width: `${(Object.keys(myAnswers).length / session.questions.length) * 100}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Question Grid */}
+                <div className="flex-1 overflow-y-auto">
+                  <div className="grid grid-cols-5 gap-3">
+                    {session.questions.map((_, idx) => {
+                      const isAnswered = myAnswers[idx] !== undefined;
+                      const isCurrentQuestion = idx === currentQuestionIndex;
+
+                      let buttonClass =
+                        'w-full aspect-square rounded-lg text-sm font-bold transition-all flex items-center justify-center min-h-[44px] ';
+
+                      if (isCurrentQuestion) {
+                        buttonClass +=
+                          'ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-gray-800 ';
+                      }
+
+                      if (isAnswered) {
+                        buttonClass += 'bg-indigo-500 text-white';
+                      } else {
+                        buttonClass +=
+                          'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400';
+                      }
+
+                      buttonClass += ' hover:opacity-80 active:scale-95 cursor-pointer';
+
+                      return (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            navigateToQuestion(idx);
+                            setShowMobileNav(false);
+                          }}
+                          className={buttonClass}
+                        >
+                          {idx + 1}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Legend */}
+                <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+                  <div className="flex flex-wrap gap-3 text-xs text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 rounded bg-indigo-500"></div>
+                      <span>Respondida</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 rounded bg-gray-200 dark:bg-gray-700"></div>
+                      <span>Sin responder</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
     );
   }
 
