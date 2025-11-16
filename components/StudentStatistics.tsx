@@ -3,11 +3,13 @@
 import React, { useEffect, useState } from 'react';
 import { getMyStatistics } from '@/lib/sessionApi';
 import type { StudentStatistics } from '@/lib/types';
+import EssayReview from './EssayReview';
 
 export default function StudentStatisticsComponent() {
   const [stats, setStats] = useState<StudentStatistics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [reviewSessionId, setReviewSessionId] = useState<string | null>(null);
 
   useEffect(() => {
     loadStatistics();
@@ -172,6 +174,12 @@ export default function StudentStatisticsComponent() {
                       <div className="text-xs text-gray-600">Ranking</div>
                     </div>
                   </div>
+                  <button
+                    onClick={() => setReviewSessionId(session.sessionId)}
+                    className="w-full mt-2 px-3 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+                  >
+                    Ver ensayo
+                  </button>
                 </div>
 
                 {/* Desktop layout: horizontal */}
@@ -201,15 +209,26 @@ export default function StudentStatisticsComponent() {
                     </div>
                     <div className="text-xs text-gray-600">Precisión</div>
                   </div>
-                  <div className="text-center">
+                  <div className="text-center mx-2 sm:mx-4">
                     <div className="text-base sm:text-lg font-bold text-purple-600">#{session.rank}</div>
                     <div className="text-xs text-gray-600">Ranking</div>
                   </div>
+                  <button
+                    onClick={() => setReviewSessionId(session.sessionId)}
+                    className="ml-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors whitespace-nowrap"
+                  >
+                    Ver ensayo
+                  </button>
                 </div>
               </div>
             ))}
           </div>
         </div>
+      )}
+
+      {/* Essay Review Modal */}
+      {reviewSessionId && (
+        <EssayReview sessionId={reviewSessionId} onClose={() => setReviewSessionId(null)} />
       )}
     </div>
   );
