@@ -15,6 +15,9 @@ import {
   updateCurrentQuestion,
   getMyStatistics,
   regenerateQuestions,
+  createDebugSession,
+  updateDebugSessionStatus,
+  resetDebugParticipant,
 } from '../controllers/sessionController';
 import { authenticate, requireAdmin } from '../auth/middleware';
 
@@ -47,6 +50,27 @@ router.post('/update-statuses', authenticate, updateSessionStatuses);
  * @access  Private
  */
 router.get('/stats/me', authenticate, getMyStatistics);
+
+/**
+ * @route   POST /api/sessions/debug
+ * @desc    Create or reset the debug session
+ * @access  Private (Admin only)
+ */
+router.post('/debug', authenticate, requireAdmin, createDebugSession);
+
+/**
+ * @route   PATCH /api/sessions/debug/status
+ * @desc    Update the debug session status
+ * @access  Private (Admin only)
+ */
+router.patch('/debug/status', authenticate, requireAdmin, updateDebugSessionStatus);
+
+/**
+ * @route   POST /api/sessions/debug/reset-participant
+ * @desc    Reset debug session participant data
+ * @access  Private (Admin only)
+ */
+router.post('/debug/reset-participant', authenticate, requireAdmin, resetDebugParticipant);
 
 /**
  * @route   GET /api/sessions/:id
