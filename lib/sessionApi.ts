@@ -393,3 +393,81 @@ export async function regenerateSessionQuestions(
     session: response.data?.session,
   };
 }
+
+/**
+ * ============================================================================
+ * DEBUG API FUNCTIONS (Admin only)
+ * ============================================================================
+ */
+
+export const DEBUG_SESSION_ID = 'debug-session-001';
+
+/**
+ * Create or reset the debug session
+ */
+export async function createDebugSession(): Promise<{
+  success: boolean;
+  sessionId?: string;
+  error?: string;
+}> {
+  const response = await api.post<{ success: boolean; sessionId: string; message: string }>(
+    '/api/sessions/debug'
+  );
+
+  if (response.error) {
+    return {
+      success: false,
+      error: response.error.error || 'Failed to create debug session',
+    };
+  }
+
+  return {
+    success: true,
+    sessionId: response.data?.sessionId,
+  };
+}
+
+/**
+ * Update the debug session status
+ */
+export async function updateDebugSessionStatus(
+  status: 'scheduled' | 'lobby' | 'active' | 'completed'
+): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  const response = await api.patch<{ success: boolean; status: string; message: string }>(
+    '/api/sessions/debug/status',
+    { status }
+  );
+
+  if (response.error) {
+    return {
+      success: false,
+      error: response.error.error || 'Failed to update debug session status',
+    };
+  }
+
+  return { success: true };
+}
+
+/**
+ * Reset debug session participant data (answers)
+ */
+export async function resetDebugParticipant(): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  const response = await api.post<{ success: boolean; message: string }>(
+    '/api/sessions/debug/reset-participant'
+  );
+
+  if (response.error) {
+    return {
+      success: false,
+      error: response.error.error || 'Failed to reset participant data',
+    };
+  }
+
+  return { success: true };
+}

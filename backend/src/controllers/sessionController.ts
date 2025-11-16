@@ -1323,3 +1323,256 @@ export const regenerateQuestions = async (req: Request, res: Response): Promise<
     });
   }
 };
+
+/**
+ * ============================================================================
+ * DEBUG ENDPOINTS (Admin only)
+ * ============================================================================
+ */
+
+const DEBUG_SESSION_ID = 'debug-session-001';
+
+const DEBUG_QUESTIONS = [
+  {
+    id: 'debug-q-1',
+    topic: 'Raíces y Potencias',
+    level: 'M1',
+    questionLatex: '\\text{Un arquitecto está diseñando un jardín cuadrado para un parque municipal. El área total del jardín es de } 49 \\text{ metros cuadrados. Sabiendo que en un cuadrado el área es el lado multiplicado por sí mismo, ¿cuántos metros mide cada lado?}',
+    options: ['5', '6', '7', '8'],
+    correctAnswer: 2,
+    explanation: '\\text{El lado del cuadrado es } \\sqrt{49} = 7 \\text{ metros.}',
+    difficulty: 'easy',
+    subject: 'álgebra',
+    skills: ['arithmetic'],
+  },
+  {
+    id: 'debug-q-2',
+    topic: 'Operaciones con Fracciones',
+    level: 'M1',
+    questionLatex: '\\text{María tiene } \\frac{3}{4} \\text{ de pizza y Juan tiene } \\frac{1}{2} \\text{ de la misma pizza. Si juntan sus porciones, ¿cuánta pizza tienen en total?}',
+    options: ['\\frac{5}{6}', '\\frac{5}{4}', '\\frac{4}{6}', '\\frac{2}{3}'],
+    correctAnswer: 1,
+    explanation: '\\frac{3}{4} + \\frac{1}{2} = \\frac{3}{4} + \\frac{2}{4} = \\frac{5}{4}',
+    difficulty: 'easy',
+    subject: 'álgebra',
+    skills: ['arithmetic'],
+  },
+  {
+    id: 'debug-q-3',
+    topic: 'Ecuaciones Lineales',
+    level: 'M1',
+    questionLatex: '\\text{Si } 2x + 5 = 13\\text{, ¿cuál es el valor de } x\\text{?}',
+    options: ['3', '4', '5', '6'],
+    correctAnswer: 1,
+    explanation: '2x + 5 = 13 \\Rightarrow 2x = 8 \\Rightarrow x = 4',
+    difficulty: 'easy',
+    subject: 'álgebra',
+    skills: ['arithmetic'],
+  },
+  {
+    id: 'debug-q-4',
+    topic: 'Teorema de Pitágoras',
+    level: 'M1',
+    questionLatex: '\\text{En un triángulo rectángulo, un cateto mide } 3 \\text{ cm y el otro cateto mide } 4 \\text{ cm. ¿Cuánto mide la hipotenusa?}',
+    options: ['5 \\text{ cm}', '6 \\text{ cm}', '7 \\text{ cm}', '\\sqrt{25} \\text{ cm}'],
+    correctAnswer: 0,
+    explanation: 'c = \\sqrt{3^2 + 4^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5 \\text{ cm}',
+    difficulty: 'easy',
+    subject: 'geometría',
+    skills: ['arithmetic'],
+  },
+  {
+    id: 'debug-q-5',
+    topic: 'Porcentajes',
+    level: 'M1',
+    questionLatex: '\\text{Una tienda ofrece un descuento del } 20\\% \\text{ en un artículo que cuesta } \\$50.000\\text{. ¿Cuál es el precio final?}',
+    options: ['\\$40.000', '\\$45.000', '\\$35.000', '\\$42.000'],
+    correctAnswer: 0,
+    explanation: '\\text{Descuento: } 50.000 \\times 0.20 = 10.000 \\text{. Precio final: } 50.000 - 10.000 = \\$40.000',
+    difficulty: 'easy',
+    subject: 'álgebra',
+    skills: ['arithmetic'],
+  },
+];
+
+/**
+ * Create or reset the debug session
+ * @route   POST /api/sessions/debug
+ * @access  Private (Admin only)
+ */
+export const createDebugSession = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = (req as any).user?.userId;
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    // Get user info
+    const userResult = await pool.query(
+      'SELECT username, display_name FROM users WHERE id = $1',
+      [userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    const { username, display_name: hostName } = userResult.rows[0];
+    const now = Date.now();
+    const scheduledStartTime = now + 600000; // 10 min from now
+    const durationMinutes = 60;
+    const scheduledEndTime = scheduledStartTime + (durationMinutes * 60 * 1000);
+    const lobbyOpenTime = scheduledStartTime - (LOBBY_OPEN_MINUTES * 60 * 1000);
+
+    // Delete existing debug session and its related data
+    await pool.query('DELETE FROM session_participants WHERE session_id = $1', [DEBUG_SESSION_ID]);
+    await pool.query('DELETE FROM session_registrations WHERE session_id = $1', [DEBUG_SESSION_ID]);
+    await pool.query('DELETE FROM sessions WHERE id = $1', [DEBUG_SESSION_ID]);
+
+    // Create new debug session
+    await pool.query(
+      `INSERT INTO sessions (
+        id, name, description, level, host_id, host_name, questions,
+        status, current_question_index, created_at, scheduled_start_time,
+        scheduled_end_time, duration_minutes, lobby_open_time, max_participants
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+      [
+        DEBUG_SESSION_ID,
+        'Ensayo de Debug',
+        'Sesión de debug para probar el flujo completo',
+        'M1',
+        userId,
+        hostName,
+        JSON.stringify(DEBUG_QUESTIONS),
+        'scheduled',
+        0,
+        now,
+        scheduledStartTime,
+        scheduledEndTime,
+        durationMinutes,
+        lobbyOpenTime,
+        50,
+      ]
+    );
+
+    // Auto-join the user as participant
+    const initialAnswers = new Array(DEBUG_QUESTIONS.length).fill(null);
+    await pool.query(
+      `INSERT INTO session_participants (session_id, user_id, username, display_name, answers, score, joined_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [DEBUG_SESSION_ID, userId, username, hostName, JSON.stringify(initialAnswers), 0, now]
+    );
+
+    res.json({
+      success: true,
+      sessionId: DEBUG_SESSION_ID,
+      message: 'Debug session created successfully',
+    });
+  } catch (error) {
+    console.error('Error creating debug session:', error);
+    res.status(500).json({
+      error: 'Failed to create debug session',
+      message: (error as Error).message,
+    });
+  }
+};
+
+/**
+ * Update the debug session status
+ * @route   PATCH /api/sessions/debug/status
+ * @access  Private (Admin only)
+ */
+export const updateDebugSessionStatus = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = (req as any).user?.userId;
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { status } = req.body;
+    const validStatuses = ['scheduled', 'lobby', 'active', 'completed'];
+
+    if (!status || !validStatuses.includes(status)) {
+      res.status(400).json({ error: 'Invalid status. Must be one of: scheduled, lobby, active, completed' });
+      return;
+    }
+
+    // Check if debug session exists
+    const sessionResult = await pool.query(
+      'SELECT id FROM sessions WHERE id = $1',
+      [DEBUG_SESSION_ID]
+    );
+
+    if (sessionResult.rows.length === 0) {
+      res.status(404).json({ error: 'Debug session not found. Create it first with POST /api/sessions/debug' });
+      return;
+    }
+
+    const now = Date.now();
+    let updateQuery = 'UPDATE sessions SET status = $1';
+    const params: any[] = [status];
+
+    // Set timestamps based on status
+    if (status === 'active') {
+      updateQuery += ', started_at = $2';
+      params.push(now);
+    } else if (status === 'completed') {
+      updateQuery += ', completed_at = $2';
+      params.push(now);
+    }
+
+    updateQuery += ` WHERE id = $${params.length + 1}`;
+    params.push(DEBUG_SESSION_ID);
+
+    await pool.query(updateQuery, params);
+
+    res.json({
+      success: true,
+      sessionId: DEBUG_SESSION_ID,
+      status,
+      message: `Debug session status updated to ${status}`,
+    });
+  } catch (error) {
+    console.error('Error updating debug session status:', error);
+    res.status(500).json({
+      error: 'Failed to update debug session status',
+      message: (error as Error).message,
+    });
+  }
+};
+
+/**
+ * Reset debug session participant data (answers)
+ * @route   POST /api/sessions/debug/reset-participant
+ * @access  Private (Admin only)
+ */
+export const resetDebugParticipant = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = (req as any).user?.userId;
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const initialAnswers = new Array(DEBUG_QUESTIONS.length).fill(null);
+
+    await pool.query(
+      'UPDATE session_participants SET answers = $1, score = 0, current_question_index = 0 WHERE session_id = $2 AND user_id = $3',
+      [JSON.stringify(initialAnswers), DEBUG_SESSION_ID, userId]
+    );
+
+    res.json({
+      success: true,
+      message: 'Participant data reset successfully',
+    });
+  } catch (error) {
+    console.error('Error resetting participant:', error);
+    res.status(500).json({
+      error: 'Failed to reset participant data',
+      message: (error as Error).message,
+    });
+  }
+};
