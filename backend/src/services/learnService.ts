@@ -23,11 +23,8 @@ interface Question {
   subject: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
   question: string;
   questionLatex?: string;
-  // Options in LaTeX format
   options: string[];
-  optionsLatex?: string[];
   correctAnswer: number;
-  // Explanation in LaTeX format
   explanation: string;
   difficulty: 'easy' | 'medium' | 'hard' | 'extreme';
   operacionBase?: string;
@@ -433,7 +430,7 @@ export async function generatePersonalizedGuidance(
   const userPrompt = `Estudiante: conoce [${assessment.knownConcepts.join(',')}], gaps [${assessment.gaps.join(',')}], confianza ${assessment.confidenceLevel}.
 
 Pregunta: ${question.questionLatex || question.question}
-Correcta: ${question.optionsLatex?.[question.correctAnswer] || question.options[question.correctAnswer]}
+Correcta: ${question.options[question.correctAnswer]}
 
 Genera JSON con:
 - steps: [{number, description, guidance (personalizada), correctAnswer, explanation}]
@@ -674,7 +671,7 @@ export async function startSocraticSession(
   // COMPACT Socratic prompt
   const systemPrompt = `Tutor PAES con método socrático. NUNCA des la respuesta directamente. Guía con preguntas. LaTeX: $expresión$. Respuestas concisas (2-4 oraciones + 1-2 preguntas).`;
 
-  const optionsText = question.options.map((opt, i) => `${String.fromCharCode(65+i)}) ${question.optionsLatex?.[i] || opt}`).join(' | ');
+  const optionsText = question.options.map((opt, i) => `${String.fromCharCode(65+i)}) ${opt}`).join(' | ');
 
   const userPrompt = `Problema: ${question.questionLatex || question.question}
 Opciones: ${optionsText}
@@ -754,7 +751,7 @@ export async function continueSocraticSession(
 
   // Build optimized context
   const optionsText = session.question.options.map((opt, i) =>
-    `${String.fromCharCode(65+i)}) ${session.question.optionsLatex?.[i] || opt}`
+    `${String.fromCharCode(65+i)}) ${opt}`
   ).join(' | ');
 
   const conversationSummary = session.conversationHistory
