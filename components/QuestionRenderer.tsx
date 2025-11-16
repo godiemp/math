@@ -3,6 +3,7 @@
 import type { Question, QuestionRendererProps } from '@/lib/types';
 import { MathText, BlockMath, InlineMath, SmartLatexRenderer, UnifiedLatexRenderer } from './MathDisplay';
 import { GeometryCanvas, GeometryFigure } from './GeometryCanvas';
+import { ReportQuestionButton } from './ReportQuestionButton';
 
 // Re-export for convenience
 export type { QuestionRendererProps };
@@ -150,6 +151,17 @@ export function QuestionRenderer({
               </p>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Report Question Button - Show after answering */}
+      {showFeedback && (
+        <div className="flex justify-end pt-2">
+          <ReportQuestionButton
+            question={question}
+            userAnswer={selectedAnswer !== null ? selectedAnswer : undefined}
+            size="sm"
+          />
         </div>
       )}
     </div>
