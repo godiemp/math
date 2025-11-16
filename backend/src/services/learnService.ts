@@ -25,6 +25,7 @@ interface Question {
   questionLatex?: string;
   // Options in LaTeX format
   options: string[];
+  optionsLatex?: string[];
   correctAnswer: number;
   // Explanation in LaTeX format
   explanation: string;
