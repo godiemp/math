@@ -317,5 +317,5 @@ export async function healthCheck(): Promise<boolean> {
   }
 }
 
-// Export OpenAI client for advanced use cases
-export { openai };
+// Export getter for advanced use cases
+export { getOpenAIClient };
