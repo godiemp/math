@@ -217,7 +217,7 @@ export const m1Num003Questions: Question[] = [
     topic: 'Números y Proporcionalidad',
     subject: 'números',
     operacionBase: '\\frac{800000}{25000000} = \\frac{1}{31.25} \\approx 1:30000',
-    questionLatex: '\\text{Un cartógrafo está elaborando un nuevo mapa turístico de una región. Midió que en su mapa de prueba, 8 cm representan una distancia real de 2{,}4 km. Para etiquetar correctamente el mapa, necesita determinar cuál es la escala que está utilizando. ¿Cuál es la escala del mapa?}',
+    questionLatex: '\\text{Un cartógrafo está elaborando un nuevo mapa turístico de una región. Midió que en su mapa de prueba, 8 cm representan una distancia real de 2,4 km. Para etiquetar correctamente el mapa, necesita determinar cuál es la escala que está utilizando. ¿Cuál es la escala del mapa?}',
     options: ['1:3.000', '1:30.000', '1:300.000', '1:3.000.000'],
     correctAnswer: 1,
     explanation: '\\frac{8 \\text{ cm}}{240.000 \\text{ cm}} = \\frac{1}{30.000} \\quad \\Rightarrow \\quad \\text{Escala: } 1:30.000',
