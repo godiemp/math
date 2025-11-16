@@ -73,7 +73,7 @@ export function MarkdownViewer({ content }: MarkdownViewerProps) {
           },
         }}
       >
-        {content}
+        {content.trim()}
       </ReactMarkdown>
     </div>
   );
