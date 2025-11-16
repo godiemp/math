@@ -11,10 +11,23 @@
 
 import OpenAI from 'openai';
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy initialization of OpenAI client
+let openaiClient: OpenAI | null = null;
+
+function getOpenAIClient(): OpenAI {
+  if (!openaiClient) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error(
+        'OPENAI_API_KEY environment variable is missing or empty. ' +
+        'Please set it in your environment to use AI features.'
+      );
+    }
+    openaiClient = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openaiClient;
+}
 
 // Model configuration
 export const MODELS = {
@@ -121,7 +134,7 @@ export async function completion(options: CompletionOptions): Promise<Completion
     requestBody.response_format = { type: 'json_object' };
   }
 
-  const response = await openai.chat.completions.create(requestBody);
+  const response = await getOpenAIClient().chat.completions.create(requestBody);
 
   const content = response.choices[0]?.message?.content || '';
   const latencyMs = Date.now() - startTime;
@@ -160,7 +173,7 @@ export async function streamCompletion(options: StreamCompletionOptions): Promis
     requestBody.response_format = { type: 'json_object' };
   }
 
-  const stream = await openai.chat.completions.create(requestBody);
+  const stream = await getOpenAIClient().chat.completions.create(requestBody);
 
   let fullContent = '';
   let promptTokens = 0;
