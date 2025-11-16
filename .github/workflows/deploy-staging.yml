@@ -1,0 +1,213 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+    inputs:
+      deploy_frontend:
+        description: 'Deploy frontend to Vercel staging'
+        required: true
+        default: true
+        type: boolean
+      deploy_backend:
+        description: 'Deploy backend to Railway staging'
+        required: true
+        default: true
+        type: boolean
+      run_migrations:
+        description: 'Run database migrations'
+        required: true
+        default: true
+        type: boolean
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  test:
+    name: Run Tests Before Deploy
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.inputs.deploy_backend == 'true' || github.event.inputs.deploy_frontend == 'true'
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: paes_test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: ./backend
+
+      - name: Run frontend unit tests
+        run: npm test
+        env:
+          NODE_ENV: test
+
+      - name: Build backend
+        run: npm run build
+        working-directory: ./backend
+
+      - name: Run backend tests
+        run: npm test
+        working-directory: ./backend
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://testuser:testpassword@localhost:5433/paes_test
+          JWT_SECRET: test-jwt-secret-for-staging-deployment
+          JWT_REFRESH_SECRET: test-refresh-secret-for-staging
+          JWT_EXPIRES_IN: 1h
+          JWT_REFRESH_EXPIRES_IN: 7d
+
+      - name: Build frontend
+        run: npm run build
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_ENVIRONMENT: staging
+
+  deploy-backend:
+    name: Deploy Backend to Railway Staging
+    needs: test
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'push') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_backend == 'true')
+    environment:
+      name: staging
+      url: https://paes-math-backend-staging.up.railway.app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway Staging
+        run: |
+          cd backend
+          railway up --service paes-math-backend-staging
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_STAGING_TOKEN }}
+
+      - name: Verify deployment health
+        run: |
+          echo "Waiting for deployment to be healthy..."
+          sleep 30
+
+          # Check health endpoint with retries
+          for i in {1..10}; do
+            if curl -sf https://paes-math-backend-staging.up.railway.app/health; then
+              echo "✅ Backend is healthy!"
+              exit 0
+            fi
+            echo "Attempt $i: Backend not ready yet, waiting..."
+            sleep 10
+          done
+
+          echo "❌ Backend health check failed after 10 attempts"
+          exit 1
+
+  deploy-frontend:
+    name: Deploy Frontend to Vercel Staging
+    needs: test
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'push') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_frontend == 'true')
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          NEXT_PUBLIC_ENVIRONMENT: staging
+          NEXT_PUBLIC_API_URL: https://paes-math-backend-staging.up.railway.app
+
+      - name: Deploy to Vercel Staging
+        id: deploy
+        run: |
+          DEPLOYMENT_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} --env NEXT_PUBLIC_ENVIRONMENT=staging)
+          echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          echo "Deployed to: $DEPLOYMENT_URL"
+
+      - name: Alias to Staging Domain
+        run: |
+          vercel alias ${{ steps.deploy.outputs.url }} staging.paes-math.vercel.app --token=${{ secrets.VERCEL_TOKEN }}
+        continue-on-error: true
+
+  notify:
+    name: Notify Deployment Status
+    needs: [deploy-backend, deploy-frontend]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Create deployment summary
+        run: |
+          echo "## 🚀 Staging Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.deploy-backend.result }}" == "success" ]; then
+            echo "✅ **Backend**: Successfully deployed to Railway staging" >> $GITHUB_STEP_SUMMARY
+            echo "   - URL: https://paes-math-backend-staging.up.railway.app" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Backend**: Deployment failed or skipped" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.deploy-frontend.result }}" == "success" ]; then
+            echo "✅ **Frontend**: Successfully deployed to Vercel staging" >> $GITHUB_STEP_SUMMARY
+            echo "   - URL: https://staging.paes-math.vercel.app" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Frontend**: Deployment failed or skipped" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Environment Details" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered by**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Timestamp**: $(date -u)" >> $GITHUB_STEP_SUMMARY

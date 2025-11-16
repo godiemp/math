@@ -1,0 +1,168 @@
+name: Promote Staging to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_promotion:
+        description: 'Type "PROMOTE" to confirm promotion to production'
+        required: true
+        type: string
+      skip_tests:
+        description: 'Skip running tests (use with caution)'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  validate:
+    name: Validate Promotion Request
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check confirmation
+        if: github.event.inputs.confirm_promotion != 'PROMOTE'
+        run: |
+          echo "❌ Promotion not confirmed. You must type 'PROMOTE' to proceed."
+          exit 1
+
+      - name: Verify staging is healthy
+        run: |
+          echo "Checking staging backend health..."
+          if ! curl -sf https://paes-math-backend-staging.up.railway.app/health; then
+            echo "❌ Staging backend is not healthy. Cannot promote to production."
+            exit 1
+          fi
+          echo "✅ Staging backend is healthy"
+
+  test-staging:
+    name: Run Smoke Tests on Staging
+    needs: validate
+    runs-on: ubuntu-latest
+    if: github.event.inputs.skip_tests != 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run E2E tests against staging
+        run: npm run test:e2e
+        env:
+          NEXT_PUBLIC_API_URL: https://paes-math-backend-staging.up.railway.app
+          PLAYWRIGHT_BASE_URL: https://staging.paes-math.vercel.app
+        continue-on-error: true
+
+  promote-backend:
+    name: Promote Backend to Production
+    needs: [validate, test-staging]
+    if: always() && needs.validate.result == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://paes-math-backend-production.up.railway.app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: staging
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway Production
+        run: |
+          cd backend
+          railway up --service paes-math-backend-production
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_PRODUCTION_TOKEN }}
+
+      - name: Verify production health
+        run: |
+          echo "Waiting for production deployment to be healthy..."
+          sleep 30
+
+          for i in {1..10}; do
+            if curl -sf https://paes-math-backend-production.up.railway.app/health; then
+              echo "✅ Production backend is healthy!"
+              exit 0
+            fi
+            echo "Attempt $i: Production not ready yet, waiting..."
+            sleep 10
+          done
+
+          echo "❌ Production health check failed"
+          exit 1
+
+  promote-frontend:
+    name: Promote Frontend to Production
+    needs: [validate, test-staging]
+    if: always() && needs.validate.result == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://paes-math.vercel.app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: staging
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Deploy to Production
+        run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          NEXT_PUBLIC_ENVIRONMENT: production
+
+  create-release-tag:
+    name: Create Release Tag
+    needs: [promote-backend, promote-frontend]
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: staging
+          fetch-depth: 0
+
+      - name: Create release tag
+        run: |
+          VERSION="v$(date +'%Y.%m.%d')-$(git rev-parse --short HEAD)"
+          git tag -a "$VERSION" -m "Production release promoted from staging"
+          git push origin "$VERSION"
+          echo "Created release tag: $VERSION"
+
+      - name: Create deployment summary
+        run: |
+          echo "## 🎉 Production Promotion Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Backend**: Promoted to production" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Frontend**: Promoted to production" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Release Details" >> $GITHUB_STEP_SUMMARY
+          echo "- **Source**: staging branch" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Promoted by**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Timestamp**: $(date -u)" >> $GITHUB_STEP_SUMMARY

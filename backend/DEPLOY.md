@@ -473,6 +473,46 @@ Your backend will likely cost **$5-10/month** including database.
 
 ---
 
+## 🔄 Staging Environment
+
+For production-grade deployments, consider setting up a **staging environment** before going live.
+
+A staging environment provides:
+- A stable testing ground for new features
+- QA validation before production deployments
+- Production-like environment for final verification
+- Isolated database and services for safe testing
+
+### Quick Setup
+
+1. Create a new Railway service named `paes-math-backend-staging`
+2. Set up a separate PostgreSQL database for staging
+3. Configure environment variables with `NODE_ENV=staging`
+4. Use the `railway.staging.json` configuration file
+5. Set up automated deployment via GitHub Actions
+
+### Documentation
+
+For complete staging environment setup instructions, see:
+- **Staging Guide**: [docs/STAGING_ENVIRONMENT.md](../docs/STAGING_ENVIRONMENT.md)
+- **Staging Config**: [backend/.env.staging.example](./.env.staging.example)
+- **Staging Railway Config**: [backend/railway.staging.json](./railway.staging.json)
+
+### Deployment Workflow
+
+```
+Development → Staging → Production
+     ↓           ↓           ↓
+  Feature     Testing      Live
+  Branches    & QA       Users
+```
+
+Use the GitHub Actions workflows:
+- `deploy-staging.yml` - Deploy to staging on push to `staging` branch
+- `promote-to-production.yml` - Promote tested staging code to production
+
+---
+
 **Need Help?** Check Railway logs first:
 ```bash
 railway logs --tail
