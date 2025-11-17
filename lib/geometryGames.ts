@@ -7,7 +7,7 @@
  * Makes it easy to add new games without modifying the hub page.
  */
 
-import { Shapes, Ruler, Symmetry, Compass, Grid3X3, Box, Move, Map } from 'lucide-react';
+import { Shapes, Ruler, FlipHorizontal2, Compass, Grid3X3, Box, Move, Map } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 /**
@@ -94,7 +94,7 @@ export const GEOMETRY_GAMES: GeometryGame[] = [
     id: 'symmetry',
     title: 'Simetría y Reflexiones',
     description: 'Descubre líneas de simetría y crea reflexiones de figuras.',
-    icon: Symmetry,
+    icon: FlipHorizontal2,
     route: '/practice/geometry/symmetry',
     category: 'shapes',
     status: 'coming_soon',
