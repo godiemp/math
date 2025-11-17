@@ -5,16 +5,38 @@
 
 import { pool } from '../config/database';
 
+/**
+ * Retry helper for database connection with exponential backoff
+ */
+async function retryWithBackoff<T>(fn: () => Promise<T>, maxRetries = 5, initialDelayMs = 2000): Promise<T> {
+  let lastError: Error | undefined;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error as Error;
+      if (attempt === maxRetries) {
+        throw error;
+      }
+      const delayMs = initialDelayMs * Math.pow(2, attempt - 1);
+      console.log(`⏳ Connection attempt ${attempt} failed, retrying in ${delayMs / 1000}s...`);
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+  throw lastError;
+}
+
 async function markMigrationsAsExecuted() {
   console.log('🔄 Marking existing migrations as executed...');
 
   try {
-    // Create SequelizeMeta table if it doesn't exist
-    await pool.query(`
+    console.log('🔗 Connecting to database...');
+    // Create SequelizeMeta table if it doesn't exist with retry logic
+    await retryWithBackoff(() => pool.query(`
       CREATE TABLE IF NOT EXISTS "SequelizeMeta" (
         name VARCHAR(255) NOT NULL PRIMARY KEY
       )
-    `);
+    `));
 
     // Check which migrations have already been applied by checking if tables/columns exist
     const checks = [
