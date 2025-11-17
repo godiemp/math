@@ -9,6 +9,48 @@ import { MarkdownViewer } from './MarkdownViewer';
 import { api } from '@/lib/api-client';
 import { analytics } from '@/lib/analytics';
 
+// Typing effect component for streaming content
+function StreamingTypingEffect({ content, speed = 15 }: { content: string; speed?: number }) {
+  const [displayedContent, setDisplayedContent] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const contentRef = useRef(content);
+
+  // Track content changes
+  useEffect(() => {
+    const prevLength = contentRef.current.length;
+    contentRef.current = content;
+
+    // If content grew, we have new text to reveal
+    // If current index is behind content length, continue typing
+    if (currentIndex < content.length) {
+      const timer = setTimeout(() => {
+        // Type a few characters at once for natural feel
+        const charsToAdd = Math.min(2, content.length - currentIndex);
+        setCurrentIndex(prev => prev + charsToAdd);
+        setDisplayedContent(content.slice(0, currentIndex + charsToAdd));
+      }, speed);
+      return () => clearTimeout(timer);
+    }
+  }, [content, currentIndex, speed]);
+
+  // Reset when streaming starts fresh
+  useEffect(() => {
+    if (content.length === 0) {
+      setDisplayedContent('');
+      setCurrentIndex(0);
+    }
+  }, [content]);
+
+  return (
+    <>
+      <MarkdownViewer content={displayedContent} />
+      {currentIndex < content.length && (
+        <span className="inline-block w-0.5 h-4 bg-teal-500 animate-pulse ml-0.5 align-middle" />
+      )}
+    </>
+  );
+}
+
 interface Message {
   role: 'user' | 'assistant' | 'system';
   content: string;
@@ -433,17 +475,16 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
             </div>
           ))}
 
-          {/* Show streaming content as it arrives */}
+          {/* Show streaming content as it arrives with typing effect */}
           {isStreaming && streamingContent && (
             <div className="flex justify-start">
               <div className="max-w-[80%] rounded-2xl px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-lg">🤖</span>
                   <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">Tutor IA</span>
-                  <span className="animate-pulse text-teal-500 text-xs">● escribiendo</span>
                 </div>
                 <div className="text-sm leading-relaxed markdown-chat-message">
-                  <MarkdownViewer content={streamingContent} />
+                  <StreamingTypingEffect content={streamingContent} speed={12} />
                 </div>
               </div>
             </div>
