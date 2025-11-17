@@ -186,10 +186,10 @@ function AngleCanvas({
         {/* Main angle */}
         {problem.type === 'compare_angles' ? (
           <>
-            {renderAngle(150, problem.vertexY, problem.ray1, problem.ray2, problem.angleDegrees, 'A')}
+            {renderAngle(problem.vertexX, problem.vertexY, problem.ray1, problem.ray2, problem.angleDegrees, 'A')}
             {problem.comparisonAngle && (
               renderAngle(
-                450,
+                problem.vertexX + 200,
                 problem.vertexY,
                 problem.comparisonAngle.ray1,
                 problem.comparisonAngle.ray2,
