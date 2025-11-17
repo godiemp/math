@@ -38,6 +38,8 @@ export interface ShapeInfo {
   sides: number; // Number of sides (0 for circle/oval)
   description: string;
   hint: string;
+  explanation?: string; // Detailed explanation for learning
+  keyFeature?: string; // Key distinguishing feature
 }
 
 /**

@@ -6,6 +6,7 @@ import {
   generateVariedShapeProblem,
   clearRecentShapes,
   DIFFICULTY_CONFIGS,
+  SHAPE_DEFINITIONS,
 } from '@/lib/shapeGenerator';
 import type { ShapeProblem, ShapeGameDifficulty } from '@/lib/types/shape-game';
 
@@ -188,6 +189,8 @@ export default function ShapeIdentificationGame({
   const [showHint, setShowHint] = useState(false);
   const [currentStreak, setCurrentStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
+  const [isRetry, setIsRetry] = useState(false);
+  const [hasTriedOnce, setHasTriedOnce] = useState(false);
 
   const config = DIFFICULTY_CONFIGS[difficulty];
 
@@ -197,6 +200,8 @@ export default function ShapeIdentificationGame({
     setSelectedAnswer(null);
     setFeedback({ show: false, isCorrect: false });
     setShowHint(false);
+    setIsRetry(false);
+    setHasTriedOnce(false);
   }, [difficulty]);
 
   useEffect(() => {
@@ -243,7 +248,11 @@ export default function ShapeIdentificationGame({
     const isCorrect = answer === problem.correctAnswer;
 
     setFeedback({ show: true, isCorrect });
-    setAttemptCount((prev) => prev + 1);
+
+    // Only count as attempt on first try (not retry)
+    if (!isRetry) {
+      setAttemptCount((prev) => prev + 1);
+    }
 
     if (isCorrect) {
       const newCorrectCount = correctCount + 1;
@@ -267,7 +276,16 @@ export default function ShapeIdentificationGame({
       }
     } else {
       setCurrentStreak(0);
+      setHasTriedOnce(true);
     }
+  };
+
+  const handleRetry = () => {
+    // Allow student to try the same shape again
+    setSelectedAnswer(null);
+    setFeedback({ show: false, isCorrect: false });
+    setIsRetry(true);
+    setShowHint(true); // Show hint automatically on retry
   };
 
   const handleContinue = () => {
@@ -446,7 +464,7 @@ export default function ShapeIdentificationGame({
               : 'bg-red-50 dark:bg-red-900/30 border-2 border-red-500'
           }`}
         >
-          <div className="flex items-start sm:items-center gap-3">
+          <div className="flex items-start gap-3">
             {feedback.isCorrect ? (
               <>
                 <Check
@@ -460,22 +478,43 @@ export default function ShapeIdentificationGame({
                   <div className="text-xs sm:text-sm text-green-700 dark:text-green-400">
                     Racha actual: {currentStreak} | Mejor racha: {bestStreak}
                   </div>
+                  {isRetry && (
+                    <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                      ¡Excelente! Aprendiste de tu error anterior.
+                    </div>
+                  )}
                 </div>
               </>
             ) : (
               <>
                 <X
                   size={28}
-                  className="sm:w-8 sm:h-8 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5 sm:mt-0"
+                  className="sm:w-8 sm:h-8 text-red-600 dark:text-red-400 flex-shrink-0 mt-1"
                 />
-                <div>
-                  <div className="text-base sm:text-lg font-bold text-red-900 dark:text-red-300">
+                <div className="flex-1">
+                  <div className="text-base sm:text-lg font-bold text-red-900 dark:text-red-300 mb-2">
                     Incorrecto
                   </div>
-                  <div className="text-xs sm:text-sm text-red-700 dark:text-red-400">
-                    La respuesta correcta es:{' '}
-                    <strong>{problem.correctAnswer}</strong>
+                  {/* Detailed explanation */}
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-3 mb-2">
+                    <div className="text-sm font-semibold text-gray-900 dark:text-white mb-1">
+                      {SHAPE_DEFINITIONS[problem.correctShape].explanation}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400">
+                      <strong>Característica clave:</strong>{' '}
+                      {SHAPE_DEFINITIONS[problem.correctShape].keyFeature}
+                    </div>
                   </div>
+                  {!hasTriedOnce || isRetry ? (
+                    <div className="text-xs sm:text-sm text-red-700 dark:text-red-400">
+                      ¡Inténtalo de nuevo! Ahora conoces las características.
+                    </div>
+                  ) : (
+                    <div className="text-xs sm:text-sm text-red-700 dark:text-red-400">
+                      Recuerda: <strong>{problem.correctAnswer}</strong> -{' '}
+                      {SHAPE_DEFINITIONS[problem.correctShape].keyFeature}
+                    </div>
+                  )}
                 </div>
               </>
             )}
@@ -483,14 +522,31 @@ export default function ShapeIdentificationGame({
         </div>
       )}
 
-      {/* Continue Button (after incorrect answer) */}
+      {/* Retry or Continue Button (after incorrect answer) */}
       {feedback.show && !feedback.isCorrect && (
-        <button
-          onClick={handleContinue}
-          className="w-full bg-gray-600 text-white py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-gray-700 transition-all shadow-lg"
-        >
-          Siguiente Forma
-        </button>
+        <div className="flex gap-3">
+          {!hasTriedOnce || isRetry ? (
+            <button
+              onClick={handleRetry}
+              className="flex-1 bg-blue-600 text-white py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-blue-700 transition-all shadow-lg"
+            >
+              🔄 Intentar de Nuevo
+            </button>
+          ) : (
+            <button
+              onClick={handleRetry}
+              className="flex-1 bg-blue-600 text-white py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-blue-700 transition-all shadow-lg"
+            >
+              🔄 Practicar Esta Forma
+            </button>
+          )}
+          <button
+            onClick={handleContinue}
+            className="flex-1 bg-gray-600 text-white py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-gray-700 transition-all shadow-lg"
+          >
+            Siguiente →
+          </button>
+        </div>
       )}
 
       {/* Stats */}
