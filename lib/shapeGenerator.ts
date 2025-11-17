@@ -28,6 +28,8 @@ export const SHAPE_DEFINITIONS: Record<Shape2D, ShapeInfo> = {
     sides: 0,
     description: 'Figura redonda sin esquinas',
     hint: 'Es perfectamente redondo',
+    explanation: 'Este es un Círculo porque es perfectamente redondo, sin lados rectos ni esquinas. Todos los puntos están a la misma distancia del centro.',
+    keyFeature: 'Sin lados rectos, completamente curvo',
   },
   square: {
     id: 'square',
@@ -36,6 +38,8 @@ export const SHAPE_DEFINITIONS: Record<Shape2D, ShapeInfo> = {
     sides: 4,
     description: 'Cuatro lados iguales y cuatro ángulos rectos',
     hint: 'Todos sus lados son iguales',
+    explanation: 'Este es un Cuadrado porque tiene 4 lados de igual longitud y 4 ángulos rectos (90°). Es como un rectángulo perfecto donde todos los lados miden lo mismo.',
+    keyFeature: '4 lados iguales + 4 ángulos de 90°',
   },
   rectangle: {
     id: 'rectangle',
@@ -44,6 +48,8 @@ export const SHAPE_DEFINITIONS: Record<Shape2D, ShapeInfo> = {
     sides: 4,
     description: 'Cuatro ángulos rectos, lados opuestos iguales',
     hint: 'Tiene forma alargada con esquinas rectas',
+    explanation: 'Este es un Rectángulo porque tiene 4 ángulos rectos (90°) y los lados opuestos son iguales, pero NO todos los lados son iguales (es más largo que ancho).',
+    keyFeature: '4 ángulos de 90° + forma alargada',
   },
   triangle: {
     id: 'triangle',
@@ -52,6 +58,8 @@ export const SHAPE_DEFINITIONS: Record<Shape2D, ShapeInfo> = {
     sides: 3,
     description: 'Tres lados y tres ángulos',
     hint: 'Tiene exactamente 3 lados',
+    explanation: 'Este es un Triángulo porque tiene exactamente 3 lados y 3 vértices (esquinas). "Tri" significa tres.',
+    keyFeature: 'Exactamente 3 lados',
   },
   pentagon: {
     id: 'pentagon',
@@ -60,6 +68,8 @@ export const SHAPE_DEFINITIONS: Record<Shape2D, ShapeInfo> = {
     sides: 5,
     description: 'Cinco lados y cinco ángulos',
     hint: 'Penta = cinco',
+    explanation: 'Este es un Pentágono porque tiene 5 lados y 5 vértices. "Penta" significa cinco en griego. Cuenta los lados: 1, 2, 3, 4, 5.',
+    keyFeature: '5 lados (penta = cinco)',
   },
   hexagon: {
     id: 'hexagon',
@@ -68,6 +78,8 @@ export const SHAPE_DEFINITIONS: Record<Shape2D, ShapeInfo> = {
     sides: 6,
     description: 'Seis lados y seis ángulos',
     hint: 'Hexa = seis',
+    explanation: 'Este es un Hexágono porque tiene 6 lados y 6 vértices. "Hexa" significa seis en griego. Los panales de abejas tienen forma hexagonal.',
+    keyFeature: '6 lados (hexa = seis)',
   },
   octagon: {
     id: 'octagon',
@@ -76,6 +88,8 @@ export const SHAPE_DEFINITIONS: Record<Shape2D, ShapeInfo> = {
     sides: 8,
     description: 'Ocho lados y ocho ángulos',
     hint: 'Octa = ocho (como las señales de ALTO)',
+    explanation: 'Este es un Octágono porque tiene 8 lados y 8 vértices. "Octa" significa ocho. Las señales de ALTO tienen esta forma.',
+    keyFeature: '8 lados (octa = ocho)',
   },
   oval: {
     id: 'oval',
@@ -84,6 +98,8 @@ export const SHAPE_DEFINITIONS: Record<Shape2D, ShapeInfo> = {
     sides: 0,
     description: 'Forma ovalada, como un huevo',
     hint: 'Es como un círculo estirado',
+    explanation: 'Este es un Óvalo porque es una forma curva alargada, como un huevo o un círculo estirado. No tiene lados rectos pero NO es perfectamente redondo.',
+    keyFeature: 'Curvo pero estirado (no es redondo perfecto)',
   },
   rhombus: {
     id: 'rhombus',
@@ -92,6 +108,8 @@ export const SHAPE_DEFINITIONS: Record<Shape2D, ShapeInfo> = {
     sides: 4,
     description: 'Cuatro lados iguales, forma de diamante',
     hint: 'Parece un cuadrado inclinado',
+    explanation: 'Este es un Rombo porque tiene 4 lados iguales pero sus ángulos NO son de 90°. Parece un diamante o un cuadrado inclinado.',
+    keyFeature: '4 lados iguales + ángulos NO son 90°',
   },
   trapezoid: {
     id: 'trapezoid',
@@ -100,6 +118,8 @@ export const SHAPE_DEFINITIONS: Record<Shape2D, ShapeInfo> = {
     sides: 4,
     description: 'Cuatro lados con dos lados paralelos',
     hint: 'Tiene un lado más corto arriba',
+    explanation: 'Este es un Trapecio porque tiene 4 lados donde solo DOS lados son paralelos (generalmente arriba y abajo). Los otros dos lados están inclinados.',
+    keyFeature: 'Solo 2 lados paralelos',
   },
   parallelogram: {
     id: 'parallelogram',
@@ -108,14 +128,18 @@ export const SHAPE_DEFINITIONS: Record<Shape2D, ShapeInfo> = {
     sides: 4,
     description: 'Cuatro lados con lados opuestos paralelos',
     hint: 'Como un rectángulo inclinado',
+    explanation: 'Este es un Paralelogramo porque tiene 4 lados donde los lados opuestos son paralelos e iguales. Es como un rectángulo "empujado" de lado.',
+    keyFeature: 'Lados opuestos paralelos + inclinado',
   },
   star: {
     id: 'star',
     nameEs: 'Estrella',
     nameEn: 'Star',
-    sides: 10, // 5-pointed star has 10 vertices
+    sides: 10,
     description: 'Forma de estrella con 5 puntas',
     hint: 'Tiene 5 puntas',
+    explanation: 'Esta es una Estrella de 5 puntas. Tiene 10 vértices en total: 5 puntas externas y 5 ángulos internos donde se unen las puntas.',
+    keyFeature: '5 puntas hacia afuera',
   },
 };
 
