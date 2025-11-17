@@ -97,7 +97,7 @@ export const GEOMETRY_GAMES: GeometryGame[] = [
     icon: FlipHorizontal2,
     route: '/practice/geometry/symmetry',
     category: 'shapes',
-    status: 'coming_soon',
+    status: 'available',
     difficulty: 'intermediate',
     skills: ['Simetría axial', 'Transformaciones', 'Percepción espacial'],
     estimatedTime: '15-20 min',
