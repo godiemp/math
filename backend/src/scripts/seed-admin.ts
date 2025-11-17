@@ -2,6 +2,27 @@ import bcrypt from 'bcryptjs';
 import { pool } from '../config/database';
 
 /**
+ * Retry helper for database connection with exponential backoff
+ */
+async function retryWithBackoff<T>(fn: () => Promise<T>, maxRetries = 5, initialDelayMs = 2000): Promise<T> {
+  let lastError: Error | undefined;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error as Error;
+      if (attempt === maxRetries) {
+        throw error;
+      }
+      const delayMs = initialDelayMs * Math.pow(2, attempt - 1);
+      console.log(`⏳ Connection attempt ${attempt} failed, retrying in ${delayMs / 1000}s...`);
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+  throw lastError;
+}
+
+/**
  * Seed script to create a default admin user
  * Run with: npm run seed:admin
  */
@@ -12,10 +33,13 @@ async function seedAdmin() {
     const password = 'admin123'; // Default password - CHANGE IN PRODUCTION
     const displayName = 'Administrador';
 
-    // Check if admin already exists
-    const existingAdmin = await pool.query(
-      'SELECT id FROM users WHERE username = $1 OR email = $2',
-      [username, email]
+    console.log('🔗 Connecting to database...');
+    // Check if admin already exists with retry logic
+    const existingAdmin = await retryWithBackoff(() =>
+      pool.query(
+        'SELECT id FROM users WHERE username = $1 OR email = $2',
+        [username, email]
+      )
     );
 
     if (existingAdmin.rows.length > 0) {

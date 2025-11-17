@@ -4,6 +4,27 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 /**
+ * Retry helper for database connection with exponential backoff
+ */
+async function retryWithBackoff<T>(fn: () => Promise<T>, maxRetries = 5, initialDelayMs = 2000): Promise<T> {
+  let lastError: Error | undefined;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error as Error;
+      if (attempt === maxRetries) {
+        throw error;
+      }
+      const delayMs = initialDelayMs * Math.pow(2, attempt - 1);
+      console.log(`⏳ Connection attempt ${attempt} failed, retrying in ${delayMs / 1000}s...`);
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+  throw lastError;
+}
+
+/**
  * Seed initial subscription plans
  *
  * Plan types:
@@ -134,7 +155,8 @@ const plans = [
 ];
 
 async function seedPlans() {
-  const client = await pool.connect();
+  console.log('🔗 Connecting to database...');
+  const client = await retryWithBackoff(() => pool.connect());
 
   try {
     console.log('🌱 Starting plan seeding (will create new plans and update existing ones)...');
