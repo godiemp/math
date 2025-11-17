@@ -9,7 +9,7 @@ export const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
   max: 20, // Maximum number of clients in the pool
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: process.env.NODE_ENV === 'production' ? 30000 : 5000, // 30s for production (cloud), 5s for dev
+  connectionTimeoutMillis: process.env.NODE_ENV === 'production' ? 60000 : 5000, // 60s for production (cloud), 5s for dev
 });
 
 // Test database connection
