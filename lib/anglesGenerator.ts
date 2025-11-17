@@ -274,7 +274,8 @@ function generateOptions(
   type: AngleProblemType,
   correctAnswer: string | number,
   angleType: AngleType,
-  availableTypes: AngleType[]
+  availableTypes: AngleType[],
+  angleDegrees?: number
 ): (string | number)[] {
   switch (type) {
     case 'classify_angle':
@@ -290,7 +291,8 @@ function generateOptions(
       return shuffleArray([correctName, ...distractorNames]);
 
     case 'measure_angle':
-      const correctDegrees = correctAnswer as number;
+      // Use the actual angle degrees, not the string answer
+      const correctDegrees = angleDegrees ? Math.round(angleDegrees / 5) * 5 : 90;
       // Generate nearby measurements as distractors
       const distractors: number[] = [];
       const possibleOffsets = [-30, -20, -15, 15, 20, 30];
@@ -434,7 +436,8 @@ export function generateAngleProblem(difficulty: AnglesGameDifficulty): AnglePro
     problemType,
     correctAnswer,
     angleType,
-    config.angleTypes
+    config.angleTypes,
+    angleDegrees
   );
   const question = generateQuestion(problemType, angleDegrees, config.showDegrees);
   const hint = generateHint(problemType, angleType);
