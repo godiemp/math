@@ -267,6 +267,33 @@ export const SYMMETRY_DIFFICULTY_CONFIGS: Record<SymmetryGameDifficulty, Symmetr
       problemsToComplete: 15,
       showSymmetryLines: false,
     },
+    expert: {
+      level: 'expert',
+      title: 'Simetría Experto',
+      description: 'Desafío máximo: sin ayudas visuales, más problemas',
+      shapes: [
+        'circle',
+        'square',
+        'rectangle',
+        'equilateral_triangle',
+        'isosceles_triangle',
+        'scalene_triangle',
+        'regular_pentagon',
+        'regular_hexagon',
+        'regular_octagon',
+        'oval',
+        'rhombus',
+        'trapezoid',
+        'parallelogram',
+        'star',
+        'heart',
+        'arrow',
+        'cross',
+      ],
+      problemTypes: ['count_lines', 'has_symmetry', 'identify_line'],
+      problemsToComplete: 20,
+      showSymmetryLines: false,
+    },
   };
 
 /**

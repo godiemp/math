@@ -62,7 +62,7 @@ function SymmetryGameContent() {
 
   const handleNextLevel = () => {
     // Determine next level
-    const levels: SymmetryGameDifficulty[] = ['basic', 'intermediate', 'advanced'];
+    const levels: SymmetryGameDifficulty[] = ['basic', 'intermediate', 'advanced', 'expert'];
     const currentIndex = selectedDifficulty ? levels.indexOf(selectedDifficulty) : -1;
 
     if (currentIndex < levels.length - 1) {

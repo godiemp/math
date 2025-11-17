@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FlipHorizontal2, Circle, Hexagon, Star, ArrowRight } from 'lucide-react';
+import { FlipHorizontal2, Circle, Hexagon, Star, Crown, ArrowRight } from 'lucide-react';
 import {
   SYMMETRY_DIFFICULTY_CONFIGS,
   SYMMETRY_SHAPE_DEFINITIONS,
@@ -15,7 +15,7 @@ interface SymmetryGameMenuProps {
 export default function SymmetryGameMenu({ onStart }: SymmetryGameMenuProps) {
   const [selectedDifficulty, setSelectedDifficulty] = useState<SymmetryGameDifficulty>('basic');
 
-  const difficulties: SymmetryGameDifficulty[] = ['basic', 'intermediate', 'advanced'];
+  const difficulties: SymmetryGameDifficulty[] = ['basic', 'intermediate', 'advanced', 'expert'];
 
   const getDifficultyIcon = (difficulty: SymmetryGameDifficulty) => {
     switch (difficulty) {
@@ -25,6 +25,8 @@ export default function SymmetryGameMenu({ onStart }: SymmetryGameMenuProps) {
         return <Hexagon size={24} />;
       case 'advanced':
         return <Star size={24} />;
+      case 'expert':
+        return <Crown size={24} />;
     }
   };
 
@@ -57,6 +59,15 @@ export default function SymmetryGameMenu({ onStart }: SymmetryGameMenuProps) {
           text: 'text-red-700 dark:text-red-400',
           badge: 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300',
         };
+      case 'expert':
+        return {
+          bg: 'bg-purple-50 dark:bg-purple-900/30',
+          border: 'border-purple-200 dark:border-purple-700',
+          selectedBg: 'bg-purple-100 dark:bg-purple-900/50',
+          selectedBorder: 'border-purple-500',
+          text: 'text-purple-700 dark:text-purple-400',
+          badge: 'bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300',
+        };
     }
   };
 
@@ -88,7 +99,7 @@ export default function SymmetryGameMenu({ onStart }: SymmetryGameMenuProps) {
       </div>
 
       {/* Difficulty Selection */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {difficulties.map((difficulty) => {
           const config = SYMMETRY_DIFFICULTY_CONFIGS[difficulty];
           const colors = getDifficultyColor(difficulty);

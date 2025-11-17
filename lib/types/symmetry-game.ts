@@ -71,7 +71,7 @@ export interface SymmetryShapeInfo {
 /**
  * Game difficulty levels
  */
-export type SymmetryGameDifficulty = 'basic' | 'intermediate' | 'advanced';
+export type SymmetryGameDifficulty = 'basic' | 'intermediate' | 'advanced' | 'expert';
 
 /**
  * Difficulty level configuration
