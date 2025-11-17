@@ -116,6 +116,27 @@ async function initializeDatabase(pool) {
 }
 
 /**
+ * Retry helper for database connection with exponential backoff
+ */
+async function retryWithBackoff(fn, maxRetries = 5, initialDelayMs = 2000) {
+  let lastError;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error;
+      if (attempt === maxRetries) {
+        throw error;
+      }
+      const delayMs = initialDelayMs * Math.pow(2, attempt - 1);
+      console.log(`⏳ Connection attempt ${attempt} failed, retrying in ${delayMs / 1000}s...`);
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+  throw lastError;
+}
+
+/**
  * Seed script to create a default admin user
  * Run with: node scripts/seed-admin.js
  */
@@ -123,12 +144,15 @@ async function seedAdmin() {
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+    max: 5, // Smaller pool for seed script
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: process.env.NODE_ENV === 'production' ? 60000 : 10000, // 60s for production, 10s for dev
   });
 
   try {
     // First, ensure database tables exist
     console.log('🔧 Initializing database tables...');
-    await initializeDatabase(pool);
+    await retryWithBackoff(() => initializeDatabase(pool));
 
     const username = 'admin';
     const email = 'admin@paes.cl';
