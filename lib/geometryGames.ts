@@ -116,7 +116,7 @@ export const GEOMETRY_GAMES: GeometryGame[] = [
     icon: Compass,
     route: '/practice/geometry/angles',
     category: 'angles',
-    status: 'coming_soon',
+    status: 'available',
     difficulty: 'intermediate',
     skills: ['Medición angular', 'Clasificación', 'Geometría analítica'],
     estimatedTime: '12-15 min',
