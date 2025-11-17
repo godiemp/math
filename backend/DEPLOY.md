@@ -501,15 +501,14 @@ For complete staging environment setup instructions, see:
 ### Deployment Workflow
 
 ```
-Development → Staging → Production
-     ↓           ↓           ↓
-  Feature     Testing      Live
-  Branches    & QA       Users
+Feature Branch → Master → Staging → Production
+       ↓            ↓         ↓           ↓
+   Development   Merge   Auto-Deploy   Manual Deploy
 ```
 
 Use the GitHub Actions workflows:
-- `deploy-staging.yml` - Deploy to staging on push to `staging` branch
-- `promote-to-production.yml` - Promote tested staging code to production
+- `deploy-staging.yml` - Automatically deploys to staging on merge to master
+- `deploy-production.yml` - Manual deployment to production (requires confirmation)
 
 ---
 

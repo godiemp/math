@@ -3,7 +3,8 @@ name: Deploy to Staging
 on:
   push:
     branches:
-      - staging
+      - main
+      - master
   workflow_dispatch:
     inputs:
       deploy_frontend:

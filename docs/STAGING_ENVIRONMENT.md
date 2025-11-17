@@ -117,9 +117,9 @@ Production (Railway + Vercel)
 
 ## Deployment Workflows
 
-### Automatic Deployment to Staging
+### Automatic Deployment to Staging (on merge to master)
 
-Pushes to the `staging` branch automatically trigger:
+Merges to `main` or `master` branch automatically trigger staging deployment:
 1. Run all tests (frontend + backend)
 2. Deploy backend to Railway staging
 3. Deploy frontend to Vercel staging
@@ -127,15 +127,18 @@ Pushes to the `staging` branch automatically trigger:
 5. Create deployment summary
 
 ```bash
-# Merge feature branch to staging
-git checkout staging
+# Merge feature branch to master (auto-deploys to staging)
+git checkout master
 git merge feature/my-feature
-git push origin staging
+git push origin master
+# → Automatically deploys to staging!
 ```
 
-### Manual Deployment
+This ensures every merge to master is tested in staging first before going to production.
 
-Use GitHub Actions workflow dispatch:
+### Manual Staging Deployment
+
+Use GitHub Actions workflow dispatch for staging:
 1. Go to Actions → "Deploy to Staging"
 2. Click "Run workflow"
 3. Select options:
@@ -144,19 +147,22 @@ Use GitHub Actions workflow dispatch:
    - Run migrations: Yes/No
 4. Click "Run workflow"
 
-### Promote Staging to Production
+### Deploy to Production (Manual Only)
 
-When staging is verified and ready:
-1. Go to Actions → "Promote Staging to Production"
+Production deployments are **manual only** to ensure safety:
+1. Go to Actions → "Deploy to Production"
 2. Click "Run workflow"
-3. Type "PROMOTE" to confirm
-4. Optionally skip tests (not recommended)
+3. Type "DEPLOY" to confirm
+4. Select options:
+   - Skip tests (not recommended)
+   - Deploy frontend: Yes/No
+   - Deploy backend: Yes/No
 5. Click "Run workflow"
 
 This will:
-1. Validate staging is healthy
-2. Run smoke tests against staging
-3. Deploy staging code to production
+1. Validate staging is healthy (warning if not)
+2. Run all tests (unless skipped)
+3. Deploy to production
 4. Create a release tag
 
 ## Local Development with Staging
@@ -200,9 +206,9 @@ DATABASE_URL=<staging-db-connection-string>
 ```
 1. Develop on feature branch
 2. Open PR → Runs E2E tests with PR preview
-3. Merge to staging branch
+3. Merge to master → Auto-deploys to staging
 4. Test thoroughly on staging
-5. Promote to production
+5. Manual deploy to production (when ready)
 ```
 
 ### 2. Database Migrations
@@ -269,8 +275,8 @@ DATABASE_URL=<staging-db-connection-string>
 - `backend/src/config/database.config.js` - Database configuration (includes staging)
 - `lib/api-client.ts` - API client with staging support
 - `app/api/config/route.ts` - Server-side config endpoint
-- `.github/workflows/deploy-staging.yml` - Staging deployment workflow
-- `.github/workflows/promote-to-production.yml` - Production promotion workflow
+- `.github/workflows/deploy-staging.yml` - Staging deployment workflow (triggers on master merge)
+- `.github/workflows/deploy-production.yml` - Production deployment workflow (manual only)
 
 ## Next Steps After Setup
 
