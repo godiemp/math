@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, Award, Lightbulb, SkipForward, FlipHorizontal2 } from 'lucide-react';
+import { ArrowLeft, Award, Lightbulb, SkipForward, FlipHorizontal2, Check, X } from 'lucide-react';
 import {
   generateSymmetryProblem,
   clearRecentSymmetryShapes,

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, Award, Lightbulb, SkipForward, Shapes } from 'lucide-react';
+import { ArrowLeft, Award, Lightbulb, SkipForward, Shapes, Check, X } from 'lucide-react';
 import {
   generateVariedShapeProblem,
   clearRecentShapes,

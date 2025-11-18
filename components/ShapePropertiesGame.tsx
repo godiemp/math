@@ -8,6 +8,8 @@ import {
   SkipForward,
   Ruler,
   Box,
+  Check,
+  X,
 } from 'lucide-react';
 import {
   generateVariedPropertiesProblem,
