@@ -23,6 +23,11 @@ function getApiBaseUrl(): string {
     return process.env.NEXT_PUBLIC_RAILWAY_URL;
   }
 
+  // Check for staging environment
+  if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'staging') {
+    return 'https://paes-math-backend-staging.up.railway.app';
+  }
+
   // For Vercel preview deployments, try to construct Railway URL
   if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview') {
     // First, try to get PR number directly from Vercel (exposed via next.config.ts)

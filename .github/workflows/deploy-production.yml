@@ -1,0 +1,249 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_deployment:
+        description: 'Type "DEPLOY" to confirm production deployment'
+        required: true
+        type: string
+      skip_tests:
+        description: 'Skip running tests (use with caution)'
+        required: false
+        default: false
+        type: boolean
+      deploy_frontend:
+        description: 'Deploy frontend to Vercel production'
+        required: true
+        default: true
+        type: boolean
+      deploy_backend:
+        description: 'Deploy backend to Railway production'
+        required: true
+        default: true
+        type: boolean
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  validate:
+    name: Validate Deployment Request
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check confirmation
+        if: github.event.inputs.confirm_deployment != 'DEPLOY'
+        run: |
+          echo "❌ Deployment not confirmed. You must type 'DEPLOY' to proceed."
+          exit 1
+
+      - name: Verify staging is healthy
+        run: |
+          echo "Checking staging backend health before production deployment..."
+          if ! curl -sf https://paes-math-backend-staging.up.railway.app/health; then
+            echo "⚠️  Warning: Staging backend is not healthy. Proceeding with caution."
+          else
+            echo "✅ Staging backend is healthy"
+          fi
+
+  test:
+    name: Run Tests Before Production Deploy
+    needs: validate
+    runs-on: ubuntu-latest
+    if: github.event.inputs.skip_tests != 'true'
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: paes_test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: ./backend
+
+      - name: Run frontend unit tests
+        run: npm test
+        env:
+          NODE_ENV: test
+
+      - name: Build backend
+        run: npm run build
+        working-directory: ./backend
+
+      - name: Run backend tests
+        run: npm test
+        working-directory: ./backend
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://testuser:testpassword@localhost:5433/paes_test
+          JWT_SECRET: test-jwt-secret-for-production-deployment
+          JWT_REFRESH_SECRET: test-refresh-secret-for-production
+          JWT_EXPIRES_IN: 1h
+          JWT_REFRESH_EXPIRES_IN: 7d
+
+      - name: Build frontend
+        run: npm run build
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_ENVIRONMENT: production
+
+  deploy-backend:
+    name: Deploy Backend to Railway Production
+    needs: [validate, test]
+    if: |
+      always() &&
+      needs.validate.result == 'success' &&
+      (needs.test.result == 'success' || needs.test.result == 'skipped') &&
+      github.event.inputs.deploy_backend == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://paes-math-backend-production.up.railway.app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway Production
+        run: |
+          cd backend
+          railway up --service paes-math-backend-production
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_PRODUCTION_TOKEN }}
+
+      - name: Verify deployment health
+        run: |
+          echo "Waiting for production deployment to be healthy..."
+          sleep 30
+
+          for i in {1..10}; do
+            if curl -sf https://paes-math-backend-production.up.railway.app/health; then
+              echo "✅ Production backend is healthy!"
+              exit 0
+            fi
+            echo "Attempt $i: Production not ready yet, waiting..."
+            sleep 10
+          done
+
+          echo "❌ Production health check failed"
+          exit 1
+
+  deploy-frontend:
+    name: Deploy Frontend to Vercel Production
+    needs: [validate, test]
+    if: |
+      always() &&
+      needs.validate.result == 'success' &&
+      (needs.test.result == 'success' || needs.test.result == 'skipped') &&
+      github.event.inputs.deploy_frontend == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Deploy to Vercel Production
+        id: deploy
+        run: |
+          DEPLOYMENT_URL=$(vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          echo "Deployed to: $DEPLOYMENT_URL"
+        env:
+          NEXT_PUBLIC_ENVIRONMENT: production
+
+  create-release-tag:
+    name: Create Release Tag
+    needs: [deploy-backend, deploy-frontend]
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create release tag
+        run: |
+          VERSION="v$(date +'%Y.%m.%d')-$(git rev-parse --short HEAD)"
+          git tag -a "$VERSION" -m "Production deployment from ${{ github.ref_name }}"
+          git push origin "$VERSION"
+          echo "Created release tag: $VERSION"
+
+  notify:
+    name: Notify Deployment Status
+    needs: [deploy-backend, deploy-frontend]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Create deployment summary
+        run: |
+          echo "## 🚀 Production Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.deploy-backend.result }}" == "success" ]; then
+            echo "✅ **Backend**: Successfully deployed to Railway production" >> $GITHUB_STEP_SUMMARY
+            echo "   - URL: https://paes-math-backend-production.up.railway.app" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.deploy-backend.result }}" == "skipped" ]; then
+            echo "⏭️ **Backend**: Skipped (not selected for deployment)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Backend**: Deployment failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.deploy-frontend.result }}" == "success" ]; then
+            echo "✅ **Frontend**: Successfully deployed to Vercel production" >> $GITHUB_STEP_SUMMARY
+            echo "   - URL: https://paes-math.vercel.app" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.deploy-frontend.result }}" == "skipped" ]; then
+            echo "⏭️ **Frontend**: Skipped (not selected for deployment)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Frontend**: Deployment failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Deployment Details" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered by**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Timestamp**: $(date -u)" >> $GITHUB_STEP_SUMMARY
