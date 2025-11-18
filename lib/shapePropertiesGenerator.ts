@@ -19,6 +19,7 @@ import type {
   ShapeProperty,
 } from '@/lib/types/shape-properties-game';
 import { generateShapeFigure, SHAPE_DEFINITIONS } from './shapeGenerator';
+import { randomInRange, shuffleArray } from '@/lib/utils/gameUtils';
 
 /**
  * Extended shape definitions including properties
@@ -258,18 +259,6 @@ export const PROPERTIES_DIFFICULTY_CONFIGS: Record<
     problemsToComplete: 15,
   },
 };
-
-/**
- * Shuffle array utility
- */
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
 
 /**
  * Generate distractors for numeric answers
