@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, Check, X, Award, Lightbulb, Box } from 'lucide-react';
+import { ArrowLeft, Award, Lightbulb, Box } from 'lucide-react';
 import {
   generateSolidsProblem,
   clearRecentSolidTypes,
@@ -11,6 +11,7 @@ import {
   toIsometric,
 } from '@/lib/3dSolidsGenerator';
 import type { SolidsProblem, SolidsGameDifficulty, SolidType } from '@/lib/types/3d-solids-game';
+import GameAnswerOptions from '@/components/GameAnswerOptions';
 
 interface SolidsGameProps {
   difficulty: SolidsGameDifficulty;
@@ -743,40 +744,15 @@ export default function SolidsGame({ difficulty, onBack, onLevelComplete, onNext
         </div>
 
         {/* Answer Options */}
-        <div className="grid grid-cols-2 gap-3 max-w-xl mx-auto">
-          {problem.options.map((option, index) => {
-            const isSelected = selectedAnswer === option;
-            const isCorrectOption = option === problem.correctAnswer;
-            const showCorrect = feedback.show && isCorrectOption;
-            const showIncorrect = feedback.show && isSelected && !isCorrectOption;
-
-            return (
-              <button
-                key={index}
-                onClick={() => handleAnswer(option)}
-                disabled={feedback.show}
-                className={`relative p-4 rounded-xl border-2 transition-all transform hover:scale-105 disabled:hover:scale-100 ${
-                  showCorrect
-                    ? 'bg-green-100 dark:bg-green-900/50 border-green-500 text-green-800 dark:text-green-300'
-                    : showIncorrect
-                      ? 'bg-red-100 dark:bg-red-900/50 border-red-500 text-red-800 dark:text-red-300'
-                      : isSelected
-                        ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-500'
-                        : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-600 hover:border-emerald-400 dark:hover:border-emerald-500'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">{index + 1}</span>
-                  {showCorrect && <Check size={20} className="text-green-600 dark:text-green-400" />}
-                  {showIncorrect && <X size={20} className="text-red-600 dark:text-red-400" />}
-                </div>
-                <div className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">
-                  {typeof option === 'number' ? option : option}
-                </div>
-              </button>
-            );
-          })}
-        </div>
+        <GameAnswerOptions
+          options={problem.options}
+          selectedAnswer={selectedAnswer}
+          correctAnswer={problem.correctAnswer}
+          showFeedback={feedback.show}
+          isCorrect={feedback.isCorrect}
+          onAnswer={handleAnswer}
+          themeColor="emerald"
+        />
 
         {/* Feedback Explanation */}
         {feedback.show && feedback.isCorrect && problem.explanation && (
