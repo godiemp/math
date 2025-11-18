@@ -242,11 +242,12 @@ export default function ShapeIdentificationGame({
     return () => window.removeEventListener('keydown', handleEnterPress);
   }, [showLevelComplete]);
 
-  const handleAnswer = (answer: string) => {
+  const handleAnswer = (answer: string | number) => {
     if (feedback.show || !problem) return;
 
-    setSelectedAnswer(answer);
-    const isCorrect = answer === problem.correctAnswer;
+    const answerStr = String(answer);
+    setSelectedAnswer(answerStr);
+    const isCorrect = answerStr === problem.correctAnswer;
 
     setFeedback({ show: true, isCorrect });
 
