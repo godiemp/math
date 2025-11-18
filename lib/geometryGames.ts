@@ -135,7 +135,7 @@ export const GEOMETRY_GAMES: GeometryGame[] = [
     icon: Box,
     route: '/practice/geometry/3d-solids',
     category: 'shapes',
-    status: 'coming_soon',
+    status: 'available',
     difficulty: 'intermediate',
     skills: ['Visualización 3D', 'Caras y aristas', 'Volumen'],
     estimatedTime: '15-20 min',

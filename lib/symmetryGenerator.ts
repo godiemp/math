@@ -1012,7 +1012,7 @@ function generateOptions(
 /**
  * Format correct answer for display
  */
-function formatCorrectAnswer(
+export function formatCorrectAnswer(
   type: SymmetryProblemType,
   value: string | number | boolean
 ): string | number {
