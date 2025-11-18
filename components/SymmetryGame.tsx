@@ -7,6 +7,7 @@ import {
   clearRecentSymmetryShapes,
   SYMMETRY_DIFFICULTY_CONFIGS,
   SYMMETRY_SHAPE_DEFINITIONS,
+  formatCorrectAnswer,
 } from '@/lib/symmetryGenerator';
 import type { SymmetryProblem, SymmetryGameDifficulty } from '@/lib/types/symmetry-game';
 import GameAnswerOptions from '@/components/GameAnswerOptions';
@@ -451,7 +452,7 @@ export default function SymmetryGame({
       <GameAnswerOptions
         options={problem.options}
         selectedAnswer={selectedAnswer}
-        correctAnswer={problem.correctAnswer}
+        correctAnswer={formatCorrectAnswer(problem.type, problem.correctAnswer)}
         showFeedback={feedback.show}
         isCorrect={feedback.isCorrect}
         onAnswer={handleAnswer}
