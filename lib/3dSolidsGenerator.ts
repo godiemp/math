@@ -15,6 +15,7 @@ import type {
   SolidsGameDifficulty,
   SolidsProblemType,
 } from '@/lib/types/3d-solids-game';
+import { randomInRange, shuffleArray } from '@/lib/utils/gameUtils';
 
 /**
  * 3D solid type definitions with Spanish names and educational content
@@ -159,22 +160,6 @@ export const SOLIDS_DIFFICULTY_CONFIGS: Record<SolidsGameDifficulty, SolidsDiffi
     showWireframe: true,
   },
 };
-
-/**
- * Utility functions
- */
-function randomInRange(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
 
 /**
  * Generate question text based on problem type
