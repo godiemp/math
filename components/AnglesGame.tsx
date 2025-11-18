@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, Check, X, Award, Lightbulb, SkipForward, Compass } from 'lucide-react';
+import { ArrowLeft, Award, Lightbulb, SkipForward, Compass } from 'lucide-react';
 import {
   generateAngleProblem,
   clearRecentAngleTypes,
@@ -11,6 +11,7 @@ import {
   getAngleColor,
 } from '@/lib/anglesGenerator';
 import type { AngleProblem, AnglesGameDifficulty } from '@/lib/types/angles-game';
+import GameAnswerOptions from '@/components/GameAnswerOptions';
 
 interface AnglesGameProps {
   difficulty: AnglesGameDifficulty;
@@ -464,50 +465,16 @@ export default function AnglesGame({
       </div>
 
       {/* Answer Options */}
-      <div
-        className={`grid gap-3 sm:gap-4 mb-6 ${problem.options.length === 3 ? 'grid-cols-3' : 'grid-cols-2'}`}
-      >
-        {problem.options.map((option, index) => {
-          let buttonClass =
-            'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 hover:border-orange-400 dark:hover:border-orange-500';
-
-          if (feedback.show) {
-            if (option === problem.correctAnswer) {
-              buttonClass =
-                'bg-green-100 dark:bg-green-900/50 text-green-900 dark:text-green-300 border-green-500';
-            } else if (option === selectedAnswer && !feedback.isCorrect) {
-              buttonClass =
-                'bg-red-100 dark:bg-red-900/50 text-red-900 dark:text-red-300 border-red-500';
-            }
-          } else if (option === selectedAnswer) {
-            buttonClass =
-              'bg-orange-100 dark:bg-orange-900/50 text-orange-900 dark:text-orange-300 border-orange-500';
-          }
-
-          return (
-            <button
-              key={index}
-              onClick={() => handleAnswer(option)}
-              disabled={feedback.show}
-              className={`relative py-4 sm:py-5 px-4 text-base sm:text-lg font-semibold rounded-xl border-2 transition-all transform hover:scale-105 ${buttonClass} disabled:transform-none disabled:opacity-90`}
-            >
-              <span className="absolute top-2 left-2 text-xs text-gray-400 dark:text-gray-500">
-                {index + 1}
-              </span>
-              {option}
-              {feedback.show && option === problem.correctAnswer && (
-                <Check
-                  size={20}
-                  className="absolute top-2 right-2 text-green-600 dark:text-green-400"
-                />
-              )}
-              {feedback.show && option === selectedAnswer && !feedback.isCorrect && (
-                <X size={20} className="absolute top-2 right-2 text-red-600 dark:text-red-400" />
-              )}
-            </button>
-          );
-        })}
-      </div>
+      <GameAnswerOptions
+        options={problem.options}
+        selectedAnswer={selectedAnswer}
+        correctAnswer={problem.correctAnswer}
+        showFeedback={feedback.show}
+        isCorrect={feedback.isCorrect}
+        onAnswer={handleAnswer}
+        themeColor="orange"
+        gridCols={problem.options.length === 3 ? 3 : 2}
+      />
 
       {/* Feedback */}
       {feedback.show && (

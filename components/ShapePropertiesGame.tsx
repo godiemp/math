@@ -3,8 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   ArrowLeft,
-  Check,
-  X,
   Award,
   Lightbulb,
   SkipForward,
@@ -23,6 +21,7 @@ import type {
   PropertiesGameDifficulty,
 } from '@/lib/types/shape-properties-game';
 import type { Shape2D } from '@/lib/types/shape-game';
+import GameAnswerOptions from '@/components/GameAnswerOptions';
 
 interface ShapePropertiesGameProps {
   difficulty: PropertiesGameDifficulty;
@@ -425,48 +424,15 @@ export default function ShapePropertiesGame({
       </div>
 
       {/* Answer Options */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6">
-        {problem.options.map((option, index) => {
-          let buttonClass =
-            'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 hover:border-indigo-400 dark:hover:border-indigo-500';
-
-          if (feedback.show) {
-            if (option === problem.correctAnswer) {
-              buttonClass =
-                'bg-green-100 dark:bg-green-900/50 text-green-900 dark:text-green-300 border-green-500';
-            } else if (option === selectedAnswer && !feedback.isCorrect) {
-              buttonClass =
-                'bg-red-100 dark:bg-red-900/50 text-red-900 dark:text-red-300 border-red-500';
-            }
-          } else if (option === selectedAnswer) {
-            buttonClass =
-              'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-900 dark:text-indigo-300 border-indigo-500';
-          }
-
-          return (
-            <button
-              key={index}
-              onClick={() => handleAnswer(option)}
-              disabled={feedback.show}
-              className={`relative py-4 sm:py-5 px-4 text-lg sm:text-xl font-semibold rounded-xl border-2 transition-all transform hover:scale-105 ${buttonClass} disabled:transform-none disabled:opacity-90`}
-            >
-              <span className="absolute top-2 left-2 text-xs text-gray-400 dark:text-gray-500">
-                {index + 1}
-              </span>
-              {option}
-              {feedback.show && option === problem.correctAnswer && (
-                <Check
-                  size={20}
-                  className="absolute top-2 right-2 text-green-600 dark:text-green-400"
-                />
-              )}
-              {feedback.show && option === selectedAnswer && !feedback.isCorrect && (
-                <X size={20} className="absolute top-2 right-2 text-red-600 dark:text-red-400" />
-              )}
-            </button>
-          );
-        })}
-      </div>
+      <GameAnswerOptions
+        options={problem.options}
+        selectedAnswer={selectedAnswer}
+        correctAnswer={problem.correctAnswer}
+        showFeedback={feedback.show}
+        isCorrect={feedback.isCorrect}
+        onAnswer={handleAnswer}
+        themeColor="indigo"
+      />
 
       {/* Feedback */}
       {feedback.show && (
