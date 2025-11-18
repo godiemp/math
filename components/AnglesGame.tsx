@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, Award, Lightbulb, SkipForward, Compass } from 'lucide-react';
+import { ArrowLeft, Award, Lightbulb, SkipForward, Compass, Check, X } from 'lucide-react';
 import {
   generateAngleProblem,
   clearRecentAngleTypes,
