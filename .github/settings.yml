@@ -1,0 +1,100 @@
+# Repository settings for branch protection and auto-merge
+# This file can be used with GitHub Apps like Probot Settings or GitHub CLI
+
+repository:
+  # See https://docs.github.com/en/rest/reference/repos#update-a-repository for all available settings.
+
+  # A short description of the repository that will show up on GitHub
+  # description: Project description
+
+  # A URL with more information about the repository
+  # homepage: https://example.github.io/
+
+  # Either `true` to enable automated security fixes, or `false` to disable
+  # automated security fixes.
+  enable_automated_security_fixes: true
+
+  # Either `true` to enable vulnerability alerts, or `false` to disable
+  # vulnerability alerts.
+  enable_vulnerability_alerts: true
+
+# Branch protection rules
+# See https://docs.github.com/en/rest/reference/repos#update-branch-protection for all available settings.
+branches:
+  - name: main
+    # https://docs.github.com/en/rest/reference/repos#update-branch-protection
+    protection:
+      # Required. Require at least one approving review on a pull request, before merging.
+      required_pull_request_reviews:
+        # The number of approvals required. (1-6)
+        required_approving_review_count: 1
+        # Dismiss approved reviews automatically when a new commit is pushed.
+        dismiss_stale_reviews: true
+        # Blocks merge until code owners have reviewed.
+        require_code_owner_reviews: false
+        # Whether the most recent reviewable push must be approved by someone other than the person who pushed it.
+        require_last_push_approval: false
+
+      # Required. Require status checks to pass before merging.
+      required_status_checks:
+        # Required. Require branches to be up to date before merging.
+        strict: true
+        # Required. The list of status checks to require in order to merge into this branch.
+        # This is the key setting that makes e2e tests required for auto-merge!
+        checks:
+          - context: "Run E2E Tests"
+            app_id: -1  # GitHub Actions
+
+      # Required. Enforce all configured restrictions for administrators.
+      enforce_admins: false
+
+      # Required. Restrict who can push to this branch. Team and user restrictions are only available for organization-owned repositories.
+      restrictions: null
+
+      # Required. Require linear history
+      required_linear_history: false
+
+      # Allows force pushes to the protected branch by anyone with write access to the repository.
+      allow_force_pushes: false
+
+      # Allows deletion of the protected branch by anyone with write access to the repository.
+      allow_deletions: false
+
+      # If set to true, the `restrictions` branch protection settings which limits
+      # who can push will also block pushes which create new branches, unless the push
+      # is initiated by a user, team, or app which has the ability to push.
+      block_creations: false
+
+      # Requires all conversations on code to be resolved before a pull request can be merged into this branch.
+      required_conversation_resolution: true
+
+      # Whether to set the branch as read-only. If this is true, users will not be able to push to the branch.
+      lock_branch: false
+
+      # Whether users can pull changes from upstream when the branch is locked.
+      allow_fork_syncing: false
+
+  - name: master
+    # Mirror the same protection for master branch in case it's used instead of main
+    protection:
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: false
+        require_last_push_approval: false
+
+      required_status_checks:
+        strict: true
+        checks:
+          - context: "Run E2E Tests"
+            app_id: -1  # GitHub Actions
+
+      enforce_admins: false
+      restrictions: null
+      required_linear_history: false
+      allow_force_pushes: false
+      allow_deletions: false
+      block_creations: false
+      required_conversation_resolution: true
+      lock_branch: false
+      allow_fork_syncing: false
