@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { summarizeContent, generatePracticeProblems, aiChat, aiHelp } from '../services/aiService';
+import { summarizeContent, generatePracticeProblems, aiChat, aiHelp, aiChatStream } from '../services/aiService';
 import { authenticate } from '../auth/middleware';
 
 const router = Router();
@@ -111,6 +111,80 @@ router.post('/chat', authenticate, async (req, res) => {
     res.status(500).json({
       error: error instanceof Error ? error.message : 'Error al obtener respuesta de IA',
     });
+  }
+});
+
+/**
+ * POST /api/ai/chat/stream
+ * Streaming chat endpoint with Server-Sent Events
+ * Returns tokens as they're generated for faster perceived response
+ */
+router.post('/chat/stream', authenticate, async (req, res) => {
+  try {
+    const {
+      question,
+      questionLatex,
+      userAnswer,
+      correctAnswer,
+      explanation,
+      options,
+      topic,
+      difficulty,
+      visualData,
+      messages,
+      userMessage,
+      quizSessionId,
+      questionId
+    } = req.body;
+
+    if (!question || userAnswer === undefined || correctAnswer === undefined || !userMessage) {
+      return res.status(400).json({ error: 'Faltan parámetros requeridos' });
+    }
+
+    // Set up SSE headers
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no'); // Disable nginx buffering
+    res.flushHeaders();
+
+    // Send initial connection event
+    res.write('event: connected\ndata: {"status": "connected"}\n\n');
+
+    await aiChatStream({
+      question,
+      questionLatex,
+      userAnswer,
+      correctAnswer,
+      explanation,
+      options,
+      topic,
+      difficulty,
+      visualData,
+      messages,
+      userMessage,
+      userId: req.user?.userId,
+      quizSessionId,
+      questionId,
+      onToken: (token) => {
+        // Send each token as an SSE event
+        const data = JSON.stringify({ token });
+        res.write(`event: token\ndata: ${data}\n\n`);
+      },
+      onComplete: (fullResponse) => {
+        // Send completion event
+        const data = JSON.stringify({ complete: true, response: fullResponse });
+        res.write(`event: complete\ndata: ${data}\n\n`);
+        res.end();
+      }
+    });
+  } catch (error) {
+    console.error('AI chat stream endpoint error:', error);
+    const errorData = JSON.stringify({
+      error: error instanceof Error ? error.message : 'Error al obtener respuesta de IA'
+    });
+    res.write(`event: error\ndata: ${errorData}\n\n`);
+    res.end();
   }
 });
 

@@ -1,9 +1,17 @@
 /**
  * AI Service for content summarization and educational assistance
- * Uses Anthropic Claude API for high-quality educational content processing
+ * Uses OpenAI API for high-quality educational content processing
+ * Optimized for speed with model routing and streaming
  */
 
 import { pool } from '../config/database';
+import {
+  completion,
+  streamCompletion,
+  optimizeConversationHistory,
+  type ChatMessage,
+  type CompletionResult,
+} from './openaiService';
 
 interface SummarizeOptions {
   content: string;
@@ -41,6 +49,11 @@ interface AIChatOptions {
 interface AIChatResponse {
   response: string;
   success: boolean;
+}
+
+interface AIChatStreamOptions extends AIChatOptions {
+  onToken: (token: string) => void;
+  onComplete: (fullResponse: string) => void;
 }
 
 interface AIHelpOptions {
@@ -344,13 +357,13 @@ IMPORTANTE:
 
 /**
  * AI Chat - Socratic tutoring for student questions
+ * Optimized with OpenAI, compact prompts, and conversation summarization
  */
 export async function aiChat(options: AIChatOptions): Promise<AIChatResponse> {
   const startTime = Date.now();
-  const apiKey = process.env.ANTHROPIC_API_KEY;
 
-  if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY not configured');
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY not configured');
   }
 
   const {
@@ -372,30 +385,37 @@ export async function aiChat(options: AIChatOptions): Promise<AIChatResponse> {
 
   const isCorrect = userAnswer === correctAnswer;
 
-  // Build rich context for the AI
-  let contextInfo = `**CONTEXTO DE LA PREGUNTA (SIEMPRE DISPONIBLE):**
+  // Build COMPACT context (reduced from ~800 tokens to ~300 tokens)
+  const contextInfo = `**CONTEXTO:**
+Pregunta: ${questionLatex || question}
+Opciones: ${answerOptions.map((opt: string, idx: number) => `${String.fromCharCode(65 + idx)}) ${opt}`).join(' | ')}
+Estudiante eligió: ${String.fromCharCode(65 + userAnswer)} (${isCorrect ? 'CORRECTO' : 'INCORRECTO'})
+Correcta: ${String.fromCharCode(65 + correctAnswer)}
+Tema: ${topic || 'Matemáticas'} | Dificultad: ${difficulty || 'media'}
+${visualData?.type === 'geometry' ? 'Nota: Incluye figura geométrica' : ''}`;
 
-**Pregunta:** ${question}
-${questionLatex ? `**LaTeX:** ${questionLatex}` : ''}
-**Tema:** ${topic || 'Matemáticas'}
-**Dificultad:** ${difficulty || 'media'}
+  // COMPACT system prompt (reduced from ~500 tokens to ~200 tokens)
+  const systemPrompt = `Eres tutor PAES chileno, empático y casual. Modo zen (sin presión).
 
-**Opciones:**
-${answerOptions.map((opt: string, idx: number) => `${String.fromCharCode(65 + idx)}. ${opt}`).join('\n')}
+${contextInfo}
 
-**Respuesta del estudiante:** Opción ${String.fromCharCode(65 + userAnswer)} - ${answerOptions[userAnswer]}
-**Respuesta correcta:** Opción ${String.fromCharCode(65 + correctAnswer)} - ${answerOptions[correctAnswer]}
-**Estado:** ${isCorrect ? 'CORRECTA ✓' : 'INCORRECTA'}
+**REGLAS (en orden):**
+1. Si pregunta "por qué me equivoqué" → PRIMERO pregunta su razonamiento, NO asumas
+2. Investiga: "¿Qué pensaste al elegir [su respuesta]?" o "¿Cómo llegaste a eso?"
+3. DESPUÉS de entender SU lógica → explica el error específico
+4. Conecta con su razonamiento: "Veo que pensaste X, tiene sentido, PERO..."
+5. Verifica: "¿Tiene sentido?"
 
-**Explicación oficial:** ${explanation}
-`;
+**ESTILO:**
+- Casual, gen z, empático
+- 2-3 párrafos máximo
+- LaTeX: $expresión$
+- Emojis sutiles (🌱✨🔍)
+- NO repitas el enunciado completo
+- Sé conciso y directo`;
 
-  if (visualData && visualData.type === 'geometry') {
-    contextInfo += `\n**Nota:** Esta pregunta incluye una figura geométrica que el estudiante puede ver.`;
-  }
-
-  // Build conversation history
-  const conversationMessages: any[] = [];
+  // Build conversation history with optimization
+  const conversationMessages: ChatMessage[] = [];
 
   if (messages && messages.length > 0) {
     messages.forEach((msg: any, index: number) => {
@@ -419,94 +439,23 @@ ${answerOptions.map((opt: string, idx: number) => `${String.fromCharCode(65 + id
     content: userMessage
   });
 
-  const systemPrompt = `Eres un tutor de matemáticas empático, paciente y muy educativo para estudiantes chilenos preparándose para la PAES.
-
-${contextInfo}
-
-**Tu personalidad:**
-- Hablas de manera casual y cercana, como un amigo que sabe mucho de matemáticas
-- Usas lenguaje gen z cuando es apropiado (pero sin forzarlo)
-- Eres motivacional sin ser cursi
-- Celebras los éxitos genuinamente
-- Cuando hay errores, los ves como oportunidades de aprendizaje
-
-**Tu metodología de enseñanza (MUY IMPORTANTE):**
-
-🔍 **PRIMERO INVESTIGA, LUEGO EXPLICA** - No asumas por qué se equivocaron.
-
-Cuando un estudiante pregunta "¿por qué me equivoqué?" o similar:
-
-**PASO 1 - Análisis crítico (piensa pero no digas todo esto):**
-- Analiza las posibles razones del error:
-  * ¿Error conceptual? (no entiende el concepto base)
-  * ¿Error de cálculo? (hizo bien el proceso pero se equivocó en números)
-  * ¿Error de interpretación? (malinterpretó el enunciado)
-  * ¿Confusión entre conceptos? (confundió término A con término B)
-  * ¿Método incorrecto? (usó una estrategia que no aplica aquí)
-
-**PASO 2 - Investigación empática:**
-- Pregunta con empatía: "¿Qué pensaste cuando elegiste [su respuesta]?"
-- O pregunta específica: "¿Cómo llegaste a esa respuesta?"
-- O da opciones: "¿Fue porque pensaste que X? ¿O porque viste Y? ¿O algo diferente?"
-- Valida su esfuerzo: reconoce que está tratando de aprender
-
-**PASO 3 - Escucha activa:**
-- El estudiante te dirá su razonamiento REAL
-- Identifica exactamente dónde está su confusión específica
-- No todos los errores son iguales - personaliza según SU proceso mental
-
-**PASO 4 - Explicación dirigida:**
-- SOLO después de entender su razonamiento, explica el error específico
-- Conecta con lo que ÉL pensó: "Ah, veo que pensaste X, lo cual tiene sentido porque... PERO..."
-- Explica paso a paso dónde se desvió su razonamiento
-- Da el concepto correcto de manera clara
-- Verifica entendimiento: "¿Tiene sentido?"
-
-**Tu actitud:**
-- Riguroso en el análisis, empático en el tono
-- Asume que el estudiante QUIERE aprender (está en modo zen)
-- Trabajan JUNTOS para identificar el error - es colaborativo
-- Haces preguntas socráticas, no das sermones
-- Usas lenguaje gen z casual pero educativo
-- Emojis sutiles para mantener tono amigable (🌱🌿🌸✨🔍)
-
-**Modo Zen:**
-Sin presión de tiempo, enfocado en aprender. Tu meta: ayudarles a ENTENDER el proceso, no solo saber la respuesta.
-
-**Importante:**
-- SIEMPRE tienes el contexto completo (pregunta, opciones, respuesta elegida, respuesta correcta, explicación)
-- NO repitas el enunciado completo, el estudiante ya lo ve en pantalla
-- SÍ usa esa información para hacer preguntas específicas y dar respuestas personalizadas
-- Cuando preguntas "¿por qué me equivoqué?", tú YA SABES qué eligió - úsalo para investigar su razonamiento
-- Sé conciso pero completo (2-4 párrafos normalmente)
-- Si preguntan algo específico diferente, responde directo
-
-Responde como si estuvieras chateando con un amigo que quiere aprender.`;
-
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 2048,
-        system: systemPrompt,
-        messages: conversationMessages,
-      }),
+    // Optimize conversation history (summarize if > 5 messages)
+    const optimizedMessages = await optimizeConversationHistory(
+      systemPrompt,
+      conversationMessages,
+      5,  // max messages before summarizing
+      2000 // max token estimate
+    );
+
+    // Use OpenAI with optimized settings
+    const result = await completion({
+      messages: optimizedMessages,
+      taskType: 'chat_response',
+      temperature: 0.7,
     });
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('Anthropic API error:', error);
-      throw new Error(`AI service error: ${response.statusText}`);
-    }
-
-    const data = await response.json() as { content: Array<{ type: string; text: string }> };
-    const aiResponse = data.content[0].type === 'text' ? data.content[0].text : '';
+    const aiResponse = result.content;
     const responseTime = Date.now() - startTime;
 
     // Save interaction to database if userId is provided
@@ -539,17 +488,16 @@ Responde como si estuvieras chateando con un amigo que quiere aprender.`;
           'chat',
           userMessage,
           aiResponse,
-          'claude-sonnet-4-5-20250929',
+          result.model,
           turnNumber,
           responseTime,
           JSON.stringify(requestContext),
           Date.now()
         ]);
 
-        console.log(`✅ Saved AI chat interaction for user ${userId}, turn ${turnNumber}`);
+        console.log(`✅ AI chat: ${result.model}, ${result.totalTokens} tokens, ${responseTime}ms`);
       } catch (dbError) {
-        // Log error but don't fail the request - interaction data is important but not critical
-        console.error('❌ Failed to save AI interaction to database:', dbError);
+        console.error('❌ Failed to save AI interaction:', dbError);
       }
     }
 
@@ -564,14 +512,167 @@ Responde como si estuvieras chateando con un amigo que quiere aprender.`;
 }
 
 /**
+ * AI Chat Streaming - Real-time token-by-token responses
+ * Provides immediate feedback with streaming for better UX
+ */
+export async function aiChatStream(options: AIChatStreamOptions): Promise<void> {
+  const startTime = Date.now();
+
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY not configured');
+  }
+
+  const {
+    question,
+    questionLatex,
+    userAnswer,
+    correctAnswer,
+    explanation,
+    options: answerOptions,
+    topic,
+    difficulty,
+    visualData,
+    messages,
+    userMessage,
+    userId,
+    quizSessionId,
+    questionId,
+    onToken,
+    onComplete
+  } = options;
+
+  const isCorrect = userAnswer === correctAnswer;
+
+  // Build COMPACT context
+  const contextInfo = `**CONTEXTO:**
+Pregunta: ${questionLatex || question}
+Opciones: ${answerOptions.map((opt: string, idx: number) => `${String.fromCharCode(65 + idx)}) ${opt}`).join(' | ')}
+Estudiante eligió: ${String.fromCharCode(65 + userAnswer)} (${isCorrect ? 'CORRECTO' : 'INCORRECTO'})
+Correcta: ${String.fromCharCode(65 + correctAnswer)}
+Tema: ${topic || 'Matemáticas'} | Dificultad: ${difficulty || 'media'}
+${visualData?.type === 'geometry' ? 'Nota: Incluye figura geométrica' : ''}`;
+
+  // COMPACT system prompt
+  const systemPrompt = `Eres tutor PAES chileno, empático y casual. Modo zen (sin presión).
+
+${contextInfo}
+
+**REGLAS (en orden):**
+1. Si pregunta "por qué me equivoqué" → PRIMERO pregunta su razonamiento, NO asumas
+2. Investiga: "¿Qué pensaste al elegir [su respuesta]?" o "¿Cómo llegaste a eso?"
+3. DESPUÉS de entender SU lógica → explica el error específico
+4. Conecta con su razonamiento: "Veo que pensaste X, tiene sentido, PERO..."
+5. Verifica: "¿Tiene sentido?"
+
+**ESTILO:**
+- Casual, gen z, empático
+- 2-3 párrafos máximo
+- LaTeX: $expresión$
+- Emojis sutiles (🌱✨🔍)
+- NO repitas el enunciado completo
+- Sé conciso y directo`;
+
+  // Build conversation history
+  const conversationMessages: ChatMessage[] = [];
+
+  if (messages && messages.length > 0) {
+    messages.forEach((msg: any, index: number) => {
+      if (msg.role === 'assistant' && index === 0) {
+        return;
+      }
+      if (msg.role === 'user' || msg.role === 'assistant') {
+        conversationMessages.push({
+          role: msg.role,
+          content: msg.content
+        });
+      }
+    });
+  }
+
+  conversationMessages.push({
+    role: 'user',
+    content: userMessage
+  });
+
+  try {
+    // Optimize conversation history
+    const optimizedMessages = await optimizeConversationHistory(
+      systemPrompt,
+      conversationMessages,
+      5,
+      2000
+    );
+
+    // Use streaming completion
+    const result = await streamCompletion({
+      messages: optimizedMessages,
+      taskType: 'chat_response',
+      temperature: 0.7,
+      onToken,
+      onComplete: async (fullResponse) => {
+        const responseTime = Date.now() - startTime;
+
+        // Save interaction to database if userId is provided
+        if (userId) {
+          try {
+            const turnNumber = messages ? messages.length + 1 : 1;
+            const requestContext = {
+              question,
+              questionLatex,
+              userAnswer,
+              correctAnswer,
+              explanation,
+              options: answerOptions,
+              topic,
+              difficulty,
+              visualData
+            };
+
+            await pool.query(`
+              INSERT INTO ai_interactions (
+                user_id, quiz_session_id, question_id,
+                interaction_type, user_message, ai_response,
+                ai_model, turn_number, response_time_ms,
+                request_context, created_at
+              ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+            `, [
+              userId,
+              quizSessionId || null,
+              questionId || null,
+              'chat_stream',
+              userMessage,
+              fullResponse,
+              result.model,
+              turnNumber,
+              responseTime,
+              JSON.stringify(requestContext),
+              Date.now()
+            ]);
+
+            console.log(`✅ AI chat stream: ${result.model}, ${result.totalTokens} tokens, ${responseTime}ms`);
+          } catch (dbError) {
+            console.error('❌ Failed to save AI stream interaction:', dbError);
+          }
+        }
+
+        onComplete(fullResponse);
+      }
+    });
+  } catch (error) {
+    console.error('Error in AI chat stream:', error);
+    throw error;
+  }
+}
+
+/**
  * AI Help - Provides explanations when students answer incorrectly
+ * Optimized with OpenAI and compact prompts
  */
 export async function aiHelp(options: AIHelpOptions): Promise<AIHelpResponse> {
   const startTime = Date.now();
-  const apiKey = process.env.ANTHROPIC_API_KEY;
 
-  if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY not configured');
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY not configured');
   }
 
   const {
@@ -586,59 +687,36 @@ export async function aiHelp(options: AIHelpOptions): Promise<AIHelpResponse> {
     questionId
   } = options;
 
-  const prompt = `Eres un tutor de matemáticas empático y paciente que ayuda a estudiantes chilenos que se preparan para la PAES (Prueba de Acceso a la Educación Superior).
+  // COMPACT prompt (reduced from ~400 tokens to ~150 tokens)
+  const systemPrompt = `Tutor PAES empático. Modo zen (sin presión). Explica errores de forma constructiva.
 
-Un estudiante está trabajando en modo zen (sin presión de tiempo, enfocado en aprender) y ha respondido incorrectamente a esta pregunta:
+**FORMATO:**
+- 2-3 párrafos máximo
+- Emojis sutiles (🌱✨)
+- LaTeX: $expresión$
+- Lenguaje casual y claro`;
 
-**Pregunta:** ${question}
-**Tema:** ${topic || 'Matemáticas'}
+  const userPrompt = `Estudiante respondió incorrectamente:
 
-**Opciones:**
-${answerOptions.map((opt: string, idx: number) => `${String.fromCharCode(65 + idx)}. ${opt}`).join('\n')}
+Pregunta: ${question}
+Tema: ${topic || 'Matemáticas'}
+Opciones: ${answerOptions.map((opt: string, idx: number) => `${String.fromCharCode(65 + idx)}) ${opt}`).join(' | ')}
+Eligió: ${String.fromCharCode(65 + userAnswer)} | Correcta: ${String.fromCharCode(65 + correctAnswer)}
+Explicación oficial: ${explanation}
 
-**Respuesta del estudiante:** Opción ${String.fromCharCode(65 + userAnswer)} - ${answerOptions[userAnswer]}
-**Respuesta correcta:** Opción ${String.fromCharCode(65 + correctAnswer)} - ${answerOptions[correctAnswer]}
-
-**Explicación oficial:** ${explanation}
-
-Por favor, proporciona una explicación personalizada y empática que:
-1. Sea comprensiva y motivadora (recuerda que estamos en modo zen - "cada error es aprendizaje")
-2. Explique por qué la respuesta del estudiante es incorrecta de manera constructiva
-3. Explique paso a paso por qué la respuesta correcta es la correcta
-4. Use un lenguaje claro y accesible para estudiantes
-5. Incluya un ejemplo similar si es relevante
-6. Sea concisa pero completa (2-3 párrafos)
-
-Usa emojis sutiles para mantener un tono amigable pero no exagerado.`;
+Explica brevemente: 1) Por qué su respuesta es incorrecta, 2) Por qué la correcta es correcta. Sé empático y conciso.`;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 1024,
-        messages: [
-          {
-            role: 'user',
-            content: prompt,
-          },
-        ],
-      }),
+    const result = await completion({
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      taskType: 'chat_response',
+      temperature: 0.7,
     });
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('Anthropic API error:', error);
-      throw new Error(`AI service error: ${response.statusText}`);
-    }
-
-    const data = await response.json() as { content: Array<{ type: string; text: string }> };
-    const aiResponse = data.content[0].type === 'text' ? data.content[0].text : '';
+    const aiResponse = result.content;
     const responseTime = Date.now() - startTime;
 
     // Save interaction to database if userId is provided
@@ -667,17 +745,16 @@ Usa emojis sutiles para mantener un tono amigable pero no exagerado.`;
           'help',
           'Incorrect answer - automatic AI help requested',
           aiResponse,
-          'claude-sonnet-4-5-20250929',
+          result.model,
           1,
           responseTime,
           JSON.stringify(requestContext),
           Date.now()
         ]);
 
-        console.log(`✅ Saved AI help interaction for user ${userId}`);
+        console.log(`✅ AI help: ${result.model}, ${result.totalTokens} tokens, ${responseTime}ms`);
       } catch (dbError) {
-        // Log error but don't fail the request
-        console.error('❌ Failed to save AI interaction to database:', dbError);
+        console.error('❌ Failed to save AI interaction:', dbError);
       }
     }
 
