@@ -496,31 +496,87 @@ app.use('/api/sessions', sessionRoutes);
 
 ## Frontend Patterns
 
-### 11. API Calls
+### 11. API Calls (Frontend Components)
 
-**USE THE CENTRALIZED API CLIENT:**
+**ALWAYS USE THE CENTRALIZED API CLIENT - NEVER use raw `fetch`:**
 
 ```typescript
-// ✅ Use lib/api-client.ts
-import { apiClient } from '@/lib/api-client';
+// ✅ CORRECT - Use api from lib/api-client.ts
+import { api } from '@/lib/api-client';
 
-const fetchData = async () => {
-  try {
-    const response = await apiClient.get('/endpoint');
-    if (response.success) {
-      setData(response.data);
-    }
-  } catch (error) {
-    handleError(error);
-  }
+export const MyComponent = () => {
+  const [data, setData] = useState<DataType | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // api.get returns ApiResponse<T> = { data?: T, error?: ApiError }
+        const response = await api.get<DataType>('/api/endpoint');
+
+        if (response.error) {
+          setError(response.error.error);
+        } else if (response.data) {
+          setData(response.data);
+        }
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Failed to load data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // ... render logic
 };
 ```
 
-**BENEFITS:**
-- Automatic token refresh
-- Consistent error handling
-- Base URL management
-- Request/response interceptors
+**POST/PUT/DELETE requests:**
+```typescript
+// POST with body
+const response = await api.post<ResponseType>('/api/endpoint', {
+  field1: value1,
+  field2: value2,
+});
+
+// PUT with body
+const response = await api.put<ResponseType>('/api/endpoint/:id', {
+  field1: newValue1,
+});
+
+// DELETE
+const response = await api.delete<ResponseType>('/api/endpoint/:id');
+```
+
+**❌ NEVER DO THIS:**
+```typescript
+// ❌ WRONG - Direct fetch calls
+const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/endpoint`, {
+  headers: {
+    'Authorization': `Bearer ${token}`,
+  },
+});
+
+// ❌ WRONG - Manual token management
+const token = localStorage.getItem('token');
+```
+
+**WHY USE THE API CLIENT:**
+- ✅ Automatic HttpOnly cookie authentication (secure)
+- ✅ Automatic token refresh on 401 errors
+- ✅ Consistent error handling with ApiResponse<T> type
+- ✅ Backend URL management (dev/staging/production)
+- ✅ Built-in retry logic
+- ✅ TypeScript type safety
+
+**REAL EXAMPLES FROM CODEBASE:**
+- ✅ `components/Streak.tsx` - Uses `api.get<StreakData>`
+- ✅ `components/StudyBuddy.tsx` - Uses `api.post<GreetingResponse>`
+- ✅ `components/AdaptiveLearning.tsx` - Uses `api.get<RecommendationsData>`
 
 ---
 
@@ -580,6 +636,7 @@ When refactoring existing code, address in this order:
 
 When reviewing or implementing code, check:
 
+**Backend:**
 - [ ] Error responses use `{ success: false, error: string }` format
 - [ ] Success responses use `{ success: true, data: T }` format
 - [ ] Controllers use `AuthRequest` type
@@ -591,7 +648,13 @@ When reviewing or implementing code, check:
 - [ ] Errors are logged with context
 - [ ] Parameterized queries (no SQL injection risk)
 - [ ] Service layer for complex business logic
-- [ ] Consistent with existing patterns in the codebase
+
+**Frontend:**
+- [ ] API calls use `api.get/post/put/delete` from `@/lib/api-client` (NEVER raw fetch)
+- [ ] Components handle ApiResponse<T> type correctly (`response.data` and `response.error`)
+- [ ] Loading states managed properly
+- [ ] Error messages user-friendly
+- [ ] No manual token/auth management in components
 
 ---
 

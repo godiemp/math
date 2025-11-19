@@ -10,6 +10,7 @@ import { useEffect, useState, Suspense } from "react";
 import { LiveSession } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar, Callout } from "@/components/ui";
 import { StudyBuddy } from "@/components/StudyBuddy";
+import { AdaptiveLearning } from "@/components/AdaptiveLearning";
 import { ShareModal } from "@/components/ShareModal";
 import { WelcomeMessage } from "@/components/WelcomeMessage";
 import { Share2 } from "lucide-react";
@@ -252,6 +253,11 @@ function DashboardContent() {
             } : undefined} />
           </div>
         )}
+
+        {/* Adaptive Learning Recommendations */}
+        <div className="mb-8">
+          <AdaptiveLearning />
+        </div>
 
         {/* Live Practice Featured Card with gradient */}
         <div className="relative overflow-hidden backdrop-blur-[20px] bg-gradient-to-r from-[#5E5CE6] to-[#0A84FF] dark:from-[#9A99FF] dark:to-[#0A84FF] rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 mb-8 sm:mb-10 md:mb-12 shadow-[0_14px_36px_rgba(0,0,0,0.22)]">
