@@ -8,7 +8,7 @@ import { useLiveSession, getMinutesUntilStart } from '@/lib/hooks/useLiveSession
 import dynamic from 'next/dynamic';
 
 // Dynamically import EssayReview to avoid SSR issues
-const EssayReview = dynamic(() => import('./EssayReview'), { ssr: false });
+const EssayReview = dynamic(() => import('@/components/content/EssayReview'), { ssr: false });
 
 interface LiveSessionProps {
   sessionId: string;
