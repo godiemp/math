@@ -278,7 +278,7 @@ export default function LiveSessionXState({ sessionId, onExit }: LiveSessionProp
     Object.entries(myAnswers).forEach(([idx, answerIndex]) => {
       const questionIndex = parseInt(idx);
       const question = session.questions[questionIndex];
-      if (question && answerIndex !== null && question.correctAnswers.includes(answerIndex)) {
+      if (question && answerIndex !== null && question.correctAnswer === answerIndex) {
         correctCount++;
       }
     });
