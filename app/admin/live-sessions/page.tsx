@@ -18,7 +18,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { QuestionDisplay } from '@/components/quiz/QuestionRenderer';
 import AdminLayout from '@/components/layout/AdminLayout';
-import PreviewSession from '@/components/interactive/PreviewSession';
+import LiveSessionXState from '@/components/interactive/LiveSessionXState';
 
 function AdminLiveSessionsContent() {
   const { user: currentUser } = useAuth();
@@ -415,9 +415,41 @@ function AdminLiveSessionsContent() {
     }
   };
 
-  // If previewing session, show preview mode
+  // If previewing session, show preview mode with LiveSessionXState
   if (previewingSession) {
-    return <PreviewSession session={previewingSession} onClose={() => setPreviewingSession(null)} />;
+    return (
+      <div className="relative">
+        {/* Preview Banner */}
+        <div className="fixed top-0 left-0 right-0 z-50 bg-yellow-100 dark:bg-yellow-900/30 border-b-2 border-yellow-400 dark:border-yellow-600 px-4 py-3">
+          <div className="max-w-4xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">👁️</span>
+              <div>
+                <p className="text-sm font-bold text-yellow-900 dark:text-yellow-100">
+                  MODO PREVIEW
+                </p>
+                <p className="text-xs text-yellow-800 dark:text-yellow-200">
+                  Esto es exactamente lo que ven los estudiantes
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setPreviewingSession(null)}
+              className="px-3 py-1 text-sm text-yellow-900 dark:text-yellow-100 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded transition-colors"
+            >
+              ✕ Cerrar Preview
+            </button>
+          </div>
+        </div>
+        {/* Add padding to account for fixed banner */}
+        <div className="pt-[72px]">
+          <LiveSessionXState
+            sessionId={previewingSession.id}
+            onExit={() => setPreviewingSession(null)}
+          />
+        </div>
+      </div>
+    );
   }
 
   // If viewing questions, show full-screen questions view
