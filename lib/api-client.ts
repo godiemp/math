@@ -145,7 +145,14 @@ export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
-  const backendUrl = await getApiUrl();
+  let backendUrl = await getApiUrl();
+
+  // Ensure URL has protocol (defensive fix for misconfigured env vars)
+  if (backendUrl && !backendUrl.startsWith('http://') && !backendUrl.startsWith('https://')) {
+    console.warn('⚠️  Backend URL missing protocol, adding https://', backendUrl);
+    backendUrl = `https://${backendUrl}`;
+  }
+
   const url = `${backendUrl}${endpoint}`;
 
   // Don't set Content-Type for FormData - browser will set it with boundary
@@ -197,7 +204,41 @@ export async function apiRequest<T>(
       }
     }
 
-    const data = await response.json();
+    // Check if response has content before parsing JSON
+    const contentType = response.headers.get('content-type');
+    const contentLength = response.headers.get('content-length');
+
+    // Handle empty responses
+    if (contentLength === '0' || (!contentType?.includes('application/json') && !response.ok)) {
+      if (!response.ok) {
+        return {
+          error: {
+            error: 'Request failed with no response body',
+            statusCode: response.status,
+          },
+        };
+      }
+      return { data: {} as T };
+    }
+
+    // Parse JSON response
+    let data;
+    try {
+      const text = await response.text();
+      data = text ? JSON.parse(text) : {};
+    } catch (parseError) {
+      console.error('Failed to parse response JSON:', parseError);
+      if (!response.ok) {
+        return {
+          error: {
+            error: 'Invalid response from server',
+            statusCode: response.status,
+          },
+        };
+      }
+      // If response was OK but JSON parsing failed, return empty object
+      return { data: {} as T };
+    }
 
     if (!response.ok) {
       return {
