@@ -317,15 +317,16 @@ function stopSessionStatusUpdater() {
   }
 }
 
-// Auto-seed development data
-const autoSeedDevelopmentData = async () => {
+// Auto-seed admin data
+const autoSeedAdminData = async () => {
   try {
-    // Only auto-seed in development mode
-    if (process.env.NODE_ENV !== 'development' && !process.env.AUTO_SEED) {
+    // Skip only if explicitly disabled
+    if (process.env.DISABLE_AUTO_SEED === 'true') {
+      console.log('⏭️  Auto-seed disabled via DISABLE_AUTO_SEED environment variable');
       return;
     }
 
-    console.log('🌱 Auto-seeding development data...');
+    console.log('🌱 Auto-seeding admin data...');
 
     // Import and run seed functions dynamically
     const { exec } = await import('child_process');
@@ -337,11 +338,11 @@ const autoSeedDevelopmentData = async () => {
         cwd: __dirname + '/..',
         timeout: 30000 // 30 second timeout
       });
-      console.log('✅ Development data seeded successfully');
+      console.log('✅ Admin data seeded successfully');
     } catch (error: any) {
       // Don't fail if seeding fails (might already be seeded)
       if (error.stdout?.includes('✅')) {
-        console.log('✅ Development data already seeded');
+        console.log('✅ Admin data already seeded');
       } else {
         console.warn('⚠️  Auto-seed warning:', error.message);
       }
@@ -360,8 +361,8 @@ const startServer = async () => {
     // Initialize database tables
     await initializeDatabase();
 
-    // Auto-seed development data
-    await autoSeedDevelopmentData();
+    // Auto-seed admin data
+    await autoSeedAdminData();
 
     // Initialize image storage directory
     initImageStorage();
