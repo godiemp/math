@@ -145,7 +145,14 @@ export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
-  const backendUrl = await getApiUrl();
+  let backendUrl = await getApiUrl();
+
+  // Ensure URL has protocol (defensive fix for misconfigured env vars)
+  if (backendUrl && !backendUrl.startsWith('http://') && !backendUrl.startsWith('https://')) {
+    console.warn('⚠️  Backend URL missing protocol, adding https://', backendUrl);
+    backendUrl = `https://${backendUrl}`;
+  }
+
   const url = `${backendUrl}${endpoint}`;
 
   // Don't set Content-Type for FormData - browser will set it with boundary
