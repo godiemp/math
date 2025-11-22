@@ -245,15 +245,15 @@ function DashboardContent() {
         {/* Study Buddy - Coming Soon Placeholder */}
         <Card hover className="p-6 mb-8 sm:mb-10 md:mb-12">
           <div className="text-center">
-            <div className="text-4xl mb-4">🤖</div>
+            <div className="text-4xl mb-4">📚</div>
             <div className="flex items-center justify-center gap-2 mb-3">
               <Heading level={3} size="sm">
-                Tu compañero de estudio
+                Aprendizaje adaptativo
               </Heading>
               <Badge variant="info">Próximamente</Badge>
             </div>
             <Text size="sm" variant="secondary">
-              Tu asistente de IA personalizado estará disponible pronto
+              Contenido personalizado según tu progreso y objetivos
             </Text>
           </div>
         </Card>
