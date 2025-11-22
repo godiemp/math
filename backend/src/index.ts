@@ -40,9 +40,10 @@ import { serveImage } from './controllers/adminController';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Trust proxy - required for Railway and other proxies to correctly identify client IP
-// This allows Express to trust X-Forwarded-For headers from the proxy
-app.set('trust proxy', true);
+// Trust proxy - Railway uses 1 proxy hop to forward the real client IP
+// Setting to 1 (instead of true) prevents X-Forwarded-For spoofing attacks
+// which could bypass rate limiting. See: express-rate-limit.github.io/ERR_ERL_PERMISSIVE_TRUST_PROXY
+app.set('trust proxy', 1);
 
 // CORS configuration for Vercel production and preview deployments
 const corsOptions = {
