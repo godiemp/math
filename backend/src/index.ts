@@ -318,6 +318,40 @@ function stopSessionStatusUpdater() {
   }
 }
 
+// Auto-seed development data
+const autoSeedDevelopmentData = async () => {
+  try {
+    // Only auto-seed in development mode
+    if (process.env.NODE_ENV !== 'development' && !process.env.AUTO_SEED) {
+      return;
+    }
+
+    console.log('🌱 Auto-seeding development data...');
+
+    // Import and run seed functions dynamically
+    const { exec } = await import('child_process');
+    const { promisify } = await import('util');
+    const execAsync = promisify(exec);
+
+    try {
+      await execAsync('npx tsx src/scripts/seed-admin.ts', {
+        cwd: __dirname + '/..',
+        timeout: 30000 // 30 second timeout
+      });
+      console.log('✅ Development data seeded successfully');
+    } catch (error: any) {
+      // Don't fail if seeding fails (might already be seeded)
+      if (error.stdout?.includes('✅')) {
+        console.log('✅ Development data already seeded');
+      } else {
+        console.warn('⚠️  Auto-seed warning:', error.message);
+      }
+    }
+  } catch (error) {
+    console.warn('⚠️  Auto-seed failed (non-critical):', error);
+  }
+};
+
 // Start server
 const startServer = async () => {
   try {
@@ -326,6 +360,9 @@ const startServer = async () => {
 
     // Initialize database tables
     await initializeDatabase();
+
+    // Auto-seed development data
+    await autoSeedDevelopmentData();
 
     // Initialize image storage directory
     initImageStorage();
