@@ -3,12 +3,12 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { QuestionAttempt, QuizHistoryResponse } from '@/lib/types';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { ModuleAccessGuard } from '@/components/ModuleAccessGuard';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
+import { ModuleAccessGuard } from '@/components/auth/ModuleAccessGuard';
 import { Button, Card, Badge, Heading, Text, Modal, Navbar, NavbarLink } from '@/components/ui';
-import { MathText, UnifiedLatexRenderer } from '@/components/MathDisplay';
-import { SkillsDisplay } from '@/components/SkillsDisplay';
-import { PaesPredictionCard } from '@/components/PaesPredictionCard';
+import { MathText, UnifiedLatexRenderer } from '@/components/math/MathDisplay';
+import { SkillsDisplay } from '@/components/analytics/SkillsDisplay';
+import { PaesPredictionCard } from '@/components/analytics/PaesPredictionCard';
 import { api } from '@/lib/api-client';
 import { isAuthenticated } from '@/lib/auth';
 

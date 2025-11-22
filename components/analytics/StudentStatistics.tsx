@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { getMyStatistics } from '@/lib/sessionApi';
 import type { StudentStatistics } from '@/lib/types';
-import EssayReview from './EssayReview';
+import EssayReview from '@/components/content/EssayReview';
 
 export default function StudentStatisticsComponent() {
   const [stats, setStats] = useState<StudentStatistics | null>(null);

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { Button, Card, Badge, Heading, Text, Navbar, NavbarLink, Modal } from '@/components/ui';
 import { QuizHistoryResponse } from '@/lib/types';
 import { api } from '@/lib/api-client';

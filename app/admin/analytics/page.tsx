@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { api } from '@/lib/api-client';
-import { SkillsAnalytics } from '@/components/SkillsAnalytics';
-import AdminLayout from '@/components/AdminLayout';
+import { SkillsAnalytics } from '@/components/analytics/SkillsAnalytics';
+import AdminLayout from '@/components/layout/AdminLayout';
 
 interface AnalyticsData {
   northStar: {

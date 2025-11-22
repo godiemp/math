@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useMachine } from '@xstate/react';
 import type { Question, RapidFireState, RapidFireScore } from '@/lib/types';
 import { getRandomQuestions } from '@/lib/questions';
-import { QuestionRenderer } from '../QuestionRenderer';
+import { QuestionRenderer } from './QuestionRenderer';
 import { useQuizProgress } from '@/hooks/useQuizProgress';
 import { formatTime, getTimerColor, generateQuizSessionId } from '@/lib/quiz-utils';
 import { RAPIDFIRE_CONFIG } from '@/lib/constants';

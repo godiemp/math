@@ -1,10 +1,10 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import Link from 'next/link';
-import { DocsContentWrapper } from '@/components/DocsContentWrapper';
-import { DocsPageWithNav } from '@/components/DocsPageWithNav';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { ModuleAccessGuard } from '@/components/ModuleAccessGuard';
+import { DocsContentWrapper } from '@/components/content/DocsContentWrapper';
+import { DocsPageWithNav } from '@/components/content/DocsPageWithNav';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
+import { ModuleAccessGuard } from '@/components/auth/ModuleAccessGuard';
 import { notFound } from 'next/navigation';
 import { m1DocsStructure, getAllDocSlugs } from '@/docs';
 

@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { SoftPaywallMessage } from '@/components/SoftPaywallMessage';
+import { SoftPaywallMessage } from '@/components/auth/SoftPaywallMessage';
 
 interface ModuleAccessGuardProps {
   children: React.ReactNode;

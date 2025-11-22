@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
-import AdminLayout from '@/components/AdminLayout';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
+import AdminLayout from '@/components/layout/AdminLayout';
 import { Card, Heading, Text, Badge } from '@/components/ui';
 import { apiRequest } from '@/lib/api-client';
 

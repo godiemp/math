@@ -3,8 +3,8 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import OperationsPath from '@/components/OperationsPath';
-import OperationsPractice from '@/components/OperationsPractice';
+import OperationsPath from '@/components/games/operations/OperationsPath';
+import OperationsPractice from '@/components/games/operations/OperationsPractice';
 import { OPERATIONS_PATH } from '@/lib/operationsPath';
 import { getOperationsProgress, unlockAllOperationsLevels } from '@/lib/operationsProgress';
 

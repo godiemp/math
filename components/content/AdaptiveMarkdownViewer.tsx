@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { MarkdownViewer } from './MarkdownViewer';
-import { ReadingModeControl, ReadingMode } from './ReadingModeControl';
-import { CollapsibleSection, CollapseControl } from './CollapsibleSection';
-import { CollapseControls } from './CollapseControls';
+import { MarkdownViewer } from '@/components/content/MarkdownViewer';
+import { ReadingModeControl, ReadingMode } from '@/components/shared/ReadingModeControl';
+import { CollapsibleSection, CollapseControl } from '@/components/shared/CollapsibleSection';
+import { CollapseControls } from '@/components/shared/CollapseControls';
 import { parseMarkdownSections, filterSectionsByMode, stripFirstHeading } from '@/lib/markdown-parser';
 
 interface AdaptiveMarkdownViewerProps {

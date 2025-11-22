@@ -1,8 +1,8 @@
 'use client';
 
 import { createGamePage } from '@/lib/factories/createGamePage';
-import AnglesGameMenu from '@/components/AnglesGameMenu';
-import AnglesGame from '@/components/AnglesGame';
+import AnglesGameMenu from '@/components/games/geometry/AnglesGameMenu';
+import AnglesGame from '@/components/games/geometry/AnglesGame';
 import type { AnglesGameDifficulty } from '@/lib/types/angles-game';
 
 export default createGamePage<AnglesGameDifficulty>({

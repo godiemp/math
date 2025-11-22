@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Button } from './ui/Button';
+import { Button } from '@/components/ui/Button';
 import { useTranslations } from 'next-intl';
 
 interface AdminLayoutProps {

@@ -3,9 +3,9 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SWRProvider } from "@/lib/swr-config";
 import { Toaster } from "sonner";
-import CookieConsent from "@/components/CookieConsent";
-import { PostHogProvider } from "@/components/PostHogProvider";
-import { IntercomProvider } from "@/components/IntercomProvider";
+import CookieConsent from "@/components/shared/CookieConsent";
+import { PostHogProvider } from "@/components/providers/PostHogProvider";
+import { IntercomProvider } from "@/components/providers/IntercomProvider";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 

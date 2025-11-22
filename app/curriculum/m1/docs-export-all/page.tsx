@@ -1,10 +1,10 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import Link from 'next/link';
-import { AdaptiveMarkdownViewer } from '@/components/AdaptiveMarkdownViewer';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { ModuleAccessGuard } from '@/components/ModuleAccessGuard';
-import { DocsExportButton } from '@/components/DocsExportButton';
+import { AdaptiveMarkdownViewer } from '@/components/content/AdaptiveMarkdownViewer';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
+import { ModuleAccessGuard } from '@/components/auth/ModuleAccessGuard';
+import { DocsExportButton } from '@/components/content/DocsExportButton';
 
 // Define the docs structure - same as in the main docs page
 const docsStructure = {

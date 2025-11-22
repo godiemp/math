@@ -1,8 +1,8 @@
 'use client';
 
 import { createGamePage } from '@/lib/factories/createGamePage';
-import SymmetryGameMenu from '@/components/SymmetryGameMenu';
-import SymmetryGame from '@/components/SymmetryGame';
+import SymmetryGameMenu from '@/components/games/geometry/SymmetryGameMenu';
+import SymmetryGame from '@/components/games/geometry/SymmetryGame';
 import type { SymmetryGameDifficulty } from '@/lib/types/symmetry-game';
 
 export default createGamePage<SymmetryGameDifficulty>({

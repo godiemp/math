@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { Button, Card, Heading, Text, Badge } from '@/components/ui';
@@ -12,7 +12,7 @@ import {
   type Archetype,
   type ArchetypeProfile
 } from '@/lib/archetypes';
-import { MarkdownViewer } from '@/components/MarkdownViewer';
+import { MarkdownViewer } from '@/components/content/MarkdownViewer';
 import { Loader2, ArrowLeft, Sparkles, User, TrendingUp, MessageCircle } from 'lucide-react';
 
 interface GreetingResponse {
