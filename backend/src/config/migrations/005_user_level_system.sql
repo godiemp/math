@@ -21,9 +21,25 @@ ADD COLUMN IF NOT EXISTS score_max INTEGER;
 ALTER TABLE paes_predictions
 DROP CONSTRAINT IF EXISTS paes_predictions_user_prediction_check;
 
--- Rename user_prediction to user_initial_estimate for clarity
-ALTER TABLE paes_predictions
-RENAME COLUMN user_prediction TO user_initial_estimate;
+-- Rename user_prediction to user_initial_estimate if it exists
+-- Or create user_initial_estimate if it doesn't exist (for fresh installs via database.ts)
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'paes_predictions' AND column_name = 'user_prediction'
+  ) AND NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'paes_predictions' AND column_name = 'user_initial_estimate'
+  ) THEN
+    ALTER TABLE paes_predictions RENAME COLUMN user_prediction TO user_initial_estimate;
+  ELSIF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'paes_predictions' AND column_name = 'user_initial_estimate'
+  ) THEN
+    ALTER TABLE paes_predictions ADD COLUMN user_initial_estimate INTEGER;
+  END IF;
+END $$;
 
 -- ========================================
 -- Step 2: Migrate existing data
