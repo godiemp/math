@@ -31,6 +31,10 @@ export interface LiveSessionContext {
 
   // Flags
   hasPersistedInitialIndex: boolean; // Track if we've loaded initial index
+
+  // Preview mode
+  previewMode: boolean; // When true, allows forcing session state
+  previewState: 'scheduled' | 'lobby' | 'active' | 'completed' | null; // Forced state in preview mode
 }
 
 export type LiveSessionEvent =
@@ -122,7 +126,11 @@ export const liveSessionMachine = setup({
   types: {
     context: {} as LiveSessionContext,
     events: {} as LiveSessionEvent,
-    input: {} as { sessionId: string },
+    input: {} as {
+      sessionId: string;
+      previewMode?: boolean;
+      previewState?: 'scheduled' | 'lobby' | 'active' | 'completed';
+    },
   },
 
   actors: {
@@ -250,22 +258,42 @@ export const liveSessionMachine = setup({
     /**
      * Check if session is in scheduled state
      */
-    isScheduled: ({ context }) => context.session?.status === 'scheduled',
+    isScheduled: ({ context }) => {
+      if (context.previewMode && context.previewState !== null) {
+        return context.previewState === 'scheduled';
+      }
+      return context.session?.status === 'scheduled';
+    },
 
     /**
      * Check if session is in lobby state
      */
-    isLobby: ({ context }) => context.session?.status === 'lobby',
+    isLobby: ({ context }) => {
+      if (context.previewMode && context.previewState !== null) {
+        return context.previewState === 'lobby';
+      }
+      return context.session?.status === 'lobby';
+    },
 
     /**
      * Check if session is active
      */
-    isActive: ({ context }) => context.session?.status === 'active',
+    isActive: ({ context }) => {
+      if (context.previewMode && context.previewState !== null) {
+        return context.previewState === 'active';
+      }
+      return context.session?.status === 'active';
+    },
 
     /**
      * Check if session is completed
      */
-    isCompleted: ({ context }) => context.session?.status === 'completed',
+    isCompleted: ({ context }) => {
+      if (context.previewMode && context.previewState !== null) {
+        return context.previewState === 'completed';
+      }
+      return context.session?.status === 'completed';
+    },
 
     /**
      * Check if can go to next question
@@ -305,6 +333,8 @@ export const liveSessionMachine = setup({
     myParticipation: null,
     error: null,
     hasPersistedInitialIndex: false,
+    previewMode: input.previewMode || false,
+    previewState: input.previewState || null,
   }),
 
   states: {

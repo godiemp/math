@@ -13,9 +13,16 @@ const EssayReview = dynamic(() => import('./EssayReview'), { ssr: false });
 interface LiveSessionProps {
   sessionId: string;
   onExit: () => void;
+  previewMode?: boolean;
+  previewState?: 'scheduled' | 'lobby' | 'active' | 'completed';
 }
 
-export default function LiveSessionXState({ sessionId, onExit }: LiveSessionProps) {
+export default function LiveSessionXState({
+  sessionId,
+  onExit,
+  previewMode,
+  previewState,
+}: LiveSessionProps) {
   const {
     // State flags
     isLoading,
@@ -45,7 +52,10 @@ export default function LiveSessionXState({ sessionId, onExit }: LiveSessionProp
     navigateToQuestion,
     retry,
     exit,
-  } = useLiveSession(sessionId);
+  } = useLiveSession(sessionId, {
+    previewMode,
+    previewState,
+  });
 
   const currentUser = getCurrentUser();
 
