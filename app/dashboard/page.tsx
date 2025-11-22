@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
@@ -9,9 +9,9 @@ import { getAllAvailableSessions, updateSessionStatuses } from "@/lib/sessionApi
 import { useEffect, useState, Suspense } from "react";
 import { LiveSession } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar, Callout } from "@/components/ui";
-import { StudyBuddy } from "@/components/StudyBuddy";
-import { ShareModal } from "@/components/ShareModal";
-import { WelcomeMessage } from "@/components/WelcomeMessage";
+import { StudyBuddy } from "@/components/interactive/StudyBuddy";
+import { ShareModal } from "@/components/shared/ShareModal";
+import { WelcomeMessage } from "@/components/shared/WelcomeMessage";
 import { Share2 } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { sendVerificationEmail } from "@/lib/auth/authApi";

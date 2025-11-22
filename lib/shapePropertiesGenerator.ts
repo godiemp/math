@@ -7,7 +7,7 @@
  * Includes both 2D and 3D shapes for comprehensive geometry learning.
  */
 
-import type { GeometryFigure } from '@/components/GeometryCanvas';
+import type { GeometryFigure } from '@/components/math/GeometryCanvas';
 import type { Shape2D } from '@/lib/types/shape-game';
 import type {
   Shape3D,

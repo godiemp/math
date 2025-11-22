@@ -1,8 +1,8 @@
 'use client';
 
 import { createGamePage } from '@/lib/factories/createGamePage';
-import ShapePropertiesMenu from '@/components/ShapePropertiesMenu';
-import ShapePropertiesGame from '@/components/ShapePropertiesGame';
+import ShapePropertiesMenu from '@/components/games/geometry/ShapePropertiesMenu';
+import ShapePropertiesGame from '@/components/games/geometry/ShapePropertiesGame';
 import type { PropertiesGameDifficulty } from '@/lib/types/shape-properties-game';
 
 export default createGamePage<PropertiesGameDifficulty>({

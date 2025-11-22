@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import Quiz from '@/components/Quiz';
+import Quiz from '@/components/quiz/Quiz';
 import { getQuestionsByLevel, getQuestionsByIds } from '@/lib/questions';
 import { Question } from '@/lib/types';
 import Link from 'next/link';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { ModuleAccessGuard } from '@/components/ModuleAccessGuard';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
+import { ModuleAccessGuard } from '@/components/auth/ModuleAccessGuard';
 import { Card, Button, Heading, Text } from '@/components/ui';
 import { getLastConfigKey } from '@/lib/constants';
 import { api } from '@/lib/api-client';

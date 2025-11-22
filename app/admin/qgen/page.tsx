@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
-import { UnifiedLatexRenderer } from '@/components/MathDisplay';
-import { MarkdownViewer } from '@/components/MarkdownViewer';
+import { UnifiedLatexRenderer } from '@/components/math/MathDisplay';
+import { MarkdownViewer } from '@/components/content/MarkdownViewer';
 import type { Level, Subject } from '@/lib/types/core';
-import AdminLayout from '@/components/AdminLayout';
+import AdminLayout from '@/components/layout/AdminLayout';
 import { api } from '@/lib/api-client';
 
 // Available skills organized by subject

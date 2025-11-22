@@ -13,12 +13,12 @@ import {
 import { useAvailableSessions } from '@/lib/hooks/useSessions';
 import { getRandomQuestions, getOfficialPAESQuestions, getRandomQuestionsByFilter } from '@/lib/questions';
 import { LiveSession, Question } from '@/lib/types';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
-import { QuestionDisplay } from '@/components/QuestionRenderer';
-import AdminLayout from '@/components/AdminLayout';
-import PreviewSession from '@/components/PreviewSession';
+import { QuestionDisplay } from '@/components/quiz/QuestionRenderer';
+import AdminLayout from '@/components/layout/AdminLayout';
+import PreviewSession from '@/components/interactive/PreviewSession';
 
 function AdminLiveSessionsContent() {
   const { user: currentUser } = useAuth();

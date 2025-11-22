@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Card } from './ui/Card';
-import { Heading } from './ui/Typography';
-import { Text } from './ui/Typography';
-import { Badge } from './ui/Badge';
+import { Card } from '@/components/ui/Card';
+import { Heading } from '@/components/ui/Typography';
+import { Text } from '@/components/ui/Typography';
+import { Badge } from '@/components/ui/Badge';
 import { StreakData } from '@/lib/types';
 import { api } from '@/lib/api-client';
 

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { CurriculumSidebar } from './ui/CurriculumSidebar';
+import { CurriculumSidebar } from '@/components/ui/CurriculumSidebar';
 import { getGroupedUnits, type ThematicUnit } from '@/lib/services/thematicUnitsService';
 import type { Level } from '@/lib/types';
 import { api } from '@/lib/api-client';

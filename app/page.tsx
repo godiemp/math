@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
-import Auth from "@/components/Auth";
-import Footer from "@/components/Footer";
+import Auth from "@/components/auth/Auth";
+import Footer from "@/components/layout/Footer";
 import { useTranslations } from 'next-intl';
 
 export default function Home() {

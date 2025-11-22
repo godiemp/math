@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ReadingMode } from './ReadingModeControl';
-import { MathText } from './MathDisplay';
+import { ReadingMode } from '@/components/shared/ReadingModeControl';
+import { MathText } from '@/components/math/MathDisplay';
 
 export type SectionImportance = 'essential' | 'important' | 'advanced';
 export type CollapseControl = 'fold-all' | 'unfold-all' | 'unfold-h2' | 'unfold-h3' | 'unfold-h4' | null;

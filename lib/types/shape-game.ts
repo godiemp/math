@@ -9,7 +9,7 @@
  * Route association: /practice/geometry/shapes
  */
 
-import type { GeometryFigure } from '@/components/GeometryCanvas';
+import type { GeometryFigure } from '@/components/math/GeometryCanvas';
 
 /**
  * 2D shape types that can be identified in the game

@@ -4,7 +4,7 @@ import { useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useGameProgress } from '@/lib/hooks/useGameProgress';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 export interface GamePageConfig<T extends string> {
   storageKey: string;

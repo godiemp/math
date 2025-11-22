@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import AdminLayout from '@/components/AdminLayout';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
+import AdminLayout from '@/components/layout/AdminLayout';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import OverviewTab from './components/OverviewTab';
 import AbstractProblemsTab from './components/AbstractProblemsTab';
 import ContextProblemsTab from './components/ContextProblemsTab';

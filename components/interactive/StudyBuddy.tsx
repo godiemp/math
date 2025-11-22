@@ -3,9 +3,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api-client';
-import { Card, Button, Text, Heading } from './ui';
+import { Card, Button, Text, Heading } from '@/components/ui';
 import { MessageCircle, X, Send, Sparkles, Loader2 } from 'lucide-react';
-import { MarkdownViewer } from './MarkdownViewer';
+import { MarkdownViewer } from '@/components/content/MarkdownViewer';
 import { StreakData } from '@/lib/types';
 
 interface GreetingData {

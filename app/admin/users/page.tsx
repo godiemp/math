@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import Link from 'next/link';
 import { api } from '@/lib/api-client';
 import {
@@ -12,7 +12,7 @@ import {
   GetUsersResponse,
   GetPlansResponse,
 } from '@/lib/types';
-import AdminLayout from '@/components/AdminLayout';
+import AdminLayout from '@/components/layout/AdminLayout';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 
 /**

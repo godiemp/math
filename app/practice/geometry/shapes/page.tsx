@@ -1,8 +1,8 @@
 'use client';
 
 import { createGamePage } from '@/lib/factories/createGamePage';
-import ShapeGameMenu from '@/components/ShapeGameMenu';
-import ShapeIdentificationGame from '@/components/ShapeIdentificationGame';
+import ShapeGameMenu from '@/components/games/geometry/ShapeGameMenu';
+import ShapeIdentificationGame from '@/components/games/geometry/ShapeIdentificationGame';
 import type { ShapeGameDifficulty } from '@/lib/types/shape-game';
 
 export default createGamePage<ShapeGameDifficulty>({

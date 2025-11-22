@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { api } from '@/lib/api-client';
-import AdminLayout from '@/components/AdminLayout';
+import AdminLayout from '@/components/layout/AdminLayout';
 
 interface AIAnalytics {
   overview: {

@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Card } from './ui/Card';
-import { Heading, Text } from './ui/Typography';
-import { Button } from './ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Heading, Text } from '@/components/ui/Typography';
+import { Button } from '@/components/ui/Button';
 import { api } from '@/lib/api-client';
 
 interface PredictionFactors {

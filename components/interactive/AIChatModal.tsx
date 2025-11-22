@@ -2,10 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Question } from '@/lib/types';
-import { SmartLatexRenderer } from './MathDisplay';
-import { QuestionText, QuestionOptionsWithFeedback } from './QuestionRenderer';
-import { GeometryCanvas, GeometryFigure } from './GeometryCanvas';
-import { MarkdownViewer } from './MarkdownViewer';
+import { SmartLatexRenderer } from '@/components/math/MathDisplay';
+import { QuestionText, QuestionOptionsWithFeedback } from '@/components/quiz/QuestionRenderer';
+import { GeometryCanvas, GeometryFigure } from '@/components/math/GeometryCanvas';
+import { MarkdownViewer } from '@/components/content/MarkdownViewer';
 import { api } from '@/lib/api-client';
 import { analytics } from '@/lib/analytics';
 

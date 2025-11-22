@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import type { LiveSession } from '@/lib/types';
-import { QuestionRenderer } from './QuestionRenderer';
+import { QuestionRenderer } from '@/components/quiz/QuestionRenderer';
 
 interface PreviewSessionProps {
   session: LiveSession;

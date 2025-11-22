@@ -1,7 +1,7 @@
 'use client';
 
-import { AdaptiveMarkdownViewer } from '@/components/AdaptiveMarkdownViewer';
-import { DocsExportButton } from '@/components/DocsExportButton';
+import { AdaptiveMarkdownViewer } from '@/components/content/AdaptiveMarkdownViewer';
+import { DocsExportButton } from '@/components/content/DocsExportButton';
 
 interface DocsContentWrapperProps {
   content: string;

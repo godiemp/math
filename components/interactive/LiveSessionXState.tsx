@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import type { LiveSession } from '@/lib/types';
 import { getCurrentUser } from '@/lib/auth';
-import { QuestionRenderer } from './QuestionRenderer';
+import { QuestionRenderer } from '@/components/quiz/QuestionRenderer';
 import { useLiveSession, getMinutesUntilStart } from '@/lib/hooks/useLiveSession';
 
 interface LiveSessionProps {
