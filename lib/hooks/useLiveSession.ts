@@ -6,6 +6,9 @@ import type { LiveSession } from '../types';
  * Hook to manage live session state with XState
  *
  * @param sessionId - The ID of the session to manage
+ * @param options - Optional configuration
+ * @param options.previewMode - Enable preview mode (bypasses real state checks)
+ * @param options.previewState - Force a specific state in preview mode
  * @returns State, context, and actions for the live session
  *
  * @example
@@ -31,10 +34,28 @@ import type { LiveSession } from '../types';
  *   );
  * }
  * ```
+ *
+ * @example Preview mode
+ * ```tsx
+ * const { ... } = useLiveSession(sessionId, {
+ *   previewMode: true,
+ *   previewState: 'active', // Force active state
+ * });
+ * ```
  */
-export function useLiveSession(sessionId: string) {
+export function useLiveSession(
+  sessionId: string,
+  options?: {
+    previewMode?: boolean;
+    previewState?: 'scheduled' | 'lobby' | 'active' | 'completed';
+  }
+) {
   const [state, send] = useMachine(liveSessionMachine, {
-    input: { sessionId },
+    input: {
+      sessionId,
+      previewMode: options?.previewMode,
+      previewState: options?.previewState,
+    },
   });
 
   const { context } = state;
