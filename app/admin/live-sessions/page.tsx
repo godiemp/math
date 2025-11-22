@@ -463,6 +463,7 @@ function AdminLiveSessionsContent() {
         {/* Add padding to account for fixed banner */}
         <div className="pt-[72px]">
           <LiveSessionXState
+            key={`preview-${previewingSession.id}-${previewState}`}
             sessionId={previewingSession.id}
             onExit={() => setPreviewingSession(null)}
             previewMode={true}

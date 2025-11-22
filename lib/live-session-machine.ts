@@ -398,6 +398,7 @@ export const liveSessionMachine = setup({
           target: 'scheduled',
           actions: 'updateSessionData',
           reenter: true,
+          guard: ({ context }) => !context.previewMode, // Disable polling in preview mode
         },
       },
 
@@ -428,6 +429,7 @@ export const liveSessionMachine = setup({
           target: 'lobby',
           actions: 'updateSessionData',
           reenter: true,
+          guard: ({ context }) => !context.previewMode, // Disable polling in preview mode
         },
       },
 
@@ -461,6 +463,7 @@ export const liveSessionMachine = setup({
           target: 'active',
           actions: 'updateSessionData',
           reenter: true,
+          guard: ({ context }) => !context.previewMode, // Disable polling in preview mode
         },
       },
 
@@ -577,6 +580,7 @@ export const liveSessionMachine = setup({
           target: 'completed',
           actions: 'updateSessionData',
           reenter: true,
+          guard: ({ context }) => !context.previewMode, // Disable polling in preview mode
         },
       },
 
