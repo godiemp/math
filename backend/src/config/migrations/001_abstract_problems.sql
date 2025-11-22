@@ -155,45 +155,57 @@ COMMENT ON COLUMN context_problems.quality_score IS 'Manual quality rating from 
 -- ========================================
 -- Question Attempts Table (Enhanced)
 -- ========================================
-CREATE TABLE IF NOT EXISTS question_attempts (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+-- Note: question_attempts table is already created by initializeDatabase()
+-- This migration only adds new columns to support abstract problems system
 
-  -- Question reference (support both old and new system)
-  context_problem_id UUID REFERENCES context_problems(id) ON DELETE SET NULL,
-  abstract_problem_id UUID REFERENCES abstract_problems(id) ON DELETE SET NULL,
-  legacy_question_id VARCHAR(100),
+-- Add new columns to existing question_attempts table
+DO $$
+BEGIN
+  -- Add context_problem_id column if it doesn't exist
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'question_attempts' AND column_name = 'context_problem_id'
+  ) THEN
+    ALTER TABLE question_attempts
+    ADD COLUMN context_problem_id UUID REFERENCES context_problems(id) ON DELETE SET NULL;
+  END IF;
 
-  -- Attempt data
-  user_answer INTEGER NOT NULL,
-  correct_answer INTEGER NOT NULL,
-  is_correct BOOLEAN NOT NULL,
-  time_spent_seconds INTEGER,
+  -- Add abstract_problem_id column if it doesn't exist
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'question_attempts' AND column_name = 'abstract_problem_id'
+  ) THEN
+    ALTER TABLE question_attempts
+    ADD COLUMN abstract_problem_id UUID REFERENCES abstract_problems(id) ON DELETE SET NULL;
+  END IF;
 
-  -- Context
-  quiz_session_id UUID,
-  difficulty VARCHAR(20) NOT NULL,
-  subject VARCHAR(50) NOT NULL,
-  skills_tested TEXT[],
+  -- Add legacy_question_id column if it doesn't exist
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'question_attempts' AND column_name = 'legacy_question_id'
+  ) THEN
+    ALTER TABLE question_attempts
+    ADD COLUMN legacy_question_id VARCHAR(100);
+  END IF;
 
-  -- Timestamps
-  attempted_at BIGINT NOT NULL,
+  -- Add skills_tested column if it doesn't exist
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'question_attempts' AND column_name = 'skills_tested'
+  ) THEN
+    ALTER TABLE question_attempts
+    ADD COLUMN skills_tested TEXT[];
+  END IF;
+END $$;
 
-  CHECK (difficulty IN ('easy', 'medium', 'hard', 'extreme')),
-  CHECK (subject IN ('números', 'álgebra', 'geometría', 'probabilidad'))
-);
-
--- Indexes for question_attempts
-CREATE INDEX idx_question_attempts_user ON question_attempts(user_id);
-CREATE INDEX idx_question_attempts_context_problem ON question_attempts(context_problem_id);
-CREATE INDEX idx_question_attempts_abstract_problem ON question_attempts(abstract_problem_id);
-CREATE INDEX idx_question_attempts_quiz_session ON question_attempts(quiz_session_id);
-CREATE INDEX idx_question_attempts_attempted_at ON question_attempts(attempted_at);
-CREATE INDEX idx_question_attempts_legacy_question ON question_attempts(legacy_question_id);
+-- Indexes for question_attempts (create only if they don't exist)
+CREATE INDEX IF NOT EXISTS idx_question_attempts_context_problem ON question_attempts(context_problem_id);
+CREATE INDEX IF NOT EXISTS idx_question_attempts_abstract_problem ON question_attempts(abstract_problem_id);
+CREATE INDEX IF NOT EXISTS idx_question_attempts_legacy_question ON question_attempts(legacy_question_id);
 
 -- Comments
-COMMENT ON TABLE question_attempts IS 'Tracks all question attempts by users';
 COMMENT ON COLUMN question_attempts.context_problem_id IS 'Reference to new context problem if applicable';
+COMMENT ON COLUMN question_attempts.abstract_problem_id IS 'Reference to abstract problem if applicable';
 COMMENT ON COLUMN question_attempts.legacy_question_id IS 'Reference to old TypeScript-based question ID for migration support';
 
 
