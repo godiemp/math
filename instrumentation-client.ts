@@ -85,3 +85,7 @@ Sentry.init({
     return event;
   },
 })
+
+// Export navigation instrumentation for Next.js 15.3+
+// This enables Sentry to automatically capture router transitions
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
