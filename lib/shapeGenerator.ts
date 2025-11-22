@@ -8,7 +8,7 @@
  * shapes regardless of size, position, or orientation.
  */
 
-import type { GeometryFigure, Point } from '@/components/GeometryCanvas';
+import type { GeometryFigure, Point } from '@/components/math/GeometryCanvas';
 import type {
   Shape2D,
   ShapeInfo,

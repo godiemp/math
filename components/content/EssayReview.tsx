@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { getSession, getMyParticipationAPI } from '@/lib/sessionApi';
 import type { LiveSession, Question } from '@/lib/types';
-import { QuestionRenderer } from './QuestionRenderer';
+import { QuestionRenderer } from '@/components/quiz/QuestionRenderer';
 
 interface EssayReviewProps {
   sessionId: string;

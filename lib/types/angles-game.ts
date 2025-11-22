@@ -9,7 +9,7 @@
  * Route association: /practice/geometry/angles
  */
 
-import type { GeometryFigure } from '@/components/GeometryCanvas';
+import type { GeometryFigure } from '@/components/math/GeometryCanvas';
 
 /**
  * Types of angle problems

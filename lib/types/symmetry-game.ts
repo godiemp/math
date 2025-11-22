@@ -9,7 +9,7 @@
  * Route association: /practice/geometry/symmetry
  */
 
-import type { GeometryFigure } from '@/components/GeometryCanvas';
+import type { GeometryFigure } from '@/components/math/GeometryCanvas';
 
 /**
  * Types of symmetry problems

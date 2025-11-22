@@ -1,8 +1,8 @@
 'use client';
 
 import type { Question } from '@/lib/types';
-import ZenQuiz from './quiz/ZenQuiz';
-import RapidFireQuiz from './quiz/RapidFireQuiz';
+import ZenQuiz from './ZenQuiz';
+import RapidFireQuiz from './RapidFireQuiz';
 
 interface QuizProps {
   questions: Question[];

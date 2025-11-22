@@ -1,6 +1,6 @@
 'use client';
 
-import { CollapseControl } from './CollapsibleSection';
+import { CollapseControl } from '@/components/shared/CollapsibleSection';
 
 interface CollapseControlsProps {
   onControlChange: (control: CollapseControl) => void;

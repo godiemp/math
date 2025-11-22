@@ -1,8 +1,8 @@
 'use client';
 
 import type { Question, QuestionRendererProps } from '@/lib/types';
-import { MathText, BlockMath, InlineMath, SmartLatexRenderer, UnifiedLatexRenderer } from './MathDisplay';
-import { GeometryCanvas, GeometryFigure } from './GeometryCanvas';
+import { MathText, BlockMath, InlineMath, SmartLatexRenderer, UnifiedLatexRenderer } from '@/components/math/MathDisplay';
+import { GeometryCanvas, GeometryFigure } from '@/components/math/GeometryCanvas';
 
 // Re-export for convenience
 export type { QuestionRendererProps };

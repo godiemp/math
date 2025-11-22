@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { api } from '@/lib/api-client';
-import AdminLayout from '@/components/AdminLayout';
+import AdminLayout from '@/components/layout/AdminLayout';
 
 // Get backend URL for direct download/preview links
 const getBackendUrl = async () => {

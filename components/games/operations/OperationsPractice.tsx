@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Check, X, Award, Sparkles, SkipForward } from 'lucide-react';
-import { InlineMath } from './MathDisplay';
+import { InlineMath } from '@/components/math/MathDisplay';
 import { OPERATIONS_PATH } from '@/lib/operationsPath';
 import { generateProblem, validateAnswer, clearProblemHistory } from '@/lib/operationsProblemGenerator';
 import { recordCorrectAnswer, recordIncorrectAnswer, completeLevel } from '@/lib/operationsProgress';

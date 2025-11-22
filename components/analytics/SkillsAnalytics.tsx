@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { questions as allQuestions } from '@/lib/questions';
 import { SKILLS } from '@/lib/skillTaxonomy';
 import { Card, Badge, Heading, Text, Button } from '@/components/ui';
-import { QuestionPreview } from '@/components/QuestionRenderer';
+import { QuestionPreview } from '@/components/quiz/QuestionRenderer';
 import type { Question } from '@/lib/types';
 
 export function SkillsAnalytics() {

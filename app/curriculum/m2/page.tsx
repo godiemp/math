@@ -1,8 +1,8 @@
 'use client';
 
-import Curriculum from '@/components/Curriculum';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { ModuleAccessGuard } from '@/components/ModuleAccessGuard';
+import Curriculum from '@/components/content/Curriculum';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
+import { ModuleAccessGuard } from '@/components/auth/ModuleAccessGuard';
 
 function M2CurriculumContent() {
   return <Curriculum level="M2" />;

@@ -1,5 +1,5 @@
-import { SectionImportance } from '@/components/CollapsibleSection';
-import { ReadingMode } from '@/components/ReadingModeControl';
+import { SectionImportance } from '@/components/shared/CollapsibleSection';
+import { ReadingMode } from '@/components/shared/ReadingModeControl';
 
 export interface MarkdownSection {
   id: string;

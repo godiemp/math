@@ -4,13 +4,13 @@ import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { questions } from '@/lib/questions'
 import { Question } from '@/lib/types'
-import { ProtectedRoute } from '@/components/ProtectedRoute'
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute'
 import { M1_SKILLS, getSkillNames } from '@/lib/skillTaxonomy'
 import { Card, Button, Heading, Text, Badge } from '@/components/ui'
-import { QuestionPreview, QuestionRenderer } from '@/components/QuestionRenderer'
-import { MathText } from '@/components/MathDisplay'
-import AdminLayout from '@/components/AdminLayout'
-import { SkillsAnalytics } from '@/components/SkillsAnalytics'
+import { QuestionPreview, QuestionRenderer } from '@/components/quiz/QuestionRenderer'
+import { MathText } from '@/components/math/MathDisplay'
+import AdminLayout from '@/components/layout/AdminLayout'
+import { SkillsAnalytics } from '@/components/analytics/SkillsAnalytics'
 
 function ProblemsExplorerContent() {
   const router = useRouter()

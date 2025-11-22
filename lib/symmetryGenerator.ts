@@ -7,7 +7,7 @@
  * Creates varied visual representations with symmetry lines.
  */
 
-import type { GeometryFigure, Point } from '@/components/GeometryCanvas';
+import type { GeometryFigure, Point } from '@/components/math/GeometryCanvas';
 import type {
   SymmetryShape,
   SymmetryShapeInfo,

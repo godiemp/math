@@ -9,7 +9,7 @@
  * Route association: /practice/geometry/properties
  */
 
-import type { GeometryFigure } from '@/components/GeometryCanvas';
+import type { GeometryFigure } from '@/components/math/GeometryCanvas';
 import type { Shape2D } from './shape-game';
 
 /**
