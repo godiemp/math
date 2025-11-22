@@ -34,10 +34,21 @@ const config: Config = {
             transform: 'translateX(0)',
           },
         },
+        scaleIn: {
+          'from': {
+            opacity: '0',
+            transform: 'scale(0.95)',
+          },
+          'to': {
+            opacity: '1',
+            transform: 'scale(1)',
+          },
+        },
       },
       animation: {
         fadeIn: 'fadeIn 0.6s ease-out forwards',
         slideInRight: 'slideInRight 0.3s ease-out forwards',
+        scaleIn: 'scaleIn 0.2s ease-out forwards',
       },
     },
   },
