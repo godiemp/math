@@ -165,20 +165,8 @@ async function seedAdmin() {
       )
     `);
 
-    // Clean up old seed sessions first to ensure fresh data
-    console.log('🧹 Cleaning up old seed sessions...');
-    const participantsDeleteResult = await pool.query(
-      `DELETE FROM session_participants WHERE session_id LIKE 'seed-session-%'`
-    );
-    console.log(`   Deleted ${participantsDeleteResult.rowCount || 0} old seed participants`);
-
-    const sessionsDeleteResult = await pool.query(
-      `DELETE FROM sessions WHERE id LIKE 'seed-session-%'`
-    );
-    console.log(`   Deleted ${sessionsDeleteResult.rowCount || 0} old seed sessions`);
-
-    // Create sample completed sessions using official PAES templates
-    console.log('📚 Creating realistic sample sessions using official PAES templates...');
+    // Create/update sample completed sessions using official PAES templates (UPSERT)
+    console.log('📚 Creating/updating realistic sample sessions using official PAES templates...');
 
     const now = Date.now();
     const dayMs = 24 * 60 * 60 * 1000;
@@ -197,6 +185,19 @@ async function seedAdmin() {
         scheduled_end_time, duration_minutes, lobby_open_time, max_participants,
         started_at, completed_at
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+      ON CONFLICT (id) DO UPDATE SET
+        name = EXCLUDED.name,
+        description = EXCLUDED.description,
+        level = EXCLUDED.level,
+        questions = EXCLUDED.questions,
+        status = EXCLUDED.status,
+        current_question_index = EXCLUDED.current_question_index,
+        scheduled_start_time = EXCLUDED.scheduled_start_time,
+        scheduled_end_time = EXCLUDED.scheduled_end_time,
+        duration_minutes = EXCLUDED.duration_minutes,
+        lobby_open_time = EXCLUDED.lobby_open_time,
+        started_at = EXCLUDED.started_at,
+        completed_at = EXCLUDED.completed_at
     `, [
       session1Id,
       m1Template.name,
@@ -223,6 +224,10 @@ async function seedAdmin() {
       INSERT INTO session_participants (
         session_id, user_id, username, display_name, answers, score, joined_at, current_question_index
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      ON CONFLICT (session_id, user_id) DO UPDATE SET
+        answers = EXCLUDED.answers,
+        score = EXCLUDED.score,
+        current_question_index = EXCLUDED.current_question_index
     `, [
       session1Id,
       'admin-default',
@@ -250,6 +255,19 @@ async function seedAdmin() {
         scheduled_end_time, duration_minutes, lobby_open_time, max_participants,
         started_at, completed_at
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+      ON CONFLICT (id) DO UPDATE SET
+        name = EXCLUDED.name,
+        description = EXCLUDED.description,
+        level = EXCLUDED.level,
+        questions = EXCLUDED.questions,
+        status = EXCLUDED.status,
+        current_question_index = EXCLUDED.current_question_index,
+        scheduled_start_time = EXCLUDED.scheduled_start_time,
+        scheduled_end_time = EXCLUDED.scheduled_end_time,
+        duration_minutes = EXCLUDED.duration_minutes,
+        lobby_open_time = EXCLUDED.lobby_open_time,
+        started_at = EXCLUDED.started_at,
+        completed_at = EXCLUDED.completed_at
     `, [
       session2Id,
       m2Template.name,
@@ -276,6 +294,10 @@ async function seedAdmin() {
       INSERT INTO session_participants (
         session_id, user_id, username, display_name, answers, score, joined_at, current_question_index
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      ON CONFLICT (session_id, user_id) DO UPDATE SET
+        answers = EXCLUDED.answers,
+        score = EXCLUDED.score,
+        current_question_index = EXCLUDED.current_question_index
     `, [
       session2Id,
       'admin-default',
@@ -303,6 +325,19 @@ async function seedAdmin() {
         scheduled_end_time, duration_minutes, lobby_open_time, max_participants,
         started_at, completed_at
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+      ON CONFLICT (id) DO UPDATE SET
+        name = EXCLUDED.name,
+        description = EXCLUDED.description,
+        level = EXCLUDED.level,
+        questions = EXCLUDED.questions,
+        status = EXCLUDED.status,
+        current_question_index = EXCLUDED.current_question_index,
+        scheduled_start_time = EXCLUDED.scheduled_start_time,
+        scheduled_end_time = EXCLUDED.scheduled_end_time,
+        duration_minutes = EXCLUDED.duration_minutes,
+        lobby_open_time = EXCLUDED.lobby_open_time,
+        started_at = EXCLUDED.started_at,
+        completed_at = EXCLUDED.completed_at
     `, [
       session3Id,
       practiceTemplate.name,
@@ -329,6 +364,10 @@ async function seedAdmin() {
       INSERT INTO session_participants (
         session_id, user_id, username, display_name, answers, score, joined_at, current_question_index
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      ON CONFLICT (session_id, user_id) DO UPDATE SET
+        answers = EXCLUDED.answers,
+        score = EXCLUDED.score,
+        current_question_index = EXCLUDED.current_question_index
     `, [
       session3Id,
       'admin-default',
