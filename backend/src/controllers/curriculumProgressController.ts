@@ -78,7 +78,7 @@ export async function getCurriculumStructure(req: Request, res: Response) {
  */
 export async function getMyProgress(req: Request, res: Response) {
   try {
-    const userId = (req as any).user?.id;
+    const userId = (req as any).user?.userId;
 
     if (!userId) {
       return res.status(401).json({
@@ -124,7 +124,7 @@ export async function getMyProgress(req: Request, res: Response) {
  */
 export async function updateMyTopicProgress(req: Request, res: Response) {
   try {
-    const userId = (req as any).user?.id;
+    const userId = (req as any).user?.userId;
 
     if (!userId) {
       return res.status(401).json({
