@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { pool } from '../config/database';
+import { PAES_SESSION_TEMPLATES, PRACTICE_SESSION_TEMPLATE } from '../config/sessionTemplates';
 
 const LOBBY_OPEN_MINUTES = 15;
 
@@ -1572,6 +1573,29 @@ export const resetDebugParticipant = async (req: Request, res: Response): Promis
     console.error('Error resetting participant:', error);
     res.status(500).json({
       error: 'Failed to reset participant data',
+      message: (error as Error).message,
+    });
+  }
+};
+
+/**
+ * Get session templates (M1, M2 official PAES formats and practice templates)
+ * @route   GET /api/sessions/templates
+ * @access  Public
+ */
+export const getSessionTemplates = async (req: Request, res: Response): Promise<void> => {
+  try {
+    res.json({
+      success: true,
+      templates: {
+        official: PAES_SESSION_TEMPLATES,
+        practice: PRACTICE_SESSION_TEMPLATE,
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching session templates:', error);
+    res.status(500).json({
+      error: 'Failed to fetch session templates',
       message: (error as Error).message,
     });
   }
