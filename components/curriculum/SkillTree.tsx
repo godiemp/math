@@ -143,16 +143,20 @@ export function SkillTree() {
           getMyProgress()
         ]);
 
-        if (structureRes.success) {
-          setStructure(structureRes.structure);
+        if (structureRes.data?.success) {
+          setStructure(structureRes.data.structure);
+        } else if (structureRes.error) {
+          setError(structureRes.error.error);
         }
 
-        if (progressRes.success) {
+        if (progressRes.data?.success) {
           const map = new Map<string, boolean>();
-          progressRes.progress.forEach((p: TopicProgress) => {
+          progressRes.data.progress.forEach((p: TopicProgress) => {
             map.set(p.topicSlug, p.isCompleted);
           });
           setProgressMap(map);
+        } else if (progressRes.error) {
+          setError(progressRes.error.error);
         }
       } catch (err) {
         console.error('Error loading skill tree:', err);
@@ -179,14 +183,14 @@ export function SkillTree() {
 
       const response = await updateTopicCompletion(topicSlug, subject, isCompleted);
 
-      if (!response.success) {
+      if (response.error || !response.data?.success) {
         // Revert on failure
         setProgressMap(prev => {
           const newMap = new Map(prev);
           newMap.set(topicSlug, !isCompleted);
           return newMap;
         });
-        setError('Error al actualizar el progreso');
+        setError(response.error?.error || 'Error al actualizar el progreso');
       }
     } catch (err) {
       console.error('Error updating topic:', err);
