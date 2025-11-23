@@ -165,6 +165,18 @@ async function seedAdmin() {
       )
     `);
 
+    // Clean up old seed sessions first to ensure fresh data
+    console.log('🧹 Cleaning up old seed sessions...');
+    const participantsDeleteResult = await pool.query(
+      `DELETE FROM session_participants WHERE session_id LIKE 'seed-session-%'`
+    );
+    console.log(`   Deleted ${participantsDeleteResult.rowCount || 0} old seed participants`);
+
+    const sessionsDeleteResult = await pool.query(
+      `DELETE FROM sessions WHERE id LIKE 'seed-session-%'`
+    );
+    console.log(`   Deleted ${sessionsDeleteResult.rowCount || 0} old seed sessions`);
+
     // Create sample completed sessions using official PAES templates
     console.log('📚 Creating realistic sample sessions using official PAES templates...');
 
@@ -185,7 +197,6 @@ async function seedAdmin() {
         scheduled_end_time, duration_minutes, lobby_open_time, max_participants,
         started_at, completed_at
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
-      ON CONFLICT (id) DO NOTHING
     `, [
       session1Id,
       m1Template.name,
@@ -212,7 +223,6 @@ async function seedAdmin() {
       INSERT INTO session_participants (
         session_id, user_id, username, display_name, answers, score, joined_at, current_question_index
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-      ON CONFLICT (session_id, user_id) DO NOTHING
     `, [
       session1Id,
       'admin-default',
@@ -240,7 +250,6 @@ async function seedAdmin() {
         scheduled_end_time, duration_minutes, lobby_open_time, max_participants,
         started_at, completed_at
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
-      ON CONFLICT (id) DO NOTHING
     `, [
       session2Id,
       m2Template.name,
@@ -267,7 +276,6 @@ async function seedAdmin() {
       INSERT INTO session_participants (
         session_id, user_id, username, display_name, answers, score, joined_at, current_question_index
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-      ON CONFLICT (session_id, user_id) DO NOTHING
     `, [
       session2Id,
       'admin-default',
@@ -295,7 +303,6 @@ async function seedAdmin() {
         scheduled_end_time, duration_minutes, lobby_open_time, max_participants,
         started_at, completed_at
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
-      ON CONFLICT (id) DO NOTHING
     `, [
       session3Id,
       practiceTemplate.name,
@@ -322,7 +329,6 @@ async function seedAdmin() {
       INSERT INTO session_participants (
         session_id, user_id, username, display_name, answers, score, joined_at, current_question_index
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-      ON CONFLICT (session_id, user_id) DO NOTHING
     `, [
       session3Id,
       'admin-default',
