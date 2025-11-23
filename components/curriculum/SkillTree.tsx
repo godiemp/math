@@ -72,14 +72,14 @@ function TopicItem({ topic, isCompleted, onToggle, disabled }: TopicItemProps) {
                 }}
                 className="text-xs text-purple-400 hover:text-purple-300 ml-2"
               >
-                {showSubsections ? '▼' : '▶'} {topic.subsections.length} secciones
+                {showSubsections ? '▼' : '▶'} {topic.subsections?.length || 0} secciones
               </button>
             )}
           </div>
         </div>
       </label>
 
-      {hasSubsections && showSubsections && (
+      {hasSubsections && showSubsections && topic.subsections && (
         <div className="ml-11 pb-2 space-y-1">
           {topic.subsections.map((subsection, idx) => (
             <div
