@@ -37,32 +37,62 @@ interface TopicItemProps {
 }
 
 function TopicItem({ topic, isCompleted, onToggle, disabled }: TopicItemProps) {
+  const [showSubsections, setShowSubsections] = useState(false);
+  const hasSubsections = topic.subsections && topic.subsections.length > 0;
+
   const handleChange = () => {
     onToggle(topic.slug, !isCompleted);
   };
 
   return (
-    <label className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/5 cursor-pointer transition-colors">
-      <input
-        type="checkbox"
-        checked={isCompleted}
-        onChange={handleChange}
-        disabled={disabled}
-        className="mt-1 w-5 h-5 rounded border-2 border-purple-500/50 bg-black/20
-                   checked:bg-purple-600 checked:border-purple-600
-                   focus:ring-2 focus:ring-purple-500/50 cursor-pointer
-                   disabled:opacity-50 disabled:cursor-not-allowed"
-      />
-      <div className="flex-1">
-        <div className="flex items-center gap-2 flex-wrap">
-          <Text className="font-medium">{topic.name}</Text>
-          <DifficultyStars difficulty={topic.difficulty} />
-          <Text className="text-sm text-white/60">
-            ({topic.questionCount} preguntas)
-          </Text>
+    <div className="rounded-lg hover:bg-white/5 transition-colors">
+      <label className="flex items-start gap-3 p-3 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={isCompleted}
+          onChange={handleChange}
+          disabled={disabled}
+          className="mt-1 w-5 h-5 rounded border-2 border-purple-500/50 bg-black/20
+                     checked:bg-purple-600 checked:border-purple-600
+                     focus:ring-2 focus:ring-purple-500/50 cursor-pointer
+                     disabled:opacity-50 disabled:cursor-not-allowed"
+        />
+        <div className="flex-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Text className="font-medium">{topic.name}</Text>
+            <DifficultyStars difficulty={topic.difficulty} />
+            <Text className="text-sm text-white/60">
+              ({topic.questionCount} preguntas)
+            </Text>
+            {hasSubsections && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowSubsections(!showSubsections);
+                }}
+                className="text-xs text-purple-400 hover:text-purple-300 ml-2"
+              >
+                {showSubsections ? '▼' : '▶'} {topic.subsections.length} secciones
+              </button>
+            )}
+          </div>
         </div>
-      </div>
-    </label>
+      </label>
+
+      {hasSubsections && showSubsections && (
+        <div className="ml-11 pb-2 space-y-1">
+          {topic.subsections.map((subsection, idx) => (
+            <div
+              key={subsection.slug}
+              className="text-sm text-white/70 py-1 px-3 rounded hover:bg-white/5"
+            >
+              <span className="text-white/50 mr-2">{idx + 1}.</span>
+              {subsection.name}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
