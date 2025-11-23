@@ -809,9 +809,18 @@ function AdminLiveSessionsContent() {
                       <Button
                         variant="secondary"
                         size="sm"
+                        disabled={session.status === 'cancelled'}
                         onClick={() => {
                           setPreviewingSession(session);
-                          setPreviewState(session.status as typeof previewState);
+                          // Only set previewState to valid states; default to 'completed' for cancelled sessions
+                          setPreviewState(
+                            session.status === 'scheduled' ||
+                            session.status === 'lobby' ||
+                            session.status === 'active' ||
+                            session.status === 'completed'
+                              ? session.status
+                              : 'completed'
+                          );
                         }}
                       >
                         👁️ Preview

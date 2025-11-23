@@ -6,6 +6,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { QuestionRenderer } from '@/components/quiz/QuestionRenderer';
 import { useLiveSession, getMinutesUntilStart } from '@/lib/hooks/useLiveSession';
 import dynamic from 'next/dynamic';
+import QuickNavigation from './QuickNavigation';
 
 // Dynamically import EssayReview to avoid SSR issues
 const EssayReview = dynamic(() => import('@/components/content/EssayReview'), { ssr: false });
@@ -59,29 +60,11 @@ export default function LiveSessionXState({
 
   const currentUser = getCurrentUser();
 
-  // Quick navigation state
-  const [showQuickNav, setShowQuickNav] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('live-practice-show-quick-nav');
-      return saved !== null ? saved === 'true' : true;
-    }
-    return true;
-  });
-  const [showMobileNav, setShowMobileNav] = useState(false);
-
   // Finish confirmation modal state
   const [showFinishModal, setShowFinishModal] = useState(false);
 
   // Review modal state
   const [showReviewModal, setShowReviewModal] = useState(false);
-
-  const toggleQuickNav = () => {
-    const newValue = !showQuickNav;
-    setShowQuickNav(newValue);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('live-practice-show-quick-nav', String(newValue));
-    }
-  };
 
   // ============================================================================
   // RENDER STATES
@@ -280,7 +263,7 @@ export default function LiveSessionXState({
   if (isCompleted && session) {
     // Calculate results
     const totalQuestions = session.questions.length;
-    const answeredCount = Object.keys(myAnswers).length;
+    const answeredCount = myAnswers.filter(answer => answer !== null).length;
     const unansweredCount = totalQuestions - answeredCount;
 
     // Calculate correct answers
@@ -445,90 +428,6 @@ export default function LiveSessionXState({
                 </div>
               </div>
 
-              {/* Quick Navigation - Desktop (hidden on mobile) */}
-              <div className="mb-4 sm:mb-6 hidden md:block">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                    Navegación rápida:
-                  </span>
-                  <button
-                    onClick={toggleQuickNav}
-                    className="text-xs px-3 py-1 rounded-md transition-colors text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30"
-                  >
-                    {showQuickNav ? '▲ Ocultar' : '▼ Mostrar'}
-                  </button>
-                </div>
-                {showQuickNav && (
-                  <>
-                    <div className="grid grid-cols-10 gap-2">
-                      {session.questions.map((_, idx) => {
-                        const isAnswered = myAnswers[idx] !== undefined;
-                        const isCurrentQuestion = idx === currentQuestionIndex;
-
-                        let buttonClass =
-                          'w-full aspect-square rounded-lg text-xs font-bold transition-all flex items-center justify-center ';
-
-                        if (isCurrentQuestion) {
-                          buttonClass +=
-                            'ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-gray-800 ';
-                        }
-
-                        if (isAnswered) {
-                          buttonClass += 'bg-indigo-500 text-white';
-                        } else {
-                          buttonClass +=
-                            'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400';
-                        }
-
-                        buttonClass += ' hover:opacity-80 cursor-pointer';
-
-                        return (
-                          <button
-                            key={idx}
-                            onClick={() => navigateToQuestion(idx)}
-                            className={buttonClass}
-                            title={`Pregunta ${idx + 1}${isAnswered ? ' (respondida)' : ''}`}
-                          >
-                            {idx + 1}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    <div className="flex items-center gap-4 mt-2 text-xs text-gray-600 dark:text-gray-400">
-                      <div className="flex items-center gap-1">
-                        <div className="w-3 h-3 rounded bg-indigo-500"></div>
-                        <span>Respondida</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <div className="w-3 h-3 rounded bg-gray-200 dark:bg-gray-700"></div>
-                        <span>Sin responder</span>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* Mobile Navigation Button - Fixed at top right */}
-              <button
-                onClick={() => setShowMobileNav(true)}
-                className="md:hidden fixed top-4 right-4 z-40 bg-white dark:bg-gray-800 rounded-full p-3 shadow-lg border border-indigo-200 dark:border-indigo-700"
-                title="Navegación rápida"
-              >
-                <svg
-                  className="w-5 h-5 text-indigo-600 dark:text-indigo-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
-
               {/* Question */}
               <div className="mb-4 sm:mb-6">
                 <div className="bg-gray-50 dark:bg-gray-700 p-3 sm:p-4 rounded-lg mb-3 sm:mb-4">
@@ -579,115 +478,13 @@ export default function LiveSessionXState({
           </div>
         </div>
 
-        {/* Mobile Slide-out Navigation Menu */}
-        {showMobileNav && (
-          <div className="md:hidden fixed inset-0 z-50">
-            {/* Backdrop */}
-            <div
-              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-              onClick={() => setShowMobileNav(false)}
-            />
-
-            {/* Slide-out Panel */}
-            <div className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-800 shadow-2xl animate-slideInRight">
-              <div className="p-4 h-full flex flex-col">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                  <h3 className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
-                    Navegación Rápida
-                  </h3>
-                  <button
-                    onClick={() => setShowMobileNav(false)}
-                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <svg
-                      className="w-5 h-5 text-gray-600 dark:text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </div>
-
-                {/* Progress Summary */}
-                <div className="mb-4 p-3 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/30 dark:to-blue-900/30 rounded-lg">
-                  <p className="text-sm font-medium text-indigo-700 dark:text-indigo-300">
-                    {Object.keys(myAnswers).length} de {session.questions.length} respondidas
-                  </p>
-                  <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div
-                      className="h-2 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500"
-                      style={{
-                        width: `${(Object.keys(myAnswers).length / session.questions.length) * 100}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Question Grid */}
-                <div className="flex-1 overflow-y-auto">
-                  <div className="grid grid-cols-5 gap-3">
-                    {session.questions.map((_, idx) => {
-                      const isAnswered = myAnswers[idx] !== undefined;
-                      const isCurrentQuestion = idx === currentQuestionIndex;
-
-                      let buttonClass =
-                        'w-full aspect-square rounded-lg text-sm font-bold transition-all flex items-center justify-center min-h-[44px] ';
-
-                      if (isCurrentQuestion) {
-                        buttonClass +=
-                          'ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-gray-800 ';
-                      }
-
-                      if (isAnswered) {
-                        buttonClass += 'bg-indigo-500 text-white';
-                      } else {
-                        buttonClass +=
-                          'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400';
-                      }
-
-                      buttonClass += ' hover:opacity-80 active:scale-95 cursor-pointer';
-
-                      return (
-                        <button
-                          key={idx}
-                          onClick={() => {
-                            navigateToQuestion(idx);
-                            setShowMobileNav(false);
-                          }}
-                          className={buttonClass}
-                        >
-                          {idx + 1}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Legend */}
-                <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
-                  <div className="flex flex-wrap gap-3 text-xs text-gray-600 dark:text-gray-400">
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded bg-indigo-500"></div>
-                      <span>Respondida</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded bg-gray-200 dark:bg-gray-700"></div>
-                      <span>Sin responder</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Quick Navigation Component */}
+        <QuickNavigation
+          currentQuestion={currentQuestionIndex}
+          totalQuestions={session.questions.length}
+          myAnswers={myAnswers}
+          onNavigate={navigateToQuestion}
+        />
 
         {/* Finish Confirmation Modal */}
         {showFinishModal && (
@@ -717,13 +514,13 @@ export default function LiveSessionXState({
                     <ul className="text-xs text-yellow-800 dark:text-yellow-300 space-y-1">
                       <li>
                         • Preguntas respondidas:{' '}
-                        <strong>{Object.keys(myAnswers).length}</strong> de{' '}
+                        <strong>{myAnswers.filter(a => a !== null).length}</strong> de{' '}
                         <strong>{session.questions.length}</strong>
                       </li>
-                      {session.questions.length - Object.keys(myAnswers).length > 0 && (
+                      {session.questions.length - myAnswers.filter(a => a !== null).length > 0 && (
                         <li className="text-red-600 dark:text-red-400 font-medium">
                           • Sin responder:{' '}
-                          {session.questions.length - Object.keys(myAnswers).length}
+                          {session.questions.length - myAnswers.filter(a => a !== null).length}
                         </li>
                       )}
                     </ul>
