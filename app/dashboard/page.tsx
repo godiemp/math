@@ -491,6 +491,20 @@ function DashboardContent() {
                 </div>
               </div>
 
+              {/* Skill Tree Link - Admin Only (Beta) */}
+              {isAdmin && (
+                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <Button asChild variant="ghost" size="sm" className="w-full">
+                    <Link href="/curriculum/skill-tree" className="flex items-center justify-center gap-2">
+                      🌳 Árbol de Habilidades M1
+                      <span className="text-xs bg-purple-500/20 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full">
+                        Beta
+                      </span>
+                    </Link>
+                  </Button>
+                </div>
+              )}
+
               {/* Documentation Buttons - Hidden for now */}
               {/* TODO: Re-enable documentation section later
               <div>
