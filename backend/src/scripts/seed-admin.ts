@@ -38,15 +38,15 @@ function generateSampleQuestions(level: 'M1' | 'M2', count: number) {
     const topic = topics[topicIndex];
     questions.push({
       id: `q${i + 1}`,
-      type: 'multiple_choice',
       subject: topic,
       topic: `${topic.charAt(0).toUpperCase() + topic.slice(1)} - Problema ${i + 1}`,
-      statement: `Pregunta de práctica ${i + 1} sobre ${topic}`,
+      questionLatex: `\\text{Pregunta de práctica ${i + 1} sobre ${topic}}`,
       options: ['Opción A', 'Opción B', 'Opción C', 'Opción D'],
       correctAnswer: i % 4, // Vary correct answers
       explanation: `Explicación para pregunta ${i + 1}`,
       difficulty: i % 3 === 0 ? 'easy' : i % 3 === 1 ? 'medium' : 'hard',
       level,
+      skills: [],
     });
   }
   return questions;
