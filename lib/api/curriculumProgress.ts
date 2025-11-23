@@ -21,6 +21,14 @@ export interface TopicProgress {
 }
 
 /**
+ * Subsection interface
+ */
+export interface Subsection {
+  slug: string;
+  name: string;
+}
+
+/**
  * Topic info interface
  */
 export interface TopicInfo {
@@ -28,6 +36,7 @@ export interface TopicInfo {
   name: string;
   questionCount: number;
   difficulty: 1 | 2 | 3;
+  subsections?: Subsection[];
 }
 
 /**
