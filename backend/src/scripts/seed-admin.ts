@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { pool } from '../config/database';
 import { PAES_SESSION_TEMPLATES, PRACTICE_SESSION_TEMPLATE } from '../config/sessionTemplates';
+import { getRandomQuestions, getOfficialPAESQuestions } from '../../../lib/questions';
 
 /**
  * Retry helper for database connection with exponential backoff
@@ -24,32 +25,17 @@ async function retryWithBackoff<T>(fn: () => Promise<T>, maxRetries = 5, initial
 }
 
 /**
- * Generate sample questions for seeding purposes
- * In production, questions are selected from the frontend question library
+ * Get questions from the actual question library
+ * Uses the same question pool as live sessions for realistic seed data
  */
-function generateSampleQuestions(level: 'M1' | 'M2', count: number) {
-  const questions = [];
-  const topics = level === 'M1'
-    ? ['números', 'álgebra', 'geometría', 'probabilidad']
-    : ['números', 'álgebra', 'geometría', 'probabilidad'];
-
-  for (let i = 0; i < count; i++) {
-    const topicIndex = i % topics.length;
-    const topic = topics[topicIndex];
-    questions.push({
-      id: `q${i + 1}`,
-      subject: topic,
-      topic: `${topic.charAt(0).toUpperCase() + topic.slice(1)} - Problema ${i + 1}`,
-      questionLatex: `\\text{Pregunta de práctica ${i + 1} sobre ${topic}}`,
-      options: ['Opción A', 'Opción B', 'Opción C', 'Opción D'],
-      correctAnswer: i % 4, // Vary correct answers
-      explanation: `Explicación para pregunta ${i + 1}`,
-      difficulty: i % 3 === 0 ? 'easy' : i % 3 === 1 ? 'medium' : 'hard',
-      level,
-      skills: [],
-    });
+function getQuestionsForSeed(level: 'M1' | 'M2', count: number) {
+  // For official PAES format (60 for M1, 50 for M2), use official distribution
+  if ((level === 'M1' && count === 60) || (level === 'M2' && count === 50)) {
+    return getOfficialPAESQuestions(level);
   }
-  return questions;
+
+  // For custom counts, use random selection
+  return getRandomQuestions(level, count);
 }
 
 /**
@@ -175,7 +161,7 @@ async function seedAdmin() {
     const m1Template = PAES_SESSION_TEMPLATES.M1;
     const session1Id = 'seed-session-001';
     const session1CompletedAt = now - (3 * dayMs);
-    const session1Questions = generateSampleQuestions('M1', m1Template.questionCount);
+    const session1Questions = getQuestionsForSeed('M1', m1Template.questionCount);
     const session1Score = Math.floor(m1Template.questionCount * 0.90); // 90% score
 
     await pool.query(`
@@ -245,7 +231,7 @@ async function seedAdmin() {
     const m2Template = PAES_SESSION_TEMPLATES.M2;
     const session2Id = 'seed-session-002';
     const session2CompletedAt = now - (7 * dayMs);
-    const session2Questions = generateSampleQuestions('M2', m2Template.questionCount);
+    const session2Questions = getQuestionsForSeed('M2', m2Template.questionCount);
     const session2Score = Math.floor(m2Template.questionCount * 0.66); // 66% score
 
     await pool.query(`
@@ -315,7 +301,7 @@ async function seedAdmin() {
     const practiceTemplate = PRACTICE_SESSION_TEMPLATE.M1;
     const session3Id = 'seed-session-003';
     const session3CompletedAt = now - (14 * dayMs);
-    const session3Questions = generateSampleQuestions('M1', practiceTemplate.questionCount);
+    const session3Questions = getQuestionsForSeed('M1', practiceTemplate.questionCount);
     const session3Score = Math.floor(practiceTemplate.questionCount * 0.92); // 92% score
 
     await pool.query(`
