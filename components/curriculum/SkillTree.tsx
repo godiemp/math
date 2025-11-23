@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Button } from '@/components/ui/Button';
-import { LoadingScreen } from '@/components/ui/LoadingScreen';
+import { LoadingScreen } from '@/components/ui';
 import {
   getCurriculumStructure,
   getMyProgress,

@@ -3,7 +3,7 @@
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { SkillTree } from '@/components/curriculum/SkillTree';
 import { Heading, Text } from '@/components/ui/Typography';
-import { useAuth } from '@/components/auth/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Card } from '@/components/ui/Card';
 
 function SkillTreeContent() {
