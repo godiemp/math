@@ -24,8 +24,14 @@ test.describe('Subscription Trial Flow', () => {
       await expect(priceElement).toBeVisible();
 
       // Look for features list
-      const featuresSection = page.locator('ul, text=/característica|feature/i').first();
-      await expect(featuresSection).toBeVisible();
+      const featuresSection = page.locator('ul').first();
+      if (await featuresSection.isVisible()) {
+        await expect(featuresSection).toBeVisible();
+      } else {
+        // Or look for feature text
+        const featureText = page.locator('text=/característica|feature/i').first();
+        await expect(featureText).toBeVisible();
+      }
 
       // Look for trial badge if available
       const trialBadge = page.locator('text=/prueba.*gratis|días.*gratis|free.*trial|trial/i').first();
@@ -234,85 +240,73 @@ test.describe('Subscription Trial Flow', () => {
   });
 
   test.describe('Paywall & Feature Gating', () => {
-    test('should show paywall to users without subscription on Practice page', async ({ page }) => {
-      // Create context without subscription
-      const newContext = await page.context().browser()!.newContext();
-      const newPage = await newContext.newPage();
+    test.describe('Unauthenticated User Paywalls', () => {
+      test('should show paywall to users without subscription on Practice page', async ({ page }) => {
+        // Create context without subscription
+        const newContext = await page.context().browser()!.newContext();
+        const newPage = await newContext.newPage();
 
-      try {
-        // Login first
-        await newPage.goto('/');
-        await newPage.evaluate(() => {
-          localStorage.setItem('cookie-consent', 'accepted');
-        });
+        try {
+          await newPage.goto('/practice/m1');
+          await newPage.waitForLoadState('networkidle');
+          await newPage.waitForTimeout(1000);
 
-        // Create a user without subscription (or use test data)
-        // For this test, we'll check if paywall appears for non-paid users
+          // Should redirect to login or show paywall
+          const needsLogin = newPage.url().includes('/login') || newPage.url() === '/' || newPage.url().includes('redirect');
+          const paywallMessage = await newPage.locator('text=/premium|suscripción|subscription|actualizar|upgrade|prueba.*gratis/i').first().isVisible();
 
-        await newPage.goto('/practice/m1');
-        await newPage.waitForLoadState('networkidle');
-        await newPage.waitForTimeout(1000);
-
-        // Look for paywall message or premium feature indicator
-        const paywallMessage = newPage.locator('text=/premium|suscripción|subscription|actualizar|upgrade|prueba.*gratis/i').first();
-
-        // Either paywall is shown or user needs to login
-        const hasPaywall = await paywallMessage.isVisible();
-        const needsLogin = newPage.url().includes('/login') || newPage.url() === '/';
-
-        // One of these should be true for non-subscribed users
-        expect(hasPaywall || needsLogin).toBeTruthy();
-      } finally {
-        await newContext.close();
-      }
+          // One of these should be true for non-authenticated users
+          expect(needsLogin || paywallMessage).toBeTruthy();
+        } finally {
+          await newContext.close();
+        }
+      });
     });
 
-    test('should allow trial/paid users full access to Practice module', async ({ page }) => {
+    test.describe('Authenticated User Access', () => {
       test.use({ storageState: '.auth/student.json' });
 
-      await page.goto('/practice/m1');
-      await page.waitForLoadState('networkidle');
+      test('should allow trial/paid users full access to Practice module', async ({ page }) => {
+        await page.goto('/practice/m1');
+        await page.waitForLoadState('networkidle');
 
-      // Should see practice options (Zen, Rapid Fire, etc.)
-      const practiceOptions = page.locator('text=/zen|rapid|rápido/i').first();
-      await expect(practiceOptions).toBeVisible();
+        // Should see practice options (Zen, Rapid Fire, etc.)
+        const practiceOptions = page.locator('text=/zen|rapid|rápido/i').first();
+        await expect(practiceOptions).toBeVisible();
 
-      // Should NOT see paywall
-      const paywall = page.locator('text=/actualizar.*plan|upgrade.*plan/i').first();
-      const hasPaywall = await paywall.isVisible();
-      expect(hasPaywall).toBeFalsy();
-    });
+        // Should NOT see paywall
+        const paywall = page.locator('text=/actualizar.*plan|upgrade.*plan/i').first();
+        const hasPaywall = await paywall.isVisible();
+        expect(hasPaywall).toBeFalsy();
+      });
 
-    test('should allow trial/paid users full access to Curriculum module', async ({ page }) => {
-      test.use({ storageState: '.auth/student.json' });
+      test('should allow trial/paid users full access to Curriculum module', async ({ page }) => {
+        await page.goto('/curriculum/m1');
+        await page.waitForLoadState('networkidle');
 
-      await page.goto('/curriculum/m1');
-      await page.waitForLoadState('networkidle');
+        // Should see curriculum content
+        const curriculumContent = page.locator('text=/unidad|unit|tema|topic|habilidad|skill/i').first();
+        await expect(curriculumContent).toBeVisible();
 
-      // Should see curriculum content
-      const curriculumContent = page.locator('text=/unidad|unit|tema|topic|habilidad|skill/i').first();
-      await expect(curriculumContent).toBeVisible();
+        // Should NOT see paywall
+        const paywall = page.locator('text=/actualizar.*plan|upgrade.*plan/i').first();
+        const hasPaywall = await paywall.isVisible();
+        expect(hasPaywall).toBeFalsy();
+      });
 
-      // Should NOT see paywall
-      const paywall = page.locator('text=/actualizar.*plan|upgrade.*plan/i').first();
-      const hasPaywall = await paywall.isVisible();
-      expect(hasPaywall).toBeFalsy();
-    });
+      test('should allow trial/paid users full access to Progress module', async ({ page }) => {
+        await page.goto('/progress');
+        await page.waitForLoadState('networkidle');
 
-    test('should allow trial/paid users full access to Progress module', async ({ page }) => {
-      test.use({ storageState: '.auth/student.json' });
+        // Should see progress tabs
+        const progressTabs = page.locator('text=/historial|history|skills|habilidades/i').first();
+        await expect(progressTabs).toBeVisible();
 
-      await page.goto('/progress');
-      await page.waitForLoadState('networkidle');
-
-      // Should see progress tabs
-      const progressTabs = page.locator('text=/historial|history|skills|habilidades/i').first();
-      await expect(progressTabs).toBeVisible();
-
-      // Should NOT see paywall
-      const paywall = page.locator('text=/actualizar.*plan|upgrade.*plan/i').first();
-      const hasPaywall = await paywall.isVisible();
-      expect(hasPaywall).toBeFalsy();
+        // Should NOT see paywall
+        const paywall = page.locator('text=/actualizar.*plan|upgrade.*plan/i').first();
+        const hasPaywall = await paywall.isVisible();
+        expect(hasPaywall).toBeFalsy();
+      });
     });
 
     test('should allow all users access to Live Practice (free module)', async ({ page }) => {
