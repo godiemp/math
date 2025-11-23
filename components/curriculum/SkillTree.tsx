@@ -40,6 +40,15 @@ function TopicItem({ topic, isCompleted, onToggle, disabled }: TopicItemProps) {
   const [showSubsections, setShowSubsections] = useState(false);
   const hasSubsections = topic.subsections && topic.subsections.length > 0;
 
+  // Debug logging
+  useEffect(() => {
+    if (topic.slug === 'numeros-porcentaje') {
+      console.log('🔍 Porcentaje topic:', topic);
+      console.log('🔍 Has subsections?', hasSubsections);
+      console.log('🔍 Subsections:', topic.subsections);
+    }
+  }, [topic, hasSubsections]);
+
   const handleChange = () => {
     onToggle(topic.slug, !isCompleted);
   };
@@ -174,6 +183,8 @@ export function SkillTree() {
         ]);
 
         if (structureRes.data?.success) {
+          console.log('📊 Curriculum structure loaded:', structureRes.data.structure);
+          console.log('📊 First topic subsections:', structureRes.data.structure.subjects[0]?.topics[0]?.subsections);
           setStructure(structureRes.data.structure);
         } else if (structureRes.error) {
           setError(structureRes.error.error);
