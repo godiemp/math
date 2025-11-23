@@ -13,6 +13,7 @@
     "migrate:sync": "npx tsx src/scripts/sync-migration-status.ts",
     "seed:admin": "node scripts/seed-admin.js",
     "seed:admin:dev": "npx tsx src/scripts/seed-admin.ts",
+    "seed:admin:clean": "npx tsx src/scripts/clean-seed-sessions.ts",
     "seed:plans": "npx tsx src/scripts/seed-plans.ts",
     "seed:abstract-problems": "npx tsx src/scripts/seed-abstract-problems.ts",
     "helpers:abstract-problems": "npx tsx src/scripts/helpers-abstract-problems.ts",
