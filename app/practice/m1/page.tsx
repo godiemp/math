@@ -9,8 +9,9 @@ import Link from 'next/link';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { ModuleAccessGuard } from '@/components/auth/ModuleAccessGuard';
 import { Card, Button, Heading, Text } from '@/components/ui';
-import { getLastConfigKey } from '@/lib/constants';
+import { getLastConfigKey, ZEN_QUESTION_COUNTS } from '@/lib/constants';
 import { api } from '@/lib/api-client';
+import { loadZenQuizProgress, clearZenQuizProgress } from '@/lib/zen-progress';
 
 type Subject = 'números' | 'álgebra' | 'geometría' | 'probabilidad';
 type QuizMode = 'zen' | 'rapidfire';
@@ -20,6 +21,7 @@ interface LastConfig {
   subject: Subject | null;
   mode: QuizMode;
   difficulty?: Difficulty;
+  questionCount?: number;
 }
 
 function M1PracticeContent() {
@@ -27,9 +29,11 @@ function M1PracticeContent() {
   const [selectedSubject, setSelectedSubject] = useState<Subject | null | undefined>(undefined);
   const [quizMode, setQuizMode] = useState<QuizMode | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
+  const [questionCount, setQuestionCount] = useState<number>(10);
   const [quizStarted, setQuizStarted] = useState(false);
   const [replayQuestions, setReplayQuestions] = useState<Question[] | undefined>(undefined);
   const [lastConfig, setLastConfig] = useState<LastConfig | null>(null);
+  const [savedQuiz, setSavedQuiz] = useState<ReturnType<typeof loadZenQuizProgress> | null>(null);
   const questions = getQuestionsByLevel('M1');
 
   // Load last config from backend (with localStorage fallback)
@@ -65,6 +69,12 @@ function M1PracticeContent() {
     };
 
     loadLastConfig();
+  }, []);
+
+  // Load saved quiz progress
+  useEffect(() => {
+    const saved = loadZenQuizProgress('M1');
+    setSavedQuiz(saved);
   }, []);
 
   // Check for replay parameter and load questions
@@ -205,6 +215,7 @@ function M1PracticeContent() {
         subject: selectedSubject === undefined ? null : selectedSubject,
         mode: quizMode,
         difficulty: difficulty || undefined,
+        questionCount: quizMode === 'zen' ? questionCount : undefined,
       };
 
       try {
@@ -218,6 +229,7 @@ function M1PracticeContent() {
           subject: config.subject,
           mode: config.mode,
           difficulty: config.difficulty,
+          questionCount: config.questionCount,
         }).catch(error => {
           console.error('Failed to save last config to backend:', error);
         });
@@ -234,6 +246,7 @@ function M1PracticeContent() {
       setSelectedSubject(lastConfig.subject);
       setQuizMode(lastConfig.mode);
       setDifficulty(lastConfig.difficulty || null);
+      setQuestionCount(lastConfig.questionCount || 10);
       setQuizStarted(true);
     }
   };
@@ -243,6 +256,7 @@ function M1PracticeContent() {
     setSelectedSubject(undefined);
     setQuizMode(null);
     setDifficulty(null);
+    setQuestionCount(10);
   };
 
   const canStartQuiz = () => {
@@ -384,6 +398,59 @@ function M1PracticeContent() {
     );
   };
 
+  // Saved Quiz Resume Banner
+  const renderSavedQuizBanner = () => {
+    if (!savedQuiz || quizStarted) return null;
+
+    const subjectLabel = savedQuiz.subject
+      ? subjects.find(s => s.value === savedQuiz.subject)?.label
+      : 'Todas las Materias';
+    const answeredCount = savedQuiz.userAnswers.filter(a => a !== null).length;
+
+    const handleContinue = () => {
+      setSelectedSubject(savedQuiz.subject);
+      setQuizMode('zen');
+      setQuestionCount(savedQuiz.questionCount);
+      setReplayQuestions(savedQuiz.questions);
+      setQuizStarted(true);
+    };
+
+    const handleDiscard = () => {
+      clearZenQuizProgress('M1');
+      setSavedQuiz(null);
+    };
+
+    return (
+      <div className="mb-5 p-4 bg-gradient-to-r from-teal-500/20 to-cyan-500/20 border-2 border-teal-400/50 rounded-xl">
+        <div className="flex items-start gap-3">
+          <div className="text-3xl">🌿</div>
+          <div className="flex-1">
+            <h3 className="text-lg font-bold text-white mb-1">
+              Tienes un quiz zen sin terminar
+            </h3>
+            <p className="text-sm text-white/80 mb-3">
+              {subjectLabel} • {answeredCount}/{savedQuiz.questionCount} preguntas respondidas
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={handleContinue}
+                className="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg font-semibold transition-all shadow-md hover:shadow-lg"
+              >
+                Continuar quiz
+              </button>
+              <button
+                onClick={handleDiscard}
+                className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-medium transition-all border border-white/30"
+              >
+                Descartar y empezar nuevo
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Step 1: Mode Selection
   const renderModeSelection = () => (
     <div className="mb-5">
@@ -451,7 +518,59 @@ function M1PracticeContent() {
     </div>
   );
 
-  // Step 3: Difficulty Selection (only for Rapid Fire)
+  // Step 3: Question Count Selection (only for Zen mode)
+  const renderQuestionCountSelection = () => {
+    if (quizMode !== 'zen') return null;
+
+    const questionCountOptions = ZEN_QUESTION_COUNTS.map(count => ({
+      value: count,
+      label: count === 5 ? 'Rápido' : count === 10 ? 'Estándar' : count === 15 ? 'Extendido' : 'Completo',
+      description: `${count} preguntas`,
+      emoji: count === 5 ? '⚡' : count === 10 ? '📝' : count === 15 ? '📚' : '🎯',
+    }));
+
+    return (
+      <div className="mb-5">
+        <div className="mb-3 text-center">
+          <h2 className="text-xl font-bold text-white mb-1">
+            Paso 3: ¿Cuántas preguntas?
+          </h2>
+          <p className="text-white/70 text-sm">
+            Elige la duración de tu sesión de práctica
+          </p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {questionCountOptions.map((option) => {
+            const isSelected = questionCount === option.value;
+            return (
+              <button
+                key={option.value}
+                onClick={() => setQuestionCount(option.value)}
+                className={`p-3 rounded-xl border-2 transition-all duration-300 text-center ${
+                  isSelected
+                    ? 'border-teal-400 bg-teal-500/30 shadow-[0_0_30px_rgba(20,184,166,0.4)] transform scale-105'
+                    : 'border-white/20 bg-black/20 hover:bg-white/10 hover:border-teal-400/50 hover:shadow-xl hover:scale-102'
+                }`}
+              >
+                <div className="text-3xl mb-1">{option.emoji}</div>
+                <div className="text-sm font-bold text-white mb-0.5">
+                  {option.label}
+                </div>
+                <div className="text-xs text-white/70">
+                  {option.description}
+                </div>
+                {isSelected && (
+                  <div className="text-teal-300 text-lg mt-1 font-bold">✓</div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  // Step 4: Difficulty Selection (only for Rapid Fire)
   const renderDifficultySelection = () => {
     if (quizMode !== 'rapidfire') return null;
 
@@ -590,6 +709,7 @@ function M1PracticeContent() {
             quizMode={quizMode || 'zen'}
             difficulty={difficulty || undefined}
             replayQuestions={replayQuestions}
+            questionCount={quizMode === 'zen' ? questionCount : undefined}
           />
         </div>
       </div>
@@ -625,9 +745,11 @@ function M1PracticeContent() {
           </div>
         </div>
 
+        {renderSavedQuizBanner()}
         {renderRepeatLastQuiz()}
         {renderModeSelection()}
         {renderSubjectSelection()}
+        {renderQuestionCountSelection()}
         {renderDifficultySelection()}
         {renderStartButton()}
       </div>

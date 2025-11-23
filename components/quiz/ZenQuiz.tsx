@@ -11,15 +11,17 @@ import { useQuizProgress } from '@/hooks/useQuizProgress';
 import { useQuizNavigation } from '@/hooks/useQuizNavigation';
 import { generateQuizSessionId } from '@/lib/quiz-utils';
 import { analytics } from '@/lib/analytics';
+import { saveZenQuizProgress, clearZenQuizProgress } from '@/lib/zen-progress';
 
 interface ZenQuizProps {
   questions: Question[];
   level: 'M1' | 'M2';
   subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
   replayQuestions?: Question[];
+  questionCount?: number;
 }
 
-export default function ZenQuiz({ questions: allQuestions, level, subject, replayQuestions }: ZenQuizProps) {
+export default function ZenQuiz({ questions: allQuestions, level, subject, replayQuestions, questionCount = 10 }: ZenQuizProps) {
   const searchParams = useSearchParams();
   const isDebugMode = searchParams.get('debug') === 'true';
 
@@ -49,7 +51,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
   } = useQuizState({
     level,
     subject,
-    questionCount: 10,
+    questionCount,
     replayQuestions,
   });
 
@@ -86,6 +88,23 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
     }
   }, [showZenIntro, zenIntroPhase, level, subject, quizQuestions.length]);
 
+  // Auto-save progress after each answer (but not after submission)
+  useEffect(() => {
+    if (quizSubmitted || quizQuestions.length === 0) return;
+
+    // Save current progress
+    saveZenQuizProgress(level, {
+      quizSessionId,
+      questions: quizQuestions,
+      userAnswers,
+      currentQuestionIndex,
+      startedAt: Date.now(),
+      level,
+      subject: subject || null,
+      questionCount: quizQuestions.length,
+    });
+  }, [userAnswers, currentQuestionIndex, quizSubmitted, quizQuestions, level, subject, quizSessionId]);
+
   const toggleQuickNav = () => {
     const newValue = !showQuickNav;
     setShowQuickNav(newValue);
@@ -118,6 +137,9 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
 
       setQuizSubmitted(true);
       setCurrentQuestionIndex(0);
+
+      // Clear saved progress after successful submission
+      clearZenQuizProgress(level);
     } catch (error) {
       console.error('Error submitting quiz:', error);
       // Reset submitting state on error so user can retry
@@ -126,7 +148,7 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
   };
 
   const handleRestart = () => {
-    const randomQuestions = getRandomQuestions(level, 10, subject);
+    const randomQuestions = getRandomQuestions(level, questionCount, subject);
     resetQuiz(randomQuestions);
     setIsChatModalOpen(false);
     setShowZenIntro(!isDebugMode);

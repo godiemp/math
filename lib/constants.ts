@@ -15,6 +15,11 @@
 export const DEFAULT_QUESTION_COUNT = 10;
 
 /**
+ * Available question counts for Zen mode customization
+ */
+export const ZEN_QUESTION_COUNTS = [5, 10, 15, 20] as const;
+
+/**
  * Time limits for rapidfire mode (in seconds) based on difficulty
  */
 export const RAPIDFIRE_TIME_LIMITS = {
@@ -186,6 +191,9 @@ export const STORAGE_KEYS = {
   // Quiz preferences
   showTimer: 'quiz-show-timer',
 
+  // Zen mode saved quiz
+  savedZenQuizPrefix: 'paes-saved-zen-quiz-', // Suffix: M1 or M2
+
   // Authentication
   accessToken: 'paes-access-token',
   refreshToken: 'paes-refresh-token',
@@ -201,6 +209,7 @@ export const STORAGE_KEYS = {
 export const getProgressKey = (level: 'M1' | 'M2') => `${STORAGE_KEYS.progressPrefix}${level}`;
 export const getHistoryKey = (level: 'M1' | 'M2') => `${STORAGE_KEYS.historyPrefix}${level}`;
 export const getLastConfigKey = (level: 'M1' | 'M2') => `${STORAGE_KEYS.lastConfigPrefix}${level}`;
+export const getSavedZenQuizKey = (level: 'M1' | 'M2') => `${STORAGE_KEYS.savedZenQuizPrefix}${level}`;
 
 // ============================================================================
 // API ENDPOINTS
