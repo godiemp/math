@@ -39,7 +39,7 @@ export default function QuickNavigation({
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed top-24 right-6 z-40 px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-lg transition-all duration-200 flex items-center gap-2 group"
+        className="fixed top-20 right-3 sm:top-24 sm:right-6 z-40 px-3 py-2 sm:px-4 sm:py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-lg transition-all duration-200 flex items-center gap-2 group"
       >
         <span className="text-sm font-medium">
           P {currentQuestion + 1}/{totalQuestions}
