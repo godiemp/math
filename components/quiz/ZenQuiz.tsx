@@ -19,9 +19,11 @@ interface ZenQuizProps {
   subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
   replayQuestions?: Question[];
   questionCount?: number;
+  initialAnswers?: (number | null)[];
+  initialIndex?: number;
 }
 
-export default function ZenQuiz({ questions: allQuestions, level, subject, replayQuestions, questionCount = 10 }: ZenQuizProps) {
+export default function ZenQuiz({ questions: allQuestions, level, subject, replayQuestions, questionCount = 10, initialAnswers, initialIndex }: ZenQuizProps) {
   const searchParams = useSearchParams();
   const isDebugMode = searchParams.get('debug') === 'true';
 
@@ -53,6 +55,8 @@ export default function ZenQuiz({ questions: allQuestions, level, subject, repla
     subject,
     questionCount,
     replayQuestions,
+    initialAnswers,
+    initialIndex,
   });
 
   const { score, submitQuiz } = useQuizProgress({ level });

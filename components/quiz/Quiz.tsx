@@ -12,6 +12,8 @@ interface QuizProps {
   difficulty?: 'easy' | 'medium' | 'hard' | 'extreme';
   replayQuestions?: Question[];
   questionCount?: number;
+  initialAnswers?: (number | null)[];
+  initialIndex?: number;
 }
 
 /**
@@ -24,7 +26,9 @@ export default function Quiz({
   quizMode = 'zen',
   difficulty = 'medium',
   replayQuestions,
-  questionCount
+  questionCount,
+  initialAnswers,
+  initialIndex
 }: QuizProps) {
   // Route to appropriate quiz mode component
   if (quizMode === 'rapidfire') {
@@ -47,6 +51,8 @@ export default function Quiz({
       subject={subject}
       replayQuestions={replayQuestions}
       questionCount={questionCount}
+      initialAnswers={initialAnswers}
+      initialIndex={initialIndex}
     />
   );
 }

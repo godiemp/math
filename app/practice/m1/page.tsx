@@ -34,6 +34,8 @@ function M1PracticeContent() {
   const [replayQuestions, setReplayQuestions] = useState<Question[] | undefined>(undefined);
   const [lastConfig, setLastConfig] = useState<LastConfig | null>(null);
   const [savedQuiz, setSavedQuiz] = useState<ReturnType<typeof loadZenQuizProgress> | null>(null);
+  const [initialAnswers, setInitialAnswers] = useState<(number | null)[] | undefined>(undefined);
+  const [initialIndex, setInitialIndex] = useState<number | undefined>(undefined);
   const questions = getQuestionsByLevel('M1');
 
   // Load last config from backend (with localStorage fallback)
@@ -237,6 +239,9 @@ function M1PracticeContent() {
         console.error('Failed to save last config:', error);
       }
 
+      // Clear any saved resume state when starting fresh
+      setInitialAnswers(undefined);
+      setInitialIndex(undefined);
       setQuizStarted(true);
     }
   };
@@ -247,6 +252,9 @@ function M1PracticeContent() {
       setQuizMode(lastConfig.mode);
       setDifficulty(lastConfig.difficulty || null);
       setQuestionCount(lastConfig.questionCount || 10);
+      // Clear any saved resume state when starting fresh
+      setInitialAnswers(undefined);
+      setInitialIndex(undefined);
       setQuizStarted(true);
     }
   };
@@ -257,6 +265,8 @@ function M1PracticeContent() {
     setQuizMode(null);
     setDifficulty(null);
     setQuestionCount(10);
+    setInitialAnswers(undefined);
+    setInitialIndex(undefined);
   };
 
   const canStartQuiz = () => {
@@ -412,6 +422,8 @@ function M1PracticeContent() {
       setQuizMode('zen');
       setQuestionCount(savedQuiz.questionCount);
       setReplayQuestions(savedQuiz.questions);
+      setInitialAnswers(savedQuiz.userAnswers);
+      setInitialIndex(savedQuiz.currentQuestionIndex);
       setQuizStarted(true);
     };
 
@@ -710,6 +722,8 @@ function M1PracticeContent() {
             difficulty={difficulty || undefined}
             replayQuestions={replayQuestions}
             questionCount={quizMode === 'zen' ? questionCount : undefined}
+            initialAnswers={initialAnswers}
+            initialIndex={initialIndex}
           />
         </div>
       </div>

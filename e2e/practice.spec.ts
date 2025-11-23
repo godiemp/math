@@ -332,6 +332,220 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     expect(hasResults).toBeTruthy();
   });
 
+  test('should save and resume Zen quiz with answers preserved', async ({ page }) => {
+    // Navigate to M1 practice
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
+
+    // Start a Zen mode quiz
+    await page.getByTestId('mode-zen').click();
+    const subjectButton = page.getByTestId('subject-all');
+    await expect(subjectButton).toBeVisible();
+    await subjectButton.click();
+
+    const startButton = page.getByTestId('start-quiz-button');
+    await expect(startButton).toBeVisible();
+    await startButton.click();
+
+    // Wait for Zen animation
+    const questionCounter = page.getByTestId('question-counter');
+    await expect(questionCounter).toBeVisible({ timeout: 10000 });
+
+    // Answer first 3 questions with specific pattern
+    for (let i = 1; i <= 3; i++) {
+      await expect(questionCounter).toContainText(`Pregunta ${i} de`, { timeout: 5000 });
+
+      // Select the second option for each question
+      const secondOption = page.locator('button').filter({ hasText: /^B\./ }).first();
+      await expect(secondOption).toBeVisible();
+      await secondOption.click();
+
+      // Navigate to next question
+      if (i < 3) {
+        const nextButton = page.getByRole('button', { name: /Siguiente/i });
+        await expect(nextButton).toBeVisible();
+        await nextButton.click();
+      }
+    }
+
+    // Refresh the page to simulate leaving and coming back
+    await page.reload();
+
+    // Should show resume banner
+    await expect(page.getByText(/Tienes un quiz zen sin terminar/i)).toBeVisible();
+    await expect(page.getByText(/3\/10 preguntas respondidas/i)).toBeVisible();
+
+    // Click continue button
+    const continueButton = page.getByRole('button', { name: /Continuar quiz/i });
+    await expect(continueButton).toBeVisible();
+    await continueButton.click();
+
+    // Wait for Zen animation again
+    await expect(questionCounter).toBeVisible({ timeout: 10000 });
+
+    // Should be on question 3 where we left off
+    await expect(questionCounter).toContainText('Pregunta 3 de', { timeout: 5000 });
+
+    // Navigate back to question 1 to verify answer was preserved
+    const prevButton = page.getByRole('button', { name: /Anterior/i });
+    await expect(prevButton).toBeVisible();
+    await prevButton.click();
+    await expect(questionCounter).toContainText('Pregunta 2 de');
+    await prevButton.click();
+    await expect(questionCounter).toContainText('Pregunta 1 de');
+
+    // Verify the second option (B) is still selected
+    const selectedOption = page.locator('button').filter({ hasText: /^B\./ }).first();
+    await expect(selectedOption).toBeVisible();
+    // Check that it has the selected styling (teal background)
+    await expect(selectedOption).toHaveClass(/bg-teal-500/);
+  });
+
+  test('should discard saved progress when requested', async ({ page }) => {
+    // Navigate to M1 practice
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
+
+    // Start a Zen mode quiz
+    await page.getByTestId('mode-zen').click();
+    const subjectButton = page.getByTestId('subject-all');
+    await expect(subjectButton).toBeVisible();
+    await subjectButton.click();
+
+    const startButton = page.getByTestId('start-quiz-button');
+    await expect(startButton).toBeVisible();
+    await startButton.click();
+
+    // Wait for Zen animation
+    const questionCounter = page.getByTestId('question-counter');
+    await expect(questionCounter).toBeVisible({ timeout: 10000 });
+
+    // Answer first question
+    const firstOption = page.locator('button').filter({ hasText: /^A\./ }).first();
+    await expect(firstOption).toBeVisible();
+    await firstOption.click();
+
+    // Refresh to trigger resume banner
+    await page.reload();
+
+    // Should show resume banner
+    await expect(page.getByText(/Tienes un quiz zen sin terminar/i)).toBeVisible();
+
+    // Click discard button
+    const discardButton = page.getByRole('button', { name: /Descartar/i });
+    await expect(discardButton).toBeVisible();
+    await discardButton.click();
+
+    // Resume banner should disappear
+    await expect(page.getByText(/Tienes un quiz zen sin terminar/i)).not.toBeVisible();
+
+    // Should be back at mode selection
+    await expect(page.getByText(/Paso 1.*Selecciona el modo de práctica/i)).toBeVisible();
+  });
+
+  test('should preserve custom question count when resuming', async ({ page }) => {
+    // Navigate to M1 practice
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
+
+    // Start a Zen mode quiz with custom question count (5 questions)
+    await page.getByTestId('mode-zen').click();
+    const subjectButton = page.getByTestId('subject-all');
+    await expect(subjectButton).toBeVisible();
+    await subjectButton.click();
+
+    // Select 5 questions (Rápido)
+    const questionCountButton = page.getByRole('button', { name: /Rápido.*5 preguntas/i });
+    await expect(questionCountButton).toBeVisible();
+    await questionCountButton.click();
+
+    const startButton = page.getByTestId('start-quiz-button');
+    await expect(startButton).toBeVisible();
+    await startButton.click();
+
+    // Wait for Zen animation
+    const questionCounter = page.getByTestId('question-counter');
+    await expect(questionCounter).toBeVisible({ timeout: 10000 });
+
+    // Verify we have 5 questions total
+    await expect(questionCounter).toContainText('Pregunta 1 de 5');
+
+    // Answer one question
+    const firstOption = page.locator('button').filter({ hasText: /^A\./ }).first();
+    await expect(firstOption).toBeVisible();
+    await firstOption.click();
+
+    // Refresh to trigger resume
+    await page.reload();
+
+    // Resume banner should show 5 questions
+    await expect(page.getByText(/1\/5 preguntas respondidas/i)).toBeVisible();
+
+    // Continue the quiz
+    const continueButton = page.getByRole('button', { name: /Continuar quiz/i });
+    await expect(continueButton).toBeVisible();
+    await continueButton.click();
+
+    // Wait for Zen animation
+    await expect(questionCounter).toBeVisible({ timeout: 10000 });
+
+    // Verify we still have 5 questions total
+    await expect(questionCounter).toContainText('de 5');
+  });
+
+  test('should clear saved progress after quiz submission', async ({ page }) => {
+    // Navigate to M1 practice
+    await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
+
+    // Start a Zen mode quiz with 5 questions for speed
+    await page.getByTestId('mode-zen').click();
+    const subjectButton = page.getByTestId('subject-all');
+    await expect(subjectButton).toBeVisible();
+    await subjectButton.click();
+
+    // Select 5 questions
+    const questionCountButton = page.getByRole('button', { name: /Rápido.*5 preguntas/i });
+    await expect(questionCountButton).toBeVisible();
+    await questionCountButton.click();
+
+    const startButton = page.getByTestId('start-quiz-button');
+    await expect(startButton).toBeVisible();
+    await startButton.click();
+
+    // Wait for Zen animation
+    const questionCounter = page.getByTestId('question-counter');
+    await expect(questionCounter).toBeVisible({ timeout: 10000 });
+
+    // Answer all 5 questions
+    for (let i = 1; i <= 5; i++) {
+      await expect(questionCounter).toContainText(`Pregunta ${i} de 5`, { timeout: 5000 });
+
+      const firstOption = page.locator('button').filter({ hasText: /^[A-E]\\./ }).first();
+      await expect(firstOption).toBeVisible();
+      await firstOption.click();
+
+      if (i < 5) {
+        const nextButton = page.getByRole('button', { name: /Siguiente/i });
+        await expect(nextButton).toBeVisible();
+        await nextButton.click();
+      }
+    }
+
+    // Submit the quiz
+    const submitButton = page.getByRole('button', { name: /Enviar Quiz/i });
+    await expect(submitButton).toBeVisible();
+    await submitButton.click();
+
+    // Wait for submission to complete by checking for results or review mode
+    await expect(questionCounter).toBeVisible({ timeout: 5000 });
+
+    // Refresh the page
+    await page.reload();
+
+    // Resume banner should NOT appear since quiz was submitted
+    await expect(page.getByText(/Tienes un quiz zen sin terminar/i)).not.toBeVisible();
+
+    // Should be back at mode selection
+    await expect(page.getByText(/Paso 1.*Selecciona el modo de práctica/i)).toBeVisible();
+  });
+
   test('should allow reviewing answers after quiz completion', async ({ page }) => {
     // Navigate to M1 practice
     await page.goto('/practice/m1', { waitUntil: 'domcontentloaded' });
