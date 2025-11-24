@@ -396,8 +396,8 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     // Verify the second option (B) is still selected
     const selectedOption = page.locator('button').filter({ hasText: /^B\./ }).first();
     await expect(selectedOption).toBeVisible();
-    // Check that it has the selected styling (teal background)
-    await expect(selectedOption).toHaveClass(/bg-teal-500/);
+    // Check that it has the selected styling (indigo border and background)
+    await expect(selectedOption).toHaveClass(/border-indigo-500/);
   });
 
   test('should discard saved progress when requested', async ({ page }) => {
@@ -517,7 +517,7 @@ test.describe('Practice Mode - M1 Quiz Flow', () => {
     for (let i = 1; i <= 5; i++) {
       await expect(questionCounter).toContainText(`Pregunta ${i} de 5`, { timeout: 5000 });
 
-      const firstOption = page.locator('button').filter({ hasText: /^[A-E]\\./ }).first();
+      const firstOption = page.locator('button').filter({ hasText: /^[A-E]\./ }).first();
       await expect(firstOption).toBeVisible();
       await firstOption.click();
 
