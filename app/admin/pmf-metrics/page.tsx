@@ -5,7 +5,6 @@ import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { api } from '@/lib/api-client';
 import AdminLayout from '@/components/layout/AdminLayout';
-import { formatDistanceToNow } from 'date-fns';
 
 interface UserData {
   id: string;
@@ -86,6 +85,21 @@ function PMFMetricsContent() {
   const [error, setError] = useState('');
   const [includeAdmins, setIncludeAdmins] = useState(true);
   const [sortBy, setSortBy] = useState<'engagement' | 'recent' | 'questions'>('engagement');
+
+  const formatDistanceToNow = (timestamp: number): string => {
+    const now = Date.now();
+    const diffMs = now - timestamp;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'just now';
+    if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    if (diffDays < 30) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    const diffMonths = Math.floor(diffDays / 30);
+    return `${diffMonths} month${diffMonths > 1 ? 's' : ''} ago`;
+  };
 
   useEffect(() => {
     fetchPMFMetrics();
