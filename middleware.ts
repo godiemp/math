@@ -35,8 +35,11 @@ function isPublicRoute(pathname: string): boolean {
   if (PUBLIC_ROUTES.includes(pathname)) {
     return true;
   }
-  // Check if it starts with any public route
-  return PUBLIC_ROUTES.some(route => pathname.startsWith(route));
+  // Check if it's a subpath of a public route (e.g., /live-practice/xyz matches /live-practice)
+  // But NOT just any path that starts with /
+  return PUBLIC_ROUTES.some(route =>
+    route !== '/' && (pathname.startsWith(route + '/') || pathname === route)
+  );
 }
 
 /**
