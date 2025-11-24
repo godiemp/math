@@ -241,64 +241,91 @@ test.describe('Subscription Trial Flow', () => {
 
   test.describe('Paywall & Feature Gating', () => {
     test.describe('Unauthenticated User Protection', () => {
-      test('should redirect unauthenticated users from Practice page to home', async ({ page }) => {
-        // Create context without authentication cookies
-        const newContext = await page.context().browser()!.newContext();
+      test('should redirect unauthenticated users from Practice page to home', async ({ page, browser }) => {
+        // Create a completely fresh context without any cookies
+        const newContext = await browser.newContext({
+          storageState: undefined, // Ensure no storage state
+        });
         const newPage = await newContext.newPage();
 
         try {
+          // Clear all cookies to ensure unauthenticated state
+          await newContext.clearCookies();
+
           await newPage.goto('/practice/m1');
           await newPage.waitForLoadState('networkidle');
           await newPage.waitForTimeout(1000);
 
-          // Server-side middleware should redirect to home page
-          const redirectedToHome = newPage.url().endsWith('/') || newPage.url().includes('localhost:3000/');
+          // Log the final URL for debugging
+          const finalUrl = newPage.url();
+          console.log('Final URL after navigation to /practice/m1:', finalUrl);
+
+          // Log cookies to verify no auth token
+          const cookies = await newContext.cookies();
+          console.log('Cookies present:', cookies.map(c => c.name));
+
+          // Server-side middleware should redirect to home page (exact match)
+          const redirectedToHome = finalUrl === 'http://localhost:3000/' || finalUrl.match(/^https?:\/\/[^/]+\/?$/);
           expect(redirectedToHome).toBeTruthy();
 
           // Should NOT be on the practice page
-          const isOnPracticePage = newPage.url().includes('/practice');
+          const isOnPracticePage = finalUrl.includes('/practice');
           expect(isOnPracticePage).toBeFalsy();
         } finally {
           await newContext.close();
         }
       });
 
-      test('should redirect unauthenticated users from Curriculum page to home', async ({ page }) => {
-        const newContext = await page.context().browser()!.newContext();
+      test('should redirect unauthenticated users from Curriculum page to home', async ({ browser }) => {
+        const newContext = await browser.newContext({
+          storageState: undefined,
+        });
         const newPage = await newContext.newPage();
 
         try {
+          await newContext.clearCookies();
+
           await newPage.goto('/curriculum/m1');
           await newPage.waitForLoadState('networkidle');
           await newPage.waitForTimeout(1000);
 
-          // Should be redirected to home
-          const redirectedToHome = newPage.url().endsWith('/') || newPage.url().includes('localhost:3000/');
+          const finalUrl = newPage.url();
+          console.log('Final URL after navigation to /curriculum/m1:', finalUrl);
+
+          // Should be redirected to home (exact match)
+          const redirectedToHome = finalUrl === 'http://localhost:3000/' || finalUrl.match(/^https?:\/\/[^/]+\/?$/);
           expect(redirectedToHome).toBeTruthy();
 
           // Should NOT be on the curriculum page
-          const isOnCurriculumPage = newPage.url().includes('/curriculum');
+          const isOnCurriculumPage = finalUrl.includes('/curriculum');
           expect(isOnCurriculumPage).toBeFalsy();
         } finally {
           await newContext.close();
         }
       });
 
-      test('should redirect unauthenticated users from Progress page to home', async ({ page }) => {
-        const newContext = await page.context().browser()!.newContext();
+      test('should redirect unauthenticated users from Progress page to home', async ({ browser }) => {
+        const newContext = await browser.newContext({
+          storageState: undefined,
+        });
         const newPage = await newContext.newPage();
 
         try {
+          await newContext.clearCookies();
+
           await newPage.goto('/progress');
           await newPage.waitForLoadState('networkidle');
           await newPage.waitForTimeout(1000);
 
-          // Should be redirected to home
-          const redirectedToHome = newPage.url().endsWith('/') || newPage.url().includes('localhost:3000/');
+          const finalUrl = newPage.url();
+          console.log('Final URL after navigation to /progress:', finalUrl);
+
+          // Should be redirected to home (exact match)
+          const redirectedToHome = finalUrl === 'http://localhost:3000/' || finalUrl.match(/^https?:\/\/[^/]+\/?$/);
           expect(redirectedToHome).toBeTruthy();
 
           // Should NOT be on the progress page
-          const isOnProgressPage = newPage.url().includes('/progress');
+          const isOnProgressPage = finalUrl.includes('/progress');
           expect(isOnProgressPage).toBeFalsy();
         } finally {
           await newContext.close();
