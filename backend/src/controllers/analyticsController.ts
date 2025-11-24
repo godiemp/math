@@ -377,6 +377,309 @@ export const getAnalyticsDashboard = async (req: Request, res: Response) => {
 };
 
 /**
+ * Get Product-Market Fit metrics
+ * Tracks who is using the product and how engaged they are
+ */
+export const getPMFMetrics = async (req: Request, res: Response) => {
+  try {
+    const includeAdmins = req.query.includeAdmins === 'true';
+    const now = Date.now();
+    const oneDayAgo = subDays(now, 1).getTime();
+    const sevenDaysAgo = subDays(now, 7).getTime();
+    const fourteenDaysAgo = subDays(now, 14).getTime();
+    const thirtyDaysAgo = subDays(now, 30).getTime();
+
+    // Build admin filter condition
+    const adminFilter = includeAdmins ? '' : "AND u.role != 'admin'";
+
+    // Get active users this week with detailed engagement
+    const activeUsersResult = await pool.query(`
+      WITH user_activity AS (
+        SELECT
+          u.id,
+          u.username,
+          u.email,
+          u.display_name,
+          u.role,
+          u.created_at,
+          u.current_streak,
+          u.longest_streak,
+          COUNT(DISTINCT DATE(to_timestamp(qa.attempted_at / 1000))) as days_active_last_7d,
+          COUNT(DISTINCT DATE(to_timestamp(qa2.attempted_at / 1000))) as days_active_last_30d,
+          COUNT(qa.id) as questions_last_7d,
+          COUNT(qa2.id) as questions_last_30d,
+          SUM(COALESCE(qa.time_spent_seconds, 0)) as time_spent_last_7d_seconds,
+          SUM(COALESCE(qa2.time_spent_seconds, 0)) as time_spent_last_30d_seconds,
+          MAX(qa2.attempted_at) as last_active_at,
+          SUM(CASE WHEN qa.is_correct THEN 1 ELSE 0 END) as correct_last_7d,
+          SUM(CASE WHEN qa2.is_correct THEN 1 ELSE 0 END) as correct_last_30d
+        FROM users u
+        LEFT JOIN question_attempts qa ON u.id = qa.user_id AND qa.attempted_at >= $1
+        LEFT JOIN question_attempts qa2 ON u.id = qa2.user_id AND qa2.attempted_at >= $2
+        WHERE 1=1 ${adminFilter}
+        GROUP BY u.id, u.username, u.email, u.display_name, u.role, u.created_at, u.current_streak, u.longest_streak
+      )
+      SELECT
+        id,
+        username,
+        email,
+        display_name,
+        role,
+        created_at,
+        current_streak,
+        longest_streak,
+        days_active_last_7d,
+        days_active_last_30d,
+        questions_last_7d,
+        questions_last_30d,
+        time_spent_last_7d_seconds,
+        time_spent_last_30d_seconds,
+        last_active_at,
+        correct_last_7d,
+        correct_last_30d,
+        CASE
+          WHEN days_active_last_7d >= 5 THEN 'power'
+          WHEN days_active_last_7d >= 3 THEN 'regular'
+          WHEN days_active_last_7d >= 1 THEN 'casual'
+          WHEN last_active_at >= $3 THEN 'dormant'
+          ELSE 'new'
+        END as user_segment,
+        (days_active_last_7d * 10 + questions_last_7d + current_streak * 5) as engagement_score
+      FROM user_activity
+      ORDER BY engagement_score DESC
+    `, [sevenDaysAgo, thirtyDaysAgo, fourteenDaysAgo]);
+
+    // Calculate PMF summary metrics
+    const powerUsers = activeUsersResult.rows.filter(u => u.user_segment === 'power').length;
+    const regularUsers = activeUsersResult.rows.filter(u => u.user_segment === 'regular').length;
+    const casualUsers = activeUsersResult.rows.filter(u => u.user_segment === 'casual').length;
+    const dormantUsers = activeUsersResult.rows.filter(u => u.user_segment === 'dormant').length;
+    const newUsers = activeUsersResult.rows.filter(u => u.user_segment === 'new').length;
+
+    const activeThisWeek = activeUsersResult.rows.filter(u => u.days_active_last_7d > 0).length;
+    const totalUsers = activeUsersResult.rows.length;
+
+    // Calculate total time spent
+    const totalTimeSpent7d = activeUsersResult.rows.reduce((sum, u) => sum + parseInt(u.time_spent_last_7d_seconds || '0'), 0);
+    const totalTimeSpent30d = activeUsersResult.rows.reduce((sum, u) => sum + parseInt(u.time_spent_last_30d_seconds || '0'), 0);
+
+    // Get weekly activity trend
+    const weeklyTrendResult = await pool.query(`
+      WITH date_series AS (
+        SELECT generate_series(
+          DATE(to_timestamp($1 / 1000)),
+          DATE(to_timestamp($2 / 1000)),
+          '1 day'::interval
+        ) as practice_date
+      ),
+      daily_activity AS (
+        SELECT
+          DATE(to_timestamp(qa.attempted_at / 1000)) as practice_date,
+          COUNT(DISTINCT qa.user_id) as active_users,
+          COUNT(*) as questions_answered
+        FROM question_attempts qa
+        JOIN users u ON qa.user_id = u.id
+        WHERE qa.attempted_at >= $1
+        ${adminFilter}
+        GROUP BY DATE(to_timestamp(qa.attempted_at / 1000))
+      )
+      SELECT
+        ds.practice_date,
+        COALESCE(da.active_users, 0) as active_users,
+        COALESCE(da.questions_answered, 0) as questions_answered
+      FROM date_series ds
+      LEFT JOIN daily_activity da ON ds.practice_date = da.practice_date
+      ORDER BY ds.practice_date
+    `, [thirtyDaysAgo, now]);
+
+    // Get cohort retention data
+    const cohortRetentionResult = await pool.query(`
+      WITH weekly_cohorts AS (
+        SELECT
+          u.id,
+          u.username,
+          DATE_TRUNC('week', to_timestamp(u.created_at / 1000)) as cohort_week,
+          u.created_at
+        FROM users u
+        WHERE u.created_at >= $1
+        ${adminFilter}
+      ),
+      cohort_activity AS (
+        SELECT
+          wc.cohort_week,
+          COUNT(DISTINCT wc.id) as cohort_size,
+          COUNT(DISTINCT CASE WHEN qa.attempted_at >= wc.created_at + (7 * 24 * 60 * 60 * 1000)
+                                   AND qa.attempted_at < wc.created_at + (14 * 24 * 60 * 60 * 1000)
+                              THEN wc.id END) as week_1_retained,
+          COUNT(DISTINCT CASE WHEN qa.attempted_at >= wc.created_at + (14 * 24 * 60 * 60 * 1000)
+                                   AND qa.attempted_at < wc.created_at + (21 * 24 * 60 * 60 * 1000)
+                              THEN wc.id END) as week_2_retained,
+          COUNT(DISTINCT CASE WHEN qa.attempted_at >= wc.created_at + (21 * 24 * 60 * 60 * 1000)
+                                   AND qa.attempted_at < wc.created_at + (28 * 24 * 60 * 60 * 1000)
+                              THEN wc.id END) as week_3_retained,
+          COUNT(DISTINCT CASE WHEN qa.attempted_at >= wc.created_at + (28 * 24 * 60 * 60 * 1000)
+                              THEN wc.id END) as week_4_retained
+        FROM weekly_cohorts wc
+        LEFT JOIN question_attempts qa ON wc.id = qa.user_id
+        GROUP BY wc.cohort_week
+        ORDER BY wc.cohort_week DESC
+      )
+      SELECT
+        cohort_week,
+        cohort_size,
+        week_1_retained,
+        week_2_retained,
+        week_3_retained,
+        week_4_retained,
+        ROUND((week_1_retained::decimal / NULLIF(cohort_size, 0)) * 100, 2) as week_1_retention_rate,
+        ROUND((week_2_retained::decimal / NULLIF(cohort_size, 0)) * 100, 2) as week_2_retention_rate,
+        ROUND((week_3_retained::decimal / NULLIF(cohort_size, 0)) * 100, 2) as week_3_retention_rate,
+        ROUND((week_4_retained::decimal / NULLIF(cohort_size, 0)) * 100, 2) as week_4_retention_rate
+      FROM cohort_activity
+    `, [thirtyDaysAgo]);
+
+    // Feature adoption metrics
+    const featureAdoptionResult = await pool.query(`
+      WITH user_features AS (
+        SELECT
+          u.id,
+          MAX(CASE WHEN qa.quiz_mode = 'zen' THEN 1 ELSE 0 END) as used_zen,
+          MAX(CASE WHEN qa.quiz_mode = 'rapidfire' THEN 1 ELSE 0 END) as used_rapidfire,
+          MAX(CASE WHEN sp.id IS NOT NULL THEN 1 ELSE 0 END) as used_live_sessions
+        FROM users u
+        LEFT JOIN question_attempts qa ON u.id = qa.user_id AND qa.attempted_at >= $1
+        LEFT JOIN session_participants sp ON u.id = sp.user_id
+        LEFT JOIN sessions s ON sp.session_id = s.id AND s.started_at >= $1
+        WHERE 1=1 ${adminFilter}
+        GROUP BY u.id
+      )
+      SELECT
+        COUNT(*) as total_users,
+        SUM(used_zen) as zen_users,
+        SUM(used_rapidfire) as rapidfire_users,
+        SUM(used_live_sessions) as live_session_users,
+        ROUND((SUM(used_zen)::decimal / NULLIF(COUNT(*), 0)) * 100, 2) as zen_adoption_rate,
+        ROUND((SUM(used_rapidfire)::decimal / NULLIF(COUNT(*), 0)) * 100, 2) as rapidfire_adoption_rate,
+        ROUND((SUM(used_live_sessions)::decimal / NULLIF(COUNT(*), 0)) * 100, 2) as live_session_adoption_rate
+      FROM user_features
+    `, [sevenDaysAgo]);
+
+    // Calculate PMF score (0-100)
+    // Based on: power users %, retention, engagement depth
+    const powerUserPercentage = totalUsers > 0 ? (powerUsers / totalUsers) * 100 : 0;
+    const activePercentage = totalUsers > 0 ? (activeThisWeek / totalUsers) * 100 : 0;
+    const avgQuestionsPerActiveUser = activeThisWeek > 0
+      ? activeUsersResult.rows.filter(u => u.days_active_last_7d > 0)
+          .reduce((sum, u) => sum + parseInt(u.questions_last_7d || '0'), 0) / activeThisWeek
+      : 0;
+
+    const pmfScore = Math.min(100, Math.round(
+      (powerUserPercentage * 0.4) +
+      (activePercentage * 0.3) +
+      (Math.min(avgQuestionsPerActiveUser / 50, 1) * 30)
+    ));
+
+    res.json({
+      success: true,
+      data: {
+        includeAdmins,
+        pmfScore,
+        summary: {
+          totalUsers,
+          activeThisWeek,
+          powerUsers,
+          regularUsers,
+          casualUsers,
+          dormantUsers,
+          newUsers,
+          powerUserPercentage: parseFloat(powerUserPercentage.toFixed(2)),
+          activePercentage: parseFloat(activePercentage.toFixed(2)),
+          totalTimeSpent7d: totalTimeSpent7d,
+          totalTimeSpent30d: totalTimeSpent30d,
+          avgTimePerUser7d: activeThisWeek > 0 ? Math.round(totalTimeSpent7d / activeThisWeek) : 0,
+          avgQuestionsPerActiveUser: parseFloat(avgQuestionsPerActiveUser.toFixed(2)),
+        },
+        users: activeUsersResult.rows.map(row => ({
+          id: row.id,
+          username: row.username,
+          email: row.email,
+          displayName: row.display_name,
+          role: row.role,
+          createdAt: parseInt(row.created_at),
+          currentStreak: parseInt(row.current_streak || '0'),
+          longestStreak: parseInt(row.longest_streak || '0'),
+          daysActive7d: parseInt(row.days_active_last_7d || '0'),
+          daysActive30d: parseInt(row.days_active_last_30d || '0'),
+          questions7d: parseInt(row.questions_last_7d || '0'),
+          questions30d: parseInt(row.questions_last_30d || '0'),
+          timeSpent7d: parseInt(row.time_spent_last_7d_seconds || '0'),
+          timeSpent30d: parseInt(row.time_spent_last_30d_seconds || '0'),
+          lastActiveAt: row.last_active_at ? parseInt(row.last_active_at) : null,
+          accuracy7d: row.questions_last_7d > 0
+            ? parseFloat(((row.correct_last_7d / row.questions_last_7d) * 100).toFixed(2))
+            : 0,
+          accuracy30d: row.questions_last_30d > 0
+            ? parseFloat(((row.correct_last_30d / row.questions_last_30d) * 100).toFixed(2))
+            : 0,
+          segment: row.user_segment,
+          engagementScore: parseInt(row.engagement_score || '0'),
+        })),
+        weeklyTrend: weeklyTrendResult.rows.map(row => ({
+          date: row.practice_date,
+          activeUsers: parseInt(row.active_users || '0'),
+          questionsAnswered: parseInt(row.questions_answered || '0'),
+        })),
+        cohortRetention: cohortRetentionResult.rows.map(row => ({
+          cohortWeek: row.cohort_week,
+          cohortSize: parseInt(row.cohort_size || '0'),
+          week1Retained: parseInt(row.week_1_retained || '0'),
+          week2Retained: parseInt(row.week_2_retained || '0'),
+          week3Retained: parseInt(row.week_3_retained || '0'),
+          week4Retained: parseInt(row.week_4_retained || '0'),
+          week1Rate: parseFloat(row.week_1_retention_rate || '0'),
+          week2Rate: parseFloat(row.week_2_retention_rate || '0'),
+          week3Rate: parseFloat(row.week_3_retention_rate || '0'),
+          week4Rate: parseFloat(row.week_4_retention_rate || '0'),
+        })),
+        featureAdoption: {
+          totalUsers: parseInt(featureAdoptionResult.rows[0]?.total_users || '0'),
+          zenUsers: parseInt(featureAdoptionResult.rows[0]?.zen_users || '0'),
+          rapidfireUsers: parseInt(featureAdoptionResult.rows[0]?.rapidfire_users || '0'),
+          liveSessionUsers: parseInt(featureAdoptionResult.rows[0]?.live_session_users || '0'),
+          zenAdoptionRate: parseFloat(featureAdoptionResult.rows[0]?.zen_adoption_rate || '0'),
+          rapidfireAdoptionRate: parseFloat(featureAdoptionResult.rows[0]?.rapidfire_adoption_rate || '0'),
+          liveSessionAdoptionRate: parseFloat(featureAdoptionResult.rows[0]?.live_session_adoption_rate || '0'),
+        },
+      },
+      timestamp: now,
+    });
+  } catch (error) {
+    console.error('Error fetching PMF metrics:', error);
+
+    let errorMessage = 'Failed to fetch PMF metrics';
+    let statusCode = 500;
+
+    if (error instanceof Error) {
+      if (error.message.includes('connect') || error.message.includes('ECONNREFUSED')) {
+        errorMessage = 'Database connection failed. Please check database availability.';
+        statusCode = 503;
+      } else if (error.message.includes('timeout') || error.message.includes('deadlock')) {
+        errorMessage = 'PMF metrics query timed out. Please try again later.';
+        statusCode = 504;
+      } else if (error.message) {
+        errorMessage = `PMF metrics error: ${error.message}`;
+      }
+    }
+
+    res.status(statusCode).json({
+      success: false,
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.stack : String(error)) : undefined,
+    });
+  }
+};
+
+/**
  * Get weekly trend data for charts
  */
 export const getWeeklyTrends = async (req: Request, res: Response) => {
