@@ -564,7 +564,7 @@ function PMFMetricsContent() {
 
 export default function PMFMetricsPage() {
   return (
-    <ProtectedRoute requireAuth requireAdmin>
+    <ProtectedRoute requireAdmin>
       <PMFMetricsContent />
     </ProtectedRoute>
   );
