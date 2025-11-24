@@ -240,9 +240,9 @@ test.describe('Subscription Trial Flow', () => {
   });
 
   test.describe('Paywall & Feature Gating', () => {
-    test.describe('Unauthenticated User Paywalls', () => {
-      test('should allow unauthenticated users to view Practice page (soft paywall)', async ({ page }) => {
-        // Create context without subscription
+    test.describe('Unauthenticated User Protection', () => {
+      test('should redirect unauthenticated users from Practice page to home', async ({ page }) => {
+        // Create context without authentication cookies
         const newContext = await page.context().browser()!.newContext();
         const newPage = await newContext.newPage();
 
@@ -251,13 +251,55 @@ test.describe('Subscription Trial Flow', () => {
           await newPage.waitForLoadState('networkidle');
           await newPage.waitForTimeout(1000);
 
-          // Soft paywall approach: page loads for everyone
-          // Users can view the page, but paywall appears when trying to start quiz
-          const pageLoaded = newPage.url().includes('/practice');
-          const needsLogin = newPage.url().includes('/login');
+          // Server-side middleware should redirect to home page
+          const redirectedToHome = newPage.url().endsWith('/') || newPage.url().includes('localhost:3000/');
+          expect(redirectedToHome).toBeTruthy();
 
-          // Either the page loads (soft paywall) or redirects to login (hard paywall)
-          expect(pageLoaded || needsLogin).toBeTruthy();
+          // Should NOT be on the practice page
+          const isOnPracticePage = newPage.url().includes('/practice');
+          expect(isOnPracticePage).toBeFalsy();
+        } finally {
+          await newContext.close();
+        }
+      });
+
+      test('should redirect unauthenticated users from Curriculum page to home', async ({ page }) => {
+        const newContext = await page.context().browser()!.newContext();
+        const newPage = await newContext.newPage();
+
+        try {
+          await newPage.goto('/curriculum/m1');
+          await newPage.waitForLoadState('networkidle');
+          await newPage.waitForTimeout(1000);
+
+          // Should be redirected to home
+          const redirectedToHome = newPage.url().endsWith('/') || newPage.url().includes('localhost:3000/');
+          expect(redirectedToHome).toBeTruthy();
+
+          // Should NOT be on the curriculum page
+          const isOnCurriculumPage = newPage.url().includes('/curriculum');
+          expect(isOnCurriculumPage).toBeFalsy();
+        } finally {
+          await newContext.close();
+        }
+      });
+
+      test('should redirect unauthenticated users from Progress page to home', async ({ page }) => {
+        const newContext = await page.context().browser()!.newContext();
+        const newPage = await newContext.newPage();
+
+        try {
+          await newPage.goto('/progress');
+          await newPage.waitForLoadState('networkidle');
+          await newPage.waitForTimeout(1000);
+
+          // Should be redirected to home
+          const redirectedToHome = newPage.url().endsWith('/') || newPage.url().includes('localhost:3000/');
+          expect(redirectedToHome).toBeTruthy();
+
+          // Should NOT be on the progress page
+          const isOnProgressPage = newPage.url().includes('/progress');
+          expect(isOnProgressPage).toBeFalsy();
         } finally {
           await newContext.close();
         }

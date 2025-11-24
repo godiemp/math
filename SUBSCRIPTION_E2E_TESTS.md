@@ -2,13 +2,16 @@
 
 This document describes the comprehensive end-to-end tests created for the free trial subscription flow.
 
-## Created Files
+## Created/Modified Files
 
 ### 1. `e2e/subscription-trial.spec.ts`
-**Test Count:** ~30 tests
-**Focus:** Free trial activation, paywall behavior, subscription status display
+**Test Count:** ~33 tests
+**Focus:** Free trial activation, server-side route protection, paywall behavior, subscription status display
 
-### 2. `e2e/helpers/db-setup.ts` (Updated)
+### 2. `middleware.ts` (Updated)
+**Changes:** Added server-side JWT authentication and route protection for `/practice`, `/curriculum`, `/progress`, `/dashboard`, `/admin`, and `/payments/history`
+
+### 3. `e2e/helpers/db-setup.ts` (Updated)
 **Changes:** Added trial plan seed data for testing
 
 ## Test Coverage
@@ -31,14 +34,23 @@ Tests the actual trial activation flow (no MercadoPago, instant activation):
 - **Redirect to dashboard** - Verify redirect after successful activation
 - **Show loading state** - Check loading indicators during activation
 
-### ✅ Paywall & Feature Gating (6 tests)
-Tests access control based on subscription status:
+### ✅ Paywall & Feature Gating (9 tests)
+Tests access control based on subscription status with server-side protection:
 
-- **Show paywall without subscription** - Free users see paywall on Practice/Curriculum/Progress
+**Unauthenticated User Protection (3 tests):**
+- **Redirect from Practice page** - Unauthenticated users redirected to home via middleware
+- **Redirect from Curriculum page** - Unauthenticated users redirected to home via middleware
+- **Redirect from Progress page** - Unauthenticated users redirected to home via middleware
+
+**Authenticated User Access (3 tests):**
 - **Allow trial users Practice access** - Trial/paid users can access Practice module
 - **Allow trial users Curriculum access** - Trial/paid users can access Curriculum module
 - **Allow trial users Progress access** - Trial/paid users can access Progress tracking
+
+**Public Access (1 test):**
 - **Allow all users Live Practice** - Live Practice remains free for everyone
+
+**Admin Access (1 test - documented):**
 - **Admin bypass** - Admin users bypass all paywalls (documented behavior)
 
 ### ✅ Edge Cases (5 tests)
@@ -198,17 +210,35 @@ Subscribed User Journey:
 
 ### Feature Gates Tested
 
-**Premium Modules (Require Subscription):**
-- `/practice/m1` - M1 Practice
-- `/practice/m2` - M2 Practice
-- `/curriculum/m1` - M1 Curriculum
-- `/curriculum/m2` - M2 Curriculum
-- `/progress` - Progress Tracking
+**Premium Modules (Require Authentication & Subscription):**
+- `/practice/m1` - M1 Practice (Server-side + Client-side protection)
+- `/practice/m2` - M2 Practice (Server-side + Client-side protection)
+- `/curriculum/m1` - M1 Curriculum (Server-side + Client-side protection)
+- `/curriculum/m2` - M2 Curriculum (Server-side + Client-side protection)
+- `/progress` - Progress Tracking (Server-side + Client-side protection)
+- `/dashboard` - Dashboard (Server-side authentication required)
+- `/admin/*` - Admin routes (Server-side authentication + admin role required)
 
 **Free Modules:**
-- `/live-practice` - Live Practice Sessions
-- `/dashboard` - Dashboard (view only)
-- `/profile` - Profile (view only)
+- `/live-practice` - Live Practice Sessions (No authentication required)
+- `/` - Home/Login page (Public)
+- `/pricing` - Pricing page (Public)
+
+### Security Architecture
+
+**Two-Layer Protection Model:**
+
+1. **Server-Side (Middleware) - Primary Security Layer**
+   - Location: `middleware.ts`
+   - Validates JWT token from `accessToken` cookie
+   - Redirects unauthenticated users to `/` before page renders
+   - Protects routes: `/practice`, `/curriculum`, `/progress`, `/dashboard`, `/admin`
+   - Admin routes verified by checking `role === 'admin'` in JWT payload
+
+2. **Client-Side (React Components) - UX Layer**
+   - `ProtectedRoute` component - Fast redirects for better UX
+   - `ModuleAccessGuard` component - Soft paywall for free users
+   - Shows paywall message instead of content for authenticated users without subscription
 
 ### Authorization Logic
 
