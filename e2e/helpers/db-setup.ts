@@ -75,8 +75,8 @@ export async function seedTestData() {
     // Create test plan (if it doesn't exist)
     const testPlanId = 'test-plan';
     await client.query(
-      `INSERT INTO plans (id, name, description, price, duration_days, features, is_active, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      `INSERT INTO plans (id, name, description, price, duration_days, trial_duration_days, features, is_active, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
        ON CONFLICT (id) DO NOTHING`,
       [
         testPlanId,
@@ -84,8 +84,36 @@ export async function seedTestData() {
         'Plan for e2e testing',
         0, // Free for testing
         365, // 1 year
+        7, // 7-day trial
         JSON.stringify(['all-features']),
         true,
+        now,
+        now
+      ]
+    );
+
+    // Create paid plan with trial for subscription testing
+    const paidPlanId = 'test-paid-plan';
+    await client.query(
+      `INSERT INTO plans (id, name, description, price, currency, duration_days, trial_duration_days, features, is_active, display_order, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+       ON CONFLICT (id) DO NOTHING`,
+      [
+        paidPlanId,
+        'Plan Premium',
+        'Plan premium para pruebas con período de prueba',
+        9990, // CLP price
+        'CLP',
+        30, // 30 days
+        7, // 7-day trial
+        JSON.stringify([
+          'Acceso completo a práctica M1 y M2',
+          'Acceso al currículum completo',
+          'Seguimiento de progreso',
+          'Estadísticas detalladas'
+        ]),
+        true,
+        1, // display order
         now,
         now
       ]
