@@ -318,6 +318,41 @@ function stopSessionStatusUpdater() {
   }
 }
 
+// Auto-seed admin data
+const autoSeedAdminData = async () => {
+  try {
+    // Skip only if explicitly disabled
+    if (process.env.DISABLE_AUTO_SEED === 'true') {
+      console.log('⏭️  Auto-seed disabled via DISABLE_AUTO_SEED environment variable');
+      return;
+    }
+
+    console.log('🌱 Auto-seeding admin data...');
+
+    // Import and run seed functions dynamically
+    const { exec } = await import('child_process');
+    const { promisify } = await import('util');
+    const execAsync = promisify(exec);
+
+    try {
+      await execAsync('npx tsx src/scripts/seed-admin.ts', {
+        cwd: __dirname + '/..',
+        timeout: 30000 // 30 second timeout
+      });
+      console.log('✅ Admin data seeded successfully');
+    } catch (error: any) {
+      // Don't fail if seeding fails (might already be seeded)
+      if (error.stdout?.includes('✅')) {
+        console.log('✅ Admin data already seeded');
+      } else {
+        console.warn('⚠️  Auto-seed warning:', error.message);
+      }
+    }
+  } catch (error) {
+    console.warn('⚠️  Auto-seed failed (non-critical):', error);
+  }
+};
+
 // Start server
 const startServer = async () => {
   try {
@@ -326,6 +361,9 @@ const startServer = async () => {
 
     // Initialize database tables
     await initializeDatabase();
+
+    // Auto-seed admin data
+    await autoSeedAdminData();
 
     // Initialize image storage directory
     initImageStorage();

@@ -18,10 +18,18 @@ import {
   createDebugSession,
   updateDebugSessionStatus,
   resetDebugParticipant,
+  getSessionTemplates,
 } from '../controllers/sessionController';
 import { authenticate, requireAdmin } from '../auth/middleware';
 
 const router = Router();
+
+/**
+ * @route   GET /api/sessions/templates
+ * @desc    Get session templates (M1/M2 official PAES and practice formats)
+ * @access  Public
+ */
+router.get('/templates', getSessionTemplates);
 
 /**
  * @route   GET /api/sessions
