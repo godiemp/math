@@ -23,6 +23,11 @@ export default async function middleware(request: NextRequest) {
   const isProtectedRoute = PROTECTED_ROUTES.some(route => pathname.startsWith(route));
   const isAdminRoute = ADMIN_ROUTES.some(route => pathname.startsWith(route));
 
+  // Log middleware execution for debugging
+  if (process.env.NODE_ENV === 'test') {
+    console.log('[Middleware] Path:', pathname, 'Protected:', isProtectedRoute);
+  }
+
   if (!isProtectedRoute) {
     return NextResponse.next();
   }
@@ -30,8 +35,16 @@ export default async function middleware(request: NextRequest) {
   // Get the access token from cookies
   const accessToken = request.cookies.get('accessToken')?.value;
 
+  // Log authentication status for debugging
+  if (process.env.NODE_ENV === 'test') {
+    console.log('[Middleware] Has accessToken:', !!accessToken);
+  }
+
   // No token - redirect to home
   if (!accessToken) {
+    if (process.env.NODE_ENV === 'test') {
+      console.log('[Middleware] Redirecting to home - no access token');
+    }
     const url = request.nextUrl.clone();
     url.pathname = '/';
     return NextResponse.redirect(url);
