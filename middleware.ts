@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import { jwtVerify } from 'jose';
 
 // Protected routes that require authentication
 const PROTECTED_ROUTES = [
@@ -38,7 +38,7 @@ export default async function middleware(request: NextRequest) {
   }
 
   try {
-    // Verify the token
+    // Verify the token using jose (Edge Runtime compatible)
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
       console.error('JWT_SECRET is not configured');
@@ -47,10 +47,12 @@ export default async function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    const decoded = jwt.verify(accessToken, jwtSecret) as { userId: string; role: string };
+    // Convert string secret to Uint8Array for jose
+    const secret = new TextEncoder().encode(jwtSecret);
+    const { payload } = await jwtVerify(accessToken, secret);
 
     // Check admin routes
-    if (isAdminRoute && decoded.role !== 'admin') {
+    if (isAdminRoute && payload.role !== 'admin') {
       const url = request.nextUrl.clone();
       url.pathname = '/';
       return NextResponse.redirect(url);
