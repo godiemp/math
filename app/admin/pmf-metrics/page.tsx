@@ -470,7 +470,7 @@ function PMFMetricsContent() {
                     </td>
                     <td className="py-3 px-4">
                       <Text size="xs" variant="secondary">
-                        {user.lastActiveAt ? formatDistanceToNow(user.lastActiveAt, { addSuffix: true }) : 'Never'}
+                        {user.lastActiveAt ? formatDistanceToNow(user.lastActiveAt) : 'Never'}
                       </Text>
                     </td>
                   </tr>
