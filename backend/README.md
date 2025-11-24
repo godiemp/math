@@ -73,6 +73,36 @@ npm run dev
 
 Server will start at `http://localhost:3001`
 
+### Seeding Data
+
+To populate your database with initial data, use the following seed scripts:
+
+#### Seed Admin User with Sample Statistics
+
+Creates an admin user with sample completed live practice sessions and statistics:
+
+```bash
+npm run seed:admin:dev
+```
+
+This creates:
+- Admin user (username: `admin`, password: `admin123`)
+- 3 completed live practice sessions
+- Session participation data with various scores
+- Statistics data visible in the Live Practice page
+
+#### Seed Plans
+
+```bash
+npm run seed:plans
+```
+
+#### Seed Abstract Problems
+
+```bash
+npx tsx src/scripts/seed-abstract-problems.ts
+```
+
 ## Deployment to Railway
 
 ### One-time Setup
