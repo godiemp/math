@@ -605,7 +605,7 @@ export const getPMFMetrics = async (req: Request, res: Response) => {
           email: row.email,
           displayName: row.display_name,
           role: row.role,
-          createdAt: parseInt(row.created_at),
+          createdAt: Number(row.created_at),
           currentStreak: parseInt(row.current_streak || '0'),
           longestStreak: parseInt(row.longest_streak || '0'),
           daysActive7d: parseInt(row.days_active_last_7d || '0'),
@@ -614,7 +614,7 @@ export const getPMFMetrics = async (req: Request, res: Response) => {
           questions30d: parseInt(row.questions_last_30d || '0'),
           timeSpent7d: parseInt(row.time_spent_last_7d_seconds || '0'),
           timeSpent30d: parseInt(row.time_spent_last_30d_seconds || '0'),
-          lastActiveAt: row.last_active_at ? parseInt(row.last_active_at) : null,
+          lastActiveAt: row.last_active_at ? Number(row.last_active_at) : null,
           accuracy7d: row.questions_last_7d > 0
             ? parseFloat(((row.correct_last_7d / row.questions_last_7d) * 100).toFixed(2))
             : 0,
