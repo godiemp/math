@@ -508,16 +508,16 @@ export const getPMFMetrics = async (req: Request, res: Response) => {
         SELECT
           wc.cohort_week,
           COUNT(DISTINCT wc.id) as cohort_size,
-          COUNT(DISTINCT CASE WHEN qa.attempted_at >= wc.created_at + (7 * 24 * 60 * 60 * 1000)
-                                   AND qa.attempted_at < wc.created_at + (14 * 24 * 60 * 60 * 1000)
+          COUNT(DISTINCT CASE WHEN qa.attempted_at >= wc.created_at + 604800000::bigint
+                                   AND qa.attempted_at < wc.created_at + 1209600000::bigint
                               THEN wc.id END) as week_1_retained,
-          COUNT(DISTINCT CASE WHEN qa.attempted_at >= wc.created_at + (14 * 24 * 60 * 60 * 1000)
-                                   AND qa.attempted_at < wc.created_at + (21 * 24 * 60 * 60 * 1000)
+          COUNT(DISTINCT CASE WHEN qa.attempted_at >= wc.created_at + 1209600000::bigint
+                                   AND qa.attempted_at < wc.created_at + 1814400000::bigint
                               THEN wc.id END) as week_2_retained,
-          COUNT(DISTINCT CASE WHEN qa.attempted_at >= wc.created_at + (21 * 24 * 60 * 60 * 1000)
-                                   AND qa.attempted_at < wc.created_at + (28 * 24 * 60 * 60 * 1000)
+          COUNT(DISTINCT CASE WHEN qa.attempted_at >= wc.created_at + 1814400000::bigint
+                                   AND qa.attempted_at < wc.created_at + 2419200000::bigint
                               THEN wc.id END) as week_3_retained,
-          COUNT(DISTINCT CASE WHEN qa.attempted_at >= wc.created_at + (28 * 24 * 60 * 60 * 1000)
+          COUNT(DISTINCT CASE WHEN qa.attempted_at >= wc.created_at + 2419200000::bigint
                               THEN wc.id END) as week_4_retained
         FROM weekly_cohorts wc
         LEFT JOIN question_attempts qa ON wc.id = qa.user_id
