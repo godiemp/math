@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import Auth from "@/components/auth/Auth";
+import { getCachedUser } from "@/lib/auth";
 import Footer from "@/components/layout/Footer";
 import { useTranslations } from 'next-intl';
 
@@ -119,7 +120,7 @@ export default function Home() {
           <Auth
             onSuccess={(isNewUser) => {
               setIsRedirecting(true);
-              setUser(require('@/lib/auth').getCurrentUser());
+              setUser(getCachedUser());
               router.push(isNewUser ? '/dashboard?welcome=true' : '/dashboard');
             }}
           />
