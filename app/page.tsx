@@ -15,15 +15,14 @@ export default function Home() {
   const { isAuthenticated, isLoading, setUser } = useAuth();
   const router = useRouter();
   const [showInfoModal, setShowInfoModal] = useState(false);
-  const [isRedirecting, setIsRedirecting] = useState(false);
+  const [redirectPath, setRedirectPath] = useState<string | null>(null);
 
   useEffect(() => {
-    // Only redirect if auth loading is complete and user is authenticated
-    // Skip if we're already redirecting from onSuccess callback
-    if (!isLoading && isAuthenticated && !isRedirecting) {
-      router.push('/dashboard');
+    // Redirect when authenticated - uses redirectPath if set (for welcome flow)
+    if (!isLoading && isAuthenticated) {
+      router.push(redirectPath || '/dashboard');
     }
-  }, [isAuthenticated, isLoading, isRedirecting, router]);
+  }, [isAuthenticated, isLoading, redirectPath, router]);
 
   // While loading auth or if authenticated, don't show login
   if (isLoading || isAuthenticated) {
@@ -119,9 +118,12 @@ export default function Home() {
           {/* Auth Component */}
           <Auth
             onSuccess={(isNewUser) => {
-              setIsRedirecting(true);
+              // Set redirect path first, then update user state
+              // The useEffect will handle navigation once isAuthenticated becomes true
+              if (isNewUser) {
+                setRedirectPath('/dashboard?welcome=true');
+              }
               setUser(getCachedUser());
-              router.push(isNewUser ? '/dashboard?welcome=true' : '/dashboard');
             }}
           />
 
