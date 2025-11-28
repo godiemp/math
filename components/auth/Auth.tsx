@@ -133,10 +133,17 @@ export default function Auth({ onSuccess }: AuthProps) {
             onSuccess(true);
             router.push('/dashboard?welcome=true');
           } else {
-            // Registration succeeded but sign in failed - still show success
+            // Registration succeeded but auto sign-in failed
+            // Don't navigate to dashboard as middleware will redirect back (no session)
+            // Instead, keep user on auth form and let them manually sign in
             toast.success(t('register.success'));
-            onSuccess(true);
-            router.push('/dashboard?welcome=true');
+            // Switch to login mode so user can manually sign in
+            setIsLogin(true);
+            // Pre-fill username for convenience
+            setUsername(username);
+            setPassword('');
+            setDisplayName('');
+            setEmail('');
           }
         } else {
           const errorMsg = result.error || t('login.errors.registration');

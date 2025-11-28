@@ -14,10 +14,7 @@ test.describe('Live Practice Registration', () => {
     await expect(page.getByText(/Test PAES Session/i)).toBeVisible();
   });
 
-  // TODO: Fix after NextAuth migration - session registration requires backend auth
-  // The API calls /api/sessions/:id/register which needs accessToken cookie
-  // but NextAuth authorize() runs server-side and doesn't forward cookies to browser
-  test.skip('should register for a scheduled session', async ({ page }) => {
+  test('should register for a scheduled session', async ({ page }) => {
     // Navigate to live practice
     await page.goto('/live-practice', { waitUntil: 'domcontentloaded' });
 
@@ -48,8 +45,7 @@ test.describe('Live Practice Registration', () => {
     await expect(unregisterButton).toBeVisible({ timeout: 5000 });
   });
 
-  // TODO: Fix after NextAuth migration - session registration requires backend auth
-  test.skip('should unregister from a scheduled session', async ({ page }) => {
+  test('should unregister from a scheduled session', async ({ page }) => {
     // Navigate to live practice
     await page.goto('/live-practice', { waitUntil: 'domcontentloaded' });
 

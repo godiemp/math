@@ -7,6 +7,7 @@
  */
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
+import { cookies } from "next/headers"
 import type { User as BackendUser } from "@/lib/types"
 
 // Get backend URL - same logic as api-client.ts
@@ -69,6 +70,36 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             const error = await response.json().catch(() => ({}));
             console.error('Login failed:', error);
             return null;
+          }
+
+          // Forward backend authentication cookies to the browser
+          // The backend sets HttpOnly cookies (accessToken, refreshToken) that need
+          // to be forwarded since this authorize() callback runs server-side
+          const setCookieHeaders = response.headers.getSetCookie();
+          if (setCookieHeaders.length > 0) {
+            const cookieStore = await cookies();
+            for (const cookieStr of setCookieHeaders) {
+              // Parse cookie string: "name=value; HttpOnly; Secure; SameSite=Lax; Max-Age=604800; Path=/"
+              const parts = cookieStr.split(';');
+              const [name, ...valueParts] = parts[0].split('=');
+              const value = valueParts.join('='); // Handle values that contain '='
+
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const cookieOptions: any = {};
+              for (let i = 1; i < parts.length; i++) {
+                const [key, val] = parts[i].trim().split('=');
+                const keyLower = key.toLowerCase();
+                if (keyLower === 'httponly') cookieOptions.httpOnly = true;
+                else if (keyLower === 'secure') cookieOptions.secure = true;
+                else if (keyLower === 'samesite') cookieOptions.sameSite = val?.toLowerCase() as 'lax' | 'strict' | 'none';
+                else if (keyLower === 'max-age') cookieOptions.maxAge = parseInt(val, 10);
+                else if (keyLower === 'path') cookieOptions.path = val;
+                else if (keyLower === 'domain') cookieOptions.domain = val;
+              }
+
+              cookieStore.set(name, value, cookieOptions);
+            }
+            console.log('[NextAuth] Forwarded backend cookies to browser:', setCookieHeaders.map(c => c.split('=')[0]));
           }
 
           const data = await response.json();

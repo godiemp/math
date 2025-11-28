@@ -145,10 +145,7 @@ test.describe('Student Profile Page', () => {
     await expect(page.getByRole('heading', { name: /Editar Perfil/i })).not.toBeVisible();
   });
 
-  // TODO: Fix after NextAuth migration - backend API calls need accessToken cookie
-  // The profile update calls /api/user/profile which requires backend auth
-  // but NextAuth authorize() runs server-side and doesn't forward cookies to browser
-  test.skip('should update display name successfully', async ({ page }) => {
+  test('should update display name successfully', async ({ page }) => {
     // Navigate to profile page
     await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
