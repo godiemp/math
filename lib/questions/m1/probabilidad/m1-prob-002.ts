@@ -57,7 +57,7 @@ export const m1Prob002Questions: Question[] = [
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
     questionLatex: '\\text{El rango del conjunto de datos 12, 8, 15, 20, 9 es:}',
-    options: ['8', '9', '12', '12'],
+    options: ['8', '9', '12', '15'],
     correctAnswer: 2,
     explanation: '\\text{Rango} = 20 - 8 = 12',
     difficulty: 'easy',
