@@ -37,7 +37,7 @@ export const m1Alg007Questions: Question[] = [
     operacionBase: 'g(x) = x^2',
     questionLatex: '\\text{Un físico estudia la energía cinética de partículas usando la función } g(x) = x^2, \\text{ donde x representa la velocidad de la partícula. El experimento solo mide velocidades específicas: -2, -1, 0, 1, y 2 metros por segundo, que conforman el dominio. El físico necesita identificar todos los valores posibles de energía (el rango) que puede obtener con estas velocidades. ¿Cuál es el rango de la función?}',
     options: ['\\{0, 1, 2, 4\\}', '\\{-2, -1, 0, 1, 2\\}', '\\{0, 1, 4\\}', '\\{1, 2, 4\\}'],
-    correctAnswer: 0,
+    correctAnswer: 2,
     explanation: 'g(-2) = 4, g(-1) = 1, g(0) = 0, g(1) = 1, g(2) = 4 \\quad \\Rightarrow \\quad \\text{Rango} = \\{0, 1, 4\\}',
     difficulty: 'medium',
     skills: ['algebra-funciones', 'algebra-dominio-rango', 'algebra-evaluacion-funciones', 'numeros-potencias']
