@@ -203,7 +203,7 @@ export const m1Alg001Questions: Question[] = [
     operacionBase: '5x - [2x - (3x - 4)]',
     questionLatex: '\\text{Un contador analiza las finanzas de una empresa usando la expresión } 5x - [2x - (3x - 4)], \\text{ donde x representa miles de dólares en ventas mensuales. La expresión incluye ingresos brutos, menos deducciones, que a su vez tienen ajustes internos. El contador necesita simplificar completamente esta expresión para presentar un informe claro al directorio. ¿Cuál es la expresión simplificada?}',
     options: ['6x - 4', '6x + 4', '4x - 4', '4x + 4'],
-    correctAnswer: 1,
+    correctAnswer: 0,
     explanation: '5x - [2x - (3x - 4)] = 5x - [2x - 3x + 4] = 5x - [-x + 4] = 5x + x - 4 = 6x - 4',
     difficulty: 'hard',
     skills: ['algebra-expresiones', 'algebra-terminos-semejantes', 'numeros-operaciones-basicas']

@@ -58,8 +58,8 @@ export const m1Alg002Questions: Question[] = [
     operacionBase: '(2x^2 + 5x - 3) - (x^2 + 2x - 1) + (3x^2 - x + 4)',
     questionLatex: '\\text{Un economista analiza tres indicadores financieros de una empresa. El indicador A aporta } (2x^2 + 5x - 3) \\text{ puntos, el indicador B resta } (x^2 + 2x - 1) \\text{ puntos, y el indicador C aporta } (3x^2 - x + 4) \\text{ puntos, donde x representa trimestres evaluados. Para obtener el puntaje neto de desempeño, necesita combinar los tres indicadores. ¿Cuál es la expresión simplificada del puntaje neto?}',
     options: ['4x^2 + 2x', '4x^2 + 2x + 2', '6x^2 + 2x', '4x^2 + 8x'],
-    correctAnswer: 0,
-    explanation: '(2x^2 - x^2 + 3x^2) + (5x - 2x - x) + (-3 + 1 + 4) = 4x^2 + 2x + 0 = 4x^2 + 2x',
+    correctAnswer: 1,
+    explanation: '(2x^2 - x^2 + 3x^2) + (5x - 2x - x) + (-3 + 1 + 4) = 4x^2 + 2x + 2',
     difficulty: 'hard',
     skills: ['algebra-polinomios', 'algebra-terminos-semejantes', 'numeros-operaciones-basicas']
   },
