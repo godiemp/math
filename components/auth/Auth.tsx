@@ -128,14 +128,15 @@ export default function Auth({ onSuccess }: AuthProps) {
 
           if (signInResult?.ok) {
             toast.success(t('register.success'));
-            // Navigate directly to dashboard with welcome flag - don't rely on session state propagation
-            router.push('/dashboard?welcome=true');
+            // Call onSuccess FIRST to set redirectPath state, then navigate
+            // This ensures the landing page has the correct redirectPath if middleware redirects back
             onSuccess(true);
+            router.push('/dashboard?welcome=true');
           } else {
             // Registration succeeded but sign in failed - still show success
             toast.success(t('register.success'));
-            router.push('/dashboard?welcome=true');
             onSuccess(true);
+            router.push('/dashboard?welcome=true');
           }
         } else {
           const errorMsg = result.error || t('login.errors.registration');

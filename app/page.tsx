@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import Auth from "@/components/auth/Auth";
@@ -13,15 +13,21 @@ export default function Home() {
   const tCommon = useTranslations('common');
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [redirectPath, setRedirectPath] = useState<string | null>(null);
 
+  // Check URL for welcome flag (middleware preserves query params when redirecting)
+  const hasWelcomeParam = searchParams.get('welcome') === 'true';
+
   useEffect(() => {
-    // Redirect when authenticated - uses redirectPath if set (for welcome flow)
+    // Redirect when authenticated - uses redirectPath state, URL welcome param, or default
     if (!isLoading && isAuthenticated) {
-      router.push(redirectPath || '/dashboard');
+      // Priority: redirectPath state > URL welcome param > default dashboard
+      const targetPath = redirectPath || (hasWelcomeParam ? '/dashboard?welcome=true' : '/dashboard');
+      router.push(targetPath);
     }
-  }, [isAuthenticated, isLoading, redirectPath, router]);
+  }, [isAuthenticated, isLoading, redirectPath, hasWelcomeParam, router]);
 
   // While loading auth or if authenticated, don't show login
   if (isLoading || isAuthenticated) {
