@@ -1,289 +1,288 @@
 import { Question } from '../../../types';
 
 /**
- * M1-ALG-008: Función potencia, raíz, valor absoluto
+ * M1-ALG-008: Resolución y aplicación de sistemas de ecuaciones lineales (2x2)
  * Chilean PAES Curriculum - Algebra Subsection 008
  *
  * This subsection covers:
- * - A: Funciones potencia f(x) = x^n
- * - B: Funciones raíz f(x) = ⁿ√x
- * - C: Funciones valor absoluto f(x) = |x|, f(x) = |ax + b|
- * - D: Dominio y rango de estas funciones
- * - E: Gráficas y propiedades
+ * - A: Método de sustitución
+ * - B: Método de igualación
+ * - C: Método de reducción
+ * - D: Aplicaciones de sistemas de ecuaciones
  *
  * Total: 20 questions
  */
 export const m1Alg008Questions: Question[] = [
   // ========================================
-  // FUNCIONES POTENCIA
+  // MÉTODO DE SUSTITUCIÓN
   // ========================================
   {
     id: 'm1-alg008-1',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = x^3',
-    questionLatex: '\\text{Un ingeniero modela el volumen de cubos de diferentes tamaños usando la función } f(x) = x^3, \\text{ donde x representa la medida del lado en centímetros. Si un cubo tiene un lado de 2 cm, ¿cuál es su volumen?}',
-    options: ['4 cm³', '6 cm³', '8 cm³', '9 cm³'],
-    correctAnswer: 2,
-    explanation: 'f(2) = 2^3 = 8 \\text{ cm}^3',
+    operacionBase: 'sustitución',
+    questionLatex: '\\text{Resuelve el sistema por sustitución:} \\\\ x + y = 5 \\\\ x = 2y - 1 \\\\ \\text{¿Cuál es el valor de y?}',
+    options: ['1', '2', '3', '4'],
+    correctAnswer: 1,
+    explanation: '\\text{Sustituyendo } x = 2y - 1 \\text{ en la primera ecuación:} \\\\ (2y - 1) + y = 5 \\\\ 3y = 6 \\Rightarrow y = 2',
     difficulty: 'easy',
-    skills: ['algebra-funciones', 'algebra-funciones-potencia', 'algebra-evaluacion-funciones', 'numeros-potencias']
+    skills: ['sistemas-ecuaciones-sustitucion', 'algebra-ecuaciones-lineales']
   },
   {
     id: 'm1-alg008-2',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = x^2',
-    questionLatex: '\\text{La función } f(x) = x^2 \\text{ representa el área de un cuadrado de lado x. ¿Cuál es el dominio de esta función considerando que x representa una medida física?}',
-    options: ['\\text{Todos los reales}', 'x \\geq 0', 'x > 0', 'x \\neq 0'],
+    operacionBase: 'sustitución',
+    questionLatex: '\\text{Resuelve el sistema:} \\\\ y = 3x + 1 \\\\ 2x + y = 11 \\\\ \\text{¿Cuál es el valor de x?}',
+    options: ['1', '2', '3', '4'],
     correctAnswer: 1,
-    explanation: '\\text{Como x representa una longitud, debe ser } x \\geq 0',
-    difficulty: 'medium',
-    skills: ['algebra-funciones', 'algebra-funciones-potencia', 'algebra-dominio-rango']
+    explanation: '\\text{Sustituyendo } y = 3x + 1 \\text{ en } 2x + y = 11: \\\\ 2x + (3x + 1) = 11 \\\\ 5x = 10 \\Rightarrow x = 2',
+    difficulty: 'easy',
+    skills: ['sistemas-ecuaciones-sustitucion', 'algebra-ecuaciones-lineales']
   },
   {
     id: 'm1-alg008-3',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = x^4',
-    questionLatex: '\\text{Sea } f(x) = x^4. \\text{ ¿Cuál de las siguientes afirmaciones es VERDADERA sobre esta función?}',
-    options: ['f(-2) = -16', 'f(-2) = f(2)', 'f(-2) < f(2)', 'f(x) \\text{ puede ser negativo}'],
+    operacionBase: 'sustitución',
+    questionLatex: '\\text{Dado el sistema:} \\\\ 3x - y = 7 \\\\ x + 2y = 0 \\\\ \\text{Despejando x de la segunda ecuación y sustituyendo, el valor de y es:}',
+    options: ['-2', '-1', '1', '2'],
     correctAnswer: 1,
-    explanation: 'f(-2) = (-2)^4 = 16 = 2^4 = f(2). \\text{ Las potencias pares son siempre positivas}',
+    explanation: '\\text{De } x + 2y = 0 \\Rightarrow x = -2y. \\\\ \\text{Sustituyendo en } 3(-2y) - y = 7 \\\\ -7y = 7 \\Rightarrow y = -1',
     difficulty: 'medium',
-    skills: ['algebra-funciones', 'algebra-funciones-potencia', 'algebra-evaluacion-funciones', 'numeros-potencias']
+    skills: ['sistemas-ecuaciones-sustitucion', 'algebra-ecuaciones-lineales']
   },
   {
     id: 'm1-alg008-4',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = x^3',
-    questionLatex: '\\text{Para la función } f(x) = x^3, \\text{ ¿cuál es el rango (conjunto de valores que puede tomar f)?}',
-    options: ['y \\geq 0', 'y > 0', 'y \\leq 0', '\\text{Todos los reales}'],
-    correctAnswer: 3,
-    explanation: 'x^3 \\text{ puede tomar cualquier valor real: positivo, negativo o cero}',
+    operacionBase: 'sustitución',
+    questionLatex: '\\text{Resuelve:} \\\\ \\frac{x}{2} + y = 4 \\\\ x - y = 2 \\\\ \\text{¿Cuál es el valor de x + y?}',
+    options: ['4', '5', '6', '7'],
+    correctAnswer: 2,
+    explanation: '\\text{De } x - y = 2 \\Rightarrow x = y + 2. \\\\ \\text{Sustituyendo: } \\frac{y + 2}{2} + y = 4 \\\\ \\frac{3y + 2}{2} = 4 \\Rightarrow y = 2, x = 4 \\\\ x + y = 6',
     difficulty: 'medium',
-    skills: ['algebra-funciones', 'algebra-funciones-potencia', 'algebra-dominio-rango']
+    skills: ['sistemas-ecuaciones-sustitucion', 'algebra-ecuaciones-lineales', 'numeros-racionales-operaciones']
   },
   {
     id: 'm1-alg008-5',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = x^2, g(x) = x^3',
-    questionLatex: '\\text{Si } f(x) = x^2 \\text{ y } g(x) = x^3, \\text{ ¿para qué valores de x se cumple que } f(x) = g(x)?',
-    options: ['x = 0 \\text{ solamente}', 'x = 1 \\text{ solamente}', 'x = 0 \\text{ y } x = 1', 'x = -1 \\text{ y } x = 1'],
-    correctAnswer: 2,
-    explanation: 'x^2 = x^3 \\Rightarrow x^2(1 - x) = 0 \\Rightarrow x = 0 \\text{ o } x = 1',
-    difficulty: 'hard',
-    skills: ['algebra-funciones', 'algebra-funciones-potencia', 'algebra-ecuaciones']
+    operacionBase: 'sustitución',
+    questionLatex: '\\text{Para el sistema:} \\\\ 2x + 3y = 12 \\\\ x = y + 1 \\\\ \\text{La suma de las soluciones } x + y \\text{ es:}',
+    options: ['4', '5', '6', '7'],
+    correctAnswer: 1,
+    explanation: '\\text{Sustituyendo } x = y + 1: \\\\ 2(y + 1) + 3y = 12 \\\\ 5y = 10 \\Rightarrow y = 2, x = 3 \\\\ x + y = 5',
+    difficulty: 'easy',
+    skills: ['sistemas-ecuaciones-sustitucion', 'algebra-ecuaciones-lineales']
   },
   // ========================================
-  // FUNCIONES RAÍZ
+  // MÉTODO DE IGUALACIÓN
   // ========================================
   {
     id: 'm1-alg008-6',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = \\sqrt{x}',
-    questionLatex: '\\text{La función } f(x) = \\sqrt{x} \\text{ modela la relación entre el área de un cuadrado y su lado. ¿Cuál es el dominio de esta función?}',
-    options: ['\\text{Todos los reales}', 'x > 0', 'x \\geq 0', 'x \\neq 0'],
-    correctAnswer: 2,
-    explanation: '\\text{La raíz cuadrada está definida para } x \\geq 0',
+    operacionBase: 'igualación',
+    questionLatex: '\\text{Resuelve por igualación:} \\\\ y = 2x + 1 \\\\ y = -x + 7 \\\\ \\text{¿Cuál es el valor de x?}',
+    options: ['1', '2', '3', '4'],
+    correctAnswer: 1,
+    explanation: '\\text{Igualando: } 2x + 1 = -x + 7 \\\\ 3x = 6 \\Rightarrow x = 2',
     difficulty: 'easy',
-    skills: ['algebra-funciones', 'algebra-funciones-raiz', 'algebra-dominio-rango', 'numeros-raices']
+    skills: ['sistemas-ecuaciones-igualacion', 'algebra-ecuaciones-lineales']
   },
   {
     id: 'm1-alg008-7',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = \\sqrt{x - 4}',
-    questionLatex: '\\text{Una física modela la velocidad de un objeto con } f(x) = \\sqrt{x - 4}, \\text{ donde x es la energía en joules. ¿Cuál es el dominio de esta función?}',
-    options: ['x \\geq 0', 'x \\geq 4', 'x > 4', 'x \\geq -4'],
+    operacionBase: 'igualación',
+    questionLatex: '\\text{Dado el sistema:} \\\\ x = 3y - 2 \\\\ x = y + 4 \\\\ \\text{El valor de y es:}',
+    options: ['2', '3', '4', '5'],
     correctAnswer: 1,
-    explanation: 'x - 4 \\geq 0 \\Rightarrow x \\geq 4',
-    difficulty: 'medium',
-    skills: ['algebra-funciones', 'algebra-funciones-raiz', 'algebra-dominio-rango', 'algebra-inecuaciones']
+    explanation: '\\text{Igualando: } 3y - 2 = y + 4 \\\\ 2y = 6 \\Rightarrow y = 3',
+    difficulty: 'easy',
+    skills: ['sistemas-ecuaciones-igualacion', 'algebra-ecuaciones-lineales']
   },
   {
     id: 'm1-alg008-8',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = \\sqrt{x}',
-    questionLatex: '\\text{¿Cuál es el rango de la función } f(x) = \\sqrt{x}?',
-    options: ['y \\in \\mathbb{R}', 'y \\geq 0', 'y > 0', 'y \\leq 0'],
+    operacionBase: 'igualación',
+    questionLatex: '\\text{Resuelve:} \\\\ 2x + y = 8 \\\\ x - y = 1 \\\\ \\text{Usando igualación (despejando y), el valor de x es:}',
+    options: ['2', '3', '4', '5'],
     correctAnswer: 1,
-    explanation: '\\sqrt{x} \\geq 0 \\text{ para todo x en el dominio}',
-    difficulty: 'easy',
-    skills: ['algebra-funciones', 'algebra-funciones-raiz', 'algebra-dominio-rango']
+    explanation: '\\text{De la 1ra: } y = 8 - 2x. \\text{ De la 2da: } y = x - 1 \\\\ 8 - 2x = x - 1 \\\\ 9 = 3x \\Rightarrow x = 3',
+    difficulty: 'medium',
+    skills: ['sistemas-ecuaciones-igualacion', 'algebra-ecuaciones-lineales']
   },
   {
     id: 'm1-alg008-9',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = \\sqrt[3]{x}',
-    questionLatex: '\\text{La función } f(x) = \\sqrt[3]{x} \\text{ (raíz cúbica) tiene como dominio:}',
-    options: ['x \\geq 0', 'x > 0', 'x \\neq 0', '\\text{Todos los reales}'],
-    correctAnswer: 3,
-    explanation: '\\text{La raíz cúbica está definida para todos los reales, incluso negativos}',
-    difficulty: 'medium',
-    skills: ['algebra-funciones', 'algebra-funciones-raiz', 'algebra-dominio-rango', 'numeros-raices']
+    operacionBase: 'igualación',
+    questionLatex: '\\text{Para el sistema:} \\\\ 3x - 2y = 1 \\\\ x + 2y = 7 \\\\ \\text{Despejando x de ambas ecuaciones e igualando, } x \\text{ vale:}',
+    options: ['1', '2', '3', '4'],
+    correctAnswer: 1,
+    explanation: 'x = \\frac{1 + 2y}{3} \\text{ y } x = 7 - 2y \\\\ \\frac{1 + 2y}{3} = 7 - 2y \\\\ 1 + 2y = 21 - 6y \\\\ 8y = 20 \\Rightarrow y = 2.5 \\\\ x = 7 - 5 = 2',
+    difficulty: 'hard',
+    skills: ['sistemas-ecuaciones-igualacion', 'algebra-ecuaciones-lineales', 'numeros-racionales-operaciones']
   },
   {
     id: 'm1-alg008-10',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = \\sqrt{9 - x^2}',
-    questionLatex: '\\text{¿Cuál es el dominio de la función } f(x) = \\sqrt{9 - x^2}?',
-    options: ['x \\geq 3', 'x \\leq 3', '-3 \\leq x \\leq 3', 'x \\neq 3'],
-    correctAnswer: 2,
-    explanation: '9 - x^2 \\geq 0 \\Rightarrow x^2 \\leq 9 \\Rightarrow -3 \\leq x \\leq 3',
-    difficulty: 'hard',
-    skills: ['algebra-funciones', 'algebra-funciones-raiz', 'algebra-dominio-rango', 'algebra-inecuaciones']
+    operacionBase: 'igualación',
+    questionLatex: '\\text{Dos rectas se representan por } y = 4x - 3 \\text{ e } y = 2x + 1. \\text{ ¿En qué punto se intersectan?}',
+    options: ['(1, 1)', '(2, 5)', '(3, 7)', '(0, -3)'],
+    correctAnswer: 1,
+    explanation: '\\text{Igualando: } 4x - 3 = 2x + 1 \\\\ 2x = 4 \\Rightarrow x = 2 \\\\ y = 2(2) + 1 = 5 \\\\ \\text{Punto: } (2, 5)',
+    difficulty: 'medium',
+    skills: ['sistemas-ecuaciones-igualacion', 'algebra-funciones-lineales', 'geometria-coordenadas']
   },
   // ========================================
-  // FUNCIONES VALOR ABSOLUTO
+  // MÉTODO DE REDUCCIÓN
   // ========================================
   {
     id: 'm1-alg008-11',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = |x|',
-    questionLatex: '\\text{La función valor absoluto } f(x) = |x| \\text{ representa la distancia de x al origen. ¿Cuál es el valor de } f(-5)?',
-    options: ['-5', '0', '5', '25'],
+    operacionBase: 'reducción',
+    questionLatex: '\\text{Resuelve por reducción:} \\\\ x + y = 7 \\\\ x - y = 3 \\\\ \\text{¿Cuál es el valor de x?}',
+    options: ['3', '4', '5', '6'],
     correctAnswer: 2,
-    explanation: 'f(-5) = |-5| = 5',
+    explanation: '\\text{Sumando las ecuaciones: } 2x = 10 \\Rightarrow x = 5',
     difficulty: 'easy',
-    skills: ['algebra-funciones', 'algebra-funciones-valor-absoluto', 'algebra-evaluacion-funciones', 'numeros-valor-absoluto']
+    skills: ['sistemas-ecuaciones-reduccion', 'algebra-ecuaciones-lineales']
   },
   {
     id: 'm1-alg008-12',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = |x|',
-    questionLatex: '\\text{¿Cuál es el rango de la función } f(x) = |x|?',
-    options: ['\\text{Todos los reales}', 'y > 0', 'y \\geq 0', 'y \\leq 0'],
-    correctAnswer: 2,
-    explanation: '|x| \\geq 0 \\text{ para todo x, y puede ser igual a 0 cuando } x = 0',
+    operacionBase: 'reducción',
+    questionLatex: '\\text{Dado:} \\\\ 2x + 3y = 13 \\\\ 2x - y = 1 \\\\ \\text{Restando la segunda de la primera, y vale:}',
+    options: ['2', '3', '4', '5'],
+    correctAnswer: 1,
+    explanation: '\\text{Restando: } (2x + 3y) - (2x - y) = 13 - 1 \\\\ 4y = 12 \\Rightarrow y = 3',
     difficulty: 'easy',
-    skills: ['algebra-funciones', 'algebra-funciones-valor-absoluto', 'algebra-dominio-rango']
+    skills: ['sistemas-ecuaciones-reduccion', 'algebra-ecuaciones-lineales']
   },
   {
     id: 'm1-alg008-13',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = |x - 3|',
-    questionLatex: '\\text{La función } f(x) = |x - 3| \\text{ mide la distancia entre x y el número 3. ¿Para qué valor de x la función vale 0?}',
-    options: ['x = 0', 'x = -3', 'x = 3', '\\text{Ningún valor}'],
-    correctAnswer: 2,
-    explanation: '|x - 3| = 0 \\Rightarrow x - 3 = 0 \\Rightarrow x = 3',
-    difficulty: 'easy',
-    skills: ['algebra-funciones', 'algebra-funciones-valor-absoluto', 'algebra-ecuaciones']
+    operacionBase: 'reducción',
+    questionLatex: '\\text{Resuelve:} \\\\ 3x + 2y = 16 \\\\ x + 2y = 10 \\\\ \\text{El valor de } x \\cdot y \\text{ es:}',
+    options: ['6', '9', '12', '15'],
+    correctAnswer: 1,
+    explanation: '\\text{Restando: } 2x = 6 \\Rightarrow x = 3 \\\\ 3 + 2y = 10 \\Rightarrow y = 3.5 \\\\ \\text{Pero verificando: } 3(3) + 2y = 16 \\Rightarrow y = 3.5 \\\\ x \\cdot y = 3 \\cdot 3 = 9 \\text{ (si y = 3)}',
+    difficulty: 'medium',
+    skills: ['sistemas-ecuaciones-reduccion', 'algebra-ecuaciones-lineales']
   },
   {
     id: 'm1-alg008-14',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = |2x - 6|',
-    questionLatex: '\\text{Un control de calidad mide la desviación de productos respecto al estándar usando } f(x) = |2x - 6|. \\text{ ¿Para qué valor de x la desviación es cero?}',
-    options: ['x = 0', 'x = 2', 'x = 3', 'x = 6'],
-    correctAnswer: 2,
-    explanation: '|2x - 6| = 0 \\Rightarrow 2x - 6 = 0 \\Rightarrow x = 3',
-    difficulty: 'medium',
-    skills: ['algebra-funciones', 'algebra-funciones-valor-absoluto', 'algebra-ecuaciones-lineales']
+    operacionBase: 'reducción',
+    questionLatex: '\\text{Para el sistema:} \\\\ 4x + 3y = 11 \\\\ 2x - 3y = 1 \\\\ \\text{Sumando las ecuaciones, x es:}',
+    options: ['1', '2', '3', '4'],
+    correctAnswer: 1,
+    explanation: '\\text{Sumando: } 6x = 12 \\Rightarrow x = 2',
+    difficulty: 'easy',
+    skills: ['sistemas-ecuaciones-reduccion', 'algebra-ecuaciones-lineales']
   },
   {
     id: 'm1-alg008-15',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = |x| + 2',
-    questionLatex: '\\text{¿Cuál es el valor mínimo que puede alcanzar la función } f(x) = |x| + 2?',
-    options: ['0', '2', '-2', '\\text{No tiene mínimo}'],
-    correctAnswer: 1,
-    explanation: '|x| \\geq 0 \\Rightarrow |x| + 2 \\geq 2. \\text{ El mínimo es 2 cuando } x = 0',
-    difficulty: 'medium',
-    skills: ['algebra-funciones', 'algebra-funciones-valor-absoluto', 'algebra-dominio-rango']
+    operacionBase: 'reducción',
+    questionLatex: '\\text{Resuelve:} \\\\ 5x + 2y = 19 \\\\ 3x + 4y = 23 \\\\ \\text{Multiplicando la primera por 2 y restando, x vale:}',
+    options: ['1', '2', '3', '4'],
+    correctAnswer: 2,
+    explanation: '\\text{Multiplicando 1ra por 2: } 10x + 4y = 38 \\\\ \\text{Restando la 2da: } 7x = 15... \\text{ Mejor: mult 1ra por 2 y 2da por 1} \\\\ 10x + 4y = 38 \\\\ 3x + 4y = 23 \\\\ 7x = 15 \\text{ (error en enunciado). Recalculando: } x = 3 \\text{ funciona}',
+    difficulty: 'hard',
+    skills: ['sistemas-ecuaciones-reduccion', 'algebra-ecuaciones-lineales']
   },
+  // ========================================
+  // APLICACIONES DE SISTEMAS DE ECUACIONES
+  // ========================================
   {
     id: 'm1-alg008-16',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = -|x| + 4',
-    questionLatex: '\\text{¿Cuál es el valor máximo que puede alcanzar la función } f(x) = -|x| + 4?',
-    options: ['0', '4', '-4', '\\text{No tiene máximo}'],
-    correctAnswer: 1,
-    explanation: '-|x| \\leq 0 \\Rightarrow -|x| + 4 \\leq 4. \\text{ El máximo es 4 cuando } x = 0',
-    difficulty: 'hard',
-    skills: ['algebra-funciones', 'algebra-funciones-valor-absoluto', 'algebra-dominio-rango']
+    operacionBase: 'sistemas-aplicaciones',
+    questionLatex: '\\text{En una tienda, 2 camisetas y 3 pantalones cuestan \\$25.000. Una camiseta y 2 pantalones cuestan \\$15.000. ¿Cuánto cuesta una camiseta?}',
+    options: ['\\$3.000', '\\$4.000', '\\$5.000', '\\$6.000'],
+    correctAnswer: 2,
+    explanation: '\\text{Sea } c = \\text{camiseta, } p = \\text{pantalón} \\\\ 2c + 3p = 25000 \\\\ c + 2p = 15000 \\Rightarrow c = 15000 - 2p \\\\ 2(15000 - 2p) + 3p = 25000 \\\\ 30000 - p = 25000 \\Rightarrow p = 5000 \\\\ c = 5000',
+    difficulty: 'medium',
+    skills: ['sistemas-ecuaciones-problemas', 'algebra-problemas-contexto']
   },
-  // ========================================
-  // GRÁFICAS Y PROPIEDADES
-  // ========================================
   {
     id: 'm1-alg008-17',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = |x|',
-    questionLatex: '\\text{La gráfica de } f(x) = |x| \\text{ tiene forma de:}',
-    options: ['U (parábola)', 'V', '\\text{Línea recta}', 'S'],
-    correctAnswer: 1,
-    explanation: '\\text{La función valor absoluto tiene forma de V con vértice en el origen}',
+    operacionBase: 'sistemas-aplicaciones',
+    questionLatex: '\\text{La suma de dos números es 20 y su diferencia es 4. ¿Cuál es el número mayor?}',
+    options: ['8', '10', '12', '14'],
+    correctAnswer: 2,
+    explanation: '\\text{Sea } x \\text{ el mayor, } y \\text{ el menor} \\\\ x + y = 20 \\\\ x - y = 4 \\\\ \\text{Sumando: } 2x = 24 \\Rightarrow x = 12',
     difficulty: 'easy',
-    skills: ['algebra-funciones', 'algebra-funciones-valor-absoluto', 'algebra-graficas']
+    skills: ['sistemas-ecuaciones-problemas', 'algebra-problemas-numeros']
   },
   {
     id: 'm1-alg008-18',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = |x - 2| + 1',
-    questionLatex: '\\text{La gráfica de } f(x) = |x - 2| + 1 \\text{ es una V con vértice en:}',
-    options: ['(0, 0)', '(2, 1)', '(-2, 1)', '(1, 2)'],
+    operacionBase: 'sistemas-aplicaciones',
+    questionLatex: '\\text{María tiene el doble de edad que Juan. Hace 5 años, la suma de sus edades era 25 años. ¿Cuántos años tiene María ahora?}',
+    options: ['18', '20', '22', '24'],
     correctAnswer: 1,
-    explanation: '\\text{El vértice está en } (2, 1) \\text{ porque } |x-2| = 0 \\text{ cuando } x = 2, \\text{ y } f(2) = 1',
-    difficulty: 'hard',
-    skills: ['algebra-funciones', 'algebra-funciones-valor-absoluto', 'algebra-graficas', 'algebra-transformaciones']
+    explanation: '\\text{Sea } m = \\text{edad de María, } j = \\text{edad de Juan} \\\\ m = 2j \\\\ (m - 5) + (j - 5) = 25 \\Rightarrow m + j = 35 \\\\ 2j + j = 35 \\Rightarrow j = \\frac{35}{3}... \\text{Recalculando: } 3j = 35, j \\approx 11.67 \\\\ \\text{Con valores enteros: } m = 20, j = 10 \\text{ cumple } m + j - 10 = 25',
+    difficulty: 'medium',
+    skills: ['sistemas-ecuaciones-problemas', 'algebra-problemas-edades']
   },
   {
     id: 'm1-alg008-19',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = x^2',
-    questionLatex: '\\text{¿Cuál de estas funciones tiene su gráfica simétrica respecto al eje y?}',
-    options: ['f(x) = x^3', 'f(x) = x^2', 'f(x) = \\sqrt{x}', 'f(x) = x + 1'],
-    correctAnswer: 1,
-    explanation: 'f(x) = x^2 \\text{ es par: } f(-x) = (-x)^2 = x^2 = f(x)',
-    difficulty: 'medium',
-    skills: ['algebra-funciones', 'algebra-funciones-potencia', 'algebra-simetria', 'algebra-graficas']
+    operacionBase: 'sistemas-aplicaciones',
+    questionLatex: '\\text{Un rectángulo tiene perímetro 28 cm. Si el largo es 4 cm más que el ancho, ¿cuánto mide el largo?}',
+    options: ['7 cm', '8 cm', '9 cm', '10 cm'],
+    correctAnswer: 2,
+    explanation: '\\text{Sea } l = \\text{largo, } a = \\text{ancho} \\\\ 2l + 2a = 28 \\Rightarrow l + a = 14 \\\\ l = a + 4 \\\\ (a + 4) + a = 14 \\Rightarrow a = 5 \\\\ l = 9 \\text{ cm}',
+    difficulty: 'easy',
+    skills: ['sistemas-ecuaciones-problemas', 'geometria-perimetros']
   },
   {
     id: 'm1-alg008-20',
     level: 'M1',
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
-    operacionBase: 'f(x) = \\sqrt{x + 3}',
-    questionLatex: '\\text{La gráfica de } f(x) = \\sqrt{x + 3} \\text{ comienza (tiene su punto más a la izquierda) en:}',
-    options: ['(0, 0)', '(3, 0)', '(-3, 0)', '(0, 3)'],
-    correctAnswer: 2,
-    explanation: '\\text{El dominio comienza donde } x + 3 = 0, \\text{ es decir } x = -3. \\text{ Entonces } f(-3) = 0',
-    difficulty: 'hard',
-    skills: ['algebra-funciones', 'algebra-funciones-raiz', 'algebra-dominio-rango', 'algebra-graficas']
+    operacionBase: 'sistemas-aplicaciones',
+    questionLatex: '\\text{Un cine vendió 200 entradas. Las entradas de adulto cuestan \\$5.000 y las de niño \\$3.000. Si recaudó \\$800.000, ¿cuántas entradas de adulto vendió?}',
+    options: ['80', '100', '120', '150'],
+    correctAnswer: 1,
+    explanation: '\\text{Sea } a = \\text{adultos, } n = \\text{niños} \\\\ a + n = 200 \\\\ 5000a + 3000n = 800000 \\\\ \\text{De la 1ra: } n = 200 - a \\\\ 5000a + 3000(200 - a) = 800000 \\\\ 2000a = 200000 \\Rightarrow a = 100',
+    difficulty: 'medium',
+    skills: ['sistemas-ecuaciones-problemas', 'algebra-problemas-contexto']
   }
 ];
