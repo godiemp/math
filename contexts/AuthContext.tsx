@@ -23,26 +23,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoadingFullUser, setIsLoadingFullUser] = useState(false);
 
   // Derive basic user from NextAuth session
-  const sessionUser: User | null = session?.user ? {
-    id: session.user.id,
-    username: session.user.username,
-    email: session.user.email,
-    displayName: session.user.displayName,
-    role: session.user.role,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sessionUserData = session?.user as any;
+  const sessionUser: User | null = sessionUserData?.id && sessionUserData?.email ? {
+    id: sessionUserData.id,
+    username: sessionUserData.username || '',
+    email: sessionUserData.email,
+    displayName: sessionUserData.displayName || '',
+    role: sessionUserData.role || 'student',
     createdAt: 0, // Will be populated by full user fetch
-    subscription: session.user.subscription ? {
+    subscription: sessionUserData.subscription ? {
       id: 0,
-      userId: session.user.id,
+      userId: sessionUserData.id,
       planId: '',
-      status: session.user.subscription.status,
+      status: sessionUserData.subscription.status,
       startedAt: 0,
-      expiresAt: session.user.subscription.expiresAt,
-      trialEndsAt: session.user.subscription.trialEndsAt,
+      expiresAt: sessionUserData.subscription.expiresAt,
+      trialEndsAt: sessionUserData.subscription.trialEndsAt,
       autoRenew: false,
       createdAt: 0,
       updatedAt: 0,
     } : undefined,
-    emailVerified: session.user.emailVerified,
+    emailVerified: sessionUserData.emailVerified,
   } : null;
 
   // Use full user if available, otherwise session user
