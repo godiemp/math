@@ -7,6 +7,8 @@ interface UseQuizStateProps {
   subject?: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
   questionCount: number;
   replayQuestions?: Question[];
+  initialAnswers?: (number | null)[];
+  initialIndex?: number;
 }
 
 /**
@@ -16,10 +18,12 @@ export const useQuizState = ({
   level,
   subject,
   questionCount,
-  replayQuestions
+  replayQuestions,
+  initialAnswers,
+  initialIndex
 }: UseQuizStateProps) => {
   const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(initialIndex || 0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
 
@@ -30,8 +34,9 @@ export const useQuizState = ({
       : getRandomQuestions(level, questionCount, subject);
 
     setQuizQuestions(questionsToUse);
-    setUserAnswers(new Array(questionsToUse.length).fill(null));
-  }, [level, subject, questionCount, replayQuestions]);
+    setUserAnswers(initialAnswers || new Array(questionsToUse.length).fill(null));
+    setCurrentQuestionIndex(initialIndex || 0);
+  }, [level, subject, questionCount, replayQuestions, initialAnswers, initialIndex]);
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
 
