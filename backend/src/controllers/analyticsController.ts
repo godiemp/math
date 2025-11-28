@@ -467,8 +467,8 @@ export const getPMFMetrics = async (req: Request, res: Response) => {
     const weeklyTrendResult = await pool.query(`
       WITH date_series AS (
         SELECT generate_series(
-          DATE(to_timestamp($1 / 1000)),
-          DATE(to_timestamp($2 / 1000)),
+          DATE(to_timestamp($1::bigint / 1000)),
+          DATE(to_timestamp($2::bigint / 1000)),
           '1 day'::interval
         ) as practice_date
       ),
