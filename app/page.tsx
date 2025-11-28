@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,18 +8,32 @@ import Auth from "@/components/auth/Auth";
 import Footer from "@/components/layout/Footer";
 import { useTranslations } from 'next-intl';
 
-// Inner component that uses useSearchParams (requires Suspense boundary)
+// Small component that reads search params - isolated for Suspense boundary
+function SearchParamsReader({ onWelcomeParam }: { onWelcomeParam: (hasWelcome: boolean) => void }) {
+  const searchParams = useSearchParams();
+  const hasWelcomeParam = searchParams.get('welcome') === 'true';
+
+  useEffect(() => {
+    onWelcomeParam(hasWelcomeParam);
+  }, [hasWelcomeParam, onWelcomeParam]);
+
+  return null;
+}
+
+// Inner component that handles the main UI (no useSearchParams here)
 function HomeContent() {
   const t = useTranslations('landing');
   const tCommon = useTranslations('common');
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [redirectPath, setRedirectPath] = useState<string | null>(null);
+  const [hasWelcomeParam, setHasWelcomeParam] = useState(false);
 
-  // Check URL for welcome flag (middleware preserves query params when redirecting)
-  const hasWelcomeParam = searchParams.get('welcome') === 'true';
+  // Callback to receive welcome param from SearchParamsReader
+  const handleWelcomeParam = useCallback((hasWelcome: boolean) => {
+    setHasWelcomeParam(hasWelcome);
+  }, []);
 
   useEffect(() => {
     // Redirect when authenticated - uses redirectPath state, URL welcome param, or default
@@ -42,6 +56,11 @@ function HomeContent() {
         background: 'var(--color-bg)'
       }}
     >
+      {/* Read search params in isolated Suspense boundary */}
+      <Suspense fallback={null}>
+        <SearchParamsReader onWelcomeParam={handleWelcomeParam} />
+      </Suspense>
+
       {/* Gradient Background Layer */}
       <div
         className="absolute inset-0 opacity-40"
