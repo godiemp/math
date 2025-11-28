@@ -89,8 +89,8 @@ export const m1Num008Questions: Question[] = [
     operacionBase: '6.02 \\times 10^{23}',
     questionLatex: '\\text{El número de Avogadro, fundamental en química, es } 6.02 \\times 10^{23}\\text{. Un estudiante necesita entender la magnitud de este número. ¿Cuántos ceros tendría este número si se escribiera en notación decimal estándar?}',
     options: ['20 ceros', '21 ceros', '22 ceros', '23 ceros'],
-    correctAnswer: 1,
-    explanation: '6.02 \\times 10^{23} \\text{ tiene 21 ceros}',
+    correctAnswer: 2,
+    explanation: '6.02 \\times 10^{23} = 602{,}000{,}000{,}000{,}000{,}000{,}000{,}000 \\text{ tiene 22 ceros (1 en 602 y 21 ceros adicionales)}',
     difficulty: 'medium',
     skills: ['numeros-decimales', 'numeros-potencias', 'numeros-notacion-cientifica', 'numeros-operaciones-basicas']
   },
