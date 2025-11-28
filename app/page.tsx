@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,7 +8,8 @@ import Auth from "@/components/auth/Auth";
 import Footer from "@/components/layout/Footer";
 import { useTranslations } from 'next-intl';
 
-export default function Home() {
+// Inner component that uses useSearchParams (requires Suspense boundary)
+function HomeContent() {
   const t = useTranslations('landing');
   const tCommon = useTranslations('common');
   const { isAuthenticated, isLoading } = useAuth();
@@ -314,5 +315,14 @@ export default function Home() {
       {/* Footer */}
       <Footer />
     </div>
+  );
+}
+
+// Wrapper component with Suspense boundary for useSearchParams
+export default function Home() {
+  return (
+    <Suspense fallback={null}>
+      <HomeContent />
+    </Suspense>
   );
 }
