@@ -894,6 +894,7 @@
       "liveSessions": "live sessions",
       "certificates": "certificates",
       "analytics": "analytics",
+      "pmfMetrics": "PMF metrics",
       "aiAnalytics": "AI analytics",
       "systemHealth": "system health",
       "users": "users",

@@ -29,6 +29,7 @@ const menuGroupsConfig: MenuGroup[] = [
       { nameKey: 'liveSessions', path: '/admin/live-sessions', icon: '📊' },
       { nameKey: 'certificates', path: '/admin/certificates', icon: '🎓' },
       { nameKey: 'analytics', path: '/admin/analytics', icon: '📈' },
+      { nameKey: 'pmfMetrics', path: '/admin/pmf-metrics', icon: '🎯' },
       { nameKey: 'aiAnalytics', path: '/admin/ai-analytics', icon: '🤖' },
       { nameKey: 'systemHealth', path: '/admin/system-health', icon: '💚' },
     ],
