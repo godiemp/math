@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { toast } from 'sonner';
 import { Eye, EyeOff } from 'lucide-react';
@@ -15,6 +16,7 @@ interface AuthProps {
 export default function Auth({ onSuccess }: AuthProps) {
   const t = useTranslations('auth');
   const tCommon = useTranslations('common');
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   // Auto-fill credentials in Vercel preview for faster testing
   const isPreview = process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
@@ -65,6 +67,8 @@ export default function Auth({ onSuccess }: AuthProps) {
           });
 
           toast.success(t('login.success'));
+          // Navigate directly to dashboard - don't rely on session state propagation
+          router.push('/dashboard');
           onSuccess(false);
         }
       } else {
@@ -124,10 +128,13 @@ export default function Auth({ onSuccess }: AuthProps) {
 
           if (signInResult?.ok) {
             toast.success(t('register.success'));
+            // Navigate directly to dashboard with welcome flag - don't rely on session state propagation
+            router.push('/dashboard?welcome=true');
             onSuccess(true);
           } else {
             // Registration succeeded but sign in failed - still show success
             toast.success(t('register.success'));
+            router.push('/dashboard?welcome=true');
             onSuccess(true);
           }
         } else {
