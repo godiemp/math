@@ -60,6 +60,8 @@ jobs:
       # SECURITY: Minimum 32 characters required (for tests only - use secure secrets in production)
       JWT_SECRET: test-jwt-secret-key-for-e2e-tests-minimum-32-chars
       JWT_REFRESH_SECRET: test-jwt-refresh-secret-key-for-e2e-tests-minimum-32-chars
+      # NextAuth secret for session encryption (test-only value)
+      AUTH_SECRET: test-auth-secret-key-for-e2e-tests-minimum-32-characters
       FRONTEND_URL: http://localhost:3000
       NEXT_PUBLIC_API_URL: http://localhost:3002
 
