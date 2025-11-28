@@ -19,10 +19,10 @@ export const m1Num001Questions: Question[] = [
     topic: 'Números y Operaciones',
     subject: 'números',
     operacionBase: '(-3) \\times (-5)',
-    questionLatex: '\\text{Un buzo profesional está explorando las profundidades marinas y registra sus movimientos verticales. En su primer descenso baja 3 metros, lo que se representa como -3. Luego, debido a las condiciones climáticas adversas, debe realizar esta misma maniobra descendente 5 veces consecutivas. El equipo de superficie necesita calcular el cambio neto en su posición respecto al nivel inicial. ¿Cuál es el resultado de esta operación?}',
+    questionLatex: '\\text{Un operador de grúa registra los movimientos verticales de la carga. Cada vez que baja la carga 3 metros, anota -3 en su registro. Cada vez que sube la carga 5 metros, anota +5. Al final del día, el supervisor le pide calcular qué pasaría si en lugar de bajar la carga 3 metros, la hubiera subido 3 metros, y esto lo hubiera repetido 5 veces. Es decir, debe calcular el opuesto de -3, multiplicado por 5. ¿Cuál es el resultado de } (-3) \\times (-5) \\text{?}',
     options: ['-15', '-8', '8', '15'],
     correctAnswer: 3,
-    explanation: '(-3) \\times (-5) = 15',
+    explanation: '(-3) \\times (-5) = 15 \\text{. El producto de dos números negativos es positivo.}',
     difficulty: 'easy',
     skills: ['numeros-enteros-multiplicar-dividir', 'numeros-patrones-signos', 'numeros-enteros-comprender-significado']
   },
