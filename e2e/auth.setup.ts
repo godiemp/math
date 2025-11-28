@@ -24,15 +24,12 @@ setup('authenticate as student', async ({ page }) => {
   // Submit login
   await page.click('button[type="submit"]');
 
-  // Wait for navigation to complete - login should redirect us somewhere
-  // Wait for network to be idle to ensure all auth cookies/tokens are set
-  await page.waitForLoadState('networkidle', { timeout: 15000 });
+  // Wait for automatic redirect to dashboard - this tests the actual login flow
+  // Don't manually navigate to /dashboard as that masks redirect bugs
+  await page.waitForURL(/\/dashboard/, { timeout: 5000 });
 
-  // Navigate to dashboard to ensure we end up on an authenticated page
-  await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
-
-  // Wait a moment for any additional auth setup
-  await page.waitForLoadState('domcontentloaded');
+  // Wait for network to settle to ensure auth state is fully saved
+  await page.waitForLoadState('networkidle', { timeout: 10000 });
 
   // Save signed-in state - this captures all cookies, localStorage, sessionStorage
   await page.context().storageState({ path: authFile });

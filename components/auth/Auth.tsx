@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { toast } from 'sonner';
 import { Eye, EyeOff } from 'lucide-react';
-import { registerUser, loginUser } from '@/lib/auth';
+import { registerUser } from '@/lib/auth';
 import { analytics } from '@/lib/analytics';
 import { useTranslations } from 'next-intl';
 
@@ -14,6 +16,7 @@ interface AuthProps {
 export default function Auth({ onSuccess }: AuthProps) {
   const t = useTranslations('auth');
   const tCommon = useTranslations('common');
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   // Auto-fill credentials in Vercel preview for faster testing
   const isPreview = process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
@@ -33,7 +36,7 @@ export default function Auth({ onSuccess }: AuthProps) {
 
     try {
       if (isLogin) {
-        // Login
+        // Login via NextAuth
         if (!username || !password) {
           const errorMsg = t('login.errors.completeFields');
           setError(errorMsg);
@@ -42,34 +45,34 @@ export default function Auth({ onSuccess }: AuthProps) {
           return;
         }
 
-        const result = await loginUser(username, password);
-        if (result.success && result.user) {
+        const result = await signIn('credentials', {
+          usernameOrEmail: username,
+          password,
+          redirect: false,
+        });
+
+        if (result?.error) {
+          const errorMsg = t('login.errors.invalidCredentials');
+          setError(errorMsg);
+          toast.error(errorMsg);
+          setIsLoading(false);
+          return;
+        }
+
+        if (result?.ok) {
           // Track login event
           analytics.track('user_logged_in', {
             method: 'password',
-            username: result.user.username,
-          });
-
-          // Identify user for future events
-          analytics.identify(result.user.id, {
-            email: result.user.email,
-            username: result.user.username,
-            displayName: result.user.displayName,
-            role: result.user.role,
-            subscriptionStatus: result.user.subscription?.status || 'free',
-            currentStreak: result.user.currentStreak || 0,
-            longestStreak: result.user.longestStreak || 0,
+            username: username,
           });
 
           toast.success(t('login.success'));
+          // Navigate directly to dashboard - don't rely on session state propagation
+          router.push('/dashboard');
           onSuccess(false);
-        } else {
-          const errorMsg = result.error || t('login.errors.invalidCredentials');
-          setError(errorMsg);
-          toast.error(errorMsg);
         }
       } else {
-        // Register
+        // Register - call backend first, then signIn
         if (!username || !email || !password || !displayName) {
           const errorMsg = t('register.errors.completeFields');
           setError(errorMsg);
@@ -95,6 +98,7 @@ export default function Auth({ onSuccess }: AuthProps) {
           return;
         }
 
+        // Register with backend
         const result = await registerUser(username, email, password, displayName, acceptedTerms);
         if (result.success && result.user) {
           // Track registration event
@@ -115,8 +119,32 @@ export default function Auth({ onSuccess }: AuthProps) {
             longestStreak: 0,
           });
 
-          toast.success(t('register.success'));
-          onSuccess(true);
+          // Now sign in with NextAuth to create session
+          const signInResult = await signIn('credentials', {
+            usernameOrEmail: username,
+            password,
+            redirect: false,
+          });
+
+          if (signInResult?.ok) {
+            toast.success(t('register.success'));
+            // Call onSuccess FIRST to set redirectPath state, then navigate
+            // This ensures the landing page has the correct redirectPath if middleware redirects back
+            onSuccess(true);
+            router.push('/dashboard?welcome=true');
+          } else {
+            // Registration succeeded but auto sign-in failed
+            // Don't navigate to dashboard as middleware will redirect back (no session)
+            // Instead, keep user on auth form and let them manually sign in
+            toast.success(t('register.success'));
+            // Switch to login mode so user can manually sign in
+            setIsLogin(true);
+            // Pre-fill username for convenience
+            setUsername(username);
+            setPassword('');
+            setDisplayName('');
+            setEmail('');
+          }
         } else {
           const errorMsg = result.error || t('login.errors.registration');
           setError(errorMsg);
