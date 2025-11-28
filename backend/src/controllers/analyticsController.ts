@@ -545,7 +545,7 @@ export const getPMFMetrics = async (req: Request, res: Response) => {
           u.id,
           MAX(CASE WHEN qa.quiz_mode = 'zen' THEN 1 ELSE 0 END) as used_zen,
           MAX(CASE WHEN qa.quiz_mode = 'rapidfire' THEN 1 ELSE 0 END) as used_rapidfire,
-          MAX(CASE WHEN sp.id IS NOT NULL THEN 1 ELSE 0 END) as used_live_sessions
+          MAX(CASE WHEN s.id IS NOT NULL THEN 1 ELSE 0 END) as used_live_sessions
         FROM users u
         LEFT JOIN question_attempts qa ON u.id = qa.user_id AND qa.attempted_at >= $1
         LEFT JOIN session_participants sp ON u.id = sp.user_id
