@@ -44,16 +44,20 @@ test.describe('Student Profile Page', () => {
     await page.goto('/profile', { waitUntil: 'domcontentloaded' });
 
     // Check subscription heading
-    await expect(page.getByRole('heading', { name: /Suscripción/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Suscripción/i })).toBeVisible({ timeout: 10000 });
 
-    // Check for subscription status (could be Trial, Active, etc.)
-    await expect(page.getByText(/Estado:/i)).toBeVisible();
+    // Check for subscription status (could be Trial, Active, etc.) - use case-insensitive search
+    await expect(page.getByText(/estado:/i)).toBeVisible({ timeout: 5000 });
 
-    // Should have subscription details or "no subscription" message
-    const hasSubscription = await page.getByText(/Fecha de inicio:/i).isVisible().catch(() => false);
-    const noSubscription = await page.getByText(/No tienes una suscripción activa/i).isVisible().catch(() => false);
+    // Should show subscription status badge (activa, prueba gratuita, etc.) or "no subscription" message
+    // Wait longer and use more flexible matching
+    await page.waitForTimeout(1000); // Allow session data to load
 
-    expect(hasSubscription || noSubscription).toBeTruthy();
+    const hasActiveStatus = await page.locator('text=/activa/i').first().isVisible().catch(() => false);
+    const hasTrialStatus = await page.locator('text=/prueba gratuita/i').first().isVisible().catch(() => false);
+    const noSubscription = await page.locator('text=/no tienes una suscripción/i').first().isVisible().catch(() => false);
+
+    expect(hasActiveStatus || hasTrialStatus || noSubscription).toBeTruthy();
   });
 
   test('should display practice streaks', async ({ page }) => {

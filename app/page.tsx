@@ -1,28 +1,48 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import Auth from "@/components/auth/Auth";
 import Footer from "@/components/layout/Footer";
 import { useTranslations } from 'next-intl';
 
-export default function Home() {
-  const t = useTranslations('landing');
-  const tCommon = useTranslations('common');
-  const { isAuthenticated, isLoading, setUser } = useAuth();
-  const router = useRouter();
-  const [showInfoModal, setShowInfoModal] = useState(false);
-  const [isRedirecting, setIsRedirecting] = useState(false);
+// Small component that reads search params - isolated for Suspense boundary
+function SearchParamsReader({ onWelcomeParam }: { onWelcomeParam: (hasWelcome: boolean) => void }) {
+  const searchParams = useSearchParams();
+  const hasWelcomeParam = searchParams.get('welcome') === 'true';
 
   useEffect(() => {
-    // Only redirect if auth loading is complete and user is authenticated
-    // Skip if we're already redirecting from onSuccess callback
-    if (!isLoading && isAuthenticated && !isRedirecting) {
-      router.push('/dashboard');
+    onWelcomeParam(hasWelcomeParam);
+  }, [hasWelcomeParam, onWelcomeParam]);
+
+  return null;
+}
+
+// Inner component that handles the main UI (no useSearchParams here)
+function HomeContent() {
+  const t = useTranslations('landing');
+  const tCommon = useTranslations('common');
+  const { isAuthenticated, isLoading } = useAuth();
+  const router = useRouter();
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [redirectPath, setRedirectPath] = useState<string | null>(null);
+  const [hasWelcomeParam, setHasWelcomeParam] = useState(false);
+
+  // Callback to receive welcome param from SearchParamsReader
+  const handleWelcomeParam = useCallback((hasWelcome: boolean) => {
+    setHasWelcomeParam(hasWelcome);
+  }, []);
+
+  useEffect(() => {
+    // Redirect when authenticated - uses redirectPath state, URL welcome param, or default
+    if (!isLoading && isAuthenticated) {
+      // Priority: redirectPath state > URL welcome param > default dashboard
+      const targetPath = redirectPath || (hasWelcomeParam ? '/dashboard?welcome=true' : '/dashboard');
+      router.push(targetPath);
     }
-  }, [isAuthenticated, isLoading, isRedirecting, router]);
+  }, [isAuthenticated, isLoading, redirectPath, hasWelcomeParam, router]);
 
   // While loading auth or if authenticated, don't show login
   if (isLoading || isAuthenticated) {
@@ -36,6 +56,11 @@ export default function Home() {
         background: 'var(--color-bg)'
       }}
     >
+      {/* Read search params in isolated Suspense boundary */}
+      <Suspense fallback={null}>
+        <SearchParamsReader onWelcomeParam={handleWelcomeParam} />
+      </Suspense>
+
       {/* Gradient Background Layer */}
       <div
         className="absolute inset-0 opacity-40"
@@ -118,9 +143,12 @@ export default function Home() {
           {/* Auth Component */}
           <Auth
             onSuccess={(isNewUser) => {
-              setIsRedirecting(true);
-              setUser(require('@/lib/auth').getCurrentUser());
-              router.push(isNewUser ? '/dashboard?welcome=true' : '/dashboard');
+              // Set redirect path for new users (welcome flow)
+              // NextAuth session is automatically updated after signIn()
+              // The useEffect will handle navigation once isAuthenticated becomes true
+              if (isNewUser) {
+                setRedirectPath('/dashboard?welcome=true');
+              }
             }}
           />
 
@@ -306,5 +334,14 @@ export default function Home() {
       {/* Footer */}
       <Footer />
     </div>
+  );
+}
+
+// Wrapper component with Suspense boundary for useSearchParams
+export default function Home() {
+  return (
+    <Suspense fallback={null}>
+      <HomeContent />
+    </Suspense>
   );
 }

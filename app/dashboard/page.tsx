@@ -1,6 +1,7 @@
 'use client';
 
 import Link from "next/link";
+import { signOut } from 'next-auth/react';
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -108,9 +109,10 @@ function DashboardContent() {
   }, [user]);
 
   const handleLogout = async () => {
+    // Also call backend logout to clear HttpOnly cookies
     await logoutUser();
-    setUser(null);
-    router.push('/');
+    // Sign out from NextAuth (clears session)
+    await signOut({ callbackUrl: '/' });
   };
 
   const handleWelcomeClose = () => {

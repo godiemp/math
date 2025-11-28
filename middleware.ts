@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { jwtVerify } from 'jose';
+import { auth } from "@/auth"
+import { NextResponse } from 'next/server';
 
 // Protected routes that require authentication
 const PROTECTED_ROUTES = [
@@ -16,8 +16,8 @@ const ADMIN_ROUTES = [
   '/admin'
 ];
 
-export default async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+export default auth((req) => {
+  const { pathname } = req.nextUrl;
 
   // Check if the current path is a protected route
   const isProtectedRoute = PROTECTED_ROUTES.some(route => pathname.startsWith(route));
@@ -25,62 +25,34 @@ export default async function middleware(request: NextRequest) {
 
   // Log middleware execution for debugging
   if (process.env.NODE_ENV === 'test') {
-    console.log('[Middleware] Path:', pathname, 'Protected:', isProtectedRoute);
+    console.log('[Middleware] Path:', pathname, 'Protected:', isProtectedRoute, 'Auth:', !!req.auth);
   }
 
   if (!isProtectedRoute) {
     return NextResponse.next();
   }
 
-  // Get the access token from cookies
-  const accessToken = request.cookies.get('accessToken')?.value;
-
-  // Log authentication status for debugging
-  if (process.env.NODE_ENV === 'test') {
-    console.log('[Middleware] Has accessToken:', !!accessToken);
-  }
-
-  // No token - redirect to home
-  if (!accessToken) {
+  // Check if user is authenticated via NextAuth session
+  if (!req.auth) {
     if (process.env.NODE_ENV === 'test') {
-      console.log('[Middleware] Redirecting to home - no access token');
+      console.log('[Middleware] Redirecting to home - no session');
     }
-    const url = request.nextUrl.clone();
+    const url = req.nextUrl.clone();
     url.pathname = '/';
     return NextResponse.redirect(url);
   }
 
-  try {
-    // Verify the token using jose (Edge Runtime compatible)
-    const jwtSecret = process.env.JWT_SECRET;
-    if (!jwtSecret) {
-      console.error('JWT_SECRET is not configured');
-      const url = request.nextUrl.clone();
-      url.pathname = '/';
-      return NextResponse.redirect(url);
-    }
-
-    // Convert string secret to Uint8Array for jose
-    const secret = new TextEncoder().encode(jwtSecret);
-    const { payload } = await jwtVerify(accessToken, secret);
-
-    // Check admin routes
-    if (isAdminRoute && payload.role !== 'admin') {
-      const url = request.nextUrl.clone();
-      url.pathname = '/';
-      return NextResponse.redirect(url);
-    }
-
-    // Token is valid - allow access
-    return NextResponse.next();
-  } catch (error) {
-    // Invalid or expired token - redirect to home
-    console.error('Token verification failed:', error instanceof Error ? error.message : 'Unknown error');
-    const url = request.nextUrl.clone();
+  // Check admin routes
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (isAdminRoute && (req.auth.user as any)?.role !== 'admin') {
+    const url = req.nextUrl.clone();
     url.pathname = '/';
     return NextResponse.redirect(url);
   }
-}
+
+  // User is authenticated - allow access
+  return NextResponse.next();
+})
 
 export const config = {
   // Match all pathnames except for

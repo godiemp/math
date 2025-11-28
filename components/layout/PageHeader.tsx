@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import { useAuth } from '@/contexts/AuthContext';
 import { logoutUser } from '@/lib/auth';
 import { Button, Heading, Text, Badge } from '@/components/ui';
@@ -30,9 +31,10 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   const { user, setUser, isAdmin } = useAuth();
 
   const handleLogout = async () => {
+    // Also call backend logout to clear HttpOnly cookies
     await logoutUser();
-    setUser(null);
-    router.push('/');
+    // Sign out from NextAuth (clears session)
+    await signOut({ callbackUrl: '/' });
   };
 
   const handleBack = () => {

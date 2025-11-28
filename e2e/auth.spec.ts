@@ -30,8 +30,9 @@ test.describe('Authentication', () => {
     // Click login button
     await page.click('button[type="submit"]');
 
-    // Wait for navigation to complete
-    await page.waitForURL(/\/dashboard/, { timeout: 5000 });
+    // Wait for automatic redirect to dashboard - short timeout to catch race conditions
+    // The redirect should happen immediately after auth state updates, not require manual navigation
+    await page.waitForURL(/\/dashboard/, { timeout: 3000 });
 
     // Verify all dashboard cards are rendered by checking for their key links/buttons
 
