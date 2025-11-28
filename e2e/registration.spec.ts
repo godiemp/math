@@ -58,12 +58,9 @@ test.describe('User Registration', () => {
     // Submit form
     await page.getByTestId('auth-submit-button').click();
 
-    // Wait for redirect to dashboard
-    await page.waitForTimeout(3000);
-
-    // Verify successful registration - should be redirected to dashboard
-    const url = page.url();
-    expect(url).toContain('/dashboard');
+    // Wait for automatic redirect to dashboard after registration
+    // NextAuth session is created after registration, then useEffect handles redirect
+    await page.waitForURL(/\/dashboard/, { timeout: 10000 });
   });
 
   test('should show error for username less than 3 characters', async ({ page }) => {
