@@ -9,6 +9,7 @@ import { m1Num005Questions } from './M1-NUM-005';
 import { m1Num006Questions } from './M1-NUM-006';
 import { m1Num007Questions } from './M1-NUM-007';
 import { m1Num008Questions } from './M1-NUM-008';
+import { m1Num009Questions } from './M1-NUM-009';
 
 // Export curriculum subsections
 export { m1Num001Questions } from './M1-NUM-001';
@@ -19,6 +20,7 @@ export { m1Num005Questions } from './M1-NUM-005';
 export { m1Num006Questions } from './M1-NUM-006';
 export { m1Num007Questions } from './M1-NUM-007';
 export { m1Num008Questions } from './M1-NUM-008';
+export { m1Num009Questions } from './M1-NUM-009';
 
 // Export combined array
 export const m1NumerosQuestions: Question[] = [
@@ -30,4 +32,5 @@ export const m1NumerosQuestions: Question[] = [
   ...m1Num006Questions,
   ...m1Num007Questions,
   ...m1Num008Questions,
+  ...m1Num009Questions,
 ];

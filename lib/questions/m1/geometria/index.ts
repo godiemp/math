@@ -4,6 +4,8 @@ import { m1Geo002Questions } from './m1-geo-002';
 import { m1Geo003Questions } from './m1-geo-003';
 import { m1Geo004Questions } from './m1-geo-004';
 import { m1Geo005Questions } from './m1-geo-005';
+import { m1Geo006Questions } from './m1-geo-006';
+import { m1Geo007Questions } from './m1-geo-007';
 
 // Export curriculum subsections
 export { m1Geo001Questions } from './m1-geo-001';
@@ -11,6 +13,8 @@ export { m1Geo002Questions } from './m1-geo-002';
 export { m1Geo003Questions } from './m1-geo-003';
 export { m1Geo004Questions } from './m1-geo-004';
 export { m1Geo005Questions } from './m1-geo-005';
+export { m1Geo006Questions } from './m1-geo-006';
+export { m1Geo007Questions } from './m1-geo-007';
 
 // Export combined array
 export const m1GeometriaQuestions = [
@@ -19,4 +23,6 @@ export const m1GeometriaQuestions = [
   ...m1Geo003Questions,
   ...m1Geo004Questions,
   ...m1Geo005Questions,
+  ...m1Geo006Questions,
+  ...m1Geo007Questions,
 ];
