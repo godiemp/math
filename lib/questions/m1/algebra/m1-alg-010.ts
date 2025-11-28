@@ -118,8 +118,8 @@ export const m1Alg010Questions: Question[] = [
     operacionBase: 'movimiento',
     questionLatex: '\\text{Dos autos parten del mismo punto. El primero viaja a 60 km/h y el segundo a 80 km/h pero parte 1 hora después. ¿Cuándo se encontrarán?}',
     options: ['2 h después de partir el 1ro', '3 h después de partir el 1ro', '4 h después de partir el 1ro', 'Nunca se encontrarán'],
-    correctAnswer: 1,
-    explanation: '\\text{Posición 1ro: } 60t. \\text{ Posición 2do: } 80(t-1) \\\\ 60t = 80(t-1) \\Rightarrow 60t = 80t - 80 \\\\ 20t = 80 \\Rightarrow t = 4 \\text{ (error). Recalculando: } t = 3 \\text{ h}',
+    correctAnswer: 2,
+    explanation: '\\text{Posición 1ro: } 60t. \\text{ Posición 2do: } 80(t-1) \\\\ 60t = 80(t-1) \\Rightarrow 60t = 80t - 80 \\\\ -20t = -80 \\Rightarrow t = 4 \\text{ h}',
     difficulty: 'hard',
     skills: ['funcion-lineal-problemas-movimiento', 'sistemas-ecuaciones-problemas']
   },
@@ -173,7 +173,7 @@ export const m1Alg010Questions: Question[] = [
     operacionBase: 'conversión',
     questionLatex: '\\text{Si } k(m) = 1.6m \\text{ convierte millas a kilómetros, ¿cuántos km son 5 millas?}',
     options: ['3.125 km', '6.4 km', '8 km', '10 km'],
-    correctAnswer: 1,
+    correctAnswer: 2,
     explanation: 'k(5) = 1.6 \\times 5 = 8 \\text{ km}',
     difficulty: 'easy',
     skills: ['funcion-lineal-problemas-conversion', 'algebra-evaluacion-funciones']

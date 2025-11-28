@@ -265,10 +265,10 @@ export const m1Alg014Questions: Question[] = [
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
     operacionBase: 'economía',
-    questionLatex: '\\text{Una tienda baja el precio en \\$x y vende } (50 + 10x) \\text{ unidades. Los ingresos son } I = (100 - x)(50 + 10x). \\text{ ¿Qué descuento maximiza I?}',
+    questionLatex: '\\text{Una tienda baja el precio en \\$x y vende } (50 + x) \\text{ unidades. Los ingresos son } I = (100 - x)(50 + x). \\text{ ¿Qué descuento maximiza I?}',
     options: ['\\$10', '\\$20', '\\$25', '\\$30'],
     correctAnswer: 2,
-    explanation: 'I = -10x^2 + 500x + 5000. \\text{ } x = -\\frac{500}{-20} = 25',
+    explanation: 'I = (100 - x)(50 + x) = 5000 + 100x - 50x - x^2 = -x^2 + 50x + 5000 \\\\ x = -\\frac{50}{-2} = 25',
     difficulty: 'hard',
     skills: ['funcion-cuadratica-problemas-economia', 'funcion-cuadratica-vertice']
   },
@@ -278,10 +278,10 @@ export const m1Alg014Questions: Question[] = [
     topic: 'Álgebra y Funciones',
     subject: 'álgebra',
     operacionBase: 'economía',
-    questionLatex: '\\text{El costo total es } C(x) = x^2 + 10x + 100 \\text{ y el ingreso es } I(x) = 50x. \\text{ ¿Para qué valores de x hay ganancia?}',
+    questionLatex: '\\text{El costo total es } C(x) = x^2 + 400 \\text{ y el ingreso es } I(x) = 50x. \\text{ ¿Para qué valores de x hay ganancia?}',
     options: ['10 < x < 40', '0 < x < 10', '5 < x < 20', '\\text{Nunca hay ganancia}'],
     correctAnswer: 0,
-    explanation: 'G = I - C = -x^2 + 40x - 100 > 0 \\\\ x^2 - 40x + 100 < 0 \\Rightarrow \\text{Entre las raíces} \\\\ x = \\frac{40 \\pm \\sqrt{1200}}{2} \\approx 10 \\text{ y } 40',
+    explanation: 'G = I - C = 50x - x^2 - 400 = -x^2 + 50x - 400 > 0 \\\\ x^2 - 50x + 400 < 0 \\Rightarrow (x - 10)(x - 40) < 0 \\\\ \\text{Entre las raíces: } 10 < x < 40',
     difficulty: 'hard',
     skills: ['funcion-cuadratica-problemas-economia', 'algebra-inecuaciones']
   }
