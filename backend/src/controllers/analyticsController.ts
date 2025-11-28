@@ -441,7 +441,7 @@ export const getPMFMetrics = async (req: Request, res: Response) => {
           WHEN days_active_last_7d >= 5 THEN 'power'
           WHEN days_active_last_7d >= 3 THEN 'regular'
           WHEN days_active_last_7d >= 1 THEN 'casual'
-          WHEN last_active_at >= $3 THEN 'dormant'
+          WHEN last_active_at IS NOT NULL AND last_active_at < $3 THEN 'dormant'
           ELSE 'new'
         END as user_segment,
         (days_active_last_7d * 10 + questions_last_7d + current_streak * 5) as engagement_score
