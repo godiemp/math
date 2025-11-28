@@ -5,14 +5,13 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import Auth from "@/components/auth/Auth";
-import { getCachedUser } from "@/lib/auth";
 import Footer from "@/components/layout/Footer";
 import { useTranslations } from 'next-intl';
 
 export default function Home() {
   const t = useTranslations('landing');
   const tCommon = useTranslations('common');
-  const { isAuthenticated, isLoading, setUser } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [redirectPath, setRedirectPath] = useState<string | null>(null);
@@ -118,12 +117,12 @@ export default function Home() {
           {/* Auth Component */}
           <Auth
             onSuccess={(isNewUser) => {
-              // Set redirect path first, then update user state
+              // Set redirect path for new users (welcome flow)
+              // NextAuth session is automatically updated after signIn()
               // The useEffect will handle navigation once isAuthenticated becomes true
               if (isNewUser) {
                 setRedirectPath('/dashboard?welcome=true');
               }
-              setUser(getCachedUser());
             }}
           />
 

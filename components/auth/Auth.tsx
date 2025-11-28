@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { signIn } from 'next-auth/react';
 import { toast } from 'sonner';
 import { Eye, EyeOff } from 'lucide-react';
-import { registerUser, loginUser } from '@/lib/auth';
+import { registerUser } from '@/lib/auth';
 import { analytics } from '@/lib/analytics';
 import { useTranslations } from 'next-intl';
 
@@ -33,7 +34,7 @@ export default function Auth({ onSuccess }: AuthProps) {
 
     try {
       if (isLogin) {
-        // Login
+        // Login via NextAuth
         if (!username || !password) {
           const errorMsg = t('login.errors.completeFields');
           setError(errorMsg);
@@ -42,34 +43,32 @@ export default function Auth({ onSuccess }: AuthProps) {
           return;
         }
 
-        const result = await loginUser(username, password);
-        if (result.success && result.user) {
+        const result = await signIn('credentials', {
+          usernameOrEmail: username,
+          password,
+          redirect: false,
+        });
+
+        if (result?.error) {
+          const errorMsg = t('login.errors.invalidCredentials');
+          setError(errorMsg);
+          toast.error(errorMsg);
+          setIsLoading(false);
+          return;
+        }
+
+        if (result?.ok) {
           // Track login event
           analytics.track('user_logged_in', {
             method: 'password',
-            username: result.user.username,
-          });
-
-          // Identify user for future events
-          analytics.identify(result.user.id, {
-            email: result.user.email,
-            username: result.user.username,
-            displayName: result.user.displayName,
-            role: result.user.role,
-            subscriptionStatus: result.user.subscription?.status || 'free',
-            currentStreak: result.user.currentStreak || 0,
-            longestStreak: result.user.longestStreak || 0,
+            username: username,
           });
 
           toast.success(t('login.success'));
           onSuccess(false);
-        } else {
-          const errorMsg = result.error || t('login.errors.invalidCredentials');
-          setError(errorMsg);
-          toast.error(errorMsg);
         }
       } else {
-        // Register
+        // Register - call backend first, then signIn
         if (!username || !email || !password || !displayName) {
           const errorMsg = t('register.errors.completeFields');
           setError(errorMsg);
@@ -95,6 +94,7 @@ export default function Auth({ onSuccess }: AuthProps) {
           return;
         }
 
+        // Register with backend
         const result = await registerUser(username, email, password, displayName, acceptedTerms);
         if (result.success && result.user) {
           // Track registration event
@@ -115,8 +115,21 @@ export default function Auth({ onSuccess }: AuthProps) {
             longestStreak: 0,
           });
 
-          toast.success(t('register.success'));
-          onSuccess(true);
+          // Now sign in with NextAuth to create session
+          const signInResult = await signIn('credentials', {
+            usernameOrEmail: username,
+            password,
+            redirect: false,
+          });
+
+          if (signInResult?.ok) {
+            toast.success(t('register.success'));
+            onSuccess(true);
+          } else {
+            // Registration succeeded but sign in failed - still show success
+            toast.success(t('register.success'));
+            onSuccess(true);
+          }
         } else {
           const errorMsg = result.error || t('login.errors.registration');
           setError(errorMsg);

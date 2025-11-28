@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { NextAuthProvider } from "@/components/providers/NextAuthProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SWRProvider } from "@/lib/swr-config";
 import { Toaster } from "sonner";
@@ -24,19 +25,21 @@ export default async function RootLayout({
   return (
     <html lang="es-CL">
       <body className="antialiased">
-        <NextIntlClientProvider messages={messages}>
-          <PostHogProvider>
-            <SWRProvider>
-              <AuthProvider>
-                <IntercomProvider>
-                  {children}
-                </IntercomProvider>
-              </AuthProvider>
-            </SWRProvider>
-            <Toaster position="top-right" richColors />
-            <CookieConsent />
-          </PostHogProvider>
-        </NextIntlClientProvider>
+        <NextAuthProvider>
+          <NextIntlClientProvider messages={messages}>
+            <PostHogProvider>
+              <SWRProvider>
+                <AuthProvider>
+                  <IntercomProvider>
+                    {children}
+                  </IntercomProvider>
+                </AuthProvider>
+              </SWRProvider>
+              <Toaster position="top-right" richColors />
+              <CookieConsent />
+            </PostHogProvider>
+          </NextIntlClientProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );
