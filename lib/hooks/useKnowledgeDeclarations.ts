@@ -3,24 +3,14 @@
  */
 
 import useSWR from 'swr';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef, useEffect } from 'react';
 import { apiRequest } from '../api-client';
 import type {
   Level,
   GetKnowledgeDeclarationsResponse,
   UpdateKnowledgeDeclarationRequest,
   UpdateKnowledgeDeclarationsResponse,
-  KnowledgeDeclaration,
 } from '../types';
-
-// Debounce utility
-function debounce<T extends (...args: any[]) => any>(fn: T, delay: number): T {
-  let timeoutId: NodeJS.Timeout | null = null;
-  return ((...args: Parameters<T>) => {
-    if (timeoutId) clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn(...args), delay);
-  }) as T;
-}
 
 /**
  * Fetcher for knowledge declarations
@@ -57,12 +47,23 @@ export function useKnowledgeDeclarations(level?: Level) {
     }
   );
 
+  // Refs for debouncing - these persist across renders
+  const pendingUpdatesRef = useRef<UpdateKnowledgeDeclarationRequest[]>([]);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const dataRef = useRef(data);
+  const mutateRef = useRef(mutate);
+
+  // Keep refs updated
+  useEffect(() => {
+    dataRef.current = data;
+    mutateRef.current = mutate;
+  }, [data, mutate]);
+
   // Create a map for quick lookup
   const declarationMap = useMemo(() => {
     const map = new Map<string, boolean>();
     if (data?.declarations) {
       for (const decl of data.declarations) {
-        // Key format: "type:itemCode" e.g., "unit:M1-NUM-001"
         map.set(`${decl.declarationType}:${decl.itemCode}`, decl.knows);
       }
     }
@@ -77,114 +78,110 @@ export function useKnowledgeDeclarations(level?: Level) {
     [declarationMap]
   );
 
-  // Update declarations
-  const updateDeclarations = useCallback(
-    async (declarations: UpdateKnowledgeDeclarationRequest[]) => {
-      // Optimistic update
-      if (data) {
-        const newDeclarations = [...data.declarations];
+  // Flush pending updates to API
+  const flushUpdates = useCallback(async () => {
+    const updates = pendingUpdatesRef.current;
+    if (updates.length === 0) return;
 
-        for (const update of declarations) {
-          const existingIndex = newDeclarations.findIndex(
-            (d) => d.declarationType === update.type && d.itemCode === update.itemCode
-          );
+    pendingUpdatesRef.current = [];
 
-          const now = Date.now();
-          if (existingIndex >= 0) {
-            newDeclarations[existingIndex] = {
-              ...newDeclarations[existingIndex],
-              knows: update.knows,
-              updatedAt: now,
-            };
-          } else {
-            // Add new declaration
-            newDeclarations.push({
-              userId: '',
-              level: update.itemCode.startsWith('M2') ? 'M2' : 'M1',
-              declarationType: update.type,
-              itemCode: update.itemCode,
-              knows: update.knows,
-              declaredAt: now,
-              updatedAt: now,
-            });
-          }
+    const response = await apiRequest<UpdateKnowledgeDeclarationsResponse>(
+      '/api/user/knowledge-declarations',
+      {
+        method: 'PUT',
+        body: JSON.stringify({ declarations: updates }),
+      }
+    );
+
+    if (response.error) {
+      mutateRef.current();
+      console.error('Failed to save knowledge declarations:', response.error.error);
+      return;
+    }
+
+    if (response.data) {
+      mutateRef.current({
+        declarations: response.data.declarations,
+        summary: response.data.summary,
+      });
+    }
+  }, []);
+
+  // Set knowledge state for an item (debounced)
+  const setKnowledge = useCallback(
+    (type: 'unit' | 'subsection' | 'skill', itemCode: string, knows: boolean, cascade = false) => {
+      // Add to pending updates (replace if same item already pending)
+      const existingIdx = pendingUpdatesRef.current.findIndex(
+        (u) => u.type === type && u.itemCode === itemCode
+      );
+      const update = { type, itemCode, knows, cascade };
+
+      if (existingIdx >= 0) {
+        pendingUpdatesRef.current[existingIdx] = update;
+      } else {
+        pendingUpdatesRef.current.push(update);
+      }
+
+      // Optimistic update for immediate UI feedback
+      const currentData = dataRef.current;
+      if (currentData) {
+        const newDeclarations = [...currentData.declarations];
+        const declIdx = newDeclarations.findIndex(
+          (d) => d.declarationType === type && d.itemCode === itemCode
+        );
+
+        const now = Date.now();
+        if (declIdx >= 0) {
+          newDeclarations[declIdx] = { ...newDeclarations[declIdx], knows, updatedAt: now };
+        } else {
+          newDeclarations.push({
+            userId: '',
+            level: itemCode.startsWith('M2') ? 'M2' : 'M1',
+            declarationType: type,
+            itemCode,
+            knows,
+            declaredAt: now,
+            updatedAt: now,
+          });
         }
 
-        // Calculate new summary (simplified - real calculation is on backend)
         const newSummary = {
-          ...data.summary,
+          ...currentData.summary,
           knownUnits: newDeclarations.filter((d) => d.declarationType === 'unit' && d.knows).length,
           knownSubsections: newDeclarations.filter((d) => d.declarationType === 'subsection' && d.knows).length,
           knownSkills: newDeclarations.filter((d) => d.declarationType === 'skill' && d.knows).length,
         };
 
-        mutate({ declarations: newDeclarations, summary: newSummary }, false);
+        mutateRef.current({ declarations: newDeclarations, summary: newSummary }, false);
       }
 
-      // Make API call
-      const response = await apiRequest<UpdateKnowledgeDeclarationsResponse>(
-        '/api/user/knowledge-declarations',
-        {
-          method: 'PUT',
-          body: JSON.stringify({ declarations }),
-        }
-      );
-
-      if (response.error) {
-        // Revert optimistic update on error
-        mutate();
-        throw new Error(response.error.error);
+      // Debounce the API call
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
       }
-
-      // Update with actual server response
-      if (response.data) {
-        mutate({
-          declarations: response.data.declarations,
-          summary: response.data.summary,
-        });
-      }
-
-      return response.data;
+      debounceTimerRef.current = setTimeout(flushUpdates, 800);
     },
-    [data, mutate]
-  );
-
-  // Debounced version for rapid checkbox changes
-  const debouncedUpdate = useMemo(
-    () => debounce(updateDeclarations, 500),
-    [updateDeclarations]
+    [flushUpdates]
   );
 
   // Toggle a single item
   const toggleKnowledge = useCallback(
     (type: 'unit' | 'subsection' | 'skill', itemCode: string, cascade = false) => {
       const currentlyKnown = isKnown(type, itemCode);
-      return debouncedUpdate([
-        {
-          type,
-          itemCode,
-          knows: !currentlyKnown,
-          cascade,
-        },
-      ]);
+      setKnowledge(type, itemCode, !currentlyKnown, cascade);
     },
-    [isKnown, debouncedUpdate]
+    [isKnown, setKnowledge]
   );
 
-  // Set knowledge state for an item
-  const setKnowledge = useCallback(
-    (type: 'unit' | 'subsection' | 'skill', itemCode: string, knows: boolean, cascade = false) => {
-      return debouncedUpdate([
-        {
-          type,
-          itemCode,
-          knows,
-          cascade,
-        },
-      ]);
-    },
-    [debouncedUpdate]
-  );
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+        flushUpdates();
+      }
+    };
+  }, [flushUpdates]);
 
   return {
     declarations: data?.declarations || [],
@@ -201,7 +198,6 @@ export function useKnowledgeDeclarations(level?: Level) {
     isKnown,
     toggleKnowledge,
     setKnowledge,
-    updateDeclarations,
     refresh: mutate,
   };
 }
