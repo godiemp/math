@@ -11,7 +11,7 @@ import { Question } from '../../../types';
  * - D: Histogramas
  * - E: Interpretación de gráficos estadísticos
  *
- * Total: 13 questions
+ * Total: 25 questions
  */
 
 export const m1Prob001Questions: Question[] = [
@@ -170,5 +170,164 @@ export const m1Prob001Questions: Question[] = [
     explanation: '0.25 \\times 1000 = 250',
     difficulty: 'easy',
     skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas']
+  },
+  // ========================================
+  // TABLAS DE FRECUENCIA ABSOLUTA Y RELATIVA
+  // ========================================
+  {
+    id: 'm1-prob-001-001',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En una encuesta, 15 personas prefieren té, 25 prefieren café y 10 prefieren agua. ¿Cuál es la frecuencia relativa de quienes prefieren café?}',
+    options: ['0.25', '0.30', '0.50', '0.75'],
+    correctAnswer: 2,
+    explanation: 'f_r = \\frac{25}{15+25+10} = \\frac{25}{50} = 0.50',
+    difficulty: 'easy',
+    skills: ['estadistica-frecuencia', 'estadistica-tablas', 'numeros-fracciones', 'numeros-decimales']
+  },
+  {
+    id: 'm1-prob-001-002',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Si la frecuencia relativa de un dato es 0.35 y el total de datos es 80, ¿cuál es la frecuencia absoluta de ese dato?}',
+    options: ['20', '24', '28', '32'],
+    correctAnswer: 2,
+    explanation: 'f = f_r \\times n = 0.35 \\times 80 = 28',
+    difficulty: 'medium',
+    skills: ['estadistica-frecuencia', 'estadistica-tablas', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-001-003',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{La suma de todas las frecuencias relativas en una tabla de frecuencias siempre es igual a:}',
+    options: ['0', '0.5', '1', 'El total de datos'],
+    correctAnswer: 2,
+    explanation: '\\sum f_r = 1 \\text{ (siempre)}',
+    difficulty: 'easy',
+    skills: ['estadistica-frecuencia', 'estadistica-conceptos']
+  },
+  // ========================================
+  // GRÁFICOS DE BARRAS
+  // ========================================
+  {
+    id: 'm1-prob-001-004',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Un gráfico de barras muestra: Lunes (45), Martes (60), Miércoles (30), Jueves (55). ¿Cuál día tuvo menos ventas?}',
+    options: ['Lunes', 'Martes', 'Miércoles', 'Jueves'],
+    correctAnswer: 2,
+    explanation: '\\text{Miércoles tiene 30, el menor valor}',
+    difficulty: 'easy',
+    skills: ['estadistica-graficos', 'estadistica-interpretacion']
+  },
+  {
+    id: 'm1-prob-001-005',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En un gráfico de barras, las alturas son: A=20, B=35, C=45, D=15. ¿Qué porcentaje del total representa C?}',
+    options: ['35%', '39.13%', '45%', '50%'],
+    correctAnswer: 1,
+    explanation: '\\frac{45}{20+35+45+15} = \\frac{45}{115} \\approx 0.3913 = 39.13\\%',
+    difficulty: 'medium',
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas']
+  },
+  // ========================================
+  // GRÁFICOS CIRCULARES
+  // ========================================
+  {
+    id: 'm1-prob-001-006',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En un gráfico circular, un sector representa el 15\\% del total. ¿Cuántos grados mide el ángulo central de ese sector?}',
+    options: ['15°', '45°', '54°', '60°'],
+    correctAnswer: 2,
+    explanation: '0.15 \\times 360° = 54°',
+    difficulty: 'medium',
+    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-porcentajes', 'geometria-angulos']
+  },
+  {
+    id: 'm1-prob-001-007',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Un gráfico circular muestra gastos: alimentación (120°), vivienda (90°), transporte (60°), otros (90°). ¿Qué fracción representa alimentación?}',
+    options: ['\\frac{1}{4}', '\\frac{1}{3}', '\\frac{1}{2}', '\\frac{2}{3}'],
+    correctAnswer: 1,
+    explanation: '\\frac{120°}{360°} = \\frac{1}{3}',
+    difficulty: 'medium',
+    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-fracciones', 'geometria-angulos']
+  },
+  {
+    id: 'm1-prob-001-008',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Si un gráfico circular representa 400 encuestados y el sector de "Sí" mide 180°, ¿cuántas personas dijeron "Sí"?}',
+    options: ['100', '150', '180', '200'],
+    correctAnswer: 3,
+    explanation: '\\frac{180°}{360°} \\times 400 = \\frac{1}{2} \\times 400 = 200',
+    difficulty: 'medium',
+    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  // ========================================
+  // HISTOGRAMAS
+  // ========================================
+  {
+    id: 'm1-prob-001-009',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En un histograma de notas: [1-3) tiene 5 estudiantes, [3-5) tiene 12 estudiantes, [5-7) tiene 8 estudiantes. ¿Cuántos estudiantes hay en total?}',
+    options: ['20', '25', '30', '35'],
+    correctAnswer: 1,
+    explanation: '5 + 12 + 8 = 25 \\text{ estudiantes}',
+    difficulty: 'easy',
+    skills: ['estadistica-graficos', 'estadistica-histogramas', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-001-010',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En un histograma de edades, el intervalo [20-30) tiene frecuencia 15 y ancho 10. ¿Cuál es la densidad de frecuencia?}',
+    options: ['0.5', '1.5', '5', '15'],
+    correctAnswer: 1,
+    explanation: '\\text{Densidad} = \\frac{f}{\\text{ancho}} = \\frac{15}{10} = 1.5',
+    difficulty: 'hard',
+    skills: ['estadistica-graficos', 'estadistica-histogramas', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-001-011',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{¿Cuál es la diferencia principal entre un gráfico de barras y un histograma?}',
+    options: ['El histograma no tiene barras', 'En el histograma las barras están separadas', 'El histograma se usa para datos agrupados en intervalos', 'No hay diferencia'],
+    correctAnswer: 2,
+    explanation: '\\text{El histograma representa datos continuos agrupados en intervalos (clases)}',
+    difficulty: 'easy',
+    skills: ['estadistica-graficos', 'estadistica-histogramas', 'estadistica-conceptos']
+  },
+  // ========================================
+  // INTERPRETACIÓN DE GRÁFICOS
+  // ========================================
+  {
+    id: 'm1-prob-001-012',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Un gráfico de líneas muestra ventas mensuales que suben de enero a junio y bajan de julio a diciembre. ¿Qué mes tuvo las mayores ventas?}',
+    options: ['Enero', 'Marzo', 'Junio', 'Diciembre'],
+    correctAnswer: 2,
+    explanation: '\\text{Junio es el punto más alto antes de que empiecen a bajar}',
+    difficulty: 'easy',
+    skills: ['estadistica-graficos', 'estadistica-interpretacion']
   }
 ];
