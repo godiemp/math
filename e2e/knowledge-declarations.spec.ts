@@ -205,8 +205,9 @@ test.describe('Knowledge Declarations Feature', () => {
       const firstUnitCheckbox = page.locator('input[type="checkbox"].h-5.w-5').first();
       await firstUnitCheckbox.click();
 
-      // Wait for optimistic update
-      await page.waitForTimeout(300);
+      // Wait for debounce (800ms) + API response
+      // With cascade=true, summary updates only after backend responds
+      await page.waitForTimeout(1500);
 
       // Check that the known count changed
       const updatedSummary = await summaryLocator.textContent();
@@ -297,8 +298,9 @@ test.describe('Knowledge Declarations Feature', () => {
       const wasChecked = await subsectionCheckbox.isChecked();
       await subsectionCheckbox.click();
 
-      // Wait for update
-      await page.waitForTimeout(300);
+      // Wait for debounce (800ms) + API response
+      // With cascade=true, summary updates only after backend responds
+      await page.waitForTimeout(1500);
 
       // Verify the count changed
       const updatedText = await subsectionSummary.textContent();
