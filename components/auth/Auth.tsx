@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { toast } from 'sonner';
 import { Eye, EyeOff } from 'lucide-react';
-import { registerUser } from '@/lib/auth';
+import { registerUser, loginUser } from '@/lib/auth';
 import { analytics } from '@/lib/analytics';
 import { useTranslations } from 'next-intl';
 
@@ -36,7 +36,8 @@ export default function Auth({ onSuccess }: AuthProps) {
 
     try {
       if (isLogin) {
-        // Login via NextAuth
+        // Login flow: Call backend directly first (browser receives cookies),
+        // then create NextAuth session with user data
         if (!username || !password) {
           const errorMsg = t('login.errors.completeFields');
           setError(errorMsg);
@@ -45,9 +46,20 @@ export default function Auth({ onSuccess }: AuthProps) {
           return;
         }
 
+        // Step 1: Call backend directly - browser receives HttpOnly cookies for backend domain
+        const loginResult = await loginUser(username, password);
+        if (!loginResult.success) {
+          const errorMsg = loginResult.error || t('login.errors.invalidCredentials');
+          setError(errorMsg);
+          toast.error(errorMsg);
+          setIsLoading(false);
+          return;
+        }
+
+        // Step 2: Create NextAuth session with pre-authenticated user data
+        // Pass user data instead of credentials to skip server-side backend call
         const result = await signIn('credentials', {
-          usernameOrEmail: username,
-          password,
+          user: JSON.stringify(loginResult.user),
           redirect: false,
         });
 
@@ -119,10 +131,11 @@ export default function Auth({ onSuccess }: AuthProps) {
             longestStreak: 0,
           });
 
-          // Now sign in with NextAuth to create session
+          // Now sign in with NextAuth to create session using user data
+          // Pass user data instead of credentials to skip server-side backend call
+          // (cookies are already set by registerUser call above)
           const signInResult = await signIn('credentials', {
-            usernameOrEmail: username,
-            password,
+            user: JSON.stringify(result.user),
             redirect: false,
           });
 

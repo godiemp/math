@@ -1,9 +1,10 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { User } from '@/lib/types';
 import { fetchCurrentUser, setCachedUser, clearCachedUser } from '@/lib/auth';
+import { setOnAuthFailure } from '@/lib/api-client';
 
 interface AuthContextType {
   user: User | null;
@@ -81,6 +82,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       clearCachedUser();
     }
   }, [status, session?.user, fullUser, refreshUser]);
+
+  // Register global auth failure handler
+  // This is called when API requests fail due to expired tokens and refresh fails
+  useEffect(() => {
+    setOnAuthFailure(() => {
+      console.warn('Session expired - signing out');
+      // Clear local state immediately for responsive UI
+      setFullUser(null);
+      clearCachedUser();
+      // Trigger NextAuth signOut which will redirect to home
+      signOut({ callbackUrl: '/' });
+    });
+
+    // Cleanup on unmount
+    return () => {
+      setOnAuthFailure(null);
+    };
+  }, []);
 
   // setUser is now a no-op for compatibility - NextAuth manages the session
   // Components should use signIn/signOut from next-auth/react instead
