@@ -251,18 +251,74 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
         case 'ax+bx-cx':
           expr = `${getRandomInt(3, 6)}*x+${getRandomInt(2, 4)}*x-${getRandomInt(1, 3)}*x`;
           break;
-        case 'a(x+b)+x':
-          expr = `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 5)})+x`;
-          break;
-        case 'a(x+b)+cx':
-          expr = `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 5)})+${getRandomInt(2, 4)}*x`;
-          break;
-        case 'a(x+b)-cx':
-          expr = `${getRandomInt(3, 5)}*(x+${getRandomInt(1, 4)})-${getRandomInt(1, 3)}*x`;
-          break;
-        case 'a(x+b)+c(x+d)':
-          expr = `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 4)})+${getRandomInt(2, 3)}*(x+${getRandomInt(1, 4)})`;
-          break;
+        case 'a(x+b)+x': {
+          // Calculate manually: a(x+b)+x = ax+ab+x = (a+1)x+ab
+          const a_val = getRandomInt(2, 4);
+          const b_val = getRandomInt(1, 5);
+          expr = `${a_val}*(x+${b_val})+x`;
+
+          const xCoef = a_val + 1;
+          const constant = a_val * b_val;
+
+          const expression = expr.replace(/\*/g, '');
+          const expressionLatex = expr.replace(/\*/g, '');
+          const correctAnswer = `${xCoef}x+${constant}`;
+          const problemKey = `simp:${expr}`;
+
+          return { expression, expressionLatex, correctAnswer, problemKey };
+        }
+        case 'a(x+b)+cx': {
+          // Calculate manually: a(x+b)+cx = ax+ab+cx = (a+c)x+ab
+          const a_val = getRandomInt(2, 4);
+          const b_val = getRandomInt(1, 5);
+          const c_val = getRandomInt(2, 4);
+          expr = `${a_val}*(x+${b_val})+${c_val}*x`;
+
+          const xCoef = a_val + c_val;
+          const constant = a_val * b_val;
+
+          const expression = expr.replace(/\*/g, '');
+          const expressionLatex = expr.replace(/\*/g, '');
+          const correctAnswer = `${xCoef}x+${constant}`;
+          const problemKey = `simp:${expr}`;
+
+          return { expression, expressionLatex, correctAnswer, problemKey };
+        }
+        case 'a(x+b)-cx': {
+          // Calculate manually: a(x+b)-cx = ax+ab-cx = (a-c)x+ab
+          const a_val = getRandomInt(3, 5);
+          const b_val = getRandomInt(1, 4);
+          const c_val = getRandomInt(1, 3);
+          expr = `${a_val}*(x+${b_val})-${c_val}*x`;
+
+          const xCoef = a_val - c_val;
+          const constant = a_val * b_val;
+
+          const expression = expr.replace(/\*/g, '');
+          const expressionLatex = expr.replace(/\*/g, '');
+          const correctAnswer = `${xCoef}x+${constant}`;
+          const problemKey = `simp:${expr}`;
+
+          return { expression, expressionLatex, correctAnswer, problemKey };
+        }
+        case 'a(x+b)+c(x+d)': {
+          // Calculate manually: a(x+b)+c(x+d) = ax+ab+cx+cd = (a+c)x+(ab+cd)
+          const a_val = getRandomInt(2, 4);
+          const b_val = getRandomInt(1, 4);
+          const c_val = getRandomInt(2, 3);
+          const d_val = getRandomInt(1, 4);
+          expr = `${a_val}*(x+${b_val})+${c_val}*(x+${d_val})`;
+
+          const xCoef = a_val + c_val;
+          const constant = a_val * b_val + c_val * d_val;
+
+          const expression = expr.replace(/\*/g, '');
+          const expressionLatex = expr.replace(/\*/g, '');
+          const correctAnswer = `${xCoef}x+${constant}`;
+          const problemKey = `simp:${expr}`;
+
+          return { expression, expressionLatex, correctAnswer, problemKey };
+        }
         default:
           expr = 'x+x';
       }
@@ -311,12 +367,42 @@ export function generateSimplification(context: GeneratorContext): ProblemData {
         case 'ax-by+cx-dy':
           expr = `${getRandomInt(2, 4)}*x-${getRandomInt(2, 4)}*y+${getRandomInt(2, 3)}*x-${getRandomInt(1, 2)}*y`;
           break;
-        case 'a(x+y)+bx':
-          expr = `${getRandomInt(2, 4)}*(x+y)+${getRandomInt(2, 3)}*x`;
-          break;
-        case 'a(x+b)+c(y+d)':
-          expr = `${getRandomInt(2, 4)}*(x+${getRandomInt(1, 4)})+${getRandomInt(2, 3)}*(y+${getRandomInt(1, 4)})`;
-          break;
+        case 'a(x+y)+bx': {
+          // Calculate manually: a(x+y)+bx = ax+ay+bx = (a+b)x+ay
+          const a_val = getRandomInt(2, 4);
+          const b_val = getRandomInt(2, 3);
+          expr = `${a_val}*(x+y)+${b_val}*x`;
+
+          const xCoef = a_val + b_val;
+          const yCoef = a_val;
+
+          const expression = expr.replace(/\*/g, '');
+          const expressionLatex = expr.replace(/\*/g, '');
+          const correctAnswer = `${xCoef}x+${yCoef}y`;
+          const problemKey = `simp:${expr}`;
+
+          return { expression, expressionLatex, correctAnswer, problemKey };
+        }
+        case 'a(x+b)+c(y+d)': {
+          // Calculate manually since math.simplify doesn't expand properly
+          const a_val = getRandomInt(2, 4);
+          const b_val = getRandomInt(1, 4);
+          const c_val = getRandomInt(2, 3);
+          const d_val = getRandomInt(1, 4);
+          expr = `${a_val}*(x+${b_val})+${c_val}*(y+${d_val})`;
+
+          // Manually compute: a(x+b)+c(y+d) = ax + ab + cy + cd = ax + cy + (ab+cd)
+          const xCoef = a_val;
+          const yCoef = c_val;
+          const constant = a_val * b_val + c_val * d_val;
+
+          const expression = expr.replace(/\*/g, '');
+          const expressionLatex = expr.replace(/\*/g, '');
+          const correctAnswer = `${xCoef}x+${yCoef}y+${constant}`;
+          const problemKey = `simp:${expr}`;
+
+          return { expression, expressionLatex, correctAnswer, problemKey };
+        }
         default:
           expr = `${getRandomInt(2, 4)}*x+${getRandomInt(2, 4)}*y+x`;
       }
