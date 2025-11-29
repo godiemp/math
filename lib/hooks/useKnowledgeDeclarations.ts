@@ -49,6 +49,13 @@ async function fetchDeclarations(level?: Level): Promise<GetKnowledgeDeclaration
 }
 
 /**
+ * Determine level from item code
+ */
+function getLevelFromItemCode(itemCode: string): Level {
+  return itemCode.startsWith('M2') ? 'M2' : 'M1';
+}
+
+/**
  * Hook to fetch and manage knowledge declarations
  */
 export function useKnowledgeDeclarations(level?: Level) {
@@ -67,7 +74,7 @@ export function useKnowledgeDeclarations(level?: Level) {
     {
       dedupingInterval: 30000,
       revalidateOnFocus: false,
-      keepPreviousData: true,
+      keepPreviousData: false, // Don't keep previous data to avoid mixing M1/M2 during transition
       shouldRetryOnError: false, // Don't retry on errors
       errorRetryCount: 0, // No retries
     }
@@ -78,13 +85,15 @@ export function useKnowledgeDeclarations(level?: Level) {
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const dataRef = useRef(data);
   const mutateRef = useRef(mutate);
+  const levelRef = useRef(level); // Track current level for optimistic updates
   const authFailedRef = useRef(false); // Track if auth has failed to prevent repeated attempts
 
   // Keep refs updated
   useEffect(() => {
     dataRef.current = data;
     mutateRef.current = mutate;
-  }, [data, mutate]);
+    levelRef.current = level;
+  }, [data, mutate, level]);
 
   // Create a map for quick lookup
   const declarationMap = useMemo(() => {
@@ -184,11 +193,17 @@ export function useKnowledgeDeclarations(level?: Level) {
           });
         }
 
+        // Filter by current level when calculating summary to avoid mixing M1/M2 counts
+        const currentLevel = levelRef.current;
+        const levelFiltered = currentLevel
+          ? newDeclarations.filter((d) => getLevelFromItemCode(d.itemCode) === currentLevel)
+          : newDeclarations;
+
         const newSummary = {
           ...currentData.summary,
-          knownUnits: newDeclarations.filter((d) => d.declarationType === 'unit' && d.knows).length,
-          knownSubsections: newDeclarations.filter((d) => d.declarationType === 'subsection' && d.knows).length,
-          knownSkills: newDeclarations.filter((d) => d.declarationType === 'skill' && d.knows).length,
+          knownUnits: levelFiltered.filter((d) => d.declarationType === 'unit' && d.knows).length,
+          knownSubsections: levelFiltered.filter((d) => d.declarationType === 'subsection' && d.knows).length,
+          knownSkills: levelFiltered.filter((d) => d.declarationType === 'skill' && d.knows).length,
         };
 
         mutateRef.current({ declarations: newDeclarations, summary: newSummary }, false);
