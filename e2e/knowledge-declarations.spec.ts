@@ -615,15 +615,22 @@ test.describe('Knowledge Declarations Feature', () => {
       // Wait for units to load
       await expect(page.getByRole('heading', { name: /Números/i })).toBeVisible({ timeout: 10000 });
 
-      // Check that checkboxes are focusable - use unit checkbox (h-5 w-5)
-      const checkbox = page.locator('input[type="checkbox"].h-5.w-5').first();
+      // Expand first unit to get a simple subsection checkbox (no cascade behavior)
+      const expandButton = page.locator('button[aria-label="Expandir"]').first();
+      if (await expandButton.count() > 0) {
+        await expandButton.click();
+        await page.waitForTimeout(300);
+      }
+
+      // Use subsection checkbox (h-4 w-4) - simpler behavior than unit checkboxes
+      const checkbox = page.locator('input[type="checkbox"].h-4.w-4').first();
       await checkbox.focus();
       await expect(checkbox).toBeFocused();
 
       // Get initial state
       const initialState = await checkbox.isChecked();
 
-      // Click to toggle (more reliable than keyboard)
+      // Click to toggle
       await checkbox.click();
       await page.waitForTimeout(300);
 
