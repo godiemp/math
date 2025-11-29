@@ -13,10 +13,10 @@ export function IntercomProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Only initialize Intercom if user is authenticated
     // Note: Intercom is customer support, not analytics, so it doesn't require cookie consent
     // Users should always be able to get help
     if (isAuthenticated && user) {
+      // Authenticated user: include user details
       Intercom({
         app_id: 'uzabsd5b',
         user_id: user.id,
@@ -27,6 +27,11 @@ export function IntercomProvider({ children }: { children: React.ReactNode }) {
         user_role: user.role,
         subscription_status: user.subscription?.status || 'none',
         target_level: user.targetLevel || 'not_set',
+      });
+    } else {
+      // Anonymous visitor: show Intercom without user identification
+      Intercom({
+        app_id: 'uzabsd5b',
       });
     }
   }, [user, isAuthenticated, isLoading]);

@@ -2,6 +2,14 @@
 
 import { PageHeader } from '@/components/layout/PageHeader';
 
+// Helper to open Intercom chat
+const openIntercom = (e: React.MouseEvent) => {
+  e.preventDefault();
+  if (typeof window !== 'undefined' && window.Intercom) {
+    window.Intercom('show');
+  }
+};
+
 export default function ReembolsosPage() {
 
   return (
@@ -76,7 +84,7 @@ export default function ReembolsosPage() {
                 Para retractarse de su compra, debe:
               </p>
               <ol style={{ paddingLeft: '20px', marginTop: '12px' }}>
-                <li>Contactarnos a través de nuestra <a href="/contacto" style={{ color: 'var(--color-tint)' }}>página de contacto</a></li>
+                <li>Contactarnos a través de nuestro <a href="#" onClick={openIntercom} style={{ color: 'var(--color-tint)', cursor: 'pointer' }}>chat de soporte</a></li>
                 <li>Indicar claramente su intención de retractarse</li>
                 <li>Proporcionar su número de orden o información de la transacción</li>
               </ol>
@@ -166,7 +174,7 @@ export default function ReembolsosPage() {
                 <li>Seleccione "Cancelar Suscripción"</li>
               </ol>
               <p style={{ marginTop: '12px' }}>
-                Alternativamente, puede contactarnos directamente a través de nuestra <a href="/contacto" style={{ color: 'var(--color-tint)' }}>página de contacto</a>.
+                Alternativamente, puede contactarnos directamente a través de nuestro <a href="#" onClick={openIntercom} style={{ color: 'var(--color-tint)', cursor: 'pointer' }}>chat de soporte</a>.
               </p>
             </section>
 
@@ -281,8 +289,8 @@ export default function ReembolsosPage() {
                 8. Contacto para Solicitar Reembolsos
               </h2>
               <p>
-                Para solicitar un reembolso o si tiene preguntas sobre esta Política de Reembolsos, contáctenos a través de nuestra{' '}
-                <a href="/contacto" style={{ color: 'var(--color-tint)' }}>página de contacto</a>.
+                Para solicitar un reembolso o si tiene preguntas sobre esta Política de Reembolsos, contáctenos a través de nuestro{' '}
+                <a href="#" onClick={openIntercom} style={{ color: 'var(--color-tint)', cursor: 'pointer' }}>chat de soporte</a>.
               </p>
               <p style={{ marginTop: '12px' }}>
                 Incluya en su mensaje:
