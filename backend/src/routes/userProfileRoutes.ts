@@ -9,6 +9,7 @@
 import { Router } from 'express';
 import { authenticate } from '../auth/middleware/authenticate';
 import { updateUserProfile, markWelcomeSeen, updateCookieConsent } from '../controllers/userProfileController';
+import { getKnowledgeDeclarations, updateKnowledgeDeclarations } from '../controllers/knowledgeDeclarationController';
 
 const router = Router();
 
@@ -35,5 +36,21 @@ router.post('/welcome-seen', markWelcomeSeen);
  * @access  Private
  */
 router.patch('/cookie-consent', updateCookieConsent);
+
+/**
+ * @route   GET /api/user/knowledge-declarations
+ * @desc    Get all knowledge declarations for current user
+ * @query   level - Optional filter by level (M1 or M2)
+ * @access  Private
+ */
+router.get('/knowledge-declarations', getKnowledgeDeclarations);
+
+/**
+ * @route   PUT /api/user/knowledge-declarations
+ * @desc    Update knowledge declarations for current user
+ * @body    { declarations: [{ type, itemCode, knows, cascade? }] }
+ * @access  Private
+ */
+router.put('/knowledge-declarations', updateKnowledgeDeclarations);
 
 export default router;
