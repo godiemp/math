@@ -5,7 +5,7 @@
 import useSWR from 'swr';
 import { useCallback, useMemo, useRef, useEffect } from 'react';
 import { apiRequest } from '../api-client';
-import { useAuth } from '../auth';
+import { useAuth } from '@/contexts/AuthContext';
 import type {
   Level,
   GetKnowledgeDeclarationsResponse,
