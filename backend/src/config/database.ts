@@ -881,6 +881,30 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_operations_attempts_operation_type ON operations_practice_attempts(operation_type)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_operations_attempts_attempted_at ON operations_practice_attempts(attempted_at)');
 
+    // ========================================
+    // USER KNOWLEDGE DECLARATIONS TABLE
+    // ========================================
+
+    // Create user_knowledge_declarations table for self-declared knowledge
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS user_knowledge_declarations (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        level VARCHAR(5) NOT NULL CHECK (level IN ('M1', 'M2')),
+        declaration_type VARCHAR(20) NOT NULL CHECK (declaration_type IN ('unit', 'subsection', 'skill')),
+        item_code VARCHAR(100) NOT NULL,
+        knows BOOLEAN NOT NULL DEFAULT FALSE,
+        declared_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL,
+        UNIQUE(user_id, declaration_type, item_code)
+      )
+    `);
+
+    // User knowledge declarations indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_knowledge_decl_user_id ON user_knowledge_declarations(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_knowledge_decl_level ON user_knowledge_declarations(level)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_knowledge_decl_type ON user_knowledge_declarations(declaration_type)');
+
     // Create certificates table
     await client.query(`
       CREATE TABLE IF NOT EXISTS certificates (

@@ -128,6 +128,18 @@ import type { ApiError, ApiResponse } from './types';
 // Re-export types for convenience
 export type { ApiError, ApiResponse };
 
+// Global callback for auth failures - called when token refresh fails
+// This allows external code (like AuthContext) to react to auth failures
+let onAuthFailureCallback: (() => void) | null = null;
+
+/**
+ * Register a callback to be notified when authentication fails permanently
+ * (i.e., when token refresh fails and user needs to login again)
+ */
+export function setOnAuthFailure(callback: (() => void) | null): void {
+  onAuthFailureCallback = callback;
+}
+
 /**
  * Refresh the access token using the refresh token
  * Internal wrapper that provides the backend URL to the token service
@@ -195,6 +207,10 @@ export async function apiRequest<T>(
         });
       } else {
         // Refresh failed, user needs to login again
+        // Notify any registered callback about auth failure
+        if (onAuthFailureCallback) {
+          onAuthFailureCallback();
+        }
         return {
           error: {
             error: 'Session expired. Please login again.',

@@ -45,9 +45,38 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       name: "credentials",
       credentials: {
         usernameOrEmail: { label: "Username or Email", type: "text" },
-        password: { label: "Password", type: "password" }
+        password: { label: "Password", type: "password" },
+        user: { label: "Pre-authenticated User", type: "text" }
       },
       async authorize(credentials) {
+        // If user data is passed directly (already authenticated client-side)
+        // This happens when the browser has already called the backend API directly
+        // and received HttpOnly cookies for the backend domain
+        if (credentials?.user) {
+          try {
+            const user = JSON.parse(credentials.user as string);
+            console.log('[NextAuth] Using pre-authenticated user:', user.username);
+            return {
+              id: user.id,
+              username: user.username,
+              email: user.email,
+              displayName: user.displayName,
+              role: user.role,
+              subscription: user.subscription ? {
+                status: user.subscription.status,
+                expiresAt: user.subscription.expiresAt,
+                trialEndsAt: user.subscription.trialEndsAt,
+              } : undefined,
+              emailVerified: user.emailVerified,
+            };
+          } catch {
+            console.error('[NextAuth] Failed to parse pre-authenticated user');
+            return null;
+          }
+        }
+
+        // Legacy flow: server-side authentication (for backwards compatibility)
+        // Note: This path has cookie domain issues in cross-origin deployments
         if (!credentials?.usernameOrEmail || !credentials?.password) {
           return null;
         }
@@ -73,8 +102,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
 
           // Forward backend authentication cookies to the browser
-          // The backend sets HttpOnly cookies (accessToken, refreshToken) that need
-          // to be forwarded since this authorize() callback runs server-side
+          // Note: This only works when frontend and backend are on same domain
+          // For cross-origin (Vercel/Railway), use pre-authenticated user flow instead
           const setCookieHeaders = response.headers.getSetCookie();
           if (setCookieHeaders.length > 0) {
             const cookieStore = await cookies();

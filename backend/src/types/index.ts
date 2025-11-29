@@ -229,3 +229,52 @@ export interface UserWithMetadata extends User {
 // Type alias for authenticated requests
 // Note: Request.user is already typed as TokenPayload via global declaration in middleware/auth.ts
 export type AuthRequest = Request;
+
+// ========================================
+// USER KNOWLEDGE DECLARATIONS TYPES
+// ========================================
+
+export type DeclarationType = 'unit' | 'subsection' | 'skill';
+
+export interface KnowledgeDeclaration {
+  id?: number;
+  userId: string;
+  level: 'M1' | 'M2';
+  declarationType: DeclarationType;
+  itemCode: string;
+  knows: boolean;
+  declaredAt: number;
+  updatedAt: number;
+}
+
+export interface KnowledgeDeclarationSummary {
+  totalUnits: number;
+  knownUnits: number;
+  totalSubsections: number;
+  knownSubsections: number;
+  totalSkills: number;
+  knownSkills: number;
+}
+
+export interface GetKnowledgeDeclarationsResponse {
+  declarations: KnowledgeDeclaration[];
+  summary: KnowledgeDeclarationSummary;
+}
+
+export interface UpdateKnowledgeDeclarationRequest {
+  type: DeclarationType;
+  itemCode: string;
+  knows: boolean;
+  cascade?: boolean;
+}
+
+export interface UpdateKnowledgeDeclarationsRequest {
+  declarations: UpdateKnowledgeDeclarationRequest[];
+}
+
+export interface UpdateKnowledgeDeclarationsResponse {
+  success: boolean;
+  message: string;
+  declarations: KnowledgeDeclaration[];
+  summary: KnowledgeDeclarationSummary;
+}

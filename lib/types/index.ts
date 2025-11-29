@@ -158,3 +158,16 @@ export type {
   GetPaymentResponse,
   GetPaymentsResponse,
 } from './payment';
+
+// ============================================================================
+// KNOWLEDGE DECLARATION TYPES
+// ============================================================================
+export type {
+  DeclarationType,
+  KnowledgeDeclaration,
+  KnowledgeDeclarationSummary,
+  GetKnowledgeDeclarationsResponse,
+  UpdateKnowledgeDeclarationRequest,
+  UpdateKnowledgeDeclarationsRequest,
+  UpdateKnowledgeDeclarationsResponse,
+} from './knowledge';
