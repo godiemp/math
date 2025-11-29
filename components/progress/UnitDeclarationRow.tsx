@@ -58,7 +58,6 @@ export function UnitDeclarationRow({
   };
 
   const subsectionCount = unit.subsections?.length || 0;
-  const skillCount = unit.subsections?.reduce((sum, s) => sum + s.primary_skills.length, 0) || 0;
 
   return (
     <div className="bg-white dark:bg-[#1C1C1E] rounded-xl overflow-hidden border border-black/[0.06] dark:border-white/[0.08]">
@@ -90,7 +89,7 @@ export function UnitDeclarationRow({
           </div>
           <div className="flex items-center gap-2 mt-1">
             <Text size="xs" variant="secondary">
-              {subsectionCount} subsecciones · {skillCount} habilidades
+              {subsectionCount} {subsectionCount === 1 ? 'subsección' : 'subsecciones'}
             </Text>
           </div>
         </div>
