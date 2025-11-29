@@ -156,9 +156,14 @@ export function useKnowledgeDeclarations(level?: Level) {
         : response.data.declarations;
 
       // Recalculate summary for filtered declarations
+      // Don't use backend's totals - they're combined M1+M2. Preserve existing totals from cache.
       const filteredSummary = currentLevel
         ? {
-            ...response.data.summary,
+            // Preserve totals from current cache (came from level-filtered GET request)
+            totalUnits: dataRef.current?.summary.totalUnits ?? 0,
+            totalSubsections: dataRef.current?.summary.totalSubsections ?? 0,
+            totalSkills: dataRef.current?.summary.totalSkills ?? 0,
+            // Recalculate known counts from filtered declarations
             knownUnits: filteredDeclarations.filter((d) => d.declarationType === 'unit' && d.knows).length,
             knownSubsections: filteredDeclarations.filter((d) => d.declarationType === 'subsection' && d.knows).length,
             knownSkills: filteredDeclarations.filter((d) => d.declarationType === 'skill' && d.knows).length,
