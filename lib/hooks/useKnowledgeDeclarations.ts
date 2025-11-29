@@ -148,9 +148,26 @@ export function useKnowledgeDeclarations(level?: Level) {
     }
 
     if (response.data) {
+      // Backend returns ALL declarations (M1+M2 combined), but our cache is level-specific
+      // Filter the response to only include declarations for the current level
+      const currentLevel = levelRef.current;
+      const filteredDeclarations = currentLevel
+        ? response.data.declarations.filter((d) => d.level === currentLevel)
+        : response.data.declarations;
+
+      // Recalculate summary for filtered declarations
+      const filteredSummary = currentLevel
+        ? {
+            ...response.data.summary,
+            knownUnits: filteredDeclarations.filter((d) => d.declarationType === 'unit' && d.knows).length,
+            knownSubsections: filteredDeclarations.filter((d) => d.declarationType === 'subsection' && d.knows).length,
+            knownSkills: filteredDeclarations.filter((d) => d.declarationType === 'skill' && d.knows).length,
+          }
+        : response.data.summary;
+
       mutateRef.current({
-        declarations: response.data.declarations,
-        summary: response.data.summary,
+        declarations: filteredDeclarations,
+        summary: filteredSummary,
       });
     }
   }, []);
