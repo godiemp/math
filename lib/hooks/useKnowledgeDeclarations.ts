@@ -33,7 +33,7 @@ async function fetchDeclarations(level?: Level): Promise<GetKnowledgeDeclaration
   const response = await apiRequest<GetKnowledgeDeclarationsResponse>(endpoint);
 
   if (response.error) {
-    throw new Error(response.error.message);
+    throw new Error(response.error.error);
   }
 
   return response.data!;
@@ -133,7 +133,7 @@ export function useKnowledgeDeclarations(level?: Level) {
       if (response.error) {
         // Revert optimistic update on error
         mutate();
-        throw new Error(response.error.message);
+        throw new Error(response.error.error);
       }
 
       // Update with actual server response
