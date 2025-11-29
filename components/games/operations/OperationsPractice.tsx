@@ -373,7 +373,7 @@ export default function OperationsPractice({
                 value={userAnswer}
                 onChange={(e) => setUserAnswer(e.target.value)}
                 disabled={isSubmitting || feedback.show}
-                className="w-full px-4 sm:px-6 py-3 sm:py-4 text-xl sm:text-2xl text-center border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all disabled:bg-gray-100"
+                className="w-full px-4 sm:px-6 py-3 sm:py-4 text-xl sm:text-2xl text-center border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all disabled:bg-gray-100 bg-white text-gray-900"
                 placeholder={
                   problem.answerType === 'array'
                     ? 'Ej: 1,2,3,4,5'
