@@ -44,8 +44,8 @@ function HomeContent() {
     }
   }, [isAuthenticated, isLoading, redirectPath, hasWelcomeParam, router]);
 
-  // While loading auth or if authenticated, don't show login
-  if (isLoading || isAuthenticated) {
+  // If authenticated, don't show login (useEffect will redirect to dashboard)
+  if (isAuthenticated) {
     return null;
   }
 
