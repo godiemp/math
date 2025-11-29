@@ -13,6 +13,18 @@ import type {
   UpdateKnowledgeDeclarationsResponse,
 } from '../types';
 
+const EMPTY_RESPONSE: GetKnowledgeDeclarationsResponse = {
+  declarations: [],
+  summary: {
+    totalUnits: 0,
+    knownUnits: 0,
+    totalSubsections: 0,
+    knownSubsections: 0,
+    totalSkills: 0,
+    knownSkills: 0,
+  },
+};
+
 /**
  * Fetcher for knowledge declarations
  */
@@ -24,6 +36,12 @@ async function fetchDeclarations(level?: Level): Promise<GetKnowledgeDeclaration
   const response = await apiRequest<GetKnowledgeDeclarationsResponse>(endpoint);
 
   if (response.error) {
+    // On auth error, return empty data instead of throwing
+    // This prevents SWR from retrying infinitely
+    if (response.error.statusCode === 401) {
+      console.warn('Knowledge declarations: session expired');
+      return EMPTY_RESPONSE;
+    }
     throw new Error(response.error.error);
   }
 
@@ -50,6 +68,8 @@ export function useKnowledgeDeclarations(level?: Level) {
       dedupingInterval: 30000,
       revalidateOnFocus: false,
       keepPreviousData: true,
+      shouldRetryOnError: false, // Don't retry on errors
+      errorRetryCount: 0, // No retries
     }
   );
 
@@ -100,6 +120,11 @@ export function useKnowledgeDeclarations(level?: Level) {
     );
 
     if (response.error) {
+      // Don't revert on auth error - just log and ignore
+      if (response.error.statusCode === 401) {
+        console.warn('Knowledge declarations: cannot save, session expired');
+        return;
+      }
       mutateRef.current();
       console.error('Failed to save knowledge declarations:', response.error.error);
       return;
