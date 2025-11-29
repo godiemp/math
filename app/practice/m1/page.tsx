@@ -167,7 +167,7 @@ function M1PracticeContent() {
       time: 10,
       description: '5 preguntas - 2 min por pregunta',
       details: 'Modo tranquilo para principiantes',
-      features: ['✓ Feedback inmediato', '🎯 60% para aprobar']
+      features: ['🎯 60% para aprobar']
     },
     {
       value: 'medium',
@@ -176,7 +176,7 @@ function M1PracticeContent() {
       time: 10,
       description: '8 preguntas - 1:15 por pregunta',
       details: 'Ritmo moderado sin presión',
-      features: ['✓ Feedback inmediato', '🎯 70% para aprobar']
+      features: ['🎯 70% para aprobar']
     },
     {
       value: 'hard',
@@ -185,16 +185,16 @@ function M1PracticeContent() {
       time: 10,
       description: '10 preguntas - 1 min por pregunta',
       details: 'Sistema de vidas: 2 errores permitidos',
-      features: ['❤️ 2 vidas (3er error = Game Over)', '✓ Feedback inmediato', '🎯 75% para aprobar']
+      features: ['❤️ 2 vidas (3er error = Game Over)', '🎯 75% para aprobar']
     },
     {
       value: 'extreme',
       label: 'Extremo',
       emoji: '🔴',
-      time: 10,
-      description: '12 preguntas - 50s por pregunta',
+      time: 5,
+      description: '10 preguntas - 30s por pregunta',
       details: 'Máximo desafío con sistema de 1 vida',
-      features: ['❤️ 1 vida (2do error = Game Over)', '✓ Feedback inmediato', '🎯 80% para aprobar']
+      features: ['❤️ 1 vida (2do error = Game Over)', '🎯 80% para aprobar']
     }
   ];
 
