@@ -5,6 +5,7 @@
 import useSWR from 'swr';
 import { useCallback, useMemo, useRef, useEffect } from 'react';
 import { apiRequest } from '../api-client';
+import { useAuth } from '../auth';
 import type {
   Level,
   GetKnowledgeDeclarationsResponse,
@@ -33,9 +34,14 @@ async function fetchDeclarations(level?: Level): Promise<GetKnowledgeDeclaration
  * Hook to fetch and manage knowledge declarations
  */
 export function useKnowledgeDeclarations(level?: Level) {
-  const cacheKey = level
-    ? `/api/user/knowledge-declarations?level=${level}`
-    : '/api/user/knowledge-declarations';
+  const { user, isLoading: authLoading } = useAuth();
+
+  // Only fetch if user is authenticated
+  const cacheKey = user
+    ? level
+      ? `/api/user/knowledge-declarations?level=${level}`
+      : '/api/user/knowledge-declarations'
+    : null; // null key = don't fetch
 
   const { data, error, isLoading, mutate } = useSWR<GetKnowledgeDeclarationsResponse>(
     cacheKey,
@@ -193,7 +199,7 @@ export function useKnowledgeDeclarations(level?: Level) {
       totalSkills: 0,
       knownSkills: 0,
     },
-    isLoading,
+    isLoading: isLoading || authLoading,
     error,
     isKnown,
     toggleKnowledge,
