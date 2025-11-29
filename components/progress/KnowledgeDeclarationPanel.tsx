@@ -157,7 +157,7 @@ export function KnowledgeDeclarationPanel({ initialLevel = 'M1' }: KnowledgeDecl
         </div>
 
         {/* Summary stats */}
-        <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="text-center p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.04]">
             <div className="text-2xl font-bold text-[#0A84FF]">
               {summary.knownUnits}/{summary.totalUnits}
@@ -169,12 +169,6 @@ export function KnowledgeDeclarationPanel({ initialLevel = 'M1' }: KnowledgeDecl
               {summary.knownSubsections}/{summary.totalSubsections}
             </div>
             <Text size="xs" variant="secondary">Subsecciones</Text>
-          </div>
-          <div className="text-center p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.04]">
-            <div className="text-2xl font-bold text-[#0A84FF]">
-              {summary.knownSkills}/{summary.totalSkills}
-            </div>
-            <Text size="xs" variant="secondary">Habilidades</Text>
           </div>
         </div>
 
