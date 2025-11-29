@@ -78,6 +78,7 @@ export function useKnowledgeDeclarations(level?: Level) {
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const dataRef = useRef(data);
   const mutateRef = useRef(mutate);
+  const authFailedRef = useRef(false); // Track if auth has failed to prevent repeated attempts
 
   // Keep refs updated
   useEffect(() => {
@@ -106,6 +107,12 @@ export function useKnowledgeDeclarations(level?: Level) {
 
   // Flush pending updates to API
   const flushUpdates = useCallback(async () => {
+    // Don't attempt if auth already failed
+    if (authFailedRef.current) {
+      pendingUpdatesRef.current = [];
+      return;
+    }
+
     const updates = pendingUpdatesRef.current;
     if (updates.length === 0) return;
 
@@ -120,9 +127,10 @@ export function useKnowledgeDeclarations(level?: Level) {
     );
 
     if (response.error) {
-      // Don't revert on auth error - just log and ignore
+      // Don't revert on auth error - just log and stop future attempts
       if (response.error.statusCode === 401) {
-        console.warn('Knowledge declarations: cannot save, session expired');
+        authFailedRef.current = true;
+        console.warn('Knowledge declarations: cannot save, session expired. Stopping further attempts.');
         return;
       }
       mutateRef.current();
