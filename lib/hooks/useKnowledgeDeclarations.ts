@@ -3,7 +3,7 @@
  */
 
 import useSWR from 'swr';
-import { useCallback, useMemo, useRef, useEffect } from 'react';
+import { useCallback, useMemo, useRef, useEffect, useState } from 'react';
 import { apiRequest } from '../api-client';
 import { useAuth } from '@/contexts/AuthContext';
 import type {
@@ -12,18 +12,6 @@ import type {
   UpdateKnowledgeDeclarationRequest,
   UpdateKnowledgeDeclarationsResponse,
 } from '../types';
-
-const EMPTY_RESPONSE: GetKnowledgeDeclarationsResponse = {
-  declarations: [],
-  summary: {
-    totalUnits: 0,
-    knownUnits: 0,
-    totalSubsections: 0,
-    knownSubsections: 0,
-    totalSkills: 0,
-    knownSkills: 0,
-  },
-};
 
 /**
  * Fetcher for knowledge declarations
@@ -36,12 +24,8 @@ async function fetchDeclarations(level?: Level): Promise<GetKnowledgeDeclaration
   const response = await apiRequest<GetKnowledgeDeclarationsResponse>(endpoint);
 
   if (response.error) {
-    // On auth error, return empty data instead of throwing
-    // This prevents SWR from retrying infinitely
-    if (response.error.statusCode === 401) {
-      console.warn('Knowledge declarations: session expired');
-      return EMPTY_RESPONSE;
-    }
+    // Always throw errors so SWR can set error state
+    // shouldRetryOnError: false prevents retries, so 401 errors won't retry infinitely
     throw new Error(response.error.error);
   }
 
@@ -79,6 +63,9 @@ export function useKnowledgeDeclarations(level?: Level) {
       errorRetryCount: 0, // No retries
     }
   );
+
+  // State for tracking update errors
+  const [updateError, setUpdateError] = useState<string | null>(null);
 
   // Refs for debouncing - these persist across renders
   const pendingUpdatesRef = useRef<UpdateKnowledgeDeclarationRequest[]>([]);
@@ -125,8 +112,6 @@ export function useKnowledgeDeclarations(level?: Level) {
     const updates = pendingUpdatesRef.current;
     if (updates.length === 0) return;
 
-    pendingUpdatesRef.current = [];
-
     const response = await apiRequest<UpdateKnowledgeDeclarationsResponse>(
       '/api/user/knowledge-declarations',
       {
@@ -142,10 +127,18 @@ export function useKnowledgeDeclarations(level?: Level) {
         console.warn('Knowledge declarations: cannot save, session expired. Stopping further attempts.');
         return;
       }
+      // Track the error and revert UI to server state
+      setUpdateError(response.error.error || 'Failed to save changes');
       mutateRef.current();
       console.error('Failed to save knowledge declarations:', response.error.error);
       return;
     }
+
+    // Only clear pending updates after confirming the request succeeded
+    pendingUpdatesRef.current = [];
+
+    // Clear any previous update errors on successful save
+    setUpdateError(null);
 
     if (response.data) {
       // Backend returns ALL declarations (M1+M2 combined), but our cache is level-specific
@@ -215,18 +208,25 @@ export function useKnowledgeDeclarations(level?: Level) {
           });
         }
 
-        // Filter by current level when calculating summary to avoid mixing M1/M2 counts
-        const currentLevel = levelRef.current;
-        const levelFiltered = currentLevel
-          ? newDeclarations.filter((d) => getLevelFromItemCode(d.itemCode) === currentLevel)
-          : newDeclarations;
+        // When cascade is true, don't recalculate summary optimistically
+        // because cascaded subsections/skills haven't been added to declarations yet.
+        // The summary will be correct when the backend response arrives with cascaded items.
+        // If cascade is false, recalculate summary immediately for accurate stats.
+        let newSummary = currentData.summary;
+        if (!cascade) {
+          // Filter by current level when calculating summary to avoid mixing M1/M2 counts
+          const currentLevel = levelRef.current;
+          const levelFiltered = currentLevel
+            ? newDeclarations.filter((d) => getLevelFromItemCode(d.itemCode) === currentLevel)
+            : newDeclarations;
 
-        const newSummary = {
-          ...currentData.summary,
-          knownUnits: levelFiltered.filter((d) => d.declarationType === 'unit' && d.knows).length,
-          knownSubsections: levelFiltered.filter((d) => d.declarationType === 'subsection' && d.knows).length,
-          knownSkills: levelFiltered.filter((d) => d.declarationType === 'skill' && d.knows).length,
-        };
+          newSummary = {
+            ...currentData.summary,
+            knownUnits: levelFiltered.filter((d) => d.declarationType === 'unit' && d.knows).length,
+            knownSubsections: levelFiltered.filter((d) => d.declarationType === 'subsection' && d.knows).length,
+            knownSkills: levelFiltered.filter((d) => d.declarationType === 'skill' && d.knows).length,
+          };
+        }
 
         mutateRef.current({ declarations: newDeclarations, summary: newSummary }, false);
       }
@@ -271,6 +271,7 @@ export function useKnowledgeDeclarations(level?: Level) {
     },
     isLoading: isLoading || authLoading,
     error,
+    updateError,
     isKnown,
     toggleKnowledge,
     setKnowledge,

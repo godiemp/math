@@ -271,3 +271,10 @@ export interface UpdateKnowledgeDeclarationRequest {
 export interface UpdateKnowledgeDeclarationsRequest {
   declarations: UpdateKnowledgeDeclarationRequest[];
 }
+
+export interface UpdateKnowledgeDeclarationsResponse {
+  success: boolean;
+  message: string;
+  declarations: KnowledgeDeclaration[];
+  summary: KnowledgeDeclarationSummary;
+}

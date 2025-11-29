@@ -51,7 +51,7 @@ export function KnowledgeDeclarationPanel({ initialLevel = 'M1' }: KnowledgeDecl
   const [loading, setLoading] = useState(true);
   const [expandedUnits, setExpandedUnits] = useState<Set<string>>(new Set());
 
-  const { summary, isKnown, setKnowledge, isLoading: declarationsLoading } = useKnowledgeDeclarations(level);
+  const { summary, isKnown, setKnowledge, updateError, isLoading: declarationsLoading } = useKnowledgeDeclarations(level);
 
   // Load units when level changes
   useEffect(() => {
@@ -185,6 +185,15 @@ export function KnowledgeDeclarationPanel({ initialLevel = 'M1' }: KnowledgeDecl
             />
           </div>
         </div>
+
+        {/* Error message for failed updates */}
+        {updateError && (
+          <div className="mb-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+            <Text size="xs" className="text-red-900 dark:text-red-100">
+              No se pudieron guardar los cambios: {updateError}. Por favor, intenta nuevamente.
+            </Text>
+          </div>
+        )}
 
         {/* Expand/Collapse all */}
         <div className="flex justify-end gap-2 mt-4">

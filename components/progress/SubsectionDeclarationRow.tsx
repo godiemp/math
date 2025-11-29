@@ -20,7 +20,7 @@ export function SubsectionDeclarationRow({
   const subsectionKnown = isKnown('subsection', subsectionCode);
 
   const handleSubsectionToggle = () => {
-    setKnowledge('subsection', subsectionCode, !subsectionKnown, false);
+    setKnowledge('subsection', subsectionCode, !subsectionKnown, true);
   };
 
   return (
