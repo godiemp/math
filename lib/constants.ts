@@ -21,7 +21,7 @@ export const RAPIDFIRE_TIME_LIMITS = {
   easy: 25 * 60,      // 25 minutes = 1500 seconds
   medium: 18 * 60,    // 18 minutes = 1080 seconds
   hard: 12 * 60,      // 12 minutes = 720 seconds
-  extreme: 10 * 60,   // 10 minutes = 600 seconds
+  extreme: 5 * 60,    // 5 minutes = 300 seconds
 } as const;
 
 /**
@@ -54,8 +54,8 @@ export const RAPIDFIRE_CONFIG = {
     passingPercentage: 75,         // 75% to pass
   },
   extreme: {
-    timeLimit: 10 * 60,           // 10 minutes
-    questionCount: 12,             // 12 questions
+    timeLimit: 5 * 60,            // 5 minutes
+    questionCount: 10,             // 10 questions
     pauseAllowed: true,            // Can pause unlimited times
     livesSystem: true,             // Lives system enabled
     maxWrongAnswers: 1,            // 1 wrong answer allowed, 2nd ends quiz immediately
