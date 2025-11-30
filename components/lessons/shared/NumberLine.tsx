@@ -162,7 +162,7 @@ export default function NumberLine({
       {draggableNumbers.length > 0 && !readOnly && (
         <div className="flex flex-wrap justify-center gap-3 mb-8">
           {draggableNumbers
-            .filter(n => !isPlaced(n))
+            .filter(n => !isPlaced(n) && n !== dragging)
             .map(num => (
               <div
                 key={num}
