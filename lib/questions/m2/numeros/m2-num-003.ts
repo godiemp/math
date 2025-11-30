@@ -174,5 +174,160 @@ export const m2Num003Questions: Question[] = [
     explanation: '500{,}000 \\times (1.20)^3 - 500{,}000 = 500{,}000 \\times 1.728 - 500{,}000 = 364{,}000',
     difficulty: 'hard',
     skills: ['finanzas-interes-compuesto', 'numeros-potencias', 'numeros-porcentaje', 'numeros-operaciones-basicas']
+  },
+  // Capitalización mensual / Monthly compounding
+  {
+    id: 'm2-num-fin-cap-1',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    operacionBase: 'A = P\\left(1 + \\frac{r}{n}\\right)^{nt}',
+    questionLatex: '\\text{Un banco ofrece una tasa de interés del 12\\% anual con capitalización mensual. Si depositas \\$1.000.000, ¿cuánto tendrás después de 1 año? (Usa } (1{,}01)^{12} \\approx 1{,}1268)',
+    options: ['$1.100.000', '$1.120.000', '$1.126.800', '$1.144.000'],
+    correctAnswer: 2,
+    explanation: 'A = 1{,}000{,}000 \\times \\left(1 + \\frac{0{,}12}{12}\\right)^{12} = 1{,}000{,}000 \\times 1{,}01^{12} \\approx 1{,}126{,}800',
+    difficulty: 'hard',
+    skills: ['finanzas-interes-compuesto', 'finanzas-capitalizacion', 'numeros-potencias', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-fin-cap-2',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    operacionBase: 'A = P\\left(1 + \\frac{r}{n}\\right)^{nt}',
+    questionLatex: '\\text{¿Cuál es la diferencia entre depositar \\$2.000.000 al 12\\% anual simple versus 12\\% anual con capitalización mensual durante 2 años? (Usa } (1{,}01)^{24} \\approx 1{,}2697)',
+    options: ['$0', '$19.400', '$59.400', '$100.000'],
+    correctAnswer: 2,
+    explanation: '\\text{Simple: } 2{,}000{,}000 \\times 0{,}24 = 480{,}000. \\quad \\text{Compuesto: } 2{,}000{,}000 \\times 1{,}2697 - 2{,}000{,}000 = 539{,}400. \\quad \\text{Diferencia} = 59{,}400',
+    difficulty: 'extreme',
+    skills: ['finanzas-interes-compuesto', 'finanzas-capitalizacion', 'finanzas-interes-simple', 'numeros-potencias', 'numeros-operaciones-basicas']
+  },
+  // Valor presente y futuro / Present and Future Value
+  {
+    id: 'm2-num-fin-vp-1',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    operacionBase: 'VP = \\frac{VF}{(1 + r)^t}',
+    questionLatex: '\\text{¿Cuánto dinero debes depositar hoy en una cuenta que paga 10\\% anual compuesto para tener \\$1.000.000 en exactamente 2 años?}',
+    options: ['$800.000', '$826.446', '$900.000', '$909.091'],
+    correctAnswer: 1,
+    explanation: 'VP = \\frac{1{,}000{,}000}{(1{,}10)^2} = \\frac{1{,}000{,}000}{1{,}21} \\approx 826{,}446',
+    difficulty: 'hard',
+    skills: ['finanzas-valor-presente', 'finanzas-interes-compuesto', 'numeros-potencias', 'numeros-division', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-fin-vp-2',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    operacionBase: 'VP = \\frac{VF}{(1 + r)^t}',
+    questionLatex: '\\text{Los padres de Martina quieren regalarle \\$5.000.000 cuando cumpla 18 años (en 5 años más). Si el banco ofrece 8\\% anual, ¿cuánto deben depositar hoy? (Usa } (1{,}08)^5 \\approx 1{,}4693)',
+    options: ['$3.000.000', '$3.402.916', '$4.000.000', '$4.629.630'],
+    correctAnswer: 1,
+    explanation: 'VP = \\frac{5{,}000{,}000}{(1{,}08)^5} = \\frac{5{,}000{,}000}{1{,}4693} \\approx 3{,}402{,}916',
+    difficulty: 'hard',
+    skills: ['finanzas-valor-presente', 'finanzas-interes-compuesto', 'numeros-potencias', 'numeros-division', 'numeros-operaciones-basicas']
+  },
+  // Créditos y amortización / Loans and amortization
+  {
+    id: 'm2-num-fin-cred-3',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    operacionBase: '\\text{Intereses} = \\text{Total pagado} - \\text{Capital}',
+    questionLatex: '\\text{María solicita un crédito de consumo de \\$3.000.000 a 24 meses con cuota mensual de \\$141.220. ¿Cuánto pagará en total por intereses durante todo el crédito?}',
+    options: ['$300.000', '$389.280', '$420.000', '$489.280'],
+    correctAnswer: 1,
+    explanation: '\\text{Total pagado} = 141{,}220 \\times 24 = 3{,}389{,}280. \\quad \\text{Intereses} = 3{,}389{,}280 - 3{,}000{,}000 = 389{,}280',
+    difficulty: 'medium',
+    skills: ['finanzas-creditos', 'finanzas-amortizacion', 'numeros-multiplicacion', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-fin-cred-4',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    questionLatex: '\\text{Dos bancos ofrecen créditos de \\$1.000.000 a 12 meses: Banco A con cuota de \\$89.000 y Banco B con cuota de \\$91.200. ¿Cuál es la diferencia en el total a pagar entre ambos bancos?}',
+    options: ['$2.200', '$12.000', '$24.000', '$26.400'],
+    correctAnswer: 3,
+    explanation: '\\text{Banco A: } 89{,}000 \\times 12 = 1{,}068{,}000. \\quad \\text{Banco B: } 91{,}200 \\times 12 = 1{,}094{,}400. \\quad \\text{Diferencia} = 26{,}400',
+    difficulty: 'medium',
+    skills: ['finanzas-creditos', 'finanzas-comparacion', 'numeros-multiplicacion', 'numeros-operaciones-basicas']
+  },
+  // CAE - Carga Anual Equivalente (Chilean specific)
+  {
+    id: 'm2-num-fin-cae-1',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    questionLatex: '\\text{Al comparar créditos de consumo en Chile, se usa el CAE (Carga Anual Equivalente). Si el Banco A ofrece un crédito con CAE de 15\\% y el Banco B ofrece CAE de 18\\%, ¿cuál conviene más y cuál es la diferencia porcentual?}',
+    options: ['\\text{Banco A, difieren en 3 puntos porcentuales}', '\\text{Banco B, difieren en 3 puntos porcentuales}', '\\text{Banco A, difieren en 20\\%}', '\\text{Son equivalentes}'],
+    correctAnswer: 0,
+    explanation: '\\text{Menor CAE = menor costo total. CAE de 15\\% < 18\\%. Diferencia} = 18\\% - 15\\% = 3 \\text{ puntos porcentuales}',
+    difficulty: 'easy',
+    skills: ['finanzas-cae', 'finanzas-creditos', 'finanzas-comparacion', 'numeros-porcentaje']
+  },
+  {
+    id: 'm2-num-fin-cae-2',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    questionLatex: '\\text{Un crédito de \\$500.000 tiene tasa mensual de 1,5\\% y el CAE informado es 19,56\\%. Si la tasa mensual simple sería } 1{,}5\\% \\times 12 = 18\\%\\text{, ¿por qué el CAE es mayor?}',
+    options: ['\\text{El CAE incluye comisiones y seguros}', '\\text{El CAE es siempre mayor}', '\\text{Error de cálculo del banco}', '\\text{El CAE no incluye IVA}'],
+    correctAnswer: 0,
+    explanation: '\\text{El CAE incluye todos los costos: intereses, comisiones, seguros y otros gastos, por eso es mayor que la tasa simple.}',
+    difficulty: 'medium',
+    skills: ['finanzas-cae', 'finanzas-creditos', 'finanzas-conceptos', 'numeros-porcentaje']
+  },
+  // AFP - More complex scenarios (Chilean pension system)
+  {
+    id: 'm2-num-fin-afp-3',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    questionLatex: '\\text{Carolina tiene su fondo de AFP en el Fondo A (más riesgoso) con \\$15.000.000. El año pasado, el Fondo A tuvo rentabilidad de 12\\% y el Fondo E (conservador) tuvo 4\\%. ¿Cuánto más ganó por estar en el Fondo A en vez del E?}',
+    options: ['$600.000', '$1.200.000', '$1.800.000', '$2.400.000'],
+    correctAnswer: 1,
+    explanation: '\\text{Diferencia de rentabilidad} = 12\\% - 4\\% = 8\\%. \\quad 15{,}000{,}000 \\times 0{,}08 = 1{,}200{,}000',
+    difficulty: 'medium',
+    skills: ['finanzas-afp', 'finanzas-rentabilidad', 'numeros-porcentaje', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-fin-afp-4',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    operacionBase: '\\text{Descuento total} = \\text{Cotización} + \\text{Comisión AFP}',
+    questionLatex: '\\text{Felipe tiene sueldo imponible de \\$1.200.000. Su AFP cobra 1,44\\% de comisión sobre el sueldo imponible, además del 10\\% obligatorio de cotización. ¿Cuánto se descuenta mensualmente en total para la AFP?}',
+    options: ['$120.000', '$137.280', '$144.000', '$154.080'],
+    correctAnswer: 1,
+    explanation: '\\text{Cotización} = 1{,}200{,}000 \\times 0{,}10 = 120{,}000. \\quad \\text{Comisión} = 1{,}200{,}000 \\times 0{,}0144 = 17{,}280. \\quad \\text{Total} = 137{,}280',
+    difficulty: 'medium',
+    skills: ['finanzas-afp', 'finanzas-comisiones', 'numeros-porcentaje', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-fin-afp-5',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    questionLatex: '\\text{Andrea hace APV (Ahorro Previsional Voluntario) de \\$100.000 mensuales. Su empleador aporta 50\\% adicional por cada peso que ella ahorre en APV. ¿Cuánto se deposita mensualmente en total por concepto de APV?}',
+    options: ['$100.000', '$125.000', '$150.000', '$200.000'],
+    correctAnswer: 2,
+    explanation: '\\text{APV Andrea} = 100{,}000. \\quad \\text{Aporte empleador} = 100{,}000 \\times 0{,}50 = 50{,}000. \\quad \\text{Total APV} = 150{,}000',
+    difficulty: 'medium',
+    skills: ['finanzas-afp', 'finanzas-apv', 'numeros-porcentaje', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-fin-afp-6',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    questionLatex: '\\text{Tomás tiene 55 años y debe elegir entre los 5 fondos de AFP (A, B, C, D, E). Por ley, a su edad no puede tener más del 60\\% en el Fondo A. Si tiene \\$20.000.000, ¿cuánto es lo máximo que puede tener en el Fondo A?}',
+    options: ['$8.000.000', '$10.000.000', '$12.000.000', '$20.000.000'],
+    correctAnswer: 2,
+    explanation: '20{,}000{,}000 \\times 0{,}60 = 12{,}000{,}000',
+    difficulty: 'easy',
+    skills: ['finanzas-afp', 'finanzas-multifondos', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   }
 ];

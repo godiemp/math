@@ -214,5 +214,72 @@ export const m2Geo002Questions: Question[] = [
     explanation: 'h = \\sqrt{6^2 + 8^2} = 10. \\quad \\cos(\\alpha) = \\frac{8}{10} = \\frac{4}{5}',
     difficulty: 'hard',
     skills: ['trigonometria-calculo', 'trigonometria-razones-basicas', 'geometria-pitagoras', 'numeros-fracciones']
+  },
+  // Ley de Senos / Law of Sines
+  {
+    id: 'm2-geo-leysenos-1',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    operacionBase: '\\frac{a}{\\sin(A)} = \\frac{b}{\\sin(B)} = \\frac{c}{\\sin(C)}',
+    questionLatex: '\\text{En un triángulo, } a = 8\\text{ cm, } A = 30°\\text{ y } B = 45°\\text{. Usando la ley de senos, ¿cuánto mide el lado } b\\text{? (Usa } \\sin(30°) = 0{,}5, \\sin(45°) \\approx 0{,}707)',
+    options: ['8\\text{ cm}', '11{,}3\\text{ cm}', '16\\text{ cm}', '5{,}7\\text{ cm}'],
+    correctAnswer: 1,
+    explanation: '\\frac{8}{0{,}5} = \\frac{b}{0{,}707} \\rightarrow b = \\frac{8 \\times 0{,}707}{0{,}5} = 11{,}3\\text{ cm}',
+    difficulty: 'hard',
+    skills: ['trigonometria-ley-senos', 'geometria-triangulos', 'algebra-despeje', 'numeros-decimales']
+  },
+  {
+    id: 'm2-geo-leysenos-2',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    operacionBase: '\\frac{a}{\\sin(A)} = \\frac{b}{\\sin(B)}',
+    questionLatex: '\\text{En un triángulo, el lado } a = 10\\text{ cm está opuesto al ángulo } A = 90°\\text{, y el lado } b \\text{ está opuesto al ángulo } B = 30°\\text{. ¿Cuánto mide } b\\text{?}',
+    options: ['5\\text{ cm}', '10\\text{ cm}', '8{,}66\\text{ cm}', '20\\text{ cm}'],
+    correctAnswer: 0,
+    explanation: '\\frac{10}{\\sin(90°)} = \\frac{b}{\\sin(30°)} \\rightarrow \\frac{10}{1} = \\frac{b}{0{,}5} \\rightarrow b = 5\\text{ cm}',
+    difficulty: 'medium',
+    skills: ['trigonometria-ley-senos', 'geometria-triangulos', 'trigonometria-angulos-notables', 'algebra-despeje']
+  },
+  // Ley de Cosenos / Law of Cosines
+  {
+    id: 'm2-geo-leycosenos-1',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    operacionBase: 'c^2 = a^2 + b^2 - 2ab\\cos(C)',
+    questionLatex: '\\text{En un triángulo con lados } a = 5\\text{ cm, } b = 7\\text{ cm y ángulo } C = 60°\\text{ entre ellos, ¿cuánto mide el lado } c\\text{? (Usa } \\cos(60°) = 0{,}5)',
+    options: ['\\sqrt{39}\\text{ cm}', '6\\text{ cm}', '8\\text{ cm}', '\\sqrt{74}\\text{ cm}'],
+    correctAnswer: 0,
+    explanation: 'c^2 = 5^2 + 7^2 - 2(5)(7)(0{,}5) = 25 + 49 - 35 = 39 \\rightarrow c = \\sqrt{39}\\text{ cm}',
+    difficulty: 'hard',
+    skills: ['trigonometria-ley-cosenos', 'geometria-triangulos', 'numeros-potencias', 'numeros-raices']
+  },
+  {
+    id: 'm2-geo-leycosenos-2',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    operacionBase: '\\cos(C) = \\frac{a^2 + b^2 - c^2}{2ab}',
+    questionLatex: '\\text{En un triángulo con lados 5, 7 y 8 cm, ¿cuál es el coseno del ángulo mayor (opuesto al lado de 8 cm)?}',
+    options: ['\\frac{1}{7}', '\\frac{2}{7}', '\\frac{1}{2}', '\\frac{5}{7}'],
+    correctAnswer: 0,
+    explanation: '\\cos(C) = \\frac{5^2 + 7^2 - 8^2}{2 \\times 5 \\times 7} = \\frac{25 + 49 - 64}{70} = \\frac{10}{70} = \\frac{1}{7}',
+    difficulty: 'hard',
+    skills: ['trigonometria-ley-cosenos', 'geometria-triangulos', 'numeros-fracciones', 'numeros-potencias']
+  },
+  {
+    id: 'm2-geo-leycosenos-3',
+    level: 'M2',
+    topic: 'Geometría',
+    subject: 'geometría',
+    operacionBase: 'c^2 = a^2 + b^2 - 2ab\\cos(C)',
+    questionLatex: '\\text{Dos fuerzas de 6 N y 8 N actúan con un ángulo de 60° entre ellas. ¿Cuál es la magnitud de la fuerza resultante? (Usa } \\cos(60°) = 0{,}5)',
+    options: ['10\\text{ N}', '\\sqrt{52}\\text{ N}', '14\\text{ N}', '\\sqrt{76}\\text{ N}'],
+    correctAnswer: 3,
+    explanation: 'R^2 = 6^2 + 8^2 + 2(6)(8)\\cos(60°) = 36 + 64 + 48(0{,}5) = 36 + 64 - 24 = 76 \\rightarrow R = \\sqrt{76}\\text{ N}',
+    difficulty: 'extreme',
+    skills: ['trigonometria-ley-cosenos', 'geometria-vectores', 'numeros-potencias', 'numeros-raices']
   }
 ];

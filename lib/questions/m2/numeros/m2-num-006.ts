@@ -147,5 +147,110 @@ export const m2Num006Questions: Question[] = [
     explanation: '25\\% = \\frac{1}{4} = \\frac{1}{2^2} \\rightarrow 2 \\text{ vidas medias} \\rightarrow t \\approx 11460\\text{ años}',
     difficulty: 'hard',
     skills: ['logaritmos-problemas-ciencias', 'logaritmos-tipos', 'numeros-porcentaje', 'numeros-operaciones-basicas']
+  },
+  // Ecuaciones logarítmicas más complejas
+  {
+    id: 'm2-num-log-ec-1',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    operacionBase: '\\log(a) + \\log(b) = \\log(ab)',
+    questionLatex: '\\text{Resuelve: } \\log(x) + \\log(x-3) = \\log(10)',
+    options: ['x = 2', 'x = 5', 'x = -2', 'x = 10'],
+    correctAnswer: 1,
+    explanation: '\\log(x(x-3)) = \\log(10) \\rightarrow x^2 - 3x = 10 \\rightarrow x^2 - 3x - 10 = 0 \\rightarrow (x-5)(x+2) = 0. \\quad x = 5 \\text{ (válido)}',
+    difficulty: 'hard',
+    skills: ['logaritmos-ecuaciones', 'logaritmos-propiedad-producto', 'algebra-ecuaciones-cuadraticas', 'algebra-factorizacion']
+  },
+  {
+    id: 'm2-num-log-ec-2',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    operacionBase: '\\log_2(a) + \\log_2(b) = \\log_2(ab)',
+    questionLatex: '\\text{Resuelve: } \\log_2(x) + \\log_2(x-2) = 3',
+    options: ['x = 2', 'x = 4', 'x = 6', 'x = 8'],
+    correctAnswer: 1,
+    explanation: '\\log_2(x(x-2)) = 3 \\rightarrow x^2 - 2x = 8 \\rightarrow x^2 - 2x - 8 = 0 \\rightarrow (x-4)(x+2) = 0. \\quad x = 4 \\text{ (válido)}',
+    difficulty: 'hard',
+    skills: ['logaritmos-ecuaciones', 'logaritmos-propiedad-producto', 'algebra-ecuaciones-cuadraticas', 'algebra-factorizacion']
+  },
+  {
+    id: 'm2-num-log-ec-3',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    operacionBase: '\\log(a) - \\log(b) = \\log(a/b)',
+    questionLatex: '\\text{Resuelve: } \\log(x+6) - \\log(x) = 1',
+    options: ['x = \\frac{2}{3}', 'x = 1', 'x = \\frac{3}{2}', 'x = 2'],
+    correctAnswer: 0,
+    explanation: '\\log\\left(\\frac{x+6}{x}\\right) = 1 \\rightarrow \\frac{x+6}{x} = 10 \\rightarrow x + 6 = 10x \\rightarrow 6 = 9x \\rightarrow x = \\frac{2}{3}',
+    difficulty: 'hard',
+    skills: ['logaritmos-ecuaciones', 'logaritmos-propiedad-cociente', 'algebra-despeje', 'numeros-fracciones']
+  },
+  // Crecimiento y decrecimiento exponencial (sin logaritmos explícitos)
+  {
+    id: 'm2-num-exp-crec-1',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    operacionBase: 'N = N_0 \\cdot 2^{t/T}',
+    questionLatex: '\\text{Una población de bacterias se duplica cada 3 horas. Si inicialmente hay 500 bacterias, ¿cuántas habrá después de 9 horas?}',
+    options: ['1.500', '2.000', '4.000', '8.000'],
+    correctAnswer: 2,
+    explanation: '\\text{En 9 horas hay } \\frac{9}{3} = 3 \\text{ duplicaciones}. \\quad N = 500 \\times 2^3 = 500 \\times 8 = 4.000',
+    difficulty: 'medium',
+    skills: ['logaritmos-problemas-ciencias', 'numeros-potencias', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-exp-crec-2',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    operacionBase: 'N = N_0 \\cdot (1 + r)^t',
+    questionLatex: '\\text{Una ciudad crece 5\\% anual. Si hoy tiene 100.000 habitantes, ¿cuántos tendrá en 2 años? (Usa } (1{,}05)^2 = 1{,}1025)',
+    options: ['105.000', '110.000', '110.250', '115.000'],
+    correctAnswer: 2,
+    explanation: 'N = 100.000 \\times (1{,}05)^2 = 100.000 \\times 1{,}1025 = 110.250',
+    difficulty: 'medium',
+    skills: ['logaritmos-problemas-ciencias', 'numeros-porcentaje', 'numeros-potencias', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-exp-decay-1',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    operacionBase: 'N = N_0 \\cdot \\left(\\frac{1}{2}\\right)^{t/T}',
+    questionLatex: '\\text{Un medicamento se reduce a la mitad en el cuerpo cada 4 horas. Si tomas 400 mg, ¿cuánto queda después de 12 horas?}',
+    options: ['25 mg', '50 mg', '100 mg', '200 mg'],
+    correctAnswer: 1,
+    explanation: '\\text{En 12 horas hay } \\frac{12}{4} = 3 \\text{ vidas medias}. \\quad N = 400 \\times \\left(\\frac{1}{2}\\right)^3 = 400 \\times \\frac{1}{8} = 50 \\text{ mg}',
+    difficulty: 'medium',
+    skills: ['logaritmos-problemas-ciencias', 'numeros-potencias', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-num-exp-decay-2',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    operacionBase: 'N = N_0 \\cdot (1 - r)^t',
+    questionLatex: '\\text{Un auto pierde 20\\% de su valor cada año (depreciación). Si costó \\$10.000.000, ¿cuánto valdrá en 3 años? (Usa } (0{,}8)^3 = 0{,}512)',
+    options: ['$4.000.000', '$5.120.000', '$6.000.000', '$8.000.000'],
+    correctAnswer: 1,
+    explanation: 'V = 10.000.000 \\times (0{,}8)^3 = 10.000.000 \\times 0{,}512 = 5.120.000',
+    difficulty: 'medium',
+    skills: ['logaritmos-problemas-ciencias', 'numeros-porcentaje', 'numeros-potencias', 'numeros-decimales']
+  },
+  {
+    id: 'm2-num-exp-tiempo-1',
+    level: 'M2',
+    topic: 'Números',
+    subject: 'números',
+    questionLatex: '\\text{Una inversión se triplica cada 10 años. Si hoy inviertes \\$1.000.000, ¿cuánto tendrás en 20 años?}',
+    options: ['$3.000.000', '$6.000.000', '$9.000.000', '$27.000.000'],
+    correctAnswer: 2,
+    explanation: '\\text{En 20 años hay } \\frac{20}{10} = 2 \\text{ triplicaciones}. \\quad V = 1.000.000 \\times 3^2 = 9.000.000',
+    difficulty: 'medium',
+    skills: ['logaritmos-problemas-ciencias', 'numeros-potencias', 'numeros-operaciones-basicas']
   }
 ];
