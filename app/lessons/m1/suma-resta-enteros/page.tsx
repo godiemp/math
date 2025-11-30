@@ -5,11 +5,9 @@ import { LessonShell } from '@/components/lessons/shared';
 import { getLessonBySlug } from '@/lib/lessons/types';
 import {
   Step1Hook,
-  Step2NumberLineAddition,
-  Step3Explain,
-  Step4Subtraction,
-  Step5Challenge,
-  Step6Verify,
+  Step2Discovery,
+  Step3SubtractionSecret,
+  Step4Verify,
 } from '@/components/lessons/m1/suma-resta-enteros';
 
 const LESSON_SLUG = 'suma-resta-enteros';
@@ -28,11 +26,11 @@ export default function SumaRestaEnterosLesson() {
 
   const handleComplete = () => {
     // TODO: Save lesson completion to user progress
-    router.push('/curriculum/m1');
+    router.push('/mini-lessons');
   };
 
   const handleExit = () => {
-    router.push('/curriculum/m1');
+    router.push('/mini-lessons');
   };
 
   return (
@@ -48,30 +46,20 @@ export default function SumaRestaEnterosLesson() {
             onComplete={completeStep}
             isActive={currentStep === 0}
           />,
-          <Step2NumberLineAddition
+          <Step2Discovery
             key="step2"
             onComplete={completeStep}
             isActive={currentStep === 1}
           />,
-          <Step3Explain
+          <Step3SubtractionSecret
             key="step3"
             onComplete={completeStep}
             isActive={currentStep === 2}
           />,
-          <Step4Subtraction
+          <Step4Verify
             key="step4"
             onComplete={completeStep}
             isActive={currentStep === 3}
-          />,
-          <Step5Challenge
-            key="step5"
-            onComplete={completeStep}
-            isActive={currentStep === 4}
-          />,
-          <Step6Verify
-            key="step6"
-            onComplete={completeStep}
-            isActive={currentStep === 5}
           />,
         ];
 
