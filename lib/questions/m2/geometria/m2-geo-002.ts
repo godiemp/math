@@ -274,7 +274,7 @@ export const m2Geo002Questions: Question[] = [
     level: 'M2',
     topic: 'Geometría',
     subject: 'geometría',
-    operacionBase: 'c^2 = a^2 + b^2 - 2ab\\cos(C)',
+    operacionBase: 'R^2 = a^2 + b^2 + 2ab\\cos(\\theta)',
     questionLatex: '\\text{Dos fuerzas de 6 N y 8 N actúan con un ángulo de 60° entre ellas. ¿Cuál es la magnitud de la fuerza resultante? (Usa } \\cos(60°) = 0{,}5)',
     options: ['10\\text{ N}', '2\\sqrt{37}\\text{ N}', '14\\text{ N}', '\\sqrt{76}\\text{ N}'],
     correctAnswer: 1,
