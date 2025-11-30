@@ -1,0 +1,121 @@
+/**
+ * ============================================================================
+ * LESSON TYPES
+ * ============================================================================
+ *
+ * Types for the interactive lesson system.
+ * Each lesson is a bespoke, step-by-step learning experience.
+ */
+
+import { Level, Subject } from '@/lib/types/core';
+
+/**
+ * Step types in a lesson
+ * - hook: Opening engagement (puzzle, question, real-world scenario)
+ * - explore: Interactive discovery
+ * - explain: Theory/concept explanation
+ * - practice: Guided exercises
+ * - verify: Checkpoint quiz to confirm learning
+ */
+export type LessonStepType = 'hook' | 'explore' | 'explain' | 'practice' | 'verify';
+
+/**
+ * Lesson step definition
+ */
+export interface LessonStep {
+  id: string;
+  type: LessonStepType;
+  title: string;
+  description?: string;
+  requiredToAdvance?: boolean;
+}
+
+/**
+ * Lesson definition
+ */
+export interface Lesson {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  level: Level;
+  subject: Subject;
+  thematicUnit: string;
+  skills: string[];
+  estimatedMinutes: number;
+  steps: LessonStep[];
+}
+
+/**
+ * Lesson progress tracking
+ */
+export interface LessonProgress {
+  lessonId: string;
+  currentStep: number;
+  completedSteps: string[];
+  startedAt: number;
+  completedAt?: number;
+  verifyAttempts: number;
+  verifyCorrect: number;
+}
+
+/**
+ * Props for individual step components
+ */
+export interface LessonStepProps {
+  onComplete: () => void;
+  onBack?: () => void;
+  isActive: boolean;
+}
+
+/**
+ * Verify step question
+ */
+export interface VerifyQuestion {
+  id: string;
+  question: string;
+  questionLatex?: string;
+  type: 'multiple-choice' | 'ordering' | 'fill-blank' | 'two-values';
+  options?: string[];
+  correctAnswer: number | number[] | string | string[];
+  explanation: string;
+}
+
+/**
+ * All M1 lessons registry
+ */
+export const M1_LESSONS: Lesson[] = [
+  {
+    id: 'm1-num-001-a',
+    slug: 'numeros-enteros-orden',
+    title: 'Orden y Valor Absoluto',
+    description: 'Aprende a ordenar números enteros y entender el valor absoluto como distancia.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-001',
+    skills: ['numeros-enteros-orden', 'numeros-enteros-valor-absoluto'],
+    estimatedMinutes: 10,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Termómetro Loco', requiredToAdvance: true },
+      { id: 'number-line', type: 'explore', title: 'La Recta Numérica', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: '¿Qué son los Enteros?' },
+      { id: 'comparison', type: 'explore', title: 'El Juego de Comparación', requiredToAdvance: true },
+      { id: 'absolute-value', type: 'explore', title: 'Valor Absoluto: La Distancia', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
+];
+
+/**
+ * Get lesson by slug
+ */
+export function getLessonBySlug(slug: string): Lesson | undefined {
+  return M1_LESSONS.find(lesson => lesson.slug === slug);
+}
+
+/**
+ * Get lessons by thematic unit
+ */
+export function getLessonsByUnit(unitCode: string): Lesson[] {
+  return M1_LESSONS.filter(lesson => lesson.thematicUnit === unitCode);
+}
