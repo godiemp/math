@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Thermometer, Building, Wallet, ArrowLeft, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
@@ -64,6 +64,13 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
   const [selectedNumber, setSelectedNumber] = useState<number | null>(null);
 
   const selectedExample = EXAMPLES.find(e => e.number === selectedNumber);
+
+  // Mark step as completed when it becomes active (no interaction required)
+  useEffect(() => {
+    if (isActive) {
+      onComplete();
+    }
+  }, [isActive, onComplete]);
 
   if (!isActive) return null;
 
