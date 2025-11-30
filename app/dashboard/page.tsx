@@ -244,6 +244,27 @@ function DashboardContent() {
           </Callout>
         )}
 
+        {/* Mini Lessons Banner */}
+        <Link href="/mini-lessons" className="block mb-8 sm:mb-10 md:mb-12">
+          <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full">NUEVO</span>
+                  <span className="text-2xl">🎯</span>
+                </div>
+                <h3 className="font-bold text-xl sm:text-2xl mb-1">Mini Lecciones</h3>
+                <p className="text-white/90 text-sm sm:text-base">
+                  Aprende paso a paso con ejercicios interactivos
+                </p>
+              </div>
+              <div className="bg-white text-purple-600 font-bold py-2 px-4 rounded-lg text-sm whitespace-nowrap">
+                Ver Lecciones →
+              </div>
+            </div>
+          </div>
+        </Link>
+
         {/* Study Buddy - Coming Soon Placeholder */}
         <Card hover className="p-6 mb-8 sm:mb-10 md:mb-12">
           <div className="text-center">
