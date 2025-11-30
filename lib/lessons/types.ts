@@ -104,6 +104,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-num-001-b',
+    slug: 'suma-resta-enteros',
+    title: 'Suma y Resta de Enteros',
+    description: 'Aprende a sumar y restar números negativos y positivos.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-001',
+    skills: ['numeros-enteros-sumar-restar', 'numeros-enteros-opuesto'],
+    estimatedMinutes: 12,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Banco de Monedas', requiredToAdvance: true },
+      { id: 'number-line-addition', type: 'explore', title: 'Suma en la Recta Numérica', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Las Reglas de la Suma' },
+      { id: 'subtraction', type: 'explore', title: 'Resta = Sumar el Opuesto', requiredToAdvance: true },
+      { id: 'challenge', type: 'explore', title: 'El Desafío de Operaciones', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
 ];
 
 /**
