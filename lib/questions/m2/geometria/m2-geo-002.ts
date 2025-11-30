@@ -276,9 +276,9 @@ export const m2Geo002Questions: Question[] = [
     subject: 'geometría',
     operacionBase: 'c^2 = a^2 + b^2 - 2ab\\cos(C)',
     questionLatex: '\\text{Dos fuerzas de 6 N y 8 N actúan con un ángulo de 60° entre ellas. ¿Cuál es la magnitud de la fuerza resultante? (Usa } \\cos(60°) = 0{,}5)',
-    options: ['10\\text{ N}', '\\sqrt{52}\\text{ N}', '14\\text{ N}', '\\sqrt{76}\\text{ N}'],
-    correctAnswer: 3,
-    explanation: 'R^2 = 6^2 + 8^2 + 2(6)(8)\\cos(60°) = 36 + 64 + 48(0{,}5) = 36 + 64 - 24 = 76 \\rightarrow R = \\sqrt{76}\\text{ N}',
+    options: ['10\\text{ N}', '2\\sqrt{37}\\text{ N}', '14\\text{ N}', '\\sqrt{76}\\text{ N}'],
+    correctAnswer: 1,
+    explanation: 'R^2 = a^2 + b^2 + 2ab\\cos(\\theta) = 6^2 + 8^2 + 2(6)(8)(0{,}5) = 36 + 64 + 48 = 148 \\rightarrow R = \\sqrt{148} = 2\\sqrt{37}\\text{ N}',
     difficulty: 'extreme',
     skills: ['trigonometria-ley-cosenos', 'geometria-vectores', 'numeros-potencias', 'numeros-raices']
   }
