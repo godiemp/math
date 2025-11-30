@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Thermometer, Building, Wallet, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Thermometer, Building, Wallet, ArrowLeft, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
@@ -190,16 +190,6 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
         )}
       </div>
 
-      {/* Continue button */}
-      <div className="flex justify-center">
-        <button
-          onClick={onComplete}
-          className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
-        >
-          <span>Continuar</span>
-          <ArrowRight size={20} />
-        </button>
-      </div>
     </div>
   );
 }

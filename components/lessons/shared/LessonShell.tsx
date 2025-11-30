@@ -155,8 +155,8 @@ export default function LessonShell({
         })}
       </div>
 
-      {/* Footer navigation (only show if not on verify step or step allows manual advance) */}
-      {currentStepDef.type !== 'verify' && (
+      {/* Footer navigation (only show for steps that don't require interaction to advance) */}
+      {!currentStepDef.requiredToAdvance && (
         <div className="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700 p-4">
           <div className="max-w-4xl mx-auto flex justify-between">
             <button

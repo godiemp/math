@@ -96,7 +96,7 @@ export const M1_LESSONS: Lesson[] = [
     skills: ['numeros-enteros-orden', 'numeros-enteros-valor-absoluto'],
     estimatedMinutes: 10,
     steps: [
-      { id: 'hook', type: 'hook', title: 'El Termómetro Loco' },
+      { id: 'hook', type: 'hook', title: 'El Termómetro Loco', requiredToAdvance: true },
       { id: 'number-line', type: 'explore', title: 'La Recta Numérica', requiredToAdvance: true },
       { id: 'explain', type: 'explain', title: '¿Qué son los Enteros?' },
       { id: 'comparison', type: 'explore', title: 'El Juego de Comparación', requiredToAdvance: true },
