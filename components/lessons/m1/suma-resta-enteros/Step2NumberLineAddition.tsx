@@ -202,13 +202,15 @@ export default function Step2NumberLineAddition({ onComplete, isActive }: Lesson
                 {/* Starting position marker */}
                 {(phase === 'animating' || phase === 'feedback') && (
                   <div
-                    className="absolute top-0 -translate-x-1/2 transition-all duration-500"
+                    className="absolute top-0 -translate-x-1/2"
                     style={{ left: `${getPosition(problem.a)}%` }}
                   >
-                    <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse" />
-                    <span className="text-xs text-blue-600 dark:text-blue-400 font-bold">
-                      inicio
-                    </span>
+                    <div className="relative">
+                      <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse" />
+                      <span className="absolute top-full left-1/2 -translate-x-1/2 text-xs text-blue-600 dark:text-blue-400 font-bold whitespace-nowrap">
+                        inicio
+                      </span>
+                    </div>
                   </div>
                 )}
 
