@@ -51,6 +51,7 @@ export default function NumberLine({
   className,
 }: NumberLineProps) {
   const lineRef = useRef<HTMLDivElement>(null);
+  const allCorrectCalledRef = useRef(false);
   const [placedNumbers, setPlacedNumbers] = useState<PlacedNumber[]>([]);
   const [dragging, setDragging] = useState<number | null>(null);
   const [dragPosition, setDragPosition] = useState<{ x: number; y: number } | null>(null);
@@ -129,7 +130,8 @@ export default function NumberLine({
             );
             const allCorrect = current.every(p => p.isCorrect);
 
-            if (allPlaced && allCorrect) {
+            if (allPlaced && allCorrect && !allCorrectCalledRef.current) {
+              allCorrectCalledRef.current = true;
               onAllCorrect?.();
             }
             return current;

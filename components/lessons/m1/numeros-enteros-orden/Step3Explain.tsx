@@ -5,6 +5,16 @@ import { Thermometer, Building, Wallet, ArrowRight, ArrowLeft } from 'lucide-rea
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
+// Color classes must be explicit for Tailwind to include them in production
+const COLOR_CLASSES: Record<string, { bg: string; icon: string }> = {
+  blue: { bg: 'bg-blue-100 dark:bg-blue-900/50', icon: 'text-blue-600 dark:text-blue-400' },
+  purple: { bg: 'bg-purple-100 dark:bg-purple-900/50', icon: 'text-purple-600 dark:text-purple-400' },
+  red: { bg: 'bg-red-100 dark:bg-red-900/50', icon: 'text-red-600 dark:text-red-400' },
+  green: { bg: 'bg-green-100 dark:bg-green-900/50', icon: 'text-green-600 dark:text-green-400' },
+  emerald: { bg: 'bg-emerald-100 dark:bg-emerald-900/50', icon: 'text-emerald-600 dark:text-emerald-400' },
+  gray: { bg: 'bg-gray-100 dark:bg-gray-900/50', icon: 'text-gray-600 dark:text-gray-400' },
+};
+
 const EXAMPLES = [
   {
     number: -5,
@@ -161,11 +171,11 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
           <div className="animate-fadeIn bg-white dark:bg-gray-800 rounded-xl p-4 flex items-center gap-4">
             <div className={cn(
               'w-14 h-14 rounded-xl flex items-center justify-center',
-              `bg-${selectedExample.color}-100 dark:bg-${selectedExample.color}-900/50`
+              COLOR_CLASSES[selectedExample.color]?.bg
             )}>
               <selectedExample.icon className={cn(
                 'w-8 h-8',
-                `text-${selectedExample.color}-600 dark:text-${selectedExample.color}-400`
+                COLOR_CLASSES[selectedExample.color]?.icon
               )} />
             </div>
             <div>

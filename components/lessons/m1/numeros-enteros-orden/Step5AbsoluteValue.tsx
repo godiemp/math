@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { ArrowRight, RotateCcw, Check, Play, Pause } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { ArrowRight, RotateCcw, Check, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
@@ -17,6 +17,16 @@ export default function Step5AbsoluteValue({ onComplete, isActive }: LessonStepP
   const [isAnimating, setIsAnimating] = useState(false);
   const [practiceAnswer, setPracticeAnswer] = useState<{ pos: number | null; neg: number | null }>({ pos: null, neg: null });
   const [showPracticeResult, setShowPracticeResult] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup interval on unmount
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
 
   // Demo: walking from 0 to -4
   const runDemoAnimation = () => {
@@ -24,14 +34,17 @@ export default function Step5AbsoluteValue({ onComplete, isActive }: LessonStepP
     setAnimation({ number: -4, currentStep: 0, isComplete: false });
 
     let step = 0;
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       step++;
       if (step <= 4) {
         setAnimation({ number: -4, currentStep: step, isComplete: false });
       } else {
         setAnimation({ number: -4, currentStep: 4, isComplete: true });
         setIsAnimating(false);
-        clearInterval(interval);
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
       }
     }, 600);
   };
