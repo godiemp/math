@@ -84,17 +84,21 @@ Respuesta correcta: A) 6x
 - **Naturaleza**: temperaturas, alturas, mediciones
 - **Construcción**: materiales, medidas, áreas
 
-## Adaptación por Nivel
+## Niveles PAES: M1 y M2
 
-### M1 (Educación Media 1)
-- Contextos más simples y directos
-- Operaciones básicas y conceptos fundamentales
-- Variables con significados muy concretos
+### M1 (Matemática 1 - Competencia Matemática)
+Prueba **obligatoria para todos** los postulantes. Evalúa competencias matemáticas generales.
 
-### M2 (Educación Media 2)
-- Contextos más complejos
-- Operaciones compuestas
-- Mayor abstracción permitida
+### M2 (Matemática 2 - Competencia Científica)
+Prueba **adicional** requerida por carreras científicas, técnicas e ingenierías. Los estudiantes que rinden M2 **también rinden M1**.
+
+### Temario Oficial
+El temario completo de cada nivel está definido en `backend/src/config/thematic-units.ts`.
+
+**Importante sobre la organización en este software:**
+- El **temario de M2 incluye todo M1 + contenidos adicionales** (logaritmos, trigonometría avanzada, probabilidad condicional, etc.)
+- En nuestro banco de preguntas, las **preguntas etiquetadas como M2** corresponden únicamente al **temario específico de M2** (los contenidos adicionales que no están en M1)
+- Si un estudiante practica M2, el sistema le mostrará preguntas de M1 + preguntas específicas de M2
 
 ## Notas de Implementación
 
