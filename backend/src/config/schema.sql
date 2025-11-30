@@ -45,3 +45,28 @@ COMMENT ON COLUMN users.current_streak IS 'Current consecutive days of practice'
 COMMENT ON COLUMN users.longest_streak IS 'Longest streak the user has achieved';
 COMMENT ON COLUMN users.last_practice_date IS 'Last date user completed practice (YYYY-MM-DD format)';
 COMMENT ON COLUMN refresh_tokens.revoked IS 'Flag to invalidate token (logout, security breach, etc.)';
+
+-- Curriculum Topic Progress Table (Skill Tree)
+-- Tracks user knowledge of curriculum topics for self-assessment
+CREATE TABLE IF NOT EXISTS curriculum_topic_progress (
+  id SERIAL PRIMARY KEY,
+  user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  topic_slug VARCHAR(100) NOT NULL,
+  subject VARCHAR(50) NOT NULL,
+  level VARCHAR(10) NOT NULL DEFAULT 'M1',
+  is_completed BOOLEAN DEFAULT false,
+  completed_at BIGINT,
+  notes TEXT,
+  created_at BIGINT NOT NULL,
+  updated_at BIGINT NOT NULL,
+  CONSTRAINT unique_user_topic_level UNIQUE(user_id, topic_slug, level)
+);
+
+-- Indexes for curriculum progress
+CREATE INDEX IF NOT EXISTS idx_curriculum_progress_user ON curriculum_topic_progress(user_id);
+CREATE INDEX IF NOT EXISTS idx_curriculum_progress_level_subject ON curriculum_topic_progress(level, subject);
+
+-- Comments for curriculum progress
+COMMENT ON TABLE curriculum_topic_progress IS 'Tracks user self-assessment of curriculum topic knowledge (skill tree)';
+COMMENT ON COLUMN curriculum_topic_progress.topic_slug IS 'Unique identifier for the topic (e.g., "numeros-porcentaje")';
+COMMENT ON COLUMN curriculum_topic_progress.is_completed IS 'User has marked this topic as known/mastered';
