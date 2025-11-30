@@ -176,5 +176,126 @@ export const m2Alg001Questions: Question[] = [
     explanation: '\\text{Rectas coincidentes} \\Rightarrow \\text{infinitos puntos en común}',
     difficulty: 'easy',
     skills: ['sistemas-infinitas-soluciones', 'sistemas-interpretacion-geometrica', 'algebra-sistemas-ecuaciones', 'geometria-rectas']
+  },
+  // Problemas clásicos de edades
+  {
+    id: 'm2-alg-edad-1',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    operacionBase: 'x = 3y; \\quad x + 10 = 2(y + 10)',
+    questionLatex: '\\text{La edad de un padre es el triple de la edad de su hijo. En 10 años, la edad del padre será el doble de la del hijo. ¿Cuántos años tiene cada uno actualmente?}',
+    options: ['\\text{Padre: 30, Hijo: 10}', '\\text{Padre: 36, Hijo: 12}', '\\text{Padre: 45, Hijo: 15}', '\\text{Padre: 42, Hijo: 14}'],
+    correctAnswer: 0,
+    explanation: 'x = 3y. \\quad x + 10 = 2(y + 10) \\rightarrow 3y + 10 = 2y + 20 \\rightarrow y = 10. \\quad x = 30',
+    difficulty: 'hard',
+    skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-problemas-edades', 'algebra-planteamiento-ecuaciones']
+  },
+  {
+    id: 'm2-alg-edad-2',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    operacionBase: 'x + y = 50; \\quad x - y = 14',
+    questionLatex: '\\text{La suma de las edades de dos hermanos es 50 años y la diferencia es 14 años. ¿Cuántos años tiene el hermano mayor?}',
+    options: ['25', '28', '32', '36'],
+    correctAnswer: 2,
+    explanation: 'x + y = 50, \\quad x - y = 14 \\rightarrow 2x = 64 \\rightarrow x = 32',
+    difficulty: 'medium',
+    skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-problemas-edades', 'numeros-operaciones-basicas']
+  },
+  // Problemas de mezclas
+  {
+    id: 'm2-alg-mezcla-1',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    operacionBase: 'x + y = 30; \\quad 0{,}2x + 0{,}5y = 0{,}3 \\times 30',
+    questionLatex: '\\text{¿Cuántos litros de solución al 20\\% y al 50\\% se deben mezclar para obtener 30 litros de solución al 30\\%?}',
+    options: ['\\text{10 L al 20\\% y 20 L al 50\\%}', '\\text{15 L al 20\\% y 15 L al 50\\%}', '\\text{20 L al 20\\% y 10 L al 50\\%}', '\\text{25 L al 20\\% y 5 L al 50\\%}'],
+    correctAnswer: 2,
+    explanation: 'x + y = 30, \\quad 0{,}2x + 0{,}5y = 9 \\rightarrow 0{,}2x + 0{,}5(30-x) = 9 \\rightarrow -0{,}3x = -6 \\rightarrow x = 20, y = 10',
+    difficulty: 'hard',
+    skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-problemas-mezclas', 'numeros-porcentaje']
+  },
+  {
+    id: 'm2-alg-mezcla-2',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    operacionBase: 'x + y = 100; \\quad 60x + 80y = 72 \\times 100',
+    questionLatex: '\\text{Un café vende mezcla de granos tipo A (\\$60/kg) y tipo B (\\$80/kg). ¿Cuántos kg de cada tipo se necesitan para 100 kg de mezcla a \\$72/kg?}',
+    options: ['\\text{30 kg de A y 70 kg de B}', '\\text{40 kg de A y 60 kg de B}', '\\text{50 kg de A y 50 kg de B}', '\\text{60 kg de A y 40 kg de B}'],
+    correctAnswer: 1,
+    explanation: 'x + y = 100, \\quad 60x + 80y = 7200 \\rightarrow 60x + 80(100-x) = 7200 \\rightarrow -20x = -800 \\rightarrow x = 40, y = 60',
+    difficulty: 'hard',
+    skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-problemas-mezclas', 'numeros-operaciones-basicas']
+  },
+  // Problemas de trabajo conjunto
+  {
+    id: 'm2-alg-trabajo-1',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    operacionBase: '\\frac{1}{a} + \\frac{1}{b} = \\frac{1}{t}',
+    questionLatex: '\\text{Ana puede pintar una casa en 6 horas y Beto en 4 horas. Si trabajan juntos, ¿cuántas horas tardarán en pintar la casa?}',
+    options: ['2 horas', '2{,}4 horas', '3 horas', '5 horas'],
+    correctAnswer: 1,
+    explanation: '\\frac{1}{6} + \\frac{1}{4} = \\frac{2 + 3}{12} = \\frac{5}{12} \\rightarrow t = \\frac{12}{5} = 2{,}4 \\text{ horas}',
+    difficulty: 'hard',
+    skills: ['sistemas-solucion-unica', 'algebra-problemas-trabajo', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-alg-trabajo-2',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    operacionBase: '\\frac{1}{a} + \\frac{1}{b} = \\frac{1}{t}',
+    questionLatex: '\\text{Una llave llena un tanque en 3 horas y otra en 6 horas. ¿En cuánto tiempo se llena el tanque si ambas llaves están abiertas?}',
+    options: ['1{,}5 horas', '2 horas', '4{,}5 horas', '9 horas'],
+    correctAnswer: 1,
+    explanation: '\\frac{1}{3} + \\frac{1}{6} = \\frac{2 + 1}{6} = \\frac{3}{6} = \\frac{1}{2} \\rightarrow t = 2 \\text{ horas}',
+    difficulty: 'medium',
+    skills: ['sistemas-solucion-unica', 'algebra-problemas-trabajo', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  // Problemas de distancia, velocidad y tiempo
+  {
+    id: 'm2-alg-dist-1',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    operacionBase: 'd = v \\cdot t; \\quad d_1 + d_2 = D_{total}',
+    questionLatex: '\\text{Dos autos parten simultáneamente de ciudades separadas por 300 km. Uno va a 60 km/h y otro a 90 km/h, acercándose. ¿En cuántas horas se encuentran?}',
+    options: ['1{,}5 horas', '2 horas', '2{,}5 horas', '3 horas'],
+    correctAnswer: 1,
+    explanation: '60t + 90t = 300 \\rightarrow 150t = 300 \\rightarrow t = 2 \\text{ horas}',
+    difficulty: 'medium',
+    skills: ['sistemas-solucion-unica', 'algebra-problemas-movimiento', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-alg-dist-2',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    operacionBase: 'd = v \\cdot t',
+    questionLatex: '\\text{Un ciclista viaja a 20 km/h. Una hora después, sale otro ciclista a 30 km/h por el mismo camino. ¿Cuántas horas tardará el segundo en alcanzar al primero?}',
+    options: ['1 hora', '2 horas', '3 horas', '4 horas'],
+    correctAnswer: 1,
+    explanation: '20(t + 1) = 30t \\rightarrow 20t + 20 = 30t \\rightarrow 20 = 10t \\rightarrow t = 2 \\text{ horas}',
+    difficulty: 'hard',
+    skills: ['sistemas-solucion-unica', 'algebra-problemas-movimiento', 'algebra-despeje', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm2-alg-dist-3',
+    level: 'M2',
+    topic: 'Álgebra y Funciones',
+    subject: 'álgebra',
+    operacionBase: '\\frac{d}{v_1} + \\frac{d}{v_2} = t_{total}',
+    questionLatex: '\\text{Un auto viaja de A a B a 60 km/h y regresa a 40 km/h. Si el tiempo total del viaje fue 5 horas, ¿cuál es la distancia entre A y B?}',
+    options: ['100 km', '120 km', '150 km', '180 km'],
+    correctAnswer: 1,
+    explanation: '\\frac{d}{60} + \\frac{d}{40} = 5 \\rightarrow \\frac{2d + 3d}{120} = 5 \\rightarrow 5d = 600 \\rightarrow d = 120 \\text{ km}',
+    difficulty: 'hard',
+    skills: ['sistemas-solucion-unica', 'algebra-problemas-movimiento', 'numeros-fracciones', 'algebra-despeje']
   }
 ];

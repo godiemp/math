@@ -84,17 +84,21 @@ Respuesta correcta: A) 6x
 - **Naturaleza**: temperaturas, alturas, mediciones
 - **Construcción**: materiales, medidas, áreas
 
-## Adaptación por Nivel
+## Niveles PAES: M1 y M2
 
-### M1 (Educación Media 1)
-- Contextos más simples y directos
-- Operaciones básicas y conceptos fundamentales
-- Variables con significados muy concretos
+### M1 (Matemática 1 - Competencia Matemática)
+Prueba **obligatoria para todos** los postulantes. Evalúa competencias matemáticas generales.
 
-### M2 (Educación Media 2)
-- Contextos más complejos
-- Operaciones compuestas
-- Mayor abstracción permitida
+### M2 (Matemática 2 - Competencia Científica)
+Prueba **adicional** requerida por carreras científicas, técnicas e ingenierías. Los estudiantes que rinden M2 **también rinden M1**.
+
+### Temario Oficial
+El temario completo de cada nivel está definido en `backend/src/config/thematic-units.ts`.
+
+**Importante sobre la organización en este software:**
+- El **temario de M2 incluye todo M1 + contenidos adicionales** (logaritmos, trigonometría avanzada, probabilidad condicional, etc.)
+- En nuestro banco de preguntas, las **preguntas etiquetadas como M2** corresponden únicamente al **temario específico de M2** (los contenidos adicionales que no están en M1)
+- Si un estudiante practica M2, el sistema le mostrará preguntas de M1 + preguntas específicas de M2
 
 ## Notas de Implementación
 
@@ -103,3 +107,54 @@ El campo `operación base` es crítico para:
 - Facilitar búsqueda y clasificación
 - Permitir generación automática de variaciones futuras
 - Conectar con el sistema de práctica de operaciones
+
+## Visión del Banco de Preguntas
+
+### Objetivo a Largo Plazo
+
+El banco de preguntas está diseñado para escalar a **miles de preguntas** por unidad temática. La meta es que cada estudiante tenga una experiencia de práctica única, con suficientes variaciones para:
+
+1. **Evitar memorización**: Con miles de variaciones, los estudiantes deben dominar el concepto, no memorizar respuestas específicas
+2. **Práctica infinita**: Permitir que estudiantes practiquen el mismo tipo de problema múltiples veces con contextos diferentes
+3. **Evaluación robusta**: Generar evaluaciones únicas para cada estudiante
+
+### Estrategia de Variaciones
+
+Es **intencional y deseable** tener múltiples preguntas que evalúen el mismo concepto matemático con:
+
+- **Diferentes contextos**: El mismo problema de proporcionalidad puede presentarse como receta de cocina, mezcla de químicos, o dilución de pintura
+- **Diferentes números**: Variaciones numéricas del mismo tipo de problema
+- **Diferentes niveles de dificultad**: Versiones más simples y más complejas del mismo concepto
+- **Diferentes formulaciones**: La misma operación presentada de distintas formas
+
+### Ejemplos de Variaciones Válidas
+
+| Concepto | Variación 1 | Variación 2 | Variación 3 |
+|----------|-------------|-------------|-------------|
+| Trabajo conjunto `1/a + 1/b = 1/t` | Pintar casa | Llenar tanque | Construir muro |
+| Bayes (falsos positivos) | Test médico | Control de calidad | Filtro spam |
+| Sistemas 2x2 | Edades padre-hijo | Mezcla soluciones | Precios tickets |
+| Distancia-velocidad | Autos encontrándose | Ciclista alcanzando | Viaje ida y vuelta |
+
+### Preguntas Similares Entre Niveles (M1/M2)
+
+Es aceptable que existan preguntas similares entre M1 y M2 cuando:
+- El concepto se refuerza en ambos niveles con diferente profundidad
+- M2 agrega complejidad adicional (más variables, contextos más abstractos)
+- El currículum oficial incluye el tema en ambos niveles
+
+### Organización por Unidad Temática
+
+Cada archivo de preguntas (`m1-xxx-###.ts`, `m2-xxx-###.ts`) corresponde a una unidad temática específica. Las preguntas deben:
+
+1. Pertenecer conceptualmente a esa unidad temática
+2. Usar las habilidades (skills) correspondientes
+3. Cubrir las diferentes subsecciones definidas en el archivo
+
+### Contribución de Nuevas Preguntas
+
+Al agregar preguntas:
+- Verificar que no sea un **duplicado exacto** (mismo contexto Y mismos números)
+- Las **variaciones** del mismo concepto son bienvenidas
+- Mantener balance entre dificultades (easy, medium, hard, extreme)
+- Seguir el formato de `operacionBase` para facilitar clasificación futura
