@@ -76,27 +76,25 @@
   --material-tint-opacity: 0.08;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Color Roles - Dark Mode */
-    --color-tint: #0A84FF;
-    --color-tint-alt: #9A99FF;
-    --color-bg: #000000;
-    --color-surface: #121212;
-    --color-elevated-surface: #1C1C1C;
-    --color-label-primary: #FFFFFF;
-    --color-label-secondary: rgba(255, 255, 255, 0.7);
-    --color-separator: rgba(255, 255, 255, 0.16);
-    --color-separator-strong: rgba(255, 255, 255, 0.28);
-    --color-fill: rgba(255, 255, 255, 0.06);
-    --color-success: #30D158;
-    --color-warning: #FF9F0A;
-    --color-danger: #FF453A;
-    --color-info: #64D2FF;
-    --color-link: #0A84FF;
+.dark {
+  /* Color Roles - Dark Mode */
+  --color-tint: #0A84FF;
+  --color-tint-alt: #9A99FF;
+  --color-bg: #000000;
+  --color-surface: #121212;
+  --color-elevated-surface: #1C1C1C;
+  --color-label-primary: #FFFFFF;
+  --color-label-secondary: rgba(255, 255, 255, 0.7);
+  --color-separator: rgba(255, 255, 255, 0.16);
+  --color-separator-strong: rgba(255, 255, 255, 0.28);
+  --color-fill: rgba(255, 255, 255, 0.06);
+  --color-success: #30D158;
+  --color-warning: #FF9F0A;
+  --color-danger: #FF453A;
+  --color-info: #64D2FF;
+  --color-link: #0A84FF;
 
-    --material-tint-opacity: 0.16;
-  }
+  --material-tint-opacity: 0.16;
 }
 
 body {
@@ -122,10 +120,8 @@ body {
     border: 0.5px solid var(--color-separator);
   }
 
-  @media (prefers-color-scheme: dark) {
-    .liquid-glass {
-      background: rgba(255, 255, 255, 0.06);
-    }
+  .dark .liquid-glass {
+    background: rgba(255, 255, 255, 0.06);
   }
 
   /* Translucent Material */
@@ -136,10 +132,8 @@ body {
     border: 0.5px solid var(--color-separator);
   }
 
-  @media (prefers-color-scheme: dark) {
-    .translucent {
-      background: rgba(18, 18, 18, 0.85);
-    }
+  .dark .translucent {
+    background: rgba(18, 18, 18, 0.85);
   }
 
   /* Spring Motion */

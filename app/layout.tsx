@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { NextAuthProvider } from "@/components/providers/NextAuthProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SWRProvider } from "@/lib/swr-config";
 import { Toaster } from "sonner";
@@ -23,9 +24,10 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang="es-CL">
+    <html lang="es-CL" suppressHydrationWarning>
       <body className="antialiased">
-        <NextAuthProvider>
+        <ThemeProvider>
+          <NextAuthProvider>
           <NextIntlClientProvider messages={messages}>
             <PostHogProvider>
               <SWRProvider>
@@ -39,7 +41,8 @@ export default async function RootLayout({
               <CookieConsent />
             </PostHogProvider>
           </NextIntlClientProvider>
-        </NextAuthProvider>
+          </NextAuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
