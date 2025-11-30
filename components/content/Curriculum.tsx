@@ -264,29 +264,6 @@ export default function Curriculum({ level }: CurriculumProps) {
               </Link>
             </div>
 
-            {/* Interactive Lessons Banner */}
-            {level === 'M1' && (
-              <div className="mb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl p-4 sm:p-5 text-white shadow-lg">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full">NUEVO</span>
-                      <h3 className="font-bold text-lg">Lecciones Interactivas</h3>
-                    </div>
-                    <p className="text-white/90 text-sm">
-                      Aprende paso a paso con ejercicios interactivos
-                    </p>
-                  </div>
-                  <Link
-                    href="/lessons/m1/numeros-enteros-orden"
-                    className="bg-white text-purple-600 font-bold py-2 px-4 rounded-lg hover:bg-white/90 transition-colors text-sm whitespace-nowrap"
-                  >
-                    Lección 1: Enteros →
-                  </Link>
-                </div>
-              </div>
-            )}
-
             {/* Header */}
             <div className="mb-6 sm:mb-8">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
