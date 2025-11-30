@@ -297,15 +297,14 @@ export default function NumberLine({
       {/* Dragging indicator */}
       {dragging !== null && dragPosition && (
         <div
-          className="fixed z-50 pointer-events-none -translate-x-1/2 -translate-y-1/2"
+          className="fixed z-50 pointer-events-none w-12 h-12 flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-500 text-white rounded-xl font-bold text-lg shadow-2xl opacity-90"
           style={{
             left: dragPosition.x,
             top: dragPosition.y,
+            transform: 'translate(-50%, -50%)',
           }}
         >
-          <div className="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-500 text-white rounded-xl font-bold text-lg shadow-2xl opacity-90 scale-110">
-            {dragging}
-          </div>
+          {dragging}
         </div>
       )}
     </div>
