@@ -23,6 +23,10 @@ interface UpdateCookieConsentRequest {
   cookieConsent: 'accepted' | 'declined';
 }
 
+interface UpdateThemePreferenceRequest {
+  themePreference: 'light' | 'dark' | 'system';
+}
+
 /**
  * Update current user's profile
  */
@@ -217,5 +221,50 @@ export async function updateCookieConsent(req: Request, res: Response): Promise<
   } catch (error) {
     console.error('Update cookie consent error:', error);
     res.status(500).json({ error: 'Failed to update cookie consent' });
+  }
+}
+
+/**
+ * Update current user's theme preference
+ */
+export async function updateThemePreference(req: Request, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
+
+    const userId = req.user.userId;
+    const { themePreference } = req.body as UpdateThemePreferenceRequest;
+
+    // Validate input
+    if (!themePreference || !['light', 'dark', 'system'].includes(themePreference)) {
+      res.status(400).json({ error: 'Theme preference must be "light", "dark", or "system"' });
+      return;
+    }
+
+    // Update theme_preference field
+    const query = `
+      UPDATE users
+      SET theme_preference = $1, updated_at = $2
+      WHERE id = $3
+      RETURNING theme_preference
+    `;
+
+    const result = await pool.query(query, [themePreference, Date.now(), userId]);
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      message: 'Theme preference updated successfully',
+      themePreference: result.rows[0].theme_preference,
+    });
+  } catch (error) {
+    console.error('Update theme preference error:', error);
+    res.status(500).json({ error: 'Failed to update theme preference' });
   }
 }

@@ -47,6 +47,7 @@ function formatUserResponse(user: UserRecord): UserResponse {
     hasSeenWelcome: user.has_seen_welcome,
     emailVerified: user.email_verified,
     cookieConsent: user.cookie_consent,
+    themePreference: user.theme_preference,
   };
 }
 

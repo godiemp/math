@@ -144,6 +144,7 @@ export interface User {
   hasSeenWelcome?: boolean;
   emailVerified?: boolean;
   cookieConsent?: 'accepted' | 'declined' | null;
+  themePreference?: 'light' | 'dark' | 'system';
   subscription?: {
     id: number;
     userId: string;

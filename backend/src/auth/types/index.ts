@@ -59,6 +59,7 @@ export interface UserRecord {
   password_reset_token: string | null;
   password_reset_token_expires_at: number | null;
   cookie_consent: 'accepted' | 'declined' | null;
+  theme_preference: 'light' | 'dark' | 'system' | null;
 }
 
 /**
@@ -79,6 +80,7 @@ export interface UserResponse {
   hasSeenWelcome?: boolean;
   emailVerified?: boolean;
   cookieConsent?: 'accepted' | 'declined' | null;
+  themePreference?: 'light' | 'dark' | 'system' | null;
 }
 
 /**

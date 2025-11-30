@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useTheme } from 'next-themes';
 import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { Button, Card, Badge, Heading, Text, Navbar, NavbarLink, Modal } from '@/components/ui';
 import { QuizHistoryResponse } from '@/lib/types';
 import { api } from '@/lib/api-client';
 import { useTranslations } from 'next-intl';
+import { Sun, Moon, Monitor } from 'lucide-react';
 
 interface ProfileStats {
   totalQuestions: number;
@@ -33,6 +35,9 @@ interface UpdateProfileResponse {
 function ProfilePageContent() {
   const t = useTranslations('profile');
   const { user, refreshUser, isPaidUser } = useAuth();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [isSavingTheme, setIsSavingTheme] = useState(false);
   const [stats, setStats] = useState<ProfileStats>({
     totalQuestions: 0,
     correctAnswers: 0,
@@ -49,6 +54,31 @@ function ProfilePageContent() {
   });
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [editError, setEditError] = useState<string>('');
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Sync theme from user preference on mount
+  useEffect(() => {
+    if (user?.themePreference && mounted) {
+      setTheme(user.themePreference);
+    }
+  }, [user?.themePreference, mounted, setTheme]);
+
+  const handleThemeChange = async (newTheme: 'light' | 'dark' | 'system') => {
+    setIsSavingTheme(true);
+    setTheme(newTheme);
+
+    try {
+      await api.patch('/api/user/theme-preference', { themePreference: newTheme });
+      await refreshUser();
+    } catch (error) {
+      console.error('Failed to save theme preference:', error);
+    } finally {
+      setIsSavingTheme(false);
+    }
+  };
 
   useEffect(() => {
     const loadStats = async () => {
@@ -373,6 +403,71 @@ function ProfilePageContent() {
               </div>
             </div>
           )}
+        </Card>
+
+        {/* Settings Card */}
+        <Card className="p-6 mb-6">
+          <Heading level={3} size="xs" className="mb-4">
+            Configuración
+          </Heading>
+
+          <div className="space-y-4">
+            <div>
+              <Text size="sm" variant="secondary" className="mb-3">
+                Tema de la aplicación
+              </Text>
+              {mounted ? (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleThemeChange('light')}
+                    disabled={isSavingTheme}
+                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border transition-all ${
+                      theme === 'light'
+                        ? 'bg-[#0A84FF] text-white border-[#0A84FF]'
+                        : 'bg-white dark:bg-[#1C1C1C] border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50'
+                    }`}
+                  >
+                    <Sun size={18} />
+                    <span className="text-sm font-medium">Claro</span>
+                  </button>
+                  <button
+                    onClick={() => handleThemeChange('dark')}
+                    disabled={isSavingTheme}
+                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border transition-all ${
+                      theme === 'dark'
+                        ? 'bg-[#0A84FF] text-white border-[#0A84FF]'
+                        : 'bg-white dark:bg-[#1C1C1C] border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50'
+                    }`}
+                  >
+                    <Moon size={18} />
+                    <span className="text-sm font-medium">Oscuro</span>
+                  </button>
+                  <button
+                    onClick={() => handleThemeChange('system')}
+                    disabled={isSavingTheme}
+                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border transition-all ${
+                      theme === 'system'
+                        ? 'bg-[#0A84FF] text-white border-[#0A84FF]'
+                        : 'bg-white dark:bg-[#1C1C1C] border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50'
+                    }`}
+                  >
+                    <Monitor size={18} />
+                    <span className="text-sm font-medium">Sistema</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="h-[52px] bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />
+              )}
+              <Text size="xs" variant="secondary" className="mt-2">
+                {theme === 'system'
+                  ? `Actualmente usando el tema del sistema (${resolvedTheme === 'dark' ? 'oscuro' : 'claro'})`
+                  : theme === 'dark'
+                    ? 'Modo oscuro activado'
+                    : 'Modo claro activado'
+                }
+              </Text>
+            </div>
+          </div>
         </Card>
 
         {/* Quick Actions */}
