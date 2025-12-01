@@ -15,13 +15,6 @@ const UPCOMING_LESSONS = [
     estimatedMinutes: 12,
   },
   {
-    id: 'm1-num-001-c',
-    title: 'Multiplicación y División de Enteros',
-    description: 'Domina las reglas de signos en multiplicación y división.',
-    thematicUnit: 'M1-NUM-001-C',
-    estimatedMinutes: 15,
-  },
-  {
     id: 'm1-num-001-d',
     title: 'Propiedades y Jerarquía de Operaciones',
     description: 'Aprende el orden correcto para resolver operaciones combinadas.',
