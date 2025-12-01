@@ -212,11 +212,9 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               )}
             </div>
 
-            {animationPhase !== 'idle' && (
-              <div className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-                Piso actual: <span className="font-bold">{elevatorFloor >= 0 ? `+${elevatorFloor}` : elevatorFloor}</span>
-              </div>
-            )}
+            <div className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+              Piso actual: <span className="font-bold">{elevatorFloor >= 0 ? `+${elevatorFloor}` : elevatorFloor}</span>
+            </div>
           </div>
         )}
       </div>
