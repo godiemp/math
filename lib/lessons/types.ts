@@ -113,12 +113,14 @@ export const M1_LESSONS: Lesson[] = [
     subject: 'números',
     thematicUnit: 'M1-NUM-001',
     skills: ['numeros-enteros-sumar-restar', 'numeros-enteros-opuesto'],
-    estimatedMinutes: 5,
+    estimatedMinutes: 10,
     steps: [
       { id: 'hook', type: 'hook', title: 'La Alcancía', requiredToAdvance: true },
-      { id: 'discovery', type: 'explore', title: 'Descubriendo el Patrón', requiredToAdvance: true },
-      { id: 'subtraction-secret', type: 'explain', title: 'El Secreto de la Resta' },
-      { id: 'verify', type: 'verify', title: '¿Lo Captaste?', requiredToAdvance: true },
+      { id: 'number-line-addition', type: 'explore', title: 'Suma en la Recta', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Las Reglas de Signos' },
+      { id: 'subtraction', type: 'explore', title: 'Resta = Sumar el Opuesto', requiredToAdvance: true },
+      { id: 'practice', type: 'explore', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
 ];

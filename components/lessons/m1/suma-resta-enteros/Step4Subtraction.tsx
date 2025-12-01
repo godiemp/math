@@ -7,7 +7,7 @@ import { LessonStepProps } from '@/lib/lessons/types';
 
 type Phase = 'intro' | 'example1-setup' | 'example1-reveal' | 'example2-setup' | 'example2-reveal' | 'summary';
 
-export default function Step3SubtractionSecret({ onComplete, isActive }: LessonStepProps) {
+export default function Step4Subtraction({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('intro');
 
   // Auto-advance for reveals

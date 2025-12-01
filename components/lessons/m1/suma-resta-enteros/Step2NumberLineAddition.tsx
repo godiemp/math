@@ -35,7 +35,7 @@ const EXAMPLES: Example[] = [
 
 type Phase = 'show-problem' | 'starting' | 'jumping' | 'arrived' | 'insight';
 
-export default function Step2Discovery({ onComplete, isActive }: LessonStepProps) {
+export default function Step2NumberLineAddition({ onComplete, isActive }: LessonStepProps) {
   const [currentExample, setCurrentExample] = useState(0);
   const [phase, setPhase] = useState<Phase>('show-problem');
   const [currentPosition, setCurrentPosition] = useState(0);
@@ -123,10 +123,10 @@ export default function Step2Discovery({ onComplete, isActive }: LessonStepProps
       {/* Title */}
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          Descubriendo el Patrón
+          Suma en la Recta Numérica
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          Observa cómo nos movemos en la recta numérica
+          Observa cómo nos movemos al sumar
         </p>
       </div>
 

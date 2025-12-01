@@ -38,7 +38,7 @@ const QUESTIONS: Question[] = [
   },
 ];
 
-export default function Step4Verify({ onComplete, isActive }: LessonStepProps) {
+export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -89,10 +89,10 @@ export default function Step4Verify({ onComplete, isActive }: LessonStepProps) {
       {/* Title */}
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          ¿Lo Captaste?
+          Checkpoint
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          Veamos si entendiste los conceptos clave
+          Demuestra lo que aprendiste
         </p>
       </div>
 

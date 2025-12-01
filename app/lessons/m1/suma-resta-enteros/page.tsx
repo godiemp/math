@@ -5,9 +5,11 @@ import { LessonShell } from '@/components/lessons/shared';
 import { getLessonBySlug } from '@/lib/lessons/types';
 import {
   Step1Hook,
-  Step2Discovery,
-  Step3SubtractionSecret,
-  Step4Verify,
+  Step2NumberLineAddition,
+  Step3Explain,
+  Step4Subtraction,
+  Step5Practice,
+  Step6Verify,
 } from '@/components/lessons/m1/suma-resta-enteros';
 
 const LESSON_SLUG = 'suma-resta-enteros';
@@ -46,20 +48,30 @@ export default function SumaRestaEnterosLesson() {
             onComplete={completeStep}
             isActive={currentStep === 0}
           />,
-          <Step2Discovery
+          <Step2NumberLineAddition
             key="step2"
             onComplete={completeStep}
             isActive={currentStep === 1}
           />,
-          <Step3SubtractionSecret
+          <Step3Explain
             key="step3"
             onComplete={completeStep}
             isActive={currentStep === 2}
           />,
-          <Step4Verify
+          <Step4Subtraction
             key="step4"
             onComplete={completeStep}
             isActive={currentStep === 3}
+          />,
+          <Step5Practice
+            key="step5"
+            onComplete={completeStep}
+            isActive={currentStep === 4}
+          />,
+          <Step6Verify
+            key="step6"
+            onComplete={completeStep}
+            isActive={currentStep === 5}
           />,
         ];
 
