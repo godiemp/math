@@ -12,6 +12,7 @@ export async function GET() {
   const prNumber = process.env.VERCEL_GIT_PULL_REQUEST_ID;
   const branchName = process.env.VERCEL_GIT_COMMIT_REF;
   const nodeEnv = process.env.NODE_ENV;
+  const environment = process.env.NEXT_PUBLIC_ENVIRONMENT;
 
   // Explicit overrides
   const explicitApiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -27,7 +28,11 @@ export async function GET() {
   else if (explicitRailwayUrl) {
     backendUrl = explicitRailwayUrl;
   }
-  // Priority 3: Construct from PR number (Vercel preview)
+  // Priority 3: Staging environment
+  else if (environment === 'staging') {
+    backendUrl = 'https://paes-math-backend-staging.up.railway.app';
+  }
+  // Priority 4: Construct from PR number (Vercel preview)
   else if (vercelEnv === 'preview') {
     let pr = prNumber;
 
@@ -45,11 +50,11 @@ export async function GET() {
       backendUrl = 'https://paes-math-backend-production.up.railway.app';
     }
   }
-  // Priority 4: Development environment
+  // Priority 5: Development environment
   else if (nodeEnv === 'development') {
     backendUrl = 'http://localhost:3001';
   }
-  // Priority 5: Default to production backend
+  // Priority 6: Default to production backend
   else {
     backendUrl = 'https://paes-math-backend-production.up.railway.app';
   }
@@ -61,6 +66,7 @@ export async function GET() {
       prNumber,
       branchName,
       nodeEnv,
+      environment,
     },
   });
 }
