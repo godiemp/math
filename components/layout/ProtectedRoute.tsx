@@ -38,7 +38,22 @@ export function ProtectedRoute({ children, requireAdmin = false, loadingMessage 
   const router = useRouter();
   const pathname = usePathname();
   const [shouldShowLoading, setShouldShowLoading] = useState(false);
+  const [showInitialLoading, setShowInitialLoading] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
+
+  // Show loading screen after threshold when auth is still loading
+  useEffect(() => {
+    if (!isLoading) {
+      setShowInitialLoading(false);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setShowInitialLoading(true);
+    }, LOADING_THRESHOLD_MS);
+
+    return () => clearTimeout(timer);
+  }, [isLoading]);
 
   useEffect(() => {
     // Don't make auth decisions while auth is still loading
@@ -73,9 +88,11 @@ export function ProtectedRoute({ children, requireAdmin = false, loadingMessage 
   // Get the appropriate message based on route or use custom message
   const currentLoadingMessage = loadingMessage || getLoadingMessage(pathname);
 
-  // Show loading while auth is being checked
+  // Show loading while auth is being checked (after threshold to avoid flash)
   if (isLoading) {
-    return null; // Return null during initial auth check to avoid flash
+    return showInitialLoading ? (
+      <LoadingScreen message={currentLoadingMessage} />
+    ) : null;
   }
 
   // Show redirect message if redirecting due to lack of authentication
