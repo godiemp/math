@@ -21,16 +21,19 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const [showReversalFlash, setShowReversalFlash] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRefs = useRef<NodeJS.Timeout[]>([]);
 
   const correctAnswer: 'up' | 'down' = 'up';
   const isCorrect = selectedAnswer === correctAnswer;
 
-  // Cleanup interval on unmount
+  // Cleanup intervals and timeouts on unmount
   useEffect(() => {
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
+      timeoutRefs.current.forEach(timeout => clearTimeout(timeout));
+      timeoutRefs.current = [];
     };
   }, []);
 
@@ -60,11 +63,11 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         intervalRef.current = null;
 
         // Phase 2: Reversal flash
-        setTimeout(() => {
+        const timeout1 = setTimeout(() => {
           setShowReversalFlash(true);
           setAnimationPhase('reversing');
 
-          setTimeout(() => {
+          const timeout2 = setTimeout(() => {
             setShowReversalFlash(false);
             setAnimationPhase('ascending');
 
@@ -81,13 +84,16 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 setAnimationComplete(true);
 
                 // Show result after animation
-                setTimeout(() => {
+                const timeout3 = setTimeout(() => {
                   setShowResult(true);
                 }, 500);
+                timeoutRefs.current.push(timeout3);
               }
             }, 400);
           }, 800);
+          timeoutRefs.current.push(timeout2);
         }, 600);
+        timeoutRefs.current.push(timeout1);
       }
     }, 400);
   };
