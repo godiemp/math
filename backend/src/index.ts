@@ -56,11 +56,14 @@ const corsOptions = {
 
     console.log(`🔍 CORS: Checking origin: ${origin}`);
 
-    // List of allowed origins
+    // List of allowed origins (automatically includes www variant of FRONTEND_URL)
+    const frontendUrl = process.env.FRONTEND_URL;
+    const frontendWwwUrl = frontendUrl?.replace('https://', 'https://www.');
     const allowedOrigins = [
       'http://localhost:3000',
       'http://localhost:3001',
-      process.env.FRONTEND_URL, // Your production Vercel URL
+      frontendUrl,
+      frontendWwwUrl,
     ].filter(Boolean); // Remove undefined values
 
     // Check if origin is in allowed list
