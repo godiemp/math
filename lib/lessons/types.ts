@@ -104,6 +104,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-num-001-b',
+    slug: 'suma-resta-enteros',
+    title: 'Suma y Resta de Enteros',
+    description: 'Descubre cómo funcionan la suma y resta con números negativos.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-001',
+    skills: ['numeros-enteros-sumar-restar', 'numeros-enteros-opuesto'],
+    estimatedMinutes: 10,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'La Alcancía', requiredToAdvance: true },
+      { id: 'number-line-addition', type: 'explore', title: 'Suma en la Recta', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Las Reglas de Signos' },
+      { id: 'subtraction', type: 'explore', title: 'Resta = Sumar el Opuesto', requiredToAdvance: true },
+      { id: 'practice', type: 'explore', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
 ];
 
 /**

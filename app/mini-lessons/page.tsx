@@ -8,13 +8,6 @@ import { M1_LESSONS } from '@/lib/lessons/types';
 // Upcoming lessons that will be built
 const UPCOMING_LESSONS = [
   {
-    id: 'm1-num-001-b',
-    title: 'Suma y Resta de Enteros',
-    description: 'Aprende a sumar y restar números negativos y positivos.',
-    thematicUnit: 'M1-NUM-001-B',
-    estimatedMinutes: 12,
-  },
-  {
     id: 'm1-num-001-c',
     title: 'Multiplicación y División de Enteros',
     description: 'Domina las reglas de signos en multiplicación y división.',
