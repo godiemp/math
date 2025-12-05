@@ -91,7 +91,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             )}
 
             {/* Action buttons */}
-            <div className="flex gap-2 ml-auto sm:ml-0">
+            <div className="flex items-center gap-2 ml-auto sm:ml-0">
               {children}
               {showAdmin && isAdmin && (
                 <Button

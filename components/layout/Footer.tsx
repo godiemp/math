@@ -46,7 +46,7 @@ export default function Footer() {
         style={{
           borderRadius: '24px 24px 0 0',
           boxShadow: '0 -4px 24px rgba(0, 0, 0, 0.2)',
-          background: 'white',
+          background: 'var(--color-surface)',
           animation: 'slideUp 0.3s ease-out',
         }}
         onClick={(e) => e.stopPropagation()}
@@ -58,7 +58,7 @@ export default function Footer() {
               width: '36px',
               height: '4px',
               borderRadius: '2px',
-              background: '#d1d1d6',
+              background: 'var(--color-separator-strong)',
             }}
           />
         </div>
@@ -71,7 +71,7 @@ export default function Footer() {
               style={{
                 fontSize: '22px',
                 fontWeight: 600,
-                color: '#000',
+                color: 'var(--color-label-primary)',
               }}
             >
               {t('subtitle')}
@@ -83,7 +83,7 @@ export default function Footer() {
                 background: 'none',
                 border: 'none',
                 fontSize: '28px',
-                color: '#8e8e93',
+                color: 'var(--color-label-secondary)',
                 cursor: 'pointer',
                 padding: 0,
                 lineHeight: 1,
@@ -97,17 +97,17 @@ export default function Footer() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Company Info */}
             <div>
-              <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#000', marginBottom: '12px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-label-primary)', marginBottom: '12px' }}>
                 PAES Chile
               </h3>
-              <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#636366' }}>
+              <p style={{ fontSize: '14px', lineHeight: '1.6', color: 'var(--color-label-secondary)' }}>
                 Plataforma de preparación para la Prueba de Acceso a la Educación Superior
               </p>
             </div>
 
             {/* Legal */}
             <div>
-              <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#000', marginBottom: '12px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-label-primary)', marginBottom: '12px' }}>
                 Legal
               </h3>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
@@ -115,7 +115,7 @@ export default function Footer() {
                   <Link
                     href="/legal/terminos"
                     onClick={handleCloseModal}
-                    style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
+                    style={{ fontSize: '14px', color: 'var(--color-link)', textDecoration: 'none' }}
                   >
                     {t('links.terms')}
                   </Link>
@@ -124,7 +124,7 @@ export default function Footer() {
                   <Link
                     href="/legal/privacidad"
                     onClick={handleCloseModal}
-                    style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
+                    style={{ fontSize: '14px', color: 'var(--color-link)', textDecoration: 'none' }}
                   >
                     {t('links.privacy')}
                   </Link>
@@ -133,7 +133,7 @@ export default function Footer() {
                   <Link
                     href="/legal/cookies"
                     onClick={handleCloseModal}
-                    style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
+                    style={{ fontSize: '14px', color: 'var(--color-link)', textDecoration: 'none' }}
                   >
                     {t('links.cookies')}
                   </Link>
@@ -142,7 +142,7 @@ export default function Footer() {
                   <Link
                     href="/legal/reembolsos"
                     onClick={handleCloseModal}
-                    style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
+                    style={{ fontSize: '14px', color: 'var(--color-link)', textDecoration: 'none' }}
                   >
                     {t('links.refunds')}
                   </Link>
@@ -152,7 +152,7 @@ export default function Footer() {
 
             {/* Support */}
             <div>
-              <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#000', marginBottom: '12px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-label-primary)', marginBottom: '12px' }}>
                 Soporte
               </h3>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
@@ -160,7 +160,7 @@ export default function Footer() {
                   <Link
                     href="/contacto"
                     onClick={handleCloseModal}
-                    style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
+                    style={{ fontSize: '14px', color: 'var(--color-link)', textDecoration: 'none' }}
                   >
                     Contacto
                   </Link>
@@ -170,7 +170,7 @@ export default function Footer() {
                     href="https://wa.me/56931338020"
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
+                    style={{ fontSize: '14px', color: 'var(--color-link)', textDecoration: 'none' }}
                   >
                     WhatsApp: +56 9 3133 8020
                   </a>
@@ -180,7 +180,7 @@ export default function Footer() {
 
             {/* Consumer Protection */}
             <div>
-              <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#000', marginBottom: '12px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-label-primary)', marginBottom: '12px' }}>
                 Protección al Consumidor
               </h3>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
@@ -189,20 +189,20 @@ export default function Footer() {
                     href="https://www.sernac.cl"
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ fontSize: '14px', color: '#007AFF', textDecoration: 'none' }}
+                    style={{ fontSize: '14px', color: 'var(--color-link)', textDecoration: 'none' }}
                   >
                     SERNAC
                   </a>
                 </li>
-                <li style={{ fontSize: '13px', color: '#8e8e93' }}>
+                <li style={{ fontSize: '13px', color: 'var(--color-label-secondary)' }}>
                   800 700 100
                 </li>
               </ul>
             </div>
 
             {/* Copyright */}
-            <div style={{ paddingTop: '16px', borderTop: '1px solid #d1d1d6' }}>
-              <p style={{ fontSize: '12px', color: '#8e8e93', textAlign: 'center', margin: 0 }}>
+            <div style={{ paddingTop: '16px', borderTop: '1px solid var(--color-separator)' }}>
+              <p style={{ fontSize: '12px', color: 'var(--color-label-secondary)', textAlign: 'center', margin: 0 }}>
                 {t('copyright')}
               </p>
             </div>

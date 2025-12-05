@@ -8,7 +8,7 @@
 
 import { Router } from 'express';
 import { authenticate } from '../auth/middleware/authenticate';
-import { updateUserProfile, markWelcomeSeen, updateCookieConsent } from '../controllers/userProfileController';
+import { updateUserProfile, markWelcomeSeen, updateCookieConsent, updateThemePreference } from '../controllers/userProfileController';
 import { getKnowledgeDeclarations, updateKnowledgeDeclarations } from '../controllers/knowledgeDeclarationController';
 
 const router = Router();
@@ -36,6 +36,13 @@ router.post('/welcome-seen', markWelcomeSeen);
  * @access  Private
  */
 router.patch('/cookie-consent', updateCookieConsent);
+
+/**
+ * @route   PATCH /api/user/theme-preference
+ * @desc    Update current user's theme preference
+ * @access  Private
+ */
+router.patch('/theme-preference', updateThemePreference);
 
 /**
  * @route   GET /api/user/knowledge-declarations
