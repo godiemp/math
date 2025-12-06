@@ -237,7 +237,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
           </div>
 
           {/* Number line */}
-          <div className="relative py-12 overflow-hidden">
+          <div className="relative pt-16 pb-8 overflow-visible">
             <div className="relative h-1 bg-gray-300 dark:bg-gray-600 rounded-full mx-4">
               {/* Ticks and labels */}
               {[-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6].map(num => {
