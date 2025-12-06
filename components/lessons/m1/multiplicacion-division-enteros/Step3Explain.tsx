@@ -285,9 +285,9 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               >
                 <div className={cn(
                   'text-3xl',
-                  // Flip character based on walking direction
-                  animation && ((activeDemo.secondFactor < 0 && activeDemo.firstFactor > 0) ||
-                               (activeDemo.secondFactor > 0 && activeDemo.firstFactor < 0))
+                  // Flip character to face right when moving right (positive result)
+                  // The 🚶 emoji naturally faces left, so we flip it when moving right
+                  animation && activeDemo.result > 0
                     ? 'transform -scale-x-100'
                     : ''
                 )}>
