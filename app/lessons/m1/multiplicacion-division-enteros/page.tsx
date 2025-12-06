@@ -27,11 +27,11 @@ export default function MultiplicacionDivisionEnterosLesson() {
   }
 
   const handleComplete = () => {
-    router.push('/curriculum/m1');
+    router.push('/mini-lessons');
   };
 
   const handleExit = () => {
-    router.push('/curriculum/m1');
+    router.push('/mini-lessons');
   };
 
   return (

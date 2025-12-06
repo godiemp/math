@@ -28,11 +28,11 @@ export default function NumerosEnterosOrdenLesson() {
 
   const handleComplete = () => {
     // TODO: Save lesson completion to user progress
-    router.push('/curriculum/m1');
+    router.push('/mini-lessons');
   };
 
   const handleExit = () => {
-    router.push('/curriculum/m1');
+    router.push('/mini-lessons');
   };
 
   return (

@@ -118,7 +118,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
   if (!isActive) return null;
 
   return (
-    <div className="space-y-8 animate-fadeIn pb-20">
+    <div className="space-y-8 animate-fadeIn pb-32">
       {/* Title */}
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
