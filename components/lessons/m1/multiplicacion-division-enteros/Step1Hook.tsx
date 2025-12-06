@@ -8,8 +8,8 @@ import { LessonStepProps } from '@/lib/lessons/types';
 type Phase = 'scenario' | 'question' | 'animation' | 'result';
 type AnimationPhase = 'idle' | 'reversing' | 'ascending' | 'complete';
 
-// Reduced floors for compact building (5 instead of 7)
-const FLOORS = [3, 1, 0, -1, -3];
+// All 7 floors from +3 to -3
+const FLOORS = [3, 2, 1, 0, -1, -2, -3];
 const FLOOR_HEIGHT = 48; // h-12 = 48px
 
 export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
@@ -86,13 +86,6 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   // Calculate elevator position
   const getElevatorTop = (floor: number) => {
     const floorIndex = FLOORS.indexOf(floor);
-    // If floor is not in reduced list, interpolate
-    if (floorIndex === -1) {
-      // Floor 2 would be between 3 and 1
-      if (floor === 2) return 0.5 * FLOOR_HEIGHT;
-      // Floor -2 would be between -1 and -3
-      if (floor === -2) return 3.5 * FLOOR_HEIGHT;
-    }
     return floorIndex * FLOOR_HEIGHT;
   };
 
