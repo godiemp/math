@@ -262,3 +262,34 @@ export const TIMER_COLOR_THRESHOLDS = {
  * Default number of questions to fetch for official PAES quiz
  */
 export const OFFICIAL_PAES_QUESTION_COUNT = 65;
+
+// ============================================================================
+// INTERACTIVE LESSON TIMINGS (in milliseconds)
+// ============================================================================
+
+/**
+ * Feedback display durations for practice steps
+ * Longer times for incorrect answers to allow reading the explanation
+ */
+export const LESSON_FEEDBACK_TIMING = {
+  correct: 2000,          // 2 seconds for correct answers
+  incorrect: 3000,        // 3 seconds for incorrect (time to read feedback)
+  patternDiscovery: 2500, // 2.5 seconds when discovering patterns
+} as const;
+
+/**
+ * Animation timing constants for lesson step animations
+ */
+export const LESSON_ANIMATION_TIMING = {
+  stepInterval: 300,      // Interval between animation steps (walking, elevator)
+  pauseBetweenPhases: 600, // Pause between animation phases
+  celebrationDuration: 500, // How long celebration effects last
+  transitionDuration: 300, // General transition duration
+} as const;
+
+/**
+ * Streak thresholds for showing streak indicators
+ */
+export const LESSON_STREAK_CONFIG = {
+  showAt: 3,              // Show streak indicator at 3+ correct in a row
+} as const;

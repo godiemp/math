@@ -9,48 +9,61 @@ import { Celebration } from '@/components/lessons/shared';
 interface Question {
   id: string;
   question: string;
-  type: 'multiple-choice' | 'ordering';
-  options?: string[];
-  correctAnswer: number | number[];
+  type: 'multiple-choice';
+  options: string[];
+  correctAnswer: number;
   explanation: string;
 }
 
 const QUESTIONS: Question[] = [
   {
     id: 'q1',
-    question: 'Ordena de menor a mayor: 2, -5, 0, -1, 4',
-    type: 'ordering',
-    options: ['-5, -1, 0, 2, 4', '-1, -5, 0, 2, 4', '0, -1, -5, 2, 4', '-5, 0, -1, 2, 4'],
+    question: '¿Cuál es el resultado de (−5) × (−4)?',
+    type: 'multiple-choice',
+    options: ['20', '−20', '−9', '9'],
     correctAnswer: 0,
-    explanation: 'En orden: -5 (más pequeño), -1, 0, 2, 4 (más grande). Recuerda que los negativos más grandes en valor absoluto son los más pequeños.',
+    explanation: 'Signos iguales (negativo × negativo) dan positivo. 5 × 4 = 20, entonces (−5) × (−4) = 20',
   },
   {
     id: 'q2',
-    question: '¿Cuál es mayor: -7 o -3?',
+    question: '¿Cuál es el resultado de (−18) ÷ (3)?',
     type: 'multiple-choice',
-    options: ['-7', '-3', 'Son iguales'],
+    options: ['6', '−6', '15', '−15'],
     correctAnswer: 1,
-    explanation: '-3 es mayor que -7. Aunque 7 > 3 en valor absoluto, -3 está más a la derecha en la recta numérica.',
+    explanation: 'Signos diferentes (negativo ÷ positivo) dan negativo. 18 ÷ 3 = 6, entonces (−18) ÷ (3) = −6',
   },
   {
     id: 'q3',
-    question: 'Calcula: |-8|',
+    question: 'Si (−3) × □ = 15, ¿qué número va en el cuadro?',
     type: 'multiple-choice',
-    options: ['-8', '8', '0'],
+    options: ['5', '−5', '12', '−12'],
     correctAnswer: 1,
-    explanation: '|-8| = 8. El valor absoluto es la distancia al cero, siempre positiva o cero.',
+    explanation: 'Para que negativo × algo = positivo, el algo debe ser negativo (signos iguales). (−3) × (−5) = 15',
   },
   {
     id: 'q4',
-    question: 'Si |x| = 5, ¿cuáles son los valores posibles de x?',
+    question: '¿Cuál afirmación es VERDADERA?',
     type: 'multiple-choice',
-    options: ['Solo 5', 'Solo -5', '5 y -5', '0'],
+    options: [
+      'Negativo × negativo = negativo',
+      'Positivo ÷ negativo = positivo',
+      'Negativo ÷ negativo = positivo',
+      'Positivo × negativo = positivo',
+    ],
     correctAnswer: 2,
-    explanation: 'x puede ser 5 o -5, porque ambos están a 5 pasos del cero.',
+    explanation: 'Negativo ÷ negativo = positivo (signos iguales dan positivo). Las otras opciones son falsas.',
+  },
+  {
+    id: 'q5',
+    question: 'Calcula: (−2) × (3) × (−1)',
+    type: 'multiple-choice',
+    options: ['6', '−6', '5', '−5'],
+    correctAnswer: 0,
+    explanation: 'Paso a paso: (−2) × (3) = −6, luego (−6) × (−1) = 6. O contar signos: 2 negativos = positivo.',
   },
 ];
 
-const REQUIRED_CORRECT = 3;
+const REQUIRED_CORRECT = 4;
 
 export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -156,7 +169,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
 
             {/* Options */}
             <div className="space-y-3">
-              {question.options?.map((option, index) => (
+              {question.options.map((option, index) => (
                 <button
                   key={index}
                   onClick={() => handleSelect(index)}
@@ -284,7 +297,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
               passed ? 'text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300'
             )}>
               {passed
-                ? 'Has completado la lección exitosamente'
+                ? 'Has dominado la multiplicación y división de enteros'
                 : `Necesitas ${REQUIRED_CORRECT} respuestas correctas. ¡Puedes intentarlo de nuevo!`}
             </p>
           </div>
@@ -316,6 +329,20 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
             </div>
           </div>
 
+          {/* Key takeaways */}
+          {passed && (
+            <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
+              <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">
+                Recuerda siempre:
+              </h4>
+              <ul className="text-sm text-purple-700 dark:text-purple-300 space-y-1">
+                <li>• <strong>Signos iguales</strong> → resultado <strong>positivo</strong></li>
+                <li>• <strong>Signos diferentes</strong> → resultado <strong>negativo</strong></li>
+                <li>• Esto aplica tanto para multiplicación como división</li>
+              </ul>
+            </div>
+          )}
+
           {/* Action buttons */}
           <div className="flex justify-center gap-4">
             {!passed && (
@@ -344,7 +371,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
       {showCelebration && (
         <Celebration
           title="¡Lección Completada!"
-          message="Has demostrado que entiendes los números enteros, el orden y el valor absoluto. ¡Excelente trabajo!"
+          message="Has dominado las reglas de signos en multiplicación y división de enteros. ¡Excelente trabajo!"
           onContinue={handleCelebrationContinue}
           continueLabel="Finalizar"
         />
