@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, ReactNode } from 'react';
+import { useState, ReactNode } from 'react';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
-import { Lesson, LessonStep } from '@/lib/lessons/types';
+import { Lesson } from '@/lib/lessons/types';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface LessonShellProps {
   lesson: Lesson;
@@ -24,6 +25,7 @@ export default function LessonShell({
   onComplete,
   onExit,
 }: LessonShellProps) {
+  const { isAdmin } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
   const [canAdvance, setCanAdvance] = useState(true);
@@ -113,33 +115,46 @@ export default function LessonShell({
 
             {/* Step dots */}
             <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between px-0">
-              {lesson.steps.map((step, index) => (
-                <button
-                  key={step.id}
-                  onClick={() => {
-                    if (index <= currentStep || completedSteps.has(index - 1)) {
-                      goToStep(index);
-                    }
-                  }}
-                  disabled={index > currentStep && !completedSteps.has(index - 1)}
-                  className={cn(
-                    'w-4 h-4 rounded-full border-2 transition-all',
-                    index === currentStep
-                      ? 'bg-blue-500 border-blue-500 scale-125'
-                      : completedSteps.has(index)
-                      ? 'bg-green-500 border-green-500'
-                      : index < currentStep
-                      ? 'bg-gray-400 border-gray-400'
-                      : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600'
-                  )}
-                  title={step.title}
-                >
-                  {completedSteps.has(index) && (
-                    <Check size={10} className="text-white mx-auto" />
-                  )}
-                </button>
-              ))}
+              {lesson.steps.map((step, index) => {
+                const canClick = isAdmin || index <= currentStep || completedSteps.has(index - 1);
+                return (
+                  <button
+                    key={step.id}
+                    onClick={() => {
+                      if (canClick) {
+                        goToStep(index);
+                      }
+                    }}
+                    disabled={!canClick}
+                    className={cn(
+                      'w-4 h-4 rounded-full border-2 transition-all',
+                      index === currentStep
+                        ? 'bg-blue-500 border-blue-500 scale-125'
+                        : completedSteps.has(index)
+                        ? 'bg-green-500 border-green-500'
+                        : index < currentStep
+                        ? 'bg-gray-400 border-gray-400'
+                        : isAdmin
+                        ? 'bg-orange-200 dark:bg-orange-900 border-orange-400 cursor-pointer hover:scale-110'
+                        : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600'
+                    )}
+                    title={isAdmin ? `[Admin] ${step.title}` : step.title}
+                  >
+                    {completedSteps.has(index) && (
+                      <Check size={10} className="text-white mx-auto" />
+                    )}
+                  </button>
+                );
+              })}
             </div>
+            {/* Admin mode indicator */}
+            {isAdmin && (
+              <div className="absolute -bottom-5 left-0 right-0 text-center">
+                <span className="text-xs text-orange-500 font-medium">
+                  Admin: click en cualquier paso
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>

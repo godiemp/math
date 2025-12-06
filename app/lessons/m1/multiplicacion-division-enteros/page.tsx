@@ -5,16 +5,16 @@ import { LessonShell } from '@/components/lessons/shared';
 import { getLessonBySlug } from '@/lib/lessons/types';
 import {
   Step1Hook,
-  Step2NumberLine,
+  Step2SignRules,
   Step3Explain,
-  Step4Comparison,
-  Step5AbsoluteValue,
+  Step4Practice,
+  Step5Division,
   Step6Verify,
-} from '@/components/lessons/m1/numeros-enteros-orden';
+} from '@/components/lessons/m1/multiplicacion-division-enteros';
 
-const LESSON_SLUG = 'numeros-enteros-orden';
+const LESSON_SLUG = 'multiplicacion-division-enteros';
 
-export default function NumerosEnterosOrdenLesson() {
+export default function MultiplicacionDivisionEnterosLesson() {
   const router = useRouter();
   const lesson = getLessonBySlug(LESSON_SLUG);
 
@@ -27,7 +27,6 @@ export default function NumerosEnterosOrdenLesson() {
   }
 
   const handleComplete = () => {
-    // TODO: Save lesson completion to user progress
     router.push('/mini-lessons');
   };
 
@@ -41,14 +40,14 @@ export default function NumerosEnterosOrdenLesson() {
       onComplete={handleComplete}
       onExit={handleExit}
     >
-      {({ currentStep, completeStep, canAdvance, setCanAdvance }) => {
+      {({ currentStep, completeStep }) => {
         const stepComponents = [
           <Step1Hook
             key="step1"
             onComplete={completeStep}
             isActive={currentStep === 0}
           />,
-          <Step2NumberLine
+          <Step2SignRules
             key="step2"
             onComplete={completeStep}
             isActive={currentStep === 1}
@@ -58,12 +57,12 @@ export default function NumerosEnterosOrdenLesson() {
             onComplete={completeStep}
             isActive={currentStep === 2}
           />,
-          <Step4Comparison
+          <Step4Practice
             key="step4"
             onComplete={completeStep}
             isActive={currentStep === 3}
           />,
-          <Step5AbsoluteValue
+          <Step5Division
             key="step5"
             onComplete={completeStep}
             isActive={currentStep === 4}
