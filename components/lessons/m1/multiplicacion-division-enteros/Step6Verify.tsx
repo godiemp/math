@@ -22,23 +22,23 @@ const QUESTIONS: Question[] = [
     type: 'multiple-choice',
     options: ['20', '−20', '−9', '9'],
     correctAnswer: 0,
-    explanation: 'Signos iguales (negativo × negativo) dan positivo. 5 × 4 = 20, entonces (−5) × (−4) = +20',
+    explanation: 'Signos iguales (negativo × negativo) dan positivo. 5 × 4 = 20, entonces (−5) × (−4) = 20',
   },
   {
     id: 'q2',
-    question: '¿Cuál es el resultado de (−18) ÷ (+3)?',
+    question: '¿Cuál es el resultado de (−18) ÷ (3)?',
     type: 'multiple-choice',
     options: ['6', '−6', '15', '−15'],
     correctAnswer: 1,
-    explanation: 'Signos diferentes (negativo ÷ positivo) dan negativo. 18 ÷ 3 = 6, entonces (−18) ÷ (+3) = −6',
+    explanation: 'Signos diferentes (negativo ÷ positivo) dan negativo. 18 ÷ 3 = 6, entonces (−18) ÷ (3) = −6',
   },
   {
     id: 'q3',
-    question: 'Si (−3) × □ = +15, ¿qué número va en el cuadro?',
+    question: 'Si (−3) × □ = 15, ¿qué número va en el cuadro?',
     type: 'multiple-choice',
     options: ['5', '−5', '12', '−12'],
     correctAnswer: 1,
-    explanation: 'Para que negativo × algo = positivo, el algo debe ser negativo (signos iguales). (−3) × (−5) = +15',
+    explanation: 'Para que negativo × algo = positivo, el algo debe ser negativo (signos iguales). (−3) × (−5) = 15',
   },
   {
     id: 'q4',
@@ -55,11 +55,11 @@ const QUESTIONS: Question[] = [
   },
   {
     id: 'q5',
-    question: 'Calcula: (−2) × (+3) × (−1)',
+    question: 'Calcula: (−2) × (3) × (−1)',
     type: 'multiple-choice',
     options: ['6', '−6', '5', '−5'],
     correctAnswer: 0,
-    explanation: 'Paso a paso: (−2) × (+3) = −6, luego (−6) × (−1) = +6. O contar signos: 2 negativos = positivo.',
+    explanation: 'Paso a paso: (−2) × (3) = −6, luego (−6) × (−1) = 6. O contar signos: 2 negativos = positivo.',
   },
 ];
 

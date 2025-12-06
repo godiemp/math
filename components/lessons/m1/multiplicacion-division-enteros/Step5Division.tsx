@@ -262,19 +262,19 @@ export default function Step5Division({ onComplete, isActive }: LessonStepProps)
           </h3>
           <div className="space-y-3 text-center font-mono text-lg">
             <p>
-              <span className="text-green-600">(+12)</span> ÷ <span className="text-green-600">(+3)</span> = <span className="text-green-600 font-bold">+4</span>
+              <span className="text-green-600">(12)</span> ÷ <span className="text-green-600">(3)</span> = <span className="text-green-600 font-bold">4</span>
               <span className="text-gray-400 text-sm ml-2">(iguales → +)</span>
             </p>
             <p>
-              <span className="text-red-600">(−12)</span> ÷ <span className="text-green-600">(+3)</span> = <span className="text-red-600 font-bold">−4</span>
+              <span className="text-red-600">(−12)</span> ÷ <span className="text-green-600">(3)</span> = <span className="text-red-600 font-bold">−4</span>
               <span className="text-gray-400 text-sm ml-2">(diferentes → −)</span>
             </p>
             <p>
-              <span className="text-green-600">(+12)</span> ÷ <span className="text-red-600">(−3)</span> = <span className="text-red-600 font-bold">−4</span>
+              <span className="text-green-600">(12)</span> ÷ <span className="text-red-600">(−3)</span> = <span className="text-red-600 font-bold">−4</span>
               <span className="text-gray-400 text-sm ml-2">(diferentes → −)</span>
             </p>
             <p>
-              <span className="text-red-600">(−12)</span> ÷ <span className="text-red-600">(−3)</span> = <span className="text-green-600 font-bold">+4</span>
+              <span className="text-red-600">(−12)</span> ÷ <span className="text-red-600">(−3)</span> = <span className="text-green-600 font-bold">4</span>
               <span className="text-gray-400 text-sm ml-2">(iguales → +)</span>
             </p>
           </div>
