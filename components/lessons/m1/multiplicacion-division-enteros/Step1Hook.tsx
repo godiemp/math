@@ -5,7 +5,7 @@ import { ArrowUp, ArrowDown, ArrowRight, Check, X, RotateCcw } from 'lucide-reac
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
-type AnimationPhase = 'idle' | 'descending' | 'reversing' | 'ascending' | 'complete';
+type AnimationPhase = 'idle' | 'reversing' | 'ascending' | 'complete';
 
 const FLOORS = [3, 2, 1, 0, -1, -2, -3];
 const FLOOR_HEIGHT = 48; // h-12 = 48px
@@ -50,52 +50,37 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   };
 
   const runElevatorAnimation = () => {
-    setAnimationPhase('descending');
+    // The reversal happens BEFORE the elevator moves
+    // Show the "reversa" button being pressed first, then elevator goes UP
+    setAnimationPhase('reversing');
+    setShowReversalFlash(true);
 
-    // Phase 1: Descend to -2 (showing intention to go down)
-    let floor = 0;
-    intervalRef.current = setInterval(() => {
-      floor--;
-      setElevatorFloor(floor);
+    // Phase 1: Show reversal for a moment
+    const timeout1 = setTimeout(() => {
+      setShowReversalFlash(false);
+      setAnimationPhase('ascending');
 
-      if (floor <= -2) {
-        clearInterval(intervalRef.current!);
-        intervalRef.current = null;
+      // Phase 2: Elevator goes UP to +3 (because -3 reversed = +3)
+      let floor = 0;
+      intervalRef.current = setInterval(() => {
+        floor++;
+        setElevatorFloor(floor);
 
-        // Phase 2: Reversal flash
-        const timeout1 = setTimeout(() => {
-          setShowReversalFlash(true);
-          setAnimationPhase('reversing');
+        if (floor >= 3) {
+          clearInterval(intervalRef.current!);
+          intervalRef.current = null;
+          setAnimationPhase('complete');
+          setAnimationComplete(true);
 
+          // Show result after animation
           const timeout2 = setTimeout(() => {
-            setShowReversalFlash(false);
-            setAnimationPhase('ascending');
-
-            // Phase 3: Ascend to +3
-            let ascendFloor = -2;
-            intervalRef.current = setInterval(() => {
-              ascendFloor++;
-              setElevatorFloor(ascendFloor);
-
-              if (ascendFloor >= 3) {
-                clearInterval(intervalRef.current!);
-                intervalRef.current = null;
-                setAnimationPhase('complete');
-                setAnimationComplete(true);
-
-                // Show result after animation
-                const timeout3 = setTimeout(() => {
-                  setShowResult(true);
-                }, 500);
-                timeoutRefs.current.push(timeout3);
-              }
-            }, 400);
-          }, 800);
+            setShowResult(true);
+          }, 500);
           timeoutRefs.current.push(timeout2);
-        }, 600);
-        timeoutRefs.current.push(timeout1);
-      }
-    }, 400);
+        }
+      }, 400);
+    }, 1200);
+    timeoutRefs.current.push(timeout1);
   };
 
   // Calculate elevator position (floor 3 is top, floor -3 is bottom)
@@ -194,33 +179,28 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           <div className="ml-6 flex flex-col justify-center">
             <div className={cn(
               'px-4 py-2 rounded-lg font-semibold text-sm animate-fadeIn',
-              animationPhase === 'descending' && 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300',
               animationPhase === 'reversing' && 'bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300',
               animationPhase === 'ascending' && 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300'
             )}>
-              {animationPhase === 'descending' && (
-                <span className="flex items-center gap-2">
-                  <ArrowDown className="w-4 h-4" />
-                  Bajando...
-                </span>
-              )}
               {animationPhase === 'reversing' && (
                 <span className="flex items-center gap-2">
                   <RotateCcw className="w-4 h-4 animate-spin" />
-                  ¡REVERSA!
+                  ¡REVERSA activada!
                 </span>
               )}
               {animationPhase === 'ascending' && (
                 <span className="flex items-center gap-2">
                   <ArrowUp className="w-4 h-4" />
-                  ¡Subiendo!
+                  Bajar → ¡Subiendo!
                 </span>
               )}
             </div>
 
-            <div className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-              Piso actual: <span className="font-bold">{elevatorFloor >= 0 ? `+${elevatorFloor}` : elevatorFloor}</span>
-            </div>
+            {animationPhase === 'ascending' && (
+              <div className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+                Piso actual: <span className="font-bold">{elevatorFloor >= 0 ? `+${elevatorFloor}` : elevatorFloor}</span>
+              </div>
+            )}
           </div>
         )}
       </div>
