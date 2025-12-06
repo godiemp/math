@@ -130,19 +130,19 @@ const apiLimiter = process.env.NODE_ENV === 'test'
       legacyHeaders: false, // Disable the `X-RateLimit-*` headers
     });
 
-// Strict rate limiting for authentication endpoints - 20 attempts per 15 minutes per IP
+// Strict rate limiting for authentication endpoints - 20 failed attempts per 15 minutes per IP
 // Disabled in test environment to allow multiple logins in e2e tests
 const authLimiter = process.env.NODE_ENV === 'test'
   ? (req: Request, res: Response, next: NextFunction) => next() // No rate limiting in test
   : rateLimit({
       windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 20, // Limit each IP to 20 requests per windowMs
+      max: 20, // Limit each IP to 20 failed requests per windowMs
       message: {
         error: 'Demasiados intentos de inicio de sesión. Por favor, intenta de nuevo en 15 minutos.',
       },
       standardHeaders: true,
       legacyHeaders: false,
-      skipSuccessfulRequests: false, // Count successful requests
+      skipSuccessfulRequests: true, // Only count failed requests (protects against brute force)
     });
 
 // Strict rate limiting for payment operations - 10 attempts per 15 minutes per IP

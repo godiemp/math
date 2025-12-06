@@ -1,30 +1,92 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Clock, Lock, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Calculator, FunctionSquare, Shapes, BarChart3 } from 'lucide-react';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
-import { M1_LESSONS } from '@/lib/lessons/types';
+import { useAuth } from '@/contexts/AuthContext';
+import { SUBJECTS, SUBJECT_LABELS, getUnitCount, subjectToSlug, type Subject } from '@/lib/lessons/thematicUnits';
 
-// Upcoming lessons that will be built
-const UPCOMING_LESSONS = [
-  {
-    id: 'm1-num-001-d',
-    title: 'Propiedades y Jerarquía de Operaciones',
-    description: 'Aprende el orden correcto para resolver operaciones combinadas.',
-    thematicUnit: 'M1-NUM-001-D',
-    estimatedMinutes: 10,
-  },
-  {
-    id: 'm1-num-002-a',
-    title: 'Fracciones y Decimales',
-    description: 'Convierte entre fracciones y decimales con facilidad.',
-    thematicUnit: 'M1-NUM-002-A',
-    estimatedMinutes: 15,
-  },
-];
+const SUBJECT_ICONS: Record<Subject, React.ElementType> = {
+  'números': Calculator,
+  'álgebra': FunctionSquare,
+  'geometría': Shapes,
+  'probabilidad': BarChart3,
+};
+
+const SUBJECT_COLORS: Record<Subject, { from: string; to: string; border: string }> = {
+  'números': { from: 'from-blue-500', to: 'to-cyan-500', border: 'border-blue-500/30' },
+  'álgebra': { from: 'from-purple-500', to: 'to-pink-500', border: 'border-purple-500/30' },
+  'geometría': { from: 'from-green-500', to: 'to-emerald-500', border: 'border-green-500/30' },
+  'probabilidad': { from: 'from-orange-500', to: 'to-amber-500', border: 'border-orange-500/30' },
+};
+
+interface CategoryCardProps {
+  subject: Subject;
+  level: 'M1' | 'M2';
+}
+
+function CategoryCard({ subject, level }: CategoryCardProps) {
+  const Icon = SUBJECT_ICONS[subject];
+  const colors = SUBJECT_COLORS[subject];
+  const unitCount = getUnitCount(level, subject);
+  const slug = subjectToSlug(subject);
+
+  return (
+    <Link
+      href={`/mini-lessons/${level.toLowerCase()}/${slug}`}
+      className="block group"
+    >
+      <div className={`bg-gradient-to-br ${colors.from} ${colors.to} p-0.5 rounded-2xl`}>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 h-full hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+          <div className="flex items-center gap-3">
+            <div className={`w-12 h-12 bg-gradient-to-br ${colors.from} ${colors.to} rounded-xl flex items-center justify-center`}>
+              <Icon className="text-white" size={24} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors truncate">
+                {SUBJECT_LABELS[subject]}
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {unitCount} {unitCount === 1 ? 'unidad' : 'unidades'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+interface LevelSectionProps {
+  level: 'M1' | 'M2';
+  title: string;
+}
+
+function LevelSection({ level, title }: LevelSectionProps) {
+  return (
+    <div className="mb-8">
+      <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+        <span className={`px-2 py-1 rounded-lg text-sm font-bold ${
+          level === 'M1'
+            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+            : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
+        }`}>
+          {level}
+        </span>
+        {title}
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {SUBJECTS.map((subject) => (
+          <CategoryCard key={`${level}-${subject}`} subject={subject} level={level} />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function MiniLessonsContent() {
-  const availableLessons = M1_LESSONS.filter(lesson => lesson.slug);
+  const { user } = useAuth();
+  const showM2 = user?.targetLevel !== 'M1_ONLY';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -56,110 +118,24 @@ function MiniLessonsContent() {
           <p className="text-gray-600 dark:text-gray-300 text-lg">
             Aprende matemáticas paso a paso con lecciones interactivas
           </p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">
+            Selecciona una categoría para ver las lecciones disponibles
+          </p>
         </div>
 
-        {/* Available Lessons */}
-        <div className="mb-12">
-          <div className="flex items-center gap-2 mb-4">
-            <CheckCircle className="text-green-500" size={24} />
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-              Disponible Ahora
-            </h2>
-          </div>
+        {/* M1 Section */}
+        <LevelSection level="M1" title="Competencia Matemática 1" />
 
-          <div className="space-y-4">
-            {availableLessons.map((lesson, index) => (
-              <Link
-                key={lesson.id}
-                href={`/lessons/m1/${lesson.slug}`}
-                className="block group"
-              >
-                <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-0.5 rounded-2xl">
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 sm:p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
-                          {index + 1}
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                            {lesson.title}
-                          </h3>
-                          <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
-                            {lesson.description}
-                          </p>
-                          <div className="flex items-center gap-4 mt-2">
-                            <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                              <Clock size={14} />
-                              {lesson.estimatedMinutes} min
-                            </span>
-                            <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">
-                              {lesson.thematicUnit}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <ArrowRight className="text-purple-500 group-hover:translate-x-1 transition-transform flex-shrink-0" size={24} />
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
+        {/* M2 Section (conditional) */}
+        {showM2 && (
+          <LevelSection level="M2" title="Competencia Matemática 2" />
+        )}
 
-        {/* Upcoming Lessons */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <Lock className="text-gray-400" size={24} />
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-              Próximamente
-            </h2>
-          </div>
-
-          <div className="space-y-3">
-            {UPCOMING_LESSONS.map((lesson, index) => (
-              <div
-                key={lesson.id}
-                className="bg-gray-100 dark:bg-gray-800/50 rounded-xl p-4 sm:p-5 opacity-75"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-gray-300 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 font-bold flex-shrink-0">
-                      {availableLessons.length + index + 1}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold text-gray-700 dark:text-gray-300">
-                          {lesson.title}
-                        </h3>
-                        <Lock size={14} className="text-gray-400" />
-                      </div>
-                      <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
-                        {lesson.description}
-                      </p>
-                      <div className="flex items-center gap-4 mt-2">
-                        <span className="text-xs text-gray-400 flex items-center gap-1">
-                          <Clock size={14} />
-                          {lesson.estimatedMinutes} min
-                        </span>
-                        <span className="text-xs text-gray-400">
-                          {lesson.thematicUnit}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* More coming soon message */}
-          <div className="mt-6 text-center">
-            <p className="text-gray-500 dark:text-gray-400 text-sm">
-              Estamos creando más lecciones constantemente. ¡Vuelve pronto!
-            </p>
-          </div>
+        {/* Footer message */}
+        <div className="mt-6 text-center">
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
+            Estamos creando más lecciones constantemente. ¡Vuelve pronto!
+          </p>
         </div>
       </div>
     </div>
