@@ -410,7 +410,7 @@ export default function Step5Division({ onComplete, isActive }: LessonStepProps)
               key={index}
               onClick={() => handleAnswer(option)}
               disabled={showFeedback}
-              aria-label={`Opción ${index + 1}: ${option > 0 ? '+' : ''}${option}`}
+              aria-label={`Opción ${index + 1}: ${option}`}
               className={cn(
                 'relative p-4 rounded-xl text-2xl font-bold transition-all shadow-md',
                 showFeedback && option === currentProblem.answer
@@ -425,7 +425,7 @@ export default function Step5Division({ onComplete, isActive }: LessonStepProps)
               <span className="absolute top-1 left-2 text-xs text-gray-400 font-normal">
                 {index + 1}
               </span>
-              {option > 0 ? `+${option}` : option}
+              {option}
             </button>
           ))}
         </div>
