@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ArrowLeft, ArrowRight, Clock, Lock, CheckCircle } from 'lucide-react';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
-import { M1_LESSONS } from '@/lib/lessons/types';
+import { M1_LESSONS, type Lesson } from '@/lib/lessons/types';
 import {
   getUnitsByLevelAndSubject,
   subjectFromSlug,
@@ -14,62 +14,59 @@ import {
   type ThematicUnitSummary,
 } from '@/lib/lessons/thematicUnits';
 
-interface UnitCardProps {
-  unit: ThematicUnitSummary;
+interface LessonCardProps {
+  lesson: Lesson;
   index: number;
-  availableLesson?: {
-    slug: string;
-    title: string;
-    description: string;
-    estimatedMinutes: number;
-  };
 }
 
-function UnitCard({ unit, index, availableLesson }: UnitCardProps) {
-  const isAvailable = !!availableLesson;
-
-  if (isAvailable) {
-    return (
-      <Link
-        href={`/lessons/${unit.level.toLowerCase()}/${availableLesson.slug}`}
-        className="block group"
-      >
-        <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-0.5 rounded-2xl">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 sm:p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-            <div className="flex items-center justify-between">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
-                  {index + 1}
+function LessonCard({ lesson, index }: LessonCardProps) {
+  return (
+    <Link
+      href={`/lessons/${lesson.level.toLowerCase()}/${lesson.slug}`}
+      className="block group"
+    >
+      <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-0.5 rounded-2xl">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 sm:p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+          <div className="flex items-center justify-between">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+                {index + 1}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                    {lesson.title}
+                  </h3>
+                  <CheckCircle className="text-green-500" size={18} />
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                      {availableLesson.title}
-                    </h3>
-                    <CheckCircle className="text-green-500" size={18} />
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
-                    {availableLesson.description}
-                  </p>
-                  <div className="flex items-center gap-4 mt-2">
-                    <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                      <Clock size={14} />
-                      {availableLesson.estimatedMinutes} min
-                    </span>
-                    <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">
-                      {unit.code}
-                    </span>
-                  </div>
+                <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
+                  {lesson.description}
+                </p>
+                <div className="flex items-center gap-4 mt-2">
+                  <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                    <Clock size={14} />
+                    {lesson.estimatedMinutes} min
+                  </span>
+                  <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">
+                    {lesson.thematicUnit}
+                  </span>
                 </div>
               </div>
-              <ArrowRight className="text-purple-500 group-hover:translate-x-1 transition-transform flex-shrink-0" size={24} />
             </div>
+            <ArrowRight className="text-purple-500 group-hover:translate-x-1 transition-transform flex-shrink-0" size={24} />
           </div>
         </div>
-      </Link>
-    );
-  }
+      </div>
+    </Link>
+  );
+}
 
+interface UpcomingUnitCardProps {
+  unit: ThematicUnitSummary;
+  index: number;
+}
+
+function UpcomingUnitCard({ unit, index }: UpcomingUnitCardProps) {
   return (
     <div className="bg-gray-100 dark:bg-gray-800/50 rounded-xl p-4 sm:p-5 opacity-75">
       <div className="flex items-center justify-between">
@@ -127,22 +124,16 @@ function UnitListContent() {
   const units = getUnitsByLevelAndSubject(levelParam, subject);
   const subjectLabel = SUBJECT_LABELS[subject];
 
-  // Find available lessons for each unit
-  const getAvailableLessonForUnit = (unitCode: string) => {
-    // M1_LESSONS have thematicUnit like 'M1-NUM-001'
-    const lesson = M1_LESSONS.find(l => l.thematicUnit === unitCode);
-    if (lesson) {
-      return {
-        slug: lesson.slug,
-        title: lesson.title,
-        description: lesson.description,
-        estimatedMinutes: lesson.estimatedMinutes,
-      };
-    }
-    return undefined;
-  };
+  // Get all available lessons for this level and subject
+  const availableLessons = M1_LESSONS.filter(
+    l => l.level === levelParam && l.subject === subject
+  );
 
-  const availableCount = units.filter(u => getAvailableLessonForUnit(u.code)).length;
+  // Get units that have at least one lesson
+  const unitsWithLessons = new Set(availableLessons.map(l => l.thematicUnit));
+
+  // Get units without any lessons (upcoming)
+  const upcomingUnits = units.filter(u => !unitsWithLessons.has(u.code));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -179,31 +170,58 @@ function UnitListContent() {
         {/* Stats */}
         <div className="text-center mb-8">
           <p className="text-gray-600 dark:text-gray-300">
-            {units.length} {units.length === 1 ? 'unidad temática' : 'unidades temáticas'}
-            {availableCount > 0 && (
-              <span className="text-green-600 dark:text-green-400 ml-2">
-                ({availableCount} disponible{availableCount !== 1 ? 's' : ''})
+            {availableLessons.length > 0 && (
+              <span className="text-green-600 dark:text-green-400">
+                {availableLessons.length} {availableLessons.length === 1 ? 'lección disponible' : 'lecciones disponibles'}
+              </span>
+            )}
+            {availableLessons.length > 0 && upcomingUnits.length > 0 && ' · '}
+            {upcomingUnits.length > 0 && (
+              <span className="text-gray-500 dark:text-gray-400">
+                {upcomingUnits.length} próximamente
               </span>
             )}
           </p>
         </div>
 
-        {/* Units List */}
-        <div className="space-y-4">
-          {units.map((unit, index) => (
-            <UnitCard
-              key={unit.code}
-              unit={unit}
-              index={index}
-              availableLesson={getAvailableLessonForUnit(unit.code)}
-            />
-          ))}
-        </div>
+        {/* Available Lessons */}
+        {availableLessons.length > 0 && (
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <CheckCircle className="text-green-500" size={20} />
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Disponibles
+              </h2>
+            </div>
+            <div className="space-y-4">
+              {availableLessons.map((lesson, index) => (
+                <LessonCard key={lesson.id} lesson={lesson} index={index} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Upcoming Units */}
+        {upcomingUnits.length > 0 && (
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Lock className="text-gray-400" size={20} />
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Próximamente
+              </h2>
+            </div>
+            <div className="space-y-3">
+              {upcomingUnits.map((unit, index) => (
+                <UpcomingUnitCard key={unit.code} unit={unit} index={index} />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Footer message */}
         <div className="mt-8 text-center">
           <p className="text-gray-500 dark:text-gray-400 text-sm">
-            Las lecciones bloqueadas estarán disponibles próximamente.
+            Estamos creando más lecciones constantemente. ¡Vuelve pronto!
           </p>
         </div>
       </div>
