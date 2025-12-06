@@ -196,11 +196,16 @@ export default function Step4Explain({ onComplete, isActive }: LessonStepProps) 
       </div>
 
       {/* Famous Pythagorean triples */}
-      <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4">
-        <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-3 text-center">
-          Ternas Pitagóricas Famosas
+      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 rounded-xl p-5 border border-indigo-200 dark:border-indigo-700">
+        <h4 className="font-bold text-indigo-800 dark:text-indigo-200 mb-2 text-center">
+          Ternas Pitagóricas: Tu Atajo Mental
         </h4>
-        <div className="flex flex-wrap justify-center gap-3">
+        <p className="text-sm text-indigo-700 dark:text-indigo-300 text-center mb-4">
+          Son grupos de 3 números enteros que <strong>siempre</strong> cumplen el teorema.
+          Si los memorizas, puedes resolver problemas <strong>sin calculadora</strong>.
+        </p>
+
+        <div className="flex flex-wrap justify-center gap-3 mb-4">
           {[
             { a: 3, b: 4, c: 5 },
             { a: 5, b: 12, c: 13 },
@@ -209,19 +214,30 @@ export default function Step4Explain({ onComplete, isActive }: LessonStepProps) 
           ].map((triple, i) => (
             <div
               key={i}
-              className="px-4 py-2 bg-white dark:bg-gray-700 rounded-lg shadow-sm"
+              className="px-4 py-2 bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-indigo-100 dark:border-indigo-800"
             >
-              <span className="text-blue-600 font-medium">{triple.a}</span>
+              <span className="text-blue-600 font-semibold">{triple.a}</span>
               <span className="text-gray-400 mx-1">-</span>
-              <span className="text-green-600 font-medium">{triple.b}</span>
+              <span className="text-green-600 font-semibold">{triple.b}</span>
               <span className="text-gray-400 mx-1">-</span>
-              <span className="text-amber-600 font-medium">{triple.c}</span>
+              <span className="text-amber-600 font-semibold">{triple.c}</span>
             </div>
           ))}
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">
-          Estos números siempre cumplen a² + b² = c²
-        </p>
+
+        {/* Example of using a triple */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+            <strong>Ejemplo:</strong> Si un triángulo tiene catetos de 6 y 8, ¿cuánto mide la hipotenusa?
+          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            <strong>Truco:</strong> 6 y 8 son el doble de <span className="text-blue-600 font-semibold">3</span> y <span className="text-green-600 font-semibold">4</span>.
+            Entonces la hipotenusa es el doble de <span className="text-amber-600 font-semibold">5</span> = <strong>10</strong>.
+          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+            Los múltiplos de una terna también son ternas: (6-8-10), (9-12-15), (12-16-20)...
+          </p>
+        </div>
       </div>
     </div>
   );
