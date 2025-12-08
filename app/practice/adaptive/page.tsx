@@ -55,6 +55,15 @@ const TOPIC_COLORS: Record<string, string> = {
   'surprise': 'from-gray-500 to-gray-600',
 };
 
+// Default topics - used as fallback if API fails
+const DEFAULT_TOPICS: Topic[] = [
+  { id: 'números', name: 'Números', type: 'subject' },
+  { id: 'álgebra', name: 'Álgebra y Funciones', type: 'subject' },
+  { id: 'geometría', name: 'Geometría', type: 'subject' },
+  { id: 'probabilidad', name: 'Probabilidades y Estadística', type: 'subject' },
+  { id: 'surprise', name: 'Sorpréndeme', type: 'subject' },
+];
+
 function TopicCard({
   topic,
   onSelect,
@@ -275,7 +284,7 @@ function ProblemDisplay({
 
 function AdaptivePracticeContent() {
   const [state, setState] = useState<AppState>('selecting');
-  const [topics, setTopics] = useState<Topic[]>([]);
+  const [topics, setTopics] = useState<Topic[]>(DEFAULT_TOPICS);
   const [selectedFocus, setSelectedFocus] = useState<string>('');
   const [currentProblem, setCurrentProblem] = useState<Problem | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -290,12 +299,18 @@ function AdaptivePracticeContent() {
   }, []);
 
   const loadTopics = async () => {
-    const response = await api.get<{ topics: Topic[] }>('/api/adaptive/topics');
-    if (response.data) {
-      setTopics([
-        ...response.data.topics,
-        { id: 'surprise', name: 'Sorpréndeme', type: 'subject' },
-      ]);
+    try {
+      const response = await api.get<{ topics: Topic[] }>('/api/adaptive/topics');
+      if (response.data?.topics) {
+        setTopics([
+          ...response.data.topics,
+          { id: 'surprise', name: 'Sorpréndeme', type: 'subject' },
+        ]);
+      }
+      // If API fails or returns no data, DEFAULT_TOPICS is already set
+    } catch (err) {
+      console.error('Failed to load topics, using defaults:', err);
+      // Keep DEFAULT_TOPICS
     }
   };
 
