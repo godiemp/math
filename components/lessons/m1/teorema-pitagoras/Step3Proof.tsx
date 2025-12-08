@@ -1,69 +1,93 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, RotateCcw, ChevronRight, Target } from 'lucide-react';
+import { ArrowRight, RotateCcw, ChevronRight, Target, Shuffle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 import MathDisplay from '@/components/math/MathDisplay';
 
-type ProofPhase = 'goal' | 'setup' | 'arrange1' | 'arrange2' | 'conclusion';
+type ProofPhase = 'goal' | 'setup' | 'arrange1' | 'rearrange' | 'arrange2' | 'conclusion';
 
-const PHASES: { id: ProofPhase; title: string; description: string }[] = [
-  {
-    id: 'goal',
-    title: 'Objetivo',
-    description: '¿Por qué a² + b² = c² funciona SIEMPRE?'
-  },
-  {
-    id: 'setup',
-    title: 'Preparación',
-    description: 'Construimos un cuadrado grande de lado (a + b)'
-  },
-  {
-    id: 'arrange1',
-    title: 'Primer arreglo',
-    description: '4 triángulos + cuadrado c² en el centro'
-  },
-  {
-    id: 'arrange2',
-    title: 'Segundo arreglo',
-    description: '4 triángulos + cuadrados a² y b²'
-  },
-  {
-    id: 'conclusion',
-    title: '¡Conclusión!',
-    description: 'Los mismos triángulos, diferente espacio libre'
-  },
+const PHASES: { id: ProofPhase; title: string }[] = [
+  { id: 'goal', title: 'Objetivo' },
+  { id: 'setup', title: 'Preparación' },
+  { id: 'arrange1', title: 'Arreglo 1' },
+  { id: 'rearrange', title: '¡Mover!' },
+  { id: 'arrange2', title: 'Arreglo 2' },
+  { id: 'conclusion', title: 'Conclusión' },
 ];
 
 export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
   const [currentPhase, setCurrentPhase] = useState<ProofPhase>('goal');
+  const [arrangement, setArrangement] = useState<1 | 2>(1);
+  const [isAnimating, setIsAnimating] = useState(false);
   const [showComplete, setShowComplete] = useState(false);
 
-  // Triangle dimensions (scaled for visualization)
-  const a = 50;
-  const b = 70;
-  const size = a + b; // 120
+  // Triangle dimensions for visualization
+  const a = 40; // shorter leg
+  const b = 60; // longer leg
+  const size = a + b; // 100
 
   const phaseIndex = PHASES.findIndex(p => p.id === currentPhase);
+
+  // Triangle colors - consistent across both arrangements
+  const colors = {
+    t1: { fill: '#3B82F6', stroke: '#1E40AF' }, // blue
+    t2: { fill: '#10B981', stroke: '#047857' }, // green
+    t3: { fill: '#F59E0B', stroke: '#B45309' }, // amber
+    t4: { fill: '#EF4444', stroke: '#B91C1C' }, // red
+  };
+
+  // Triangle positions for arrangement 1 (around c² center)
+  // Each triangle is defined by its 3 vertices
+  const arrangement1 = {
+    t1: `0,${size} ${b},${size} 0,${size - a}`,           // bottom-left
+    t2: `${b},${size} ${size},${size} ${size},${size - a}`, // bottom-right
+    t3: `${size},${size - a} ${size},0 ${size - b},0`,      // top-right
+    t4: `${size - b},0 0,0 0,${size - a}`,                  // top-left
+  };
+
+  // Triangle positions for arrangement 2 (in corners, leaving a² and b²)
+  const arrangement2 = {
+    t1: `0,0 ${b},0 0,${a}`,                    // top-left corner
+    t2: `${size},0 ${size},${a} ${b},${a}`,     // top-right area
+    t3: `0,${a} 0,${size} ${b},${size}`,        // bottom-left corner
+    t4: `${b},${size} ${size},${size} ${size},${a}`, // bottom-right area
+  };
 
   const handleNextPhase = () => {
     const nextIndex = phaseIndex + 1;
     if (nextIndex < PHASES.length) {
-      setCurrentPhase(PHASES[nextIndex].id);
+      const nextPhase = PHASES[nextIndex].id;
+      setCurrentPhase(nextPhase);
 
-      if (PHASES[nextIndex].id === 'conclusion') {
-        setTimeout(() => setShowComplete(true), 1000);
+      if (nextPhase === 'conclusion') {
+        setTimeout(() => setShowComplete(true), 1500);
       }
     }
   };
 
+  const handleRearrange = () => {
+    setIsAnimating(true);
+    setArrangement(2);
+    // Wait for animation to complete before allowing next
+    setTimeout(() => {
+      setIsAnimating(false);
+      setCurrentPhase('arrange2');
+    }, 1500);
+  };
+
   const handleReset = () => {
     setCurrentPhase('goal');
+    setArrangement(1);
     setShowComplete(false);
+    setIsAnimating(false);
   };
 
   if (!isActive) return null;
+
+  const showTriangles = currentPhase !== 'goal' && currentPhase !== 'setup';
+  const currentArrangement = arrangement === 1 ? arrangement1 : arrangement2;
 
   return (
     <div className="space-y-6 animate-fadeIn">
@@ -83,7 +107,7 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
           <div
             key={phase.id}
             className={cn(
-              'w-3 h-3 rounded-full transition-all',
+              'w-3 h-3 rounded-full transition-all duration-300',
               i === phaseIndex
                 ? 'bg-green-500 scale-125'
                 : i < phaseIndex
@@ -94,20 +118,16 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
         ))}
       </div>
 
-      {/* Current phase info */}
+      {/* Current phase title */}
       <div className="text-center">
         <span className="inline-block px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-sm font-medium">
           {PHASES[phaseIndex].title}
         </span>
-        <p className="text-gray-600 dark:text-gray-400 mt-2 font-medium">
-          {PHASES[phaseIndex].description}
-        </p>
       </div>
 
-      {/* Proof visualization */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg">
+      {/* Main visualization */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
         {currentPhase === 'goal' ? (
-          // Goal phase - no diagram yet
           <div className="flex flex-col items-center justify-center py-8">
             <Target className="w-16 h-16 text-green-500 mb-4" />
             <p className="text-lg text-gray-700 dark:text-gray-300 text-center max-w-md">
@@ -116,111 +136,221 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
             <p className="text-lg text-gray-700 dark:text-gray-300 text-center max-w-md mt-2">
               Ahora vamos a <strong>demostrar</strong> que funciona para <strong>TODOS</strong>.
             </p>
+            <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/30 rounded-lg">
+              <p className="text-sm text-green-700 dark:text-green-300 text-center">
+                <strong>La clave:</strong> misma área total, diferentes formas de llenarla
+              </p>
+            </div>
           </div>
-        ) : currentPhase === 'setup' ? (
-          // Setup phase - show empty square
-          <div className="flex justify-center">
-            <svg viewBox="-10 -10 160 160" className="w-full max-w-xs h-auto">
+        ) : (
+          <div className="flex flex-col items-center">
+            {/* SVG Canvas */}
+            <svg
+              viewBox={`-15 -25 ${size + 30} ${size + 40}`}
+              className="w-full max-w-sm h-auto"
+              style={{ minHeight: '280px' }}
+            >
+              {/* Dimension labels on top */}
+              {currentPhase === 'setup' && (
+                <>
+                  <line x1="0" y1="-12" x2={b} y2="-12" stroke="#10B981" strokeWidth="2" />
+                  <line x1={b} y1="-12" x2={size} y2="-12" stroke="#3B82F6" strokeWidth="2" />
+                  <text x={b / 2} y="-16" textAnchor="middle" className="text-xs font-bold fill-green-600">b</text>
+                  <text x={b + a / 2} y="-16" textAnchor="middle" className="text-xs font-bold fill-blue-600">a</text>
+                </>
+              )}
+
+              {/* Outer square */}
               <rect
                 x="0" y="0"
                 width={size} height={size}
-                fill="#F3F4F6"
-                stroke="#6B7280"
+                fill="#F9FAFB"
+                stroke="#9CA3AF"
                 strokeWidth="2"
+                className="dark:fill-gray-700"
               />
-              {/* Dimension labels */}
-              <text x={size / 2} y={-3} textAnchor="middle" className="text-xs fill-gray-500">a + b</text>
-              <text x={size + 5} y={size / 2} className="text-xs fill-gray-500">a + b</text>
 
-              {/* Side breakdown on top */}
-              <line x1="0" y1="-8" x2={b} y2="-8" stroke="#10B981" strokeWidth="2" />
-              <line x1={b} y1="-8" x2={size} y2="-8" stroke="#3B82F6" strokeWidth="2" />
-              <text x={b / 2} y="-12" textAnchor="middle" className="text-[10px] fill-green-600">b</text>
-              <text x={b + a / 2} y="-12" textAnchor="middle" className="text-[10px] fill-blue-600">a</text>
-            </svg>
-          </div>
-        ) : currentPhase === 'arrange1' || currentPhase === 'arrange2' || currentPhase === 'conclusion' ? (
-          // Show both arrangements side by side
-          <div className="flex justify-center items-center gap-4 flex-wrap">
-            {/* First arrangement */}
-            <div className={cn(
-              'flex flex-col items-center transition-opacity duration-500',
-              (currentPhase === 'arrange2' || currentPhase === 'conclusion') ? 'opacity-100' : 'opacity-100'
-            )}>
-              <span className="text-xs text-gray-500 mb-2">Arreglo 1</span>
-              <svg viewBox="-5 -5 130 130" className="w-32 h-32 md:w-40 md:h-40">
-                {/* Outer square */}
-                <rect x="0" y="0" width={size} height={size} fill="none" stroke="#9CA3AF" strokeWidth="1" />
-
-                {/* Four triangles around c² */}
-                <polygon points={`0,${size} ${b},${size} 0,${size - a}`} fill="#3B82F6" fillOpacity="0.7" stroke="#1E40AF" strokeWidth="1" />
-                <polygon points={`${b},${size} ${size},${size} ${size},${size - a}`} fill="#10B981" fillOpacity="0.7" stroke="#047857" strokeWidth="1" />
-                <polygon points={`${size},${size - a} ${size},0 ${size - b},0`} fill="#F59E0B" fillOpacity="0.7" stroke="#B45309" strokeWidth="1" />
-                <polygon points={`${size - b},0 0,0 0,${size - a}`} fill="#EF4444" fillOpacity="0.7" stroke="#B91C1C" strokeWidth="1" />
-
-                {/* Inner c² square */}
+              {/* Empty space highlighting */}
+              {arrangement === 1 && showTriangles && (
+                // c² square in center (tilted)
                 <polygon
                   points={`0,${size - a} ${b},${size} ${size},${size - a} ${size - b},0`}
                   fill="#8B5CF6"
-                  fillOpacity="0.3"
+                  fillOpacity="0.2"
                   stroke="#7C3AED"
                   strokeWidth="2"
+                  strokeDasharray="4"
+                  className={cn(
+                    'transition-opacity duration-500',
+                    (currentPhase === 'arrange1' || currentPhase === 'rearrange') ? 'opacity-100' : 'opacity-0'
+                  )}
                 />
-                <text x={size / 2} y={size / 2 + 4} textAnchor="middle" className="text-sm font-bold fill-purple-600">c²</text>
-              </svg>
-            </div>
+              )}
 
-            {/* Equals sign */}
-            {(currentPhase === 'arrange2' || currentPhase === 'conclusion') && (
-              <span className="text-3xl font-bold text-gray-400">=</span>
-            )}
+              {arrangement === 2 && showTriangles && (
+                // a² and b² squares
+                <>
+                  <rect
+                    x={b} y={0}
+                    width={a} height={a}
+                    fill="#3B82F6"
+                    fillOpacity="0.15"
+                    stroke="#3B82F6"
+                    strokeWidth="2"
+                    strokeDasharray="4"
+                    className="animate-pulse"
+                  />
+                  <rect
+                    x={0} y={a}
+                    width={b} height={b}
+                    fill="#10B981"
+                    fillOpacity="0.15"
+                    stroke="#10B981"
+                    strokeWidth="2"
+                    strokeDasharray="4"
+                    className="animate-pulse"
+                  />
+                </>
+              )}
 
-            {/* Second arrangement */}
-            {(currentPhase === 'arrange2' || currentPhase === 'conclusion') && (
-              <div className="flex flex-col items-center animate-fadeIn">
-                <span className="text-xs text-gray-500 mb-2">Arreglo 2</span>
-                <svg viewBox="-5 -5 130 130" className="w-32 h-32 md:w-40 md:h-40">
-                  {/* Outer square */}
-                  <rect x="0" y="0" width={size} height={size} fill="none" stroke="#9CA3AF" strokeWidth="1" />
+              {/* Four triangles with smooth transitions */}
+              {showTriangles && (
+                <>
+                  {/* Triangle 1 - Blue */}
+                  <g>
+                    <polygon
+                      points={currentArrangement.t1}
+                      fill={colors.t1.fill}
+                      fillOpacity="0.8"
+                      stroke={colors.t1.stroke}
+                      strokeWidth="2"
+                      className="transition-all duration-[1500ms] ease-in-out"
+                    />
+                    {/* Number label */}
+                    <text
+                      x={arrangement === 1 ? b / 3 : b / 3}
+                      y={arrangement === 1 ? size - a / 3 : a / 2}
+                      textAnchor="middle"
+                      className="text-xs font-bold fill-white"
+                    >
+                      1
+                    </text>
+                  </g>
 
-                  {/* Four triangles in corners */}
-                  <polygon points={`0,0 ${b},0 0,${a}`} fill="#3B82F6" fillOpacity="0.7" stroke="#1E40AF" strokeWidth="1" />
-                  <polygon points={`${b},0 ${b},${a} ${size},${a}`} fill="#10B981" fillOpacity="0.7" stroke="#047857" strokeWidth="1" />
-                  <polygon points={`0,${a} ${b},${a} 0,${size}`} fill="#F59E0B" fillOpacity="0.7" stroke="#B45309" strokeWidth="1" />
-                  <polygon points={`${b},${a} ${b},${size} ${size},${size}`} fill="#EF4444" fillOpacity="0.7" stroke="#B91C1C" strokeWidth="1" />
+                  {/* Triangle 2 - Green */}
+                  <g>
+                    <polygon
+                      points={currentArrangement.t2}
+                      fill={colors.t2.fill}
+                      fillOpacity="0.8"
+                      stroke={colors.t2.stroke}
+                      strokeWidth="2"
+                      className="transition-all duration-[1500ms] ease-in-out"
+                    />
+                    <text
+                      x={arrangement === 1 ? b + (size - b) * 2 / 3 : (b + size) / 2}
+                      y={arrangement === 1 ? size - a / 3 : a / 2}
+                      textAnchor="middle"
+                      className="text-xs font-bold fill-white"
+                    >
+                      2
+                    </text>
+                  </g>
 
-                  {/* a² square */}
-                  <rect x={b} y={0} width={a} height={a} fill="#3B82F6" fillOpacity="0.2" stroke="#1E40AF" strokeWidth="2" />
-                  <text x={b + a / 2} y={a / 2 + 4} textAnchor="middle" className="text-xs font-bold fill-blue-600">a²</text>
+                  {/* Triangle 3 - Amber */}
+                  <g>
+                    <polygon
+                      points={currentArrangement.t3}
+                      fill={colors.t3.fill}
+                      fillOpacity="0.8"
+                      stroke={colors.t3.stroke}
+                      strokeWidth="2"
+                      className="transition-all duration-[1500ms] ease-in-out"
+                    />
+                    <text
+                      x={arrangement === 1 ? size - b / 3 : b / 3}
+                      y={arrangement === 1 ? a / 2 : a + b / 2}
+                      textAnchor="middle"
+                      className="text-xs font-bold fill-white"
+                    >
+                      3
+                    </text>
+                  </g>
 
-                  {/* b² square */}
-                  <rect x={0} y={a} width={b} height={b} fill="#10B981" fillOpacity="0.2" stroke="#047857" strokeWidth="2" />
-                  <text x={b / 2} y={a + b / 2 + 4} textAnchor="middle" className="text-xs font-bold fill-green-600">b²</text>
-                </svg>
+                  {/* Triangle 4 - Red */}
+                  <g>
+                    <polygon
+                      points={currentArrangement.t4}
+                      fill={colors.t4.fill}
+                      fillOpacity="0.8"
+                      stroke={colors.t4.stroke}
+                      strokeWidth="2"
+                      className="transition-all duration-[1500ms] ease-in-out"
+                    />
+                    <text
+                      x={arrangement === 1 ? (size - b) / 2 : (b + size) / 2}
+                      y={arrangement === 1 ? a / 2 : a + (size - a) / 2}
+                      textAnchor="middle"
+                      className="text-xs font-bold fill-white"
+                    >
+                      4
+                    </text>
+                  </g>
+                </>
+              )}
+
+              {/* Empty space labels */}
+              {arrangement === 1 && showTriangles && currentPhase !== 'rearrange' && (
+                <text
+                  x={size / 2}
+                  y={size / 2 + 4}
+                  textAnchor="middle"
+                  className="text-lg font-bold fill-purple-600"
+                >
+                  c²
+                </text>
+              )}
+
+              {arrangement === 2 && showTriangles && (
+                <>
+                  <text
+                    x={b + a / 2}
+                    y={a / 2 + 4}
+                    textAnchor="middle"
+                    className="text-sm font-bold fill-blue-600"
+                  >
+                    a²
+                  </text>
+                  <text
+                    x={b / 2}
+                    y={a + b / 2 + 4}
+                    textAnchor="middle"
+                    className="text-sm font-bold fill-green-600"
+                  >
+                    b²
+                  </text>
+                </>
+              )}
+            </svg>
+
+            {/* Legend */}
+            {showTriangles && (
+              <div className="flex justify-center gap-3 mt-4 text-xs flex-wrap">
+                <div className="flex items-center gap-1">
+                  <div className="w-4 h-4 bg-blue-500 rounded flex items-center justify-center text-[8px] text-white font-bold">1</div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-4 h-4 bg-green-500 rounded flex items-center justify-center text-[8px] text-white font-bold">2</div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-4 h-4 bg-amber-500 rounded flex items-center justify-center text-[8px] text-white font-bold">3</div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-4 h-4 bg-red-500 rounded flex items-center justify-center text-[8px] text-white font-bold">4</div>
+                </div>
+                <span className="text-gray-500 dark:text-gray-400 ml-2">= 4 triángulos idénticos</span>
               </div>
             )}
-          </div>
-        ) : null}
-
-        {/* Legend */}
-        {(currentPhase !== 'goal' && currentPhase !== 'setup') && (
-          <div className="flex justify-center gap-3 mt-4 text-xs flex-wrap">
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 bg-blue-500 rounded" />
-              <span className="text-gray-600 dark:text-gray-400">Triángulo</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 bg-green-500 rounded" />
-              <span className="text-gray-600 dark:text-gray-400">Triángulo</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 bg-amber-500 rounded" />
-              <span className="text-gray-600 dark:text-gray-400">Triángulo</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 bg-red-500 rounded" />
-              <span className="text-gray-600 dark:text-gray-400">Triángulo</span>
-            </div>
           </div>
         )}
       </div>
@@ -228,68 +358,82 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
       {/* Explanation for current phase */}
       <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-6">
         {currentPhase === 'goal' && (
-          <div className="text-green-800 dark:text-green-200">
-            <p className="mb-2">
-              <strong>La idea clave:</strong> Vamos a usar los mismos 4 triángulos y
-              acomodarlos de dos formas diferentes dentro del mismo cuadrado grande.
-            </p>
+          <div className="text-green-800 dark:text-green-200 text-center">
             <p>
-              Si el espacio libre es diferente en cada arreglo, ¡eso nos dará la prueba!
+              Vamos a usar <strong>4 triángulos iguales</strong> y acomodarlos de <strong>dos formas diferentes</strong> dentro del mismo cuadrado grande.
             </p>
           </div>
         )}
+
         {currentPhase === 'setup' && (
-          <div className="text-green-800 dark:text-green-200">
-            <p className="mb-2">
-              Construimos un cuadrado grande de lado <strong>(a + b)</strong>.
+          <div className="text-green-800 dark:text-green-200 space-y-2">
+            <p>
+              Empezamos con un <strong>cuadrado grande</strong> de lado (a + b).
             </p>
             <p>
-              Ahora vamos a llenar este cuadrado con <strong>4 copias idénticas</strong> de nuestro triángulo rectángulo.
+              Su área es <MathDisplay latex="(a+b)^2" /> — sin importar cómo lo llenemos, siempre tendrá la misma área.
             </p>
           </div>
         )}
+
         {currentPhase === 'arrange1' && (
-          <div className="text-green-800 dark:text-green-200">
-            <p className="mb-2">
-              <strong>Primer arreglo:</strong> Colocamos los 4 triángulos rotados alrededor del centro.
-            </p>
-            <p>
-              El espacio vacío en el medio forma un <strong>cuadrado de lado c</strong> (la hipotenusa).
-            </p>
-            <p className="mt-2 font-medium">
-              Área vacía = c²
-            </p>
-          </div>
-        )}
-        {currentPhase === 'arrange2' && (
-          <div className="text-green-800 dark:text-green-200">
-            <p className="mb-2">
-              <strong>Segundo arreglo:</strong> Los MISMOS 4 triángulos, pero acomodados en las esquinas.
-            </p>
-            <p>
-              Ahora el espacio vacío son <strong>dos cuadrados</strong>: uno de lado <strong>a</strong> y otro de lado <strong>b</strong>.
-            </p>
-            <p className="mt-2 font-medium">
-              Área vacía = a² + b²
-            </p>
-          </div>
-        )}
-        {currentPhase === 'conclusion' && (
           <div className="text-green-800 dark:text-green-200 space-y-3">
             <p>
-              <strong>¡La prueba!</strong> Los dos arreglos usan el MISMO cuadrado grande y
-              los MISMOS 4 triángulos.
+              Colocamos <strong>4 copias idénticas</strong> del triángulo alrededor de los bordes.
             </p>
             <p>
-              Entonces el espacio vacío debe ser igual:
+              El <strong>espacio vacío</strong> en el centro forma un cuadrado de lado <strong>c</strong> (la hipotenusa).
             </p>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center">
-              <p className="text-gray-700 dark:text-gray-300 mb-2">
-                Espacio vacío en Arreglo 1 = Espacio vacío en Arreglo 2
-              </p>
-              <MathDisplay latex="c^2 = a^2 + b^2" displayMode />
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Área total del cuadrado grande:</p>
+              <MathDisplay latex="4 \times \frac{1}{2}ab + c^2 = (a+b)^2" />
             </div>
-            <p className="text-center font-bold text-lg">
+          </div>
+        )}
+
+        {currentPhase === 'rearrange' && (
+          <div className="text-green-800 dark:text-green-200 text-center space-y-3">
+            <p className="text-lg font-semibold">
+              ¿Qué pasa si movemos los mismos 4 triángulos a otras posiciones?
+            </p>
+            <p className="text-sm">
+              Observa los números — son los <strong>mismos triángulos</strong>, solo cambian de lugar.
+            </p>
+          </div>
+        )}
+
+        {currentPhase === 'arrange2' && (
+          <div className="text-green-800 dark:text-green-200 space-y-3">
+            <p>
+              ¡<strong>Mismos 4 triángulos</strong>, diferente espacio vacío!
+            </p>
+            <p>
+              Ahora quedan <strong>dos cuadrados</strong>: uno de lado <strong>a</strong> y otro de lado <strong>b</strong>.
+            </p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Área total (¡la misma!):</p>
+              <MathDisplay latex="4 \times \frac{1}{2}ab + a^2 + b^2 = (a+b)^2" />
+            </div>
+          </div>
+        )}
+
+        {currentPhase === 'conclusion' && (
+          <div className="text-green-800 dark:text-green-200 space-y-4">
+            <p className="text-center">
+              <strong>¡La prueba!</strong> Los dos arreglos tienen la <strong>misma área total</strong> y los <strong>mismos 4 triángulos</strong>.
+            </p>
+            <p className="text-center">
+              Entonces el <strong>espacio vacío</strong> debe ser igual:
+            </p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 space-y-2">
+              <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+                Espacio vacío en Arreglo 1 = Espacio vacío en Arreglo 2
+              </div>
+              <div className="text-center">
+                <MathDisplay latex="c^2 = a^2 + b^2" displayMode />
+              </div>
+            </div>
+            <p className="text-center font-bold text-lg text-green-700 dark:text-green-300">
               ¡El Teorema de Pitágoras queda demostrado!
             </p>
           </div>
@@ -309,13 +453,30 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
                 <span>Reiniciar</span>
               </button>
             )}
-            <button
-              onClick={handleNextPhase}
-              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
-            >
-              <span>Siguiente</span>
-              <ChevronRight size={18} />
-            </button>
+
+            {currentPhase === 'rearrange' ? (
+              <button
+                onClick={handleRearrange}
+                disabled={isAnimating}
+                className={cn(
+                  'flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all shadow-lg',
+                  isAnimating
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600'
+                )}
+              >
+                <Shuffle size={20} />
+                <span>{isAnimating ? 'Moviendo...' : '¡Mover Triángulos!'}</span>
+              </button>
+            ) : (
+              <button
+                onClick={handleNextPhase}
+                className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
+              >
+                <span>Siguiente</span>
+                <ChevronRight size={18} />
+              </button>
+            )}
           </>
         ) : showComplete && (
           <button

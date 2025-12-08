@@ -1,20 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Triangle, ArrowRight, Info } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowRight, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 import MathDisplay from '@/components/math/MathDisplay';
 
 export default function Step4Explain({ onComplete, isActive }: LessonStepProps) {
   const [selectedExample, setSelectedExample] = useState<'hypotenuse' | 'leg' | null>(null);
-
-  // Mark step as completed when it becomes active (no interaction required)
-  useEffect(() => {
-    if (isActive) {
-      onComplete();
-    }
-  }, [isActive, onComplete]);
 
   if (!isActive) return null;
 
@@ -238,6 +231,17 @@ export default function Step4Explain({ onComplete, isActive }: LessonStepProps) 
             Los múltiplos de una terna también son ternas: (6-8-10), (9-12-15), (12-16-20)...
           </p>
         </div>
+      </div>
+
+      {/* Continue button */}
+      <div className="flex justify-center pt-4">
+        <button
+          onClick={onComplete}
+          className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
+        >
+          <span>Continuar a Practicar</span>
+          <ArrowRight size={20} />
+        </button>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Check, X, ArrowRight, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import MathDisplay from '@/components/math/MathDisplay';
 
 export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<'yes' | 'no' | null>(null);
@@ -58,20 +59,20 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
             {/* Wall (building) */}
             <rect x="200" y="40" width="120" height="180" fill="#F3F4F6" stroke="#D1D5DB" strokeWidth="2" />
-            <rect x="220" y="60" width="30" height="40" fill="#93C5FD" stroke="#60A5FA" strokeWidth="1" />
-            <rect x="270" y="60" width="30" height="40" fill="#93C5FD" stroke="#60A5FA" strokeWidth="1" />
+            <rect x="220" y="120" width="30" height="40" fill="#93C5FD" stroke="#60A5FA" strokeWidth="1" />
+            <rect x="270" y="120" width="30" height="40" fill="#93C5FD" stroke="#60A5FA" strokeWidth="1" />
 
-            {/* Target window */}
-            <rect x="220" y="120" width="30" height="40" fill="#FEF3C7" stroke="#F59E0B" strokeWidth="2" />
-            <line x1="235" y1="120" x2="235" y2="160" stroke="#F59E0B" strokeWidth="1" />
-            <line x1="220" y1="140" x2="250" y2="140" stroke="#F59E0B" strokeWidth="1" />
+            {/* Target window - positioned where ladder reaches (y=60) */}
+            <rect x="220" y="60" width="30" height="40" fill="#FEF3C7" stroke="#F59E0B" strokeWidth="2" />
+            <line x1="235" y1="60" x2="235" y2="100" stroke="#F59E0B" strokeWidth="1" />
+            <line x1="220" y1="80" x2="250" y2="80" stroke="#F59E0B" strokeWidth="1" />
 
             {/* Window label */}
-            <text x="235" y="115" textAnchor="middle" className="text-xs fill-amber-600 font-bold">
+            <text x="235" y="55" textAnchor="middle" className="text-xs fill-amber-600 font-bold">
               Ventana
             </text>
 
-            {/* Wall height measurement */}
+            {/* Wall height measurement - from window (y=60) to ground (y=220) = 160px = 4m */}
             <line x1="195" y1="60" x2="195" y2="220" stroke="#8B5CF6" strokeWidth="2" strokeDasharray="5,3" />
             <text x="175" y="145" textAnchor="middle" className="text-sm fill-purple-600 font-bold">
               {wallHeight}m
@@ -221,11 +222,31 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   {isCorrect ? '¡Correcto!' : '¡Casi!'}
                 </h3>
                 <p className="text-gray-700 dark:text-gray-300">
-                  <strong>Sí, la escalera alcanza exactamente.</strong> Pero, ¿cómo podemos estar seguros sin medirlo físicamente?
+                  <strong>Sí, la escalera alcanza exactamente.</strong> Pero, ¿cómo lo sabemos sin medirlo físicamente?
                 </p>
-                <p className="text-gray-600 dark:text-gray-400 mt-2">
-                  Existe una fórmula matemática que nos permite saberlo: el <strong>Teorema de Pitágoras</strong>.
-                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Calculation reveal */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700">
+            <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-4 text-center">
+              ¿Cómo lo sabemos?
+            </h4>
+            <div className="space-y-3 text-center">
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
+                Hay una relación especial entre los tres lados:
+              </p>
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 rounded-lg p-4">
+                <div className="space-y-2">
+                  <MathDisplay latex={`${distanceFromWall}^2 + ${wallHeight}^2 = ${distanceFromWall * distanceFromWall} + ${wallHeight * wallHeight} = ${distanceFromWall * distanceFromWall + wallHeight * wallHeight}`} />
+                  <MathDisplay latex={`${ladderLength}^2 = ${ladderLength * ladderLength}`} />
+                </div>
+                <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+                  <p className="text-green-700 dark:text-green-300 font-bold">
+                    ¡Son iguales! <MathDisplay latex={`${distanceFromWall * distanceFromWall + wallHeight * wallHeight} = ${ladderLength * ladderLength}`} />
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -234,7 +255,10 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-6 border border-purple-200 dark:border-purple-700">
             <p className="text-purple-800 dark:text-purple-200 font-medium">
               Esta situación forma un <strong>triángulo rectángulo</strong> (tiene un ángulo de 90°).
-              Vamos a descubrir una relación mágica entre sus tres lados.
+              La relación que acabas de ver es el <strong>Teorema de Pitágoras</strong>.
+            </p>
+            <p className="text-purple-700 dark:text-purple-300 mt-2 text-sm">
+              Vamos a descubrir por qué siempre funciona.
             </p>
           </div>
 
