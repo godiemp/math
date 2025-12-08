@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { UnifiedLatexRenderer } from '@/components/math/MathDisplay';
 import { api } from '@/lib/api-client';
+import { getQuestionsBySubject, questions as allQuestions } from '@/lib/questions';
+import type { Question } from '@/lib/types/core';
 
 // ============================================================================
 // Types
@@ -16,24 +18,13 @@ interface Topic {
   type: 'subject' | 'unit';
 }
 
-interface Problem {
-  id: string;
-  question: string;
-  questionLatex: string | null;
-  options: string[];
-  optionsLatex: string[] | null;
-  difficulty: string;
-  subject: string;
-  unit: string;
-  skills: string[];
-}
-
 interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
 }
 
 type AppState = 'selecting' | 'practicing' | 'loading';
+type Subject = 'números' | 'álgebra' | 'geometría' | 'probabilidad';
 
 // ============================================================================
 // Topic Card Component
@@ -55,7 +46,7 @@ const TOPIC_COLORS: Record<string, string> = {
   'surprise': 'from-gray-500 to-gray-600',
 };
 
-// Default topics - used as fallback if API fails
+// Default topics
 const DEFAULT_TOPICS: Topic[] = [
   { id: 'números', name: 'Números', type: 'subject' },
   { id: 'álgebra', name: 'Álgebra y Funciones', type: 'subject' },
@@ -190,18 +181,20 @@ function ProblemDisplay({
   selectedAnswer,
   onSelectAnswer,
   onSubmit,
+  onNext,
   feedback,
   showExplanation,
 }: {
-  problem: Problem;
+  problem: Question;
   selectedAnswer: number | null;
   onSelectAnswer: (index: number) => void;
   onSubmit: () => void;
+  onNext: () => void;
   feedback: { correct: boolean; message: string; explanation?: string } | null;
   showExplanation: boolean;
 }) {
-  const questionContent = problem.questionLatex || problem.question;
-  const options = problem.optionsLatex || problem.options;
+  const questionContent = problem.questionLatex;
+  const options = problem.options;
 
   return (
     <div className="bg-white/10 rounded-xl p-6 border border-white/20">
@@ -259,23 +252,50 @@ function ProblemDisplay({
           Verificar Respuesta
         </button>
       ) : (
-        <div className={`p-4 rounded-xl ${feedback.correct ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
-          <p className={`font-bold ${feedback.correct ? 'text-green-300' : 'text-red-300'}`}>
-            {feedback.correct ? '¡Correcto!' : 'Incorrecto'}
-          </p>
-          <p className="text-white/80 text-sm mt-1">{feedback.message}</p>
-          {showExplanation && feedback.explanation && (
-            <div className="mt-3 pt-3 border-t border-white/20">
-              <p className="text-white/60 text-xs mb-1">Explicación:</p>
-              <div className="text-white/80 text-sm">
-                <UnifiedLatexRenderer content={feedback.explanation} />
+        <div>
+          <div className={`p-4 rounded-xl mb-4 ${feedback.correct ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
+            <p className={`font-bold ${feedback.correct ? 'text-green-300' : 'text-red-300'}`}>
+              {feedback.correct ? '¡Correcto!' : 'Incorrecto'}
+            </p>
+            <p className="text-white/80 text-sm mt-1">{feedback.message}</p>
+            {showExplanation && feedback.explanation && (
+              <div className="mt-3 pt-3 border-t border-white/20">
+                <p className="text-white/60 text-xs mb-1">Explicación:</p>
+                <div className="text-white/80 text-sm">
+                  <UnifiedLatexRenderer content={feedback.explanation} />
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+          <button
+            onClick={onNext}
+            className="w-full py-3 rounded-xl bg-white/20 text-white font-bold hover:bg-white/30 transition-all"
+          >
+            Siguiente Problema →
+          </button>
         </div>
       )}
     </div>
   );
+}
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+function getRandomQuestion(focus: string): Question | null {
+  let pool: Question[];
+
+  if (focus === 'surprise') {
+    pool = allQuestions;
+  } else {
+    pool = getQuestionsBySubject(focus as Subject);
+  }
+
+  if (pool.length === 0) return null;
+
+  const randomIndex = Math.floor(Math.random() * pool.length);
+  return pool[randomIndex];
 }
 
 // ============================================================================
@@ -284,52 +304,25 @@ function ProblemDisplay({
 
 function AdaptivePracticeContent() {
   const [state, setState] = useState<AppState>('selecting');
-  const [topics, setTopics] = useState<Topic[]>(DEFAULT_TOPICS);
+  const [topics] = useState<Topic[]>(DEFAULT_TOPICS);
   const [selectedFocus, setSelectedFocus] = useState<string>('');
-  const [currentProblem, setCurrentProblem] = useState<Problem | null>(null);
+  const [currentProblem, setCurrentProblem] = useState<Question | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<{ correct: boolean; message: string; explanation?: string } | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [isChatLoading, setIsChatLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Load topics on mount
-  useEffect(() => {
-    loadTopics();
-  }, []);
-
-  const loadTopics = async () => {
-    try {
-      const response = await api.get<{ topics: Topic[] }>('/api/adaptive/topics');
-      if (response.data?.topics) {
-        setTopics([
-          ...response.data.topics,
-          { id: 'surprise', name: 'Sorpréndeme', type: 'subject' },
-        ]);
-      }
-      // If API fails or returns no data, DEFAULT_TOPICS is already set
-    } catch (err) {
-      console.error('Failed to load topics, using defaults:', err);
-      // Keep DEFAULT_TOPICS
-    }
-  };
-
-  const startPractice = async (focus: string) => {
+  const startPractice = (focus: string) => {
     setState('loading');
     setSelectedFocus(focus);
     setError(null);
     setChatMessages([]);
 
-    const response = await api.post<{ problem: Problem; focus: string }>('/api/adaptive/start', { focus });
+    const problem = getRandomQuestion(focus);
 
-    if (response.error) {
-      setError(response.error.error);
-      setState('selecting');
-      return;
-    }
-
-    if (response.data?.problem) {
-      setCurrentProblem(response.data.problem);
+    if (problem) {
+      setCurrentProblem(problem);
       setSelectedAnswer(null);
       setFeedback(null);
       setState('practicing');
@@ -339,36 +332,25 @@ function AdaptivePracticeContent() {
     }
   };
 
-  const handleSubmitAnswer = async () => {
+  const handleSubmitAnswer = () => {
     if (!currentProblem || selectedAnswer === null) return;
 
-    const response = await api.post<{
-      correct: boolean;
-      feedback: string;
-      explanation?: string;
-      nextProblem?: Problem;
-    }>('/api/adaptive/submit', {
-      problemId: currentProblem.id,
-      answer: selectedAnswer,
-      focus: selectedFocus,
+    const correct = selectedAnswer === currentProblem.correctAnswer;
+
+    setFeedback({
+      correct,
+      message: correct ? '¡Muy bien!' : 'Revisa la explicación e intenta el siguiente.',
+      explanation: correct ? undefined : currentProblem.explanation,
     });
+  };
 
-    if (response.data) {
-      setFeedback({
-        correct: response.data.correct,
-        message: response.data.feedback,
-        explanation: response.data.explanation,
-      });
-
-      // Auto-advance to next problem after delay
-      setTimeout(() => {
-        if (response.data?.nextProblem) {
-          setCurrentProblem(response.data.nextProblem);
-          setSelectedAnswer(null);
-          setFeedback(null);
-          setChatMessages([]);
-        }
-      }, response.data.correct ? 1500 : 3000);
+  const handleNextProblem = () => {
+    const problem = getRandomQuestion(selectedFocus);
+    if (problem) {
+      setCurrentProblem(problem);
+      setSelectedAnswer(null);
+      setFeedback(null);
+      setChatMessages([]);
     }
   };
 
@@ -378,27 +360,34 @@ function AdaptivePracticeContent() {
     setChatMessages((prev) => [...prev, { role: 'user', content: message }]);
     setIsChatLoading(true);
 
-    // We need to send the full problem data for the hint
-    const problemForHint = {
-      ...currentProblem,
-      // These fields are stripped from the API response but needed for hints
-      correctAnswer: -1, // We don't have this on client, backend will look it up
-    };
+    try {
+      const response = await api.post<{ hint: string }>('/api/adaptive/hint', {
+        problem: {
+          id: currentProblem.id,
+          question: currentProblem.questionLatex,
+          options: currentProblem.options,
+          subject: currentProblem.subject,
+          difficulty: currentProblem.difficulty,
+        },
+        studentMessage: message,
+        conversationHistory: chatMessages,
+      });
 
-    const response = await api.post<{ hint: string }>('/api/adaptive/hint', {
-      problem: currentProblem,
-      studentMessage: message,
-      conversationHistory: chatMessages,
-    });
+      setIsChatLoading(false);
 
-    setIsChatLoading(false);
-
-    if (response.data?.hint) {
-      setChatMessages((prev) => [...prev, { role: 'assistant', content: response.data!.hint }]);
-    } else {
+      if (response.data?.hint) {
+        setChatMessages((prev) => [...prev, { role: 'assistant', content: response.data!.hint }]);
+      } else {
+        setChatMessages((prev) => [
+          ...prev,
+          { role: 'assistant', content: 'Lo siento, hubo un error. Intenta de nuevo.' },
+        ]);
+      }
+    } catch (err) {
+      setIsChatLoading(false);
       setChatMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: 'Lo siento, hubo un error. Intenta de nuevo.' },
+        { role: 'assistant', content: 'Lo siento, hubo un error de conexión. Intenta de nuevo.' },
       ]);
     }
   };
@@ -438,7 +427,7 @@ function AdaptivePracticeContent() {
               href="/dashboard"
               className="text-white/80 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/10 inline-block text-sm font-semibold"
             >
-              &larr; Volver al Inicio
+              ← Volver al Inicio
             </Link>
           </div>
 
@@ -475,7 +464,7 @@ function AdaptivePracticeContent() {
             onClick={handleChangeTopic}
             className="text-white/80 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/10 text-sm font-semibold"
           >
-            &larr; Cambiar tema
+            ← Cambiar tema
           </button>
           <div className="flex items-center gap-2">
             <span className="text-2xl">{TOPIC_EMOJIS[selectedFocus] || '📚'}</span>
@@ -495,6 +484,7 @@ function AdaptivePracticeContent() {
                 selectedAnswer={selectedAnswer}
                 onSelectAnswer={setSelectedAnswer}
                 onSubmit={handleSubmitAnswer}
+                onNext={handleNextProblem}
                 feedback={feedback}
                 showExplanation={!feedback?.correct}
               />
