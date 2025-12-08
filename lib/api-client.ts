@@ -177,7 +177,8 @@ export async function apiRequest<T>(
   let backendUrl = await getApiUrl();
 
   // Ensure URL has protocol (defensive fix for misconfigured env vars)
-  if (backendUrl && !backendUrl.startsWith('http://') && !backendUrl.startsWith('https://')) {
+  // Skip for relative URLs (proxy) which start with '/'
+  if (backendUrl && !backendUrl.startsWith('/') && !backendUrl.startsWith('http://') && !backendUrl.startsWith('https://')) {
     console.warn('⚠️  Backend URL missing protocol, adding https://', backendUrl);
     backendUrl = `https://${backendUrl}`;
   }
