@@ -110,6 +110,8 @@ async function proxyRequest(
   }
 
   try {
+    console.log(`[Proxy] ${request.method} ${url.toString()}`);
+
     // Forward the request to the backend
     const response = await fetch(url.toString(), {
       method: request.method,
@@ -118,6 +120,8 @@ async function proxyRequest(
       // Don't follow redirects - let the client handle them
       redirect: 'manual',
     });
+
+    console.log(`[Proxy] Response: ${response.status} ${response.statusText}`);
 
     // Build response headers
     const responseHeaders = new Headers();
@@ -133,19 +137,25 @@ async function proxyRequest(
       }
     });
 
-    // Get response body
-    const responseBody = await response.arrayBuffer();
+    // Get response body as text first to inspect it
+    const responseText = await response.text();
 
-    return new NextResponse(responseBody, {
+    // Log response details for debugging
+    if (!response.ok) {
+      console.log(`[Proxy] Error response body: ${responseText.substring(0, 500)}`);
+    }
+
+    // Return the response with the body
+    return new NextResponse(responseText, {
       status: response.status,
       statusText: response.statusText,
       headers: responseHeaders,
     });
   } catch (error) {
-    console.error('Backend proxy error:', error);
-    console.error('Target URL:', url.toString());
+    console.error('[Proxy] Backend proxy error:', error);
+    console.error('[Proxy] Target URL:', url.toString());
     return NextResponse.json(
-      { error: 'Failed to connect to backend' },
+      { error: 'Failed to connect to backend', details: String(error) },
       { status: 502 }
     );
   }
