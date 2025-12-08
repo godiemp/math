@@ -4,6 +4,21 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./i18n.ts');
 
+// Determine backend URL based on environment
+function getBackendUrl(): string {
+  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+  if (process.env.NEXT_PUBLIC_RAILWAY_URL) return process.env.NEXT_PUBLIC_RAILWAY_URL;
+
+  // For PR preview deployments
+  const prNumber = process.env.VERCEL_GIT_PULL_REQUEST_ID;
+  if (process.env.VERCEL_ENV === 'preview' && prNumber) {
+    return `https://paes-math-backend-math-pr-${prNumber}.up.railway.app`;
+  }
+
+  // Production backend
+  return 'https://paes-math-backend-production.up.railway.app';
+}
+
 const nextConfig: NextConfig = {
   /* config options here */
   env: {
@@ -11,6 +26,19 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID: process.env.VERCEL_GIT_PULL_REQUEST_ID || '',
   },
   // Instrumentation is enabled by default in Next.js 15
+
+  // Proxy API requests to backend - fixes Safari ITP cookie blocking
+  async rewrites() {
+    const backendUrl = getBackendUrl();
+    console.log('[Next.js Config] Backend URL for rewrites:', backendUrl);
+
+    return [
+      {
+        source: '/api/backend/:path*',
+        destination: `${backendUrl}/:path*`,
+      },
+    ];
+  },
 };
 
 const configWithIntl = withNextIntl(nextConfig);
