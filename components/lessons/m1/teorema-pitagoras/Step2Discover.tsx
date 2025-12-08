@@ -52,9 +52,10 @@ export default function Step2Discover({ onComplete, isActive }: LessonStepProps)
 
   if (!isActive) return null;
 
-  // Scale for squares visualization (normalize to fit nicely)
-  const maxArea = Math.max(areaA, areaB, areaC);
-  const squareScale = 80 / Math.sqrt(maxArea);
+  // Scale for squares visualization - proportional to side lengths
+  // Use the hypotenuse (c) as the reference for max size
+  const maxSide = triangle.c;
+  const squareScale = 80 / maxSide; // c² square will be 80x80px
 
   return (
     <div className="space-y-6 animate-fadeIn">
@@ -100,38 +101,63 @@ export default function Step2Discover({ onComplete, isActive }: LessonStepProps)
       {/* Main visualization - Side by side layout */}
       <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
         <div className="grid md:grid-cols-2 gap-8 items-center">
-          {/* Left: Triangle */}
+          {/* Left: Triangle - proportional to actual side lengths */}
           <div className="flex flex-col items-center">
             <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-4">
               Triángulo Rectángulo
             </h3>
-            <svg viewBox="0 0 160 140" className="w-full max-w-[200px] h-auto">
-              {/* Triangle */}
-              <polygon
-                points="20,120 140,120 20,30"
-                fill="#F0FDF4"
-                stroke="#059669"
-                strokeWidth="3"
-              />
-              {/* Right angle marker */}
-              <path
-                d="M 20,105 L 35,105 L 35,120"
-                fill="none"
-                stroke="#6B7280"
-                strokeWidth="2"
-              />
-              {/* Side a (vertical) */}
-              <line x1="20" y1="30" x2="20" y2="120" stroke="#3B82F6" strokeWidth="4" />
-              <text x="8" y="80" className="text-sm font-bold fill-blue-600">a</text>
+            {(() => {
+              // Calculate proportional triangle dimensions
+              // Use the larger of a or b as the reference for scaling
+              const maxCateto = Math.max(triangle.a, triangle.b);
+              const triScale = 100 / maxCateto; // Scale to fit in ~100px
+              const scaledA = triangle.a * triScale; // Vertical side
+              const scaledB = triangle.b * triScale; // Horizontal side
 
-              {/* Side b (horizontal) */}
-              <line x1="20" y1="120" x2="140" y2="120" stroke="#10B981" strokeWidth="4" />
-              <text x="80" y="135" textAnchor="middle" className="text-sm font-bold fill-green-600">b</text>
+              // SVG coordinates: origin at bottom-left corner of triangle
+              const padding = 25;
+              const bottomY = padding + scaledA;
+              const rightX = padding + scaledB;
 
-              {/* Side c (hypotenuse) */}
-              <line x1="20" y1="30" x2="140" y2="120" stroke="#F59E0B" strokeWidth="4" />
-              <text x="90" y="65" className="text-sm font-bold fill-amber-600">c</text>
-            </svg>
+              // Triangle points: bottom-left, bottom-right, top-left
+              const p1 = `${padding},${bottomY}`; // Bottom-left (right angle)
+              const p2 = `${rightX},${bottomY}`; // Bottom-right
+              const p3 = `${padding},${padding}`; // Top-left
+
+              return (
+                <svg
+                  viewBox={`0 0 ${rightX + padding} ${bottomY + 20}`}
+                  className="w-full max-w-[200px] h-auto"
+                  style={{ minHeight: '120px' }}
+                >
+                  {/* Triangle */}
+                  <polygon
+                    points={`${p1} ${p2} ${p3}`}
+                    fill="#F0FDF4"
+                    stroke="#059669"
+                    strokeWidth="3"
+                  />
+                  {/* Right angle marker */}
+                  <path
+                    d={`M ${padding},${bottomY - 15} L ${padding + 15},${bottomY - 15} L ${padding + 15},${bottomY}`}
+                    fill="none"
+                    stroke="#6B7280"
+                    strokeWidth="2"
+                  />
+                  {/* Side a (vertical) */}
+                  <line x1={padding} y1={padding} x2={padding} y2={bottomY} stroke="#3B82F6" strokeWidth="4" />
+                  <text x={padding - 12} y={(padding + bottomY) / 2} className="text-sm font-bold fill-blue-600">a</text>
+
+                  {/* Side b (horizontal) */}
+                  <line x1={padding} y1={bottomY} x2={rightX} y2={bottomY} stroke="#10B981" strokeWidth="4" />
+                  <text x={(padding + rightX) / 2} y={bottomY + 15} textAnchor="middle" className="text-sm font-bold fill-green-600">b</text>
+
+                  {/* Side c (hypotenuse) */}
+                  <line x1={padding} y1={padding} x2={rightX} y2={bottomY} stroke="#F59E0B" strokeWidth="4" />
+                  <text x={(padding + rightX) / 2 + 10} y={(padding + bottomY) / 2 - 5} className="text-sm font-bold fill-amber-600">c</text>
+                </svg>
+              );
+            })()}
 
             {/* Side values */}
             <div className="flex gap-4 mt-4 text-sm">
@@ -156,8 +182,8 @@ export default function Step2Discover({ onComplete, isActive }: LessonStepProps)
                     showAreas ? 'opacity-100' : 'opacity-30'
                   )}
                   style={{
-                    width: Math.sqrt(areaA) * squareScale,
-                    height: Math.sqrt(areaA) * squareScale,
+                    width: triangle.a * squareScale,
+                    height: triangle.a * squareScale,
                   }}
                 />
                 <span className="text-xs text-blue-600 font-semibold mt-1">a²</span>
@@ -180,8 +206,8 @@ export default function Step2Discover({ onComplete, isActive }: LessonStepProps)
                     showAreas ? 'opacity-100' : 'opacity-30'
                   )}
                   style={{
-                    width: Math.sqrt(areaB) * squareScale,
-                    height: Math.sqrt(areaB) * squareScale,
+                    width: triangle.b * squareScale,
+                    height: triangle.b * squareScale,
                   }}
                 />
                 <span className="text-xs text-green-600 font-semibold mt-1">b²</span>
@@ -204,8 +230,8 @@ export default function Step2Discover({ onComplete, isActive }: LessonStepProps)
                     showAreas ? 'opacity-100' : 'opacity-30'
                   )}
                   style={{
-                    width: Math.sqrt(areaC) * squareScale,
-                    height: Math.sqrt(areaC) * squareScale,
+                    width: triangle.c * squareScale,
+                    height: triangle.c * squareScale,
                   }}
                 />
                 <span className="text-xs text-amber-600 font-semibold mt-1">c²</span>
