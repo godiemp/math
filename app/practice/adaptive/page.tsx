@@ -113,13 +113,13 @@ function ChatPanel({
   };
 
   return (
-    <div className="flex flex-col h-full bg-white/10 rounded-xl border border-white/20">
-      <div className="p-3 border-b border-white/20">
+    <div className="flex flex-col h-[500px] bg-white/10 rounded-xl border border-white/20">
+      <div className="p-3 border-b border-white/20 flex-shrink-0">
         <h3 className="font-semibold text-white">Tutor AI</h3>
         <p className="text-xs text-white/60">Pregunta si necesitas ayuda</p>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-3 space-y-3 min-h-0">
+      <div className="flex-1 overflow-y-auto p-3 space-y-3">
         {messages.length === 0 && (
           <div className="text-center text-white/50 text-sm py-4">
             Escribe tu pregunta o lo que has intentado
@@ -134,7 +134,9 @@ function ChatPanel({
                 : 'bg-white/20 mr-4'
             }`}
           >
-            <p className="text-white whitespace-pre-wrap">{msg.content}</p>
+            <div className="text-white">
+              <UnifiedLatexRenderer content={msg.content} />
+            </div>
           </div>
         ))}
         {isLoading && (
@@ -149,7 +151,7 @@ function ChatPanel({
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={handleSubmit} className="p-3 border-t border-white/20">
+      <form onSubmit={handleSubmit} className="p-3 border-t border-white/20 flex-shrink-0">
         <div className="flex gap-2">
           <input
             type="text"
@@ -492,7 +494,7 @@ function AdaptivePracticeContent() {
           </div>
 
           {/* Chat area - 1 column */}
-          <div className="lg:col-span-1 h-[500px] lg:h-auto">
+          <div className="lg:col-span-1">
             <ChatPanel
               messages={chatMessages}
               onSendMessage={handleSendChatMessage}
