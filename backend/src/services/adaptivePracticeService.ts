@@ -212,6 +212,75 @@ ${request.problem.options.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt
 }
 
 // ============================================================================
+// Save Individual Attempt
+// ============================================================================
+
+export interface AttemptData {
+  questionId: string;
+  subject: string;
+  topic: string;
+  difficulty: string;
+  userAnswer: number;
+  correctAnswer: number;
+  isCorrect: boolean;
+  skills: string[];
+  hintUsed: boolean;
+  question: string;
+  options: string[];
+  explanation: string;
+}
+
+export async function saveAttempt(
+  userId: string,
+  attempt: AttemptData
+): Promise<void> {
+  const query = `
+    INSERT INTO quiz_attempts (
+      user_id,
+      quiz_session_id,
+      question_id,
+      level,
+      topic,
+      subject,
+      question,
+      options,
+      user_answer,
+      correct_answer,
+      is_correct,
+      difficulty,
+      explanation,
+      skills,
+      attempted_at
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+  `;
+
+  // Normalize difficulty to match constraint
+  const normalizedDifficulty = ['easy', 'medium', 'hard'].includes(attempt.difficulty)
+    ? attempt.difficulty
+    : 'medium';
+
+  const values = [
+    userId,
+    null, // quiz_session_id - adaptive doesn't use sessions
+    attempt.questionId,
+    'M2', // level - adaptive defaults to M2
+    attempt.topic || attempt.subject,
+    attempt.subject,
+    attempt.question,
+    JSON.stringify(attempt.options),
+    attempt.userAnswer,
+    attempt.correctAnswer,
+    attempt.isCorrect,
+    normalizedDifficulty,
+    attempt.explanation || '',
+    JSON.stringify(attempt.skills || []),
+    Date.now(),
+  ];
+
+  await pool.query(query, values);
+}
+
+// ============================================================================
 // Answer Submission
 // ============================================================================
 

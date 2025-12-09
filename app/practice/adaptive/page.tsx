@@ -334,7 +334,7 @@ function AdaptivePracticeContent() {
     }
   };
 
-  const handleSubmitAnswer = () => {
+  const handleSubmitAnswer = async () => {
     if (!currentProblem || selectedAnswer === null) return;
 
     const correct = selectedAnswer === currentProblem.correctAnswer;
@@ -344,6 +344,27 @@ function AdaptivePracticeContent() {
       message: correct ? '¡Muy bien!' : 'Revisa la explicación e intenta el siguiente.',
       explanation: correct ? undefined : currentProblem.explanation,
     });
+
+    // Save attempt to backend (fire-and-forget)
+    try {
+      await api.post('/api/adaptive/attempt', {
+        questionId: currentProblem.id,
+        subject: currentProblem.subject,
+        topic: currentProblem.topic || currentProblem.subject,
+        difficulty: currentProblem.difficulty,
+        userAnswer: selectedAnswer,
+        correctAnswer: currentProblem.correctAnswer,
+        isCorrect: correct,
+        skills: currentProblem.skills || [],
+        hintUsed: chatMessages.length > 0,
+        question: currentProblem.questionLatex,
+        options: currentProblem.options,
+        explanation: currentProblem.explanation,
+      });
+    } catch (error) {
+      console.error('Failed to save attempt:', error);
+      // Silently fail - don't block UX
+    }
   };
 
   const handleNextProblem = () => {

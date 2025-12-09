@@ -9,6 +9,7 @@ import {
   getNextProblem,
   getHint,
   submitAnswer,
+  saveAttempt,
 } from '../services/adaptivePracticeService';
 
 const router = Router();
@@ -139,6 +140,37 @@ router.post('/submit', authenticate, async (req, res) => {
     console.error('Submit answer error:', error);
     res.status(500).json({
       error: error instanceof Error ? error.message : 'Error al enviar respuesta',
+    });
+  }
+});
+
+/**
+ * POST /api/adaptive/attempt
+ * Save a single attempt (called after each answer)
+ */
+router.post('/attempt', authenticate, async (req, res) => {
+  try {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    const attempt = req.body;
+
+    if (!attempt.questionId || attempt.userAnswer === undefined) {
+      return res.status(400).json({
+        error: 'questionId y userAnswer son requeridos',
+      });
+    }
+
+    await saveAttempt(userId, attempt);
+
+    res.status(201).json({ success: true });
+  } catch (error) {
+    console.error('Save attempt error:', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Error al guardar intento',
     });
   }
 });
