@@ -264,9 +264,9 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
           <div className="flex flex-col items-center">
             <svg
-              viewBox={`-20 -30 ${size + 40} ${size + 50}`}
+              viewBox={`-20 -30 ${size + 40} ${size + 60}`}
               className="w-full max-w-sm h-auto"
-              style={{ minHeight: '280px' }}
+              style={{ minHeight: '300px' }}
             >
               {/* Dimension labels */}
               {phase === 'build-container' && (
