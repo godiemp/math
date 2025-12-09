@@ -187,8 +187,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
             {/* Right column - results */}
             <div className="space-y-3">
               <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 text-center">Resultados</p>
-              {/* Shuffle results for display */}
-              {[...pairs].sort(() => 0.5 - Math.random()).map(pair => (
+              {pairs.map(pair => (
                 <button
                   key={pair.result}
                   onClick={() => handleSelectResult(pair.result)}
