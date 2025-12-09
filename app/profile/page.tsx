@@ -129,16 +129,23 @@ function ProfilePageContent() {
     try {
       const response = await api.put<UpdateProfileResponse>('/api/user/profile', editForm);
 
+      if (response.error) {
+        // API returned an error response
+        setEditError(response.error.error || t('error'));
+        return;
+      }
+
       if (response.data?.success) {
         // Refresh user data
         await refreshUser();
         setIsEditModalOpen(false);
       } else {
+        // Unexpected response format
         setEditError(response.data?.message || t('error'));
       }
     } catch (error: any) {
       console.error('Failed to update profile:', error);
-      setEditError(error.response?.data?.message || t('error'));
+      setEditError(t('error'));
     } finally {
       setIsSaving(false);
     }
