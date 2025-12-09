@@ -165,13 +165,13 @@ export const M1_LESSONS: Lesson[] = [
   // ÁLGEBRA Y FUNCIONES
   // ========================================
   {
-    id: 'm1-alg-002-a',
+    id: 'm1-alg-001-a',
     slug: 'terminos-semejantes',
     title: 'Términos Semejantes',
     description: 'Aprende a identificar y combinar términos algebraicos con la misma parte literal.',
     level: 'M1',
     subject: 'álgebra',
-    thematicUnit: 'M1-ALG-002',
+    thematicUnit: 'M1-ALG-001',
     skills: ['algebra-terminos-semejantes', 'algebra-expresiones', 'algebra-simplificacion'],
     estimatedMinutes: 12,
     steps: [

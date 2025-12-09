@@ -53,7 +53,7 @@ const SIMPLIFY_PROBLEMS: SimplifyProblem[] = [
   },
 ];
 
-// Grid of terms for matching game
+// Grid of terms for matching game - 4 pairs
 const MATCHING_TERMS = [
   { id: '1', term: '3x²', group: 'A' },
   { id: '2', term: '-7y', group: 'B' },
@@ -62,7 +62,7 @@ const MATCHING_TERMS = [
   { id: '5', term: 'x²', group: 'A' },
   { id: '6', term: '4y', group: 'B' },
   { id: '7', term: '-x', group: 'C' },
-  { id: '8', term: '8', group: 'E' },
+  { id: '8', term: '-5y²', group: 'D' },
 ];
 
 export default function Step4Classify({ onComplete, isActive }: LessonStepProps) {

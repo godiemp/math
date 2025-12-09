@@ -125,22 +125,44 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               Toca cada parte del término para descubrir su nombre:
             </p>
 
-            <div className="flex justify-center items-end gap-1 mb-8">
-              {TERM_PARTS.map(part => (
+            <div className="flex justify-center items-baseline mb-8">
+              {/* Coefficient */}
+              <button
+                onClick={() => handleRevealPart('coefficient')}
+                className={cn(
+                  'transition-all duration-300 rounded-lg px-3 py-2 text-5xl',
+                  revealedParts.has('coefficient')
+                    ? 'text-blue-600 bg-blue-100 dark:bg-blue-900/50'
+                    : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-400'
+                )}
+              >
+                5
+              </button>
+              {/* Variable with exponent as superscript */}
+              <div className="relative">
                 <button
-                  key={part.id}
-                  onClick={() => handleRevealPart(part.id)}
+                  onClick={() => handleRevealPart('variable')}
                   className={cn(
-                    'transition-all duration-300 rounded-lg px-4 py-2',
-                    part.id === 'exponent' ? 'text-3xl -mb-2' : 'text-5xl',
-                    revealedParts.has(part.id)
-                      ? part.color
+                    'transition-all duration-300 rounded-lg px-3 py-2 text-5xl',
+                    revealedParts.has('variable')
+                      ? 'text-green-600 bg-green-100 dark:bg-green-900/50'
                       : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-400'
                   )}
                 >
-                  {part.label}
+                  x
                 </button>
-              ))}
+                <button
+                  onClick={() => handleRevealPart('exponent')}
+                  className={cn(
+                    'absolute -top-2 -right-4 transition-all duration-300 rounded-lg px-2 py-1 text-2xl',
+                    revealedParts.has('exponent')
+                      ? 'text-purple-600 bg-purple-100 dark:bg-purple-900/50'
+                      : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-400'
+                  )}
+                >
+                  2
+                </button>
+              </div>
             </div>
 
             {/* Revealed descriptions */}

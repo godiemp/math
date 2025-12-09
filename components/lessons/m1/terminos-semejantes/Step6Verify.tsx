@@ -20,7 +20,7 @@ const QUESTIONS: Question[] = [
     question: '¿Qué hace que dos términos sean "semejantes"?',
     options: [
       'Tienen el mismo coeficiente',
-      'Tienen la misma variable Y exponente',
+      'Tienen la misma variable y exponente',
       'Tienen el mismo valor numérico',
     ],
     correctAnswer: 1,

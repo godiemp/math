@@ -106,16 +106,16 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
     } else {
       setStreak(0);
     }
+  };
 
-    setTimeout(() => {
-      if (currentProblem < PROBLEMS.length - 1) {
-        setCurrentProblem(prev => prev + 1);
-        setSelectedAnswer(null);
-        setShowFeedback(false);
-      } else {
-        setIsComplete(true);
-      }
-    }, 1500);
+  const handleNext = () => {
+    if (currentProblem < PROBLEMS.length - 1) {
+      setCurrentProblem(prev => prev + 1);
+      setSelectedAnswer(null);
+      setShowFeedback(false);
+    } else {
+      setIsComplete(true);
+    }
   };
 
   const handleReset = () => {
@@ -238,9 +238,9 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
             )}
           </div>
 
-          {/* Check button */}
-          {!showFeedback && (
-            <div className="flex justify-center">
+          {/* Check/Next button */}
+          <div className="flex justify-center">
+            {!showFeedback ? (
               <button
                 onClick={handleCheck}
                 disabled={selectedAnswer === null}
@@ -253,8 +253,16 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
               >
                 Verificar
               </button>
-            </div>
-          )}
+            ) : (
+              <button
+                onClick={handleNext}
+                className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg"
+              >
+                <span>{currentProblem < PROBLEMS.length - 1 ? 'Siguiente' : 'Ver Resultados'}</span>
+                <ArrowRight size={20} />
+              </button>
+            )}
+          </div>
         </>
       ) : (
         // Results
