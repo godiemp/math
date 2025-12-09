@@ -183,6 +183,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-prob-004-b',
+    slug: 'reglas-probabilidad',
+    title: 'Reglas de Probabilidad',
+    description: 'Domina el complemento y la regla aditiva para calcular probabilidades compuestas.',
+    level: 'M1',
+    subject: 'probabilidad',
+    thematicUnit: 'M1-PROB-004',
+    skills: ['probabilidad-complemento', 'regla-aditiva', 'eventos-mutuamente-excluyentes'],
+    estimatedMinutes: 12,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'Regalos para Sofía', requiredToAdvance: true },
+      { id: 'explore-venn', type: 'explore', title: 'El Diagrama de Venn', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Las Reglas de Probabilidad' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'advanced', type: 'explore', title: 'Casos Avanzados', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
 ];
 
 /**
