@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
-import Intercom, { boot, shutdown, hide, show } from '@intercom/messenger-js-sdk';
+import Intercom, { boot, shutdown, update } from '@intercom/messenger-js-sdk';
 import { useAuth } from '@/contexts/AuthContext';
 
 // Routes where Intercom widget should be visible
@@ -116,15 +116,13 @@ export function IntercomProvider({ children }: { children: React.ReactNode }) {
     bootIntercom();
   }, [isLoading, bootIntercom]);
 
-  // Show/hide Intercom based on current route
+  // Show/hide Intercom launcher based on current route
   useEffect(() => {
     if (!isInitialized.current) return;
 
-    if (shouldShowIntercom(pathname)) {
-      show();
-    } else {
-      hide();
-    }
+    update({
+      hide_default_launcher: !shouldShowIntercom(pathname),
+    });
   }, [pathname]);
 
   return <>{children}</>;
