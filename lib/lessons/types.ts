@@ -183,6 +183,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-alg-001-b',
+    slug: 'propiedad-distributiva',
+    title: 'Propiedad Distributiva',
+    description: 'Aprende a expandir expresiones usando la propiedad distributiva.',
+    level: 'M1',
+    subject: 'álgebra',
+    thematicUnit: 'M1-ALG-001',
+    skills: ['algebra-propiedad-distributiva', 'algebra-terminos-semejantes', 'algebra-expresiones'],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'La Tienda de Juguetes', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'El Constructor de Áreas', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'La Ley de Distribución' },
+      { id: 'classify', type: 'explore', title: 'El Distribuidor', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Desafío Distributivo', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // PROBABILIDAD Y ESTADÍSTICA
   // ========================================
