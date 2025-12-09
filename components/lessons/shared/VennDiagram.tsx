@@ -46,14 +46,16 @@ export default function VennDiagram({
   showCounts = false,
   className,
 }: VennDiagramProps) {
-  // Size configurations - with extra padding for exclusive mode
+  // Size configurations
   const sizeConfig = {
-    sm: { width: 200, height: 140, radius: 45, overlap: 30, exclusiveGap: 15 },
-    md: { width: 280, height: 180, radius: 65, overlap: 40, exclusiveGap: 20 },
-    lg: { width: 360, height: 240, radius: 85, overlap: 50, exclusiveGap: 25 },
+    sm: { width: 200, height: 140, radius: 40, overlap: 25, exclusiveGap: 12 },
+    md: { width: 280, height: 180, radius: 58, overlap: 35, exclusiveGap: 16 },
+    lg: { width: 360, height: 240, radius: 78, overlap: 45, exclusiveGap: 20 },
   };
 
   const config = sizeConfig[size];
+  // Add padding to viewBox to prevent clipping of strokes and glow effects
+  const viewBoxPadding = 10;
   const centerY = config.height / 2;
 
   // Calculate circle positions based on mode
@@ -92,8 +94,9 @@ export default function VennDiagram({
       <svg
         width={config.width}
         height={config.height}
-        viewBox={`0 0 ${config.width} ${config.height}`}
+        viewBox={`${-viewBoxPadding} ${-viewBoxPadding} ${config.width + viewBoxPadding * 2} ${config.height + viewBoxPadding * 2}`}
         className={cn(animated && 'transition-all duration-500')}
+        style={{ overflow: 'visible' }}
       >
         <defs>
           {/* Gradients for circles */}
