@@ -28,6 +28,9 @@ const MATCHING_PAIRS: MatchingPair[] = [
   { id: '4', expression: '-1(x - 7)', result: '-x + 7', matched: false },
 ];
 
+// Fixed display order for results column (different from expressions to make it challenging)
+const RESULTS_DISPLAY_ORDER = [3, 0, 2, 1]; // Shows: -x+7, 2x+8, 10a+15, -3y+6
+
 const SIMPLIFY_PROBLEMS: SimplifyProblem[] = [
   {
     expression: '4(x + 2)',
@@ -184,10 +187,10 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
               ))}
             </div>
 
-            {/* Right column - results */}
+            {/* Right column - results (in different order to make it challenging) */}
             <div className="space-y-3">
               <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 text-center">Resultados</p>
-              {pairs.map(pair => (
+              {RESULTS_DISPLAY_ORDER.map(index => pairs[index]).map(pair => (
                 <button
                   key={pair.result}
                   onClick={() => handleSelectResult(pair.result)}
