@@ -302,6 +302,7 @@ export default function Step2ExploreAddition({ onComplete, isActive }: LessonSte
         </div>
 
         <InteractiveProblem
+          key={currentProblem}
           num1={problem.num1}
           num2={problem.num2}
           denom={problem.denom}
