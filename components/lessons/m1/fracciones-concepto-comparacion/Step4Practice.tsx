@@ -100,9 +100,9 @@ export default function Step4Practice({ onComplete, isActive }: LessonStepProps)
   const [showVisual, setShowVisual] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
 
-  const question = QUESTIONS[currentQuestion];
-  const isCorrect = selectedAnswer === question.correctAnswer;
   const isComplete = currentQuestion >= QUESTIONS.length;
+  const question = isComplete ? null : QUESTIONS[currentQuestion];
+  const isCorrect = question ? selectedAnswer === question.correctAnswer : false;
 
   if (!isActive) return null;
 
@@ -128,7 +128,7 @@ export default function Step4Practice({ onComplete, isActive }: LessonStepProps)
   };
 
   // ============ COMPLETION SCREEN ============
-  if (isComplete) {
+  if (isComplete || !question) {
     return (
       <div className="space-y-6 animate-fadeIn">
         <div className="text-center">

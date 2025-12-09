@@ -155,7 +155,7 @@ export const M1_LESSONS: Lesson[] = [
     steps: [
       { id: 'hook', type: 'hook', title: 'El Chocolate Perfecto', requiredToAdvance: true },
       { id: 'fraction-bars', type: 'explore', title: 'La Barra de Fracciones', requiredToAdvance: true },
-      { id: 'explain', type: 'explain', title: 'Una Fracción = Un Número' },
+      { id: 'explain', type: 'explain', title: 'Una Fracción = Un Número', requiredToAdvance: true },
       { id: 'practice', type: 'practice', title: '¿Cuál es Mayor?', requiredToAdvance: true },
       { id: 'number-line', type: 'explore', title: 'La Recta Numérica', requiredToAdvance: true },
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
