@@ -152,21 +152,6 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
 
       {phase === 'matching' && (
         <div className="space-y-6 animate-fadeIn">
-          {/* Feedback */}
-          {matchFeedback && (
-            <div
-              className={cn(
-                'p-4 rounded-xl text-center animate-fadeIn',
-                matchFeedback.isError
-                  ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300'
-                  : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
-              )}
-            >
-              {matchFeedback.isError ? <X className="inline mr-2" size={20} /> : <Check className="inline mr-2" size={20} />}
-              {matchFeedback.message}
-            </div>
-          )}
-
           {/* Instructions */}
           <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-4 text-center">
             <p className="text-purple-800 dark:text-purple-200">
@@ -228,6 +213,21 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           <div className="text-center text-gray-500 dark:text-gray-400">
             {pairs.filter(p => p.matched).length} / {pairs.length} parejas encontradas
           </div>
+
+          {/* Feedback - shown at bottom to not interrupt flow */}
+          {matchFeedback && (
+            <div
+              className={cn(
+                'p-4 rounded-xl text-center animate-fadeIn',
+                matchFeedback.isError
+                  ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300'
+                  : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+              )}
+            >
+              {matchFeedback.isError ? <X className="inline mr-2" size={20} /> : <Check className="inline mr-2" size={20} />}
+              {matchFeedback.message}
+            </div>
+          )}
 
           {/* Continue button */}
           {allMatched && (
