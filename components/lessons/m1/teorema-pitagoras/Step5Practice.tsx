@@ -205,7 +205,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
 
         {/* Triangle visualization */}
         <div className="flex justify-center mb-4">
-          <svg viewBox="0 0 150 115" className="w-48 h-36">
+          <svg viewBox="-10 0 160 115" className="w-48 h-36">
             <polygon
               points="10,90 140,90 10,20"
               fill="#D1FAE5"
@@ -213,7 +213,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
               strokeWidth="2"
             />
             <path d="M 10,75 L 25,75 L 25,90" fill="none" stroke="#6B7280" strokeWidth="1.5" />
-            <text x="0" y="55" className="text-sm font-bold fill-blue-600">
+            <text x="-2" y="55" className="text-sm font-bold fill-blue-600">
               {problem.a ?? '?'}
             </text>
             <text x="75" y="108" textAnchor="middle" className="text-sm font-bold fill-green-600">
