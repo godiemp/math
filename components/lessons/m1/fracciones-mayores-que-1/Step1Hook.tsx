@@ -7,72 +7,97 @@ import { LessonStepProps } from '@/lib/lessons/types';
 
 type Phase = 'scenario' | 'question' | 'reveal' | 'result';
 
-// Pizza component - shows a circular pizza divided into slices
+// Pizza component - shows a circular pizza divided into slices using SVG
 function Pizza({
   slices,
   filledSlices,
-  animate = false,
   label,
 }: {
   slices: number;
   filledSlices: number;
-  animate?: boolean;
   label?: string;
 }) {
-  const sliceAngle = 360 / slices;
+  const size = 96;
+  const center = size / 2;
+  const radius = size / 2 - 4;
+  const sliceAngle = (2 * Math.PI) / slices;
+
+  // Generate path for a slice
+  const getSlicePath = (index: number) => {
+    const startAngle = index * sliceAngle - Math.PI / 2;
+    const endAngle = startAngle + sliceAngle;
+    const x1 = center + radius * Math.cos(startAngle);
+    const y1 = center + radius * Math.sin(startAngle);
+    const x2 = center + radius * Math.cos(endAngle);
+    const y2 = center + radius * Math.sin(endAngle);
+    const largeArc = sliceAngle > Math.PI ? 1 : 0;
+    return `M ${center} ${center} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+  };
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="relative w-24 h-24">
-        {/* Pizza base */}
-        <div className="absolute inset-0 rounded-full bg-amber-200 dark:bg-amber-800/50 border-4 border-amber-600 dark:border-amber-500" />
+      <svg width={size} height={size} className="drop-shadow-md">
+        {/* Pizza base circle */}
+        <circle
+          cx={center}
+          cy={center}
+          r={radius}
+          className="fill-amber-200 dark:fill-amber-800/50 stroke-amber-600 dark:stroke-amber-500"
+          strokeWidth="3"
+        />
 
         {/* Pizza slices */}
         {Array.from({ length: slices }).map((_, i) => {
           const isFilled = i < filledSlices;
-          const rotation = i * sliceAngle - 90;
-
           return (
-            <div
+            <path
               key={i}
+              d={getSlicePath(i)}
               className={cn(
-                'absolute inset-0 transition-all duration-500',
-                animate && 'opacity-0',
+                isFilled
+                  ? 'fill-orange-500 dark:fill-orange-600'
+                  : 'fill-amber-200 dark:fill-amber-300/30',
               )}
-              style={{
-                clipPath: `polygon(50% 50%, 50% 0%, ${50 + 50 * Math.cos((sliceAngle * Math.PI) / 180)}% ${50 - 50 * Math.sin((sliceAngle * Math.PI) / 180)}%)`,
-                transform: `rotate(${rotation}deg)`,
-                transitionDelay: animate ? `${i * 100}ms` : '0ms',
-                opacity: animate ? 0 : 1,
-              }}
-            >
-              <div
-                className={cn(
-                  'absolute inset-0 rounded-full transition-colors duration-300',
-                  isFilled
-                    ? 'bg-orange-500 dark:bg-orange-600'
-                    : 'bg-amber-100 dark:bg-amber-900/30',
-                )}
-              />
-            </div>
+            />
           );
         })}
 
-        {/* Slice dividers */}
+        {/* Slice divider lines */}
         {Array.from({ length: slices }).map((_, i) => {
-          const rotation = i * sliceAngle;
+          const angle = i * sliceAngle - Math.PI / 2;
+          const x = center + radius * Math.cos(angle);
+          const y = center + radius * Math.sin(angle);
           return (
-            <div
+            <line
               key={`line-${i}`}
-              className="absolute top-1/2 left-1/2 w-[2px] h-1/2 bg-amber-700 dark:bg-amber-500 origin-top"
-              style={{ transform: `rotate(${rotation}deg)` }}
+              x1={center}
+              y1={center}
+              x2={x}
+              y2={y}
+              className="stroke-amber-700 dark:stroke-amber-500"
+              strokeWidth="2"
             />
           );
         })}
 
         {/* Center dot */}
-        <div className="absolute top-1/2 left-1/2 w-3 h-3 -mt-1.5 -ml-1.5 rounded-full bg-amber-700 dark:bg-amber-500" />
-      </div>
+        <circle
+          cx={center}
+          cy={center}
+          r={5}
+          className="fill-amber-700 dark:fill-amber-500"
+        />
+
+        {/* Outer border */}
+        <circle
+          cx={center}
+          cy={center}
+          r={radius}
+          fill="none"
+          className="stroke-amber-600 dark:stroke-amber-500"
+          strokeWidth="3"
+        />
+      </svg>
       {label && (
         <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
           {label}
@@ -87,12 +112,10 @@ function PizzaDisplay({
   numerator,
   denominator,
   showLabel = true,
-  animate = false,
 }: {
   numerator: number;
   denominator: number;
   showLabel?: boolean;
-  animate?: boolean;
 }) {
   const wholePizzas = Math.floor(numerator / denominator);
   const remainingSlices = numerator % denominator;
@@ -107,7 +130,6 @@ function PizzaDisplay({
             key={`full-${i}`}
             slices={denominator}
             filledSlices={denominator}
-            animate={animate}
             label={`Pizza ${i + 1}`}
           />
         ))}
@@ -116,7 +138,6 @@ function PizzaDisplay({
           <Pizza
             slices={denominator}
             filledSlices={remainingSlices}
-            animate={animate}
             label={`Pizza ${totalPizzas}`}
           />
         )}
@@ -144,7 +165,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   // 9 slices eaten out of 4-slice pizzas = 9/4 = 2 and 1/4 pizzas
   const numerator = 9;
   const denominator = 4;
-  const correctAnswer = 2; // "More than 2" option
+  const correctAnswer = 3; // "Más de 2 pizzas" is at index 3
 
   if (!isActive) return null;
 
@@ -295,7 +316,6 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           <PizzaDisplay
             numerator={numerator}
             denominator={denominator}
-            animate={showPizzas}
           />
         </div>
 
