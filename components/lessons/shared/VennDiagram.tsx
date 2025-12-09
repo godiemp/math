@@ -78,8 +78,9 @@ export default function VennDiagram({
   };
 
   // Calculate text positions for counts
-  const countAx = centerAx - (mode === 'exclusive' ? 0 : config.overlap / 2);
-  const countBx = centerBx + (mode === 'exclusive' ? 0 : config.overlap / 2);
+  // For overlapping mode, position counts in the exclusive regions (away from center)
+  const countAx = mode === 'exclusive' ? centerAx : centerAx - config.radius * 0.5;
+  const countBx = mode === 'exclusive' ? centerBx : centerBx + config.radius * 0.5;
   const countBothX = config.width / 2;
 
   return (

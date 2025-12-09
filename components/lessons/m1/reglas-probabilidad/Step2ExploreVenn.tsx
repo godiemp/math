@@ -20,7 +20,7 @@ export default function Step2ExploreVenn({ onComplete, isActive }: LessonStepPro
   // ============ PHASE 1: INTRO ============
   if (phase === 'intro') {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             El Diagrama de Venn
@@ -70,7 +70,7 @@ export default function Step2ExploreVenn({ onComplete, isActive }: LessonStepPro
     const pNotA = 100 - complementValue;
 
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             El Complemento
@@ -100,7 +100,6 @@ export default function Step2ExploreVenn({ onComplete, isActive }: LessonStepPro
                   stroke="#F97316"
                   strokeWidth="20"
                   strokeDasharray={`${pNotA * 2.51} ${pA * 2.51}`}
-                  className="transition-all duration-300"
                 />
                 {/* A - green */}
                 <circle
@@ -112,7 +111,6 @@ export default function Step2ExploreVenn({ onComplete, isActive }: LessonStepPro
                   strokeWidth="20"
                   strokeDasharray={`${pA * 2.51} ${pNotA * 2.51}`}
                   strokeDashoffset={`${-pNotA * 2.51}`}
-                  className="transition-all duration-300"
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
@@ -188,7 +186,7 @@ export default function Step2ExploreVenn({ onComplete, isActive }: LessonStepPro
   // ============ PHASE 3: MUTUALLY EXCLUSIVE ============
   if (phase === 'exclusive') {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Eventos Mutuamente Excluyentes
@@ -326,7 +324,7 @@ export default function Step2ExploreVenn({ onComplete, isActive }: LessonStepPro
     };
 
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Eventos NO Mutuamente Excluyentes
@@ -453,7 +451,7 @@ export default function Step2ExploreVenn({ onComplete, isActive }: LessonStepPro
 
   // ============ PHASE 5: SUMMARY ============
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6 animate-fadeIn pb-24">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Resumen: Las Reglas Descubiertas
@@ -483,7 +481,9 @@ export default function Step2ExploreVenn({ onComplete, isActive }: LessonStepPro
         {/* Exclusive */}
         <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4 border border-blue-200 dark:border-blue-700">
           <div className="flex items-center gap-3 mb-2">
-            <VennDiagram mode="exclusive" showLabels={false} size="sm" className="scale-50 -my-4" />
+            <div className="w-24 h-16 flex items-center justify-center overflow-visible flex-shrink-0">
+              <VennDiagram mode="exclusive" showLabels={false} size="sm" className="scale-[0.4] origin-center" />
+            </div>
             <span className="font-semibold text-blue-800 dark:text-blue-200">Eventos Excluyentes (sin superposición)</span>
           </div>
           <div className="text-xl font-bold text-blue-900 dark:text-blue-100 text-center">
@@ -497,7 +497,9 @@ export default function Step2ExploreVenn({ onComplete, isActive }: LessonStepPro
         {/* Non-exclusive */}
         <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
           <div className="flex items-center gap-3 mb-2">
-            <VennDiagram mode="overlapping" showLabels={false} size="sm" className="scale-50 -my-4" />
+            <div className="w-24 h-16 flex items-center justify-center overflow-visible flex-shrink-0">
+              <VennDiagram mode="overlapping" showLabels={false} size="sm" className="scale-[0.4] origin-center" />
+            </div>
             <span className="font-semibold text-purple-800 dark:text-purple-200">Eventos NO Excluyentes (con superposición)</span>
           </div>
           <div className="text-xl font-bold text-purple-900 dark:text-purple-100 text-center">

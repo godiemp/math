@@ -20,7 +20,7 @@ export default function Step5Advanced({ onComplete, isActive }: LessonStepProps)
   // ============ PHASE 1: INTRO ============
   if (phase === 'intro') {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Casos Avanzados
@@ -70,7 +70,7 @@ export default function Step5Advanced({ onComplete, isActive }: LessonStepProps)
   // ============ PHASE 2: THREE EVENTS ============
   if (phase === 'three_events') {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Tres Eventos Excluyentes
@@ -172,7 +172,7 @@ export default function Step5Advanced({ onComplete, isActive }: LessonStepProps)
   // ============ PHASE 3: COMPLEMENT STRATEGY ============
   if (phase === 'complement_strategy') {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             La Estrategia del Complemento
@@ -189,32 +189,35 @@ export default function Step5Advanced({ onComplete, isActive }: LessonStepProps)
           </div>
 
           <p className="text-purple-800 dark:text-purple-200 text-center mb-4">
-            Lanzas un dado <strong>dos veces</strong>.
+            En una encuesta, el <strong>15%</strong> de las personas no celebra <strong>ninguna</strong> festividad.
             <br />
-            ¿Cuál es P(obtener <strong>al menos un 6</strong>)?
+            ¿Cuál es P(celebrar <strong>al menos una</strong> festividad)?
           </p>
 
-          {/* Visual - two dice */}
-          <div className="flex justify-center gap-8 py-4">
+          {/* Visual - celebration icons */}
+          <div className="flex justify-center gap-6 py-4">
             <div className="text-center">
-              <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-lg shadow-lg flex items-center justify-center text-3xl">
-                🎲
+              <div className="w-14 h-14 bg-white dark:bg-gray-800 rounded-lg shadow-lg flex items-center justify-center text-2xl">
+                🎄
               </div>
-              <span className="text-sm text-gray-600 dark:text-gray-400 mt-1">Lanzamiento 1</span>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-lg shadow-lg flex items-center justify-center text-3xl">
-                🎲
+              <div className="w-14 h-14 bg-white dark:bg-gray-800 rounded-lg shadow-lg flex items-center justify-center text-2xl">
+                🎆
               </div>
-              <span className="text-sm text-gray-600 dark:text-gray-400 mt-1">Lanzamiento 2</span>
+            </div>
+            <div className="text-center">
+              <div className="w-14 h-14 bg-white dark:bg-gray-800 rounded-lg shadow-lg flex items-center justify-center text-2xl">
+                🎂
+              </div>
             </div>
           </div>
 
           <div className="bg-amber-100 dark:bg-amber-900/40 rounded-lg p-4 mb-4">
             <p className="text-amber-800 dark:text-amber-200 text-sm">
-              <strong>💡 Tip:</strong> &ldquo;Al menos un 6&rdquo; significa: 6 en el primero, O en el segundo, O en ambos.
+              <strong>💡 Tip:</strong> &ldquo;Al menos una&rdquo; y &ldquo;ninguna&rdquo; son complementos.
               <br />
-              ¡Eso es complicado! Pero lo contrario es simple...
+              Si conoces uno, puedes calcular el otro fácilmente.
             </p>
           </div>
 
@@ -237,14 +240,13 @@ export default function Step5Advanced({ onComplete, isActive }: LessonStepProps)
               <Target className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
               <div className="w-full">
                 <p className="text-green-800 dark:text-green-200 font-semibold mb-3">
-                  Estrategia: Calcular P(ningún 6) y restar de 1
+                  Estrategia: Usar el complemento directamente
                 </p>
 
                 <div className="space-y-2 text-green-700 dark:text-green-300">
-                  <p>1️⃣ P(NO 6 en un lanzamiento) = 5/6</p>
-                  <p>2️⃣ P(NO 6 en ninguno) = 5/6 × 5/6 = 25/36</p>
+                  <p>1️⃣ Sabemos que P(ninguna festividad) = 15% = 0.15</p>
                   <p className="text-lg font-bold text-green-900 dark:text-green-100">
-                    3️⃣ P(al menos un 6) = 1 - 25/36 = <span className="text-xl">11/36</span>
+                    2️⃣ P(al menos una) = 1 - P(ninguna) = 1 - 0.15 = <span className="text-xl">0.85 = 85%</span>
                   </p>
                 </div>
 
@@ -254,7 +256,7 @@ export default function Step5Advanced({ onComplete, isActive }: LessonStepProps)
                     <br />
                     &ldquo;Al menos uno&rdquo; y &ldquo;ninguno&rdquo; son <strong>complementos</strong>.
                     <br />
-                    Si calculas uno, automáticamente tienes el otro.
+                    ¡Siempre suman 100%!
                   </p>
                 </div>
               </div>
@@ -291,7 +293,7 @@ export default function Step5Advanced({ onComplete, isActive }: LessonStepProps)
     const atLeastOne = totalStudents - neither;
 
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Aplicación: Datos de Encuesta
@@ -347,14 +349,15 @@ export default function Step5Advanced({ onComplete, isActive }: LessonStepProps)
 
           <button
             onClick={() => setShowRealWorldAnswer(true)}
+            disabled={showRealWorldAnswer}
             className={cn(
               'w-full py-3 rounded-lg font-semibold transition-all',
               showRealWorldAnswer
-                ? 'bg-pink-200 dark:bg-pink-800 text-pink-800 dark:text-pink-200'
+                ? 'bg-pink-200 dark:bg-pink-800 text-pink-800 dark:text-pink-200 cursor-default'
                 : 'bg-pink-500 text-white hover:bg-pink-600'
             )}
           >
-            {showRealWorldAnswer ? '¡Correcto!' : 'Calcular'}
+            {showRealWorldAnswer ? '¡Solución revelada!' : 'Ver solución'}
           </button>
         </div>
 
@@ -404,7 +407,7 @@ export default function Step5Advanced({ onComplete, isActive }: LessonStepProps)
 
   // ============ PHASE 5: SUMMARY ============
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6 animate-fadeIn pb-24">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Resumen: Casos Avanzados

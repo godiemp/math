@@ -29,7 +29,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   // ============ PHASE 1: INTRO ============
   if (phase === 'intro') {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Regalos para Sofía
@@ -117,7 +117,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
     };
 
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Regalos para Sofía
@@ -211,7 +211,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const isCorrect = selectedAnswer === correctAnswer;
 
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6 animate-fadeIn pb-24">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Regalos para Sofía

@@ -26,7 +26,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
   // ============ PHASE 1: COMPLEMENT ============
   if (phase === 'complement') {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Las Reglas de Probabilidad
@@ -122,7 +122,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
   // ============ PHASE 2: ADDITION EXCLUSIVE ============
   if (phase === 'addition_exclusive') {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Las Reglas de Probabilidad
@@ -217,7 +217,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
   // ============ PHASE 3: ADDITION GENERAL ============
   if (phase === 'addition_general') {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Las Reglas de Probabilidad
@@ -320,7 +320,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
 
   // ============ PHASE 4: SUMMARY ============
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6 animate-fadeIn pb-24">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Resumen de Fórmulas

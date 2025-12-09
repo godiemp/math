@@ -118,7 +118,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
   // ============ COMPLETION SCREEN ============
   if (isComplete) {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Checkpoint Completado
@@ -214,7 +214,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
 
   // ============ QUESTION SCREEN ============
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6 animate-fadeIn pb-24">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Checkpoint
