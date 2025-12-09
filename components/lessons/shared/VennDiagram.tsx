@@ -46,18 +46,22 @@ export default function VennDiagram({
   showCounts = false,
   className,
 }: VennDiagramProps) {
-  // Size configurations
+  // Size configurations - with extra padding for exclusive mode
   const sizeConfig = {
-    sm: { width: 200, height: 140, radius: 50, overlap: 30 },
-    md: { width: 280, height: 180, radius: 70, overlap: 40 },
-    lg: { width: 360, height: 240, radius: 90, overlap: 50 },
+    sm: { width: 200, height: 140, radius: 45, overlap: 30, exclusiveGap: 15 },
+    md: { width: 280, height: 180, radius: 65, overlap: 40, exclusiveGap: 20 },
+    lg: { width: 360, height: 240, radius: 85, overlap: 50, exclusiveGap: 25 },
   };
 
   const config = sizeConfig[size];
   const centerY = config.height / 2;
 
   // Calculate circle positions based on mode
-  const separation = mode === 'exclusive' ? config.radius * 2 + 20 : config.overlap;
+  // For exclusive mode: position circles with gap between them, staying within bounds
+  // For overlapping mode: use overlap value
+  const separation = mode === 'exclusive'
+    ? config.radius * 2 + config.exclusiveGap
+    : config.overlap;
   const centerAx = config.width / 2 - separation / 2;
   const centerBx = config.width / 2 + separation / 2;
 
@@ -78,9 +82,9 @@ export default function VennDiagram({
   };
 
   // Calculate text positions for counts
-  // For overlapping mode, position counts in the exclusive regions (away from center)
-  const countAx = mode === 'exclusive' ? centerAx : centerAx - config.radius * 0.5;
-  const countBx = mode === 'exclusive' ? centerBx : centerBx + config.radius * 0.5;
+  // For overlapping mode, position counts well into the exclusive regions (away from center/intersection)
+  const countAx = mode === 'exclusive' ? centerAx : centerAx - config.radius * 0.55;
+  const countBx = mode === 'exclusive' ? centerBx : centerBx + config.radius * 0.55;
   const countBothX = config.width / 2;
 
   return (
@@ -127,9 +131,6 @@ export default function VennDiagram({
             animated && 'transition-all duration-500',
             mode === 'interactive' && 'cursor-pointer hover:brightness-110'
           )}
-          style={{
-            transform: `translateX(${mode === 'exclusive' ? '-10px' : '0'})`,
-          }}
           onClick={() => handleRegionClick('A')}
         />
 
@@ -145,9 +146,6 @@ export default function VennDiagram({
             animated && 'transition-all duration-500',
             mode === 'interactive' && 'cursor-pointer hover:brightness-110'
           )}
-          style={{
-            transform: `translateX(${mode === 'exclusive' ? '10px' : '0'})`,
-          }}
           onClick={() => handleRegionClick('B')}
         />
 

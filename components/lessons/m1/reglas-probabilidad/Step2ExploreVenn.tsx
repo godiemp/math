@@ -87,36 +87,24 @@ export default function Step2ExploreVenn({ onComplete, isActive }: LessonStepPro
             ¿Cuál es la probabilidad de que <strong>NO llueva</strong>?
           </p>
 
-          {/* Interactive pie chart visualization */}
+          {/* Interactive pie chart visualization - using conic-gradient for smooth updates */}
           <div className="flex justify-center mb-4">
             <div className="relative w-48 h-48">
-              <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
-                {/* NOT A (complement) - orange */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke="#F97316"
-                  strokeWidth="20"
-                  strokeDasharray={`${pNotA * 2.51} ${pA * 2.51}`}
-                />
-                {/* A - green */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke="#22C55E"
-                  strokeWidth="20"
-                  strokeDasharray={`${pA * 2.51} ${pNotA * 2.51}`}
-                  strokeDashoffset={`${-pNotA * 2.51}`}
-                />
-              </svg>
+              <div
+                className="w-full h-full rounded-full"
+                style={{
+                  background: `conic-gradient(
+                    #22C55E 0deg ${pA * 3.6}deg,
+                    #F97316 ${pA * 3.6}deg 360deg
+                  )`
+                }}
+              />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Total</div>
-                  <div className="text-lg font-bold text-gray-800 dark:text-gray-200">100%</div>
+                <div className="w-24 h-24 rounded-full bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Total</div>
+                    <div className="text-lg font-bold text-gray-800 dark:text-gray-200">100%</div>
+                  </div>
                 </div>
               </div>
             </div>
