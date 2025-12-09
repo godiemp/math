@@ -21,12 +21,9 @@ test.describe('Adaptive Practice', () => {
     // Click on a topic (Números)
     await page.getByText('Números').click();
 
-    // Should show problem display with options
-    // Wait for either an option button or the chat panel to appear
-    const optionButton = page.locator('button').filter({ hasText: /^[A-E]$/ }).first();
-    const chatPanel = page.getByText('Tutor AI');
-
-    await expect(optionButton.or(chatPanel)).toBeVisible({ timeout: 10000 });
+    // Should show problem display - wait for "Verificar Respuesta" button
+    const submitButton = page.getByRole('button', { name: /Verificar Respuesta/i });
+    await expect(submitButton).toBeVisible({ timeout: 10000 });
   });
 
   test('should save attempt when answering a question', async ({ page }) => {
@@ -48,16 +45,18 @@ test.describe('Adaptive Practice', () => {
     // Select a topic
     await page.getByText('Números').click();
 
-    // Wait for problem to load - look for option buttons with letters A-E
-    const optionButtons = page.locator('button').filter({ hasText: /^[A-E]$/ });
-    await expect(optionButtons.first()).toBeVisible({ timeout: 10000 });
+    // Wait for problem to load - "Verificar Respuesta" button indicates problem is ready
+    const submitButton = page.getByRole('button', { name: /Verificar Respuesta/i });
+    await expect(submitButton).toBeVisible({ timeout: 10000 });
 
-    // Select the first answer option
-    await optionButtons.first().click();
+    // Find and click an option button (buttons with letter spans A-E)
+    // Option buttons have a span with single letter and are not action buttons
+    const optionButton = page.locator('button').filter({
+      has: page.locator('span.rounded-full'),
+    }).first();
+    await optionButton.click();
 
     // Click "Verificar Respuesta" button
-    const submitButton = page.getByRole('button', { name: /Verificar Respuesta/i });
-    await expect(submitButton).toBeVisible();
     await submitButton.click();
 
     // Wait for feedback to appear (correct or incorrect)
@@ -83,13 +82,16 @@ test.describe('Adaptive Practice', () => {
     await page.getByText('Álgebra y Funciones').click();
 
     // Wait for problem to load
-    const optionButtons = page.locator('button').filter({ hasText: /^[A-E]$/ });
-    await expect(optionButtons.first()).toBeVisible({ timeout: 10000 });
-
-    // Answer the question
-    await optionButtons.first().click();
-
     const submitButton = page.getByRole('button', { name: /Verificar Respuesta/i });
+    await expect(submitButton).toBeVisible({ timeout: 10000 });
+
+    // Click an option button
+    const optionButton = page.locator('button').filter({
+      has: page.locator('span.rounded-full'),
+    }).first();
+    await optionButton.click();
+
+    // Submit answer
     await submitButton.click();
 
     // Wait for feedback
@@ -111,8 +113,8 @@ test.describe('Adaptive Practice', () => {
     await page.getByText('Geometría').click();
 
     // Wait for problem to load
-    const optionButtons = page.locator('button').filter({ hasText: /^[A-E]$/ });
-    await expect(optionButtons.first()).toBeVisible({ timeout: 10000 });
+    const submitButton = page.getByRole('button', { name: /Verificar Respuesta/i });
+    await expect(submitButton).toBeVisible({ timeout: 10000 });
 
     // Click "Cambiar tema" button
     const changeTopicButton = page.getByRole('button', { name: /Cambiar tema/i });
@@ -131,8 +133,8 @@ test.describe('Adaptive Practice', () => {
     await page.getByText('Probabilidades y Estadística').click();
 
     // Wait for problem to load
-    const optionButtons = page.locator('button').filter({ hasText: /^[A-E]$/ });
-    await expect(optionButtons.first()).toBeVisible({ timeout: 10000 });
+    const submitButton = page.getByRole('button', { name: /Verificar Respuesta/i });
+    await expect(submitButton).toBeVisible({ timeout: 10000 });
 
     // Check chat panel is visible
     await expect(page.getByText('Tutor AI')).toBeVisible();
