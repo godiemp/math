@@ -40,19 +40,35 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
 
   // Triangle positions for arrangement 1 (around c² center)
   // Each triangle is defined by its 3 vertices
+  // All 4 triangles must have legs a=40 and b=60 for the proof to work
   const arrangement1 = {
-    t1: `0,${size} ${b},${size} 0,${size - a}`,           // bottom-left
-    t2: `${b},${size} ${size},${size} ${size},${size - a}`, // bottom-right
-    t3: `${size},${size - a} ${size},0 ${size - b},0`,      // top-right
-    t4: `${size - b},0 0,0 0,${size - a}`,                  // top-left
+    t1: `0,${size} ${b},${size} 0,${size - a}`,             // bottom-left: legs b=60 horizontal, a=40 vertical
+    t2: `${b},${size} ${size},${size} ${size},${size - b}`, // bottom-right: legs a=40 horizontal, b=60 vertical (FIXED)
+    t3: `${size},${size - b} ${size},0 ${size - b},0`,      // top-right: legs b=60 vertical, a=40 horizontal (FIXED)
+    t4: `${size - b},0 0,0 0,${size - a}`,                  // top-left: legs a=40 horizontal, b=60 vertical
   };
 
   // Triangle positions for arrangement 2 (in corners, leaving a² and b²)
+  // a² square at top-right: x=[b,size], y=[0,a] = [60,100] x [0,40]
+  // b² square at bottom-left: x=[0,b], y=[a,size] = [0,60] x [40,100]
   const arrangement2 = {
-    t1: `0,0 ${b},0 0,${a}`,                    // top-left corner
-    t2: `${size},0 ${size},${a} ${b},${a}`,     // top-right area
-    t3: `0,${a} 0,${size} ${b},${size}`,        // bottom-left corner
-    t4: `${b},${size} ${size},${size} ${size},${a}`, // bottom-right area
+    t1: `0,0 ${b},0 0,${a}`,                      // top-left corner: legs b=60 horizontal, a=40 vertical
+    t2: `${b},0 ${b},${a} 0,${a}`,                // fills remaining top-left: legs a=40 vertical, b=60 horizontal (REWRITTEN)
+    t3: `${b},${a} ${b},${size} ${size},${a}`,    // fills remaining bottom-right: legs b=60 vertical, a=40 horizontal (REWRITTEN)
+    t4: `${b},${size} ${size},${size} ${size},${a}`, // bottom-right corner: legs a=40 horizontal, b=60 vertical
+  };
+
+  // Helper to calculate centroid of a triangle from polygon points string
+  // This allows labels to animate smoothly with the triangles
+  const getCentroid = (points: string) => {
+    const coords = points.split(' ').map(p => {
+      const [x, y] = p.split(',').map(Number);
+      return { x, y };
+    });
+    return {
+      cx: coords.reduce((sum, c) => sum + c.x, 0) / coords.length,
+      cy: coords.reduce((sum, c) => sum + c.y, 0) / coords.length,
+    };
   };
 
   const handleNextPhase = () => {
@@ -174,7 +190,7 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
               {arrangement === 1 && showTriangles && (
                 // c² square in center (tilted)
                 <polygon
-                  points={`0,${size - a} ${b},${size} ${size},${size - a} ${size - b},0`}
+                  points={`0,${size - a} ${b},${size} ${size},${size - b} ${size - b},0`}
                   fill="#8B5CF6"
                   fillOpacity="0.2"
                   stroke="#7C3AED"
@@ -213,7 +229,7 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
                 </>
               )}
 
-              {/* Four triangles with smooth transitions */}
+              {/* Four triangles with smooth transitions and staggered delays */}
               {showTriangles && (
                 <>
                   {/* Triangle 1 - Blue */}
@@ -224,14 +240,15 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
                       fillOpacity="0.8"
                       stroke={colors.t1.stroke}
                       strokeWidth="2"
-                      className="transition-all duration-[1500ms] ease-in-out"
+                      className="transition-all duration-[1200ms] ease-in-out"
                     />
-                    {/* Number label */}
+                    {/* Number label - uses centroid for smooth animation */}
                     <text
-                      x={arrangement === 1 ? b / 3 : b / 3}
-                      y={arrangement === 1 ? size - a / 3 : a / 2}
+                      x={getCentroid(currentArrangement.t1).cx}
+                      y={getCentroid(currentArrangement.t1).cy + 4}
                       textAnchor="middle"
-                      className="text-xs font-bold fill-white"
+                      dominantBaseline="middle"
+                      className="text-xs font-bold fill-white transition-all duration-[1200ms] ease-in-out"
                     >
                       1
                     </text>
@@ -245,13 +262,14 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
                       fillOpacity="0.8"
                       stroke={colors.t2.stroke}
                       strokeWidth="2"
-                      className="transition-all duration-[1500ms] ease-in-out"
+                      className="transition-all duration-[1200ms] ease-in-out delay-[100ms]"
                     />
                     <text
-                      x={arrangement === 1 ? b + (size - b) * 2 / 3 : (b + size) / 2}
-                      y={arrangement === 1 ? size - a / 3 : a / 2}
+                      x={getCentroid(currentArrangement.t2).cx}
+                      y={getCentroid(currentArrangement.t2).cy + 4}
                       textAnchor="middle"
-                      className="text-xs font-bold fill-white"
+                      dominantBaseline="middle"
+                      className="text-xs font-bold fill-white transition-all duration-[1200ms] ease-in-out delay-[100ms]"
                     >
                       2
                     </text>
@@ -265,13 +283,14 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
                       fillOpacity="0.8"
                       stroke={colors.t3.stroke}
                       strokeWidth="2"
-                      className="transition-all duration-[1500ms] ease-in-out"
+                      className="transition-all duration-[1200ms] ease-in-out delay-[200ms]"
                     />
                     <text
-                      x={arrangement === 1 ? size - b / 3 : b / 3}
-                      y={arrangement === 1 ? a / 2 : a + b / 2}
+                      x={getCentroid(currentArrangement.t3).cx}
+                      y={getCentroid(currentArrangement.t3).cy + 4}
                       textAnchor="middle"
-                      className="text-xs font-bold fill-white"
+                      dominantBaseline="middle"
+                      className="text-xs font-bold fill-white transition-all duration-[1200ms] ease-in-out delay-[200ms]"
                     >
                       3
                     </text>
@@ -285,13 +304,14 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
                       fillOpacity="0.8"
                       stroke={colors.t4.stroke}
                       strokeWidth="2"
-                      className="transition-all duration-[1500ms] ease-in-out"
+                      className="transition-all duration-[1200ms] ease-in-out delay-[300ms]"
                     />
                     <text
-                      x={arrangement === 1 ? (size - b) / 2 : (b + size) / 2}
-                      y={arrangement === 1 ? a / 2 : a + (size - a) / 2}
+                      x={getCentroid(currentArrangement.t4).cx}
+                      y={getCentroid(currentArrangement.t4).cy + 4}
                       textAnchor="middle"
-                      className="text-xs font-bold fill-white"
+                      dominantBaseline="middle"
+                      className="text-xs font-bold fill-white transition-all duration-[1200ms] ease-in-out delay-[300ms]"
                     >
                       4
                     </text>
@@ -299,13 +319,16 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
                 </>
               )}
 
-              {/* Empty space labels */}
-              {arrangement === 1 && showTriangles && currentPhase !== 'rearrange' && (
+              {/* Empty space labels with fade transitions */}
+              {arrangement === 1 && showTriangles && (
                 <text
                   x={size / 2}
                   y={size / 2 + 4}
                   textAnchor="middle"
-                  className="text-lg font-bold fill-purple-600"
+                  className={cn(
+                    'text-lg font-bold fill-purple-600 transition-opacity duration-500',
+                    currentPhase === 'rearrange' ? 'opacity-0' : 'opacity-100'
+                  )}
                 >
                   c²
                 </text>
@@ -317,7 +340,7 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
                     x={b + a / 2}
                     y={a / 2 + 4}
                     textAnchor="middle"
-                    className="text-sm font-bold fill-blue-600"
+                    className="text-sm font-bold fill-blue-600 animate-fadeIn"
                   >
                     a²
                   </text>
@@ -325,7 +348,7 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
                     x={b / 2}
                     y={a + b / 2 + 4}
                     textAnchor="middle"
-                    className="text-sm font-bold fill-green-600"
+                    className="text-sm font-bold fill-green-600 animate-fadeIn"
                   >
                     b²
                   </text>
