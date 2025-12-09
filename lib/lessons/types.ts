@@ -161,6 +161,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-num-002-b',
+    slug: 'fracciones-mayores-que-1',
+    title: 'Fracciones Mayores que 1',
+    description: 'Descubre las fracciones impropias y los números mixtos, y aprende a convertir entre ellos.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-002',
+    skills: ['fracciones-impropias', 'numeros-mixtos', 'conversion-fracciones'],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'La Fiesta de Pizza', requiredToAdvance: true },
+      { id: 'improper-fractions', type: 'explore', title: 'Fracciones Impropias', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Dos Formas, Un Número', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Conversiones', requiredToAdvance: true },
+      { id: 'number-line', type: 'explore', title: 'Más Allá del 1', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // ÁLGEBRA Y FUNCIONES
   // ========================================
