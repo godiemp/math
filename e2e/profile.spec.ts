@@ -151,24 +151,31 @@ test.describe('Student Profile Page', () => {
 
     // Open edit modal
     await page.getByRole('button', { name: /Editar Perfil/i }).click();
-    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
-    // Get the display name input
+    // Get the display name input and store original value
     const displayNameInput = page.getByLabel(/Nombre para mostrar/i);
+    const originalName = await displayNameInput.inputValue();
 
     // Clear and enter new display name
+    const newName = `Test User ${Date.now()}`;
     await displayNameInput.clear();
-    await displayNameInput.fill('Updated Student Name');
+    await displayNameInput.fill(newName);
 
     // Click save
     await page.getByRole('button', { name: /Guardar Cambios/i }).click();
-    await page.waitForTimeout(2000);
 
-    // Modal should close
-    await expect(page.getByRole('heading', { name: /Editar Perfil/i })).not.toBeVisible();
+    // Modal should close (indicates success)
+    await expect(page.getByRole('heading', { name: /Editar Perfil/i })).not.toBeVisible({ timeout: 5000 });
 
-    // Verify the display name was updated (check in navbar or profile)
-    await expect(page.getByText(/Updated Student Name/i)).toBeVisible();
+    // Verify the display name was updated on the profile page
+    await expect(page.getByText(newName)).toBeVisible({ timeout: 5000 });
+
+    // Restore original name for test isolation
+    await page.getByRole('button', { name: /Editar Perfil/i }).click();
+    await displayNameInput.clear();
+    await displayNameInput.fill(originalName || 'Test Student');
+    await page.getByRole('button', { name: /Guardar Cambios/i }).click();
+    await expect(page.getByRole('heading', { name: /Editar Perfil/i })).not.toBeVisible({ timeout: 5000 });
   });
 
   test('should show error for empty display name', async ({ page }) => {
@@ -177,7 +184,6 @@ test.describe('Student Profile Page', () => {
 
     // Open edit modal
     await page.getByRole('button', { name: /Editar Perfil/i }).click();
-    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Get the display name input
     const displayNameInput = page.getByLabel(/Nombre para mostrar/i);
@@ -189,11 +195,12 @@ test.describe('Student Profile Page', () => {
 
     // Click save with empty display name
     await page.getByRole('button', { name: /Guardar Cambios/i }).click();
-    await page.waitForTimeout(1500);
 
-    // Should show error message in the modal (from backend or frontend)
-    const errorMessage = page.getByText(/cannot be empty|Display name cannot be empty|Error al actualizar/i);
-    await expect(errorMessage).toBeVisible({ timeout: 10000 });
+    // Should show specific error message from backend
+    await expect(page.getByText(/Display name cannot be empty/i)).toBeVisible({ timeout: 5000 });
+
+    // Modal should still be open (error state)
+    await expect(page.getByRole('heading', { name: /Editar Perfil/i })).toBeVisible();
   });
 
   test('should show error for invalid email format', async ({ page }) => {
@@ -202,7 +209,6 @@ test.describe('Student Profile Page', () => {
 
     // Open edit modal
     await page.getByRole('button', { name: /Editar Perfil/i }).click();
-    // Removed: await page.waitForTimeout(500); - relying on auto-wait
 
     // Get the email input
     const emailInput = page.getByLabel(/Email/i);
@@ -213,10 +219,73 @@ test.describe('Student Profile Page', () => {
 
     // Click save
     await page.getByRole('button', { name: /Guardar Cambios/i }).click();
-    await page.waitForTimeout(1000);
 
-    // Should show error message
-    await expect(page.getByText(/Invalid email|email format|Error/i)).toBeVisible();
+    // Should show specific error message from backend
+    await expect(page.getByText(/Invalid email format/i)).toBeVisible({ timeout: 5000 });
+
+    // Modal should still be open (error state)
+    await expect(page.getByRole('heading', { name: /Editar Perfil/i })).toBeVisible();
+  });
+
+  test('should update target level successfully', async ({ page }) => {
+    // Navigate to profile page
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
+
+    // Open edit modal
+    await page.getByRole('button', { name: /Editar Perfil/i }).click();
+
+    // Get the target level select
+    const targetLevelSelect = page.getByLabel(/qué estás preparando/i);
+    const originalValue = await targetLevelSelect.inputValue();
+
+    // Change to different value
+    const newValue = originalValue === 'M1_ONLY' ? 'M1_AND_M2' : 'M1_ONLY';
+    await targetLevelSelect.selectOption(newValue);
+
+    // Click save
+    await page.getByRole('button', { name: /Guardar Cambios/i }).click();
+
+    // Modal should close (indicates success)
+    await expect(page.getByRole('heading', { name: /Editar Perfil/i })).not.toBeVisible({ timeout: 5000 });
+
+    // Restore original value for test isolation
+    await page.getByRole('button', { name: /Editar Perfil/i }).click();
+    await targetLevelSelect.selectOption(originalValue);
+    await page.getByRole('button', { name: /Guardar Cambios/i }).click();
+    await expect(page.getByRole('heading', { name: /Editar Perfil/i })).not.toBeVisible({ timeout: 5000 });
+  });
+
+  test('should update email successfully', async ({ page }) => {
+    // Navigate to profile page
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
+
+    // Open edit modal
+    await page.getByRole('button', { name: /Editar Perfil/i }).click();
+
+    // Get the email input and store original value
+    const emailInput = page.getByLabel(/Email/i);
+    const originalEmail = await emailInput.inputValue();
+
+    // Change to a new unique email
+    const newEmail = `test-${Date.now()}@example.com`;
+    await emailInput.clear();
+    await emailInput.fill(newEmail);
+
+    // Click save
+    await page.getByRole('button', { name: /Guardar Cambios/i }).click();
+
+    // Modal should close (indicates success)
+    await expect(page.getByRole('heading', { name: /Editar Perfil/i })).not.toBeVisible({ timeout: 5000 });
+
+    // Verify the email was updated on the profile page
+    await expect(page.getByText(newEmail)).toBeVisible({ timeout: 5000 });
+
+    // Restore original email for test isolation
+    await page.getByRole('button', { name: /Editar Perfil/i }).click();
+    await emailInput.clear();
+    await emailInput.fill(originalEmail);
+    await page.getByRole('button', { name: /Guardar Cambios/i }).click();
+    await expect(page.getByRole('heading', { name: /Editar Perfil/i })).not.toBeVisible({ timeout: 5000 });
   });
 
   test('should navigate to progress page from quick actions', async ({ page }) => {
