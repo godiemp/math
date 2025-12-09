@@ -368,6 +368,7 @@ function AdaptivePracticeContent() {
           id: currentProblem.id,
           question: currentProblem.questionLatex,
           options: currentProblem.options,
+          correctAnswer: currentProblem.correctAnswer,
           subject: currentProblem.subject,
           difficulty: currentProblem.difficulty,
         },
@@ -377,8 +378,9 @@ function AdaptivePracticeContent() {
 
       setIsChatLoading(false);
 
-      if (response.data?.hint) {
-        setChatMessages((prev) => [...prev, { role: 'assistant', content: response.data!.hint }]);
+      const hint = response.data?.hint;
+      if (hint && hint !== 'undefined' && hint.trim() !== '') {
+        setChatMessages((prev) => [...prev, { role: 'assistant', content: hint }]);
       } else {
         setChatMessages((prev) => [
           ...prev,

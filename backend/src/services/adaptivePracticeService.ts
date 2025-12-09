@@ -33,8 +33,17 @@ export interface Problem {
   skills: string[];
 }
 
+export interface HintProblem {
+  id: string;
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  subject?: string;
+  difficulty?: string;
+}
+
 export interface HintRequest {
-  problem: Problem;
+  problem: HintProblem;
   studentMessage: string;
   conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }>;
 }
