@@ -203,6 +203,27 @@ export const M1_LESSONS: Lesson[] = [
     ],
   },
   // ========================================
+  // GEOMETRÍA
+  // ========================================
+  {
+    id: 'm1-geo-001-a',
+    slug: 'area-figuras',
+    title: 'Área de Triángulos y Cuadriláteros',
+    description: 'Aprende a calcular el área de triángulos, rectángulos, paralelogramos y trapecios.',
+    level: 'M1',
+    subject: 'geometría',
+    thematicUnit: 'M1-GEO-001',
+    skills: ['area-triangulo', 'area-cuadrilatero', 'descomponer-figuras'],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Proyecto de Pintura', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubriendo Fórmulas', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Fórmulas de Área' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
+  // ========================================
   // PROBABILIDAD Y ESTADÍSTICA
   // ========================================
   {
