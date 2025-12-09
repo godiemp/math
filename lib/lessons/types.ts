@@ -207,6 +207,25 @@ export const M1_LESSONS: Lesson[] = [
   // ========================================
   {
     id: 'm1-geo-001-a',
+    slug: 'teorema-pitagoras',
+    title: 'El Teorema de Pitágoras',
+    description: 'Descubre la relación entre los lados de un triángulo rectángulo.',
+    level: 'M1',
+    subject: 'geometría',
+    thematicUnit: 'M1-GEO-001',
+    skills: ['teorema-pitagoras-aplicar', 'teorema-pitagoras-identificar'],
+    estimatedMinutes: 12,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Problema de la Escalera', requiredToAdvance: true },
+      { id: 'discover', type: 'explore', title: 'Descubre el Patrón', requiredToAdvance: true },
+      { id: 'proof', type: 'explore', title: 'La Prueba Visual', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'El Teorema de Pitágoras' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
+  {
+    id: 'm1-geo-001-b',
     slug: 'area-figuras',
     title: 'Área de Triángulos y Cuadriláteros',
     description: 'Aprende a calcular el área de triángulos, rectángulos, paralelogramos y trapecios.',
