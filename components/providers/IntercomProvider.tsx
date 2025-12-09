@@ -1,8 +1,31 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
-import Intercom, { boot, shutdown } from '@intercom/messenger-js-sdk';
+import { usePathname } from 'next/navigation';
+import Intercom, { boot, shutdown, update } from '@intercom/messenger-js-sdk';
 import { useAuth } from '@/contexts/AuthContext';
+
+// Routes where Intercom widget should be visible
+const ALLOWED_ROUTES = [
+  '/',
+  '/dashboard',
+  '/profile',
+  '/pricing',
+  '/contacto',
+  '/como-funciona',
+  '/payment',
+  '/payments',
+  '/legal',
+  '/forgot-password',
+  '/reset-password',
+];
+
+// Check if current path should show Intercom
+const shouldShowIntercom = (pathname: string): boolean => {
+  return ALLOWED_ROUTES.some(route =>
+    pathname === route || pathname.startsWith(`${route}/`)
+  );
+};
 
 const APP_ID = 'uzabsd5b';
 
@@ -38,6 +61,7 @@ const waitForIntercom = (maxWait = 10000): Promise<boolean> => {
 
 export function IntercomProvider({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated, isLoading } = useAuth();
+  const pathname = usePathname();
   const isInitialized = useRef(false);
   const lastUserId = useRef<string | null | undefined>(undefined);
 
@@ -91,6 +115,15 @@ export function IntercomProvider({ children }: { children: React.ReactNode }) {
 
     bootIntercom();
   }, [isLoading, bootIntercom]);
+
+  // Show/hide Intercom launcher based on current route
+  useEffect(() => {
+    if (!isInitialized.current) return;
+
+    update({
+      hide_default_launcher: !shouldShowIntercom(pathname),
+    });
+  }, [pathname]);
 
   return <>{children}</>;
 }

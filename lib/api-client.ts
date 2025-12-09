@@ -94,8 +94,25 @@ async function fetchBackendUrl(): Promise<string> {
 /**
  * Get the API base URL, fetching from server on first call
  * Returns a Promise that resolves to the backend URL
+ *
+ * IMPORTANT: In the browser, we use the API proxy (/api/backend) to avoid
+ * Safari ITP blocking third-party cookies from the Railway backend.
+ * This makes all API requests "first-party" from the browser's perspective.
  */
 async function getApiUrl(): Promise<string> {
+  // In browser, always use the proxy to avoid Safari ITP cookie issues
+  // The proxy forwards requests to the backend while keeping cookies first-party
+  if (typeof window !== 'undefined') {
+    if (!hasLoggedDebugInfo) {
+      hasLoggedDebugInfo = true;
+      console.log('🔗 Using API proxy for Safari compatibility');
+      // Still fetch config for debug info
+      fetchBackendUrl().catch(() => {});
+    }
+    return '/api/backend';
+  }
+
+  // Server-side: fetch the actual backend URL
   if (cachedApiBaseUrl) {
     return cachedApiBaseUrl;
   }
@@ -160,7 +177,8 @@ export async function apiRequest<T>(
   let backendUrl = await getApiUrl();
 
   // Ensure URL has protocol (defensive fix for misconfigured env vars)
-  if (backendUrl && !backendUrl.startsWith('http://') && !backendUrl.startsWith('https://')) {
+  // Skip for relative URLs (proxy) which start with '/'
+  if (backendUrl && !backendUrl.startsWith('/') && !backendUrl.startsWith('http://') && !backendUrl.startsWith('https://')) {
     console.warn('⚠️  Backend URL missing protocol, adding https://', backendUrl);
     backendUrl = `https://${backendUrl}`;
   }
