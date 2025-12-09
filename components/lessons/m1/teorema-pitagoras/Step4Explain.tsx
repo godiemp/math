@@ -72,7 +72,7 @@ export default function Step4Explain({ onComplete, isActive }: LessonStepProps) 
             <div className="flex flex-col md:flex-row items-center gap-6">
               {/* Triangle diagram */}
               <div className="flex-shrink-0">
-                <svg viewBox="0 0 150 120" className="w-40 h-32">
+                <svg viewBox="0 0 150 135" className="w-40 h-36">
                   {/* Triangle */}
                   <polygon
                     points="10,110 140,110 10,20"
@@ -89,7 +89,7 @@ export default function Step4Explain({ onComplete, isActive }: LessonStepProps) 
                   />
                   {/* Labels */}
                   <text x="0" y="70" className="text-sm font-bold fill-blue-600">a</text>
-                  <text x="75" y="125" textAnchor="middle" className="text-sm font-bold fill-green-600">b</text>
+                  <text x="75" y="128" textAnchor="middle" className="text-sm font-bold fill-green-600">b</text>
                   <text x="85" y="55" className="text-sm font-bold fill-amber-600">c</text>
                 </svg>
               </div>
