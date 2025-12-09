@@ -142,6 +142,28 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint Final', requiredToAdvance: true },
     ],
   },
+  // ========================================
+  // PROBABILIDAD Y ESTADÍSTICA
+  // ========================================
+  {
+    id: 'm1-prob-004-a',
+    slug: 'probabilidad-eventos',
+    title: 'Probabilidad de Eventos',
+    description: 'Descubre cómo calcular la probabilidad de que ocurra un evento.',
+    level: 'M1',
+    subject: 'probabilidad',
+    thematicUnit: 'M1-PROB-004',
+    skills: ['probabilidad-basica', 'espacio-muestral', 'eventos-favorables'],
+    estimatedMinutes: 12,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Juego de Dados', requiredToAdvance: true },
+      { id: 'explore-dice', type: 'explore', title: 'Explorando Posibilidades', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'La Fórmula de Probabilidad' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'advanced', type: 'explore', title: 'Más Allá del Dado', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
 ];
 
 /**
