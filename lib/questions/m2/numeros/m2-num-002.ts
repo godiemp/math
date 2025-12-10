@@ -25,6 +25,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '5 \\times 12 = 8 \\times x \\quad \\Rightarrow \\quad x = \\frac{60}{8} = 7.5 \\text{ días}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-proporcionalidad', 'numeros-proporcionalidad-inversa', 'numeros-regla-tres', 'numeros-operaciones-basicas']
   },
   {
@@ -37,6 +38,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '1 \\times 6 = 3 \\times x \\quad \\Rightarrow \\quad x = \\frac{6}{3} = 2 \\text{ horas}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-proporcionalidad', 'numeros-proporcionalidad-inversa', 'numeros-regla-tres', 'numeros-operaciones-basicas']
   },
   {
@@ -50,6 +52,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'd = l\\sqrt{2} \\rightarrow l = \\frac{10\\sqrt{2}}{\\sqrt{2}} = 10\\text{ cm}. \\quad A = l^2 = 10^2 = 100\\text{ cm}^2',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-reales', 'numeros-reales-problemas-raices', 'geometria-area', 'numeros-raices', 'numeros-racionalizacion', 'numeros-operaciones-basicas']
   },
   {
@@ -63,6 +66,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Error absoluto} = |3.14159 - 3.14| = 0.00159',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales', 'numeros-reales-problemas-aproximacion', 'numeros-irracionales', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -76,6 +80,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'A = \\pi r^2 = \\pi(\\sqrt{50})^2 = 50\\pi\\text{ cm}^2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales', 'numeros-reales-problemas-raices', 'geometria-area-circulo', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   // Subsection B: Problemas de medición con irracionales
@@ -90,6 +95,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'l = \\sqrt{50} = \\sqrt{25 \\times 2} = 5\\sqrt{2}\\text{ m}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-problemas-medicion', 'geometria-area', 'numeros-raices', 'numeros-simplificacion-raices', 'numeros-operaciones-basicas']
   },
   {
@@ -102,6 +108,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'h = \\sqrt{25 - 7} = \\sqrt{18} = 3\\sqrt{2}\\text{ m}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-reales-problemas-medicion', 'geometria-pitagoras', 'numeros-raices', 'numeros-operaciones-basicas']
   },
   {
@@ -115,6 +122,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'r = \\sqrt{18} = \\sqrt{9 \\times 2} = 3\\sqrt{2}\\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-problemas-medicion', 'geometria-area-circulo', 'numeros-raices', 'numeros-simplificacion-raices']
   },
   {
@@ -128,6 +136,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'd = a\\sqrt{3} \\rightarrow 6\\sqrt{3} = a\\sqrt{3} \\rightarrow a = 6\\text{ cm}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-reales-problemas-medicion', 'geometria-volumen', 'numeros-raices', 'algebra-despeje']
   },
   // Subsection C: Problemas de aproximación y error
@@ -142,6 +151,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{|1.41421 - 1.41|}{1.41421} \\approx 0.003 \\approx 0.3\\%',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-reales-problemas-aproximacion', 'numeros-decimales', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   },
   {
@@ -155,6 +165,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '15.3 \\pm 0.2 \\Rightarrow [15.1, 15.5]',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['numeros-reales-problemas-aproximacion', 'numeros-reales-intervalos', 'numeros-decimales']
   },
   {
@@ -168,6 +179,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '7.0710... \\approx 7.07',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['numeros-reales-problemas-aproximacion', 'numeros-reales-aproximaciones', 'numeros-decimales', 'numeros-raices']
   },
   {
@@ -181,6 +193,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '|9\\pi - 27| \\approx |28.27 - 27| \\approx 1.27\\text{ m}^2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-problemas-aproximacion', 'geometria-area-circulo', 'numeros-irracionales', 'numeros-operaciones-basicas']
   },
   // Subsection D: Aplicaciones en ciencias y tecnología
@@ -195,6 +208,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'dB = 10\\log_{10}\\left(\\frac{10^{-6}}{10^{-12}}\\right) = 10\\log_{10}(10^6) = 10 \\times 6 = 60\\text{ dB}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-reales-problemas-ciencias', 'logaritmos-problemas-escalas', 'logaritmos-propiedades', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -208,6 +222,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'd = ct = 3 \\times 10^8 \\times 3.156 \\times 10^7 \\approx 9.46 \\times 10^{15}\\text{ m}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-reales-problemas-ciencias', 'numeros-notacion-cientifica', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -221,6 +236,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'T = 2\\pi\\sqrt{\\frac{1}{10}} \\approx \\frac{6.28}{3.16} \\approx 2\\text{ s}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-reales-problemas-ciencias', 'numeros-irracionales', 'numeros-raices', 'numeros-operaciones-basicas']
   },
   {
@@ -234,6 +250,7 @@ export const m2Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '6.626 \\times 10^{-34} = 0.\\underbrace{000...000}_{33\\text{ ceros}}6626',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-problemas-ciencias', 'numeros-notacion-cientifica', 'numeros-potencias']
   }
 ];

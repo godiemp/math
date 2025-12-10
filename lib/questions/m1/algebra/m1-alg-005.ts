@@ -27,6 +27,7 @@ export const m1Alg005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{En una función, cada valor de } x \\text{ tiene exactamente un valor de } y. \\text{ Solo B cumple.}',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['algebra-funciones', 'algebra-relaciones-funciones']
   },
   {
@@ -40,6 +41,7 @@ export const m1Alg005Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Dom}(f) = \\mathbb{R} \\text{ porque no hay restricciones para } x',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['algebra-funciones', 'algebra-dominio-rango', 'algebra-funciones-lineales']
   },
   {
@@ -52,7 +54,8 @@ export const m1Alg005Questions: Question[] = [
     options: ['\\{7\\}', '\\text{Todos los números reales}', '\\{0, 7\\}', '\\{x : x \\geq 7\\}'],
     correctAnswer: 0,
     explanation: '\\text{Para todo } x, f(x) = 7 \\quad \\Rightarrow \\quad \\text{Rango} = \\{7\\}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['algebra-funciones', 'algebra-dominio-rango', 'algebra-funciones-lineales']
   },
   {
@@ -65,7 +68,8 @@ export const m1Alg005Questions: Question[] = [
     options: ['Todos los reales excepto 3', 'Todos los reales excepto 0', 'Todos los reales mayores que 3', 'Todos los reales'],
     correctAnswer: 0,
     explanation: 'x - 3 \\neq 0 \\quad \\Rightarrow \\quad x \\neq 3 \\quad \\therefore \\quad \\text{Dom}(f) = \\mathbb{R} - \\{3\\}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['algebra-funciones', 'algebra-dominio-rango', 'algebra-funciones-racionales']
   },
   {
@@ -78,7 +82,8 @@ export const m1Alg005Questions: Question[] = [
     options: ['$x \\geq 2$', '$x > 2$', '$x \\geq -2$', 'Todos los reales'],
     correctAnswer: 0,
     explanation: 'x - 2 \\geq 0 \\quad \\Rightarrow \\quad x \\geq 2 \\quad \\therefore \\quad \\text{Dom}(g) = [2, \\infty)',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.40,
     skills: ['algebra-funciones', 'algebra-dominio-rango', 'algebra-desigualdades', 'numeros-raices']
   },
   {
@@ -92,6 +97,7 @@ export const m1Alg005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{El punto } (3, 7) \\text{ significa que cuando } x = 3, y = 7 \\quad \\therefore \\quad f(3) = 7',
     difficulty: 'easy',
+    difficultyScore: 0.15,
     skills: ['algebra-funciones', 'algebra-evaluacion-funciones', 'algebra-graficas']
   }
 ];

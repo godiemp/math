@@ -21,6 +21,8 @@ interface Question {
   // Explanation in LaTeX format
   explanation: string;
   difficulty: 'easy' | 'medium' | 'hard' | 'extreme';
+  // Numeric difficulty score from 0.0 (easiest) to 1.0 (hardest)
+  difficultyScore: number;
   operacionBase?: string;
   skills: string[];
 }

@@ -24,6 +24,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'V = a^3 = 3^3 = 3 \\times 3 \\times 3 = 27 \\text{ cm}^3',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['geometria-volumen', 'geometria-volumen-cubo', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'a^3'
   },
@@ -38,6 +39,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'V = \\pi r^2 h = 3.14 \\times 3^2 \\times 4 = 3.14 \\times 9 \\times 4 = 113.04 \\text{ cm}^3',
     difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['geometria-volumen', 'geometria-volumen-cilindro', 'numeros-potencias', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -50,6 +52,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'V = \\frac{4}{3}\\pi r^3 = \\frac{4}{3} \\times 3.14 \\times 6^3 = \\frac{4}{3} \\times 3.14 \\times 216 \\approx 904.32 \\text{ cm}^3',
     difficulty: 'hard',
+    difficultyScore: 0.58,
     skills: ['geometria-volumen', 'geometria-volumen-esfera', 'numeros-potencias', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -62,6 +65,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'V = \\frac{1}{3}\\pi r^2 h = \\frac{1}{3} \\times 3.14 \\times 4^2 \\times 9 \\approx 150.72 \\text{ cm}^3',
     difficulty: 'hard',
+    difficultyScore: 0.55,
     skills: ['geometria-volumen', 'geometria-volumen-cono', 'numeros-potencias', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -73,7 +77,8 @@ export const m1Geo003Questions: Question[] = [
     options: ['235.5 m³', '471 m³', '706.5 m³', '942 m³'],
     correctAnswer: 2,
     explanation: 'V_{total} = 3.14 \\times 25 \\times 12 = 942 \\text{ m}^3, \\quad V_{agua} = \\frac{3}{4} \\times 942 = 706.5 \\text{ m}^3',
-    difficulty: 'extreme',
+    difficulty: 'hard',
+    difficultyScore: 0.55,
     skills: ['geometria-volumen', 'geometria-volumen-cilindro', 'geometria-aplicaciones', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   // ========================================
@@ -89,6 +94,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'V = l \\times a \\times h = 4 \\times 3 \\times 5 = 60 \\text{ cm}^3',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['geometria-volumen', 'geometria-volumen-prisma', 'numeros-operaciones-basicas']
   },
   {
@@ -101,6 +107,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A = 2(lw + lh + wh) = 2(6 \\times 4 + 6 \\times 3 + 4 \\times 3) = 2(24 + 18 + 12) = 2(54) = 108 \\text{ cm}^2',
     difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['geometria-area', 'geometria-area-prisma', 'numeros-operaciones-basicas']
   },
   {
@@ -113,6 +120,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'V = A_{base} \\times h \\quad \\Rightarrow \\quad 120 = (5 \\times 4) \\times h \\quad \\Rightarrow \\quad h = \\frac{120}{20} = 6 \\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['geometria-volumen', 'geometria-volumen-prisma', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
@@ -125,6 +133,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A_{triángulo} = \\frac{1}{2} \\times 6 \\times 4 = 12 \\text{ cm}^2, \\quad V = 12 \\times 10 = 120 \\text{ cm}^3',
     difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['geometria-volumen', 'geometria-volumen-prisma', 'geometria-area-triangulo', 'numeros-operaciones-basicas']
   },
   {
@@ -136,7 +145,8 @@ export const m1Geo003Questions: Question[] = [
     options: ['32.000 litros', '48.000 litros', '64.000 litros', '80.000 litros'],
     correctAnswer: 2,
     explanation: 'V = 8 \\times 4 \\times 2 = 64 \\text{ m}^3 = 64.000 \\text{ litros}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['geometria-volumen', 'geometria-volumen-prisma', 'geometria-aplicaciones', 'numeros-operaciones-basicas']
   },
   // ========================================
@@ -152,6 +162,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'V = \\pi r^2 h = 3.14 \\times 16 \\times 10 = 502.4 \\text{ cm}^3',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['geometria-volumen', 'geometria-volumen-cilindro', 'numeros-potencias', 'numeros-decimales']
   },
   {
@@ -164,6 +175,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A_{lateral} = 2\\pi rh = 2 \\times 3.14 \\times 5 \\times 8 = 251.2 \\text{ cm}^2',
     difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['geometria-area', 'geometria-area-cilindro', 'numeros-decimales']
   },
   {
@@ -175,7 +187,8 @@ export const m1Geo003Questions: Question[] = [
     options: ['150.72 cm²', '175.84 cm²', '188.4 cm²', '207.24 cm²'],
     correctAnswer: 2,
     explanation: 'A_{total} = 2\\pi r^2 + 2\\pi rh = 2(3.14)(9) + 2(3.14)(3)(7) = 56.52 + 131.88 = 188.4 \\text{ cm}^2',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.52,
     skills: ['geometria-area', 'geometria-area-cilindro', 'numeros-potencias', 'numeros-decimales']
   },
   {
@@ -188,6 +201,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'V = \\pi r^2 h \\quad \\Rightarrow \\quad 942 = 3.14 \\times 25 \\times h \\quad \\Rightarrow \\quad h = \\frac{942}{78.5} = 12 \\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['geometria-volumen', 'geometria-volumen-cilindro', 'algebra-despeje', 'numeros-decimales']
   },
   {
@@ -200,6 +214,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'V_1 = \\pi (4)^2 (9) = 144\\pi, \\quad V_2 = \\pi (6)^2 h = 36\\pi h \\quad \\Rightarrow \\quad h = \\frac{144\\pi}{36\\pi} = 4 \\text{ cm}',
     difficulty: 'hard',
+    difficultyScore: 0.58,
     skills: ['geometria-volumen', 'geometria-volumen-cilindro', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   // ========================================
@@ -215,6 +230,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'A = 6(6)^2 = 216 \\text{ cm}^2, \\quad V = 6^3 = 216 \\text{ cm}^3, \\quad \\text{Relación} = 216:216 = 1:1',
     difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['geometria-area', 'geometria-volumen', 'geometria-volumen-cubo', 'numeros-operaciones-basicas']
   },
   {
@@ -226,7 +242,8 @@ export const m1Geo003Questions: Question[] = [
     options: ['2 veces', '4 veces', '6 veces', '8 veces'],
     correctAnswer: 3,
     explanation: 'V_1 = a^3, \\quad V_2 = (2a)^3 = 8a^3 \\quad \\Rightarrow \\quad \\text{Aumenta 8 veces}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['geometria-volumen', 'geometria-volumen-cubo', 'numeros-potencias']
   },
   {
@@ -239,6 +256,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'V = 60{,}000 \\text{ cm}^3, \\quad h = \\frac{60{,}000}{50 \\times 30} = \\frac{60{,}000}{1{,}500} = 40 \\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['geometria-volumen', 'geometria-volumen-prisma', 'geometria-aplicaciones', 'algebra-despeje']
   },
   {
@@ -251,6 +269,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'V = \\pi h(R^2 - r^2) = 3.14 \\times 10 \\times (25 - 16) = 3.14 \\times 10 \\times 9 = 282.6 \\text{ cm}^3',
     difficulty: 'hard',
+    difficultyScore: 0.58,
     skills: ['geometria-volumen', 'geometria-volumen-cilindro', 'numeros-potencias', 'numeros-decimales']
   },
   {
@@ -263,6 +282,7 @@ export const m1Geo003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'a = \\sqrt[3]{125} = 5 \\text{ cm}, \\quad A = 6a^2 = 6(25) = 150 \\text{ cm}^2',
     difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['geometria-area', 'geometria-volumen', 'geometria-volumen-cubo', 'numeros-raices']
   }
 ];

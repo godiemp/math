@@ -33,6 +33,7 @@ export const m1Alg009Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Una función asigna a cada elemento del dominio un único valor. Solo la opción B cumple esto.}',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-concepto', 'algebra-funciones']
   },
   {
@@ -46,6 +47,7 @@ export const m1Alg009Questions: Question[] = [
     correctAnswer: 3,
     explanation: 'f(4) = 2(4) + 3 = 8 + 3 = 11',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['funcion-concepto', 'algebra-evaluacion-funciones']
   },
   {
@@ -59,6 +61,7 @@ export const m1Alg009Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Una función lineal está definida para todos los números reales.}',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['funcion-concepto', 'algebra-dominio-rango']
   },
   // ========================================
@@ -75,6 +78,7 @@ export const m1Alg009Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{En } f(x) = mx + b, \\text{ la pendiente es } m. \\text{ Aquí } m = 5.',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['funcion-lineal-concepto', 'funcion-afin-pendiente']
   },
   {
@@ -87,7 +91,8 @@ export const m1Alg009Questions: Question[] = [
     options: ['f(x) = mx + b, b \\neq 0', 'f(x) = mx', 'f(x) = b', 'f(x) = x + b'],
     correctAnswer: 1,
     explanation: '\\text{Si pasa por el origen, } f(0) = 0, \\text{ entonces } b = 0 \\text{ y } f(x) = mx.',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['funcion-lineal-concepto', 'algebra-funciones']
   },
   {
@@ -106,6 +111,7 @@ export const m1Alg009Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Pendiente negativa significa que al aumentar x, f(x) disminuye.}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['funcion-lineal-concepto', 'funcion-lineal-grafica']
   },
   // ========================================
@@ -122,6 +128,7 @@ export const m1Alg009Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{En } f(x) = mx + b, \\text{ el coeficiente de posición es } b. \\text{ Aquí } b = 7.',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['funcion-afin-pendiente', 'funcion-lineal-concepto']
   },
   {
@@ -134,7 +141,8 @@ export const m1Alg009Questions: Question[] = [
     options: ['1', '2', '3', '6'],
     correctAnswer: 1,
     explanation: 'm = \\frac{y_2 - y_1}{x_2 - x_1} = \\frac{9 - 3}{4 - 1} = \\frac{6}{3} = 2',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['funcion-afin-pendiente', 'geometria-coordenadas']
   },
   {
@@ -147,7 +155,8 @@ export const m1Alg009Questions: Question[] = [
     options: ['y = 3x - 2', 'y = -2x + 3', 'y = 3x + 2', 'y = -3x - 2'],
     correctAnswer: 0,
     explanation: '\\text{Como pasa por } (0, -2), \\text{ el coeficiente de posición es } -2. \\\\ \\text{Con pendiente 3: } y = 3x - 2',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['funcion-afin-pendiente', 'funcion-lineal-concepto']
   },
   {
@@ -166,6 +175,7 @@ export const m1Alg009Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Rectas paralelas tienen la misma pendiente pero diferente coeficiente de posición.}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['funcion-afin-pendiente', 'geometria-rectas']
   },
   // ========================================
@@ -182,6 +192,7 @@ export const m1Alg009Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{El corte con el eje y ocurre cuando } x = 0: f(0) = 1. \\text{ Punto: } (0, 1)',
     difficulty: 'easy',
+    difficultyScore: 0.20,
     skills: ['funcion-lineal-grafica', 'geometria-coordenadas']
   },
   {
@@ -194,7 +205,8 @@ export const m1Alg009Questions: Question[] = [
     options: ['(0, -6)', '(2, 0)', '(-2, 0)', '(6, 0)'],
     correctAnswer: 1,
     explanation: '\\text{El corte con el eje x ocurre cuando } f(x) = 0: \\\\ 3x - 6 = 0 \\Rightarrow x = 2. \\text{ Punto: } (2, 0)',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['funcion-lineal-grafica', 'algebra-ecuaciones-lineales']
   },
   {
@@ -208,6 +220,7 @@ export const m1Alg009Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Como pasa por } (0, 3), b = 3. \\\\ m = \\frac{7 - 3}{2 - 0} = 2 \\\\ f(x) = 2x + 3',
     difficulty: 'medium',
+    difficultyScore: 0.40,
     skills: ['funcion-lineal-grafica', 'funcion-afin-pendiente']
   },
   {
@@ -220,7 +233,8 @@ export const m1Alg009Questions: Question[] = [
     options: ['-4', '-2', '2', '4'],
     correctAnswer: 1,
     explanation: 'm = \\frac{0 - 4}{1 - (-1)} = \\frac{-4}{2} = -2',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['funcion-lineal-grafica', 'funcion-afin-pendiente']
   },
   // ========================================
@@ -237,6 +251,7 @@ export const m1Alg009Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{La diferencia constante es 2 (pendiente). Cuando } x = 0, f(0) = 5. \\\\ f(x) = 2x + 5',
     difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['funcion-lineal-tablas', 'algebra-patrones']
   },
   {
@@ -250,6 +265,7 @@ export const m1Alg009Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'f(3) = 4(3) - 1 = 12 - 1 = 11',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['funcion-lineal-tablas', 'algebra-evaluacion-funciones']
   },
   {
@@ -263,6 +279,7 @@ export const m1Alg009Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{La pendiente es el cambio en f(x) dividido por el cambio en x: } m = \\frac{3}{1} = 3',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['funcion-lineal-tablas', 'funcion-afin-pendiente']
   },
   {
@@ -275,7 +292,8 @@ export const m1Alg009Questions: Question[] = [
     options: ['7', '8', '9', '10'],
     correctAnswer: 2,
     explanation: '\\text{Pendiente: } m = \\frac{-3 - (-7)}{0 - (-2)} = \\frac{4}{2} = 2 \\\\ f(x) = 2x - 3 \\Rightarrow f(6) = 12 - 3 = 9',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.52,
     skills: ['funcion-lineal-tablas', 'funcion-afin-pendiente']
   },
   {
@@ -288,7 +306,8 @@ export const m1Alg009Questions: Question[] = [
     options: ['2', '4', '6', '8'],
     correctAnswer: 1,
     explanation: 'm = \\frac{19 - 10}{5 - 2} = 3 \\\\ 10 = 3(2) + b \\Rightarrow b = 4 \\\\ f(0) = 4',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['funcion-lineal-tablas', 'funcion-afin-pendiente']
   },
   {
@@ -302,6 +321,7 @@ export const m1Alg009Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'f(x) = x^2 + 1 \\text{ es cuadrática, no lineal.}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['funcion-lineal-concepto', 'funcion-concepto']
   }
 ];

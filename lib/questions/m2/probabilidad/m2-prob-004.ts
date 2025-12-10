@@ -26,6 +26,7 @@ export const m2Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P = C(3,2) \\times \\left(\\frac{1}{2}\\right)^2 \\times \\left(\\frac{1}{2}\\right)^1 = 3 \\times \\frac{1}{8} = \\frac{3}{8}',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-calculo-binomial', 'probabilidad-combinaciones', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -38,7 +39,8 @@ export const m2Prob004Questions: Question[] = [
     options: ['\\frac{125}{324}', '\\frac{200}{648}', '\\frac{500}{1296}', '\\frac{625}{1296}'],
     correctAnswer: 2,
     explanation: 'P = C(4,1) \\times \\left(\\frac{1}{6}\\right)^1 \\times \\left(\\frac{5}{6}\\right)^3 = 4 \\times \\frac{125}{1296} = \\frac{500}{1296}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-calculo-binomial', 'probabilidad-combinaciones', 'numeros-fracciones', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -51,7 +53,8 @@ export const m2Prob004Questions: Question[] = [
     options: ['\\frac{45}{512}', '\\frac{90}{1024}', '\\frac{135}{1024}', '\\frac{270}{1024}'],
     correctAnswer: 1,
     explanation: 'P = C(5,3) \\times \\left(\\frac{1}{4}\\right)^3 \\times \\left(\\frac{3}{4}\\right)^2 = 10 \\times \\frac{9}{1024} = \\frac{90}{1024}',
-    difficulty: 'extreme',
+    difficulty: 'hard',
+    difficultyScore: 0.55,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-calculo-binomial', 'probabilidad-combinaciones', 'numeros-fracciones', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -64,7 +67,8 @@ export const m2Prob004Questions: Question[] = [
     options: ['0.2048', '0.4096', '0.6', '0.8192'],
     correctAnswer: 1,
     explanation: 'P = C(5,4) \\times (0.8)^4 \\times (0.2)^1 = 5 \\times 0.4096 \\times 0.2 = 0.4096',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-calculo-binomial', 'probabilidad-modelos-aplicaciones', 'probabilidad-combinaciones', 'numeros-decimales', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -77,7 +81,8 @@ export const m2Prob004Questions: Question[] = [
     options: ['\\frac{7}{128}', '\\frac{11}{256}', '\\frac{7}{512}', '\\frac{56}{1024}'],
     correctAnswer: 3,
     explanation: 'P = \\frac{C(10,8) + C(10,9) + C(10,10)}{2^{10}} = \\frac{45 + 10 + 1}{1024} = \\frac{56}{1024}',
-    difficulty: 'extreme',
+    difficulty: 'hard',
+    difficultyScore: 0.58,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-calculo-binomial', 'probabilidad-combinaciones', 'numeros-fracciones', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -91,6 +96,7 @@ export const m2Prob004Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'P(0 \\text{ defectuosos}) = (0.95)^3 \\approx 0.857',
     difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-calculo-binomial', 'probabilidad-modelos-aplicaciones', 'numeros-decimales', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   // Subsection C: Otros modelos probabilísticos
@@ -104,7 +110,8 @@ export const m2Prob004Questions: Question[] = [
     options: ['\\frac{1}{5}', '\\frac{1}{4}', '\\frac{1}{10}', '\\frac{3}{20}'],
     correctAnswer: 0,
     explanation: 'P = \\frac{20}{100} = \\frac{1}{5} \\text{ (distribución uniforme discreta)}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-otros-modelos', 'probabilidad-uniforme', 'numeros-multiplos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -117,7 +124,8 @@ export const m2Prob004Questions: Question[] = [
     options: ['\\frac{1}{6}', '\\frac{25}{216}', '\\frac{5}{36}', '\\frac{1}{36}'],
     correctAnswer: 1,
     explanation: 'P = \\left(\\frac{5}{6}\\right)^2 \\times \\frac{1}{6} = \\frac{25}{216}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['probabilidad-otros-modelos', 'probabilidad-geometrica', 'numeros-fracciones', 'numeros-potencias']
   },
   {
@@ -130,7 +138,8 @@ export const m2Prob004Questions: Question[] = [
     options: ['e^{-3} \\approx 0.05', '\\frac{1}{3}', '0', '1'],
     correctAnswer: 0,
     explanation: 'P(0) = \\frac{3^0 e^{-3}}{0!} = e^{-3} \\approx 0.05',
-    difficulty: 'extreme',
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['probabilidad-otros-modelos', 'probabilidad-poisson', 'numeros-potencias', 'numeros-factorial']
   },
   {
@@ -143,7 +152,8 @@ export const m2Prob004Questions: Question[] = [
     options: ['\\text{Binomial: n fijo; Geométrica: hasta éxito}', '\\text{Son iguales}', '\\text{Binomial: sin rep.; Geométrica: con rep.}', '\\text{Depende de n}'],
     correctAnswer: 0,
     explanation: '\\text{Binomial: } P(X=k) \\text{ en } n \\text{ ensayos}; \\quad \\text{Geométrica: ensayos hasta éxito}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['probabilidad-otros-modelos', 'probabilidad-conceptos', 'probabilidad-distribucion-binomial']
   },
   // Esperanza (Expected Value) E[X] = n·p
@@ -158,6 +168,7 @@ export const m2Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'E[X] = n \\cdot p = 100 \\times 0{,}5 = 50',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-esperanza', 'numeros-operaciones-basicas']
   },
   {
@@ -171,6 +182,7 @@ export const m2Prob004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'E[X] = n \\cdot p = 20 \\times 0{,}5 = 10',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-esperanza', 'numeros-operaciones-basicas']
   },
   {
@@ -183,7 +195,8 @@ export const m2Prob004Questions: Question[] = [
     options: ['25', '30', '35', '40'],
     correctAnswer: 2,
     explanation: 'E[X] = n \\cdot p = 50 \\times 0{,}7 = 35',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-esperanza', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   },
   // Varianza y Desviación Estándar Var(X) = n·p·(1-p)
@@ -198,6 +211,7 @@ export const m2Prob004Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'Var(X) = n \\cdot p \\cdot (1-p) = 100 \\times 0{,}5 \\times 0{,}5 = 25',
     difficulty: 'medium',
+    difficultyScore: 0.32,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-varianza', 'numeros-operaciones-basicas']
   },
   {
@@ -211,6 +225,7 @@ export const m2Prob004Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\sigma = \\sqrt{Var(X)} = \\sqrt{25} = 5',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-desviacion-estandar', 'numeros-raices']
   },
   {
@@ -224,6 +239,7 @@ export const m2Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\sigma = \\sqrt{400 \\times 0{,}5 \\times 0{,}5} = \\sqrt{100} = 10',
     difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-desviacion-estandar', 'numeros-raices', 'numeros-operaciones-basicas']
   },
   // Probabilidades "al menos" / "a lo más" (at-least / at-most)
@@ -237,7 +253,8 @@ export const m2Prob004Questions: Question[] = [
     options: ['\\frac{1}{6}', '\\frac{91}{216}', '\\frac{125}{216}', '\\frac{1}{2}'],
     correctAnswer: 1,
     explanation: 'P(X \\geq 1) = 1 - P(X=0) = 1 - \\left(\\frac{5}{6}\\right)^3 = 1 - \\frac{125}{216} = \\frac{91}{216}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-complemento', 'numeros-fracciones', 'numeros-potencias']
   },
   {
@@ -251,6 +268,7 @@ export const m2Prob004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P(X \\geq 2) = 1 - P(X=0) - P(X=1) = 1 - \\frac{1}{16} - \\frac{4}{16} = \\frac{11}{16}',
     difficulty: 'hard',
+    difficultyScore: 0.52,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-complemento', 'probabilidad-combinaciones', 'numeros-fracciones']
   },
   {
@@ -264,6 +282,7 @@ export const m2Prob004Questions: Question[] = [
     correctAnswer: 3,
     explanation: 'P(X \\leq 1) = P(X=0) + P(X=1) = \\frac{125}{216} + 3 \\times \\frac{1}{6} \\times \\frac{25}{36} = \\frac{125 + 75}{216} = \\frac{200}{216}',
     difficulty: 'hard',
+    difficultyScore: 0.52,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-calculo-binomial', 'numeros-fracciones', 'numeros-potencias']
   },
   // Control de calidad / Quality control
@@ -277,7 +296,8 @@ export const m2Prob004Questions: Question[] = [
     options: ['0{,}349', '0{,}500', '0{,}599', '0{,}950'],
     correctAnswer: 2,
     explanation: 'P(X=0) = (0{,}95)^{10} \\approx 0{,}599',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-modelos-aplicaciones', 'numeros-potencias', 'numeros-decimales']
   },
   {
@@ -291,6 +311,7 @@ export const m2Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P(X \\geq 1) = 1 - P(X=0) = 1 - (0{,}9)^5 \\approx 1 - 0{,}59 = 0{,}41',
     difficulty: 'medium',
+    difficultyScore: 0.32,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-complemento', 'probabilidad-modelos-aplicaciones', 'numeros-potencias']
   },
   {
@@ -303,6 +324,7 @@ export const m2Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'E[X] = n \\cdot p = 100 \\times 0{,}02 = 2',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-esperanza', 'probabilidad-modelos-aplicaciones', 'numeros-porcentaje']
   }
 ];

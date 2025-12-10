@@ -27,6 +27,7 @@ export const m1Alg012Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{La forma general es } f(x) = ax^2 + bx + c, \\text{ con } a \\neq 0.',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['funcion-cuadratica-forma']
   },
   {
@@ -40,6 +41,7 @@ export const m1Alg012Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{La forma canónica es } f(x) = a(x - h)^2 + k, \\text{ donde } (h, k) \\text{ es el vértice.}',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['funcion-cuadratica-forma']
   },
   {
@@ -53,6 +55,7 @@ export const m1Alg012Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Comparando con } ax^2 + bx + c: a = 3, b = -6, c = 2',
     difficulty: 'easy',
+    difficultyScore: 0.20,
     skills: ['funcion-cuadratica-forma']
   },
   {
@@ -66,6 +69,7 @@ export const m1Alg012Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'f(x) = 2(x^2 - 6x + 9) + 1 = 2x^2 - 12x + 18 + 1 = 2x^2 - 12x + 19',
     difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['funcion-cuadratica-forma', 'algebra-cuadrado-binomio']
   },
   // ========================================
@@ -87,6 +91,7 @@ export const m1Alg012Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Cuando } a > 0, \\text{ la parábola abre hacia arriba (tiene un mínimo).}',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['funcion-cuadratica-parametro-a', 'funcion-cuadratica-grafica']
   },
   {
@@ -104,7 +109,8 @@ export const m1Alg012Questions: Question[] = [
     ],
     correctAnswer: 1,
     explanation: '\\text{Mayor valor de } |a| \\text{ hace la parábola más angosta.}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-cuadratica-parametro-a', 'funcion-cuadratica-grafica']
   },
   {
@@ -123,6 +129,7 @@ export const m1Alg012Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Cuando } a < 0, \\text{ la parábola abre hacia abajo, el vértice es un máximo.}',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['funcion-cuadratica-parametro-a', 'funcion-cuadratica-vertice']
   },
   {
@@ -135,7 +142,8 @@ export const m1Alg012Questions: Question[] = [
     options: ['f(x) = 2x^2', 'f(x) = x^2', 'f(x) = \\frac{1}{2}x^2', 'f(x) = 4x^2'],
     correctAnswer: 2,
     explanation: '\\text{Menor valor de } |a| \\text{ produce parábola más ancha. } |\\frac{1}{2}| = 0.5 \\text{ es el menor.}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-cuadratica-parametro-a', 'funcion-cuadratica-grafica']
   },
   // ========================================
@@ -157,6 +165,7 @@ export const m1Alg012Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Cuando } x = 0, f(0) = c. \\text{ Aquí } f(0) = 5, \\text{ corta al eje y en } (0, 5).',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['funcion-cuadratica-parametros-bc', 'funcion-cuadratica-interseccion-y']
   },
   {
@@ -175,6 +184,7 @@ export const m1Alg012Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Sumar una constante desplaza la parábola verticalmente. } +3 \\text{ = hacia arriba.}',
     difficulty: 'easy',
+    difficultyScore: 0.20,
     skills: ['funcion-cuadratica-parametros-bc', 'algebra-transformaciones']
   },
   {
@@ -192,7 +202,8 @@ export const m1Alg012Questions: Question[] = [
     ],
     correctAnswer: 1,
     explanation: '\\text{La coordenada x del vértice es } h = -\\frac{b}{2a}, \\text{ que depende de b.}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-cuadratica-parametros-bc', 'funcion-cuadratica-vertice']
   },
   {
@@ -206,6 +217,7 @@ export const m1Alg012Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'f(0) = 0 - 0 + 3 = 3. \\text{ La intersección es } (0, 3).',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['funcion-cuadratica-parametros-bc', 'funcion-cuadratica-interseccion-y']
   },
   // ========================================
@@ -227,6 +239,7 @@ export const m1Alg012Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{El vértice es el punto clave para graficar una parábola.}',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['funcion-cuadratica-grafica', 'funcion-cuadratica-vertice']
   },
   {
@@ -245,6 +258,7 @@ export const m1Alg012Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'f(-2) = 4 - 1 = 3, f(-1) = 1 - 1 = 0, f(0) = -1, f(1) = 0, f(2) = 3',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['funcion-cuadratica-grafica', 'algebra-evaluacion-funciones']
   },
   {
@@ -258,6 +272,7 @@ export const m1Alg012Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{En forma canónica } (x - h)^2 + k, \\text{ el vértice es } (h, k) = (2, 0).',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['funcion-cuadratica-grafica', 'funcion-cuadratica-vertice']
   },
   {
@@ -270,7 +285,8 @@ export const m1Alg012Questions: Question[] = [
     options: ['f(x) = (x - 1)^2 - 4', 'f(x) = (x + 1)^2 - 4', 'f(x) = (x - 1)^2 + 4', 'f(x) = (x + 4)^2 - 1'],
     correctAnswer: 0,
     explanation: '\\text{En } f(x) = (x - h)^2 + k, \\text{ vértice } (h, k) = (1, -4) \\Rightarrow f(x) = (x - 1)^2 - 4',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-cuadratica-grafica', 'funcion-cuadratica-vertice']
   },
   {
@@ -283,7 +299,8 @@ export const m1Alg012Questions: Question[] = [
     options: ['x = \\pm 2', 'x = \\pm 4', 'x = 2 \\text{ solamente}', '\\text{No corta al eje x}'],
     correctAnswer: 0,
     explanation: '-x^2 + 4 = 0 \\Rightarrow x^2 = 4 \\Rightarrow x = \\pm 2',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-cuadratica-grafica', 'funcion-cuadratica-ceros']
   },
   {
@@ -296,7 +313,8 @@ export const m1Alg012Questions: Question[] = [
     options: ['f(x) = 2(x - 3)^2 + 5', 'f(x) = 2(x + 3)^2 + 5', 'f(x) = 2(x - 5)^2 + 3', 'f(x) = 2(x - 3)^2 - 5'],
     correctAnswer: 0,
     explanation: '\\text{Con vértice } (h, k) = (3, 5): f(x) = 2(x - 3)^2 + 5',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.30,
     skills: ['funcion-cuadratica-grafica', 'funcion-cuadratica-forma']
   },
   {
@@ -315,6 +333,7 @@ export const m1Alg012Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x^2 + 2x + 1 = (x + 1)^2 = 0 \\Rightarrow x = -1 \\text{ (raíz doble)}',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['funcion-cuadratica-grafica', 'funcion-cuadratica-ceros']
   },
   {
@@ -328,6 +347,7 @@ export const m1Alg012Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Eje de simetría: } x = -\\frac{b}{2a} = -\\frac{-6}{2} = 3',
     difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['funcion-cuadratica-grafica', 'funcion-cuadratica-simetria']
   }
 ];

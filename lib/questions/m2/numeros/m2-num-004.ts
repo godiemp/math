@@ -25,6 +25,7 @@ export const m2Num004Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\log_2 8 = 3 \\text{ porque } 2^3 = 8',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['numeros-logaritmos', 'logaritmos-definicion', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -36,7 +37,8 @@ export const m2Num004Questions: Question[] = [
     options: ['8', '15', '25', '125'],
     correctAnswer: 3,
     explanation: '\\log_5 x = 3 \\rightarrow 5^3 = x \\rightarrow x = 125',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['numeros-logaritmos', 'logaritmos-definicion', 'logaritmos-relacion-potencias', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -49,6 +51,7 @@ export const m2Num004Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\log_{10} 1000 = 3 \\text{ porque } 10^3 = 1000',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['numeros-logaritmos', 'logaritmos-definicion', 'logaritmos-decimales', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -60,7 +63,8 @@ export const m2Num004Questions: Question[] = [
     options: ['x = \\log_2 32', 'x = \\log_{32} 2', 'x = \\log 2', 'x = 32 \\log 2'],
     correctAnswer: 0,
     explanation: '2^x = 32 \\rightarrow x = \\log_2 32 = 5',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['numeros-logaritmos', 'logaritmos-relacion-potencias', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -72,7 +76,8 @@ export const m2Num004Questions: Question[] = [
     options: ['-2', '-3', '\\frac{1}{2}', '2'],
     correctAnswer: 0,
     explanation: '\\log_3 \\frac{1}{9} = -2 \\text{ porque } 3^{-2} = \\frac{1}{9}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['numeros-logaritmos', 'logaritmos-definicion', 'numeros-exponentes-negativos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -84,7 +89,8 @@ export const m2Num004Questions: Question[] = [
     options: ['\\frac{\\log 16}{\\log 4}', '\\frac{\\log 4}{\\log 16}', '\\log 16 - \\log 4', '\\log 16 + \\log 4'],
     correctAnswer: 0,
     explanation: '\\log_4 16 = \\frac{\\log 16}{\\log 4} = \\frac{\\log 2^4}{\\log 2^2} = \\frac{4\\log 2}{2\\log 2} = 2',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['numeros-logaritmos', 'logaritmos-cambio-base', 'logaritmos-definicion', 'numeros-fracciones']
   },
   {
@@ -96,7 +102,8 @@ export const m2Num004Questions: Question[] = [
     options: ['0', '1', '7', '\\frac{1}{7}'],
     correctAnswer: 0,
     explanation: '\\log_7 1 = 0 \\text{ porque } 7^0 = 1',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['numeros-logaritmos', 'logaritmos-definicion', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -108,7 +115,8 @@ export const m2Num004Questions: Question[] = [
     options: ['2', '4', '8', '10'],
     correctAnswer: 0,
     explanation: '\\log_b 64 = 6 \\rightarrow b^6 = 64 \\rightarrow b = 2 \\text{ (porque } 2^6 = 64)',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['numeros-logaritmos', 'logaritmos-definicion', 'logaritmos-relacion-potencias', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   // Additional: Logaritmos decimales y naturales
@@ -122,6 +130,7 @@ export const m2Num004Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\log = \\log_{10}, \\quad \\ln = \\log_e \\text{ donde } e \\approx 2.718',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['logaritmos-tipos', 'logaritmos-definicion', 'numeros-irracionales']
   },
   {
@@ -133,7 +142,8 @@ export const m2Num004Questions: Question[] = [
     options: ['e', '3', 'e^3', '3e'],
     correctAnswer: 1,
     explanation: '\\ln e^3 = 3 \\text{ porque } \\ln e^x = x',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['logaritmos-tipos', 'logaritmos-definicion', 'logaritmos-relacion-potencias', 'numeros-potencias']
   },
   {
@@ -145,7 +155,8 @@ export const m2Num004Questions: Question[] = [
     options: ['-3', '-2', '3', '0.001'],
     correctAnswer: 0,
     explanation: '\\log 0.001 = \\log 10^{-3} = -3',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['logaritmos-tipos', 'logaritmos-definicion', 'numeros-exponentes-negativos', 'numeros-decimales']
   },
   {
@@ -157,7 +168,8 @@ export const m2Num004Questions: Question[] = [
     options: ['\\approx 1.5', '\\approx 2.3', '\\approx 3.0', '\\approx 10'],
     correctAnswer: 1,
     explanation: '\\ln 10 \\approx 2.303 \\text{ porque } e^{2.303} \\approx 10',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['logaritmos-tipos', 'logaritmos-definicion', 'numeros-irracionales', 'numeros-decimales']
   },
   // Additional: Cambio de base
@@ -170,7 +182,8 @@ export const m2Num004Questions: Question[] = [
     options: ['\\frac{\\log b}{\\log a}', '\\frac{\\log a}{\\log b}', '\\log b - \\log a', '\\log(b-a)'],
     correctAnswer: 0,
     explanation: '\\log_a b = \\frac{\\log b}{\\log a} = \\frac{\\ln b}{\\ln a}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['logaritmos-cambio-base', 'logaritmos-definicion', 'numeros-fracciones']
   },
   {
@@ -182,7 +195,8 @@ export const m2Num004Questions: Question[] = [
     options: ['\\frac{3}{5}', '\\frac{4}{3}', '\\frac{5}{3}', '4'],
     correctAnswer: 2,
     explanation: '\\log_8 32 = \\frac{\\log 32}{\\log 8} = \\frac{\\log 2^5}{\\log 2^3} = \\frac{5}{3}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['logaritmos-cambio-base', 'logaritmos-propiedad-potencia', 'numeros-fracciones', 'numeros-potencias']
   },
   {
@@ -194,7 +208,8 @@ export const m2Num004Questions: Question[] = [
     options: ['\\approx 3.32', '\\approx 2.5', '\\approx 1.5', '\\approx 0.5'],
     correctAnswer: 0,
     explanation: '\\log_2 10 = \\frac{\\log 10}{\\log 2} = \\frac{1}{0.301} \\approx 3.32',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['logaritmos-cambio-base', 'logaritmos-tipos', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -206,7 +221,8 @@ export const m2Num004Questions: Question[] = [
     options: ['\\frac{\\ln 7}{\\ln 5}', '\\frac{\\ln 5}{\\ln 7}', '\\ln 7 - \\ln 5', '\\ln 35'],
     correctAnswer: 0,
     explanation: '\\log_5 7 = \\frac{\\ln 7}{\\ln 5}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['logaritmos-cambio-base', 'logaritmos-tipos', 'numeros-fracciones']
   }
 ];

@@ -25,7 +25,8 @@ export const m2Prob001Questions: Question[] = [
     options: ['4', '5', '6', '7'],
     correctAnswer: 2,
     explanation: 'Q_1 = 4, \\quad Q_3 = 10 \\quad \\Rightarrow \\quad \\text{IQR} = Q_3 - Q_1 = 10 - 4 = 6',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['estadistica-cuartiles', 'estadistica-rango-intercuartilico', 'estadistica-mediana', 'numeros-operaciones-basicas']
   },
   {
@@ -38,7 +39,8 @@ export const m2Prob001Questions: Question[] = [
     options: ['10', '15', '20', '25'],
     correctAnswer: 2,
     explanation: '\\text{Rango} = \\text{Máx} - \\text{Mín} = 30 - 10 = 20',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['estadistica-rango', 'estadistica-medidas-dispersion', 'numeros-operaciones-basicas']
   },
   {
@@ -51,7 +53,8 @@ export const m2Prob001Questions: Question[] = [
     options: ['2', '2.4', '3', '3.2'],
     correctAnswer: 1,
     explanation: '\\text{DMA} = \\frac{|3-7|+|5-7|+|7-7|+|9-7|+|11-7|}{5} = \\frac{12}{5} = 2.4',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['estadistica-desviacion-media', 'estadistica-medidas-dispersion', 'estadistica-media', 'numeros-valor-absoluto', 'numeros-operaciones-basicas']
   },
   {
@@ -64,7 +67,8 @@ export const m2Prob001Questions: Question[] = [
     options: ['5', '8', '10', '15'],
     correctAnswer: 0,
     explanation: '\\text{Var}(X + c) = \\text{Var}(X) = 5',
-    difficulty: 'hard',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['estadistica-varianza', 'estadistica-medidas-dispersion', 'estadistica-propiedades-varianza']
   },
   {
@@ -78,6 +82,7 @@ export const m2Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Q_1 = \\text{mediana}(\\{4, 8, 10\\}) = 8',
     difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['estadistica-cuartiles', 'estadistica-mediana', 'estadistica-medidas-posicion', 'numeros-operaciones-basicas']
   },
   // Subsection A: Varianza y desviación estándar
@@ -92,6 +97,7 @@ export const m2Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Var} = \\frac{(4-6)^2+(5-6)^2+(6-6)^2+(7-6)^2+(8-6)^2}{5} = \\frac{10}{5} = 2',
     difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['estadistica-varianza-desviacion', 'estadistica-varianza', 'estadistica-media', 'numeros-operaciones-basicas']
   },
   {
@@ -105,6 +111,7 @@ export const m2Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\sigma = \\sqrt{\\text{Var}} = \\sqrt{16} = 4',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['estadistica-varianza-desviacion', 'estadistica-desviacion-estandar', 'numeros-raices', 'numeros-operaciones-basicas']
   },
   // Subsection B: Coeficiente de variación
@@ -118,7 +125,8 @@ export const m2Prob001Questions: Question[] = [
     options: ['Matemáticas', 'Historia', 'Iguales', 'No se puede determinar'],
     correctAnswer: 0,
     explanation: 'CV_{\\text{mates}} = \\frac{12}{60} = 0.20 > CV_{\\text{hist}} = \\frac{8}{50} = 0.16',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['estadistica-coeficiente-variacion', 'estadistica-comparacion-dispersion', 'numeros-division', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -131,7 +139,8 @@ export const m2Prob001Questions: Question[] = [
     options: ['5%', '10%', '20%', '32%'],
     correctAnswer: 2,
     explanation: 'CV = \\frac{8}{40} \\times 100\\% = 20\\%',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['estadistica-coeficiente-variacion', 'numeros-porcentaje', 'numeros-division', 'numeros-operaciones-basicas']
   },
   // Subsection C: Comparación de dispersión entre grupos
@@ -146,6 +155,7 @@ export const m2Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\sigma_B = 15 > \\sigma_A = 10 \\Rightarrow \\text{Grupo B más disperso}',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['estadistica-comparacion-dispersion', 'estadistica-desviacion-estandar', 'estadistica-interpretacion-dispersion', 'numeros-comparacion']
   },
   {
@@ -158,7 +168,8 @@ export const m2Prob001Questions: Question[] = [
     options: ['X más dispersa que Y', 'Y más dispersa que X', 'Igual dispersión', 'El rango no mide dispersión'],
     correctAnswer: 0,
     explanation: '\\text{Rango}_X > \\text{Rango}_Y \\Rightarrow \\text{X más dispersa}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['estadistica-comparacion-dispersion', 'estadistica-rango', 'estadistica-interpretacion-dispersion', 'numeros-comparacion']
   },
   // Subsection D: Interpretación de medidas de dispersión
@@ -172,7 +183,8 @@ export const m2Prob001Questions: Question[] = [
     options: ['Los datos están muy dispersos', 'Los datos son todos iguales o muy similares', 'La media es cero', 'Los datos son negativos'],
     correctAnswer: 1,
     explanation: '\\sigma \\approx 0 \\Rightarrow \\text{datos muy homogéneos}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['estadistica-interpretacion-dispersion', 'estadistica-desviacion-estandar', 'estadistica-analisis-datos']
   },
   {
@@ -185,7 +197,8 @@ export const m2Prob001Questions: Question[] = [
     options: ['A tiene salarios más equitativos', 'B tiene salarios más equitativos', 'Ambas son igualmente equitativas', 'No se puede determinar'],
     correctAnswer: 0,
     explanation: '\\sigma_A < \\sigma_B \\Rightarrow \\text{A más equitativa}',
-    difficulty: 'hard',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['estadistica-interpretacion-dispersion', 'estadistica-desviacion-estandar', 'estadistica-comparacion-dispersion', 'estadistica-aplicaciones-contexto']
   }
 ];

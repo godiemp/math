@@ -26,6 +26,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{8}{12} - \\frac{9}{12} + \\frac{2}{12} = \\frac{8 - 9 + 2}{12} = \\frac{1}{12}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-operaciones', 'numeros-fracciones', 'numeros-fracciones-comun-denominador', 'numeros-operaciones-basicas']
   },
   {
@@ -39,6 +40,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '(-3) \\times (-2) \\times 5 \\times (-1) = 6 \\times 5 \\times (-1) = 30 \\times (-1) = -30',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-operaciones', 'numeros-enteros', 'numeros-multiplicacion-enteros', 'numeros-signos', 'numeros-operaciones-basicas']
   },
   {
@@ -52,6 +54,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{\\frac{11}{12}}{\\frac{1}{2}} = \\frac{11}{12} \\times \\frac{2}{1} = \\frac{11}{6}',
     difficulty: 'extreme',
+    difficultyScore: 0.95,
     skills: ['numeros-reales-operaciones', 'numeros-fracciones', 'numeros-fracciones-complejas', 'numeros-division-fracciones', 'numeros-comun-denominador', 'numeros-operaciones-basicas']
   },
   {
@@ -65,6 +68,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '(2^3)^2 \\cdot 2^{-4} = 2^6 \\cdot 2^{-4} = 2^{6-4} = 2^2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-operaciones', 'numeros-potencias', 'numeros-propiedades-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -78,6 +82,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\sqrt{72} = \\sqrt{36 \\times 2} = \\sqrt{36} \\times \\sqrt{2} = 6\\sqrt{2}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-reales-irracionales', 'numeros-raices', 'numeros-simplificacion-raices', 'numeros-factorizacion', 'numeros-operaciones-basicas']
   },
   {
@@ -90,6 +95,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\left(\\frac{1}{2}\\right)^{-3} = \\left(\\frac{2}{1}\\right)^{3} = 2^3 = 8',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-reales-operaciones', 'numeros-potencias', 'numeros-exponentes-negativos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -103,6 +109,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 3,
     explanation: '5\\sqrt{2} + 4\\sqrt{2} - 3\\sqrt{2} = (5+4-3)\\sqrt{2} = 6\\sqrt{2}',
     difficulty: 'extreme',
+    difficultyScore: 0.95,
     skills: ['numeros-reales-irracionales', 'numeros-raices', 'numeros-simplificacion-raices', 'numeros-suma-radicales', 'numeros-factorizacion', 'numeros-operaciones-basicas']
   },
   {
@@ -116,6 +123,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '12 = 2^2 \\times 3, \\quad 18 = 2 \\times 3^2, \\quad 24 = 2^3 \\times 3 \\quad \\Rightarrow \\quad \\text{MCM} = 2^3 \\times 3^2 = 8 \\times 9 = 72',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -129,6 +137,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '48 = 2^4 \\times 3, \\quad 72 = 2^3 \\times 3^2, \\quad 120 = 2^3 \\times 3 \\times 5 \\quad \\Rightarrow \\quad \\text{MCD} = 2^3 \\times 3 = 24',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -142,6 +151,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '15 = 3 \\times 5, \\quad 20 = 2^2 \\times 5, \\quad 25 = 5^2 \\quad \\Rightarrow \\quad \\text{MCM} = 2^2 \\times 3 \\times 5^2 = 300',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -155,6 +165,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '36 = 2^2 \\times 3^2, \\quad 48 = 2^4 \\times 3 \\quad \\Rightarrow \\quad \\text{MCD} = 2^2 \\times 3 = 12',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -168,6 +179,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '6 \\times 72 = 18 \\times b \\quad \\Rightarrow \\quad b = \\frac{432}{18} = 24',
     difficulty: 'extreme',
+    difficultyScore: 0.95,
     skills: ['numeros-reales-operaciones', 'numeros-mcd-mcm', 'numeros-relacion-mcd-mcm', 'numeros-operaciones-basicas', 'algebra-despeje']
   },
   {
@@ -181,6 +193,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{6}{\\sqrt{3}} = \\frac{6}{\\sqrt{3}} \\times \\frac{\\sqrt{3}}{\\sqrt{3}} = \\frac{6\\sqrt{3}}{3} = 2\\sqrt{3}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -194,6 +207,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{10}{\\sqrt{5} + \\sqrt{3}} \\times \\frac{\\sqrt{5} - \\sqrt{3}}{\\sqrt{5} - \\sqrt{3}} = \\frac{10(\\sqrt{5} - \\sqrt{3})}{5 - 3} = \\frac{10(\\sqrt{5} - \\sqrt{3})}{2} = 5(\\sqrt{5} - \\sqrt{3})',
     difficulty: 'extreme',
+    difficultyScore: 0.95,
     skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-racionalizacion-conjugado', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -207,6 +221,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{12}{2\\sqrt{3}} = \\frac{6}{\\sqrt{3}} \\times \\frac{\\sqrt{3}}{\\sqrt{3}} = \\frac{6\\sqrt{3}}{3} = 2\\sqrt{3}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-raices', 'numeros-fracciones', 'numeros-simplificacion', 'numeros-operaciones-basicas']
   },
   {
@@ -220,6 +235,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{\\sqrt{8}}{\\sqrt{2}} = \\sqrt{\\frac{8}{2}} = \\sqrt{4} = 2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-raices', 'numeros-simplificacion-raices', 'numeros-operaciones-basicas']
   },
   {
@@ -233,6 +249,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{6}{\\sqrt{2} - 1} \\times \\frac{\\sqrt{2} + 1}{\\sqrt{2} + 1} = \\frac{6(\\sqrt{2} + 1)}{2 - 1} = 6(\\sqrt{2} + 1)',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-reales-irracionales', 'numeros-racionalizacion', 'numeros-racionalizacion-conjugado', 'numeros-raices', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   // Subsection C: Aproximaciones y redondeo
@@ -247,6 +264,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '3.14159... \\rightarrow 3.14 \\text{ (el tercer decimal es 1 < 5)}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['numeros-reales-aproximaciones', 'numeros-redondeo', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -260,6 +278,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '45.678 \\rightarrow 45.7 \\text{ g (3 cifras significativas)}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-aproximaciones', 'numeros-cifras-significativas', 'numeros-redondeo', 'numeros-decimales']
   },
   {
@@ -273,6 +292,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Error} = |1.414 - 1.4| \\approx 0.014',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-aproximaciones', 'numeros-error-absoluto', 'numeros-raices', 'numeros-operaciones-basicas']
   },
   // Subsection D: Intervalos y conjuntos en la recta real
@@ -287,6 +307,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '[2, 5) = \\{x \\in \\mathbb{R} : 2 \\leq x < 5\\}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['numeros-reales-intervalos', 'numeros-notacion-intervalos', 'numeros-desigualdades']
   },
   {
@@ -300,6 +321,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x > -3 \\Leftrightarrow x \\in (-3, \\infty)',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-intervalos', 'numeros-notacion-intervalos', 'numeros-desigualdades', 'numeros-recta-numerica']
   },
   {
@@ -313,6 +335,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '[1, 6] \\cap [4, 9] = [4, 6]',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-reales-intervalos', 'numeros-operaciones-intervalos', 'numeros-interseccion-intervalos', 'numeros-conjuntos']
   },
   {
@@ -326,6 +349,7 @@ export const m2Num001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(-\\infty, 2] \\cup (5, \\infty) \\text{ (intervalos disjuntos)}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-reales-intervalos', 'numeros-operaciones-intervalos', 'numeros-union-intervalos', 'numeros-conjuntos']
   }
 ];
