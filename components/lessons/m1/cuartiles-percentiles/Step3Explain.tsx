@@ -16,21 +16,49 @@ const CONCEPTS = [
     steps: [
       '1. Ordenar los datos de menor a mayor',
       '2. Encontrar Q₂ (mediana): divide los datos en dos mitades',
-      '3. Q₁ = mediana de la mitad inferior',
-      '4. Q₃ = mediana de la mitad superior',
+      '3. Q₁ = mediana de la mitad inferior (SIN incluir Q₂)',
+      '4. Q₃ = mediana de la mitad superior (SIN incluir Q₂)',
     ],
     example: {
       data: [10, 15, 20, 25, 30, 35, 40],
       steps: [
-        'Datos ordenados: 10, 15, 20, 25, 30, 35, 40',
+        'n=7 (impar): 10, 15, 20, [25], 30, 35, 40',
         'Q₂ = 25 (el valor del medio)',
-        'Mitad inferior: 10, 15, 20 → Q₁ = 15',
-        'Mitad superior: 30, 35, 40 → Q₃ = 35',
+        'Mitad inferior (sin 25): 10, 15, 20 → Q₁ = 15',
+        'Mitad superior (sin 25): 30, 35, 40 → Q₃ = 35',
       ],
       result: 'Q₁ = 15, Q₂ = 25, Q₃ = 35'
     },
     keyInsight: 'Cada cuartil marca donde esta el 25%, 50% o 75% de los datos',
     metaphor: 'Como dividir una fila ordenada en 4 grupos iguales'
+  },
+  {
+    id: 'cuartiles-par',
+    title: 'Caso Especial: n PAR',
+    subtitle: 'Cuando hay cantidad par de datos',
+    icon: Divide,
+    color: 'blue',
+    formula: 'Si n es par, Q₂ es promedio de los 2 del medio',
+    steps: [
+      '1. Ordenar los datos',
+      '2. Q₂ = promedio de los 2 valores centrales',
+      '3. Mitad inferior = primera mitad (antes de Q₂)',
+      '4. Mitad superior = segunda mitad (despues de Q₂)',
+      '5. Q₁ y Q₃ = medianas de cada mitad',
+    ],
+    example: {
+      data: [10, 20, 30, 40, 50, 60, 70, 80],
+      steps: [
+        'n=8 (par): 10, 20, 30, 40 | 50, 60, 70, 80',
+        'Q₂ = (40+50)/2 = 45',
+        'Mitad inferior: 10, 20, 30, 40 → Q₁ = (20+30)/2 = 25',
+        'Mitad superior: 50, 60, 70, 80 → Q₃ = (60+70)/2 = 65',
+      ],
+      result: 'Q₁ = 25, Q₂ = 45, Q₃ = 65'
+    },
+    keyInsight: 'Con n par, tanto Q₂ como Q₁ y Q₃ pueden ser promedios',
+    warning: 'No incluyas la mediana en las mitades cuando n es impar',
+    metaphor: 'Cuando la fila tiene numero par, el "medio" esta entre dos personas'
   },
   {
     id: 'iqr',
