@@ -1,12 +1,21 @@
 'use client';
 
-import { useState, useRef, Suspense } from 'react';
-import { ArrowRight, Lightbulb, Maximize2, Minimize2 } from 'lucide-react';
+import { useState } from 'react';
+import dynamic from 'next/dynamic';
+import { ArrowRight, Lightbulb, Maximize2, Minimize2, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Text, RoundedBox } from '@react-three/drei';
-import * as THREE from 'three';
+
+// Dynamically import the 3D scene with SSR disabled
+const CubeScene3D = dynamic(() => import('./CubeScene3D'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center text-white gap-2">
+      <Loader2 className="w-5 h-5 animate-spin" />
+      <span>Cargando visualización 3D...</span>
+    </div>
+  ),
+});
 
 type Phase = 'intro' | 'discover' | 'pattern';
 
@@ -25,140 +34,6 @@ const CUBE_PARTS: CubePart[] = [
   { id: 'ab2', label: 'ab²', formula: 'a × b × b', count: 3, color: '#a855f7', bgColor: 'bg-purple-500' },
   { id: 'b3', label: 'b³', formula: 'b × b × b', count: 1, color: '#ec4899', bgColor: 'bg-pink-500' },
 ];
-
-// Cube positions in the 2x2x2 arrangement and their types
-const CUBE_CONFIG = [
-  // Front layer (z = 0.55)
-  { position: [-0.55, 0.55, 0.55], type: 'a3', label: 'a³' },      // top-left
-  { position: [0.55, 0.55, 0.55], type: 'a2b', label: 'a²b' },     // top-right
-  { position: [-0.55, -0.55, 0.55], type: 'a2b', label: 'a²b' },   // bottom-left
-  { position: [0.55, -0.55, 0.55], type: 'ab2', label: 'ab²' },    // bottom-right
-  // Back layer (z = -0.55)
-  { position: [-0.55, 0.55, -0.55], type: 'a2b', label: 'a²b' },   // top-left
-  { position: [0.55, 0.55, -0.55], type: 'ab2', label: 'ab²' },    // top-right
-  { position: [-0.55, -0.55, -0.55], type: 'ab2', label: 'ab²' },  // bottom-left
-  { position: [0.55, -0.55, -0.55], type: 'b3', label: 'b³' },     // bottom-right
-];
-
-interface SingleCubeProps {
-  position: [number, number, number];
-  color: string;
-  label: string;
-  isSelected: boolean;
-  isExploded: boolean;
-  onClick: () => void;
-}
-
-function SingleCube({ position, color, label, isSelected, isExploded, onClick }: SingleCubeProps) {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const [hovered, setHovered] = useState(false);
-
-  // Calculate exploded position
-  const explodeFactor = isExploded ? 1.8 : 1;
-  const explodedPosition: [number, number, number] = [
-    position[0] * explodeFactor,
-    position[1] * explodeFactor,
-    position[2] * explodeFactor,
-  ];
-
-  // Animate scale on hover/select
-  useFrame(() => {
-    if (meshRef.current) {
-      const targetScale = hovered || isSelected ? 1.1 : 1;
-      meshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.1);
-    }
-  });
-
-  return (
-    <group position={explodedPosition}>
-      <RoundedBox
-        ref={meshRef}
-        args={[1, 1, 1]}
-        radius={0.08}
-        smoothness={4}
-        onClick={(e) => {
-          e.stopPropagation();
-          onClick();
-        }}
-        onPointerOver={(e) => {
-          e.stopPropagation();
-          setHovered(true);
-          document.body.style.cursor = 'pointer';
-        }}
-        onPointerOut={() => {
-          setHovered(false);
-          document.body.style.cursor = 'auto';
-        }}
-      >
-        <meshStandardMaterial
-          color={color}
-          transparent
-          opacity={isSelected ? 1 : 0.85}
-          emissive={isSelected ? color : '#000000'}
-          emissiveIntensity={isSelected ? 0.3 : 0}
-        />
-      </RoundedBox>
-      {/* Edge outline when selected */}
-      {isSelected && (
-        <lineSegments>
-          <edgesGeometry args={[new THREE.BoxGeometry(1.05, 1.05, 1.05)]} />
-          <lineBasicMaterial color="#ffffff" linewidth={2} />
-        </lineSegments>
-      )}
-      {/* Label */}
-      <Text
-        position={[0, 0, 0.52]}
-        fontSize={0.3}
-        color="#ffffff"
-        anchorX="center"
-        anchorY="middle"
-        font="/fonts/inter-bold.woff"
-        outlineWidth={0.02}
-        outlineColor="#000000"
-      >
-        {label}
-      </Text>
-    </group>
-  );
-}
-
-interface CubeSceneProps {
-  selectedPart: string | null;
-  onPartClick: (partId: string) => void;
-  isExploded: boolean;
-}
-
-function CubeScene({ selectedPart, onPartClick, isExploded }: CubeSceneProps) {
-  const groupRef = useRef<THREE.Group>(null);
-
-  // Slow auto-rotation when not interacting
-  useFrame((state, delta) => {
-    if (groupRef.current && !state.controls) {
-      groupRef.current.rotation.y += delta * 0.1;
-    }
-  });
-
-  const getColor = (type: string) => {
-    const part = CUBE_PARTS.find(p => p.id === type);
-    return part?.color || '#888888';
-  };
-
-  return (
-    <group ref={groupRef}>
-      {CUBE_CONFIG.map((cube, index) => (
-        <SingleCube
-          key={index}
-          position={cube.position as [number, number, number]}
-          color={getColor(cube.type)}
-          label={cube.label}
-          isSelected={selectedPart === cube.type}
-          isExploded={isExploded}
-          onClick={() => onPartClick(cube.type)}
-        />
-      ))}
-    </group>
-  );
-}
 
 export default function Step2Explore({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('intro');
@@ -209,33 +84,11 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
             {/* Three.js 3D Cube Visualization */}
             <div className="w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800">
-              <Suspense fallback={
-                <div className="w-full h-full flex items-center justify-center text-white">
-                  Cargando visualización 3D...
-                </div>
-              }>
-                <Canvas
-                  camera={{ position: [4, 3, 4], fov: 45 }}
-                  gl={{ antialias: true }}
-                >
-                  <ambientLight intensity={0.5} />
-                  <pointLight position={[10, 10, 10]} intensity={1} />
-                  <pointLight position={[-10, -10, -10]} intensity={0.5} />
-                  <CubeScene
-                    selectedPart={selectedPart}
-                    onPartClick={handlePartClick}
-                    isExploded={exploded}
-                  />
-                  <OrbitControls
-                    enablePan={false}
-                    enableZoom={true}
-                    minDistance={3}
-                    maxDistance={10}
-                    autoRotate={!selectedPart}
-                    autoRotateSpeed={1}
-                  />
-                </Canvas>
-              </Suspense>
+              <CubeScene3D
+                selectedPart={selectedPart}
+                onPartClick={handlePartClick}
+                isExploded={exploded}
+              />
             </div>
 
             <p className="text-gray-500 dark:text-gray-400 text-center text-sm mt-2">
