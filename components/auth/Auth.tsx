@@ -8,15 +8,37 @@ import { Eye, EyeOff } from 'lucide-react';
 import { registerUser, loginUser } from '@/lib/auth';
 import { analytics } from '@/lib/analytics';
 import { useTranslations } from 'next-intl';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface AuthProps {
   onSuccess: (isNewUser?: boolean) => void;
+}
+
+// Helper to retry API calls on network errors (handles Railway cold starts)
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  isRetryableError: (result: T) => boolean,
+  maxRetries = 2,
+  delayMs = 1000
+): Promise<T> {
+  let lastResult: T;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    lastResult = await fn();
+    if (!isRetryableError(lastResult)) {
+      return lastResult;
+    }
+    if (attempt < maxRetries) {
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+  return lastResult!;
 }
 
 export default function Auth({ onSuccess }: AuthProps) {
   const t = useTranslations('auth');
   const tCommon = useTranslations('common');
   const router = useRouter();
+  const { refreshSession } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   // Auto-fill credentials in Vercel preview for faster testing
   const isPreview = process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
@@ -27,6 +49,7 @@ export default function Auth({ onSuccess }: AuthProps) {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isRetrying, setIsRetrying] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,7 +70,21 @@ export default function Auth({ onSuccess }: AuthProps) {
         }
 
         // Step 1: Call backend directly - browser receives HttpOnly cookies for backend domain
-        const loginResult = await loginUser(username, password);
+        // Use retry logic to handle Railway cold starts
+        const loginResult = await withRetry(
+          async () => {
+            const result = await loginUser(username, password);
+            // If network error on first try, show "connecting" message
+            if (!result.success && result.error?.includes('Network error')) {
+              setIsRetrying(true);
+            }
+            return result;
+          },
+          // Only retry on network errors (cold start), not auth errors
+          (result) => !result.success && Boolean(result.error?.includes('Network error') || result.error?.includes('Unable to connect'))
+        );
+        setIsRetrying(false);
+
         if (!loginResult.success) {
           const errorMsg = loginResult.error || t('login.errors.invalidCredentials');
           setError(errorMsg);
@@ -79,9 +116,10 @@ export default function Auth({ onSuccess }: AuthProps) {
           });
 
           toast.success(t('login.success'));
-          // Don't navigate directly - let the useEffect in page.tsx handle navigation
-          // when isAuthenticated becomes true. This avoids race condition where
-          // middleware redirects back because NextAuth session cookie isn't ready yet.
+          // Force NextAuth to refetch the session before notifying success
+          // This ensures useSession() has the updated session data before
+          // the landing page's useEffect tries to redirect
+          await refreshSession();
           onSuccess(false);
         }
       } else {
@@ -111,8 +149,19 @@ export default function Auth({ onSuccess }: AuthProps) {
           return;
         }
 
-        // Register with backend
-        const result = await registerUser(username, email, password, displayName, acceptedTerms);
+        // Register with backend - use retry logic for Railway cold starts
+        const result = await withRetry(
+          async () => {
+            const res = await registerUser(username, email, password, displayName, acceptedTerms);
+            if (!res.success && res.error?.includes('Network error')) {
+              setIsRetrying(true);
+            }
+            return res;
+          },
+          (res) => !res.success && Boolean(res.error?.includes('Network error') || res.error?.includes('Unable to connect'))
+        );
+        setIsRetrying(false);
+
         if (result.success && result.user) {
           // Track registration event
           analytics.track('user_signed_up', {
@@ -142,8 +191,9 @@ export default function Auth({ onSuccess }: AuthProps) {
 
           if (signInResult?.ok) {
             toast.success(t('register.success'));
-            // Call onSuccess FIRST to set redirectPath state, then navigate
-            // This ensures the landing page has the correct redirectPath if middleware redirects back
+            // Force NextAuth to refetch the session before navigation
+            await refreshSession();
+            // Call onSuccess to set redirectPath state, then navigate
             onSuccess(true);
             router.push('/dashboard?welcome=true');
           } else {
@@ -596,7 +646,7 @@ export default function Auth({ onSuccess }: AuthProps) {
               }
             }}
           >
-            {isLoading ? tCommon('loading') : (isLogin ? t('login.submit') : t('register.titleFree'))}
+            {isRetrying ? tCommon('connecting') : isLoading ? tCommon('loading') : (isLogin ? t('login.submit') : t('register.titleFree'))}
           </button>
         </div>
       </form>

@@ -14,12 +14,13 @@ interface AuthContextType {
   isPaidUser: boolean;
   isLoading: boolean;
   refreshUser: () => Promise<void>;
+  refreshSession: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { data: session, status } = useSession();
+  const { data: session, status, update: updateSession } = useSession();
   const [fullUser, setFullUser] = useState<User | null>(null);
   const [isLoadingFullUser, setIsLoadingFullUser] = useState(false);
 
@@ -122,6 +123,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Loading state: NextAuth is loading OR we're fetching full user data
   const isLoading = status === 'loading' || isLoadingFullUser;
 
+  // Force NextAuth to refetch the session from the server
+  // This is needed after signIn() to ensure the session is up-to-date
+  const refreshSession = useCallback(async () => {
+    await updateSession();
+  }, [updateSession]);
+
   const value = {
     user,
     setUser,
@@ -130,6 +137,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isPaidUser,
     isLoading,
     refreshUser,
+    refreshSession,
   };
 
   // No global loading screen - let individual pages handle their own loading states

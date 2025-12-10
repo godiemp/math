@@ -920,6 +920,7 @@
   },
   "common": {
     "loading": "cargando...",
+    "connecting": "conectando...",
     "error": "error",
     "success": "éxito",
     "cancel": "cancelar",
