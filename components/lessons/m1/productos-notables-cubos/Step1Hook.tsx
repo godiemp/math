@@ -323,15 +323,19 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   <p className="font-mono text-lg text-gray-700 dark:text-gray-300">
                     (<span className="text-blue-600">x</span> + <span className="text-purple-600">2</span>)³
                   </p>
-                  <p className="text-gray-400">↓ expandiendo paso a paso</p>
+                  <p className="text-gray-400 text-sm">↓ separamos</p>
                   <p className="font-mono text-sm text-gray-600 dark:text-gray-400">
-                    = (<span className="text-blue-600">x</span> + <span className="text-purple-600">2</span>)(<span className="text-blue-600">x</span> + <span className="text-purple-600">2</span>)(<span className="text-blue-600">x</span> + <span className="text-purple-600">2</span>)
+                    = (<span className="text-blue-600">x</span> + <span className="text-purple-600">2</span>)(<span className="text-blue-600">x</span> + <span className="text-purple-600">2</span>) · (<span className="text-blue-600">x</span> + <span className="text-purple-600">2</span>)
                   </p>
-                  <p className="text-gray-400">↓</p>
-                  <p className="font-mono text-lg">
-                    <span className="text-blue-600">x³</span> + <span className="text-teal-600">3x²·2</span> + <span className="text-teal-600">3x·4</span> + <span className="text-purple-600">8</span>
+                  <p className="text-gray-400 text-sm">↓ primero resolvemos (x+2)²</p>
+                  <p className="font-mono text-sm text-gray-600 dark:text-gray-400">
+                    = (<span className="text-teal-600">x² + 4x + 4</span>) · (<span className="text-blue-600">x</span> + <span className="text-purple-600">2</span>)
                   </p>
-                  <p className="text-gray-400">↓ simplificando</p>
+                  <p className="text-gray-400 text-sm">↓ multiplicamos cada término</p>
+                  <p className="font-mono text-xs text-gray-500 dark:text-gray-500">
+                    = x³ + 2x² + 4x² + 8x + 4x + 8
+                  </p>
+                  <p className="text-gray-400 text-sm">↓ simplificamos</p>
                   <p className="font-mono text-xl text-green-600 font-bold">
                     x³ + 6x² + 12x + 8
                   </p>
