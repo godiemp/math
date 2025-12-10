@@ -19,12 +19,12 @@ const trianglePositions: Record<AnimationStep, { x: number; y: number }> = {
   3: { x: 140, y: 0 },
 };
 
-// Trapezoid copy animation states
+// Trapezoid copy animation states - for steps 0-2 (step 3 uses static positions)
 const trapezoidCopyStates: Record<AnimationStep, { opacity: number; x: number; y: number; rotate: number }> = {
   0: { opacity: 0, x: 0, y: 0, rotate: 0 },
-  1: { opacity: 0.7, x: 40, y: -30, rotate: 0 },
-  2: { opacity: 0.9, x: 80, y: 0, rotate: 180 },
-  3: { opacity: 1, x: 80, y: 0, rotate: 180 },
+  1: { opacity: 0.7, x: 50, y: -40, rotate: 0 },
+  2: { opacity: 0.9, x: 70, y: -10, rotate: 90 },
+  3: { opacity: 1, x: 70, y: -10, rotate: 90 }, // Intermediate state
 };
 
 export default function Step2Explore({ onComplete, isActive }: LessonStepProps) {
@@ -347,9 +347,12 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     const stepDescriptions = [
       'Este es un trapecio con bases diferentes.',
       'Hacemos una copia del trapecio...',
-      'Rotamos la copia 180° y la unimos...',
+      'Volteamos la copia y la acercamos...',
       '¡Juntos forman un paralelogramo!',
     ];
+
+    // Original trapezoid: base menor=70, base mayor=130, altura=80
+    // When combined with rotated copy, forms parallelogram with base = 200 (70+130)
 
     return (
       <div className="space-y-6 animate-fadeIn pb-32">
@@ -380,104 +383,123 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           </div>
 
           <div className="flex justify-center mb-4">
-            <svg viewBox="0 0 300 170" className="w-full max-w-md">
+            <svg viewBox="0 0 320 160" className="w-full max-w-md">
               {/* Grid background */}
               <defs>
                 <pattern id="gridTrap" width="20" height="20" patternUnits="userSpaceOnUse">
                   <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e5e7eb" strokeWidth="0.5"/>
                 </pattern>
               </defs>
-              <rect x="0" y="0" width="300" height="170" fill="url(#gridTrap)" />
+              <rect x="0" y="0" width="320" height="160" fill="url(#gridTrap)" />
 
-              {/* Original trapezoid - stays in place */}
-              <polygon
-                points="60,125 90,45 160,45 190,125"
-                fill="#fde68a"
-                stroke="#b45309"
-                strokeWidth="2"
-              />
+              {/* Step 3: Final combined state - draw both trapezoids at exact positions */}
+              {trapStep === 3 ? (
+                <>
+                  {/* Original trapezoid (left) */}
+                  <polygon
+                    points="30,120 50,40 120,40 140,120"
+                    fill="#fde68a"
+                    stroke="#b45309"
+                    strokeWidth="2"
+                  />
+                  {/* Second trapezoid (right, flipped) - forms perfect parallelogram */}
+                  <polygon
+                    points="140,120 120,40 190,40 170,120"
+                    fill="#fed7aa"
+                    stroke="#ea580c"
+                    strokeWidth="2"
+                  />
+                  {/* Parallelogram outline */}
+                  <motion.polygon
+                    points="30,120 50,40 190,40 170,120"
+                    fill="none"
+                    stroke="#166534"
+                    strokeWidth="3"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                  />
+                </>
+              ) : (
+                <>
+                  {/* Original trapezoid - centered for steps 0-2 */}
+                  <polygon
+                    points="90,120 110,40 180,40 200,120"
+                    fill="#fde68a"
+                    stroke="#b45309"
+                    strokeWidth="2"
+                  />
 
-              {/* Second trapezoid (copy) - animates with Framer Motion */}
-              <motion.g
-                animate={{
-                  x: trapezoidCopyStates[trapStep].x,
-                  y: trapezoidCopyStates[trapStep].y,
-                  rotate: trapezoidCopyStates[trapStep].rotate,
-                  opacity: trapezoidCopyStates[trapStep].opacity,
-                }}
-                transition={{
-                  duration: 0.8,
-                  ease: [0.2, 0.8, 0.2, 1]
-                }}
-                style={{ transformOrigin: '125px 85px' }}
-              >
-                <polygon
-                  points="60,125 90,45 160,45 190,125"
-                  fill="#fed7aa"
-                  stroke="#ea580c"
-                  strokeWidth="2"
-                />
-              </motion.g>
-
-              {/* Parallelogram outline (appears at end) */}
-              <motion.polygon
-                points="60,125 90,45 240,45 210,125"
-                fill="none"
-                stroke="#166534"
-                strokeWidth="3"
-                animate={{ opacity: trapStep === 3 ? 1 : 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-              />
+                  {/* Copy trapezoid - animates */}
+                  <motion.g
+                    initial={{ opacity: 0, x: 0, y: 0, scaleY: 1 }}
+                    animate={{
+                      opacity: trapStep >= 1 ? 1 : 0,
+                      x: trapStep >= 2 ? 30 : 60,
+                      y: trapStep >= 2 ? 0 : -50,
+                      scaleY: trapStep >= 2 ? -1 : 1,
+                    }}
+                    transition={{
+                      duration: 0.8,
+                      ease: [0.2, 0.8, 0.2, 1]
+                    }}
+                    style={{ transformOrigin: '145px 80px' }}
+                  >
+                    <polygon
+                      points="90,120 110,40 180,40 200,120"
+                      fill="#fed7aa"
+                      stroke="#ea580c"
+                      strokeWidth="2"
+                    />
+                  </motion.g>
+                </>
+              )}
 
               {/* Height line */}
-              <line
-                x1="125"
-                y1="45"
-                x2="125"
-                y2="125"
+              <motion.line
+                x1={trapStep === 3 ? "110" : "145"}
+                y1="40"
+                x2={trapStep === 3 ? "110" : "145"}
+                y2="120"
                 stroke="#6b7280"
                 strokeWidth="1.5"
                 strokeDasharray="4,4"
+                animate={{ x1: trapStep === 3 ? 110 : 145, x2: trapStep === 3 ? 110 : 145 }}
+                transition={{ duration: 0.5 }}
               />
 
-              {/* Labels */}
+              {/* Labels for steps 0-2 */}
               <motion.g
                 animate={{ opacity: trapStep < 3 ? 1 : 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <text x="125" y="35" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold">
+                <text x="145" y="30" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold">
                   b (base menor)
                 </text>
-                <text x="125" y="145" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold">
+                <text x="145" y="140" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold">
                   B (base mayor)
                 </text>
-                <text x="135" y="90" textAnchor="start" fontSize="14" fill="#1f2937" fontWeight="bold">
+                <text x="155" y="85" textAnchor="start" fontSize="14" fill="#1f2937" fontWeight="bold">
                   h
                 </text>
               </motion.g>
 
-              {/* Success labels */}
+              {/* Success labels for step 3 */}
               {trapStep === 3 && (
                 <motion.g
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <text x="165" y="35" textAnchor="middle" fontSize="12" fill="#166534" fontWeight="bold">
+                  <text x="120" y="30" textAnchor="middle" fontSize="12" fill="#166534" fontWeight="bold">
                     B + b
                   </text>
-                  <motion.text
-                    x="150" y="90"
-                    textAnchor="middle"
-                    fontSize="16"
-                    fill="#166534"
-                    fontWeight="bold"
-                    initial={{ scale: 0.8 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.3, delay: 0.5 }}
-                  >
+                  <text x="120" y="85" textAnchor="middle" fontSize="16" fill="#166534" fontWeight="bold">
                     ¡Paralelogramo!
-                  </motion.text>
+                  </text>
+                  <text x="120" y="140" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold">
+                    B + b
+                  </text>
                 </motion.g>
               )}
             </svg>
