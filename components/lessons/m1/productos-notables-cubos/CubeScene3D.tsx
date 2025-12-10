@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, RoundedBox } from '@react-three/drei';
+import { OrbitControls, RoundedBox, Html } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface CubePart {
@@ -96,12 +96,23 @@ function SingleCube({ position, color, label, isSelected, isExploded, onClick }:
           <lineBasicMaterial color="#ffffff" linewidth={2} />
         </lineSegments>
       )}
-      {/* Label as a simple plane with text texture would be complex, using color coding instead */}
-      {/* Front face indicator */}
-      <mesh position={[0, 0, 0.51]}>
-        <planeGeometry args={[0.6, 0.3]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.9} />
-      </mesh>
+      {/* Label using Html from drei */}
+      <Html
+        position={[0, 0, 0.52]}
+        center
+        distanceFactor={4}
+        style={{
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }}
+      >
+        <div
+          className="font-mono font-bold text-white text-sm px-2 py-1 rounded bg-black/50 backdrop-blur-sm whitespace-nowrap"
+          style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
+        >
+          {label}
+        </div>
+      </Html>
     </group>
   );
 }
