@@ -30,7 +30,6 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   // Derived transforms - synchronized with unrollProgress (0 to 1)
   const circleRotation = useTransform(unrollProgress, [0, 1], [0, 360]);
   const strokeOffset = useTransform(unrollProgress, [0, 1], [0, circumference]);
-  const lineWidth = useTransform(unrollProgress, [0, 1], [0, lineLength]);
 
   // Start unroll animation
   const startUnrollAnimation = () => {
@@ -272,9 +271,6 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   stroke="#0d9488"
                   strokeWidth="4"
                   strokeLinecap="round"
-                  style={{
-                    x2: useTransform(lineWidth, v => lineStartX + v),
-                  }}
                   animate={{
                     x2: lineStartX + lineLength,
                   }}
