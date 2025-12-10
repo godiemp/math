@@ -1,11 +1,31 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ArrowRight, Scissors, RotateCcw, Play, Pause } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight, Scissors, RotateCcw, Play } from 'lucide-react';
 import { LessonStepProps } from '@/lib/lessons/types';
 
 type Phase = 'intro' | 'parallelogram' | 'trapezoid' | 'summary';
 type AnimationStep = 0 | 1 | 2 | 3;
+
+// Animation configuration
+const STEP_DELAY = 1200; // ms between auto-advance steps
+
+// Triangle positions for parallelogram animation
+const trianglePositions: Record<AnimationStep, { x: number; y: number }> = {
+  0: { x: 0, y: 0 },
+  1: { x: 0, y: -20 },
+  2: { x: 140, y: -20 },
+  3: { x: 140, y: 0 },
+};
+
+// Trapezoid copy animation states
+const trapezoidCopyStates: Record<AnimationStep, { opacity: number; x: number; y: number; rotate: number }> = {
+  0: { opacity: 0, x: 0, y: 0, rotate: 0 },
+  1: { opacity: 0.7, x: 40, y: -30, rotate: 0 },
+  2: { opacity: 0.9, x: 80, y: 0, rotate: 180 },
+  3: { opacity: 1, x: 80, y: 0, rotate: 180 },
+};
 
 export default function Step2Explore({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('intro');
@@ -35,7 +55,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           return (prev + 1) as AnimationStep;
         });
       }
-    }, 1200);
+    }, STEP_DELAY);
 
     return () => clearInterval(timer);
   }, [isPlaying, phase]);
@@ -101,33 +121,6 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
       '¡Se formó un rectángulo! Misma área.',
     ];
 
-    // Calculate positions based on step
-    const getTriangleTransform = () => {
-      switch (paraStep) {
-        case 0: return 'translate(0, 0)';
-        case 1: return 'translate(0, -15)'; // Lift up
-        case 2: return 'translate(140, -15)'; // Move right (still up)
-        case 3: return 'translate(140, 0)'; // Settle down
-        default: return 'translate(0, 0)';
-      }
-    };
-
-    const getMainShapePoints = () => {
-      // Original: "40,130 80,30 220,30 180,130" (parallelogram)
-      // Final: "80,130 80,30 220,30 220,130" (rectangle)
-      switch (paraStep) {
-        case 0:
-        case 1:
-          return "40,130 80,30 220,30 180,130";
-        case 2:
-          return "60,130 80,30 220,30 200,130"; // Intermediate
-        case 3:
-          return "80,130 80,30 220,30 220,130"; // Rectangle
-        default:
-          return "40,130 80,30 220,30 180,130";
-      }
-    };
-
     return (
       <div className="space-y-6 animate-fadeIn pb-32">
         <div className="text-center">
@@ -144,11 +137,14 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           {/* Step indicator */}
           <div className="flex justify-center gap-2 mb-4">
             {[0, 1, 2, 3].map((step) => (
-              <div
+              <motion.div
                 key={step}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  step <= paraStep ? 'bg-purple-500' : 'bg-gray-300 dark:bg-gray-600'
-                }`}
+                animate={{
+                  scale: step === paraStep ? 1.3 : 1,
+                  backgroundColor: step <= paraStep ? '#8b5cf6' : '#d1d5db',
+                }}
+                transition={{ duration: 0.3 }}
+                className="w-3 h-3 rounded-full"
               />
             ))}
           </div>
@@ -163,20 +159,22 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               </defs>
               <rect x="0" y="0" width="300" height="180" fill="url(#gridPara)" />
 
-              {/* Main parallelogram body */}
+              {/* Main parallelogram body - transforms with triangle */}
               <polygon
-                points={getMainShapePoints()}
+                points="80,130 80,30 220,30 220,130"
                 fill="#c4b5fd"
                 stroke="#7c3aed"
                 strokeWidth="2"
-                style={{ transition: 'all 0.8s ease-in-out' }}
               />
 
-              {/* Triangle piece that moves */}
-              <g style={{
-                transition: 'transform 0.8s ease-in-out',
-                transform: getTriangleTransform()
-              }}>
+              {/* Triangle piece that moves - using Framer Motion */}
+              <motion.g
+                animate={trianglePositions[paraStep]}
+                transition={{
+                  duration: 0.8,
+                  ease: [0.2, 0.8, 0.2, 1] // Custom easing for smooth movement
+                }}
+              >
                 <polygon
                   points="40,130 80,30 80,130"
                   fill="#fca5a5"
@@ -184,32 +182,39 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   strokeWidth="2"
                 />
                 {/* Scissors icon on triangle */}
-                {paraStep < 2 && (
-                  <text x="55" y="95" fontSize="10" fill="#dc2626" fontWeight="bold">
-                    ✂
-                  </text>
-                )}
-              </g>
+                <motion.text
+                  x="55" y="95"
+                  fontSize="16"
+                  fill="#dc2626"
+                  fontWeight="bold"
+                  animate={{ opacity: paraStep < 2 ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  ✂
+                </motion.text>
+              </motion.g>
 
               {/* Cut line (dashed) - only visible in step 0 */}
-              <line
+              <motion.line
                 x1="80" y1="30" x2="80" y2="130"
                 stroke="#dc2626"
                 strokeWidth="2"
                 strokeDasharray="6,4"
-                opacity={paraStep === 0 ? 1 : 0}
-                style={{ transition: 'opacity 0.4s' }}
+                animate={{ opacity: paraStep === 0 ? 1 : 0 }}
+                transition={{ duration: 0.4 }}
               />
 
               {/* Rectangle outline (appears at end) */}
-              <rect
+              <motion.rect
                 x="80" y="30" width="140" height="100"
                 fill="none"
                 stroke="#166534"
                 strokeWidth="3"
-                strokeDasharray={paraStep === 3 ? "0" : "8,4"}
-                opacity={paraStep >= 3 ? 1 : 0}
-                style={{ transition: 'all 0.5s ease-in-out 0.3s' }}
+                animate={{
+                  opacity: paraStep >= 3 ? 1 : 0,
+                  strokeDasharray: paraStep === 3 ? "0" : "8,4"
+                }}
+                transition={{ duration: 0.5, delay: 0.3 }}
               />
 
               {/* Labels */}
@@ -222,48 +227,58 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
               {/* Success message */}
               {paraStep === 3 && (
-                <text
+                <motion.text
                   x="150" y="85"
                   textAnchor="middle"
                   fontSize="18"
                   fontWeight="bold"
                   fill="#166534"
-                  className="animate-fadeIn"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
                 >
                   ¡Rectángulo!
-                </text>
+                </motion.text>
               )}
             </svg>
           </div>
 
           {/* Step description */}
-          <div className="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-3 mb-4">
+          <motion.div
+            key={paraStep}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-3 mb-4"
+          >
             <p className="text-purple-800 dark:text-purple-200 text-center font-medium">
               {stepDescriptions[paraStep]}
             </p>
-          </div>
+          </motion.div>
 
-          {/* Controls */}
+          {/* Controls - simplified without Pause */}
           <div className="flex justify-center gap-3">
             <button
               onClick={() => {
-                if (isPlaying) {
-                  setIsPlaying(false);
-                } else if (paraStep === 3) {
+                if (paraStep === 3) {
                   setParaStep(0);
                   setTimeout(() => setIsPlaying(true), 100);
                 } else {
                   setIsPlaying(true);
                 }
               }}
-              className="flex items-center gap-2 px-6 py-2 bg-purple-500 text-white rounded-lg font-medium hover:bg-purple-600 transition-all"
+              disabled={isPlaying && paraStep < 3}
+              className="flex items-center gap-2 px-6 py-2 bg-purple-500 text-white rounded-lg font-medium hover:bg-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isPlaying ? <Pause size={18} /> : <Play size={18} />}
-              <span>{isPlaying ? 'Pausar' : paraStep === 3 ? 'Repetir' : 'Animar'}</span>
+              <Play size={18} />
+              <span>{paraStep === 3 ? 'Repetir' : 'Animar'}</span>
             </button>
-            {paraStep > 0 && !isPlaying && (
+            {paraStep > 0 && (
               <button
-                onClick={() => setParaStep(0)}
+                onClick={() => {
+                  setIsPlaying(false);
+                  setParaStep(0);
+                }}
                 className="flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
               >
                 <RotateCcw size={18} />
@@ -308,27 +323,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     const stepDescriptions = [
       'Este es un trapecio con bases diferentes.',
       'Hacemos una copia del trapecio...',
-      'Rotamos la copia 180° y la movemos...',
+      'Rotamos la copia 180° y la unimos...',
       '¡Juntos forman un paralelogramo!',
     ];
-
-    // Second trapezoid animation
-    const getSecondTrapezoid = () => {
-      switch (trapStep) {
-        case 0:
-          return { points: "165,85 145,45 175,45 195,85", opacity: 0, transform: 'translate(0, 0) rotate(0)' };
-        case 1:
-          return { points: "165,85 145,45 175,45 195,85", opacity: 0.5, transform: 'translate(60, -20) rotate(0)' };
-        case 2:
-          return { points: "165,85 145,45 175,45 195,85", opacity: 0.8, transform: 'translate(60, 40) rotate(180, 170, 65)' };
-        case 3:
-          return { points: "155,125 185,35 235,35 205,125", opacity: 1, transform: 'translate(0, 0)' };
-        default:
-          return { points: "165,85 145,45 175,45 195,85", opacity: 0, transform: 'translate(0, 0)' };
-      }
-    };
-
-    const secondTrap = getSecondTrapezoid();
 
     return (
       <div className="space-y-6 animate-fadeIn pb-32">
@@ -346,11 +343,14 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           {/* Step indicator */}
           <div className="flex justify-center gap-2 mb-4">
             {[0, 1, 2, 3].map((step) => (
-              <div
+              <motion.div
                 key={step}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  step <= trapStep ? 'bg-orange-500' : 'bg-gray-300 dark:bg-gray-600'
-                }`}
+                animate={{
+                  scale: step === trapStep ? 1.3 : 1,
+                  backgroundColor: step <= trapStep ? '#f97316' : '#d1d5db',
+                }}
+                transition={{ duration: 0.3 }}
+                className="w-3 h-3 rounded-full"
               />
             ))}
           </div>
@@ -365,109 +365,136 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               </defs>
               <rect x="0" y="0" width="300" height="170" fill="url(#gridTrap)" />
 
-              {/* Original trapezoid */}
+              {/* Original trapezoid - stays in place */}
               <polygon
-                points={trapStep === 3 ? "55,125 85,35 135,35 105,125" : "75,125 105,35 175,35 205,125"}
+                points="60,125 90,45 160,45 190,125"
                 fill="#fde68a"
                 stroke="#b45309"
                 strokeWidth="2"
-                style={{ transition: 'all 0.8s ease-in-out' }}
               />
 
-              {/* Second trapezoid (copy) */}
-              <polygon
-                points={trapStep === 3 ? "155,125 185,35 235,35 205,125" : "75,125 105,35 175,35 205,125"}
-                fill="#fed7aa"
-                stroke="#ea580c"
-                strokeWidth="2"
-                opacity={secondTrap.opacity}
-                style={{
-                  transition: 'all 0.8s ease-in-out',
-                  transformOrigin: 'center',
-                  transform: trapStep < 3 ? secondTrap.transform : 'none'
+              {/* Second trapezoid (copy) - animates with Framer Motion */}
+              <motion.g
+                animate={{
+                  x: trapezoidCopyStates[trapStep].x,
+                  y: trapezoidCopyStates[trapStep].y,
+                  rotate: trapezoidCopyStates[trapStep].rotate,
+                  opacity: trapezoidCopyStates[trapStep].opacity,
                 }}
-              />
+                transition={{
+                  duration: 0.8,
+                  ease: [0.2, 0.8, 0.2, 1]
+                }}
+                style={{ transformOrigin: '125px 85px' }}
+              >
+                <polygon
+                  points="60,125 90,45 160,45 190,125"
+                  fill="#fed7aa"
+                  stroke="#ea580c"
+                  strokeWidth="2"
+                />
+              </motion.g>
 
               {/* Parallelogram outline (appears at end) */}
-              <polygon
-                points="55,125 85,35 235,35 205,125"
+              <motion.polygon
+                points="60,125 90,45 240,45 210,125"
                 fill="none"
                 stroke="#166534"
                 strokeWidth="3"
-                opacity={trapStep === 3 ? 1 : 0}
-                style={{ transition: 'opacity 0.5s ease-in-out 0.3s' }}
+                animate={{ opacity: trapStep === 3 ? 1 : 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
               />
 
               {/* Height line */}
               <line
-                x1={trapStep === 3 ? "110" : "140"}
-                y1="35"
-                x2={trapStep === 3 ? "110" : "140"}
+                x1="125"
+                y1="45"
+                x2="125"
                 y2="125"
                 stroke="#6b7280"
                 strokeWidth="1.5"
                 strokeDasharray="4,4"
-                style={{ transition: 'all 0.8s ease-in-out' }}
               />
 
               {/* Labels */}
-              {trapStep < 3 && (
-                <>
-                  <text x="140" y="25" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold">
-                    b (base menor)
-                  </text>
-                  <text x="140" y="145" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold">
-                    B (base mayor)
-                  </text>
-                </>
-              )}
+              <motion.g
+                animate={{ opacity: trapStep < 3 ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <text x="125" y="35" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold">
+                  b (base menor)
+                </text>
+                <text x="125" y="145" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold">
+                  B (base mayor)
+                </text>
+                <text x="135" y="90" textAnchor="start" fontSize="14" fill="#1f2937" fontWeight="bold">
+                  h
+                </text>
+              </motion.g>
+
+              {/* Success labels */}
               {trapStep === 3 && (
-                <>
-                  <text x="160" y="25" textAnchor="middle" fontSize="12" fill="#166534" fontWeight="bold">
+                <motion.g
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  <text x="165" y="35" textAnchor="middle" fontSize="12" fill="#166534" fontWeight="bold">
                     B + b
                   </text>
-                  <text x="160" y="85" textAnchor="middle" fontSize="14" fill="#166534" fontWeight="bold">
+                  <motion.text
+                    x="150" y="90"
+                    textAnchor="middle"
+                    fontSize="16"
+                    fill="#166534"
+                    fontWeight="bold"
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.3, delay: 0.5 }}
+                  >
                     ¡Paralelogramo!
-                  </text>
-                </>
+                  </motion.text>
+                </motion.g>
               )}
-              <text x="155" y="85" textAnchor="start" fontSize="14" fill="#1f2937" fontWeight="bold"
-                opacity={trapStep < 3 ? 1 : 0}
-                style={{ transition: 'opacity 0.3s' }}
-              >
-                h
-              </text>
             </svg>
           </div>
 
           {/* Step description */}
-          <div className="bg-orange-50 dark:bg-orange-900/30 rounded-lg p-3 mb-4">
+          <motion.div
+            key={trapStep}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="bg-orange-50 dark:bg-orange-900/30 rounded-lg p-3 mb-4"
+          >
             <p className="text-orange-800 dark:text-orange-200 text-center font-medium">
               {stepDescriptions[trapStep]}
             </p>
-          </div>
+          </motion.div>
 
-          {/* Controls */}
+          {/* Controls - simplified without Pause */}
           <div className="flex justify-center gap-3">
             <button
               onClick={() => {
-                if (isPlaying) {
-                  setIsPlaying(false);
-                } else if (trapStep === 3) {
+                if (trapStep === 3) {
                   setTrapStep(0);
                   setTimeout(() => setIsPlaying(true), 100);
                 } else {
                   setIsPlaying(true);
                 }
               }}
-              className="flex items-center gap-2 px-6 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-all"
+              disabled={isPlaying && trapStep < 3}
+              className="flex items-center gap-2 px-6 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isPlaying ? <Pause size={18} /> : <Play size={18} />}
-              <span>{isPlaying ? 'Pausar' : trapStep === 3 ? 'Repetir' : 'Animar'}</span>
+              <Play size={18} />
+              <span>{trapStep === 3 ? 'Repetir' : 'Animar'}</span>
             </button>
-            {trapStep > 0 && !isPlaying && (
+            {trapStep > 0 && (
               <button
-                onClick={() => setTrapStep(0)}
+                onClick={() => {
+                  setIsPlaying(false);
+                  setTrapStep(0);
+                }}
                 className="flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
               >
                 <RotateCcw size={18} />
