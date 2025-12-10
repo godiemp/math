@@ -26,14 +26,18 @@ function FractionBar({
     orange: 'bg-orange-500',
   };
 
+  // Use smaller segments for larger denominators
+  const segmentWidth = denominator > 10 ? 'w-5' : 'w-8';
+  const segmentHeight = denominator > 10 ? 'h-5' : 'h-6';
+
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="flex gap-0.5">
+      <div className="flex gap-0.5 flex-wrap justify-center">
         {Array.from({ length: denominator }).map((_, i) => (
           <div
             key={i}
             className={cn(
-              'w-8 h-6 border border-gray-400 dark:border-gray-500 first:rounded-l-md last:rounded-r-md',
+              `${segmentWidth} ${segmentHeight} border border-gray-400 dark:border-gray-500 rounded-sm`,
               i < numerator ? colorClasses[color] : 'bg-gray-100 dark:bg-gray-700',
             )}
           />

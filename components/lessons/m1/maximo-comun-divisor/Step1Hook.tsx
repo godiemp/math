@@ -64,20 +64,20 @@ function MeatPile({ count, highlight = false }: { count: number; highlight?: boo
   );
 }
 
-// Taco Station component
-function TacoStation({
+// Taco Station component (now called "Mesa" for clarity)
+function TacoMesa({
   tortillas,
   meats,
-  stationNumber,
+  mesaNumber,
 }: {
   tortillas: number;
   meats: number;
-  stationNumber: number;
+  mesaNumber: number;
 }) {
   return (
     <div className="flex flex-col items-center p-3 bg-white dark:bg-gray-800 rounded-lg border-2 border-amber-300 dark:border-amber-600 shadow-sm">
       <span className="text-xs font-bold text-amber-600 dark:text-amber-400 mb-2">
-        Estación {stationNumber}
+        Mesa {mesaNumber}
       </span>
       <div className="flex gap-3 items-center">
         <div className="flex flex-col items-center">
@@ -127,7 +127,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30 rounded-xl p-6">
           <div className="space-y-4 text-center">
             <p className="text-lg text-gray-800 dark:text-gray-200">
-              Don Pancho quiere preparar <strong>estaciones de tacos idénticas</strong> para un evento.
+              Don Pancho quiere preparar <strong>mesas de tacos idénticas</strong> para un evento.
             </p>
             <p className="text-lg text-gray-800 dark:text-gray-200">
               Tiene estos ingredientes:
@@ -169,7 +169,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
             <div className="border-t border-amber-200 dark:border-amber-700 pt-4 mt-4">
               <p className="text-amber-700 dark:text-amber-300 font-medium">
-                Cada estación debe tener <strong>la misma cantidad</strong> de tortillas
+                Cada mesa debe tener <strong>la misma cantidad</strong> de tortillas
               </p>
               <p className="text-amber-700 dark:text-amber-300 font-medium">
                 Y <strong>la misma cantidad</strong> de piezas de carne.
@@ -197,10 +197,10 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   // ============ PHASE 2: QUESTION ============
   if (phase === 'question') {
     const options = [
-      { label: '2 estaciones', value: 0 },
-      { label: '3 estaciones', value: 1 },
-      { label: '6 estaciones', value: 2 },
-      { label: '8 estaciones', value: 3 },
+      { label: '2 mesas', value: 0 },
+      { label: '3 mesas', value: 1 },
+      { label: '6 mesas', value: 2 },
+      { label: '8 mesas', value: 3 },
     ];
 
     return (
@@ -210,7 +210,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             El Problema del Reparto
           </h2>
           <p className="text-gray-600 dark:text-gray-300">
-            ¿Cuál es el <strong>máximo</strong> número de estaciones idénticas?
+            ¿Cuál es el <strong>máximo</strong> número de mesas idénticas?
           </p>
         </div>
 
@@ -221,7 +221,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               <strong className="text-red-600">18 piezas de carne</strong>
             </p>
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Dividir en estaciones idénticas sin que sobre nada
+              Dividir en mesas idénticas sin que sobre nada
             </p>
           </div>
         </div>
@@ -286,20 +286,20 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         <div className="bg-gradient-to-r from-amber-50 to-green-50 dark:from-amber-900/30 dark:to-green-900/30 rounded-xl p-6">
           <div className="text-center mb-4">
             <p className="text-lg font-bold text-green-700 dark:text-green-400">
-              ¡6 estaciones idénticas!
+              ¡6 mesas idénticas!
             </p>
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              24 ÷ 6 = 4 tortillas por estación | 18 ÷ 6 = 3 carnes por estación
+              24 ÷ 6 = 4 tortillas por mesa | 18 ÷ 6 = 3 carnes por mesa
             </p>
           </div>
 
           <div className="grid grid-cols-3 gap-3 max-w-lg mx-auto">
             {Array.from({ length: 6 }).map((_, i) => (
-              <TacoStation
+              <TacoMesa
                 key={i}
                 tortillas={4}
                 meats={3}
-                stationNumber={i + 1}
+                mesaNumber={i + 1}
               />
             ))}
           </div>
@@ -345,7 +345,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   }
 
   // ============ PHASE 4: RESULT ============
-  const correctAnswer = 2; // 6 estaciones
+  const correctAnswer = 2; // 6 mesas
   const isCorrect = selectedAnswer === correctAnswer;
 
   return (
@@ -385,8 +385,8 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             </h3>
             <p className="text-gray-700 dark:text-gray-300">
               {isCorrect
-                ? 'El máximo número de estaciones es 6. Cada una con 4 tortillas y 3 carnes.'
-                : 'El máximo es 6 estaciones. Tanto 2, 3 como 6 dividen a 24 y 18, pero 6 es el mayor.'}
+                ? 'El máximo número de mesas es 6. Cada una con 4 tortillas y 3 carnes.'
+                : 'El máximo es 6 mesas. Tanto 2, 3 como 6 dividen a 24 y 18, pero 6 es el mayor.'}
             </p>
           </div>
         </div>
