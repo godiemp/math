@@ -232,8 +232,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                       : "bg-white/50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800"
                   )}
                   style={{
-                    ringColor: selectedPart === part.id ? part.color : undefined
-                  }}
+                    '--tw-ring-color': selectedPart === part.id ? part.color : undefined
+                  } as React.CSSProperties}
                 >
                   <div
                     className="w-4 h-4 rounded"
