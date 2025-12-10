@@ -52,6 +52,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   const [dataset, setDataset] = useState<number[]>([3, 5, 7, 7, 9]);
   const [showCalculation, setShowCalculation] = useState<'mean' | 'median' | 'mode' | 'range' | null>(null);
   const [discoveryStep, setDiscoveryStep] = useState(0);
+  const [addedForStep, setAddedForStep] = useState(false); // Track if user added target for current step
 
   const measures = useMemo(() => calculateMeasures(dataset), [dataset]);
   const sortedData = useMemo(() => [...dataset].sort((a, b) => a - b), [dataset]);
@@ -344,18 +345,23 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 {num}
               </div>
             ))}
-            <button
-              onClick={() => {
-                addNumber(currentDiscovery.targetNum);
-              }}
-              className="w-10 h-10 rounded-lg font-bold text-lg bg-amber-500 text-white border-2 border-amber-600 flex items-center justify-center hover:bg-amber-600 transition-all animate-pulse"
-            >
-              <Plus size={20} />
-            </button>
+            {!addedForStep && (
+              <button
+                onClick={() => {
+                  addNumber(currentDiscovery.targetNum);
+                  setAddedForStep(true);
+                }}
+                className="w-10 h-10 rounded-lg font-bold text-lg bg-amber-500 text-white border-2 border-amber-600 flex items-center justify-center hover:bg-amber-600 transition-all animate-pulse"
+              >
+                <Plus size={20} />
+              </button>
+            )}
           </div>
-          <p className="text-center text-sm text-amber-600 dark:text-amber-400 mt-2">
-            Toca + para agregar {currentDiscovery.targetNum}
-          </p>
+          {!addedForStep && (
+            <p className="text-center text-sm text-amber-600 dark:text-amber-400 mt-2">
+              Toca + para agregar {currentDiscovery.targetNum}
+            </p>
+          )}
         </div>
 
         {/* Live measures */}
@@ -379,7 +385,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
         </div>
 
         {/* Insight after adding */}
-        {dataset.includes(currentDiscovery.targetNum) && (
+        {addedForStep && (
           <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-4 border border-green-200 dark:border-green-700 animate-fadeIn">
             <p className="text-green-800 dark:text-green-200">
               <strong>¡Observa!</strong> {currentDiscovery.insight}
@@ -389,6 +395,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 onClick={() => {
                   if (discoveryStep < discoveries.length - 1) {
                     setDiscoveryStep(discoveryStep + 1);
+                    setAddedForStep(false); // Reset for next step
                   } else {
                     setPhase('complete');
                   }
