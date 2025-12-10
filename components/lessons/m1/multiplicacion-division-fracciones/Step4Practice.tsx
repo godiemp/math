@@ -190,7 +190,7 @@ export default function Step4Practice({ onComplete, isActive }: LessonStepProps)
       {/* Problem */}
       <div className="bg-gradient-to-r from-orange-50 to-blue-50 dark:from-orange-900/30 dark:to-blue-900/30 rounded-xl p-6">
         <div className="text-center mb-6">
-          <p className="text-gray-600 dark:text-gray-400 mb-2">Resuelve:</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-2">Resuelve y simplifica:</p>
           <div className="text-3xl md:text-4xl font-bold">
             <span className="text-orange-600 dark:text-orange-400">
               {problem.fraction1.num}/{problem.fraction1.den}
