@@ -1,0 +1,242 @@
+'use client';
+
+import { cn } from '@/lib/utils';
+
+export interface FrequencyTableData {
+  category: string;
+  frequency: number;
+  color?: string;
+}
+
+export interface FrequencyTableProps {
+  /** Data for each row */
+  data: FrequencyTableData[];
+  /** Show tally marks column */
+  showTally?: boolean;
+  /** Show relative frequency column */
+  showRelative?: boolean;
+  /** Show percentage column */
+  showPercentage?: boolean;
+  /** Total count (auto-calculated if not provided) */
+  total?: number;
+  /** Index of row to highlight */
+  highlightRow?: number;
+  /** Callback when row is clicked */
+  onRowClick?: (index: number) => void;
+  /** Animate number changes */
+  animated?: boolean;
+  /** Custom class name */
+  className?: string;
+}
+
+// Render tally marks (||||) with crossover for groups of 5
+function TallyMarks({ count }: { count: number }) {
+  const groups = Math.floor(count / 5);
+  const remainder = count % 5;
+
+  return (
+    <div className="flex items-center gap-1.5">
+      {/* Groups of 5 */}
+      {Array.from({ length: groups }).map((_, groupIndex) => (
+        <div key={`group-${groupIndex}`} className="relative flex gap-0.5">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={`tally-${i}`}
+              className="w-0.5 h-4 bg-gray-700 dark:bg-gray-300"
+            />
+          ))}
+          {/* Diagonal strike-through */}
+          <div
+            className="absolute w-5 h-0.5 bg-gray-700 dark:bg-gray-300 rotate-[-60deg]"
+            style={{ top: '50%', left: '-2px', transformOrigin: 'left center' }}
+          />
+        </div>
+      ))}
+
+      {/* Remaining marks */}
+      {remainder > 0 && (
+        <div className="flex gap-0.5">
+          {Array.from({ length: remainder }).map((_, i) => (
+            <div
+              key={`remainder-${i}`}
+              className="w-0.5 h-4 bg-gray-700 dark:bg-gray-300"
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Show empty space if count is 0 */}
+      {count === 0 && <span className="text-gray-400">-</span>}
+    </div>
+  );
+}
+
+export default function FrequencyTable({
+  data,
+  showTally = false,
+  showRelative = false,
+  showPercentage = false,
+  total: providedTotal,
+  highlightRow,
+  onRowClick,
+  animated = true,
+  className,
+}: FrequencyTableProps) {
+  const total = providedTotal ?? data.reduce((sum, item) => sum + item.frequency, 0);
+
+  const getRelativeFrequency = (frequency: number) => {
+    return total > 0 ? (frequency / total).toFixed(2) : '0.00';
+  };
+
+  const getPercentage = (frequency: number) => {
+    return total > 0 ? Math.round((frequency / total) * 100) : 0;
+  };
+
+  return (
+    <div className={cn('w-full overflow-x-auto', className)}>
+      <table className="w-full border-collapse">
+        <thead>
+          <tr className="bg-gray-100 dark:bg-gray-800">
+            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+              Categoria
+            </th>
+            {showTally && (
+              <th className="px-3 py-2 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+                Conteo
+              </th>
+            )}
+            <th className="px-3 py-2 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+              Frecuencia (f<sub>i</sub>)
+            </th>
+            {showRelative && (
+              <th className="px-3 py-2 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+                Frec. Relativa (h<sub>i</sub>)
+              </th>
+            )}
+            {showPercentage && (
+              <th className="px-3 py-2 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+                Porcentaje
+              </th>
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => {
+            const isHighlighted = highlightRow === index;
+            const rowColor = item.color;
+
+            return (
+              <tr
+                key={`${item.category}-${index}`}
+                onClick={() => onRowClick?.(index)}
+                className={cn(
+                  'border-b border-gray-100 dark:border-gray-800',
+                  animated && 'transition-all duration-300',
+                  onRowClick && 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50',
+                  isHighlighted && 'bg-amber-50 dark:bg-amber-900/30'
+                )}
+              >
+                {/* Category with color indicator */}
+                <td className="px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    {rowColor && (
+                      <div
+                        className="w-3 h-3 rounded-sm flex-shrink-0"
+                        style={{ backgroundColor: rowColor }}
+                      />
+                    )}
+                    <span
+                      className={cn(
+                        'text-sm',
+                        isHighlighted
+                          ? 'text-amber-700 dark:text-amber-300 font-semibold'
+                          : 'text-gray-800 dark:text-gray-200'
+                      )}
+                    >
+                      {item.category}
+                    </span>
+                  </div>
+                </td>
+
+                {/* Tally marks */}
+                {showTally && (
+                  <td className="px-3 py-2 text-center">
+                    <TallyMarks count={item.frequency} />
+                  </td>
+                )}
+
+                {/* Absolute frequency */}
+                <td className="px-3 py-2 text-center">
+                  <span
+                    className={cn(
+                      'text-sm font-mono',
+                      animated && 'transition-all duration-300',
+                      isHighlighted
+                        ? 'text-amber-700 dark:text-amber-300 font-bold text-base'
+                        : 'text-gray-800 dark:text-gray-200'
+                    )}
+                  >
+                    {item.frequency}
+                  </span>
+                </td>
+
+                {/* Relative frequency */}
+                {showRelative && (
+                  <td className="px-3 py-2 text-center">
+                    <span
+                      className={cn(
+                        'text-sm font-mono',
+                        isHighlighted
+                          ? 'text-amber-700 dark:text-amber-300 font-bold'
+                          : 'text-gray-600 dark:text-gray-400'
+                      )}
+                    >
+                      {getRelativeFrequency(item.frequency)}
+                    </span>
+                  </td>
+                )}
+
+                {/* Percentage */}
+                {showPercentage && (
+                  <td className="px-3 py-2 text-center">
+                    <span
+                      className={cn(
+                        'text-sm font-mono',
+                        isHighlighted
+                          ? 'text-amber-700 dark:text-amber-300 font-bold'
+                          : 'text-gray-600 dark:text-gray-400'
+                      )}
+                    >
+                      {getPercentage(item.frequency)}%
+                    </span>
+                  </td>
+                )}
+              </tr>
+            );
+          })}
+
+          {/* Total row */}
+          <tr className="bg-gray-50 dark:bg-gray-800/50 font-semibold">
+            <td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
+              Total
+            </td>
+            {showTally && <td className="px-3 py-2"></td>}
+            <td className="px-3 py-2 text-center text-sm text-gray-700 dark:text-gray-300 font-mono">
+              {total}
+            </td>
+            {showRelative && (
+              <td className="px-3 py-2 text-center text-sm text-gray-700 dark:text-gray-300 font-mono">
+                1.00
+              </td>
+            )}
+            {showPercentage && (
+              <td className="px-3 py-2 text-center text-sm text-gray-700 dark:text-gray-300 font-mono">
+                100%
+              </td>
+            )}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}
