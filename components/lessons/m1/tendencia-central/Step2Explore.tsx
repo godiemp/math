@@ -57,8 +57,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   const measures = useMemo(() => calculateMeasures(dataset), [dataset]);
   const sortedData = useMemo(() => [...dataset].sort((a, b) => a - b), [dataset]);
 
-  const addNumber = (num: number) => {
-    if (dataset.length < 12) {
+  const addNumber = (num: number, force = false) => {
+    if (force || dataset.length < 12) {
       setDataset([...dataset, num]);
     }
   };
@@ -348,7 +348,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             {!addedForStep && (
               <button
                 onClick={() => {
-                  addNumber(currentDiscovery.targetNum);
+                  addNumber(currentDiscovery.targetNum, true); // Force add for discovery
                   setAddedForStep(true);
                 }}
                 className="w-10 h-10 rounded-lg font-bold text-lg bg-amber-500 text-white border-2 border-amber-600 flex items-center justify-center hover:bg-amber-600 transition-all animate-pulse"
