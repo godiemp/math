@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, Lightbulb, MousePointerClick } from 'lucide-react';
+import { ArrowRight, Lightbulb, Hand } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
@@ -13,14 +13,14 @@ function AreaModelGrid({
   cols,
   selectedRows,
   selectedCols,
-  onCellHover,
+  onCellSelect,
   interactive = false,
 }: {
   rows: number;
   cols: number;
   selectedRows: number;
   selectedCols: number;
-  onCellHover?: (row: number, col: number) => void;
+  onCellSelect?: (row: number, col: number) => void;
   interactive?: boolean;
 }) {
   return (
@@ -39,7 +39,8 @@ function AreaModelGrid({
           return (
             <div
               key={i}
-              onMouseEnter={() => interactive && onCellHover?.(row, col)}
+              onClick={() => interactive && onCellSelect?.(row, col)}
+              onMouseEnter={() => interactive && onCellSelect?.(row, col)}
               className={cn(
                 'w-10 h-10 md:w-12 md:h-12 border border-gray-300 dark:border-gray-600 transition-all duration-200',
                 isSelected
@@ -49,7 +50,7 @@ function AreaModelGrid({
                     : isColSelected
                       ? 'bg-orange-200 dark:bg-orange-800/50'
                       : 'bg-gray-100 dark:bg-gray-800',
-                interactive && 'cursor-pointer hover:opacity-80',
+                interactive && 'cursor-pointer hover:opacity-80 active:scale-95',
               )}
             />
           );
@@ -67,7 +68,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
   if (!isActive) return null;
 
-  const handleCellHover = (row: number, col: number) => {
+  const handleCellSelect = (row: number, col: number) => {
     setSelectedRows(row + 1);
     setSelectedCols(col + 1);
     setHasInteracted(true);
@@ -158,9 +159,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
         <div className="bg-gradient-to-r from-orange-50 to-blue-50 dark:from-orange-900/30 dark:to-blue-900/30 rounded-xl p-6">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <MousePointerClick className="w-5 h-5 text-gray-500" />
+            <Hand className="w-5 h-5 text-gray-500" />
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Mueve el mouse sobre la cuadricula para seleccionar
+              Toca un cuadro para seleccionar
             </p>
           </div>
 
@@ -170,7 +171,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               cols={5}
               selectedRows={selectedRows}
               selectedCols={selectedCols}
-              onCellHover={handleCellHover}
+              onCellSelect={handleCellSelect}
               interactive
             />
           </div>
