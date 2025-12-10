@@ -220,13 +220,23 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               {/* Multiplication step */}
               <div className="flex items-center justify-center gap-4 flex-wrap">
                 <div className="text-center">
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">×3</p>
                   <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
                     <div>1</div>
                     <div className="border-t-2 border-orange-600 dark:border-orange-400 w-8 mx-auto" />
                     <div>2</div>
                   </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">×3</p>
+                </div>
+
+                <div className="text-center">
+                  <span className="text-2xl font-bold text-gray-400">×</span>
+                </div>
+
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    <div>3</div>
+                    <div className="border-t-2 border-purple-600 dark:border-purple-400 w-8 mx-auto" />
+                    <div>3</div>
+                  </div>
                 </div>
 
                 <span className="text-2xl font-bold text-gray-400">=</span>
@@ -249,7 +259,17 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               </div>
             </div>
 
-            <p className="text-center text-purple-700 dark:text-purple-300 mt-4 text-sm">
+            {/* Key insight: multiplying by 1 */}
+            <div className="mt-4 p-3 bg-purple-100 dark:bg-purple-900/50 rounded-lg border border-purple-300 dark:border-purple-700">
+              <p className="text-center text-purple-800 dark:text-purple-200 text-sm">
+                <strong>¿Por qué funciona?</strong> Porque <span className="font-bold">3/3 = 1</span>
+              </p>
+              <p className="text-center text-purple-700 dark:text-purple-300 text-xs mt-1">
+                Multiplicar por 1 no cambia el valor de la fracción, ¡solo su forma!
+              </p>
+            </div>
+
+            <p className="text-center text-gray-600 dark:text-gray-400 mt-3 text-sm">
               <strong>¿Por qué ×3?</strong> Porque 6 ÷ 2 = 3
             </p>
           </div>
