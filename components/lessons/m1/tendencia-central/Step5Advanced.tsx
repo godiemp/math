@@ -6,7 +6,8 @@ import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
 // Base employee salaries (in thousands)
-const BASE_SALARIES = [400, 450, 500, 550, 600];
+// Using 9 employees with two at $500k so median stays stable when adding CEO
+const BASE_SALARIES = [350, 400, 450, 480, 500, 500, 520, 550, 600];
 
 function calculateMean(data: number[]) {
   return data.reduce((a, b) => a + b, 0) / data.length;
@@ -22,7 +23,7 @@ function calculateMedian(data: number[]) {
 }
 
 export default function Step5Advanced({ onComplete, isActive }: LessonStepProps) {
-  const [ceoSalary, setCeoSalary] = useState(600);
+  const [ceoSalary, setCeoSalary] = useState(700);
   const [showInsight, setShowInsight] = useState(false);
 
   const allSalaries = useMemo(() => [...BASE_SALARIES, ceoSalary], [ceoSalary]);
@@ -98,7 +99,7 @@ export default function Step5Advanced({ onComplete, isActive }: LessonStepProps)
         {/* Slider */}
         <div className="space-y-2">
           <div className="flex justify-between text-sm text-gray-500">
-            <span>$600k</span>
+            <span>$700k</span>
             <span className={cn(
               'font-semibold',
               ceoSalary > 1500 ? 'text-amber-600' : 'text-gray-600'
@@ -109,7 +110,7 @@ export default function Step5Advanced({ onComplete, isActive }: LessonStepProps)
           </div>
           <input
             type="range"
-            min={600}
+            min={700}
             max={3000}
             step={100}
             value={ceoSalary}
