@@ -35,38 +35,50 @@ function TallyMarks({ count }: { count: number }) {
   const remainder = count % 5;
 
   return (
-    <div className="flex items-center gap-1.5">
-      {/* Groups of 5 */}
+    <div className="flex items-center gap-3">
+      {/* Groups of 5 - using SVG for precise rendering */}
       {Array.from({ length: groups }).map((_, groupIndex) => (
-        <div key={`group-${groupIndex}`} className="relative flex gap-0.5">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div
-              key={`tally-${i}`}
-              className="w-0.5 h-4 bg-gray-700 dark:bg-gray-300"
-            />
-          ))}
+        <svg
+          key={`group-${groupIndex}`}
+          width="24"
+          height="20"
+          viewBox="0 0 24 20"
+          className="text-gray-700 dark:text-gray-300"
+        >
+          {/* 4 vertical lines */}
+          <line x1="3" y1="2" x2="3" y2="18" stroke="currentColor" strokeWidth="2" />
+          <line x1="8" y1="2" x2="8" y2="18" stroke="currentColor" strokeWidth="2" />
+          <line x1="13" y1="2" x2="13" y2="18" stroke="currentColor" strokeWidth="2" />
+          <line x1="18" y1="2" x2="18" y2="18" stroke="currentColor" strokeWidth="2" />
           {/* Diagonal strike-through */}
-          <div
-            className="absolute w-5 h-0.5 bg-gray-700 dark:bg-gray-300 rotate-[-60deg]"
-            style={{ top: '50%', left: '-2px', transformOrigin: 'left center' }}
-          />
-        </div>
+          <line x1="1" y1="16" x2="21" y2="4" stroke="currentColor" strokeWidth="2" />
+        </svg>
       ))}
 
-      {/* Remaining marks */}
+      {/* Remaining marks (1-4) */}
       {remainder > 0 && (
-        <div className="flex gap-0.5">
+        <svg
+          width={remainder * 5 + 2}
+          height="20"
+          viewBox={`0 0 ${remainder * 5 + 2} 20`}
+          className="text-gray-700 dark:text-gray-300"
+        >
           {Array.from({ length: remainder }).map((_, i) => (
-            <div
+            <line
               key={`remainder-${i}`}
-              className="w-0.5 h-4 bg-gray-700 dark:bg-gray-300"
+              x1={i * 5 + 3}
+              y1="2"
+              x2={i * 5 + 3}
+              y2="18"
+              stroke="currentColor"
+              strokeWidth="2"
             />
           ))}
-        </div>
+        </svg>
       )}
 
-      {/* Show empty space if count is 0 */}
-      {count === 0 && <span className="text-gray-400">-</span>}
+      {/* Show dash if count is 0 */}
+      {count === 0 && <span className="text-gray-400">—</span>}
     </div>
   );
 }

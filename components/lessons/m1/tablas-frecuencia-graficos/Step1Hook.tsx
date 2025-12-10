@@ -78,14 +78,9 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
         {/* Receipt tape container */}
         <div className="bg-gradient-to-b from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-900/10 rounded-xl p-4 border border-amber-200 dark:border-amber-800">
-          <div className="h-48 overflow-hidden relative">
-            {/* Scrolling receipt tape */}
-            <div
-              className="flex flex-wrap gap-1 justify-center transition-all duration-300"
-              style={{
-                transform: `translateY(${Math.max(0, visibleOrders - 20) * -8}px)`,
-              }}
-            >
+          <div className="min-h-32 max-h-64 overflow-y-auto relative">
+            {/* Receipt items - no scrolling away */}
+            <div className="flex flex-wrap gap-1.5 justify-center">
               {ORDERS.slice(0, visibleOrders).map((order, index) => (
                 <div
                   key={index}
@@ -93,16 +88,13 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                     'px-2 py-1 bg-white dark:bg-gray-800 rounded shadow-sm text-sm',
                     'animate-fadeIn border border-gray-100 dark:border-gray-700'
                   )}
-                  style={{ animationDelay: `${index * 50}ms` }}
+                  style={{ animationDelay: `${index * 30}ms` }}
                 >
                   <span className="mr-1">{order.emoji}</span>
                   <span className="text-gray-700 dark:text-gray-300">{order.name}</span>
                 </div>
               ))}
             </div>
-
-            {/* Fade overlay at bottom */}
-            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-amber-100 dark:from-amber-900/20 to-transparent pointer-events-none" />
           </div>
 
           {/* Counter */}
