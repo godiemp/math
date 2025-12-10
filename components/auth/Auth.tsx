@@ -81,7 +81,7 @@ export default function Auth({ onSuccess }: AuthProps) {
             return result;
           },
           // Only retry on network errors (cold start), not auth errors
-          (result) => !result.success && (result.error?.includes('Network error') || result.error?.includes('Unable to connect'))
+          (result) => !result.success && Boolean(result.error?.includes('Network error') || result.error?.includes('Unable to connect'))
         );
         setIsRetrying(false);
 
@@ -158,7 +158,7 @@ export default function Auth({ onSuccess }: AuthProps) {
             }
             return res;
           },
-          (res) => !res.success && (res.error?.includes('Network error') || res.error?.includes('Unable to connect'))
+          (res) => !res.success && Boolean(res.error?.includes('Network error') || res.error?.includes('Unable to connect'))
         );
         setIsRetrying(false);
 
