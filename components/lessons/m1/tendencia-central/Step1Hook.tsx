@@ -7,34 +7,35 @@ import { LessonStepProps } from '@/lib/lessons/types';
 
 type Phase = 'intro' | 'guess' | 'reveal';
 
-// Song data - different play patterns to illustrate the concept
+// Song data - designed to show different winners by different measures
+// Key insight: Total plays vs Number of fans creates different rankings
 const SONGS = [
   {
     id: 1,
     name: 'Ritmo Latino',
     emoji: '💃',
-    plays: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3], // 10 students, 3 plays each = 30 total, everyone plays it
+    plays: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4], // Everyone plays it = 40 total, 10 fans
     color: 'bg-pink-500'
   },
   {
     id: 2,
     name: 'Pop del Momento',
     emoji: '🎤',
-    plays: [0, 0, 0, 0, 0, 15, 15, 15, 15, 15], // 5 fans play it a lot = 75 total
+    plays: [0, 0, 0, 0, 0, 0, 12, 12, 12, 12], // Only 4 superfans = 48 total, 4 fans
     color: 'bg-purple-500'
   },
   {
     id: 3,
     name: 'Rock Clasico',
     emoji: '🎸',
-    plays: [2, 2, 2, 4, 4, 4, 4, 4, 4, 4], // 34 total, 4 is mode
+    plays: [0, 0, 0, 3, 3, 3, 3, 3, 3, 3], // 7 fans = 21 total
     color: 'bg-orange-500'
   },
   {
     id: 4,
     name: 'Reggaeton Hit',
     emoji: '🔥',
-    plays: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // 55 total, spread out, no mode
+    plays: [0, 0, 0, 0, 0, 5, 5, 5, 5, 5], // 5 fans = 25 total
     color: 'bg-red-500'
   },
 ];
@@ -42,6 +43,7 @@ const SONGS = [
 // Calculate statistics for each song
 function calculateStats(plays: number[]) {
   const total = plays.reduce((a, b) => a + b, 0);
+  const fans = plays.filter(p => p > 0).length; // Number of people who actually played it
   const mean = total / plays.length;
 
   const sorted = [...plays].sort((a, b) => a - b);
@@ -58,7 +60,7 @@ function calculateStats(plays: number[]) {
     .filter(([, f]) => f === maxFreq && maxFreq > 1)
     .map(([v]) => Number(v));
 
-  return { total, mean, median, modes };
+  return { total, fans, mean, median, modes };
 }
 
 const SONG_STATS = SONGS.map(song => ({
@@ -66,9 +68,9 @@ const SONG_STATS = SONGS.map(song => ({
   stats: calculateStats(song.plays)
 }));
 
-// Rankings by different measures
-const byMean = [...SONG_STATS].sort((a, b) => b.stats.mean - a.stats.mean);
+// Rankings by different measures - these give DIFFERENT winners!
 const byTotal = [...SONG_STATS].sort((a, b) => b.stats.total - a.stats.total);
+const byFans = [...SONG_STATS].sort((a, b) => b.stats.fans - a.stats.fans);
 
 export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('intro');
@@ -116,9 +118,9 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               </div>
               <div className="text-right">
                 <div className="text-lg font-bold text-gray-900 dark:text-white">
-                  {song.stats.mean.toFixed(1)}
+                  {song.stats.fans}/10
                 </div>
-                <div className="text-xs text-gray-500">promedio/persona</div>
+                <div className="text-xs text-gray-500">estudiantes</div>
               </div>
             </div>
           ))}
@@ -269,13 +271,13 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           </div>
         </div>
 
-        {/* By Mean */}
+        {/* By Fans */}
         <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
           <h3 className="text-center font-bold text-purple-800 dark:text-purple-200 mb-3 text-sm">
-            Por PROMEDIO por persona
+            Por NUMERO de fans
           </h3>
           <div className="space-y-2">
-            {byMean.map((song, index) => (
+            {byFans.map((song, index) => (
               <div
                 key={song.id}
                 className={cn(
@@ -286,14 +288,14 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 <span className="font-bold text-purple-600 w-5">#{index + 1}</span>
                 <span>{song.emoji}</span>
                 <span className="flex-1 truncate text-gray-700 dark:text-gray-300">{song.name}</span>
-                <span className="font-mono text-xs">{song.stats.mean.toFixed(1)}</span>
+                <span className="font-mono text-xs">{song.stats.fans}</span>
               </div>
             ))}
           </div>
           <div className="mt-2 text-center">
             <Trophy className="w-5 h-5 text-purple-500 mx-auto" />
             <p className="text-xs text-purple-600 dark:text-purple-400 font-semibold">
-              {byMean[0].name}
+              {byFans[0].name}
             </p>
           </div>
         </div>
