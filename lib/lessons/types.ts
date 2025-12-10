@@ -285,6 +285,25 @@ export const M1_LESSONS: Lesson[] = [
   // PROBABILIDAD Y ESTADÍSTICA
   // ========================================
   {
+    id: 'm1-prob-001-a',
+    slug: 'tablas-frecuencia-graficos',
+    title: 'Tablas de Frecuencia y Gráficos',
+    description: 'Construye tablas de frecuencia y descubre cómo se transforman en gráficos de barras y circulares.',
+    level: 'M1',
+    subject: 'probabilidad',
+    thematicUnit: 'M1-PROB-001',
+    skills: ['tablas-frecuencia', 'frecuencia-relativa', 'grafico-barras', 'grafico-circular'],
+    estimatedMinutes: 12,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'La Encuesta Misteriosa', requiredToAdvance: true },
+      { id: 'explore-build', type: 'explore', title: 'Construye tu Gráfico', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Frecuencias y Gráficos' },
+      { id: 'practice', type: 'practice', title: 'Interpreta los Datos', requiredToAdvance: true },
+      { id: 'advanced', type: 'explore', title: 'Del Gráfico de Barras al Circular', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
+  {
     id: 'm1-prob-004-a',
     slug: 'probabilidad-eventos',
     title: 'Probabilidad de Eventos',
