@@ -9,11 +9,11 @@ import {
   Step3Explain,
   Step4Practice,
   Step5Verify,
-} from '@/components/lessons/m1/area-figuras';
+} from '@/components/lessons/m1/area-rectangulos-triangulos';
 
-const LESSON_SLUG = 'area-figuras';
+const LESSON_SLUG = 'area-rectangulos-triangulos';
 
-export default function AreaFigurasLesson() {
+export default function AreaRectangulosTriangulosLesson() {
   const router = useRouter();
   const lesson = getLessonBySlug(LESSON_SLUG);
 

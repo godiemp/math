@@ -5,7 +5,7 @@ import { ArrowRight, Check, Sparkles, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
-type Phase = 'intro' | 'rectangle' | 'triangle' | 'parallelogram' | 'summary';
+type Phase = 'intro' | 'rectangle' | 'triangle' | 'summary';
 
 export default function Step2Explore({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('intro');
@@ -18,7 +18,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   // ============ INTRO ============
   if (phase === 'intro') {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-32">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Descubriendo Fórmulas de Área
@@ -33,18 +33,20 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             <div className="flex items-center gap-3">
               <Lightbulb className="w-8 h-8 text-yellow-500" />
               <p className="text-lg text-gray-800 dark:text-gray-200">
-                La clave para entender las áreas es <strong>descomponer figuras</strong>.
+                La clave para entender las áreas es <strong>contar cuadritos</strong>.
               </p>
             </div>
 
             <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
               <p className="text-gray-600 dark:text-gray-400 text-center">
-                Cualquier polígono se puede dividir en <strong>rectángulos</strong> y <strong>triángulos</strong>.
+                Empezaremos con el <strong>rectángulo</strong>, la figura más simple.
+                <br />
+                Luego veremos cómo el <strong>triángulo</strong> se relaciona con él.
               </p>
             </div>
 
-            {/* Visual showing decomposition concept */}
-            <div className="flex justify-center gap-4 py-4">
+            {/* Visual showing the two shapes */}
+            <div className="flex justify-center gap-6 py-4">
               <div className="text-center">
                 <svg viewBox="0 0 80 60" className="w-20 h-16">
                   <rect x="10" y="10" width="60" height="40" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
@@ -61,7 +63,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
             <div className="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-4 mt-4">
               <p className="text-amber-800 dark:text-amber-200 text-center">
-                Vamos a descubrir las fórmulas paso a paso, comenzando por la más simple.
+                Vamos a descubrir las fórmulas paso a paso.
               </p>
             </div>
           </div>
@@ -83,7 +85,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   // ============ RECTANGLE ============
   if (phase === 'rectangle') {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-32">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             El Rectángulo
@@ -173,11 +175,11 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
       setShowFeedback(false);
       setSelectedAnswer(null);
       setShowDecomposition(false);
-      setPhase('parallelogram');
+      setPhase('summary');
     };
 
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-32">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             El Triángulo
@@ -342,7 +344,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               onClick={handleTriangleNext}
               className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
             >
-              <span>Ver el Paralelogramo</span>
+              <span>Ver resumen</span>
               <ArrowRight size={20} />
             </button>
           )}
@@ -351,115 +353,15 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     );
   }
 
-  // ============ PARALLELOGRAM ============
-  if (phase === 'parallelogram') {
-    return (
-      <div className="space-y-6 animate-fadeIn">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            El Paralelogramo
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300">
-            Un rectángulo disfrazado
-          </p>
-        </div>
-
-        {/* Interactive parallelogram visualization */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-          <div className="flex justify-center">
-            <svg viewBox="0 0 250 160" className="w-full max-w-sm">
-              {/* Parallelogram */}
-              <polygon
-                points="50,120 80,40 200,40 170,120"
-                fill={showDecomposition ? 'transparent' : '#c4b5fd'}
-                stroke="#7c3aed"
-                strokeWidth="2"
-                className="transition-all duration-500"
-              />
-
-              {/* Decomposition - cut triangle and moved piece */}
-              {showDecomposition && (
-                <>
-                  {/* Main rectangle */}
-                  <rect x="50" y="40" width="120" height="80" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
-                  {/* Cut triangle (original position - ghosted) */}
-                  <polygon points="50,120 80,40 50,40" fill="none" stroke="#7c3aed" strokeWidth="1" strokeDasharray="4,4" />
-                  {/* Moved triangle */}
-                  <polygon points="170,120 200,40 170,40" fill="#fcd34d" stroke="#b45309" strokeWidth="2" />
-                  {/* Arrow showing movement */}
-                  <path d="M 65 80 Q 110 100 165 80" fill="none" stroke="#6b7280" strokeWidth="1.5" markerEnd="url(#arrowhead)" strokeDasharray="4,4" />
-                  <defs>
-                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                      <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280" />
-                    </marker>
-                  </defs>
-                </>
-              )}
-
-              {/* Dimensions */}
-              <text x="125" y="135" textAnchor="middle" fontSize="14" fill="#1f2937" fontWeight="bold">base</text>
-              <line x1="80" y1="40" x2="80" y2="120" stroke="#6b7280" strokeWidth="1" strokeDasharray="4,4" />
-              <text x="30" y="85" textAnchor="middle" fontSize="14" fill="#1f2937" fontWeight="bold">h</text>
-            </svg>
-          </div>
-
-          <div className="mt-4 text-center">
-            <button
-              onClick={() => setShowDecomposition(!showDecomposition)}
-              className="px-4 py-2 bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 rounded-lg font-medium hover:bg-purple-200 dark:hover:bg-purple-900 transition-all"
-            >
-              {showDecomposition ? 'Ver paralelogramo' : 'Convertir a rectángulo'}
-            </button>
-          </div>
-        </div>
-
-        {showDecomposition && (
-          <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-4 border border-purple-200 dark:border-purple-700 animate-fadeIn">
-            <p className="text-purple-800 dark:text-purple-200 text-center">
-              Cortamos un triángulo de un lado y lo movemos al otro.
-              <br />
-              <strong>¡Se convierte en un rectángulo!</strong>
-            </p>
-          </div>
-        )}
-
-        <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-4 border border-green-200 dark:border-green-700">
-          <div className="flex items-center justify-center gap-2">
-            <Check className="w-5 h-5 text-green-600" />
-            <span className="text-green-800 dark:text-green-200 font-semibold text-lg">
-              Área del paralelogramo = base × altura
-            </span>
-          </div>
-          <p className="text-green-700 dark:text-green-300 text-center mt-2 text-sm">
-            ¡La misma fórmula que el rectángulo!
-          </p>
-        </div>
-
-        <div className="flex justify-center">
-          <button
-            onClick={() => {
-              setShowDecomposition(false);
-              setPhase('summary');
-            }}
-            className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
-          >
-            <span>Ver resumen</span>
-            <ArrowRight size={20} />
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   // ============ SUMMARY ============
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6 animate-fadeIn pb-32">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           ¡Excelente trabajo!
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          Has descubierto cómo funcionan las fórmulas
+          Has descubierto las fórmulas fundamentales
         </p>
       </div>
 
@@ -497,19 +399,6 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               ½ × b × h
             </div>
           </div>
-
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 flex items-center gap-4">
-            <svg viewBox="0 0 50 40" className="w-12 h-10 flex-shrink-0">
-              <polygon points="10,35 20,5 45,5 35,35" fill="#c4b5fd" stroke="#7c3aed" strokeWidth="2" />
-            </svg>
-            <div className="flex-1">
-              <p className="font-semibold text-gray-800 dark:text-gray-200">Paralelogramo</p>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Se transforma en rectángulo</p>
-            </div>
-            <div className="text-lg font-bold text-purple-600 dark:text-purple-400">
-              b × h
-            </div>
-          </div>
         </div>
       </div>
 
@@ -517,8 +406,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
         <div className="flex items-start gap-3">
           <Lightbulb className="w-6 h-6 text-amber-500 flex-shrink-0" />
           <p className="text-amber-800 dark:text-amber-200">
-            <strong>Patrón clave:</strong> Todo se reduce al rectángulo.
-            El triángulo es la mitad, y el paralelogramo se transforma en uno.
+            <strong>Patrón clave:</strong> El triángulo es exactamente la mitad del rectángulo.
+            Por eso su fórmula es <strong>½ × base × altura</strong>.
           </p>
         </div>
       </div>

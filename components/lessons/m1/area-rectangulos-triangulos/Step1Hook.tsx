@@ -20,7 +20,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   // ============ PHASE 1: INTRO ============
   if (phase === 'intro') {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-32">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             El Proyecto de Pintura
@@ -39,13 +39,13 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
             {/* Wall visualization with window */}
             <div className="flex justify-center py-4">
-              <svg viewBox="0 0 200 150" className="w-64 h-48">
+              <svg viewBox="0 0 260 180" className="w-72 h-52">
                 {/* Wall background */}
                 <rect
-                  x="10"
-                  y="10"
+                  x="20"
+                  y="20"
                   width="180"
-                  height="130"
+                  height="120"
                   fill="#fbbf24"
                   stroke="#92400e"
                   strokeWidth="3"
@@ -53,8 +53,8 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 />
                 {/* Window */}
                 <rect
-                  x="70"
-                  y="40"
+                  x="80"
+                  y="45"
                   width="60"
                   height="50"
                   fill="#7dd3fc"
@@ -63,12 +63,20 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   rx="2"
                 />
                 {/* Window panes */}
-                <line x1="100" y1="40" x2="100" y2="90" stroke="#0369a1" strokeWidth="2" />
-                <line x1="70" y1="65" x2="130" y2="65" stroke="#0369a1" strokeWidth="2" />
-                {/* Dimensions */}
-                <text x="100" y="148" textAnchor="middle" fontSize="12" fill="#1f2937">4 m</text>
-                <text x="200" y="75" textAnchor="start" fontSize="12" fill="#1f2937">3 m</text>
-                <text x="100" y="105" textAnchor="middle" fontSize="10" fill="#0369a1">1m × 2m</text>
+                <line x1="110" y1="45" x2="110" y2="95" stroke="#0369a1" strokeWidth="2" />
+                <line x1="80" y1="70" x2="140" y2="70" stroke="#0369a1" strokeWidth="2" />
+                {/* Dimensions - positioned outside the shape */}
+                <text x="110" y="160" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1f2937">4 m</text>
+                <text x="215" y="85" textAnchor="start" fontSize="14" fontWeight="bold" fill="#1f2937">3 m</text>
+                {/* Window dimension - below the window */}
+                <text x="110" y="115" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#0369a1">1m × 2m</text>
+                {/* Dimension lines */}
+                <line x1="20" y1="150" x2="200" y2="150" stroke="#6b7280" strokeWidth="1" />
+                <line x1="20" y1="145" x2="20" y2="155" stroke="#6b7280" strokeWidth="1" />
+                <line x1="200" y1="145" x2="200" y2="155" stroke="#6b7280" strokeWidth="1" />
+                <line x1="210" y1="20" x2="210" y2="140" stroke="#6b7280" strokeWidth="1" />
+                <line x1="205" y1="20" x2="215" y2="20" stroke="#6b7280" strokeWidth="1" />
+                <line x1="205" y1="140" x2="215" y2="140" stroke="#6b7280" strokeWidth="1" />
               </svg>
             </div>
 
@@ -115,7 +123,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
     };
 
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6 animate-fadeIn pb-32">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             El Proyecto de Pintura
@@ -141,13 +149,13 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
         {/* Visual with highlighted areas */}
         <div className="flex justify-center py-2">
-          <svg viewBox="0 0 200 150" className="w-64 h-48">
+          <svg viewBox="0 0 260 180" className="w-72 h-52">
             {/* Wall background - paintable area highlighted */}
             <rect
-              x="10"
-              y="10"
+              x="20"
+              y="20"
               width="180"
-              height="130"
+              height="120"
               fill={showingCalculation ? '#86efac' : '#fbbf24'}
               stroke="#92400e"
               strokeWidth="3"
@@ -156,8 +164,8 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             />
             {/* Window */}
             <rect
-              x="70"
-              y="40"
+              x="80"
+              y="45"
               width="60"
               height="50"
               fill={showingCalculation ? '#fca5a5' : '#7dd3fc'}
@@ -167,17 +175,24 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               className="transition-all duration-500"
             />
             {/* Window panes */}
-            <line x1="100" y1="40" x2="100" y2="90" stroke="#0369a1" strokeWidth="2" />
-            <line x1="70" y1="65" x2="130" y2="65" stroke="#0369a1" strokeWidth="2" />
-            {/* Labels */}
-            <text x="100" y="148" textAnchor="middle" fontSize="12" fill="#1f2937">4 m</text>
-            <text x="200" y="75" textAnchor="start" fontSize="12" fill="#1f2937">3 m</text>
+            <line x1="110" y1="45" x2="110" y2="95" stroke="#0369a1" strokeWidth="2" />
+            <line x1="80" y1="70" x2="140" y2="70" stroke="#0369a1" strokeWidth="2" />
+            {/* Dimensions - positioned outside the shape */}
+            <text x="110" y="160" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1f2937">4 m</text>
+            <text x="215" y="85" textAnchor="start" fontSize="14" fontWeight="bold" fill="#1f2937">3 m</text>
+            {/* Dimension lines */}
+            <line x1="20" y1="150" x2="200" y2="150" stroke="#6b7280" strokeWidth="1" />
+            <line x1="20" y1="145" x2="20" y2="155" stroke="#6b7280" strokeWidth="1" />
+            <line x1="200" y1="145" x2="200" y2="155" stroke="#6b7280" strokeWidth="1" />
+            <line x1="210" y1="20" x2="210" y2="140" stroke="#6b7280" strokeWidth="1" />
+            <line x1="205" y1="20" x2="215" y2="20" stroke="#6b7280" strokeWidth="1" />
+            <line x1="205" y1="140" x2="215" y2="140" stroke="#6b7280" strokeWidth="1" />
             {showingCalculation && (
               <>
-                <text x="35" y="75" textAnchor="middle" fontSize="10" fill="#166534" fontWeight="bold">
+                <text x="45" y="85" textAnchor="middle" fontSize="11" fill="#166534" fontWeight="bold">
                   PINTAR
                 </text>
-                <text x="100" y="70" textAnchor="middle" fontSize="10" fill="#991b1b" fontWeight="bold">
+                <text x="110" y="75" textAnchor="middle" fontSize="11" fill="#991b1b" fontWeight="bold">
                   NO
                 </text>
               </>
@@ -231,7 +246,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const isCorrect = selectedAnswer === correctAnswer;
 
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6 animate-fadeIn pb-32">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           El Proyecto de Pintura
@@ -311,7 +326,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           </span>
         </div>
         <p className="text-purple-700 dark:text-purple-300 mt-3 text-sm text-center">
-          En esta lección aprenderás las fórmulas de área para triángulos y cuadriláteros.
+          En esta lección aprenderás las fórmulas de área para rectángulos y triángulos.
         </p>
       </div>
 

@@ -9,13 +9,14 @@ interface PracticeQuestion {
   id: string;
   scenario: string;
   question: string;
-  shape: 'rectangle' | 'triangle' | 'parallelogram' | 'trapezoid';
+  shape: 'parallelogram' | 'trapezoid';
   dimensions: {
     base?: number;
     height: number;
     baseMayor?: number;
     baseMenor?: number;
   };
+  unit: string;
   options: string[];
   correctAnswer: number;
   explanation: string;
@@ -24,43 +25,47 @@ interface PracticeQuestion {
 const QUESTIONS: PracticeQuestion[] = [
   {
     id: 'q1',
-    scenario: 'Un jardín rectangular',
-    question: '¿Cuál es el área del jardín?',
-    shape: 'rectangle',
-    dimensions: { base: 6, height: 4 },
-    options: ['10 m²', '20 m²', '24 m²', '12 m²'],
-    correctAnswer: 2,
-    explanation: 'Área del rectángulo = base × altura = 6 × 4 = 24 m²',
-  },
-  {
-    id: 'q2',
-    scenario: 'Una vela triangular',
-    question: '¿Cuál es el área de la vela?',
-    shape: 'triangle',
-    dimensions: { base: 10, height: 8 },
-    options: ['80 cm²', '40 cm²', '18 cm²', '20 cm²'],
-    correctAnswer: 1,
-    explanation: 'Área del triángulo = ½ × base × altura = ½ × 10 × 8 = 40 cm²',
-  },
-  {
-    id: 'q3',
     scenario: 'Una ventana con forma de paralelogramo',
     question: '¿Cuál es el área del vidrio?',
     shape: 'parallelogram',
     dimensions: { base: 5, height: 3 },
+    unit: 'm',
     options: ['8 m²', '15 m²', '7.5 m²', '16 m²'],
     correctAnswer: 1,
     explanation: 'Área del paralelogramo = base × altura = 5 × 3 = 15 m²',
   },
   {
-    id: 'q4',
+    id: 'q2',
     scenario: 'Un terreno en forma de trapecio',
     question: '¿Cuál es el área del terreno?',
     shape: 'trapezoid',
     dimensions: { baseMayor: 10, baseMenor: 6, height: 4 },
+    unit: 'm',
     options: ['24 m²', '32 m²', '40 m²', '16 m²'],
     correctAnswer: 1,
     explanation: 'Área del trapecio = ½ × (B + b) × h = ½ × (10 + 6) × 4 = ½ × 16 × 4 = 32 m²',
+  },
+  {
+    id: 'q3',
+    scenario: 'Un mosaico con forma de paralelogramo',
+    question: '¿Cuál es el área del mosaico?',
+    shape: 'parallelogram',
+    dimensions: { base: 8, height: 6 },
+    unit: 'cm',
+    options: ['48 cm²', '14 cm²', '24 cm²', '56 cm²'],
+    correctAnswer: 0,
+    explanation: 'Área del paralelogramo = base × altura = 8 × 6 = 48 cm²',
+  },
+  {
+    id: 'q4',
+    scenario: 'Una mesa con forma de trapecio',
+    question: '¿Cuál es el área de la superficie?',
+    shape: 'trapezoid',
+    dimensions: { baseMayor: 12, baseMenor: 8, height: 5 },
+    unit: 'cm',
+    options: ['100 cm²', '40 cm²', '50 cm²', '60 cm²'],
+    correctAnswer: 2,
+    explanation: 'Área del trapecio = ½ × (B + b) × h = ½ × (12 + 8) × 5 = ½ × 20 × 5 = 50 cm²',
   },
 ];
 
@@ -101,36 +106,15 @@ export default function Step4Practice({ onComplete, isActive }: LessonStepProps)
 
   // Render shape visualization
   const renderShape = () => {
-    const { shape, dimensions } = question;
-
-    if (shape === 'rectangle') {
-      return (
-        <svg viewBox="0 0 160 120" className="w-40 h-32">
-          <rect x="20" y="20" width="120" height="80" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
-          <text x="80" y="110" textAnchor="middle" fontSize="12" fill="#1f2937">{dimensions.base} m</text>
-          <text x="150" y="65" textAnchor="start" fontSize="12" fill="#1f2937">{dimensions.height} m</text>
-        </svg>
-      );
-    }
-
-    if (shape === 'triangle') {
-      return (
-        <svg viewBox="0 0 160 120" className="w-40 h-32">
-          <polygon points="80,15 20,100 140,100" fill="#86efac" stroke="#166534" strokeWidth="2" />
-          <line x1="80" y1="15" x2="80" y2="100" stroke="#6b7280" strokeWidth="1" strokeDasharray="4,4" />
-          <text x="80" y="115" textAnchor="middle" fontSize="12" fill="#1f2937">{dimensions.base} cm</text>
-          <text x="90" y="60" textAnchor="start" fontSize="12" fill="#1f2937">{dimensions.height} cm</text>
-        </svg>
-      );
-    }
+    const { shape, dimensions, unit } = question;
 
     if (shape === 'parallelogram') {
       return (
         <svg viewBox="0 0 160 120" className="w-40 h-32">
           <polygon points="40,100 60,20 140,20 120,100" fill="#c4b5fd" stroke="#7c3aed" strokeWidth="2" />
           <line x1="60" y1="20" x2="60" y2="100" stroke="#6b7280" strokeWidth="1" strokeDasharray="4,4" />
-          <text x="80" y="115" textAnchor="middle" fontSize="12" fill="#1f2937">{dimensions.base} m</text>
-          <text x="48" y="65" textAnchor="end" fontSize="12" fill="#1f2937">{dimensions.height} m</text>
+          <text x="90" y="115" textAnchor="middle" fontSize="12" fill="#1f2937">{dimensions.base} {unit}</text>
+          <text x="48" y="65" textAnchor="end" fontSize="12" fill="#1f2937">{dimensions.height} {unit}</text>
         </svg>
       );
     }
@@ -140,9 +124,9 @@ export default function Step4Practice({ onComplete, isActive }: LessonStepProps)
         <svg viewBox="0 0 160 120" className="w-40 h-32">
           <polygon points="30,100 50,20 110,20 130,100" fill="#fde68a" stroke="#b45309" strokeWidth="2" />
           <line x1="80" y1="20" x2="80" y2="100" stroke="#6b7280" strokeWidth="1" strokeDasharray="4,4" />
-          <text x="80" y="14" textAnchor="middle" fontSize="10" fill="#1f2937">{dimensions.baseMenor} m</text>
-          <text x="80" y="115" textAnchor="middle" fontSize="10" fill="#1f2937">{dimensions.baseMayor} m</text>
-          <text x="90" y="65" textAnchor="start" fontSize="12" fill="#1f2937">{dimensions.height} m</text>
+          <text x="80" y="14" textAnchor="middle" fontSize="10" fill="#1f2937">{dimensions.baseMenor} {unit}</text>
+          <text x="80" y="115" textAnchor="middle" fontSize="10" fill="#1f2937">{dimensions.baseMayor} {unit}</text>
+          <text x="90" y="65" textAnchor="start" fontSize="12" fill="#1f2937">{dimensions.height} {unit}</text>
         </svg>
       );
     }
@@ -151,7 +135,7 @@ export default function Step4Practice({ onComplete, isActive }: LessonStepProps)
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6 animate-fadeIn pb-32">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Práctica Guiada
@@ -264,7 +248,7 @@ export default function Step4Practice({ onComplete, isActive }: LessonStepProps)
             className={cn(
               'px-8 py-3 rounded-xl font-semibold transition-all',
               selectedAnswer !== null
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 shadow-lg'
+                ? 'bg-gradient-to-r from-purple-500 to-orange-500 text-white hover:from-purple-600 hover:to-orange-600 shadow-lg'
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
             )}
           >
@@ -273,7 +257,7 @@ export default function Step4Practice({ onComplete, isActive }: LessonStepProps)
         ) : (
           <button
             onClick={handleNext}
-            className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
+            className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-orange-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-orange-600 transition-all shadow-lg"
           >
             <span>{isLastQuestion ? 'Continuar' : 'Siguiente'}</span>
             <ArrowRight size={20} />

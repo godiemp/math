@@ -34,19 +34,19 @@ const QUESTIONS: Question[] = [
   },
   {
     id: 'q3',
-    question: 'Un paralelogramo tiene base 9 cm y altura 7 cm. ¿Cuál es su área?',
+    question: 'Un cuadrado tiene lado 9 cm. ¿Cuál es su área?',
     type: 'multiple-choice',
-    options: ['32 cm²', '63 cm²', '31.5 cm²', '16 cm²'],
+    options: ['36 cm²', '81 cm²', '18 cm²', '72 cm²'],
     correctAnswer: 1,
-    explanation: 'Área del paralelogramo = b × h = 9 × 7 = 63 cm²',
+    explanation: 'Área del cuadrado = lado × lado = 9 × 9 = 81 cm²',
   },
   {
     id: 'q4',
-    question: 'Un trapecio tiene bases de 8 m y 4 m, con altura 5 m. ¿Cuál es su área?',
+    question: 'Un triángulo tiene base 20 m y altura 7 m. ¿Cuál es su área?',
     type: 'multiple-choice',
-    options: ['20 m²', '40 m²', '30 m²', '60 m²'],
+    options: ['140 m²', '27 m²', '70 m²', '35 m²'],
     correctAnswer: 2,
-    explanation: 'Área del trapecio = ½ × (B + b) × h = ½ × (8 + 4) × 5 = ½ × 12 × 5 = 30 m²',
+    explanation: 'Área del triángulo = ½ × b × h = ½ × 20 × 7 = 70 m²',
   },
 ];
 
@@ -284,7 +284,7 @@ export default function Step5Verify({ onComplete, isActive }: LessonStepProps) {
               passed ? 'text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300'
             )}>
               {passed
-                ? 'Has dominado el cálculo de áreas de figuras planas'
+                ? 'Has dominado el cálculo de áreas de rectángulos y triángulos'
                 : `Necesitas ${REQUIRED_CORRECT} respuestas correctas. ¡Puedes intentarlo de nuevo!`}
             </p>
           </div>
@@ -324,9 +324,8 @@ export default function Step5Verify({ onComplete, isActive }: LessonStepProps) {
               </h4>
               <ul className="text-sm text-purple-700 dark:text-purple-300 space-y-1">
                 <li>- <strong>Rectángulo:</strong> A = b × h</li>
+                <li>- <strong>Cuadrado:</strong> A = lado × lado</li>
                 <li>- <strong>Triángulo:</strong> A = ½ × b × h</li>
-                <li>- <strong>Paralelogramo:</strong> A = b × h</li>
-                <li>- <strong>Trapecio:</strong> A = ½ × (B + b) × h</li>
               </ul>
             </div>
           )}
@@ -359,7 +358,7 @@ export default function Step5Verify({ onComplete, isActive }: LessonStepProps) {
       {showCelebration && (
         <Celebration
           title="¡Lección Completada!"
-          message="Has aprendido a calcular el área de triángulos y cuadriláteros. ¡Excelente trabajo!"
+          message="Has aprendido a calcular el área de rectángulos y triángulos. ¡Excelente trabajo!"
           onContinue={handleCelebrationContinue}
           continueLabel="Finalizar"
         />
