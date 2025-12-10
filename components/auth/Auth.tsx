@@ -79,8 +79,9 @@ export default function Auth({ onSuccess }: AuthProps) {
           });
 
           toast.success(t('login.success'));
-          // Navigate directly to dashboard - don't rely on session state propagation
-          router.push('/dashboard');
+          // Don't navigate directly - let the useEffect in page.tsx handle navigation
+          // when isAuthenticated becomes true. This avoids race condition where
+          // middleware redirects back because NextAuth session cookie isn't ready yet.
           onSuccess(false);
         }
       } else {
