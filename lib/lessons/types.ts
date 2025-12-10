@@ -261,6 +261,30 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-num-002-g',
+    slug: 'multiplicacion-division-fracciones',
+    title: 'Multiplicación y División de Fracciones',
+    description: 'Domina la multiplicación y división de fracciones usando el modelo de área y el recíproco.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-002',
+    skills: [
+      'fracciones-multiplicacion',
+      'fracciones-division',
+      'fracciones-reciproco',
+      'simplificacion-fracciones',
+    ],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Chocolate Compartido', requiredToAdvance: true },
+      { id: 'explore-multiply', type: 'explore', title: 'Descubre la Multiplicación', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Las Reglas de Oro', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica: Multiplicación', requiredToAdvance: true },
+      { id: 'explore-division', type: 'explore', title: 'El Secreto de la División', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // ÁLGEBRA Y FUNCIONES
   // ========================================
