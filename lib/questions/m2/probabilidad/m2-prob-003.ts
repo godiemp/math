@@ -27,6 +27,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '3 \\times 4 \\times 2 = 24',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['combinatoria-principio-multiplicativo', 'numeros-multiplicacion', 'numeros-operaciones-basicas']
   },
   {
@@ -40,6 +41,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '26^2 \\times 10^3 = 676 \\times 1{,}000 = 676{,}000',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['combinatoria-principio-multiplicativo', 'numeros-potencias', 'numeros-multiplicacion', 'numeros-operaciones-basicas']
   },
   // Subsection B: Permutaciones
@@ -54,6 +56,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P(6,3) = \\frac{6!}{3!} = 6 \\times 5 \\times 4 = 120',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['combinatoria-permutaciones', 'probabilidad-factorial', 'numeros-multiplicacion', 'numeros-operaciones-basicas']
   },
   {
@@ -67,6 +70,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'C(5,3) = \\frac{5!}{3! \\times 2!} = \\frac{5 \\times 4}{2 \\times 1} = 10',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['combinatoria-combinaciones', 'probabilidad-factorial', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -80,6 +84,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 3,
     explanation: 'P(4) = 4! = 4 \\times 3 \\times 2 \\times 1 = 24',
     difficulty: 'hard',
+    difficultyScore: 0.74,
     skills: ['combinatoria-permutaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
   },
   // Subsection C: Combinaciones
@@ -94,6 +99,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'C(12,5) - C(10,3) = 792 - 120 = 672',
     difficulty: 'extreme',
+    difficultyScore: 0.95,
     skills: ['probabilidad-combinatoria', 'probabilidad-combinaciones', 'probabilidad-casos-excluyentes', 'probabilidad-factorial', 'numeros-operaciones-basicas']
   },
   {
@@ -107,6 +113,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'C(8,2) = \\frac{8!}{2! \\times 6!} = \\frac{8 \\times 7}{2} = 28',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['probabilidad-combinatoria', 'probabilidad-combinaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
   },
   {
@@ -120,6 +127,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P(5,3) = \\frac{5!}{2!} = 5 \\times 4 \\times 3 = 60',
     difficulty: 'hard',
+    difficultyScore: 0.74,
     skills: ['combinatoria-permutaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
   },
   {
@@ -133,6 +141,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'C(9,3) - C(5,3) = 84 - 10 = 74',
     difficulty: 'extreme',
+    difficultyScore: 0.95,
     skills: ['combinatoria-combinaciones', 'probabilidad-casos-excluyentes', 'probabilidad-factorial', 'numeros-operaciones-basicas']
   },
   // Subsection D: Problemas de conteo en probabilidad
@@ -147,6 +156,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'C(8,2) = \\frac{8 \\times 7}{2} = 28',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['combinatoria-problemas-probabilidad', 'combinatoria-combinaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
   },
   {
@@ -160,6 +170,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 3,
     explanation: '6^3 = 216',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['combinatoria-problemas-probabilidad', 'combinatoria-principio-multiplicativo', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   // Additional Subsection B: Permutaciones
@@ -174,6 +185,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 3,
     explanation: 'P(5) = 5! = 120',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['conteo-permutaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
   },
   {
@@ -187,6 +199,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'P(10,4) = 10 \\times 9 \\times 8 \\times 7 = 5{,}040',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['conteo-permutaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
   },
   {
@@ -200,6 +213,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{4!}{2!} = \\frac{24}{2} = 12',
     difficulty: 'hard',
+    difficultyScore: 0.74,
     skills: ['conteo-permutaciones', 'probabilidad-factorial', 'probabilidad-permutaciones-repeticion', 'numeros-operaciones-basicas']
   },
   {
@@ -213,6 +227,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P(8,2) = 8 \\times 7 = 56',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['conteo-permutaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
   },
   // Additional Subsection C: Combinaciones
@@ -227,6 +242,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'C(10,4) = \\frac{10!}{4! \\times 6!} = 210',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['conteo-combinaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
   },
   {
@@ -240,6 +256,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'C(5,2) = \\frac{5 \\times 4}{2} = 10',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['conteo-combinaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
   },
   {
@@ -253,6 +270,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'C(7,3) = \\frac{7 \\times 6 \\times 5}{6} = 35',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['conteo-combinaciones', 'probabilidad-factorial', 'numeros-operaciones-basicas']
   },
   {
@@ -266,6 +284,7 @@ export const m2Prob003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Permutación: } ABC \\neq BAC; \\quad \\text{Combinación: } \\{A,B,C\\} = \\{B,A,C\\}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['conteo-permutaciones', 'conteo-combinaciones', 'probabilidad-conceptos']
   }
 ];

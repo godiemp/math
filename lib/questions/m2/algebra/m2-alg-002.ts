@@ -26,6 +26,7 @@ export const m2Alg002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'f(4) = 4^3 = 64',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['funcion-potencia-entero', 'algebra-funcion-potencia', 'algebra-evaluacion-funciones', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -39,6 +40,7 @@ export const m2Alg002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'f(2) = 2^{-2} = \\frac{1}{2^2} = \\frac{1}{4}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['funcion-potencia-entero', 'algebra-funcion-potencia', 'algebra-evaluacion-funciones', 'numeros-exponentes-negativos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -51,6 +53,7 @@ export const m2Alg002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'f(x) = x^{1/2} = \\sqrt{x} \\text{ requiere } x \\geq 0',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['funcion-potencia-dominio-recorrido', 'funcion-potencia-fraccionario', 'algebra-funcion-potencia', 'algebra-dominio-funciones', 'numeros-raices', 'numeros-reales']
   },
   {
@@ -64,6 +67,7 @@ export const m2Alg002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'f(8) = 8^{2/3} = (\\sqrt[3]{8})^2 = 2^2 = 4',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['funcion-potencia-fraccionario', 'algebra-funcion-potencia', 'algebra-evaluacion-funciones', 'numeros-exponentes-fraccionarios', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -76,6 +80,7 @@ export const m2Alg002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'f(x) = x^{-1} = \\frac{1}{x} \\text{ decrece para } x > 0',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['funcion-potencia-grafica', 'algebra-funcion-potencia', 'algebra-grafica-funciones', 'algebra-crecimiento-decrecimiento', 'algebra-analisis-funciones']
   },
   {
@@ -88,6 +93,7 @@ export const m2Alg002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'x^4 \\geq 0 \\text{ para todo } x \\in \\mathbb{R}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['funcion-potencia-dominio-recorrido', 'funcion-potencia-entero', 'algebra-funcion-potencia', 'algebra-recorrido-funciones', 'numeros-potencias', 'algebra-analisis-funciones']
   },
   {
@@ -101,6 +107,7 @@ export const m2Alg002Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'a^{-3} = \\frac{1}{27} \\rightarrow a^3 = 27 \\rightarrow a = 3',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['funcion-potencia-entero', 'algebra-funcion-potencia', 'algebra-ecuaciones', 'algebra-despeje', 'numeros-exponentes-negativos', 'numeros-raices', 'numeros-operaciones-basicas']
   }
 ];

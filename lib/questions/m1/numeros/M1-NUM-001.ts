@@ -24,6 +24,7 @@ export const m1Num001Questions: Question[] = [
     correctAnswer: 3,
     explanation: '(-3) \\times (-5) = 15 \\text{. El producto de dos números negativos es positivo.}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['numeros-enteros-multiplicar-dividir', 'numeros-patrones-signos', 'numeros-enteros-comprender-significado']
   },
   {
@@ -37,6 +38,7 @@ export const m1Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '8 + 2 \\times 5 = 8 + 10 = 18',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['numeros-jerarquia-operaciones']
   },
   {
@@ -50,6 +52,7 @@ export const m1Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '20 - 3 \\times 4 + 6 = 20 - 12 + 6 = 14',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['numeros-jerarquia-operaciones', 'numeros-enteros-sumar-restar']
   },
   {
@@ -63,6 +66,7 @@ export const m1Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '2^3 + 4 \\times 3 - 5 = 8 + 12 - 5 = 15',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['numeros-jerarquia-operaciones', 'numeros-potencias']
   },
   {
@@ -76,6 +80,7 @@ export const m1Num001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '(8 + 2) \\times 5 = 10 \\times 5 = 50',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['numeros-jerarquia-operaciones']
   },
   {
@@ -89,6 +94,7 @@ export const m1Num001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '3 \\times (12 - 4) + 8 = 3 \\times 8 + 8 = 24 + 8 = 32',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['numeros-jerarquia-operaciones']
   },
   {
@@ -102,6 +108,7 @@ export const m1Num001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '[(15 - 3) \\div 4 + 2] \\times 3 = [12 \\div 4 + 2] \\times 3 = [3 + 2] \\times 3 = 5 \\times 3 = 15',
     difficulty: 'hard',
+    difficultyScore: 0.68,
     skills: ['numeros-jerarquia-operaciones']
   },
   {
@@ -115,6 +122,7 @@ export const m1Num001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{-3 + 5}{2} = \\frac{2}{2} = 1',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['numeros-representar-recta-numerica', 'numeros-enteros-ordenar-recta', 'numeros-calcular-promedios-racionales']
   },
   {
@@ -128,6 +136,7 @@ export const m1Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '|-0.5| = 0.5 \\text{ es el menor}',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['numeros-valor-absoluto', 'numeros-comparar-distancia-cero', 'numeros-decimales-comparar']
   },
   {
@@ -141,6 +150,7 @@ export const m1Num001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '|7 - (-4)| = |7 + 4| = 11',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['numeros-representar-recta-numerica', 'numeros-valor-absoluto']
   },
   {
@@ -154,6 +164,7 @@ export const m1Num001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '|-8| = 8',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['numeros-valor-absoluto', 'numeros-enteros-comprender-significado']
   },
   {
@@ -167,6 +178,7 @@ export const m1Num001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '|5 - 9| = |-4| = 4',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['numeros-valor-absoluto', 'numeros-enteros-sumar-restar']
   },
   {
@@ -180,6 +192,7 @@ export const m1Num001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '|-3| + |2| - |-5| = 3 + 2 - 5 = 0',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['numeros-valor-absoluto', 'numeros-jerarquia-operaciones']
   }
 ];

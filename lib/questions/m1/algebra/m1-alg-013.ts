@@ -28,6 +28,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'h = -\\frac{b}{2a} = -\\frac{-4}{2} = 2 \\\\ k = f(2) = 4 - 8 + 3 = -1 \\\\ \\text{Vértice: } (2, -1)',
     difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['funcion-cuadratica-vertice']
   },
   {
@@ -41,6 +42,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{La coordenada x del vértice es } x = -\\frac{b}{2a}',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-cuadratica-vertice']
   },
   {
@@ -54,6 +56,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'h = -\\frac{8}{2(-2)} = 2 \\\\ k = f(2) = -8 + 16 - 5 = 3 \\\\ \\text{Vértice: } (2, 3)',
     difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['funcion-cuadratica-vertice']
   },
   {
@@ -67,6 +70,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 3,
     explanation: '-\\frac{b}{2(1)} = 3 \\Rightarrow b = -6',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-cuadratica-vertice', 'algebra-ecuaciones']
   },
   // ========================================
@@ -83,6 +87,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x^2 - 5x + 6 = (x - 2)(x - 3) = 0 \\Rightarrow x = 2 \\text{ o } x = 3',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-cuadratica-ceros', 'ecuaciones-cuadraticas-factorizacion']
   },
   {
@@ -96,6 +101,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'x^2 + 4 = 0 \\Rightarrow x^2 = -4 \\text{ (no tiene solución real)}',
     difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['funcion-cuadratica-ceros', 'ecuaciones-cuadraticas-discriminante']
   },
   {
@@ -109,6 +115,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x^2 = 16 \\Rightarrow x = \\pm 4',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-cuadratica-ceros', 'algebra-suma-por-diferencia']
   },
   {
@@ -122,6 +129,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 2,
     explanation: '(x - 1)(x + 5) = 0 \\Rightarrow x = 1 \\text{ o } x = -5',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-cuadratica-ceros']
   },
   // ========================================
@@ -138,6 +146,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'f(0) = 0 - 0 + 7 = 7. \\text{ Punto: } (0, 7)',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-cuadratica-interseccion-y']
   },
   {
@@ -151,6 +160,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'f(0) = a(0)^2 + b(0) + c = c. \\text{ La intersección es } (0, c).',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-cuadratica-interseccion-y']
   },
   {
@@ -164,6 +174,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'f(0) = (0 - 2)^2 - 9 = 4 - 9 = -5. \\text{ Punto: } (0, -5)',
     difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['funcion-cuadratica-interseccion-y', 'algebra-evaluacion-funciones']
   },
   // ========================================
@@ -180,6 +191,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Eje de simetría: } x = -\\frac{b}{2a} = -\\frac{-8}{2} = 4',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-cuadratica-simetria']
   },
   {
@@ -193,6 +205,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{El eje de simetría pasa por el punto medio de los ceros: } x = \\frac{1 + 5}{2} = 3',
     difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['funcion-cuadratica-simetria', 'funcion-cuadratica-ceros']
   },
   {
@@ -206,6 +219,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x = -\\frac{12}{2(-3)} = -\\frac{12}{-6} = 2',
     difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['funcion-cuadratica-simetria']
   },
   // ========================================
@@ -227,6 +241,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'h = 1, k = 1 - 2 - 3 = -4. \\text{ Ceros: } (x-3)(x+1) = 0. \\text{ f(0) = -3}',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-cuadratica-analisis', 'funcion-cuadratica-vertice', 'funcion-cuadratica-ceros']
   },
   {
@@ -240,6 +255,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{El valor mínimo es la coordenada y del vértice: } -1',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-cuadratica-analisis', 'funcion-cuadratica-vertice']
   },
   {
@@ -253,6 +269,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'h = -\\frac{6}{-2} = 3 \\\\ k = f(3) = -9 + 18 - 5 = 4 \\text{ (máximo porque } a < 0)',
     difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['funcion-cuadratica-analisis', 'funcion-cuadratica-vertice']
   },
   {
@@ -266,6 +283,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Vértice: } h = 2, k = 4 - 8 + 5 = 1. \\text{ Como } a > 0, \\text{ rango: } y \\geq 1',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-cuadratica-analisis', 'algebra-dominio-rango']
   },
   {
@@ -279,6 +297,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Puntos simétricos respecto al eje. Eje: } x = \\frac{3 + 7}{2} = 5',
     difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['funcion-cuadratica-analisis', 'funcion-cuadratica-simetria']
   },
   {
@@ -292,6 +311,7 @@ export const m1Alg013Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'f(x) = a(x - 0)^2 + 4 = ax^2 + 4 \\\\ f(2) = 4a + 4 = 0 \\Rightarrow a = -1 \\\\ f(x) = -x^2 + 4',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-cuadratica-analisis', 'funcion-cuadratica-forma']
   }
 ];

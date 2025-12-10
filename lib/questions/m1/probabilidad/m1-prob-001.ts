@@ -25,6 +25,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{12}{12 + 18} = \\frac{12}{30} = 0.4 = 40\\%',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-porcentajes', 'numeros-porcentajes', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -37,6 +38,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Frecuencia de 16} = 4',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-frecuencia', 'estadistica-tablas']
   },
   {
@@ -49,6 +51,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'f_r = \\frac{8}{20} = 0.40',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-frecuencia', 'estadistica-tablas', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -61,6 +64,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'f_\\% = \\frac{4}{10} \\times 100\\% = 40\\%',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-frecuencia', 'estadistica-tablas', 'numeros-porcentajes', 'numeros-operaciones-basicas']
   },
   {
@@ -73,6 +77,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'F_{16} = 3 + 5 = 8',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-frecuencia', 'estadistica-frecuencia-acumulada', 'numeros-operaciones-basicas']
   },
   {
@@ -85,6 +90,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'F_2 = 4 + 6 = 10',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-frecuencia', 'estadistica-frecuencia-acumulada', 'numeros-operaciones-basicas']
   },
   {
@@ -97,6 +103,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{20}{50} \\times 100\\% = 40\\%',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['estadistica-frecuencia', 'estadistica-frecuencia-acumulada', 'numeros-porcentajes', 'numeros-operaciones-basicas']
   },
   {
@@ -109,6 +116,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '30 + 45 + 35 = 110',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-operaciones-basicas']
   },
   {
@@ -121,6 +129,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{40}{80} \\times 100\\% = 50\\%',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas']
   },
   {
@@ -133,6 +142,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '28 - 23 = 5°C',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-operaciones-basicas']
   },
   {
@@ -145,6 +155,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '0.50 \\times 200 = 100',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas']
   },
   {
@@ -157,6 +168,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{90}{360} \\times 100\\% = 25\\%',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'geometria-angulos', 'numeros-operaciones-basicas']
   },
   {
@@ -169,6 +181,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '0.25 \\times 1000 = 250',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas']
   },
   // ========================================
@@ -184,6 +197,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'f_r = \\frac{25}{15+25+10} = \\frac{25}{50} = 0.50',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-frecuencia', 'estadistica-tablas', 'numeros-fracciones', 'numeros-decimales']
   },
   {
@@ -196,6 +210,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'f = f_r \\times n = 0.35 \\times 80 = 28',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['estadistica-frecuencia', 'estadistica-tablas', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -208,6 +223,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\sum f_r = 1 \\text{ (siempre)}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-frecuencia', 'estadistica-conceptos']
   },
   // ========================================
@@ -223,6 +239,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Miércoles tiene 30, el menor valor}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-graficos', 'estadistica-interpretacion']
   },
   {
@@ -235,6 +252,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{45}{20+35+45+15} = \\frac{45}{115} \\approx 0.3913 = 39.13\\%',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas']
   },
   // ========================================
@@ -250,6 +268,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '0.15 \\times 360° = 54°',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-porcentajes', 'geometria-angulos']
   },
   {
@@ -262,6 +281,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{120°}{360°} = \\frac{1}{3}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-fracciones', 'geometria-angulos']
   },
   {
@@ -274,6 +294,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 3,
     explanation: '\\frac{180°}{360°} \\times 400 = \\frac{1}{2} \\times 400 = 200',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   // ========================================
@@ -289,6 +310,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '5 + 12 + 8 = 25 \\text{ estudiantes}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-graficos', 'estadistica-histogramas', 'numeros-operaciones-basicas']
   },
   {
@@ -301,6 +323,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Densidad} = \\frac{f}{\\text{ancho}} = \\frac{15}{10} = 1.5',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['estadistica-graficos', 'estadistica-histogramas', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -313,6 +336,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{El histograma representa datos continuos agrupados en intervalos (clases)}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-graficos', 'estadistica-histogramas', 'estadistica-conceptos']
   },
   // ========================================
@@ -328,6 +352,7 @@ export const m1Prob001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Junio es el punto más alto antes de que empiecen a bajar}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['estadistica-graficos', 'estadistica-interpretacion']
   }
 ];

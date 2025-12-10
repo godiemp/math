@@ -25,6 +25,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A = \\pi r^2 = 3.14 \\times 5^2 = 3.14 \\times 25 = 78.5 \\text{ cm}^2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-circulos', 'geometria-area-circulo', 'geometria-area', 'numeros-potencias', 'numeros-decimales'],
     operacionBase: 'A = \\pi r^2'
   },
@@ -38,6 +39,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '90^\\circ - 35^\\circ = 55^\\circ',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-angulos', 'geometria-angulos-complementarios', 'numeros-operaciones-basicas'],
     operacionBase: '90^\\circ - \\alpha'
   },
@@ -51,6 +53,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P = 2(\\text{largo} + \\text{ancho}) = 2(8 + 5) = 2(13) = 26 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-rectangulos', 'geometria-perimetro', 'numeros-operaciones-basicas'],
     operacionBase: 'P = 2(l + w)'
   },
@@ -64,6 +67,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A = \\frac{(b_1 + b_2) \\times h}{2} = \\frac{(6 + 10) \\times 4}{2} = \\frac{64}{2} = 32 \\text{ cm}^2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-trapecio', 'geometria-area', 'numeros-fracciones', 'numeros-operaciones-basicas'],
     operacionBase: 'A = \\frac{(b_1 + b_2) \\times h}{2}'
   },
@@ -77,6 +81,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A = \\pi r^2 = 3.14 \\times 7^2 = 3.14 \\times 49 = 153.86 \\text{ cm}^2',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-circulos', 'geometria-area-circulo', 'geometria-area', 'numeros-potencias', 'numeros-decimales', 'numeros-operaciones-basicas'],
     operacionBase: 'A = \\pi r^2',
     visualData: {
@@ -106,6 +111,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\angle AOC = \\angle AOB + \\angle BOC = 60^\\circ + 50^\\circ = 110^\\circ',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-angulos', 'geometria-angulos-adyacentes', 'numeros-operaciones-basicas'],
     operacionBase: '\\alpha + \\beta',
     visualData: {
@@ -135,6 +141,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P = 2(l + w) = 2(12 + 5) = 2 \\times 17 = 34 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-rectangulos', 'geometria-perimetro', 'numeros-operaciones-basicas'],
     operacionBase: 'P = 2(l + w)',
     visualData: {
@@ -166,6 +173,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P = 3 \\times l = 3 \\times 8 = 24 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-triangulos', 'geometria-perimetro', 'numeros-operaciones-basicas'],
     operacionBase: 'P = 3l',
     visualData: {
@@ -198,6 +206,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A = l^2 = 6^2 = 36 \\text{ cm}^2',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-cuadrados', 'geometria-area', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'A = l^2'
   },
@@ -211,6 +220,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '180^\\circ - 110^\\circ = 70^\\circ',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-angulos', 'geometria-angulos-suplementarios', 'numeros-operaciones-basicas'],
     operacionBase: '180^\\circ - \\alpha'
   },
@@ -224,6 +234,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P = 3 \\times 5 = 15 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-triangulos', 'geometria-perimetro', 'numeros-operaciones-basicas'],
     operacionBase: 'P = 3l'
   },
@@ -237,6 +248,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A = \\frac{b \\times h}{2} = \\frac{8 \\times 6}{2} = \\frac{48}{2} = 24 \\text{ cm}^2',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-triangulos', 'geometria-area-triangulo', 'geometria-area', 'numeros-fracciones', 'numeros-operaciones-basicas'],
     operacionBase: 'A = \\frac{b \\times h}{2}'
   },
@@ -251,6 +263,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '0^\\circ < 45^\\circ < 90^\\circ \\rightarrow \\text{Ángulo agudo}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-angulos', 'geometria-clasificacion-angulos']
   },
   {
@@ -264,6 +277,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '90^\\circ < 135^\\circ < 180^\\circ \\rightarrow \\text{Ángulo obtuso}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-angulos', 'geometria-clasificacion-angulos']
   },
   {
@@ -277,6 +291,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Ángulo llano} = 180^\\circ',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-angulos', 'geometria-clasificacion-angulos']
   },
   {
@@ -290,6 +305,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '2x = 90^\\circ \\rightarrow x = 45^\\circ',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-angulos', 'geometria-angulos-complementarios', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -303,6 +319,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '2x = 180^\\circ \\rightarrow x = 90^\\circ',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-angulos', 'geometria-angulos-suplementarios', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -316,6 +333,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '90^\\circ - 27^\\circ = 63^\\circ',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-angulos', 'geometria-angulos-complementarios', 'numeros-operaciones-basicas']
   },
   {
@@ -329,6 +347,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Ángulo correspondiente} = 70^\\circ',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-angulos', 'geometria-rectas-paralelas', 'geometria-angulos-correspondientes']
   },
   {
@@ -342,6 +361,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Ángulo alterno interno} = 65^\\circ',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-angulos', 'geometria-rectas-paralelas', 'geometria-angulos-alternos']
   },
   {
@@ -355,6 +375,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '180^\\circ - 130^\\circ = 50^\\circ',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['geometria-angulos', 'geometria-rectas-paralelas', 'geometria-angulos-conjugados', 'numeros-operaciones-basicas']
   },
   {
@@ -368,6 +389,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Ángulo opuesto} = 85^\\circ',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-angulos', 'geometria-angulos-opuestos']
   },
   {
@@ -381,6 +403,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '3x + 5x = 180^\\circ \\rightarrow 8x = 180^\\circ \\rightarrow x = 22.5^\\circ',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['geometria-angulos', 'geometria-angulos-adyacentes', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -394,6 +417,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Dos ángulos de } 40^\\circ \\text{ y dos de } 140^\\circ',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-angulos', 'geometria-angulos-opuestos', 'geometria-angulos-adyacentes', 'numeros-operaciones-basicas']
   },
   {
@@ -407,6 +431,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Suma} = 180^\\circ',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-triangulos', 'geometria-angulos', 'geometria-suma-angulos']
   },
   {
@@ -420,6 +445,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '180^\\circ - 50^\\circ - 60^\\circ = 70^\\circ',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-triangulos', 'geometria-angulos', 'geometria-suma-angulos', 'numeros-operaciones-basicas']
   },
   {
@@ -433,6 +459,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Suma} = (4-2) \\times 180^\\circ = 360^\\circ',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-cuadrilateros', 'geometria-angulos', 'geometria-suma-angulos', 'numeros-operaciones-basicas']
   },
 
@@ -448,6 +475,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Escaleno: todos los lados tienen diferentes medidas}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-triangulos', 'geometria-clasificacion-triangulos']
   },
   {
@@ -461,6 +489,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Isósceles: dos lados tienen la misma medida}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-triangulos', 'geometria-clasificacion-triangulos']
   },
   {
@@ -474,6 +503,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 3,
     explanation: '\\text{Los tres ángulos son iguales, cada uno mide } 60^\\circ',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-triangulos', 'geometria-triangulo-equilatero', 'geometria-angulos']
   },
 
@@ -489,6 +519,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Triángulo rectángulo: uno de sus ángulos mide } 90^\\circ',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-triangulos', 'geometria-clasificacion-triangulos', 'geometria-triangulo-rectangulo']
   },
   {
@@ -502,6 +533,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Todos los ángulos son menores que } 90^\\circ \\rightarrow \\text{ Triángulo acutángulo}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-triangulos', 'geometria-clasificacion-triangulos']
   },
   {
@@ -515,6 +547,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Tercer ángulo} = 180^\\circ - 30^\\circ - 40^\\circ = 110^\\circ > 90^\\circ \\rightarrow \\text{Obtusángulo}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-triangulos', 'geometria-clasificacion-triangulos', 'geometria-suma-angulos', 'numeros-operaciones-basicas']
   },
 
@@ -530,6 +563,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P = 5 + 7 + 8 = 20 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-triangulos', 'geometria-perimetro', 'numeros-operaciones-basicas']
   },
   {
@@ -543,6 +577,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P = 12 + 12 + 8 = 32 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-triangulos', 'geometria-perimetro', 'numeros-operaciones-basicas']
   },
   {
@@ -556,6 +591,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Lado} = \\frac{36}{3} = 12 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-triangulos', 'geometria-triangulo-equilatero', 'geometria-perimetro', 'numeros-operaciones-basicas']
   },
 
@@ -571,6 +607,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A = \\frac{b \\times h}{2} = \\frac{10 \\times 7}{2} = 35 \\text{ cm}^2',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-triangulos', 'geometria-area-triangulo', 'geometria-area', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -584,6 +621,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A = \\frac{b \\times h}{2} \\rightarrow h = \\frac{2A}{b} = \\frac{2(48)}{12} = 8 \\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-triangulos', 'geometria-area-triangulo', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -597,6 +635,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A_{\\text{nuevo}} = \\frac{30 \\times 8}{2} = 2 \\times \\frac{15 \\times 8}{2} = 2A_{\\text{original}}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-triangulos', 'geometria-area-triangulo', 'geometria-proporciones', 'numeros-operaciones-basicas']
   },
 
@@ -612,6 +651,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '3 + 4 = 7 < 8 \\rightarrow \\text{No puede existir}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-triangulos', 'geometria-desigualdad-triangular']
   },
   {
@@ -625,6 +665,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '4 + 5 = 9 > 8 \\quad \\checkmark \\quad 4 + 8 = 12 > 5 \\quad \\checkmark \\quad 5 + 8 = 13 > 4 \\quad \\checkmark',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['geometria-triangulos', 'geometria-desigualdad-triangular', 'numeros-operaciones-basicas']
   },
   {
@@ -638,6 +679,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '|9 - 5| < x < 9 + 5 \\rightarrow 4 < x < 14 \\rightarrow x = 7 \\text{ cm es válido}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['geometria-triangulos', 'geometria-desigualdad-triangular']
   },
   {
@@ -650,6 +692,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Cuadrado: } 4 \\text{ lados iguales y } 4 \\text{ ángulos de } 90^\\circ',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-cuadrilateros', 'geometria-cuadrados', 'geometria-clasificacion'],
     operacionBase: 'Cuadrilátero con 4 lados iguales y 4 ángulos = 90°'
   },
@@ -663,6 +706,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Rombo: paralelogramo con 4 lados iguales y ángulos } \\neq 90^\\circ',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-cuadrilateros', 'geometria-rombo', 'geometria-clasificacion'],
     operacionBase: 'Cuadrilátero con 4 lados iguales y ángulos ≠ 90°'
   },
@@ -676,6 +720,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Trapecio: un par de lados paralelos}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-cuadrilateros', 'geometria-trapecio', 'geometria-clasificacion'],
     operacionBase: 'Cuadrilátero con solo un par de lados paralelos'
   },
@@ -689,6 +734,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P = 4 \\times 9 = 36 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-cuadrados', 'geometria-perimetro', 'numeros-operaciones-basicas'],
     operacionBase: 'P = 4l'
   },
@@ -702,6 +748,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P = 4 \\times 7 = 28 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-rombo', 'geometria-perimetro', 'numeros-operaciones-basicas'],
     operacionBase: 'P = 4l'
   },
@@ -715,6 +762,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '40 = 2(l + 8) \\rightarrow 20 = l + 8 \\rightarrow l = 12 \\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-rectangulos', 'geometria-perimetro', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas'],
     operacionBase: 'P = 2(l + w), despejar l'
   },
@@ -728,6 +776,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A = l \\times w = 14 \\times 6 = 84 \\text{ cm}^2',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-rectangulos', 'geometria-area', 'numeros-operaciones-basicas'],
     operacionBase: 'A = l × w'
   },
@@ -741,6 +790,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A = l^2 \\rightarrow 49 = l^2 \\rightarrow l = \\sqrt{49} = 7 \\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-cuadrados', 'geometria-area', 'numeros-raices', 'numeros-potencias'],
     operacionBase: 'A = l², despejar l'
   },
@@ -754,6 +804,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'A = \\frac{d_1 \\times d_2}{2} = \\frac{10 \\times 8}{2} = 40 \\text{ cm}^2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-rombo', 'geometria-area', 'numeros-fracciones', 'numeros-operaciones-basicas'],
     operacionBase: 'A = (d₁ × d₂) / 2'
   },
@@ -767,6 +818,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(5-2) \\times 180^\\circ = 3 \\times 180^\\circ = 540^\\circ',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-poligonos', 'geometria-suma-angulos', 'numeros-operaciones-basicas'],
     operacionBase: '(n - 2) × 180°, n = 5'
   },
@@ -780,6 +832,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{(6-2) \\times 180^\\circ}{6} = \\frac{720^\\circ}{6} = 120^\\circ',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['geometria-poligonos', 'geometria-poligonos-regulares', 'geometria-angulos', 'numeros-operaciones-basicas'],
     operacionBase: '[(n - 2) × 180°] / n, n = 6'
   },
@@ -793,6 +846,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P = 8 \\times 5 = 40 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-poligonos', 'geometria-perimetro', 'numeros-operaciones-basicas'],
     operacionBase: 'P = 8l'
   },
@@ -806,6 +860,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Diagonales} = \\frac{n(n-3)}{2} = \\frac{4(4-3)}{2} = 2',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-cuadrilateros', 'geometria-diagonales'],
     operacionBase: 'd = n(n - 3) / 2, n = 4'
   },
@@ -819,6 +874,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Diagonales} = \\frac{5(5-3)}{2} = \\frac{5 \\times 2}{2} = 5',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-poligonos', 'geometria-diagonales', 'numeros-operaciones-basicas'],
     operacionBase: 'd = n(n - 3) / 2, n = 5'
   },
@@ -832,6 +888,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Las diagonales del rectángulo son iguales en longitud}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-rectangulos', 'geometria-propiedades', 'geometria-diagonales'],
     operacionBase: 'Diagonales rectángulo: congruentes'
   },
@@ -847,6 +904,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A = b \\times h = 12 \\times 7 = 84 \\text{ cm}^2',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-paralelogramo', 'geometria-area', 'numeros-operaciones-basicas']
   },
 
@@ -862,6 +920,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A = b \\times h \\Rightarrow 60 = 10 \\times h \\Rightarrow h = 6 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-paralelogramo', 'geometria-area', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
 
@@ -877,6 +936,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A_2 = b \\times (2h) = 2(b \\times h) = 2A_1',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-paralelogramo', 'geometria-area', 'geometria-proporciones']
   },
 
@@ -892,6 +952,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A = \\frac{(b_1 + b_2) \\times h}{2} = \\frac{(8 + 12) \\times 5}{2} = \\frac{100}{2} = 50 \\text{ cm}^2',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-trapecio', 'geometria-area', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
 
@@ -907,6 +968,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '72 = \\frac{(10 + 14) \\times h}{2} \\Rightarrow 144 = 24h \\Rightarrow h = 6 \\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-trapecio', 'geometria-area', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
 
@@ -922,6 +984,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P = 16 + 10 + 5 + 5 = 36 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-trapecio', 'geometria-perimetro', 'numeros-operaciones-basicas']
   },
 
@@ -937,6 +1000,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A_{\\text{cuadrado}} = 6^2 = 36, \\quad A_{\\text{triángulo}} = \\frac{6 \\times 4}{2} = 12 \\quad \\Rightarrow \\quad A_{\\text{total}} = 48 \\text{ cm}^2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-area', 'geometria-figuras-compuestas', 'geometria-cuadrados', 'geometria-triangulos', 'numeros-operaciones-basicas']
   },
 
@@ -952,6 +1016,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'A_{\\text{restante}} = (10 \\times 8) - (4 \\times 3) = 80 - 12 = 68 \\text{ cm}^2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-area', 'geometria-figuras-compuestas', 'geometria-rectangulos', 'numeros-operaciones-basicas']
   },
 
@@ -967,6 +1032,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A_{\\text{camino}} = (24 \\times 19) - (20 \\times 15) = 456 - 300 = 156 \\text{ m}^2',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['geometria-area', 'geometria-figuras-compuestas', 'geometria-rectangulos', 'numeros-operaciones-basicas']
   },
 
@@ -982,6 +1048,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A_{\\text{nuevo}} = (2l)(2w) = 4(lw) = 4A_{\\text{original}}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-area', 'geometria-proporciones', 'geometria-rectangulos', 'numeros-operaciones-basicas']
   },
 
@@ -997,6 +1064,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{A_1}{A_2} = \\left(\\frac{l_1}{l_2}\\right)^2 = \\left(\\frac{1}{3}\\right)^2 = \\frac{1}{9}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['geometria-area', 'geometria-proporciones', 'geometria-cuadrados', 'numeros-potencias', 'numeros-razones']
   },
 
@@ -1012,6 +1080,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'A_{\\text{cuadrado}} = 10^2 = 100 \\text{ m}^2 \\quad \\text{vs} \\quad A_{\\text{rectángulo}} = 12 \\times 8 = 96 \\text{ m}^2',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['geometria-area', 'geometria-perimetro', 'geometria-comparacion', 'geometria-cuadrados', 'geometria-rectangulos', 'numeros-operaciones-basicas']
   },
 
@@ -1027,6 +1096,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '1 \\text{ m}^2 = (100 \\text{ cm})^2 = 10,000 \\text{ cm}^2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-area', 'geometria-unidades', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
 
@@ -1042,6 +1112,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '2.5 \\text{ m}^2 \\times 10,000 \\frac{\\text{cm}^2}{\\text{m}^2} = 25,000 \\text{ cm}^2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-area', 'geometria-unidades', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
 
@@ -1057,6 +1128,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '500 \\text{ m} = \\frac{500}{1000} = 0.5 \\text{ km}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-perimetro', 'geometria-unidades', 'numeros-decimales', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -1070,6 +1142,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'C = 2\\pi r = 2 \\times 3.14 \\times 3 = 18.84 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-circulos', 'geometria-circunferencia', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -1083,6 +1156,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'C = \\pi d = 3.14 \\times 10 = 31.4 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-circulos', 'geometria-circunferencia', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -1096,6 +1170,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'C = 2\\pi r \\rightarrow r = \\frac{C}{2\\pi} = \\frac{62.8}{2(3.14)} = \\frac{62.8}{6.28} = 10 \\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-circulos', 'geometria-circunferencia', 'algebra-ecuaciones-lineales', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -1109,6 +1184,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A = \\pi r^2 = 3.14 \\times 4^2 = 3.14 \\times 16 = 50.24 \\text{ m}^2',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-circulos', 'geometria-area-circulo', 'geometria-area', 'numeros-potencias', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -1122,6 +1198,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'r = \\frac{d}{2} = \\frac{12}{2} = 6 \\text{ cm} \\quad \\Rightarrow \\quad A = \\pi r^2 = 3.14 \\times 6^2 = 3.14 \\times 36 = 113.04 \\text{ cm}^2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-circulos', 'geometria-area-circulo', 'geometria-area', 'numeros-potencias', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -1135,6 +1212,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A = \\pi r^2 \\rightarrow r^2 = \\frac{A}{\\pi} = \\frac{78.5}{3.14} = 25 \\rightarrow r = \\sqrt{25} = 5 \\text{ m}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['geometria-circulos', 'geometria-area-circulo', 'algebra-ecuaciones-cuadraticas', 'numeros-raices', 'numeros-potencias', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -1148,6 +1226,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'L_{arco} = \\frac{90}{360} \\times 2\\pi r = \\frac{1}{4} \\times 2(3.14)(6) = \\frac{1}{4} \\times 37.68 = 9.42 \\text{ cm}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['geometria-circulos', 'geometria-sectores', 'geometria-arcos', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -1161,6 +1240,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A_{semicirculo} = \\frac{\\pi r^2}{2} = \\frac{3.14 \\times 8^2}{2} = \\frac{3.14 \\times 64}{2} = \\frac{200.96}{2} = 100.48 \\text{ m}^2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-circulos', 'geometria-sectores', 'geometria-area', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -1174,6 +1254,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A_{cuadrante} = \\frac{\\pi r^2}{4} = \\frac{3.14 \\times 10^2}{4} = \\frac{3.14 \\times 100}{4} = \\frac{314}{4} = 78.5 \\text{ m}^2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-circulos', 'geometria-sectores', 'geometria-area', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -1187,6 +1268,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'r = \\frac{s}{2} = \\frac{10}{2} = 5 \\text{ m}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-circulos', 'geometria-cuadrados', 'geometria-figuras-inscritas']
   },
   {
@@ -1200,6 +1282,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A_{nuevo} = \\pi(3r)^2 = 9\\pi r^2 = 9A_{original}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-circulos', 'geometria-area-circulo', 'geometria-proporciones', 'numeros-potencias']
   },
   {
@@ -1213,6 +1296,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'C = \\pi d = 3.14 \\times 100 = 314 \\text{ m}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['geometria-circulos', 'geometria-circunferencia', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -1226,6 +1310,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'C = 2\\pi r = 2(3.14)(0.3) = 1.884 \\text{ m} \\quad \\Rightarrow \\quad n = \\frac{188.4}{1.884} = 100 \\text{ vueltas}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['geometria-circulos', 'geometria-circunferencia', 'geometria-aplicaciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -1239,6 +1324,7 @@ export const m1Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A = \\pi r^2 \\rightarrow r^2 = \\frac{A}{\\pi} = \\frac{314}{3.14} = 100 \\rightarrow r = \\sqrt{100} = 10 \\text{ m}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-circulos', 'geometria-area-circulo', 'algebra-ecuaciones-cuadraticas', 'numeros-raices', 'numeros-decimales', 'numeros-operaciones-basicas']
   }
 

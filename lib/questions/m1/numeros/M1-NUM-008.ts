@@ -24,6 +24,7 @@ export const m1Num008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '5,000,000 = 5 \\times 10^6',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['numeros-decimales', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -37,6 +38,7 @@ export const m1Num008Questions: Question[] = [
     correctAnswer: 2,
     explanation: '3.5 \\times 10^4 = 35,000',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['numeros-decimales', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -50,6 +52,7 @@ export const m1Num008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(2 \\times 10^3) \\times (4 \\times 10^5) = (2 \\times 4) \\times 10^{3+5} = 8 \\times 10^8',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-decimales', 'numeros-potencias', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   {
@@ -63,6 +66,7 @@ export const m1Num008Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\pi + \\sqrt{2} \\approx 3.14 + 1.41 = 4.55',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-raices', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   // ========================================
@@ -79,6 +83,7 @@ export const m1Num008Questions: Question[] = [
     correctAnswer: 0,
     explanation: '0.00045 = 4.5 \\times 10^{-4}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['numeros-decimales', 'numeros-potencias', 'numeros-notacion-cientifica', 'numeros-operaciones-basicas']
   },
   {
@@ -92,6 +97,7 @@ export const m1Num008Questions: Question[] = [
     correctAnswer: 2,
     explanation: '6.02 \\times 10^{23} = 602{,}000{,}000{,}000{,}000{,}000{,}000{,}000 \\text{ tiene 22 ceros (1 en 602 y 21 ceros adicionales)}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-decimales', 'numeros-potencias', 'numeros-notacion-cientifica', 'numeros-operaciones-basicas']
   },
   {
@@ -105,6 +111,7 @@ export const m1Num008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{8 \\times 10^6}{2 \\times 10^2} = \\frac{8}{2} \\times 10^{6-2} = 4 \\times 10^4',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-decimales', 'numeros-potencias', 'numeros-notacion-cientifica', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   {
@@ -118,6 +125,7 @@ export const m1Num008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(3 \\times 10^5) + (7 \\times 10^5) = 10 \\times 10^5 = 1 \\times 10^6',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-decimales', 'numeros-potencias', 'numeros-notacion-cientifica', 'numeros-operaciones-basicas']
   },
   {
@@ -131,6 +139,7 @@ export const m1Num008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '9.3 \\times 10^7 = 93,000,000',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['numeros-decimales', 'numeros-potencias', 'numeros-notacion-cientifica', 'numeros-operaciones-basicas']
   },
   {
@@ -144,6 +153,7 @@ export const m1Num008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(5 \\times 10^{-3}) \\times (2 \\times 10^4) = 10 \\times 10^{-3+4} = 10 \\times 10^1 = 1 \\times 10^2',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-decimales', 'numeros-potencias', 'numeros-notacion-cientifica', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   {
@@ -157,6 +167,7 @@ export const m1Num008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{3.6 \\times 10^8}{1.2 \\times 10^5} = \\frac{3.6}{1.2} \\times 10^{8-5} = 3 \\times 10^3',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-decimales', 'numeros-potencias', 'numeros-notacion-cientifica', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   {
@@ -170,6 +181,7 @@ export const m1Num008Questions: Question[] = [
     correctAnswer: 0,
     explanation: '1.5 \\times 10^{-6} = 0.0000015',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-decimales', 'numeros-potencias', 'numeros-notacion-cientifica', 'numeros-operaciones-basicas']
   }
 ];

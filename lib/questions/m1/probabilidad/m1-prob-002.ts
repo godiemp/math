@@ -25,6 +25,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\bar{x} = \\frac{4 + 6 + 8 + 10}{4} = \\frac{28}{4} = 7',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-media', 'numeros-operaciones-basicas', 'numeros-fracciones']
   },
   {
@@ -37,6 +38,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Mediana} = 7',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-mediana', 'numeros-operaciones-basicas']
   },
   {
@@ -49,6 +51,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Moda} = 3 \\text{ (aparece 3 veces)}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-moda']
   },
   {
@@ -61,6 +64,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Rango} = 20 - 8 = 12',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-rango', 'numeros-operaciones-basicas']
   },
   {
@@ -73,6 +77,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\bar{x} = \\frac{5 + 8 + 10 + 13}{4} = \\frac{36}{4} = 9',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-media', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -85,6 +90,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Dato más frecuente (moda)} = 3',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-moda', 'estadistica-frecuencia']
   },
   {
@@ -97,6 +103,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Rango} = 48 - 12 = 36',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-rango', 'numeros-operaciones-basicas']
   },
   {
@@ -109,6 +116,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Mediana} = \\frac{6 + 8}{2} = 7',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-mediana', 'numeros-operaciones-basicas']
   },
   {
@@ -121,6 +129,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\bar{x} = \\frac{5.5 + 6.0 + 4.5 + 6.5}{4} = \\frac{22.5}{4} = 5.625',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['estadistica-media', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -133,6 +142,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '10 + 15 + x = 36 \\rightarrow x = 36 - 25 = 11',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['estadistica-media', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -145,6 +155,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x = 150 - 120 = 30',
     difficulty: 'hard',
+    difficultyScore: 0.74,
     skills: ['estadistica-media', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -157,6 +168,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Mediana} = 15',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-mediana', 'numeros-orden']
   },
   {
@@ -169,6 +181,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Mediana} = \\frac{9 + 11}{2} = 10',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-mediana', 'numeros-operaciones-basicas']
   },
   {
@@ -181,6 +194,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Mediana} = 560 \\text{ (más representativa que media} \\approx 643)',
     difficulty: 'hard',
+    difficultyScore: 0.74,
     skills: ['estadistica-mediana', 'estadistica-media', 'estadistica-interpretacion']
   },
   {
@@ -193,6 +207,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Moda} = 3',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-moda', 'estadistica-frecuencia']
   },
   {
@@ -205,6 +220,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Dos modas: 5 y 7}',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['estadistica-moda', 'estadistica-frecuencia']
   },
   {
@@ -217,6 +233,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 3,
     explanation: '\\text{No hay moda cuando todos tienen la misma frecuencia}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-moda', 'estadistica-conceptos']
   },
   {
@@ -229,6 +246,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Media} = \\text{Mediana} = \\text{Moda} = 10',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-media', 'estadistica-mediana', 'estadistica-moda', 'estadistica-conceptos']
   },
   {
@@ -241,6 +259,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Media} = \\frac{20}{5} = 4, \\quad \\text{Mediana} = 4',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-media', 'estadistica-mediana', 'numeros-operaciones-basicas']
   },
   {
@@ -253,6 +272,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Hay valores extremos altos que elevan la media}',
     difficulty: 'hard',
+    difficultyScore: 0.74,
     skills: ['estadistica-media', 'estadistica-mediana', 'estadistica-interpretacion']
   },
   {
@@ -265,6 +285,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Media original} = 70, \\quad \\text{Nueva media} = \\frac{450}{6} = 75',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['estadistica-media', 'estadistica-interpretacion', 'numeros-operaciones-basicas']
   },
   {
@@ -277,6 +298,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\bar{x} = \\frac{5.0 + 6.0 + 7.0}{3} = 6.0',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-media', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -289,6 +311,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Moda} = 22°C',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-moda', 'estadistica-frecuencia']
   },
   {
@@ -301,6 +324,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Rango} = 32 - 15 = 17',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-rango', 'numeros-operaciones-basicas']
   },
   {
@@ -313,6 +337,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Todos los datos tienen el mismo valor}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['estadistica-rango', 'estadistica-conceptos']
   },
   {
@@ -325,6 +350,7 @@ export const m1Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Rango}_A = 10, \\quad \\text{Rango}_B = 25',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['estadistica-rango', 'estadistica-dispersion', 'numeros-operaciones-basicas']
   }
 ];

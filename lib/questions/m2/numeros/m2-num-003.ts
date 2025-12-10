@@ -25,6 +25,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '80{,}000 \\times 0.75 = 60{,}000 \\quad \\Rightarrow \\quad 60{,}000 \\times 1.19 = 71{,}400',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-porcentaje', 'numeros-porcentaje-descuento', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -37,6 +38,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{52{,}000 - 40{,}000}{40{,}000} \\times 100 = \\frac{12{,}000}{40{,}000} \\times 100 = 30\\%',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-porcentaje', 'numeros-porcentaje-variacion', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -49,6 +51,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '8 \\text{ cm} \\times 50{,}000 = 400{,}000 \\text{ cm} = 4000 \\text{ m} = 4 \\text{ km}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-proporcionalidad', 'numeros-escala', 'numeros-conversion-unidades', 'numeros-operaciones-basicas']
   },
   {
@@ -61,6 +64,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{3}{4500} = \\frac{5}{x} \\quad \\Rightarrow \\quad x = \\frac{5 \\times 4500}{3} = 7500',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-proporcionalidad', 'numeros-proporcionalidad-directa', 'numeros-regla-tres', 'numeros-operaciones-basicas']
   },
   {
@@ -73,6 +77,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '40 \\text{ cm} \\times 250 = 10{,}000 \\text{ cm} = 100 \\text{ m}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-proporcionalidad', 'numeros-escala', 'numeros-conversion-unidades', 'numeros-operaciones-basicas']
   },
   // Subsection A: Sistemas de AFP y ahorro previsional
@@ -86,6 +91,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '800{,}000 \\times 0.10 + 800{,}000 \\times 0.02 = 80{,}000 + 16{,}000 = 96{,}000',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['finanzas-afp', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   },
   {
@@ -98,6 +104,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '90{,}000 \\times 60 = 5{,}400{,}000. \\quad \\text{Rentabilidad} = 6{,}000{,}000 - 5{,}400{,}000 = 600{,}000',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['finanzas-afp', 'numeros-porcentaje', 'numeros-multiplicacion', 'numeros-operaciones-basicas']
   },
   // Subsection B: Cálculo de jubilación y pensiones
@@ -111,6 +118,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '600{,}000 \\times 0.60 = 360{,}000',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['finanzas-jubilacion', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   },
   {
@@ -123,6 +131,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{45{,}000{,}000 - 30{,}000{,}000}{24} = \\frac{15{,}000{,}000}{24} = 625{,}000',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['finanzas-jubilacion', 'numeros-division', 'numeros-operaciones-basicas']
   },
   // Subsection C: Créditos y sistemas de amortización
@@ -136,6 +145,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{1{,}440{,}000}{12} = 120{,}000',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['finanzas-creditos', 'numeros-division', 'numeros-operaciones-basicas']
   },
   {
@@ -148,6 +158,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 3,
     explanation: '250{,}000 \\times 10 - 2{,}000{,}000 = 2{,}500{,}000 - 2{,}000{,}000 = 500{,}000',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['finanzas-creditos', 'numeros-multiplicacion', 'numeros-operaciones-basicas']
   },
   // Subsection D: Interés compuesto
@@ -161,6 +172,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '1{,}000{,}000 \\times (1.10)^2 = 1{,}000{,}000 \\times 1.21 = 1{,}210{,}000',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['finanzas-interes-compuesto', 'numeros-potencias', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   },
   {
@@ -173,6 +185,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '500{,}000 \\times (1.20)^3 - 500{,}000 = 500{,}000 \\times 1.728 - 500{,}000 = 364{,}000',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['finanzas-interes-compuesto', 'numeros-potencias', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   },
   // Capitalización mensual / Monthly compounding
@@ -187,6 +200,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A = 1{,}000{,}000 \\times \\left(1 + \\frac{0{,}12}{12}\\right)^{12} = 1{,}000{,}000 \\times 1{,}01^{12} \\approx 1{,}126{,}800',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['finanzas-interes-compuesto', 'finanzas-capitalizacion', 'numeros-potencias', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -200,6 +214,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Simple: } 2{,}000{,}000 \\times 0{,}24 = 480{,}000. \\quad \\text{Compuesto: } 2{,}000{,}000 \\times 1{,}2697 - 2{,}000{,}000 = 539{,}400. \\quad \\text{Diferencia} = 59{,}400',
     difficulty: 'extreme',
+    difficultyScore: 0.95,
     skills: ['finanzas-interes-compuesto', 'finanzas-capitalizacion', 'finanzas-interes-simple', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   // Valor presente y futuro / Present and Future Value
@@ -214,6 +229,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'VP = \\frac{1{,}000{,}000}{(1{,}10)^2} = \\frac{1{,}000{,}000}{1{,}21} \\approx 826{,}446',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['finanzas-valor-presente', 'finanzas-interes-compuesto', 'numeros-potencias', 'numeros-division', 'numeros-operaciones-basicas']
   },
   {
@@ -227,6 +243,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'VP = \\frac{5{,}000{,}000}{(1{,}08)^5} = \\frac{5{,}000{,}000}{1{,}4693} \\approx 3{,}402{,}916',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['finanzas-valor-presente', 'finanzas-interes-compuesto', 'numeros-potencias', 'numeros-division', 'numeros-operaciones-basicas']
   },
   // Créditos y amortización / Loans and amortization
@@ -241,6 +258,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Total pagado} = 141{,}220 \\times 24 = 3{,}389{,}280. \\quad \\text{Intereses} = 3{,}389{,}280 - 3{,}000{,}000 = 389{,}280',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['finanzas-creditos', 'finanzas-amortizacion', 'numeros-multiplicacion', 'numeros-operaciones-basicas']
   },
   {
@@ -253,6 +271,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 3,
     explanation: '\\text{Banco A: } 89{,}000 \\times 12 = 1{,}068{,}000. \\quad \\text{Banco B: } 91{,}200 \\times 12 = 1{,}094{,}400. \\quad \\text{Diferencia} = 26{,}400',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['finanzas-creditos', 'finanzas-comparacion', 'numeros-multiplicacion', 'numeros-operaciones-basicas']
   },
   // CAE - Carga Anual Equivalente (Chilean specific)
@@ -266,6 +285,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Menor CAE = menor costo total. CAE de 15\\% < 18\\%. Diferencia} = 18\\% - 15\\% = 3 \\text{ puntos porcentuales}',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['finanzas-cae', 'finanzas-creditos', 'finanzas-comparacion', 'numeros-porcentaje']
   },
   {
@@ -278,6 +298,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{El CAE incluye todos los costos: intereses, comisiones, seguros y otros gastos, por eso es mayor que la tasa simple.}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['finanzas-cae', 'finanzas-creditos', 'finanzas-conceptos', 'numeros-porcentaje']
   },
   // AFP - More complex scenarios (Chilean pension system)
@@ -291,6 +312,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Diferencia de rentabilidad} = 12\\% - 4\\% = 8\\%. \\quad 15{,}000{,}000 \\times 0{,}08 = 1{,}200{,}000',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['finanzas-afp', 'finanzas-rentabilidad', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   },
   {
@@ -304,6 +326,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Cotización} = 1{,}200{,}000 \\times 0{,}10 = 120{,}000. \\quad \\text{Comisión} = 1{,}200{,}000 \\times 0{,}0144 = 17{,}280. \\quad \\text{Total} = 137{,}280',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['finanzas-afp', 'finanzas-comisiones', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   },
   {
@@ -316,6 +339,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{APV Andrea} = 100{,}000. \\quad \\text{Aporte empleador} = 100{,}000 \\times 0{,}50 = 50{,}000. \\quad \\text{Total APV} = 150{,}000',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['finanzas-afp', 'finanzas-apv', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   },
   {
@@ -328,6 +352,7 @@ export const m2Num003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '20{,}000{,}000 \\times 0{,}60 = 12{,}000{,}000',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['finanzas-afp', 'finanzas-multifondos', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   }
 ];

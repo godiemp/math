@@ -27,6 +27,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'C(x) = 500 + 200x \\\\ C(8) = 500 + 200(8) = 500 + 1600 = \\$2.100',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['funcion-lineal-problemas-tarificacion', 'algebra-evaluacion-funciones']
   },
   {
@@ -40,6 +41,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'C(x) = 8000 + 50x = 10500 \\\\ 50x = 2500 \\Rightarrow x = 50 \\text{ minutos}',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-lineal-problemas-tarificacion', 'algebra-ecuaciones-lineales']
   },
   {
@@ -53,6 +55,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 1,
     explanation: '15000 < 5000 + 100x \\\\ 10000 < 100x \\\\ x > 100 \\text{ GB}',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-lineal-problemas-tarificacion', 'algebra-inecuaciones']
   },
   {
@@ -66,6 +69,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'C = 1000 + 500(5-1) = 1000 + 2000 = \\$3.000',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-lineal-problemas-tarificacion', 'algebra-evaluacion-funciones']
   },
   {
@@ -79,6 +83,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{El costo fijo es el término independiente: } \\$2.000',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['funcion-lineal-problemas-tarificacion', 'funcion-lineal-concepto']
   },
   // ========================================
@@ -95,6 +100,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'd(2.5) = 80 \\times 2.5 = 200 \\text{ km}',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['funcion-lineal-problemas-movimiento', 'algebra-evaluacion-funciones']
   },
   {
@@ -108,6 +114,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 1,
     explanation: '10 + 25t = 60 \\Rightarrow 25t = 50 \\Rightarrow t = 2 \\text{ h}',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-lineal-problemas-movimiento', 'algebra-ecuaciones-lineales']
   },
   {
@@ -121,6 +128,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Posición 1ro: } 60t. \\text{ Posición 2do: } 80(t-1) \\\\ 60t = 80(t-1) \\Rightarrow 60t = 80t - 80 \\\\ -20t = -80 \\Rightarrow t = 4 \\text{ h}',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-lineal-problemas-movimiento', 'sistemas-ecuaciones-problemas']
   },
   {
@@ -134,6 +142,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'v = \\frac{150}{2} = 75 \\text{ km/h} \\\\ d(t) = 75t',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['funcion-lineal-problemas-movimiento', 'algebra-funciones']
   },
   {
@@ -147,6 +156,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{En } d = vt, \\text{ el coeficiente de t es la velocidad: 90 km/h}',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['funcion-lineal-problemas-movimiento', 'funcion-lineal-concepto']
   },
   // ========================================
@@ -163,6 +173,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'F(20) = \\frac{9}{5}(20) + 32 = 36 + 32 = 68°F',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-lineal-problemas-conversion', 'algebra-evaluacion-funciones']
   },
   {
@@ -176,6 +187,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'k(5) = 1.6 \\times 5 = 8 \\text{ km}',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['funcion-lineal-problemas-conversion', 'algebra-evaluacion-funciones']
   },
   {
@@ -189,6 +201,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 1,
     explanation: '800d = 24000 \\Rightarrow d = 30 \\text{ dólares}',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-lineal-problemas-conversion', 'algebra-ecuaciones-lineales']
   },
   {
@@ -202,6 +215,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Multiplicamos las pulgadas por el factor de conversión: } c(p) = 2.54p',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['funcion-lineal-problemas-conversion', 'funcion-lineal-concepto']
   },
   {
@@ -215,6 +229,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Volumen inicial más lo que se agrega: } V(t) = 20 + 5t',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-lineal-problemas-conversion', 'algebra-funciones']
   },
   // ========================================
@@ -236,6 +251,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Si la distancia no cambia con el tiempo, el objeto está detenido.}',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['funcion-lineal-problemas-interpretacion', 'funcion-lineal-grafica']
   },
   {
@@ -254,6 +270,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{La pendiente indica cuánto aumenta el costo por cada unidad adicional.}',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-lineal-problemas-interpretacion', 'funcion-afin-pendiente']
   },
   {
@@ -272,6 +289,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Donde oferta y demanda se igualan está el precio y cantidad de equilibrio.}',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-lineal-problemas-interpretacion', 'sistemas-ecuaciones-problemas']
   },
   {
@@ -290,6 +308,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Pendiente negativa indica que el nivel disminuye con el tiempo.}',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['funcion-lineal-problemas-interpretacion', 'funcion-lineal-grafica']
   },
   {
@@ -308,6 +327,7 @@ export const m1Alg010Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{El valor negativo en el eje y representa los costos fijos antes de generar ingresos.}',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-lineal-problemas-interpretacion', 'funcion-lineal-concepto']
   }
 ];

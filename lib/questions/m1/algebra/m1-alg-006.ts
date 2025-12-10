@@ -29,6 +29,7 @@ export const m1Alg006Questions: Question[] = [
     correctAnswer: 3,
     explanation: 'f(5) = 2(5) + 3 = 10 + 3 = 13',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['algebra-funciones', 'algebra-evaluacion-funciones', 'numeros-operaciones-basicas']
   },
   {
@@ -42,6 +43,7 @@ export const m1Alg006Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'y = 3x - 2 \\quad \\Rightarrow \\quad m = 3',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['algebra-funciones', 'algebra-funciones-lineales', 'algebra-pendiente']
   },
   {
@@ -55,6 +57,7 @@ export const m1Alg006Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'f(x) = 2x - 5 \\text{ tiene la forma } mx + b \\text{ con } m = 2 \\text{ y } b = -5',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['algebra-funciones', 'algebra-funciones-lineales']
   },
   {
@@ -68,6 +71,7 @@ export const m1Alg006Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'f(0) = 2(0) - 6 = -6 \\quad \\Rightarrow \\quad \\text{Intercepto en } (0, -6)',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['algebra-funciones', 'algebra-interceptos', 'algebra-funciones-lineales']
   },
   {
@@ -81,6 +85,7 @@ export const m1Alg006Questions: Question[] = [
     correctAnswer: 0,
     explanation: '3x + 9 = 0 \\rightarrow 3x = -9 \\rightarrow x = -3 \\quad \\Rightarrow \\quad \\text{Intercepto en } (-3, 0)',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['algebra-funciones', 'algebra-interceptos', 'algebra-funciones-lineales', 'algebra-ecuaciones-lineales']
   },
   {
@@ -94,6 +99,7 @@ export const m1Alg006Questions: Question[] = [
     correctAnswer: 0,
     explanation: '0 = -2x + 8 \\rightarrow 2x = 8 \\rightarrow x = 4 \\quad \\Rightarrow \\quad (4, 0)',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['algebra-funciones', 'algebra-interceptos', 'algebra-funciones-lineales', 'algebra-ecuaciones-lineales']
   },
   {
@@ -107,6 +113,7 @@ export const m1Alg006Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'y = mx + b = -1 \\cdot x + 5 = -x + 5',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['algebra-funciones', 'algebra-funciones-lineales', 'algebra-pendiente', 'algebra-interceptos']
   },
   {
@@ -120,6 +127,7 @@ export const m1Alg006Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'm = \\frac{9 - 5}{4 - 2} = \\frac{4}{2} = 2',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['algebra-funciones', 'algebra-funciones-lineales', 'algebra-pendiente', 'numeros-fracciones', 'numeros-operaciones-basicas']
   }
 ];

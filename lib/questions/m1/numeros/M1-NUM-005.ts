@@ -28,6 +28,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '20.000 \\times 0.15 = 3.000 \\quad \\Rightarrow \\quad 20.000 - 3.000 = 17.000',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['numeros-porcentajes', 'numeros-porcentajes-descuentos', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -41,6 +42,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '1.12x = 560000 \\quad \\Rightarrow \\quad x = \\frac{560000}{1.12} = 500.000',
     difficulty: 'hard',
+    difficultyScore: 0.74,
     skills: ['numeros-porcentajes', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -54,6 +56,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 0,
     explanation: '100000 + (0.05 \\times 100000) = 100000 + 5000 = 105.000',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -67,6 +70,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 2,
     explanation: '200000 + (0.08 \\times 200000 \\times 2) = 200000 + 32000 = 232.000',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -80,6 +84,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '50\\% \\text{ de } 200 = 100, \\quad 20\\% \\text{ de } 100 = 20',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -93,6 +98,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '100000 \\times 0.70 \\times 0.90 = 70000 \\times 0.90 = 63.000',
     difficulty: 'hard',
+    difficultyScore: 0.74,
     skills: ['numeros-porcentajes', 'numeros-porcentajes-descuentos', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -106,6 +112,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 2,
     explanation: '40\\% \\text{ de } 800 = 320, \\quad 25\\% \\text{ de } 320 = 80',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -119,6 +126,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '0.80x = 24000 \\quad \\Rightarrow \\quad x = \\frac{24000}{0.80} = 30.000',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['numeros-porcentajes', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -132,6 +140,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '1.25x = 50000 \\quad \\Rightarrow \\quad x = \\frac{50000}{1.25} = 40.000',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['numeros-porcentajes', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   // ========================================
@@ -148,6 +157,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 2,
     explanation: '200 \\times 1.10 \\times 1.10 = 200 \\times 1.21 = 242',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['numeros-porcentajes', 'numeros-porcentajes-sucesivos', 'numeros-operaciones-basicas']
   },
   {
@@ -161,6 +171,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '500000 \\times 0.80 \\times 0.80 = 500000 \\times 0.64 = 320.000',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['numeros-porcentajes', 'numeros-porcentajes-sucesivos', 'numeros-porcentajes-descuentos', 'numeros-operaciones-basicas']
   },
   {
@@ -174,6 +185,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '1000 \\times 1.50 \\times 0.50 = 1500 \\times 0.50 = 750',
     difficulty: 'hard',
+    difficultyScore: 0.74,
     skills: ['numeros-porcentajes', 'numeros-porcentajes-sucesivos', 'numeros-argumentar-sentido-resultado', 'numeros-operaciones-basicas']
   },
   {
@@ -187,6 +199,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '800000 \\times 0.85 \\times 0.90 \\times 0.95 = 800000 \\times 0.723 = 578.400',
     difficulty: 'hard',
+    difficultyScore: 0.74,
     skills: ['numeros-porcentajes', 'numeros-porcentajes-sucesivos', 'numeros-porcentajes-descuentos', 'numeros-operaciones-basicas']
   },
   {
@@ -200,6 +213,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '600 \\times 1.15 \\times 1.20 = 600 \\times 1.38 = 828',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['numeros-porcentajes', 'numeros-porcentajes-sucesivos', 'numeros-operaciones-basicas']
   },
   {
@@ -213,6 +227,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '1200 \\times 1.25 \\times 0.80 = 1200 \\times 1.00 = 1.200',
     difficulty: 'hard',
+    difficultyScore: 0.74,
     skills: ['numeros-porcentajes', 'numeros-porcentajes-sucesivos', 'numeros-argumentar-sentido-resultado', 'numeros-operaciones-basicas']
   },
   // ========================================
@@ -229,6 +244,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '45000 \\times 1.19 = 53.550',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -242,6 +258,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'x = \\frac{35700}{1.19} = 30.000',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['numeros-porcentajes', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -255,6 +272,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 2,
     explanation: '85000 \\times 1.10 = 93.500',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -268,6 +286,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 2,
     explanation: '250000 \\times 0.65 = 162.500',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['numeros-porcentajes', 'numeros-porcentajes-descuentos', 'numeros-operaciones-basicas']
   },
   {
@@ -281,6 +300,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'x = \\frac{136000}{0.85} = 160.000',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['numeros-porcentajes', 'numeros-porcentajes-descuentos', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -294,6 +314,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '320000 \\times 1.08 = 345.600',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -307,6 +328,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{75}{125} \\times 100\\% = \\frac{3}{5} \\times 100\\% = 60\\%',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['numeros-porcentajes', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -320,6 +342,7 @@ export const m1Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{36000}{180000} \\times 100\\% = \\frac{1}{5} \\times 100\\% = 20\\%',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['numeros-porcentajes', 'numeros-porcentajes-descuentos', 'numeros-operaciones-basicas']
   }
 ];

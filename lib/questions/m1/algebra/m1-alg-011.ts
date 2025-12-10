@@ -27,6 +27,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x^2 - 5x + 6 = (x - 2)(x - 3) = 0 \\Rightarrow x = 2 \\text{ o } x = 3',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['ecuaciones-cuadraticas-factorizacion', 'algebra-factorizacion-trinomios']
   },
   {
@@ -40,6 +41,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x^2 + 7x + 12 = (x + 3)(x + 4) = 0 \\Rightarrow x = -3 \\text{ o } x = -4',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['ecuaciones-cuadraticas-factorizacion', 'algebra-factorizacion-trinomios']
   },
   {
@@ -53,6 +55,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x^2 - 9 = (x + 3)(x - 3) = 0 \\Rightarrow x = 3 \\text{ o } x = -3',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['ecuaciones-cuadraticas-factorizacion', 'algebra-suma-por-diferencia']
   },
   {
@@ -66,6 +69,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 1,
     explanation: '2x^2 - 8x = 2x(x - 4) = 0 \\Rightarrow x = 0 \\text{ o } x = 4',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['ecuaciones-cuadraticas-factorizacion', 'algebra-factorizacion-factor-comun']
   },
   {
@@ -79,6 +83,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x^2 - x - 20 = (x + 4)(x - 5) = 0 \\Rightarrow x = -4 \\text{ o } x = 5',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['ecuaciones-cuadraticas-factorizacion', 'algebra-factorizacion-trinomios']
   },
   // ========================================
@@ -95,6 +100,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'x = \\frac{4 \\pm \\sqrt{16 - 12}}{2} = \\frac{4 \\pm 2}{2} \\Rightarrow x = 3 \\text{ o } x = 1',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['ecuaciones-cuadraticas-formula', 'numeros-raices']
   },
   {
@@ -108,6 +114,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'x = \\frac{-2 \\pm \\sqrt{4 + 60}}{2} = \\frac{-2 \\pm 8}{2} \\Rightarrow x = 3 \\text{ o } x = -5',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['ecuaciones-cuadraticas-formula', 'numeros-raices']
   },
   {
@@ -121,6 +128,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'x = \\frac{7 \\pm \\sqrt{49 - 24}}{4} = \\frac{7 \\pm 5}{4} \\Rightarrow x = 3 \\text{ o } x = \\frac{1}{2}',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['ecuaciones-cuadraticas-formula', 'numeros-racionales-operaciones']
   },
   {
@@ -139,6 +147,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{La fórmula general es } x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['ecuaciones-cuadraticas-formula']
   },
   {
@@ -152,6 +161,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Por Vieta: la suma de las raíces es } -\\frac{b}{a} = -\\frac{-6}{1} = 6',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['ecuaciones-cuadraticas-formula', 'algebra-propiedades']
   },
   // ========================================
@@ -168,6 +178,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Se suma } \\left(\\frac{6}{2}\\right)^2 = 9 \\text{ para completar } (x + 3)^2',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['ecuaciones-cuadraticas-completacion', 'algebra-cuadrado-binomio']
   },
   {
@@ -181,6 +192,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'x^2 - 4x + 3 = (x^2 - 4x + 4) - 4 + 3 = (x - 2)^2 - 1',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['ecuaciones-cuadraticas-completacion', 'algebra-cuadrado-binomio']
   },
   {
@@ -194,6 +206,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 0,
     explanation: '(x + 4)^2 - 16 + 12 = 0 \\Rightarrow (x + 4)^2 = 4 \\Rightarrow x + 4 = \\pm 2 \\\\ x = -2 \\text{ o } x = -6',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['ecuaciones-cuadraticas-completacion', 'algebra-cuadrado-binomio']
   },
   {
@@ -207,6 +220,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Se suma } \\left(\\frac{-10}{2}\\right)^2 = 25 \\text{ para obtener } (x - 5)^2',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['ecuaciones-cuadraticas-completacion', 'algebra-cuadrado-binomio']
   },
   // ========================================
@@ -223,6 +237,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\Delta = b^2 - 4ac = 16 - 16 = 0',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['ecuaciones-cuadraticas-discriminante']
   },
   {
@@ -241,6 +256,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Si } \\Delta < 0, \\text{ no hay raíces reales (solo complejas).}',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['ecuaciones-cuadraticas-discriminante']
   },
   {
@@ -254,6 +270,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\Delta = 36 - 36 = 0 \\Rightarrow \\text{una solución real doble: } x = 3',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['ecuaciones-cuadraticas-discriminante']
   },
   {
@@ -267,6 +284,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\Delta = k^2 - 36 = 0 \\Rightarrow k^2 = 36 \\Rightarrow k = \\pm 6',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['ecuaciones-cuadraticas-discriminante', 'algebra-ecuaciones']
   },
   {
@@ -280,6 +298,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\Delta = (-5)^2 - 4(2)(1) = 25 - 8 = 17',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['ecuaciones-cuadraticas-discriminante']
   },
   {
@@ -298,6 +317,7 @@ export const m1Alg011Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Discriminante positivo indica dos raíces reales diferentes.}',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['ecuaciones-cuadraticas-discriminante']
   }
 ];

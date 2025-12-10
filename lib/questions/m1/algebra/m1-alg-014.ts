@@ -27,6 +27,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x = -\\frac{40}{2(-2)} = 10. \\text{ El precio que maximiza es } \\$10',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-cuadratica-problemas-optimizacion', 'funcion-cuadratica-vertice']
   },
   {
@@ -40,6 +41,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A(x) = -2x^2 + 100x \\\\ x = -\\frac{100}{2(-2)} = 25 \\text{ m}',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-cuadratica-problemas-optimizacion', 'funcion-cuadratica-vertice']
   },
   {
@@ -53,6 +55,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'x = -\\frac{8}{-2} = 4 \\\\ f(4) = -16 + 32 = 16',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-cuadratica-problemas-optimizacion', 'funcion-cuadratica-vertice']
   },
   {
@@ -66,6 +69,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x = -\\frac{-20}{2(1)} = 10 \\text{ unidades}',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-cuadratica-problemas-optimizacion', 'funcion-cuadratica-vertice']
   },
   {
@@ -79,6 +83,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Si } x + y = 20, \\text{ entonces } P = x(20 - x) = -x^2 + 20x \\\\ x = 10 \\Rightarrow P = 100',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-cuadratica-problemas-optimizacion', 'algebra-problemas-numeros']
   },
   // ========================================
@@ -95,6 +100,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 1,
     explanation: 't = -\\frac{20}{-10} = 2 \\\\ h(2) = -20 + 40 + 1 = 21 \\text{ m}',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-cuadratica-problemas-movimiento', 'funcion-cuadratica-vertice']
   },
   {
@@ -108,6 +114,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 1,
     explanation: 't = -\\frac{19.6}{2(-4.9)} = \\frac{19.6}{9.8} = 2 \\text{ s}',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-cuadratica-problemas-movimiento', 'funcion-cuadratica-vertice']
   },
   {
@@ -121,6 +128,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 2,
     explanation: '-5t^2 + 30t = 0 \\Rightarrow -5t(t - 6) = 0 \\Rightarrow t = 0 \\text{ o } t = 6 \\text{ s}',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-cuadratica-problemas-movimiento', 'funcion-cuadratica-ceros']
   },
   {
@@ -134,6 +142,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'y(0) = -0 + 0 + 2 = 2 \\text{ m (altura inicial)}',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['funcion-cuadratica-problemas-movimiento', 'algebra-evaluacion-funciones']
   },
   {
@@ -147,6 +156,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 2,
     explanation: '-2t^2 + 16t + 10 = 10 \\Rightarrow -2t^2 + 16t = 0 \\Rightarrow t(t - 8) = 0 \\\\ t = 0 \\text{ (inicio) o } t = 8 \\text{ s}',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-cuadratica-problemas-movimiento', 'ecuaciones-cuadraticas-factorizacion']
   },
   // ========================================
@@ -163,6 +173,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A(x) = -x^2 + 20x \\text{ se maximiza en } x = 10 \\\\ \\text{El rectángulo es un cuadrado } 10 \\times 10',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-cuadratica-problemas-areas', 'funcion-cuadratica-vertice']
   },
   {
@@ -176,6 +187,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A_{nueva} = (x + 3)^2 = x^2 + 6x + 9',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['funcion-cuadratica-problemas-areas', 'algebra-cuadrado-binomio']
   },
   {
@@ -189,6 +201,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x(x + 5) = 84 \\Rightarrow x^2 + 5x - 84 = 0 \\Rightarrow (x + 12)(x - 7) = 0 \\\\ x = 7 \\text{ m (positivo)}',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-cuadratica-problemas-areas', 'ecuaciones-cuadraticas-factorizacion']
   },
   {
@@ -202,6 +215,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'A = \\frac{1}{2} \\cdot base \\cdot altura = \\frac{1}{2} \\cdot 2x \\cdot x = x^2',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['funcion-cuadratica-problemas-areas', 'geometria-area-triangulo']
   },
   {
@@ -215,6 +229,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Dimensiones internas: } (20 - 2x) \\times (16 - 2x) \\\\ A = (20 - 2x)(16 - 2x)',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-cuadratica-problemas-areas', 'algebra-expresiones']
   },
   // ========================================
@@ -231,6 +246,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x = -\\frac{50}{2(-1)} = 25',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-cuadratica-problemas-economia', 'funcion-cuadratica-vertice']
   },
   {
@@ -244,6 +260,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'I(p) = p(100 - 2p) = -2p^2 + 100p \\\\ p = -\\frac{100}{-4} = 25',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-cuadratica-problemas-economia', 'funcion-cuadratica-vertice']
   },
   {
@@ -257,6 +274,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 0,
     explanation: '-3x^2 + 24x - 36 = 0 \\Rightarrow x^2 - 8x + 12 = 0 \\Rightarrow (x - 2)(x - 6) = 0',
     difficulty: 'medium',
+    difficultyScore: 0.51,
     skills: ['funcion-cuadratica-problemas-economia', 'ecuaciones-cuadraticas-factorizacion']
   },
   {
@@ -270,6 +288,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'I = (100 - x)(50 + x) = 5000 + 100x - 50x - x^2 = -x^2 + 50x + 5000 \\\\ x = -\\frac{50}{-2} = 25',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-cuadratica-problemas-economia', 'funcion-cuadratica-vertice']
   },
   {
@@ -283,6 +302,7 @@ export const m1Alg014Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'G = I - C = 50x - x^2 - 400 = -x^2 + 50x - 400 > 0 \\\\ x^2 - 50x + 400 < 0 \\Rightarrow (x - 10)(x - 40) < 0 \\\\ \\text{Entre las raíces: } 10 < x < 40',
     difficulty: 'hard',
+    difficultyScore: 0.71,
     skills: ['funcion-cuadratica-problemas-economia', 'algebra-inecuaciones']
   }
 ];

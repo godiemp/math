@@ -26,6 +26,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'd = \\sqrt{(4-1)^2 + (6-2)^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-plano-cartesiano', 'geometria-distancia', 'geometria-pitagoras', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -38,6 +39,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 3,
     explanation: 'm_1 \\times m_2 = -1 \\quad \\Rightarrow \\quad 2 \\times m_2 = -1 \\quad \\Rightarrow \\quad m_2 = -\\frac{1}{2}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-rectas-perpendiculares', 'geometria-pendiente-perpendicular', 'algebra-funciones-lineales', 'algebra-pendiente', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -50,6 +52,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'M = \\left(\\frac{-2+6}{2}, \\frac{5+(-1)}{2}\\right) = \\left(\\frac{4}{2}, \\frac{4}{2}\\right) = (2, 2)',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-punto-medio', 'geometria-plano-cartesiano', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -62,6 +65,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A = \\frac{1}{2}|x_1(y_2-y_3) + x_2(y_3-y_1) + x_3(y_1-y_2)| = \\frac{1}{2}|24| = 12',
     difficulty: 'extreme',
+    difficultyScore: 0.95,
     skills: ['geometria-area-triangulo', 'geometria-plano-cartesiano', 'geometria-formula-determinante', 'numeros-valor-absoluto', 'numeros-operaciones-basicas']
   },
   // ========================================
@@ -77,6 +81,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x < 0 \\text{ e } y > 0 \\Rightarrow \\text{Cuadrante II}',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['geometria-plano-cartesiano', 'geometria-cuadrantes']
   },
   {
@@ -89,6 +94,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'd = \\sqrt{4^2 + (-2)^2} = \\sqrt{16 + 4} = \\sqrt{20}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-plano-cartesiano', 'geometria-distancia', 'numeros-raices', 'numeros-potencias']
   },
   {
@@ -101,6 +107,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Sobre el eje } x: y = 0. \\text{ A distancia 5: } x = \\pm 5',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['geometria-plano-cartesiano', 'geometria-distancia']
   },
   // ========================================
@@ -116,6 +123,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'd = \\sqrt{(5-2)^2 + (7-3)^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['geometria-plano-cartesiano', 'geometria-distancia', 'numeros-raices', 'numeros-potencias']
   },
   {
@@ -128,6 +136,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'd = \\sqrt{(5-(-1))^2 + (-4-4)^2} = \\sqrt{36 + 64} = \\sqrt{100} = 10',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-plano-cartesiano', 'geometria-distancia', 'numeros-raices', 'numeros-potencias']
   },
   {
@@ -140,6 +149,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'd_{BC} = \\sqrt{(3-0)^2 + (0-4)^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-plano-cartesiano', 'geometria-distancia', 'geometria-pitagoras', 'numeros-raices']
   },
   // ========================================
@@ -155,6 +165,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'M = \\left(\\frac{2+8}{2}, \\frac{6+2}{2}\\right) = \\left(\\frac{10}{2}, \\frac{8}{2}\\right) = (5, 4)',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['geometria-punto-medio', 'geometria-plano-cartesiano', 'numeros-operaciones-basicas']
   },
   {
@@ -167,6 +178,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'B_x = 2(3) - 1 = 5, \\quad B_y = 2(5) - 2 = 8 \\quad \\Rightarrow \\quad B(5, 8)',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-punto-medio', 'geometria-plano-cartesiano', 'algebra-despeje']
   },
   {
@@ -179,6 +191,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Q_x = 2(0) - (-4) = 4, \\quad Q_y = 2(0) - 3 = -3 \\quad \\Rightarrow \\quad Q(4, -3)',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-punto-medio', 'geometria-plano-cartesiano', 'algebra-despeje']
   },
   // ========================================
@@ -194,6 +207,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 0,
     explanation: '|\\vec{u}| = \\sqrt{3^2 + 4^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['geometria-vectores', 'geometria-magnitud-vector', 'numeros-raices', 'numeros-potencias']
   },
   {
@@ -206,6 +220,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\vec{AB} = B - A = (4-1, 6-2) = (3, 4)',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['geometria-vectores', 'geometria-plano-cartesiano', 'numeros-operaciones-basicas']
   },
   // ========================================
@@ -221,6 +236,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\vec{u} + \\vec{v} = (2+3, 5+(-1)) = (5, 4)',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['geometria-vectores', 'geometria-operaciones-vectores', 'numeros-operaciones-basicas']
   },
   {
@@ -233,6 +249,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\vec{a} - \\vec{b} = (4-1, -2-3) = (3, -5)',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['geometria-vectores', 'geometria-operaciones-vectores', 'numeros-operaciones-basicas']
   },
   {
@@ -245,6 +262,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 1,
     explanation: '3\\vec{v} = 3(2, -3) = (6, -9)',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['geometria-vectores', 'geometria-escalar-vector', 'numeros-operaciones-basicas']
   },
   {
@@ -257,6 +275,7 @@ export const m1Geo004Questions: Question[] = [
     correctAnswer: 1,
     explanation: '|\\vec{w}| = \\sqrt{(-5)^2 + 12^2} = \\sqrt{25 + 144} = \\sqrt{169} = 13',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-vectores', 'geometria-magnitud-vector', 'numeros-raices', 'numeros-potencias']
   }
 ];

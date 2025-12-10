@@ -26,6 +26,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '3x = 9 \\rightarrow x = 3. \\quad \\text{Sustituyendo: } 3 - y = 1 \\rightarrow y = 2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-metodo-eliminacion', 'algebra-metodo-sustitucion', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
@@ -39,6 +40,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'x + y = 5 \\rightarrow y = 5 - x. \\quad 3x + 2(5-x) = 12 \\rightarrow 3x + 10 - 2x = 12 \\rightarrow x = 2, y = 3',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-metodo-eliminacion', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
@@ -51,6 +53,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Las rectas se intersectan en un punto único} \\rightarrow \\text{una solución}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['sistemas-interpretacion-geometrica', 'sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-interpretacion-geometrica', 'geometria-rectas', 'algebra-solucion-sistemas']
   },
   {
@@ -64,6 +67,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Sistema 3×3: sumando ecuaciones 1 y 2: } 2x + 2z = 8 \\rightarrow x + z = 4. \\text{ De ec. 1 y 3: } 2z = 6 \\rightarrow z = 3, x = 1, y = 2',
     difficulty: 'extreme',
+    difficultyScore: 0.95,
     skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-sistemas-3x3', 'algebra-eliminacion-gaussiana', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
@@ -77,6 +81,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'x + (2x - 1) = 5 \\rightarrow 3x - 1 = 5 \\rightarrow 3x = 6 \\rightarrow x = 2, y = 2(2) - 1 = 3',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-metodo-sustitucion', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
@@ -89,6 +94,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '4x + 6y = 2(2x + 3y) = 2(6) = 12 \\rightarrow k = 12',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['sistemas-infinitas-soluciones', 'algebra-sistemas-ecuaciones', 'algebra-solucion-sistemas', 'algebra-ecuaciones-parametricas', 'algebra-interpretacion-geometrica']
   },
   {
@@ -101,6 +107,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'x + y = 15, \\; x - y = 3 \\rightarrow 2x = 18 \\rightarrow x = 9, y = 6',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-problemas-aplicados', 'algebra-planteamiento-ecuaciones', 'numeros-operaciones-basicas']
   },
   // Subsection C: Sistemas sin solución
@@ -114,6 +121,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '4x + 6y = 2(2x + 3y) \\text{ pero } 15 \\neq 2(6) \\Rightarrow \\text{paralelas, sin solución}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['sistemas-sin-solucion', 'sistemas-interpretacion-geometrica', 'algebra-sistemas-ecuaciones', 'geometria-rectas-paralelas']
   },
   {
@@ -126,6 +134,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '3(x + 2y) = 3x + 6y = 3(5) = 15 \\Rightarrow \\text{si } k \\neq 15, \\text{ sin solución}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['sistemas-sin-solucion', 'algebra-sistemas-ecuaciones', 'algebra-ecuaciones-parametricas', 'algebra-solucion-sistemas']
   },
   {
@@ -138,6 +147,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '2(x - y) = 6 \\neq 5 \\Rightarrow \\text{rectas paralelas, sin solución}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['sistemas-sin-solucion', 'algebra-sistemas-ecuaciones', 'algebra-analisis-sistemas', 'algebra-solucion-sistemas']
   },
   // Additional Subsection B: Sistemas con infinitas soluciones
@@ -151,6 +161,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '2(x + y) = 6 \\Rightarrow \\text{rectas coincidentes, infinitas soluciones}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['sistemas-infinitas-soluciones', 'algebra-sistemas-ecuaciones', 'algebra-analisis-sistemas', 'algebra-solucion-sistemas']
   },
   {
@@ -163,6 +174,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '6x + 4y = 2(ax + 2y) \\rightarrow 6 = 2a \\rightarrow a = 3',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['sistemas-infinitas-soluciones', 'algebra-sistemas-ecuaciones', 'algebra-ecuaciones-parametricas', 'algebra-despeje']
   },
   {
@@ -175,6 +187,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Rectas coincidentes} \\Rightarrow \\text{infinitos puntos en común}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['sistemas-infinitas-soluciones', 'sistemas-interpretacion-geometrica', 'algebra-sistemas-ecuaciones', 'geometria-rectas']
   },
   // Problemas clásicos de edades
@@ -189,6 +202,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'x = 3y. \\quad x + 10 = 2(y + 10) \\rightarrow 3y + 10 = 2y + 20 \\rightarrow y = 10. \\quad x = 30',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-problemas-edades', 'algebra-planteamiento-ecuaciones']
   },
   {
@@ -202,6 +216,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'x + y = 50, \\quad x - y = 14 \\rightarrow 2x = 64 \\rightarrow x = 32',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-problemas-edades', 'numeros-operaciones-basicas']
   },
   // Problemas de mezclas
@@ -216,6 +231,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'x + y = 30, \\quad 0{,}2x + 0{,}5y = 9 \\rightarrow 0{,}2x + 0{,}5(30-x) = 9 \\rightarrow -0{,}3x = -6 \\rightarrow x = 20, y = 10',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-problemas-mezclas', 'numeros-porcentaje']
   },
   {
@@ -229,6 +245,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x + y = 100, \\quad 60x + 80y = 7200 \\rightarrow 60x + 80(100-x) = 7200 \\rightarrow -20x = -800 \\rightarrow x = 40, y = 60',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['sistemas-solucion-unica', 'algebra-sistemas-ecuaciones', 'algebra-problemas-mezclas', 'numeros-operaciones-basicas']
   },
   // Problemas de trabajo conjunto
@@ -243,6 +260,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{1}{6} + \\frac{1}{4} = \\frac{2 + 3}{12} = \\frac{5}{12} \\rightarrow t = \\frac{12}{5} = 2{,}4 \\text{ horas}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['sistemas-solucion-unica', 'algebra-problemas-trabajo', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -256,6 +274,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{1}{3} + \\frac{1}{6} = \\frac{2 + 1}{6} = \\frac{3}{6} = \\frac{1}{2} \\rightarrow t = 2 \\text{ horas}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['sistemas-solucion-unica', 'algebra-problemas-trabajo', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   // Problemas de distancia, velocidad y tiempo
@@ -270,6 +289,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '60t + 90t = 300 \\rightarrow 150t = 300 \\rightarrow t = 2 \\text{ horas}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['sistemas-solucion-unica', 'algebra-problemas-movimiento', 'numeros-operaciones-basicas']
   },
   {
@@ -283,6 +303,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '20(t + 1) = 30t \\rightarrow 20t + 20 = 30t \\rightarrow 20 = 10t \\rightarrow t = 2 \\text{ horas}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['sistemas-solucion-unica', 'algebra-problemas-movimiento', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
@@ -296,6 +317,7 @@ export const m2Alg001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{d}{60} + \\frac{d}{40} = 5 \\rightarrow \\frac{2d + 3d}{120} = 5 \\rightarrow 5d = 600 \\rightarrow d = 120 \\text{ km}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['sistemas-solucion-unica', 'algebra-problemas-movimiento', 'numeros-fracciones', 'algebra-despeje']
   }
 ];

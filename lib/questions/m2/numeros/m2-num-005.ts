@@ -25,6 +25,7 @@ export const m2Num005Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\log_2 8 + \\log_2 4 = \\log_2(8 \\times 4) = \\log_2 32 = 5',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-logaritmos', 'logaritmos-propiedad-producto', 'logaritmos-simplificacion', 'numeros-operaciones-basicas']
   },
   {
@@ -37,6 +38,7 @@ export const m2Num005Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\log_5 125 - \\log_5 25 = \\log_5\\left(\\frac{125}{25}\\right) = \\log_5 5 = 1',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-logaritmos', 'logaritmos-propiedad-cociente', 'logaritmos-simplificacion', 'numeros-operaciones-basicas']
   },
   {
@@ -49,6 +51,7 @@ export const m2Num005Questions: Question[] = [
     correctAnswer: 2,
     explanation: '3\\log_2 4 = \\log_2(4^3) = \\log_2 64 = 6',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-logaritmos', 'logaritmos-propiedad-potencia', 'logaritmos-simplificacion', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -61,6 +64,7 @@ export const m2Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\log x + \\log y - \\log z = \\log(xy) - \\log z = \\log\\left(\\frac{xy}{z}\\right)',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-logaritmos', 'logaritmos-propiedad-producto', 'logaritmos-propiedad-cociente', 'logaritmos-simplificacion']
   },
   {
@@ -73,6 +77,7 @@ export const m2Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\log_3(ab) = \\log_3 a + \\log_3 b = 2 + 4 = 6',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['numeros-logaritmos', 'logaritmos-propiedad-producto', 'logaritmos-simplificacion', 'numeros-operaciones-basicas']
   },
   {
@@ -85,6 +90,7 @@ export const m2Num005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\log_4 16^5 = 5\\log_4 16 = 5 \\times 2 = 10',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-logaritmos', 'logaritmos-propiedad-potencia', 'logaritmos-simplificacion', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -97,6 +103,7 @@ export const m2Num005Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\log_2\\left(\\frac{x^3}{y^2}\\right) = \\log_2 x^3 - \\log_2 y^2 = 3\\log_2 x - 2\\log_2 y',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['numeros-logaritmos', 'logaritmos-propiedad-cociente', 'logaritmos-propiedad-potencia', 'logaritmos-simplificacion']
   }
 ];

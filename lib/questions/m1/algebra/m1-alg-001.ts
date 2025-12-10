@@ -24,6 +24,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '3x + 5x - 2x = (3 + 5 - 2)x = 6x',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['algebra-expresiones', 'algebra-terminos-semejantes', 'numeros-operaciones-basicas']
   },
   {
@@ -37,6 +38,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(3x^2)(4x^3) = 3 \\times 4 \\times x^{2+3} = 12x^5',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['algebra-expresiones', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   {
@@ -50,6 +52,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '(2a^3b)(5ab^2) = 2 \\times 5 \\times a^{3+1} \\times b^{1+2} = 10a^4b^3',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['algebra-expresiones', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   {
@@ -63,6 +66,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(-3x^2y)(2xy^3) = -3 \\times 2 \\times x^{2+1} \\times y^{1+3} = -6x^3y^4',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['algebra-expresiones', 'numeros-potencias-propiedades', 'numeros-enteros', 'numeros-operaciones-basicas']
   },
   {
@@ -76,6 +80,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{12x^5}{4x^2} = \\frac{12}{4} \\times x^{5-2} = 3x^3',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['algebra-expresiones', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   {
@@ -89,6 +94,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{18a^4b^3}{6a^2b} = \\frac{18}{6} \\times a^{4-2} \\times b^{3-1} = 3a^2b^2',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['algebra-expresiones', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   {
@@ -102,6 +108,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{-24x^6y^4}{8x^2y} = \\frac{-24}{8} \\times x^{6-2} \\times y^{4-1} = -3x^4y^3',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['algebra-expresiones', 'numeros-potencias-propiedades', 'numeros-enteros', 'numeros-operaciones-basicas']
   },
   {
@@ -115,6 +122,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(2x^3)^2 = 2^2 \\times (x^3)^2 = 4 \\times x^{3 \\times 2} = 4x^6',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['algebra-expresiones', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   {
@@ -128,6 +136,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 3,
     explanation: '(3a^2b)^3 = 3^3 \\times (a^2)^3 \\times b^3 = 27 \\times a^6 \\times b^3 = 27a^6b^3',
     difficulty: 'hard',
+    difficultyScore: 0.74,
     skills: ['algebra-expresiones', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   {
@@ -141,6 +150,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '(-2xy^2)^3 = (-2)^3 \\times x^3 \\times (y^2)^3 = -8 \\times x^3 \\times y^6 = -8x^3y^6',
     difficulty: 'hard',
+    difficultyScore: 0.74,
     skills: ['algebra-expresiones', 'numeros-potencias-propiedades', 'numeros-enteros', 'numeros-operaciones-basicas']
   },
   {
@@ -154,6 +164,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 2,
     explanation: '3a + 2b = 3(2) + 2(3) = 6 + 6 = 12',
     difficulty: 'easy',
+    difficultyScore: 0.34,
     skills: ['algebra-expresiones', 'algebra-evaluacion-funciones', 'numeros-operaciones-basicas']
   },
   {
@@ -167,6 +178,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'x^2 - 2xy + y^2 = 5^2 - 2(5)(3) + 3^2 = 25 - 30 + 9 = 4',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['algebra-expresiones', 'algebra-evaluacion-funciones', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -180,6 +192,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 3,
     explanation: '\\frac{a^2 + b}{c} = \\frac{(-2)^2 + 4}{1} = \\frac{4 + 4}{1} = 8',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['algebra-expresiones', 'algebra-evaluacion-funciones', 'numeros-potencias', 'numeros-enteros', 'numeros-operaciones-basicas']
   },
   {
@@ -193,6 +206,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '2(x + 3) - 3(x - 1) = 2x + 6 - 3x + 3 = -x + 9',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['algebra-expresiones', 'algebra-propiedad-distributiva', 'algebra-terminos-semejantes', 'numeros-operaciones-basicas']
   },
   {
@@ -206,6 +220,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '5x - [2x - (3x - 4)] = 5x - [2x - 3x + 4] = 5x - [-x + 4] = 5x + x - 4 = 6x - 4',
     difficulty: 'hard',
+    difficultyScore: 0.74,
     skills: ['algebra-expresiones', 'algebra-terminos-semejantes', 'numeros-operaciones-basicas']
   },
   {
@@ -219,6 +234,7 @@ export const m1Alg001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '3(2a - b) - 2(a + 3b) = 6a - 3b - 2a - 6b = 4a - 9b',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['algebra-expresiones', 'algebra-propiedad-distributiva', 'algebra-terminos-semejantes', 'numeros-operaciones-basicas']
   }
 ];

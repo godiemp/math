@@ -24,6 +24,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'h^2 = 3^2 + 4^2 = 9 + 16 = 25 \\text{, entonces } h = \\sqrt{25} = 5 \\text{ m}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['geometria-triangulos', 'geometria-pitagoras', 'numeros-raices', 'numeros-potencias'],
     operacionBase: 'c^2 = a^2 + b^2'
   },
@@ -37,6 +38,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'd = \\sqrt{(4-1)^2 + (6-2)^2} = \\sqrt{3^2 + 4^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-plano-cartesiano', 'geometria-distancia', 'geometria-pitagoras', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'd = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}'
   },
@@ -50,6 +52,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'c^2 = a^2 + b^2 = 6^2 + 8^2 = 36 + 64 = 100 \\quad \\Rightarrow \\quad c = \\sqrt{100} = 10 \\text{ m}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['geometria-triangulos', 'geometria-pitagoras', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'c^2 = a^2 + b^2',
     visualData: {
@@ -82,6 +85,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'l \\times \\sqrt{2} = 10 \\rightarrow l = \\frac{10}{\\sqrt{2}} = \\frac{10\\sqrt{2}}{2} = 5\\sqrt{2} \\approx 7.07 \\text{ cm}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['geometria-circulos', 'geometria-cuadrados', 'geometria-figuras-inscritas', 'numeros-raices', 'geometria-pitagoras'],
     operacionBase: 'd = l\\sqrt{2}'
   },
@@ -95,6 +99,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'c^2 = 5^2 + 12^2 = 25 + 144 = 169 \\rightarrow c = \\sqrt{169} = 13 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['geometria-triangulos', 'geometria-pitagoras', 'geometria-triangulo-rectangulo', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'c^2 = a^2 + b^2'
   },
@@ -108,6 +113,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'b^2 = 10^2 - 6^2 = 100 - 36 = 64 \\rightarrow b = \\sqrt{64} = 8 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['geometria-triangulos', 'geometria-pitagoras', 'geometria-triangulo-rectangulo', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'b^2 = c^2 - a^2'
   },
@@ -121,6 +127,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 0,
     explanation: '7^2 + 24^2 = 49 + 576 = 625 = 25^2 \\quad \\checkmark \\text{ Sí es triángulo rectángulo}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-triangulos', 'geometria-pitagoras', 'geometria-triangulo-rectangulo', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'a^2 + b^2 = c^2'
   },
@@ -134,6 +141,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'd^2 = 9^2 + 12^2 = 81 + 144 = 225 \\rightarrow d = \\sqrt{225} = 15 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['geometria-rectangulos', 'geometria-pitagoras', 'geometria-diagonales', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'd^2 = l^2 + w^2'
   },
@@ -147,6 +155,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'l \\times \\sqrt{2} = 10 \\rightarrow l = \\frac{10}{\\sqrt{2}} = \\frac{10\\sqrt{2}}{2} = 5\\sqrt{2} \\approx 7.07 \\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-cuadrados', 'geometria-pitagoras', 'geometria-diagonales', 'numeros-raices', 'numeros-operaciones-basicas'],
     operacionBase: 'd = l\\sqrt{2}'
   },
@@ -160,6 +169,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'h^2 = 5^2 - 3^2 = 25 - 9 = 16 \\rightarrow h = \\sqrt{16} = 4 \\text{ m}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['geometria-pitagoras', 'geometria-aplicaciones', 'geometria-triangulo-rectangulo', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'h^2 = c^2 - b^2'
   },
@@ -173,6 +183,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'd = \\sqrt{(3-0)^2 + (4-0)^2} = \\sqrt{3^2 + 4^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['geometria-plano-cartesiano', 'geometria-distancia', 'geometria-pitagoras', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'd = \\sqrt{x^2 + y^2}'
   },
@@ -186,6 +197,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'd = \\sqrt{(6-2)^2 + (6-3)^2} = \\sqrt{4^2 + 3^2} = \\sqrt{16 + 9} = \\sqrt{25} = 5',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-plano-cartesiano', 'geometria-distancia', 'geometria-pitagoras', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'd = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}'
   },
@@ -199,6 +211,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'd = \\sqrt{5^2 + 12^2} = \\sqrt{25 + 144} = \\sqrt{169} = 13',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-plano-cartesiano', 'geometria-distancia', 'geometria-pitagoras', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'd = \\sqrt{x^2 + y^2}'
   },
@@ -212,6 +225,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '5^2 + 12^2 = 25 + 144 = 169 = 13^2 \\quad \\checkmark \\text{ Es terna pitagórica}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['geometria-pitagoras', 'geometria-ternas-pitagoricas', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'a^2 + b^2 = c^2'
   },
@@ -225,6 +239,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(6, 8, 10) = 2(3, 4, 5) \\text{ y cumple: } 6^2 + 8^2 = 36 + 64 = 100 = 10^2',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-pitagoras', 'geometria-ternas-pitagoricas', 'numeros-operaciones-basicas'],
     operacionBase: 'k \\cdot (a, b, c) = (ka, kb, kc)'
   },
@@ -238,6 +253,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'c^2 = 8^2 + 15^2 = 64 + 225 = 289 = 17^2 \\rightarrow c = 17',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['geometria-pitagoras', 'geometria-ternas-pitagoricas', 'geometria-triangulo-rectangulo', 'numeros-potencias', 'numeros-raices', 'numeros-operaciones-basicas'],
     operacionBase: 'c^2 = a^2 + b^2'
   },
@@ -251,6 +267,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'd^2 = 6^2 + 8^2 = 36 + 64 = 100 \\rightarrow d = \\sqrt{100} = 10 \\text{ m}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-pitagoras', 'geometria-aplicaciones', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'd^2 = h^2 + s^2'
   },
@@ -264,6 +281,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'd^2 = 12^2 + 16^2 = 144 + 256 = 400 \\rightarrow d = \\sqrt{400} = 20 \\text{ km}',
     difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['geometria-pitagoras', 'geometria-aplicaciones', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'd^2 = a^2 + b^2'
   },
@@ -277,6 +295,7 @@ export const m1Geo001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'h^2 = 6^2 - 3^2 = 36 - 9 = 27 \\rightarrow h = \\sqrt{27} = 3\\sqrt{3} \\approx 5.20 \\text{ cm}',
     difficulty: 'hard',
+    difficultyScore: 0.75,
     skills: ['geometria-triangulos', 'geometria-triangulo-equilatero', 'geometria-pitagoras', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     operacionBase: 'h^2 = l^2 - (l/2)^2'
   }
