@@ -209,8 +209,8 @@ function AxisLabels({ isExploded }: { isExploded: boolean }) {
 
       {/* Total dimension label */}
       <Html position={[0, offset + 0.5, 0]} center>
-        <div className="font-mono font-bold text-white text-base bg-purple-600/90 px-3 py-1 rounded-lg">
-          (a + b)³
+        <div className="font-mono font-bold text-white text-base bg-purple-600/90 px-3 py-1 rounded-lg whitespace-nowrap">
+          (a+b)³
         </div>
       </Html>
     </group>
