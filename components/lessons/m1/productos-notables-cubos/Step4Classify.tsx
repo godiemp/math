@@ -68,9 +68,9 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
   const [correctCount, setCorrectCount] = useState(0);
   const [answers, setAnswers] = useState<(ExpressionType | null)[]>(Array(EXPRESSIONS.length).fill(null));
 
-  const currentExpression = EXPRESSIONS[currentIndex];
-  const isCorrect = selectedType === currentExpression.correctType;
   const isComplete = currentIndex >= EXPRESSIONS.length;
+  const currentExpression = isComplete ? EXPRESSIONS[0] : EXPRESSIONS[currentIndex];
+  const isCorrect = selectedType === currentExpression.correctType;
 
   const handleSelect = (type: ExpressionType) => {
     if (showFeedback) return;
