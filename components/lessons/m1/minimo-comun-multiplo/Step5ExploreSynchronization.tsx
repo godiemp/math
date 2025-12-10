@@ -123,6 +123,10 @@ export default function Step5ExploreSynchronization({ onComplete, isActive }: Le
   const [currentTime, setCurrentTime] = useState(0);
   const [foundSync, setFoundSync] = useState(false);
 
+  // Challenge phase state
+  const [selectedChallenge, setSelectedChallenge] = useState<number | null>(null);
+  const [showChallengeFeedback, setShowChallengeFeedback] = useState(false);
+
   // Traffic light intervals
   const light1Interval = 15;
   const light2Interval = 20;
@@ -313,8 +317,6 @@ export default function Step5ExploreSynchronization({ onComplete, isActive }: Le
       { label: '60 segundos', value: 60 },
       { label: '90 segundos', value: 90 },
     ];
-    const [selectedChallenge, setSelectedChallenge] = useState<number | null>(null);
-    const [showChallengeFeedback, setShowChallengeFeedback] = useState(false);
     const challengeCorrect = 60;
 
     return (
