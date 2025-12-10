@@ -9,7 +9,8 @@ type Phase = 'intro' | 'circumference' | 'area' | 'summary';
 
 export default function Step2Explore({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('intro');
-  const [showGrid, setShowGrid] = useState(false);
+  const [showUnroll, setShowUnroll] = useState(false);
+  const [showSlices, setShowSlices] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
 
@@ -100,76 +101,135 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
       <div className="space-y-6 animate-fadeIn pb-32">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Circunferencia del Circulo
+            ¿Por que C = π × d?
           </h2>
           <p className="text-gray-600 dark:text-gray-300">
-            El perimetro de un circulo
+            Descubre de donde viene la formula
           </p>
         </div>
 
-        {/* Interactive circle with circumference */}
+        {/* Interactive visualization */}
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
           <div className="flex justify-center">
-            <svg viewBox="0 0 200 200" className="w-full max-w-xs">
-              {/* Main circle */}
-              <circle
-                cx="100"
-                cy="100"
-                r="70"
-                fill="#ccfbf1"
-                stroke="#0d9488"
-                strokeWidth="4"
-              />
+            <svg viewBox="0 0 300 180" className="w-full max-w-md">
+              {!showUnroll ? (
+                <>
+                  {/* Circle with diameter marked */}
+                  <circle
+                    cx="80"
+                    cy="90"
+                    r="60"
+                    fill="#ccfbf1"
+                    stroke="#0d9488"
+                    strokeWidth="3"
+                  />
+                  <circle cx="80" cy="90" r="4" fill="#0d9488" />
 
-              {/* Center point */}
-              <circle cx="100" cy="100" r="4" fill="#0d9488" />
+                  {/* Diameter line */}
+                  <line x1="20" y1="90" x2="140" y2="90" stroke="#7c3aed" strokeWidth="3" />
+                  <text x="80" y="80" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#7c3aed">d</text>
 
-              {/* Radius line */}
-              <line x1="100" y1="100" x2="170" y2="100" stroke="#dc2626" strokeWidth="3" />
-              <text x="135" y="95" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#dc2626">r</text>
+                  {/* Question marks around */}
+                  <text x="80" y="25" textAnchor="middle" fontSize="16" fill="#6b7280">?</text>
+                  <text x="150" y="90" textAnchor="middle" fontSize="16" fill="#6b7280">?</text>
+                  <text x="80" y="165" textAnchor="middle" fontSize="16" fill="#6b7280">?</text>
+                  <text x="10" y="90" textAnchor="middle" fontSize="16" fill="#6b7280">?</text>
 
-              {/* Diameter line (below) */}
-              <line x1="30" y1="100" x2="170" y2="100" stroke="#7c3aed" strokeWidth="2" strokeDasharray="6,3" />
-              <text x="100" y="190" textAnchor="middle" fontSize="12" fill="#7c3aed">d = 2r</text>
+                  {/* Arrow pointing to button */}
+                  <text x="220" y="90" textAnchor="middle" fontSize="12" fill="#6b7280">
+                    ¿Cuantas veces cabe
+                  </text>
+                  <text x="220" y="105" textAnchor="middle" fontSize="12" fill="#6b7280">
+                    el diametro en
+                  </text>
+                  <text x="220" y="120" textAnchor="middle" fontSize="12" fill="#6b7280">
+                    la circunferencia?
+                  </text>
+                </>
+              ) : (
+                <>
+                  {/* Unrolled circumference as a line */}
+                  <line x1="20" y1="50" x2="280" y2="50" stroke="#0d9488" strokeWidth="4" />
+                  <text x="150" y="35" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#0d9488">
+                    Circunferencia (desenrollada)
+                  </text>
 
-              {/* Circumference arc indicator */}
-              <path
-                d="M 170 100 A 70 70 0 1 1 169.9 99"
-                fill="none"
-                stroke="#0d9488"
-                strokeWidth="8"
-                strokeLinecap="round"
-                opacity="0.5"
-              />
-              <text x="100" y="25" textAnchor="middle" fontSize="12" fill="#0d9488" fontWeight="bold">
-                Circunferencia (C)
-              </text>
+                  {/* Diameter segments marked on the line */}
+                  {/* Segment 1 */}
+                  <line x1="20" y1="70" x2="103" y2="70" stroke="#7c3aed" strokeWidth="4" />
+                  <text x="61" y="90" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#7c3aed">d</text>
+
+                  {/* Segment 2 */}
+                  <line x1="107" y1="70" x2="190" y2="70" stroke="#ec4899" strokeWidth="4" />
+                  <text x="148" y="90" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#ec4899">d</text>
+
+                  {/* Segment 3 */}
+                  <line x1="194" y1="70" x2="277" y2="70" stroke="#f59e0b" strokeWidth="4" />
+                  <text x="235" y="90" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#f59e0b">d</text>
+
+                  {/* Remaining bit (0.14d) */}
+                  <line x1="277" y1="70" x2="280" y2="70" stroke="#10b981" strokeWidth="4" />
+
+                  {/* Labels */}
+                  <text x="150" y="115" textAnchor="middle" fontSize="13" fill="#1f2937">
+                    ¡El diametro cabe 3.14 veces!
+                  </text>
+
+                  {/* Count bubbles */}
+                  <circle cx="61" cy="140" r="15" fill="#7c3aed" />
+                  <text x="61" y="145" textAnchor="middle" fontSize="14" fontWeight="bold" fill="white">1</text>
+
+                  <circle cx="148" cy="140" r="15" fill="#ec4899" />
+                  <text x="148" y="145" textAnchor="middle" fontSize="14" fontWeight="bold" fill="white">2</text>
+
+                  <circle cx="235" cy="140" r="15" fill="#f59e0b" />
+                  <text x="235" y="145" textAnchor="middle" fontSize="14" fontWeight="bold" fill="white">3</text>
+
+                  <text x="275" y="145" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#10b981">.14</text>
+                </>
+              )}
             </svg>
           </div>
 
           <div className="mt-4 text-center">
-            <p className="text-gray-700 dark:text-gray-300">
-              La <strong>circunferencia</strong> es la distancia alrededor del circulo.
-            </p>
+            <button
+              onClick={() => setShowUnroll(!showUnroll)}
+              className="px-4 py-2 bg-teal-100 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300 rounded-lg font-medium hover:bg-teal-200 dark:hover:bg-teal-900 transition-all"
+            >
+              {showUnroll ? 'Ver el circulo' : 'Desenrollar la circunferencia'}
+            </button>
           </div>
         </div>
 
-        <div className="bg-teal-50 dark:bg-teal-900/30 rounded-xl p-5 border border-teal-200 dark:border-teal-700">
-          <p className="text-teal-800 dark:text-teal-200 text-center mb-3">
-            Como C ÷ d = π, entonces:
+        {showUnroll && (
+          <div className="bg-teal-50 dark:bg-teal-900/30 rounded-xl p-5 border border-teal-200 dark:border-teal-700 animate-fadeIn">
+            <p className="text-teal-800 dark:text-teal-200 text-center">
+              <strong>¡Eso es π!</strong> El diametro cabe <strong>π veces</strong> (≈ 3.14) en la circunferencia.
+            </p>
+            <p className="text-teal-700 dark:text-teal-300 text-center mt-2 text-sm">
+              Por eso: Circunferencia = π × diametro = <strong>C = πd</strong>
+            </p>
+          </div>
+        )}
+
+        <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-5 border border-purple-200 dark:border-purple-700">
+          <p className="text-purple-800 dark:text-purple-200 text-center mb-3 font-semibold">
+            Las dos formas de escribir la formula:
           </p>
           <div className="flex flex-col items-center gap-2">
-            <span className="text-2xl font-bold text-teal-900 dark:text-teal-100">
-              C = π × d
-            </span>
-            <span className="text-gray-600 dark:text-gray-400">o tambien</span>
-            <span className="text-2xl font-bold text-teal-900 dark:text-teal-100">
-              C = 2πr
-            </span>
+            <div className="flex items-center gap-4">
+              <span className="text-xl font-bold text-purple-900 dark:text-purple-100">
+                C = π × d
+              </span>
+              <span className="text-gray-500">(usando diametro)</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-xl font-bold text-purple-900 dark:text-purple-100">
+                C = 2πr
+              </span>
+              <span className="text-gray-500">(usando radio, porque d = 2r)</span>
+            </div>
           </div>
-          <p className="text-teal-700 dark:text-teal-300 text-center mt-3 text-sm">
-            (porque el diametro es 2 veces el radio: d = 2r)
-          </p>
         </div>
 
         <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-4 border border-green-200 dark:border-green-700">
@@ -203,7 +263,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     const handleAreaNext = () => {
       setShowFeedback(false);
       setSelectedAnswer(null);
-      setShowGrid(false);
+      setShowSlices(false);
       setPhase('summary');
     };
 
@@ -211,64 +271,102 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
       <div className="space-y-6 animate-fadeIn pb-32">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Area del Circulo
+            ¿Por que A = πr²?
           </h2>
           <p className="text-gray-600 dark:text-gray-300">
-            Descubriendo la formula
+            Descubre de donde viene la formula del area
           </p>
         </div>
 
         {/* Interactive circle area visualization */}
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
           <div className="flex justify-center">
-            <svg viewBox="0 0 200 200" className="w-full max-w-xs">
-              {/* Grid background (optional) */}
-              {showGrid && (
+            <svg viewBox="0 0 320 200" className="w-full max-w-md">
+              {!showSlices ? (
                 <>
+                  {/* Circle divided into slices (like pizza) */}
+                  <g transform="translate(100, 100)">
+                    {/* 8 slices */}
+                    {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+                      const angle1 = (i * 45 * Math.PI) / 180;
+                      const angle2 = ((i + 1) * 45 * Math.PI) / 180;
+                      const x1 = 70 * Math.cos(angle1);
+                      const y1 = 70 * Math.sin(angle1);
+                      const x2 = 70 * Math.cos(angle2);
+                      const y2 = 70 * Math.sin(angle2);
+                      const colors = ['#5eead4', '#2dd4bf', '#14b8a6', '#0d9488', '#5eead4', '#2dd4bf', '#14b8a6', '#0d9488'];
+                      return (
+                        <path
+                          key={i}
+                          d={`M 0 0 L ${x1} ${y1} A 70 70 0 0 1 ${x2} ${y2} Z`}
+                          fill={colors[i]}
+                          stroke="#0d9488"
+                          strokeWidth="1"
+                        />
+                      );
+                    })}
+                    <circle cx="0" cy="0" r="4" fill="#0d9488" />
+                    {/* Radius label */}
+                    <line x1="0" y1="0" x2="70" y2="0" stroke="#dc2626" strokeWidth="2" />
+                    <text x="35" y="-8" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#dc2626">r</text>
+                  </g>
+
+                  <text x="100" y="190" textAnchor="middle" fontSize="11" fill="#6b7280">
+                    Circulo cortado como pizza
+                  </text>
+
+                  {/* Arrow */}
+                  <path d="M 185 100 L 210 100" stroke="#6b7280" strokeWidth="2" markerEnd="url(#arrowhead)" />
                   <defs>
-                    <pattern id="areaGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e5e7eb" strokeWidth="0.5"/>
-                    </pattern>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                      <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280" />
+                    </marker>
                   </defs>
-                  <rect x="10" y="10" width="180" height="180" fill="url(#areaGrid)" />
+
+                  <text x="260" y="95" textAnchor="middle" fontSize="11" fill="#6b7280">
+                    Presiona el boton
+                  </text>
+                  <text x="260" y="110" textAnchor="middle" fontSize="11" fill="#6b7280">
+                    para reorganizar
+                  </text>
                 </>
-              )}
-
-              {/* Square outline (for comparison) - side = 2r */}
-              <rect
-                x="30"
-                y="30"
-                width="140"
-                height="140"
-                fill={showGrid ? '#fecaca' : 'none'}
-                fillOpacity={showGrid ? '0.3' : '0'}
-                stroke={showGrid ? '#dc2626' : 'transparent'}
-                strokeWidth="2"
-                strokeDasharray="6,3"
-                className="transition-all duration-500"
-              />
-
-              {/* Main circle */}
-              <circle
-                cx="100"
-                cy="100"
-                r="70"
-                fill="#ccfbf1"
-                stroke="#0d9488"
-                strokeWidth="3"
-              />
-
-              {/* Center point */}
-              <circle cx="100" cy="100" r="4" fill="#0d9488" />
-
-              {/* Radius line */}
-              <line x1="100" y1="100" x2="170" y2="100" stroke="#dc2626" strokeWidth="3" />
-              <text x="140" y="95" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#dc2626">r</text>
-
-              {showGrid && (
+              ) : (
                 <>
-                  <text x="100" y="185" textAnchor="middle" fontSize="11" fill="#dc2626">
-                    Cuadrado: (2r)² = 4r²
+                  {/* Slices rearranged into parallelogram */}
+                  <g transform="translate(40, 60)">
+                    {/* Bottom row (pointing up) */}
+                    {[0, 1, 2, 3].map((i) => (
+                      <path
+                        key={`up-${i}`}
+                        d={`M ${i * 55} 80 L ${i * 55 + 27.5} 10 L ${i * 55 + 55} 80 Z`}
+                        fill={['#5eead4', '#14b8a6', '#5eead4', '#14b8a6'][i]}
+                        stroke="#0d9488"
+                        strokeWidth="1"
+                      />
+                    ))}
+                    {/* Top row (pointing down) */}
+                    {[0, 1, 2, 3].map((i) => (
+                      <path
+                        key={`down-${i}`}
+                        d={`M ${i * 55 + 27.5} 10 L ${i * 55 + 55} 80 L ${i * 55 + 82.5} 10 Z`}
+                        fill={['#2dd4bf', '#0d9488', '#2dd4bf', '#0d9488'][i]}
+                        stroke="#0d9488"
+                        strokeWidth="1"
+                      />
+                    ))}
+                  </g>
+
+                  {/* Labels */}
+                  {/* Base = half circumference = πr */}
+                  <line x1="40" y1="150" x2="260" y2="150" stroke="#7c3aed" strokeWidth="3" />
+                  <text x="150" y="170" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#7c3aed">
+                    base = πr (mitad de la circunferencia)
+                  </text>
+
+                  {/* Height = r */}
+                  <line x1="275" y1="70" x2="275" y2="140" stroke="#dc2626" strokeWidth="3" />
+                  <text x="295" y="110" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#dc2626">
+                    altura = r
                   </text>
                 </>
               )}
@@ -277,30 +375,37 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
           <div className="mt-4 text-center">
             <button
-              onClick={() => setShowGrid(!showGrid)}
+              onClick={() => setShowSlices(!showSlices)}
               className="px-4 py-2 bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 rounded-lg font-medium hover:bg-purple-200 dark:hover:bg-purple-900 transition-all"
             >
-              {showGrid ? 'Ocultar cuadrado' : 'Comparar con un cuadrado'}
+              {showSlices ? 'Ver el circulo' : 'Reorganizar las rebanadas'}
             </button>
           </div>
         </div>
 
-        {showGrid && (
-          <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-4 border border-purple-200 dark:border-purple-700 animate-fadeIn">
+        {showSlices && (
+          <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-5 border border-purple-200 dark:border-purple-700 animate-fadeIn">
             <p className="text-purple-800 dark:text-purple-200 text-center">
-              El circulo es <strong>un poco mas de 3/4</strong> del cuadrado que lo contiene.
-              <br />
-              <span className="text-sm">Area del cuadrado = (2r)² = 4r². El circulo es aproximadamente π/4 de eso.</span>
+              ¡Las rebanadas forman casi un <strong>rectangulo</strong>!
             </p>
+            <div className="mt-3 bg-white dark:bg-gray-800 rounded-lg p-4">
+              <p className="text-center text-sm text-gray-700 dark:text-gray-300">
+                <strong>Area del rectangulo</strong> = base × altura
+              </p>
+              <p className="text-center text-sm text-gray-700 dark:text-gray-300 mt-1">
+                = <span className="text-purple-600 font-semibold">πr</span> × <span className="text-red-600 font-semibold">r</span>
+              </p>
+              <p className="text-center text-lg font-bold text-teal-600 dark:text-teal-400 mt-2">
+                = πr²
+              </p>
+            </div>
           </div>
         )}
 
         {/* Question */}
         <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-5 border border-blue-200 dark:border-blue-700">
           <p className="text-blue-800 dark:text-blue-200 text-center font-semibold mb-4">
-            Si π aparece en la circunferencia,
-            <br />
-            ¿cual sera la formula del area?
+            Entonces, ¿cual es la formula del area de un circulo?
           </p>
 
           <div className="grid grid-cols-2 gap-3">
@@ -353,7 +458,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   {selectedAnswer === 1 ? '¡Correcto!' : 'La respuesta es A = πr²'}
                 </p>
                 <p className="text-gray-700 dark:text-gray-300 mt-1 text-sm">
-                  El area depende del radio al cuadrado, multiplicado por π.
+                  El area es π veces el radio al cuadrado, porque el circulo se puede reorganizar en un rectangulo de base πr y altura r.
                 </p>
               </div>
             </div>
@@ -416,7 +521,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             </div>
             <div className="flex-1">
               <p className="font-semibold text-gray-800 dark:text-gray-200">Pi (π)</p>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">C ÷ d = 3.14159...</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">El diametro cabe π veces en la circunferencia</p>
             </div>
             <div className="text-lg font-bold text-purple-600 dark:text-purple-400">
               ≈ 3.14
@@ -426,14 +531,14 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           {/* Circumference */}
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 flex items-center gap-4">
             <svg viewBox="0 0 50 50" className="w-12 h-12 flex-shrink-0">
-              <circle cx="25" cy="25" r="20" fill="none" stroke="#0d9488" strokeWidth="4" />
+              <circle cx="25" cy="25" r="20" fill="none" stroke="#0d9488" strokeWidth="3" />
             </svg>
             <div className="flex-1">
               <p className="font-semibold text-gray-800 dark:text-gray-200">Circunferencia</p>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Perimetro del circulo</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">π veces el diametro</p>
             </div>
             <div className="text-lg font-bold text-teal-600 dark:text-teal-400">
-              C = 2πr
+              C = πd
             </div>
           </div>
 
@@ -444,7 +549,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             </svg>
             <div className="flex-1">
               <p className="font-semibold text-gray-800 dark:text-gray-200">Area</p>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Espacio dentro del circulo</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">Rebanadas forman rectangulo πr × r</p>
             </div>
             <div className="text-lg font-bold text-teal-600 dark:text-teal-400">
               A = πr²
@@ -458,7 +563,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           <Lightbulb className="w-6 h-6 text-amber-500 flex-shrink-0" />
           <p className="text-amber-800 dark:text-amber-200">
             <strong>Patron clave:</strong> Ambas formulas usan π (pi).
-            La circunferencia usa r, el area usa r² (radio al cuadrado).
+            La circunferencia usa el diametro (o 2r), el area usa r² (radio al cuadrado).
           </p>
         </div>
       </div>
