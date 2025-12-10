@@ -9,3 +9,4 @@ export { default as PieChart } from './PieChart';
 export type { PieChartProps, PieChartData } from './PieChart';
 export { default as FrequencyTable } from './FrequencyTable';
 export type { FrequencyTableProps, FrequencyTableData } from './FrequencyTable';
+export { default as FactorGrid } from './FactorGrid';
