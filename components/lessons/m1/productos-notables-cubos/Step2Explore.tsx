@@ -1,9 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, Suspense } from 'react';
 import { ArrowRight, Lightbulb, Maximize2, Minimize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, Text, RoundedBox } from '@react-three/drei';
+import * as THREE from 'three';
 
 type Phase = 'intro' | 'discover' | 'pattern';
 
@@ -23,6 +26,140 @@ const CUBE_PARTS: CubePart[] = [
   { id: 'b3', label: 'b³', formula: 'b × b × b', count: 1, color: '#ec4899', bgColor: 'bg-pink-500' },
 ];
 
+// Cube positions in the 2x2x2 arrangement and their types
+const CUBE_CONFIG = [
+  // Front layer (z = 0.55)
+  { position: [-0.55, 0.55, 0.55], type: 'a3', label: 'a³' },      // top-left
+  { position: [0.55, 0.55, 0.55], type: 'a2b', label: 'a²b' },     // top-right
+  { position: [-0.55, -0.55, 0.55], type: 'a2b', label: 'a²b' },   // bottom-left
+  { position: [0.55, -0.55, 0.55], type: 'ab2', label: 'ab²' },    // bottom-right
+  // Back layer (z = -0.55)
+  { position: [-0.55, 0.55, -0.55], type: 'a2b', label: 'a²b' },   // top-left
+  { position: [0.55, 0.55, -0.55], type: 'ab2', label: 'ab²' },    // top-right
+  { position: [-0.55, -0.55, -0.55], type: 'ab2', label: 'ab²' },  // bottom-left
+  { position: [0.55, -0.55, -0.55], type: 'b3', label: 'b³' },     // bottom-right
+];
+
+interface SingleCubeProps {
+  position: [number, number, number];
+  color: string;
+  label: string;
+  isSelected: boolean;
+  isExploded: boolean;
+  onClick: () => void;
+}
+
+function SingleCube({ position, color, label, isSelected, isExploded, onClick }: SingleCubeProps) {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const [hovered, setHovered] = useState(false);
+
+  // Calculate exploded position
+  const explodeFactor = isExploded ? 1.8 : 1;
+  const explodedPosition: [number, number, number] = [
+    position[0] * explodeFactor,
+    position[1] * explodeFactor,
+    position[2] * explodeFactor,
+  ];
+
+  // Animate scale on hover/select
+  useFrame(() => {
+    if (meshRef.current) {
+      const targetScale = hovered || isSelected ? 1.1 : 1;
+      meshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.1);
+    }
+  });
+
+  return (
+    <group position={explodedPosition}>
+      <RoundedBox
+        ref={meshRef}
+        args={[1, 1, 1]}
+        radius={0.08}
+        smoothness={4}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setHovered(true);
+          document.body.style.cursor = 'pointer';
+        }}
+        onPointerOut={() => {
+          setHovered(false);
+          document.body.style.cursor = 'auto';
+        }}
+      >
+        <meshStandardMaterial
+          color={color}
+          transparent
+          opacity={isSelected ? 1 : 0.85}
+          emissive={isSelected ? color : '#000000'}
+          emissiveIntensity={isSelected ? 0.3 : 0}
+        />
+      </RoundedBox>
+      {/* Edge outline when selected */}
+      {isSelected && (
+        <lineSegments>
+          <edgesGeometry args={[new THREE.BoxGeometry(1.05, 1.05, 1.05)]} />
+          <lineBasicMaterial color="#ffffff" linewidth={2} />
+        </lineSegments>
+      )}
+      {/* Label */}
+      <Text
+        position={[0, 0, 0.52]}
+        fontSize={0.3}
+        color="#ffffff"
+        anchorX="center"
+        anchorY="middle"
+        font="/fonts/inter-bold.woff"
+        outlineWidth={0.02}
+        outlineColor="#000000"
+      >
+        {label}
+      </Text>
+    </group>
+  );
+}
+
+interface CubeSceneProps {
+  selectedPart: string | null;
+  onPartClick: (partId: string) => void;
+  isExploded: boolean;
+}
+
+function CubeScene({ selectedPart, onPartClick, isExploded }: CubeSceneProps) {
+  const groupRef = useRef<THREE.Group>(null);
+
+  // Slow auto-rotation when not interacting
+  useFrame((state, delta) => {
+    if (groupRef.current && !state.controls) {
+      groupRef.current.rotation.y += delta * 0.1;
+    }
+  });
+
+  const getColor = (type: string) => {
+    const part = CUBE_PARTS.find(p => p.id === type);
+    return part?.color || '#888888';
+  };
+
+  return (
+    <group ref={groupRef}>
+      {CUBE_CONFIG.map((cube, index) => (
+        <SingleCube
+          key={index}
+          position={cube.position as [number, number, number]}
+          color={getColor(cube.type)}
+          label={cube.label}
+          isSelected={selectedPart === cube.type}
+          isExploded={isExploded}
+          onClick={() => onPartClick(cube.type)}
+        />
+      ))}
+    </group>
+  );
+}
+
 export default function Step2Explore({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('intro');
   const [exploded, setExploded] = useState(false);
@@ -39,22 +176,6 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   const allPartsDiscovered = discoveredParts.length === CUBE_PARTS.length;
 
   if (!isActive) return null;
-
-  // Exploded view offsets for each of the 8 cubes
-  const getOffset = (index: number, isExploded: boolean) => {
-    if (!isExploded) return { x: 0, y: 0 };
-    const offsets = [
-      { x: -15, y: -15 },  // a³ (back-top-left)
-      { x: 15, y: -15 },   // a²b (back-top-right)
-      { x: -15, y: 0 },    // a²b (back-bottom-left)
-      { x: 15, y: 0 },     // a²b (back-bottom-right)
-      { x: -15, y: 15 },   // ab² (front-top-left)
-      { x: 15, y: 15 },    // ab² (front-top-right)
-      { x: -15, y: 30 },   // ab² (front-bottom-left)
-      { x: 15, y: 30 },    // b³ (front-bottom-right)
-    ];
-    return offsets[index] || { x: 0, y: 0 };
-  };
 
   return (
     <div className="space-y-8 animate-fadeIn">
@@ -86,141 +207,43 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               </button>
             </div>
 
-            {/* Simplified 2D representation showing 8 cubes in layers */}
-            <div className="flex justify-center mb-6">
-              <div className="relative">
-                {/* Layer labels */}
-                <div className="absolute -left-16 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400 font-medium">
-                  <div className="mb-16">Capa a</div>
-                  <div>Capa b</div>
+            {/* Three.js 3D Cube Visualization */}
+            <div className="w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800">
+              <Suspense fallback={
+                <div className="w-full h-full flex items-center justify-center text-white">
+                  Cargando visualización 3D...
                 </div>
-
-                {/* 3D-ish grid showing the 8 cubes */}
-                <div className={cn(
-                  "grid grid-cols-2 gap-1 transition-all duration-500",
-                  exploded && "gap-4"
-                )}>
-                  {/* Back layer (a dimension) */}
-                  <div className={cn(
-                    "grid grid-cols-2 gap-1 transition-all duration-500",
-                    exploded && "gap-3 -translate-x-2 -translate-y-2"
-                  )}>
-                    {/* a³ */}
-                    <div
-                      onClick={() => handlePartClick('a3')}
-                      className={cn(
-                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
-                        "bg-blue-500 border-2 border-blue-600",
-                        selectedPart === 'a3' && "ring-4 ring-blue-300"
-                      )}
-                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
-                    >
-                      a³
-                    </div>
-                    {/* a²b */}
-                    <div
-                      onClick={() => handlePartClick('a2b')}
-                      className={cn(
-                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
-                        "bg-teal-500 border-2 border-teal-600",
-                        selectedPart === 'a2b' && "ring-4 ring-teal-300"
-                      )}
-                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
-                    >
-                      a²b
-                    </div>
-                    {/* a²b */}
-                    <div
-                      onClick={() => handlePartClick('a2b')}
-                      className={cn(
-                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
-                        "bg-teal-500 border-2 border-teal-600",
-                        selectedPart === 'a2b' && "ring-4 ring-teal-300"
-                      )}
-                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
-                    >
-                      a²b
-                    </div>
-                    {/* a²b */}
-                    <div
-                      onClick={() => handlePartClick('a2b')}
-                      className={cn(
-                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
-                        "bg-teal-500 border-2 border-teal-600",
-                        selectedPart === 'a2b' && "ring-4 ring-teal-300"
-                      )}
-                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
-                    >
-                      a²b
-                    </div>
-                  </div>
-
-                  {/* Front layer (b dimension) */}
-                  <div className={cn(
-                    "grid grid-cols-2 gap-1 transition-all duration-500",
-                    exploded && "gap-3 translate-x-2 translate-y-2"
-                  )}>
-                    {/* ab² */}
-                    <div
-                      onClick={() => handlePartClick('ab2')}
-                      className={cn(
-                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
-                        "bg-purple-500 border-2 border-purple-600",
-                        selectedPart === 'ab2' && "ring-4 ring-purple-300"
-                      )}
-                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
-                    >
-                      ab²
-                    </div>
-                    {/* ab² */}
-                    <div
-                      onClick={() => handlePartClick('ab2')}
-                      className={cn(
-                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
-                        "bg-purple-500 border-2 border-purple-600",
-                        selectedPart === 'ab2' && "ring-4 ring-purple-300"
-                      )}
-                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
-                    >
-                      ab²
-                    </div>
-                    {/* ab² */}
-                    <div
-                      onClick={() => handlePartClick('ab2')}
-                      className={cn(
-                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
-                        "bg-purple-500 border-2 border-purple-600",
-                        selectedPart === 'ab2' && "ring-4 ring-purple-300"
-                      )}
-                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
-                    >
-                      ab²
-                    </div>
-                    {/* b³ */}
-                    <div
-                      onClick={() => handlePartClick('b3')}
-                      className={cn(
-                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
-                        "bg-pink-500 border-2 border-pink-600",
-                        selectedPart === 'b3' && "ring-4 ring-pink-300"
-                      )}
-                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
-                    >
-                      b³
-                    </div>
-                  </div>
-                </div>
-
-                {/* Dimension labels */}
-                <div className="flex justify-center mt-4 gap-8">
-                  <span className="text-blue-600 font-bold">a</span>
-                  <span className="text-pink-600 font-bold">b</span>
-                </div>
-              </div>
+              }>
+                <Canvas
+                  camera={{ position: [4, 3, 4], fov: 45 }}
+                  gl={{ antialias: true }}
+                >
+                  <ambientLight intensity={0.5} />
+                  <pointLight position={[10, 10, 10]} intensity={1} />
+                  <pointLight position={[-10, -10, -10]} intensity={0.5} />
+                  <CubeScene
+                    selectedPart={selectedPart}
+                    onPartClick={handlePartClick}
+                    isExploded={exploded}
+                  />
+                  <OrbitControls
+                    enablePan={false}
+                    enableZoom={true}
+                    minDistance={3}
+                    maxDistance={10}
+                    autoRotate={!selectedPart}
+                    autoRotateSpeed={1}
+                  />
+                </Canvas>
+              </Suspense>
             </div>
 
+            <p className="text-gray-500 dark:text-gray-400 text-center text-sm mt-2">
+              Arrastra para rotar • Scroll para zoom • Clic en los cubos para explorar
+            </p>
+
             {/* Legend */}
-            <div className="flex flex-wrap justify-center gap-3 mb-4">
+            <div className="flex flex-wrap justify-center gap-3 mt-4 mb-4">
               {CUBE_PARTS.map((part) => (
                 <div
                   key={part.id}
@@ -248,10 +271,6 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 </div>
               ))}
             </div>
-
-            <p className="text-gray-600 dark:text-gray-400 text-center text-sm">
-              Haz clic en los cubos o la leyenda para explorar cada tipo de pieza.
-            </p>
 
             {/* Selected part info */}
             {selectedPart && (
