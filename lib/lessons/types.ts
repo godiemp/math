@@ -218,6 +218,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-num-002-e',
+    slug: 'minimo-comun-multiplo',
+    title: 'Mínimo Común Múltiplo (M.C.M.)',
+    description: 'Aprende a encontrar el mínimo común múltiplo y úsalo para sumar fracciones con distinto denominador.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-002',
+    skills: ['mcm-concepto', 'multiplos-comunes', 'fracciones-denominador-comun'],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Problema de los Encuentros', requiredToAdvance: true },
+      { id: 'explore-multiples', type: 'explore', title: 'El Cazador de Múltiplos', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Los Métodos del M.C.M.', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'explore-sync', type: 'explore', title: 'Sincronizando Eventos', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // ÁLGEBRA Y FUNCIONES
   // ========================================
