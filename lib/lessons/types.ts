@@ -240,6 +240,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-alg-001-c',
+    slug: 'productos-notables',
+    title: 'Productos Notables',
+    description: 'Domina los tres productos notables: cuadrado de binomio, suma por diferencia, y binomios con término común.',
+    level: 'M1',
+    subject: 'álgebra',
+    thematicUnit: 'M1-ALG-001',
+    skills: ['algebra-productos-notables', 'algebra-propiedad-distributiva', 'algebra-terminos-semejantes'],
+    estimatedMinutes: 17,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Arquitecto de Jardines', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubre los Patrones', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Los Tres Productos Notables' },
+      { id: 'classify', type: 'explore', title: 'Identifica el Patrón', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // GEOMETRÍA
   // ========================================
