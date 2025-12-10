@@ -237,6 +237,30 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-num-002-f',
+    slug: 'suma-resta-fracciones-distinto-denominador',
+    title: 'Suma y Resta de Fracciones con Distinto Denominador',
+    description: 'Aprende a sumar y restar fracciones cuando tienen diferente denominador usando el mínimo común múltiplo.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-002',
+    skills: [
+      'fracciones-suma-distinto-denominador',
+      'fracciones-resta-distinto-denominador',
+      'fracciones-denominador-comun',
+      'simplificacion-fracciones',
+    ],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'Pizzas Diferentes', requiredToAdvance: true },
+      { id: 'explore-lcd', type: 'explore', title: 'Buscando el Denominador Común', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'La Regla de la Conversión', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica: Suma', requiredToAdvance: true },
+      { id: 'explore-subtraction', type: 'explore', title: 'Restando con Distinto Denominador', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // ÁLGEBRA Y FUNCIONES
   // ========================================
