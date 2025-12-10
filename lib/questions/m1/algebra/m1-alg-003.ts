@@ -26,6 +26,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '2x - 5 = 11 \\rightarrow 2x = 16 \\rightarrow x = 8',
     difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
@@ -39,6 +40,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '2x + 3 > 7 \\rightarrow 2x > 4 \\rightarrow x > 2',
     difficulty: 'medium',
+    difficultyScore: 0.40,
     skills: ['algebra-desigualdades', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
@@ -52,6 +54,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'x + 5 = 12 \\rightarrow x = 7 \\quad \\Rightarrow \\quad 2x = 2(7) = 14',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
@@ -65,6 +68,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{x}{3} + 2 = 5 \\rightarrow \\frac{x}{3} = 3 \\rightarrow x = 9',
     difficulty: 'easy',
+    difficultyScore: 0.30,
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -78,6 +82,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{x}{2} + \\frac{x}{3} = 10 \\rightarrow \\frac{3x + 2x}{6} = 10 \\rightarrow \\frac{5x}{6} = 10 \\rightarrow x = 12',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'numeros-fracciones', 'numeros-fracciones-comun-denominador', 'numeros-operaciones-basicas']
   },
   {
@@ -91,6 +96,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{2x - 1}{3} = 5 \\rightarrow 2x - 1 = 15 \\rightarrow 2x = 16 \\rightarrow x = 8',
     difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -104,6 +110,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{x + 2}{4} - \\frac{2(x + 2)}{4} = 1 \\rightarrow \\frac{x + 2 - 2x - 4}{4} = 1 \\rightarrow \\frac{-x - 2}{4} = 1 \\rightarrow -x - 2 = 4 \\rightarrow x = -6',
     difficulty: 'hard',
+    difficultyScore: 0.68,
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'numeros-fracciones', 'numeros-fracciones-comun-denominador', 'numeros-operaciones-basicas']
   },
   {
@@ -117,6 +124,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '3(x - 2) = 2(x + 1) \\rightarrow 3x - 6 = 2x + 2 \\rightarrow 3x - 2x = 2 + 6 \\rightarrow x = 8',
     difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'algebra-propiedad-distributiva', 'numeros-operaciones-basicas']
   },
   {
@@ -130,6 +138,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '4(2x + 1) - 3(x - 2) = 20 \\rightarrow 8x + 4 - 3x + 6 = 20 \\rightarrow 5x + 10 = 20 \\rightarrow 5x = 10 \\rightarrow x = 2',
     difficulty: 'hard',
+    difficultyScore: 0.65,
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'algebra-propiedad-distributiva', 'algebra-terminos-semejantes', 'numeros-operaciones-basicas']
   },
   {
@@ -143,6 +152,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '2[x - (3 - x)] = 10 \\rightarrow 2[x - 3 + x] = 10 \\rightarrow 2[2x - 3] = 10 \\rightarrow 4x - 6 = 10 \\rightarrow 4x = 16 \\rightarrow x = 4',
     difficulty: 'hard',
+    difficultyScore: 0.60,
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'algebra-propiedad-distributiva', 'numeros-operaciones-basicas']
   },
   {
@@ -155,7 +165,8 @@ export const m1Alg003Questions: Question[] = [
     options: ['12 años', '18 años', '24 años', '30 años'],
     correctAnswer: 2,
     explanation: 'x + 2x = 36 \\rightarrow 3x = 36 \\rightarrow x = 12 \\text{ (Ana)} \\quad \\Rightarrow \\quad \\text{Pedro} = 2(12) = 24 \\text{ años}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
@@ -169,6 +180,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'x + (x + 1) + (x + 2) = 48 \\rightarrow 3x + 3 = 48 \\rightarrow 3x = 45 \\rightarrow x = 15 \\quad \\Rightarrow \\quad \\text{mayor} = 15 + 2 = 17',
     difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
@@ -181,7 +193,8 @@ export const m1Alg003Questions: Question[] = [
     options: ['8 cm', '10 cm', '12 cm', '15 cm'],
     correctAnswer: 1,
     explanation: '2x + 2(x + 5) = 50 \\rightarrow 2x + 2x + 10 = 50 \\rightarrow 4x = 40 \\rightarrow x = 10 \\text{ cm}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'geometria-perimetro', 'geometria-rectangulos', 'numeros-operaciones-basicas']
   },
   {
@@ -195,6 +208,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '3x - 7 \\leq 8 \\rightarrow 3x \\leq 15 \\rightarrow x \\leq 5',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['algebra-desigualdades', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
@@ -208,6 +222,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '-2x + 4 > 10 \\rightarrow -2x > 6 \\rightarrow x < -3',
     difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['algebra-desigualdades', 'algebra-despeje', 'numeros-enteros', 'numeros-operaciones-basicas']
   },
   {
@@ -221,6 +236,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{x - 2}{3} \\geq 2 \\rightarrow x - 2 \\geq 6 \\rightarrow x \\geq 8',
     difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['algebra-desigualdades', 'algebra-despeje', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -234,6 +250,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '|x| < 5 \\quad \\Leftrightarrow \\quad -5 < x < 5',
     difficulty: 'medium',
+    difficultyScore: 0.54,
     skills: ['algebra-desigualdades', 'algebra-valor-absoluto']
   },
   {
@@ -247,6 +264,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '|x - 3| \\leq 2 \\quad \\Leftrightarrow \\quad -2 \\leq x - 3 \\leq 2 \\quad \\Rightarrow \\quad 1 \\leq x \\leq 5',
     difficulty: 'hard',
+    difficultyScore: 0.62,
     skills: ['algebra-desigualdades', 'algebra-valor-absoluto', 'numeros-operaciones-basicas']
   },
   {
@@ -260,6 +278,7 @@ export const m1Alg003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '|2x + 1| > 5 \\quad \\Leftrightarrow \\quad 2x + 1 < -5 \\text{ o } 2x + 1 > 5 \\quad \\Rightarrow \\quad x < -3 \\text{ o } x > 2',
     difficulty: 'hard',
+    difficultyScore: 0.68,
     skills: ['algebra-desigualdades', 'algebra-valor-absoluto', 'numeros-operaciones-basicas']
   }
 ];

@@ -152,6 +152,18 @@ export function convertToQuestionFormat(
 ): QuestionWithMetadata {
   const now = Date.now();
 
+  // Calculate difficultyScore from difficulty level
+  const difficultyScoreMap: Record<string, number> = {
+    easy: 0.25,
+    medium: 0.45,
+    hard: 0.65,
+    extreme: 0.85,
+  };
+  const baseDifficultyScore = difficultyScoreMap[metadata.difficulty] ?? 0.45;
+  // Add small adjustment based on number of skills
+  const skillAdjustment = Math.min(metadata.skills.length * 0.03, 0.10);
+  const difficultyScore = Math.round((baseDifficultyScore + skillAdjustment) * 100) / 100;
+
   return {
     id: metadata.id,
     level: metadata.level,
@@ -164,6 +176,7 @@ export function convertToQuestionFormat(
     // Explanation is already in LaTeX format
     explanation: extracted.explanation ?? 'No explanation provided.',
     difficulty: metadata.difficulty,
+    difficultyScore,
     skills: metadata.skills,
     createdAt: now,
     updatedAt: now,

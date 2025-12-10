@@ -27,6 +27,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{2}{3} + \\frac{1}{4} = \\frac{8}{12} + \\frac{3}{12} = \\frac{11}{12}',
     difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-fracciones-sumar-restar-distinto-denominador', 'numeros-simplificar-fracciones', 'numeros-jerarquia-operaciones']
   },
   {
@@ -40,6 +41,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '12 = 2^2 \\times 3, \\quad 18 = 2 \\times 3^2 \\quad \\Rightarrow \\quad \\text{MCD} = 2 \\times 3 = 6',
     difficulty: 'medium',
+    difficultyScore: 0.40,
     skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima']
   },
   {
@@ -53,6 +55,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{3}{4}x = 15 \\quad \\Rightarrow \\quad x = 15 \\times \\frac{4}{3} = 20',
     difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['numeros-fracciones-multiplicar-dividir', 'numeros-inverso-aditivo-multiplicativo', 'algebra-ecuaciones-lineales', 'algebra-despeje']
   },
   {
@@ -66,6 +69,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{2}{3} \\times \\frac{5}{4} = \\frac{2 \\times 5}{3 \\times 4} = \\frac{10}{12} = \\frac{5}{6}',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['numeros-fracciones-multiplicar-dividir', 'numeros-simplificar-fracciones']
   },
   {
@@ -78,7 +82,8 @@ export const m1Num002Questions: Question[] = [
     options: ['\\frac{6}{20}', '\\frac{5}{8}', '\\frac{15}{8}', '\\frac{8}{15}'],
     correctAnswer: 2,
     explanation: '\\frac{3}{4} \\div \\frac{2}{5} = \\frac{3}{4} \\times \\frac{5}{2} = \\frac{15}{8}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-fracciones-multiplicar-dividir', 'numeros-inverso-aditivo-multiplicativo']
   },
   {
@@ -91,7 +96,8 @@ export const m1Num002Questions: Question[] = [
     options: ['\\frac{1}{6}', '\\frac{2}{12}', '\\frac{1}{8}', '\\frac{8}{3}'],
     correctAnswer: 0,
     explanation: '\\frac{2}{3} \\div 4 = \\frac{2}{3} \\times \\frac{1}{4} = \\frac{2}{12} = \\frac{1}{6}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.30,
     skills: ['numeros-fracciones-multiplicar-dividir', 'numeros-modelar-proporciones-repartos', 'numeros-interpretar-resultados-razonabilidad']
   },
   {
@@ -105,6 +111,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '2\\frac{3}{5} = \\frac{(2 \\times 5) + 3}{5} = \\frac{10 + 3}{5} = \\frac{13}{5}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['numeros-fracciones-impropias-mixtos', 'numeros-jerarquia-operaciones']
   },
   {
@@ -118,6 +125,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '17 \\div 4 = 4 \\text{ con resto } 1 \\quad \\Rightarrow \\quad \\frac{17}{4} = 4\\frac{1}{4}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['numeros-fracciones-impropias-mixtos']
   },
   {
@@ -131,6 +139,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(1 + 2) + \\left(\\frac{2}{3} + \\frac{1}{4}\\right) = 3 + \\frac{8}{12} + \\frac{3}{12} = 3\\frac{11}{12}',
     difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['numeros-fracciones-impropias-mixtos', 'numeros-fracciones-sumar-restar-distinto-denominador', 'numeros-jerarquia-operaciones']
   },
   {
@@ -144,6 +153,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{3}{4} = \\frac{9}{12}, \\quad \\frac{5}{6} = \\frac{10}{12}, \\quad \\frac{2}{3} = \\frac{8}{12}, \\quad \\frac{7}{12} = \\frac{7}{12} \\quad \\Rightarrow \\quad \\frac{5}{6} \\text{ es mayor}',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['numeros-fracciones-comparar-distinto-denominador', 'numeros-identificar-mayor-menor-mixtos']
   },
   {
@@ -157,6 +167,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{1}{2} = \\frac{15}{30}, \\quad \\frac{3}{5} = \\frac{18}{30}, \\quad \\frac{2}{3} = \\frac{20}{30} \\quad \\Rightarrow \\quad \\frac{1}{2} < \\frac{3}{5} < \\frac{2}{3}',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['numeros-fracciones-comparar-distinto-denominador', 'numeros-enteros-ordenar-recta']
   },
   {
@@ -170,6 +181,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{4}{6} = \\frac{4 \\div 2}{6 \\div 2} = \\frac{2}{3}',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['numeros-equivalencia-fracciones', 'numeros-simplificar-fracciones', 'numeros-mcd-mcm']
   },
   {
@@ -183,6 +195,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '0.75 = \\frac{75}{100} = \\frac{75 \\div 25}{100 \\div 25} = \\frac{3}{4}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['numeros-relacionar-fraccion-decimal-porcentaje', 'numeros-simplificar-fracciones']
   },
   {
@@ -196,6 +209,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{7}{8} = 7 \\div 8 = 0.875',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['numeros-relacionar-fraccion-decimal-porcentaje', 'numeros-decimales-multiplicar-dividir']
   },
   {
@@ -209,6 +223,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '0.625 = \\frac{625}{1000} = \\frac{625 \\div 125}{1000 \\div 125} = \\frac{5}{8}',
     difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['numeros-relacionar-fraccion-decimal-porcentaje', 'numeros-simplificar-fracciones']
   },
   {
@@ -221,7 +236,8 @@ export const m1Num002Questions: Question[] = [
     options: ['\\frac{1}{3}', '\\frac{3}{10}', '\\frac{33}{100}', '\\frac{3}{9}'],
     correctAnswer: 0,
     explanation: '0.\\overline{3} = \\frac{1}{3}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['numeros-fracciones-periodicas', 'numeros-convertir-decimal-periodico', 'numeros-densidad-racionales']
   },
   {
@@ -234,7 +250,8 @@ export const m1Num002Questions: Question[] = [
     options: ['\\frac{1}{4}', '\\frac{1}{5}', '\\frac{1}{3}', '\\frac{1}{8}'],
     correctAnswer: 2,
     explanation: '\\frac{1}{3} = 0.\\overline{3} \\text{ (periódico). Las otras: } \\frac{1}{4}=0.25, \\frac{1}{5}=0.2, \\frac{1}{8}=0.125',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.40,
     skills: ['numeros-fracciones-periodicas', 'numeros-factorizacion-prima', 'numeros-argumentar-sentido-resultado']
   },
   {
@@ -247,7 +264,8 @@ export const m1Num002Questions: Question[] = [
     options: ['\\frac{2}{3}', '\\frac{6}{10}', '\\frac{66}{100}', '\\frac{6}{9}'],
     correctAnswer: 0,
     explanation: '0.\\overline{6} = \\frac{6}{9} = \\frac{2}{3}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['numeros-fracciones-periodicas', 'numeros-convertir-decimal-periodico', 'numeros-simplificar-fracciones']
   },
   {
@@ -261,6 +279,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '17 \\text{ es primo. } 15=3\\times5, \\quad 21=3\\times7, \\quad 25=5\\times5',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['numeros-factorizacion-prima']
   },
   {
@@ -274,6 +293,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '2, 3, 5, 7 \\quad \\Rightarrow \\quad 4 \\text{ números primos}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['numeros-factorizacion-prima']
   },
   {
@@ -287,6 +307,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '21=3\\times7, \\quad 22=2\\times11, \\quad 23 \\text{ es primo}, \\quad 25=5\\times5',
     difficulty: 'medium',
+    difficultyScore: 0.32,
     skills: ['numeros-factorizacion-prima']
   },
   {
@@ -300,6 +321,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '24 = 2 \\times 12 = 2 \\times 2 \\times 6 = 2 \\times 2 \\times 2 \\times 3 = 2^3 \\times 3',
     difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['numeros-factorizacion-prima', 'numeros-potencias']
   },
   {
@@ -313,6 +335,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '30 = \\frac{60}{2} = \\frac{2^2 \\times 3 \\times 5}{2} = 2 \\times 3 \\times 5',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['numeros-factorizacion-prima', 'numeros-potencias', 'numeros-argumentar-sentido-resultado']
   },
   {
@@ -326,6 +349,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '72 = 8 \\times 9 = (2^3) \\times (3^2) = 2^3 \\times 3^2',
     difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['numeros-factorizacion-prima', 'numeros-potencias']
   },
   {
@@ -339,6 +363,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Múltiplos de 4: } 4, 8, 12, 16... \\quad \\text{Múltiplos de 6: } 6, 12, 18... \\quad \\Rightarrow \\quad \\text{MCM} = 12',
     difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['numeros-mcd-mcm']
   },
   {
@@ -351,7 +376,8 @@ export const m1Num002Questions: Question[] = [
     options: ['36', '48', '72', '144'],
     correctAnswer: 2,
     explanation: '8=2^3, \\quad 12=2^2\\times3, \\quad 18=2\\times3^2 \\quad \\Rightarrow \\quad \\text{MCM} = 2^3\\times3^2 = 72',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima']
   },
   {
@@ -365,6 +391,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '15 = 3 \\times 5, \\quad 20 = 2^2 \\times 5 \\quad \\Rightarrow \\quad \\text{MCM} = 2^2 \\times 3 \\times 5 = 60',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['numeros-mcd-mcm', 'numeros-factorizacion-prima', 'numeros-problemas-unidades-conversiones']
   },
   {
@@ -378,6 +405,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '342: \\quad 3+4+2 = 9 \\text{ (divisible por 3)} \\quad \\Rightarrow \\quad 342 \\text{ es divisible por 3}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['numeros-patrones-signos', 'numeros-argumentar-sentido-resultado']
   },
   {
@@ -390,7 +418,8 @@ export const m1Num002Questions: Question[] = [
     options: ['234', '567', '729', '891'],
     correctAnswer: 2,
     explanation: '729: \\quad 7+2+9 = 18 \\text{ (divisible por 9)} \\quad \\Rightarrow \\quad 729 \\text{ es divisible por 9}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['numeros-patrones-signos', 'numeros-argumentar-sentido-resultado']
   },
   {
@@ -403,7 +432,8 @@ export const m1Num002Questions: Question[] = [
     options: ['La suma de sus dígitos es 11', 'La diferencia entre la suma de dígitos en posiciones impares y pares es 0 o múltiplo de 11', 'El último dígito es 1', 'La suma de sus dígitos es divisible por 11'],
     correctAnswer: 1,
     explanation: '\\text{Ejemplo: } 121 \\rightarrow (1+1)-2 = 0 \\text{ (divisible por 11)}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['numeros-patrones-signos', 'numeros-argumentar-sentido-resultado']
   },
   {
@@ -416,7 +446,8 @@ export const m1Num002Questions: Question[] = [
     options: ['\\frac{22}{7}', '\\sqrt{16}', '\\pi', '0.\\overline{3}'],
     correctAnswer: 2,
     explanation: '\\pi \\text{ es irracional. } \\frac{22}{7} \\text{ y } 0.\\overline{3} \\text{ son racionales, } \\sqrt{16}=4',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['numeros-racionales-comprender-significado', 'numeros-argumentar-sentido-resultado']
   },
   {
@@ -430,6 +461,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\sqrt{9} = 3 \\text{ (racional). Los demás son irracionales.}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['numeros-racionales-comprender-significado', 'numeros-raices']
   },
   // ========================================
@@ -446,6 +478,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{1}{3} + \\frac{1}{4} = \\frac{4}{12} + \\frac{3}{12} = \\frac{7}{12}',
     difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-fracciones', 'numeros-fracciones-sumar-restar-distinto-denominador', 'numeros-mcd-mcm', 'numeros-operaciones-basicas']
   },
   {
@@ -459,6 +492,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{2}{5} + \\frac{1}{3} = \\frac{6}{15} + \\frac{5}{15} = \\frac{11}{15}',
     difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-fracciones', 'numeros-fracciones-sumar-restar-distinto-denominador', 'numeros-mcd-mcm', 'numeros-operaciones-basicas']
   },
   {
@@ -472,6 +506,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{3}{4} - \\frac{1}{6} = \\frac{9}{12} - \\frac{2}{12} = \\frac{7}{12}',
     difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-fracciones', 'numeros-fracciones-sumar-restar-distinto-denominador', 'numeros-mcd-mcm', 'numeros-operaciones-basicas']
   },
   {
@@ -485,6 +520,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{5}{6} + \\frac{2}{9} = \\frac{15}{18} + \\frac{4}{18} = \\frac{19}{18}',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['numeros-fracciones', 'numeros-fracciones-sumar-restar-distinto-denominador', 'numeros-fracciones-impropias-mixtos', 'numeros-mcd-mcm', 'numeros-operaciones-basicas']
   },
   {
@@ -498,6 +534,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{7}{8} - \\frac{3}{10} = \\frac{35}{40} - \\frac{12}{40} = \\frac{23}{40}',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['numeros-fracciones', 'numeros-fracciones-sumar-restar-distinto-denominador', 'numeros-mcd-mcm', 'numeros-operaciones-basicas']
   },
   {
@@ -511,6 +548,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{2}{3} + \\frac{3}{5} + \\frac{1}{2} = \\frac{20}{30} + \\frac{18}{30} + \\frac{15}{30} = \\frac{53}{30}',
     difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['numeros-fracciones', 'numeros-fracciones-sumar-restar-distinto-denominador', 'numeros-mcd-mcm', 'numeros-operaciones-basicas']
   },
   {
@@ -523,7 +561,8 @@ export const m1Num002Questions: Question[] = [
     options: ['\\frac{13}{24}', '\\frac{17}{24}', '\\frac{19}{24}', '\\frac{23}{24}'],
     correctAnswer: 3,
     explanation: '\\frac{5}{12} - \\frac{1}{8} + \\frac{2}{3} = \\frac{10}{24} - \\frac{3}{24} + \\frac{16}{24} = \\frac{23}{24}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['numeros-fracciones', 'numeros-fracciones-sumar-restar-distinto-denominador', 'numeros-mcd-mcm', 'numeros-operaciones-basicas']
   },
   {
@@ -537,6 +576,7 @@ export const m1Num002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{11}{15} - \\frac{7}{20} = \\frac{44}{60} - \\frac{21}{60} = \\frac{23}{60}',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['numeros-fracciones', 'numeros-fracciones-sumar-restar-distinto-denominador', 'numeros-mcd-mcm', 'numeros-operaciones-basicas']
   },
   {
@@ -549,7 +589,8 @@ export const m1Num002Questions: Question[] = [
     options: ['1', '\\frac{5}{4}', '\\frac{3}{2}', '\\frac{13}{12}'],
     correctAnswer: 1,
     explanation: '\\frac{1}{2} + \\frac{1}{3} + \\frac{1}{4} + \\frac{1}{6} = \\frac{6+4+3+2}{12} = \\frac{15}{12} = \\frac{5}{4}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['numeros-fracciones', 'numeros-fracciones-sumar-restar-distinto-denominador', 'numeros-mcd-mcm', 'numeros-simplificar-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -562,7 +603,8 @@ export const m1Num002Questions: Question[] = [
     options: ['\\frac{1}{3}', '\\frac{4}{15}', '\\frac{7}{30}', '\\frac{1}{5}'],
     correctAnswer: 2,
     explanation: '1 - \\frac{2}{5} - \\frac{1}{5} - \\frac{1}{6} = \\frac{30-12-6-5}{30} = \\frac{7}{30}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['numeros-fracciones', 'numeros-fracciones-sumar-restar-distinto-denominador', 'numeros-mcd-mcm', 'numeros-operaciones-basicas']
   }
 ];

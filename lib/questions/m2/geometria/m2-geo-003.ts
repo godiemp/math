@@ -25,6 +25,7 @@ export const m2Geo003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'h^2 + 6^2 = 10^2 \\rightarrow h^2 + 36 = 100 \\rightarrow h^2 = 64 \\rightarrow h = 8 \\text{ m}',
     difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['geometria-pitagoras', 'geometria-triangulos', 'geometria-aplicaciones', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -38,6 +39,7 @@ export const m2Geo003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'c^2 = 9^2 + 12^2 = 81 + 144 = 225 \\rightarrow c = \\sqrt{225} = 15 \\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['geometria-pitagoras', 'geometria-triangulos', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -50,7 +52,8 @@ export const m2Geo003Questions: Question[] = [
     options: ['4 cm', '5 cm', '6 cm', '7 cm'],
     correctAnswer: 2,
     explanation: '10^2 = 8^2 + b^2 \\rightarrow 100 = 64 + b^2 \\rightarrow b^2 = 36 \\rightarrow b = 6 \\text{ cm}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['geometria-pitagoras', 'geometria-rectangulo', 'geometria-aplicaciones', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -62,7 +65,8 @@ export const m2Geo003Questions: Question[] = [
     options: ['25\\text{ m}', '28.9\\text{ m}', '43.3\\text{ m}', '50\\text{ m}'],
     correctAnswer: 1,
     explanation: '\\tan(30^\\circ) = \\frac{h}{50} \\rightarrow h = 50 \\times 0.577 \\approx 28.9\\text{ m}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['trigonometria-problemas-elevacion-depresion', 'geometria-trigonometria', 'trigonometria-tangente', 'algebra-despeje', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -74,7 +78,8 @@ export const m2Geo003Questions: Question[] = [
     options: ['1500\\text{ m}', '2121\\text{ m}', '3000\\text{ m}', '4243\\text{ m}'],
     correctAnswer: 2,
     explanation: '\\tan(45^\\circ) = \\frac{3000}{d} = 1 \\rightarrow d = 3000\\text{ m}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['trigonometria-problemas-altura-distancia', 'trigonometria-problemas-elevacion-depresion', 'geometria-trigonometria', 'trigonometria-angulos-notables', 'algebra-despeje']
   },
   // Subsection A: Problemas de altura y distancia
@@ -88,6 +93,7 @@ export const m2Geo003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\tan(60^\\circ) = \\frac{h}{15} \\rightarrow h = 15 \\times 1.732 \\approx 25.98\\text{ m}',
     difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['trigonometria-problemas-altura-distancia', 'geometria-trigonometria', 'trigonometria-tangente', 'algebra-despeje', 'numeros-operaciones-basicas']
   },
   {
@@ -99,7 +105,8 @@ export const m2Geo003Questions: Question[] = [
     options: ['0.5', '0.625', '0.8', '1.6'],
     correctAnswer: 1,
     explanation: '\\tan(\\theta) = \\frac{50}{80} = \\frac{5}{8} = 0.625',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['trigonometria-problemas-altura-distancia', 'trigonometria-problemas-elevacion-depresion', 'geometria-trigonometria', 'trigonometria-tangente', 'numeros-fracciones']
   },
   // Subsection B: Ángulos de elevación y depresión
@@ -112,7 +119,8 @@ export const m2Geo003Questions: Question[] = [
     options: ['23\\text{ m}', '46.2\\text{ m}', '69.3\\text{ m}', '80\\text{ m}'],
     correctAnswer: 2,
     explanation: '\\tan(30^\\circ) = \\frac{40}{d} \\rightarrow d = \\frac{40}{0.577} \\approx 69.3\\text{ m}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['trigonometria-problemas-elevacion-depresion', 'geometria-trigonometria', 'trigonometria-tangente', 'algebra-despeje', 'numeros-division', 'numeros-operaciones-basicas']
   },
   {
@@ -124,7 +132,8 @@ export const m2Geo003Questions: Question[] = [
     options: ['100\\text{ m}', '141\\text{ m}', '200\\text{ m}', '283\\text{ m}'],
     correctAnswer: 2,
     explanation: '\\tan(45^\\circ) = \\frac{200}{d} = 1 \\rightarrow d = 200\\text{ m}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['trigonometria-problemas-elevacion-depresion', 'geometria-trigonometria', 'trigonometria-angulos-notables', 'algebra-despeje']
   },
   // Subsection C: Aplicaciones en navegación
@@ -138,6 +147,7 @@ export const m2Geo003Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'd = \\sqrt{50^2 + 30^2} = \\sqrt{3400} \\approx 58\\text{ km}',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['trigonometria-problemas-navegacion', 'geometria-pitagoras', 'geometria-aplicaciones', 'numeros-raices', 'numeros-operaciones-basicas']
   },
   {
@@ -149,7 +159,8 @@ export const m2Geo003Questions: Question[] = [
     options: ['30\\text{ km}', '50\\text{ km}', '70\\text{ km}', '87\\text{ km}'],
     correctAnswer: 1,
     explanation: '\\text{Este} = 100 \\times \\sin(30^\\circ) = 100 \\times 0.5 = 50\\text{ km}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['trigonometria-problemas-navegacion', 'geometria-trigonometria', 'trigonometria-seno', 'geometria-vectores', 'numeros-operaciones-basicas']
   },
   // Subsection D: Aplicaciones en arquitectura e ingeniería
@@ -162,7 +173,8 @@ export const m2Geo003Questions: Question[] = [
     options: ['10.9\\text{ m}', '12\\text{ m}', '13.2\\text{ m}', '15\\text{ m}'],
     correctAnswer: 2,
     explanation: '\\cos(25^\\circ) = \\frac{12}{L} \\rightarrow L = \\frac{12}{0.906} \\approx 13.2\\text{ m}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['trigonometria-problemas-arquitectura', 'geometria-trigonometria', 'trigonometria-coseno', 'algebra-despeje', 'numeros-division', 'numeros-operaciones-basicas']
   },
   {
@@ -174,7 +186,8 @@ export const m2Geo003Questions: Question[] = [
     options: ['8.7\\text{ m}', '10\\text{ m}', '11.5\\text{ m}', '12\\text{ m}'],
     correctAnswer: 2,
     explanation: '\\sin(5^\\circ) = \\frac{1}{L} \\rightarrow L = \\frac{1}{0.087} \\approx 11.5\\text{ m}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['trigonometria-problemas-arquitectura', 'geometria-trigonometria', 'trigonometria-seno', 'algebra-despeje', 'numeros-division', 'numeros-operaciones-basicas']
   }
 ];

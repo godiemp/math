@@ -111,6 +111,9 @@ export interface Question {
   // Explanation in LaTeX format (full explanation with LaTeX)
   explanation: string;
   difficulty: DifficultyLevel;
+  // Numeric difficulty score from 0.0 (easiest) to 1.0 (hardest)
+  // Used by adaptive algorithm for fine-grained difficulty matching
+  difficultyScore: number;
   // Subject area for better categorization
   subject: Subject;
   // Skills required to solve this problem (from skillTaxonomy.ts)

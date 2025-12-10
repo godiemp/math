@@ -27,6 +27,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Sustituyendo } x = 2y - 1 \\text{ en la primera ecuación:} \\\\ (2y - 1) + y = 5 \\\\ 3y = 6 \\Rightarrow y = 2',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['sistemas-ecuaciones-sustitucion', 'algebra-ecuaciones-lineales']
   },
   {
@@ -40,6 +41,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Sustituyendo } y = 3x + 1 \\text{ en } 2x + y = 11: \\\\ 2x + (3x + 1) = 11 \\\\ 5x = 10 \\Rightarrow x = 2',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['sistemas-ecuaciones-sustitucion', 'algebra-ecuaciones-lineales']
   },
   {
@@ -53,6 +55,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{De } x + 2y = 0 \\Rightarrow x = -2y. \\\\ \\text{Sustituyendo en } 3(-2y) - y = 7 \\\\ -7y = 7 \\Rightarrow y = -1',
     difficulty: 'medium',
+    difficultyScore: 0.40,
     skills: ['sistemas-ecuaciones-sustitucion', 'algebra-ecuaciones-lineales']
   },
   {
@@ -66,6 +69,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{De } x - y = 2 \\Rightarrow x = y + 2. \\\\ \\text{Sustituyendo: } \\frac{y + 2}{2} + y = 4 \\\\ \\frac{3y + 2}{2} = 4 \\Rightarrow y = 2, x = 4 \\\\ x + y = 6',
     difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['sistemas-ecuaciones-sustitucion', 'algebra-ecuaciones-lineales', 'numeros-racionales-operaciones']
   },
   {
@@ -79,6 +83,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Sustituyendo } x = y + 1: \\\\ 2(y + 1) + 3y = 12 \\\\ 5y = 10 \\Rightarrow y = 2, x = 3 \\\\ x + y = 5',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['sistemas-ecuaciones-sustitucion', 'algebra-ecuaciones-lineales']
   },
   // ========================================
@@ -95,6 +100,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Igualando: } 2x + 1 = -x + 7 \\\\ 3x = 6 \\Rightarrow x = 2',
     difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['sistemas-ecuaciones-igualacion', 'algebra-ecuaciones-lineales']
   },
   {
@@ -108,6 +114,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Igualando: } 3y - 2 = y + 4 \\\\ 2y = 6 \\Rightarrow y = 3',
     difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['sistemas-ecuaciones-igualacion', 'algebra-ecuaciones-lineales']
   },
   {
@@ -120,7 +127,8 @@ export const m1Alg008Questions: Question[] = [
     options: ['2', '3', '4', '5'],
     correctAnswer: 1,
     explanation: '\\text{De la 1ra: } y = 8 - 2x. \\text{ De la 2da: } y = x - 1 \\\\ 8 - 2x = x - 1 \\\\ 9 = 3x \\Rightarrow x = 3',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.38,
     skills: ['sistemas-ecuaciones-igualacion', 'algebra-ecuaciones-lineales']
   },
   {
@@ -133,7 +141,8 @@ export const m1Alg008Questions: Question[] = [
     options: ['1', '2', '3', '4'],
     correctAnswer: 1,
     explanation: 'x = \\frac{1 + 2y}{3} \\text{ y } x = 7 - 2y \\\\ \\frac{1 + 2y}{3} = 7 - 2y \\\\ 1 + 2y = 21 - 6y \\\\ 8y = 20 \\Rightarrow y = 2.5 \\\\ x = 7 - 5 = 2',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['sistemas-ecuaciones-igualacion', 'algebra-ecuaciones-lineales', 'numeros-racionales-operaciones']
   },
   {
@@ -146,7 +155,8 @@ export const m1Alg008Questions: Question[] = [
     options: ['(1, 1)', '(2, 5)', '(3, 7)', '(0, -3)'],
     correctAnswer: 1,
     explanation: '\\text{Igualando: } 4x - 3 = 2x + 1 \\\\ 2x = 4 \\Rightarrow x = 2 \\\\ y = 2(2) + 1 = 5 \\\\ \\text{Punto: } (2, 5)',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['sistemas-ecuaciones-igualacion', 'algebra-funciones-lineales', 'geometria-coordenadas']
   },
   // ========================================
@@ -163,6 +173,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Sumando las ecuaciones: } 2x = 10 \\Rightarrow x = 5',
     difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['sistemas-ecuaciones-reduccion', 'algebra-ecuaciones-lineales']
   },
   {
@@ -176,6 +187,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Restando: } (2x + 3y) - (2x - y) = 13 - 1 \\\\ 4y = 12 \\Rightarrow y = 3',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['sistemas-ecuaciones-reduccion', 'algebra-ecuaciones-lineales']
   },
   {
@@ -188,7 +200,8 @@ export const m1Alg008Questions: Question[] = [
     options: ['6', '9', '12', '15'],
     correctAnswer: 1,
     explanation: '\\text{Restando: } 2x = 6 \\Rightarrow x = 3 \\\\ 3 + 2y = 9 \\Rightarrow y = 3 \\\\ x \\cdot y = 3 \\cdot 3 = 9',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.38,
     skills: ['sistemas-ecuaciones-reduccion', 'algebra-ecuaciones-lineales']
   },
   {
@@ -202,6 +215,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Sumando: } 6x = 12 \\Rightarrow x = 2',
     difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['sistemas-ecuaciones-reduccion', 'algebra-ecuaciones-lineales']
   },
   {
@@ -214,7 +228,8 @@ export const m1Alg008Questions: Question[] = [
     options: ['1', '2', '3', '4'],
     correctAnswer: 2,
     explanation: '\\text{Multiplicando 1ra por 2: } 10x + 4y = 38 \\\\ \\text{Restando la 2da: } 7x = 21 \\Rightarrow x = 3',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['sistemas-ecuaciones-reduccion', 'algebra-ecuaciones-lineales']
   },
   // ========================================
@@ -231,6 +246,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Sea } c = \\text{camiseta, } p = \\text{pantalón} \\\\ 2c + 3p = 25000 \\\\ c + 2p = 15000 \\Rightarrow c = 15000 - 2p \\\\ 2(15000 - 2p) + 3p = 25000 \\\\ 30000 - p = 25000 \\Rightarrow p = 5000 \\\\ c = 5000',
     difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['sistemas-ecuaciones-problemas', 'algebra-problemas-contexto']
   },
   {
@@ -244,6 +260,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Sea } x \\text{ el mayor, } y \\text{ el menor} \\\\ x + y = 20 \\\\ x - y = 4 \\\\ \\text{Sumando: } 2x = 24 \\Rightarrow x = 12',
     difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['sistemas-ecuaciones-problemas', 'algebra-problemas-numeros']
   },
   {
@@ -257,6 +274,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Sea } m = \\text{edad de María, } j = \\text{edad de Juan} \\\\ m = 2j \\\\ (m - 5) + (j - 5) = 20 \\Rightarrow m + j = 30 \\\\ 2j + j = 30 \\Rightarrow j = 10 \\Rightarrow m = 20',
     difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['sistemas-ecuaciones-problemas', 'algebra-problemas-edades']
   },
   {
@@ -270,6 +288,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{Sea } l = \\text{largo, } a = \\text{ancho} \\\\ 2l + 2a = 28 \\Rightarrow l + a = 14 \\\\ l = a + 4 \\\\ (a + 4) + a = 14 \\Rightarrow a = 5 \\\\ l = 9 \\text{ cm}',
     difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['sistemas-ecuaciones-problemas', 'geometria-perimetros']
   },
   {
@@ -283,6 +302,7 @@ export const m1Alg008Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Sea } a = \\text{adultos, } n = \\text{niños} \\\\ a + n = 200 \\\\ 5000a + 3000n = 800000 \\\\ \\text{De la 1ra: } n = 200 - a \\\\ 5000a + 3000(200 - a) = 800000 \\\\ 2000a = 200000 \\Rightarrow a = 100',
     difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['sistemas-ecuaciones-problemas', 'algebra-problemas-contexto']
   }
 ];

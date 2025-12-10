@@ -25,7 +25,8 @@ export const m2Prob002Questions: Question[] = [
     options: ['\\frac{5}{14}', '\\frac{5}{16}', '\\frac{4}{14}', '\\frac{25}{64}'],
     correctAnswer: 0,
     explanation: 'P = \\frac{5}{8} \\times \\frac{4}{7} = \\frac{20}{56} = \\frac{5}{14}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['probabilidad-condicional', 'probabilidad-sin-reposicion', 'probabilidad-reglas-multiplicacion', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -38,7 +39,8 @@ export const m2Prob002Questions: Question[] = [
     options: ['Aproximadamente 16%', 'Aproximadamente 32%', 'Aproximadamente 48%', 'Aproximadamente 95%'],
     correctAnswer: 0,
     explanation: 'P(E|+) = \\frac{0.95 \\times 0.02}{0.95 \\times 0.02 + 0.10 \\times 0.98} = \\frac{0.019}{0.117} \\approx 0.16',
-    difficulty: 'extreme',
+    difficulty: 'hard',
+    difficultyScore: 0.62,
     skills: ['probabilidad-bayes', 'probabilidad-teorema-bayes', 'probabilidad-condicional', 'probabilidad-reglas-multiplicacion', 'numeros-decimales', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   },
   {
@@ -51,7 +53,8 @@ export const m2Prob002Questions: Question[] = [
     options: ['\\frac{1}{3}', '\\frac{3}{10}', '\\frac{4}{10}', '\\frac{2}{9}'],
     correctAnswer: 0,
     explanation: 'P(\\text{segunda blanca}|\\text{primera blanca}) = \\frac{3}{9} = \\frac{1}{3}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['probabilidad-condicional', 'probabilidad-condicional-concepto', 'probabilidad-sin-reposicion', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -64,7 +67,8 @@ export const m2Prob002Questions: Question[] = [
     options: ['\\frac{1}{6}', '\\frac{1}{3}', '\\frac{1}{2}', '\\frac{2}{3}'],
     correctAnswer: 1,
     explanation: 'P(\\text{suma} > 10|\\text{primero} = 6) = P(\\text{segundo} \\geq 5) = \\frac{2}{6} = \\frac{1}{3}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['probabilidad-condicional', 'probabilidad-condicional-aplicaciones', 'probabilidad-eventos-independientes', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -77,7 +81,8 @@ export const m2Prob002Questions: Question[] = [
     options: ['\\frac{9}{19}', '\\frac{9}{20}', '\\frac{3}{5}', '\\frac{1}{2}'],
     correctAnswer: 0,
     explanation: 'P(M|D) = \\frac{P(M \\cap D)}{P(D)} = \\frac{0.6 \\times 0.3}{0.6 \\times 0.3 + 0.4 \\times 0.5} = \\frac{0.18}{0.38} = \\frac{9}{19}',
-    difficulty: 'extreme',
+    difficulty: 'hard',
+    difficultyScore: 0.55,
     skills: ['probabilidad-bayes', 'probabilidad-teorema-bayes', 'probabilidad-condicional', 'probabilidad-condicional-aplicaciones', 'numeros-decimales', 'numeros-fracciones', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   },
   // Subsection C: Eventos independientes y dependientes
@@ -91,7 +96,8 @@ export const m2Prob002Questions: Question[] = [
     options: ['\\text{Sí, resultado independiente}', '\\text{No, mismo experimento}', '\\text{Depende del tipo de moneda}', '\\text{No se puede determinar}'],
     correctAnswer: 0,
     explanation: 'P(\\text{cara}_1 \\cap \\text{sello}_2) = \\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{4} \\Rightarrow \\text{independientes}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-eventos-dependientes', 'probabilidad-eventos-independientes', 'probabilidad-condicional', 'numeros-fracciones']
   },
   {
@@ -104,7 +110,8 @@ export const m2Prob002Questions: Question[] = [
     options: ['\\text{Sí, 4 ases siempre}', '\\text{No, primera afecta segunda}', '\\text{Sí, misma probabilidad}', '\\text{No se puede determinar}'],
     correctAnswer: 1,
     explanation: 'P(\\text{2°as}|\\text{1°as}) = \\frac{3}{51} \\neq P(\\text{2°as}) = \\frac{4}{52} \\Rightarrow \\text{dependientes}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.32,
     skills: ['probabilidad-eventos-dependientes', 'probabilidad-sin-reposicion', 'probabilidad-condicional', 'numeros-fracciones']
   },
   // Additional Subsection A: Probabilidad condicional concepto
@@ -119,6 +126,7 @@ export const m2Prob002Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P(A|B) = \\frac{P(A \\cap B)}{P(B)}',
     difficulty: 'easy',
+    difficultyScore: 0.15,
     skills: ['probabilidad-condicional-concepto', 'probabilidad-formulas', 'numeros-fracciones']
   },
   {
@@ -131,7 +139,8 @@ export const m2Prob002Questions: Question[] = [
     options: ['0.2', '0.4', '0.5', '0.8'],
     correctAnswer: 1,
     explanation: 'P(A|B) = \\frac{P(A \\cap B)}{P(B)} = \\frac{0.2}{0.5} = 0.4',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['probabilidad-condicional-concepto', 'probabilidad-condicional', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -144,7 +153,8 @@ export const m2Prob002Questions: Question[] = [
     options: ['0.20', '0.24', '0.40', '0.60'],
     correctAnswer: 1,
     explanation: 'P(M \\cap L) = P(M) \\times P(L|M) = 0.6 \\times 0.4 = 0.24',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['probabilidad-condicional-aplicaciones', 'probabilidad-condicional', 'numeros-decimales', 'numeros-porcentaje']
   },
   {
@@ -157,7 +167,8 @@ export const m2Prob002Questions: Question[] = [
     options: ['\\frac{1}{3}', '\\frac{2}{5}', '\\frac{1}{10}', '\\frac{1}{4}'],
     correctAnswer: 0,
     explanation: 'P(F|M) = \\frac{P(F \\cap M)}{P(M)} = \\frac{10/100}{30/100} = \\frac{10}{30} = \\frac{1}{3}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['probabilidad-condicional-aplicaciones', 'probabilidad-condicional-concepto', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   // Additional Subsection B: Teorema de Bayes - Classic scenarios
@@ -172,6 +183,7 @@ export const m2Prob002Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'P(A|D) = \\frac{0.03 \\times 0.60}{0.03 \\times 0.60 + 0.05 \\times 0.40} = \\frac{0.018}{0.038} = \\frac{9}{19}',
     difficulty: 'hard',
+    difficultyScore: 0.52,
     skills: ['probabilidad-bayes', 'probabilidad-teorema-bayes', 'probabilidad-condicional', 'numeros-decimales', 'numeros-fracciones', 'numeros-porcentaje']
   },
   {
@@ -184,7 +196,8 @@ export const m2Prob002Questions: Question[] = [
     options: ['\\frac{12}{29}', '\\frac{9}{29}', '\\frac{10}{29}', '\\frac{6}{29}'],
     correctAnswer: 0,
     explanation: 'P(N|D) = \\frac{0.06 \\times 0.20}{0.02 \\times 0.50 + 0.03 \\times 0.30 + 0.06 \\times 0.20} = \\frac{0.012}{0.029} = \\frac{12}{29}',
-    difficulty: 'extreme',
+    difficulty: 'hard',
+    difficultyScore: 0.58,
     skills: ['probabilidad-bayes', 'probabilidad-teorema-bayes', 'probabilidad-condicional', 'numeros-decimales', 'numeros-fracciones', 'numeros-porcentaje']
   },
   {
@@ -197,7 +210,8 @@ export const m2Prob002Questions: Question[] = [
     options: ['Aproximadamente 99\\%', 'Aproximadamente 95\\%', 'Aproximadamente 90\\%', 'Aproximadamente 85\\%'],
     correctAnswer: 0,
     explanation: 'P(S|{-}) = \\frac{0.95 \\times 0.95}{0.95 \\times 0.95 + 0.10 \\times 0.05} = \\frac{0.9025}{0.9075} \\approx 0.9945 \\approx 99\\%',
-    difficulty: 'extreme',
+    difficulty: 'hard',
+    difficultyScore: 0.55,
     skills: ['probabilidad-bayes', 'probabilidad-teorema-bayes', 'probabilidad-condicional', 'numeros-decimales', 'numeros-porcentaje']
   },
   {
@@ -211,6 +225,7 @@ export const m2Prob002Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'P(E|+) = \\frac{0.99 \\times 0.01}{0.99 \\times 0.01 + 0.01 \\times 0.99} = \\frac{0.0099}{0.0198} = \\frac{1}{2}',
     difficulty: 'hard',
+    difficultyScore: 0.52,
     skills: ['probabilidad-bayes', 'probabilidad-teorema-bayes', 'probabilidad-condicional', 'numeros-decimales', 'numeros-fracciones', 'numeros-porcentaje']
   },
   {
@@ -224,6 +239,7 @@ export const m2Prob002Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'P(S|P) = \\frac{0.80 \\times 0.40}{0.80 \\times 0.40 + 0.10 \\times 0.60} = \\frac{0.32}{0.38} = \\frac{16}{19}',
     difficulty: 'hard',
+    difficultyScore: 0.52,
     skills: ['probabilidad-bayes', 'probabilidad-teorema-bayes', 'probabilidad-condicional', 'numeros-decimales', 'numeros-fracciones', 'numeros-porcentaje']
   },
   {
@@ -236,7 +252,8 @@ export const m2Prob002Questions: Question[] = [
     options: ['\\frac{12}{29}', '\\frac{17}{29}', '\\frac{4}{5}', '\\frac{3}{20}'],
     correctAnswer: 0,
     explanation: 'P(A|I) = \\frac{0.80 \\times 0.15}{0.80 \\times 0.15 + 0.20 \\times 0.85} = \\frac{0.12}{0.29} = \\frac{12}{29}',
-    difficulty: 'extreme',
+    difficulty: 'hard',
+    difficultyScore: 0.55,
     skills: ['probabilidad-bayes', 'probabilidad-teorema-bayes', 'probabilidad-condicional', 'numeros-decimales', 'numeros-fracciones', 'numeros-porcentaje']
   },
   {
@@ -250,6 +267,7 @@ export const m2Prob002Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'P(C_1|R) = \\frac{\\frac{3}{10} \\times \\frac{1}{2}}{\\frac{3}{10} \\times \\frac{1}{2} + \\frac{6}{10} \\times \\frac{1}{2}} = \\frac{0.15}{0.45} = \\frac{1}{3}',
     difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['probabilidad-bayes', 'probabilidad-teorema-bayes', 'probabilidad-condicional', 'numeros-fracciones']
   },
   {
@@ -263,6 +281,7 @@ export const m2Prob002Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'P(D|R) = \\frac{0.90 \\times 0.04}{0.90 \\times 0.04 + 0.05 \\times 0.96} = \\frac{0.036}{0.084} = \\frac{36}{84} = \\frac{3}{7}',
     difficulty: 'hard',
+    difficultyScore: 0.52,
     skills: ['probabilidad-bayes', 'probabilidad-teorema-bayes', 'probabilidad-condicional', 'numeros-decimales', 'numeros-fracciones', 'numeros-porcentaje']
   }
 ];

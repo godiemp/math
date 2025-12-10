@@ -25,6 +25,7 @@ export const m2Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'c^2 = a^2 + b^2 \\quad \\Rightarrow \\quad 13^2 = 5^2 + b^2 \\quad \\Rightarrow \\quad 169 = 25 + b^2 \\quad \\Rightarrow \\quad b^2 = 144 \\quad \\Rightarrow \\quad b = 12 \\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['geometria-pitagoras', 'geometria-triangulos', 'numeros-raices', 'numeros-potencias', 'numeros-operaciones-basicas'],
     visualData: {
       type: 'geometry',
@@ -56,6 +57,7 @@ export const m2Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'c^2 = a^2 + b^2 - 2ab\\cos(C) = 10^2 + 10^2 - 2(10)(10)(0.5) = 100 + 100 - 100 = 100 \\quad \\Rightarrow \\quad c = 10 \\text{ cm}',
     difficulty: 'hard',
+    difficultyScore: 0.52,
     skills: ['geometria-ley-cosenos', 'geometria-triangulos', 'numeros-potencias', 'numeros-operaciones-basicas'],
     visualData: {
       type: 'geometry',
@@ -98,7 +100,8 @@ export const m2Geo002Questions: Question[] = [
     options: ['\\frac{3}{5}', '\\frac{4}{5}', '\\frac{3}{4}', '\\frac{5}{3}'],
     correctAnswer: 0,
     explanation: '\\sin(\\theta) = \\frac{\\text{cateto opuesto}}{\\text{hipotenusa}} = \\frac{3}{5}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['geometria-trigonometria', 'trigonometria-razones-basicas', 'trigonometria-calculo', 'numeros-fracciones']
   },
   {
@@ -110,7 +113,8 @@ export const m2Geo002Questions: Question[] = [
     options: ['\\frac{1}{2}', '\\frac{\\sqrt{3}}{2}', '1', '\\frac{\\sqrt{2}}{2}'],
     correctAnswer: 0,
     explanation: '\\sin(30^\\circ) = \\cos(60^\\circ) = \\frac{1}{2}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['geometria-trigonometria', 'trigonometria-angulos-notables', 'trigonometria-razones-basicas', 'numeros-fracciones']
   },
   {
@@ -123,7 +127,8 @@ export const m2Geo002Questions: Question[] = [
     options: ['6\\text{ cm}', '10\\text{ cm}', '12\\text{ cm}', '14\\text{ cm}'],
     correctAnswer: 1,
     explanation: '\\tan(\\alpha) = \\frac{8}{b} = \\frac{4}{3} \\rightarrow b = 6. \\quad h = \\sqrt{8^2 + 6^2} = \\sqrt{100} = 10\\text{ cm}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['geometria-trigonometria', 'trigonometria-resolucion-triangulos', 'trigonometria-razones-basicas', 'geometria-pitagoras', 'numeros-raices', 'numeros-operaciones-basicas']
   },
   {
@@ -137,6 +142,7 @@ export const m2Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\tan(45^\\circ) = \\frac{\\text{cateto opuesto}}{\\text{cateto adyacente}} = \\frac{a}{a} = 1',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['geometria-trigonometria', 'trigonometria-angulos-notables', 'trigonometria-razones-basicas']
   },
   {
@@ -150,6 +156,7 @@ export const m2Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\cos(\\beta) = \\frac{\\text{cateto adyacente}}{13} = \\frac{5}{13} \\rightarrow \\text{cateto adyacente} = 5\\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.32,
     skills: ['geometria-trigonometria', 'trigonometria-resolucion-triangulos', 'trigonometria-razones-basicas', 'algebra-despeje', 'numeros-fracciones']
   },
   // Additional questions
@@ -164,6 +171,7 @@ export const m2Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\sin(60^\\circ) = \\frac{\\sqrt{3}}{2}',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['trigonometria-angulos-notables', 'trigonometria-razones-basicas', 'numeros-raices']
   },
   {
@@ -176,6 +184,7 @@ export const m2Geo002Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\sin(\\alpha) = \\frac{12}{h} = 0.6 \\rightarrow h = \\frac{12}{0.6} = 20\\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['trigonometria-calculo', 'trigonometria-resolucion-triangulos', 'algebra-despeje', 'numeros-decimales']
   },
   {
@@ -189,6 +198,7 @@ export const m2Geo002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\sin(\\theta) = \\frac{\\text{cateto opuesto}}{\\text{hipotenusa}}',
     difficulty: 'easy',
+    difficultyScore: 0.15,
     skills: ['trigonometria-razones-basicas', 'geometria-trigonometria', 'trigonometria-definiciones']
   },
   {
@@ -200,7 +210,8 @@ export const m2Geo002Questions: Question[] = [
     options: ['\\frac{1}{2}', '\\frac{\\sqrt{2}}{2}', '\\frac{\\sqrt{3}}{2}', '1'],
     correctAnswer: 2,
     explanation: '\\cos(30^\\circ) = \\sin(60^\\circ) = \\frac{\\sqrt{3}}{2}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['trigonometria-angulos-notables', 'trigonometria-razones-basicas', 'numeros-raices']
   },
   {
@@ -212,7 +223,8 @@ export const m2Geo002Questions: Question[] = [
     options: ['\\frac{3}{5}', '\\frac{4}{5}', '\\frac{3}{4}', '\\frac{4}{3}'],
     correctAnswer: 1,
     explanation: 'h = \\sqrt{6^2 + 8^2} = 10. \\quad \\cos(\\alpha) = \\frac{8}{10} = \\frac{4}{5}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['trigonometria-calculo', 'trigonometria-razones-basicas', 'geometria-pitagoras', 'numeros-fracciones']
   },
   // Ley de Senos / Law of Sines
@@ -226,7 +238,8 @@ export const m2Geo002Questions: Question[] = [
     options: ['8\\text{ cm}', '11{,}3\\text{ cm}', '16\\text{ cm}', '5{,}7\\text{ cm}'],
     correctAnswer: 1,
     explanation: '\\frac{8}{0{,}5} = \\frac{b}{0{,}707} \\rightarrow b = \\frac{8 \\times 0{,}707}{0{,}5} = 11{,}3\\text{ cm}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['trigonometria-ley-senos', 'geometria-triangulos', 'algebra-despeje', 'numeros-decimales']
   },
   {
@@ -240,6 +253,7 @@ export const m2Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{10}{\\sin(90°)} = \\frac{b}{\\sin(30°)} \\rightarrow \\frac{10}{1} = \\frac{b}{0{,}5} \\rightarrow b = 5\\text{ cm}',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['trigonometria-ley-senos', 'geometria-triangulos', 'trigonometria-angulos-notables', 'algebra-despeje']
   },
   // Ley de Cosenos / Law of Cosines
@@ -253,7 +267,8 @@ export const m2Geo002Questions: Question[] = [
     options: ['\\sqrt{39}\\text{ cm}', '6\\text{ cm}', '8\\text{ cm}', '\\sqrt{74}\\text{ cm}'],
     correctAnswer: 0,
     explanation: 'c^2 = 5^2 + 7^2 - 2(5)(7)(0{,}5) = 25 + 49 - 35 = 39 \\rightarrow c = \\sqrt{39}\\text{ cm}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['trigonometria-ley-cosenos', 'geometria-triangulos', 'numeros-potencias', 'numeros-raices']
   },
   {
@@ -267,6 +282,7 @@ export const m2Geo002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\cos(C) = \\frac{5^2 + 7^2 - 8^2}{2 \\times 5 \\times 7} = \\frac{25 + 49 - 64}{70} = \\frac{10}{70} = \\frac{1}{7}',
     difficulty: 'hard',
+    difficultyScore: 0.52,
     skills: ['trigonometria-ley-cosenos', 'geometria-triangulos', 'numeros-fracciones', 'numeros-potencias']
   },
   {
@@ -279,7 +295,8 @@ export const m2Geo002Questions: Question[] = [
     options: ['10\\text{ N}', '2\\sqrt{37}\\text{ N}', '14\\text{ N}', '\\sqrt{76}\\text{ N}'],
     correctAnswer: 1,
     explanation: 'R^2 = a^2 + b^2 + 2ab\\cos(\\theta) = 6^2 + 8^2 + 2(6)(8)(0{,}5) = 36 + 64 + 48 = 148 \\rightarrow R = \\sqrt{148} = 2\\sqrt{37}\\text{ N}',
-    difficulty: 'extreme',
+    difficulty: 'hard',
+    difficultyScore: 0.58,
     skills: ['trigonometria-ley-cosenos', 'geometria-vectores', 'numeros-potencias', 'numeros-raices']
   }
 ];

@@ -27,6 +27,7 @@ export const m1Alg007Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'f(3) = 3^2 - 1 = 9 - 1 = 8',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['algebra-funciones', 'algebra-evaluacion-funciones', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -40,6 +41,7 @@ export const m1Alg007Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'g(-2) = 4, g(-1) = 1, g(0) = 0, g(1) = 1, g(2) = 4 \\quad \\Rightarrow \\quad \\text{Rango} = \\{0, 1, 4\\}',
     difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['algebra-funciones', 'algebra-dominio-rango', 'algebra-evaluacion-funciones', 'numeros-potencias']
   },
   {
@@ -52,7 +54,8 @@ export const m1Alg007Questions: Question[] = [
     options: ['Función lineal', 'Función cuadrática', 'Función constante', 'Función exponencial'],
     correctAnswer: 1,
     explanation: 'h(x) = ax^2 + bx + c \\text{ es cuadrática porque el término de mayor grado es } x^2',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.20,
     skills: ['algebra-funciones', 'algebra-funciones-cuadraticas']
   },
   {
@@ -65,7 +68,8 @@ export const m1Alg007Questions: Question[] = [
     options: ['0', '2', '4', 'No tiene máximo'],
     correctAnswer: 2,
     explanation: 'f(0) = -(0)^2 + 4 = 4 \\text{ es el valor máximo porque } -x^2 \\leq 0 \\text{ para todo } x',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['algebra-funciones', 'algebra-dominio-rango', 'algebra-funciones-cuadraticas', 'numeros-potencias']
   },
   {
@@ -79,6 +83,7 @@ export const m1Alg007Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'x^2 - 5x + 6 = (x - 2)(x - 3) = 0 \\quad \\Rightarrow \\quad x = 2 \\text{ o } x = 3',
     difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['algebra-ecuaciones-cuadraticas', 'algebra-factorizacion', 'numeros-operaciones-basicas']
   },
   {
@@ -91,7 +96,8 @@ export const m1Alg007Questions: Question[] = [
     options: ['x = -2 \\text{ o } x = -5', 'x = 2 \\text{ o } x = 5', 'x = -1 \\text{ o } x = -10', 'x = 1 \\text{ o } x = 10'],
     correctAnswer: 0,
     explanation: 'x^2 + 7x + 10 = (x + 2)(x + 5) = 0 \\quad \\Rightarrow \\quad x = -2 \\text{ o } x = -5',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['algebra-ecuaciones-cuadraticas', 'algebra-factorizacion', 'numeros-enteros', 'numeros-operaciones-basicas']
   },
   {
@@ -105,6 +111,7 @@ export const m1Alg007Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'x^2 - 9 = (x - 3)(x + 3) = 0 \\quad \\Rightarrow \\quad x = 3 \\text{ o } x = -3',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['algebra-ecuaciones-cuadraticas', 'algebra-factorizacion', 'algebra-diferencia-cuadrados', 'numeros-raices']
   },
   {
@@ -118,6 +125,7 @@ export const m1Alg007Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'x = \\frac{-2 \\pm \\sqrt{4 + 12}}{2} = \\frac{-2 \\pm 4}{2} \\quad \\Rightarrow \\quad x = 1 \\text{ o } x = -3',
     difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['algebra-ecuaciones-cuadraticas', 'algebra-formula-cuadratica', 'numeros-raices', 'numeros-operaciones-basicas']
   },
   {
@@ -131,6 +139,7 @@ export const m1Alg007Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\Delta = (-4)^2 - 4(1)(4) = 16 - 16 = 0 \\text{ (una raíz doble)}',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['algebra-ecuaciones-cuadraticas', 'algebra-discriminante', 'numeros-operaciones-basicas']
   },
   {
@@ -143,7 +152,8 @@ export const m1Alg007Questions: Question[] = [
     options: ['No tiene soluciones reales', 'Tiene dos soluciones reales distintas', 'Tiene una solución real', 'Tiene infinitas soluciones'],
     correctAnswer: 0,
     explanation: '\\Delta < 0 \\quad \\Rightarrow \\quad \\text{No existen soluciones reales (las soluciones son complejas)}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.32,
     skills: ['algebra-ecuaciones-cuadraticas', 'algebra-discriminante']
   },
   {
@@ -156,7 +166,8 @@ export const m1Alg007Questions: Question[] = [
     options: ['t = 0 \\text{ o } t = 4', 't = 0 \\text{ o } t = 5', 't = 2 \\text{ o } t = 4', 't = 1 \\text{ o } t = 4'],
     correctAnswer: 0,
     explanation: '-5t(t - 4) = 0 \\quad \\Rightarrow \\quad t = 0 \\text{ (lanzamiento) o } t = 4 \\text{ (aterrizaje)}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['algebra-ecuaciones-cuadraticas', 'algebra-factorizacion', 'numeros-operaciones-basicas']
   },
   {
@@ -169,7 +180,8 @@ export const m1Alg007Questions: Question[] = [
     options: ['4 m', '5 m', '6 m', '8 m'],
     correctAnswer: 0,
     explanation: 'x^2 + 2x = 24 \\rightarrow x^2 + 2x - 24 = 0 \\rightarrow (x + 6)(x - 4) = 0 \\quad \\Rightarrow \\quad x = 4 \\text{ (positivo)}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['algebra-ecuaciones-cuadraticas', 'algebra-factorizacion', 'geometria-area', 'numeros-operaciones-basicas']
   },
   {
@@ -182,7 +194,8 @@ export const m1Alg007Questions: Question[] = [
     options: ['(2, 0) \\text{ y } (4, 0)', '(1, 0) \\text{ y } (8, 0)', '(-2, 0) \\text{ y } (-4, 0)', '(3, 0) \\text{ y } (6, 0)'],
     correctAnswer: 0,
     explanation: 'x^2 - 6x + 8 = (x - 2)(x - 4) = 0 \\quad \\Rightarrow \\quad x = 2 \\text{ o } x = 4',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['algebra-ecuaciones-cuadraticas', 'algebra-factorizacion', 'algebra-funciones-cuadraticas', 'algebra-interceptos', 'numeros-operaciones-basicas']
   }
 ];

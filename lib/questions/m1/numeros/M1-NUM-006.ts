@@ -24,6 +24,7 @@ export const m1Num006Questions: Question[] = [
     correctAnswer: 1,
     explanation: '2^4 = 2 \\times 2 \\times 2 \\times 2 = 16',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -37,6 +38,7 @@ export const m1Num006Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{2^3 \\times 2^2}{2^4} = \\frac{2^{3+2}}{2^4} = \\frac{2^5}{2^4} = 2^{5-4} = 2^1 = 2',
     difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   {
@@ -49,7 +51,8 @@ export const m1Num006Questions: Question[] = [
     options: ['-8', '-6', '\\frac{1}{8}', '\\frac{1}{6}'],
     correctAnswer: 2,
     explanation: '2^{-3} = \\frac{1}{2^3} = \\frac{1}{8}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.30,
     skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   {
@@ -62,7 +65,8 @@ export const m1Num006Questions: Question[] = [
     options: ['5^3', '5^{-7}', '5^{10}', '25'],
     correctAnswer: 0,
     explanation: '5^{-2} \\times 5^5 = 5^{-2+5} = 5^3',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   {
@@ -75,7 +79,8 @@ export const m1Num006Questions: Question[] = [
     options: ['3^2', '3^{-2}', '9', '\\frac{1}{9}'],
     correctAnswer: 3,
     explanation: '\\frac{3^4}{3^6} = 3^{4-6} = 3^{-2} = \\frac{1}{3^2} = \\frac{1}{9}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-operaciones-basicas']
   },
   {
@@ -89,6 +94,7 @@ export const m1Num006Questions: Question[] = [
     correctAnswer: 0,
     explanation: '16^{1/2} = \\sqrt{16} = 4',
     difficulty: 'easy',
+    difficultyScore: 0.31,
     skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-raices', 'numeros-operaciones-basicas']
   },
   {
@@ -101,7 +107,8 @@ export const m1Num006Questions: Question[] = [
     options: ['2', '3', '4', '\\frac{8}{3}'],
     correctAnswer: 0,
     explanation: '8^{1/3} = \\sqrt[3]{8} = 2 \\text{ porque } 2^3 = 8',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-raices', 'numeros-operaciones-basicas']
   },
   {
@@ -114,7 +121,8 @@ export const m1Num006Questions: Question[] = [
     options: ['3', '6', '9', '18'],
     correctAnswer: 2,
     explanation: '27^{2/3} = (\\sqrt[3]{27})^2 = 3^2 = 9',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['numeros-potencias', 'numeros-potencias-propiedades', 'numeros-raices', 'numeros-operaciones-basicas']
   }
 ];

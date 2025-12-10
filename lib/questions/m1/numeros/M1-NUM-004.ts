@@ -24,6 +24,7 @@ export const m1Num004Questions: Question[] = [
     correctAnswer: 1,
     explanation: '25\\% \\text{ de } 80 = 0.25 \\times 80 = 20',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -37,6 +38,7 @@ export const m1Num004Questions: Question[] = [
     correctAnswer: 2,
     explanation: '0.60 \\times 50 = 30 \\text{ litros de alcohol}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['numeros-porcentajes', 'numeros-proporcionalidad', 'numeros-operaciones-basicas']
   },
   {
@@ -50,6 +52,7 @@ export const m1Num004Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{25000 - 20000}{20000} \\times 100\\% = \\frac{5000}{20000} \\times 100\\% = 25\\%',
     difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -63,6 +66,7 @@ export const m1Num004Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{8000 - 6400}{8000} \\times 100\\% = \\frac{1600}{8000} \\times 100\\% = 20\\%',
     difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -75,7 +79,8 @@ export const m1Num004Questions: Question[] = [
     options: ['4%', '5%', '6%', '7%'],
     correctAnswer: 2,
     explanation: '\\frac{3000}{50000} \\times 100\\% = 6\\%',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-porcentajes', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -88,7 +93,8 @@ export const m1Num004Questions: Question[] = [
     options: ['150', '180', '200', '240'],
     correctAnswer: 2,
     explanation: '0.35x = 70 \\quad \\Rightarrow \\quad x = \\frac{70}{0.35} = 200',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['numeros-porcentajes', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -102,6 +108,7 @@ export const m1Num004Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{3}{4} = 3 \\div 4 = 0{,}75',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['numeros-fracciones', 'numeros-decimales', 'numeros-conversiones', 'numeros-operaciones-basicas']
   },
   {
@@ -115,6 +122,7 @@ export const m1Num004Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{3}{4} = 0{,}75 = 75\\%',
     difficulty: 'easy',
+    difficultyScore: 0.20,
     skills: ['numeros-fracciones', 'numeros-porcentajes', 'numeros-conversiones', 'numeros-operaciones-basicas']
   },
   {
@@ -128,6 +136,7 @@ export const m1Num004Questions: Question[] = [
     correctAnswer: 1,
     explanation: '0{,}6 = \\frac{6}{10} = \\frac{3}{5}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['numeros-decimales', 'numeros-fracciones', 'numeros-conversiones', 'numeros-simplificacion', 'numeros-operaciones-basicas']
   },
   {
@@ -140,7 +149,8 @@ export const m1Num004Questions: Question[] = [
     options: ['\\frac{9}{20}', '\\frac{45}{100}', '\\frac{5}{11}', '\\frac{4}{9}'],
     correctAnswer: 0,
     explanation: '45\\% = \\frac{45}{100} = \\frac{9}{20}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['numeros-porcentajes', 'numeros-fracciones', 'numeros-conversiones', 'numeros-simplificacion', 'numeros-operaciones-basicas']
   },
   {
@@ -154,6 +164,7 @@ export const m1Num004Questions: Question[] = [
     correctAnswer: 2,
     explanation: '0{,}35 \\times 100 = 35\\%',
     difficulty: 'easy',
+    difficultyScore: 0.15,
     skills: ['numeros-decimales', 'numeros-porcentajes', 'numeros-conversiones', 'numeros-operaciones-basicas']
   },
   {
@@ -166,7 +177,8 @@ export const m1Num004Questions: Question[] = [
     options: ['0,12', '1,2', '12', '120'],
     correctAnswer: 1,
     explanation: '120\\% = \\frac{120}{100} = 1{,}2',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['numeros-porcentajes', 'numeros-decimales', 'numeros-conversiones', 'numeros-operaciones-basicas']
   },
   {
@@ -180,6 +192,7 @@ export const m1Num004Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{2}{5} = 0{,}4 = 40\\%',
     difficulty: 'easy',
+    difficultyScore: 0.20,
     skills: ['numeros-fracciones', 'numeros-decimales', 'numeros-porcentajes', 'numeros-conversiones', 'numeros-operaciones-basicas']
   },
   {
@@ -192,7 +205,8 @@ export const m1Num004Questions: Question[] = [
     options: ['\\frac{1}{8}', '\\frac{1}{10}', '\\frac{1}{12}', '\\frac{1}{16}'],
     correctAnswer: 0,
     explanation: '0{,}125 = \\frac{125}{1000} = \\frac{1}{8}',
-    difficulty: 'hard',
+    difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['numeros-decimales', 'numeros-fracciones', 'numeros-conversiones', 'numeros-simplificacion', 'numeros-operaciones-basicas']
   },
   {
@@ -205,7 +219,8 @@ export const m1Num004Questions: Question[] = [
     options: ['\\frac{1}{12}', '\\frac{2}{25}', '\\frac{4}{50}', '\\frac{8}{100}'],
     correctAnswer: 1,
     explanation: '8\\% = \\frac{8}{100} = \\frac{2}{25}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['numeros-porcentajes', 'numeros-fracciones', 'numeros-conversiones', 'numeros-simplificacion', 'numeros-operaciones-basicas']
   }
 ];

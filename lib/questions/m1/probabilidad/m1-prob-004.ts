@@ -24,6 +24,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P = \\frac{3}{6} = \\frac{1}{2}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
   {
@@ -36,6 +37,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P(\\text{azul}) = \\frac{3}{5+3} = \\frac{3}{8}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
   {
@@ -48,6 +50,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P = \\frac{2}{6} = \\frac{1}{3}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
   {
@@ -60,6 +63,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'S = \\{CC, CS, SC, SS\\} \\rightarrow |S| = 4',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-espacio-muestral', 'probabilidad-basica']
   },
   {
@@ -72,6 +76,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A = \\{2, 3, 5\\} \\rightarrow |A| = 3',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-eventos', 'probabilidad-espacio-muestral', 'numeros-primos']
   },
   {
@@ -84,6 +89,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 2,
     explanation: '13 + 13 = 26 \\text{ cartas rojas}',
     difficulty: 'easy',
+    difficultyScore: 0.15,
     skills: ['probabilidad-casos-favorables', 'numeros-operaciones-basicas']
   },
   {
@@ -96,6 +102,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P(\\text{blanca}) = \\frac{4}{12} = \\frac{1}{3}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -108,6 +115,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P = \\frac{2}{6} = \\frac{1}{3}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-multiplos', 'numeros-fracciones']
   },
   {
@@ -120,6 +128,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P(\\text{oro}) = \\frac{10}{40} = \\frac{1}{4}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
   {
@@ -132,6 +141,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P(\\text{no lluvia}) = 1 - \\frac{3}{10} = \\frac{7}{10}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-complemento', 'probabilidad-basica', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -144,6 +154,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P(\\text{no 6}) = 1 - P(6) = 1 - \\frac{1}{6} = \\frac{5}{6}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-complemento', 'probabilidad-basica', 'numeros-fracciones']
   },
   {
@@ -156,6 +167,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P(\\text{no } A) = 1 - P(A) = 1 - 0.35 = 0.65',
     difficulty: 'easy',
+    difficultyScore: 0.18,
     skills: ['probabilidad-complemento', 'probabilidad-basica', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -167,7 +179,8 @@ export const m1Prob004Questions: Question[] = [
     options: ['\\frac{1}{4}', '\\frac{1}{5}', '\\frac{1}{3}', '\\frac{3}{10}'],
     correctAnswer: 0,
     explanation: 'P = \\frac{5}{20} = \\frac{1}{4}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-divisores', 'numeros-fracciones']
   },
   {
@@ -179,7 +192,8 @@ export const m1Prob004Questions: Question[] = [
     options: ['\\frac{1}{100}', '\\frac{1}{50}', '\\frac{1}{20}', '\\frac{1}{10}'],
     correctAnswer: 3,
     explanation: 'P = \\frac{10}{100} = \\frac{1}{10}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -191,7 +205,8 @@ export const m1Prob004Questions: Question[] = [
     options: ['\\frac{1}{10}', '\\frac{2}{10}', '\\frac{3}{10}', '\\frac{4}{10}'],
     correctAnswer: 2,
     explanation: 'P(A) = \\frac{3}{10}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
   {
@@ -204,6 +219,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P(\\text{inglés}) = 0.60',
     difficulty: 'easy',
+    difficultyScore: 0.15,
     skills: ['probabilidad-basica', 'numeros-porcentajes', 'numeros-decimales']
   },
   // ========================================
@@ -219,6 +235,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: '0 \\leq P(A) \\leq 1 \\text{ para cualquier evento } A',
     difficulty: 'easy',
+    difficultyScore: 0.15,
     skills: ['probabilidad-basica', 'probabilidad-conceptos']
   },
   {
@@ -231,6 +248,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P(\\text{evento imposible}) = 0',
     difficulty: 'easy',
+    difficultyScore: 0.15,
     skills: ['probabilidad-basica', 'probabilidad-conceptos']
   },
   {
@@ -243,6 +261,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P(\\text{evento seguro}) = 1',
     difficulty: 'easy',
+    difficultyScore: 0.15,
     skills: ['probabilidad-basica', 'probabilidad-conceptos']
   },
   // ========================================
@@ -257,7 +276,8 @@ export const m1Prob004Questions: Question[] = [
     options: ['6', '8', '10', '12'],
     correctAnswer: 3,
     explanation: '|S| = 6 \\times 2 = 12 \\text{ resultados posibles}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['probabilidad-espacio-muestral', 'probabilidad-conteo', 'numeros-operaciones-basicas']
   },
   {
@@ -270,6 +290,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 3,
     explanation: '\\text{Todos los resultados (1,2,3,4,5,6) son menores que 7} \\Rightarrow P = 1',
     difficulty: 'easy',
+    difficultyScore: 0.15,
     skills: ['probabilidad-eventos', 'probabilidad-conceptos']
   },
   // ========================================
@@ -285,6 +306,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P(\\text{impar}) = \\frac{3}{6} = \\frac{1}{2} \\quad (\\text{impares: 1, 3, 5})',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
   {
@@ -297,6 +319,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P(\\text{as}) = \\frac{4}{52} = \\frac{1}{13}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
   {
@@ -309,6 +332,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P(\\text{corazón}) = \\frac{13}{52} = \\frac{1}{4}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
   {
@@ -320,7 +344,8 @@ export const m1Prob004Questions: Question[] = [
     options: ['\\frac{1}{50}', '\\frac{1}{10}', '\\frac{1}{5}', '\\frac{2}{5}'],
     correctAnswer: 1,
     explanation: 'P = \\frac{5}{50} = \\frac{1}{10} \\quad (\\text{múltiplos de 10: 10, 20, 30, 40, 50})',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-multiplos', 'numeros-fracciones']
   },
   {
@@ -333,6 +358,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P(\\text{verde}) = \\frac{5}{6+4+5} = \\frac{5}{15} = \\frac{1}{3}',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
   // ========================================
@@ -348,6 +374,7 @@ export const m1Prob004Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'f_r = \\frac{112}{200} = 0.56',
     difficulty: 'easy',
+    difficultyScore: 0.22,
     skills: ['probabilidad-experimental', 'estadistica-frecuencia', 'numeros-decimales']
   },
   {
@@ -359,7 +386,8 @@ export const m1Prob004Questions: Question[] = [
     options: ['\\frac{1}{6}', '\\frac{2}{15}', '\\frac{8}{60}', '\\frac{1}{8}'],
     correctAnswer: 1,
     explanation: 'P_{exp} = \\frac{8}{60} = \\frac{2}{15}',
-    difficulty: 'medium',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['probabilidad-experimental', 'numeros-fracciones']
   }
 ];
