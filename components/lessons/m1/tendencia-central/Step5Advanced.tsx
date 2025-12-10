@@ -216,7 +216,7 @@ export default function Step5Advanced({ onComplete, isActive }: LessonStepProps)
                 ¡Descubrimiento clave!
               </p>
               <p className="text-green-700 dark:text-green-300 text-sm mt-1">
-                La <strong>mediana</strong> apenas cambio (+{Math.round(medianChange)}k), mientras la
+                La <strong>mediana</strong> {medianChange === 0 ? 'no cambio' : `apenas cambio (+${Math.round(medianChange)}k)`}, mientras la
                 <strong> media</strong> subio mucho (+{Math.round(meanChange)}k).
               </p>
               <p className="text-green-700 dark:text-green-300 text-sm mt-2">
