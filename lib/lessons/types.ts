@@ -180,6 +180,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-num-002-c',
+    slug: 'suma-resta-fracciones-igual-denominador',
+    title: 'Suma y Resta de Fracciones con Igual Denominador',
+    description: 'Aprende a sumar y restar fracciones cuando tienen el mismo denominador y simplifica los resultados.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-002',
+    skills: ['fracciones-suma-igual-denominador', 'fracciones-resta-igual-denominador', 'simplificacion-fracciones'],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'Combinando Rebanadas', requiredToAdvance: true },
+      { id: 'explore-addition', type: 'explore', title: 'Sumando Pedazos', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'La Regla de Oro', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'explore-subtraction', type: 'explore', title: 'Restando Pedazos', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // ÁLGEBRA Y FUNCIONES
   // ========================================
