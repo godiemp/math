@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowRight, Check, Sparkles, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
@@ -9,10 +9,30 @@ type Phase = 'intro' | 'circumference' | 'area' | 'summary';
 
 export default function Step2Explore({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('intro');
-  const [showUnroll, setShowUnroll] = useState(false);
-  const [showSlices, setShowSlices] = useState(false);
+  const [circumferenceAnimStep, setCircumferenceAnimStep] = useState(0);
+  const [areaAnimStep, setAreaAnimStep] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
+
+  // Auto-advance circumference animation
+  useEffect(() => {
+    if (phase === 'circumference' && circumferenceAnimStep < 3) {
+      const timer = setTimeout(() => {
+        setCircumferenceAnimStep((prev) => prev + 1);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [phase, circumferenceAnimStep]);
+
+  // Auto-advance area animation
+  useEffect(() => {
+    if (phase === 'area' && areaAnimStep < 2) {
+      const timer = setTimeout(() => {
+        setAreaAnimStep((prev) => prev + 1);
+      }, 1800);
+      return () => clearTimeout(timer);
+    }
+  }, [phase, areaAnimStep]);
 
   if (!isActive) return null;
 
@@ -99,154 +119,297 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   if (phase === 'circumference') {
     return (
       <div className="space-y-6 animate-fadeIn pb-32">
+        <style jsx>{`
+          @keyframes unrollCircle {
+            0% {
+              stroke-dashoffset: 0;
+              opacity: 1;
+            }
+            100% {
+              stroke-dashoffset: 377;
+              opacity: 0;
+            }
+          }
+          @keyframes showLine {
+            0% {
+              transform: scaleX(0);
+              opacity: 0;
+            }
+            100% {
+              transform: scaleX(1);
+              opacity: 1;
+            }
+          }
+          @keyframes slideInSegment1 {
+            0% {
+              transform: translateX(-50px);
+              opacity: 0;
+            }
+            100% {
+              transform: translateX(0);
+              opacity: 1;
+            }
+          }
+          @keyframes slideInSegment2 {
+            0% {
+              transform: translateX(-50px);
+              opacity: 0;
+            }
+            100% {
+              transform: translateX(0);
+              opacity: 1;
+            }
+          }
+          @keyframes slideInSegment3 {
+            0% {
+              transform: translateX(-50px);
+              opacity: 0;
+            }
+            100% {
+              transform: translateX(0);
+              opacity: 1;
+            }
+          }
+          @keyframes popIn {
+            0% {
+              transform: scale(0);
+              opacity: 0;
+            }
+            50% {
+              transform: scale(1.2);
+            }
+            100% {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+          @keyframes fadeInUp {
+            0% {
+              transform: translateY(10px);
+              opacity: 0;
+            }
+            100% {
+              transform: translateY(0);
+              opacity: 1;
+            }
+          }
+          .circle-unroll {
+            animation: unrollCircle 1.2s ease-out forwards;
+          }
+          .line-appear {
+            transform-origin: left center;
+            animation: showLine 0.8s ease-out forwards;
+          }
+          .segment-1 {
+            animation: slideInSegment1 0.5s ease-out 0s forwards;
+          }
+          .segment-2 {
+            animation: slideInSegment2 0.5s ease-out 0.2s forwards;
+          }
+          .segment-3 {
+            animation: slideInSegment3 0.5s ease-out 0.4s forwards;
+          }
+          .pop-in {
+            animation: popIn 0.4s ease-out forwards;
+          }
+          .fade-in-up {
+            animation: fadeInUp 0.5s ease-out forwards;
+          }
+        `}</style>
+
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             ¿Por que C = π × d?
           </h2>
           <p className="text-gray-600 dark:text-gray-300">
-            Descubre de donde viene la formula
+            Observa como el diametro cabe en la circunferencia
           </p>
         </div>
 
-        {/* Interactive visualization */}
+        {/* Animated visualization */}
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
           <div className="flex justify-center">
-            <svg viewBox="0 0 300 180" className="w-full max-w-md">
-              {!showUnroll ? (
+            <svg viewBox="0 0 320 200" className="w-full max-w-md">
+              {/* Phase 0: Circle with diameter */}
+              {circumferenceAnimStep === 0 && (
                 <>
-                  {/* Circle with diameter marked */}
                   <circle
-                    cx="80"
+                    cx="160"
                     cy="90"
                     r="60"
                     fill="#ccfbf1"
                     stroke="#0d9488"
-                    strokeWidth="3"
+                    strokeWidth="4"
                   />
-                  <circle cx="80" cy="90" r="4" fill="#0d9488" />
+                  <circle cx="160" cy="90" r="4" fill="#0d9488" />
 
                   {/* Diameter line */}
-                  <line x1="20" y1="90" x2="140" y2="90" stroke="#7c3aed" strokeWidth="3" />
-                  <text x="80" y="80" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#7c3aed">d</text>
+                  <line x1="100" y1="90" x2="220" y2="90" stroke="#7c3aed" strokeWidth="4" />
+                  <text x="160" y="80" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#7c3aed">d</text>
 
-                  {/* Question marks around */}
-                  <text x="80" y="25" textAnchor="middle" fontSize="16" fill="#6b7280">?</text>
-                  <text x="150" y="90" textAnchor="middle" fontSize="16" fill="#6b7280">?</text>
-                  <text x="80" y="165" textAnchor="middle" fontSize="16" fill="#6b7280">?</text>
-                  <text x="10" y="90" textAnchor="middle" fontSize="16" fill="#6b7280">?</text>
+                  {/* Circumference label */}
+                  <text x="160" y="170" textAnchor="middle" fontSize="13" fill="#0d9488" fontWeight="bold">
+                    Circunferencia (borde del círculo)
+                  </text>
 
-                  {/* Arrow pointing to button */}
-                  <text x="220" y="90" textAnchor="middle" fontSize="12" fill="#6b7280">
-                    ¿Cuantas veces cabe
-                  </text>
-                  <text x="220" y="105" textAnchor="middle" fontSize="12" fill="#6b7280">
-                    el diametro en
-                  </text>
-                  <text x="220" y="120" textAnchor="middle" fontSize="12" fill="#6b7280">
-                    la circunferencia?
-                  </text>
+                  {/* Animated pulse on circle edge */}
+                  <circle
+                    cx="160"
+                    cy="90"
+                    r="60"
+                    fill="none"
+                    stroke="#0d9488"
+                    strokeWidth="4"
+                    strokeDasharray="8 4"
+                    className="animate-pulse"
+                  />
                 </>
-              ) : (
+              )}
+
+              {/* Phase 1+: Unrolled circumference as a line */}
+              {circumferenceAnimStep >= 1 && (
                 <>
-                  {/* Unrolled circumference as a line */}
-                  <line x1="20" y1="50" x2="280" y2="50" stroke="#0d9488" strokeWidth="4" />
-                  <text x="150" y="35" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#0d9488">
-                    Circunferencia (desenrollada)
+                  {/* Main circumference line */}
+                  <line
+                    x1="20" y1="40" x2="300" y2="40"
+                    stroke="#0d9488" strokeWidth="5"
+                    className="line-appear"
+                  />
+                  <text
+                    x="160" y="25"
+                    textAnchor="middle"
+                    fontSize="12"
+                    fontWeight="bold"
+                    fill="#0d9488"
+                    className="fade-in-up"
+                  >
+                    Circunferencia desenrollada
                   </text>
 
-                  {/* Diameter segments marked on the line */}
-                  {/* Segment 1 */}
-                  <line x1="20" y1="70" x2="103" y2="70" stroke="#7c3aed" strokeWidth="4" />
-                  <text x="61" y="90" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#7c3aed">d</text>
+                  {/* Diameter segments with staggered animation */}
+                  <g className="segment-1" style={{ opacity: 0 }}>
+                    <line x1="20" y1="65" x2="109" y2="65" stroke="#7c3aed" strokeWidth="5" strokeLinecap="round" />
+                    <text x="64" y="85" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#7c3aed">d</text>
+                  </g>
 
-                  {/* Segment 2 */}
-                  <line x1="107" y1="70" x2="190" y2="70" stroke="#ec4899" strokeWidth="4" />
-                  <text x="148" y="90" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#ec4899">d</text>
+                  <g className="segment-2" style={{ opacity: 0 }}>
+                    <line x1="113" y1="65" x2="202" y2="65" stroke="#ec4899" strokeWidth="5" strokeLinecap="round" />
+                    <text x="157" y="85" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#ec4899">d</text>
+                  </g>
 
-                  {/* Segment 3 */}
-                  <line x1="194" y1="70" x2="277" y2="70" stroke="#f59e0b" strokeWidth="4" />
-                  <text x="235" y="90" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#f59e0b">d</text>
+                  <g className="segment-3" style={{ opacity: 0 }}>
+                    <line x1="206" y1="65" x2="295" y2="65" stroke="#f59e0b" strokeWidth="5" strokeLinecap="round" />
+                    <text x="250" y="85" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#f59e0b">d</text>
+                  </g>
 
-                  {/* Remaining bit (0.14d) */}
-                  <line x1="277" y1="70" x2="280" y2="70" stroke="#10b981" strokeWidth="4" />
+                  {/* Remaining .14 portion */}
+                  <line x1="295" y1="65" x2="300" y2="65" stroke="#10b981" strokeWidth="5" strokeLinecap="round" style={{ opacity: circumferenceAnimStep >= 2 ? 1 : 0 }} />
+                </>
+              )}
 
-                  {/* Labels */}
-                  <text x="150" y="115" textAnchor="middle" fontSize="13" fill="#1f2937">
-                    ¡El diametro cabe 3.14 veces!
+              {/* Phase 2: Count bubbles */}
+              {circumferenceAnimStep >= 2 && (
+                <>
+                  <g className="pop-in" style={{ animationDelay: '0s' }}>
+                    <circle cx="64" cy="120" r="18" fill="#7c3aed" />
+                    <text x="64" y="126" textAnchor="middle" fontSize="16" fontWeight="bold" fill="white">1</text>
+                  </g>
+
+                  <g className="pop-in" style={{ animationDelay: '0.15s' }}>
+                    <circle cx="157" cy="120" r="18" fill="#ec4899" />
+                    <text x="157" y="126" textAnchor="middle" fontSize="16" fontWeight="bold" fill="white">2</text>
+                  </g>
+
+                  <g className="pop-in" style={{ animationDelay: '0.3s' }}>
+                    <circle cx="250" cy="120" r="18" fill="#f59e0b" />
+                    <text x="250" y="126" textAnchor="middle" fontSize="16" fontWeight="bold" fill="white">3</text>
+                  </g>
+
+                  <text
+                    x="297" y="126"
+                    textAnchor="middle"
+                    fontSize="14"
+                    fontWeight="bold"
+                    fill="#10b981"
+                    className="pop-in"
+                    style={{ animationDelay: '0.45s' }}
+                  >.14</text>
+
+                  {/* Result label */}
+                  <text
+                    x="160" y="165"
+                    textAnchor="middle"
+                    fontSize="15"
+                    fontWeight="bold"
+                    fill="#1f2937"
+                    className="fade-in-up"
+                    style={{ animationDelay: '0.6s' }}
+                  >
+                    ¡El diámetro cabe 3.14 veces! = π
                   </text>
-
-                  {/* Count bubbles */}
-                  <circle cx="61" cy="140" r="15" fill="#7c3aed" />
-                  <text x="61" y="145" textAnchor="middle" fontSize="14" fontWeight="bold" fill="white">1</text>
-
-                  <circle cx="148" cy="140" r="15" fill="#ec4899" />
-                  <text x="148" y="145" textAnchor="middle" fontSize="14" fontWeight="bold" fill="white">2</text>
-
-                  <circle cx="235" cy="140" r="15" fill="#f59e0b" />
-                  <text x="235" y="145" textAnchor="middle" fontSize="14" fontWeight="bold" fill="white">3</text>
-
-                  <text x="275" y="145" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#10b981">.14</text>
                 </>
               )}
             </svg>
           </div>
-
-          <div className="mt-4 text-center">
-            <button
-              onClick={() => setShowUnroll(!showUnroll)}
-              className="px-4 py-2 bg-teal-100 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300 rounded-lg font-medium hover:bg-teal-200 dark:hover:bg-teal-900 transition-all"
-            >
-              {showUnroll ? 'Ver el circulo' : 'Desenrollar la circunferencia'}
-            </button>
-          </div>
         </div>
 
-        {showUnroll && (
+        {/* Formula explanation - appears after animation */}
+        {circumferenceAnimStep >= 2 && (
           <div className="bg-teal-50 dark:bg-teal-900/30 rounded-xl p-5 border border-teal-200 dark:border-teal-700 animate-fadeIn">
             <p className="text-teal-800 dark:text-teal-200 text-center">
-              <strong>¡Eso es π!</strong> El diametro cabe <strong>π veces</strong> (≈ 3.14) en la circunferencia.
+              <strong>¡Eso es π!</strong> El diámetro cabe exactamente <strong>π veces</strong> (≈ 3.14) en la circunferencia.
             </p>
             <p className="text-teal-700 dark:text-teal-300 text-center mt-2 text-sm">
-              Por eso: Circunferencia = π × diametro = <strong>C = πd</strong>
+              Por eso: Circunferencia = π × diámetro = <strong>C = πd</strong>
             </p>
           </div>
         )}
 
-        <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-5 border border-purple-200 dark:border-purple-700">
-          <p className="text-purple-800 dark:text-purple-200 text-center mb-3 font-semibold">
-            Las dos formas de escribir la formula:
-          </p>
-          <div className="flex flex-col items-center gap-2">
-            <div className="flex items-center gap-4">
-              <span className="text-xl font-bold text-purple-900 dark:text-purple-100">
-                C = π × d
-              </span>
-              <span className="text-gray-500">(usando diametro)</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-xl font-bold text-purple-900 dark:text-purple-100">
-                C = 2πr
-              </span>
-              <span className="text-gray-500">(usando radio, porque d = 2r)</span>
+        {circumferenceAnimStep >= 2 && (
+          <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-5 border border-purple-200 dark:border-purple-700 animate-fadeIn">
+            <p className="text-purple-800 dark:text-purple-200 text-center mb-3 font-semibold">
+              Las dos formas de escribir la fórmula:
+            </p>
+            <div className="flex flex-col items-center gap-2">
+              <div className="flex items-center gap-4">
+                <span className="text-xl font-bold text-purple-900 dark:text-purple-100">
+                  C = π × d
+                </span>
+                <span className="text-gray-500">(usando diámetro)</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="text-xl font-bold text-purple-900 dark:text-purple-100">
+                  C = 2πr
+                </span>
+                <span className="text-gray-500">(usando radio, porque d = 2r)</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-4 border border-green-200 dark:border-green-700">
-          <div className="flex items-center justify-center gap-2">
-            <Check className="w-5 h-5 text-green-600" />
-            <span className="text-green-800 dark:text-green-200 font-semibold text-lg">
-              C = 2πr = πd
-            </span>
+        {circumferenceAnimStep >= 2 && (
+          <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-4 border border-green-200 dark:border-green-700 animate-fadeIn">
+            <div className="flex items-center justify-center gap-2">
+              <Check className="w-5 h-5 text-green-600" />
+              <span className="text-green-800 dark:text-green-200 font-semibold text-lg">
+                C = 2πr = πd
+              </span>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="flex justify-center">
           <button
             onClick={() => setPhase('area')}
-            className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
+            disabled={circumferenceAnimStep < 2}
+            className={cn(
+              'flex items-center gap-2 px-8 py-3 rounded-xl font-semibold transition-all shadow-lg',
+              circumferenceAnimStep >= 2
+                ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
+                : 'bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed'
+            )}
           >
-            <span>Ahora el area</span>
+            <span>Ahora el área</span>
             <ArrowRight size={20} />
           </button>
         </div>
@@ -263,134 +426,171 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     const handleAreaNext = () => {
       setShowFeedback(false);
       setSelectedAnswer(null);
-      setShowSlices(false);
       setPhase('summary');
     };
 
+    // Calculate slice positions for animation
+    const numSlices = 8;
+    const sliceAngle = 360 / numSlices;
+
     return (
       <div className="space-y-6 animate-fadeIn pb-32">
+        <style jsx>{`
+          @keyframes sliceMove {
+            0% {
+              transform: translate(0, 0) rotate(0deg);
+            }
+            100% {
+              transform: var(--final-transform);
+            }
+          }
+          @keyframes labelFadeIn {
+            0% {
+              opacity: 0;
+              transform: translateY(10px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          .slice-animate {
+            animation: sliceMove 1.2s ease-in-out forwards;
+            animation-delay: var(--delay);
+          }
+          .label-animate {
+            animation: labelFadeIn 0.5s ease-out forwards;
+            animation-delay: 1.4s;
+            opacity: 0;
+          }
+        `}</style>
+
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            ¿Por que A = πr²?
+            ¿Por qué A = πr²?
           </h2>
           <p className="text-gray-600 dark:text-gray-300">
-            Descubre de donde viene la formula del area
+            Observa cómo las rebanadas forman un rectángulo
           </p>
         </div>
 
-        {/* Interactive circle area visualization */}
+        {/* Animated circle area visualization */}
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
           <div className="flex justify-center">
-            <svg viewBox="0 0 320 200" className="w-full max-w-md">
-              {!showSlices ? (
+            <svg viewBox="0 0 360 220" className="w-full max-w-lg">
+              {/* Phase 0: Pizza circle */}
+              {areaAnimStep === 0 && (
+                <g transform="translate(180, 100)">
+                  {/* 8 slices like pizza */}
+                  {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+                    const angle1 = (i * sliceAngle * Math.PI) / 180;
+                    const angle2 = ((i + 1) * sliceAngle * Math.PI) / 180;
+                    const r = 70;
+                    const x1 = r * Math.cos(angle1);
+                    const y1 = r * Math.sin(angle1);
+                    const x2 = r * Math.cos(angle2);
+                    const y2 = r * Math.sin(angle2);
+                    const colors = ['#5eead4', '#2dd4bf', '#14b8a6', '#0d9488', '#5eead4', '#2dd4bf', '#14b8a6', '#0d9488'];
+                    return (
+                      <path
+                        key={i}
+                        d={`M 0 0 L ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2} Z`}
+                        fill={colors[i]}
+                        stroke="#0d9488"
+                        strokeWidth="1.5"
+                        className="transition-all duration-300"
+                      />
+                    );
+                  })}
+                  <circle cx="0" cy="0" r="4" fill="#0d9488" />
+
+                  {/* Radius indicator */}
+                  <line x1="0" y1="0" x2="70" y2="0" stroke="#dc2626" strokeWidth="3" />
+                  <text x="35" y="-10" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#dc2626">r</text>
+
+                  {/* Label */}
+                  <text x="0" y="100" textAnchor="middle" fontSize="12" fill="#6b7280">
+                    Círculo cortado en rebanadas
+                  </text>
+                </g>
+              )}
+
+              {/* Phase 1+: Animated slices moving to rectangle */}
+              {areaAnimStep >= 1 && (
                 <>
-                  {/* Circle divided into slices (like pizza) */}
-                  <g transform="translate(100, 100)">
-                    {/* 8 slices */}
-                    {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
-                      const angle1 = (i * 45 * Math.PI) / 180;
-                      const angle2 = ((i + 1) * 45 * Math.PI) / 180;
-                      const x1 = 70 * Math.cos(angle1);
-                      const y1 = 70 * Math.sin(angle1);
-                      const x2 = 70 * Math.cos(angle2);
-                      const y2 = 70 * Math.sin(angle2);
-                      const colors = ['#5eead4', '#2dd4bf', '#14b8a6', '#0d9488', '#5eead4', '#2dd4bf', '#14b8a6', '#0d9488'];
+                  {/* Slices rearranged - alternating up and down triangles */}
+                  <g transform="translate(30, 50)">
+                    {/* Bottom pointing up triangles */}
+                    {[0, 1, 2, 3].map((i) => {
+                      const colors = ['#5eead4', '#14b8a6', '#5eead4', '#14b8a6'];
+                      const baseX = i * 75;
                       return (
                         <path
-                          key={i}
-                          d={`M 0 0 L ${x1} ${y1} A 70 70 0 0 1 ${x2} ${y2} Z`}
+                          key={`up-${i}`}
+                          d={`M ${baseX} 100 L ${baseX + 37.5} 30 L ${baseX + 75} 100 Z`}
                           fill={colors[i]}
                           stroke="#0d9488"
-                          strokeWidth="1"
+                          strokeWidth="1.5"
+                          style={{
+                            '--delay': `${i * 0.1}s`,
+                            '--final-transform': 'translate(0, 0)',
+                          } as React.CSSProperties}
+                          className={areaAnimStep === 1 ? 'slice-animate' : ''}
                         />
                       );
                     })}
-                    <circle cx="0" cy="0" r="4" fill="#0d9488" />
-                    {/* Radius label */}
-                    <line x1="0" y1="0" x2="70" y2="0" stroke="#dc2626" strokeWidth="2" />
-                    <text x="35" y="-8" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#dc2626">r</text>
+
+                    {/* Top pointing down triangles (filling gaps) */}
+                    {[0, 1, 2, 3].map((i) => {
+                      const colors = ['#2dd4bf', '#0d9488', '#2dd4bf', '#0d9488'];
+                      const baseX = i * 75 + 37.5;
+                      return (
+                        <path
+                          key={`down-${i}`}
+                          d={`M ${baseX} 30 L ${baseX + 37.5} 100 L ${baseX + 75} 30 Z`}
+                          fill={colors[i]}
+                          stroke="#0d9488"
+                          strokeWidth="1.5"
+                          style={{
+                            '--delay': `${0.4 + i * 0.1}s`,
+                          } as React.CSSProperties}
+                          className={areaAnimStep === 1 ? 'slice-animate' : ''}
+                        />
+                      );
+                    })}
                   </g>
 
-                  <text x="100" y="190" textAnchor="middle" fontSize="11" fill="#6b7280">
-                    Circulo cortado como pizza
-                  </text>
+                  {/* Labels that appear after animation */}
+                  {areaAnimStep >= 2 && (
+                    <>
+                      {/* Base label */}
+                      <line x1="30" y1="165" x2="330" y2="165" stroke="#7c3aed" strokeWidth="3" className="label-animate" />
+                      <text x="180" y="185" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#7c3aed" className="label-animate">
+                        base = πr (mitad de la circunferencia)
+                      </text>
 
-                  {/* Arrow */}
-                  <path d="M 185 100 L 210 100" stroke="#6b7280" strokeWidth="2" markerEnd="url(#arrowhead)" />
-                  <defs>
-                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                      <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280" />
-                    </marker>
-                  </defs>
-
-                  <text x="260" y="95" textAnchor="middle" fontSize="11" fill="#6b7280">
-                    Presiona el boton
-                  </text>
-                  <text x="260" y="110" textAnchor="middle" fontSize="11" fill="#6b7280">
-                    para reorganizar
-                  </text>
-                </>
-              ) : (
-                <>
-                  {/* Slices rearranged into parallelogram */}
-                  <g transform="translate(40, 60)">
-                    {/* Bottom row (pointing up) */}
-                    {[0, 1, 2, 3].map((i) => (
-                      <path
-                        key={`up-${i}`}
-                        d={`M ${i * 55} 80 L ${i * 55 + 27.5} 10 L ${i * 55 + 55} 80 Z`}
-                        fill={['#5eead4', '#14b8a6', '#5eead4', '#14b8a6'][i]}
-                        stroke="#0d9488"
-                        strokeWidth="1"
-                      />
-                    ))}
-                    {/* Top row (pointing down) */}
-                    {[0, 1, 2, 3].map((i) => (
-                      <path
-                        key={`down-${i}`}
-                        d={`M ${i * 55 + 27.5} 10 L ${i * 55 + 55} 80 L ${i * 55 + 82.5} 10 Z`}
-                        fill={['#2dd4bf', '#0d9488', '#2dd4bf', '#0d9488'][i]}
-                        stroke="#0d9488"
-                        strokeWidth="1"
-                      />
-                    ))}
-                  </g>
-
-                  {/* Labels */}
-                  {/* Base = half circumference = πr */}
-                  <line x1="40" y1="150" x2="260" y2="150" stroke="#7c3aed" strokeWidth="3" />
-                  <text x="150" y="170" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#7c3aed">
-                    base = πr (mitad de la circunferencia)
-                  </text>
-
-                  {/* Height = r */}
-                  <line x1="275" y1="70" x2="275" y2="140" stroke="#dc2626" strokeWidth="3" />
-                  <text x="295" y="110" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#dc2626">
-                    altura = r
-                  </text>
+                      {/* Height label */}
+                      <line x1="340" y1="50" x2="340" y2="150" stroke="#dc2626" strokeWidth="3" className="label-animate" />
+                      <text x="352" y="105" textAnchor="start" fontSize="13" fontWeight="bold" fill="#dc2626" className="label-animate">
+                        altura = r
+                      </text>
+                    </>
+                  )}
                 </>
               )}
             </svg>
           </div>
-
-          <div className="mt-4 text-center">
-            <button
-              onClick={() => setShowSlices(!showSlices)}
-              className="px-4 py-2 bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 rounded-lg font-medium hover:bg-purple-200 dark:hover:bg-purple-900 transition-all"
-            >
-              {showSlices ? 'Ver el circulo' : 'Reorganizar las rebanadas'}
-            </button>
-          </div>
         </div>
 
-        {showSlices && (
+        {/* Explanation that appears after animation */}
+        {areaAnimStep >= 2 && (
           <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-5 border border-purple-200 dark:border-purple-700 animate-fadeIn">
             <p className="text-purple-800 dark:text-purple-200 text-center">
-              ¡Las rebanadas forman casi un <strong>rectangulo</strong>!
+              ¡Las rebanadas forman casi un <strong>rectángulo</strong>!
             </p>
             <div className="mt-3 bg-white dark:bg-gray-800 rounded-lg p-4">
               <p className="text-center text-sm text-gray-700 dark:text-gray-300">
-                <strong>Area del rectangulo</strong> = base × altura
+                <strong>Área del rectángulo</strong> = base × altura
               </p>
               <p className="text-center text-sm text-gray-700 dark:text-gray-300 mt-1">
                 = <span className="text-purple-600 font-semibold">πr</span> × <span className="text-red-600 font-semibold">r</span>
@@ -402,41 +602,43 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           </div>
         )}
 
-        {/* Question */}
-        <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-5 border border-blue-200 dark:border-blue-700">
-          <p className="text-blue-800 dark:text-blue-200 text-center font-semibold mb-4">
-            Entonces, ¿cual es la formula del area de un circulo?
-          </p>
+        {/* Question - appears after animation */}
+        {areaAnimStep >= 2 && (
+          <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-5 border border-blue-200 dark:border-blue-700 animate-fadeIn">
+            <p className="text-blue-800 dark:text-blue-200 text-center font-semibold mb-4">
+              Entonces, ¿cuál es la fórmula del área de un círculo?
+            </p>
 
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { label: 'A = πr', value: 0 },
-              { label: 'A = πr²', value: 1 },
-              { label: 'A = 2πr', value: 2 },
-              { label: 'A = πd²', value: 3 },
-            ].map((option) => (
-              <button
-                key={option.value}
-                onClick={() => setSelectedAnswer(option.value)}
-                disabled={showFeedback}
-                className={cn(
-                  'p-3 rounded-xl font-semibold transition-all border-2 text-sm',
-                  selectedAnswer === option.value
-                    ? showFeedback
-                      ? option.value === 1
-                        ? 'bg-green-100 dark:bg-green-900/50 border-green-500'
-                        : 'bg-red-100 dark:bg-red-900/50 border-red-500'
-                      : 'bg-purple-100 dark:bg-purple-900/50 border-purple-500'
-                    : showFeedback && option.value === 1
-                    ? 'bg-green-50 dark:bg-green-900/30 border-green-400'
-                    : 'bg-white dark:bg-gray-700 border-transparent hover:border-gray-300 dark:hover:border-gray-600'
-                )}
-              >
-                {option.label}
-              </button>
-            ))}
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { label: 'A = πr', value: 0 },
+                { label: 'A = πr²', value: 1 },
+                { label: 'A = 2πr', value: 2 },
+                { label: 'A = πd²', value: 3 },
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setSelectedAnswer(option.value)}
+                  disabled={showFeedback}
+                  className={cn(
+                    'p-3 rounded-xl font-semibold transition-all border-2 text-sm',
+                    selectedAnswer === option.value
+                      ? showFeedback
+                        ? option.value === 1
+                          ? 'bg-green-100 dark:bg-green-900/50 border-green-500'
+                          : 'bg-red-100 dark:bg-red-900/50 border-red-500'
+                        : 'bg-purple-100 dark:bg-purple-900/50 border-purple-500'
+                      : showFeedback && option.value === 1
+                      ? 'bg-green-50 dark:bg-green-900/30 border-green-400'
+                      : 'bg-white dark:bg-gray-700 border-transparent hover:border-gray-300 dark:hover:border-gray-600'
+                  )}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {showFeedback && (
           <div className={cn(
@@ -458,7 +660,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   {selectedAnswer === 1 ? '¡Correcto!' : 'La respuesta es A = πr²'}
                 </p>
                 <p className="text-gray-700 dark:text-gray-300 mt-1 text-sm">
-                  El area es π veces el radio al cuadrado, porque el circulo se puede reorganizar en un rectangulo de base πr y altura r.
+                  El área es π veces el radio al cuadrado, porque el círculo se puede reorganizar en un rectángulo de base πr y altura r.
                 </p>
               </div>
             </div>
@@ -466,7 +668,11 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
         )}
 
         <div className="flex justify-center">
-          {!showFeedback ? (
+          {areaAnimStep < 2 ? (
+            <div className="text-gray-500 dark:text-gray-400 text-sm animate-pulse">
+              Observando la animación...
+            </div>
+          ) : !showFeedback ? (
             <button
               onClick={handleAreaSubmit}
               disabled={selectedAnswer === null}
@@ -501,7 +707,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           ¡Excelente trabajo!
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          Has descubierto las formulas del circulo
+          Has descubierto las fórmulas del círculo
         </p>
       </div>
 
@@ -521,7 +727,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             </div>
             <div className="flex-1">
               <p className="font-semibold text-gray-800 dark:text-gray-200">Pi (π)</p>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">El diametro cabe π veces en la circunferencia</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">El diámetro cabe π veces en la circunferencia</p>
             </div>
             <div className="text-lg font-bold text-purple-600 dark:text-purple-400">
               ≈ 3.14
@@ -535,7 +741,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             </svg>
             <div className="flex-1">
               <p className="font-semibold text-gray-800 dark:text-gray-200">Circunferencia</p>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">π veces el diametro</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">π veces el diámetro</p>
             </div>
             <div className="text-lg font-bold text-teal-600 dark:text-teal-400">
               C = πd
@@ -548,8 +754,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <circle cx="25" cy="25" r="20" fill="#5eead4" stroke="#0d9488" strokeWidth="2" />
             </svg>
             <div className="flex-1">
-              <p className="font-semibold text-gray-800 dark:text-gray-200">Area</p>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Rebanadas forman rectangulo πr × r</p>
+              <p className="font-semibold text-gray-800 dark:text-gray-200">Área</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">Rebanadas forman rectángulo πr × r</p>
             </div>
             <div className="text-lg font-bold text-teal-600 dark:text-teal-400">
               A = πr²
@@ -562,8 +768,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
         <div className="flex items-start gap-3">
           <Lightbulb className="w-6 h-6 text-amber-500 flex-shrink-0" />
           <p className="text-amber-800 dark:text-amber-200">
-            <strong>Patron clave:</strong> Ambas formulas usan π (pi).
-            La circunferencia usa el diametro (o 2r), el area usa r² (radio al cuadrado).
+            <strong>Patrón clave:</strong> Ambas fórmulas usan π (pi).
+            La circunferencia usa el diámetro (o 2r), el área usa r² (radio al cuadrado).
           </p>
         </div>
       </div>
@@ -573,7 +779,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           onClick={onComplete}
           className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
         >
-          <span>Ver las formulas completas</span>
+          <span>Ver las fórmulas completas</span>
           <ArrowRight size={20} />
         </button>
       </div>
