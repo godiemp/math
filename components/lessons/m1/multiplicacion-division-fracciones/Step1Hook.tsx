@@ -9,20 +9,12 @@ type Phase = 'scenario' | 'question' | 'reveal' | 'result';
 
 // Chocolate bar component - shows a rectangular bar divided into pieces
 function ChocolateBar({
-  rows,
   cols,
-  filledRows,
   filledCols,
-  highlightColor = 'amber',
-  showHighlight = false,
   size = 'normal',
 }: {
-  rows: number;
   cols: number;
-  filledRows?: number;
-  filledCols?: number;
-  highlightColor?: 'amber' | 'green' | 'blue' | 'purple';
-  showHighlight?: boolean;
+  filledCols: number;
   size?: 'small' | 'normal' | 'large';
 }) {
   const sizeClasses = {
@@ -31,42 +23,94 @@ function ChocolateBar({
     large: { cell: 'w-10 h-10', gap: 'gap-1' },
   };
 
-  const highlightColors = {
-    amber: 'bg-amber-400 dark:bg-amber-500',
-    green: 'bg-green-400 dark:bg-green-500',
-    blue: 'bg-blue-400 dark:bg-blue-500',
-    purple: 'bg-purple-400 dark:bg-purple-500',
-  };
-
   const s = sizeClasses[size];
 
   return (
-    <div className={cn('inline-grid', s.gap)} style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
-      {Array.from({ length: rows * cols }).map((_, i) => {
-        const row = Math.floor(i / cols);
-        const col = i % cols;
-        const isFilled = filledRows !== undefined && filledCols !== undefined
-          ? row < filledRows && col < filledCols
-          : row < rows && col < cols;
-        const isHighlighted = showHighlight && filledRows !== undefined && filledCols !== undefined
-          ? row < filledRows && col < filledCols
-          : false;
+    <div className={cn('inline-flex', s.gap)}>
+      {Array.from({ length: cols }).map((_, i) => (
+        <div
+          key={i}
+          className={cn(
+            s.cell,
+            'rounded-sm border border-amber-800 dark:border-amber-600 transition-all',
+            i < filledCols
+              ? 'bg-amber-600 dark:bg-amber-700'
+              : 'bg-amber-200/50 dark:bg-amber-900/30',
+          )}
+        />
+      ))}
+    </div>
+  );
+}
 
-        return (
+// Special component to show chocolate bar being cut in half
+function ChocolateBarWithCut({
+  cols,
+  filledCols,
+  showCutLine = false,
+  showOnlyTop = false,
+  showOnlyBottom = false,
+}: {
+  cols: number;
+  filledCols: number;
+  showCutLine?: boolean;
+  showOnlyTop?: boolean;
+  showOnlyBottom?: boolean;
+}) {
+  return (
+    <div className="inline-flex flex-col">
+      {/* Top half */}
+      <div className={cn('inline-flex gap-1', showOnlyBottom && 'opacity-30')}>
+        {Array.from({ length: cols }).map((_, i) => (
           <div
-            key={i}
+            key={`top-${i}`}
             className={cn(
-              s.cell,
-              'rounded-sm border border-amber-800 dark:border-amber-600 transition-all',
-              isFilled
-                ? isHighlighted
-                  ? highlightColors[highlightColor]
+              'w-10 h-5 rounded-t-sm border border-amber-800 dark:border-amber-600 transition-all',
+              showCutLine && 'border-b-0',
+              i < filledCols
+                ? showOnlyTop
+                  ? 'bg-green-500 dark:bg-green-600'
                   : 'bg-amber-600 dark:bg-amber-700'
                 : 'bg-amber-200/50 dark:bg-amber-900/30',
             )}
           />
-        );
-      })}
+        ))}
+      </div>
+
+      {/* Cut line */}
+      {showCutLine && (
+        <div className="inline-flex gap-1">
+          {Array.from({ length: cols }).map((_, i) => (
+            <div
+              key={`line-${i}`}
+              className={cn(
+                'w-10 border-t-2 border-dashed',
+                i < filledCols
+                  ? 'border-red-500 dark:border-red-400'
+                  : 'border-gray-400 dark:border-gray-500',
+              )}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Bottom half */}
+      <div className={cn('inline-flex gap-1', showOnlyTop && 'opacity-30')}>
+        {Array.from({ length: cols }).map((_, i) => (
+          <div
+            key={`bottom-${i}`}
+            className={cn(
+              'w-10 h-5 rounded-b-sm border border-amber-800 dark:border-amber-600 transition-all',
+              showCutLine && 'border-t-0',
+              i < filledCols
+                ? showOnlyBottom
+                  ? 'bg-green-500 dark:bg-green-600'
+                  : 'bg-amber-600 dark:bg-amber-700'
+                : 'bg-amber-200/50 dark:bg-amber-900/30',
+            )}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -253,40 +297,33 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 Empezamos con 3/4 del chocolate:
               </p>
               <div className="flex justify-center">
-                <ChocolateBar rows={1} cols={4} filledRows={1} filledCols={3} />
+                <ChocolateBar cols={4} filledCols={3} size="large" />
               </div>
             </div>
 
-            {/* Step 2: Divide in half vertically */}
+            {/* Step 2: Show the cut line */}
             <div className="text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                Dividimos cada pedazo en 2 (para tomar la mitad):
+                Cortamos por la mitad <span className="text-red-500">(linea roja)</span>:
               </p>
               <div className="flex justify-center">
-                <ChocolateBar rows={2} cols={4} filledRows={2} filledCols={3} />
+                <ChocolateBarWithCut cols={4} filledCols={3} showCutLine={true} />
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                Ahora tenemos 8 pedacitos en total, 6 con chocolate
+                Cada pedazo ahora tiene 2 mitades
               </p>
             </div>
 
             {/* Step 3: Take half */}
             <div className="text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                Tomamos la mitad (1 fila de las 2):
+                Tomamos solo una mitad <span className="text-green-500">(verde)</span>:
               </p>
               <div className="flex justify-center">
-                <ChocolateBar
-                  rows={2}
-                  cols={4}
-                  filledRows={1}
-                  filledCols={3}
-                  showHighlight={true}
-                  highlightColor="green"
-                />
+                <ChocolateBarWithCut cols={4} filledCols={3} showCutLine={true} showOnlyTop={true} />
               </div>
               <p className="text-lg font-bold text-green-600 dark:text-green-400 mt-2">
-                ¡3 pedacitos de 8 = 3/8!
+                ¡3 mitades de 8 mitades = 3/8!
               </p>
             </div>
           </div>
