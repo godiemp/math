@@ -159,20 +159,45 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               </defs>
               <rect x="0" y="0" width="300" height="180" fill="url(#gridPara)" />
 
-              {/* Main parallelogram body - transforms with triangle */}
-              <polygon
-                points="80,130 80,30 220,30 220,130"
-                fill="#c4b5fd"
-                stroke="#7c3aed"
-                strokeWidth="2"
-              />
+              {/* Full parallelogram shown initially (step 0) */}
+              {paraStep === 0 && (
+                <polygon
+                  points="40,130 80,30 220,30 180,130"
+                  fill="#c4b5fd"
+                  stroke="#7c3aed"
+                  strokeWidth="2"
+                />
+              )}
+
+              {/* After cutting: show remaining quadrilateral + moving triangle */}
+              {paraStep > 0 && (
+                <>
+                  {/* Remaining quadrilateral (trapezoid shape that morphs to rectangle) */}
+                  <motion.polygon
+                    initial={{ points: "80,130 80,30 220,30 180,130" }}
+                    animate={{
+                      points: paraStep >= 3
+                        ? "80,130 80,30 220,30 220,130"  // Rectangle
+                        : "80,130 80,30 220,30 180,130"  // Trapezoid
+                    }}
+                    transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1] }}
+                    fill="#c4b5fd"
+                    stroke="#7c3aed"
+                    strokeWidth="2"
+                  />
+                </>
+              )}
 
               {/* Triangle piece that moves - using Framer Motion */}
               <motion.g
-                animate={trianglePositions[paraStep]}
+                initial={{ x: 0, y: 0, opacity: paraStep === 0 ? 0 : 1 }}
+                animate={{
+                  ...trianglePositions[paraStep],
+                  opacity: paraStep === 0 ? 0 : 1
+                }}
                 transition={{
                   duration: 0.8,
-                  ease: [0.2, 0.8, 0.2, 1] // Custom easing for smooth movement
+                  ease: [0.2, 0.8, 0.2, 1]
                 }}
               >
                 <polygon
@@ -187,7 +212,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   fontSize="16"
                   fill="#dc2626"
                   fontWeight="bold"
-                  animate={{ opacity: paraStep < 2 ? 1 : 0 }}
+                  animate={{ opacity: paraStep >= 1 && paraStep < 3 ? 1 : 0 }}
                   transition={{ duration: 0.3 }}
                 >
                   ✂
@@ -212,13 +237,12 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 strokeWidth="3"
                 animate={{
                   opacity: paraStep >= 3 ? 1 : 0,
-                  strokeDasharray: paraStep === 3 ? "0" : "8,4"
                 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               />
 
               {/* Labels */}
-              <text x="150" y="155" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1f2937">
+              <text x="130" y="155" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1f2937">
                 base
               </text>
               <text x="240" y="85" textAnchor="start" fontSize="14" fontWeight="bold" fill="#1f2937">
