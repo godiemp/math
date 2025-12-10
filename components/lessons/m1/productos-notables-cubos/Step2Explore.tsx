@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, Eye, EyeOff, Lightbulb } from 'lucide-react';
+import { ArrowRight, Lightbulb, Maximize2, Minimize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
@@ -13,19 +13,19 @@ interface CubePart {
   formula: string;
   count: number;
   color: string;
-  darkColor: string;
+  bgColor: string;
 }
 
 const CUBE_PARTS: CubePart[] = [
-  { id: 'a3', label: 'a³', formula: 'a × a × a', count: 1, color: 'bg-blue-500', darkColor: 'dark:bg-blue-600' },
-  { id: 'a2b', label: 'a²b', formula: 'a × a × b', count: 3, color: 'bg-teal-500', darkColor: 'dark:bg-teal-600' },
-  { id: 'ab2', label: 'ab²', formula: 'a × b × b', count: 3, color: 'bg-purple-500', darkColor: 'dark:bg-purple-600' },
-  { id: 'b3', label: 'b³', formula: 'b × b × b', count: 1, color: 'bg-pink-500', darkColor: 'dark:bg-pink-600' },
+  { id: 'a3', label: 'a³', formula: 'a × a × a', count: 1, color: '#3b82f6', bgColor: 'bg-blue-500' },
+  { id: 'a2b', label: 'a²b', formula: 'a × a × b', count: 3, color: '#14b8a6', bgColor: 'bg-teal-500' },
+  { id: 'ab2', label: 'ab²', formula: 'a × b × b', count: 3, color: '#a855f7', bgColor: 'bg-purple-500' },
+  { id: 'b3', label: 'b³', formula: 'b × b × b', count: 1, color: '#ec4899', bgColor: 'bg-pink-500' },
 ];
 
 export default function Step2Explore({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('intro');
-  const [showLabels, setShowLabels] = useState(true);
+  const [exploded, setExploded] = useState(false);
   const [selectedPart, setSelectedPart] = useState<string | null>(null);
   const [discoveredParts, setDiscoveredParts] = useState<string[]>([]);
 
@@ -39,6 +39,22 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   const allPartsDiscovered = discoveredParts.length === CUBE_PARTS.length;
 
   if (!isActive) return null;
+
+  // Exploded view offsets for each of the 8 cubes
+  const getOffset = (index: number, isExploded: boolean) => {
+    if (!isExploded) return { x: 0, y: 0 };
+    const offsets = [
+      { x: -15, y: -15 },  // a³ (back-top-left)
+      { x: 15, y: -15 },   // a²b (back-top-right)
+      { x: -15, y: 0 },    // a²b (back-bottom-left)
+      { x: 15, y: 0 },     // a²b (back-bottom-right)
+      { x: -15, y: 15 },   // ab² (front-top-left)
+      { x: 15, y: 15 },    // ab² (front-top-right)
+      { x: -15, y: 30 },   // ab² (front-bottom-left)
+      { x: 15, y: 30 },    // b³ (front-bottom-right)
+    ];
+    return offsets[index] || { x: 0, y: 0 };
+  };
 
   return (
     <div className="space-y-8 animate-fadeIn">
@@ -55,209 +71,207 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
       {phase === 'intro' && (
         <div className="space-y-6 animate-fadeIn">
           <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 rounded-2xl p-6 border border-blue-200 dark:border-blue-800">
-            <p className="text-gray-700 dark:text-gray-300 text-lg text-center mb-6">
+            <p className="text-gray-700 dark:text-gray-300 text-lg text-center mb-4">
               Cuando expandimos <span className="font-mono font-bold text-purple-600">(a + b)³</span>, el resultado se puede visualizar como un cubo grande dividido en <strong>8 partes</strong>.
             </p>
 
-            {/* 3D cube visualization showing the decomposition */}
-            <div className="flex justify-center mb-6">
-              <svg viewBox="0 0 320 280" className="w-80 h-70">
-                {/* Main cube outline */}
-                <g transform="translate(160, 140)">
-                  {/* Back corner cube (a³) */}
-                  <g className="cursor-pointer hover:opacity-80 transition-opacity">
-                    <polygon
-                      points="-80,-60 -20,-60 -20,0 -80,0"
-                      fill="#3b82f6"
-                      stroke="#1d4ed8"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="-80,-60 -50,-90 10,-90 -20,-60"
-                      fill="#60a5fa"
-                      stroke="#1d4ed8"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="-20,-60 10,-90 10,-30 -20,0"
-                      fill="#2563eb"
-                      stroke="#1d4ed8"
-                      strokeWidth="2"
-                    />
-                    <text x="-50" y="-25" textAnchor="middle" className="text-sm font-bold" fill="white">a³</text>
-                  </g>
-
-                  {/* Top front a²b */}
-                  <g className="cursor-pointer hover:opacity-80 transition-opacity">
-                    <polygon
-                      points="10,-90 70,-90 70,-30 10,-30"
-                      fill="#14b8a6"
-                      stroke="#0d9488"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="-20,-60 10,-90 70,-90 40,-60"
-                      fill="#2dd4bf"
-                      stroke="#0d9488"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="40,-60 70,-90 70,-30 40,0"
-                      fill="#0d9488"
-                      stroke="#0d9488"
-                      strokeWidth="2"
-                    />
-                    <text x="30" y="-55" textAnchor="middle" className="text-xs font-bold" fill="white">a²b</text>
-                  </g>
-
-                  {/* Right back a²b */}
-                  <g className="cursor-pointer hover:opacity-80 transition-opacity">
-                    <polygon
-                      points="-20,0 40,0 40,60 -20,60"
-                      fill="#14b8a6"
-                      stroke="#0d9488"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="-20,0 10,-30 70,-30 40,0"
-                      fill="#2dd4bf"
-                      stroke="#0d9488"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="40,0 70,-30 70,30 40,60"
-                      fill="#0d9488"
-                      stroke="#0d9488"
-                      strokeWidth="2"
-                    />
-                    <text x="30" y="25" textAnchor="middle" className="text-xs font-bold" fill="white">a²b</text>
-                  </g>
-
-                  {/* Left middle a²b */}
-                  <g className="cursor-pointer hover:opacity-80 transition-opacity">
-                    <polygon
-                      points="-80,0 -20,0 -20,60 -80,60"
-                      fill="#14b8a6"
-                      stroke="#0d9488"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="-80,0 -50,-30 10,-30 -20,0"
-                      fill="#2dd4bf"
-                      stroke="#0d9488"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="-20,0 10,-30 10,30 -20,60"
-                      fill="#0d9488"
-                      stroke="#0d9488"
-                      strokeWidth="2"
-                    />
-                    <text x="-50" y="25" textAnchor="middle" className="text-xs font-bold" fill="white">a²b</text>
-                  </g>
-
-                  {/* Front top ab² */}
-                  <g className="cursor-pointer hover:opacity-80 transition-opacity">
-                    <polygon
-                      points="10,-30 70,-30 70,30 10,30"
-                      fill="#a855f7"
-                      stroke="#7c3aed"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="10,-30 40,-60 100,-60 70,-30"
-                      fill="#c084fc"
-                      stroke="#7c3aed"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="70,-30 100,-60 100,0 70,30"
-                      fill="#7c3aed"
-                      stroke="#7c3aed"
-                      strokeWidth="2"
-                    />
-                    <text x="50" y="-10" textAnchor="middle" className="text-xs font-bold" fill="white">ab²</text>
-                  </g>
-
-                  {/* Right middle ab² */}
-                  <g className="cursor-pointer hover:opacity-80 transition-opacity">
-                    <polygon
-                      points="40,0 100,0 100,60 40,60"
-                      fill="#a855f7"
-                      stroke="#7c3aed"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="40,0 70,-30 130,-30 100,0"
-                      fill="#c084fc"
-                      stroke="#7c3aed"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="100,0 130,-30 130,30 100,60"
-                      fill="#7c3aed"
-                      stroke="#7c3aed"
-                      strokeWidth="2"
-                    />
-                    <text x="80" y="25" textAnchor="middle" className="text-xs font-bold" fill="white">ab²</text>
-                  </g>
-
-                  {/* Bottom front ab² */}
-                  <g className="cursor-pointer hover:opacity-80 transition-opacity">
-                    <polygon
-                      points="-20,60 40,60 40,120 -20,120"
-                      fill="#a855f7"
-                      stroke="#7c3aed"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="-20,60 10,30 70,30 40,60"
-                      fill="#c084fc"
-                      stroke="#7c3aed"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="40,60 70,30 70,90 40,120"
-                      fill="#7c3aed"
-                      stroke="#7c3aed"
-                      strokeWidth="2"
-                    />
-                    <text x="20" y="85" textAnchor="middle" className="text-xs font-bold" fill="white">ab²</text>
-                  </g>
-
-                  {/* Front corner (b³) */}
-                  <g className="cursor-pointer hover:opacity-80 transition-opacity">
-                    <polygon
-                      points="40,60 100,60 100,120 40,120"
-                      fill="#ec4899"
-                      stroke="#db2777"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="40,60 70,30 130,30 100,60"
-                      fill="#f472b6"
-                      stroke="#db2777"
-                      strokeWidth="2"
-                    />
-                    <polygon
-                      points="100,60 130,30 130,90 100,120"
-                      fill="#db2777"
-                      stroke="#db2777"
-                      strokeWidth="2"
-                    />
-                    <text x="80" y="85" textAnchor="middle" className="text-sm font-bold" fill="white">b³</text>
-                  </g>
-
-                  {/* Dimension labels */}
-                  <text x="-65" y="-100" className="text-sm font-bold" fill="#3b82f6">a</text>
-                  <text x="30" y="-100" className="text-sm font-bold" fill="#ec4899">b</text>
-                </g>
-              </svg>
+            {/* Explode toggle */}
+            <div className="flex justify-center mb-4">
+              <button
+                onClick={() => setExploded(!exploded)}
+                className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+              >
+                {exploded ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+                {exploded ? 'Vista compacta' : 'Vista expandida'}
+              </button>
             </div>
 
-            <p className="text-gray-600 dark:text-gray-400 text-center">
-              Cada color representa un tipo de pieza diferente.
+            {/* Simplified 2D representation showing 8 cubes in layers */}
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                {/* Layer labels */}
+                <div className="absolute -left-16 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400 font-medium">
+                  <div className="mb-16">Capa a</div>
+                  <div>Capa b</div>
+                </div>
+
+                {/* 3D-ish grid showing the 8 cubes */}
+                <div className={cn(
+                  "grid grid-cols-2 gap-1 transition-all duration-500",
+                  exploded && "gap-4"
+                )}>
+                  {/* Back layer (a dimension) */}
+                  <div className={cn(
+                    "grid grid-cols-2 gap-1 transition-all duration-500",
+                    exploded && "gap-3 -translate-x-2 -translate-y-2"
+                  )}>
+                    {/* a³ */}
+                    <div
+                      onClick={() => handlePartClick('a3')}
+                      className={cn(
+                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
+                        "bg-blue-500 border-2 border-blue-600",
+                        selectedPart === 'a3' && "ring-4 ring-blue-300"
+                      )}
+                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
+                    >
+                      a³
+                    </div>
+                    {/* a²b */}
+                    <div
+                      onClick={() => handlePartClick('a2b')}
+                      className={cn(
+                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
+                        "bg-teal-500 border-2 border-teal-600",
+                        selectedPart === 'a2b' && "ring-4 ring-teal-300"
+                      )}
+                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
+                    >
+                      a²b
+                    </div>
+                    {/* a²b */}
+                    <div
+                      onClick={() => handlePartClick('a2b')}
+                      className={cn(
+                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
+                        "bg-teal-500 border-2 border-teal-600",
+                        selectedPart === 'a2b' && "ring-4 ring-teal-300"
+                      )}
+                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
+                    >
+                      a²b
+                    </div>
+                    {/* a²b */}
+                    <div
+                      onClick={() => handlePartClick('a2b')}
+                      className={cn(
+                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
+                        "bg-teal-500 border-2 border-teal-600",
+                        selectedPart === 'a2b' && "ring-4 ring-teal-300"
+                      )}
+                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
+                    >
+                      a²b
+                    </div>
+                  </div>
+
+                  {/* Front layer (b dimension) */}
+                  <div className={cn(
+                    "grid grid-cols-2 gap-1 transition-all duration-500",
+                    exploded && "gap-3 translate-x-2 translate-y-2"
+                  )}>
+                    {/* ab² */}
+                    <div
+                      onClick={() => handlePartClick('ab2')}
+                      className={cn(
+                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
+                        "bg-purple-500 border-2 border-purple-600",
+                        selectedPart === 'ab2' && "ring-4 ring-purple-300"
+                      )}
+                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
+                    >
+                      ab²
+                    </div>
+                    {/* ab² */}
+                    <div
+                      onClick={() => handlePartClick('ab2')}
+                      className={cn(
+                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
+                        "bg-purple-500 border-2 border-purple-600",
+                        selectedPart === 'ab2' && "ring-4 ring-purple-300"
+                      )}
+                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
+                    >
+                      ab²
+                    </div>
+                    {/* ab² */}
+                    <div
+                      onClick={() => handlePartClick('ab2')}
+                      className={cn(
+                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
+                        "bg-purple-500 border-2 border-purple-600",
+                        selectedPart === 'ab2' && "ring-4 ring-purple-300"
+                      )}
+                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
+                    >
+                      ab²
+                    </div>
+                    {/* b³ */}
+                    <div
+                      onClick={() => handlePartClick('b3')}
+                      className={cn(
+                        "w-16 h-16 rounded-lg flex items-center justify-center font-mono font-bold text-white cursor-pointer transition-all hover:scale-105 shadow-lg",
+                        "bg-pink-500 border-2 border-pink-600",
+                        selectedPart === 'b3' && "ring-4 ring-pink-300"
+                      )}
+                      style={{ transform: `perspective(500px) rotateX(10deg) rotateY(-10deg)` }}
+                    >
+                      b³
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dimension labels */}
+                <div className="flex justify-center mt-4 gap-8">
+                  <span className="text-blue-600 font-bold">a</span>
+                  <span className="text-pink-600 font-bold">b</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Legend */}
+            <div className="flex flex-wrap justify-center gap-3 mb-4">
+              {CUBE_PARTS.map((part) => (
+                <div
+                  key={part.id}
+                  onClick={() => handlePartClick(part.id)}
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all",
+                    selectedPart === part.id
+                      ? "bg-white dark:bg-gray-800 shadow-lg ring-2 ring-offset-2"
+                      : "bg-white/50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800"
+                  )}
+                  style={{
+                    ringColor: selectedPart === part.id ? part.color : undefined
+                  }}
+                >
+                  <div
+                    className="w-4 h-4 rounded"
+                    style={{ backgroundColor: part.color }}
+                  />
+                  <span className="font-mono font-bold text-gray-700 dark:text-gray-300">
+                    {part.label}
+                  </span>
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">
+                    ×{part.count}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-gray-600 dark:text-gray-400 text-center text-sm">
+              Haz clic en los cubos o la leyenda para explorar cada tipo de pieza.
             </p>
+
+            {/* Selected part info */}
+            {selectedPart && (
+              <div className="mt-4 bg-white dark:bg-gray-800 rounded-xl p-4 animate-fadeIn">
+                {(() => {
+                  const part = CUBE_PARTS.find(p => p.id === selectedPart);
+                  if (!part) return null;
+                  return (
+                    <div className="text-center">
+                      <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                        Hay <span className="font-bold text-2xl" style={{ color: part.color }}>{part.count}</span> {part.count === 1 ? 'pieza' : 'piezas'} de tipo <span className="font-mono" style={{ color: part.color }}>{part.label}</span>
+                      </p>
+                      <p className="text-gray-600 dark:text-gray-400 mt-1">
+                        Cada una tiene dimensiones: <span className="font-mono">{part.formula}</span>
+                      </p>
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
           </div>
 
           <div className="flex justify-center">
@@ -265,7 +279,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               onClick={() => setPhase('discover')}
               className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
             >
-              <span>Explorar las partes</span>
+              <span>Explorar el patrón</span>
               <ArrowRight size={20} />
             </button>
           </div>
@@ -291,7 +305,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                       ? 'ring-2 ring-offset-2 ring-blue-500'
                       : '',
                     discoveredParts.includes(part.id)
-                      ? `${part.color} ${part.darkColor} border-transparent text-white`
+                      ? `${part.bgColor} border-transparent text-white`
                       : 'bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400'
                   )}
                 >
@@ -316,7 +330,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   className={cn(
                     'w-3 h-3 rounded-full transition-all',
                     discoveredParts.includes(part.id)
-                      ? `${part.color}`
+                      ? part.bgColor
                       : 'bg-gray-300 dark:bg-gray-600'
                   )}
                 />
@@ -332,7 +346,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   return (
                     <div className="text-center">
                       <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                        Hay <span className={cn('font-bold text-2xl', part.color.replace('bg-', 'text-'))}>{part.count}</span> piezas de tipo <span className="font-mono">{part.label}</span>
+                        Hay <span className="font-bold text-2xl" style={{ color: part.color }}>{part.count}</span> piezas de tipo <span className="font-mono">{part.label}</span>
                       </p>
                       <p className="text-gray-600 dark:text-gray-400 mt-2">
                         Cada una tiene dimensiones: <span className="font-mono">{part.formula}</span>

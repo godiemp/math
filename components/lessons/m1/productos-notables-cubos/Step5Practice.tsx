@@ -84,9 +84,9 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
   const [correctCount, setCorrectCount] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>(Array(PROBLEMS.length).fill(null));
 
-  const currentProblem = PROBLEMS[currentIndex];
-  const isCorrect = selectedAnswer === currentProblem.correctAnswer;
   const isComplete = currentIndex >= PROBLEMS.length;
+  const currentProblem = isComplete ? PROBLEMS[0] : PROBLEMS[currentIndex];
+  const isCorrect = selectedAnswer === currentProblem.correctAnswer;
 
   const handleSelect = (index: number) => {
     if (showFeedback) return;
