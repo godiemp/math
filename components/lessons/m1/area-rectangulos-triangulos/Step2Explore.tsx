@@ -192,51 +192,31 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
         {/* Interactive triangle visualization */}
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
           <div className="flex justify-center">
-            <svg viewBox="0 0 220 160" className="w-full max-w-sm">
-              {/* Rectangle outline (ghosted) */}
+            <svg viewBox="0 0 220 170" className="w-full max-w-sm">
+              {/* Rectangle outline (ghosted) - perfectly aligned with triangle */}
               <rect
-                x="35" y="35" width="150" height="100"
-                fill="none"
-                stroke={showDecomposition ? '#94a3b8' : 'transparent'}
+                x="30" y="30" width="160" height="110"
+                fill={showDecomposition ? '#fecaca' : 'none'}
+                fillOpacity={showDecomposition ? '0.3' : '0'}
+                stroke={showDecomposition ? '#dc2626' : 'transparent'}
                 strokeWidth="2"
-                strokeDasharray="6,4"
                 className="transition-all duration-500"
               />
 
-              {/* Original triangle */}
+              {/* Original triangle - vertices exactly match rectangle corners */}
               <polygon
-                points="35,135 185,135 110,35"
+                points="30,140 190,140 110,30"
                 fill="#86efac"
                 stroke="#166534"
                 strokeWidth="2"
               />
 
-              {/* Second triangle (appears on decomposition) */}
-              {showDecomposition && (
-                <polygon
-                  points="35,135 35,35 110,35"
-                  fill="#fca5a5"
-                  stroke="#dc2626"
-                  strokeWidth="2"
-                  className="animate-fadeIn"
-                  opacity="0.7"
-                />
-              )}
-              {showDecomposition && (
-                <polygon
-                  points="185,135 185,35 110,35"
-                  fill="#fca5a5"
-                  stroke="#dc2626"
-                  strokeWidth="2"
-                  className="animate-fadeIn"
-                  opacity="0.7"
-                />
-              )}
+              {/* Height line */}
+              <line x1="110" y1="30" x2="110" y2="140" stroke="#6b7280" strokeWidth="1.5" strokeDasharray="4,4" />
 
               {/* Dimensions */}
-              <text x="110" y="152" textAnchor="middle" fontSize="14" fill="#1f2937" fontWeight="bold">base</text>
-              <text x="50" y="85" textAnchor="start" fontSize="14" fill="#1f2937" fontWeight="bold">altura</text>
-              <line x1="110" y1="35" x2="110" y2="135" stroke="#6b7280" strokeWidth="1" strokeDasharray="4,4" />
+              <text x="110" y="160" textAnchor="middle" fontSize="14" fill="#1f2937" fontWeight="bold">base</text>
+              <text x="22" y="90" textAnchor="end" fontSize="14" fill="#1f2937" fontWeight="bold">altura</text>
             </svg>
           </div>
 

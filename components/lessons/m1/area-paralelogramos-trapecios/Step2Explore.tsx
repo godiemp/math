@@ -79,59 +79,78 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
         {/* Interactive transformation */}
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
           <div className="flex justify-center mb-4">
-            <svg viewBox="0 0 300 150" className="w-full max-w-md">
-              {!showTransform ? (
-                <>
-                  {/* Original parallelogram */}
-                  <polygon
-                    points="60,120 100,30 240,30 200,120"
-                    fill="#c4b5fd"
-                    stroke="#7c3aed"
-                    strokeWidth="2"
-                  />
-                  {/* Dashed cut line */}
-                  <line x1="100" y1="30" x2="100" y2="120" stroke="#dc2626" strokeWidth="2" strokeDasharray="5,5" />
-                  {/* Triangle to cut */}
-                  <polygon
-                    points="60,120 100,30 100,120"
-                    fill="#fca5a5"
-                    fillOpacity="0.5"
-                    stroke="#dc2626"
-                    strokeWidth="1"
-                  />
-                  {/* Labels */}
-                  <text x="150" y="145" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1f2937">base</text>
-                  <text x="85" y="80" textAnchor="end" fontSize="14" fontWeight="bold" fill="#1f2937">h</text>
-                  <Scissors className="w-4 h-4" />
-                  <text x="80" y="85" textAnchor="middle" fontSize="10" fill="#dc2626">cortar</text>
-                </>
-              ) : (
-                <>
-                  {/* Transformed rectangle */}
-                  <rect
-                    x="60"
-                    y="30"
-                    width="140"
-                    height="90"
-                    fill="#86efac"
-                    stroke="#166534"
-                    strokeWidth="2"
-                  />
-                  {/* Show where triangle moved */}
-                  <polygon
-                    points="200,30 200,120 240,120"
-                    fill="#fca5a5"
-                    fillOpacity="0.5"
-                    stroke="#dc2626"
-                    strokeWidth="1"
-                    strokeDasharray="3,3"
-                  />
-                  {/* Labels */}
-                  <text x="130" y="145" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1f2937">base</text>
-                  <text x="45" y="80" textAnchor="end" fontSize="14" fontWeight="bold" fill="#1f2937">h</text>
-                  <text x="130" y="80" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#166534">¡Rectángulo!</text>
-                </>
-              )}
+            <svg viewBox="0 0 320 160" className="w-full max-w-md">
+              {/* Main parallelogram body (becomes rectangle) */}
+              <polygon
+                points={showTransform ? "80,130 80,40 220,40 220,130" : "80,130 120,40 260,40 220,130"}
+                fill="#c4b5fd"
+                stroke="#7c3aed"
+                strokeWidth="2"
+                style={{ transition: 'all 0.6s ease-in-out' }}
+              />
+
+              {/* Animated triangle piece */}
+              <polygon
+                points={showTransform ? "220,40 220,130 260,130" : "80,130 120,40 120,130"}
+                fill="#fca5a5"
+                fillOpacity="0.7"
+                stroke="#dc2626"
+                strokeWidth="2"
+                style={{ transition: 'all 0.6s ease-in-out' }}
+              />
+
+              {/* Cut line (only visible before transform) */}
+              <line
+                x1="120" y1="40" x2="120" y2="130"
+                stroke="#dc2626"
+                strokeWidth="2"
+                strokeDasharray="5,5"
+                opacity={showTransform ? 0 : 1}
+                style={{ transition: 'opacity 0.3s ease-in-out' }}
+              />
+
+              {/* Rectangle outline indicator (appears after transform) */}
+              <rect
+                x="80" y="40" width="140" height="90"
+                fill="none"
+                stroke="#166534"
+                strokeWidth="3"
+                opacity={showTransform ? 1 : 0}
+                style={{ transition: 'opacity 0.4s ease-in-out 0.4s' }}
+              />
+
+              {/* Labels */}
+              <text x="170" y="155" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1f2937">base</text>
+              <text
+                x={showTransform ? "68" : "105"}
+                y="90"
+                textAnchor="end"
+                fontSize="14"
+                fontWeight="bold"
+                fill="#1f2937"
+                style={{ transition: 'all 0.6s ease-in-out' }}
+              >h</text>
+
+              {/* "cortar" label */}
+              <text
+                x="108" y="90"
+                textAnchor="end"
+                fontSize="10"
+                fill="#dc2626"
+                opacity={showTransform ? 0 : 1}
+                style={{ transition: 'opacity 0.3s ease-in-out' }}
+              >cortar</text>
+
+              {/* Success message */}
+              <text
+                x="150" y="90"
+                textAnchor="middle"
+                fontSize="16"
+                fontWeight="bold"
+                fill="#166534"
+                opacity={showTransform ? 1 : 0}
+                style={{ transition: 'opacity 0.4s ease-in-out 0.5s' }}
+              >¡Rectángulo!</text>
             </svg>
           </div>
 
@@ -202,45 +221,106 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
         {/* Interactive transformation */}
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
           <div className="flex justify-center mb-4">
-            <svg viewBox="0 0 300 160" className="w-full max-w-md">
-              {!showTrapezoidTransform ? (
-                <>
-                  {/* Original trapezoid */}
-                  <polygon
-                    points="50,130 80,30 200,30 250,130"
-                    fill="#fde68a"
-                    stroke="#b45309"
-                    strokeWidth="2"
-                  />
-                  {/* Height line */}
-                  <line x1="140" y1="30" x2="140" y2="130" stroke="#6b7280" strokeWidth="1" strokeDasharray="4,4" />
-                  {/* Labels */}
-                  <text x="140" y="22" textAnchor="middle" fontSize="12" fill="#1f2937" fontWeight="bold">Base menor (b)</text>
-                  <text x="150" y="148" textAnchor="middle" fontSize="12" fill="#1f2937" fontWeight="bold">Base mayor (B)</text>
-                  <text x="148" y="85" textAnchor="start" fontSize="14" fill="#1f2937" fontWeight="bold">h</text>
-                </>
-              ) : (
-                <>
-                  {/* Two trapezoids forming a parallelogram */}
-                  <polygon
-                    points="30,130 60,30 180,30 210,130"
-                    fill="#fde68a"
-                    stroke="#b45309"
-                    strokeWidth="2"
-                  />
-                  <polygon
-                    points="210,130 240,30 120,30 90,130"
-                    fill="#fed7aa"
-                    stroke="#ea580c"
-                    strokeWidth="2"
-                    transform="rotate(180, 150, 80)"
-                  />
-                  {/* Labels */}
-                  <text x="150" y="22" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold">B + b</text>
-                  <text x="260" y="85" textAnchor="start" fontSize="14" fill="#1f2937" fontWeight="bold">h</text>
-                  <text x="150" y="85" textAnchor="middle" fontSize="12" fill="#166534" fontWeight="bold">2 trapecios</text>
-                </>
-              )}
+            <svg viewBox="0 0 320 170" className="w-full max-w-md">
+              {/* Original trapezoid */}
+              <polygon
+                points={showTrapezoidTransform ? "40,130 70,40 170,40 200,130" : "60,130 90,40 190,40 240,130"}
+                fill="#fde68a"
+                stroke="#b45309"
+                strokeWidth="2"
+                style={{ transition: 'all 0.6s ease-in-out' }}
+              />
+
+              {/* Second trapezoid (copy, rotated 180°) - slides in from above */}
+              <polygon
+                points={showTrapezoidTransform ? "200,130 170,40 270,40 240,130" : "240,130 210,40 260,40 260,40"}
+                fill="#fed7aa"
+                stroke="#ea580c"
+                strokeWidth="2"
+                opacity={showTrapezoidTransform ? 1 : 0}
+                style={{ transition: 'all 0.6s ease-in-out' }}
+              />
+
+              {/* Height line */}
+              <line
+                x1={showTrapezoidTransform ? "120" : "140"}
+                y1="40"
+                x2={showTrapezoidTransform ? "120" : "140"}
+                y2="130"
+                stroke="#6b7280"
+                strokeWidth="1.5"
+                strokeDasharray="4,4"
+                style={{ transition: 'all 0.6s ease-in-out' }}
+              />
+
+              {/* Parallelogram outline (appears after transform) */}
+              <polygon
+                points="40,130 70,40 270,40 240,130"
+                fill="none"
+                stroke="#166534"
+                strokeWidth="3"
+                opacity={showTrapezoidTransform ? 1 : 0}
+                style={{ transition: 'opacity 0.4s ease-in-out 0.5s' }}
+              />
+
+              {/* Labels - Base menor */}
+              <text
+                x={showTrapezoidTransform ? "120" : "140"}
+                y="32"
+                textAnchor="middle"
+                fontSize="11"
+                fill="#1f2937"
+                fontWeight="bold"
+                opacity={showTrapezoidTransform ? 0 : 1}
+                style={{ transition: 'opacity 0.3s ease-in-out' }}
+              >Base menor (b)</text>
+
+              {/* Labels - Base mayor */}
+              <text
+                x={showTrapezoidTransform ? "140" : "150"}
+                y="155"
+                textAnchor="middle"
+                fontSize="11"
+                fill="#1f2937"
+                fontWeight="bold"
+                opacity={showTrapezoidTransform ? 0 : 1}
+                style={{ transition: 'opacity 0.3s ease-in-out' }}
+              >Base mayor (B)</text>
+
+              {/* Labels - Combined base (B + b) */}
+              <text
+                x="170"
+                y="32"
+                textAnchor="middle"
+                fontSize="12"
+                fill="#166534"
+                fontWeight="bold"
+                opacity={showTrapezoidTransform ? 1 : 0}
+                style={{ transition: 'opacity 0.4s ease-in-out 0.5s' }}
+              >B + b</text>
+
+              {/* Height label */}
+              <text
+                x={showTrapezoidTransform ? "130" : "150"}
+                y="90"
+                textAnchor="start"
+                fontSize="14"
+                fill="#1f2937"
+                fontWeight="bold"
+                style={{ transition: 'all 0.6s ease-in-out' }}
+              >h</text>
+
+              {/* "2 trapecios" message */}
+              <text
+                x="155"
+                y="95"
+                textAnchor="middle"
+                fontSize="12"
+                fill="#166534"
+                fontWeight="bold"
+                opacity={showTrapezoidTransform ? 1 : 0}
+                style={{ transition: 'opacity 0.4s ease-in-out 0.6s' }}
+              >= Paralelogramo</text>
             </svg>
           </div>
 

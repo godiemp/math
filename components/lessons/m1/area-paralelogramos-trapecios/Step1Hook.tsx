@@ -74,11 +74,11 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 </text>
 
                 {/* Dimension labels */}
-                <text x="90" y="175" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold">6 m</text>
-                <text x="25" y="115" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold" transform="rotate(-90, 25, 115)">4 m</text>
+                <text x="90" y="180" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold">6 m</text>
+                <text x="12" y="115" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold" transform="rotate(-90, 12, 115)">4 m</text>
                 <text x="200" y="52" textAnchor="middle" fontSize="10" fill="#1f2937" fontWeight="bold">5 m</text>
-                <text x="210" y="175" textAnchor="middle" fontSize="10" fill="#1f2937" fontWeight="bold">8 m</text>
-                <text x="280" y="115" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold" transform="rotate(90, 280, 115)">4 m</text>
+                <text x="210" y="180" textAnchor="middle" fontSize="10" fill="#1f2937" fontWeight="bold">8 m</text>
+                <text x="288" y="115" textAnchor="middle" fontSize="11" fill="#1f2937" fontWeight="bold" transform="rotate(90, 288, 115)">4 m</text>
               </svg>
             </div>
 
