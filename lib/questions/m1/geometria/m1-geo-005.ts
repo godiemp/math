@@ -24,8 +24,8 @@ export const m1Geo005Questions: Question[] = [
     options: ['(3, -4)', '(-3, 4)', '(-3, -4)', '(4, 3)'],
     correctAnswer: 0,
     explanation: 'A(3, 4) \\xrightarrow{\\text{reflejo eje } x} A\'(3, -4)',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['geometria-transformaciones', 'geometria-reflexion', 'geometria-plano-cartesiano']
   },
   {
@@ -37,8 +37,8 @@ export const m1Geo005Questions: Question[] = [
     options: ['(-y, x)', '(y, -x)', '(-x, -y)', '(x, -y)'],
     correctAnswer: 0,
     explanation: '(x, y) \\xrightarrow{90^\\circ} (-y, x)',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['geometria-transformaciones', 'geometria-rotacion', 'geometria-plano-cartesiano']
   },
   {
@@ -50,8 +50,8 @@ export const m1Geo005Questions: Question[] = [
     options: ['(1, 3)', '(-5, 7)', '(1, 7)', '(-5, 3)'],
     correctAnswer: 0,
     explanation: 'B(-2, 5) + (3, -2) = (-2+3, 5-2) = (1, 3)',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['geometria-transformaciones', 'geometria-traslacion', 'geometria-plano-cartesiano', 'numeros-operaciones-basicas']
   },
   {
@@ -63,8 +63,8 @@ export const m1Geo005Questions: Question[] = [
     options: ['(-4, -3)', '(4, 3)', '(-4, 3)', '(3, -4)'],
     correctAnswer: 0,
     explanation: 'C(4, -3) \\xrightarrow{\\text{reflejo eje } y} C\'(-4, -3)',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['geometria-transformaciones', 'geometria-reflexion', 'geometria-plano-cartesiano']
   },
   {
@@ -76,8 +76,8 @@ export const m1Geo005Questions: Question[] = [
     options: ['(6, 8)', '(1.5, 2)', '(5, 6)', '(3, 4)'],
     correctAnswer: 0,
     explanation: 'D(3, 4) \\xrightarrow{k=2} D\'(2 \\times 3, 2 \\times 4) = (6, 8)',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['geometria-transformaciones', 'geometria-homotecia', 'geometria-plano-cartesiano', 'numeros-operaciones-basicas']
   },
   // ========================================
@@ -93,7 +93,7 @@ export const m1Geo005Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'P\' = P + \\vec{v} = (2+4, -3+5) = (6, 2)',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.25,
     skills: ['geometria-transformaciones', 'geometria-traslacion', 'geometria-plano-cartesiano', 'numeros-operaciones-basicas']
   },
   {
@@ -106,7 +106,7 @@ export const m1Geo005Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'A\' = (1-2, 1+3) = (-1, 4)',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.28,
     skills: ['geometria-transformaciones', 'geometria-traslacion', 'geometria-plano-cartesiano', 'numeros-operaciones-basicas']
   },
   {
@@ -119,7 +119,7 @@ export const m1Geo005Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\vec{v} = Q\' - Q = (1-(-5), -4-2) = (6, -6)',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.38,
     skills: ['geometria-transformaciones', 'geometria-traslacion', 'geometria-vectores', 'numeros-operaciones-basicas']
   },
   // ========================================
@@ -135,7 +135,7 @@ export const m1Geo005Questions: Question[] = [
     correctAnswer: 0,
     explanation: '(x, y) \\xrightarrow{90^\\circ} (-y, x): (4, 0) \\to (0, 4)',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.42,
     skills: ['geometria-transformaciones', 'geometria-rotacion', 'geometria-plano-cartesiano']
   },
   {
@@ -148,7 +148,7 @@ export const m1Geo005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(x, y) \\xrightarrow{180^\\circ} (-x, -y): (2, 3) \\to (-2, -3)',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.28,
     skills: ['geometria-transformaciones', 'geometria-rotacion', 'geometria-plano-cartesiano']
   },
   {
@@ -160,8 +160,8 @@ export const m1Geo005Questions: Question[] = [
     options: ['(5, 0)', '(-5, 0)', '(0, -5)', '(-5, 5)'],
     correctAnswer: 0,
     explanation: '(x, y) \\xrightarrow{270^\\circ} (y, -x): (0, 5) \\to (5, 0)',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.52,
     skills: ['geometria-transformaciones', 'geometria-rotacion', 'geometria-plano-cartesiano']
   },
   {
@@ -174,7 +174,7 @@ export const m1Geo005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(x, y) \\xrightarrow{-90^\\circ} (y, -x): (1, 0) \\to (0, -1)',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.42,
     skills: ['geometria-transformaciones', 'geometria-rotacion', 'geometria-plano-cartesiano']
   },
   // ========================================
@@ -190,7 +190,7 @@ export const m1Geo005Questions: Question[] = [
     correctAnswer: 0,
     explanation: '(x, y) \\xrightarrow{\\text{eje } x} (x, -y): (-2, 7) \\to (-2, -7)',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.22,
     skills: ['geometria-transformaciones', 'geometria-reflexion', 'geometria-plano-cartesiano']
   },
   {
@@ -203,7 +203,7 @@ export const m1Geo005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(x, y) \\xrightarrow{\\text{eje } y} (-x, y): (6, -4) \\to (-6, -4)',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.22,
     skills: ['geometria-transformaciones', 'geometria-reflexion', 'geometria-plano-cartesiano']
   },
   {
@@ -215,8 +215,8 @@ export const m1Geo005Questions: Question[] = [
     options: ['(-3, 5)', '(3, -5)', '(-3, -5)', '(5, 3)'],
     correctAnswer: 2,
     explanation: '(x, y) \\xrightarrow{\\text{origen}} (-x, -y): (3, 5) \\to (-3, -5)',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.30,
     skills: ['geometria-transformaciones', 'geometria-reflexion', 'geometria-plano-cartesiano']
   },
   {
@@ -228,8 +228,8 @@ export const m1Geo005Questions: Question[] = [
     options: ['(1, 4)', '(-4, -1)', '(-1, -4)', '(4, -1)'],
     correctAnswer: 0,
     explanation: '(x, y) \\xrightarrow{y=x} (y, x): (4, 1) \\to (1, 4)',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['geometria-transformaciones', 'geometria-reflexion', 'geometria-plano-cartesiano']
   },
   // ========================================
@@ -244,8 +244,8 @@ export const m1Geo005Questions: Question[] = [
     options: ['(3, -1)', '(3, 5)', '(1, -1)', '(1, 5)'],
     correctAnswer: 0,
     explanation: 'J(2, 3) \\xrightarrow{\\text{eje } x} (2, -3) \\xrightarrow{+(1,2)} (3, -1)',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.52,
     skills: ['geometria-transformaciones', 'geometria-reflexion', 'geometria-traslacion', 'geometria-plano-cartesiano']
   },
   {
@@ -258,7 +258,7 @@ export const m1Geo005Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'K(1, 0) \\xrightarrow{90^\\circ} (0, 1) \\xrightarrow{90^\\circ} (-1, 0)',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.45,
     skills: ['geometria-transformaciones', 'geometria-rotacion', 'geometria-plano-cartesiano']
   },
   {
@@ -271,7 +271,7 @@ export const m1Geo005Questions: Question[] = [
     correctAnswer: 0,
     explanation: '(x, y) \\to (x, -y) \\text{ es reflexión respecto al eje } x',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.22,
     skills: ['geometria-transformaciones', 'geometria-reflexion', 'geometria-conceptos']
   },
   {
@@ -284,7 +284,7 @@ export const m1Geo005Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'L\' = \\frac{1}{2} \\cdot L = \\left(\\frac{1}{2}(8), \\frac{1}{2}(-6)\\right) = (4, -3)',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.38,
     skills: ['geometria-transformaciones', 'geometria-homotecia', 'geometria-plano-cartesiano', 'numeros-fracciones']
   }
 ];

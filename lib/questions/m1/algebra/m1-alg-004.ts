@@ -27,7 +27,7 @@ export const m1Alg004Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'x + 2x = 6 \\rightarrow 3x = 6 \\rightarrow x = 2 \\quad \\Rightarrow \\quad y = 2(2) = 4',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.30,
     skills: ['algebra-sistemas-ecuaciones', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -69,7 +69,7 @@ export const m1Alg004Questions: Question[] = [
     correctAnswer: 0,
     explanation: '(x + y) + (x - y) = 7 + 3 \\rightarrow 2x = 10 \\rightarrow x = 5 \\quad \\Rightarrow \\quad 5 + y = 7 \\rightarrow y = 2',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.32,
     skills: ['algebra-sistemas-ecuaciones', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -83,7 +83,7 @@ export const m1Alg004Questions: Question[] = [
     correctAnswer: 0,
     explanation: '(2x + y) + (2x - y) = 10 + 6 \\rightarrow 4x = 16 \\rightarrow x = 4 \\quad \\Rightarrow \\quad 2(4) + y = 10 \\rightarrow y = 2',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.45,
     skills: ['algebra-sistemas-ecuaciones', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -96,8 +96,8 @@ export const m1Alg004Questions: Question[] = [
     options: ['x = 2, y = 5', 'x = 3, y = 2', 'x = 4, y = 2', 'x = 2, y = 3'],
     correctAnswer: 1,
     explanation: '(3x + 2y) - (3x - y) = 13 - 7 \\rightarrow 3y = 6 \\rightarrow y = 2 \\quad \\Rightarrow \\quad 3x - 2 = 7 \\rightarrow x = 3',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.58,
     skills: ['algebra-sistemas-ecuaciones', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -125,7 +125,7 @@ export const m1Alg004Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\begin{cases} x + y = 50 \\\\ x - y = 10 \\end{cases} \\rightarrow 2x = 60 \\rightarrow x = 30 \\text{ (número mayor)}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.35,
     skills: ['algebra-sistemas-ecuaciones', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -139,7 +139,7 @@ export const m1Alg004Questions: Question[] = [
     correctAnswer: 3,
     explanation: '\\begin{cases} 3a + 2m = 5000 \\\\ a + m = 1800 \\end{cases} \\rightarrow m = 1800 - a \\rightarrow 3a + 2(1800 - a) = 5000 \\rightarrow a = 1200',
     difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficultyScore: 0.62,
     skills: ['algebra-sistemas-ecuaciones', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   }
 ];

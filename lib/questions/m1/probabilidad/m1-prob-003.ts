@@ -26,7 +26,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Q_2 = \\text{mediana} = \\text{valor en posición 4} = 8',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.22,
     skills: ['estadistica-cuartiles', 'estadistica-mediana', 'estadistica-medidas-posicion']
   },
   {
@@ -40,7 +40,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 0,
     explanation: 'Q_1 = \\text{mediana de } \\{3, 5, 7, 9\\} = \\frac{5 + 7}{2} = 6, \\text{ pero usando método exclusivo: mediana de } \\{3, 5, 7\\} = 5',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.35,
     skills: ['estadistica-cuartiles', 'estadistica-medidas-posicion', 'numeros-operaciones-basicas']
   },
   {
@@ -54,7 +54,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Q_3 = \\text{mediana de } \\{50, 60, 70, 80, 90\\} = 70, \\text{ o mediana de } \\{60, 70, 80, 90\\} = \\frac{70 + 80}{2} = 75 \\text{ (método inclusivo)}',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.35,
     skills: ['estadistica-cuartiles', 'estadistica-medidas-posicion', 'numeros-operaciones-basicas']
   },
   {
@@ -67,8 +67,8 @@ export const m1Prob003Questions: Question[] = [
     options: ['7.5 litros', '10 litros', '12.5 litros', '15 litros'],
     correctAnswer: 1,
     explanation: 'Q_1 = \\text{mediana de } \\{5, 10, 15\\} = 10',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['estadistica-cuartiles', 'estadistica-medidas-posicion', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -81,8 +81,8 @@ export const m1Prob003Questions: Question[] = [
     options: ['12 mil', '15 mil', '18 mil', '20 mil'],
     correctAnswer: 3,
     explanation: 'Q_1 = \\frac{14 + 18}{2} = 16, \\quad Q_3 = \\frac{34 + 38}{2} = 36, \\quad IQR = Q_3 - Q_1 = 36 - 16 = 20',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['estadistica-cuartiles', 'estadistica-rango-intercuartilico', 'numeros-operaciones-basicas']
   },
   {
@@ -96,7 +96,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Q_1 = \\text{mediana de } \\{2, 4\\} = \\frac{2 + 4}{2} = 3',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.28,
     skills: ['estadistica-cuartiles', 'estadistica-mediana', 'numeros-operaciones-basicas']
   },
 
@@ -112,7 +112,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P_{50} = Q_2 = \\text{mediana}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.15,
     skills: ['estadistica-percentiles', 'estadistica-mediana', 'estadistica-conceptos']
   },
   {
@@ -126,7 +126,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P_{25} = \\text{posición } 2.5: 20 + 0.5(30-20) = 27.5',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.38,
     skills: ['estadistica-percentiles', 'estadistica-medidas-posicion', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -140,7 +140,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P_{75} \\rightarrow 75\\% \\text{ de los datos} \\leq \\text{puntaje del estudiante}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.18,
     skills: ['estadistica-percentiles', 'estadistica-interpretacion', 'estadistica-conceptos']
   },
   {
@@ -154,7 +154,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P_{90} = \\text{valor en posición } 9 = 45',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.35,
     skills: ['estadistica-percentiles', 'estadistica-medidas-posicion']
   },
   {
@@ -168,7 +168,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'Q_1 = P_{25} \\text{ (ambos dejan 25\\% de datos por debajo)}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.15,
     skills: ['estadistica-percentiles', 'estadistica-cuartiles', 'estadistica-conceptos']
   },
   {
@@ -182,7 +182,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P_{10} = \\$400{,}000 \\rightarrow 10\\% \\text{ de salarios} \\leq \\$400{,}000',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.18,
     skills: ['estadistica-percentiles', 'estadistica-interpretacion', 'estadistica-conceptos']
   },
 
@@ -198,7 +198,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Resumen de 5 números: Mínimo, } Q_1, Q_2, Q_3, \\text{ Máximo}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.18,
     skills: ['estadistica-diagramas-caja', 'estadistica-conceptos']
   },
   {
@@ -212,7 +212,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Longitud de la caja} = IQR = Q_3 - Q_1 = 15 - 5 = 10',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.22,
     skills: ['estadistica-diagramas-caja', 'estadistica-rango-intercuartilico', 'numeros-operaciones-basicas']
   },
   {
@@ -226,7 +226,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Línea dentro de la caja} = Q_2 = \\text{mediana}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.15,
     skills: ['estadistica-diagramas-caja', 'estadistica-conceptos']
   },
   {
@@ -239,8 +239,8 @@ export const m1Prob003Questions: Question[] = [
     options: ['Min=5, Q1=10, Q2=20, Q3=30, Max=35', 'Min=5, Q1=12.5, Q2=20, Q3=27.5, Max=35', 'Min=5, Q1=15, Q2=20, Q3=25, Max=35', 'Min=5, Q1=10, Q2=15, Q3=30, Max=35'],
     correctAnswer: 0,
     explanation: '\\text{Min}=5, Q_1=\\text{mediana de }\\{5,10,15\\}=10, Q_2=20, Q_3=\\text{mediana de }\\{25,30,35\\}=30, \\text{Max}=35',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['estadistica-diagramas-caja', 'estadistica-cuartiles', 'estadistica-mediana', 'numeros-decimales']
   },
   {
@@ -253,8 +253,8 @@ export const m1Prob003Questions: Question[] = [
     options: ['50', '60', '70', '80'],
     correctAnswer: 2,
     explanation: 'IQR = 40 - 20 = 20; \\quad \\text{Límite superior} = 40 + 1.5(20) = 70',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['estadistica-diagramas-caja', 'estadistica-outliers', 'estadistica-rango-intercuartilico', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -268,7 +268,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\text{Bigote izquierdo: } Q_1 \\to \\text{Mínimo}; \\quad \\text{Bigote derecho: } Q_3 \\to \\text{Máximo}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.15,
     skills: ['estadistica-diagramas-caja', 'estadistica-conceptos']
   },
 
@@ -284,7 +284,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'Q_2 \\text{ cerca de } Q_1 \\rightarrow \\text{más datos bajos, cola derecha} \\rightarrow \\text{sesgo positivo}',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.38,
     skills: ['estadistica-diagramas-caja', 'estadistica-interpretacion', 'estadistica-asimetria']
   },
   {
@@ -298,7 +298,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'IQR_B = 30 > IQR_A = 10 \\rightarrow \\text{Grupo B más disperso}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.22,
     skills: ['estadistica-diagramas-caja', 'estadistica-interpretacion', 'estadistica-dispersion', 'estadistica-rango-intercuartilico']
   },
   {
@@ -311,8 +311,8 @@ export const m1Prob003Questions: Question[] = [
     options: ['Los datos son simétricos', 'Hay un posible valor atípico en el extremo superior', 'Hay un posible valor atípico en el extremo inferior', 'La distribución es uniforme'],
     correctAnswer: 1,
     explanation: 'IQR = 10; \\quad \\text{Límite} = 30 + 15 = 45; \\quad 80 > 45 \\rightarrow \\text{outlier}',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['estadistica-diagramas-caja', 'estadistica-interpretacion', 'estadistica-outliers', 'estadistica-rango-intercuartilico']
   },
   {
@@ -325,8 +325,8 @@ export const m1Prob003Questions: Question[] = [
     options: ['Q1 = Q2 = Q3 (todos son iguales)', 'Q2 - Q1 = Q3 - Q2 (mediana centrada)', 'Q3 = 2×Q1 (Q3 es el doble de Q1)', 'Q1 + Q3 = Q2 (suma de extremos)'],
     correctAnswer: 1,
     explanation: '\\text{Simetría: } Q_2 - Q_1 = Q_3 - Q_2 \\text{ (mediana centrada)}',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['estadistica-diagramas-caja', 'estadistica-interpretacion', 'estadistica-simetria']
   },
   {
@@ -340,7 +340,7 @@ export const m1Prob003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Caja: de } P_{25} \\text{ a } P_{75} = 75\\% - 25\\% = 50\\% \\text{ de los datos}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.18,
     skills: ['estadistica-diagramas-caja', 'estadistica-interpretacion', 'estadistica-conceptos']
   },
   {
@@ -353,8 +353,8 @@ export const m1Prob003Questions: Question[] = [
     options: ['La empresa tiene menos empleados totales', 'La empresa tiene un salario medio más alto', 'La empresa tiene menor dispersión salarial en el 50% central', 'La empresa tiene más valores atípicos'],
     correctAnswer: 2,
     explanation: '\\text{Caja angosta} \\rightarrow IQR \\text{ pequeño} \\rightarrow \\text{menor dispersión central}',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['estadistica-diagramas-caja', 'estadistica-interpretacion', 'estadistica-dispersion', 'estadistica-rango-intercuartilico']
   }
 ];

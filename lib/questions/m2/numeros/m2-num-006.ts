@@ -24,8 +24,8 @@ export const m2Num006Questions: Question[] = [
     options: ['x = 10', 'x = 25', 'x = 32', 'x = 64'],
     correctAnswer: 2,
     explanation: '\\log_2 x = 5 \\rightarrow 2^5 = x \\rightarrow x = 32',
-    difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['numeros-logaritmos', 'logaritmos-ecuaciones', 'logaritmos-relacion-potencias', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -37,8 +37,8 @@ export const m2Num006Questions: Question[] = [
     options: ['x \\approx 6.64', 'x \\approx 7.32', 'x \\approx 8.14', 'x \\approx 10'],
     correctAnswer: 0,
     explanation: '2^x = 100 \\rightarrow x = \\frac{\\log 100}{\\log 2} \\approx \\frac{2}{0.301} \\approx 6.64',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['numeros-logaritmos', 'logaritmos-ecuaciones-exponenciales', 'logaritmos-cambio-base', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -51,7 +51,7 @@ export const m2Num006Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'pH = -\\log(10^{-4}) = -(-4) = 4',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.32,
     skills: ['numeros-logaritmos', 'logaritmos-problemas-escalas', 'logaritmos-problemas-ciencias', 'numeros-exponentes-negativos', 'numeros-operaciones-basicas']
   },
   {
@@ -63,8 +63,8 @@ export const m2Num006Questions: Question[] = [
     options: ['2\\text{ veces}', '10\\text{ veces}', '100\\text{ veces}', '1000\\text{ veces}'],
     correctAnswer: 2,
     explanation: '7 - 5 = \\log\\left(\\frac{I_7}{I_5}\\right) \\rightarrow 2 = \\log\\left(\\frac{I_7}{I_5}\\right) \\rightarrow \\frac{I_7}{I_5} = 10^2 = 100',
-    difficulty: 'extreme',
-    difficultyScore: 0.95,
+    difficulty: 'hard',
+    difficultyScore: 0.52,
     skills: ['numeros-logaritmos', 'logaritmos-problemas-escalas', 'logaritmos-propiedad-cociente', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -76,8 +76,8 @@ export const m2Num006Questions: Question[] = [
     options: ['x = 5', 'x = 7', 'x = 9', 'x = 11'],
     correctAnswer: 1,
     explanation: '\\log_3(x + 2) = 2 \\rightarrow 3^2 = x + 2 \\rightarrow 9 = x + 2 \\rightarrow x = 7',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['numeros-logaritmos', 'logaritmos-ecuaciones', 'algebra-despeje', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -89,8 +89,8 @@ export const m2Num006Questions: Question[] = [
     options: ['10^6', '10^7', '10^8', '10^9'],
     correctAnswer: 2,
     explanation: '80 = 10\\log\\left(\\frac{I}{I_0}\\right) \\rightarrow 8 = \\log\\left(\\frac{I}{I_0}\\right) \\rightarrow \\frac{I}{I_0} = 10^8',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['numeros-logaritmos', 'logaritmos-problemas-escalas', 'logaritmos-relacion-potencias', 'algebra-despeje', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -103,7 +103,7 @@ export const m2Num006Questions: Question[] = [
     correctAnswer: 1,
     explanation: '2^{x+1} = 128 = 2^7 \\rightarrow x+1 = 7 \\rightarrow x = 6',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.32,
     skills: ['numeros-logaritmos', 'logaritmos-ecuaciones-exponenciales', 'algebra-despeje', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   // Additional: Aplicaciones en ciencias naturales
@@ -117,7 +117,7 @@ export const m2Num006Questions: Question[] = [
     correctAnswer: 2,
     explanation: '3200 = 100 \\cdot 2^t \\rightarrow 32 = 2^t \\rightarrow t = 5',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.35,
     skills: ['logaritmos-problemas-ciencias', 'logaritmos-ecuaciones-exponenciales', 'numeros-potencias', 'algebra-despeje']
   },
   {
@@ -129,8 +129,8 @@ export const m2Num006Questions: Question[] = [
     options: ['1', 'e', '-1', '\\frac{1}{e}'],
     correctAnswer: 0,
     explanation: '\\frac{N}{N_0} = \\frac{1}{e} = e^{-1} = e^{-kt} \\rightarrow kt = 1',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['logaritmos-problemas-ciencias', 'logaritmos-tipos', 'numeros-potencias', 'algebra-despeje']
   },
   {
@@ -142,8 +142,8 @@ export const m2Num006Questions: Question[] = [
     options: ['t = 1', 't = 5', 't = 10', 't = 20'],
     correctAnswer: 2,
     explanation: '\\frac{36.8}{100} \\approx e^{-1} \\rightarrow -0.1t = -1 \\rightarrow t = 10',
-    difficulty: 'extreme',
-    difficultyScore: 0.95,
+    difficulty: 'hard',
+    difficultyScore: 0.52,
     skills: ['logaritmos-problemas-ciencias', 'logaritmos-tipos', 'numeros-decimales', 'algebra-despeje']
   },
   {
@@ -155,8 +155,8 @@ export const m2Num006Questions: Question[] = [
     options: ['\\approx 5730\\text{ años}', '\\approx 11460\\text{ años}', '\\approx 17190\\text{ años}', '\\approx 22920\\text{ años}'],
     correctAnswer: 1,
     explanation: '25\\% = \\frac{1}{4} = \\frac{1}{2^2} \\rightarrow 2 \\text{ vidas medias} \\rightarrow t \\approx 11460\\text{ años}',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['logaritmos-problemas-ciencias', 'logaritmos-tipos', 'numeros-porcentaje', 'numeros-operaciones-basicas']
   },
   // Ecuaciones logarítmicas más complejas
@@ -171,7 +171,7 @@ export const m2Num006Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\log(x(x-3)) = \\log(10) \\rightarrow x^2 - 3x = 10 \\rightarrow x^2 - 3x - 10 = 0 \\rightarrow (x-5)(x+2) = 0. \\quad x = 5 \\text{ (válido)}',
     difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficultyScore: 0.52,
     skills: ['logaritmos-ecuaciones', 'logaritmos-propiedad-producto', 'algebra-ecuaciones-cuadraticas', 'algebra-factorizacion']
   },
   {
@@ -185,7 +185,7 @@ export const m2Num006Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\log_2(x(x-2)) = 3 \\rightarrow x^2 - 2x = 8 \\rightarrow x^2 - 2x - 8 = 0 \\rightarrow (x-4)(x+2) = 0. \\quad x = 4 \\text{ (válido)}',
     difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficultyScore: 0.52,
     skills: ['logaritmos-ecuaciones', 'logaritmos-propiedad-producto', 'algebra-ecuaciones-cuadraticas', 'algebra-factorizacion']
   },
   {
@@ -198,8 +198,8 @@ export const m2Num006Questions: Question[] = [
     options: ['x = \\frac{2}{3}', 'x = 1', 'x = \\frac{3}{2}', 'x = 2'],
     correctAnswer: 0,
     explanation: '\\log\\left(\\frac{x+6}{x}\\right) = 1 \\rightarrow \\frac{x+6}{x} = 10 \\rightarrow x + 6 = 10x \\rightarrow 6 = 9x \\rightarrow x = \\frac{2}{3}',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['logaritmos-ecuaciones', 'logaritmos-propiedad-cociente', 'algebra-despeje', 'numeros-fracciones']
   },
   // Crecimiento y decrecimiento exponencial (sin logaritmos explícitos)
@@ -214,7 +214,7 @@ export const m2Num006Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{En 9 horas hay } \\frac{9}{3} = 3 \\text{ duplicaciones}. \\quad N = 500 \\times 2^3 = 500 \\times 8 = 4.000',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.32,
     skills: ['logaritmos-problemas-ciencias', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -228,7 +228,7 @@ export const m2Num006Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'N = 100.000 \\times (1{,}05)^2 = 100.000 \\times 1{,}1025 = 110.250',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.38,
     skills: ['logaritmos-problemas-ciencias', 'numeros-porcentaje', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -242,7 +242,7 @@ export const m2Num006Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{En 12 horas hay } \\frac{12}{4} = 3 \\text{ vidas medias}. \\quad N = 400 \\times \\left(\\frac{1}{2}\\right)^3 = 400 \\times \\frac{1}{8} = 50 \\text{ mg}',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.35,
     skills: ['logaritmos-problemas-ciencias', 'numeros-potencias', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -256,7 +256,7 @@ export const m2Num006Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'V = 10.000.000 \\times (0{,}8)^3 = 10.000.000 \\times 0{,}512 = 5.120.000',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.38,
     skills: ['logaritmos-problemas-ciencias', 'numeros-porcentaje', 'numeros-potencias', 'numeros-decimales']
   },
   {
@@ -269,7 +269,7 @@ export const m2Num006Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\text{En 20 años hay } \\frac{20}{10} = 2 \\text{ triplicaciones}. \\quad V = 1.000.000 \\times 3^2 = 9.000.000',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.35,
     skills: ['logaritmos-problemas-ciencias', 'numeros-potencias', 'numeros-operaciones-basicas']
   }
 ];

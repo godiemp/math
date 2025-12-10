@@ -35,7 +35,7 @@ export const m1Alg002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '(3x^2 + x^2) + (2x - 4x) + (-5 + 3) = 4x^2 - 2x - 2',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.28,
     skills: ['algebra-polinomios', 'algebra-terminos-semejantes', 'numeros-operaciones-basicas']
   },
   {
@@ -63,7 +63,7 @@ export const m1Alg002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(2x^2 - x^2 + 3x^2) + (5x - 2x - x) + (-3 + 1 + 4) = 4x^2 + 2x + 2',
     difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficultyScore: 0.65,
     skills: ['algebra-polinomios', 'algebra-terminos-semejantes', 'numeros-operaciones-basicas']
   },
   {
@@ -119,7 +119,7 @@ export const m1Alg002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{6x^3}{3x^2} + \\frac{9x^2}{3x^2} = 2x + 3',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.28,
     skills: ['algebra-polinomios', 'algebra-division-polinomios', 'numeros-operaciones-basicas']
   },
   {
@@ -160,8 +160,8 @@ export const m1Alg002Questions: Question[] = [
     options: ['x^2 + 5x + 6', 'x^2 + 6x + 5', 'x^2 + 5x + 5', 'x^2 + 6x + 6'],
     correctAnswer: 0,
     explanation: '(x + 3)(x + 2) = x^2 + 2x + 3x + 6 = x^2 + 5x + 6',
-    difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficulty: 'easy',
+    difficultyScore: 0.35,
     skills: ['algebra-expansion', 'algebra-propiedad-distributiva', 'numeros-operaciones-basicas']
   },
   {
@@ -175,7 +175,7 @@ export const m1Alg002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(x + 5)^2 = x^2 + 2(x)(5) + 5^2 = x^2 + 10x + 25',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.25,
     skills: ['algebra-productos-notables', 'algebra-expansion', 'numeros-operaciones-basicas']
   },
   {
@@ -189,7 +189,7 @@ export const m1Alg002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '(2x - 3)^2 = (2x)^2 - 2(2x)(3) + 3^2 = 4x^2 - 12x + 9',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.45,
     skills: ['algebra-productos-notables', 'algebra-expansion', 'numeros-operaciones-basicas']
   },
   {
@@ -202,8 +202,8 @@ export const m1Alg002Questions: Question[] = [
     options: ['9a^2 + 4b^2', '9a^2 + 6ab + 4b^2', '9a^2 + 12ab + 4b^2', '3a^2 + 12ab + 2b^2'],
     correctAnswer: 2,
     explanation: '(3a + 2b)^2 = (3a)^2 + 2(3a)(2b) + (2b)^2 = 9a^2 + 12ab + 4b^2',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['algebra-productos-notables', 'algebra-expansion', 'numeros-operaciones-basicas']
   },
   {
@@ -217,7 +217,7 @@ export const m1Alg002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '(x + 4)(x - 4) = x^2 - 4^2 = x^2 - 16',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.22,
     skills: ['algebra-productos-notables', 'algebra-diferencia-cuadrados', 'algebra-expansion', 'numeros-operaciones-basicas']
   },
   {
@@ -231,7 +231,7 @@ export const m1Alg002Questions: Question[] = [
     correctAnswer: 1,
     explanation: '(3x + 5)(3x - 5) = (3x)^2 - 5^2 = 9x^2 - 25',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.38,
     skills: ['algebra-productos-notables', 'algebra-diferencia-cuadrados', 'algebra-expansion', 'numeros-operaciones-basicas']
   },
   {
@@ -244,8 +244,8 @@ export const m1Alg002Questions: Question[] = [
     options: ['x^2 \\text{ m}^2', 'x^2 - 9 \\text{ m}^2', 'x^2 + 9 \\text{ m}^2', 'x^2 - 6x - 9 \\text{ m}^2'],
     correctAnswer: 1,
     explanation: '\\text{Área} = (x + 3)(x - 3) = x^2 - 9 \\text{ m}^2',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'easy',
+    difficultyScore: 0.30,
     skills: ['algebra-productos-notables', 'algebra-diferencia-cuadrados', 'geometria-area', 'numeros-operaciones-basicas']
   },
   {
@@ -300,8 +300,8 @@ export const m1Alg002Questions: Question[] = [
     options: ['(x-3)(x-3)', '(x+3)(x+3)', '(x-3)(x+3)', 'x(x-9)'],
     correctAnswer: 2,
     explanation: 'x^2 - 9 = x^2 - 3^2 = (x-3)(x+3)',
-    difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['algebra-factorizacion', 'algebra-diferencia-cuadrados', 'numeros-operaciones-basicas']
   },
   {
@@ -315,7 +315,7 @@ export const m1Alg002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '6x + 9 = 3(2x) + 3(3) = 3(2x + 3)',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.20,
     skills: ['algebra-factorizacion', 'numeros-mcd-mcm', 'numeros-operaciones-basicas']
   },
   {
@@ -329,7 +329,7 @@ export const m1Alg002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '4x^2 - 8x = 4x(x) - 4x(2) = 4x(x - 2)',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.25,
     skills: ['algebra-factorizacion', 'algebra-expresiones', 'numeros-operaciones-basicas']
   },
   {
@@ -384,8 +384,8 @@ export const m1Alg002Questions: Question[] = [
     options: ['x^2 + 4x + 4', 'x^2 + 4x + 2', 'x^2 + 2x + 4', 'x^2 + 8x + 4'],
     correctAnswer: 0,
     explanation: 'x^2 + 4x + 4 = x^2 + 2(x)(2) + 2^2 = (x + 2)^2 \\text{ es TCP}',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['algebra-factorizacion', 'numeros-operaciones-basicas']
   },
   {
@@ -426,8 +426,8 @@ export const m1Alg002Questions: Question[] = [
     options: ['(x + 5)(x - 3)', '(x - 5)(x + 3)', '(x + 15)(x - 1)', '(x + 3)(x - 5)'],
     correctAnswer: 0,
     explanation: 'x^2 + 2x - 15 = (x + 5)(x - 3) \\quad \\text{porque } 5 + (-3) = 2 \\text{ y } 5(-3) = -15',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.55,
     skills: ['algebra-factorizacion', 'numeros-enteros', 'numeros-operaciones-basicas']
   },
   {
@@ -441,7 +441,7 @@ export const m1Alg002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{6x^2}{3x} = \\frac{6}{3} \\times x^{2-1} = 2x',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.18,
     skills: ['algebra-expresiones-racionales', 'algebra-simplificacion', 'numeros-operaciones-basicas']
   },
   {
@@ -483,7 +483,7 @@ export const m1Alg002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{2x}{3} \\times \\frac{6}{x} = \\frac{2x \\times 6}{3 \\times x} = \\frac{12x}{3x} = 4',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.25,
     skills: ['algebra-expresiones-racionales', 'algebra-multiplicacion-fracciones', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -511,7 +511,7 @@ export const m1Alg002Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\frac{2}{x} + \\frac{3}{x} = \\frac{2 + 3}{x} = \\frac{5}{x}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.18,
     skills: ['algebra-expresiones-racionales', 'algebra-suma-fracciones', 'numeros-fracciones', 'numeros-operaciones-basicas']
   }
 ];

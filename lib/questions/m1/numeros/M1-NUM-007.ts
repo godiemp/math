@@ -53,7 +53,7 @@ export const m1Num007Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\sqrt[3]{-27} = -3 \\text{ porque } (-3)^3 = -27',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.35,
     skills: ['numeros-raices', 'numeros-enteros', 'numeros-operaciones-basicas']
   },
   {
@@ -66,8 +66,8 @@ export const m1Num007Questions: Question[] = [
     options: ['15', '25', '125', '625'],
     correctAnswer: 2,
     explanation: '\\sqrt[3]{x} = 5 \\quad \\Rightarrow \\quad x = 5^3 = 125',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-raices', 'numeros-potencias', 'algebra-ecuaciones-lineales', 'numeros-operaciones-basicas']
   },
   {
@@ -81,7 +81,7 @@ export const m1Num007Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\sqrt{50} = \\sqrt{25 \\times 2} = \\sqrt{25} \\times \\sqrt{2} = 5\\sqrt{2}',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.38,
     skills: ['numeros-raices', 'numeros-factorizacion-prima', 'numeros-operaciones-basicas']
   },
   {
@@ -95,7 +95,7 @@ export const m1Num007Questions: Question[] = [
     correctAnswer: 0,
     explanation: '\\sqrt{72} = \\sqrt{36 \\times 2} = 6\\sqrt{2}',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.38,
     skills: ['numeros-raices', 'numeros-factorizacion-prima', 'numeros-operaciones-basicas']
   },
   {
@@ -108,8 +108,8 @@ export const m1Num007Questions: Question[] = [
     options: ['\\sqrt{26}', '5\\sqrt{2}', '\\sqrt{10}', '3\\sqrt{2} + 2\\sqrt{2}'],
     correctAnswer: 1,
     explanation: '\\sqrt{18} + \\sqrt{8} = 3\\sqrt{2} + 2\\sqrt{2} = 5\\sqrt{2}',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['numeros-raices', 'numeros-factorizacion-prima', 'numeros-operaciones-basicas']
   }
 ];

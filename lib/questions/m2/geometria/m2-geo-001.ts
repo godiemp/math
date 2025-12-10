@@ -27,7 +27,7 @@ export const m2Geo001Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Homotecia: cambio de tamaño con factor } k, \\text{ manteniendo forma}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.18,
     skills: ['geometria-homotecia-concepto', 'geometria-transformaciones', 'geometria-semejanza']
   },
   {
@@ -40,8 +40,8 @@ export const m2Geo001Questions: Question[] = [
     options: ['(6, 8)', '(1.5, 2)', '(5, 6)', '(3, 4)'],
     correctAnswer: 0,
     explanation: 'D(3, 4) \\xrightarrow{k=2} D\'(2 \\times 3, 2 \\times 4) = (6, 8)',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['geometria-transformaciones', 'geometria-homotecia', 'geometria-plano-cartesiano', 'numeros-operaciones-basicas']
   },
   {
@@ -54,8 +54,8 @@ export const m2Geo001Questions: Question[] = [
     options: ['(3, 2)', '(6, 3)', '(12, 9)', '(27, 18)'],
     correctAnswer: 0,
     explanation: 'A(9, 6) \\xrightarrow{k=1/3} A\'\\left(\\frac{9}{3}, \\frac{6}{3}\\right) = (3, 2)',
-    difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['geometria-homotecia', 'geometria-homotecia-razon', 'geometria-plano-cartesiano', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -68,8 +68,8 @@ export const m2Geo001Questions: Question[] = [
     options: ['36\\text{ cm}^2', '108\\text{ cm}^2', '24\\text{ cm}^2', '72\\text{ cm}^2'],
     correctAnswer: 1,
     explanation: 'A\' = A \\times k^2 = 12 \\times 3^2 = 12 \\times 9 = 108\\text{ cm}^2',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['geometria-homotecia', 'geometria-homotecia-semejanza', 'geometria-area', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -82,8 +82,8 @@ export const m2Geo001Questions: Question[] = [
     options: ['18\\text{ cm}', '36\\text{ cm}', '54\\text{ cm}', '72\\text{ cm}'],
     correctAnswer: 1,
     explanation: 'P\' = P \\times k = 18 \\times 2 = 36\\text{ cm}',
-    difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['geometria-homotecia', 'geometria-homotecia-semejanza', 'geometria-perimetro', 'numeros-operaciones-basicas']
   },
   {
@@ -96,8 +96,8 @@ export const m2Geo001Questions: Question[] = [
     options: ['(2, 6)', '(-2, -6)', '(-1, -3)', '(2, -6)'],
     correctAnswer: 1,
     explanation: 'P(1, 3) \\xrightarrow{k=-2} P\'(-2 \\times 1, -2 \\times 3) = (-2, -6)',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['geometria-homotecia', 'geometria-homotecia-razon', 'geometria-plano-cartesiano', 'numeros-enteros', 'numeros-operaciones-basicas']
   },
   {
@@ -110,8 +110,8 @@ export const m2Geo001Questions: Question[] = [
     options: ['24\\text{ cm}^3', '72\\text{ cm}^3', '216\\text{ cm}^3', '512\\text{ cm}^3'],
     correctAnswer: 2,
     explanation: 'V\' = V \\times k^3 = 8 \\times 3^3 = 8 \\times 27 = 216\\text{ cm}^3',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['geometria-homotecia', 'geometria-homotecia-aplicaciones', 'geometria-volumen', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   // Additional homotecia questions
@@ -126,7 +126,7 @@ export const m2Geo001Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A\' = A \\times k^2 = A \\times 4^2 = 16A',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.32,
     skills: ['geometria-homotecia-semejanza', 'geometria-homotecia-razon', 'geometria-area', 'numeros-potencias']
   },
   {
@@ -140,7 +140,7 @@ export const m2Geo001Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'k = \\frac{1}{2} \\Rightarrow \\text{figura reducida a la mitad}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.18,
     skills: ['geometria-homotecia-razon', 'geometria-homotecia-concepto', 'numeros-fracciones']
   },
   {
@@ -153,8 +153,8 @@ export const m2Geo001Questions: Question[] = [
     options: ['15\\text{ m}^2', '25\\text{ m}^2', '45\\text{ m}^2', '125\\text{ m}^2'],
     correctAnswer: 2,
     explanation: 'A_{\\text{mayor}} = A_{\\text{menor}} \\times k^2 = 5 \\times 9 = 45\\text{ m}^2',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['geometria-homotecia-semejanza', 'geometria-semejanza', 'geometria-area', 'numeros-potencias']
   },
   {
@@ -168,7 +168,7 @@ export const m2Geo001Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P\'(-1 \\times 3, -1 \\times (-2)) = (-3, 2)',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.32,
     skills: ['geometria-homotecia-razon', 'geometria-homotecia', 'geometria-plano-cartesiano', 'numeros-enteros']
   },
   {
@@ -181,8 +181,8 @@ export const m2Geo001Questions: Question[] = [
     options: ['20\\text{ cm}^2', '2\\text{ m}^2', '20\\text{ m}^2', '200\\text{ m}^2'],
     correctAnswer: 2,
     explanation: '5 \\times 100 = 500\\text{ cm} = 5\\text{ m}, \\quad 4 \\times 100 = 400\\text{ cm} = 4\\text{ m}. \\quad A = 5 \\times 4 = 20\\text{ m}^2',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['geometria-homotecia-aplicaciones', 'geometria-semejanza', 'geometria-area', 'numeros-conversion-unidades']
   }
 ];

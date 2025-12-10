@@ -27,7 +27,7 @@ export const m1Num003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '3 \\times 12 = 4 \\times x \\text{, entonces } x = \\frac{36}{4} = 9 \\text{ días}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.32,
     skills: ['numeros-proporcionalidad', 'numeros-proporcionalidad-inversa', 'numeros-operaciones-basicas']
   },
   {
@@ -41,7 +41,7 @@ export const m1Num003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{5}{7500} = \\frac{8}{x} \\quad \\Rightarrow \\quad x = \\frac{8 \\times 7500}{5} = 12.000',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.28,
     skills: ['numeros-proporcionalidad', 'numeros-proporcionalidad-directa', 'numeros-operaciones-basicas']
   },
   {
@@ -54,8 +54,8 @@ export const m1Num003Questions: Question[] = [
     options: ['360 km', '400 km', '420 km', '480 km'],
     correctAnswer: 1,
     explanation: '\\frac{240}{3} = \\frac{x}{5} \\quad \\Rightarrow \\quad x = \\frac{240 \\times 5}{3} = 400 \\text{ km}',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['numeros-proporcionalidad', 'numeros-proporcionalidad-directa', 'numeros-operaciones-basicas']
   },
   {
@@ -68,8 +68,8 @@ export const m1Num003Questions: Question[] = [
     options: ['8 huevos', '9 huevos', '10 huevos', '12 huevos'],
     correctAnswer: 2,
     explanation: '\\frac{6}{4} = \\frac{15}{x} \\quad \\Rightarrow \\quad x = \\frac{15 \\times 4}{6} = 10 \\text{ huevos}',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['numeros-proporcionalidad', 'numeros-proporcionalidad-directa', 'numeros-operaciones-basicas']
   },
   {
@@ -82,8 +82,8 @@ export const m1Num003Questions: Question[] = [
     options: ['10', '12', '15', '18'],
     correctAnswer: 1,
     explanation: '\\text{Hombres} = \\frac{2}{5} \\times 30 = 12',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-proporcionalidad', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -96,8 +96,8 @@ export const m1Num003Questions: Question[] = [
     options: ['$24.000', '$30.000', '$36.000', '$40.000'],
     correctAnswer: 2,
     explanation: '\\text{Ana} = \\frac{3}{5} \\times 60.000 = 36.000',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-proporcionalidad', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -110,8 +110,8 @@ export const m1Num003Questions: Question[] = [
     options: ['12 cm', '16 cm', '20 cm', '24 cm'],
     correctAnswer: 2,
     explanation: '\\text{Lado más largo} = \\frac{5}{12} \\times 48 = 20 \\text{ cm}',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['numeros-proporcionalidad', 'numeros-fracciones', 'geometria-perimetro', 'numeros-operaciones-basicas']
   },
   {
@@ -125,7 +125,7 @@ export const m1Num003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{4}{2+3+4} \\times 90.000 = \\frac{4}{9} \\times 90.000 = 40.000',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.35,
     skills: ['numeros-proporcionalidad', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -138,8 +138,8 @@ export const m1Num003Questions: Question[] = [
     options: ['6 años', '12 años', '18 años', '24 años'],
     correctAnswer: 1,
     explanation: '\\text{María} = \\frac{2}{6} \\times 36 = 12 \\text{ años}',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-proporcionalidad', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -152,8 +152,8 @@ export const m1Num003Questions: Question[] = [
     options: ['20 kg', '30 kg', '50 kg', '60 kg'],
     correctAnswer: 2,
     explanation: '\\frac{5}{10} \\times 100 = 50 \\text{ kg}',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-proporcionalidad', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -167,7 +167,7 @@ export const m1Num003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{3}{5} \\text{ de la mezcla es jugo}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.20,
     skills: ['numeros-proporcionalidad', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -180,8 +180,8 @@ export const m1Num003Questions: Question[] = [
     options: ['$1.320', '$1.440', '$1.500', '$1.560'],
     correctAnswer: 1,
     explanation: '\\frac{6(1200) + 4(1800)}{10} = \\frac{7200 + 7200}{10} = \\frac{14400}{10} = 1.440',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['numeros-proporcionalidad', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -195,7 +195,7 @@ export const m1Num003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '4 \\text{ cm} \\times 50.000 = 200.000 \\text{ cm} = 2.000 \\text{ m} = 2 \\text{ km}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.30,
     skills: ['numeros-proporcionalidad', 'numeros-escalas', 'numeros-conversiones-unidades', 'numeros-operaciones-basicas']
   },
   {
@@ -209,7 +209,7 @@ export const m1Num003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\frac{1.500.000 \\text{ cm}}{200.000} = 7{,}5 \\text{ cm en el mapa}',
     difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficultyScore: 0.38,
     skills: ['numeros-proporcionalidad', 'numeros-escalas', 'numeros-conversiones-unidades', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
   {
@@ -223,7 +223,7 @@ export const m1Num003Questions: Question[] = [
     correctAnswer: 1,
     explanation: '6 \\text{ cm} \\times 100 = 600 \\text{ cm} = 6 \\text{ m}',
     difficulty: 'easy',
-    difficultyScore: 0.34,
+    difficultyScore: 0.25,
     skills: ['numeros-proporcionalidad', 'numeros-escalas', 'numeros-conversiones-unidades', 'numeros-operaciones-basicas']
   },
   {
@@ -236,8 +236,8 @@ export const m1Num003Questions: Question[] = [
     options: ['1:3.000', '1:30.000', '1:300.000', '1:3.000.000'],
     correctAnswer: 1,
     explanation: '\\frac{8 \\text{ cm}}{240.000 \\text{ cm}} = \\frac{1}{30.000} \\quad \\Rightarrow \\quad \\text{Escala: } 1:30.000',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['numeros-proporcionalidad', 'numeros-escalas', 'numeros-conversiones-unidades', 'numeros-simplificacion', 'numeros-operaciones-basicas']
   },
   {
@@ -250,8 +250,8 @@ export const m1Num003Questions: Question[] = [
     options: ['3 km', '12 km', '30 km', '120 km'],
     correctAnswer: 2,
     explanation: '12 \\text{ cm} \\times 250.000 = 3.000.000 \\text{ cm} = 30 \\text{ km}',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-proporcionalidad', 'numeros-escalas', 'numeros-conversiones-unidades', 'numeros-operaciones-basicas']
   },
   {
@@ -264,8 +264,8 @@ export const m1Num003Questions: Question[] = [
     options: ['42 cm', '84 cm', '2,1 m', '4,2 m'],
     correctAnswer: 1,
     explanation: '\\frac{4.200 \\text{ cm}}{50} = 84 \\text{ cm en el modelo}',
-    difficulty: 'medium',
-    difficultyScore: 0.54,
+    difficulty: 'easy',
+    difficultyScore: 0.32,
     skills: ['numeros-proporcionalidad', 'numeros-escalas', 'numeros-conversiones-unidades', 'numeros-decimales', 'numeros-operaciones-basicas']
   }
 ];

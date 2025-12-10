@@ -23,8 +23,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['\\frac{1}{2}', '\\frac{1}{3}', '\\frac{1}{4}', '\\frac{2}{3}'],
     correctAnswer: 2,
     explanation: 'P(\\text{dos caras}) = \\frac{1}{4}',
-    difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['probabilidad-eventos-compuestos', 'probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
 {
@@ -37,7 +37,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P(1 \\text{ o } 2) = P(1) + P(2) = \\frac{1}{6} + \\frac{1}{6} = \\frac{2}{6} = \\frac{1}{3}',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.25,
     skills: ['probabilidad-union', 'probabilidad-basica', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
 {
@@ -50,7 +50,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P = \\frac{4}{6} = \\frac{2}{3}',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.32,
     skills: ['probabilidad-union', 'probabilidad-basica', 'numeros-fracciones']
   },
 {
@@ -62,8 +62,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['\\frac{1}{4}', '\\frac{7}{12}', '\\frac{1}{2}', '\\frac{2}{3}'],
     correctAnswer: 1,
     explanation: 'P(\\text{roja o azul}) = \\frac{7}{12}',
-    difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['probabilidad-union', 'probabilidad-basica', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
 {
@@ -76,7 +76,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '3 \\times 4 = 12 \\text{ formas diferentes}',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.20,
     skills: ['probabilidad-conteo', 'probabilidad-principio-multiplicativo', 'numeros-operaciones-basicas']
   },
 {
@@ -89,7 +89,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 2,
     explanation: '2 \\times 5 \\times 3 = 30 \\text{ combinaciones}',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.22,
     skills: ['probabilidad-conteo', 'probabilidad-principio-multiplicativo', 'numeros-operaciones-basicas']
   },
 {
@@ -101,8 +101,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['15', '60', '125', '243'],
     correctAnswer: 2,
     explanation: '5 \\times 5 \\times 5 = 125 \\text{ números}',
-    difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['probabilidad-conteo', 'probabilidad-principio-multiplicativo', 'numeros-operaciones-basicas']
   },
 {
@@ -115,7 +115,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 3,
     explanation: '4! = 4 \\times 3 \\times 2 \\times 1 = 24',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.25,
     skills: ['probabilidad-permutaciones', 'probabilidad-conteo', 'numeros-operaciones-basicas']
   },
 {
@@ -128,7 +128,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '3! = 3 \\times 2 \\times 1 = 6',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.22,
     skills: ['probabilidad-permutaciones', 'probabilidad-conteo', 'numeros-operaciones-basicas']
   },
 {
@@ -140,8 +140,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['25', '60', '120', '625'],
     correctAnswer: 2,
     explanation: '5! = 5 \\times 4 \\times 3 \\times 2 \\times 1 = 120',
-    difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['probabilidad-permutaciones', 'probabilidad-conteo', 'numeros-operaciones-basicas']
   },
 {
@@ -154,7 +154,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 2,
     explanation: '5 \\times 4 = 20 \\text{ formas}',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.25,
     skills: ['probabilidad-variaciones', 'probabilidad-conteo', 'numeros-operaciones-basicas']
   },
 {
@@ -167,7 +167,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '5 \\times 4 = 20 \\text{ números}',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.25,
     skills: ['probabilidad-variaciones', 'probabilidad-conteo', 'numeros-operaciones-basicas']
   },
 {
@@ -179,8 +179,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['24', '56', '168', '336'],
     correctAnswer: 3,
     explanation: '8 \\times 7 \\times 6 = 336 \\text{ formas}',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.35,
     skills: ['probabilidad-variaciones', 'probabilidad-conteo', 'numeros-operaciones-basicas']
   },
 {
@@ -193,7 +193,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P(\\text{suma} = 7) = \\frac{6}{36} = \\frac{1}{6}',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.42,
     skills: ['probabilidad-eventos-compuestos', 'probabilidad-conteo', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
 {
@@ -206,7 +206,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P = \\frac{2}{4} = \\frac{1}{2}',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.28,
     skills: ['probabilidad-eventos-compuestos', 'probabilidad-conteo', 'numeros-fracciones']
   },
 {
@@ -218,8 +218,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['\\frac{1}{13}', '\\frac{2}{13}', '\\frac{1}{6}', '\\frac{1}{7}'],
     correctAnswer: 1,
     explanation: 'P = \\frac{4 + 4}{52} = \\frac{8}{52} = \\frac{2}{13}',
-    difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['probabilidad-union', 'probabilidad-basica', 'numeros-fracciones']
   },
 {
@@ -231,8 +231,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['\\frac{1}{8}', '\\frac{1}{4}', '\\frac{3}{8}', '\\frac{1}{2}'],
     correctAnswer: 2,
     explanation: 'P = \\frac{3}{8}',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['probabilidad-eventos-compuestos', 'probabilidad-conteo', 'numeros-fracciones']
   },
 {
@@ -244,8 +244,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['\\frac{1}{8}', '\\frac{1}{4}', '\\frac{3}{8}', '\\frac{1}{2}'],
     correctAnswer: 1,
     explanation: 'P = \\frac{2}{8} = \\frac{1}{4}',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['probabilidad-eventos-compuestos', 'probabilidad-conteo', 'numeros-fracciones']
   },
 {
@@ -257,8 +257,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['\\frac{1}{6}', '\\frac{11}{36}', '\\frac{1}{3}', '\\frac{5}{12}'],
     correctAnswer: 1,
     explanation: 'P(\\text{al menos un 6}) = 1 - P(\\text{ningún 6}) = 1 - \\frac{5}{6} \\times \\frac{5}{6} = 1 - \\frac{25}{36} = \\frac{11}{36}',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['probabilidad-complemento', 'probabilidad-eventos-compuestos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
 {
@@ -271,7 +271,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 3,
     explanation: 'P(\\text{cara y 5}) = P(\\text{cara}) \\times P(5) = \\frac{1}{2} \\times \\frac{1}{6} = \\frac{1}{12}',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.32,
     skills: ['probabilidad-eventos-independientes', 'probabilidad-eventos-compuestos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
 {
@@ -283,8 +283,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['\\frac{1}{169}', '\\frac{1}{221}', '\\frac{4}{663}', '\\frac{1}{13}'],
     correctAnswer: 0,
     explanation: 'P = \\frac{4}{52} \\times \\frac{4}{52} = \\frac{1}{13} \\times \\frac{1}{13} = \\frac{1}{169}',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['probabilidad-eventos-independientes', 'probabilidad-eventos-compuestos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
 {
@@ -297,7 +297,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P = \\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{4}',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.25,
     skills: ['probabilidad-eventos-independientes', 'probabilidad-eventos-compuestos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
 {
@@ -309,8 +309,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['\\frac{15}{56}', '\\frac{5}{28}', '\\frac{15}{64}', '\\frac{3}{14}'],
     correctAnswer: 0,
     explanation: 'P = \\frac{5}{8} \\times \\frac{3}{7} = \\frac{15}{56}',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['probabilidad-eventos-dependientes', 'probabilidad-eventos-compuestos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
 {
@@ -322,8 +322,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['\\frac{1}{17}', '\\frac{1}{16}', '\\frac{13}{204}', '\\frac{1}{20}'],
     correctAnswer: 0,
     explanation: 'P = \\frac{13}{52} \\times \\frac{12}{51} = \\frac{1}{4} \\times \\frac{12}{51} = \\frac{12}{204} = \\frac{1}{17}',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['probabilidad-eventos-dependientes', 'probabilidad-eventos-compuestos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
 {
@@ -336,7 +336,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P = \\frac{4}{6} \\times \\frac{3}{5} = \\frac{12}{30} = \\frac{2}{5}',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.42,
     skills: ['probabilidad-eventos-dependientes', 'probabilidad-eventos-compuestos', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
 {
@@ -348,8 +348,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['\\frac{3}{7}', '\\frac{2}{5}', '\\frac{6}{25}', '\\frac{1}{2}'],
     correctAnswer: 0,
     explanation: 'P(\\text{mujer}|\\text{ingeniería}) = \\frac{6}{8+6} = \\frac{6}{14} = \\frac{3}{7}',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['probabilidad-condicional', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
 {
@@ -362,7 +362,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'P(>4|\\text{par}) = \\frac{1}{3}',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.35,
     skills: ['probabilidad-condicional', 'numeros-fracciones']
   },
 {
@@ -375,7 +375,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'P = \\frac{60}{100} = 0.6',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.22,
     skills: ['probabilidad-tablas', 'estadistica-tablas', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
   },
 {
@@ -388,7 +388,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '\\text{Al menos una} = 30 + 25 - 15 = 40 \\rightarrow \\text{Ninguna} = 50 - 40 = 10',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.38,
     skills: ['probabilidad-tablas', 'probabilidad-union', 'numeros-operaciones-basicas']
   },
 {
@@ -401,7 +401,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 1,
     explanation: '120 + 80 - 40 = 160 \\rightarrow \\text{Ninguna} = 200 - 160 = 40',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.38,
     skills: ['probabilidad-tablas', 'probabilidad-union', 'numeros-operaciones-basicas']
   },
 {
@@ -414,7 +414,7 @@ export const m1Prob005Questions: Question[] = [
     correctAnswer: 2,
     explanation: '2^4 = 16 \\text{ resultados posibles}',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.22,
     skills: ['probabilidad-espacio-muestral', 'probabilidad-conteo', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
 {
@@ -426,8 +426,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['18', '36', '108', '216'],
     correctAnswer: 3,
     explanation: '6^3 = 6 \\times 6 \\times 6 = 216',
-    difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['probabilidad-espacio-muestral', 'probabilidad-conteo', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
 {
@@ -439,8 +439,8 @@ export const m1Prob005Questions: Question[] = [
     options: ['\\frac{15}{16}', '\\frac{1}{2}', '\\frac{7}{8}', '\\frac{3}{4}'],
     correctAnswer: 0,
     explanation: 'P = 1 - P(\\text{todas sellos}) = 1 - \\left(\\frac{1}{2}\\right)^4 = 1 - \\frac{1}{16} = \\frac{15}{16}',
-    difficulty: 'hard',
-    difficultyScore: 0.74,
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['probabilidad-complemento', 'probabilidad-eventos-compuestos', 'numeros-fracciones', 'numeros-potencias', 'numeros-operaciones-basicas']
   }
 ];

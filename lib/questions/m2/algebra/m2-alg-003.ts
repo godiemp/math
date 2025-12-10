@@ -26,7 +26,7 @@ export const m2Alg003Questions: Question[] = [
     correctAnswer: 2,
     explanation: 'A(5) = 5^2 = 25\\text{ cm}^2',
     difficulty: 'easy',
-    difficultyScore: 0.35,
+    difficultyScore: 0.22,
     skills: ['funcion-potencia-modelamiento', 'algebra-funcion-potencia', 'algebra-modelamiento', 'geometria-area', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -40,7 +40,7 @@ export const m2Alg003Questions: Question[] = [
     correctAnswer: 3,
     explanation: 'V(2a) = (2a)^3 = 8a^3 = 8 \\cdot V(a)',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.38,
     skills: ['funcion-potencia-modelamiento', 'funcion-potencia-problemas-variacion', 'algebra-funcion-potencia', 'algebra-modelamiento', 'geometria-volumen', 'numeros-potencias', 'algebra-variacion']
   },
   {
@@ -53,8 +53,8 @@ export const m2Alg003Questions: Question[] = [
     options: ['50', '100', '200', '400'],
     correctAnswer: 3,
     explanation: '100 = \\frac{k}{2^2} \\rightarrow k = 100 \\times 4 = 400',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['funcion-potencia-modelamiento', 'funcion-potencia-problemas-fisica', 'algebra-funcion-potencia', 'algebra-modelamiento', 'algebra-despeje', 'numeros-potencias', 'numeros-operaciones-basicas']
   },
   {
@@ -67,8 +67,8 @@ export const m2Alg003Questions: Question[] = [
     options: ['\\text{Se cuadruplica}', '\\text{Se duplica}', '\\text{Se mantiene igual}', '\\text{Se divide por 2}'],
     correctAnswer: 1,
     explanation: 'T(4L) = 2\\pi\\sqrt{\\frac{4L}{g}} = 2\\pi \\cdot 2\\sqrt{\\frac{L}{g}} = 2 \\cdot T(L)',
-    difficulty: 'extreme',
-    difficultyScore: 0.95,
+    difficulty: 'hard',
+    difficultyScore: 0.52,
     skills: ['funcion-potencia-problemas-fisica', 'funcion-potencia-problemas-variacion', 'algebra-funcion-potencia', 'algebra-modelamiento', 'algebra-variacion', 'numeros-raices', 'numeros-operaciones-basicas']
   },
   {
@@ -81,8 +81,8 @@ export const m2Alg003Questions: Question[] = [
     options: ['25\\%', '50\\%', '75\\%', '90\\%'],
     correctAnswer: 2,
     explanation: 'E\\left(\\frac{v}{2}\\right) = \\frac{1}{2}m\\left(\\frac{v}{2}\\right)^2 = \\frac{1}{4}E(v) \\rightarrow \\text{pierde } 75\\%',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.48,
     skills: ['funcion-potencia-problemas-fisica', 'funcion-potencia-problemas-variacion', 'algebra-funcion-potencia', 'algebra-modelamiento', 'algebra-variacion', 'numeros-porcentaje', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -96,7 +96,7 @@ export const m2Alg003Questions: Question[] = [
     correctAnswer: 2,
     explanation: '\\frac{S(6)}{S(3)} = \\frac{4\\pi \\cdot 36}{4\\pi \\cdot 9} = \\frac{36}{9} = 4',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.35,
     skills: ['funcion-potencia-modelamiento', 'funcion-potencia-problemas-variacion', 'algebra-funcion-potencia', 'algebra-modelamiento', 'geometria-superficie-esfera', 'numeros-potencias', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   {
@@ -109,8 +109,8 @@ export const m2Alg003Questions: Question[] = [
     options: ['\\text{Se divide por 3}', '\\text{Se divide por 6}', '\\text{Se divide por 9}', '\\text{Se triplica}'],
     correctAnswer: 2,
     explanation: 'F(3r) = \\frac{Gm_1m_2}{(3r)^2} = \\frac{Gm_1m_2}{9r^2} = \\frac{F(r)}{9}',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.42,
     skills: ['funcion-potencia-problemas-fisica', 'funcion-potencia-problemas-variacion', 'algebra-funcion-potencia', 'algebra-modelamiento', 'algebra-variacion', 'numeros-potencias', 'numeros-fracciones', 'numeros-operaciones-basicas']
   },
   // Subsection D: Interpretación de gráficos
@@ -125,7 +125,7 @@ export const m2Alg003Questions: Question[] = [
     correctAnswer: 1,
     explanation: 'x^{-2} = \\frac{1}{x^2} \\text{ decrece, } \\lim_{x \\to \\infty} \\frac{1}{x^2} = 0',
     difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficultyScore: 0.32,
     skills: ['funcion-potencia-problemas-interpretacion', 'funcion-potencia-graficos', 'algebra-funcion-potencia', 'algebra-interpretacion-graficos', 'algebra-limites']
   },
   {
@@ -138,8 +138,8 @@ export const m2Alg003Questions: Question[] = [
     options: ['y = kx', 'y = kx^2', 'y = k\\sqrt{x}', 'y = kx^3'],
     correctAnswer: 1,
     explanation: 'y = kx^2: \\quad k(2x)^2 = 4kx^2 = 4y',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['funcion-potencia-problemas-interpretacion', 'funcion-potencia-problemas-variacion', 'algebra-funcion-potencia', 'algebra-interpretacion-graficos']
   },
   {
@@ -152,8 +152,8 @@ export const m2Alg003Questions: Question[] = [
     options: ['\\text{Solo cuadrante I}', '\\text{Cuadrantes I y III}', '\\text{Cuadrantes I y II}', '\\text{Todos los cuadrantes}'],
     correctAnswer: 1,
     explanation: 'x > 0 \\Rightarrow x^3 > 0 \\text{ (I)}; \\quad x < 0 \\Rightarrow x^3 < 0 \\text{ (III)}',
-    difficulty: 'medium',
-    difficultyScore: 0.55,
+    difficulty: 'easy',
+    difficultyScore: 0.28,
     skills: ['funcion-potencia-problemas-interpretacion', 'funcion-potencia-grafica', 'algebra-funcion-potencia', 'algebra-interpretacion-graficos', 'geometria-plano-cartesiano']
   },
   {
@@ -166,8 +166,8 @@ export const m2Alg003Questions: Question[] = [
     options: ['\\text{Impar}', '\\text{Par}', '\\text{Cualquier entero}', '\\text{Solo positivo}'],
     correctAnswer: 1,
     explanation: 'n \\text{ par: } (-x)^n = x^n \\Rightarrow \\text{simetría con eje Y}',
-    difficulty: 'hard',
-    difficultyScore: 0.75,
+    difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['funcion-potencia-problemas-interpretacion', 'funcion-potencia-grafica', 'algebra-funcion-potencia', 'algebra-simetria', 'algebra-interpretacion-graficos']
   }
 ];
