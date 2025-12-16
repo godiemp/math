@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Plataforma de preparación para la PAES de Matemática en Chile. Practica con +600 ejercicios del temario oficial, feedback personalizado, y seguimiento de progreso. Prepárate para la Prueba de Acceso a la Educación Superior.",
+    "Plataforma de preparación para la PAES de Matemática en Chile. Practica con +900 ejercicios del temario oficial, feedback personalizado, y seguimiento de progreso. Prepárate para la Prueba de Acceso a la Educación Superior.",
   keywords: [
     "PAES",
     "PAES matemática",
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: `${SITE_NAME} - Preparación PAES Matemática Chile`,
     description:
-      "Prepara la PAES de Matemática con +600 ejercicios del temario oficial, feedback personalizado y seguimiento de progreso.",
+      "Prepara la PAES de Matemática con +900 ejercicios del temario oficial, feedback personalizado y seguimiento de progreso.",
   },
   twitter: {
     card: "summary_large_image",
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     creator: "@simplepaes",
     title: `${SITE_NAME} - Preparación PAES Matemática Chile`,
     description:
-      "Prepara la PAES de Matemática con +600 ejercicios del temario oficial y feedback personalizado.",
+      "Prepara la PAES de Matemática con +900 ejercicios del temario oficial y feedback personalizado.",
   },
   verification: {
     google: "GOOGLE_SITE_VERIFICATION_CODE",

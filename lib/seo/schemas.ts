@@ -14,7 +14,7 @@ export const organizationSchema = {
     height: 630,
   },
   description:
-    "Plataforma de preparación para la PAES de Matemática en Chile. Más de 600 ejercicios del temario oficial con práctica personalizada.",
+    "Plataforma de preparación para la PAES de Matemática en Chile. Más de 900 ejercicios del temario oficial con práctica personalizada.",
   areaServed: {
     "@type": "Country",
     name: "Chile",
@@ -54,7 +54,7 @@ export const courseSchema = {
   "@id": `${SITE_URL}/#course`,
   name: "Preparación PAES Matemática",
   description:
-    "Curso de preparación para la Prueba de Acceso a la Educación Superior (PAES) de Matemática en Chile. Incluye más de 600 ejercicios del temario oficial, práctica personalizada y seguimiento de progreso.",
+    "Curso de preparación para la Prueba de Acceso a la Educación Superior (PAES) de Matemática en Chile. Incluye más de 900 ejercicios del temario oficial, práctica personalizada y seguimiento de progreso.",
   provider: { "@id": `${SITE_URL}/#organization` },
   educationalLevel: "Educación Media / Preparación Universitaria",
   inLanguage: "es-CL",
@@ -82,7 +82,7 @@ export const faqSchema = {
       name: "¿Qué es SimplePAES?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "SimplePAES es una plataforma de preparación para la PAES de Matemática en Chile. Ofrece más de 600 ejercicios alineados con el temario oficial, práctica personalizada basada en datos, feedback inmediato y seguimiento de progreso.",
+        text: "SimplePAES es una plataforma de preparación para la PAES de Matemática en Chile. Ofrece más de 900 ejercicios alineados con el temario oficial, práctica personalizada basada en datos, feedback inmediato y seguimiento de progreso.",
       },
     },
     {
@@ -98,7 +98,7 @@ export const faqSchema = {
       name: "¿Qué incluye la suscripción premium?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "La suscripción premium incluye acceso completo a más de 600 ejercicios PAES, ensayos en vivo con otros estudiantes, tutor AI ilimitado, explicaciones detalladas, análisis de habilidades y seguimiento personalizado de progreso.",
+        text: "La suscripción premium incluye acceso completo a más de 900 ejercicios PAES, ensayos en vivo con otros estudiantes, tutor AI ilimitado, explicaciones detalladas, análisis de habilidades y seguimiento personalizado de progreso.",
       },
     },
     {
