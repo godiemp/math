@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Check, X, RotateCcw, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
-import { Celebration } from '@/components/lessons/shared';
 import MathDisplay from '@/components/math/MathDisplay';
 
 interface Question {
@@ -61,7 +60,6 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
   const [answers, setAnswers] = useState<(number | null)[]>(Array(QUESTIONS.length).fill(null));
   const [showFeedback, setShowFeedback] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
-  const [showCelebration, setShowCelebration] = useState(false);
 
   const question = QUESTIONS[currentQuestion];
   const selectedAnswer = answers[currentQuestion];
@@ -87,9 +85,6 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
       setCurrentQuestion(prev => prev + 1);
     } else {
       setIsComplete(true);
-      if (passed) {
-        setShowCelebration(true);
-      }
     }
   };
 
@@ -98,12 +93,6 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
     setAnswers(Array(QUESTIONS.length).fill(null));
     setShowFeedback(false);
     setIsComplete(false);
-    setShowCelebration(false);
-  };
-
-  const handleCelebrationContinue = () => {
-    setShowCelebration(false);
-    onComplete();
   };
 
   if (!isActive) return null;
@@ -340,7 +329,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
 
             {passed && (
               <button
-                onClick={() => setShowCelebration(true)}
+                onClick={onComplete}
                 className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
               >
                 Completar Lección
@@ -348,16 +337,6 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
             )}
           </div>
         </div>
-      )}
-
-      {/* Celebration modal */}
-      {showCelebration && (
-        <Celebration
-          title="¡Lección Completada!"
-          message="Has aprendido el Teorema de Pitágoras y cómo aplicarlo para resolver problemas con triángulos rectángulos. ¡Excelente trabajo!"
-          onContinue={handleCelebrationContinue}
-          continueLabel="Finalizar"
-        />
       )}
     </div>
   );
