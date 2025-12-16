@@ -1,0 +1,21 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#007AFF"/>
+  <rect x="60" y="60" width="1080" height="510" rx="24" fill="white" fill-opacity="0.1"/>
+
+  <!-- Logo icon -->
+  <g transform="translate(540, 180)">
+    <rect width="120" height="120" rx="30" fill="white"/>
+    <path d="M60 35L35 50L60 65L85 50L60 35Z" stroke="#007AFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M35 70L60 85L85 70" stroke="#007AFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M35 60L60 75L85 60" stroke="#007AFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+
+  <!-- Text -->
+  <text x="600" y="360" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="700" fill="white" text-anchor="middle">SimplePAES</text>
+  <text x="600" y="430" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="400" fill="white" fill-opacity="0.9" text-anchor="middle">Preparación PAES Matemática Chile</text>
+
+  <!-- Stats -->
+  <text x="300" y="520" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="600" fill="white" text-anchor="middle">+600 ejercicios</text>
+  <text x="600" y="520" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="600" fill="white" text-anchor="middle">M1 y M2</text>
+  <text x="900" y="520" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="600" fill="white" text-anchor="middle">Feedback AI</text>
+</svg>
