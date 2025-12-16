@@ -1,154 +1,105 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { ArrowRight, Trophy, HelpCircle, Sparkles, Medal, Users } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useState } from 'react';
+import { ArrowRight, Lightbulb, Sparkles, Target } from 'lucide-react';
 import { LessonStepProps } from '@/lib/lessons/types';
 
-type Phase = 'intro' | 'guess' | 'reveal';
+type Phase = 'review' | 'question' | 'reveal';
 
-// Student test score data - designed to illustrate quartiles clearly
-// Ordered: 45, 52, 58, 62, 68, 72, 78, 85, 88, 95
-const STUDENTS = [
-  { id: 1, name: 'Ana', emoji: '👧', score: 72 },
-  { id: 2, name: 'Bruno', emoji: '👦', score: 85 },
-  { id: 3, name: 'Carla', emoji: '👧', score: 58 },
-  { id: 4, name: 'Diego', emoji: '👦', score: 95 },
-  { id: 5, name: 'Elena', emoji: '👧', score: 45 },
-  { id: 6, name: 'Felipe', emoji: '👦', score: 68 },
-  { id: 7, name: 'Gabi', emoji: '👧', score: 88 },
-  { id: 8, name: 'Hugo', emoji: '👦', score: 52 },
-  { id: 9, name: 'Iris', emoji: '👧', score: 78 },
-  { id: 10, name: 'Juan', emoji: '👦', score: 62 },
-];
-
-const SCORES = STUDENTS.map(s => s.score);
-const SORTED_SCORES = [...SCORES].sort((a, b) => a - b);
-
-// Calculate quartiles
-function calculateQuartiles(data: number[]) {
-  const sorted = [...data].sort((a, b) => a - b);
-  const n = sorted.length;
-
-  // Q2 (median)
-  const mid = Math.floor(n / 2);
-  const q2 = n % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-
-  // Q1 (median of lower half)
-  const lowerHalf = sorted.slice(0, mid);
-  const q1Mid = Math.floor(lowerHalf.length / 2);
-  const q1 = lowerHalf.length % 2 !== 0
-    ? lowerHalf[q1Mid]
-    : (lowerHalf[q1Mid - 1] + lowerHalf[q1Mid]) / 2;
-
-  // Q3 (median of upper half)
-  const upperHalf = n % 2 !== 0 ? sorted.slice(mid + 1) : sorted.slice(mid);
-  const q3Mid = Math.floor(upperHalf.length / 2);
-  const q3 = upperHalf.length % 2 !== 0
-    ? upperHalf[q3Mid]
-    : (upperHalf[q3Mid - 1] + upperHalf[q3Mid]) / 2;
-
-  return { q1, q2, q3 };
-}
-
-const QUARTILES = calculateQuartiles(SCORES);
-// Q1 = 55, Q2 = 70, Q3 = 86.5
+// Simple dataset to illustrate the concept - 7 values for clean odd case
+const DATA = [10, 20, 30, 40, 50, 60, 70];
+const MEDIAN = 40; // The middle value
+const LOWER_HALF = [10, 20, 30];
+const UPPER_HALF = [50, 60, 70];
+const Q1 = 20; // Median of lower half
+const Q3 = 60; // Median of upper half
 
 export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
-  const [phase, setPhase] = useState<Phase>('intro');
-  const [selectedQuartile, setSelectedQuartile] = useState<number | null>(null);
-
-  const sortedStudents = useMemo(() =>
-    [...STUDENTS].sort((a, b) => a.score - b.score), []
-  );
-
-  // Count students in each quartile
-  const quartileGroups = useMemo(() => {
-    const groups = {
-      bottom25: sortedStudents.filter(s => s.score <= QUARTILES.q1),
-      middle50: sortedStudents.filter(s => s.score > QUARTILES.q1 && s.score <= QUARTILES.q3),
-      top25: sortedStudents.filter(s => s.score > QUARTILES.q3),
-    };
-    return groups;
-  }, [sortedStudents]);
+  const [phase, setPhase] = useState<Phase>('review');
 
   if (!isActive) return null;
 
-  // ============ PHASE 1: INTRO ============
-  if (phase === 'intro') {
+  // ============ PHASE 1: REVIEW - Connect to prior knowledge ============
+  if (phase === 'review') {
     return (
       <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-100 dark:bg-amber-900/30 rounded-full mb-4">
-            <Trophy className="w-5 h-5 text-amber-600" />
-            <span className="text-amber-700 dark:text-amber-300 font-medium">
-              El Ranking de la Clase
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 rounded-full mb-4">
+            <Target className="w-5 h-5 text-green-600" />
+            <span className="text-green-700 dark:text-green-300 font-medium">
+              ¿Recuerdas la mediana?
             </span>
           </div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            ¿Quien esta en el Top 25%?
+            La Mediana Divide en 2
           </h2>
           <p className="text-gray-600 dark:text-gray-300">
-            Estos son los puntajes de la ultima prueba de matematicas.
+            Ya sabes encontrar el valor del medio. ¡Repasemos!
           </p>
         </div>
 
-        {/* Students grid with scores */}
-        <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl p-4 border border-amber-200 dark:border-amber-700">
-          <div className="grid grid-cols-5 gap-3">
-            {STUDENTS.map((student, index) => (
-              <div
-                key={student.id}
-                className={cn(
-                  'flex flex-col items-center p-2 bg-white dark:bg-gray-800 rounded-lg border',
-                  student.score >= 85
-                    ? 'border-amber-300 dark:border-amber-600'
-                    : 'border-gray-200 dark:border-gray-700',
-                  'animate-fadeIn'
-                )}
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <span className="text-2xl mb-1">{student.emoji}</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">{student.name}</span>
-                <div className={cn(
-                  'mt-1 px-2 py-0.5 rounded-full text-sm font-bold',
-                  student.score >= 85
-                    ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300'
-                    : student.score >= 70
-                    ? 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300'
-                    : student.score >= 55
-                    ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
-                )}>
-                  {student.score}
+        {/* Data visualization with median highlighted */}
+        <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-6 border border-green-200 dark:border-green-700">
+          <p className="text-sm text-green-600 dark:text-green-400 mb-4 text-center">
+            Datos ordenados:
+          </p>
+          <div className="flex items-center justify-center gap-2">
+            {/* Lower half */}
+            <div className="flex gap-2 p-2 bg-blue-100/50 dark:bg-blue-900/30 rounded-lg">
+              {LOWER_HALF.map((val, i) => (
+                <div
+                  key={i}
+                  className="w-12 h-12 rounded-lg bg-white dark:bg-gray-700 border-2 border-blue-300 flex items-center justify-center font-bold text-blue-700 dark:text-blue-300"
+                >
+                  {val}
                 </div>
+              ))}
+            </div>
+
+            {/* Median */}
+            <div className="flex flex-col items-center">
+              <div className="w-14 h-14 rounded-xl bg-green-500 border-2 border-green-600 flex items-center justify-center font-bold text-white text-lg shadow-lg">
+                {MEDIAN}
               </div>
-            ))}
+              <span className="text-xs font-bold text-green-600 mt-1">MEDIANA</span>
+            </div>
+
+            {/* Upper half */}
+            <div className="flex gap-2 p-2 bg-purple-100/50 dark:bg-purple-900/30 rounded-lg">
+              {UPPER_HALF.map((val, i) => (
+                <div
+                  key={i}
+                  className="w-12 h-12 rounded-lg bg-white dark:bg-gray-700 border-2 border-purple-300 flex items-center justify-center font-bold text-purple-700 dark:text-purple-300"
+                >
+                  {val}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-around mt-4 text-sm">
+            <span className="text-blue-600 dark:text-blue-400 font-medium">
+              Mitad inferior (50%)
+            </span>
+            <span className="text-purple-600 dark:text-purple-400 font-medium">
+              Mitad superior (50%)
+            </span>
           </div>
         </div>
 
-        {/* The question */}
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
-          <div className="flex items-start gap-3">
-            <Medal className="w-6 h-6 text-purple-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-purple-800 dark:text-purple-200 font-semibold">
-                La pregunta del profesor
-              </p>
-              <p className="text-purple-700 dark:text-purple-300 text-sm mt-1">
-                El profesor quiere premiar al <strong>top 25%</strong> de la clase.
-                ¿Cuantos estudiantes recibiran premio? ¿Quienes son?
-              </p>
-            </div>
-          </div>
+        {/* Key insight */}
+        <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-4 border border-green-200 dark:border-green-700">
+          <p className="text-green-800 dark:text-green-200 text-center">
+            La mediana divide los datos en <strong>2 partes iguales</strong> de 50% cada una.
+          </p>
         </div>
 
         <div className="flex justify-center">
           <button
-            onClick={() => setPhase('guess')}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 transition-all shadow-lg"
+            onClick={() => setPhase('question')}
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
           >
-            <span>Intentar responder</span>
+            <span>Entendido, ¿que sigue?</span>
             <ArrowRight size={20} />
           </button>
         </div>
@@ -156,206 +107,172 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
     );
   }
 
-  // ============ PHASE 2: GUESS ============
-  if (phase === 'guess') {
+  // ============ PHASE 2: QUESTION - The key insight ============
+  if (phase === 'question') {
     return (
       <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4">
-            <HelpCircle className="w-5 h-5 text-blue-600" />
-            <span className="text-blue-700 dark:text-blue-300 font-medium">
-              Tu prediccion
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-100 dark:bg-amber-900/30 rounded-full mb-4">
+            <Lightbulb className="w-5 h-5 text-amber-600" />
+            <span className="text-amber-700 dark:text-amber-300 font-medium">
+              Una idea poderosa
             </span>
           </div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            ¿Cuantos en el top 25%?
+            ¿Y si dividimos MAS?
           </h2>
-          <p className="text-gray-600 dark:text-gray-300">
-            Selecciona tu respuesta
+        </div>
+
+        {/* The question visualization */}
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl p-6 border border-amber-200 dark:border-amber-700">
+          <p className="text-amber-800 dark:text-amber-200 text-center mb-4">
+            Ya tenemos la mediana de TODOS los datos...
+          </p>
+
+          <div className="flex items-center justify-center gap-2 mb-6">
+            {/* Lower half with question */}
+            <div className="flex flex-col items-center">
+              <div className="flex gap-1 p-2 bg-blue-100/50 dark:bg-blue-900/30 rounded-lg">
+                {LOWER_HALF.map((val, i) => (
+                  <div
+                    key={i}
+                    className="w-10 h-10 rounded-lg bg-white dark:bg-gray-700 border-2 border-blue-300 flex items-center justify-center font-bold text-sm text-blue-700 dark:text-blue-300"
+                  >
+                    {val}
+                  </div>
+                ))}
+              </div>
+              <div className="mt-2 px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-bold animate-pulse">
+                ¿Mediana de estos?
+              </div>
+            </div>
+
+            {/* Center */}
+            <div className="w-12 h-12 rounded-xl bg-green-500 flex items-center justify-center font-bold text-white">
+              {MEDIAN}
+            </div>
+
+            {/* Upper half with question */}
+            <div className="flex flex-col items-center">
+              <div className="flex gap-1 p-2 bg-purple-100/50 dark:bg-purple-900/30 rounded-lg">
+                {UPPER_HALF.map((val, i) => (
+                  <div
+                    key={i}
+                    className="w-10 h-10 rounded-lg bg-white dark:bg-gray-700 border-2 border-purple-300 flex items-center justify-center font-bold text-sm text-purple-700 dark:text-purple-300"
+                  >
+                    {val}
+                  </div>
+                ))}
+              </div>
+              <div className="mt-2 px-3 py-1 bg-purple-500 text-white rounded-full text-sm font-bold animate-pulse">
+                ¿Mediana de estos?
+              </div>
+            </div>
+          </div>
+
+          <p className="text-amber-800 dark:text-amber-200 text-center font-semibold">
+            ¿Que pasa si encontramos la mediana de CADA MITAD?
           </p>
         </div>
 
-        {/* Sorted students for reference */}
-        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4">
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-2 text-center">
-            Puntajes ordenados de menor a mayor:
-          </p>
-          <div className="flex flex-wrap gap-2 justify-center">
-            {SORTED_SCORES.map((score, i) => (
-              <span
-                key={i}
-                className="px-3 py-1 rounded-lg text-sm font-mono bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600"
-              >
-                {score}
-              </span>
-            ))}
-          </div>
+        <div className="flex justify-center">
+          <button
+            onClick={() => setPhase('reveal')}
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 transition-all shadow-lg"
+          >
+            <span>¡Ver que pasa!</span>
+            <ArrowRight size={20} />
+          </button>
         </div>
-
-        {/* Answer options */}
-        <div className="grid grid-cols-2 gap-3">
-          {[2, 3, 4, 5].map((num) => (
-            <button
-              key={num}
-              onClick={() => setSelectedQuartile(num)}
-              className={cn(
-                'p-4 rounded-xl border-2 transition-all text-center',
-                selectedQuartile === num
-                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-blue-300'
-              )}
-            >
-              <div className="text-3xl font-bold text-gray-900 dark:text-white">{num}</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">estudiantes</div>
-            </button>
-          ))}
-        </div>
-
-        {selectedQuartile !== null && (
-          <div className="space-y-4 animate-fadeIn">
-            <div className="bg-amber-50 dark:bg-amber-900/30 rounded-xl p-4 border border-amber-200 dark:border-amber-700">
-              <p className="text-center text-amber-800 dark:text-amber-200">
-                <strong>Interesante...</strong> Pero, ¿como sabemos exactamente donde &ldquo;cortar&rdquo;?
-                Necesitamos un metodo matematico para dividir los datos.
-              </p>
-            </div>
-
-            <div className="flex justify-center">
-              <button
-                onClick={() => setPhase('reveal')}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg"
-              >
-                <span>Ver la solucion</span>
-                <ArrowRight size={20} />
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     );
   }
 
-  // ============ PHASE 3: REVEAL ============
+  // ============ PHASE 3: REVEAL - Introducing quartiles ============
   return (
     <div className="space-y-6 animate-fadeIn pb-24">
       <div className="text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 rounded-full mb-4">
-          <Sparkles className="w-5 h-5 text-green-600" />
-          <span className="text-green-700 dark:text-green-300 font-medium">
-            ¡Los Cuartiles!
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mb-4">
+          <Sparkles className="w-5 h-5 text-purple-600" />
+          <span className="text-purple-700 dark:text-purple-300 font-medium">
+            ¡Nacen los Cuartiles!
           </span>
         </div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          Dividir los datos en 4 partes iguales
+          Ahora Tenemos 4 Partes
         </h2>
-        <p className="text-gray-600 dark:text-gray-300">
-          Los cuartiles nos dicen donde estan el 25%, 50% y 75% de los datos
-        </p>
       </div>
 
-      {/* Visual quartile representation */}
-      <div className="bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-900/30 dark:to-blue-900/30 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-        <div className="space-y-3">
-          {/* Number line with quartiles */}
-          <div className="relative h-16 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-            {/* Quartile markers */}
-            <div className="absolute top-0 left-[25%] w-px h-full bg-blue-400 dark:bg-blue-500">
-              <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-blue-600 dark:text-blue-400">Q₁</div>
-              <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-xs text-blue-600 dark:text-blue-400">{QUARTILES.q1}</div>
-            </div>
-            <div className="absolute top-0 left-[50%] w-px h-full bg-green-400 dark:bg-green-500">
-              <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-green-600 dark:text-green-400">Q₂</div>
-              <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-xs text-green-600 dark:text-green-400">{QUARTILES.q2}</div>
-            </div>
-            <div className="absolute top-0 left-[75%] w-px h-full bg-purple-400 dark:bg-purple-500">
-              <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-purple-600 dark:text-purple-400">Q₃</div>
-              <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-xs text-purple-600 dark:text-purple-400">{QUARTILES.q3}</div>
-            </div>
+      {/* The reveal visualization */}
+      <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-700">
+        <div className="flex items-center justify-center gap-1">
+          {/* Section 1: below Q1 */}
+          <div className="flex flex-col items-center">
+            <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/50 border border-blue-300 flex items-center justify-center font-bold text-sm">10</div>
+            <span className="text-xs text-gray-500 mt-1">25%</span>
+          </div>
 
-            {/* Quartile sections */}
-            <div className="absolute top-1/2 -translate-y-1/2 left-[12.5%] text-xs text-gray-500 dark:text-gray-400">25%</div>
-            <div className="absolute top-1/2 -translate-y-1/2 left-[37.5%] text-xs text-gray-500 dark:text-gray-400">25%</div>
-            <div className="absolute top-1/2 -translate-y-1/2 left-[62.5%] text-xs text-gray-500 dark:text-gray-400">25%</div>
-            <div className="absolute top-1/2 -translate-y-1/2 left-[87.5%] text-xs text-gray-500 dark:text-gray-400">25%</div>
+          {/* Q1 marker */}
+          <div className="flex flex-col items-center mx-1">
+            <div className="w-11 h-11 rounded-lg bg-blue-500 flex items-center justify-center font-bold text-white">20</div>
+            <span className="text-xs font-bold text-blue-600">Q₁</span>
+          </div>
+
+          {/* Section 2: Q1 to Q2 */}
+          <div className="flex flex-col items-center">
+            <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/50 border border-blue-300 flex items-center justify-center font-bold text-sm">30</div>
+            <span className="text-xs text-gray-500 mt-1">25%</span>
+          </div>
+
+          {/* Q2 marker (median) */}
+          <div className="flex flex-col items-center mx-1">
+            <div className="w-11 h-11 rounded-lg bg-green-500 flex items-center justify-center font-bold text-white">40</div>
+            <span className="text-xs font-bold text-green-600">Q₂</span>
+          </div>
+
+          {/* Section 3: Q2 to Q3 */}
+          <div className="flex flex-col items-center">
+            <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/50 border border-purple-300 flex items-center justify-center font-bold text-sm">50</div>
+            <span className="text-xs text-gray-500 mt-1">25%</span>
+          </div>
+
+          {/* Q3 marker */}
+          <div className="flex flex-col items-center mx-1">
+            <div className="w-11 h-11 rounded-lg bg-purple-500 flex items-center justify-center font-bold text-white">60</div>
+            <span className="text-xs font-bold text-purple-600">Q₃</span>
+          </div>
+
+          {/* Section 4: above Q3 */}
+          <div className="flex flex-col items-center">
+            <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/50 border border-purple-300 flex items-center justify-center font-bold text-sm">70</div>
+            <span className="text-xs text-gray-500 mt-1">25%</span>
           </div>
         </div>
       </div>
 
-      {/* Three quartile explanations */}
+      {/* Explanation cards - THE KEY INSIGHT */}
       <div className="space-y-3">
-        {/* Q1 */}
-        <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-700">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-800 flex items-center justify-center">
-                <span className="text-lg font-bold text-blue-600">Q₁</span>
-              </div>
-              <div>
-                <p className="text-sm text-blue-600 dark:text-blue-400">Primer Cuartil (25%)</p>
-                <p className="text-xl font-bold text-blue-700 dark:text-blue-300">{QUARTILES.q1} puntos</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <span className="text-sm text-blue-600 dark:text-blue-400 font-medium">
-                {quartileGroups.bottom25.length} estudiantes debajo
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Q2 */}
-        <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-4 border border-green-200 dark:border-green-700">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center">
-                <span className="text-lg font-bold text-green-600">Q₂</span>
-              </div>
-              <div>
-                <p className="text-sm text-green-600 dark:text-green-400">Segundo Cuartil = Mediana (50%)</p>
-                <p className="text-xl font-bold text-green-700 dark:text-green-300">{QUARTILES.q2} puntos</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <span className="text-sm text-green-600 dark:text-green-400 font-medium">
-                Divide la clase por la mitad
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Q3 */}
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-800 flex items-center justify-center">
-                <span className="text-lg font-bold text-purple-600">Q₃</span>
-              </div>
-              <div>
-                <p className="text-sm text-purple-600 dark:text-purple-400">Tercer Cuartil (75%)</p>
-                <p className="text-xl font-bold text-purple-700 dark:text-purple-300">{QUARTILES.q3} puntos</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <span className="text-sm text-purple-600 dark:text-purple-400 font-medium">
-                {quartileGroups.top25.length} estudiantes arriba
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Answer to the original question */}
-      <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl p-4 border border-amber-200 dark:border-amber-700">
-        <div className="flex items-start gap-3">
-          <Trophy className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+        <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-xl">
+          <div className="w-10 h-10 rounded-lg bg-blue-500 flex items-center justify-center font-bold text-white">Q₁</div>
           <div>
-            <p className="text-amber-800 dark:text-amber-200 font-semibold">
-              Respuesta: ¡{quartileGroups.top25.length} estudiantes en el top 25%!
-            </p>
-            <p className="text-amber-700 dark:text-amber-300 text-sm mt-1">
-              {quartileGroups.top25.map(s => s.name).join(', ')} tienen puntajes mayores a Q₃ = {QUARTILES.q3}.
-              Ellos estan por encima del 75% de la clase.
-            </p>
+            <p className="font-semibold text-blue-800 dark:text-blue-200">Primer Cuartil = {Q1}</p>
+            <p className="text-sm text-blue-600 dark:text-blue-400">Mediana de [{LOWER_HALF.join(', ')}] → el del medio es <strong>{Q1}</strong></p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/30 rounded-xl">
+          <div className="w-10 h-10 rounded-lg bg-green-500 flex items-center justify-center font-bold text-white">Q₂</div>
+          <div>
+            <p className="font-semibold text-green-800 dark:text-green-200">Segundo Cuartil = {MEDIAN}</p>
+            <p className="text-sm text-green-600 dark:text-green-400">¡La mediana que ya conocias!</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 p-3 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
+          <div className="w-10 h-10 rounded-lg bg-purple-500 flex items-center justify-center font-bold text-white">Q₃</div>
+          <div>
+            <p className="font-semibold text-purple-800 dark:text-purple-200">Tercer Cuartil = {Q3}</p>
+            <p className="text-sm text-purple-600 dark:text-purple-400">Mediana de [{UPPER_HALF.join(', ')}] → el del medio es <strong>{Q3}</strong></p>
           </div>
         </div>
       </div>
@@ -366,12 +283,12 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           <Sparkles className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
           <div>
             <p className="text-green-800 dark:text-green-200 font-semibold">
-              El gran descubrimiento
+              ¡Asi de simple!
             </p>
             <p className="text-green-700 dark:text-green-300 text-sm mt-1">
-              Los <strong>cuartiles</strong> dividen los datos ordenados en 4 partes de 25% cada una.
-              Son super utiles para entender donde se ubica un dato dentro de un grupo.
-              ¡Vamos a aprender a calcularlos!
+              Los cuartiles son solo <strong>3 medianas</strong>: la del medio (Q₂),
+              la de la mitad inferior (Q₁) y la de la mitad superior (Q₃).
+              Dividen los datos en <strong>4 partes de 25%</strong> cada una.
             </p>
           </div>
         </div>
@@ -381,9 +298,9 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
       <div className="flex justify-center">
         <button
           onClick={onComplete}
-          className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
+          className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg"
         >
-          <span>¡Aprender a calcularlos!</span>
+          <span>¡Practicar calculando!</span>
           <ArrowRight size={20} />
         </button>
       </div>

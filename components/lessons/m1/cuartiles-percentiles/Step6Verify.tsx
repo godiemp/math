@@ -17,45 +17,29 @@ interface Question {
 const QUESTIONS: Question[] = [
   {
     id: 'q1',
-    question: 'Datos ordenados: 10, 15, 20, 25, 30, 35, 40. ¿Cual es Q₁?',
+    question: 'Datos ordenados: 10, 15, 20, 25, 30, 35, 40. ¿Cual es Q₂ (la mediana)?',
     data: [10, 15, 20, 25, 30, 35, 40],
-    options: ['10', '15', '17.5', '20'],
+    options: ['20', '25', '27.5', '30'],
     correctAnswer: 1,
-    explanation: 'Con 7 datos, Q₂=25 (4to valor). Mitad inferior: 10, 15, 20. Q₁ = 15 (el valor central de la mitad inferior).',
+    explanation: 'Con 7 datos (impar), la mediana es el valor del medio: el 4to valor = 25.',
   },
   {
     id: 'q2',
+    question: 'Con los mismos datos: 10, 15, 20, 25, 30, 35, 40. ¿Cual es Q₁?',
+    data: [10, 15, 20, 25, 30, 35, 40],
+    options: ['10', '15', '17.5', '20'],
+    correctAnswer: 1,
+    explanation: 'Q₁ es la mediana de la mitad inferior (sin incluir Q₂). Mitad inferior: [10, 15, 20]. Q₁ = 15 (el del medio).',
+  },
+  {
+    id: 'q3',
     question: 'Si Q₁ = 20 y Q₃ = 50, ¿cual es el IQR (rango intercuartilico)?',
-    options: ['20', '30', '35', '50'],
+    options: ['20', '30', '35', '70'],
     correctAnswer: 1,
     explanation: 'IQR = Q₃ - Q₁ = 50 - 20 = 30. El IQR mide la amplitud del 50% central de los datos.',
   },
   {
-    id: 'q3',
-    question: 'Si Juan obtuvo P₈₅ = 700 en un test, ¿que significa?',
-    options: [
-      'Juan obtuvo 85% de respuestas correctas',
-      'El 85% de los participantes obtuvo mas que Juan',
-      'El 85% de los participantes obtuvo menos o igual que Juan',
-      'Juan obtuvo 700 de 850 puntos',
-    ],
-    correctAnswer: 2,
-    explanation: 'P₈₅ = 700 significa que el 85% de los participantes obtuvo 700 puntos o menos. Juan esta en el top 15%.',
-  },
-  {
     id: 'q4',
-    question: 'En un diagrama de caja (boxplot), ¿que representa la CAJA?',
-    options: [
-      'El rango total de los datos',
-      'El rango intercuartilico (IQR)',
-      'Los valores atipicos',
-      'La media de los datos',
-    ],
-    correctAnswer: 1,
-    explanation: 'La caja va desde Q₁ hasta Q₃, que es el IQR. Contiene el 50% central de los datos.',
-  },
-  {
-    id: 'q5',
     question: 'Con Q₁=10, Q₃=30 e IQR=20, ¿el valor 75 seria un outlier?',
     data: [5, 10, 15, 20, 25, 30, 35, 75],
     options: [
@@ -66,6 +50,18 @@ const QUESTIONS: Question[] = [
     ],
     correctAnswer: 1,
     explanation: 'Limite superior = Q₃ + 1.5×IQR = 30 + 1.5(20) = 30 + 30 = 60. Como 75 > 60, SI es un outlier.',
+  },
+  {
+    id: 'q5',
+    question: 'En un diagrama de caja (boxplot), ¿que representa la CAJA?',
+    options: [
+      'El rango total de los datos',
+      'El rango intercuartilico (IQR) - el 50% central',
+      'Los valores atipicos',
+      'La media de los datos',
+    ],
+    correctAnswer: 1,
+    explanation: 'La caja va desde Q₁ hasta Q₃, que es el IQR. Contiene el 50% central de los datos.',
   },
 ];
 
@@ -187,7 +183,6 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
             <ul className="text-sm text-purple-600 dark:text-purple-400 space-y-1">
               <li>• Calcular cuartiles (Q₁, Q₂, Q₃)</li>
               <li>• Calcular el rango intercuartilico (IQR)</li>
-              <li>• Interpretar percentiles</li>
               <li>• Identificar valores atipicos (outliers)</li>
               <li>• Leer diagramas de caja (boxplots)</li>
             </ul>
@@ -274,7 +269,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
                 key={i}
                 className={cn(
                   'w-12 h-12 rounded-lg border flex items-center justify-center font-mono font-bold',
-                  question.id === 'q5' && val === 75
+                  question.id === 'q4' && val === 75
                     ? 'bg-red-100 dark:bg-red-900/50 border-red-400 text-red-700 dark:text-red-300'
                     : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300'
                 )}
