@@ -131,6 +131,32 @@
       "requirement": "la contraseña debe tener al menos 8 caracteres.",
       "successMessage": "✓ tu contraseña ha sido restablecida exitosamente. serás redirigido al inicio de sesión...",
       "loading": "cargando..."
+    },
+    "verifyEmail": {
+      "loading": {
+        "title": "verificando...",
+        "message": "estamos verificando tu correo electrónico."
+      },
+      "success": {
+        "title": "correo verificado",
+        "message": "tu correo electrónico ha sido verificado exitosamente. ya puedes disfrutar de todas las funciones de la plataforma."
+      },
+      "error": {
+        "title": "error de verificación",
+        "message": "no pudimos verificar tu correo electrónico."
+      },
+      "errors": {
+        "invalidToken": "el enlace de verificación es inválido o ha expirado.",
+        "generic": "error al verificar el correo electrónico.",
+        "connection": "error de conexión. por favor intenta de nuevo."
+      },
+      "toast": {
+        "success": "correo electrónico verificado exitosamente"
+      },
+      "button": {
+        "goToDashboard": "ir al panel",
+        "goToHome": "ir al inicio"
+      }
     }
   },
   "dashboard": {
