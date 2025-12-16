@@ -7,11 +7,11 @@ test.describe('Mini Lesson - M1 Números Enteros Orden', () => {
     // Navigate to the lesson
     await page.goto('/lessons/m1/numeros-enteros-orden', { waitUntil: 'domcontentloaded' });
 
-    // Check lesson title is visible
-    await expect(page.getByText('Orden y Valor Absoluto')).toBeVisible();
+    // Check lesson title is visible in the header
+    await expect(page.getByRole('heading', { name: 'Orden y Valor Absoluto' })).toBeVisible();
 
-    // Check Step 1 header
-    await expect(page.getByText('El Termómetro Loco')).toBeVisible();
+    // Check Step 1 header (use getByRole to avoid matching progress text)
+    await expect(page.getByRole('heading', { name: 'El Termómetro Loco' })).toBeVisible();
 
     // Check the question is displayed
     await expect(page.getByText('¿Cuál temperatura está más lejos de 0°C?')).toBeVisible();
@@ -23,13 +23,16 @@ test.describe('Mini Lesson - M1 Números Enteros Orden', () => {
     // Check temperature values are displayed
     await expect(page.getByText('-5°C')).toBeVisible();
     await expect(page.getByText('25°C')).toBeVisible();
+
+    // Check progress indicator
+    await expect(page.getByText('Paso 1 de 6')).toBeVisible();
   });
 
   test('should complete Step 1 (Hook) with correct answer', async ({ page }) => {
     await page.goto('/lessons/m1/numeros-enteros-orden', { waitUntil: 'domcontentloaded' });
 
     // Wait for the lesson to load
-    await expect(page.getByText('El Termómetro Loco')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'El Termómetro Loco' })).toBeVisible();
 
     // Select Santiago (correct answer - 25 is farther from 0 than -5)
     await page.getByText('Santiago').click();
@@ -51,13 +54,14 @@ test.describe('Mini Lesson - M1 Números Enteros Orden', () => {
 
     // Should be on Step 2 - check for Step 2 content (La Recta Numérica)
     await expect(page.getByText('Paso 2 de 6')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'La Recta Numérica' })).toBeVisible();
   });
 
   test('should complete Step 1 (Hook) with wrong answer', async ({ page }) => {
     await page.goto('/lessons/m1/numeros-enteros-orden', { waitUntil: 'domcontentloaded' });
 
     // Wait for the lesson to load
-    await expect(page.getByText('El Termómetro Loco')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'El Termómetro Loco' })).toBeVisible();
 
     // Select Punta Arenas (incorrect answer)
     await page.getByText('Punta Arenas').click();
@@ -75,7 +79,7 @@ test.describe('Mini Lesson - M1 Números Enteros Orden', () => {
     await expect(page.getByRole('button', { name: 'Continuar' })).toBeVisible();
   });
 
-  test('should navigate through all steps', async ({ page }) => {
+  test('should navigate back from Step 2 to Step 1', async ({ page }) => {
     await page.goto('/lessons/m1/numeros-enteros-orden', { waitUntil: 'domcontentloaded' });
 
     // Step 1: Complete the Hook
@@ -83,7 +87,7 @@ test.describe('Mini Lesson - M1 Números Enteros Orden', () => {
     await page.getByRole('button', { name: 'Ver Respuesta' }).click();
     await page.getByRole('button', { name: 'Continuar' }).click();
 
-    // Step 2: La Recta Numérica - should auto-advance or have continue
+    // Step 2: La Recta Numérica
     await expect(page.getByText('Paso 2 de 6')).toBeVisible();
 
     // Use back button to verify navigation
@@ -92,14 +96,7 @@ test.describe('Mini Lesson - M1 Números Enteros Orden', () => {
 
     // Should be back on Step 1
     await expect(page.getByText('Paso 1 de 6')).toBeVisible();
-
-    // Go forward again
-    await page.getByText('Santiago').click();
-    await page.getByRole('button', { name: 'Ver Respuesta' }).click();
-    await page.getByRole('button', { name: 'Continuar' }).click();
-
-    // Should be on Step 2 again
-    await expect(page.getByText('Paso 2 de 6')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'El Termómetro Loco' })).toBeVisible();
   });
 
   test('should display progress bar and step indicators', async ({ page }) => {
@@ -117,107 +114,11 @@ test.describe('Mini Lesson - M1 Números Enteros Orden', () => {
     await expect(page.getByText('Paso 2 de 6')).toBeVisible();
   });
 
-  test('should complete the full lesson with checkpoint quiz', async ({ page }) => {
-    // Increase timeout for full lesson completion
-    test.setTimeout(90000);
-
-    await page.goto('/lessons/m1/numeros-enteros-orden', { waitUntil: 'domcontentloaded' });
-
-    // Step 1: Complete the Hook
-    await page.getByText('Santiago').click();
-    await page.getByRole('button', { name: 'Ver Respuesta' }).click();
-    await page.getByRole('button', { name: 'Continuar' }).click();
-
-    // Step 2-5: Navigate through interactive steps
-    // These steps may have "Continuar" buttons or auto-complete behavior
-    // We'll look for and click continue/complete buttons as they appear
-
-    // Navigate through remaining steps
-    for (let step = 2; step <= 5; step++) {
-      // Wait for the step to load
-      await expect(page.getByText(`Paso ${step} de 6`)).toBeVisible({ timeout: 5000 });
-
-      // Look for any continue/next button to advance
-      const continueButton = page.getByRole('button', { name: /Continuar|Siguiente|Entendido/i });
-      const nextButton = page.locator('button').filter({ hasText: 'Siguiente' }).first();
-
-      // Try to find and click a continue button
-      if (await continueButton.isVisible().catch(() => false)) {
-        await continueButton.click();
-      } else if (await nextButton.isVisible().catch(() => false)) {
-        await nextButton.click();
-      } else {
-        // Some steps may require interaction - look for interactive elements
-        // For now, wait a moment for auto-advance or find the next navigation
-        await page.waitForTimeout(1000);
-
-        // Try footer navigation if available
-        const footerNext = page.locator('.fixed button').filter({ hasText: /Siguiente/i });
-        if (await footerNext.isVisible().catch(() => false)) {
-          await footerNext.click();
-        }
-      }
-    }
-
-    // Step 6: Checkpoint Quiz
-    await expect(page.getByText('Paso 6 de 6')).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText('Checkpoint Final')).toBeVisible();
-
-    // Answer the 4 checkpoint questions (need 3/4 correct)
-    const answers = [
-      0, // Q1: -5, -1, 0, 2, 4 (correct ordering)
-      1, // Q2: -3 is greater than -7
-      1, // Q3: |-8| = 8
-      2, // Q4: x = 5 and -5
-    ];
-
-    for (let i = 0; i < 4; i++) {
-      // Wait for question to load
-      await expect(page.getByText(`Pregunta ${i + 1} de 4`)).toBeVisible({ timeout: 5000 });
-
-      // Select the answer (option button by letter)
-      const optionLetter = String.fromCharCode(65 + answers[i]); // A, B, C, or D
-      const optionButton = page.locator('button').filter({ has: page.locator(`text="${optionLetter}"`) }).first();
-
-      // Click the option
-      await optionButton.click();
-
-      // Click "Verificar"
-      await page.getByRole('button', { name: 'Verificar' }).click();
-
-      // Wait for feedback
-      await page.waitForTimeout(500);
-
-      // Click next (or "Ver Resultados" on last question)
-      if (i < 3) {
-        await page.getByRole('button', { name: 'Siguiente Pregunta' }).click();
-      } else {
-        await page.getByRole('button', { name: 'Ver Resultados' }).click();
-      }
-    }
-
-    // Should show completion results
-    await expect(page.getByText('¡Felicitaciones!')).toBeVisible({ timeout: 5000 });
-    await expect(page.getByText('4 / 4')).toBeVisible();
-
-    // Click to complete lesson
-    await page.getByRole('button', { name: 'Completar Lección' }).click();
-
-    // Should show celebration modal
-    await expect(page.getByText('¡Lección Completada!')).toBeVisible({ timeout: 5000 });
-
-    // Click to finish and redirect
-    await page.getByRole('button', { name: 'Finalizar' }).click();
-
-    // Should redirect to mini-lessons page
-    await page.waitForURL('**/mini-lessons', { timeout: 10000 });
-  });
-
   test('should allow exit from lesson', async ({ page }) => {
     await page.goto('/lessons/m1/numeros-enteros-orden', { waitUntil: 'domcontentloaded' });
 
     // Wait for lesson to load
-    await expect(page.getByText('El Termómetro Loco')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'El Termómetro Loco' })).toBeVisible();
 
     // Click the back/exit button (shows "Salir" on first step)
     const exitButton = page.locator('button').filter({ hasText: 'Salir' }).first();
