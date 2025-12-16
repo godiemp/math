@@ -1,16 +1,31 @@
 import { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/constants";
+import { getAllPosts } from "@/lib/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Use current date for dynamic pages, static date for stable pages
   const now = new Date();
+  const posts = getAllPosts();
 
-  return [
+  // Dynamic blog posts
+  const blogPosts: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `${SITE_URL}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: SITE_URL,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 1.0,
+    },
+    {
+      url: `${SITE_URL}/blog`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.8,
     },
     {
       url: `${SITE_URL}/como-funciona`,
@@ -52,4 +67,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
   ];
+
+  return [...staticPages, ...blogPosts];
 }
