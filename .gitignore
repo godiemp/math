@@ -41,3 +41,19 @@ next-env.d.ts
 # sentry
 .sentryclirc
 *.sentry-*
+
+# Expo
+mobile/.expo/
+mobile/node_modules/
+mobile/dist/
+mobile/ios/
+mobile/android/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Metro
+.metro-health-check*

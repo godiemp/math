@@ -18,6 +18,14 @@ import { RegisterRequest, LoginRequest, RefreshTokenRequest } from '../types';
 import { SubscriptionService } from '../../services/subscriptionService';
 
 /**
+ * Check if request is from a mobile client
+ * Mobile clients send X-Client-Type: mobile header
+ */
+function isMobileClient(req: Request): boolean {
+  return req.headers['x-client-type'] === 'mobile';
+}
+
+/**
  * SECURITY: Cookie options for JWT tokens
  * - httpOnly: Prevents JavaScript access (XSS protection)
  * - secure: Only sent over HTTPS in production
@@ -48,7 +56,18 @@ export async function register(req: Request, res: Response): Promise<void> {
     const data = req.body as RegisterRequest;
     const result = await registerUserService(data);
 
-    // SECURITY: Set tokens as HttpOnly cookies instead of returning in response
+    // Mobile clients receive tokens in response body
+    if (isMobileClient(req)) {
+      res.status(201).json({
+        user: result.user,
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+        message: 'Registration successful',
+      });
+      return;
+    }
+
+    // SECURITY: Set tokens as HttpOnly cookies for web clients
     res.cookie('accessToken', result.accessToken, getAccessTokenCookieOptions());
     res.cookie('refreshToken', result.refreshToken, getRefreshTokenCookieOptions());
 
@@ -85,16 +104,29 @@ export async function login(req: Request, res: Response): Promise<void> {
       ? await SubscriptionService.getUserSubscription(result.user.id)
       : null;
 
-    // SECURITY: Set tokens as HttpOnly cookies instead of returning in response
+    const userWithSubscription = {
+      ...result.user,
+      subscription,
+    };
+
+    // Mobile clients receive tokens in response body
+    if (isMobileClient(req)) {
+      res.json({
+        user: userWithSubscription,
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+        message: 'Login successful',
+      });
+      return;
+    }
+
+    // SECURITY: Set tokens as HttpOnly cookies for web clients
     res.cookie('accessToken', result.accessToken, getAccessTokenCookieOptions());
     res.cookie('refreshToken', result.refreshToken, getRefreshTokenCookieOptions());
 
     // Return user data without tokens (tokens are in cookies now)
     res.json({
-      user: {
-        ...result.user,
-        subscription,
-      },
+      user: userWithSubscription,
       message: 'Login successful',
     });
   } catch (error) {
@@ -115,8 +147,10 @@ export async function login(req: Request, res: Response): Promise<void> {
  */
 export async function refresh(req: Request, res: Response): Promise<void> {
   try {
-    // SECURITY: Get refresh token from cookie instead of request body
-    const refreshToken = req.cookies.refreshToken;
+    // Mobile clients send refresh token in body, web clients use cookies
+    const refreshToken = isMobileClient(req)
+      ? req.body.refreshToken
+      : req.cookies.refreshToken;
 
     if (!refreshToken) {
       res.status(401).json({ error: 'No refresh token provided' });
@@ -125,7 +159,16 @@ export async function refresh(req: Request, res: Response): Promise<void> {
 
     const result = await refreshAccessToken(refreshToken);
 
-    // SECURITY: Set new access token as HttpOnly cookie
+    // Mobile clients receive new tokens in response body
+    if (isMobileClient(req)) {
+      res.json({
+        accessToken: result.accessToken,
+        message: 'Token refreshed successfully',
+      });
+      return;
+    }
+
+    // SECURITY: Set new access token as HttpOnly cookie for web clients
     res.cookie('accessToken', result.accessToken, getAccessTokenCookieOptions());
 
     res.json({ message: 'Token refreshed successfully' });
