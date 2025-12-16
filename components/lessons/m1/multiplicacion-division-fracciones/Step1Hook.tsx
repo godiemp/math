@@ -142,7 +142,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
             <div className="flex justify-center py-4">
               <div className="text-center">
-                <ChocolateBar rows={1} cols={4} filledRows={1} filledCols={3} size="large" />
+                <ChocolateBar cols={4} filledCols={3} size="large" />
                 <p className="mt-2 font-medium text-amber-700 dark:text-amber-400">
                   Tu chocolate: <span className="text-xl">3/4</span>
                 </p>
