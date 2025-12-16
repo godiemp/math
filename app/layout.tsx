@@ -69,9 +69,17 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@simplepaes",
+    creator: "@simplepaes",
     title: `${SITE_NAME} - Preparación PAES Matemática Chile`,
     description:
       "Prepara la PAES de Matemática con +600 ejercicios del temario oficial y feedback personalizado.",
+  },
+  verification: {
+    google: "GOOGLE_SITE_VERIFICATION_CODE",
+    other: {
+      "msvalidate.01": "BING_SITE_VERIFICATION_CODE",
+    },
   },
   alternates: {
     canonical: SITE_URL,
@@ -98,6 +106,7 @@ export default async function RootLayout({
   return (
     <html lang="es-CL">
       <head>
+        <link rel="manifest" href="/manifest.json" />
         <JsonLd data={organizationSchema} />
         <JsonLd data={websiteSchema} />
         <JsonLd data={faqSchema} />

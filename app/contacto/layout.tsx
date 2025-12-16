@@ -1,5 +1,10 @@
 import { Metadata } from "next";
 import { SITE_URL } from "@/lib/constants";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  contactPageSchema,
+  createBreadcrumbSchema,
+} from "@/lib/seo/schemas";
 
 export const metadata: Metadata = {
   title: "Contacto SimplePAES - Soporte y Ayuda",
@@ -16,10 +21,21 @@ export const metadata: Metadata = {
   },
 };
 
+const breadcrumbs = createBreadcrumbSchema([
+  { name: "Inicio", url: SITE_URL },
+  { name: "Contacto", url: `${SITE_URL}/contacto` },
+]);
+
 export default function ContactoLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      <JsonLd data={contactPageSchema} />
+      <JsonLd data={breadcrumbs} />
+      {children}
+    </>
+  );
 }

@@ -165,6 +165,32 @@ export const howToSchema = {
   ],
 };
 
+// ContactPage Schema for /contacto
+export const contactPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "@id": `${SITE_URL}/contacto#webpage`,
+  name: "Contacto SimplePAES",
+  description:
+    "Contacta al equipo de SimplePAES para soporte y ayuda con tu preparación PAES.",
+  url: `${SITE_URL}/contacto`,
+  mainEntity: {
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: SITE_NAME,
+    telephone: "+56-9-3133-8020",
+    email: "soporte@paes-math.cl",
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      telephone: "+56-9-3133-8020",
+      email: "soporte@paes-math.cl",
+      availableLanguage: "Spanish",
+      areaServed: "CL",
+    },
+  },
+};
+
 // BreadcrumbList Schema generator
 export function createBreadcrumbSchema(
   items: Array<{ name: string; url: string }>
