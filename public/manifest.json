@@ -1,0 +1,25 @@
+{
+  "name": "SimplePAES - Preparación PAES Matemática Chile",
+  "short_name": "SimplePAES",
+  "description": "Plataforma de preparación para la PAES de Matemática en Chile. +600 ejercicios del temario oficial.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007AFF",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "es-CL",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/icon",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-icon",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
