@@ -5,7 +5,6 @@ import { ArrowRight, Check, X, RotateCcw, Trophy, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps, VerifyQuestion } from '@/lib/lessons/types';
 import { BarChart, PieChart, FrequencyTable } from '@/components/lessons/shared';
-import { Celebration } from '@/components/lessons/shared';
 
 const QUESTIONS: (VerifyQuestion & { visual?: 'bar' | 'pie' | 'table'; visualData?: { categories: string[]; values: number[]; colors: string[] } })[] = [
   {
@@ -75,7 +74,6 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
   const [answers, setAnswers] = useState<(number | null)[]>(Array(QUESTIONS.length).fill(null));
   const [showFeedback, setShowFeedback] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [showCelebration, setShowCelebration] = useState(false);
 
   if (!isActive) return null;
 
@@ -96,10 +94,6 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
   const handleNext = () => {
     if (currentQuestion === QUESTIONS.length - 1) {
       setShowResults(true);
-      if (correctCount >= REQUIRED_CORRECT - 1 && isCorrect) {
-        // Will pass, show celebration
-        setTimeout(() => setShowCelebration(true), 500);
-      }
     } else {
       setCurrentQuestion((prev) => prev + 1);
       setShowFeedback(false);
@@ -111,7 +105,6 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
     setAnswers(Array(QUESTIONS.length).fill(null));
     setShowFeedback(false);
     setShowResults(false);
-    setShowCelebration(false);
   };
 
   // Prepare visual data if exists
@@ -131,17 +124,6 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
   if (showResults) {
     return (
       <div className="space-y-6 animate-fadeIn pb-24">
-        {showCelebration && (
-          <Celebration
-            title="¡Excelente!"
-            message="Has completado la leccion de Tablas de Frecuencia y Graficos"
-            onContinue={() => {
-              setShowCelebration(false);
-              onComplete();
-            }}
-          />
-        )}
-
         <div className="text-center">
           <div
             className={cn(

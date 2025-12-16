@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Check, X, Trophy, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
-import { Celebration } from '@/components/lessons/shared';
 
 interface Question {
   id: string;
@@ -44,7 +43,6 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
   const [showFeedback, setShowFeedback] = useState(false);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
-  const [showCelebration, setShowCelebration] = useState(false);
 
   const question = QUESTIONS[currentQuestion];
   const isCorrect = selectedAnswer === question?.correctAnswer;
@@ -70,16 +68,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
       setShowFeedback(false);
     } else {
       setIsComplete(true);
-      // Show celebration if got all correct OR at least 2/3
-      if (correctAnswers + (isCorrect ? 1 : 0) >= 2) {
-        setShowCelebration(true);
-      }
     }
-  };
-
-  const handleCelebrationContinue = () => {
-    setShowCelebration(false);
-    onComplete();
   };
 
   if (!isActive) return null;
@@ -229,23 +218,13 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
 
           <div className="flex justify-center">
             <button
-              onClick={() => setShowCelebration(true)}
+              onClick={onComplete}
               className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
             >
               Finalizar Lección
             </button>
           </div>
         </div>
-      )}
-
-      {/* Celebration */}
-      {showCelebration && (
-        <Celebration
-          title="¡Excelente trabajo!"
-          message="Ahora entiendes cómo funciona la suma y resta de enteros. Practica más en el modo Operaciones."
-          onContinue={handleCelebrationContinue}
-          continueLabel="Terminar"
-        />
       )}
     </div>
   );
