@@ -3,8 +3,6 @@ import { BlogHeader } from '@/components/blog/BlogHeader';
 import { BlogPostCard } from '@/components/blog/BlogPostCard';
 import { Breadcrumbs } from '@/components/blog/Breadcrumbs';
 import { SITE_URL } from '@/lib/constants';
-import { Rss } from 'lucide-react';
-import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,9 +10,6 @@ export const metadata: Metadata = {
   description: 'Consejos, estrategias y recursos para mejorar en matemáticas y prepararte para la PAES.',
   alternates: {
     canonical: `${SITE_URL}/blog`,
-    types: {
-      'application/rss+xml': `${SITE_URL}/blog/feed.xml`,
-    },
   },
   openGraph: {
     title: 'Blog - SimplePAES',
@@ -83,15 +78,6 @@ export default function BlogPage() {
               Estrategias, consejos y recursos para dominar las matemáticas y mejorar tu puntaje PAES.
             </p>
 
-            {/* RSS Link */}
-            <Link
-              href="/blog/feed.xml"
-              className="inline-flex items-center gap-2 text-sm transition-colors hover:text-indigo-600"
-              style={{ color: 'var(--color-label-tertiary)' }}
-            >
-              <Rss size={14} />
-              Suscribirse via RSS
-            </Link>
           </div>
         </section>
 
