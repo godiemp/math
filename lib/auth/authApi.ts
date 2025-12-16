@@ -173,3 +173,16 @@ export async function sendVerificationEmail(): Promise<{ success: boolean; error
 
   return { success: true };
 }
+
+/**
+ * Verify email with token (from email link)
+ */
+export async function verifyEmail(token: string): Promise<{ success: boolean; error?: string }> {
+  const response = await api.get<{ message: string }>(`${AUTH_ENDPOINTS.VERIFY_EMAIL}/${token}`);
+
+  if (response.error) {
+    return { success: false, error: response.error.error || 'Email verification failed' };
+  }
+
+  return { success: true };
+}
