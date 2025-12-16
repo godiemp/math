@@ -1,8 +1,11 @@
 import { Calendar, Clock, Tag, User } from 'lucide-react';
-import { getPostBySlug, getAllSlugs } from '@/lib/blog';
+import { getPostBySlug, getAllSlugs, getRelatedPosts, extractHeadings } from '@/lib/blog';
 import { MarkdownViewer } from '@/components/content/MarkdownViewer';
 import { BlogHeader } from '@/components/blog/BlogHeader';
 import { ShareButtons } from '@/components/blog/ShareButtons';
+import { RelatedPosts } from '@/components/blog/RelatedPosts';
+import { TableOfContents } from '@/components/blog/TableOfContents';
+import { Breadcrumbs } from '@/components/blog/Breadcrumbs';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { SITE_URL } from '@/lib/constants';
@@ -44,11 +47,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       authors: [post.author],
       tags: post.tags,
       siteName: 'SimplePAES',
+      ...(post.image && { images: [{ url: post.image }] }),
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
+      ...(post.image && { images: [post.image] }),
     },
   };
 }
@@ -57,11 +62,13 @@ export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
   const post = getPostBySlug(slug);
 
-  if (!post) {
+  if (!post || !post.published) {
     notFound();
   }
 
   const url = `${SITE_URL}/blog/${slug}`;
+  const relatedPosts = getRelatedPosts(slug, post.tags);
+  const headings = extractHeadings(post.content);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -69,6 +76,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
+    ...(post.image && { image: post.image }),
     author: {
       '@type': 'Organization',
       name: post.author,
@@ -96,6 +104,16 @@ export default async function BlogPostPage({ params }: PageProps) {
         {/* Article */}
         <article className="px-4 py-12">
           <div className="max-w-3xl mx-auto">
+            {/* Breadcrumbs */}
+            <div className="mb-6">
+              <Breadcrumbs
+                items={[
+                  { label: 'Blog', href: '/blog' },
+                  { label: post.title },
+                ]}
+              />
+            </div>
+
             {/* Meta */}
             <div
               className="flex flex-wrap items-center gap-4 mb-6"
@@ -150,7 +168,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
             {/* Tags */}
             {post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-10">
+              <div className="flex flex-wrap gap-2 mb-8">
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
@@ -170,6 +188,9 @@ export default async function BlogPostPage({ params }: PageProps) {
               </div>
             )}
 
+            {/* Table of Contents */}
+            <TableOfContents headings={headings} />
+
             {/* Content */}
             <div
               style={{
@@ -186,6 +207,9 @@ export default async function BlogPostPage({ params }: PageProps) {
             <div className="mt-8 pt-8 border-t" style={{ borderColor: 'var(--color-separator)' }}>
               <ShareButtons url={url} title={post.title} description={post.description} />
             </div>
+
+            {/* Related Posts */}
+            <RelatedPosts posts={relatedPosts} />
 
             {/* CTA */}
             <div

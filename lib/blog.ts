@@ -11,6 +11,8 @@ export interface BlogPost {
   date: string;
   author: string;
   tags: string[];
+  image?: string;
+  published: boolean;
   content: string;
   readingTime: number;
 }
@@ -22,6 +24,8 @@ export interface BlogPostMeta {
   date: string;
   author: string;
   tags: string[];
+  image?: string;
+  published: boolean;
   readingTime: number;
 }
 
@@ -31,7 +35,7 @@ function calculateReadingTime(content: string): number {
   return Math.ceil(words / wordsPerMinute);
 }
 
-export function getAllPosts(): BlogPostMeta[] {
+export function getAllPosts(includeUnpublished = false): BlogPostMeta[] {
   if (!fs.existsSync(BLOG_DIR)) {
     return [];
   }
@@ -51,12 +55,19 @@ export function getAllPosts(): BlogPostMeta[] {
       date: data.date || new Date().toISOString().split('T')[0],
       author: data.author || 'SimplePAES',
       tags: data.tags || [],
+      image: data.image || undefined,
+      published: data.published !== false, // Default to true if not specified
       readingTime: calculateReadingTime(content),
     };
   });
 
+  // Filter unpublished posts unless explicitly requested
+  const filteredPosts = includeUnpublished
+    ? posts
+    : posts.filter(post => post.published);
+
   // Sort by date, newest first
-  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return filteredPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
@@ -76,6 +87,8 @@ export function getPostBySlug(slug: string): BlogPost | null {
     date: data.date || new Date().toISOString().split('T')[0],
     author: data.author || 'SimplePAES',
     tags: data.tags || [],
+    image: data.image || undefined,
+    published: data.published !== false,
     content,
     readingTime: calculateReadingTime(content),
   };
@@ -86,7 +99,41 @@ export function getAllSlugs(): string[] {
     return [];
   }
 
-  return fs.readdirSync(BLOG_DIR)
-    .filter(file => file.endsWith('.md'))
-    .map(file => file.replace('.md', ''));
+  // Only return slugs for published posts
+  return getAllPosts().map(post => post.slug);
+}
+
+export function getRelatedPosts(currentSlug: string, currentTags: string[], limit = 3): BlogPostMeta[] {
+  const allPosts = getAllPosts();
+
+  // Filter out current post and score by tag overlap
+  const scoredPosts = allPosts
+    .filter(post => post.slug !== currentSlug)
+    .map(post => {
+      const commonTags = post.tags.filter(tag => currentTags.includes(tag));
+      return { post, score: commonTags.length };
+    })
+    .filter(item => item.score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  return scoredPosts.slice(0, limit).map(item => item.post);
+}
+
+export function extractHeadings(content: string): { level: number; text: string; id: string }[] {
+  const headingRegex = /^(#{2,4})\s+(.+)$/gm;
+  const headings: { level: number; text: string; id: string }[] = [];
+
+  let match;
+  while ((match = headingRegex.exec(content)) !== null) {
+    const level = match[1].length;
+    const text = match[2].trim();
+    const id = text
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-');
+
+    headings.push({ level, text, id });
+  }
+
+  return headings;
 }
