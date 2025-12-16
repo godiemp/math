@@ -141,6 +141,24 @@ export default function Auth({ onSuccess }: AuthProps) {
           return;
         }
 
+        // Validate username format (no spaces, special characters, or accents)
+        const usernameRegex = /^[a-zA-Z0-9_]+$/;
+        if (!usernameRegex.test(username)) {
+          const errorMsg = t('register.errors.usernameFormat');
+          setError(errorMsg);
+          toast.error(errorMsg);
+          setIsLoading(false);
+          return;
+        }
+
+        if (username.length > 20) {
+          const errorMsg = t('register.errors.usernameTooLong');
+          setError(errorMsg);
+          toast.error(errorMsg);
+          setIsLoading(false);
+          return;
+        }
+
         if (!acceptedTerms) {
           const errorMsg = t('register.errors.acceptTerms');
           setError(errorMsg);

@@ -13,123 +13,125 @@
       "showPassword": "mostrar contraseña"
     },
     "login": {
-      "title": "iniciar sesión",
-      "userOrEmail": "usuario o email",
-      "password": "contraseña",
-      "submit": "iniciar sesión",
+      "title": "Iniciar Sesión",
+      "userOrEmail": "Usuario o Email",
+      "password": "Contraseña",
+      "submit": "Iniciar Sesión",
       "forgotPassword": "¿olvidaste tu contraseña?",
       "noAccount": "¿no tienes cuenta?",
       "register": "regístrate",
       "registerFree": "regístrate gratis",
       "errors": {
-        "completeFields": "por favor completa todos los campos",
-        "invalidCredentials": "error al iniciar sesión",
-        "generic": "ocurrió un error. intenta de nuevo",
-        "registration": "error al registrarse"
+        "completeFields": "Por favor completa todos los campos",
+        "invalidCredentials": "Error al iniciar sesión",
+        "generic": "Ocurrió un error. Intenta de nuevo",
+        "registration": "Error al registrarse"
       },
-      "success": "sesión iniciada correctamente"
+      "success": "Sesión iniciada correctamente"
     },
     "register": {
-      "title": "crear cuenta",
-      "titleFree": "crear cuenta gratis",
-      "displayName": "nombre para mostrar",
-      "username": "usuario",
-      "email": "email",
-      "password": "contraseña",
-      "confirmPassword": "confirmar contraseña",
+      "title": "Crear Cuenta",
+      "titleFree": "Crear Cuenta Gratis",
+      "displayName": "Nombre",
+      "username": "Usuario",
+      "email": "Email",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
       "acceptTerms": "acepto los",
       "termsLink": "términos y condiciones",
-      "submit": "crear cuenta",
+      "submit": "Crear Cuenta",
       "hasAccount": "¿ya tienes cuenta?",
       "login": "inicia sesión",
       "errors": {
-        "completeFields": "por favor completa todos los campos",
-        "passwordLength": "la contraseña debe tener al menos 8 caracteres",
-        "passwordMismatch": "las contraseñas no coinciden",
-        "acceptTerms": "debes aceptar los términos y condiciones",
-        "generic": "error al crear la cuenta"
+        "completeFields": "Por favor completa todos los campos",
+        "passwordLength": "La contraseña debe tener al menos 8 caracteres",
+        "passwordMismatch": "Las contraseñas no coinciden",
+        "acceptTerms": "Debes aceptar los términos y condiciones",
+        "usernameFormat": "El usuario solo puede contener letras, números y guiones bajos (sin espacios ni tildes)",
+        "usernameTooLong": "El usuario debe tener máximo 20 caracteres",
+        "generic": "Error al crear la cuenta"
       },
-      "success": "cuenta creada exitosamente"
+      "success": "Cuenta creada exitosamente"
     },
     "forgotPassword": {
-      "title": "recuperar contraseña",
-      "email": "correo electrónico",
-      "submit": "enviar enlace de recuperación",
-      "backToLogin": "volver al inicio de sesión",
-      "success": "revisa tu correo",
-      "error": "error al enviar el enlace",
+      "title": "Recuperar Contraseña",
+      "email": "Correo Electrónico",
+      "submit": "Enviar Enlace de Recuperación",
+      "backToLogin": "Volver al Inicio de Sesión",
+      "success": "Revisa tu correo",
+      "error": "Error al enviar el enlace",
       "errors": {
-        "emailRequired": "por favor ingresa tu correo electrónico",
-        "invalidToken": "token de restablecimiento inválido",
-        "connection": "error de conexión. por favor intenta de nuevo."
+        "emailRequired": "Por favor ingresa tu correo electrónico",
+        "invalidToken": "Token de restablecimiento inválido",
+        "connection": "Error de conexión. Por favor intenta de nuevo."
       },
       "toast": {
-        "success": "revisa tu correo para restablecer tu contraseña",
-        "error": "error al enviar el correo de recuperación"
+        "success": "Revisa tu correo para restablecer tu contraseña",
+        "error": "Error al enviar el correo de recuperación"
       },
-      "titleSent": "revisa tu correo",
-      "titleRequest": "recuperar contraseña",
-      "subtitleSent": "si existe una cuenta con ese correo, te hemos enviado un enlace para restablecer tu contraseña.",
-      "subtitleRequest": "ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.",
+      "titleSent": "Revisa tu Correo",
+      "titleRequest": "Recuperar Contraseña",
+      "subtitleSent": "Si existe una cuenta con ese correo, te hemos enviado un enlace para restablecer tu contraseña.",
+      "subtitleRequest": "Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.",
       "label": {
-        "email": "correo electrónico"
+        "email": "Correo Electrónico"
       },
       "placeholder": {
         "email": "tu@email.com"
       },
       "button": {
-        "sending": "enviando...",
-        "send": "enviar enlace de recuperación",
-        "backToHome": "volver al inicio",
-        "sendAgain": "enviar de nuevo"
+        "sending": "Enviando...",
+        "send": "Enviar Enlace de Recuperación",
+        "backToHome": "Volver al Inicio",
+        "sendAgain": "Enviar de Nuevo"
       },
-      "successMessage": "✓ si existe una cuenta con el correo {email}, recibirás un enlace para restablecer tu contraseña. el enlace expirará en 1 hora."
+      "successMessage": "✓ Si existe una cuenta con el correo {email}, recibirás un enlace para restablecer tu contraseña. El enlace expirará en 1 hora."
     },
     "resetPassword": {
-      "title": "restablecer contraseña",
-      "newPassword": "nueva contraseña",
-      "confirmPassword": "confirmar contraseña",
-      "submit": "restablecer contraseña",
-      "requestNewLink": "solicitar nuevo enlace",
-      "goToLogin": "ir al inicio de sesión",
-      "done": "¡listo!",
-      "success": "contraseña actualizada correctamente",
-      "error": "error al actualizar la contraseña",
+      "title": "Restablecer Contraseña",
+      "newPassword": "Nueva Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "submit": "Restablecer Contraseña",
+      "requestNewLink": "Solicitar Nuevo Enlace",
+      "goToLogin": "Ir al Inicio de Sesión",
+      "done": "¡Listo!",
+      "success": "Contraseña actualizada correctamente",
+      "error": "Error al actualizar la contraseña",
       "errors": {
-        "passwordMismatch": "las contraseñas no coinciden",
-        "passwordLength": "la contraseña debe tener al menos 8 caracteres",
-        "invalidToken": "token de restablecimiento inválido",
-        "completeFields": "por favor completa todos los campos",
-        "connection": "error de conexión. por favor intenta de nuevo."
+        "passwordMismatch": "Las contraseñas no coinciden",
+        "passwordLength": "La contraseña debe tener al menos 8 caracteres",
+        "invalidToken": "Token de restablecimiento inválido",
+        "completeFields": "Por favor completa todos los campos",
+        "connection": "Error de conexión. Por favor intenta de nuevo."
       },
       "toast": {
-        "success": "contraseña restablecida exitosamente",
-        "error": "error al restablecer la contraseña"
+        "success": "Contraseña restablecida exitosamente",
+        "error": "Error al restablecer la contraseña"
       },
       "invalid": {
-        "title": "enlace inválido",
-        "message": "el enlace de restablecimiento es inválido o ha expirado."
+        "title": "Enlace Inválido",
+        "message": "El enlace de restablecimiento es inválido o ha expirado."
       },
       "button": {
-        "requestNew": "solicitar nuevo enlace",
-        "resetting": "restableciendo...",
-        "reset": "restablecer contraseña",
-        "goToLogin": "ir al inicio de sesión"
+        "requestNew": "Solicitar Nuevo Enlace",
+        "resetting": "Restableciendo...",
+        "reset": "Restablecer Contraseña",
+        "goToLogin": "Ir al Inicio de Sesión"
       },
-      "titleDone": "¡listo!",
-      "titleNewPassword": "nueva contraseña",
-      "subtitleSuccess": "tu contraseña ha sido restablecida exitosamente.",
-      "subtitleEnter": "ingresa tu nueva contraseña.",
+      "titleDone": "¡Listo!",
+      "titleNewPassword": "Nueva Contraseña",
+      "subtitleSuccess": "Tu contraseña ha sido restablecida exitosamente.",
+      "subtitleEnter": "Ingresa tu nueva contraseña.",
       "label": {
-        "newPassword": "nueva contraseña",
-        "confirmPassword": "confirmar contraseña"
+        "newPassword": "Nueva Contraseña",
+        "confirmPassword": "Confirmar Contraseña"
       },
       "placeholder": {
         "newPassword": "mínimo 8 caracteres",
         "confirmPassword": "repite tu contraseña"
       },
-      "requirement": "la contraseña debe tener al menos 8 caracteres.",
-      "successMessage": "✓ tu contraseña ha sido restablecida exitosamente. serás redirigido al inicio de sesión...",
+      "requirement": "La contraseña debe tener al menos 8 caracteres.",
+      "successMessage": "✓ Tu contraseña ha sido restablecida exitosamente. Serás redirigido al inicio de sesión...",
       "loading": "cargando..."
     }
   },
@@ -145,73 +147,73 @@
       "logout": "cerrar sesión"
     },
     "errors": {
-      "loadError": "error al cargar el panel. por favor, intenta recargar la página.",
-      "title": "error al cargar",
-      "reload": "recargar página"
+      "loadError": "Error al cargar el panel. Por favor, intenta recargar la página.",
+      "title": "Error al Cargar",
+      "reload": "Recargar Página"
     },
     "status": {
-      "scheduled": "programado",
-      "lobbyOpen": "lobby abierto",
-      "active": "en curso"
+      "scheduled": "Programado",
+      "lobbyOpen": "Lobby Abierto",
+      "active": "En Curso"
     },
     "liveSession": {
-      "title": "ensayo PAES en vivo",
+      "title": "Ensayo PAES en Vivo",
       "subtitle": "práctica con otros estudiantes en tiempo real",
-      "header": "ensayo PAES en vivo",
+      "header": "Ensayo PAES en Vivo",
       "nextSession": "próximo ensayo",
-      "cta": "¡regístrate ahora!",
+      "cta": "¡Regístrate Ahora!",
       "invite": "invitar amigos",
-      "registerNow": "¡regístrate ahora! →",
-      "viewAvailable": "ver ensayos disponibles →",
-      "registerDescription": "¡regístrate ahora! practica con ensayos PAES en tiempo real y compite con otros estudiantes.",
-      "newDescription": "¡nuevo! practica con ensayos PAES en tiempo real. regístrate, únete al lobby antes de comenzar y compite con otros estudiantes."
+      "registerNow": "¡Regístrate ahora! →",
+      "viewAvailable": "Ver ensayos disponibles →",
+      "registerDescription": "¡Regístrate ahora! Practica con ensayos PAES en tiempo real y compite con otros estudiantes.",
+      "newDescription": "¡Nuevo! Practica con ensayos PAES en tiempo real. Regístrate, únete al lobby antes de comenzar y compite con otros estudiantes."
     },
     "operations": {
-      "title": "práctica de operaciones",
+      "title": "Práctica de Operaciones",
       "subtitle": "domina operaciones básicas progresivamente",
-      "header": "práctica de operaciones",
+      "header": "Práctica de Operaciones",
       "description": "domina operaciones básicas progresivamente",
-      "cta": "comenzar"
+      "cta": "Comenzar"
     },
     "curriculum": {
-      "title": "temario PAES matemática",
+      "title": "Temario PAES Matemática",
       "subtitle": "revisa todo el contenido oficial",
-      "curriculumOfficial": "📋 currículo oficial",
-      "documentation": "📖 documentación completa",
+      "curriculumOfficial": "📋 Currículo Oficial",
+      "documentation": "📖 Documentación Completa",
       "reviewOfficial": "revisa los contenidos oficiales evaluados en la PAES",
       "m1": "M1",
       "m2": "M2",
-      "m1Full": "matemática 1",
-      "m2Full": "matemática 2",
-      "docsM1": "documentación M1",
-      "docsM2": "documentación M2",
-      "basicCompetence": "competencia básica",
-      "advancedCompetence": "competencia avanzada",
-      "practice": "practicar"
+      "m1Full": "Matemática 1",
+      "m2Full": "Matemática 2",
+      "docsM1": "Documentación M1",
+      "docsM2": "Documentación M2",
+      "basicCompetence": "Competencia Básica",
+      "advancedCompetence": "Competencia Avanzada",
+      "practice": "Practicar"
     },
     "progress": {
-      "title": "seguimiento de progreso",
+      "title": "Seguimiento de Progreso",
       "subtitle": "ve tu evolución y estadísticas",
-      "cta": "ver mi progreso"
+      "cta": "Ver Mi Progreso"
     },
     "improving": {
-      "title": "¡estamos mejorando!",
-      "backHome": "volver al inicio"
+      "title": "¡Estamos Mejorando!",
+      "backHome": "Volver al Inicio"
     },
     "improvement": {
-      "header": "¡estamos mejorando!",
-      "message": "estamos mejorando los problemas para tener problemas estilo PAES. hasta ahora tenemos los temarios cubiertos pero no el formato. pronto tendrás una experiencia más cercana al examen real."
+      "header": "¡Estamos Mejorando!",
+      "message": "Estamos mejorando los problemas para tener problemas estilo PAES. Hasta ahora tenemos los temarios cubiertos pero no el formato. Pronto tendrás una experiencia más cercana al examen real."
     },
     "emailVerification": {
-      "title": "email no verificado",
-      "message": "por favor verifica tu correo electrónico para asegurar que no pierdas acceso a tu cuenta.",
-      "resendButton": "reenviar email",
-      "sending": "enviando...",
-      "sentSuccess": "¡email de verificación enviado! por favor revisa tu bandeja de entrada.",
-      "sentError": "error al enviar el email. por favor intenta de nuevo."
+      "title": "Email No Verificado",
+      "message": "Por favor verifica tu correo electrónico para asegurar que no pierdas acceso a tu cuenta.",
+      "resendButton": "Reenviar Email",
+      "sending": "Enviando...",
+      "sentSuccess": "¡Email de verificación enviado! Por favor revisa tu bandeja de entrada.",
+      "sentError": "Error al enviar el email. Por favor intenta de nuevo."
     },
     "footer": {
-      "copyright": "© 2024 SimplePAES - plataforma de preparación matemática"
+      "copyright": "© 2024 SimplePAES - Plataforma de Preparación Matemática"
     }
   },
   "practice": {
@@ -220,663 +222,665 @@
     "verifying": "verificando...",
     "processing": "procesando...",
     "sending": "enviando...",
-    "solve": "resuelve la operación",
-    "selectAnswer": "selecciona tu respuesta",
-    "yourAnswer": "tu respuesta",
-    "writeAnswer": "escribe tu respuesta",
-    "separateWithCommas": "separa los números con comas",
-    "verify": "verificar respuesta",
-    "next": "siguiente problema",
-    "nextQuestion": "siguiente",
-    "previous": "anterior",
-    "back": "volver",
-    "progress": "progreso: {current} / {total}",
-    "progressOf": "progreso",
-    "accuracy": "precisión: {percent}%",
-    "accuracyLabel": "precisión",
-    "accuracyRequirement": "mantén un 80% de precisión para poder saltar al siguiente nivel",
-    "skipLevel": "saltar nivel",
-    "skipLevelFull": "saltar al siguiente nivel (80%+ precisión)",
-    "continueToNext": "continuar al siguiente nivel",
+    "solve": "Resuelve la operación",
+    "selectAnswer": "Selecciona tu respuesta",
+    "yourAnswer": "Tu respuesta",
+    "writeAnswer": "Escribe tu respuesta",
+    "separateWithCommas": "Separa los números con comas",
+    "verify": "Verificar Respuesta",
+    "next": "Siguiente Problema",
+    "nextQuestion": "Siguiente",
+    "previous": "Anterior",
+    "back": "Volver",
+    "progress": "Progreso: {current} / {total}",
+    "progressOf": "Progreso",
+    "accuracy": "Precisión: {percent}%",
+    "accuracyLabel": "Precisión",
+    "accuracyRequirement": "Mantén un 80% de precisión para poder saltar al siguiente nivel",
+    "skipLevel": "Saltar Nivel",
+    "skipLevelFull": "Saltar al siguiente nivel (80%+ precisión)",
+    "continueToNext": "Continuar al Siguiente Nivel",
     "levelCompleted": {
-      "title": "¡nivel completado!",
-      "message": "has completado el nivel",
-      "correctAnswers": "respuestas correctas",
-      "accuracy": "precisión"
+      "title": "¡Nivel Completado!",
+      "message": "Has completado el nivel",
+      "correctAnswers": "Respuestas Correctas",
+      "accuracy": "Precisión"
     },
     "stats": {
-      "correct": "correctas",
-      "attempts": "intentos",
-      "accuracy": "precisión"
+      "correct": "Correctas",
+      "attempts": "Intentos",
+      "accuracy": "Precisión"
     },
     "feedback": {
-      "correct": "¡correcto!",
-      "correctFull": "¡correcto! 🎉 excelente trabajo, sigue así",
-      "wellDone": "¡bien hecho! 🌸 respondiste correctamente",
-      "excellent": "¡excelente trabajo! puedes saltar al siguiente nivel",
-      "incorrect": "incorrecto",
-      "incorrectAnswer": "la respuesta correcta es",
-      "tryAgain": "no te rindas, sigue intentando",
-      "answerSelected": "respuesta seleccionada. puedes cambiarla antes de enviar el quiz"
+      "correct": "¡Correcto!",
+      "correctFull": "¡Correcto! 🎉 Excelente trabajo, sigue así",
+      "wellDone": "¡Bien hecho! 🌸 Respondiste correctamente",
+      "excellent": "¡Excelente trabajo! Puedes saltar al siguiente nivel",
+      "incorrect": "Incorrecto",
+      "incorrectAnswer": "La respuesta correcta es",
+      "tryAgain": "No te rindas, sigue intentando",
+      "answerSelected": "Respuesta seleccionada. Puedes cambiarla antes de enviar el quiz"
     },
     "modes": {
       "rapidFire": {
-        "title": "modo rapid fire",
-        "titleShort": "rapid fire mode",
-        "description": "responde lo más rápido que puedas",
-        "getReady": "¡prepárate!",
+        "title": "Modo Rapid Fire",
+        "titleShort": "Rapid Fire Mode",
+        "description": "Responde lo más rápido que puedas",
+        "getReady": "¡Prepárate!",
         "go": "¡GO!",
-        "noLives": "sin vidas",
-        "finishing": "finalizando quiz...",
-        "pause": "pausar",
-        "exit": "salir",
-        "paused": "quiz pausado",
-        "continue": "continuar quiz",
-        "pauseMessage": "puedes pausar las veces que necesites"
+        "noLives": "Sin vidas",
+        "finishing": "Finalizando quiz...",
+        "pause": "Pausar",
+        "exit": "Salir",
+        "paused": "Quiz Pausado",
+        "continue": "Continuar Quiz",
+        "pauseMessage": "Puedes pausar las veces que necesites"
       },
       "zen": {
-        "title": "modo zen",
-        "description": "practica sin presión de tiempo",
-        "subtitle": "a tu ritmo, sin presión",
-        "quickNav": "navegación rápida",
-        "hide": "ocultar",
-        "show": "mostrar",
-        "answered": "respondida",
-        "sendQuiz": "enviar quiz",
+        "title": "Modo Zen",
+        "description": "Practica sin presión de tiempo",
+        "subtitle": "A tu ritmo, sin presión",
+        "quickNav": "Navegación Rápida",
+        "hide": "Ocultar",
+        "show": "Mostrar",
+        "answered": "Respondida",
+        "sendQuiz": "Enviar Quiz",
         "answeredCount": "{count} respondidas"
       }
     },
     "quiz": {
-      "completed": "¡quiz completado!",
-      "passed": "¡aprobado!",
-      "notPassed": "no aprobado",
-      "accuracy": "precisión",
-      "timeUsed": "usado",
-      "summary": "resumen de respuestas",
-      "correct": "correcta",
-      "incorrect": "incorrecta",
-      "unanswered": "sin responder",
-      "reviewAnswers": "revisar respuestas",
-      "newQuiz": "nuevo quiz",
-      "backHome": "volver al inicio",
-      "question": "pregunta",
-      "viewSummary": "ver resumen",
-      "unansweredQuestions": "preguntas sin responder",
+      "completed": "¡Quiz Completado!",
+      "passed": "¡Aprobado!",
+      "notPassed": "No Aprobado",
+      "accuracy": "Precisión",
+      "timeUsed": "Usado",
+      "summary": "Resumen de Respuestas",
+      "correct": "Correcta",
+      "incorrect": "Incorrecta",
+      "unanswered": "Sin Responder",
+      "reviewAnswers": "Revisar Respuestas",
+      "newQuiz": "Nuevo Quiz",
+      "backHome": "Volver al Inicio",
+      "question": "Pregunta",
+      "viewSummary": "Ver Resumen",
+      "unansweredQuestions": "Preguntas Sin Responder",
       "thinking": "pensando..."
     }
   },
   "studyBuddy": {
-    "title": "tu compañero de estudio",
+    "title": "Tu Compañero de Estudio",
     "subtitle": "siempre aquí para ayudarte",
     "preparing": "preparando tu compañero de estudio...",
-    "greeting": "¡hola! 🌿 estoy aquí para ayudarte",
-    "placeholder": "pregúntame lo que quieras...",
+    "greeting": "¡Hola! 🌿 Estoy aquí para ayudarte",
+    "placeholder": "Pregúntame lo que quieras...",
     "thinking": "pensando...",
-    "error": "perdón, tuve un problema. ¿puedes intentar de nuevo?",
-    "clickToChat": "click para conversar",
+    "error": "Perdón, tuve un problema. ¿Puedes intentar de nuevo?",
+    "clickToChat": "Click para conversar",
     "context": {
-      "title": "contexto del estudiante",
-      "view": "ver qué sé de ti",
-      "viewLess": "ver menos",
-      "description": "uso estos datos para darte recomendaciones personalizadas",
-      "generalStats": "estadísticas generales",
-      "totalQuestions": "preguntas totales",
-      "overallAccuracy": "precisión general",
-      "performanceByTopic": "rendimiento por tema",
-      "recentSessions": "sesiones recientes",
+      "title": "Contexto del Estudiante",
+      "view": "Ver qué sé de ti",
+      "viewLess": "Ver menos",
+      "description": "Uso estos datos para darte recomendaciones personalizadas",
+      "generalStats": "Estadísticas Generales",
+      "totalQuestions": "Preguntas Totales",
+      "overallAccuracy": "Precisión General",
+      "performanceByTopic": "Rendimiento por Tema",
+      "recentSessions": "Sesiones Recientes",
       "questionsShort": "preg.",
-      "toolsAvailable": "herramientas disponibles"
+      "toolsAvailable": "Herramientas Disponibles"
     },
     "streak": {
-      "daily": "racha diaria",
-      "best": "mejor racha",
+      "daily": "Racha Diaria",
+      "best": "Mejor Racha",
       "day": "día",
       "days": "días"
     }
   },
   "aiChat": {
-    "title": "tu tutor IA",
-    "tutorIA": "tutor IA",
-    "backHome": "volver al inicio",
-    "questionContext": "contexto de la pregunta",
-    "hideDetails": "haz clic para ocultar detalles",
-    "showDetails": "haz clic para ver detalles",
+    "title": "Tu Tutor IA",
+    "tutorIA": "Tutor IA",
+    "backHome": "Volver al Inicio",
+    "questionContext": "Contexto de la Pregunta",
+    "hideDetails": "Haz clic para ocultar detalles",
+    "showDetails": "Haz clic para ver detalles",
     "question": "PREGUNTA",
     "figure": "FIGURA GEOMÉTRICA",
     "options": "OPCIONES",
-    "correctOption": "correcta",
-    "yourAnswer": "tu respuesta",
-    "placeholder": "escribe tu pregunta aquí...",
-    "send": "enviar",
-    "pressEnter": "presiona Enter para enviar",
-    "askQuestion": "pregunta lo que quieras sobre esta pregunta de",
+    "correctOption": "Correcta",
+    "yourAnswer": "Tu respuesta",
+    "placeholder": "Escribe tu pregunta aquí...",
+    "send": "Enviar",
+    "pressEnter": "Presiona Enter para enviar",
+    "askQuestion": "Pregunta lo que quieras sobre esta pregunta de",
     "responses": {
-      "correct": "¡bien hecho! 🌸 respondiste correctamente. ¿hay algo que quieras profundizar sobre esta pregunta?",
-      "unanswered": "¡hola! 🌿 estoy aquí para ayudarte a entender esta pregunta. ¿qué te gustaría saber?",
-      "incorrect": "respondiste correctamente - ¡podemos profundizar en el concepto!",
-      "incorrectAlt": "no respondiste - ¡puedo ayudarte a resolverla!",
-      "incorrectError": "respuesta incorrecta - ¡aprendamos juntos del error!"
+      "correct": "¡Bien hecho! 🌸 Respondiste correctamente. ¿Hay algo que quieras profundizar sobre esta pregunta?",
+      "unanswered": "¡Hola! 🌿 Estoy aquí para ayudarte a entender esta pregunta. ¿Qué te gustaría saber?",
+      "incorrect": "Respondiste correctamente - ¡Podemos profundizar en el concepto!",
+      "incorrectAlt": "No respondiste - ¡Puedo ayudarte a resolverla!",
+      "incorrectError": "Respuesta incorrecta - ¡Aprendamos juntos del error!"
     },
     "errors": {
-      "response": "error en la respuesta",
-      "invalidResponse": "respuesta inválida del servidor",
-      "generic": "perdón, tuve un problema al procesar tu mensaje. ¿puedes intentar de nuevo?"
+      "response": "Error en la respuesta",
+      "invalidResponse": "Respuesta inválida del servidor",
+      "generic": "Perdón, tuve un problema al procesar tu mensaje. ¿Puedes intentar de nuevo?"
     }
   },
   "subscription": {
     "trial": {
-      "title": "versión de prueba",
-      "active": "¡prueba gratuita activada! disfruta 7 días de acceso completo",
-      "message": "estás usando la versión de prueba de nuestra plataforma"
+      "title": "Versión de Prueba",
+      "active": "¡Prueba gratuita activada! Disfruta 7 días de acceso completo",
+      "message": "Estás usando la versión de prueba de nuestra plataforma"
     },
     "content": {
-      "available": "contenido disponible",
-      "premium": "contenido premium"
+      "available": "Contenido Disponible",
+      "premium": "Contenido Premium"
     },
     "plans": {
-      "title": "planes de suscripción",
-      "subtitle": "elige el plan que mejor se adapte a tus necesidades",
-      "viewPlans": "ver planes premium",
-      "upgradeToPremium": "actualízate a Premium para desbloquear todo el contenido",
-      "noPlans": "no hay planes disponibles en este momento",
-      "currentStatus": "estado actual",
-      "active": "suscripción activa",
-      "freeUser": "usuario gratuito",
-      "premium": "premium",
-      "recommended": "recomendado",
+      "title": "Planes de Suscripción",
+      "subtitle": "Elige el plan que mejor se adapte a tus necesidades",
+      "viewPlans": "Ver Planes Premium",
+      "upgradeToPremium": "Actualízate a Premium para desbloquear todo el contenido",
+      "noPlans": "No hay planes disponibles en este momento",
+      "currentStatus": "Estado Actual",
+      "active": "Suscripción Activa",
+      "freeUser": "Usuario Gratuito",
+      "premium": "Premium",
+      "recommended": "Recomendado",
       "per": "por",
       "freeDays": "días de prueba gratis",
-      "subscribe": "suscribirse",
-      "processing": "procesando...",
-      "alreadySubscribed": "ya tienes una suscripción"
+      "subscribe": "Suscribirse",
+      "processing": "Procesando...",
+      "alreadySubscribed": "Ya tienes una suscripción"
     },
     "status": {
-      "active": "estado actual: suscripción activa ✓",
-      "inactive": "estado actual: sin suscripción"
+      "active": "Estado Actual: Suscripción Activa ✓",
+      "inactive": "Estado Actual: Sin Suscripción"
     },
     "features": {
-      "liveSession": "ensayo PAES en vivo",
-      "fullAccess": "acceso completo y gratuito",
-      "practice": "ejercicios de práctica M1 y M2",
-      "curriculum": "temario completo PAES matemática",
-      "progress": "seguimiento de progreso personalizado"
+      "liveSession": "Ensayo PAES en Vivo",
+      "fullAccess": "Acceso Completo y Gratuito",
+      "practice": "Ejercicios de Práctica M1 y M2",
+      "curriculum": "Temario Completo PAES Matemática",
+      "progress": "Seguimiento de Progreso Personalizado"
     },
     "faq": {
-      "title": "preguntas frecuentes",
+      "title": "Preguntas Frecuentes",
       "trial": {
-        "question": "¿cómo funciona el período de prueba?",
-        "answer": "tienes 7 días gratis para probar todas las funciones premium"
+        "question": "¿Cómo funciona el período de prueba?",
+        "answer": "Tienes 7 días gratis para probar todas las funciones premium"
       },
       "cancel": {
-        "question": "¿puedo cancelar en cualquier momento?",
-        "answer": "sí, puedes cancelar cuando quieras sin compromisos"
+        "question": "¿Puedo cancelar en cualquier momento?",
+        "answer": "Sí, puedes cancelar cuando quieras sin compromisos"
       },
       "payment": {
-        "question": "¿qué métodos de pago aceptan?",
-        "answer": "aceptamos tarjetas de crédito y débito"
+        "question": "¿Qué métodos de pago aceptan?",
+        "answer": "Aceptamos tarjetas de crédito y débito"
       }
     },
     "startOptions": {
-      "title": "elige cómo empezar",
-      "tryFirst": "probar y pagar después",
-      "payNow": "pagar ahora",
-      "cancel": "cancelar"
+      "title": "Elige Cómo Empezar",
+      "tryFirst": "Probar y Pagar Después",
+      "payNow": "Pagar Ahora",
+      "cancel": "Cancelar"
     }
   },
   "progress": {
-    "title": "mi progreso",
-    "myQuizzes": "mis quizzes",
-    "showLast": "mostrar últimas",
+    "title": "Mi Progreso",
+    "myQuizzes": "Mis Quizzes",
+    "showLast": "Mostrar últimas",
     "questions": "preguntas",
-    "generalSummary": "resumen general",
-    "skillsM1": "habilidades M1",
-    "skillsM2": "habilidades M2",
-    "paesPrediction": "predicción PAES",
-    "competenceM1": "competencia matemática M1",
-    "competenceM2": "competencia matemática M2",
-    "lastQuestions": "últimas {count} preguntas",
-    "correctInLast": "respuestas correctas en las últimas {count} preguntas",
-    "startPractice": "¡comienza a practicar {level}!",
-    "continuePractice": "continuar práctica",
-    "beginPractice": "comenzar práctica",
-    "recentHistory": "historial de preguntas recientes",
-    "total": "total",
-    "previous": "anterior",
-    "next": "siguiente",
-    "notStarted": "aún no has comenzado a practicar",
+    "generalSummary": "Resumen General",
+    "skillsM1": "Habilidades M1",
+    "skillsM2": "Habilidades M2",
+    "paesPrediction": "Predicción PAES",
+    "competenceM1": "Competencia Matemática M1",
+    "competenceM2": "Competencia Matemática M2",
+    "lastQuestions": "Últimas {count} preguntas",
+    "correctInLast": "Respuestas correctas en las últimas {count} preguntas",
+    "startPractice": "¡Comienza a practicar {level}!",
+    "continuePractice": "Continuar Práctica",
+    "beginPractice": "Comenzar Práctica",
+    "recentHistory": "Historial de Preguntas Recientes",
+    "total": "Total",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "notStarted": "Aún no has comenzado a practicar",
     "loadingQuizzes": "cargando tus quizzes...",
-    "noQuizzes": "no has completado ningún quiz todavía",
-    "replayQuiz": "rejugar quiz",
-    "viewDetails": "ver detalles",
-    "reviewQuestion": "revisar pregunta",
-    "explanation": "explicación",
-    "close": "cerrar",
-    "noSessions": "aún no has completado ninguna sesión de práctica en vivo",
-    "joinSession": "¡únete a una sesión para comenzar a ver tus estadísticas!",
+    "noQuizzes": "No has completado ningún quiz todavía",
+    "replayQuiz": "Rejugar Quiz",
+    "viewDetails": "Ver Detalles",
+    "reviewQuestion": "Revisar Pregunta",
+    "explanation": "Explicación",
+    "close": "Cerrar",
+    "noSessions": "Aún no has completado ninguna sesión de práctica en vivo",
+    "joinSession": "¡Únete a una sesión para comenzar a ver tus estadísticas!",
     "stats": {
-      "correctAnswers": "respuestas correctas",
-      "accuracy": "precisión",
-      "correct": "correctas: {count}",
-      "attempts": "intentos: {count}",
-      "dailyStreak": "racha diaria",
-      "bestStreak": "mejor racha",
+      "correctAnswers": "Respuestas Correctas",
+      "accuracy": "Precisión",
+      "correct": "Correctas: {count}",
+      "attempts": "Intentos: {count}",
+      "dailyStreak": "Racha Diaria",
+      "bestStreak": "Mejor Racha",
       "days": "{count} días",
       "day": "{count} día",
-      "totalQuestions": "preguntas totales",
-      "overallAccuracy": "precisión general",
-      "sessionsCompleted": "sesiones completadas",
-      "averageScore": "puntaje promedio",
-      "averageAccuracy": "precisión promedio",
-      "bestScore": "mejor puntaje",
-      "ranking": "ranking",
-      "firstPlace": "1er lugar",
-      "secondPlace": "2do lugar",
-      "thirdPlace": "3er lugar"
+      "totalQuestions": "Preguntas Totales",
+      "overallAccuracy": "Precisión General",
+      "sessionsCompleted": "Sesiones Completadas",
+      "averageScore": "Puntaje Promedio",
+      "averageAccuracy": "Precisión Promedio",
+      "bestScore": "Mejor Puntaje",
+      "ranking": "Ranking",
+      "firstPlace": "1er Lugar",
+      "secondPlace": "2do Lugar",
+      "thirdPlace": "3er Lugar"
     },
     "performance": {
-      "byTopic": "rendimiento por tema",
-      "byLevel": "estadísticas por nivel",
-      "recentSessions": "sesiones recientes",
-      "session": "sesión",
-      "sessions": "sesiones",
-      "score": "puntaje",
-      "accuracy": "precisión",
-      "noSessions": "sin sesiones completadas"
+      "byTopic": "Rendimiento por Tema",
+      "byLevel": "Estadísticas por Nivel",
+      "recentSessions": "Sesiones Recientes",
+      "session": "Sesión",
+      "sessions": "Sesiones",
+      "score": "Puntaje",
+      "accuracy": "Precisión",
+      "noSessions": "Sin sesiones completadas"
     },
     "loading": "preparando tu panel...",
-    "error": "error al cargar el panel. por favor, intenta recargar la página."
+    "error": "Error al cargar el panel. Por favor, intenta recargar la página."
   },
   "pricing": {
-    "title": "el precio",
-    "description": "8.000 al mes. es menos que un preu, menos que una salida al cine. cuando pagas, te comprometes de verdad. y puede ser la diferencia para entrar a la u que quieres.",
-    "cta": "elegir plan",
+    "title": "El Precio",
+    "description": "8.000 al mes. Es menos que un preu, menos que una salida al cine. Cuando pagas, te comprometes de verdad. Y puede ser la diferencia para entrar a la U que quieres.",
+    "cta": "Elegir Plan",
     "errors": {
-      "mustLogin": "debes iniciar sesión para suscribirte",
-      "alreadySubscribed": "ya tienes una suscripción activa"
+      "mustLogin": "Debes iniciar sesión para suscribirte",
+      "alreadySubscribed": "Ya tienes una suscripción activa"
     },
     "trial": {
-      "activated": "¡prueba gratuita activada! disfruta 7 días de acceso completo"
+      "activated": "¡Prueba gratuita activada! Disfruta 7 días de acceso completo"
     },
     "duration": {
+      "oneWeek": "1 semana",
       "oneMonth": "1 mes",
       "threeMonths": "3 meses",
       "sixMonths": "6 meses",
       "oneYear": "1 año",
+      "permanent": "siempre",
       "days": "{days} días"
     },
     "header": {
-      "title": "planes de suscripción",
-      "subtitle": "elige el plan que mejor se adapte a tus necesidades y mejora tu preparación para la PAES"
+      "title": "Planes de Suscripción",
+      "subtitle": "Elige el plan que mejor se adapte a tus necesidades y mejora tu preparación para la PAES"
     },
     "currentStatus": {
-      "label": "estado actual:",
-      "active": "suscripción activa ✓",
-      "free": "usuario gratuito"
+      "label": "Estado Actual:",
+      "active": "Suscripción Activa ✓",
+      "free": "Usuario Gratuito"
     },
     "badge": {
-      "recommended": "recomendado",
-      "premium": "premium"
+      "recommended": "Recomendado",
+      "premium": "Premium"
     },
     "plan": {
       "per": "por",
       "trialDays": "{days} días de prueba gratis"
     },
     "button": {
-      "processing": "procesando...",
-      "subscribed": "ya tienes una suscripción",
-      "subscribe": "suscribirse"
+      "processing": "Procesando...",
+      "subscribed": "Ya tienes una suscripción",
+      "subscribe": "Suscribirse"
     },
-    "noPlans": "no hay planes disponibles en este momento",
+    "noPlans": "No hay planes disponibles en este momento",
     "faqSection": {
-      "header": "preguntas frecuentes",
+      "header": "Preguntas Frecuentes",
       "trial": {
-        "question": "¿cómo funciona el período de prueba?",
-        "answer": "tendrás acceso completo a todas las funciones premium durante el período de prueba. si cancelas antes de que termine, no se te cobrará nada."
+        "question": "¿Cómo funciona el período de prueba?",
+        "answer": "Tendrás acceso completo a todas las funciones premium durante el período de prueba. Si cancelas antes de que termine, no se te cobrará nada."
       },
       "cancel": {
-        "question": "¿puedo cancelar en cualquier momento?",
-        "answer": "sí, puedes cancelar tu suscripción en cualquier momento desde tu perfil. mantendrás el acceso hasta el final del período pagado."
+        "question": "¿Puedo cancelar en cualquier momento?",
+        "answer": "Sí, puedes cancelar tu suscripción en cualquier momento desde tu perfil. Mantendrás el acceso hasta el final del período pagado."
       },
       "payment": {
-        "question": "¿qué métodos de pago aceptan?",
-        "answer": "aceptamos todos los métodos de pago disponibles en MercadoPago, incluyendo tarjetas de crédito, débito, y transferencias bancarias."
+        "question": "¿Qué métodos de pago aceptan?",
+        "answer": "Aceptamos todos los métodos de pago disponibles en MercadoPago, incluyendo tarjetas de crédito, débito, y transferencias bancarias."
       }
     },
     "modal": {
-      "title": "elige cómo empezar",
+      "title": "Elige Cómo Empezar",
       "tryFirst": {
-        "title": "probar y pagar después",
-        "description": "comienza tu prueba gratuita de 7 días ahora. no se requiere tarjeta.",
-        "benefit1": "✓ sin tarjeta requerida",
+        "title": "Probar y Pagar Después",
+        "description": "Comienza tu prueba gratuita de 7 días ahora. No se requiere tarjeta.",
+        "benefit1": "✓ Sin tarjeta requerida",
         "benefit2": "✓ 7 días de acceso completo gratis",
-        "benefit3": "✓ paga solo si decides continuar"
+        "benefit3": "✓ Paga solo si decides continuar"
       },
       "payNow": {
-        "title": "pagar ahora",
-        "description": "paga hoy y obtén acceso inmediato. tu prueba de 7 días comienza ahora.",
-        "benefit1": "✓ tu cargo comienza en 7 días",
-        "benefit2": "✓ acceso completo inmediato",
-        "benefit3": "✓ cancela en cualquier momento"
+        "title": "Pagar Ahora",
+        "description": "Paga hoy y obtén acceso inmediato. Tu prueba de 7 días comienza ahora.",
+        "benefit1": "✓ Tu cargo comienza en 7 días",
+        "benefit2": "✓ Acceso completo inmediato",
+        "benefit3": "✓ Cancela en cualquier momento"
       }
     }
   },
   "contact": {
-    "title": "contacto",
+    "title": "Contacto",
     "subtitle": "¿tienes dudas? escríbenos",
-    "name": "nombre",
-    "email": "email",
-    "message": "mensaje",
-    "submit": "enviar mensaje",
-    "success": "mensaje enviado - nos pondremos en contacto contigo dentro de 2 días hábiles",
-    "error": "error al enviar el mensaje. intenta de nuevo"
+    "name": "Nombre",
+    "email": "Email",
+    "message": "Mensaje",
+    "submit": "Enviar Mensaje",
+    "success": "Mensaje enviado - Nos pondremos en contacto contigo dentro de 2 días hábiles",
+    "error": "Error al enviar el mensaje. Intenta de nuevo"
   },
   "footer": {
-    "title": "legal, soporte y contacto",
-    "subtitle": "información legal y soporte",
+    "title": "Legal, Soporte y Contacto",
+    "subtitle": "Información Legal y Soporte",
     "links": {
-      "terms": "términos y condiciones",
-      "privacy": "política de privacidad",
-      "cookies": "política de cookies",
-      "refunds": "política de reembolsos",
-      "consumer": "protección al consumidor"
+      "terms": "Términos y Condiciones",
+      "privacy": "Política de Privacidad",
+      "cookies": "Política de Cookies",
+      "refunds": "Política de Reembolsos",
+      "consumer": "Protección al Consumidor"
     },
-    "madeIn": "hecho con ❤️ en chile",
-    "copyright": "© 2024 PAES Chile. todos los derechos reservados."
+    "madeIn": "Hecho con ❤️ en Chile",
+    "copyright": "© 2024 PAES Chile. Todos los derechos reservados."
   },
   "cookies": {
-    "message": "usamos cookies para mejorar tu experiencia.",
-    "moreInfo": "más información",
-    "essentialOnly": "solo esenciales",
-    "acceptAll": "aceptar todas"
+    "message": "Usamos cookies para mejorar tu experiencia.",
+    "moreInfo": "Más Información",
+    "essentialOnly": "Solo Esenciales",
+    "acceptAll": "Aceptar Todas"
   },
   "paywall": {
-    "title": "contenido premium",
-    "message": "este contenido requiere una suscripción activa",
-    "cta": "ver planes",
-    "goToLive": "ir a ensayo en vivo",
-    "backToDashboard": "volver al dashboard"
+    "title": "Contenido Premium",
+    "message": "Este contenido requiere una suscripción activa",
+    "cta": "Ver Planes",
+    "goToLive": "Ir a Ensayo en Vivo",
+    "backToDashboard": "Volver al Dashboard"
   },
   "landing": {
     "title": "SimplePAES",
-    "subtitle": "plataforma de preparación matemática",
-    "fullTitle": "preparación para la prueba de acceso a la educación superior",
+    "subtitle": "Plataforma de Preparación Matemática",
+    "fullTitle": "Preparación para la Prueba de Acceso a la Educación Superior",
     "hero": {
-      "title": "prepara la PAES de matemática",
-      "subtitle": "una plataforma donde practicas mate para la PAES. tienes ejercicios del temario oficial, feedback cuando te equivocas, y ves tu progreso en tiempo real. sin publicidad.",
-      "cta": "comenzar ahora"
+      "title": "Prepara la PAES de Matemática",
+      "subtitle": "Una plataforma donde practicas mate para la PAES. Tienes ejercicios del temario oficial, feedback cuando te equivocas, y ves tu progreso en tiempo real. Sin publicidad.",
+      "cta": "Comenzar Ahora"
     },
     "sections": {
       "howItWorks": "cómo funciona",
-      "whatIsThis": "qué es esto",
-      "whatIncludes": "qué incluye",
-      "pricing": "el precio",
-      "okUnderstood": "ok, entendido"
+      "whatIsThis": "Qué es Esto",
+      "whatIncludes": "Qué Incluye",
+      "pricing": "El Precio",
+      "okUnderstood": "Ok, Entendido"
     },
     "whatIncludes": {
       "items": [
-        "problemas del temario oficial PAES",
-        "explicaciones cuando te equivocas",
-        "seguimiento de tu progreso",
-        "sesiones de práctica en vivo"
+        "Problemas del temario oficial PAES",
+        "Explicaciones cuando te equivocas",
+        "Seguimiento de tu progreso",
+        "Sesiones de práctica en vivo"
       ]
     },
     "howItWorks": {
-      "title": "cómo funciona",
+      "title": "Cómo Funciona",
       "step1": {
-        "title": "practica",
-        "description": "ejercicios del temario oficial"
+        "title": "Practica",
+        "description": "Ejercicios del temario oficial"
       },
       "step2": {
-        "title": "aprende",
-        "description": "feedback inmediato cuando te equivocas"
+        "title": "Aprende",
+        "description": "Feedback inmediato cuando te equivocas"
       },
       "step3": {
-        "title": "mejora",
-        "description": "ve tu progreso en tiempo real"
+        "title": "Mejora",
+        "description": "Ve tu progreso en tiempo real"
       }
     },
     "features": {
-      "title": "qué es esto",
-      "practice": "práctica progresiva",
-      "feedback": "feedback inmediato",
-      "progress": "seguimiento de progreso",
-      "ai": "compañero de estudio AI",
-      "curriculum": "temario oficial completo"
+      "title": "Qué es Esto",
+      "practice": "Práctica Progresiva",
+      "feedback": "Feedback Inmediato",
+      "progress": "Seguimiento de Progreso",
+      "ai": "Compañero de Estudio AI",
+      "curriculum": "Temario Oficial Completo"
     },
     "pricingSection": {
-      "details": "8.000 CLP/mes • cancela cuando quieras • sin permanencia"
+      "details": "8.000 CLP/mes • Cancela cuando quieras • Sin permanencia"
     }
   },
   "liveSession": {
     "toast": {
-      "registering": "registrando...",
-      "registered": "te has registrado al ensayo exitosamente",
-      "registerError": "error al registrarse",
-      "canceling": "cancelando registro...",
-      "canceled": "registro cancelado exitosamente",
-      "cancelError": "error al cancelar registro",
-      "joining": "uniéndote al ensayo...",
-      "joined": "te has unido al ensayo exitosamente",
-      "joinError": "error al unirse al ensayo"
+      "registering": "Registrando...",
+      "registered": "Te has registrado al ensayo exitosamente",
+      "registerError": "Error al registrarse",
+      "canceling": "Cancelando registro...",
+      "canceled": "Registro cancelado exitosamente",
+      "cancelError": "Error al cancelar registro",
+      "joining": "Uniéndote al ensayo...",
+      "joined": "Te has unido al ensayo exitosamente",
+      "joinError": "Error al unirse al ensayo"
     },
     "status": {
-      "scheduled": "programado",
-      "lobby": "lobby abierto",
-      "active": "en curso"
+      "scheduled": "Programado",
+      "lobby": "Lobby Abierto",
+      "active": "En Curso"
     },
     "header": {
-      "title": "ensayo PAES en vivo",
-      "subtitle": "regístrate y practica ensayos PAES con otros estudiantes en tiempo real"
+      "title": "Ensayo PAES en Vivo",
+      "subtitle": "Regístrate y practica ensayos PAES con otros estudiantes en tiempo real"
     },
-    "welcome": "bienvenido,",
+    "welcome": "Bienvenido,",
     "actions": {
-      "home": "inicio",
-      "admin": "administrador",
-      "exit": "salir"
+      "home": "Inicio",
+      "admin": "Administrador",
+      "exit": "Salir"
     },
     "available": {
-      "title": "ensayos disponibles",
-      "none": "no hay ensayos disponibles en este momento",
-      "wait": "espera a que un administrador cree un nuevo ensayo"
+      "title": "Ensayos Disponibles",
+      "none": "No hay ensayos disponibles en este momento",
+      "wait": "Espera a que un administrador cree un nuevo ensayo"
     },
     "card": {
       "by": "por",
-      "date": "📅 fecha:",
-      "level": "nivel:",
-      "questions": "preguntas:"
+      "date": "📅 Fecha:",
+      "level": "Nivel:",
+      "questions": "Preguntas:"
     },
     "buttons": {
-      "cancelRegistration": "cancelar registro",
-      "register": "registrarse",
-      "returnToLobby": "volver al lobby",
-      "enterLobby": "entrar al lobby",
-      "returnToSession": "volver a entrar",
-      "joinNow": "unirse ahora"
+      "cancelRegistration": "Cancelar Registro",
+      "register": "Registrarse",
+      "returnToLobby": "Volver al Lobby",
+      "enterLobby": "Entrar al Lobby",
+      "returnToSession": "Volver a Entrar",
+      "joinNow": "Unirse Ahora"
     }
   },
   "curriculum": {
-    "title": "temario PAES",
+    "title": "Temario PAES",
     "titleFull": "SimplePAES - Matemática",
-    "backHome": "volver al inicio",
-    "level": "curriculum PAES - nivel",
-    "viewDocs": "ver documentación detallada",
-    "docs": "docs",
-    "m1Title": "competencia matemática 1 - contenidos básicos",
-    "m2Title": "competencia matemática 2 - contenidos avanzados",
-    "duration": "duración",
-    "questions": "preguntas",
-    "includesSufficiency": "incluye suficiencia de datos",
-    "thematicAxes": "ejes temáticos y unidades",
-    "thematicUnits": "unidades temáticas",
-    "practice": "practicar",
-    "subsections": "subsecciones",
-    "skills": "habilidades evaluadas",
-    "skillMatrix": "matriz habilidad-eje temático",
+    "backHome": "Volver al Inicio",
+    "level": "Curriculum PAES - Nivel",
+    "viewDocs": "Ver Documentación Detallada",
+    "docs": "Docs",
+    "m1Title": "Competencia Matemática 1 - Contenidos Básicos",
+    "m2Title": "Competencia Matemática 2 - Contenidos Avanzados",
+    "duration": "Duración",
+    "questions": "Preguntas",
+    "includesSufficiency": "Incluye suficiencia de datos",
+    "thematicAxes": "Ejes Temáticos y Unidades",
+    "thematicUnits": "Unidades Temáticas",
+    "practice": "Practicar",
+    "subsections": "Subsecciones",
+    "skills": "Habilidades Evaluadas",
+    "skillMatrix": "Matriz Habilidad-Eje Temático",
     "skillsEvaluated": {
-      "problemSolving": "resolver problemas",
-      "modeling": "modelar",
-      "representing": "representar",
-      "arguing": "argumentar"
+      "problemSolving": "Resolver Problemas",
+      "modeling": "Modelar",
+      "representing": "Representar",
+      "arguing": "Argumentar"
     },
-    "startPractice": "comenzar práctica",
+    "startPractice": "Comenzar Práctica",
     "loading": "cargando temario...",
-    "error": "error al cargar el temario",
-    "copy": "copiar temario",
-    "copying": "copiando...",
-    "copied": "¡copiado!",
-    "copyError": "error",
-    "copyTooltip": "copiar temario {level} al portapapeles"
+    "error": "Error al cargar el temario",
+    "copy": "Copiar Temario",
+    "copying": "Copiando...",
+    "copied": "¡Copiado!",
+    "copyError": "Error",
+    "copyTooltip": "Copiar temario {level} al portapapeles"
   },
   "profile": {
-    "title": "mi perfil",
-    "editProfile": "editar perfil",
-    "displayName": "nombre para mostrar",
-    "email": "email",
-    "username": "usuario",
+    "title": "Mi Perfil",
+    "editProfile": "Editar Perfil",
+    "displayName": "Nombre para Mostrar",
+    "email": "Email",
+    "username": "Usuario",
     "navigation": {
-      "backHome": "← volver al inicio"
+      "backHome": "← Volver al Inicio"
     },
     "header": {
-      "edit": "editar perfil"
+      "edit": "Editar Perfil"
     },
     "info": {
-      "email": "email:",
-      "role": "rol:",
-      "memberSince": "miembro desde:",
-      "targetLevel": "nivel objetivo:"
+      "email": "Email:",
+      "role": "Rol:",
+      "memberSince": "Miembro desde:",
+      "targetLevel": "Nivel Objetivo:"
     },
     "role": {
-      "admin": "administrador",
-      "student": "estudiante"
+      "admin": "Administrador",
+      "student": "Estudiante"
     },
-    "memberSince": "miembro desde",
-    "targetLevel": "nivel objetivo",
-    "onlyM1": "solo M1",
+    "memberSince": "Miembro desde",
+    "targetLevel": "Nivel Objetivo",
+    "onlyM1": "Solo M1",
     "m1AndM2": "M1 y M2",
-    "m1Only": "solo M1",
+    "m1Only": "Solo M1",
     "m1AndM2Full": "M1 y M2",
-    "whatPreparing": "¿qué estás preparando?",
-    "subscription": "suscripción",
-    "status": "estado",
+    "whatPreparing": "¿Qué estás preparando?",
+    "subscription": "Suscripción",
+    "status": "Estado",
     "statusTypes": {
-      "active": "activa",
-      "trial": "prueba gratuita",
-      "expired": "expirada",
-      "canceled": "cancelada",
-      "unknown": "desconocida"
+      "active": "Activa",
+      "trial": "Prueba Gratuita",
+      "expired": "Expirada",
+      "canceled": "Cancelada",
+      "unknown": "Desconocida"
     },
     "subscriptionSection": {
-      "title": "suscripción",
-      "state": "estado:",
-      "none": "sin suscripción",
-      "active": "activa",
-      "trial": "prueba gratuita",
-      "expired": "expirada",
-      "canceled": "cancelada",
-      "unknown": "desconocida",
-      "startDate": "fecha de inicio:",
-      "expirationDate": "fecha de expiración:",
-      "trialUntil": "prueba gratuita hasta:",
-      "autoRenew": "renovación automática:",
-      "enabled": "activada",
-      "disabled": "desactivada",
-      "renew": "renovar suscripción",
-      "noActive": "no tienes una suscripción activa",
-      "viewPlans": "ver planes"
+      "title": "Suscripción",
+      "state": "Estado:",
+      "none": "Sin Suscripción",
+      "active": "Activa",
+      "trial": "Prueba Gratuita",
+      "expired": "Expirada",
+      "canceled": "Cancelada",
+      "unknown": "Desconocida",
+      "startDate": "Fecha de Inicio:",
+      "expirationDate": "Fecha de Expiración:",
+      "trialUntil": "Prueba Gratuita hasta:",
+      "autoRenew": "Renovación Automática:",
+      "enabled": "Activada",
+      "disabled": "Desactivada",
+      "renew": "Renovar Suscripción",
+      "noActive": "No tienes una suscripción activa",
+      "viewPlans": "Ver Planes"
     },
-    "startDate": "fecha de inicio",
-    "autoRenewal": "renovación automática",
-    "enabled": "activada",
-    "disabled": "desactivada",
-    "practiceStreaks": "rachas de práctica",
+    "startDate": "Fecha de Inicio",
+    "autoRenewal": "Renovación Automática",
+    "enabled": "Activada",
+    "disabled": "Desactivada",
+    "practiceStreaks": "Rachas de Práctica",
     "streaks": {
-      "practice": "rachas de práctica",
-      "lastPractice": "última práctica:"
+      "practice": "Rachas de Práctica",
+      "lastPractice": "Última práctica:"
     },
-    "currentStreak": "racha actual",
-    "bestStreak": "mejor racha",
-    "generalStats": "estadísticas generales",
+    "currentStreak": "Racha Actual",
+    "bestStreak": "Mejor Racha",
+    "generalStats": "Estadísticas Generales",
     "stats": {
-      "title": "estadísticas generales",
-      "totalQuestions": "total de preguntas:",
-      "correctAnswers": "respuestas correctas:",
-      "generalAccuracy": "precisión general:",
-      "questionsM1": "preguntas M1",
-      "questionsM2": "preguntas M2"
+      "title": "Estadísticas Generales",
+      "totalQuestions": "Total de Preguntas:",
+      "correctAnswers": "Respuestas Correctas:",
+      "generalAccuracy": "Precisión General:",
+      "questionsM1": "Preguntas M1",
+      "questionsM2": "Preguntas M2"
     },
-    "totalQuestions": "total de preguntas",
-    "correctAnswers": "respuestas correctas",
-    "overallAccuracy": "precisión general",
-    "quickActions": "acciones rápidas",
+    "totalQuestions": "Total de Preguntas",
+    "correctAnswers": "Respuestas Correctas",
+    "overallAccuracy": "Precisión General",
+    "quickActions": "Acciones Rápidas",
     "quickActionsSection": {
-      "title": "acciones rápidas",
-      "viewProgress": "ver mi progreso",
-      "practiceM1": "practicar M1",
-      "practiceM2": "practicar M2",
-      "paymentHistory": "historial de pagos"
+      "title": "Acciones Rápidas",
+      "viewProgress": "Ver Mi Progreso",
+      "practiceM1": "Practicar M1",
+      "practiceM2": "Practicar M2",
+      "paymentHistory": "Historial de Pagos"
     },
     "edit": {
       "modal": {
-        "title": "editar perfil",
-        "displayName": "nombre para mostrar",
+        "title": "Editar Perfil",
+        "displayName": "Nombre para Mostrar",
         "displayNamePlaceholder": "ej: Juan Pérez",
         "emailPlaceholder": "tu-email@ejemplo.com",
-        "targetLevelQuestion": "¿qué estás preparando?",
+        "targetLevelQuestion": "¿Qué estás preparando?",
         "m1AndM2Option": "M1 y M2 (carreras científicas/ingeniería)",
-        "m1OnlyOption": "solo M1 (otras carreras)",
-        "m1Description": "si solo necesitas M1, ocultaremos las opciones de práctica de M2",
-        "cancel": "cancelar",
-        "saving": "guardando...",
-        "saveChanges": "guardar cambios"
+        "m1OnlyOption": "Solo M1 (otras carreras)",
+        "m1Description": "Si solo necesitas M1, ocultaremos las opciones de práctica de M2",
+        "cancel": "Cancelar",
+        "saving": "Guardando...",
+        "saveChanges": "Guardar Cambios"
       }
     },
-    "save": "guardar cambios",
-    "success": "perfil actualizado correctamente",
-    "error": "error al actualizar el perfil"
+    "save": "Guardar Cambios",
+    "success": "Perfil actualizado correctamente",
+    "error": "Error al actualizar el perfil"
   },
   "operations": {
-    "title": "práctica de operaciones",
+    "title": "Práctica de Operaciones",
     "levels": {
-      "suma_basica": "suma básica - suma números del 1 al 5",
-      "suma_hasta_10": "suma hasta 10 - suma números del 1 al 10",
-      "suma_hasta_20": "suma hasta 20 - suma números del 1 al 20",
-      "suma_con_decenas": "suma con decenas - suma números hasta 100",
-      "suma_centenas": "suma centenas - suma números de tres dígitos",
-      "resta_basica": "resta básica - resta números del 1 al 5",
-      "resta_hasta_10": "resta hasta 10 - resta números del 1 al 10",
-      "resta_hasta_20": "resta hasta 20 - resta números del 1 al 20",
-      "resta_con_decenas": "resta con decenas - resta números hasta 100",
-      "resta_centenas": "resta centenas - resta números de tres dígitos",
-      "mult_simple": "multiplicación simple - tablas del 1 al 5",
-      "mult_completa": "multiplicación completa - tablas del 1 al 10",
-      "mult_dos_digitos": "multiplicación dos dígitos - multiplica por números de dos dígitos",
-      "div_exacta": "división exacta - divisiones exactas básicas",
-      "div_completa": "división completa - divisiones con resto"
+      "suma_basica": "Suma Básica - Suma números del 1 al 5",
+      "suma_hasta_10": "Suma hasta 10 - Suma números del 1 al 10",
+      "suma_hasta_20": "Suma hasta 20 - Suma números del 1 al 20",
+      "suma_con_decenas": "Suma con Decenas - Suma números hasta 100",
+      "suma_centenas": "Suma Centenas - Suma números de tres dígitos",
+      "resta_basica": "Resta Básica - Resta números del 1 al 5",
+      "resta_hasta_10": "Resta hasta 10 - Resta números del 1 al 10",
+      "resta_hasta_20": "Resta hasta 20 - Resta números del 1 al 20",
+      "resta_con_decenas": "Resta con Decenas - Resta números hasta 100",
+      "resta_centenas": "Resta Centenas - Resta números de tres dígitos",
+      "mult_simple": "Multiplicación Simple - Tablas del 1 al 5",
+      "mult_completa": "Multiplicación Completa - Tablas del 1 al 10",
+      "mult_dos_digitos": "Multiplicación Dos Dígitos - Multiplica por números de dos dígitos",
+      "div_exacta": "División Exacta - Divisiones exactas básicas",
+      "div_completa": "División Completa - Divisiones con resto"
     }
   },
   "share": {
     "whatsapp": "WhatsApp",
-    "copyLink": "copiar link",
-    "forOtherPlatforms": "para Instagram, Discord, Telegram",
-    "shared": "compartido",
-    "copied": "copiado",
-    "error": "error",
+    "copyLink": "Copiar Link",
+    "forOtherPlatforms": "Para Instagram, Discord, Telegram",
+    "shared": "Compartido",
+    "copied": "Copiado",
+    "error": "Error",
     "ago": "ya va",
     "agoPlural": "ya van"
   },
   "docs": {
-    "home": "inicio",
-    "exportAll": "exportar todo",
-    "closeMenu": "cerrar menú",
-    "openMenu": "abrir menú",
-    "navigation": "navegación",
-    "controls": "controles",
-    "expandAll": "expandir todo",
-    "collapseAll": "colapsar todo",
-    "byLevel": "por nivel",
-    "expandH2": "expandir solo títulos principales (H2)",
-    "expandH3": "expandir hasta subtítulos (H3)",
-    "expandH4": "expandir hasta nivel 4 (H4)"
+    "home": "Inicio",
+    "exportAll": "Exportar Todo",
+    "closeMenu": "Cerrar Menú",
+    "openMenu": "Abrir Menú",
+    "navigation": "Navegación",
+    "controls": "Controles",
+    "expandAll": "Expandir Todo",
+    "collapseAll": "Colapsar Todo",
+    "byLevel": "Por Nivel",
+    "expandH2": "Expandir solo títulos principales (H2)",
+    "expandH3": "Expandir hasta subtítulos (H3)",
+    "expandH4": "Expandir hasta nivel 4 (H4)"
   },
   "admin": {
     "sidebar": {
@@ -921,22 +925,22 @@
   "common": {
     "loading": "cargando...",
     "connecting": "conectando...",
-    "error": "error",
-    "success": "éxito",
-    "cancel": "cancelar",
-    "confirm": "confirmar",
-    "save": "guardar",
-    "delete": "eliminar",
-    "edit": "editar",
-    "back": "volver",
-    "next": "siguiente",
-    "previous": "anterior",
-    "close": "cerrar",
-    "ok": "ok, entendido",
-    "yes": "sí",
-    "no": "no",
-    "connectionError": "error de conexión. por favor intenta de nuevo.",
-    "start": "comenzar",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "close": "Cerrar",
+    "ok": "Ok, Entendido",
+    "yes": "Sí",
+    "no": "No",
+    "connectionError": "Error de conexión. Por favor intenta de nuevo.",
+    "start": "Comenzar",
     "howItWorks": "cómo funciona"
   }
 }

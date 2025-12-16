@@ -157,11 +157,12 @@ export default function PricingPage() {
   };
 
   const formatDuration = (days: number) => {
-    if (days === 7) return t('duration.oneWeek', { defaultValue: 'semana' });
+    if (days === 7) return t('duration.oneWeek');
     if (days === 30) return t('duration.oneMonth');
     if (days === 90) return t('duration.threeMonths');
     if (days === 180) return t('duration.sixMonths');
     if (days === 365) return t('duration.oneYear');
+    if (days >= 36500) return t('duration.permanent');
     return t('duration.days', { days });
   };
 
