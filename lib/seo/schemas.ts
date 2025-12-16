@@ -7,19 +7,32 @@ export const organizationSchema = {
   "@id": `${SITE_URL}/#organization`,
   name: SITE_NAME,
   url: SITE_URL,
-  logo: `${SITE_URL}/opengraph-image`,
+  logo: {
+    "@type": "ImageObject",
+    url: `${SITE_URL}/opengraph-image`,
+    width: 1200,
+    height: 630,
+  },
   description:
     "Plataforma de preparación para la PAES de Matemática en Chile. Más de 600 ejercicios del temario oficial con práctica personalizada.",
   areaServed: {
     "@type": "Country",
     name: "Chile",
   },
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "CL",
+    addressLocality: "Santiago",
+    addressRegion: "Región Metropolitana",
+  },
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer service",
     telephone: "+56-9-3133-8020",
+    email: "soporte@paes-math.cl",
     availableLanguage: "Spanish",
   },
+  foundingDate: "2024",
 };
 
 // WebSite Schema
