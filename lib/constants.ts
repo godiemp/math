@@ -293,3 +293,22 @@ export const LESSON_ANIMATION_TIMING = {
 export const LESSON_STREAK_CONFIG = {
   showAt: 3,              // Show streak indicator at 3+ correct in a row
 } as const;
+
+// ============================================================================
+// SEO CONFIGURATION
+// ============================================================================
+
+/**
+ * Site URL for canonical links and structured data
+ */
+export const SITE_URL = "https://simplepaes.cl";
+
+/**
+ * Site name for branding
+ */
+export const SITE_NAME = "SimplePAES";
+
+/**
+ * Brand color for theme
+ */
+export const BRAND_COLOR = "#007AFF";
