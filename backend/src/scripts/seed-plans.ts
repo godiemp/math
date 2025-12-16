@@ -65,7 +65,7 @@ const plans = [
     description: 'Acceso básico a la plataforma de práctica PAES',
     price: 0,
     currency: 'CLP',
-    duration_days: 365 * 100, // Essentially permanent (100 years)
+    duration_days: 365, // 1 year
     trial_duration_days: 0,
     features: JSON.stringify([
       'Acceso a ensayos en vivo',

@@ -94,8 +94,14 @@ function ProfilePageContent() {
     }
   }, [user]);
 
-  const formatDate = (timestamp: number) => {
+  const formatDate = (timestamp: number | undefined | null) => {
+    if (!timestamp || timestamp <= 0) {
+      return '-';
+    }
     const date = new Date(timestamp);
+    if (isNaN(date.getTime())) {
+      return '-';
+    }
     return date.toLocaleDateString('es-ES', {
       day: '2-digit',
       month: 'long',
