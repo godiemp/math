@@ -4,68 +4,56 @@ import { useState } from 'react';
 import { Check, X, RotateCcw, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
-import MathDisplay from '@/components/math/MathDisplay';
 
-interface Question {
+export interface CheckpointQuestion {
   id: string;
   question: string;
-  questionLatex?: string;
-  type: 'multiple-choice';
   options: string[];
-  optionsLatex?: string[];
   correctAnswer: number;
   explanation: string;
 }
 
-const QUESTIONS: Question[] = [
-  {
-    id: 'q1',
-    question: 'En un triángulo rectángulo con catetos de 9 y 12, ¿cuánto mide la hipotenusa?',
-    type: 'multiple-choice',
-    options: ['15', '21', '108', '225'],
-    correctAnswer: 0,
-    explanation: 'c² = 9² + 12² = 81 + 144 = 225. Entonces c = √225 = 15.',
-  },
-  {
-    id: 'q2',
-    question: '¿Cuál es la fórmula correcta del Teorema de Pitágoras?',
-    type: 'multiple-choice',
-    optionsLatex: ['a + b = c', 'a^2 + b^2 = c^2', 'a \\cdot b = c', '2a + 2b = c'],
-    options: ['a + b = c', 'a² + b² = c²', 'a × b = c', '2a + 2b = c'],
-    correctAnswer: 1,
-    explanation: 'El Teorema de Pitágoras establece que a² + b² = c², donde a y b son los catetos y c es la hipotenusa.',
-  },
-  {
-    id: 'q3',
-    question: 'Si la hipotenusa mide 10 y un cateto mide 6, ¿cuánto mide el otro cateto?',
-    type: 'multiple-choice',
-    options: ['4', '8', '16', '64'],
-    correctAnswer: 1,
-    explanation: 'a² = c² - b² = 10² - 6² = 100 - 36 = 64. Entonces a = √64 = 8.',
-  },
-  {
-    id: 'q4',
-    question: '¿En qué tipo de triángulo se puede aplicar el Teorema de Pitágoras?',
-    type: 'multiple-choice',
-    options: ['En cualquier triángulo', 'Solo en triángulos equiláteros', 'Solo en triángulos rectángulos', 'Solo en triángulos isósceles'],
-    correctAnswer: 2,
-    explanation: 'El Teorema de Pitágoras solo funciona en triángulos rectángulos, es decir, aquellos que tienen un ángulo de 90°.',
-  },
-];
+export interface CheckpointQuizProps extends LessonStepProps {
+  /** The questions for this checkpoint */
+  questions: CheckpointQuestion[];
+  /** Number of correct answers required to pass (default: 75% of questions) */
+  requiredCorrect?: number;
+  /** Title shown at the top (default: "Checkpoint Final") */
+  title?: string;
+  /** Subtitle/instruction text */
+  subtitle?: string;
+  /** Message shown when passed */
+  successMessage?: string;
+  /** Message shown when failed */
+  failureMessage?: string;
+}
 
-const REQUIRED_CORRECT = 3;
-
-export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
+export default function CheckpointQuiz({
+  onComplete,
+  isActive,
+  questions,
+  requiredCorrect,
+  title = 'Checkpoint Final',
+  subtitle,
+  successMessage = 'Has completado la lección exitosamente',
+  failureMessage,
+}: CheckpointQuizProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<(number | null)[]>(Array(QUESTIONS.length).fill(null));
+  const [answers, setAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
   const [showFeedback, setShowFeedback] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
 
-  const question = QUESTIONS[currentQuestion];
+  // Default to 75% of questions if not specified
+  const threshold = requiredCorrect ?? Math.ceil(questions.length * 0.75);
+
+  const question = questions[currentQuestion];
   const selectedAnswer = answers[currentQuestion];
-  const isCorrect = selectedAnswer === question.correctAnswer;
-  const correctCount = answers.filter((a, i) => a === QUESTIONS[i].correctAnswer).length;
-  const passed = correctCount >= REQUIRED_CORRECT;
+  const isCorrect = selectedAnswer === question?.correctAnswer;
+  const correctCount = answers.filter((a, i) => a === questions[i]?.correctAnswer).length;
+  const passed = correctCount >= threshold;
+
+  const defaultSubtitle = `Demuestra lo que aprendiste. Necesitas ${threshold} de ${questions.length} correctas.`;
+  const defaultFailureMessage = `Necesitas ${threshold} respuestas correctas. ¡Puedes intentarlo de nuevo!`;
 
   const handleSelect = (optionIndex: number) => {
     if (showFeedback) return;
@@ -81,7 +69,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
 
   const handleNext = () => {
     setShowFeedback(false);
-    if (currentQuestion < QUESTIONS.length - 1) {
+    if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(prev => prev + 1);
     } else {
       setIsComplete(true);
@@ -90,7 +78,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
 
   const handleReset = () => {
     setCurrentQuestion(0);
-    setAnswers(Array(QUESTIONS.length).fill(null));
+    setAnswers(Array(questions.length).fill(null));
     setShowFeedback(false);
     setIsComplete(false);
   };
@@ -98,14 +86,14 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
   if (!isActive) return null;
 
   return (
-    <div className="space-y-8 animate-fadeIn pb-20">
+    <div className="space-y-8 animate-fadeIn pb-32">
       {/* Title */}
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          Checkpoint Final
+          {title}
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          Demuestra lo que aprendiste. Necesitas {REQUIRED_CORRECT} de {QUESTIONS.length} correctas.
+          {subtitle || defaultSubtitle}
         </p>
       </div>
 
@@ -114,25 +102,25 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
           {/* Progress */}
           <div className="flex items-center justify-between px-2">
             <div className="text-sm text-gray-600 dark:text-gray-300">
-              Pregunta {currentQuestion + 1} de {QUESTIONS.length}
+              Pregunta {currentQuestion + 1} de {questions.length}
             </div>
             <div className="flex gap-1">
-              {QUESTIONS.map((_, i) => (
+              {questions.map((_, i) => (
                 <div
                   key={i}
                   className={cn(
                     'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all',
                     answers[i] !== null
-                      ? answers[i] === QUESTIONS[i].correctAnswer
+                      ? answers[i] === questions[i].correctAnswer
                         ? 'bg-green-500 text-white'
                         : 'bg-red-500 text-white'
                       : i === currentQuestion
-                      ? 'bg-green-500 text-white'
+                      ? 'bg-blue-500 text-white'
                       : 'bg-gray-200 dark:bg-gray-700 text-gray-500'
                   )}
                 >
                   {answers[i] !== null ? (
-                    answers[i] === QUESTIONS[i].correctAnswer ? '✓' : '✗'
+                    answers[i] === questions[i].correctAnswer ? '✓' : '✗'
                   ) : (
                     i + 1
                   )}
@@ -161,7 +149,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
                         ? index === question.correctAnswer
                           ? 'bg-green-100 dark:bg-green-900/50 border-green-500 text-green-800 dark:text-green-200'
                           : 'bg-red-100 dark:bg-red-900/50 border-red-500 text-red-800 dark:text-red-200'
-                        : 'bg-green-100 dark:bg-green-900/50 border-green-500 text-green-800 dark:text-green-200'
+                        : 'bg-blue-100 dark:bg-blue-900/50 border-blue-500 text-blue-800 dark:text-blue-200'
                       : showFeedback && index === question.correctAnswer
                       ? 'bg-green-50 dark:bg-green-900/30 border-green-400'
                       : 'bg-gray-50 dark:bg-gray-700 border-transparent hover:border-gray-300 dark:hover:border-gray-500'
@@ -175,7 +163,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
                           ? index === question.correctAnswer
                             ? 'bg-green-500 text-white'
                             : 'bg-red-500 text-white'
-                          : 'bg-green-500 text-white'
+                          : 'bg-blue-500 text-white'
                         : 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300'
                     )}>
                       {showFeedback && index === question.correctAnswer ? (
@@ -186,13 +174,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
                         String.fromCharCode(65 + index)
                       )}
                     </span>
-                    <span className="text-gray-800 dark:text-gray-200">
-                      {question.optionsLatex ? (
-                        <MathDisplay latex={question.optionsLatex[index]} />
-                      ) : (
-                        option
-                      )}
-                    </span>
+                    <span className="text-gray-800 dark:text-gray-200">{option}</span>
                   </div>
                 </button>
               ))}
@@ -237,7 +219,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
                 className={cn(
                   'px-8 py-3 rounded-xl font-semibold transition-all',
                   selectedAnswer !== null
-                    ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 shadow-lg'
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 shadow-lg'
                     : 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
                 )}
               >
@@ -246,15 +228,15 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
             ) : (
               <button
                 onClick={handleNext}
-                className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
+                className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
               >
-                {currentQuestion < QUESTIONS.length - 1 ? 'Siguiente Pregunta' : 'Ver Resultados'}
+                {currentQuestion < questions.length - 1 ? 'Siguiente Pregunta' : 'Ver Resultados'}
               </button>
             )}
           </div>
         </>
       ) : (
-        // Results
+        // Results - NO CELEBRATION MODAL, direct completion
         <div className="space-y-6 animate-fadeIn">
           <div className={cn(
             'rounded-2xl p-8 text-center',
@@ -272,19 +254,17 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
               'text-2xl font-bold mb-2',
               passed ? 'text-green-800 dark:text-green-300' : 'text-amber-800 dark:text-amber-300'
             )}>
-              {passed ? '¡Felicitaciones!' : '¡Casi lo logras!'}
+              {passed ? '¡Lección Completada!' : '¡Casi lo logras!'}
             </h3>
 
             <div className="text-5xl font-bold text-gray-900 dark:text-white mb-2">
-              {correctCount} / {QUESTIONS.length}
+              {correctCount} / {questions.length}
             </div>
 
             <p className={cn(
               passed ? 'text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300'
             )}>
-              {passed
-                ? 'Has completado la lección exitosamente'
-                : `Necesitas ${REQUIRED_CORRECT} respuestas correctas. ¡Puedes intentarlo de nuevo!`}
+              {passed ? successMessage : (failureMessage || defaultFailureMessage)}
             </p>
           </div>
 
@@ -292,7 +272,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4">
             <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-3">Resumen:</h4>
             <div className="space-y-2">
-              {QUESTIONS.map((q, i) => (
+              {questions.map((q, i) => (
                 <div
                   key={q.id}
                   className={cn(
@@ -315,7 +295,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
             </div>
           </div>
 
-          {/* Action buttons */}
+          {/* Action buttons - Direct completion, no modal */}
           <div className="flex justify-center gap-4">
             {!passed && (
               <button
@@ -332,7 +312,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
                 onClick={onComplete}
                 className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
               >
-                Completar Lección
+                Finalizar Lección
               </button>
             )}
           </div>
