@@ -46,8 +46,8 @@ test.describe('Mini Lesson - M1 Números Enteros Orden', () => {
     // Should show explanation
     await expect(page.getByText(/Santiago.*25°C.*está más lejos de 0°C/)).toBeVisible();
 
-    // Should show insight about absolute value
-    await expect(page.getByText(/valor absoluto/i)).toBeVisible();
+    // Should show insight about absolute value (use exact match to avoid matching title)
+    await expect(page.getByText('valor absoluto', { exact: true })).toBeVisible();
 
     // Click Continue to go to Step 2
     await page.getByRole('button', { name: 'Continuar' }).click();
