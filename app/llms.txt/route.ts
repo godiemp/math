@@ -9,7 +9,7 @@ export async function GET() {
 
 SimplePAES es una plataforma educativa online que ayuda a estudiantes chilenos a prepararse para la prueba PAES de Matemática. Ofrece:
 
-- Más de 600 ejercicios alineados con el temario oficial PAES
+- Más de 900 ejercicios alineados con el temario oficial PAES
 - Práctica personalizada basada en datos de rendimiento
 - Feedback inmediato con explicaciones cuando te equivocas
 - Seguimiento de progreso con métricas detalladas

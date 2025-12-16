@@ -4,6 +4,8 @@ description: "Descubre las razones reales por las que las matemáticas se siente
 date: "2024-12-16"
 author: "SimplePAES"
 tags: ["matemáticas", "aprendizaje", "estrategias", "mentalidad"]
+published: true
+# image: "/images/blog/por-que-no-entiendo-matematicas.jpg"
 ---
 
 Si alguna vez has sentido que "las matemáticas no son lo tuyo", no estás solo. Según estudios del Ministerio de Educación de Chile, cerca del 50% de los estudiantes de enseñanza media reportan dificultades significativas con esta asignatura.
