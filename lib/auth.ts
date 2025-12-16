@@ -19,6 +19,8 @@ export {
   fetchCurrentUser,
   requestPasswordReset,
   resetPassword,
+  verifyEmail,
+  sendVerificationEmail,
   // Utilities
   isAuthenticated,
   isAdmin,

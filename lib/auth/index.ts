@@ -48,6 +48,8 @@ export {
   fetchCurrentUser,
   requestPasswordReset,
   resetPassword,
+  verifyEmail,
+  sendVerificationEmail,
 } from './authApi';
 
 // Auth Utilities
