@@ -6,7 +6,7 @@ import { SITE_URL } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Precios SimplePAES - Planes de Preparación PAES",
   description:
-    "Planes de preparación PAES desde $8.000 CLP/mes. Acceso completo a +600 ejercicios PAES, tutor AI ilimitado, ensayos en vivo, y seguimiento personalizado. 7 días gratis.",
+    "Planes de preparación PAES desde $8.000 CLP/mes. Acceso completo a +900 ejercicios PAES, tutor AI ilimitado, ensayos en vivo, y seguimiento personalizado. 7 días gratis.",
   alternates: {
     canonical: `${SITE_URL}/pricing`,
   },

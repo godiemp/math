@@ -528,7 +528,7 @@ npm run monitor-backups:alert
 
 ## Banco de Preguntas
 
-**Total: 616 Problemas**
+**Total: 900+ Problemas**
 
 | Nivel | Cantidad | Cobertura |
 |-------|----------|-----------|
@@ -1218,7 +1218,7 @@ Para preguntas o soporte, por favor abre un issue en GitHub.
 
 <div align="center">
 
-**616 problemas** | **Tutor IA Socrático** | **Sesiones en Vivo** | **Progreso Personalizado**
+**900+ problemas** | **Tutor IA Socrático** | **Sesiones en Vivo** | **Progreso Personalizado**
 
 *La plataforma que combina inteligencia artificial, práctica adaptativa y metodología pedagógica probada para prepararte con éxito para la PAES.*
 
@@ -1231,7 +1231,7 @@ Para preguntas o soporte, por favor abre un issue en GitHub.
 SimplePAES es una **plataforma de preparación matemática** diseñada específicamente para estudiantes chilenos que rinden la Prueba de Acceso a la Educación Superior (PAES). Más que un simple banco de preguntas, es un **ecosistema completo de aprendizaje** que integra:
 
 - **Inteligencia Artificial avanzada** que te enseña como un tutor personal
-- **Práctica interactiva** con más de 600 problemas reales
+- **Práctica interactiva** con más de 900 problemas reales
 - **Sesiones colaborativas** donde estudias con otros estudiantes
 - **Seguimiento detallado** de tu progreso y habilidades
 
@@ -1310,7 +1310,7 @@ Con 4 obreros, ¿cómo calcularías los días?
 
 ---
 
-### 📊 616 Problemas que Cubren Todo
+### 📊 900+ Problemas que Cubren Todo
 
 | Área | Nivel M1 (Básico) | Nivel M2 (Avanzado) |
 |------|-------------------|---------------------|
@@ -1581,7 +1581,7 @@ SimplePAES implementa el **método socrático** (preguntas guiadas para desarrol
 #### Panel de Administración Completo:
 
 **Gestión de Contenido:**
-- Ver los 616 problemas del banco
+- Ver los 900+ problemas del banco
 - Filtrar por nivel, tema y dificultad
 - Subir PDFs y extraer preguntas automáticamente
 - Sistema QGen para generar preguntas personalizadas
@@ -1644,7 +1644,7 @@ SimplePAES implementa el **método socrático** (preguntas guiadas para desarrol
 
 **Métricas del sistema:**
 
-- **616 problemas** curados y validados pedagógicamente
+- **900+ problemas** curados y validados pedagógicamente
 - **500+ habilidades** mapeadas a taxonomía PAES
 - **Metodología Socrática** implementada con IA estado del arte
 - **Tracking completo** de cada interacción estudiante-sistema
@@ -1708,7 +1708,7 @@ SimplePAES ofrece diferentes planes adaptados a tus necesidades:
 
 ### SimplePAES en 3 Puntos:
 
-1. **Para Estudiantes**: Tu tutor personal 24/7 que te enseña a PENSAR matemáticamente, con 616 problemas y práctica adaptativa.
+1. **Para Estudiantes**: Tu tutor personal 24/7 que te enseña a PENSAR matemáticamente, con 900+ problemas y práctica adaptativa.
 
 2. **Para Padres**: Inversión inteligente en el futuro de tu hijo con tecnología de punta, seguridad total y resultados medibles.
 
@@ -1726,7 +1726,7 @@ SimplePAES ofrece diferentes planes adaptados a tus necesidades:
 
 ---
 
-**616 problemas** · **IA Socrática** · **Progreso medible** · **Comunidad activa**
+**900+ problemas** · **IA Socrática** · **Progreso medible** · **Comunidad activa**
 
 </div>
 

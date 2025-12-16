@@ -6,7 +6,7 @@ import { SITE_URL } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Cómo Funciona SimplePAES - Preparación PAES Personalizada",
   description:
-    "Descubre cómo SimplePAES te prepara para la PAES de Matemática con práctica basada en datos, feedback inmediato, y seguimiento de progreso personalizado. +600 ejercicios del temario oficial.",
+    "Descubre cómo SimplePAES te prepara para la PAES de Matemática con práctica basada en datos, feedback inmediato, y seguimiento de progreso personalizado. +900 ejercicios del temario oficial.",
   alternates: {
     canonical: `${SITE_URL}/como-funciona`,
   },

@@ -19,7 +19,7 @@ const disallowedPaths = [
   "/reset-password/",
 ];
 
-const publicPaths = ["/", "/como-funciona", "/pricing", "/contacto", "/legal/", "/llms.txt"];
+const publicPaths = ["/", "/como-funciona", "/pricing", "/contacto", "/legal/", "/blog/", "/llms.txt"];
 
 export default function robots(): MetadataRoute.Robots {
   return {
