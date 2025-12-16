@@ -42,12 +42,24 @@ export function authenticate(
   }
 
   try {
-    // SECURITY: Read token from HttpOnly cookie instead of Authorization header
-    const token = req.cookies.accessToken;
+    // Check for token from multiple sources:
+    // 1. Authorization header (mobile clients) - takes precedence
+    // 2. HttpOnly cookie (web clients)
+    let token: string | undefined;
+    let tokenSource: string;
+
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.substring(7);
+      tokenSource = 'Authorization header';
+    } else {
+      token = req.cookies.accessToken;
+      tokenSource = 'cookie';
+    }
 
     // Log presence of token without exposing the actual value
     if (process.env.NODE_ENV === 'development') {
-      console.log('🔐 Auth middleware - Access token cookie:', token ? 'present' : 'missing');
+      console.log(`🔐 Auth middleware - Token from ${tokenSource}:`, token ? 'present' : 'missing');
       // Redact sensitive cookie data in logs
       const safeCookies = { ...req.cookies };
       if (safeCookies.accessToken) safeCookies.accessToken = '[REDACTED]';
@@ -63,7 +75,7 @@ export function authenticate(
 
     // Only log token length in development, never log the actual token
     if (process.env.NODE_ENV === 'development') {
-      console.log('🔑 Token extracted from cookie, length:', token.length);
+      console.log(`🔑 Token extracted from ${tokenSource}, length:`, token.length);
     }
 
     const payload = verifyAccessToken(token);
