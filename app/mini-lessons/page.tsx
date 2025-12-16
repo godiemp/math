@@ -1,12 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Calculator, FunctionSquare, Shapes, BarChart3 } from 'lucide-react';
+import { ArrowLeft, Calculator, FunctionSquare, Shapes, BarChart3, type LucideIcon } from 'lucide-react';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
 import { SUBJECTS, SUBJECT_LABELS, getUnitCount, subjectToSlug, type Subject } from '@/lib/lessons/thematicUnits';
 
-const SUBJECT_ICONS: Record<Subject, React.ElementType> = {
+const SUBJECT_ICONS: Record<Subject, LucideIcon> = {
   'números': Calculator,
   'álgebra': FunctionSquare,
   'geometría': Shapes,
