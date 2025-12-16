@@ -44,6 +44,7 @@ next-env.d.ts
 
 # Expo
 mobile/.expo/
+mobile/node_modules/
 mobile/dist/
 mobile/ios/
 mobile/android/
