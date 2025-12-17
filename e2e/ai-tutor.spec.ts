@@ -103,6 +103,6 @@ test.describe('AI Tutor Chat', () => {
     }
 
     // Verify user message was added to chat (proves the send flow worked)
-    await expect(page.getByText('hola')).toBeVisible();
+    await expect(page.getByText('hola', { exact: true })).toBeVisible();
   });
 });
