@@ -27,11 +27,11 @@ const QUESTIONS: PracticeQuestion[] = [
   {
     id: '2',
     expression: 'x² + 4x + 2x + 8',
-    options: ['(x + 2)(x + 4)', '(x + 4)(x + 2)', '(x + 8)(x + 1)', 'x(x + 6) + 8'],
-    correctAnswer: 1,
+    options: ['(x + 2)(x + 4)', '(x + 6)(x + 2)', '(x + 8)(x + 1)', 'x(x + 6) + 8'],
+    correctAnswer: 0,
     hint: 'Agrupa (x² + 4x) y (2x + 8). Del primer grupo sale x, del segundo sale 2.',
     explanation:
-      '(x² + 4x) + (2x + 8) = x(x + 4) + 2(x + 4) = (x + 4)(x + 2)',
+      '(x² + 4x) + (2x + 8) = x(x + 4) + 2(x + 4) = (x + 4)(x + 2) = (x + 2)(x + 4)',
   },
   {
     id: '3',
