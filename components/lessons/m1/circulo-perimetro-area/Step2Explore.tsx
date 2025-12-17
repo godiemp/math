@@ -183,17 +183,17 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           </div>
 
           <div className="flex justify-center mb-4">
-            <svg viewBox="0 0 340 180" className="w-full max-w-lg">
+            <svg viewBox="0 0 390 180" className="w-full max-w-xl">
               {/* Grid background */}
               <defs>
                 <pattern id="gridCirc" width="20" height="20" patternUnits="userSpaceOnUse">
                   <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e5e7eb" strokeWidth="0.5"/>
                 </pattern>
               </defs>
-              <rect x="0" y="0" width="340" height="180" fill="url(#gridCirc)" />
+              <rect x="0" y="0" width="390" height="180" fill="url(#gridCirc)" />
 
               {/* Ground line - the surface the circle "rolls" on */}
-              <line x1="15" y1={lineY} x2="325" y2={lineY} stroke="#cbd5e1" strokeWidth="2" />
+              <line x1="15" y1={lineY} x2="385" y2={lineY} stroke="#cbd5e1" strokeWidth="2" />
 
               {/* CIRCLE - rolls to the right */}
               {/* Outer group positions the circle center at y=circleY */}
