@@ -12,13 +12,13 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
 
-  const correctAnswer = 2; // "(x + 2)(3 + y)"
+  const correctAnswer = 1; // "(x + 3)(y + 2)"
 
   const options = [
-    '3x + xy + 6 + 2y',
+    '(x + 2)(y + 3)',
     '(x + 3)(y + 2)',
-    '(x + 2)(3 + y)',
-    'xy + 3x + 2y + 6',
+    '(xy + 6)(2 + 3)',
+    'xy + 2x + 3y + 6',
   ];
 
   const handleSelect = (index: number) => {
@@ -43,10 +43,10 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
       {/* Title */}
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          El Puzzle de los Equipos
+          El Terreno del Arquitecto
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          A veces organizar en grupos revela patrones ocultos...
+          ¿Puedes encontrar las dimensiones de un terreno conociendo solo su área?
         </p>
       </div>
 
@@ -55,55 +55,54 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           {/* Scenario */}
           <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30 rounded-2xl p-6 border border-amber-200 dark:border-amber-800">
             <p className="text-gray-700 dark:text-gray-300 text-lg mb-6">
-              En un torneo, hay <strong className="text-blue-600">4 tipos de participantes</strong> que deben organizarse en equipos:
+              Un arquitecto necesita <strong className="text-blue-600">cercar un terreno rectangular</strong>.
+              Solo conoce el <strong className="text-purple-600">área total</strong>, que está dividida en 4 secciones:
             </p>
 
-            {/* Visual representation */}
+            {/* Area Model Visualization */}
             <div className="flex flex-col items-center gap-6 mb-6">
-              {/* Products spread out */}
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-lg">
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md">
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400 text-center mb-4">
-                  Los participantes:
+                  El terreno dividido en secciones:
                 </p>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-3 text-center">
-                    <div className="text-3xl mb-1">🏃</div>
-                    <span className="font-mono text-lg text-blue-600 font-bold">3x</span>
-                    <p className="text-xs text-gray-500">corredores experimentados</p>
-                  </div>
-                  <div className="bg-green-50 dark:bg-green-900/30 rounded-lg p-3 text-center">
-                    <div className="text-3xl mb-1">🚴</div>
-                    <span className="font-mono text-lg text-green-600 font-bold">xy</span>
-                    <p className="text-xs text-gray-500">ciclistas expertos</p>
-                  </div>
-                  <div className="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-3 text-center">
-                    <div className="text-3xl mb-1">🏊</div>
-                    <span className="font-mono text-lg text-purple-600 font-bold">6</span>
-                    <p className="text-xs text-gray-500">nadadores novatos</p>
-                  </div>
-                  <div className="bg-pink-50 dark:bg-pink-900/30 rounded-lg p-3 text-center">
-                    <div className="text-3xl mb-1">🎿</div>
-                    <span className="font-mono text-lg text-pink-600 font-bold">2y</span>
-                    <p className="text-xs text-gray-500">esquiadores</p>
-                  </div>
+
+                {/* SVG Area Model */}
+                <div className="flex justify-center">
+                  <svg viewBox="0 0 280 200" className="w-full max-w-xs">
+                    {/* Background rectangles */}
+                    <rect x="40" y="20" width="100" height="70" fill="#dbeafe" stroke="#3b82f6" strokeWidth="2" rx="4" />
+                    <rect x="140" y="20" width="100" height="70" fill="#dcfce7" stroke="#22c55e" strokeWidth="2" rx="4" />
+                    <rect x="40" y="90" width="100" height="70" fill="#fef3c7" stroke="#f59e0b" strokeWidth="2" rx="4" />
+                    <rect x="140" y="90" width="100" height="70" fill="#fce7f3" stroke="#ec4899" strokeWidth="2" rx="4" />
+
+                    {/* Labels inside boxes */}
+                    <text x="90" y="60" textAnchor="middle" className="text-lg font-bold fill-blue-700" style={{ fontSize: '18px', fontFamily: 'monospace' }}>xy</text>
+                    <text x="190" y="60" textAnchor="middle" className="text-lg font-bold fill-green-700" style={{ fontSize: '18px', fontFamily: 'monospace' }}>2x</text>
+                    <text x="90" y="130" textAnchor="middle" className="text-lg font-bold fill-amber-700" style={{ fontSize: '18px', fontFamily: 'monospace' }}>3y</text>
+                    <text x="190" y="130" textAnchor="middle" className="text-lg font-bold fill-pink-700" style={{ fontSize: '18px', fontFamily: 'monospace' }}>6</text>
+
+                    {/* Question marks for dimensions */}
+                    <text x="20" y="95" textAnchor="middle" className="fill-gray-500" style={{ fontSize: '24px' }}>?</text>
+                    <text x="140" y="10" textAnchor="middle" className="fill-gray-500" style={{ fontSize: '24px' }}>?</text>
+                  </svg>
                 </div>
               </div>
 
-              {/* Expression */}
-              <div className="bg-amber-100 dark:bg-amber-900/50 rounded-xl p-4 max-w-lg">
+              {/* Total Area Expression */}
+              <div className="bg-purple-100 dark:bg-purple-900/50 rounded-xl p-4 max-w-md">
                 <p className="text-gray-700 dark:text-gray-300 text-center mb-2">
-                  La expresión algebraica de todos es:
+                  El área total del terreno es:
                 </p>
-                <p className="font-mono text-2xl text-center font-bold text-gray-800 dark:text-gray-200">
-                  3x + xy + 6 + 2y
+                <p className="font-mono text-2xl text-center font-bold text-purple-700 dark:text-purple-300">
+                  xy + 2x + 3y + 6 m²
                 </p>
               </div>
 
               {/* Question */}
-              <div className="bg-amber-100 dark:bg-amber-900/50 rounded-xl p-4 max-w-lg">
+              <div className="bg-amber-100 dark:bg-amber-900/50 rounded-xl p-4 max-w-md">
                 <p className="text-amber-800 dark:text-amber-200 text-center">
-                  El organizador quiere formar <strong>2 grupos principales</strong> donde cada grupo
-                  tenga un <strong>factor común</strong>. ¿Cómo puede escribirse la expresión final?
+                  El arquitecto necesita saber el <strong>largo</strong> y el <strong>ancho</strong> del terreno
+                  para comprar la cantidad exacta de cerca. ¿Cuáles son las dimensiones?
                 </p>
               </div>
             </div>
@@ -115,7 +114,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               onClick={() => setPhase('question')}
               className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 transition-all shadow-lg"
             >
-              <span>Resolver el problema</span>
+              <span>Encontrar las dimensiones</span>
               <ArrowRight size={20} />
             </button>
           </div>
@@ -124,14 +123,31 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
       {phase === 'question' && (
         <div className="space-y-6 animate-fadeIn">
-          {/* Question reminder */}
-          <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-6 text-center border border-blue-200 dark:border-blue-700">
-            <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-              Expresión: <span className="font-mono text-purple-600">3x + xy + 6 + 2y</span>
-            </p>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">
-              ¿Cómo podemos factorizarla agrupando términos?
-            </p>
+          {/* Question reminder with visual */}
+          <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-6 border border-blue-200 dark:border-blue-700">
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              {/* Mini area model */}
+              <div className="flex-shrink-0">
+                <svg viewBox="0 0 140 100" className="w-32">
+                  <rect x="10" y="10" width="50" height="35" fill="#dbeafe" stroke="#3b82f6" strokeWidth="1" rx="2" />
+                  <rect x="60" y="10" width="50" height="35" fill="#dcfce7" stroke="#22c55e" strokeWidth="1" rx="2" />
+                  <rect x="10" y="45" width="50" height="35" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1" rx="2" />
+                  <rect x="60" y="45" width="50" height="35" fill="#fce7f3" stroke="#ec4899" strokeWidth="1" rx="2" />
+                  <text x="35" y="32" textAnchor="middle" style={{ fontSize: '10px', fontFamily: 'monospace' }} className="fill-blue-700">xy</text>
+                  <text x="85" y="32" textAnchor="middle" style={{ fontSize: '10px', fontFamily: 'monospace' }} className="fill-green-700">2x</text>
+                  <text x="35" y="67" textAnchor="middle" style={{ fontSize: '10px', fontFamily: 'monospace' }} className="fill-amber-700">3y</text>
+                  <text x="85" y="67" textAnchor="middle" style={{ fontSize: '10px', fontFamily: 'monospace' }} className="fill-pink-700">6</text>
+                </svg>
+              </div>
+              <div className="text-center md:text-left">
+                <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                  Área total: <span className="font-mono text-purple-600">xy + 2x + 3y + 6</span>
+                </p>
+                <p className="text-gray-600 dark:text-gray-400 mt-1">
+                  Si Área = Largo × Ancho, ¿cuáles son las dimensiones?
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Options */}
@@ -210,7 +226,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               )}
             >
               <p className={cn('font-semibold', isCorrect ? 'text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300')}>
-                {isCorrect ? '¡Exacto!' : '¡Casi!'} Veamos cómo funciona...
+                {isCorrect ? '¡Exacto!' : '¡Casi!'} Veamos cómo encontrar las dimensiones...
               </p>
             </div>
           )}
@@ -222,58 +238,71 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           {/* Explanation with visual breakdown */}
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-2xl p-6 border border-green-200 dark:border-green-800">
             <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 text-center">
-              ¡Organizamos por Agrupación!
+              ¡Encontramos las dimensiones!
             </h3>
 
-            {/* Visual breakdown */}
+            {/* Visual breakdown with labeled dimensions */}
             <div className="flex justify-center mb-6">
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-inner">
-                <div className="text-center space-y-4">
-                  <p className="font-mono text-lg text-gray-700 dark:text-gray-300">
-                    <span className="text-blue-600">3x</span> + <span className="text-green-600">xy</span> + <span className="text-purple-600">6</span> + <span className="text-pink-600">2y</span>
-                  </p>
-                  <p className="text-gray-400 text-sm">↓ agrupamos los primeros dos y los últimos dos</p>
-                  <p className="font-mono text-sm text-gray-600 dark:text-gray-400">
-                    = (<span className="text-blue-600">3x</span> + <span className="text-green-600">xy</span>) + (<span className="text-purple-600">6</span> + <span className="text-pink-600">2y</span>)
-                  </p>
-                  <p className="text-gray-400 text-sm">↓ sacamos factor común de cada grupo</p>
-                  <p className="font-mono text-sm text-gray-600 dark:text-gray-400">
-                    = <span className="text-amber-600">x</span>(3 + y) + <span className="text-amber-600">2</span>(3 + y)
-                  </p>
-                  <p className="text-gray-400 text-sm">↓ ahora (3 + y) es el factor común</p>
-                  <p className="font-mono text-2xl text-green-600 font-bold">
-                    (x + 2)(3 + y)
-                  </p>
-                </div>
+                <svg viewBox="0 0 320 220" className="w-full max-w-sm">
+                  {/* Top dimension label */}
+                  <text x="160" y="15" textAnchor="middle" className="fill-purple-600 font-bold" style={{ fontSize: '16px', fontFamily: 'monospace' }}>y + 2</text>
+                  <line x1="60" y1="25" x2="260" y2="25" stroke="#9333ea" strokeWidth="2" markerEnd="url(#arrowhead)" markerStart="url(#arrowhead-start)" />
+
+                  {/* Left dimension label */}
+                  <text x="30" y="115" textAnchor="middle" className="fill-teal-600 font-bold" style={{ fontSize: '16px', fontFamily: 'monospace' }} transform="rotate(-90, 30, 115)">x + 3</text>
+                  <line x1="45" y1="40" x2="45" y2="190" stroke="#14b8a6" strokeWidth="2" />
+
+                  {/* Rectangles */}
+                  <rect x="60" y="40" width="100" height="70" fill="#dbeafe" stroke="#3b82f6" strokeWidth="2" rx="4" />
+                  <rect x="160" y="40" width="100" height="70" fill="#dcfce7" stroke="#22c55e" strokeWidth="2" rx="4" />
+                  <rect x="60" y="110" width="100" height="80" fill="#fef3c7" stroke="#f59e0b" strokeWidth="2" rx="4" />
+                  <rect x="160" y="110" width="100" height="80" fill="#fce7f3" stroke="#ec4899" strokeWidth="2" rx="4" />
+
+                  {/* Labels inside boxes */}
+                  <text x="110" y="80" textAnchor="middle" className="fill-blue-700 font-bold" style={{ fontSize: '18px', fontFamily: 'monospace' }}>xy</text>
+                  <text x="210" y="80" textAnchor="middle" className="fill-green-700 font-bold" style={{ fontSize: '18px', fontFamily: 'monospace' }}>2x</text>
+                  <text x="110" y="155" textAnchor="middle" className="fill-amber-700 font-bold" style={{ fontSize: '18px', fontFamily: 'monospace' }}>3y</text>
+                  <text x="210" y="155" textAnchor="middle" className="fill-pink-700 font-bold" style={{ fontSize: '18px', fontFamily: 'monospace' }}>6</text>
+
+                  {/* Row labels (factors) */}
+                  <text x="280" y="80" textAnchor="start" className="fill-blue-600" style={{ fontSize: '12px', fontFamily: 'monospace' }}>×x</text>
+                  <text x="280" y="155" textAnchor="start" className="fill-amber-600" style={{ fontSize: '12px', fontFamily: 'monospace' }}>×3</text>
+
+                  {/* Column labels (factors) */}
+                  <text x="110" y="205" textAnchor="middle" className="fill-blue-600" style={{ fontSize: '12px', fontFamily: 'monospace' }}>×y</text>
+                  <text x="210" y="205" textAnchor="middle" className="fill-green-600" style={{ fontSize: '12px', fontFamily: 'monospace' }}>×2</text>
+                </svg>
               </div>
             </div>
 
-            {/* Team visualization */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400 text-center mb-4">
-                Los equipos finales:
-              </p>
-              <div className="flex justify-center gap-6 flex-wrap">
-                <div className="bg-amber-100 dark:bg-amber-900/50 rounded-lg p-4 border-2 border-amber-300 dark:border-amber-700">
-                  <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-2">Equipo 1</p>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">🏃</span>
-                    <span className="text-gray-400">+</span>
-                    <span className="text-2xl">🏊</span>
-                  </div>
-                  <p className="text-center text-sm text-gray-700 dark:text-gray-300 mt-2 font-mono font-bold">(x + 2)</p>
+            {/* Step by step */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 mb-4">
+              <div className="text-center space-y-3">
+                <p className="text-sm text-gray-500">Observa el patrón:</p>
+                <div className="flex items-center justify-center gap-2 flex-wrap text-sm">
+                  <span className="bg-blue-100 dark:bg-blue-900/50 px-2 py-1 rounded font-mono">xy = x·y</span>
+                  <span className="bg-green-100 dark:bg-green-900/50 px-2 py-1 rounded font-mono">2x = x·2</span>
+                  <span className="text-gray-400">← fila con factor x</span>
                 </div>
-                <div className="text-2xl self-center text-gray-400">×</div>
-                <div className="bg-teal-100 dark:bg-teal-900/50 rounded-lg p-4 border-2 border-teal-300 dark:border-teal-700">
-                  <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-2">Equipo 2</p>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">🚴</span>
-                    <span className="text-gray-400">+</span>
-                    <span className="text-2xl">🎿</span>
-                  </div>
-                  <p className="text-center text-sm text-gray-700 dark:text-gray-300 mt-2 font-mono font-bold">(3 + y)</p>
+                <div className="flex items-center justify-center gap-2 flex-wrap text-sm">
+                  <span className="bg-amber-100 dark:bg-amber-900/50 px-2 py-1 rounded font-mono">3y = 3·y</span>
+                  <span className="bg-pink-100 dark:bg-pink-900/50 px-2 py-1 rounded font-mono">6 = 3·2</span>
+                  <span className="text-gray-400">← fila con factor 3</span>
                 </div>
+                <p className="text-gray-400 text-sm">↓</p>
+                <p className="font-mono text-xl text-green-600 font-bold">
+                  Largo: (x + 3) · Ancho: (y + 2)
+                </p>
               </div>
+            </div>
+
+            {/* Verification */}
+            <div className="bg-green-100 dark:bg-green-900/50 rounded-lg p-3 text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Verificación:</p>
+              <p className="font-mono text-green-700 dark:text-green-300">
+                (x + 3)(y + 2) = xy + 2x + 3y + 6 ✓
+              </p>
             </div>
           </div>
 
@@ -290,16 +319,16 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 </h4>
                 <div className="space-y-4 text-gray-700 dark:text-gray-300">
                   <div className="bg-white dark:bg-gray-800 p-4 rounded-xl text-center">
-                    <p className="text-sm mb-2">Cuando una expresión tiene 4 términos sin factor común directo:</p>
+                    <p className="text-sm mb-2">Encontrar las dimensiones de un área es lo mismo que <strong>factorizar</strong>:</p>
                     <p className="font-mono text-lg">
-                      ab + ac + db + dc = <span className="text-amber-600 font-bold">(a + d)(b + c)</span>
+                      xy + 2x + 3y + 6 = <span className="text-purple-600 font-bold">(x + 3)(y + 2)</span>
                     </p>
                   </div>
                   <div className="bg-amber-50 dark:bg-amber-900/30 p-3 rounded-lg border border-amber-200 dark:border-amber-700">
                     <p className="text-amber-800 dark:text-amber-200 text-sm text-center">
-                      <strong>Agrupamos de a pares</strong>, sacamos factor común de cada par,
+                      <strong>El modelo de área</strong> nos ayuda a visualizar la factorización:
                       <br />
-                      <span className="text-purple-600">y luego un segundo factor común aparece.</span>
+                      <span className="text-purple-600">cada sección del rectángulo es un término del polinomio.</span>
                     </p>
                   </div>
                 </div>

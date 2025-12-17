@@ -565,7 +565,7 @@ export const M1_LESSONS: Lesson[] = [
     skills: ['algebra-factorizacion', 'algebra-factorizacion-agrupacion', 'algebra-expresiones'],
     estimatedMinutes: 15,
     steps: [
-      { id: 'hook', type: 'hook', title: 'El Puzzle de los Equipos', requiredToAdvance: true },
+      { id: 'hook', type: 'hook', title: 'El Terreno del Arquitecto', requiredToAdvance: true },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón', requiredToAdvance: true },
       { id: 'explain', type: 'explain', title: 'Casos de Agrupación' },
       { id: 'classify', type: 'explore', title: '¿Se Puede Agrupar?', requiredToAdvance: true },
