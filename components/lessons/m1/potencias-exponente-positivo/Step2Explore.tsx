@@ -101,9 +101,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             {/* Visual explanation */}
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
               <div className="text-center space-y-6">
-                <div className="flex justify-center items-end gap-1">
+                <div className="flex justify-center items-baseline">
                   <span className="text-6xl font-bold text-blue-600">a</span>
-                  <span className="text-3xl font-bold text-purple-600 -translate-y-4">n</span>
+                  <sup className="text-3xl font-bold text-purple-600">n</sup>
                 </div>
                 <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
                   <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
@@ -168,9 +168,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="text-center mb-6">
               <p className="text-gray-500 dark:text-gray-400 mb-2">Calcula:</p>
-              <div className="flex justify-center items-end gap-1">
+              <div className="flex justify-center items-baseline">
                 <span className="text-5xl font-bold text-blue-600">{example.base}</span>
-                <span className="text-2xl font-bold text-purple-600 -translate-y-4">{example.exponent}</span>
+                <sup className="text-2xl font-bold text-purple-600">{example.exponent}</sup>
               </div>
             </div>
 
@@ -237,10 +237,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                       {example.expanded}
                     </p>
                     <div className="flex items-center justify-center gap-4">
-                      <div className="flex items-end gap-1">
-                        <span className="font-mono text-2xl text-blue-600">{example.base}</span>
-                        <span className="font-mono text-lg text-purple-600 -translate-y-2">{example.exponent}</span>
-                      </div>
+                      <span className="font-mono text-2xl text-blue-600">{example.base}<sup className="text-lg text-purple-600">{example.exponent}</sup></span>
                       <span className="text-gray-400">=</span>
                       <span className="font-mono text-3xl font-bold text-green-600">{example.result}</span>
                     </div>
@@ -306,10 +303,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                     key={ex.id}
                     className="flex items-center justify-between p-2 rounded-lg bg-gray-50 dark:bg-gray-700/50"
                   >
-                    <div className="flex items-end gap-1">
-                      <span className="font-mono text-lg text-blue-600">{ex.base}</span>
-                      <span className="font-mono text-sm text-purple-600 -translate-y-1">{ex.exponent}</span>
-                    </div>
+                    <span className="font-mono text-lg text-blue-600">{ex.base}<sup className="text-sm text-purple-600">{ex.exponent}</sup></span>
                     <span className="text-gray-400">=</span>
                     <span className="font-mono text-sm text-gray-600 dark:text-gray-400">{ex.expanded}</span>
                     <span className="text-gray-400">=</span>
