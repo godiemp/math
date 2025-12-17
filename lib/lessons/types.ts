@@ -440,6 +440,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-alg-001-h',
+    slug: 'trinomios-cuadraticos-perfectos',
+    title: 'Factorización de Trinomios Cuadráticos Perfectos',
+    description: 'Aprende a factorizar trinomios de la forma a² ± 2ab + b² reconociéndolos como cuadrados perfectos (a ± b)².',
+    level: 'M1',
+    subject: 'álgebra',
+    thematicUnit: 'M1-ALG-001',
+    skills: ['algebra-factorizacion', 'algebra-trinomios-cuadraticos-perfectos', 'algebra-expresiones'],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Inverso de los Productos Notables', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Trinomios Cuadráticos Perfectos' },
+      { id: 'classify', type: 'explore', title: 'Identifica el Tipo', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // GEOMETRÍA
   // ========================================
