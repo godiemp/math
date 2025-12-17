@@ -46,7 +46,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           El Terreno del Arquitecto
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          ¿Puedes encontrar las dimensiones de un terreno conociendo solo su área?
+          ¿Puedes encontrar unas posibles dimensiones de un terreno conociendo solo su área?
         </p>
       </div>
 
@@ -68,22 +68,22 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
                 {/* SVG Area Model */}
                 <div className="flex justify-center">
-                  <svg viewBox="0 0 280 200" className="w-full max-w-xs">
+                  <svg viewBox="0 0 280 220" className="w-full max-w-xs">
                     {/* Background rectangles */}
-                    <rect x="40" y="20" width="100" height="70" fill="#dbeafe" stroke="#3b82f6" strokeWidth="2" rx="4" />
-                    <rect x="140" y="20" width="100" height="70" fill="#dcfce7" stroke="#22c55e" strokeWidth="2" rx="4" />
-                    <rect x="40" y="90" width="100" height="70" fill="#fef3c7" stroke="#f59e0b" strokeWidth="2" rx="4" />
-                    <rect x="140" y="90" width="100" height="70" fill="#fce7f3" stroke="#ec4899" strokeWidth="2" rx="4" />
+                    <rect x="40" y="40" width="100" height="70" fill="#dbeafe" stroke="#3b82f6" strokeWidth="2" rx="4" />
+                    <rect x="140" y="40" width="100" height="70" fill="#dcfce7" stroke="#22c55e" strokeWidth="2" rx="4" />
+                    <rect x="40" y="110" width="100" height="70" fill="#fef3c7" stroke="#f59e0b" strokeWidth="2" rx="4" />
+                    <rect x="140" y="110" width="100" height="70" fill="#fce7f3" stroke="#ec4899" strokeWidth="2" rx="4" />
 
                     {/* Labels inside boxes */}
-                    <text x="90" y="60" textAnchor="middle" className="text-lg font-bold fill-blue-700" style={{ fontSize: '18px', fontFamily: 'monospace' }}>xy</text>
-                    <text x="190" y="60" textAnchor="middle" className="text-lg font-bold fill-green-700" style={{ fontSize: '18px', fontFamily: 'monospace' }}>2x</text>
-                    <text x="90" y="130" textAnchor="middle" className="text-lg font-bold fill-amber-700" style={{ fontSize: '18px', fontFamily: 'monospace' }}>3y</text>
-                    <text x="190" y="130" textAnchor="middle" className="text-lg font-bold fill-pink-700" style={{ fontSize: '18px', fontFamily: 'monospace' }}>6</text>
+                    <text x="90" y="82" textAnchor="middle" className="text-lg font-bold fill-blue-700" style={{ fontSize: '18px', fontFamily: 'monospace' }}>xy</text>
+                    <text x="190" y="82" textAnchor="middle" className="text-lg font-bold fill-green-700" style={{ fontSize: '18px', fontFamily: 'monospace' }}>2x</text>
+                    <text x="90" y="152" textAnchor="middle" className="text-lg font-bold fill-amber-700" style={{ fontSize: '18px', fontFamily: 'monospace' }}>3y</text>
+                    <text x="190" y="152" textAnchor="middle" className="text-lg font-bold fill-pink-700" style={{ fontSize: '18px', fontFamily: 'monospace' }}>6</text>
 
                     {/* Question marks for dimensions */}
-                    <text x="20" y="95" textAnchor="middle" className="fill-gray-500" style={{ fontSize: '24px' }}>?</text>
-                    <text x="140" y="10" textAnchor="middle" className="fill-gray-500" style={{ fontSize: '24px' }}>?</text>
+                    <text x="20" y="115" textAnchor="middle" className="fill-gray-500" style={{ fontSize: '24px' }}>?</text>
+                    <text x="140" y="25" textAnchor="middle" className="fill-gray-500" style={{ fontSize: '24px' }}>?</text>
                   </svg>
                 </div>
               </div>
@@ -102,7 +102,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               <div className="bg-amber-100 dark:bg-amber-900/50 rounded-xl p-4 max-w-md">
                 <p className="text-amber-800 dark:text-amber-200 text-center">
                   El arquitecto necesita saber el <strong>largo</strong> y el <strong>ancho</strong> del terreno
-                  para comprar la cantidad exacta de cerca. ¿Cuáles son las dimensiones?
+                  para comprar la cantidad exacta de cerca. ¿Cuáles podrían ser las dimensiones?
                 </p>
               </div>
             </div>
@@ -114,7 +114,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               onClick={() => setPhase('question')}
               className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 transition-all shadow-lg"
             >
-              <span>Encontrar las dimensiones</span>
+              <span>Buscar las dimensiones</span>
               <ArrowRight size={20} />
             </button>
           </div>
@@ -144,7 +144,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   Área total: <span className="font-mono text-purple-600">xy + 2x + 3y + 6</span>
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 mt-1">
-                  Si Área = Largo × Ancho, ¿cuáles son las dimensiones?
+                  Si Área = Largo × Ancho, ¿cuáles podrían ser las dimensiones?
                 </p>
               </div>
             </div>
@@ -238,7 +238,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           {/* Explanation with visual breakdown */}
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-2xl p-6 border border-green-200 dark:border-green-800">
             <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 text-center">
-              ¡Encontramos las dimensiones!
+              ¡Encontramos unas posibles dimensiones!
             </h3>
 
             {/* Visual breakdown with labeled dimensions */}
