@@ -77,15 +77,15 @@ const QUESTIONS: PracticeQuestion[] = [
       'En un histograma de estaturas, el intervalo [170, 175) tiene frecuencia 18 y es el mas alto.',
     question: '¿Que puedes concluir sobre la distribucion de estaturas?',
     options: [
-      'La mayoria mide menos de 170 cm',
-      'La mayoria mide entre 170 y 175 cm',
-      'La mayoria mide mas de 175 cm',
-      'No hay un patron claro',
+      'Todos miden entre 170 y 175 cm',
+      'El intervalo mas frecuente es [170, 175)',
+      'Exactamente 18 personas participaron',
+      'No se puede saber nada',
     ],
     correctAnswer: 1,
-    hint: 'La barra mas alta indica el intervalo con mayor frecuencia.',
+    hint: 'La barra mas alta indica el intervalo con mayor frecuencia, pero no necesariamente la mayoria.',
     explanation:
-      'El intervalo [170, 175) tiene la mayor frecuencia (18), lo que significa que la mayoria de las personas mide entre 170 y 175 cm.',
+      'El intervalo [170, 175) es el mas frecuente (moda de los datos agrupados), pero eso no significa que sea la mayoria del total. Solo sabemos que es el intervalo donde se concentran mas datos.',
   },
 ];
 
