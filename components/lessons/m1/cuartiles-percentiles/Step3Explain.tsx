@@ -142,26 +142,30 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
 
         {/* The formula card */}
         <div className="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 rounded-xl p-6 border border-orange-200 dark:border-orange-700">
-          <div className="flex items-center justify-center gap-4 text-2xl font-bold">
+          <div className="flex items-start justify-center gap-4 text-2xl font-bold">
             <div className="text-center">
               <div className="p-4 bg-purple-100 dark:bg-purple-900/50 rounded-xl">
                 <span className="text-purple-600">{Q3}</span>
               </div>
-              <span className="text-xs text-purple-600 mt-1">Q₃</span>
+              <span className="text-xs text-purple-600 mt-1 block">Q₃</span>
             </div>
-            <span className="text-gray-500">-</span>
+            <div className="p-4 flex items-center">
+              <span className="text-gray-500">-</span>
+            </div>
             <div className="text-center">
               <div className="p-4 bg-blue-100 dark:bg-blue-900/50 rounded-xl">
                 <span className="text-blue-600">{Q1}</span>
               </div>
-              <span className="text-xs text-blue-600 mt-1">Q₁</span>
+              <span className="text-xs text-blue-600 mt-1 block">Q₁</span>
             </div>
-            <span className="text-gray-500">=</span>
+            <div className="p-4 flex items-center">
+              <span className="text-gray-500">=</span>
+            </div>
             <div className="text-center">
               <div className="p-4 bg-orange-500 text-white rounded-xl">
                 <span>{IQR}</span>
               </div>
-              <span className="text-xs text-orange-600 mt-1 font-bold">IQR</span>
+              <span className="text-xs text-orange-600 mt-1 font-bold block">IQR</span>
             </div>
           </div>
         </div>
