@@ -402,6 +402,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-alg-001-g',
+    slug: 'diferencia-cuadrados',
+    title: 'Factorización por Diferencia de Cuadrados',
+    description: 'Domina la factorización de expresiones de la forma a² - b² usando la fórmula (a + b)(a - b).',
+    level: 'M1',
+    subject: 'álgebra',
+    thematicUnit: 'M1-ALG-001',
+    skills: ['algebra-factorizacion', 'algebra-diferencia-cuadrados', 'algebra-expresiones'],
+    estimatedMinutes: 14,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Truco del Calculista', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Diferencia de Cuadrados' },
+      { id: 'classify', type: 'explore', title: 'Identifica el Tipo de Expresión', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // GEOMETRÍA
   // ========================================
