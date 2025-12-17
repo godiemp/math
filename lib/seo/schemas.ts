@@ -14,7 +14,7 @@ export const organizationSchema = {
     height: 630,
   },
   description:
-    "Plataforma de preparación para la PAES de Matemática en Chile. Más de 900 ejercicios del temario oficial con práctica personalizada.",
+    "Plataforma de preparación PAES Matemática con mini-lecciones que explican el por qué y Tutor AI Socrático disponible 24/7.",
   areaServed: {
     "@type": "Country",
     name: "Chile",
@@ -42,7 +42,7 @@ export const websiteSchema = {
   "@id": `${SITE_URL}/#website`,
   url: SITE_URL,
   name: SITE_NAME,
-  description: "Preparación PAES Matemática Chile",
+  description: "Preparación PAES Matemática Chile - Mini-lecciones + Tutor AI Socrático",
   publisher: { "@id": `${SITE_URL}/#organization` },
   inLanguage: "es-CL",
 };
@@ -54,7 +54,7 @@ export const courseSchema = {
   "@id": `${SITE_URL}/#course`,
   name: "Preparación PAES Matemática",
   description:
-    "Curso de preparación para la Prueba de Acceso a la Educación Superior (PAES) de Matemática en Chile. Incluye más de 900 ejercicios del temario oficial, práctica personalizada y seguimiento de progreso.",
+    "Preparación PAES Matemática con mini-lecciones que explican el por qué (no solo el cómo), Tutor AI Socrático 24/7, y más de 900 ejercicios del temario oficial.",
   provider: { "@id": `${SITE_URL}/#organization` },
   educationalLevel: "Educación Media / Preparación Universitaria",
   inLanguage: "es-CL",
@@ -82,7 +82,7 @@ export const faqSchema = {
       name: "¿Qué es SimplePAES?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "SimplePAES es una plataforma de preparación para la PAES de Matemática en Chile. Ofrece más de 900 ejercicios alineados con el temario oficial, práctica personalizada basada en datos, feedback inmediato y seguimiento de progreso.",
+        text: "SimplePAES es una plataforma de preparación para la PAES de Matemática en Chile. Ofrece más de 900 ejercicios, mini-lecciones interactivas que te explican el por qué (no solo el cómo), un Tutor AI Socrático que te guía sin darte las respuestas, y seguimiento de progreso por habilidad.",
       },
     },
     {
@@ -98,7 +98,7 @@ export const faqSchema = {
       name: "¿Qué incluye la suscripción premium?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "La suscripción premium incluye acceso completo a más de 900 ejercicios PAES, ensayos en vivo con otros estudiantes, tutor AI ilimitado, explicaciones detalladas, análisis de habilidades y seguimiento personalizado de progreso.",
+        text: "La suscripción premium incluye acceso a más de 900 ejercicios PAES, mini-lecciones que te explican el por qué, Tutor AI Socrático ilimitado, ensayos en vivo con otros estudiantes, y análisis de 500+ habilidades.",
       },
     },
     {
@@ -146,14 +146,14 @@ export const howToSchema = {
     },
     {
       "@type": "HowToStep",
-      name: "Practica con ejercicios reales",
-      text: "Resuelve ejercicios del temario oficial PAES. El sistema se adapta a tu nivel.",
+      name: "Aprende con mini-lecciones",
+      text: "Las mini-lecciones te explican el por qué de cada concepto, no solo el procedimiento.",
       url: `${SITE_URL}/como-funciona`,
     },
     {
       "@type": "HowToStep",
-      name: "Aprende de tus errores",
-      text: "Recibe explicaciones detalladas cuando te equivocas. El tutor AI te ayuda a entender.",
+      name: "Usa el Tutor AI cuando te trabas",
+      text: "El Tutor AI Socrático te hace preguntas que te guían a entender —sin darte la respuesta directa.",
       url: `${SITE_URL}/como-funciona`,
     },
     {
