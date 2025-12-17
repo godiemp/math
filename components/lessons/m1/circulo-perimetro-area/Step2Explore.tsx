@@ -223,7 +223,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   <circle r="4" fill="#0d9488" />
 
                   {/* Diameter line inside circle */}
-                  <line x1={-circleRadius + 5} y1="0" x2={circleRadius - 5} y2="0" stroke="#7c3aed" strokeWidth="3" />
+                  <line x1={-circleRadius} y1="0" x2={circleRadius} y2="0" stroke="#7c3aed" strokeWidth="3" />
                   <text x="0" y="-8" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#7c3aed">d</text>
 
                   {/* Marker dot at contact point (bottom of circle) */}
