@@ -285,6 +285,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-num-003-a',
+    slug: 'potencias-exponente-positivo',
+    title: 'Potencias con Exponente Positivo',
+    description: 'Aprende qué son las potencias, cómo calcularlas y sus casos especiales.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-003',
+    skills: ['potencias-concepto', 'potencias-calcular', 'potencias-casos-especiales'],
+    estimatedMinutes: 14,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'La Leyenda del Tablero de Ajedrez', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Conceptos de Potencias' },
+      { id: 'classify', type: 'explore', title: 'Identifica el Valor', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // ÁLGEBRA Y FUNCIONES
   // ========================================
