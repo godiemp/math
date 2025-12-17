@@ -180,22 +180,23 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             </h3>
             <div className="h-64 flex items-end justify-around gap-2 border-b-2 border-l-2 border-gray-300 dark:border-gray-600 p-2">
               {INTERVALS.map((interval, idx) => {
-                const height = (groupedCounts[idx] / 10) * 100; // Scale to percentage
+                const maxFreq = Math.max(...groupedCounts, 1);
+                const heightPercent = (groupedCounts[idx] / maxFreq) * 100;
                 return (
-                  <div key={interval.label} className="flex flex-col items-center flex-1">
-                    <div
-                      className="w-full rounded-t transition-all duration-300 relative"
-                      style={{
-                        height: `${height}%`,
-                        backgroundColor: INTERVAL_COLORS[idx],
-                        minHeight: groupedCounts[idx] > 0 ? '20px' : '0px',
-                      }}
-                    >
+                  <div key={interval.label} className="flex flex-col items-center flex-1 h-full">
+                    <div className="flex-1 w-full flex flex-col justify-end">
                       {groupedCounts[idx] > 0 && (
-                        <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-sm font-bold text-gray-700 dark:text-gray-300">
+                        <span className="text-center text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
                           {groupedCounts[idx]}
                         </span>
                       )}
+                      <div
+                        className="w-full rounded-t transition-all duration-300"
+                        style={{
+                          height: `${heightPercent}%`,
+                          backgroundColor: INTERVAL_COLORS[idx],
+                        }}
+                      />
                     </div>
                   </div>
                 );
@@ -276,21 +277,21 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
             <div className="ml-6 h-48 flex items-end justify-around gap-1 border-b-2 border-l-2 border-gray-300 dark:border-gray-600 p-2">
               {INTERVALS.map((interval, idx) => {
-                const height = (CORRECT_COUNTS[idx] / 10) * 100;
+                const maxFreq = Math.max(...CORRECT_COUNTS);
+                const heightPercent = (CORRECT_COUNTS[idx] / maxFreq) * 100;
                 return (
-                  <div key={interval.label} className="flex flex-col items-center flex-1">
-                    <div
-                      className="w-full rounded-t transition-all duration-500 relative"
-                      style={{
-                        height: `${height}%`,
-                        backgroundColor: INTERVAL_COLORS[idx],
-                        minHeight: CORRECT_COUNTS[idx] > 0 ? '20px' : '0px',
-                        animationDelay: `${idx * 100}ms`,
-                      }}
-                    >
-                      <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-sm font-bold text-gray-700 dark:text-gray-300">
+                  <div key={interval.label} className="flex flex-col items-center flex-1 h-full">
+                    <div className="flex-1 w-full flex flex-col justify-end">
+                      <span className="text-center text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
                         {CORRECT_COUNTS[idx]}
                       </span>
+                      <div
+                        className="w-full rounded-t transition-all duration-500"
+                        style={{
+                          height: `${heightPercent}%`,
+                          backgroundColor: INTERVAL_COLORS[idx],
+                        }}
+                      />
                     </div>
                   </div>
                 );
@@ -404,17 +405,20 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             Agrupados en Histograma
           </h4>
           <div className="h-20 flex items-end justify-around gap-1">
-            {CORRECT_COUNTS.map((count, idx) => (
-              <div
-                key={idx}
-                className="flex-1 rounded-t"
-                style={{
-                  height: `${(count / 10) * 100}%`,
-                  backgroundColor: INTERVAL_COLORS[idx],
-                  minHeight: count > 0 ? '8px' : '0px',
-                }}
-              />
-            ))}
+            {CORRECT_COUNTS.map((count, idx) => {
+              const maxFreq = Math.max(...CORRECT_COUNTS);
+              const heightPercent = (count / maxFreq) * 100;
+              return (
+                <div
+                  key={idx}
+                  className="flex-1 rounded-t"
+                  style={{
+                    height: `${heightPercent}%`,
+                    backgroundColor: INTERVAL_COLORS[idx],
+                  }}
+                />
+              );
+            })}
           </div>
           <p className="text-xs text-center text-green-600 dark:text-green-400 mt-2">
             ¡Patron claro!

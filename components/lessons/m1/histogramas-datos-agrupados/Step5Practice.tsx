@@ -260,20 +260,22 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
           <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
             <div className="h-32 flex items-end justify-around gap-1 border-b-2 border-l-2 border-gray-300 dark:border-gray-600 p-2">
               {question.histogram.intervals.map((_, idx) => {
-                const height = (question.histogram!.frequencies[idx] / 20) * 100;
+                const maxFreq = Math.max(...question.histogram!.frequencies);
+                const heightPercent = (question.histogram!.frequencies[idx] / maxFreq) * 100;
                 return (
-                  <div key={idx} className="flex flex-col items-center flex-1">
-                    <span className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">
-                      {question.histogram!.frequencies[idx]}
-                    </span>
-                    <div
-                      className="w-full rounded-t transition-all"
-                      style={{
-                        height: `${height}%`,
-                        backgroundColor: question.histogram!.colors[idx],
-                        minHeight: '8px',
-                      }}
-                    />
+                  <div key={idx} className="flex flex-col items-center flex-1 h-full">
+                    <div className="flex-1 w-full flex flex-col justify-end">
+                      <span className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1 text-center">
+                        {question.histogram!.frequencies[idx]}
+                      </span>
+                      <div
+                        className="w-full rounded-t transition-all"
+                        style={{
+                          height: `${heightPercent}%`,
+                          backgroundColor: question.histogram!.colors[idx],
+                        }}
+                      />
+                    </div>
                   </div>
                 );
               })}
