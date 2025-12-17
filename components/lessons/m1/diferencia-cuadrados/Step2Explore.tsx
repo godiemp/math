@@ -180,14 +180,14 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-3 text-center">
                 Identifica los cuadrados:
               </p>
-              <div className="flex justify-center gap-8 flex-wrap">
+              <div className="flex justify-center items-start gap-8 flex-wrap">
                 <div className="text-center">
                   <div className="bg-white dark:bg-gray-800 rounded-lg p-3 border-2 border-blue-200 dark:border-blue-600 mb-2">
                     <span className="font-mono text-xl text-blue-600">{example.aSquared}</span>
                   </div>
                   <p className="text-sm text-gray-500">a = <span className="font-mono text-blue-600 font-bold">{example.a}</span></p>
                 </div>
-                <div className="flex items-center text-2xl text-gray-400 font-bold">−</div>
+                <div className="flex items-center text-2xl text-gray-400 font-bold h-[52px]">−</div>
                 <div className="text-center">
                   <div className="bg-white dark:bg-gray-800 rounded-lg p-3 border-2 border-purple-200 dark:border-purple-600 mb-2">
                     <span className="font-mono text-xl text-purple-600">{example.bSquared}</span>
