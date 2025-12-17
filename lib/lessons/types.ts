@@ -497,6 +497,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-alg-001-i',
+    slug: 'factorizacion-trinomios-ax2',
+    title: 'Factorización de Trinomios ax² + bx + c',
+    description: 'Domina la factorización de trinomios cuando el coeficiente de x² no es 1, usando el Método AC.',
+    level: 'M1',
+    subject: 'álgebra',
+    thematicUnit: 'M1-ALG-001',
+    skills: ['algebra-factorizacion', 'algebra-factorizacion-trinomios-ax2', 'algebra-metodo-ac'],
+    estimatedMinutes: 16,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'La Bodega de Muebles', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubre el Método AC', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Métodos de Factorización' },
+      { id: 'classify', type: 'explore', title: 'Identifica los Valores m y n', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // GEOMETRÍA
   // ========================================
