@@ -10,7 +10,7 @@ import {
   MOCK_CLASS_ANALYTICS,
   ClassStudent,
 } from '@/lib/types/teacher';
-import { Copy, Check, ArrowLeft, Users, TrendingUp, BookOpen, AlertTriangle } from 'lucide-react';
+import { Copy, Check, ArrowLeft, Users, TrendingUp, BookOpen, AlertTriangle, Settings, Bell, UserX } from 'lucide-react';
 
 function formatTimeAgo(timestamp: number): string {
   const seconds = Math.floor((Date.now() - timestamp) / 1000);
@@ -122,6 +122,13 @@ export default function ClassDetailPage() {
               {classData.schoolName} • {classData.studentCount} estudiantes
             </Text>
           </div>
+          <button
+            onClick={() => router.push(`/teacher/classes/${classId}/edit`)}
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            title="Editar clase"
+          >
+            <Settings className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Stats Overview */}
@@ -214,6 +221,75 @@ export default function ClassDetailPage() {
           </div>
         </Card>
 
+        {/* Actionable Insights */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Inactive Students Alert */}
+          {students.filter(s => s.lastActive && Date.now() - s.lastActive > 3 * 24 * 60 * 60 * 1000).length > 0 && (
+            <Card padding="md" className="bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-orange-100 dark:bg-orange-900/50 rounded-lg flex-shrink-0">
+                  <UserX className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                </div>
+                <div>
+                  <Text className="font-medium text-orange-900 dark:text-orange-100">
+                    {students.filter(s => s.lastActive && Date.now() - s.lastActive > 3 * 24 * 60 * 60 * 1000).length} estudiantes inactivos
+                  </Text>
+                  <Text size="xs" variant="secondary" className="mt-1">
+                    No han practicado en más de 3 días
+                  </Text>
+                  <button className="mt-2 text-xs font-medium text-orange-700 dark:text-orange-300 hover:underline">
+                    Ver estudiantes →
+                  </button>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* Low Accuracy Alert */}
+          {students.filter(s => s.accuracy < 0.6).length > 0 && (
+            <Card padding="md" className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-red-100 dark:bg-red-900/50 rounded-lg flex-shrink-0">
+                  <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
+                </div>
+                <div>
+                  <Text className="font-medium text-red-900 dark:text-red-100">
+                    {students.filter(s => s.accuracy < 0.6).length} necesitan ayuda
+                  </Text>
+                  <Text size="xs" variant="secondary" className="mt-1">
+                    Precisión menor al 60%
+                  </Text>
+                  <button className="mt-2 text-xs font-medium text-red-700 dark:text-red-300 hover:underline">
+                    Ver detalles →
+                  </button>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* Top Performer Highlight */}
+          {students.filter(s => s.accuracy >= 0.9).length > 0 && (
+            <Card padding="md" className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg flex-shrink-0">
+                  <TrendingUp className="w-5 h-5 text-green-600 dark:text-green-400" />
+                </div>
+                <div>
+                  <Text className="font-medium text-green-900 dark:text-green-100">
+                    {students.filter(s => s.accuracy >= 0.9).length} destacados
+                  </Text>
+                  <Text size="xs" variant="secondary" className="mt-1">
+                    Precisión sobre 90% - listos para desafíos
+                  </Text>
+                  <button className="mt-2 text-xs font-medium text-green-700 dark:text-green-300 hover:underline">
+                    Ver estudiantes →
+                  </button>
+                </div>
+              </div>
+            </Card>
+          )}
+        </div>
+
         {/* Tabs */}
         <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700">
           <button
@@ -240,86 +316,159 @@ export default function ClassDetailPage() {
 
         {/* Tab Content */}
         {activeTab === 'roster' && (
-          <Card padding="sm" className="overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50 dark:bg-gray-800">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      <SortButton field="name" label="Estudiante" />
-                    </th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      <SortButton field="accuracy" label="Precisión" />
-                    </th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      <SortButton field="questions" label="Preguntas" />
-                    </th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Lecciones
-                    </th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      <SortButton field="streak" label="Racha" />
-                    </th>
-                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      <SortButton field="lastActive" label="Última Actividad" />
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                  {sortedStudents.map((student) => (
-                    <tr
-                      key={student.id}
-                      onClick={() => router.push(`/teacher/classes/${classId}/students/${student.id}`)}
-                      className="hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 transition-colors cursor-pointer"
-                    >
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-medium">
-                            {student.displayName.charAt(0)}
-                          </div>
-                          <div>
-                            <div className="font-medium text-gray-900 dark:text-white">
-                              {student.displayName}
-                            </div>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {student.email}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-center">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-medium ${getAccuracyBg(
-                            student.accuracy
-                          )} ${getAccuracyColor(student.accuracy)}`}
-                        >
-                          {Math.round(student.accuracy * 100)}%
-                        </span>
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-center text-gray-900 dark:text-white">
-                        {student.questionsAnswered}
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-center text-gray-900 dark:text-white">
-                        {student.lessonsCompleted}
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-center">
-                        {student.currentStreak > 0 ? (
-                          <span className="inline-flex items-center gap-1 text-orange-600 dark:text-orange-400 font-medium">
-                            🔥 {student.currentStreak}
-                          </span>
-                        ) : (
-                          <span className="text-gray-400">-</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-right text-sm text-gray-500 dark:text-gray-400">
-                        {student.lastActive ? formatTimeAgo(student.lastActive) : 'Nunca'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          <>
+            {/* Mobile Sort Controls */}
+            <div className="flex items-center gap-2 md:hidden mb-4 overflow-x-auto pb-2">
+              <Text size="xs" variant="secondary" className="flex-shrink-0">Ordenar:</Text>
+              {(['accuracy', 'questions', 'lastActive'] as const).map((field) => (
+                <button
+                  key={field}
+                  onClick={() => handleSort(field)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
+                    sortField === field
+                      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                      : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                  }`}
+                >
+                  {field === 'accuracy' && 'Precisión'}
+                  {field === 'questions' && 'Preguntas'}
+                  {field === 'lastActive' && 'Actividad'}
+                  {sortField === field && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
+                </button>
+              ))}
             </div>
-          </Card>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-3">
+              {sortedStudents.map((student) => (
+                <Card
+                  key={student.id}
+                  padding="md"
+                  className="cursor-pointer hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors"
+                  onClick={() => router.push(`/teacher/classes/${classId}/students/${student.id}`)}
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-medium text-lg">
+                      {student.displayName.charAt(0)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-gray-900 dark:text-white truncate">
+                        {student.displayName}
+                      </div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {student.lastActive ? formatTimeAgo(student.lastActive) : 'Nunca activo'}
+                      </div>
+                    </div>
+                    <span
+                      className={`px-3 py-1.5 rounded-full text-sm font-bold ${getAccuracyBg(
+                        student.accuracy
+                      )} ${getAccuracyColor(student.accuracy)}`}
+                    >
+                      {Math.round(student.accuracy * 100)}%
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div className="p-2 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                      <div className="font-bold text-gray-900 dark:text-white">{student.questionsAnswered}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">preguntas</div>
+                    </div>
+                    <div className="p-2 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                      <div className="font-bold text-gray-900 dark:text-white">{student.lessonsCompleted}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">lecciones</div>
+                    </div>
+                    <div className="p-2 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                      <div className="font-bold text-orange-600 dark:text-orange-400">
+                        {student.currentStreak > 0 ? `🔥 ${student.currentStreak}` : '-'}
+                      </div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">racha</div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <Card padding="sm" className="overflow-hidden hidden md:block">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50 dark:bg-gray-800">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        <SortButton field="name" label="Estudiante" />
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        <SortButton field="accuracy" label="Precisión" />
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        <SortButton field="questions" label="Preguntas" />
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Lecciones
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        <SortButton field="streak" label="Racha" />
+                      </th>
+                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        <SortButton field="lastActive" label="Última Actividad" />
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {sortedStudents.map((student) => (
+                      <tr
+                        key={student.id}
+                        onClick={() => router.push(`/teacher/classes/${classId}/students/${student.id}`)}
+                        className="hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 transition-colors cursor-pointer"
+                      >
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-medium">
+                              {student.displayName.charAt(0)}
+                            </div>
+                            <div>
+                              <div className="font-medium text-gray-900 dark:text-white">
+                                {student.displayName}
+                              </div>
+                              <div className="text-sm text-gray-500 dark:text-gray-400">
+                                {student.email}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-center">
+                          <span
+                            className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-medium ${getAccuracyBg(
+                              student.accuracy
+                            )} ${getAccuracyColor(student.accuracy)}`}
+                          >
+                            {Math.round(student.accuracy * 100)}%
+                          </span>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-center text-gray-900 dark:text-white">
+                          {student.questionsAnswered}
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-center text-gray-900 dark:text-white">
+                          {student.lessonsCompleted}
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-center">
+                          {student.currentStreak > 0 ? (
+                            <span className="inline-flex items-center gap-1 text-orange-600 dark:text-orange-400 font-medium">
+                              🔥 {student.currentStreak}
+                            </span>
+                          ) : (
+                            <span className="text-gray-400">-</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-right text-sm text-gray-500 dark:text-gray-400">
+                          {student.lastActive ? formatTimeAgo(student.lastActive) : 'Nunca'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+          </>
         )}
 
         {activeTab === 'analytics' && (
