@@ -96,17 +96,11 @@ Cuando resuelves una inecuación, hay una regla que muchos olvidan: al multiplic
 
 **El error:**
 
-$$\begin{aligned}
--2x &< 6 \\
-x &< -3
-\end{aligned}$$ ❌
+$-2x < 6 \quad \Rightarrow \quad x < -3$ ❌
 
 **Lo correcto:**
 
-$$\begin{aligned}
--2x &< 6 \\
-x &> -3
-\end{aligned}$$ ✓
+$-2x < 6 \quad \Rightarrow \quad x > -3$ ✓
 
 Al dividir ambos lados por $-2$, el $<$ se convierte en $>$.
 
