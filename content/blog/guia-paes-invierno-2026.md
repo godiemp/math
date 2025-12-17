@@ -120,6 +120,28 @@ Tienes aproximadamente **3 meses** entre la inscripción y la prueba. Aquí hay 
 
 Recuerda: los puntajes de la PAES Invierno son **válidos para el mismo proceso de admisión** que la Regular. No hay diferencia en cómo las universidades los consideran.
 
+## ¿Puedo mezclar puntajes de diferentes rendiciones?
+
+**Sí.** Al momento de postular, puedes usar **el mejor puntaje obtenido en cada prueba**, sin importar en qué rendición lo obtuviste.
+
+Por ejemplo, para Admisión 2026 puedes combinar:
+- Tu mejor M1 de PAES Invierno 2025
+- Tu mejor Competencia Lectora de PAES Regular 2024
+- Tu mejor M2 de PAES Regular 2025
+
+**Rendiciones válidas para Admisión 2026:**
+- PAES Invierno 2024
+- PAES Regular 2024
+- PAES Invierno 2025
+- PAES Regular 2025
+
+Esto significa que si ya tienes un buen puntaje en Lectora pero quieres mejorar en Matemáticas, puedes rendir solo M1 y M2 en la PAES de Invierno y conservar tu puntaje anterior en las otras pruebas.
+
+**Requisitos para postular:**
+- Tener puntaje válido en ambas pruebas obligatorias (Lectora y M1)
+- Tener puntaje en al menos una prueba electiva (Ciencias o Historia)
+- Tener M2 si tu carrera lo exige
+
 ## Fuentes y recursos oficiales
 
 **Información general PAES Invierno:**
