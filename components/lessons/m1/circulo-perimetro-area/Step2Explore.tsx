@@ -541,8 +541,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
     // Calculate slice chord width (width at the arc)
     const sliceChordWidth = 2 * radius * Math.sin(halfAngle);
-    // Total rectangle width: each pair of slices (one up, one down) occupies one sliceChordWidth
-    const actualRectWidth = (numSlices / 2) * sliceChordWidth;
+    // Total rectangle width
+    const actualRectWidth = numSlices * (sliceChordWidth / 2);
     const rectStartX = circleCenterX - actualRectWidth / 2;
 
     // Circle view: rotate each slice to its position in the circle
@@ -553,12 +553,10 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     });
 
     // Rectangle view: simple 0° or 180° rotation
-    // Pairs of slices (one up, one down) share the same X position
     const getRectanglePosition = (index: number) => {
       const isDown = index % 2 === 0;
-      const pairIndex = Math.floor(index / 2);
       return {
-        x: rectStartX + (pairIndex + 0.5) * sliceChordWidth,
+        x: rectStartX + (index + 0.5) * (sliceChordWidth / 2),
         y: isDown ? rectCenterY - radius / 2 : rectCenterY + radius / 2,
         rotate: isDown ? 180 : 0,
       };
