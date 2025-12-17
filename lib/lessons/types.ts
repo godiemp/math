@@ -650,6 +650,24 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-geo-002-a',
+    slug: 'circulo-perimetro-area',
+    title: 'Circunferencia y Área del Círculo',
+    description: 'Descubre Pi (π) y aprende a calcular la circunferencia y el área de círculos.',
+    level: 'M1',
+    subject: 'geometría',
+    thematicUnit: 'M1-GEO-002',
+    skills: ['circunferencia-circulo', 'area-circulo', 'pi-concepto'],
+    estimatedMinutes: 12,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'La Rueda de la Fortuna', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubriendo Pi (π)', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Fórmulas del Círculo' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // PROBABILIDAD Y ESTADÍSTICA
   // ========================================
