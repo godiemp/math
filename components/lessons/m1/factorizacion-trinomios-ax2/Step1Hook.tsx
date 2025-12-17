@@ -257,26 +257,49 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
             {/* Warehouse visualization */}
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400 text-center mb-4">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400 text-center mb-6">
                 La bodega de Carlos tiene dimensiones:
               </p>
               <div className="flex justify-center">
-                <div className="relative">
+                <div className="relative pt-4 pb-12 pl-16 pr-4">
                   {/* Rectangle representing warehouse */}
-                  <div className="w-56 h-32 bg-gradient-to-br from-amber-200 to-orange-300 dark:from-amber-800 dark:to-orange-700 rounded-lg border-2 border-amber-500 flex items-center justify-center">
-                    <span className="font-mono text-lg text-amber-800 dark:text-amber-200">
-                      2x² + 7x + 3
-                    </span>
+                  <div className="w-56 h-36 bg-gradient-to-br from-amber-200 to-orange-300 dark:from-amber-800 dark:to-orange-700 rounded-lg border-2 border-amber-500 flex items-center justify-center shadow-md">
+                    <div className="text-center">
+                      <p className="text-xs text-amber-700 dark:text-amber-300 mb-1">Área</p>
+                      <span className="font-mono text-xl text-amber-800 dark:text-amber-200 font-bold">
+                        2x² + 7x + 3
+                      </span>
+                    </div>
                   </div>
-                  {/* Width label */}
-                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
-                    <span className="font-mono text-blue-600 font-bold bg-white dark:bg-gray-800 px-2 rounded">
+
+                  {/* Width dimension line (bottom) */}
+                  <div className="absolute -bottom-2 left-16 right-4 flex flex-col items-center">
+                    <svg className="w-full h-6" viewBox="0 0 224 24">
+                      {/* Left arrow */}
+                      <path d="M 0 12 L 8 6 L 8 18 Z" fill="currentColor" className="text-blue-600" />
+                      {/* Right arrow */}
+                      <path d="M 224 12 L 216 6 L 216 18 Z" fill="currentColor" className="text-blue-600" />
+                      {/* Line */}
+                      <line x1="8" y1="12" x2="216" y2="12" stroke="currentColor" strokeWidth="2" className="text-blue-600" />
+                    </svg>
+                    <span className="font-mono text-blue-600 font-bold text-lg bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-sm border border-blue-200 dark:border-blue-700 -mt-1">
                       x + 3
                     </span>
                   </div>
-                  {/* Height label */}
-                  <div className="absolute -right-14 top-1/2 transform -translate-y-1/2">
-                    <span className="font-mono text-blue-600 font-bold bg-white dark:bg-gray-800 px-2 rounded">
+
+                  {/* Height dimension line (left) */}
+                  <div className="absolute top-4 -left-2 bottom-12 flex items-center">
+                    <div className="flex flex-col items-center h-36">
+                      <svg className="h-full w-6" viewBox="0 0 24 144">
+                        {/* Top arrow */}
+                        <path d="M 12 0 L 6 8 L 18 8 Z" fill="currentColor" className="text-blue-600" />
+                        {/* Bottom arrow */}
+                        <path d="M 12 144 L 6 136 L 18 136 Z" fill="currentColor" className="text-blue-600" />
+                        {/* Line */}
+                        <line x1="12" y1="8" x2="12" y2="136" stroke="currentColor" strokeWidth="2" className="text-blue-600" />
+                      </svg>
+                    </div>
+                    <span className="font-mono text-blue-600 font-bold text-lg bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-sm border border-blue-200 dark:border-blue-700 -ml-14 whitespace-nowrap">
                       2x + 1
                     </span>
                   </div>
