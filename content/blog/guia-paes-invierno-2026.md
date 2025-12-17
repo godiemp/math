@@ -132,10 +132,23 @@ Tienes aproximadamente **3 meses** entre la inscripción y la prueba. Aquí hay 
 
 Recuerda: los puntajes de la PAES Invierno son **válidos para el mismo proceso de admisión** que la Regular. No hay diferencia en cómo las universidades los consideran.
 
-## Recursos oficiales
+## Fuentes y recursos oficiales
 
+**Información general PAES Invierno:**
+- [DEMRE - PAES de Invierno Admisión 2026](https://demre.cl/proceso-admision/prueba-invierno)
+- [Acceso Mineduc - Aplicación de Invierno](https://acceso.mineduc.cl/aplicacion-de-invierno/)
+- [Mineduc - Inscripción PAES Invierno 2025](https://acceso.mineduc.cl/blog/2025/03/05/hoy-se-inicia-el-periodo-de-inscripcion-a-la-paes-de-invierno-2025-admision-2026/)
+
+**Temario y cambios 2026:**
 - [DEMRE - Temario M1 Invierno 2026](https://demre.cl/publicaciones/2026/2026-25-01-24-temario-paes-invierno-m1)
-- [Acceso Mineduc - Inscripción](https://acceso.mineduc.cl/portal-inscripcion/)
+- [Red de Matemáticas - Novedades Temario M1 2026](https://matematicas.cl/temarios-paes-2025-novedades-en-matematicas-m1-para-la-admision-2026/)
+
+**Resultados y estadísticas:**
+- [Mineduc - Resultados PAES 2025](https://www.mineduc.cl/resultados-de-la-paes-231-mil-personas-estan-habilitadas-para-postular-a-las-universidades-del-sistema-de-acceso-a-la-educacion-superior/)
+- [DEMRE - Resultados PAES 2025](https://demre.cl/noticias/2025-01-06-resultados-paes-231-mil-habilitados-para-postular)
+
+**Inscripción y calendario:**
+- [Portal de Inscripción PAES](https://acceso.mineduc.cl/portal-inscripcion/)
 - [Calendario Admisión 2026](https://demre.cl/calendario/calendario-proceso-2026)
 
 ---
