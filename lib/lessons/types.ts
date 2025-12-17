@@ -634,6 +634,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-prob-004-c',
+    slug: 'probabilidad-condicional',
+    title: 'Probabilidad Condicional e Independencia',
+    description: 'Aprende a calcular probabilidades cuando tienes información adicional y a identificar eventos independientes.',
+    level: 'M1',
+    subject: 'probabilidad',
+    thematicUnit: 'M1-PROB-004',
+    skills: ['probabilidad-condicional', 'eventos-independientes', 'regla-multiplicacion'],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Pronóstico del Tiempo', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Probabilidad Condicional' },
+      { id: 'classify', type: 'explore', title: 'Clasifica los Eventos', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
 ];
 
 /**
