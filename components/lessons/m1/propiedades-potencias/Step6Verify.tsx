@@ -23,7 +23,7 @@ const QUESTIONS: CheckpointQuestion[] = [
   {
     id: 'q3',
     question: '¿Cuál es el resultado de (2³)⁴?',
-    options: ['2⁷ = 128', '2¹² = 4096', '8⁴ = 4096', '2⁴³ = muy grande'],
+    options: ['2⁷ = 128', '2¹² = 4096', '2³⁴ = muy grande', '2⁴ = 16'],
     correctAnswer: 1,
     explanation:
       '(2³)⁴ = 2³ˣ⁴ = 2¹² = 4096. Al elevar una potencia a otro exponente, multiplicamos los exponentes.',
