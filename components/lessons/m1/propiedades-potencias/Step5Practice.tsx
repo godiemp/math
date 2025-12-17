@@ -35,7 +35,7 @@ const PROBLEMS: Problem[] = [
     id: 'p3',
     question: 'Simplifica: (3²)⁴',
     hint: 'Potencia de una potencia: multiplica los exponentes.',
-    options: ['3⁶ = 729', '3⁸ = 6561', '9⁴ = 6561', '3² = 9'],
+    options: ['3⁶ = 729', '3⁸ = 6561', '3²⁴ = muy grande', '3² = 9'],
     correctAnswer: 1,
     explanation: '(3²)⁴ = 3²ˣ⁴ = 3⁸ = 6561. Al elevar una potencia a otro exponente, multiplicamos los exponentes.',
   },
