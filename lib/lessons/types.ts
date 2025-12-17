@@ -323,6 +323,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-num-003-c',
+    slug: 'propiedades-potencias',
+    title: 'Propiedades de las Potencias',
+    description: 'Domina las propiedades de las potencias: producto, cociente y potencia de potencia.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-003',
+    skills: ['potencias-producto', 'potencias-cociente', 'potencias-potencia-de-potencia'],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Secreto del Científico', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubre las Propiedades', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Propiedades de las Potencias' },
+      { id: 'classify', type: 'explore', title: 'Identifica la Propiedad', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // ÁLGEBRA Y FUNCIONES
   // ========================================
