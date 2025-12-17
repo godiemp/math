@@ -21,7 +21,7 @@ export default function EcuacionesProblemasLesson() {
   if (!lesson) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500">Leccion no encontrada</p>
+        <p className="text-gray-500">Lección no encontrada</p>
       </div>
     );
   }
