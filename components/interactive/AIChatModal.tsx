@@ -89,6 +89,7 @@ export function AIChatModal({ isOpen, onClose, question, userAnswer, quizMode = 
 
     try {
       const response = await api.post<{ response: string; success: boolean }>('/api/ai/chat', {
+        question: question.questionLatex,
         questionLatex: question.questionLatex,
         userAnswer: userAnswer,
         correctAnswer: question.correctAnswer,
