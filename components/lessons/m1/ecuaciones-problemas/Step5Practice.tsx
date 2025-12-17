@@ -16,47 +16,47 @@ interface Problem {
 
 const PROBLEMS: Problem[] = [
   {
-    problem: 'Ana tiene el doble de edad que su hermano. La suma de sus edades es 24 anos. ¿Cuantos anos tiene Ana?',
+    problem: 'Ana tiene el doble de edad que su hermano. La suma de sus edades es 24 años. ¿Cuántos años tiene Ana?',
     equation: 'x + 2x = 24',
-    options: ['8 anos', '12 anos', '16 anos', '18 anos'],
+    options: ['8 años', '12 años', '16 años', '18 años'],
     correctIndex: 2,
-    hint: 'Si el hermano tiene x anos, Ana tiene 2x anos. Juntos: x + 2x = 24.',
-    solution: 'x + 2x = 24 → 3x = 24 → x = 8 (hermano). Ana = 2(8) = 16 anos.',
+    hint: 'Si el hermano tiene x años, Ana tiene 2x años. Juntos: x + 2x = 24.',
+    solution: 'x + 2x = 24 → 3x = 24 → x = 8 (hermano). Ana = 2(8) = 16 años.',
   },
   {
-    problem: 'Un rectangulo tiene perimetro de 40 cm. El largo es 4 cm mas que el ancho. ¿Cual es el ancho?',
+    problem: 'Un rectángulo tiene perímetro de 40 cm. El largo es 4 cm más que el ancho. ¿Cuál es el ancho?',
     equation: '2x + 2(x + 4) = 40',
     options: ['6 cm', '8 cm', '10 cm', '12 cm'],
     correctIndex: 1,
-    hint: 'Si ancho = x, largo = x + 4. Perimetro = 2(ancho) + 2(largo).',
+    hint: 'Si ancho = x, largo = x + 4. Perímetro = 2(ancho) + 2(largo).',
     solution: '2x + 2(x+4) = 40 → 2x + 2x + 8 = 40 → 4x = 32 → x = 8 cm.',
   },
   {
-    problem: 'En una tienda, 3 lapices y 1 borrador cuestan $10. Si cada borrador cuesta $1, ¿cuanto cuesta cada lapiz?',
+    problem: 'En una tienda, 3 lápices y 1 borrador cuestan $10. Si cada borrador cuesta $1, ¿cuánto cuesta cada lápiz?',
     equation: '3x + 1 = 10',
     options: ['$2', '$3', '$4', '$5'],
     correctIndex: 1,
-    hint: '3 lapices a $x cada uno + 1 borrador a $1 = $10 total.',
-    solution: '3x + 1 = 10 → 3x = 9 → x = 3. Cada lapiz cuesta $3.',
+    hint: '3 lápices a $x cada uno + 1 borrador a $1 = $10 total.',
+    solution: '3x + 1 = 10 → 3x = 9 → x = 3. Cada lápiz cuesta $3.',
   },
   {
-    problem: 'El triple de un numero disminuido en 5 es igual a 16. ¿Cual es el numero?',
+    problem: 'El triple de un número disminuido en 5 es igual a 16. ¿Cuál es el número?',
     equation: '3x - 5 = 16',
     options: ['5', '7', '9', '11'],
     correctIndex: 1,
-    hint: '"El triple de un numero" es 3x, "disminuido en 5" significa restar 5.',
+    hint: '"El triple de un número" es 3x, "disminuido en 5" significa restar 5.',
     solution: '3x - 5 = 16 → 3x = 21 → x = 7.',
   },
   {
-    problem: 'Maria gasto la mitad de su dinero en un libro. Si le quedaron $15, ¿cuanto tenia inicialmente?',
+    problem: 'María gastó la mitad de su dinero en un libro. Si le quedaron $15, ¿cuánto tenía inicialmente?',
     equation: 'x - x/2 = 15',
     options: ['$25', '$30', '$35', '$40'],
     correctIndex: 1,
-    hint: 'Tenia x, gasto x/2, le quedo x - x/2 = 15.',
-    solution: 'x - x/2 = 15 → x/2 = 15 → x = 30. Tenia $30.',
+    hint: 'Tenía x, gastó x/2, le quedó x - x/2 = 15.',
+    solution: 'x - x/2 = 15 → x/2 = 15 → x = 30. Tenía $30.',
   },
   {
-    problem: 'Dos numeros consecutivos suman 47. ¿Cual es el numero menor?',
+    problem: 'Dos números consecutivos suman 47. ¿Cuál es el número menor?',
     equation: 'x + (x + 1) = 47',
     options: ['22', '23', '24', '25'],
     correctIndex: 1,
@@ -129,7 +129,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
       {/* Title */}
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          Practica Guiada
+          Práctica Guiada
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
           Necesitas {REQUIRED_CORRECT} de {PROBLEMS.length} correctas para avanzar
@@ -181,7 +181,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
 
             {/* Equation hint */}
             <div className="text-center mb-4">
-              <span className="text-sm text-gray-500 dark:text-gray-400">Ecuacion: </span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Ecuación: </span>
               <span className="font-mono font-bold text-purple-600 dark:text-purple-400">
                 {problem.equation}
               </span>

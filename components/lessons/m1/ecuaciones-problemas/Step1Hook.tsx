@@ -55,7 +55,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           {/* Scenario */}
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-2xl p-6 border border-blue-200 dark:border-blue-800">
             <p className="text-gray-700 dark:text-gray-300 text-lg mb-6">
-              Claudia fue a la tienda y compro lo siguiente:
+              Claudia fue a la tienda y compró lo siguiente:
             </p>
 
             {/* Shopping display */}
@@ -100,7 +100,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             </div>
 
             <p className="text-center text-gray-600 dark:text-gray-400 text-lg font-medium">
-              ¿Cuanto cuesta cada cuaderno?
+              ¿Cuánto cuesta cada cuaderno?
             </p>
           </div>
 
@@ -110,7 +110,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               onClick={() => setPhase('question')}
               className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg"
             >
-              <span>¿Cual ecuacion representa esto?</span>
+              <span>¿Cuál ecuación representa esto?</span>
               <ArrowRight size={20} />
             </button>
           </div>
@@ -122,7 +122,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           {/* Question */}
           <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-6 text-center border border-purple-200 dark:border-purple-700">
             <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-              Si x es el precio de cada cuaderno, ¿cual ecuacion representa el problema?
+              Si x es el precio de cada cuaderno, ¿cuál ecuación representa el problema?
             </p>
           </div>
 
@@ -202,7 +202,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               )}
             >
               <p className={cn('font-semibold', isCorrect ? 'text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300')}>
-                {isCorrect ? '¡Exacto!' : '¡Casi!'} Veamos como resolver este problema...
+                {isCorrect ? '¡Exacto!' : '¡Casi!'} Veamos cómo resolver este problema...
               </p>
             </div>
           )}
@@ -220,7 +220,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             <div className="space-y-4">
               {/* Step 1: Identify */}
               <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-                <p className="font-semibold text-blue-600 dark:text-blue-400 mb-2">1. Identificar la incognita</p>
+                <p className="font-semibold text-blue-600 dark:text-blue-400 mb-2">1. Identificar la incógnita</p>
                 <p className="text-gray-700 dark:text-gray-300">
                   <span className="font-mono bg-blue-100 dark:bg-blue-900/50 px-2 py-1 rounded">x</span> = precio de cada cuaderno
                 </p>
@@ -228,7 +228,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
               {/* Step 2: Translate */}
               <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-                <p className="font-semibold text-purple-600 dark:text-purple-400 mb-2">2. Traducir a ecuacion</p>
+                <p className="font-semibold text-purple-600 dark:text-purple-400 mb-2">2. Traducir a ecuación</p>
                 <div className="flex flex-wrap items-center gap-2 text-gray-700 dark:text-gray-300">
                   <span className="bg-blue-100 dark:bg-blue-900/50 px-2 py-1 rounded font-mono">2x</span>
                   <span>(2 cuadernos)</span>
@@ -243,7 +243,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
               {/* Step 3: Solve */}
               <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-                <p className="font-semibold text-green-600 dark:text-green-400 mb-2">3. Resolver la ecuacion</p>
+                <p className="font-semibold text-green-600 dark:text-green-400 mb-2">3. Resolver la ecuación</p>
                 <div className="space-y-2 font-mono text-lg">
                   <p>2x + 5 = 17</p>
                   <p>2x = 17 - 5</p>
@@ -275,7 +275,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                     Los problemas de la vida real se pueden traducir a <strong>ecuaciones</strong>.
                   </p>
                   <p className="text-sm mt-2">
-                    Aprende a identificar la incognita, armar la ecuacion y resolverla paso a paso.
+                    Aprende a identificar la incógnita, armar la ecuación y resolverla paso a paso.
                   </p>
                 </div>
               </div>

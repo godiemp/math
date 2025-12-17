@@ -18,7 +18,7 @@ interface ClassifyProblem {
 const CLASSIFY_PROBLEMS: ClassifyProblem[] = [
   {
     id: '1',
-    problem: 'Juan tiene 3 veces mas dinero que Pedro. Juntos tienen $80.',
+    problem: 'Juan tiene 3 veces más dinero que Pedro. Juntos tienen $80.',
     options: ['x + 3x = 80', '3x = 80', 'x + 3 = 80', 'x - 3x = 80'],
     correctIndex: 0,
     explanation: 'Si Pedro tiene x, Juan tiene 3x. Juntos: x + 3x = 80',
@@ -27,7 +27,7 @@ const CLASSIFY_PROBLEMS: ClassifyProblem[] = [
   },
   {
     id: '2',
-    problem: 'Un numero aumentado en 12 es igual a 45.',
+    problem: 'Un número aumentado en 12 es igual a 45.',
     options: ['x - 12 = 45', '12x = 45', 'x + 12 = 45', 'x / 12 = 45'],
     correctIndex: 2,
     explanation: '"Aumentado en" significa sumar: x + 12 = 45',
@@ -36,16 +36,16 @@ const CLASSIFY_PROBLEMS: ClassifyProblem[] = [
   },
   {
     id: '3',
-    problem: 'La mitad de un numero menos 3 es 10.',
+    problem: 'La mitad de un número menos 3 es 10.',
     options: ['x/2 - 3 = 10', '(x - 3)/2 = 10', '2x - 3 = 10', 'x - 3/2 = 10'],
     correctIndex: 0,
-    explanation: '"La mitad de un numero" es x/2, luego le restamos 3: x/2 - 3 = 10',
+    explanation: '"La mitad de un número" es x/2, luego le restamos 3: x/2 - 3 = 10',
     answered: false,
     isCorrect: null,
   },
   {
     id: '4',
-    problem: 'El doble de la suma de un numero y 4 es 18.',
+    problem: 'El doble de la suma de un número y 4 es 18.',
     options: ['2x + 4 = 18', '2(x + 4) = 18', 'x + 4 = 18/2', '2x + 8 = 18'],
     correctIndex: 1,
     explanation: 'Primero "la suma de x y 4" es (x + 4), luego "el doble de" es 2(x + 4)',
@@ -54,10 +54,10 @@ const CLASSIFY_PROBLEMS: ClassifyProblem[] = [
   },
   {
     id: '5',
-    problem: 'Si a un numero le resto 7 obtengo el triple del numero.',
+    problem: 'Si a un número le resto 7 obtengo el triple del número.',
     options: ['x - 7 = 3x', '7 - x = 3x', 'x - 7 = 3', '3(x - 7) = x'],
     correctIndex: 0,
-    explanation: '"A un numero le resto 7" es x - 7, "el triple del numero" es 3x',
+    explanation: '"A un número le resto 7" es x - 7, "el triple del número" es 3x',
     answered: false,
     isCorrect: null,
   },
@@ -108,7 +108,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
       {/* Title */}
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          Identifica la Ecuacion
+          Identifica la Ecuación
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
           {!showComplete
@@ -152,7 +152,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
             </p>
 
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 text-center">
-              ¿Que ecuacion representa este problema?
+              ¿Qué ecuación representa este problema?
             </p>
 
             {/* Options */}
