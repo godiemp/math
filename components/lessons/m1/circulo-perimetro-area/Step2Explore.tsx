@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowRight, Check, Sparkles, Lightbulb, Play, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
@@ -19,31 +19,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
 
-  // Motion values for synchronized unroll animation
-  const unrollProgress = useMotionValue(0);
-
   // Circle parameters
   const circleRadius = 45;
-  const circumference = 2 * Math.PI * circleRadius;
   const lineLength = 280; // Length of unrolled line
-
-  // Derived transforms - synchronized with unrollProgress (0 to 1)
-  const circleRotation = useTransform(unrollProgress, [0, 1], [0, 360]);
-  const strokeOffset = useTransform(unrollProgress, [0, 1], [0, circumference]);
-
-  // Start unroll animation
-  const startUnrollAnimation = () => {
-    unrollProgress.set(0);
-    animate(unrollProgress, 1, {
-      duration: 2.5,
-      ease: [0.4, 0, 0.2, 1],
-    });
-  };
-
-  // Reset unroll animation
-  const resetUnrollAnimation = () => {
-    unrollProgress.set(0);
-  };
 
   // Auto-advance animation steps
   useEffect(() => {
@@ -57,12 +35,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             setIsPlaying(false);
             return maxStep as AnimStep;
           }
-          const nextStep = (prev + 1) as AnimStep;
-          // Start unroll animation at step 1
-          if (nextStep === 1) {
-            startUnrollAnimation();
-          }
-          return nextStep;
+          return (prev + 1) as AnimStep;
         });
       } else if (phase === 'area') {
         setAreaStep(prev => {
@@ -172,15 +145,15 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   if (phase === 'circumference') {
     const stepDescriptions = [
       'Este círculo tiene diámetro d. Observa su borde (la circunferencia).',
-      '¡El círculo gira y su borde se desenrolla en una línea recta!',
+      '¡El círculo rueda y su borde se desenrolla en una línea recta!',
       '¿Cuántas veces cabe el diámetro en la circunferencia? ¡Exactamente π veces!',
       'Por eso: Circunferencia = π × diámetro = πd',
     ];
 
-    const circleX = 60; // Circle center X position
-    const circleY = 75; // Circle center Y position
-    const lineStartX = circleX; // Line starts where circle touches
+    const circleStartX = 50; // Circle starting X position
+    const circleY = 70; // Circle center Y position
     const lineY = circleY + circleRadius; // Line is at bottom of circle
+    const lineStartX = circleStartX; // Line starts where circle starts
 
     return (
       <div className="space-y-6 animate-fadeIn pb-32">
@@ -222,31 +195,26 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               {/* Ground line - the surface the circle "rolls" on */}
               <line x1="15" y1={lineY} x2="325" y2={lineY} stroke="#cbd5e1" strokeWidth="2" />
 
-              {/* CIRCLE - rotates and unwinds */}
+              {/* CIRCLE - rolls to the right */}
               <motion.g
-                style={{
-                  rotate: circumStep >= 1 ? circleRotation : 0,
-                  x: 0,
-                  y: 0,
+                initial={{ x: circleStartX, rotate: 0 }}
+                animate={{
+                  x: circumStep >= 1 ? circleStartX + lineLength : circleStartX,
+                  rotate: circumStep >= 1 ? 360 : 0,
                 }}
-                initial={{ rotate: 0 }}
+                transition={{ duration: 2.5, ease: [0.4, 0, 0.2, 1] }}
+                style={{ originX: 0, originY: `${circleY}px` }}
               >
-                <g transform={`translate(${circleX}, ${circleY})`}>
+                <g transform={`translate(0, ${circleY})`}>
                   {/* Circle fill */}
                   <circle r={circleRadius} fill="#ccfbf1" />
 
-                  {/* Circle stroke - disappears as it unrolls */}
-                  <motion.circle
+                  {/* Circle stroke */}
+                  <circle
                     r={circleRadius}
                     fill="none"
                     stroke="#0d9488"
                     strokeWidth="4"
-                    strokeDasharray={circumference}
-                    style={{
-                      strokeDashoffset: circumStep >= 1 ? strokeOffset : 0,
-                    }}
-                    strokeLinecap="round"
-                    transform="rotate(-90)"
                   />
 
                   {/* Center point */}
@@ -256,7 +224,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   <line x1={-circleRadius + 5} y1="0" x2={circleRadius - 5} y2="0" stroke="#7c3aed" strokeWidth="3" />
                   <text x="0" y="-8" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#7c3aed">d</text>
 
-                  {/* Marker dot at starting point (bottom of circle) */}
+                  {/* Marker dot at contact point (bottom of circle) */}
                   <circle cx="0" cy={circleRadius} r="6" fill="#dc2626" />
                 </g>
               </motion.g>
@@ -429,7 +397,6 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               onClick={() => {
                 if (circumStep >= 3) {
                   setCircumStep(0);
-                  resetUnrollAnimation();
                   setTimeout(() => setIsPlaying(true), 100);
                 } else {
                   setIsPlaying(true);
@@ -446,7 +413,6 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 onClick={() => {
                   setIsPlaying(false);
                   setCircumStep(0);
-                  resetUnrollAnimation();
                 }}
                 className="flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
               >
@@ -519,7 +485,6 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             onClick={() => {
               setCircumStep(0);
               setIsPlaying(false);
-              resetUnrollAnimation();
               setPhase('area');
             }}
             disabled={circumStep < 3}
