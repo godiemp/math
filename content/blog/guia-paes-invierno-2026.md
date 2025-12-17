@@ -78,19 +78,30 @@ Esto no significa que no puedas destacar viniendo de cualquier tipo de colegio. 
 
 ## Estrategia de preparación para PAES Invierno
 
+Si ya sabes que vas a rendir la PAES de Invierno, **no esperes hasta marzo para empezar**. Mientras antes comiences, más tiempo tendrás para cerrar brechas importantes—especialmente si estás lejos de tu puntaje objetivo.
+
+### Si empiezas en enero-febrero (ideal)
+
+Tienes 4-5 meses antes de la prueba. Esto te permite:
+- Hacer un diagnóstico profundo de tus lagunas
+- Trabajar temas desde la base si es necesario
+- Subir de nivel gradualmente sin presión extrema
+
+### Si empiezas en marzo (mínimo recomendado)
+
 Tienes aproximadamente **3 meses** entre la inscripción y la prueba. Aquí hay un plan realista:
 
-### Marzo (después de inscribirte)
+**Marzo (después de inscribirte)**
 
 1. **Diagnóstico inicial:** Identifica tus lagunas específicas. No estudies "matemáticas en general"—descubre exactamente qué temas te cuestan.
 2. **Revisa el temario oficial:** Asegúrate de que tu material de estudio cubra los contenidos del temario vigente en [demre.cl](https://demre.cl).
 
-### Abril-Mayo
+**Abril-Mayo**
 
 3. **Práctica activa diaria:** 30-45 minutos de ejercicios. No leer teoría—resolver problemas.
 4. **Enfócate en lo que pesa:** Álgebra y funciones aparecen en muchas preguntas. Números y porcentajes son puntos "fáciles" que no puedes perder.
 
-### Junio (semanas antes)
+**Junio (semanas antes)**
 
 5. **Ensayos completos:** Simula la prueba real con 65 preguntas en 140 minutos.
 6. **Revisa errores, no solo respuestas:** Cada error es información sobre qué reforzar.
