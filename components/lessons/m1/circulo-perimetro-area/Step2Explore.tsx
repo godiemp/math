@@ -551,37 +551,35 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
     // Calculate slice chord width (width at the arc)
     const sliceChordWidth = 2 * radius * Math.sin(sliceAngle / 2);
-    // Total rectangle width when slices interlock
-    const actualRectWidth = (numSlices / 2) * sliceChordWidth;
+    // Total rectangle width: each slice takes half its chord width when interlocking
+    const actualRectWidth = numSlices * (sliceChordWidth / 2);
     const rectStartX = circleCenterX - actualRectWidth / 2;
 
-    // Final positions for rectangle arrangement - with correct rotation math
+    // Final positions for rectangle arrangement
     const getRectanglePosition = (index: number) => {
       // Each slice's center angle in the original circle (in degrees)
-      // Slice 0 points at -90° (top), slice 1 at -90° + sliceAngle, etc.
       const sliceAngleDeg = (360 / numSlices);
       const originalAngle = (index + 0.5) * sliceAngleDeg - 90;
 
       // Target angle in SVG coords (Y increases downward):
       // - 90° = pointing down (arc at bottom)
-      // - -90° (270°) = pointing up (arc at top)
+      // - -90° = pointing up (arc at top)
       const isPointingDown = index % 2 === 0;
       const targetAngle = isPointingDown ? 90 : -90;
 
       // Rotation needed = target - original
       const rotation = targetAngle - originalAngle;
 
-      // X position: pair slices side by side
-      // Even index (0,2,4...) and odd index (1,3,5...) pair up
-      // Each pair occupies sliceChordWidth
-      const pairIndex = Math.floor(index / 2);
-      const xPosition = rectStartX + sliceChordWidth / 2 + pairIndex * sliceChordWidth;
+      // X position: sequential layout, each slice at its own position
+      const xPosition = rectStartX + (index + 0.5) * (sliceChordWidth / 2);
 
-      // Y position: tips alternate between top and bottom of rectangle
-      // Down-pointing (even): tip at top, arc extends down to rectCenterY
-      // Up-pointing (odd): tip at bottom, arc extends up to rectCenterY
-      // This makes arcs meet at rectCenterY
-      const yPosition = isPointingDown ? rectCenterY - radius : rectCenterY + radius;
+      // Y position: tips offset by radius/2 from center for proper interlocking
+      // Down-pointing (even): tip at top (rectCenterY - radius/2), arc reaches rectCenterY + radius/2
+      // Up-pointing (odd): tip at bottom (rectCenterY + radius/2), arc reaches rectCenterY - radius/2
+      // This makes down arcs meet up tips, and up arcs meet down tips
+      const yPosition = isPointingDown
+        ? rectCenterY - radius / 2
+        : rectCenterY + radius / 2;
 
       return { x: xPosition, y: yPosition, rotate: rotation };
     };
@@ -674,25 +672,25 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               {/* Rectangle labels - appear in step 2 */}
               {areaStep >= 2 && (
                 <>
-                  {/* Base label */}
+                  {/* Base label - below the rectangle */}
                   <motion.g
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 1.2 }}
                   >
-                    <line x1={rectStartX} y1={rectCenterY + radius + 5} x2={rectStartX + actualRectWidth} y2={rectCenterY + radius + 5} stroke="#7c3aed" strokeWidth="3" />
-                    <text x={circleCenterX} y={rectCenterY + radius + 22} textAnchor="middle" fontSize="12" fontWeight="bold" fill="#7c3aed">
+                    <line x1={rectStartX} y1={rectCenterY + radius / 2 + 5} x2={rectStartX + actualRectWidth} y2={rectCenterY + radius / 2 + 5} stroke="#7c3aed" strokeWidth="3" />
+                    <text x={circleCenterX} y={rectCenterY + radius / 2 + 22} textAnchor="middle" fontSize="12" fontWeight="bold" fill="#7c3aed">
                       base = πr (mitad de la circunferencia)
                     </text>
                   </motion.g>
 
-                  {/* Height label */}
+                  {/* Height label - spans the rectangle height (= radius) */}
                   <motion.g
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5, delay: 1.4 }}
                   >
-                    <line x1={rectStartX + actualRectWidth + 10} y1={rectCenterY - radius} x2={rectStartX + actualRectWidth + 10} y2={rectCenterY + radius} stroke="#dc2626" strokeWidth="3" />
+                    <line x1={rectStartX + actualRectWidth + 10} y1={rectCenterY - radius / 2} x2={rectStartX + actualRectWidth + 10} y2={rectCenterY + radius / 2} stroke="#dc2626" strokeWidth="3" />
                     <text x={rectStartX + actualRectWidth + 20} y={rectCenterY + 5} textAnchor="start" fontSize="14" fontWeight="bold" fill="#dc2626">
                       r
                     </text>
