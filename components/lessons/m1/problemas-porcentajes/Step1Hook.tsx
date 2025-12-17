@@ -12,11 +12,11 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
 
-  const correctAnswer = 2; // "$72.000"
+  const correctAnswer = 1; // "$64.800"
 
   const options = [
-    '$60.000',
-    '$68.000',
+    '$64.000',
+    '$64.800',
     '$72.000',
     '$80.000',
   ];
