@@ -149,7 +149,10 @@ export default function Step5Advanced({ onComplete, isActive }: LessonStepProps)
                 ¿Por que 1.5?
               </p>
               <p className="text-amber-700 dark:text-amber-300 text-sm mt-1">
-                Es una convencion estadistica. Un valor que esta a mas de 1.5 veces el IQR desde los cuartiles se considera <strong>sospechoso</strong>.
+                Es una convencion estadistica comun. Un valor que esta a mas de 1.5 veces el IQR desde los cuartiles se considera <strong>sospechoso</strong>.
+              </p>
+              <p className="text-amber-600 dark:text-amber-400 text-xs mt-2 italic">
+                Nota: Esta es una orientacion general, no una regla absoluta. En la practica, el criterio puede variar segun el contexto.
               </p>
             </div>
           </div>
