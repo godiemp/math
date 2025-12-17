@@ -56,8 +56,8 @@ test.describe('AI Tutor Chat', () => {
     // Click to open AI tutor modal
     await aiTutorButton.click();
 
-    // Verify the AI tutor modal opened
-    await expect(page.getByText('Tu Tutor IA')).toBeVisible();
+    // Verify the AI tutor modal opened (use heading role to be specific)
+    await expect(page.getByRole('heading', { name: 'Tu Tutor IA' })).toBeVisible();
 
     // Verify the welcome message is displayed
     await expect(page.getByText(/Estoy aquí para ayudarte|Bien hecho/i)).toBeVisible();
