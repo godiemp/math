@@ -1,7 +1,7 @@
 {
   "name": "SimplePAES - Preparación PAES Matemática Chile",
   "short_name": "SimplePAES",
-  "description": "Plataforma de preparación para la PAES de Matemática en Chile. +900 ejercicios del temario oficial.",
+  "description": "Preparación PAES Matemática: mini-lecciones que explican el por qué + Tutor AI Socrático 24/7.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
