@@ -29,11 +29,11 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   const [examples, setExamples] = useState<TranslationExample[]>([
     {
       id: '1',
-      text: 'El triple de un numero mas 4 es igual a 19',
+      text: 'El triple de un número más 4 es igual a 19',
       equation: '3x + 4 = 19',
       parts: [
-        { phrase: 'El triple de un numero', math: '3x' },
-        { phrase: 'mas 4', math: '+ 4' },
+        { phrase: 'El triple de un número', math: '3x' },
+        { phrase: 'más 4', math: '+ 4' },
         { phrase: 'es igual a', math: '=' },
         { phrase: '19', math: '19' },
       ],
@@ -41,10 +41,10 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     },
     {
       id: '2',
-      text: 'La mitad de un numero menos 3 es 7',
+      text: 'La mitad de un número menos 3 es 7',
       equation: 'x/2 - 3 = 7',
       parts: [
-        { phrase: 'La mitad de un numero', math: 'x/2' },
+        { phrase: 'La mitad de un número', math: 'x/2' },
         { phrase: 'menos 3', math: '- 3' },
         { phrase: 'es', math: '=' },
         { phrase: '7', math: '7' },
@@ -53,11 +53,11 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     },
     {
       id: '3',
-      text: 'El doble de la suma de un numero y 5 es 16',
+      text: 'El doble de la suma de un número y 5 es 16',
       equation: '2(x + 5) = 16',
       parts: [
         { phrase: 'El doble de', math: '2(' },
-        { phrase: 'la suma de un numero y 5', math: 'x + 5' },
+        { phrase: 'la suma de un número y 5', math: 'x + 5' },
         { phrase: ')', math: ')' },
         { phrase: 'es 16', math: '= 16' },
       ],
@@ -99,10 +99,10 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
       {/* Title */}
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          Descubre el Patron
+          Descubre el Patrón
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          {phase === 'translation' && 'Traduce frases a lenguaje matematico'}
+          {phase === 'translation' && 'Traduce frases a lenguaje matemático'}
           {phase === 'keywords' && 'Aprende las palabras clave'}
           {phase === 'complete' && '¡Excelente trabajo!'}
         </p>
@@ -113,7 +113,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           {/* Instructions */}
           <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4 text-center">
             <p className="text-blue-700 dark:text-blue-300">
-              Toca cada ejemplo para ver como se traduce a una ecuacion
+              Toca cada ejemplo para ver como se traduce a una ecuación
             </p>
           </div>
 
@@ -159,7 +159,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   </div>
                 ) : (
                   <div className="text-center py-4">
-                    <span className="text-purple-500 text-sm">Toca para revelar la ecuacion</span>
+                    <span className="text-purple-500 text-sm">Toca para revelar la ecuación</span>
                   </div>
                 )}
               </div>
@@ -186,7 +186,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           {/* Instructions */}
           <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-4 text-center">
             <p className="text-purple-700 dark:text-purple-300">
-              Selecciona la operacion matematica correcta para cada palabra clave
+              Selecciona la operación matemática correcta para cada palabra clave
             </p>
           </div>
 
