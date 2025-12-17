@@ -240,7 +240,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400 text-center mb-4">
                 Visualiza el 30%:
               </p>
-              <div className="space-y-3">
+              <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-500 w-16">$50.000</span>
                   <div className="flex-1 h-8 bg-amber-200 dark:bg-amber-800 rounded-lg overflow-hidden">
@@ -249,10 +249,13 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-between text-xs text-gray-500">
-                  <span>$0</span>
-                  <span className="text-green-600 font-bold">$15.000 (descuento)</span>
-                  <span>$50.000</span>
+                <div className="flex items-center gap-2">
+                  <span className="w-16"></span>
+                  <div className="flex-1 flex text-xs">
+                    <span className="text-gray-500">$0</span>
+                    <span className="w-[30%] text-right pr-1 text-green-600 font-bold">$15.000</span>
+                    <span className="flex-1 text-right text-gray-500">$50.000</span>
+                  </div>
                 </div>
               </div>
             </div>
