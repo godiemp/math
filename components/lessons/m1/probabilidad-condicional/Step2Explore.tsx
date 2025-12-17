@@ -308,13 +308,28 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 );
               })}
             </div>
-            {showResult && (
+            {showResult ? (
               <div className="flex justify-center gap-4 mt-3 text-xs">
                 <span className="flex items-center gap-1">
                   <span className="w-3 h-3 rounded-full bg-blue-500" /> Cumplen condición ({filteredStudents.length})
                 </span>
                 <span className="flex items-center gap-1">
                   <span className="w-3 h-3 rounded-full bg-green-500 ring-2 ring-green-300" /> Favorables ({favoriteStudents.length})
+                </span>
+              </div>
+            ) : (
+              <div className="flex justify-center gap-4 mt-3 text-xs flex-wrap">
+                <span className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-full bg-orange-500" /> Deporte
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-full bg-purple-500" /> Música
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-full bg-green-500" /> Ambos
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-full bg-gray-400" /> Ninguno
                 </span>
               </div>
             )}
