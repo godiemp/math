@@ -533,16 +533,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     const circleCenterY = 100;
     const rectCenterY = 100; // Center Y of the rectangle
 
-    // Generate slice paths for circle
-    const generateSlicePath = (index: number): string => {
-      const startAngle = index * sliceAngle - Math.PI / 2;
-      const endAngle = (index + 1) * sliceAngle - Math.PI / 2;
-      const x1 = radius * Math.cos(startAngle);
-      const y1 = radius * Math.sin(startAngle);
-      const x2 = radius * Math.cos(endAngle);
-      const y2 = radius * Math.sin(endAngle);
-      return `M 0 0 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`;
-    };
+    // Single normalized slice path - tip at (0,0), pointing UP (arc toward -Y)
+    const halfAngle = sliceAngle / 2;
+    const slicePath = `M 0 0 L ${-radius * Math.sin(halfAngle)} ${-radius * Math.cos(halfAngle)} A ${radius} ${radius} 0 0 1 ${radius * Math.sin(halfAngle)} ${-radius * Math.cos(halfAngle)} Z`;
 
     // Colors for slices (alternating)
     const sliceColors = Array.from({ length: numSlices }, (_, i) =>
@@ -550,38 +543,26 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     );
 
     // Calculate slice chord width (width at the arc)
-    const sliceChordWidth = 2 * radius * Math.sin(sliceAngle / 2);
+    const sliceChordWidth = 2 * radius * Math.sin(halfAngle);
     // Total rectangle width: each slice takes half its chord width when interlocking
     const actualRectWidth = numSlices * (sliceChordWidth / 2);
     const rectStartX = circleCenterX - actualRectWidth / 2;
 
-    // Final positions for rectangle arrangement
+    // Circle view: rotate each slice to its position in the circle
+    const getCirclePosition = (index: number) => ({
+      x: circleCenterX,
+      y: circleCenterY,
+      rotate: index * (360 / numSlices),
+    });
+
+    // Rectangle view: simple 0° or 180° rotation
     const getRectanglePosition = (index: number) => {
-      // Each slice's center angle in the original circle (in degrees)
-      const sliceAngleDeg = (360 / numSlices);
-      const originalAngle = (index + 0.5) * sliceAngleDeg - 90;
-
-      // Target angle in SVG coords (Y increases downward):
-      // - 90° = pointing down (arc at bottom)
-      // - -90° = pointing up (arc at top)
-      const isPointingDown = index % 2 === 0;
-      const targetAngle = isPointingDown ? 90 : -90;
-
-      // Rotation needed = target - original
-      const rotation = targetAngle - originalAngle;
-
-      // X position: sequential layout, each slice at its own position
-      const xPosition = rectStartX + (index + 0.5) * (sliceChordWidth / 2);
-
-      // Y position: tips offset by radius/2 from center for proper interlocking
-      // Down-pointing (even): tip at top (rectCenterY - radius/2), arc reaches rectCenterY + radius/2
-      // Up-pointing (odd): tip at bottom (rectCenterY + radius/2), arc reaches rectCenterY - radius/2
-      // This makes down arcs meet up tips, and up arcs meet down tips
-      const yPosition = isPointingDown
-        ? rectCenterY - radius / 2
-        : rectCenterY + radius / 2;
-
-      return { x: xPosition, y: yPosition, rotate: rotation };
+      const isDown = index % 2 === 0;
+      return {
+        x: rectStartX + (index + 0.5) * (sliceChordWidth / 2),
+        y: isDown ? rectCenterY - radius / 2 : rectCenterY + radius / 2,
+        rotate: isDown ? 180 : 0,
+      };
     };
 
     return (
@@ -623,18 +604,14 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
               {/* Animated slices */}
               {Array.from({ length: numSlices }, (_, i) => {
-                const circlePos = { x: circleCenterX, y: circleCenterY, rotate: 0 };
+                const circlePos = getCirclePosition(i);
                 const rectPos = getRectanglePosition(i);
                 const targetPos = areaStep >= 2 ? rectPos : circlePos;
 
                 return (
                   <motion.g
                     key={i}
-                    initial={{
-                      x: circleCenterX,
-                      y: circleCenterY,
-                      rotate: 0,
-                    }}
+                    initial={circlePos}
                     animate={{
                       x: targetPos.x,
                       y: targetPos.y,
@@ -647,7 +624,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                     }}
                   >
                     <path
-                      d={generateSlicePath(i)}
+                      d={slicePath}
                       fill={sliceColors[i]}
                       stroke="#0d9488"
                       strokeWidth="1"
