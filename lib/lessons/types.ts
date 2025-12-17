@@ -611,6 +611,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-alg-001-j',
+    slug: 'factorizacion-agrupacion',
+    title: 'Factorización por Agrupación',
+    description: 'Aprende a factorizar expresiones de 4 términos agrupándolos de a pares y extrayendo factores comunes.',
+    level: 'M1',
+    subject: 'álgebra',
+    thematicUnit: 'M1-ALG-001',
+    skills: ['algebra-factorizacion', 'algebra-factorizacion-agrupacion', 'algebra-expresiones'],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Terreno del Arquitecto', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Casos de Agrupación' },
+      { id: 'classify', type: 'explore', title: '¿Se Puede Agrupar?', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // GEOMETRÍA
   // ========================================
