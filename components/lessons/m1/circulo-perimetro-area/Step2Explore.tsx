@@ -18,6 +18,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [numSlices, setNumSlices] = useState(8); // Interactive slice count for area
 
   // Circle parameters
   const circleRadius = 45;
@@ -518,13 +519,12 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     };
 
     const stepDescriptions = [
-      'Este círculo está cortado como pizza en rebanadas.',
+      'Este círculo está cortado como pizza. ¡Usa el control para cambiar el número de rebanadas!',
       'Las rebanadas se reorganizan alternando arriba y abajo...',
-      '¡Forman casi un rectángulo! Base = πr, Altura = r',
+      '¡Forman casi un rectángulo! Mientras más rebanadas, más perfecto.',
     ];
 
-    // Pizza slice geometry
-    const numSlices = 12;
+    // Pizza slice geometry - now uses dynamic numSlices from state
     const sliceAngle = (2 * Math.PI) / numSlices;
     const radius = 55;
 
@@ -544,13 +544,14 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
       i % 2 === 0 ? '#5eead4' : '#14b8a6'
     );
 
-    // Final positions for rectangle arrangement
+    // Final positions for rectangle arrangement - adapts to slice count
+    const totalRectWidth = 260; // Total width for the rectangle
     const getRectanglePosition = (index: number) => {
-      const sliceWidth = 25;
+      const sliceWidth = totalRectWidth / (numSlices / 2);
       const isPointingUp = index % 2 === 0;
       const pairIndex = Math.floor(index / 2);
       return {
-        x: 35 + pairIndex * sliceWidth,
+        x: 40 + pairIndex * sliceWidth,
         y: isPointingUp ? 140 : 60,
         rotate: isPointingUp ? 90 : -90,
       };
@@ -563,7 +564,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             ¿Por qué A = πr²?
           </h2>
           <p className="text-gray-600 dark:text-gray-300">
-            Observa cómo las rebanadas forman un rectángulo
+            Descubre cómo un círculo se convierte en rectángulo
           </p>
         </div>
 
@@ -685,6 +686,27 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             </p>
           </motion.div>
 
+          {/* Interactive slice control */}
+          <div className="mb-4 px-4">
+            <div className="flex items-center justify-center gap-4">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[80px]">
+                Rebanadas: {numSlices}
+              </span>
+              <input
+                type="range"
+                min="6"
+                max="24"
+                step="2"
+                value={numSlices}
+                onChange={(e) => setNumSlices(parseInt(e.target.value))}
+                className="w-40 h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-500"
+              />
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {numSlices >= 20 ? '¡Casi perfecto!' : numSlices >= 14 ? 'Mejor' : 'Básico'}
+              </span>
+            </div>
+          </div>
+
           {/* Controls */}
           <div className="flex justify-center gap-3">
             <button
@@ -724,19 +746,30 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             transition={{ duration: 0.5 }}
             className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-5 border border-purple-200 dark:border-purple-700"
           >
-            <p className="text-purple-800 dark:text-purple-200 text-center">
-              ¡Las rebanadas forman casi un <strong>rectángulo</strong>!
+            <p className="text-purple-800 dark:text-purple-200 text-center mb-3">
+              ¡Con {numSlices} rebanadas forman casi un <strong>rectángulo</strong>!
+              {numSlices < 16 && <span className="block text-sm mt-1">Prueba con más rebanadas para que sea más perfecto.</span>}
             </p>
-            <div className="mt-3 bg-white dark:bg-gray-800 rounded-lg p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 space-y-2">
               <p className="text-center text-sm text-gray-700 dark:text-gray-300">
-                <strong>Área del rectángulo</strong> = base × altura
+                <strong>¿Por qué la base es πr?</strong>
               </p>
-              <p className="text-center text-sm text-gray-700 dark:text-gray-300 mt-1">
-                = <span className="text-purple-600 font-semibold">πr</span> × <span className="text-red-600 font-semibold">r</span>
+              <p className="text-center text-xs text-gray-600 dark:text-gray-400">
+                La mitad de las rebanadas apuntan arriba, la otra mitad abajo.
+                <br />
+                Cada mitad tiene la mitad del borde del círculo = <span className="text-purple-600 font-semibold">½ × 2πr = πr</span>
               </p>
-              <p className="text-center text-lg font-bold text-teal-600 dark:text-teal-400 mt-2">
-                = πr²
-              </p>
+              <div className="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">
+                <p className="text-center text-sm text-gray-700 dark:text-gray-300">
+                  <strong>Área del rectángulo</strong> = base × altura
+                </p>
+                <p className="text-center text-sm text-gray-700 dark:text-gray-300 mt-1">
+                  = <span className="text-purple-600 font-semibold">πr</span> × <span className="text-red-600 font-semibold">r</span>
+                </p>
+                <p className="text-center text-lg font-bold text-teal-600 dark:text-teal-400 mt-2">
+                  = πr²
+                </p>
+              </div>
             </div>
           </motion.div>
         )}
