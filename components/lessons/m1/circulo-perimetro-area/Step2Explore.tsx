@@ -541,8 +541,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
     // Calculate slice chord width (width at the arc)
     const sliceChordWidth = 2 * radius * Math.sin(halfAngle);
-    // Total rectangle width: each slice takes half its chord width when interlocking
-    const actualRectWidth = numSlices * (sliceChordWidth / 2);
+    // Total rectangle width: each pair of slices (one up, one down) occupies one sliceChordWidth
+    const actualRectWidth = (numSlices / 2) * sliceChordWidth;
     const rectStartX = circleCenterX - actualRectWidth / 2;
 
     // Circle view: rotate each slice to its position in the circle
@@ -553,10 +553,12 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     });
 
     // Rectangle view: simple 0° or 180° rotation
+    // Pairs of slices (one up, one down) share the same X position
     const getRectanglePosition = (index: number) => {
       const isDown = index % 2 === 0;
+      const pairIndex = Math.floor(index / 2);
       return {
-        x: rectStartX + (index + 0.5) * (sliceChordWidth / 2),
+        x: rectStartX + (pairIndex + 0.5) * sliceChordWidth,
         y: isDown ? rectCenterY - radius / 2 : rectCenterY + radius / 2,
         rotate: isDown ? 180 : 0,
       };
@@ -683,14 +685,14 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <input
                 type="range"
                 min="6"
-                max="24"
+                max="36"
                 step="2"
                 value={numSlices}
                 onChange={(e) => setNumSlices(parseInt(e.target.value))}
                 className="w-40 h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-500"
               />
               <span className="text-xs text-gray-500 dark:text-gray-400">
-                {numSlices >= 20 ? '¡Casi perfecto!' : numSlices >= 14 ? 'Mejor' : 'Básico'}
+                {numSlices >= 30 ? '¡Perfecto!' : numSlices >= 20 ? '¡Casi perfecto!' : numSlices >= 14 ? 'Mejor' : 'Básico'}
               </span>
             </div>
           </div>
