@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, GraduationCap, Users, School, BarChart3, Target, TrendingUp, Clock, CheckCircle2, LineChart, Brain, Gauge } from 'lucide-react';
+import { ArrowLeft, GraduationCap, Users, School, BarChart3, Target, TrendingUp, Clock, CheckCircle2, LineChart, Brain, Gauge, BookOpen, MessageCircle } from 'lucide-react';
 
 type AudienceType = 'estudiantes' | 'padres' | 'profesores';
 
@@ -100,10 +100,10 @@ export default function ComoFuncionaPage() {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
             {[
-              { number: '616', label: 'problemas reales' },
-              { number: '500+', label: 'habilidades medidas' },
-              { number: '100%', label: 'personalizado' },
-              { number: 'Datos', label: 'no intuición' }
+              { number: '900+', label: 'ejercicios PAES' },
+              { number: '20+', label: 'mini-lecciones' },
+              { number: 'Tutor AI', label: 'disponible 24/7' },
+              { number: '500+', label: 'habilidades medidas' }
             ].map((stat, i) => (
               <div
                 key={i}
@@ -253,8 +253,8 @@ function EstudiantesContent() {
             lineHeight: 1.3
           }}
         >
-          La PAES es una prueba estandarizada.<br />
-          Aquí te preparamos exactamente para eso.
+          Aprende con explicaciones reales.<br />
+          Un tutor AI que te guía, no que te da la respuesta.
         </h2>
         <p
           style={{
@@ -263,10 +263,85 @@ function EstudiantesContent() {
             opacity: 0.95
           }}
         >
-          La PAES no mide "si eres bueno en matemáticas": mide cómo respondes un tipo específico de preguntas estandarizadas.
-          En SimplePAES entrenas exactamente ese formato usando <strong>datos reales</strong>: estadísticas de tus errores,
-          tu tiempo de respuesta, tus temas débiles y fuertes, y ejercicios adaptados a tu nivel.
+          SimplePAES tiene <strong>mini-lecciones interactivas</strong> que te explican el por qué, no solo el cómo.
+          Y cuando te trabas, el <strong>Tutor AI Socrático</strong> te hace preguntas que te guían a entender —sin darte la respuesta.
+          Así entiendes de verdad, no solo memorizas.
         </p>
+      </div>
+
+      {/* Mini-lessons and Tutor AI */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div
+          className="p-6"
+          style={{
+            background: 'var(--color-fill)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-separator)'
+          }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div
+              className="p-3"
+              style={{
+                background: 'var(--color-tint)',
+                borderRadius: 'var(--radius-md)',
+                color: 'white'
+              }}
+            >
+              <BookOpen size={24} />
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
+              Mini-Lecciones Interactivas
+            </h3>
+          </div>
+          <p style={{ fontSize: '15px', lineHeight: 1.6, color: 'var(--color-label-secondary)', marginBottom: '12px' }}>
+            No solo te dicen qué hacer —te explican por qué funciona. Así el conocimiento se queda.
+          </p>
+          <ul className="space-y-2">
+            {['Te explican el por qué, no solo el cómo', 'Ejemplos interactivos', 'Práctica guiada con feedback', 'Quiz para verificar que entendiste'].map((item, i) => (
+              <li key={i} className="flex items-center gap-2" style={{ fontSize: '14px', color: 'var(--color-label-primary)' }}>
+                <CheckCircle2 size={16} style={{ color: 'var(--color-tint)' }} />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div
+          className="p-6"
+          style={{
+            background: 'var(--color-fill)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-separator)'
+          }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div
+              className="p-3"
+              style={{
+                background: 'var(--color-tint)',
+                borderRadius: 'var(--radius-md)',
+                color: 'white'
+              }}
+            >
+              <MessageCircle size={24} />
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
+              Tutor AI Socrático
+            </h3>
+          </div>
+          <p style={{ fontSize: '15px', lineHeight: 1.6, color: 'var(--color-label-secondary)', marginBottom: '12px' }}>
+            Disponible 24/7 en el Modo Zen. Te hace preguntas que te ayudan a pensar, no te da la respuesta directa.
+          </p>
+          <ul className="space-y-2">
+            {['Metodología Socrática', 'Disponible cuando te trabas', 'Te guía sin resolver por ti', 'Desarrolla pensamiento crítico'].map((item, i) => (
+              <li key={i} className="flex items-center gap-2" style={{ fontSize: '14px', color: 'var(--color-label-primary)' }}>
+                <CheckCircle2 size={16} style={{ color: 'var(--color-tint)' }} />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       {/* How it works */}
@@ -399,8 +474,8 @@ function PadresContent() {
             lineHeight: 1.3
           }}
         >
-          La PAES es una prueba estandarizada.<br />
-          Nosotros preparamos a su hijo con datos, no con suerte.
+          Cuando su hijo no entiende algo,<br />
+          aquí le explican el por qué.
         </h2>
         <p
           style={{
@@ -409,10 +484,69 @@ function PadresContent() {
             opacity: 0.95
           }}
         >
-          Hoy la PAES de matemáticas exige responder bajo un formato estandarizado: tipos de preguntas repetitivos,
-          habilidades específicas y tiempos medidos. SimplePAES entrena a su hijo justo para eso, usando
-          <strong> análisis de desempeño</strong>, <strong>seguimiento por habilidad</strong> y <strong>prácticas personalizadas</strong> según sus resultados.
+          SimplePAES no es solo ejercicios. Tiene <strong>mini-lecciones que explican el por qué</strong> de cada concepto,
+          y un <strong>Tutor AI disponible 24/7</strong> que guía a su hijo cuando se traba —sin darle la respuesta,
+          para que aprenda de verdad.
         </p>
+      </div>
+
+      {/* Mini-lessons and AI for parents */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div
+          className="p-6"
+          style={{
+            background: 'var(--color-fill)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-separator)'
+          }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div
+              className="p-3"
+              style={{
+                background: 'var(--color-tint)',
+                borderRadius: 'var(--radius-md)',
+                color: 'white'
+              }}
+            >
+              <BookOpen size={24} />
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
+              Mini-Lecciones con Explicaciones
+            </h3>
+          </div>
+          <p style={{ fontSize: '15px', lineHeight: 1.6, color: 'var(--color-label-secondary)' }}>
+            Cuando su hijo no entiende un tema, las mini-lecciones le explican el por qué, no solo el procedimiento. Así el conocimiento se queda.
+          </p>
+        </div>
+
+        <div
+          className="p-6"
+          style={{
+            background: 'var(--color-fill)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-separator)'
+          }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div
+              className="p-3"
+              style={{
+                background: 'var(--color-tint)',
+                borderRadius: 'var(--radius-md)',
+                color: 'white'
+              }}
+            >
+              <MessageCircle size={24} />
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
+              Tutor AI Disponible 24/7
+            </h3>
+          </div>
+          <p style={{ fontSize: '15px', lineHeight: 1.6, color: 'var(--color-label-secondary)' }}>
+            Cuando su hijo se traba, el Tutor AI lo guía con preguntas —sin darle la respuesta. Así desarrolla pensamiento crítico, no dependencia.
+          </p>
+        </div>
       </div>
 
       {/* No guessing */}
@@ -558,8 +692,8 @@ function ProfesoresContent() {
             lineHeight: 1.3
           }}
         >
-          La PAES es una prueba estandarizada.<br />
-          SimplePAES entrena justo lo que mide.
+          SimplePAES enseña, no solo evalúa.<br />
+          Mini-lecciones + Tutor AI para sus estudiantes.
         </h2>
         <p
           style={{
@@ -568,10 +702,68 @@ function ProfesoresContent() {
             opacity: 0.95
           }}
         >
-          La PAES evalúa contenidos y habilidades de manera estandarizada. SimplePAES permite a los profesores reforzar
-          la preparación de sus estudiantes con práctica altamente focalizada: <strong>estadísticas por habilidad</strong>,
-          <strong> diagnósticos automáticos</strong>, <strong>seguimiento por curso</strong> y <strong>ejercicios adaptativos</strong> basados en rendimiento.
+          Las <strong>mini-lecciones explican el por qué</strong> de cada concepto matemático. Y cuando un estudiante se traba fuera de clases,
+          el <strong>Tutor AI</strong> lo guía con preguntas —sin darle la respuesta. Así usted puede enfocarse en enseñar, no en repetir lo básico.
         </p>
+      </div>
+
+      {/* Mini-lessons and AI for teachers */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div
+          className="p-6"
+          style={{
+            background: 'var(--color-fill)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-separator)'
+          }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div
+              className="p-3"
+              style={{
+                background: 'var(--color-tint)',
+                borderRadius: 'var(--radius-md)',
+                color: 'white'
+              }}
+            >
+              <BookOpen size={24} />
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
+              Mini-Lecciones que Enseñan
+            </h3>
+          </div>
+          <p style={{ fontSize: '15px', lineHeight: 1.6, color: 'var(--color-label-secondary)' }}>
+            No es solo un banco de preguntas. Las mini-lecciones explican conceptos con ejemplos y el por qué detrás de cada procedimiento.
+          </p>
+        </div>
+
+        <div
+          className="p-6"
+          style={{
+            background: 'var(--color-fill)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-separator)'
+          }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div
+              className="p-3"
+              style={{
+                background: 'var(--color-tint)',
+                borderRadius: 'var(--radius-md)',
+                color: 'white'
+              }}
+            >
+              <MessageCircle size={24} />
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
+              Tutor AI Fuera de Clases
+            </h3>
+          </div>
+          <p style={{ fontSize: '15px', lineHeight: 1.6, color: 'var(--color-label-secondary)' }}>
+            Cuando sus estudiantes se traban en casa, el Tutor AI los guía con metodología Socrática —preguntas que desarrollan pensamiento crítico.
+          </p>
+        </div>
       </div>
 
       {/* Data-driven */}
