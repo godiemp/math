@@ -10,7 +10,7 @@ import {
   Step4Classify,
   Step5Practice,
   Step6Verify,
-} from '@/components/lessons/m1/medidas-dispersion';
+} from '@/components/lessons/m2/medidas-dispersion';
 
 const LESSON_SLUG = 'medidas-dispersion';
 

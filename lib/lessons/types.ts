@@ -616,13 +616,13 @@ export const M1_LESSONS: Lesson[] = [
     ],
   },
   {
-    id: 'm1-prob-002-b',
+    id: 'm2-prob-001-a',
     slug: 'medidas-dispersion',
     title: 'Medidas de Dispersión: Rango, Varianza y Desviación Estándar',
     description: 'Aprende a medir qué tan dispersos están los datos usando rango, varianza y desviación estándar.',
-    level: 'M1',
+    level: 'M2',
     subject: 'probabilidad',
-    thematicUnit: 'M1-PROB-002',
+    thematicUnit: 'M2-PROB-001',
     skills: ['estadistica-rango', 'estadistica-varianza', 'estadistica-desviacion-estandar'],
     estimatedMinutes: 15,
     steps: [
