@@ -52,15 +52,12 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     return () => clearInterval(timer);
   }, [isPlaying, phase]);
 
-  // Auto-start animation when entering phase
+  // Auto-start animation when entering circumference phase (area phase is manual)
   useEffect(() => {
     if (phase === 'circumference' && circumStep === 0) {
       setTimeout(() => setIsPlaying(true), 500);
     }
-    if (phase === 'area' && areaStep === 0) {
-      setTimeout(() => setIsPlaying(true), 500);
-    }
-  }, [phase, circumStep, areaStep]);
+  }, [phase, circumStep]);
 
   if (!isActive) return null;
 
@@ -519,9 +516,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     };
 
     const stepDescriptions = [
-      'Este círculo está cortado como pizza. ¡Usa el control para cambiar el número de rebanadas!',
-      'Las rebanadas se reorganizan alternando arriba y abajo...',
-      '¡Forman casi un rectángulo! Mientras más rebanadas, más perfecto.',
+      'El círculo está cortado en rebanadas como pizza. ¡Ajusta el número de rebanadas!',
+      'Ahora reorganizamos las rebanadas alternando arriba y abajo...',
+      '¡Las rebanadas forman casi un rectángulo! Mientras más rebanadas, más perfecto.',
     ];
 
     // Pizza slice geometry - now uses dynamic numSlices from state
@@ -602,77 +599,64 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               </defs>
               <rect x="0" y="0" width="340" height="200" fill="url(#gridArea)" />
 
-              {/* Animated slices */}
-              {Array.from({ length: numSlices }, (_, i) => {
-                const circlePos = getCirclePosition(i);
-                const rectPos = getRectanglePosition(i);
-                const targetPos = areaStep >= 2 ? rectPos : circlePos;
-
-                return (
-                  <motion.g
-                    key={i}
-                    initial={circlePos}
-                    animate={{
-                      x: targetPos.x,
-                      y: targetPos.y,
-                      rotate: targetPos.rotate,
-                    }}
-                    transition={{
-                      duration: 1.2,
-                      ease: [0.4, 0, 0.2, 1],
-                      delay: areaStep >= 2 ? i * 0.04 : 0,
-                    }}
-                  >
-                    <path
-                      d={slicePath}
-                      fill={sliceColors[i]}
-                      stroke="#0d9488"
-                      strokeWidth="1"
-                    />
-                  </motion.g>
-                );
-              })}
-
-              {/* Radius indicator - only show in step 0 */}
-              {areaStep === 0 && (
-                <motion.g
-                  initial={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
+              {/* CIRCLE VIEW - steps 0 and 1 */}
+              {areaStep < 2 && (
+                <g>
+                  {/* Circle slices - each slice rotated to its position */}
+                  {Array.from({ length: numSlices }, (_, i) => {
+                    const pos = getCirclePosition(i);
+                    return (
+                      <g
+                        key={i}
+                        transform={`translate(${pos.x}, ${pos.y}) rotate(${pos.rotate})`}
+                      >
+                        <path
+                          d={slicePath}
+                          fill={sliceColors[i]}
+                          stroke="#0d9488"
+                          strokeWidth="1"
+                        />
+                      </g>
+                    );
+                  })}
+                  {/* Radius indicator */}
                   <line x1={circleCenterX} y1={circleCenterY} x2={circleCenterX + radius} y2={circleCenterY} stroke="#dc2626" strokeWidth="3" />
                   <text x={circleCenterX + radius / 2} y={circleCenterY - 8} textAnchor="middle" fontSize="16" fontWeight="bold" fill="#dc2626">r</text>
                   <circle cx={circleCenterX} cy={circleCenterY} r="4" fill="#0d9488" />
-                </motion.g>
+                </g>
               )}
 
-              {/* Rectangle labels - appear in step 2 */}
+              {/* RECTANGLE VIEW - step 2 */}
               {areaStep >= 2 && (
-                <>
-                  {/* Base label - below the rectangle */}
-                  <motion.g
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 1.2 }}
-                  >
-                    <line x1={rectStartX} y1={rectCenterY + radius / 2 + 5} x2={rectStartX + actualRectWidth} y2={rectCenterY + radius / 2 + 5} stroke="#7c3aed" strokeWidth="3" />
-                    <text x={circleCenterX} y={rectCenterY + radius / 2 + 22} textAnchor="middle" fontSize="12" fontWeight="bold" fill="#7c3aed">
-                      base = πr (mitad de la circunferencia)
-                    </text>
-                  </motion.g>
-
-                  {/* Height label - spans the rectangle height (= radius) */}
-                  <motion.g
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 1.4 }}
-                  >
-                    <line x1={rectStartX + actualRectWidth + 10} y1={rectCenterY - radius / 2} x2={rectStartX + actualRectWidth + 10} y2={rectCenterY + radius / 2} stroke="#dc2626" strokeWidth="3" />
-                    <text x={rectStartX + actualRectWidth + 20} y={rectCenterY + 5} textAnchor="start" fontSize="14" fontWeight="bold" fill="#dc2626">
-                      r
-                    </text>
-                  </motion.g>
-                </>
+                <g>
+                  {/* Rectangle slices - alternating up/down */}
+                  {Array.from({ length: numSlices }, (_, i) => {
+                    const pos = getRectanglePosition(i);
+                    return (
+                      <g
+                        key={i}
+                        transform={`translate(${pos.x}, ${pos.y}) rotate(${pos.rotate})`}
+                      >
+                        <path
+                          d={slicePath}
+                          fill={sliceColors[i]}
+                          stroke="#0d9488"
+                          strokeWidth="1"
+                        />
+                      </g>
+                    );
+                  })}
+                  {/* Base label */}
+                  <line x1={rectStartX} y1={rectCenterY + radius / 2 + 5} x2={rectStartX + actualRectWidth} y2={rectCenterY + radius / 2 + 5} stroke="#7c3aed" strokeWidth="3" />
+                  <text x={circleCenterX} y={rectCenterY + radius / 2 + 22} textAnchor="middle" fontSize="12" fontWeight="bold" fill="#7c3aed">
+                    base = πr (mitad de la circunferencia)
+                  </text>
+                  {/* Height label */}
+                  <line x1={rectStartX + actualRectWidth + 10} y1={rectCenterY - radius / 2} x2={rectStartX + actualRectWidth + 10} y2={rectCenterY + radius / 2} stroke="#dc2626" strokeWidth="3" />
+                  <text x={rectStartX + actualRectWidth + 20} y={rectCenterY + 5} textAnchor="start" fontSize="14" fontWeight="bold" fill="#dc2626">
+                    r
+                  </text>
+                </g>
               )}
             </svg>
           </div>
@@ -713,30 +697,21 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
           {/* Controls */}
           <div className="flex justify-center gap-3">
-            <button
-              onClick={() => {
-                if (areaStep >= 2) {
-                  setAreaStep(0);
-                  setTimeout(() => setIsPlaying(true), 100);
-                } else {
-                  setIsPlaying(true);
-                }
-              }}
-              disabled={isPlaying && areaStep < 2}
-              className="flex items-center gap-2 px-6 py-2 bg-purple-500 text-white rounded-lg font-medium hover:bg-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Play size={18} />
-              <span>{areaStep >= 2 ? 'Repetir' : 'Animar'}</span>
-            </button>
-            {areaStep > 0 && (
+            {areaStep < 2 ? (
               <button
-                onClick={() => {
-                  setIsPlaying(false);
-                  setAreaStep(0);
-                }}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+                onClick={() => setAreaStep((areaStep + 1) as AnimStep)}
+                className="flex items-center gap-2 px-6 py-2 bg-purple-500 text-white rounded-lg font-medium hover:bg-purple-600 transition-all"
+              >
+                <ArrowRight size={18} />
+                <span>Siguiente</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => setAreaStep(0)}
+                className="flex items-center gap-2 px-6 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
               >
                 <RotateCcw size={18} />
+                <span>Reiniciar</span>
               </button>
             )}
           </div>
