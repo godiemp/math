@@ -268,7 +268,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   {/* Circumference label */}
                   <motion.text
                     x={lineStartX + lineLength / 2}
-                    y={lineY + 20}
+                    y={lineY + 40}
                     textAnchor="middle"
                     fontSize="12"
                     fontWeight="bold"
@@ -304,7 +304,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                           {!isLast && (
                             <text
                               x={x + segmentWidth / 2}
-                              y={lineY - 15}
+                              y={lineY + 22}
                               textAnchor="middle"
                               fontSize="12"
                               fontWeight="bold"
