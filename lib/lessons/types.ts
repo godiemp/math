@@ -304,6 +304,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-num-003-b',
+    slug: 'potencias-exponente-cero-negativo',
+    title: 'Potencias con Exponente Cero y Negativo',
+    description: 'Descubre qué pasa cuando el exponente es cero o negativo y aprende a calcular estas potencias.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-003',
+    skills: ['potencias-exponente-cero', 'potencias-exponente-negativo', 'potencias-calcular'],
+    estimatedMinutes: 14,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Misterio del Exponente Cero', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Reglas de Exponentes' },
+      { id: 'classify', type: 'explore', title: 'Clasifica el Resultado', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Practica Calculando', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // ÁLGEBRA Y FUNCIONES
   // ========================================
