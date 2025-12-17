@@ -535,6 +535,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-alg-011-a',
+    slug: 'completar-cuadrado',
+    title: 'Completar el Cuadrado',
+    description: 'Aprende la técnica de completar el cuadrado para resolver ecuaciones cuadráticas y encontrar vértices de parábolas.',
+    level: 'M1',
+    subject: 'álgebra',
+    thematicUnit: 'M1-ALG-011',
+    skills: ['algebra-completar-cuadrado', 'algebra-ecuaciones-cuadraticas', 'algebra-vertice-parabola'],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Arquitecto y el Jardín', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Completar el Cuadrado' },
+      { id: 'classify', type: 'explore', title: 'Identifica el Cuadrado Completo', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // GEOMETRÍA
   // ========================================
