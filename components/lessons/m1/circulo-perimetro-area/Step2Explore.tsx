@@ -196,16 +196,18 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <line x1="15" y1={lineY} x2="325" y2={lineY} stroke="#cbd5e1" strokeWidth="2" />
 
               {/* CIRCLE - rolls to the right */}
-              <motion.g
-                initial={{ x: circleStartX, rotate: 0 }}
-                animate={{
-                  x: circumStep >= 1 ? circleStartX + lineLength : circleStartX,
-                  rotate: circumStep >= 1 ? 360 : 0,
-                }}
-                transition={{ duration: 2.5, ease: [0.4, 0, 0.2, 1] }}
-                style={{ originX: 0, originY: `${circleY}px` }}
-              >
-                <g transform={`translate(0, ${circleY})`}>
+              {/* Outer group positions the circle center at y=circleY */}
+              <g transform={`translate(0, ${circleY})`}>
+                {/* Inner motion.g handles x translation and rotation around center */}
+                <motion.g
+                  initial={{ x: circleStartX, rotate: 0 }}
+                  animate={{
+                    x: circumStep >= 1 ? circleStartX + lineLength : circleStartX,
+                    rotate: circumStep >= 1 ? 360 : 0,
+                  }}
+                  transition={{ duration: 2.5, ease: [0.4, 0, 0.2, 1] }}
+                >
+                  {/* All elements centered at (0,0) = circle center */}
                   {/* Circle fill */}
                   <circle r={circleRadius} fill="#ccfbf1" />
 
@@ -226,8 +228,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
                   {/* Marker dot at contact point (bottom of circle) */}
                   <circle cx="0" cy={circleRadius} r="6" fill="#dc2626" />
-                </g>
-              </motion.g>
+                </motion.g>
+              </g>
 
               {/* UNROLLED LINE - grows as circle unwinds */}
               {circumStep >= 1 && (
