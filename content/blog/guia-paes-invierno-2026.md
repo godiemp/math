@@ -42,6 +42,12 @@ Esta prueba es **exclusivamente para egresados**. Puedes inscribirte si:
 
 **Dato útil:** Si inscribes M1 (Competencia Matemática 1), puedes agregar M2 gratis, y viceversa. Pero debes inscribirlas manualmente en la plataforma—no es automático.
 
+### ¿Y la Beca PAES?
+
+La **Beca PAES** (inscripción gratuita) existe, pero **solo aplica para estudiantes que estén cursando 4° medio** en colegios municipales, SLEP, particulares subvencionados o de administración delegada. También pueden acceder estudiantes de colegios particulares pagados que acrediten vulnerabilidad.
+
+**Como la PAES de Invierno es exclusivamente para egresados, todos deben pagar.** Si estás en 4° medio y quieres acceder a la beca, deberás esperar a la PAES Regular de diciembre.
+
 ## Sedes de rendición
 
 Para 2025 se sumaron 4 nuevas sedes, llegando a un total de **49 comunas** donde puedes rendir:
