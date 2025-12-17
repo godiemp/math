@@ -74,7 +74,7 @@ function HomeContent() {
         <div className="w-full max-w-md px-4 pb-8">
           {/* Hero Section */}
           <div className="text-center mb-6 md:mb-8 spring-motion">
-            <div className="mb-4">
+            <div className="mb-4 mt-4">
               <div
                 className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-3xl mb-3 spring-emphasized hover:scale-110"
                 style={{
