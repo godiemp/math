@@ -528,6 +528,11 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     const sliceAngle = (2 * Math.PI) / numSlices;
     const radius = 55;
 
+    // Rectangle layout constants
+    const circleCenterX = 170;
+    const circleCenterY = 100;
+    const rectCenterY = 100; // Center Y of the rectangle
+
     // Generate slice paths for circle
     const generateSlicePath = (index: number): string => {
       const startAngle = index * sliceAngle - Math.PI / 2;
@@ -544,17 +549,38 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
       i % 2 === 0 ? '#5eead4' : '#14b8a6'
     );
 
-    // Final positions for rectangle arrangement - adapts to slice count
-    const totalRectWidth = 260; // Total width for the rectangle
+    // Calculate slice chord width (width at the arc)
+    const sliceChordWidth = 2 * radius * Math.sin(sliceAngle / 2);
+    // Total rectangle width when slices interlock
+    const actualRectWidth = (numSlices / 2) * sliceChordWidth;
+    const rectStartX = circleCenterX - actualRectWidth / 2;
+
+    // Final positions for rectangle arrangement - with correct rotation math
     const getRectanglePosition = (index: number) => {
-      const sliceWidth = totalRectWidth / (numSlices / 2);
-      const isPointingUp = index % 2 === 0;
+      // Each slice's center angle in the original circle (in degrees)
+      // Slice 0 points at -90° (top), slice 1 at -90° + sliceAngle, etc.
+      const sliceAngleDeg = (360 / numSlices);
+      const originalAngle = (index + 0.5) * sliceAngleDeg - 90;
+
+      // Target angle: even slices point down (180°), odd slices point up (0°)
+      const isPointingDown = index % 2 === 0;
+      const targetAngle = isPointingDown ? 180 : 0;
+
+      // Rotation needed = target - original
+      const rotation = targetAngle - originalAngle;
+
+      // X position: pair slices side by side
+      // Even index (0,2,4...) and odd index (1,3,5...) pair up
+      // Each pair occupies sliceChordWidth
       const pairIndex = Math.floor(index / 2);
-      return {
-        x: 40 + pairIndex * sliceWidth,
-        y: isPointingUp ? 140 : 60,
-        rotate: isPointingUp ? 90 : -90,
-      };
+      const xPosition = rectStartX + sliceChordWidth / 2 + pairIndex * sliceChordWidth;
+
+      // Y position: tips alternate between top and bottom of rectangle
+      // Down-pointing (even): tip at top, so y = rectCenterY - radius
+      // Up-pointing (odd): tip at bottom, so y = rectCenterY + radius
+      const yPosition = isPointingDown ? rectCenterY - radius : rectCenterY + radius;
+
+      return { x: xPosition, y: yPosition, rotate: rotation };
     };
 
     return (
@@ -596,7 +622,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
               {/* Animated slices */}
               {Array.from({ length: numSlices }, (_, i) => {
-                const circlePos = { x: 170, y: 100, rotate: 0 };
+                const circlePos = { x: circleCenterX, y: circleCenterY, rotate: 0 };
                 const rectPos = getRectanglePosition(i);
                 const targetPos = areaStep >= 2 ? rectPos : circlePos;
 
@@ -604,8 +630,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   <motion.g
                     key={i}
                     initial={{
-                      x: 170,
-                      y: 100,
+                      x: circleCenterX,
+                      y: circleCenterY,
                       rotate: 0,
                     }}
                     animate={{
@@ -636,9 +662,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <line x1="170" y1="100" x2="225" y2="100" stroke="#dc2626" strokeWidth="3" />
-                  <text x="197" y="92" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#dc2626">r</text>
-                  <circle cx="170" cy="100" r="4" fill="#0d9488" />
+                  <line x1={circleCenterX} y1={circleCenterY} x2={circleCenterX + radius} y2={circleCenterY} stroke="#dc2626" strokeWidth="3" />
+                  <text x={circleCenterX + radius / 2} y={circleCenterY - 8} textAnchor="middle" fontSize="16" fontWeight="bold" fill="#dc2626">r</text>
+                  <circle cx={circleCenterX} cy={circleCenterY} r="4" fill="#0d9488" />
                 </motion.g>
               )}
 
@@ -651,8 +677,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 1.2 }}
                   >
-                    <line x1="35" y1="175" x2="305" y2="175" stroke="#7c3aed" strokeWidth="3" />
-                    <text x="170" y="193" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#7c3aed">
+                    <line x1={rectStartX} y1={rectCenterY + radius + 5} x2={rectStartX + actualRectWidth} y2={rectCenterY + radius + 5} stroke="#7c3aed" strokeWidth="3" />
+                    <text x={circleCenterX} y={rectCenterY + radius + 22} textAnchor="middle" fontSize="12" fontWeight="bold" fill="#7c3aed">
                       base = πr (mitad de la circunferencia)
                     </text>
                   </motion.g>
@@ -663,8 +689,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5, delay: 1.4 }}
                   >
-                    <line x1="320" y1="60" x2="320" y2="140" stroke="#dc2626" strokeWidth="3" />
-                    <text x="330" y="105" textAnchor="start" fontSize="14" fontWeight="bold" fill="#dc2626">
+                    <line x1={rectStartX + actualRectWidth + 10} y1={rectCenterY - radius} x2={rectStartX + actualRectWidth + 10} y2={rectCenterY + radius} stroke="#dc2626" strokeWidth="3" />
+                    <text x={rectStartX + actualRectWidth + 20} y={rectCenterY + 5} textAnchor="start" fontSize="14" fontWeight="bold" fill="#dc2626">
                       r
                     </text>
                   </motion.g>
