@@ -1,6 +1,6 @@
 ---
 title: "PAES Invierno 2026: todo lo que necesitas saber para prepararte"
-description: "Fechas, cambios en el temario, costos y estrategias para la PAES de Invierno 2025 del proceso de Admisión 2026."
+description: "Fechas, costos, requisitos y estrategias para prepararte para la PAES de Invierno. Guía completa para egresados."
 date: "2024-12-17"
 author: "SimplePAES"
 tags: ["PAES", "PAES Invierno", "admisión 2026", "matemáticas", "guía"]
@@ -56,29 +56,6 @@ Para 2025 se sumaron 4 nuevas sedes, llegando a un total de **49 comunas** donde
 
 Puedes elegir tu sede al momento de inscribirte en [acceso.mineduc.cl](https://acceso.mineduc.cl).
 
-## Cambios en el temario de Matemática M1 para 2026
-
-El DEMRE actualizó el temario. Estos son los cambios que afectan directamente qué estudiar:
-
-### Lo que se eliminó
-
-- **Cilindros** en el eje de Geometría
-- **Mediana, moda y rango** en Estadística
-- Prismas en general (ahora solo **paralelepípedos y cubos**)
-
-### Lo que se agregó
-
-- **Promedio** ahora aparece explícitamente en la unidad de representación de datos
-
-### Lo que sigue igual
-
-- Números enteros y racionales (operaciones, orden, porcentajes)
-- Álgebra (ecuaciones lineales, sistemas, funciones lineales y afines)
-- Geometría básica (Pitágoras, áreas, volúmenes de paralelepípedos)
-- Tablas de frecuencia y gráficos
-
-**Consejo:** Si habías estudiado con material antiguo, revisa que no estés dedicando tiempo a cilindros o mediana/moda. Ese tiempo ahora es mejor invertirlo en álgebra y funciones.
-
 ## ¿Qué tan difícil es la PAES M1?
 
 Según los resultados de la PAES 2025:
@@ -106,7 +83,7 @@ Tienes aproximadamente **3 meses** entre la inscripción y la prueba. Aquí hay 
 ### Marzo (después de inscribirte)
 
 1. **Diagnóstico inicial:** Identifica tus lagunas específicas. No estudies "matemáticas en general"—descubre exactamente qué temas te cuestan.
-2. **Revisa el temario oficial:** Asegúrate de que tu material de estudio esté actualizado con los cambios 2026.
+2. **Revisa el temario oficial:** Asegúrate de que tu material de estudio cubra los contenidos del temario vigente en [demre.cl](https://demre.cl).
 
 ### Abril-Mayo
 
@@ -138,10 +115,6 @@ Recuerda: los puntajes de la PAES Invierno son **válidos para el mismo proceso 
 - [DEMRE - PAES de Invierno Admisión 2026](https://demre.cl/proceso-admision/prueba-invierno)
 - [Acceso Mineduc - Aplicación de Invierno](https://acceso.mineduc.cl/aplicacion-de-invierno/)
 - [Mineduc - Inscripción PAES Invierno 2025](https://acceso.mineduc.cl/blog/2025/03/05/hoy-se-inicia-el-periodo-de-inscripcion-a-la-paes-de-invierno-2025-admision-2026/)
-
-**Temario y cambios 2026:**
-- [DEMRE - Temario M1 Invierno 2026](https://demre.cl/publicaciones/2026/2026-25-01-24-temario-paes-invierno-m1)
-- [Red de Matemáticas - Novedades Temario M1 2026](https://matematicas.cl/temarios-paes-2025-novedades-en-matematicas-m1-para-la-admision-2026/)
 
 **Resultados y estadísticas:**
 - [Mineduc - Resultados PAES 2025](https://www.mineduc.cl/resultados-de-la-paes-231-mil-personas-estan-habilitadas-para-postular-a-las-universidades-del-sistema-de-acceso-a-la-educacion-superior/)
