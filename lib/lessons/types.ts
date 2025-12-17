@@ -383,6 +383,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-alg-001-f',
+    slug: 'factorizacion-trinomios',
+    title: 'Factorización de Trinomios',
+    description: 'Aprende a factorizar trinomios de la forma x² + bx + c encontrando dos números que sumen b y multipliquen c.',
+    level: 'M1',
+    subject: 'álgebra',
+    thematicUnit: 'M1-ALG-001',
+    skills: ['algebra-factorizacion', 'algebra-factorizacion-trinomios', 'algebra-expresiones'],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Jardín Rectangular', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Los Casos Según los Signos' },
+      { id: 'classify', type: 'explore', title: 'Identifica el Caso de Signos', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // GEOMETRÍA
   // ========================================
