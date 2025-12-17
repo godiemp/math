@@ -10,11 +10,12 @@ export async function GET() {
 SimplePAES es una plataforma educativa online que ayuda a estudiantes chilenos a prepararse para la prueba PAES de Matemática. Ofrece:
 
 - Más de 900 ejercicios alineados con el temario oficial PAES
+- Mini-lecciones interactivas con explicaciones paso a paso y feedback inmediato
+- Tutor AI Socrático (Claude) que guía sin dar respuestas directas, desarrollando pensamiento crítico
 - Práctica personalizada basada en datos de rendimiento
-- Feedback inmediato con explicaciones cuando te equivocas
-- Seguimiento de progreso con métricas detalladas
+- Seguimiento de progreso con métricas detalladas por habilidad (500+ skills)
 - Ensayos PAES en vivo con otros estudiantes
-- Tutor AI para resolver dudas
+- Modos de práctica: Zen (sin tiempo, con tutor AI) y Rapid Fire (cronometrado)
 
 ## Información Clave
 
@@ -69,6 +70,15 @@ Sí, derecho a retracto de 10 días según la Ley del Consumidor de Chile.
 
 ### ¿Cómo funciona la práctica personalizada?
 El sistema analiza tus errores y adapta los ejercicios para reforzar tus áreas débiles.
+
+### ¿Qué son las mini-lecciones?
+Lecciones interactivas de 6 pasos que enseñan conceptos matemáticos con ejemplos, práctica guiada y un quiz final. Incluyen explicaciones completas paso a paso.
+
+### ¿Cómo funciona el Tutor AI?
+El Tutor AI usa metodología Socrática: en vez de darte la respuesta, te hace preguntas que te guían a entender el problema por ti mismo. Está disponible 24/7 en el Modo Zen.
+
+### ¿SimplePAES tiene explicaciones de los ejercicios?
+Sí. Las mini-lecciones tienen explicaciones detalladas de cada concepto. Además, cuando te equivocas en un ejercicio, el Tutor AI te ayuda a entender por qué.
 `;
 
   return new NextResponse(content, {

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, GraduationCap, Users, School, BarChart3, Target, TrendingUp, Clock, CheckCircle2, LineChart, Brain, Gauge } from 'lucide-react';
+import { ArrowLeft, GraduationCap, Users, School, BarChart3, Target, TrendingUp, Clock, CheckCircle2, LineChart, Brain, Gauge, BookOpen, MessageCircle } from 'lucide-react';
 
 type AudienceType = 'estudiantes' | 'padres' | 'profesores';
 
@@ -100,10 +100,10 @@ export default function ComoFuncionaPage() {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
             {[
-              { number: '616', label: 'problemas reales' },
-              { number: '500+', label: 'habilidades medidas' },
-              { number: '100%', label: 'personalizado' },
-              { number: 'Datos', label: 'no intuición' }
+              { number: '900+', label: 'ejercicios PAES' },
+              { number: '20+', label: 'mini-lecciones' },
+              { number: 'Tutor AI', label: 'disponible 24/7' },
+              { number: '500+', label: 'habilidades medidas' }
             ].map((stat, i) => (
               <div
                 key={i}
@@ -253,8 +253,8 @@ function EstudiantesContent() {
             lineHeight: 1.3
           }}
         >
-          La PAES es una prueba estandarizada.<br />
-          Aquí te preparamos exactamente para eso.
+          Aprende con explicaciones reales.<br />
+          Un tutor AI que te guía, no que te da la respuesta.
         </h2>
         <p
           style={{
@@ -263,10 +263,85 @@ function EstudiantesContent() {
             opacity: 0.95
           }}
         >
-          La PAES no mide "si eres bueno en matemáticas": mide cómo respondes un tipo específico de preguntas estandarizadas.
-          En SimplePAES entrenas exactamente ese formato usando <strong>datos reales</strong>: estadísticas de tus errores,
-          tu tiempo de respuesta, tus temas débiles y fuertes, y ejercicios adaptados a tu nivel.
+          SimplePAES tiene <strong>mini-lecciones interactivas</strong> que te explican cada concepto paso a paso.
+          Y cuando te trabas, el <strong>Tutor AI Socrático</strong> te hace preguntas que te guían a entender —sin darte la respuesta.
+          Así aprendes de verdad, no solo memorizas.
         </p>
+      </div>
+
+      {/* Mini-lessons and Tutor AI */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div
+          className="p-6"
+          style={{
+            background: 'var(--color-fill)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-separator)'
+          }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div
+              className="p-3"
+              style={{
+                background: 'var(--color-tint)',
+                borderRadius: 'var(--radius-md)',
+                color: 'white'
+              }}
+            >
+              <BookOpen size={24} />
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
+              Mini-Lecciones Interactivas
+            </h3>
+          </div>
+          <p style={{ fontSize: '15px', lineHeight: 1.6, color: 'var(--color-label-secondary)', marginBottom: '12px' }}>
+            Cada lección tiene 6 pasos: desde un ejemplo motivador hasta un quiz para verificar que entendiste.
+          </p>
+          <ul className="space-y-2">
+            {['Explicaciones paso a paso', 'Ejemplos interactivos', 'Práctica guiada', 'Quiz de verificación'].map((item, i) => (
+              <li key={i} className="flex items-center gap-2" style={{ fontSize: '14px', color: 'var(--color-label-primary)' }}>
+                <CheckCircle2 size={16} style={{ color: 'var(--color-tint)' }} />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div
+          className="p-6"
+          style={{
+            background: 'var(--color-fill)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-separator)'
+          }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div
+              className="p-3"
+              style={{
+                background: 'var(--color-tint)',
+                borderRadius: 'var(--radius-md)',
+                color: 'white'
+              }}
+            >
+              <MessageCircle size={24} />
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-label-primary)' }}>
+              Tutor AI Socrático
+            </h3>
+          </div>
+          <p style={{ fontSize: '15px', lineHeight: 1.6, color: 'var(--color-label-secondary)', marginBottom: '12px' }}>
+            Disponible 24/7 en el Modo Zen. Te hace preguntas que te ayudan a pensar, no te da la respuesta directa.
+          </p>
+          <ul className="space-y-2">
+            {['Metodología Socrática', 'Disponible cuando te trabas', 'Te guía sin resolver por ti', 'Desarrolla pensamiento crítico'].map((item, i) => (
+              <li key={i} className="flex items-center gap-2" style={{ fontSize: '14px', color: 'var(--color-label-primary)' }}>
+                <CheckCircle2 size={16} style={{ color: 'var(--color-tint)' }} />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       {/* How it works */}

@@ -82,7 +82,7 @@ export const faqSchema = {
       name: "¿Qué es SimplePAES?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "SimplePAES es una plataforma de preparación para la PAES de Matemática en Chile. Ofrece más de 900 ejercicios alineados con el temario oficial, práctica personalizada basada en datos, feedback inmediato y seguimiento de progreso.",
+        text: "SimplePAES es una plataforma de preparación para la PAES de Matemática en Chile. Ofrece más de 900 ejercicios, mini-lecciones interactivas con explicaciones paso a paso, un Tutor AI Socrático que te guía sin darte las respuestas, práctica personalizada basada en datos y seguimiento de progreso por habilidad.",
       },
     },
     {
@@ -98,7 +98,7 @@ export const faqSchema = {
       name: "¿Qué incluye la suscripción premium?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "La suscripción premium incluye acceso completo a más de 900 ejercicios PAES, ensayos en vivo con otros estudiantes, tutor AI ilimitado, explicaciones detalladas, análisis de habilidades y seguimiento personalizado de progreso.",
+        text: "La suscripción premium incluye acceso completo a más de 900 ejercicios PAES, mini-lecciones interactivas con explicaciones paso a paso, Tutor AI Socrático ilimitado, ensayos en vivo con otros estudiantes, análisis de 500+ habilidades y seguimiento personalizado de progreso.",
       },
     },
     {

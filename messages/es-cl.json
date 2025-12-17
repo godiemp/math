@@ -239,7 +239,7 @@
       "sentError": "Error al enviar el email. Por favor intenta de nuevo."
     },
     "footer": {
-      "copyright": "© 2024 SimplePAES - Plataforma de Preparación Matemática"
+      "copyright": "© 2025 SimplePAES - Plataforma de Preparación Matemática"
     }
   },
   "practice": {
@@ -611,7 +611,7 @@
       "consumer": "Protección al Consumidor"
     },
     "madeIn": "Hecho con ❤️ en Chile",
-    "copyright": "© 2024 PAES Chile. Todos los derechos reservados."
+    "copyright": "© 2025 SimplePAES. Todos los derechos reservados."
   },
   "cookies": {
     "message": "Usamos cookies para mejorar tu experiencia.",
@@ -632,7 +632,7 @@
     "fullTitle": "Preparación para la Prueba de Acceso a la Educación Superior",
     "hero": {
       "title": "Prepara la PAES de Matemática",
-      "subtitle": "Una plataforma donde practicas mate para la PAES. Tienes ejercicios del temario oficial, feedback cuando te equivocas, y ves tu progreso en tiempo real. Sin publicidad.",
+      "subtitle": "Ejercicios del temario oficial, mini-lecciones interactivas con explicaciones paso a paso, y un Tutor AI que te guía cuando te trabas. Todo personalizado a tu nivel.",
       "cta": "Comenzar Ahora"
     },
     "sections": {
@@ -644,10 +644,11 @@
     },
     "whatIncludes": {
       "items": [
-        "Problemas del temario oficial PAES",
-        "Explicaciones cuando te equivocas",
-        "Seguimiento de tu progreso",
-        "Sesiones de práctica en vivo"
+        "Mini-lecciones interactivas con explicaciones paso a paso",
+        "Tutor AI Socrático que te guía sin darte la respuesta",
+        "Más de 900 ejercicios del temario oficial PAES",
+        "Seguimiento de progreso por habilidad (500+ skills)",
+        "Ensayos PAES en vivo con otros estudiantes"
       ]
     },
     "howItWorks": {
