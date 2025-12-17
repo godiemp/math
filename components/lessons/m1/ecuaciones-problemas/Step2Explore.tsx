@@ -151,7 +151,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
                     {/* Final equation */}
                     <div className="bg-green-100 dark:bg-green-900/30 rounded-lg p-4 text-center">
-                      <p className="text-sm text-green-600 dark:text-green-400 mb-1">Ecuacion:</p>
+                      <p className="text-sm text-green-600 dark:text-green-400 mb-1">Ecuación:</p>
                       <p className="text-2xl font-mono font-bold text-green-700 dark:text-green-300">
                         {example.equation}
                       </p>
@@ -250,7 +250,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
               >
                 <Sparkles size={20} />
-                <span>¡Lo logre!</span>
+                <span>¡Lo logré!</span>
               </button>
             </div>
           )}

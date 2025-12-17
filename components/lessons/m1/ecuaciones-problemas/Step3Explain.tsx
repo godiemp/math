@@ -28,7 +28,7 @@ const STEPS: Step[] = [
   {
     number: 3,
     title: 'TRADUCIR a ecuación',
-    description: 'Convierte las palabras en simbolos matematicos.',
+    description: 'Convierte las palabras en símbolos matemáticos.',
     example: 'x + 5 = 12',
   },
   {
@@ -78,7 +78,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
           Método para Resolver Problemas
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          Material de referencia sobre traduccion y resolucion
+          Material de referencia sobre traducción y resolución
         </p>
       </div>
 
@@ -129,15 +129,15 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
         onClick={() => setExpandedCard(expandedCard === 1 ? null : 1)}
       >
         <h3 className="text-xl font-bold text-blue-800 dark:text-blue-200 mb-4">
-          DICCIONARIO DE TRADUCCION
+          DICCIONARIO DE TRADUCCIÓN
         </h3>
 
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b-2 border-blue-200 dark:border-blue-700">
-                <th className="text-left py-2 px-3 text-blue-600 dark:text-blue-400">Espanol</th>
-                <th className="text-left py-2 px-3 text-blue-600 dark:text-blue-400">Matematicas</th>
+                <th className="text-left py-2 px-3 text-blue-600 dark:text-blue-400">Español</th>
+                <th className="text-left py-2 px-3 text-blue-600 dark:text-blue-400">Matemáticas</th>
               </tr>
             </thead>
             <tbody>
@@ -177,11 +177,11 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
         <div className="space-y-3">
           <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
             <Check className="w-5 h-5 text-green-500" />
-            <span><strong>Incognita:</strong> x = el número</span>
+            <span><strong>Incógnita:</strong> x = el número</span>
           </div>
           <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
             <Check className="w-5 h-5 text-green-500" />
-            <span><strong>Ecuacion:</strong> 3x - 7 = 14</span>
+            <span><strong>Ecuación:</strong> 3x - 7 = 14</span>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
             <p className="font-semibold text-green-600 dark:text-green-400 mb-2">Resolución:</p>
@@ -227,7 +227,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             </h4>
             <ul className="text-gray-700 dark:text-gray-300 space-y-2">
               <li>• <strong>Confundir el orden:</strong> &ldquo;5 menos un número&rdquo; es 5 - x, no x - 5</li>
-              <li>• <strong>Olvidar los parentesis:</strong> &ldquo;el doble de (x + 3)&rdquo; es 2(x + 3), no 2x + 3</li>
+              <li>• <strong>Olvidar los paréntesis:</strong> &ldquo;el doble de (x + 3)&rdquo; es 2(x + 3), no 2x + 3</li>
               <li>• <strong>No verificar:</strong> Siempre comprueba que la respuesta tenga sentido</li>
             </ul>
           </div>

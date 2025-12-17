@@ -28,7 +28,7 @@ const PROBLEMS: Problem[] = [
     equation: '2x + 2(x + 4) = 40',
     options: ['6 cm', '8 cm', '10 cm', '12 cm'],
     correctIndex: 1,
-    hint: 'Si ancho = x, largo = x + 4. Perimetro = 2(ancho) + 2(largo).',
+    hint: 'Si ancho = x, largo = x + 4. Perímetro = 2(ancho) + 2(largo).',
     solution: '2x + 2(x+4) = 40 → 2x + 2x + 8 = 40 → 4x = 32 → x = 8 cm.',
   },
   {

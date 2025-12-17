@@ -361,6 +361,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-num-004-a',
+    slug: 'porcentaje-concepto',
+    title: 'Concepto y Cálculo de Porcentaje',
+    description: 'Aprende qué son los porcentajes y cómo calcularlos en situaciones cotidianas.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-004',
+    skills: ['porcentaje-concepto', 'porcentaje-calcular', 'porcentaje-conversiones'],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'Las Ofertas del Centro Comercial', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Conceptos de Porcentajes' },
+      { id: 'classify', type: 'explore', title: 'Identifica el Valor', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // ÁLGEBRA Y FUNCIONES
   // ========================================

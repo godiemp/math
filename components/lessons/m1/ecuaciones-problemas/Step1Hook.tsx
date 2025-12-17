@@ -46,7 +46,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           El Misterio del Precio
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          Resuelve problemas de la vida real usando ecuaciónes
+          Resuelve problemas de la vida real usando ecuaciones
         </p>
       </div>
 
@@ -100,7 +100,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             </div>
 
             <p className="text-center text-gray-600 dark:text-gray-400 text-lg font-medium">
-              ¿Cuanto cuesta cada cuaderno?
+              ¿Cuánto cuesta cada cuaderno?
             </p>
           </div>
 
@@ -202,7 +202,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               )}
             >
               <p className={cn('font-semibold', isCorrect ? 'text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300')}>
-                {isCorrect ? '¡Exacto!' : '¡Casi!'} Veamos como resolver este problema...
+                {isCorrect ? '¡Exacto!' : '¡Casi!'} Veamos cómo resolver este problema...
               </p>
             </div>
           )}
@@ -272,7 +272,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 </h4>
                 <div className="space-y-2 text-gray-700 dark:text-gray-300">
                   <p>
-                    Los problemas de la vida real se pueden traducir a <strong>ecuaciónes</strong>.
+                    Los problemas de la vida real se pueden traducir a <strong>ecuaciones</strong>.
                   </p>
                   <p className="text-sm mt-2">
                     Aprende a identificar la incógnita, armar la ecuación y resolverla paso a paso.
