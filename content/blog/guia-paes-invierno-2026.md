@@ -124,16 +124,16 @@ Recuerda: los puntajes de la PAES Invierno son **válidos para el mismo proceso 
 
 **Sí.** Al momento de postular, puedes usar **el mejor puntaje obtenido en cada prueba**, sin importar en qué rendición lo obtuviste.
 
-Por ejemplo, para Admisión 2026 puedes combinar:
-- Tu mejor M1 de PAES Invierno 2025
-- Tu mejor Competencia Lectora de PAES Regular 2024
-- Tu mejor M2 de PAES Regular 2025
+Por ejemplo, para Admisión 2027 puedes combinar:
+- Tu mejor M1 de PAES Invierno 2026
+- Tu mejor Competencia Lectora de PAES Regular 2025
+- Tu mejor M2 de PAES Regular 2026
 
-**Rendiciones válidas para Admisión 2026:**
-- PAES Invierno 2024
-- PAES Regular 2024
+**Rendiciones válidas para Admisión 2027:**
 - PAES Invierno 2025
 - PAES Regular 2025
+- PAES Invierno 2026
+- PAES Regular 2026
 
 Esto significa que si ya tienes un buen puntaje en Lectora pero quieres mejorar en Matemáticas, puedes rendir solo M1 y M2 en la PAES de Invierno y conservar tu puntaje anterior en las otras pruebas.
 
