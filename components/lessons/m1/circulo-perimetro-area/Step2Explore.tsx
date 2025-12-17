@@ -562,9 +562,11 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
       const sliceAngleDeg = (360 / numSlices);
       const originalAngle = (index + 0.5) * sliceAngleDeg - 90;
 
-      // Target angle: even slices point down (180°), odd slices point up (0°)
+      // Target angle in SVG coords (Y increases downward):
+      // - 90° = pointing down (arc at bottom)
+      // - -90° (270°) = pointing up (arc at top)
       const isPointingDown = index % 2 === 0;
-      const targetAngle = isPointingDown ? 180 : 0;
+      const targetAngle = isPointingDown ? 90 : -90;
 
       // Rotation needed = target - original
       const rotation = targetAngle - originalAngle;
@@ -576,8 +578,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
       const xPosition = rectStartX + sliceChordWidth / 2 + pairIndex * sliceChordWidth;
 
       // Y position: tips alternate between top and bottom of rectangle
-      // Down-pointing (even): tip at top, so y = rectCenterY - radius
-      // Up-pointing (odd): tip at bottom, so y = rectCenterY + radius
+      // Down-pointing (even): tip at top, arc extends down to rectCenterY
+      // Up-pointing (odd): tip at bottom, arc extends up to rectCenterY
+      // This makes arcs meet at rectCenterY
       const yPosition = isPointingDown ? rectCenterY - radius : rectCenterY + radius;
 
       return { x: xPosition, y: yPosition, rotate: rotation };
