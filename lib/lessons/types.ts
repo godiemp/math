@@ -364,6 +364,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-alg-001-e',
+    slug: 'factor-comun',
+    title: 'Factorización por Factor Común',
+    description: 'Aprende a identificar y extraer el factor común de expresiones algebraicas.',
+    level: 'M1',
+    subject: 'álgebra',
+    thematicUnit: 'M1-ALG-001',
+    skills: ['algebra-factorizacion', 'algebra-factorizacion-factor-comun', 'algebra-expresiones'],
+    estimatedMinutes: 14,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Organizador de Cajas', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Tipos de Factor Común' },
+      { id: 'classify', type: 'explore', title: 'Identifica el Tipo de Factor', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // GEOMETRÍA
   // ========================================
