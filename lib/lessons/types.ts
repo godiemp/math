@@ -380,6 +380,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-num-005-a',
+    slug: 'problemas-porcentajes',
+    title: 'Problemas con Porcentajes',
+    description: 'Resuelve problemas de porcentajes en diversos contextos: descuentos, aumentos, comparaciones y más.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-005',
+    skills: ['porcentaje-problemas', 'porcentaje-sucesivos', 'porcentaje-inverso', 'porcentaje-comparacion'],
+    estimatedMinutes: 16,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'La Tienda de Electrónica', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Tipos de Problemas', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Estrategias Avanzadas' },
+      { id: 'classify', type: 'explore', title: 'Clasifica el Problema', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // ÁLGEBRA Y FUNCIONES
   // ========================================
