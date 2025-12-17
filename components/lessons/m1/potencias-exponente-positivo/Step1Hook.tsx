@@ -67,33 +67,41 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   Primeras casillas del tablero:
                 </p>
                 <div className="grid grid-cols-5 gap-2 justify-items-center">
-                  <div className="bg-amber-100 dark:bg-amber-900/50 rounded-lg p-3 text-center border-2 border-amber-300 dark:border-amber-700">
-                    <div className="text-2xl mb-1">🌾</div>
-                    <span className="font-mono text-sm text-amber-600 font-bold">1</span>
+                  <div className="flex flex-col items-center">
+                    <div className="bg-amber-100 dark:bg-amber-900/50 rounded-lg p-3 text-center border-2 border-amber-300 dark:border-amber-700">
+                      <div className="text-2xl mb-1">🌾</div>
+                      <span className="font-mono text-sm text-amber-600 font-bold">1</span>
+                    </div>
+                    <span className="text-xs text-gray-500 mt-1">Casilla 1</span>
                   </div>
-                  <div className="bg-amber-100 dark:bg-amber-900/50 rounded-lg p-3 text-center border-2 border-amber-300 dark:border-amber-700">
-                    <div className="text-2xl mb-1">🌾🌾</div>
-                    <span className="font-mono text-sm text-amber-600 font-bold">2</span>
+                  <div className="flex flex-col items-center">
+                    <div className="bg-amber-100 dark:bg-amber-900/50 rounded-lg p-3 text-center border-2 border-amber-300 dark:border-amber-700">
+                      <div className="text-2xl mb-1">🌾🌾</div>
+                      <span className="font-mono text-sm text-amber-600 font-bold">2</span>
+                    </div>
+                    <span className="text-xs text-gray-500 mt-1">Casilla 2</span>
                   </div>
-                  <div className="bg-amber-100 dark:bg-amber-900/50 rounded-lg p-3 text-center border-2 border-amber-300 dark:border-amber-700">
-                    <div className="text-2xl mb-1">🌾×4</div>
-                    <span className="font-mono text-sm text-amber-600 font-bold">4</span>
+                  <div className="flex flex-col items-center">
+                    <div className="bg-amber-100 dark:bg-amber-900/50 rounded-lg p-3 text-center border-2 border-amber-300 dark:border-amber-700">
+                      <div className="text-2xl mb-1">🌾×4</div>
+                      <span className="font-mono text-sm text-amber-600 font-bold">4</span>
+                    </div>
+                    <span className="text-xs text-gray-500 mt-1">Casilla 3</span>
                   </div>
-                  <div className="bg-amber-100 dark:bg-amber-900/50 rounded-lg p-3 text-center border-2 border-amber-300 dark:border-amber-700">
-                    <div className="text-2xl mb-1">🌾×8</div>
-                    <span className="font-mono text-sm text-amber-600 font-bold">8</span>
+                  <div className="flex flex-col items-center">
+                    <div className="bg-amber-100 dark:bg-amber-900/50 rounded-lg p-3 text-center border-2 border-amber-300 dark:border-amber-700">
+                      <div className="text-2xl mb-1">🌾×8</div>
+                      <span className="font-mono text-sm text-amber-600 font-bold">8</span>
+                    </div>
+                    <span className="text-xs text-gray-500 mt-1">Casilla 4</span>
                   </div>
-                  <div className="bg-blue-100 dark:bg-blue-900/50 rounded-lg p-3 text-center border-2 border-blue-400 dark:border-blue-600">
-                    <div className="text-2xl mb-1">❓</div>
-                    <span className="font-mono text-sm text-blue-600 font-bold">?</span>
+                  <div className="flex flex-col items-center">
+                    <div className="bg-blue-100 dark:bg-blue-900/50 rounded-lg p-3 text-center border-2 border-blue-400 dark:border-blue-600">
+                      <div className="text-2xl mb-1">❓</div>
+                      <span className="font-mono text-sm text-blue-600 font-bold">?</span>
+                    </div>
+                    <span className="text-xs text-blue-600 font-bold mt-1">Casilla 5</span>
                   </div>
-                </div>
-                <div className="flex justify-center gap-2 mt-3 text-xs text-gray-500">
-                  <span>Casilla 1</span>
-                  <span>Casilla 2</span>
-                  <span>Casilla 3</span>
-                  <span>Casilla 4</span>
-                  <span className="text-blue-600 font-bold">Casilla 5</span>
                 </div>
               </div>
 
