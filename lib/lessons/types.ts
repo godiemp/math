@@ -342,6 +342,25 @@ export const M1_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
     ],
   },
+  {
+    id: 'm1-num-003-d',
+    slug: 'notacion-cientifica',
+    title: 'Notación Científica',
+    description: 'Aprende a expresar números muy grandes y muy pequeños usando potencias de 10.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-003',
+    skills: ['notacion-cientifica-convertir', 'notacion-cientifica-identificar', 'potencias-base-10'],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Problema de los Científicos', requiredToAdvance: true },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón', requiredToAdvance: true },
+      { id: 'explain', type: 'explain', title: 'Notación Científica' },
+      { id: 'classify', type: 'explore', title: 'Identifica la Notación', requiredToAdvance: true },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada', requiredToAdvance: true },
+      { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    ],
+  },
   // ========================================
   // ÁLGEBRA Y FUNCIONES
   // ========================================
