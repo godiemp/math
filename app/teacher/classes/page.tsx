@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import TeacherLayout from '@/components/layout/TeacherLayout';
 import { Card, Heading, Text, Button } from '@/components/ui';
-import { MOCK_CLASSES, TeacherClass } from '@/lib/types/teacher';
+import { MOCK_CLASSES, TeacherClass, CLASS_LEVEL_LABELS } from '@/lib/types/teacher';
 import { Copy, Check } from 'lucide-react';
 
 function formatTimeAgo(timestamp: number): string {
@@ -46,14 +46,12 @@ function ClassCard({ cls }: { cls: TeacherClass }) {
         </div>
         <span
           className={`px-3 py-1 rounded-full text-xs font-medium ${
-            cls.level === 'M1'
-              ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-              : cls.level === 'M2'
+            cls.level === 'M1' || cls.level === 'M2' || cls.level === 'both'
               ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
-              : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+              : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
           }`}
         >
-          {cls.level === 'both' ? 'M1 + M2' : cls.level}
+          {CLASS_LEVEL_LABELS[cls.level]}
         </span>
       </div>
 
