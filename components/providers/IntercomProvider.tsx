@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 // Routes where Intercom widget should be visible
 const ALLOWED_ROUTES = [
   '/',
+  '/blog',
   '/dashboard',
   '/profile',
   '/pricing',
