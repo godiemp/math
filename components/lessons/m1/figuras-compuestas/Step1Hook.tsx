@@ -40,13 +40,13 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
             {/* L-shaped room visualization */}
             <div className="flex justify-center py-4">
-              <svg viewBox="0 0 280 220" className="w-72 h-56">
+              <svg viewBox="0 0 280 200" className="w-72 h-52">
                 {/* Background */}
-                <rect x="0" y="0" width="280" height="220" fill="#f0f9ff" rx="8" />
+                <rect x="0" y="0" width="280" height="200" fill="#f0f9ff" rx="8" />
 
-                {/* L-shaped room */}
+                {/* L-shaped room: 8m x 6m external, 3m x 4m corner cut */}
                 <path
-                  d="M 40 30 L 200 30 L 200 110 L 120 110 L 120 190 L 40 190 Z"
+                  d="M 40 30 L 200 30 L 200 70 L 140 70 L 140 150 L 40 150 Z"
                   fill="#bfdbfe"
                   stroke="#1d4ed8"
                   strokeWidth="3"
@@ -59,7 +59,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   </pattern>
                 </defs>
                 <path
-                  d="M 40 30 L 200 30 L 200 110 L 120 110 L 120 190 L 40 190 Z"
+                  d="M 40 30 L 200 30 L 200 70 L 140 70 L 140 150 L 40 150 Z"
                   fill="url(#grid)"
                 />
 
@@ -70,27 +70,27 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 <line x1="200" y1="15" x2="200" y2="25" stroke="#1f2937" strokeWidth="1" />
                 <text x="120" y="14" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937">8 m</text>
 
-                {/* Right height (top part): 4m */}
-                <line x1="210" y1="30" x2="210" y2="110" stroke="#1f2937" strokeWidth="1" />
+                {/* Right height (top part): 2m */}
+                <line x1="210" y1="30" x2="210" y2="70" stroke="#1f2937" strokeWidth="1" />
                 <line x1="205" y1="30" x2="215" y2="30" stroke="#1f2937" strokeWidth="1" />
-                <line x1="205" y1="110" x2="215" y2="110" stroke="#1f2937" strokeWidth="1" />
-                <text x="230" y="75" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937">4 m</text>
+                <line x1="205" y1="70" x2="215" y2="70" stroke="#1f2937" strokeWidth="1" />
+                <text x="230" y="55" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937">2 m</text>
 
-                {/* Bottom width: 4m */}
-                <line x1="40" y1="200" x2="120" y2="200" stroke="#1f2937" strokeWidth="1" />
-                <line x1="40" y1="195" x2="40" y2="205" stroke="#1f2937" strokeWidth="1" />
-                <line x1="120" y1="195" x2="120" y2="205" stroke="#1f2937" strokeWidth="1" />
-                <text x="80" y="214" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937">4 m</text>
+                {/* Bottom width: 5m */}
+                <line x1="40" y1="160" x2="140" y2="160" stroke="#1f2937" strokeWidth="1" />
+                <line x1="40" y1="155" x2="40" y2="165" stroke="#1f2937" strokeWidth="1" />
+                <line x1="140" y1="155" x2="140" y2="165" stroke="#1f2937" strokeWidth="1" />
+                <text x="90" y="175" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937">5 m</text>
 
-                {/* Left height: 8m */}
-                <line x1="30" y1="30" x2="30" y2="190" stroke="#1f2937" strokeWidth="1" />
+                {/* Left height: 6m */}
+                <line x1="30" y1="30" x2="30" y2="150" stroke="#1f2937" strokeWidth="1" />
                 <line x1="25" y1="30" x2="35" y2="30" stroke="#1f2937" strokeWidth="1" />
-                <line x1="25" y1="190" x2="35" y2="190" stroke="#1f2937" strokeWidth="1" />
-                <text x="18" y="115" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937" transform="rotate(-90, 18, 115)">8 m</text>
+                <line x1="25" y1="150" x2="35" y2="150" stroke="#1f2937" strokeWidth="1" />
+                <text x="18" y="95" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937" transform="rotate(-90, 18, 95)">6 m</text>
 
-                {/* Inner step dimensions */}
-                <text x="160" y="95" textAnchor="middle" fontSize="11" fill="#6b7280">4 m</text>
-                <text x="135" y="150" textAnchor="middle" fontSize="11" fill="#6b7280" transform="rotate(-90, 135, 150)">4 m</text>
+                {/* Inner step dimensions: 3m x 4m */}
+                <text x="170" y="85" textAnchor="middle" fontSize="11" fill="#6b7280">3 m</text>
+                <text x="155" y="115" textAnchor="middle" fontSize="11" fill="#6b7280" transform="rotate(-90, 155, 115)">4 m</text>
               </svg>
             </div>
 
@@ -163,10 +163,10 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
         {/* Visual with decomposition hints */}
         <div className="flex justify-center py-2">
-          <svg viewBox="0 0 280 200" className="w-72 h-52">
-            {/* L-shaped room */}
+          <svg viewBox="0 0 280 180" className="w-72 h-48">
+            {/* L-shaped room: 8m x 6m external, 3m x 4m corner cut */}
             <path
-              d="M 40 20 L 200 20 L 200 100 L 120 100 L 120 180 L 40 180 Z"
+              d="M 40 20 L 200 20 L 200 60 L 140 60 L 140 140 L 40 140 Z"
               fill={showingCalculation ? '#86efac' : '#bfdbfe'}
               stroke="#1d4ed8"
               strokeWidth="3"
@@ -176,31 +176,34 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             {/* Show decomposition when calculating */}
             {showingCalculation && (
               <>
-                {/* Dividing line */}
+                {/* Horizontal dividing line */}
                 <line
-                  x1="120"
-                  y1="20"
-                  x2="120"
-                  y2="100"
+                  x1="40"
+                  y1="60"
+                  x2="200"
+                  y2="60"
                   stroke="#dc2626"
                   strokeWidth="2"
                   strokeDasharray="5,5"
                 />
                 {/* Labels for two rectangles */}
-                <text x="80" y="100" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#166534">
-                  4×8 = 32
+                <text x="120" y="45" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#166534">
+                  8×2 = 16
                 </text>
-                <text x="160" y="65" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#166534">
-                  4×4 = 16 ×
+                <text x="90" y="105" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#166534">
+                  5×4 = 20
                 </text>
               </>
             )}
 
             {/* Dimension labels */}
             <text x="120" y="12" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1f2937">8 m</text>
-            <text x="220" y="65" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1f2937">4 m</text>
-            <text x="80" y="195" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1f2937">4 m</text>
-            <text x="25" y="100" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1f2937" transform="rotate(-90, 25, 100)">8 m</text>
+            <text x="220" y="45" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1f2937">2 m</text>
+            <text x="90" y="158" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1f2937">5 m</text>
+            <text x="25" y="85" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1f2937" transform="rotate(-90, 25, 85)">6 m</text>
+            {/* Inner notch dimensions */}
+            <text x="170" y="75" textAnchor="middle" fontSize="10" fill="#6b7280">3 m</text>
+            <text x="155" y="105" textAnchor="middle" fontSize="10" fill="#6b7280" transform="rotate(-90, 155, 105)">4 m</text>
           </svg>
         </div>
 
@@ -299,26 +302,26 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
           <p className="font-semibold text-blue-800 dark:text-blue-200 mb-2">Método 1: Sumar rectángulos</p>
           <div className="flex justify-center mb-2">
-            <svg viewBox="0 0 200 120" className="w-48 h-28">
-              {/* Rectangle A */}
-              <rect x="20" y="10" width="60" height="100" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
-              <text x="50" y="65" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1e40af">A</text>
-              {/* Rectangle B */}
-              <rect x="80" y="10" width="60" height="50" fill="#c4b5fd" stroke="#7c3aed" strokeWidth="2" />
-              <text x="110" y="40" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#5b21b6">B</text>
+            <svg viewBox="0 0 200 100" className="w-48 h-24">
+              {/* Rectangle A (top strip) */}
+              <rect x="20" y="10" width="120" height="30" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
+              <text x="80" y="30" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1e40af">A</text>
+              {/* Rectangle B (bottom left) */}
+              <rect x="20" y="40" width="75" height="50" fill="#c4b5fd" stroke="#7c3aed" strokeWidth="2" />
+              <text x="57" y="70" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#5b21b6">B</text>
               {/* Plus sign */}
-              <text x="160" y="55" fontSize="20" fill="#1f2937">+</text>
+              <text x="160" y="50" fontSize="20" fill="#1f2937">+</text>
             </svg>
           </div>
           <div className="space-y-1 text-sm">
             <p className="text-gray-700 dark:text-gray-300">
-              <span className="text-blue-600 font-semibold">A:</span> 4 × 8 = 32 m²
+              <span className="text-blue-600 font-semibold">A:</span> 8 × 2 = 16 m²
             </p>
             <p className="text-gray-700 dark:text-gray-300">
-              <span className="text-purple-600 font-semibold">B:</span> 4 × 4 = 16 m²
+              <span className="text-purple-600 font-semibold">B:</span> 5 × 4 = 20 m²
             </p>
             <p className="text-gray-700 dark:text-gray-300 font-bold">
-              Total: 32 + 16 = <span className="text-green-600">36 m²</span>
+              Total: 16 + 20 = <span className="text-green-600">36 m²</span>
             </p>
           </div>
         </div>
@@ -327,14 +330,14 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         <div className="p-3 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
           <p className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Método 2: Restar la esquina</p>
           <div className="flex justify-center mb-2">
-            <svg viewBox="0 0 200 120" className="w-48 h-28">
-              {/* Full rectangle */}
-              <rect x="20" y="10" width="120" height="100" fill="#fed7aa" stroke="#ea580c" strokeWidth="2" />
-              {/* Corner to subtract */}
-              <rect x="80" y="60" width="60" height="50" fill="#fecaca" stroke="#dc2626" strokeWidth="2" strokeDasharray="4,4" />
-              <text x="110" y="90" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#dc2626">quitar</text>
+            <svg viewBox="0 0 200 100" className="w-48 h-24">
+              {/* Full rectangle 8x6 */}
+              <rect x="20" y="10" width="120" height="75" fill="#fed7aa" stroke="#ea580c" strokeWidth="2" />
+              {/* Corner to subtract 3x4 */}
+              <rect x="95" y="35" width="45" height="50" fill="#fecaca" stroke="#dc2626" strokeWidth="2" strokeDasharray="4,4" />
+              <text x="117" y="65" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#dc2626">quitar</text>
               {/* Minus sign */}
-              <text x="160" y="55" fontSize="20" fill="#1f2937">−</text>
+              <text x="160" y="50" fontSize="20" fill="#1f2937">−</text>
             </svg>
           </div>
           <div className="space-y-1 text-sm">
@@ -342,7 +345,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               <span className="text-orange-600 font-semibold">Rectángulo completo:</span> 8 × 6 = 48 m²
             </p>
             <p className="text-gray-700 dark:text-gray-300">
-              <span className="text-red-600 font-semibold">Esquina:</span> 4 × 3 = 12 m²
+              <span className="text-red-600 font-semibold">Esquina:</span> 3 × 4 = 12 m²
             </p>
             <p className="text-gray-700 dark:text-gray-300 font-bold">
               Total: 48 − 12 = <span className="text-green-600">36 m²</span>
