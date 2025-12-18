@@ -180,12 +180,12 @@ Add to `lib/lessons/types.ts` in the `M1_LESSONS` array:
   skills: ['skill-1', 'skill-2'],  // From skill taxonomy
   estimatedMinutes: 14,         // Typical: 12-17 minutes
   steps: [
-    { id: 'hook', type: 'hook', title: 'Step Title', requiredToAdvance: true },
-    { id: 'explore', type: 'explore', title: 'Step Title', requiredToAdvance: true },
-    { id: 'explain', type: 'explain', title: 'Step Title' },  // Not required
-    { id: 'classify', type: 'explore', title: 'Step Title', requiredToAdvance: true },
-    { id: 'practice', type: 'practice', title: 'Step Title', requiredToAdvance: true },
-    { id: 'verify', type: 'verify', title: 'Checkpoint', requiredToAdvance: true },
+    { id: 'hook', type: 'hook', title: 'Step Title' },
+    { id: 'explore', type: 'explore', title: 'Step Title' },
+    { id: 'explain', type: 'explain', title: 'Step Title' },
+    { id: 'classify', type: 'explore', title: 'Step Title' },
+    { id: 'practice', type: 'practice', title: 'Step Title' },
+    { id: 'verify', type: 'verify', title: 'Checkpoint' },
   ],
 },
 ```
