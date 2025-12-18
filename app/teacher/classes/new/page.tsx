@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation';
 import TeacherLayout from '@/components/layout/TeacherLayout';
 import { Card, Heading, Text, Button } from '@/components/ui';
 import { ArrowLeft, Copy, Check } from 'lucide-react';
+import { ClassLevel, CLASS_LEVEL_OPTIONS } from '@/lib/types/teacher';
 
 export default function CreateClassPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    level: 'M1' as 'M1' | 'M2' | 'both',
+    level: '2-medio' as ClassLevel,
     schoolName: '',
     maxStudents: 45,
   });
@@ -154,7 +155,7 @@ export default function CreateClassPage() {
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Ej: 8°A Matemáticas"
+                placeholder="Ej: 2°A Matemáticas"
                 className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
               />
             </div>
@@ -176,27 +177,21 @@ export default function CreateClassPage() {
             {/* Level */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Nivel PAES
+                Nivel
               </label>
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { value: 'M1', label: 'M1', desc: 'Básico' },
-                  { value: 'M2', label: 'M2', desc: 'Avanzado' },
-                  { value: 'both', label: 'Ambos', desc: 'M1 + M2' },
-                ].map((option) => (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {CLASS_LEVEL_OPTIONS.map((option) => (
                   <button
                     key={option.value}
                     type="button"
-                    onClick={() =>
-                      setFormData({ ...formData, level: option.value as 'M1' | 'M2' | 'both' })
-                    }
-                    className={`p-4 rounded-xl border-2 transition-all ${
+                    onClick={() => setFormData({ ...formData, level: option.value })}
+                    className={`p-3 rounded-xl border-2 transition-all text-left ${
                       formData.level === option.value
                         ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
                         : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                     }`}
                   >
-                    <div className="font-bold text-lg text-gray-900 dark:text-white">
+                    <div className="font-bold text-sm text-gray-900 dark:text-white">
                       {option.label}
                     </div>
                     <div className="text-xs text-gray-500 dark:text-gray-400">{option.desc}</div>
