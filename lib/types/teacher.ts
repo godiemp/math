@@ -39,6 +39,28 @@ export const CLASS_LEVEL_OPTIONS = [
 ];
 
 /**
+ * Subjects available for each class level
+ * 1° Medio focuses on números and álgebra (foundation subjects)
+ * Higher levels progressively add geometría and probabilidad
+ */
+export const SUBJECTS_BY_LEVEL: Record<ClassLevel, Subject[]> = {
+  '1-medio': ['números', 'álgebra'], // Foundation focus: numbers and algebra only
+  '2-medio': ['números', 'álgebra', 'geometría'], // Add geometry
+  '3-medio': ['números', 'álgebra', 'geometría', 'probabilidad'], // Full curriculum
+  '4-medio': ['números', 'álgebra', 'geometría', 'probabilidad'], // Full curriculum
+  M1: ['números', 'álgebra', 'geometría', 'probabilidad'], // PAES M1 covers all
+  M2: ['números', 'álgebra', 'geometría', 'probabilidad'], // PAES M2 covers all
+  both: ['números', 'álgebra', 'geometría', 'probabilidad'], // Both levels cover all
+};
+
+/**
+ * Get subjects for a given class level
+ */
+export function getSubjectsForLevel(level: ClassLevel): Subject[] {
+  return SUBJECTS_BY_LEVEL[level];
+}
+
+/**
  * Class/Course managed by a teacher
  */
 export interface TeacherClass {
@@ -60,6 +82,11 @@ export interface TeacherClass {
 }
 
 /**
+ * Subject accuracy breakdown - partial record to support levels with limited subjects
+ */
+export type SubjectAccuracy = Partial<Record<Subject, number>>;
+
+/**
  * Student in a teacher's class (with progress summary)
  */
 export interface ClassStudent {
@@ -75,13 +102,8 @@ export interface ClassStudent {
   currentStreak: number;
   longestStreak: number;
   lessonsCompleted: number;
-  // Subject breakdown
-  subjectAccuracy: {
-    números: number;
-    álgebra: number;
-    geometría: number;
-    probabilidad: number;
-  };
+  // Subject breakdown - partial to support levels with limited subjects (e.g., 1° Medio)
+  subjectAccuracy: SubjectAccuracy;
 }
 
 /**
@@ -192,6 +214,22 @@ export const MOCK_CLASSES: TeacherClass[] = [
     studentCount: 18,
     avgAccuracy: 0.81,
     lastActivity: Date.now() - 30 * 60 * 1000,
+  },
+  {
+    id: 'class-4',
+    name: '1°C Matemáticas',
+    description: 'Clase de matemáticas para 1° medio, sección C - Enfoque en números y álgebra',
+    teacherId: 'teacher-1',
+    inviteCode: 'PRIM1MED',
+    inviteCodeActive: true,
+    maxStudents: 40,
+    level: '1-medio',
+    schoolName: 'Colegio Santa María',
+    createdAt: Date.now() - 45 * 24 * 60 * 60 * 1000,
+    updatedAt: Date.now() - 4 * 60 * 60 * 1000,
+    studentCount: 35,
+    avgAccuracy: 0.69,
+    lastActivity: Date.now() - 5 * 60 * 60 * 1000,
   },
 ];
 
@@ -312,6 +350,99 @@ export const MOCK_STUDENTS: ClassStudent[] = [
   },
 ];
 
+/**
+ * Mock students for 1° Medio class (class-4)
+ * These students only have números and álgebra accuracy since those are the
+ * subjects available at the 1° Medio level
+ */
+export const MOCK_STUDENTS_1_MEDIO: ClassStudent[] = [
+  {
+    id: 'student-1m-1',
+    displayName: 'Fernanda Núñez',
+    email: 'fernanda.n@email.com',
+    joinedAt: Date.now() - 40 * 24 * 60 * 60 * 1000,
+    status: 'active',
+    questionsAnswered: 98,
+    accuracy: 0.74,
+    lastActive: Date.now() - 1 * 60 * 60 * 1000,
+    currentStreak: 12,
+    longestStreak: 12,
+    lessonsCompleted: 5,
+    subjectAccuracy: {
+      números: 0.78,
+      álgebra: 0.70,
+    },
+  },
+  {
+    id: 'student-1m-2',
+    displayName: 'Tomás Vargas',
+    email: 'tomas.v@email.com',
+    joinedAt: Date.now() - 38 * 24 * 60 * 60 * 1000,
+    status: 'active',
+    questionsAnswered: 67,
+    accuracy: 0.62,
+    lastActive: Date.now() - 3 * 60 * 60 * 1000,
+    currentStreak: 2,
+    longestStreak: 8,
+    lessonsCompleted: 3,
+    subjectAccuracy: {
+      números: 0.68,
+      álgebra: 0.55,
+    },
+  },
+  {
+    id: 'student-1m-3',
+    displayName: 'Isidora Campos',
+    email: 'isidora.c@email.com',
+    joinedAt: Date.now() - 42 * 24 * 60 * 60 * 1000,
+    status: 'active',
+    questionsAnswered: 145,
+    accuracy: 0.85,
+    lastActive: Date.now() - 30 * 60 * 1000,
+    currentStreak: 18,
+    longestStreak: 18,
+    lessonsCompleted: 8,
+    subjectAccuracy: {
+      números: 0.88,
+      álgebra: 0.82,
+    },
+  },
+  {
+    id: 'student-1m-4',
+    displayName: 'Matías Herrera',
+    email: 'matias.h@email.com',
+    joinedAt: Date.now() - 35 * 24 * 60 * 60 * 1000,
+    status: 'active',
+    questionsAnswered: 42,
+    accuracy: 0.55,
+    lastActive: Date.now() - 4 * 24 * 60 * 60 * 1000,
+    currentStreak: 0,
+    longestStreak: 3,
+    lessonsCompleted: 2,
+    subjectAccuracy: {
+      números: 0.58,
+      álgebra: 0.52,
+    },
+  },
+  {
+    id: 'student-1m-5',
+    displayName: 'Catalina Reyes',
+    email: 'catalina.r@email.com',
+    joinedAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
+    status: 'active',
+    questionsAnswered: 112,
+    accuracy: 0.79,
+    lastActive: Date.now() - 2 * 60 * 60 * 1000,
+    currentStreak: 9,
+    longestStreak: 15,
+    lessonsCompleted: 6,
+    subjectAccuracy: {
+      números: 0.82,
+      álgebra: 0.76,
+    },
+  },
+];
+
 export const MOCK_CLASS_ANALYTICS: ClassAnalytics = {
   totalStudents: 32,
   activeThisWeek: 24,
@@ -337,6 +468,37 @@ export const MOCK_CLASS_ANALYTICS: ClassAnalytics = {
     { topic: 'Factorización', avgAccuracy: 0.52, studentsCount: 18 },
     { topic: 'Ecuaciones cuadráticas', avgAccuracy: 0.58, studentsCount: 15 },
     { topic: 'Probabilidad condicional', avgAccuracy: 0.61, studentsCount: 12 },
+  ],
+};
+
+/**
+ * Mock analytics for 1° Medio class (class-4)
+ * Only includes números and álgebra subjects (acotados)
+ */
+export const MOCK_CLASS_ANALYTICS_1_MEDIO: ClassAnalytics = {
+  totalStudents: 35,
+  activeThisWeek: 28,
+  avgAccuracy: 0.69,
+  avgQuestionsPerStudent: 93,
+  lessonsCompletedTotal: 124,
+  subjectBreakdown: [
+    { subject: 'números', avgAccuracy: 0.75, questionsAnswered: 1820 },
+    { subject: 'álgebra', avgAccuracy: 0.63, questionsAnswered: 1430 },
+    // Note: geometría and probabilidad are not included for 1° Medio
+  ],
+  weeklyActivity: [
+    { day: 'Lun', students: 25, questions: 178 },
+    { day: 'Mar', students: 28, questions: 210 },
+    { day: 'Mié', students: 26, questions: 195 },
+    { day: 'Jue', students: 30, questions: 245 },
+    { day: 'Vie', students: 22, questions: 156 },
+    { day: 'Sáb', students: 12, questions: 78 },
+    { day: 'Dom', students: 8, questions: 45 },
+  ],
+  strugglingTopics: [
+    { topic: 'Operaciones con fracciones', avgAccuracy: 0.48, studentsCount: 22 },
+    { topic: 'Ecuaciones lineales', avgAccuracy: 0.54, studentsCount: 19 },
+    { topic: 'Propiedades de potencias', avgAccuracy: 0.59, studentsCount: 15 },
   ],
 };
 
@@ -418,6 +580,83 @@ export const MOCK_AI_RECOMMENDATIONS: StudentAIRecommendation[] = [
     recommendation:
       'Continuar con el ritmo actual. Monitorear su progreso en las próximas 2 semanas para confirmar la tendencia positiva.',
     suggestedContent: null,
+    priority: 'medium',
+    generatedAt: Date.now(),
+  },
+];
+
+/**
+ * Mock AI recommendations for 1° Medio students
+ * Recommendations focus only on números and álgebra since those are the available subjects
+ */
+export const MOCK_AI_RECOMMENDATIONS_1_MEDIO: StudentAIRecommendation[] = [
+  {
+    studentId: 'student-1m-1', // Fernanda Núñez
+    analysis:
+      'Fernanda muestra un buen dominio en números (78%) y progreso sólido en álgebra (70%). Mantiene una racha de 12 días consecutivos, demostrando excelente compromiso.',
+    recommendation:
+      'Continuar con el ritmo actual. Sugerimos avanzar hacia expresiones algebraicas más complejas para preparar la base de 2° Medio.',
+    suggestedContent: {
+      id: 'ml-exp-alg',
+      title: 'Expresiones Algebraicas',
+      type: 'mini-lesson',
+    },
+    priority: 'low',
+    generatedAt: Date.now(),
+  },
+  {
+    studentId: 'student-1m-2', // Tomás Vargas
+    analysis:
+      'Tomás tiene dificultades en álgebra (55%), especialmente con ecuaciones lineales. Su precisión en números es aceptable (68%) pero necesita refuerzo en operaciones con fracciones.',
+    recommendation:
+      'Completar práctica adicional de operaciones básicas antes de continuar con ecuaciones. La base numérica es fundamental para álgebra.',
+    suggestedContent: {
+      id: 'pr-num-frac',
+      title: 'Práctica: Operaciones con Fracciones',
+      type: 'practice',
+    },
+    priority: 'high',
+    generatedAt: Date.now(),
+  },
+  {
+    studentId: 'student-1m-3', // Isidora Campos
+    analysis:
+      'Isidora domina ambas materias con excelencia (88% en números, 82% en álgebra). Mantiene una racha impresionante de 18 días y está muy por encima del promedio de la clase.',
+    recommendation:
+      'Lista para contenido desafiante. Sugerimos introducir problemas de aplicación más complejos para mantener su motivación y preparar bases para 2° Medio.',
+    suggestedContent: {
+      id: 'ml-prob-avanz',
+      title: 'Problemas de Aplicación Avanzados',
+      type: 'mini-lesson',
+    },
+    priority: 'low',
+    generatedAt: Date.now(),
+  },
+  {
+    studentId: 'student-1m-4', // Matías Herrera
+    analysis:
+      'Matías necesita atención urgente. Su precisión es baja en ambas materias (58% números, 52% álgebra) y ha estado inactivo por 4 días. Riesgo de quedarse atrás.',
+    recommendation:
+      'Contactar al estudiante para re-engagement. Priorizar mini-lección de repaso de conceptos básicos de números antes de continuar con álgebra.',
+    suggestedContent: {
+      id: 'ml-num-basics',
+      title: 'Repaso: Números Enteros y Racionales',
+      type: 'mini-lesson',
+    },
+    priority: 'high',
+    generatedAt: Date.now(),
+  },
+  {
+    studentId: 'student-1m-5', // Catalina Reyes
+    analysis:
+      'Catalina muestra progreso consistente (82% números, 76% álgebra) con actividad regular. Su racha de 9 días indica buen compromiso con la plataforma.',
+    recommendation:
+      'Mantener el ritmo actual. Sugerimos práctica adicional en álgebra para cerrar la pequeña brecha con su rendimiento en números.',
+    suggestedContent: {
+      id: 'pr-alg-lin',
+      title: 'Práctica: Ecuaciones Lineales',
+      type: 'practice',
+    },
     priority: 'medium',
     generatedAt: Date.now(),
   },
