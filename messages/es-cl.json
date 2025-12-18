@@ -919,6 +919,7 @@
       "userManagement": "user management",
       "contentManagement": "content management",
       "tools": "tools",
+      "sales": "ventas",
       "debugTools": "debug tools"
     },
     "items": {
@@ -933,6 +934,7 @@
       "abstractProblems": "abstract problems",
       "generator": "generator",
       "upload": "upload",
+      "schools": "colegios",
       "studyBuddyDebug": "study buddy debug",
       "rapidFireDebug": "rapid fire debug",
       "zenDebug": "zen debug",
