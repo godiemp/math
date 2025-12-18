@@ -58,6 +58,13 @@ const menuGroupsConfig: MenuGroup[] = [
     ],
   },
   {
+    nameKey: 'sales',
+    icon: '💼',
+    items: [
+      { nameKey: 'schools', path: '/admin/schools', icon: '🏫' },
+    ],
+  },
+  {
     nameKey: 'debugTools',
     icon: '🔧',
     items: [
