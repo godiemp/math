@@ -25,11 +25,11 @@ const QUESTIONS: CheckpointQuestion[] = [
   {
     id: 'q3',
     question:
-      '3 máquinas producen 150 piezas por hora. ¿Cuántas piezas producirán 7 máquinas en el mismo tiempo?',
-    options: ['250 piezas', '300 piezas', '350 piezas', '400 piezas'],
-    correctAnswer: 2,
+      'Si 4 obreros trabajando 5 horas/día terminan una obra en 12 días, ¿cuántos días tardarán 6 obreros trabajando 4 horas/día?',
+    options: ['8 días', '10 días', '12 días', '15 días'],
+    correctAnswer: 1,
     explanation:
-      'Es proporcionalidad directa (más máquinas = más piezas). y₂ = (7 · 150) / 3 = 1050 / 3 = 350 piezas.',
+      'Compuesta: Obreros ↑ → Días ↓ (inversa). Horas ↓ → Días ↑ (inversa). x = 12 × (4/6) × (5/4) = 12 × 20/24 = 10 días.',
   },
   {
     id: 'q4',
@@ -49,7 +49,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
       isActive={isActive}
       questions={QUESTIONS}
       requiredCorrect={3}
-      successMessage="¡Dominas la proporcionalidad directa e inversa!"
+      successMessage="¡Dominas la proporcionalidad directa, inversa y compuesta!"
     />
   );
 }

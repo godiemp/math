@@ -5,7 +5,7 @@ import { ArrowRight, ArrowUp, ArrowDown, AlertTriangle, Lightbulb, BookOpen } fr
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
-type Tab = 'direct' | 'inverse' | 'method';
+type Tab = 'direct' | 'inverse' | 'compound' | 'method';
 
 export default function Step3Explain({ onComplete, isActive }: LessonStepProps) {
   const [activeTab, setActiveTab] = useState<Tab>('direct');
@@ -15,6 +15,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
   const tabs = [
     { id: 'direct' as Tab, label: 'Directa', icon: '↑↑' },
     { id: 'inverse' as Tab, label: 'Inversa', icon: '↑↓' },
+    { id: 'compound' as Tab, label: 'Compuesta', icon: '⚙️' },
     { id: 'method' as Tab, label: 'Método', icon: '?' },
   ];
 
@@ -200,6 +201,97 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <p className="text-center mt-4 font-mono text-amber-700 dark:text-amber-300">
                 y₂ = (x₁ · y₁) / x₂ = (6 · 10) / 15 = <strong>4 días</strong>
               </p>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'compound' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="text-2xl">⚙️</div>
+              <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">
+                Proporcionalidad Compuesta
+              </h3>
+            </div>
+
+            <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-4">
+              <p className="text-purple-800 dark:text-purple-200 mb-2">
+                <strong>Definición:</strong> Se usa cuando hay más de dos magnitudes relacionadas.
+                Cada magnitud puede ser directa o inversa respecto a la incógnita.
+              </p>
+            </div>
+
+            {/* Formula */}
+            <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/50 dark:to-pink-900/50 rounded-xl p-6 text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Método</p>
+              <div className="text-xl font-mono font-bold text-purple-700 dark:text-purple-300">
+                Analizar cada magnitud por separado
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                Directa: pasa <strong>igual</strong> | Inversa: pasa <strong>invertida</strong>
+              </p>
+            </div>
+
+            {/* Worked example */}
+            <div className="border-l-4 border-purple-500 pl-4">
+              <p className="font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                <BookOpen className="inline w-5 h-5 mr-1" /> Ejemplo resuelto:
+              </p>
+              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-3">
+                <p className="text-gray-700 dark:text-gray-300">
+                  Si <strong>4 obreros</strong> trabajando <strong>6 horas/día</strong> terminan una obra en{' '}
+                  <strong>10 días</strong>, ¿cuántos días tardarán <strong>3 obreros</strong> trabajando{' '}
+                  <strong>8 horas/día</strong>?
+                </p>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-center">
+                    <thead>
+                      <tr className="border-b border-gray-300 dark:border-gray-600">
+                        <th className="py-2 px-3">Obreros</th>
+                        <th className="py-2 px-3">Horas/día</th>
+                        <th className="py-2 px-3">Días</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-gray-200 dark:border-gray-600">
+                        <td className="py-2 px-3 font-mono">4</td>
+                        <td className="py-2 px-3 font-mono">6</td>
+                        <td className="py-2 px-3 font-mono">10</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-3 font-mono">3</td>
+                        <td className="py-2 px-3 font-mono">8</td>
+                        <td className="py-2 px-3 font-mono text-purple-600 font-bold">?</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className="font-mono text-sm space-y-1 text-gray-600 dark:text-gray-400">
+                  <p>
+                    <strong>Análisis:</strong>
+                  </p>
+                  <p>• Obreros ↓ (4→3) → Días ↑ → <span className="text-orange-600">Inversa</span></p>
+                  <p>• Horas ↑ (6→8) → Días ↓ → <span className="text-orange-600">Inversa</span></p>
+                  <p className="mt-2">
+                    <strong>Cálculo:</strong> x = 10 × (4/3) × (6/8) = 10 × 4 × 6 / (3 × 8) = 240/24 ={' '}
+                    <strong className="text-purple-600">10 días</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Key insight */}
+            <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4">
+              <p className="font-semibold text-blue-800 dark:text-blue-200 mb-2">
+                <Lightbulb className="inline w-5 h-5 mr-1 text-yellow-500" /> Regla de Tres Compuesta:
+              </p>
+              <div className="space-y-2 text-sm text-blue-700 dark:text-blue-300">
+                <p>1. Identifica todas las magnitudes y la incógnita</p>
+                <p>2. Determina si cada magnitud es directa o inversa respecto a la incógnita</p>
+                <p>3. <strong>Directa:</strong> el valor pasa igual al numerador</p>
+                <p>4. <strong>Inversa:</strong> el valor pasa invertido (al revés)</p>
+                <p>5. Multiplica y simplifica</p>
+              </div>
             </div>
           </div>
         )}

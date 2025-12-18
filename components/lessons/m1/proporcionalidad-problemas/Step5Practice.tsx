@@ -8,8 +8,7 @@ import { LessonStepProps } from '@/lib/lessons/types';
 interface PracticeProblem {
   id: string;
   problem: string;
-  type: 'direct' | 'inverse';
-  data: { x1: number; y1: number; x2: number };
+  type: 'direct' | 'inverse' | 'compound';
   options: string[];
   correctIndex: number;
   hint: string;
@@ -24,7 +23,6 @@ const PRACTICE_PROBLEMS: PracticeProblem[] = [
     id: '1',
     problem: 'Si 4 metros de tela cuestan $12.000, ¿cuánto cuestan 7 metros?',
     type: 'direct',
-    data: { x1: 4, y1: 12000, x2: 7 },
     options: ['$18.000', '$21.000', '$24.000', '$28.000'],
     correctIndex: 1,
     hint: 'Es proporcionalidad directa. Usa: y₂ = (x₂ · y₁) / x₁',
@@ -37,7 +35,6 @@ const PRACTICE_PROBLEMS: PracticeProblem[] = [
     id: '2',
     problem: '5 obreros tardan 12 días en terminar una obra. ¿Cuántos días tardarán 10 obreros?',
     type: 'inverse',
-    data: { x1: 5, y1: 12, x2: 10 },
     options: ['24 días', '6 días', '8 días', '4 días'],
     correctIndex: 1,
     hint: 'Es proporcionalidad inversa. Usa: y₂ = (x₁ · y₁) / x₂',
@@ -50,7 +47,6 @@ const PRACTICE_PROBLEMS: PracticeProblem[] = [
     id: '3',
     problem: 'Un auto viaja a 60 km/h y tarda 4 horas. ¿Cuánto tardará si viaja a 80 km/h?',
     type: 'inverse',
-    data: { x1: 60, y1: 4, x2: 80 },
     options: ['5 horas', '3 horas', '2 horas', '6 horas'],
     correctIndex: 1,
     hint: 'Es proporcionalidad inversa: más velocidad = menos tiempo',
@@ -61,13 +57,12 @@ const PRACTICE_PROBLEMS: PracticeProblem[] = [
   },
   {
     id: '4',
-    problem: 'Si 3 kg de arroz cuestan $2.700, ¿cuánto cuestan 5 kg?',
-    type: 'direct',
-    data: { x1: 3, y1: 2700, x2: 5 },
-    options: ['$3.500', '$4.000', '$4.500', '$5.000'],
-    correctIndex: 2,
-    hint: 'Es proporcionalidad directa: más cantidad = más precio',
-    explanation: 'y₂ = (5 · 2.700) / 3 = 13.500 / 3 = $4.500',
+    problem: 'Si 6 obreros trabajando 8 horas/día terminan una obra en 15 días, ¿cuántos días tardarán 4 obreros trabajando 6 horas/día?',
+    type: 'compound',
+    options: ['20 días', '30 días', '25 días', '40 días'],
+    correctIndex: 1,
+    hint: 'Compuesta: Obreros ↓ → Días ↑ (inversa). Horas ↓ → Días ↑ (inversa).',
+    explanation: 'x = 15 × (6/4) × (8/6) = 15 × 6 × 8 / (4 × 6) = 720/24 = 30 días',
     answered: false,
     isCorrect: null,
     showHint: false,
@@ -76,11 +71,22 @@ const PRACTICE_PROBLEMS: PracticeProblem[] = [
     id: '5',
     problem: '8 grifos llenan una piscina en 6 horas. ¿Cuánto tardarán 12 grifos?',
     type: 'inverse',
-    data: { x1: 8, y1: 6, x2: 12 },
     options: ['9 horas', '4 horas', '3 horas', '8 horas'],
     correctIndex: 1,
     hint: 'Es proporcionalidad inversa: más grifos = menos tiempo',
     explanation: 'y₂ = (8 · 6) / 12 = 48 / 12 = 4 horas',
+    answered: false,
+    isCorrect: null,
+    showHint: false,
+  },
+  {
+    id: '6',
+    problem: 'Si 3 máquinas producen 120 piezas en 4 horas, ¿cuántas piezas producirán 5 máquinas en 6 horas?',
+    type: 'compound',
+    options: ['200 piezas', '250 piezas', '300 piezas', '360 piezas'],
+    correctIndex: 2,
+    hint: 'Compuesta: Máquinas ↑ → Piezas ↑ (directa). Horas ↑ → Piezas ↑ (directa).',
+    explanation: 'x = 120 × (5/3) × (6/4) = 120 × 5 × 6 / (3 × 4) = 3600/12 = 300 piezas',
     answered: false,
     isCorrect: null,
     showHint: false,
@@ -94,7 +100,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
 
   const problem = problems[currentProblem];
   const correctCount = problems.filter((p) => p.isCorrect).length;
-  const passed = correctCount >= 4;
+  const passed = correctCount >= 5;
 
   const handleToggleHint = () => {
     setProblems((prev) =>
@@ -135,7 +141,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Práctica Guiada</h2>
         <p className="text-gray-600 dark:text-gray-300">
           {!showComplete
-            ? `Resuelve los problemas. Necesitas 4 de ${problems.length} correctas.`
+            ? `Resuelve los problemas. Necesitas 5 de ${problems.length} correctas.`
             : '¡Resultados!'}
         </p>
       </div>
@@ -177,10 +183,12 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                   'px-3 py-1 rounded-full text-sm font-semibold',
                   problem.type === 'direct'
                     ? 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300'
-                    : 'bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-300'
+                    : problem.type === 'inverse'
+                      ? 'bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-300'
+                      : 'bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300'
                 )}
               >
-                {problem.type === 'direct' ? '↑↑ Directa' : '↑↓ Inversa'}
+                {problem.type === 'direct' ? '↑↑ Directa' : problem.type === 'inverse' ? '↑↓ Inversa' : '⚙️ Compuesta'}
               </span>
             </div>
 
@@ -315,7 +323,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
             >
               {passed
                 ? 'Has demostrado que puedes resolver problemas de proporcionalidad'
-                : `Necesitas 4 respuestas correctas. ¡Puedes intentarlo de nuevo!`}
+                : `Necesitas 5 respuestas correctas. ¡Puedes intentarlo de nuevo!`}
             </p>
           </div>
 
