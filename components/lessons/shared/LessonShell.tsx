@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, ReactNode } from 'react';
-import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import { ArrowLeft, Check } from 'lucide-react';
 import { Lesson } from '@/lib/lessons/types';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -12,8 +12,6 @@ interface LessonShellProps {
     currentStep: number;
     goToStep: (step: number) => void;
     completeStep: () => void;
-    canAdvance: boolean;
-    setCanAdvance: (can: boolean) => void;
   }) => ReactNode;
   onComplete?: () => void;
   onExit?: () => void;
@@ -28,7 +26,6 @@ export default function LessonShell({
   const { isAdmin } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
-  const [canAdvance, setCanAdvance] = useState(true);
 
   const totalSteps = lesson.steps.length;
   const progress = ((currentStep + 1) / totalSteps) * 100;
@@ -38,40 +35,25 @@ export default function LessonShell({
   const goToStep = (step: number) => {
     if (step >= 0 && step < totalSteps) {
       setCurrentStep(step);
-      setCanAdvance(!lesson.steps[step].requiredToAdvance);
     }
   };
 
   const completeStep = () => {
     setCompletedSteps(prev => new Set([...prev, currentStep]));
-    setCanAdvance(true);
 
     if (isLastStep) {
       onComplete?.();
     } else {
       // Auto-advance to next step
       setCurrentStep(prev => prev + 1);
-      // Reset canAdvance for next step
-      const nextStepDef = lesson.steps[currentStep + 1];
-      setCanAdvance(!nextStepDef?.requiredToAdvance);
     }
   };
 
   const handleBack = () => {
     if (currentStep > 0) {
       setCurrentStep(prev => prev - 1);
-      const prevStepDef = lesson.steps[currentStep - 1];
-      setCanAdvance(completedSteps.has(currentStep - 1) || !prevStepDef?.requiredToAdvance);
     } else {
       onExit?.();
-    }
-  };
-
-  const handleNext = () => {
-    if (canAdvance && currentStep < totalSteps - 1) {
-      setCurrentStep(prev => prev + 1);
-      const nextStepDef = lesson.steps[currentStep + 1];
-      setCanAdvance(completedSteps.has(currentStep + 1) || !nextStepDef?.requiredToAdvance);
     }
   };
 
@@ -165,41 +147,8 @@ export default function LessonShell({
           currentStep,
           goToStep,
           completeStep,
-          canAdvance,
-          setCanAdvance,
         })}
       </div>
-
-      {/* Footer navigation (only show for steps that don't require interaction to advance) */}
-      {!currentStepDef.requiredToAdvance && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700 p-4">
-          <div className="max-w-4xl mx-auto flex justify-between">
-            <button
-              onClick={handleBack}
-              className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
-              <ArrowLeft size={18} />
-              <span>{currentStep === 0 ? 'Salir' : 'Anterior'}</span>
-            </button>
-
-            {!isLastStep && (
-              <button
-                onClick={handleNext}
-                disabled={!canAdvance}
-                className={cn(
-                  'flex items-center gap-2 px-6 py-2 rounded-lg font-semibold transition-all',
-                  canAdvance
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 shadow-lg'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
-                )}
-              >
-                <span>Siguiente</span>
-                <ArrowRight size={18} />
-              </button>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

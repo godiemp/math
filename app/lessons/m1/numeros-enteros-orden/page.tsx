@@ -41,7 +41,7 @@ export default function NumerosEnterosOrdenLesson() {
       onComplete={handleComplete}
       onExit={handleExit}
     >
-      {({ currentStep, completeStep, canAdvance, setCanAdvance }) => {
+      {({ currentStep, completeStep }) => {
         const stepComponents = [
           <Step1Hook
             key="step1"
