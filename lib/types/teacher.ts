@@ -4,7 +4,39 @@
  * Types for the teacher version of SimplePAES
  */
 
-import { Level, Subject } from './core';
+import { Subject } from './core';
+
+/**
+ * Class levels - supports both grade levels and PAES prep
+ */
+export type ClassLevel =
+  | '1-medio' // 1° Medio
+  | '2-medio' // 2° Medio
+  | '3-medio' // 3° Medio
+  | '4-medio' // 4° Medio
+  | 'M1' // PAES M1 (básico)
+  | 'M2' // PAES M2 (avanzado)
+  | 'both'; // M1 + M2
+
+export const CLASS_LEVEL_LABELS: Record<ClassLevel, string> = {
+  '1-medio': '1° Medio',
+  '2-medio': '2° Medio',
+  '3-medio': '3° Medio',
+  '4-medio': '4° Medio',
+  M1: 'PAES M1',
+  M2: 'PAES M2',
+  both: 'PAES M1+M2',
+};
+
+export const CLASS_LEVEL_OPTIONS = [
+  { value: '1-medio' as ClassLevel, label: '1° Medio', desc: 'Primer año' },
+  { value: '2-medio' as ClassLevel, label: '2° Medio', desc: 'Segundo año' },
+  { value: '3-medio' as ClassLevel, label: '3° Medio', desc: 'Tercer año' },
+  { value: '4-medio' as ClassLevel, label: '4° Medio', desc: 'Cuarto año' },
+  { value: 'M1' as ClassLevel, label: 'PAES M1', desc: 'Competencia Matemática 1' },
+  { value: 'M2' as ClassLevel, label: 'PAES M2', desc: 'Competencia Matemática 2' },
+  { value: 'both' as ClassLevel, label: 'PAES M1+M2', desc: 'Ambas competencias' },
+];
 
 /**
  * Class/Course managed by a teacher
@@ -17,7 +49,7 @@ export interface TeacherClass {
   inviteCode: string;
   inviteCodeActive: boolean;
   maxStudents: number;
-  level: Level | 'both';
+  level: ClassLevel;
   schoolName?: string;
   createdAt: number;
   updatedAt: number;
@@ -92,6 +124,22 @@ export interface ClassAnalytics {
   }[];
 }
 
+/**
+ * AI-generated recommendation for a student
+ */
+export interface StudentAIRecommendation {
+  studentId: string;
+  analysis: string; // AI-generated analysis of student
+  recommendation: string; // What the AI suggests
+  suggestedContent: {
+    id: string;
+    title: string;
+    type: 'mini-lesson' | 'practice';
+  } | null;
+  priority: 'high' | 'medium' | 'low'; // Visual indicator
+  generatedAt: number;
+}
+
 // ============================================================================
 // MOCK DATA FOR PROTOTYPING
 // ============================================================================
@@ -99,14 +147,14 @@ export interface ClassAnalytics {
 export const MOCK_CLASSES: TeacherClass[] = [
   {
     id: 'class-1',
-    name: '8°A Matemáticas',
-    description: 'Clase de matemáticas para 8° básico, sección A',
+    name: '2°A Matemáticas',
+    description: 'Clase de matemáticas para 2° medio, sección A',
     teacherId: 'teacher-1',
     inviteCode: 'ABC123XY',
     inviteCodeActive: true,
     maxStudents: 45,
-    level: 'M1',
-    schoolName: 'Colegio San Patricio',
+    level: '2-medio',
+    schoolName: 'Liceo de Aplicación',
     createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
     updatedAt: Date.now() - 2 * 60 * 60 * 1000,
     studentCount: 32,
@@ -115,13 +163,13 @@ export const MOCK_CLASSES: TeacherClass[] = [
   },
   {
     id: 'class-2',
-    name: '8°B Matemáticas',
-    description: 'Clase de matemáticas para 8° básico, sección B',
+    name: '4°B Matemáticas',
+    description: 'Clase de matemáticas para 4° medio, sección B',
     teacherId: 'teacher-1',
     inviteCode: 'DEF456ZZ',
     inviteCodeActive: true,
     maxStudents: 45,
-    level: 'M1',
+    level: '4-medio',
     schoolName: 'Colegio San Patricio',
     createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
     updatedAt: Date.now() - 5 * 60 * 60 * 1000,
@@ -138,7 +186,7 @@ export const MOCK_CLASSES: TeacherClass[] = [
     inviteCodeActive: true,
     maxStudents: 25,
     level: 'both',
-    schoolName: 'Colegio San Patricio',
+    schoolName: 'Liceo de Aplicación',
     createdAt: Date.now() - 60 * 24 * 60 * 60 * 1000,
     updatedAt: Date.now() - 1 * 60 * 60 * 1000,
     studentCount: 18,
@@ -291,3 +339,86 @@ export const MOCK_CLASS_ANALYTICS: ClassAnalytics = {
     { topic: 'Probabilidad condicional', avgAccuracy: 0.61, studentsCount: 12 },
   ],
 };
+
+export const MOCK_AI_RECOMMENDATIONS: StudentAIRecommendation[] = [
+  {
+    studentId: 'student-1', // María González
+    analysis:
+      'María muestra un dominio sólido en todas las materias (82% general). Su punto más fuerte es geometría (88%) y su área de oportunidad es probabilidad (75%). Mantiene una racha activa de 7 días.',
+    recommendation:
+      'Continuar con el ritmo actual. Sugerimos profundizar en probabilidad condicional para alcanzar el nivel de sus otras materias.',
+    suggestedContent: {
+      id: 'ml-prob',
+      title: 'Probabilidad Condicional',
+      type: 'mini-lesson',
+    },
+    priority: 'low',
+    generatedAt: Date.now(),
+  },
+  {
+    studentId: 'student-2', // Juan Pérez
+    analysis:
+      'Juan ha estado inactivo por 2 días. Antes de eso, mostraba progreso en álgebra (mejoró de 45% a 55%). Su principal dificultad está en álgebra (55%), específicamente en ecuaciones con variables.',
+    recommendation:
+      'Práctica adicional de ecuaciones lineales antes de avanzar. Considerar contactar para re-engagement antes de que la brecha aumente.',
+    suggestedContent: {
+      id: 'pr-alg',
+      title: 'Práctica: Ecuaciones Lineales',
+      type: 'practice',
+    },
+    priority: 'high',
+    generatedAt: Date.now(),
+  },
+  {
+    studentId: 'student-3', // Camila Rodríguez
+    analysis:
+      'Camila domina todo el contenido con excelencia (91% general). Mantiene una racha impresionante de 21 días consecutivos. Su velocidad de respuesta está en el percentil 95 de la clase.',
+    recommendation:
+      'Lista para contenido avanzado. Sugerimos comenzar con material de preparación PAES M2 para mantener el desafío y evitar aburrimiento.',
+    suggestedContent: {
+      id: 'ml-func',
+      title: 'Introducción a Funciones (M2)',
+      type: 'mini-lesson',
+    },
+    priority: 'low',
+    generatedAt: Date.now(),
+  },
+  {
+    studentId: 'student-4', // Diego Muñoz
+    analysis:
+      'Diego necesita atención urgente. Su precisión general es 58% y ha estado inactivo por 5 días. Su mayor dificultad es álgebra (48%), donde confunde operaciones con variables.',
+    recommendation:
+      'Completar la mini-lección "Variables y Expresiones" antes de continuar. Es fundamental cerrar esta brecha para el currículum de este nivel.',
+    suggestedContent: {
+      id: 'ml-var',
+      title: 'Variables y Expresiones',
+      type: 'mini-lesson',
+    },
+    priority: 'high',
+    generatedAt: Date.now(),
+  },
+  {
+    studentId: 'student-5', // Valentina Silva
+    analysis:
+      'Valentina muestra un progreso consistente (76% general) con actividad regular. Sus materias están balanceadas, con geometría ligeramente más fuerte (78%).',
+    recommendation:
+      'Mantener el ritmo actual. Sugerimos práctica adicional en álgebra para consolidar antes del próximo tema.',
+    suggestedContent: {
+      id: 'pr-alg-2',
+      title: 'Práctica: Factorización',
+      type: 'practice',
+    },
+    priority: 'medium',
+    generatedAt: Date.now(),
+  },
+  {
+    studentId: 'student-6', // Sebastián Torres
+    analysis:
+      'Sebastián es nuevo en la clase (10 días) pero muestra buen progreso inicial (71% general). Mantiene una racha de 3 días y está desarrollando buenos hábitos de estudio.',
+    recommendation:
+      'Continuar con el ritmo actual. Monitorear su progreso en las próximas 2 semanas para confirmar la tendencia positiva.',
+    suggestedContent: null,
+    priority: 'medium',
+    generatedAt: Date.now(),
+  },
+];

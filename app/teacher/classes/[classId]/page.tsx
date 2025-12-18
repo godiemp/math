@@ -8,9 +8,10 @@ import {
   MOCK_CLASSES,
   MOCK_STUDENTS,
   MOCK_CLASS_ANALYTICS,
-  ClassStudent,
+  MOCK_AI_RECOMMENDATIONS,
 } from '@/lib/types/teacher';
-import { Copy, Check, ArrowLeft, Users, TrendingUp, BookOpen, AlertTriangle, Settings, Bell, UserX } from 'lucide-react';
+import { Copy, Check, ArrowLeft, Users, TrendingUp, BookOpen, AlertTriangle, Sparkles, Lightbulb, BarChart3 } from 'lucide-react';
+import { toast } from 'sonner';
 
 function formatTimeAgo(timestamp: number): string {
   const seconds = Math.floor((Date.now() - timestamp) / 1000);
@@ -47,7 +48,8 @@ export default function ClassDetailPage() {
   const [copied, setCopied] = useState(false);
   const [sortField, setSortField] = useState<SortField>('accuracy');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
-  const [activeTab, setActiveTab] = useState<'roster' | 'analytics'>('roster');
+  const [activeTab, setActiveTab] = useState<'roster' | 'analytics' | 'ai'>('ai');
+  const [assigningId, setAssigningId] = useState<string | null>(null);
 
   // Find the class (in real app, this would be fetched)
   const classData = MOCK_CLASSES.find((c) => c.id === classId) || MOCK_CLASSES[0];
@@ -122,13 +124,6 @@ export default function ClassDetailPage() {
               {classData.schoolName} • {classData.studentCount} estudiantes
             </Text>
           </div>
-          <button
-            onClick={() => router.push(`/teacher/classes/${classId}/edit`)}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            title="Editar clase"
-          >
-            <Settings className="w-5 h-5" />
-          </button>
         </div>
 
         {/* Stats Overview */}
@@ -221,75 +216,6 @@ export default function ClassDetailPage() {
           </div>
         </Card>
 
-        {/* Actionable Insights */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Inactive Students Alert */}
-          {students.filter(s => s.lastActive && Date.now() - s.lastActive > 3 * 24 * 60 * 60 * 1000).length > 0 && (
-            <Card padding="md" className="bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800">
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-orange-100 dark:bg-orange-900/50 rounded-lg flex-shrink-0">
-                  <UserX className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-                </div>
-                <div>
-                  <Text className="font-medium text-orange-900 dark:text-orange-100">
-                    {students.filter(s => s.lastActive && Date.now() - s.lastActive > 3 * 24 * 60 * 60 * 1000).length} estudiantes inactivos
-                  </Text>
-                  <Text size="xs" variant="secondary" className="mt-1">
-                    No han practicado en más de 3 días
-                  </Text>
-                  <button className="mt-2 text-xs font-medium text-orange-700 dark:text-orange-300 hover:underline">
-                    Ver estudiantes →
-                  </button>
-                </div>
-              </div>
-            </Card>
-          )}
-
-          {/* Low Accuracy Alert */}
-          {students.filter(s => s.accuracy < 0.6).length > 0 && (
-            <Card padding="md" className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-red-100 dark:bg-red-900/50 rounded-lg flex-shrink-0">
-                  <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
-                </div>
-                <div>
-                  <Text className="font-medium text-red-900 dark:text-red-100">
-                    {students.filter(s => s.accuracy < 0.6).length} necesitan ayuda
-                  </Text>
-                  <Text size="xs" variant="secondary" className="mt-1">
-                    Precisión menor al 60%
-                  </Text>
-                  <button className="mt-2 text-xs font-medium text-red-700 dark:text-red-300 hover:underline">
-                    Ver detalles →
-                  </button>
-                </div>
-              </div>
-            </Card>
-          )}
-
-          {/* Top Performer Highlight */}
-          {students.filter(s => s.accuracy >= 0.9).length > 0 && (
-            <Card padding="md" className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg flex-shrink-0">
-                  <TrendingUp className="w-5 h-5 text-green-600 dark:text-green-400" />
-                </div>
-                <div>
-                  <Text className="font-medium text-green-900 dark:text-green-100">
-                    {students.filter(s => s.accuracy >= 0.9).length} destacados
-                  </Text>
-                  <Text size="xs" variant="secondary" className="mt-1">
-                    Precisión sobre 90% - listos para desafíos
-                  </Text>
-                  <button className="mt-2 text-xs font-medium text-green-700 dark:text-green-300 hover:underline">
-                    Ver estudiantes →
-                  </button>
-                </div>
-              </div>
-            </Card>
-          )}
-        </div>
-
         {/* Tabs */}
         <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700">
           <button
@@ -311,6 +237,17 @@ export default function ClassDetailPage() {
             }`}
           >
             Analíticas
+          </button>
+          <button
+            onClick={() => setActiveTab('ai')}
+            className={`px-4 py-2 font-medium transition-colors border-b-2 -mb-px flex items-center gap-2 ${
+              activeTab === 'ai'
+                ? 'border-emerald-600 text-emerald-600 dark:border-emerald-400 dark:text-emerald-400'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            <Sparkles className="w-4 h-4" />
+            IA Recomendaciones
           </button>
         </div>
 
@@ -344,8 +281,7 @@ export default function ClassDetailPage() {
                 <Card
                   key={student.id}
                   padding="md"
-                  className="cursor-pointer hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors"
-                  onClick={() => router.push(`/teacher/classes/${classId}/students/${student.id}`)}
+                  className="hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors"
                 >
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-medium text-lg">
@@ -417,8 +353,7 @@ export default function ClassDetailPage() {
                     {sortedStudents.map((student) => (
                       <tr
                         key={student.id}
-                        onClick={() => router.push(`/teacher/classes/${classId}/students/${student.id}`)}
-                        className="hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 transition-colors cursor-pointer"
+                        className="hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 transition-colors"
                       >
                         <td className="px-4 py-4 whitespace-nowrap">
                           <div className="flex items-center gap-3">
@@ -542,34 +477,151 @@ export default function ClassDetailPage() {
               </Text>
             </Card>
 
-            {/* Weekly Activity */}
-            <Card padding="lg" className="lg:col-span-2">
-              <Heading level={3} size="sm" className="mb-4">
-                Actividad Semanal
-              </Heading>
-              <div className="flex items-end justify-between gap-2 h-32">
-                {analytics.weeklyActivity.map((day) => {
-                  const maxQuestions = Math.max(...analytics.weeklyActivity.map(d => d.questions));
-                  const height = maxQuestions > 0 ? (day.questions / maxQuestions) * 100 : 0;
-                  return (
-                    <div key={day.day} className="flex-1 flex flex-col items-center gap-2">
-                      <div className="w-full flex flex-col items-center">
-                        <Text size="xs" variant="secondary" className="mb-1">
-                          {day.questions}
-                        </Text>
-                        <div
-                          className="w-full bg-gradient-to-t from-emerald-500 to-teal-400 rounded-t-lg transition-all"
-                          style={{ height: `${Math.max(height, 8)}%`, minHeight: '8px' }}
-                        />
-                      </div>
-                      <Text size="xs" variant="secondary">
-                        {day.day}
-                      </Text>
-                    </div>
-                  );
-                })}
+          </div>
+        )}
+
+        {activeTab === 'ai' && (
+          <div className="space-y-6">
+            {/* AI Header */}
+            <Card padding="lg" className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-purple-200 dark:border-purple-800">
+              <div className="flex items-start gap-4">
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/50 rounded-xl">
+                  <Sparkles className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div>
+                  <Heading level={2} size="md" className="mb-1">
+                    Recomendaciones Personalizadas
+                  </Heading>
+                  <Text variant="secondary">
+                    Análisis generado por IA basado en el desempeño reciente de cada estudiante.
+                    Las recomendaciones se actualizan automáticamente según su progreso.
+                  </Text>
+                </div>
               </div>
             </Card>
+
+            {/* Student Recommendation Cards */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {MOCK_AI_RECOMMENDATIONS.map((rec) => {
+                const student = students.find(s => s.id === rec.studentId);
+                if (!student) return null;
+
+                const priorityStyles = {
+                  high: 'border-l-4 border-l-red-500',
+                  medium: 'border-l-4 border-l-yellow-500',
+                  low: 'border-l-4 border-l-green-500',
+                };
+
+                const priorityLabels = {
+                  high: { text: 'Prioridad Alta', bg: 'bg-red-100 dark:bg-red-900/30', color: 'text-red-700 dark:text-red-400' },
+                  medium: { text: 'Prioridad Media', bg: 'bg-yellow-100 dark:bg-yellow-900/30', color: 'text-yellow-700 dark:text-yellow-400' },
+                  low: { text: 'En buen camino', bg: 'bg-green-100 dark:bg-green-900/30', color: 'text-green-700 dark:text-green-400' },
+                };
+
+                const handleAssign = async (studentId: string) => {
+                  setAssigningId(studentId);
+                  // Simulate API call
+                  await new Promise(resolve => setTimeout(resolve, 800));
+                  toast.success('Recomendación asignada', {
+                    description: `Se ha asignado el contenido sugerido a ${student.displayName}`,
+                  });
+                  setAssigningId(null);
+                };
+
+                return (
+                  <Card
+                    key={rec.studentId}
+                    padding="lg"
+                    className={`${priorityStyles[rec.priority]} hover:shadow-lg transition-shadow`}
+                  >
+                    {/* Student Header */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-medium text-lg">
+                          {student.displayName.charAt(0)}
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-900 dark:text-white">
+                            {student.displayName}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className={`text-sm font-medium ${getAccuracyColor(student.accuracy)}`}>
+                              {Math.round(student.accuracy * 100)}% precisión
+                            </span>
+                            <span className="text-gray-300 dark:text-gray-600">•</span>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">
+                              {student.questionsAnswered} preguntas
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${priorityLabels[rec.priority].bg} ${priorityLabels[rec.priority].color}`}>
+                        {priorityLabels[rec.priority].text}
+                      </span>
+                    </div>
+
+                    {/* AI Analysis */}
+                    <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <BarChart3 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                        <Text size="sm" className="font-medium text-purple-900 dark:text-purple-100">
+                          Análisis
+                        </Text>
+                      </div>
+                      <Text size="sm" variant="secondary">
+                        {rec.analysis}
+                      </Text>
+                    </div>
+
+                    {/* Recommendation */}
+                    <div className="mb-4 p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Lightbulb className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                        <Text size="sm" className="font-medium text-emerald-900 dark:text-emerald-100">
+                          Recomendación
+                        </Text>
+                      </div>
+                      <Text size="sm" variant="secondary">
+                        {rec.recommendation}
+                      </Text>
+                    </div>
+
+                    {/* Suggested Content & Action */}
+                    {rec.suggestedContent && (
+                      <div className="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
+                        <div className="flex items-center gap-2">
+                          <BookOpen className="w-4 h-4 text-gray-400" />
+                          <div>
+                            <Text size="sm" className="font-medium">
+                              {rec.suggestedContent.title}
+                            </Text>
+                            <Text size="xs" variant="secondary">
+                              {rec.suggestedContent.type === 'mini-lesson' ? 'Mini-lección' : 'Práctica'}
+                            </Text>
+                          </div>
+                        </div>
+                        <Button
+                          size="sm"
+                          onClick={() => handleAssign(rec.studentId)}
+                          disabled={assigningId === rec.studentId}
+                          className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50"
+                        >
+                          {assigningId === rec.studentId ? 'Asignando...' : 'Asignar'}
+                        </Button>
+                      </div>
+                    )}
+
+                    {!rec.suggestedContent && (
+                      <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+                        <Text size="sm" variant="secondary" className="italic">
+                          Sin contenido específico sugerido - continuar monitoreando progreso.
+                        </Text>
+                      </div>
+                    )}
+                  </Card>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>
