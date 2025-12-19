@@ -41,11 +41,11 @@ const QUESTIONS: ClassifyQuestion[] = [
   },
   {
     id: 4,
-    system: ['3x + 2y = 12', '5x + 2y = 20'],
-    question: '¿Es conveniente usar igualación en este sistema?',
-    options: ['Sí, despejando y en ambas', 'Sí, despejando x en ambas', 'No, mejor usar reducción', 'No tiene solución'],
+    system: ['y = x + 2', 'y = 3x - 4'],
+    question: '¿Por qué este sistema es ideal para igualación?',
+    options: ['Ambas ecuaciones ya tienen y despejada', 'Los coeficientes son opuestos', 'No tiene solución', 'Solo funciona sustitución'],
     correctAnswer: 0,
-    explanation: 'Podemos despejar 2y = 12 - 3x y 2y = 20 - 5x, luego igualar. También funcionaría reducción restando.',
+    explanation: 'Ambas ecuaciones ya tienen y despejada, así que podemos igualar directamente: x + 2 = 3x - 4 → x = 3, y = 5.',
   },
   {
     id: 5,
