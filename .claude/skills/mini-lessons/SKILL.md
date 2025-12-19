@@ -225,8 +225,10 @@ Add to `lib/lessons/types.ts` in the `M1_LESSONS` array:
 **Pattern**:
 - Use tabbed interface for multiple related formulas/concepts
 - Include worked examples for each concept
-- Add "Tips" and "Common Errors" sections
+- **CRITICAL: Tips and Common Errors MUST be inside a dedicated "Tips" tab** - never as a standalone section outside tabs
 - Keep theoretical but accessible
+
+**⚠️ DO NOT add Tips as a standalone amber section outside the tabs. The Tips tab uses amber color and is always the last tab after formula tabs.**
 
 ### Step 4: Classify (Identification)
 
@@ -392,6 +394,7 @@ import {
 - [ ] Page.tsx created with LessonShell
 - [ ] Lesson registered in types.ts
 - [ ] Step6Verify uses CheckpointQuiz component
+- [ ] **Step3Explain: Tips section is INSIDE a "Tips" tab (not standalone)**
 - [ ] All steps check `isActive` prop
 - [ ] All steps call `onComplete` when done
 - [ ] Dark mode classes included (`dark:`)

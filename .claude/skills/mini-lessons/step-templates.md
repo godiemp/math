@@ -450,7 +450,16 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
 ## Step 3: Explain Template
 
-**IMPORTANT**: Tips section should be in a tab, not as a standalone section.
+> ⚠️ **CRITICAL REQUIREMENT**: Tips and Common Errors MUST be inside a dedicated "Tips" tab.
+>
+> **DO NOT** add a standalone amber "Tips y errores comunes" section outside the tabs.
+> The correct pattern is:
+> 1. Add `'tips'` to the `TabId` type
+> 2. Add `amber` to `colorClasses`
+> 3. Add the Tips tab button after formula tabs
+> 4. Use conditional rendering: `{activeTab === 'tips' ? <TipsContent /> : <FormulaContent />}`
+>
+> See the template below for the correct implementation.
 
 ```typescript
 'use client';
