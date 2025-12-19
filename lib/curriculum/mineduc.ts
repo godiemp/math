@@ -142,7 +142,7 @@ const OA_1M: MinEducOA[] = [
     name: 'Sistemas de ecuaciones 2x2',
     description: 'Resolver sistemas de ecuaciones lineales (2x2) relacionados con problemas mediante representaciones gráficas y simbólicas, manualmente o con software.',
     isBasal: true,
-    lessonIds: [], // Pendiente
+    lessonIds: ['m1-alg-008-a', 'm1-alg-008-b', 'm1-alg-008-c', 'm1-alg-008-d'],
   },
   {
     code: 'MA1M-OA-05',
