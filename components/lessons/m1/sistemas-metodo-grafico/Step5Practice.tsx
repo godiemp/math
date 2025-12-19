@@ -125,23 +125,28 @@ function GraphDisplay({ data }: { data: GraphQuestion['graphData'] }) {
   const xScale = (x: number) => padding + ((x - data.xRange[0]) / (data.xRange[1] - data.xRange[0])) * (width - 2 * padding);
   const yScale = (y: number) => height - padding - ((y - data.yRange[0]) / (data.yRange[1] - data.yRange[0])) * (height - 2 * padding);
 
+  // Generate integer grid lines
+  const xGridLines: number[] = [];
+  for (let x = Math.ceil(data.xRange[0]); x <= Math.floor(data.xRange[1]); x++) {
+    xGridLines.push(x);
+  }
+  const yGridLines: number[] = [];
+  for (let y = Math.ceil(data.yRange[0]); y <= Math.floor(data.yRange[1]); y++) {
+    yGridLines.push(y);
+  }
+
   return (
     <svg width={width} height={height} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-      {/* Grid */}
-      {Array.from({ length: 8 }, (_, i) => {
-        const x = padding + i * ((width - 2 * padding) / 7);
-        return (
-          <line key={`v${i}`} x1={x} y1={padding} x2={x} y2={height - padding}
-            stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
-        );
-      })}
-      {Array.from({ length: 6 }, (_, i) => {
-        const y = padding + i * ((height - 2 * padding) / 5);
-        return (
-          <line key={`h${i}`} x1={padding} y1={y} x2={width - padding} y2={y}
-            stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
-        );
-      })}
+      {/* Grid - vertical lines at integer x values */}
+      {xGridLines.map((x) => (
+        <line key={`v${x}`} x1={xScale(x)} y1={padding} x2={xScale(x)} y2={height - padding}
+          stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+      ))}
+      {/* Grid - horizontal lines at integer y values */}
+      {yGridLines.map((y) => (
+        <line key={`h${y}`} x1={padding} y1={yScale(y)} x2={width - padding} y2={yScale(y)}
+          stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+      ))}
 
       {/* Axes */}
       <line x1={padding} y1={yScale(0)} x2={width - padding} y2={yScale(0)}
