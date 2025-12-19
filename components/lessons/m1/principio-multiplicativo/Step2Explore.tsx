@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, Check, Target, Sparkles, Utensils, IceCream, Cookie } from 'lucide-react';
+import { ArrowRight, Check, Target, Sparkles, Utensils, IceCream, Cookie, Pizza } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
-type Phase = 'intro' | 'challenge1' | 'challenge2' | 'challenge3' | 'summary';
+type Phase = 'intro' | 'challenge1' | 'challenge2' | 'challenge3' | 'challenge4' | 'summary';
 
 interface Challenge {
   title: string;
@@ -49,6 +49,18 @@ const CHALLENGES: Challenge[] = [
     ],
     correctAnswer: 12,
     explanation: '3 letras × 4 números = 12 contraseñas posibles',
+  },
+  {
+    title: 'La Pizzería',
+    scenario: 'Arma tu pizza personalizada eligiendo:',
+    icon: <Pizza className="w-8 h-8 text-red-500" />,
+    options: [
+      { name: 'Tamaño', count: 2, items: ['Mediana', 'Grande'] },
+      { name: 'Masa', count: 3, items: ['Tradicional', 'Delgada', 'Rellena'] },
+      { name: 'Ingrediente', count: 4, items: ['Pepperoni', 'Jamón', 'Hongos', 'Piña'] },
+    ],
+    correctAnswer: 24,
+    explanation: '2 tamaños × 3 masas × 4 ingredientes = 24 pizzas diferentes',
   },
 ];
 
@@ -151,12 +163,20 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   // ============ CHALLENGES ============
   if (phase.startsWith('challenge')) {
     // Generate answer options based on challenge
+    const sumOfOptions = currentChallenge.options.reduce((acc, opt) => acc + opt.count, 0);
     const answerOptions = [
-      currentChallenge.options[0].count + currentChallenge.options[1].count, // Sum (wrong)
+      sumOfOptions, // Sum (common mistake)
       currentChallenge.correctAnswer - 2, // Close but wrong
       currentChallenge.correctAnswer, // Correct
-      currentChallenge.correctAnswer + 3, // Wrong
+      currentChallenge.correctAnswer + 4, // Wrong
     ].sort((a, b) => a - b);
+
+    // Color palette for options
+    const optionColors = [
+      { text: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-100 dark:bg-blue-900/50', textSmall: 'text-blue-700 dark:text-blue-300' },
+      { text: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-100 dark:bg-purple-900/50', textSmall: 'text-purple-700 dark:text-purple-300' },
+      { text: 'text-green-600 dark:text-green-400', bg: 'bg-green-100 dark:bg-green-900/50', textSmall: 'text-green-700 dark:text-green-300' },
+    ];
 
     return (
       <div className="space-y-6 animate-fadeIn">
@@ -198,7 +218,10 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           </div>
 
           {/* Options display */}
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className={cn(
+            'grid gap-4',
+            currentChallenge.options.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'
+          )}>
             {currentChallenge.options.map((option, idx) => (
               <div
                 key={idx}
@@ -208,10 +231,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   <span className="font-semibold text-gray-700 dark:text-gray-300">
                     {option.name}:
                   </span>
-                  <span className={cn(
-                    'text-2xl font-bold',
-                    idx === 0 ? 'text-blue-600 dark:text-blue-400' : 'text-purple-600 dark:text-purple-400'
-                  )}>
+                  <span className={cn('text-2xl font-bold', optionColors[idx].text)}>
                     {option.count}
                   </span>
                 </div>
@@ -219,12 +239,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   {option.items.map((item, i) => (
                     <span
                       key={i}
-                      className={cn(
-                        'px-2 py-1 rounded text-sm',
-                        idx === 0
-                          ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
-                          : 'bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300'
-                      )}
+                      className={cn('px-2 py-1 rounded text-sm', optionColors[idx].bg, optionColors[idx].textSmall)}
                     >
                       {item}
                     </span>
@@ -240,14 +255,17 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           <p className="text-lg font-semibold text-blue-800 dark:text-blue-200 text-center">
             ¿Cuántas combinaciones diferentes son posibles?
           </p>
-          <div className="flex justify-center items-center gap-3 mt-3">
-            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-              {currentChallenge.options[0].count}
-            </span>
-            <span className="text-xl text-gray-400">×</span>
-            <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-              {currentChallenge.options[1].count}
-            </span>
+          <div className="flex justify-center items-center gap-3 mt-3 flex-wrap">
+            {currentChallenge.options.map((opt, idx) => (
+              <span key={idx} className="flex items-center gap-3">
+                <span className={cn('text-2xl font-bold', optionColors[idx].text)}>
+                  {opt.count}
+                </span>
+                {idx < currentChallenge.options.length - 1 && (
+                  <span className="text-xl text-gray-400">×</span>
+                )}
+              </span>
+            ))}
             <span className="text-xl text-gray-400">=</span>
             <span className="text-2xl font-bold text-gray-400">?</span>
           </div>
@@ -373,7 +391,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   {challenge.title}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {challenge.options[0].count} × {challenge.options[1].count}
+                  {challenge.options.map(opt => opt.count).join(' × ')}
                 </p>
               </div>
               <div className="text-lg font-bold text-purple-600 dark:text-purple-400">
@@ -393,11 +411,13 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
         <div className="mt-3 text-center">
           <div className="inline-block bg-white dark:bg-gray-800 rounded-lg px-6 py-3 shadow-sm">
             <div className="text-lg text-gray-800 dark:text-gray-200 font-semibold">
-              <span className="text-blue-600 dark:text-blue-400">Opciones A</span>
+              <span className="text-blue-600 dark:text-blue-400">Opción 1</span>
               <span className="text-gray-400 mx-2">×</span>
-              <span className="text-purple-600 dark:text-purple-400">Opciones B</span>
+              <span className="text-purple-600 dark:text-purple-400">Opción 2</span>
+              <span className="text-gray-400 mx-2">×</span>
+              <span className="text-green-600 dark:text-green-400">...</span>
               <span className="text-gray-400 mx-2">=</span>
-              <span className="text-green-600 dark:text-green-400">Total</span>
+              <span className="text-amber-600 dark:text-amber-400">Total</span>
             </div>
           </div>
         </div>
