@@ -18,19 +18,34 @@ interface PracticeQuestion {
 const QUESTIONS: PracticeQuestion[] = [
   {
     id: 'q1',
-    description: 'Figura en L: dimensiones externas 10m × 8m, corte de 4m × 5m',
+    description: 'Figura en L: dimensiones externas 10m × 8m, corte de 5m × 4m',
     figure: (
       <svg viewBox="0 0 180 150" className="w-full h-full">
+        {/* L-shape */}
         <path
           d="M 20 20 L 140 20 L 140 70 L 80 70 L 80 130 L 20 130 Z"
           fill="#bfdbfe"
           stroke="#1d4ed8"
           strokeWidth="2"
         />
+        {/* Cut area shown with dashed lines */}
+        <rect
+          x="80"
+          y="70"
+          width="60"
+          height="60"
+          fill="#fecaca"
+          fillOpacity="0.4"
+          stroke="#dc2626"
+          strokeWidth="2"
+          strokeDasharray="4,4"
+        />
+        <text x="110" y="105" textAnchor="middle" fontSize="8" fontWeight="bold" fill="#dc2626">corte</text>
         {/* Dimensions */}
         <text x="80" y="14" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1f2937">10 m</text>
         <text x="155" y="48" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1f2937">4 m</text>
-        <text x="110" y="100" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1f2937">5 m</text>
+        <text x="110" y="140" textAnchor="middle" fontSize="9" fill="#dc2626">5 m</text>
+        <text x="148" y="105" textAnchor="start" fontSize="9" fill="#dc2626">4 m</text>
         <text x="50" y="145" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1f2937">5 m</text>
         <text x="10" y="80" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1f2937" transform="rotate(-90, 10, 80)">8 m</text>
       </svg>
