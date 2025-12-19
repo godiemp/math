@@ -34,7 +34,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
     // Also call backend logout to clear HttpOnly cookies
     await logoutUser();
     // Sign out from NextAuth (clears session)
-    await signOut({ callbackUrl: '/' });
+    await signOut({ callbackUrl: '/signin' });
   };
 
   const handleBack = () => {
