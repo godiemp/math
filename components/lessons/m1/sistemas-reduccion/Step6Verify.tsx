@@ -39,8 +39,8 @@ const QUESTIONS: CheckpointQuestion[] = [
     id: 'q4',
     question: 'Si 3x + 2y = 13 y 3x - 2y = 7, ¿cuál es la solución?',
     options: ['(3, 2)', '(4, 1/2)', '(10/3, 3/2)', '(2, 3)'],
-    correctAnswer: 0,
-    explanation: 'Sumando: 6x = 20 → x = 10/3. Restando: 4y = 6 → y = 3/2. Pero verificando opción a: 3(3)+2(2)=13 ✓, 3(3)-2(2)=5 ≠7. Revisemos: Sumando 6x=20, x=10/3. Pero mejor: restando 4y=6, y=3/2. Con x=10/3, y=3/2.',
+    correctAnswer: 2,
+    explanation: 'Sumando: 6x = 20 → x = 10/3. Restando: 4y = 6 → y = 3/2. Verificación: 3(10/3) + 2(3/2) = 10 + 3 = 13 ✓ y 3(10/3) - 2(3/2) = 10 - 3 = 7 ✓',
   },
 ];
 
