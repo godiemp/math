@@ -25,11 +25,11 @@ const QUESTIONS: ClassifyQuestion[] = [
   },
   {
     id: 2,
-    system: ['2x + y = 8', 'x - 3y = 1'],
+    system: ['2x + y = 10', '5x + 3y = 27'],
     question: '¿Cuál es la mejor opción para despejar?',
     options: ['x de la primera', 'y de la primera', 'x de la segunda', 'y de la segunda'],
     correctAnswer: 1,
-    explanation: 'Despejando "y" de la primera: y = 8 - 2x. El coeficiente de y es 1, lo cual facilita el despeje.',
+    explanation: 'Despejando "y" de la primera: y = 10 - 2x. El coeficiente de y es 1, mientras que en la segunda ecuación ningún coeficiente es 1.',
   },
   {
     id: 3,
