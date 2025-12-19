@@ -10,6 +10,12 @@ interface HeroSectionProps {
   onAudienceChange: (audience: Audience) => void;
 }
 
+const openIntercomDemo = () => {
+  if (typeof window !== 'undefined' && window.Intercom) {
+    window.Intercom('showNewMessage', 'Hola, quiero solicitar una demo para mi institución');
+  }
+};
+
 export function HeroSection({ audience, onAudienceChange }: HeroSectionProps) {
   const content = {
     b2c: {
@@ -17,14 +23,12 @@ export function HeroSection({ audience, onAudienceChange }: HeroSectionProps) {
       title: 'Prepara la PAES con Datos, No con Suerte',
       subtitle: 'Mini-lecciones que te explican el por qué. Tutor AI que te guía cuando te trabas. Práctica personalizada que se adapta a ti.',
       cta: 'Comenzar Gratis',
-      ctaHref: '/signin',
     },
     b2b: {
       badge: 'PARA INSTITUCIONES',
-      title: 'Mejora los Resultados PAES de tu Institución',
-      subtitle: 'Reportes detallados por estudiante. Asignación de tareas por tema. Seguimiento en tiempo real del progreso de cada alumno.',
+      title: 'Potencia el Aprendizaje en tu Institución',
+      subtitle: 'Plataforma de matemáticas para educación media. Reportes detallados, asignación de tareas y seguimiento en tiempo real.',
       cta: 'Solicitar Demo',
-      ctaHref: '/contacto',
     },
   };
 
@@ -126,21 +130,40 @@ export function HeroSection({ audience, onAudienceChange }: HeroSectionProps) {
         </p>
 
         {/* CTA */}
-        <Link
-          href={current.ctaHref}
-          className="inline-block spring-emphasized"
-          style={{
-            padding: '16px 40px',
-            background: 'var(--color-tint)',
-            color: 'white',
-            borderRadius: 'var(--radius-md)',
-            fontSize: '17px',
-            fontWeight: 600,
-            textDecoration: 'none',
-          }}
-        >
-          {current.cta}
-        </Link>
+        {audience === 'b2c' ? (
+          <Link
+            href="/signin"
+            className="inline-block spring-emphasized"
+            style={{
+              padding: '16px 40px',
+              background: 'var(--color-tint)',
+              color: 'white',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '17px',
+              fontWeight: 600,
+              textDecoration: 'none',
+            }}
+          >
+            {current.cta}
+          </Link>
+        ) : (
+          <button
+            onClick={openIntercomDemo}
+            className="spring-emphasized"
+            style={{
+              padding: '16px 40px',
+              background: 'var(--color-tint)',
+              color: 'white',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '17px',
+              fontWeight: 600,
+              border: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            {current.cta}
+          </button>
+        )}
       </div>
     </section>
   );

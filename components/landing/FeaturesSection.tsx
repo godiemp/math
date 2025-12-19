@@ -59,7 +59,7 @@ export function FeaturesSection({ audience }: FeaturesSectionProps) {
   const currentFeatures = features[audience];
   const sectionTitle = audience === 'b2c'
     ? 'Todo lo que necesitas para subir tu puntaje'
-    : 'Herramientas para potenciar tu institución';
+    : 'Herramientas para educación media';
 
   return (
     <section className="py-16 px-4" style={{ background: 'var(--color-fill)' }}>

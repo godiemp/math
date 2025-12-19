@@ -8,19 +8,23 @@ interface CTASectionProps {
   audience: Audience;
 }
 
+const openIntercomDemo = () => {
+  if (typeof window !== 'undefined' && window.Intercom) {
+    window.Intercom('showNewMessage', 'Hola, quiero solicitar una demo para mi institución');
+  }
+};
+
 export function CTASection({ audience }: CTASectionProps) {
   const content = {
     b2c: {
       title: 'Comienza tu preparación hoy',
       subtitle: 'Practica con datos, no con suerte. Sube tu puntaje PAES.',
       cta: 'Comenzar Gratis',
-      ctaHref: '/signin',
     },
     b2b: {
-      title: 'Mejora los resultados de tu institución',
-      subtitle: 'Reportes detallados, seguimiento en tiempo real, datos para tomar decisiones.',
+      title: 'Potencia el aprendizaje en tu institución',
+      subtitle: 'Plataforma de matemáticas para educación media con reportes y seguimiento.',
       cta: 'Solicitar Demo',
-      ctaHref: '/contacto',
     },
   };
 
@@ -55,21 +59,40 @@ export function CTASection({ audience }: CTASectionProps) {
         >
           {current.subtitle}
         </p>
-        <Link
-          href={current.ctaHref}
-          className="inline-block spring-emphasized"
-          style={{
-            padding: '16px 40px',
-            background: 'white',
-            color: 'var(--color-tint)',
-            borderRadius: 'var(--radius-md)',
-            fontSize: '17px',
-            fontWeight: 600,
-            textDecoration: 'none',
-          }}
-        >
-          {current.cta}
-        </Link>
+        {audience === 'b2c' ? (
+          <Link
+            href="/signin"
+            className="inline-block spring-emphasized"
+            style={{
+              padding: '16px 40px',
+              background: 'white',
+              color: 'var(--color-tint)',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '17px',
+              fontWeight: 600,
+              textDecoration: 'none',
+            }}
+          >
+            {current.cta}
+          </Link>
+        ) : (
+          <button
+            onClick={openIntercomDemo}
+            className="spring-emphasized"
+            style={{
+              padding: '16px 40px',
+              background: 'white',
+              color: 'var(--color-tint)',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '17px',
+              fontWeight: 600,
+              border: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            {current.cta}
+          </button>
+        )}
       </div>
     </section>
   );
