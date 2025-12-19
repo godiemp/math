@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Authentication', () => {
   test('should display login page', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/signin');
 
     // Dismiss cookie banner
     await page.evaluate(() => {
@@ -14,7 +14,7 @@ test.describe('Authentication', () => {
   });
 
   test('should login with test student credentials', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/signin');
 
     // Dismiss cookie banner before interacting with the page
     await page.evaluate(() => {

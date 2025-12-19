@@ -10,7 +10,7 @@ const authFile = path.join(__dirname, '../.auth/student.json');
  */
 setup('authenticate as student', async ({ page }) => {
   // Navigate to login page
-  await page.goto('/');
+  await page.goto('/signin');
 
   // Dismiss cookie banner
   await page.evaluate(() => {
