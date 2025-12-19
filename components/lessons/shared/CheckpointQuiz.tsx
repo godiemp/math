@@ -309,7 +309,8 @@ export default function CheckpointQuiz({
 
             {passed && (
               <button
-                onClick={onComplete}
+                type="button"
+                onClick={() => onComplete()}
                 className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
               >
                 Finalizar Lección
