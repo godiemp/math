@@ -64,20 +64,20 @@ function GraficarContent() {
               {/* Grid */}
               {[0, 1, 2, 3, 4].map(i => (
                 <g key={i}>
-                  <line x1={20 + i * 30} y1={10} x2={20 + i * 30} y2={140} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
-                  <line x1={20} y1={10 + i * 30} x2={140} y2={10 + i * 30} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+                  <line x1={20 + i * 30} y1={20} x2={20 + i * 30} y2={140} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+                  <line x1={20} y1={20 + i * 30} x2={140} y2={20 + i * 30} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
                 </g>
               ))}
               {/* Axes labels */}
-              <text x={145} y={138} className="text-xs fill-gray-500">x</text>
-              <text x={25} y={8} className="text-xs fill-gray-500">y</text>
+              <text x={145} y={143} className="text-xs fill-gray-500">x</text>
+              <text x={25} y={15} className="text-xs fill-gray-500">y</text>
               {/* Line */}
               <line x1={20} y1={20} x2={140} y2={140} stroke="#3B82F6" strokeWidth="3" />
               {/* Points */}
               <circle cx={20} cy={20} r="6" fill="#EF4444" />
               <circle cx={140} cy={140} r="6" fill="#EF4444" />
               <text x={30} y={18} className="text-xs fill-red-600">(0,4)</text>
-              <text x={115} y={155} className="text-xs fill-red-600">(4,0)</text>
+              <text x={100} y={155} className="text-xs fill-red-600">(4,0)</text>
             </svg>
           </div>
         </div>
