@@ -100,9 +100,9 @@ const QUESTIONS: PracticeQuestion[] = [
         />
         {/* Dimensions */}
         <text x="85" y="14" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1f2937">9 m</text>
-        <text x="165" y="70" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1f2937">7 m</text>
+        <text x="155" y="70" textAnchor="start" fontSize="10" fontWeight="bold" fill="#1f2937">7 m</text>
         <text x="130" y="125" textAnchor="middle" fontSize="9" fill="#dc2626">3 m</text>
-        <text x="158" y="95" textAnchor="middle" fontSize="9" fill="#dc2626">4 m</text>
+        <text x="155" y="95" textAnchor="start" fontSize="9" fill="#dc2626">4 m</text>
       </svg>
     ),
     hint: 'Rectángulo completo menos triángulo: (9×7) - (3×4)/2',
