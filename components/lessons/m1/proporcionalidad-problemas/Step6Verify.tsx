@@ -25,11 +25,11 @@ const QUESTIONS: CheckpointQuestion[] = [
   {
     id: 'q3',
     question:
-      'Si 4 obreros trabajando 5 horas/día terminan una obra en 12 días, ¿cuántos días tardarán 6 obreros trabajando 4 horas/día?',
-    options: ['8 días', '10 días', '12 días', '15 días'],
+      'Si 3 kilos de naranjas cuestan $2.400, ¿cuánto costarán 8 kilos?',
+    options: ['$4.800', '$6.400', '$7.200', '$8.000'],
     correctAnswer: 1,
     explanation:
-      'Compuesta: Obreros ↑ → Días ↓ (inversa). Horas ↓ → Días ↑ (inversa). x = 12 × (4/6) × (5/4) = 12 × 20/24 = 10 días.',
+      'Es proporcionalidad directa (más kilos = más precio). y₂ = (8 · 2.400) / 3 = 19.200 / 3 = $6.400.',
   },
   {
     id: 'q4',
@@ -49,7 +49,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
       isActive={isActive}
       questions={QUESTIONS}
       requiredCorrect={3}
-      successMessage="¡Dominas la proporcionalidad directa, inversa y compuesta!"
+      successMessage="¡Dominas la proporcionalidad directa e inversa!"
     />
   );
 }

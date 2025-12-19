@@ -8,7 +8,8 @@ import { LessonStepProps } from '@/lib/lessons/types';
 interface PracticeProblem {
   id: string;
   problem: string;
-  type: 'direct' | 'inverse';
+  setup: { magnitude: string; from: string; to: string; type: 'direct' | 'inverse' }[];
+  initialValue: string;
   options: string[];
   correctIndex: number;
   hint: string;
@@ -21,60 +22,82 @@ interface PracticeProblem {
 const PRACTICE_PROBLEMS: PracticeProblem[] = [
   {
     id: '1',
-    problem: 'Si 4 metros de tela cuestan $12.000, ¿cuánto cuestan 7 metros?',
-    type: 'direct',
-    options: ['$18.000', '$21.000', '$24.000', '$28.000'],
+    problem:
+      'Si 4 obreros trabajando 6 horas/día terminan una obra en 10 días, ¿cuántos días tardarán 6 obreros trabajando 8 horas/día?',
+    setup: [
+      { magnitude: 'Obreros', from: '4', to: '6', type: 'inverse' },
+      { magnitude: 'Horas/día', from: '6', to: '8', type: 'inverse' },
+    ],
+    initialValue: '10 días',
+    options: ['4 días', '5 días', '6 días', '8 días'],
     correctIndex: 1,
-    hint: 'Es proporcionalidad directa. Usa: y₂ = (x₂ · y₁) / x₁',
-    explanation: 'y₂ = (7 · 12.000) / 4 = 84.000 / 4 = $21.000',
+    hint: 'Obreros ↑ → Días ↓ (inversa: 4/6). Horas ↑ → Días ↓ (inversa: 6/8).',
+    explanation: 'x = 10 × (4/6) × (6/8) = 10 × 24/48 = 10 × 0.5 = 5 días',
     answered: false,
     isCorrect: null,
     showHint: false,
   },
   {
     id: '2',
-    problem: '5 obreros tardan 12 días en terminar una obra. ¿Cuántos días tardarán 10 obreros?',
-    type: 'inverse',
-    options: ['24 días', '6 días', '8 días', '4 días'],
+    problem:
+      'Si 3 máquinas producen 180 piezas en 4 horas, ¿cuántas piezas producirán 5 máquinas en 6 horas?',
+    setup: [
+      { magnitude: 'Máquinas', from: '3', to: '5', type: 'direct' },
+      { magnitude: 'Horas', from: '4', to: '6', type: 'direct' },
+    ],
+    initialValue: '180 piezas',
+    options: ['300 piezas', '450 piezas', '540 piezas', '600 piezas'],
     correctIndex: 1,
-    hint: 'Es proporcionalidad inversa. Usa: y₂ = (x₁ · y₁) / x₂',
-    explanation: 'y₂ = (5 · 12) / 10 = 60 / 10 = 6 días',
+    hint: 'Máquinas ↑ → Piezas ↑ (directa: 5/3). Horas ↑ → Piezas ↑ (directa: 6/4).',
+    explanation: 'x = 180 × (5/3) × (6/4) = 180 × 30/12 = 180 × 2.5 = 450 piezas',
     answered: false,
     isCorrect: null,
     showHint: false,
   },
   {
     id: '3',
-    problem: 'Un auto viaja a 60 km/h y tarda 4 horas. ¿Cuánto tardará si viaja a 80 km/h?',
-    type: 'inverse',
-    options: ['5 horas', '3 horas', '2 horas', '6 horas'],
+    problem:
+      'Si 8 obreros trabajando 5 horas/día construyen un muro en 12 días, ¿cuántos días necesitarán 10 obreros trabajando 4 horas/día?',
+    setup: [
+      { magnitude: 'Obreros', from: '8', to: '10', type: 'inverse' },
+      { magnitude: 'Horas/día', from: '5', to: '4', type: 'inverse' },
+    ],
+    initialValue: '12 días',
+    options: ['10 días', '12 días', '15 días', '18 días'],
     correctIndex: 1,
-    hint: 'Es proporcionalidad inversa: más velocidad = menos tiempo',
-    explanation: 'y₂ = (60 · 4) / 80 = 240 / 80 = 3 horas',
+    hint: 'Obreros ↑ → Días ↓ (inversa: 8/10). Horas ↓ → Días ↑ (inversa: 5/4).',
+    explanation: 'x = 12 × (8/10) × (5/4) = 12 × 40/40 = 12 días',
     answered: false,
     isCorrect: null,
     showHint: false,
   },
   {
     id: '4',
-    problem: '8 grifos llenan una piscina en 6 horas. ¿Cuánto tardarán 12 grifos?',
-    type: 'inverse',
-    options: ['9 horas', '4 horas', '3 horas', '8 horas'],
+    problem:
+      'Si 6 grifos llenan una piscina en 4 horas, ¿en cuántas horas la llenarán 8 grifos?',
+    setup: [{ magnitude: 'Grifos', from: '6', to: '8', type: 'inverse' }],
+    initialValue: '4 horas',
+    options: ['2 horas', '3 horas', '5 horas', '6 horas'],
     correctIndex: 1,
-    hint: 'Es proporcionalidad inversa: más grifos = menos tiempo',
-    explanation: 'y₂ = (8 · 6) / 12 = 48 / 12 = 4 horas',
+    hint: 'Grifos ↑ → Tiempo ↓ (inversa: 6/8).',
+    explanation: 'x = 4 × (6/8) = 4 × 0.75 = 3 horas',
     answered: false,
     isCorrect: null,
     showHint: false,
   },
   {
     id: '5',
-    problem: 'Si 2 kilos de arroz cuestan $1.800, ¿cuánto cuestan 5 kilos?',
-    type: 'direct',
-    options: ['$3.600', '$4.500', '$5.400', '$6.000'],
-    correctIndex: 1,
-    hint: 'Es proporcionalidad directa: más kilos = más precio',
-    explanation: 'y₂ = (5 · 1.800) / 2 = 9.000 / 2 = $4.500',
+    problem:
+      'Si 5 camiones hacen 8 viajes en 4 días, ¿cuántos viajes harán 10 camiones en 6 días?',
+    setup: [
+      { magnitude: 'Camiones', from: '5', to: '10', type: 'direct' },
+      { magnitude: 'Días', from: '4', to: '6', type: 'direct' },
+    ],
+    initialValue: '8 viajes',
+    options: ['16 viajes', '20 viajes', '24 viajes', '32 viajes'],
+    correctIndex: 2,
+    hint: 'Camiones ↑ → Viajes ↑ (directa: 10/5). Días ↑ → Viajes ↑ (directa: 6/4).',
+    explanation: 'x = 8 × (10/5) × (6/4) = 8 × 2 × 1.5 = 24 viajes',
     answered: false,
     isCorrect: null,
     showHint: false,
@@ -166,21 +189,31 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             {/* Problem type badge */}
             <div className="flex justify-center mb-4">
-              <span
-                className={cn(
-                  'px-3 py-1 rounded-full text-sm font-semibold',
-                  problem.type === 'direct'
-                    ? 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300'
-                    : 'bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-300'
-                )}
-              >
-                {problem.type === 'direct' ? '↑↑ Directa' : '↑↓ Inversa'}
+              <span className="px-3 py-1 rounded-full text-sm font-semibold bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300">
+                ⚙️ Proporcionalidad Compuesta
               </span>
             </div>
 
-            <p className="text-lg text-gray-800 dark:text-gray-200 mb-6 text-center">
+            <p className="text-lg text-gray-800 dark:text-gray-200 mb-4 text-center">
               {problem.problem}
             </p>
+
+            {/* Setup info */}
+            <div className="flex flex-wrap justify-center gap-2 mb-4">
+              {problem.setup.map((s, i) => (
+                <span
+                  key={i}
+                  className={cn(
+                    'px-2 py-1 rounded text-xs font-mono',
+                    s.type === 'direct'
+                      ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+                      : 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300'
+                  )}
+                >
+                  {s.magnitude}: {s.from}→{s.to} ({s.type === 'direct' ? '↑↑' : '↑↓'})
+                </span>
+              ))}
+            </div>
 
             {/* Hint button */}
             {!problem.answered && (
@@ -198,7 +231,9 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
             {/* Hint */}
             {problem.showHint && !problem.answered && (
               <div className="bg-yellow-50 dark:bg-yellow-900/30 rounded-xl p-4 mb-4 animate-fadeIn border border-yellow-200 dark:border-yellow-800">
-                <p className="text-yellow-800 dark:text-yellow-200 text-sm">{problem.hint}</p>
+                <p className="text-yellow-800 dark:text-yellow-200 text-sm font-mono">
+                  {problem.hint}
+                </p>
               </div>
             )}
 
@@ -308,7 +343,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
               )}
             >
               {passed
-                ? 'Has demostrado que puedes resolver problemas de proporcionalidad'
+                ? 'Has demostrado que puedes resolver problemas de proporcionalidad compuesta'
                 : `Necesitas 4 respuestas correctas. ¡Puedes intentarlo de nuevo!`}
             </p>
           </div>
