@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import Auth from "@/components/auth/Auth";
-import Footer from "@/components/layout/Footer";
 import { useTranslations } from 'next-intl';
 
 // Small component that reads search params - isolated for Suspense boundary
@@ -158,9 +157,6 @@ function SignInContent() {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }
