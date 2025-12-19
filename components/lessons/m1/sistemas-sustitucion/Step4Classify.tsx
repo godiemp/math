@@ -41,11 +41,11 @@ const QUESTIONS: ClassifyQuestion[] = [
   },
   {
     id: 4,
-    system: ['5x + 7y = 20', '3x + 4y = 11'],
-    question: '¿Es conveniente usar sustitución en este sistema?',
-    options: ['Sí, despejando x de la primera', 'Sí, despejando y de la segunda', 'No, mejor usar reducción', 'Sí, cualquier variable funciona igual'],
-    correctAnswer: 2,
-    explanation: 'Ningún coeficiente es 1 o -1, así que despejar generaría fracciones. El método de reducción sería más conveniente.',
+    system: ['y = 4x - 3', '2x + y = 9'],
+    question: 'Si y = 4x - 3, ¿qué ecuación resulta al sustituir en la segunda?',
+    options: ['2x + 4x - 3 = 9', '2y + 4x - 3 = 9', '2x + y = 4x - 3', '2(4x - 3) + y = 9'],
+    correctAnswer: 0,
+    explanation: 'Reemplazamos y por (4x - 3) en 2x + y = 9, obteniendo: 2x + (4x - 3) = 9, que simplifica a 6x - 3 = 9.',
   },
   {
     id: 5,
