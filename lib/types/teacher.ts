@@ -39,6 +39,195 @@ export const CLASS_LEVEL_OPTIONS = [
 ];
 
 /**
+ * Subjects available for each class level
+ * Based on Chilean National Curriculum (Currículum Nacional MINEDUC)
+ * All levels teach all 4 subjects but with different topics
+ */
+export const SUBJECTS_BY_LEVEL: Record<ClassLevel, Subject[]> = {
+  '1-medio': ['números', 'álgebra', 'geometría', 'probabilidad'], // All subjects
+  '2-medio': ['números', 'álgebra', 'geometría', 'probabilidad'], // All subjects
+  '3-medio': ['números', 'álgebra', 'geometría', 'probabilidad'], // All subjects
+  '4-medio': ['números', 'álgebra', 'geometría', 'probabilidad'], // All subjects
+  M1: ['números', 'álgebra', 'geometría', 'probabilidad'], // PAES M1 covers all
+  M2: ['números', 'álgebra', 'geometría', 'probabilidad'], // PAES M2 covers all
+  both: ['números', 'álgebra', 'geometría', 'probabilidad'], // Both levels cover all
+};
+
+/**
+ * Curriculum topics by level and subject
+ * Based on Chilean National Curriculum (Currículum Nacional MINEDUC 2024)
+ */
+export const CURRICULUM_TOPICS: Record<ClassLevel, Record<Subject, string[]>> = {
+  '1-medio': {
+    números: [
+      'Operaciones con números racionales',
+      'Potencias de base racional y exponente entero',
+      'Aplicaciones a problemas de crecimiento/decrecimiento',
+    ],
+    álgebra: [
+      'Productos notables',
+      'Sistemas de ecuaciones lineales 2x2',
+      'Relaciones lineales y gráficos',
+    ],
+    geometría: [
+      'Área y perímetro de sectores circulares',
+      'Volumen de conos',
+      'Homotecia y teorema de Tales',
+      'Modelos a escala',
+    ],
+    probabilidad: [
+      'Distribuciones bivariadas (tablas doble entrada)',
+      'Diagramas de dispersión',
+      'Reglas aditiva y multiplicativa',
+      'Análisis de comportamiento aleatorio',
+    ],
+  },
+  '2-medio': {
+    números: [
+      'Operaciones con números reales',
+      'Descomposición y propiedades de raíces',
+      'Relación potencias, raíces y logaritmos',
+    ],
+    álgebra: [
+      'Función cuadrática f(x) = ax² + bx + c',
+      'Ecuaciones cuadráticas',
+      'Funciones inversas',
+      'Cambio exponencial e interés compuesto',
+    ],
+    geometría: [
+      'Área y volumen de esferas',
+      'Razones trigonométricas (seno, coseno, tangente)',
+      'Composición y proyección de vectores',
+    ],
+    probabilidad: [
+      'Variables aleatorias finitas',
+      'Permutaciones y combinatoria',
+      'Probabilidad en la toma de decisiones',
+    ],
+  },
+  '3-medio': {
+    números: ['Números complejos (C)', 'Operaciones con complejos'],
+    álgebra: [
+      'Funciones exponenciales',
+      'Funciones logarítmicas',
+      'Modelos de crecimiento y decrecimiento',
+    ],
+    geometría: [
+      'Relaciones métricas en circunferencias',
+      'Ángulos, arcos, cuerdas y secantes',
+    ],
+    probabilidad: [
+      'Medidas de dispersión',
+      'Probabilidad condicional',
+      'Análisis de datos estadísticos para decisiones',
+    ],
+  },
+  '4-medio': {
+    números: ['Números complejos avanzados', 'Aplicaciones de complejos'],
+    álgebra: [
+      'Funciones trigonométricas',
+      'Modelamiento matemático avanzado',
+    ],
+    geometría: [
+      'Geometría analítica',
+      'Vectores en el plano y espacio',
+    ],
+    probabilidad: [
+      'Distribuciones de probabilidad',
+      'Inferencia estadística básica',
+      'Muestreo',
+    ],
+  },
+  M1: {
+    números: [
+      'Números enteros y racionales',
+      'Porcentajes',
+      'Potencias y raíces',
+    ],
+    álgebra: [
+      'Expresiones algebraicas',
+      'Proporcionalidad',
+      'Ecuaciones e inecuaciones',
+      'Sistemas de ecuaciones',
+      'Funciones lineales y cuadráticas',
+    ],
+    geometría: [
+      'Teorema de Pitágoras',
+      'Perímetros y áreas',
+      'Volumen de prismas y cilindros',
+      'Transformaciones geométricas',
+    ],
+    probabilidad: [
+      'Tablas de frecuencia y gráficos',
+      'Medidas de tendencia central',
+      'Cuartiles y percentiles',
+      'Reglas de probabilidad',
+    ],
+  },
+  M2: {
+    números: [
+      'Números reales',
+      'Logaritmos',
+      'Problemas financieros',
+    ],
+    álgebra: [
+      'Sistemas de ecuaciones avanzados',
+      'Función potencia',
+    ],
+    geometría: [
+      'Homotecia',
+      'Trigonometría',
+    ],
+    probabilidad: [
+      'Medidas de dispersión',
+      'Probabilidad condicional',
+      'Permutaciones y combinaciones',
+      'Modelo binomial',
+    ],
+  },
+  both: {
+    números: [
+      'Números enteros, racionales y reales',
+      'Porcentajes',
+      'Potencias, raíces y logaritmos',
+      'Problemas financieros',
+    ],
+    álgebra: [
+      'Expresiones algebraicas',
+      'Proporcionalidad',
+      'Ecuaciones, inecuaciones y sistemas',
+      'Funciones lineales, cuadráticas y potencia',
+    ],
+    geometría: [
+      'Teorema de Pitágoras',
+      'Perímetros, áreas y volúmenes',
+      'Transformaciones y homotecia',
+      'Trigonometría',
+    ],
+    probabilidad: [
+      'Estadística descriptiva completa',
+      'Reglas de probabilidad',
+      'Probabilidad condicional',
+      'Técnicas de conteo',
+    ],
+  },
+};
+
+/**
+ * Get subjects for a given class level
+ */
+export function getSubjectsForLevel(level: ClassLevel): Subject[] {
+  return SUBJECTS_BY_LEVEL[level];
+}
+
+/**
+ * Get curriculum topics for a given class level and subject
+ */
+export function getCurriculumTopics(level: ClassLevel, subject: Subject): string[] {
+  return CURRICULUM_TOPICS[level]?.[subject] ?? [];
+}
+
+/**
  * Class/Course managed by a teacher
  */
 export interface TeacherClass {
@@ -60,6 +249,11 @@ export interface TeacherClass {
 }
 
 /**
+ * Subject accuracy breakdown - partial record to support levels with limited subjects
+ */
+export type SubjectAccuracy = Partial<Record<Subject, number>>;
+
+/**
  * Student in a teacher's class (with progress summary)
  */
 export interface ClassStudent {
@@ -75,13 +269,8 @@ export interface ClassStudent {
   currentStreak: number;
   longestStreak: number;
   lessonsCompleted: number;
-  // Subject breakdown
-  subjectAccuracy: {
-    números: number;
-    álgebra: number;
-    geometría: number;
-    probabilidad: number;
-  };
+  // Subject breakdown - partial to support levels with limited subjects (e.g., 1° Medio)
+  subjectAccuracy: SubjectAccuracy;
 }
 
 /**
@@ -192,6 +381,22 @@ export const MOCK_CLASSES: TeacherClass[] = [
     studentCount: 18,
     avgAccuracy: 0.81,
     lastActivity: Date.now() - 30 * 60 * 1000,
+  },
+  {
+    id: 'class-4',
+    name: '1°C Matemáticas',
+    description: 'Clase de matemáticas para 1° medio, sección C - Enfoque en números y álgebra',
+    teacherId: 'teacher-1',
+    inviteCode: 'PRIM1MED',
+    inviteCodeActive: true,
+    maxStudents: 40,
+    level: '1-medio',
+    schoolName: 'Colegio Santa María',
+    createdAt: Date.now() - 45 * 24 * 60 * 60 * 1000,
+    updatedAt: Date.now() - 4 * 60 * 60 * 1000,
+    studentCount: 35,
+    avgAccuracy: 0.69,
+    lastActivity: Date.now() - 5 * 60 * 60 * 1000,
   },
 ];
 
@@ -312,6 +517,109 @@ export const MOCK_STUDENTS: ClassStudent[] = [
   },
 ];
 
+/**
+ * Mock students for 1° Medio class (class-4)
+ * Based on Chilean National Curriculum - all 4 subjects taught at this level
+ * Topics include: números racionales, productos notables, sectores circulares, distribuciones bivariadas
+ */
+export const MOCK_STUDENTS_1_MEDIO: ClassStudent[] = [
+  {
+    id: 'student-1m-1',
+    displayName: 'Fernanda Núñez',
+    email: 'fernanda.n@email.com',
+    joinedAt: Date.now() - 40 * 24 * 60 * 60 * 1000,
+    status: 'active',
+    questionsAnswered: 98,
+    accuracy: 0.74,
+    lastActive: Date.now() - 1 * 60 * 60 * 1000,
+    currentStreak: 12,
+    longestStreak: 12,
+    lessonsCompleted: 5,
+    subjectAccuracy: {
+      números: 0.78,
+      álgebra: 0.70,
+      geometría: 0.76,
+      probabilidad: 0.72,
+    },
+  },
+  {
+    id: 'student-1m-2',
+    displayName: 'Tomás Vargas',
+    email: 'tomas.v@email.com',
+    joinedAt: Date.now() - 38 * 24 * 60 * 60 * 1000,
+    status: 'active',
+    questionsAnswered: 67,
+    accuracy: 0.62,
+    lastActive: Date.now() - 3 * 60 * 60 * 1000,
+    currentStreak: 2,
+    longestStreak: 8,
+    lessonsCompleted: 3,
+    subjectAccuracy: {
+      números: 0.68,
+      álgebra: 0.55,
+      geometría: 0.64,
+      probabilidad: 0.60,
+    },
+  },
+  {
+    id: 'student-1m-3',
+    displayName: 'Isidora Campos',
+    email: 'isidora.c@email.com',
+    joinedAt: Date.now() - 42 * 24 * 60 * 60 * 1000,
+    status: 'active',
+    questionsAnswered: 145,
+    accuracy: 0.85,
+    lastActive: Date.now() - 30 * 60 * 1000,
+    currentStreak: 18,
+    longestStreak: 18,
+    lessonsCompleted: 8,
+    subjectAccuracy: {
+      números: 0.88,
+      álgebra: 0.82,
+      geometría: 0.86,
+      probabilidad: 0.84,
+    },
+  },
+  {
+    id: 'student-1m-4',
+    displayName: 'Matías Herrera',
+    email: 'matias.h@email.com',
+    joinedAt: Date.now() - 35 * 24 * 60 * 60 * 1000,
+    status: 'active',
+    questionsAnswered: 42,
+    accuracy: 0.55,
+    lastActive: Date.now() - 4 * 24 * 60 * 60 * 1000,
+    currentStreak: 0,
+    longestStreak: 3,
+    lessonsCompleted: 2,
+    subjectAccuracy: {
+      números: 0.58,
+      álgebra: 0.52,
+      geometría: 0.54,
+      probabilidad: 0.56,
+    },
+  },
+  {
+    id: 'student-1m-5',
+    displayName: 'Catalina Reyes',
+    email: 'catalina.r@email.com',
+    joinedAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
+    status: 'active',
+    questionsAnswered: 112,
+    accuracy: 0.79,
+    lastActive: Date.now() - 2 * 60 * 60 * 1000,
+    currentStreak: 9,
+    longestStreak: 15,
+    lessonsCompleted: 6,
+    subjectAccuracy: {
+      números: 0.82,
+      álgebra: 0.76,
+      geometría: 0.80,
+      probabilidad: 0.78,
+    },
+  },
+];
+
 export const MOCK_CLASS_ANALYTICS: ClassAnalytics = {
   totalStudents: 32,
   activeThisWeek: 24,
@@ -337,6 +645,41 @@ export const MOCK_CLASS_ANALYTICS: ClassAnalytics = {
     { topic: 'Factorización', avgAccuracy: 0.52, studentsCount: 18 },
     { topic: 'Ecuaciones cuadráticas', avgAccuracy: 0.58, studentsCount: 15 },
     { topic: 'Probabilidad condicional', avgAccuracy: 0.61, studentsCount: 12 },
+  ],
+};
+
+/**
+ * Mock analytics for 1° Medio class (class-4)
+ * Based on Chilean National Curriculum - all 4 subjects included
+ * Topics: números racionales, productos notables, sectores circulares, distribuciones bivariadas
+ */
+export const MOCK_CLASS_ANALYTICS_1_MEDIO: ClassAnalytics = {
+  totalStudents: 35,
+  activeThisWeek: 28,
+  avgAccuracy: 0.69,
+  avgQuestionsPerStudent: 93,
+  lessonsCompletedTotal: 124,
+  subjectBreakdown: [
+    { subject: 'números', avgAccuracy: 0.75, questionsAnswered: 1120 },
+    { subject: 'álgebra', avgAccuracy: 0.63, questionsAnswered: 980 },
+    { subject: 'geometría', avgAccuracy: 0.71, questionsAnswered: 720 },
+    { subject: 'probabilidad', avgAccuracy: 0.68, questionsAnswered: 430 },
+  ],
+  weeklyActivity: [
+    { day: 'Lun', students: 25, questions: 178 },
+    { day: 'Mar', students: 28, questions: 210 },
+    { day: 'Mié', students: 26, questions: 195 },
+    { day: 'Jue', students: 30, questions: 245 },
+    { day: 'Vie', students: 22, questions: 156 },
+    { day: 'Sáb', students: 12, questions: 78 },
+    { day: 'Dom', students: 8, questions: 45 },
+  ],
+  strugglingTopics: [
+    // 1° Medio specific topics from Chilean curriculum
+    { topic: 'Productos notables', avgAccuracy: 0.48, studentsCount: 22 },
+    { topic: 'Sistemas de ecuaciones 2x2', avgAccuracy: 0.52, studentsCount: 19 },
+    { topic: 'Homotecia y teorema de Tales', avgAccuracy: 0.56, studentsCount: 16 },
+    { topic: 'Reglas de probabilidad', avgAccuracy: 0.59, studentsCount: 14 },
   ],
 };
 
@@ -418,6 +761,84 @@ export const MOCK_AI_RECOMMENDATIONS: StudentAIRecommendation[] = [
     recommendation:
       'Continuar con el ritmo actual. Monitorear su progreso en las próximas 2 semanas para confirmar la tendencia positiva.',
     suggestedContent: null,
+    priority: 'medium',
+    generatedAt: Date.now(),
+  },
+];
+
+/**
+ * Mock AI recommendations for 1° Medio students
+ * Based on Chilean National Curriculum - recommendations cover all 4 subjects
+ * 1° Medio topics: números racionales, productos notables, sectores circulares, distribuciones bivariadas
+ */
+export const MOCK_AI_RECOMMENDATIONS_1_MEDIO: StudentAIRecommendation[] = [
+  {
+    studentId: 'student-1m-1', // Fernanda Núñez
+    analysis:
+      'Fernanda muestra un buen desempeño en todas las materias (74% general). Sus fortalezas están en números (78%) y geometría (76%). Álgebra (70%) es su área de oportunidad, especialmente en productos notables.',
+    recommendation:
+      'Continuar con el ritmo actual. Sugerimos reforzar productos notables antes de pasar a sistemas de ecuaciones 2x2.',
+    suggestedContent: {
+      id: 'ml-prod-not',
+      title: 'Productos Notables',
+      type: 'mini-lesson',
+    },
+    priority: 'low',
+    generatedAt: Date.now(),
+  },
+  {
+    studentId: 'student-1m-2', // Tomás Vargas
+    analysis:
+      'Tomás tiene dificultades en álgebra (55%) y probabilidad (60%). En geometría (64%) muestra mejor comprensión del teorema de Tales, pero necesita refuerzo en sectores circulares.',
+    recommendation:
+      'Completar práctica de operaciones con racionales antes de avanzar con sistemas de ecuaciones. La base numérica es fundamental.',
+    suggestedContent: {
+      id: 'pr-num-rac',
+      title: 'Práctica: Números Racionales',
+      type: 'practice',
+    },
+    priority: 'high',
+    generatedAt: Date.now(),
+  },
+  {
+    studentId: 'student-1m-3', // Isidora Campos
+    analysis:
+      'Isidora domina todas las materias con excelencia (85% general). Destaca en números (88%) y geometría (86%). En probabilidad (84%) maneja bien las reglas aditiva y multiplicativa.',
+    recommendation:
+      'Lista para contenido desafiante. Sugerimos introducir problemas de modelamiento con gráficos lineales para preparar bases de 2° Medio.',
+    suggestedContent: {
+      id: 'ml-graf-lin',
+      title: 'Gráficos y Relaciones Lineales',
+      type: 'mini-lesson',
+    },
+    priority: 'low',
+    generatedAt: Date.now(),
+  },
+  {
+    studentId: 'student-1m-4', // Matías Herrera
+    analysis:
+      'Matías necesita atención urgente. Su precisión es baja en todas las materias (55% general). Álgebra (52%) y geometría (54%) son las áreas más críticas. Ha estado inactivo por 4 días.',
+    recommendation:
+      'Contactar al estudiante. Priorizar mini-lección de repaso de potencias con exponente entero antes de avanzar con productos notables.',
+    suggestedContent: {
+      id: 'ml-pot-exp',
+      title: 'Potencias con Exponente Entero',
+      type: 'mini-lesson',
+    },
+    priority: 'high',
+    generatedAt: Date.now(),
+  },
+  {
+    studentId: 'student-1m-5', // Catalina Reyes
+    analysis:
+      'Catalina muestra progreso consistente (79% general). Buen balance entre todas las materias: números (82%), geometría (80%), probabilidad (78%) y álgebra (76%). Su racha de 9 días indica buen compromiso.',
+    recommendation:
+      'Mantener el ritmo actual. Sugerimos práctica de sistemas de ecuaciones 2x2 para consolidar álgebra antes de avanzar.',
+    suggestedContent: {
+      id: 'pr-sist-ec',
+      title: 'Práctica: Sistemas de Ecuaciones 2x2',
+      type: 'practice',
+    },
     priority: 'medium',
     generatedAt: Date.now(),
   },
