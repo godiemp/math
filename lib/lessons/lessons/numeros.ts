@@ -1,6 +1,6 @@
 /**
  * Números lessons
- * M1-NUM-001 to M1-NUM-005
+ * M1-NUM-001 to M1-NUM-007
  */
 
 import type { Lesson } from '../types';
@@ -327,6 +327,25 @@ export const NUMEROS_LESSONS: Lesson[] = [
       { id: 'explore', type: 'explore', title: 'Tipos de Problemas' },
       { id: 'explain', type: 'explain', title: 'Estrategias Avanzadas' },
       { id: 'classify', type: 'explore', title: 'Clasifica el Problema' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
+  {
+    id: 'm1-num-007-a',
+    slug: 'raices-enesimas',
+    title: 'Raíces Enésimas',
+    description: 'Aprende qué son las raíces enésimas, cómo calcularlas y su relación con las potencias.',
+    level: 'M1',
+    subject: 'números',
+    thematicUnit: 'M1-NUM-007',
+    skills: ['raices-concepto', 'raices-calcular', 'raices-exponente-fraccionario'],
+    estimatedMinutes: 15,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Jardín Cuadrado' },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
+      { id: 'explain', type: 'explain', title: 'Conceptos de Raíces Enésimas' },
+      { id: 'classify', type: 'explore', title: 'Identifica el Tipo de Raíz' },
       { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
       { id: 'verify', type: 'verify', title: 'Checkpoint' },
     ],
