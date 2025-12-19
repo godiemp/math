@@ -216,6 +216,7 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-ALG-002',
     skills: ['algebra-polinomios', 'algebra-terminos-semejantes', 'algebra-operaciones-basicas'],
     estimatedMinutes: 15,
+    minEducOA: ['MA1M-OA-03'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Gerente de la Empresa' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -235,6 +236,7 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-ALG-003',
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'algebra-traduccion-problemas'],
     estimatedMinutes: 15,
+    minEducOA: ['MA1M-OA-04'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Misterio del Precio' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -274,6 +276,7 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-ALG-006',
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'algebra-operaciones-inversas'],
     estimatedMinutes: 15,
+    minEducOA: ['MA1M-OA-04'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Cuenta del Restaurante' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -293,6 +296,7 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-ALG-011',
     skills: ['algebra-completar-cuadrado', 'algebra-ecuaciones-cuadraticas', 'algebra-vertice-parabola'],
     estimatedMinutes: 15,
+    minEducOA: ['MA1M-OA-03'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Arquitecto y el Jardín' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },

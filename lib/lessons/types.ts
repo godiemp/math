@@ -43,8 +43,15 @@ export interface Lesson {
   skills: string[];
   estimatedMinutes: number;
   steps: LessonStep[];
-  /** MINEDUC Learning Objectives this lesson covers (e.g., ['MA1M-OA-01']) */
-  minEducOA?: string[];
+  /**
+   * MINEDUC Learning Objectives this lesson covers (e.g., ['MA1M-OA-01'])
+   * REQUIRED: The OA code determines the school grade level:
+   * - MA1M-OA-XX = 1° Medio
+   * - MA2M-OA-XX = 2° Medio
+   * - MA3M-OA-XX = 3° Medio
+   * - MA4M-OA-XX = 4° Medio
+   */
+  minEducOA: string[];
 }
 
 /**
