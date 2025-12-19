@@ -4,6 +4,15 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { LandingNav, HeroSection, StatsSection, FeaturesSection, CTASection } from '@/components/landing';
+import {
+  PainPointsSection,
+  HowItWorksSection,
+  B2BFeaturesSection,
+  B2BStatsSection,
+  CurriculumPreviewSection,
+  DecisionMakersSection,
+  B2BCTASection,
+} from '@/components/landing/instituciones';
 import Footer from '@/components/layout/Footer';
 
 type Audience = 'b2c' | 'b2b';
@@ -35,11 +44,23 @@ export default function LandingPage() {
           onAudienceChange={setAudience}
         />
 
-        <StatsSection />
-
-        <FeaturesSection audience={audience} />
-
-        <CTASection audience={audience} />
+        {audience === 'b2c' ? (
+          <>
+            <StatsSection />
+            <FeaturesSection audience={audience} />
+            <CTASection audience={audience} />
+          </>
+        ) : (
+          <>
+            <PainPointsSection />
+            <HowItWorksSection />
+            <B2BFeaturesSection />
+            <B2BStatsSection />
+            <CurriculumPreviewSection />
+            <DecisionMakersSection />
+            <B2BCTASection />
+          </>
+        )}
       </main>
 
       <Footer />

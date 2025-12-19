@@ -4,31 +4,14 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 
-interface LandingNavProps {
-  variant?: 'b2c' | 'b2b';
-}
-
-const openIntercomDemo = () => {
-  if (typeof window !== 'undefined' && window.Intercom) {
-    window.Intercom('showNewMessage', 'Hola, quiero solicitar una demo para mi institución');
-  }
-};
-
-export function LandingNav({ variant = 'b2c' }: LandingNavProps) {
+export function LandingNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navLinks = variant === 'b2c'
-    ? [
-        { href: '/como-funciona', label: 'Cómo Funciona' },
-        { href: '/pricing', label: 'Precios' },
-        { href: '/blog', label: 'Blog' },
-        { href: '/instituciones', label: 'Para Instituciones' },
-      ]
-    : [
-        { href: '/como-funciona', label: 'Cómo Funciona' },
-        { href: '/blog', label: 'Blog' },
-        { href: '/', label: 'Para Estudiantes' },
-      ];
+  const navLinks = [
+    { href: '/como-funciona', label: 'Cómo Funciona' },
+    { href: '/pricing', label: 'Precios' },
+    { href: '/blog', label: 'Blog' },
+  ];
 
   return (
     <header
@@ -97,55 +80,34 @@ export function LandingNav({ variant = 'b2c' }: LandingNavProps) {
 
           {/* Desktop CTAs */}
           <div className="hidden md:flex items-center gap-3">
-            {variant === 'b2c' ? (
-              <>
-                <Link
-                  href="/signin"
-                  className="spring-motion"
-                  style={{
-                    padding: '8px 16px',
-                    fontSize: '15px',
-                    fontWeight: 500,
-                    color: 'var(--color-tint)',
-                    background: 'transparent',
-                    borderRadius: 'var(--radius-sm)',
-                  }}
-                >
-                  Iniciar Sesión
-                </Link>
-                <Link
-                  href="/signin"
-                  className="spring-emphasized"
-                  style={{
-                    padding: '8px 16px',
-                    fontSize: '15px',
-                    fontWeight: 600,
-                    color: 'white',
-                    background: 'var(--color-tint)',
-                    borderRadius: 'var(--radius-sm)',
-                  }}
-                >
-                  Comenzar Gratis
-                </Link>
-              </>
-            ) : (
-              <button
-                onClick={openIntercomDemo}
-                className="spring-emphasized"
-                style={{
-                  padding: '8px 16px',
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  color: 'white',
-                  background: 'var(--color-tint)',
-                  borderRadius: 'var(--radius-sm)',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                Solicitar Demo
-              </button>
-            )}
+            <Link
+              href="/signin"
+              className="spring-motion"
+              style={{
+                padding: '8px 16px',
+                fontSize: '15px',
+                fontWeight: 500,
+                color: 'var(--color-tint)',
+                background: 'transparent',
+                borderRadius: 'var(--radius-sm)',
+              }}
+            >
+              Iniciar Sesión
+            </Link>
+            <Link
+              href="/signin"
+              className="spring-emphasized"
+              style={{
+                padding: '8px 16px',
+                fontSize: '15px',
+                fontWeight: 600,
+                color: 'white',
+                background: 'var(--color-tint)',
+                borderRadius: 'var(--radius-sm)',
+              }}
+            >
+              Comenzar Gratis
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -183,57 +145,34 @@ export function LandingNav({ variant = 'b2c' }: LandingNavProps) {
                 </Link>
               ))}
               <div className="flex flex-col gap-2 mt-4 pt-4" style={{ borderTop: '1px solid var(--color-separator)' }}>
-                {variant === 'b2c' ? (
-                  <>
-                    <Link
-                      href="/signin"
-                      className="text-center py-3"
-                      style={{
-                        fontSize: '16px',
-                        fontWeight: 500,
-                        color: 'var(--color-tint)',
-                        border: '1px solid var(--color-tint)',
-                        borderRadius: 'var(--radius-sm)',
-                      }}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Iniciar Sesión
-                    </Link>
-                    <Link
-                      href="/signin"
-                      className="text-center py-3"
-                      style={{
-                        fontSize: '16px',
-                        fontWeight: 600,
-                        color: 'white',
-                        background: 'var(--color-tint)',
-                        borderRadius: 'var(--radius-sm)',
-                      }}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Comenzar Gratis
-                    </Link>
-                  </>
-                ) : (
-                  <button
-                    className="text-center py-3"
-                    style={{
-                      fontSize: '16px',
-                      fontWeight: 600,
-                      color: 'white',
-                      background: 'var(--color-tint)',
-                      borderRadius: 'var(--radius-sm)',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      openIntercomDemo();
-                    }}
-                  >
-                    Solicitar Demo
-                  </button>
-                )}
+                <Link
+                  href="/signin"
+                  className="text-center py-3"
+                  style={{
+                    fontSize: '16px',
+                    fontWeight: 500,
+                    color: 'var(--color-tint)',
+                    border: '1px solid var(--color-tint)',
+                    borderRadius: 'var(--radius-sm)',
+                  }}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Iniciar Sesión
+                </Link>
+                <Link
+                  href="/signin"
+                  className="text-center py-3"
+                  style={{
+                    fontSize: '16px',
+                    fontWeight: 600,
+                    color: 'white',
+                    background: 'var(--color-tint)',
+                    borderRadius: 'var(--radius-sm)',
+                  }}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Comenzar Gratis
+                </Link>
               </div>
             </nav>
           </div>
