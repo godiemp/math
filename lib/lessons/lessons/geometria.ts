@@ -1,0 +1,83 @@
+/**
+ * Geometría lessons
+ * M1-GEO-001 to M1-GEO-002
+ */
+
+import type { Lesson } from '../types';
+
+export const GEOMETRIA_LESSONS: Lesson[] = [
+  {
+    id: 'm1-geo-001-a',
+    slug: 'teorema-pitagoras',
+    title: 'El Teorema de Pitágoras',
+    description: 'Descubre la relación entre los lados de un triángulo rectángulo.',
+    level: 'M1',
+    subject: 'geometría',
+    thematicUnit: 'M1-GEO-001',
+    skills: ['teorema-pitagoras-aplicar', 'teorema-pitagoras-identificar'],
+    estimatedMinutes: 12,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Problema de la Escalera' },
+      { id: 'discover', type: 'explore', title: 'Descubre el Patrón' },
+      { id: 'proof', type: 'explore', title: 'La Prueba Visual' },
+      { id: 'explain', type: 'explain', title: 'El Teorema de Pitágoras' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
+  {
+    id: 'm1-geo-001-b',
+    slug: 'area-rectangulos-triangulos',
+    title: 'Área de Rectángulos y Triángulos',
+    description: 'Aprende a calcular el área de rectángulos, cuadrados y triángulos.',
+    level: 'M1',
+    subject: 'geometría',
+    thematicUnit: 'M1-GEO-001',
+    skills: ['area-rectangulo', 'area-triangulo'],
+    estimatedMinutes: 12,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Proyecto de Pintura' },
+      { id: 'explore', type: 'explore', title: 'Descubriendo Fórmulas' },
+      { id: 'explain', type: 'explain', title: 'Fórmulas de Área' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
+  {
+    id: 'm1-geo-001-c',
+    slug: 'area-paralelogramos-trapecios',
+    title: 'Área de Paralelogramos y Trapecios',
+    description: 'Aprende a calcular el área de paralelogramos y trapecios usando descomposición.',
+    level: 'M1',
+    subject: 'geometría',
+    thematicUnit: 'M1-GEO-001',
+    skills: ['area-paralelogramo', 'area-trapecio', 'descomponer-figuras'],
+    estimatedMinutes: 12,
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Jardín Irregular' },
+      { id: 'explore', type: 'explore', title: 'Transformando Figuras' },
+      { id: 'explain', type: 'explain', title: 'Las Fórmulas' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
+  {
+    id: 'm1-geo-002-a',
+    slug: 'circulo-perimetro-area',
+    title: 'Circunferencia y Área del Círculo',
+    description: 'Descubre Pi (π) y aprende a calcular la circunferencia y el área de círculos.',
+    level: 'M1',
+    subject: 'geometría',
+    thematicUnit: 'M1-GEO-002',
+    skills: ['circunferencia-circulo', 'area-circulo', 'pi-concepto'],
+    estimatedMinutes: 12,
+    minEducOA: ['MA1M-OA-06'],
+    steps: [
+      { id: 'hook', type: 'hook', title: 'La Rueda de la Fortuna' },
+      { id: 'explore', type: 'explore', title: 'Descubriendo Pi (π)' },
+      { id: 'explain', type: 'explain', title: 'Fórmulas del Círculo' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
+];
