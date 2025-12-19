@@ -66,15 +66,20 @@ export const GRADE_LEVELS: GradeLevelInfo[] = [
   { code: '7B', name: '7° Básico', slug: '7-basico', order: 7, isAvailable: false },
   { code: '8B', name: '8° Básico', slug: '8-basico', order: 8, isAvailable: false },
   // Media
-  { code: '1M', name: '1° Medio', slug: '1-medio', order: 9, isAvailable: true },  // MVP
-  { code: '2M', name: '2° Medio', slug: '2-medio', order: 10, isAvailable: false },
-  { code: '3M', name: '3° Medio', slug: '3-medio', order: 11, isAvailable: false },
-  { code: '4M', name: '4° Medio', slug: '4-medio', order: 12, isAvailable: false },
+  { code: '1M', name: '1° Medio', slug: '1-medio', order: 9, isAvailable: true },
+  { code: '2M', name: '2° Medio', slug: '2-medio', order: 10, isAvailable: true },
+  { code: '3M', name: '3° Medio', slug: '3-medio', order: 11, isAvailable: true },
+  { code: '4M', name: '4° Medio', slug: '4-medio', order: 12, isAvailable: true },
 ];
 
 // ============================================================================
 // 1° MEDIO - OBJETIVOS DE APRENDIZAJE (15 OA)
 // ============================================================================
+
+/**
+ * Helper to get all lesson IDs that should map to a specific OA
+ * (defined here for reference, actual mappings in lessonIds arrays)
+ */
 
 const OA_1M: MinEducOA[] = [
   // NÚMEROS (2 OA)
@@ -272,12 +277,249 @@ const OA_1M: MinEducOA[] = [
 ];
 
 // ============================================================================
-// OA BY GRADE (expandable for future grades)
+// 2° MEDIO - OBJETIVOS DE APRENDIZAJE (12 OA)
+// ============================================================================
+
+const OA_2M: MinEducOA[] = [
+  // NÚMEROS (2 OA)
+  {
+    code: 'MA2M-OA-01',
+    number: 1,
+    grade: '2M',
+    eje: 'números',
+    name: 'Operaciones con reales',
+    description: 'Realizar cálculos y estimaciones con números reales utilizando descomposición de raíces, propiedades de raíces y combinación con racionales.',
+    isBasal: true,
+    lessonIds: ['m1-num-007-a'], // Raíces enésimas
+  },
+  {
+    code: 'MA2M-OA-02',
+    number: 2,
+    grade: '2M',
+    eje: 'números',
+    name: 'Potencias, raíces y logaritmos',
+    description: 'Demostrar comprensión de las relaciones entre potencias, raíces enésimas y logaritmos.',
+    isBasal: true,
+    lessonIds: [], // Needs new lesson on logarithms
+  },
+
+  // ÁLGEBRA Y FUNCIONES (4 OA)
+  {
+    code: 'MA2M-OA-03',
+    number: 3,
+    grade: '2M',
+    eje: 'álgebra',
+    name: 'Función cuadrática',
+    description: 'Comprender la función cuadrática f(x) = ax² + bx + c reconociéndola en contextos reales.',
+    isBasal: true,
+    lessonIds: ['m1-alg-011-a'], // Completar el cuadrado
+  },
+  {
+    code: 'MA2M-OA-04',
+    number: 4,
+    grade: '2M',
+    eje: 'álgebra',
+    name: 'Ecuaciones cuadráticas',
+    description: 'Resolver ecuaciones cuadráticas en las formas ax² = b, (ax + b)² = c, ax² + bx = 0.',
+    isBasal: false,
+    lessonIds: [], // Needs new lesson
+  },
+  {
+    code: 'MA2M-OA-05',
+    number: 5,
+    grade: '2M',
+    eje: 'álgebra',
+    name: 'Funciones inversas',
+    description: 'Comprender funciones inversas mediante tablas, gráficos y reflexión cartesiana.',
+    isBasal: true,
+    lessonIds: [],
+  },
+  {
+    code: 'MA2M-OA-06',
+    number: 6,
+    grade: '2M',
+    eje: 'álgebra',
+    name: 'Cambio porcentual constante',
+    description: 'Explicar cambio porcentual constante e interés compuesto.',
+    isBasal: false,
+    lessonIds: ['m1-num-005-a'], // Problemas con porcentajes (parcial)
+  },
+
+  // GEOMETRÍA (3 OA)
+  {
+    code: 'MA2M-OA-07',
+    number: 7,
+    grade: '2M',
+    eje: 'geometría',
+    name: 'Volumen de esfera',
+    description: 'Desarrollar fórmulas de área superficial y volumen esférico.',
+    isBasal: false,
+    lessonIds: [],
+  },
+  {
+    code: 'MA2M-OA-08',
+    number: 8,
+    grade: '2M',
+    eje: 'geometría',
+    name: 'Razones trigonométricas',
+    description: 'Comprender razones trigonométricas (seno, coseno, tangente) en triángulos rectángulos.',
+    isBasal: true,
+    lessonIds: [],
+  },
+  {
+    code: 'MA2M-OA-09',
+    number: 9,
+    grade: '2M',
+    eje: 'geometría',
+    name: 'Aplicación trigonométrica',
+    description: 'Aplicar razones trigonométricas en contextos diversos.',
+    isBasal: false,
+    lessonIds: [],
+  },
+
+  // PROBABILIDAD Y ESTADÍSTICA (3 OA)
+  {
+    code: 'MA2M-OA-10',
+    number: 10,
+    grade: '2M',
+    eje: 'probabilidad',
+    name: 'Variables aleatorias',
+    description: 'Comprender variables aleatorias finitas.',
+    isBasal: false,
+    lessonIds: [],
+  },
+  {
+    code: 'MA2M-OA-11',
+    number: 11,
+    grade: '2M',
+    eje: 'probabilidad',
+    name: 'Permutaciones y combinatoria',
+    description: 'Utilizar permutaciones y combinatoria para calcular probabilidades.',
+    isBasal: true,
+    lessonIds: ['m1-prob-005-a'], // Principio multiplicativo (foundational)
+  },
+  {
+    code: 'MA2M-OA-12',
+    number: 12,
+    grade: '2M',
+    eje: 'probabilidad',
+    name: 'Rol de la probabilidad',
+    description: 'Comprender el rol de la probabilidad en la sociedad.',
+    isBasal: false,
+    lessonIds: [],
+  },
+];
+
+// ============================================================================
+// 3° MEDIO - OBJETIVOS DE APRENDIZAJE (4 OA - Formación General)
+// ============================================================================
+
+const OA_3M: MinEducOA[] = [
+  {
+    code: 'FG-MATE-3M-OAC-01',
+    number: 1,
+    grade: '3M',
+    eje: 'números',
+    name: 'Números complejos',
+    description: 'Resolver problemas de operaciones con números complejos.',
+    isBasal: true,
+    lessonIds: [], // Out of scope for current lessons
+  },
+  {
+    code: 'FG-MATE-3M-OAC-02',
+    number: 2,
+    grade: '3M',
+    eje: 'probabilidad',
+    name: 'Decisiones en incerteza',
+    description: 'Tomar decisiones involucrando medidas de dispersión y probabilidades condicionales.',
+    isBasal: true,
+    lessonIds: [
+      'm2-prob-001-a', // Medidas de dispersión
+      'm1-prob-003-a', // Cuartiles y percentiles
+      'm1-prob-004-c', // Probabilidad condicional
+    ],
+  },
+  {
+    code: 'FG-MATE-3M-OAC-03',
+    number: 3,
+    grade: '3M',
+    eje: 'álgebra',
+    name: 'Funciones exponencial y logarítmica',
+    description: 'Aplicar modelos con funciones exponencial y logarítmica.',
+    isBasal: true,
+    lessonIds: [], // Needs new lessons
+  },
+  {
+    code: 'FG-MATE-3M-OAC-04',
+    number: 4,
+    grade: '3M',
+    eje: 'geometría',
+    name: 'Geometría euclidiana circunferencia',
+    description: 'Resolver problemas de geometría euclidiana que involucran relaciones métricas en la circunferencia.',
+    isBasal: true,
+    lessonIds: ['m1-geo-002-a'], // Circunferencia y área (foundational)
+  },
+];
+
+// ============================================================================
+// 4° MEDIO - OBJETIVOS DE APRENDIZAJE (4 OA - Formación General)
+// ============================================================================
+
+const OA_4M: MinEducOA[] = [
+  {
+    code: 'FG-MATE-4M-OAC-01',
+    number: 1,
+    grade: '4M',
+    eje: 'números',
+    name: 'Matemática financiera',
+    description: 'Fundamentar decisiones financieras con porcentajes, tasas de interés e índices económicos.',
+    isBasal: true,
+    lessonIds: [
+      'm1-num-004-a', // Concepto de porcentaje
+      'm1-num-005-a', // Problemas con porcentajes
+    ],
+  },
+  {
+    code: 'FG-MATE-4M-OAC-02',
+    number: 2,
+    grade: '4M',
+    eje: 'probabilidad',
+    name: 'Modelos binomial y normal',
+    description: 'Fundamentar decisiones a partir de análisis crítico y modelos binomial y normal.',
+    isBasal: true,
+    lessonIds: [], // Needs new lessons
+  },
+  {
+    code: 'FG-MATE-4M-OAC-03',
+    number: 3,
+    grade: '4M',
+    eje: 'álgebra',
+    name: 'Funciones potencia y trigonométricas',
+    description: 'Construir modelos con funciones potencias y trigonométricas sen(x) y cos(x).',
+    isBasal: true,
+    lessonIds: [], // Needs new lessons
+  },
+  {
+    code: 'FG-MATE-4M-OAC-04',
+    number: 4,
+    grade: '4M',
+    eje: 'geometría',
+    name: 'Geometría analítica',
+    description: 'Resolver problemas de rectas y circunferencias mediante representación analítica.',
+    isBasal: true,
+    lessonIds: [], // Needs new lessons
+  },
+];
+
+// ============================================================================
+// OA BY GRADE
 // ============================================================================
 
 export const MINEDUC_OA: Partial<Record<GradeLevel, MinEducOA[]>> = {
   '1M': OA_1M,
-  // Future: Add OA for other grades
+  '2M': OA_2M,
+  '3M': OA_3M,
+  '4M': OA_4M,
 };
 
 // ============================================================================

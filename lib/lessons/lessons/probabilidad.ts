@@ -75,6 +75,7 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M2-PROB-001',
     skills: ['estadistica-rango', 'estadistica-varianza', 'estadistica-desviacion-estandar'],
     estimatedMinutes: 15,
+    minEducOA: ['FG-MATE-3M-OAC-02'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Torneo de Tiro con Arco' },
       { id: 'explore', type: 'explore', title: 'El Laboratorio de Dispersión' },
@@ -94,6 +95,7 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M1-PROB-003',
     skills: ['estadistica-cuartiles', 'estadistica-percentiles', 'estadistica-boxplot', 'interpretar-posicion'],
     estimatedMinutes: 15,
+    minEducOA: ['FG-MATE-3M-OAC-02'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Ranking de la Clase' },
       { id: 'explore', type: 'explore', title: 'El Divisor de Datos' },
@@ -153,7 +155,7 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M1-PROB-004',
     skills: ['probabilidad-condicional', 'eventos-independientes', 'regla-multiplicacion'],
     estimatedMinutes: 15,
-    minEducOA: ['MA1M-OA-14'],
+    minEducOA: ['MA1M-OA-14', 'FG-MATE-3M-OAC-02'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Pronóstico del Tiempo' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -173,7 +175,7 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M1-PROB-005',
     skills: ['probabilidad-conteo', 'probabilidad-principio-multiplicativo', 'probabilidad-permutaciones'],
     estimatedMinutes: 14,
-    minEducOA: ['MA1M-OA-14'],
+    minEducOA: ['MA1M-OA-14', 'MA2M-OA-11'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Dilema del Armario' },
       { id: 'explore', type: 'explore', title: 'Descubriendo el Patrón' },

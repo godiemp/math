@@ -293,6 +293,7 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-ALG-011',
     skills: ['algebra-completar-cuadrado', 'algebra-ecuaciones-cuadraticas', 'algebra-vertice-parabola'],
     estimatedMinutes: 15,
+    minEducOA: ['MA2M-OA-03', 'MA2M-OA-04'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Arquitecto y el Jardín' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },

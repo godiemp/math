@@ -303,6 +303,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-004',
     skills: ['porcentaje-concepto', 'porcentaje-calcular', 'porcentaje-conversiones'],
     estimatedMinutes: 15,
+    minEducOA: ['FG-MATE-4M-OAC-01'],
     steps: [
       { id: 'hook', type: 'hook', title: 'Las Ofertas del Centro Comercial' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -322,6 +323,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-005',
     skills: ['porcentaje-problemas', 'porcentaje-sucesivos', 'porcentaje-inverso', 'porcentaje-comparacion'],
     estimatedMinutes: 16,
+    minEducOA: ['MA2M-OA-06', 'FG-MATE-4M-OAC-01'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Tienda de Electrónica' },
       { id: 'explore', type: 'explore', title: 'Tipos de Problemas' },
@@ -341,6 +343,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-007',
     skills: ['raices-concepto', 'raices-calcular', 'raices-exponente-fraccionario'],
     estimatedMinutes: 15,
+    minEducOA: ['MA2M-OA-01'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Jardín Cuadrado' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
