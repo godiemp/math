@@ -64,7 +64,7 @@ const QUESTIONS: PracticeQuestion[] = [
         <rect x="70" y="55" width="45" height="75" fill="#ddd6fe" stroke="#7c3aed" strokeWidth="2" />
         {/* Dimensions */}
         <text x="90" y="14" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1f2937">12 m</text>
-        <text x="170" y="42" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1f2937">3 m</text>
+        <text x="165" y="42" textAnchor="start" fontSize="10" fontWeight="bold" fill="#1f2937">3 m</text>
         <text x="92" y="145" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1f2937">4 m</text>
         <text x="55" y="95" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1f2937" transform="rotate(-90, 55, 95)">6 m</text>
       </svg>
