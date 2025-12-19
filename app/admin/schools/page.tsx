@@ -1,18 +1,10 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { Card, Heading, Text, SlidePanel } from '@/components/ui';
 import AdminLayout from '@/components/layout/AdminLayout';
 import {
-  schools,
-  School,
   SortField,
-  SortDirection,
-  ContactStatus,
-  SchoolContact,
-  SchoolNote,
-  SchoolContactInfo,
   DEPENDENCY_LABELS,
   DEPENDENCY_COLORS,
   STATUS_LABELS,
@@ -20,314 +12,68 @@ import {
   CONTACT_STATUS_LABELS,
   CONTACT_STATUS_COLORS,
 } from '@/lib/schools';
+import { useSchoolsSales } from '@/hooks/useSchoolsSales';
 
 function SchoolsSalesContent() {
-  // Filters
-  const [selectedRegion, setSelectedRegion] = useState<number | 'all'>('all');
-  const [selectedCommune, setSelectedCommune] = useState<number | 'all'>('all');
-  const [selectedDependency, setSelectedDependency] = useState<number | 'all'>('all');
-  const [selectedStatus, setSelectedStatus] = useState<number | 'all'>('all');
-  const [selectedContactStatus, setSelectedContactStatus] = useState<ContactStatus | 'all'>('all');
-  const [hasHighSchool, setHasHighSchool] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const {
+    // Filters
+    filters,
+    setSelectedRegion,
+    setSelectedCommune,
+    setSelectedDependency,
+    setSelectedStatus,
+    setSelectedContactStatus,
+    setHasHighSchool,
+    setSearchQuery,
+    clearFilters,
+    hasActiveFilters,
 
-  // Contact tracking (frontend-only mockup)
-  const [contactStatuses, setContactStatuses] = useState<Record<number, ContactStatus>>({});
+    // Region/Commune options
+    regions,
+    communes,
 
-  // Detail panel state
-  const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
-  const [schoolContactInfo, setSchoolContactInfo] = useState<Record<number, SchoolContactInfo>>({});
+    // Sorting
+    sortField,
+    sortDirection,
+    handleSort,
 
-  // Form state for adding contacts/notes
-  const [newContactName, setNewContactName] = useState('');
-  const [newContactEmail, setNewContactEmail] = useState('');
-  const [newContactPhone, setNewContactPhone] = useState('');
-  const [newContactRole, setNewContactRole] = useState('');
-  const [newNote, setNewNote] = useState('');
+    // Pagination
+    currentPage,
+    setCurrentPage,
+    itemsPerPage,
+    setItemsPerPage,
+    totalPages,
+    startIndex,
+    endIndex,
+    getPageNumbers,
 
-  // Sorting
-  const [sortField, setSortField] = useState<SortField>('highSchoolEnrollment');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+    // Data
+    sortedSchools,
+    paginatedSchools,
+    stats,
+    pipelineStats,
 
-  // Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(50);
+    // Contact status tracking
+    getContactStatus,
+    handleContactStatusChange,
 
-  // Get unique regions and communes for dropdowns
-  const regions = useMemo(() => {
-    const uniqueRegions = new Map<number, string>();
-    schools.forEach((s) => {
-      if (!uniqueRegions.has(s.regionCode)) {
-        uniqueRegions.set(s.regionCode, s.regionName);
-      }
-    });
-    return Array.from(uniqueRegions.entries())
-      .map(([code, name]) => ({ code, name }))
-      .sort((a, b) => a.code - b.code);
-  }, []);
+    // School detail panel
+    selectedSchool,
+    setSelectedSchool,
+    getSchoolContactInfo,
 
-  const communes = useMemo(() => {
-    const filtered =
-      selectedRegion === 'all'
-        ? schools
-        : schools.filter((s) => s.regionCode === selectedRegion);
+    // Contact form
+    contactForm,
+    setContactFormField,
+    handleAddContact,
+    handleRemoveContact,
 
-    const uniqueCommunes = new Map<number, string>();
-    filtered.forEach((s) => {
-      if (!uniqueCommunes.has(s.communeCode)) {
-        uniqueCommunes.set(s.communeCode, s.communeName);
-      }
-    });
-    return Array.from(uniqueCommunes.entries())
-      .map(([code, name]) => ({ code, name }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, [selectedRegion]);
-
-  // Reset commune when region changes
-  useEffect(() => {
-    setSelectedCommune('all');
-  }, [selectedRegion]);
-
-  // Helper to get contact status for a school
-  const getContactStatus = (rbd: number): ContactStatus => contactStatuses[rbd] || 1;
-
-  // Filter schools
-  const filteredSchools = useMemo(() => {
-    return schools.filter((s) => {
-      if (selectedRegion !== 'all' && s.regionCode !== selectedRegion) return false;
-      if (selectedCommune !== 'all' && s.communeCode !== selectedCommune) return false;
-      if (selectedDependency !== 'all' && s.dependencyCode !== selectedDependency)
-        return false;
-      if (selectedStatus !== 'all' && s.status !== selectedStatus) return false;
-      if (selectedContactStatus !== 'all' && getContactStatus(s.rbd) !== selectedContactStatus)
-        return false;
-      if (hasHighSchool && s.highSchoolEnrollment === 0) return false;
-      if (
-        searchQuery &&
-        !s.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !s.rbd.toString().includes(searchQuery)
-      )
-        return false;
-      return true;
-    });
-  }, [
-    selectedRegion,
-    selectedCommune,
-    selectedDependency,
-    selectedStatus,
-    selectedContactStatus,
-    contactStatuses,
-    hasHighSchool,
-    searchQuery,
-  ]);
-
-  // Sort schools
-  const sortedSchools = useMemo(() => {
-    const sorted = [...filteredSchools].sort((a, b) => {
-      let aVal: string | number;
-      let bVal: string | number;
-
-      if (sortField === 'contactStatus') {
-        aVal = getContactStatus(a.rbd);
-        bVal = getContactStatus(b.rbd);
-      } else {
-        aVal = a[sortField];
-        bVal = b[sortField];
-      }
-
-      if (typeof aVal === 'string') {
-        aVal = aVal.toLowerCase();
-        bVal = (bVal as string).toLowerCase();
-      }
-
-      if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
-      if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
-      return 0;
-    });
-    return sorted;
-  }, [filteredSchools, sortField, sortDirection, contactStatuses]);
-
-  // Reset page when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [
-    selectedRegion,
-    selectedCommune,
-    selectedDependency,
-    selectedStatus,
-    selectedContactStatus,
-    hasHighSchool,
-    searchQuery,
-  ]);
-
-  // Pagination
-  const totalPages = Math.ceil(sortedSchools.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedSchools = sortedSchools.slice(startIndex, endIndex);
-
-  // Page numbers
-  const getPageNumbers = () => {
-    const pages: (number | string)[] = [];
-    const maxVisible = 5;
-
-    if (totalPages <= maxVisible) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (currentPage <= 3) {
-        for (let i = 1; i <= 4; i++) pages.push(i);
-        pages.push('...');
-        pages.push(totalPages);
-      } else if (currentPage >= totalPages - 2) {
-        pages.push(1);
-        pages.push('...');
-        for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
-      } else {
-        pages.push(1);
-        pages.push('...');
-        pages.push(currentPage - 1);
-        pages.push(currentPage);
-        pages.push(currentPage + 1);
-        pages.push('...');
-        pages.push(totalPages);
-      }
-    }
-
-    return pages;
-  };
-
-  // Stats
-  const stats = {
-    total: schools.length,
-    filtered: filteredSchools.length,
-    withHighSchool: schools.filter((s) => s.highSchoolEnrollment > 0).length,
-    functioning: schools.filter((s) => s.status === 1).length,
-  };
-
-  // Pipeline stats (count schools by contact status)
-  const pipelineStats = useMemo(() => {
-    const counts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0 };
-    Object.values(contactStatuses).forEach((status) => {
-      counts[status]++;
-    });
-    // Schools without a status are "Sin contactar" (1)
-    counts[1] = schools.length - Object.keys(contactStatuses).length;
-    const contacted = Object.keys(contactStatuses).length;
-    return { counts, contacted };
-  }, [contactStatuses]);
-
-  // Handler to update contact status
-  const handleContactStatusChange = (rbd: number, status: ContactStatus) => {
-    setContactStatuses((prev) => {
-      if (status === 1) {
-        // Remove from tracking if set back to "Sin contactar"
-        const { [rbd]: _, ...rest } = prev;
-        return rest;
-      }
-      return { ...prev, [rbd]: status };
-    });
-  };
-
-  // Get contact info for a school
-  const getSchoolContactInfo = (rbd: number): SchoolContactInfo => {
-    return schoolContactInfo[rbd] || { contacts: [], notes: [] };
-  };
-
-  // Add a new contact
-  const handleAddContact = (rbd: number) => {
-    if (!newContactName.trim()) return;
-
-    const newContact: SchoolContact = {
-      id: crypto.randomUUID(),
-      name: newContactName.trim(),
-      email: newContactEmail.trim() || undefined,
-      phone: newContactPhone.trim() || undefined,
-      role: newContactRole.trim() || undefined,
-    };
-
-    setSchoolContactInfo((prev) => {
-      const current = prev[rbd] || { contacts: [], notes: [] };
-      return {
-        ...prev,
-        [rbd]: {
-          ...current,
-          contacts: [...current.contacts, newContact],
-        },
-      };
-    });
-
-    // Reset form
-    setNewContactName('');
-    setNewContactEmail('');
-    setNewContactPhone('');
-    setNewContactRole('');
-  };
-
-  // Remove a contact
-  const handleRemoveContact = (rbd: number, contactId: string) => {
-    setSchoolContactInfo((prev) => {
-      const current = prev[rbd];
-      if (!current) return prev;
-      return {
-        ...prev,
-        [rbd]: {
-          ...current,
-          contacts: current.contacts.filter((c) => c.id !== contactId),
-        },
-      };
-    });
-  };
-
-  // Add a new note
-  const handleAddNote = (rbd: number) => {
-    if (!newNote.trim()) return;
-
-    const note: SchoolNote = {
-      id: crypto.randomUUID(),
-      text: newNote.trim(),
-      createdAt: new Date().toISOString(),
-    };
-
-    setSchoolContactInfo((prev) => {
-      const current = prev[rbd] || { contacts: [], notes: [] };
-      return {
-        ...prev,
-        [rbd]: {
-          ...current,
-          notes: [note, ...current.notes], // Newest first
-        },
-      };
-    });
-
-    setNewNote('');
-  };
-
-  // Remove a note
-  const handleRemoveNote = (rbd: number, noteId: string) => {
-    setSchoolContactInfo((prev) => {
-      const current = prev[rbd];
-      if (!current) return prev;
-      return {
-        ...prev,
-        [rbd]: {
-          ...current,
-          notes: current.notes.filter((n) => n.id !== noteId),
-        },
-      };
-    });
-  };
-
-  // Handle sort
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortDirection('desc');
-    }
-  };
+    // Notes
+    newNote,
+    setNewNote,
+    handleAddNote,
+    handleRemoveNote,
+  } = useSchoolsSales();
 
   const SortHeader = ({
     field,
@@ -360,7 +106,7 @@ function SchoolsSalesContent() {
             Ventas Colegios
           </Heading>
           <Text variant="secondary">
-            Base de datos MINEDUC 2025 - {schools.length.toLocaleString()} establecimientos
+            Base de datos MINEDUC 2025 - {stats.total.toLocaleString()} establecimientos
           </Text>
         </div>
 
@@ -419,7 +165,7 @@ function SchoolsSalesContent() {
             <input
               type="text"
               placeholder="Buscar por nombre o RBD..."
-              value={searchQuery}
+              value={filters.searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
             />
@@ -432,7 +178,7 @@ function SchoolsSalesContent() {
                 Región
               </label>
               <select
-                value={selectedRegion}
+                value={filters.selectedRegion}
                 onChange={(e) =>
                   setSelectedRegion(
                     e.target.value === 'all' ? 'all' : parseInt(e.target.value, 10)
@@ -455,7 +201,7 @@ function SchoolsSalesContent() {
                 Comuna
               </label>
               <select
-                value={selectedCommune}
+                value={filters.selectedCommune}
                 onChange={(e) =>
                   setSelectedCommune(
                     e.target.value === 'all' ? 'all' : parseInt(e.target.value, 10)
@@ -478,7 +224,7 @@ function SchoolsSalesContent() {
                 Dependencia
               </label>
               <select
-                value={selectedDependency}
+                value={filters.selectedDependency}
                 onChange={(e) =>
                   setSelectedDependency(
                     e.target.value === 'all' ? 'all' : parseInt(e.target.value, 10)
@@ -501,7 +247,7 @@ function SchoolsSalesContent() {
                 Estado
               </label>
               <select
-                value={selectedStatus}
+                value={filters.selectedStatus}
                 onChange={(e) =>
                   setSelectedStatus(
                     e.target.value === 'all' ? 'all' : parseInt(e.target.value, 10)
@@ -524,10 +270,10 @@ function SchoolsSalesContent() {
                 Pipeline
               </label>
               <select
-                value={selectedContactStatus}
+                value={filters.selectedContactStatus}
                 onChange={(e) =>
                   setSelectedContactStatus(
-                    e.target.value === 'all' ? 'all' : (parseInt(e.target.value, 10) as ContactStatus)
+                    e.target.value === 'all' ? 'all' : (parseInt(e.target.value, 10) as 1 | 2 | 3 | 4 | 5 | 6 | 7)
                   )
                 }
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
@@ -547,7 +293,7 @@ function SchoolsSalesContent() {
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
-                checked={hasHighSchool}
+                checked={filters.hasHighSchool}
                 onChange={(e) => setHasHighSchool(e.target.checked)}
                 className="rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500"
               />
@@ -559,23 +305,9 @@ function SchoolsSalesContent() {
           </div>
 
           {/* Clear Filters */}
-          {(selectedRegion !== 'all' ||
-            selectedCommune !== 'all' ||
-            selectedDependency !== 'all' ||
-            selectedStatus !== 'all' ||
-            selectedContactStatus !== 'all' ||
-            hasHighSchool ||
-            searchQuery) && (
+          {hasActiveFilters && (
             <button
-              onClick={() => {
-                setSelectedRegion('all');
-                setSelectedCommune('all');
-                setSelectedDependency('all');
-                setSelectedStatus('all');
-                setSelectedContactStatus('all');
-                setHasHighSchool(false);
-                setSearchQuery('');
-              }}
+              onClick={clearFilters}
               className="mt-4 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
             >
               Limpiar filtros
@@ -686,10 +418,11 @@ function SchoolsSalesContent() {
                       <td className="px-4 py-3 whitespace-nowrap">
                         <select
                           value={getContactStatus(school.rbd)}
+                          onClick={(e) => e.stopPropagation()}
                           onChange={(e) =>
                             handleContactStatusChange(
                               school.rbd,
-                              parseInt(e.target.value, 10) as ContactStatus
+                              parseInt(e.target.value, 10) as 1 | 2 | 3 | 4 | 5 | 6 | 7
                             )
                           }
                           className={`px-2 py-1 text-xs font-semibold rounded-full border-0 cursor-pointer ${
@@ -792,7 +525,7 @@ function SchoolsSalesContent() {
                 onChange={(e) =>
                   handleContactStatusChange(
                     selectedSchool.rbd,
-                    parseInt(e.target.value, 10) as ContactStatus
+                    parseInt(e.target.value, 10) as 1 | 2 | 3 | 4 | 5 | 6 | 7
                   )
                 }
                 className={`px-3 py-1.5 text-sm font-semibold rounded-full border-0 cursor-pointer ${
@@ -995,35 +728,35 @@ function SchoolsSalesContent() {
                   <input
                     type="text"
                     placeholder="Nombre *"
-                    value={newContactName}
-                    onChange={(e) => setNewContactName(e.target.value)}
+                    value={contactForm.name}
+                    onChange={(e) => setContactFormField('name', e.target.value)}
                     className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                   />
                   <input
                     type="text"
                     placeholder="Rol (ej: Director)"
-                    value={newContactRole}
-                    onChange={(e) => setNewContactRole(e.target.value)}
+                    value={contactForm.role}
+                    onChange={(e) => setContactFormField('role', e.target.value)}
                     className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                   />
                   <input
                     type="email"
                     placeholder="Email"
-                    value={newContactEmail}
-                    onChange={(e) => setNewContactEmail(e.target.value)}
+                    value={contactForm.email}
+                    onChange={(e) => setContactFormField('email', e.target.value)}
                     className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                   />
                   <input
                     type="tel"
                     placeholder="Teléfono"
-                    value={newContactPhone}
-                    onChange={(e) => setNewContactPhone(e.target.value)}
+                    value={contactForm.phone}
+                    onChange={(e) => setContactFormField('phone', e.target.value)}
                     className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
                 <button
                   onClick={() => handleAddContact(selectedSchool.rbd)}
-                  disabled={!newContactName.trim()}
+                  disabled={!contactForm.name.trim()}
                   className="w-full px-3 py-1.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed rounded-lg transition-colors"
                 >
                   + Agregar contacto
