@@ -5,7 +5,7 @@ import { ArrowRight, BookOpen, Lightbulb, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
-type TabId = 'formula' | 'numeric' | 'algebraic' | 'advanced';
+type TabId = 'formula' | 'numeric' | 'algebraic' | 'advanced' | 'tips';
 
 interface FormulaTab {
   id: TabId;
@@ -122,6 +122,12 @@ const colorClasses: Record<string, { bg: string; text: string; border: string; t
     border: 'border-pink-200 dark:border-pink-700',
     tab: 'bg-pink-500 text-white',
   },
+  amber: {
+    bg: 'bg-amber-50 dark:bg-amber-900/30',
+    text: 'text-amber-700 dark:text-amber-300',
+    border: 'border-amber-200 dark:border-amber-700',
+    tab: 'bg-amber-500 text-white',
+  },
 };
 
 export default function Step3Explain({ onComplete, isActive }: LessonStepProps) {
@@ -135,8 +141,8 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
     }
   };
 
-  const currentFormula = FORMULAS.find((f) => f.id === activeTab)!;
-  const colors = colorClasses[currentFormula.color];
+  const currentFormula = FORMULAS.find((f) => f.id === activeTab);
+  const colors = activeTab === 'tips' ? colorClasses.amber : colorClasses[currentFormula!.color];
 
   if (!isActive) return null;
 
@@ -175,154 +181,175 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             </button>
           );
         })}
+        <button
+          onClick={() => handleTabChange('tips')}
+          className={cn(
+            'px-4 py-2 rounded-lg font-medium transition-all text-sm',
+            activeTab === 'tips'
+              ? colorClasses.amber.tab
+              : visitedTabs.includes('tips')
+              ? 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500'
+          )}
+        >
+          <span>Tips</span>
+          {visitedTabs.includes('tips') && activeTab !== 'tips' && (
+            <span className="ml-1 text-green-500">✓</span>
+          )}
+        </button>
       </div>
 
-      {/* Formula content */}
-      <div className={cn('rounded-2xl p-6 border', colors.bg, colors.border)}>
-        <div className="flex items-center gap-3 mb-4">
-          <BookOpen className={cn('w-6 h-6', colors.text)} />
-          <h3 className={cn('text-xl font-bold', colors.text)}>{currentFormula.title}</h3>
-        </div>
+      {activeTab === 'tips' ? (
+        /* Tips content */
+        <div className={cn('rounded-2xl p-6 border', colors.bg, colors.border)}>
+          <div className="flex items-center gap-3 mb-4">
+            <AlertTriangle className={cn('w-6 h-6', colors.text)} />
+            <h3 className={cn('text-xl font-bold', colors.text)}>Tips y errores comunes</h3>
+          </div>
 
-        <p className="text-gray-600 dark:text-gray-400 mb-4">{currentFormula.description}</p>
+          <div className="grid md:grid-cols-2 gap-4 mb-6">
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
+              <h5 className="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Correcto:</h5>
+              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                <li>• Verificar que ambos términos son cuadrados</li>
+                <li>• Recordar que el signo entre ellos es MENOS</li>
+                <li>• Los factores son (a+b) y (a-b)</li>
+                <li>• Verificar multiplicando los factores</li>
+              </ul>
+            </div>
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
+              <h5 className="font-semibold text-red-700 dark:text-red-300 mb-2">✗ Errores comunes:</h5>
+              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                <li>• Confundir a² + b² con a² - b² (no es lo mismo)</li>
+                <li>• Escribir (a - b)² en vez de (a+b)(a-b)</li>
+                <li>• Olvidar sacar la raíz de coeficientes</li>
+                <li>• Intentar factorizar SUMA de cuadrados</li>
+              </ul>
+            </div>
+          </div>
 
-        {/* Main pattern */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6">
-          <p className="text-center font-mono text-2xl text-gray-800 dark:text-gray-200">
-            <span className="text-blue-600">a²</span> - <span className="text-purple-600">b²</span> = (<span className="text-blue-600">a</span> + <span className="text-purple-600">b</span>)(<span className="text-blue-600">a</span> - <span className="text-purple-600">b</span>)
-          </p>
-        </div>
-
-        {/* Example */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
-          <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2">
-            <Lightbulb className="w-5 h-5 text-yellow-500" />
-            Ejemplo:
-          </h4>
-          <div className="space-y-3">
-            <p className="font-mono text-lg text-gray-800 dark:text-gray-200">
-              {currentFormula.example.input}
+          {/* Important note about sum of squares */}
+          <div className="bg-red-50 dark:bg-red-900/30 rounded-xl p-6 border border-red-200 dark:border-red-700 mb-6">
+            <h4 className="font-bold text-red-800 dark:text-red-200 mb-3 flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5" />
+              ¡Importante!
+            </h4>
+            <p className="text-gray-700 dark:text-gray-300">
+              La <strong>suma de cuadrados</strong> (a² + b²) <span className="text-red-600 font-bold">NO se puede factorizar</span> con números reales.
             </p>
-            <div className="flex gap-4 text-sm text-gray-600 dark:text-gray-400 font-mono">
-              <span>
-                a = <span className="text-blue-600 font-bold">{currentFormula.example.a}</span>
-              </span>
-              <span>
-                b = <span className="text-purple-600 font-bold">{currentFormula.example.b}</span>
-              </span>
+            <div className="mt-3 bg-white dark:bg-gray-800 rounded-lg p-4 font-mono text-center text-sm">
+              <span className="text-red-600">x² + 9</span>
+              <span className="text-gray-400 mx-2">≠</span>
+              <span className="line-through text-gray-400">(x + 3)(x - 3)</span>
+              <span className="text-red-500 ml-2">✗ No se puede factorizar</span>
             </div>
-            <div className="pl-4 border-l-2 border-gray-300 dark:border-gray-600 space-y-2">
-              {currentFormula.example.steps.map((step, i) => (
-                <p key={i} className="text-gray-600 dark:text-gray-400 font-mono text-sm">
-                  {i === currentFormula.example.steps.length - 1 ? '→ ' : '• '}
-                  {step}
-                </p>
-              ))}
+          </div>
+
+          {/* Verification tip */}
+          <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-6 border border-green-200 dark:border-green-700">
+            <h4 className="font-bold text-green-800 dark:text-green-200 mb-3 flex items-center gap-2">
+              <Lightbulb className="w-5 h-5 text-yellow-500" />
+              Verificación rápida:
+            </h4>
+            <p className="text-gray-700 dark:text-gray-300">
+              Para verificar, multiplica los factores. El término del medio <strong>siempre se cancela</strong>:
+            </p>
+            <div className="mt-3 bg-white dark:bg-gray-800 rounded-lg p-4 font-mono text-center text-sm">
+              <span className="text-green-600">(x + 5)(x - 5)</span>
+              <span className="text-gray-400 mx-2">=</span>
+              <span className="text-blue-600">x² - 5x + 5x - 25</span>
+              <span className="text-gray-400 mx-2">=</span>
+              <span className="text-purple-600">x² - 25</span>
+              <span className="text-green-500 ml-2">✓</span>
             </div>
-            <div className={cn('p-3 rounded-lg mt-4', colors.bg)}>
-              <p className={cn('font-mono font-bold text-lg text-center', colors.text)}>
-                = {currentFormula.example.result}
+          </div>
+        </div>
+      ) : (
+        /* Formula content */
+        <>
+          <div className={cn('rounded-2xl p-6 border', colors.bg, colors.border)}>
+            <div className="flex items-center gap-3 mb-4">
+              <BookOpen className={cn('w-6 h-6', colors.text)} />
+              <h3 className={cn('text-xl font-bold', colors.text)}>{currentFormula!.title}</h3>
+            </div>
+
+            <p className="text-gray-600 dark:text-gray-400 mb-4">{currentFormula!.description}</p>
+
+            {/* Main pattern */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6">
+              <p className="text-center font-mono text-2xl text-gray-800 dark:text-gray-200">
+                <span className="text-blue-600">a²</span> - <span className="text-purple-600">b²</span> = (<span className="text-blue-600">a</span> + <span className="text-purple-600">b</span>)(<span className="text-blue-600">a</span> - <span className="text-purple-600">b</span>)
               </p>
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Perfect Squares Reference */}
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-900/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-        <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-4 text-center">
-          Cuadrados Perfectos Comunes
-        </h4>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-            { n: 1, sq: 1 },
-            { n: 2, sq: 4 },
-            { n: 3, sq: 9 },
-            { n: 4, sq: 16 },
-            { n: 5, sq: 25 },
-            { n: 6, sq: 36 },
-            { n: 7, sq: 49 },
-            { n: 8, sq: 64 },
-            { n: 9, sq: 81 },
-            { n: 10, sq: 100 },
-            { n: 11, sq: 121 },
-            { n: 12, sq: 144 },
-          ].map((item) => (
-            <div
-              key={item.n}
-              className="bg-white dark:bg-gray-800 rounded-lg p-2 text-center"
-            >
-              <span className="font-mono text-sm">
-                <span className="text-blue-600">{item.n}²</span> = <span className="text-green-600 font-bold">{item.sq}</span>
-              </span>
+            {/* Example */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
+              <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2">
+                <Lightbulb className="w-5 h-5 text-yellow-500" />
+                Ejemplo:
+              </h4>
+              <div className="space-y-3">
+                <p className="font-mono text-lg text-gray-800 dark:text-gray-200">
+                  {currentFormula!.example.input}
+                </p>
+                <div className="flex gap-4 text-sm text-gray-600 dark:text-gray-400 font-mono">
+                  <span>
+                    a = <span className="text-blue-600 font-bold">{currentFormula!.example.a}</span>
+                  </span>
+                  <span>
+                    b = <span className="text-purple-600 font-bold">{currentFormula!.example.b}</span>
+                  </span>
+                </div>
+                <div className="pl-4 border-l-2 border-gray-300 dark:border-gray-600 space-y-2">
+                  {currentFormula!.example.steps.map((step, i) => (
+                    <p key={i} className="text-gray-600 dark:text-gray-400 font-mono text-sm">
+                      {i === currentFormula!.example.steps.length - 1 ? '→ ' : '• '}
+                      {step}
+                    </p>
+                  ))}
+                </div>
+                <div className={cn('p-3 rounded-lg mt-4', colors.bg)}>
+                  <p className={cn('font-mono font-bold text-lg text-center', colors.text)}>
+                    = {currentFormula!.example.result}
+                  </p>
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Tips and common errors */}
-      <div className="bg-amber-50 dark:bg-amber-900/30 rounded-xl p-6 border border-amber-200 dark:border-amber-700">
-        <h4 className="font-bold text-amber-800 dark:text-amber-200 mb-4 flex items-center gap-2">
-          <AlertTriangle className="w-5 h-5" />
-          Tips y errores comunes:
-        </h4>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
-            <h5 className="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Correcto:</h5>
-            <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-              <li>• Verificar que ambos términos son cuadrados</li>
-              <li>• Recordar que el signo entre ellos es MENOS</li>
-              <li>• Los factores son (a+b) y (a-b)</li>
-              <li>• Verificar multiplicando los factores</li>
-            </ul>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
-            <h5 className="font-semibold text-red-700 dark:text-red-300 mb-2">✗ Errores comunes:</h5>
-            <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-              <li>• Confundir a² + b² con a² - b² (no es lo mismo)</li>
-              <li>• Escribir (a - b)² en vez de (a+b)(a-b)</li>
-              <li>• Olvidar sacar la raíz de coeficientes</li>
-              <li>• Intentar factorizar SUMA de cuadrados</li>
-            </ul>
+
+          {/* Perfect Squares Reference */}
+          <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-900/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+            <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-4 text-center">
+              Cuadrados Perfectos Comunes
+            </h4>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {[
+                { n: 1, sq: 1 },
+                { n: 2, sq: 4 },
+                { n: 3, sq: 9 },
+                { n: 4, sq: 16 },
+                { n: 5, sq: 25 },
+                { n: 6, sq: 36 },
+                { n: 7, sq: 49 },
+                { n: 8, sq: 64 },
+                { n: 9, sq: 81 },
+                { n: 10, sq: 100 },
+                { n: 11, sq: 121 },
+                { n: 12, sq: 144 },
+              ].map((item) => (
+                <div
+                  key={item.n}
+                  className="bg-white dark:bg-gray-800 rounded-lg p-2 text-center"
+                >
+                  <span className="font-mono text-sm">
+                    <span className="text-blue-600">{item.n}²</span> = <span className="text-green-600 font-bold">{item.sq}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </div>
-
-      {/* Important note about sum of squares */}
-      <div className="bg-red-50 dark:bg-red-900/30 rounded-xl p-6 border border-red-200 dark:border-red-700">
-        <h4 className="font-bold text-red-800 dark:text-red-200 mb-3 flex items-center gap-2">
-          <AlertTriangle className="w-5 h-5" />
-          ¡Importante!
-        </h4>
-        <p className="text-gray-700 dark:text-gray-300">
-          La <strong>suma de cuadrados</strong> (a² + b²) <span className="text-red-600 font-bold">NO se puede factorizar</span> con números reales.
-        </p>
-        <div className="mt-3 bg-white dark:bg-gray-800 rounded-lg p-4 font-mono text-center text-sm">
-          <span className="text-red-600">x² + 9</span>
-          <span className="text-gray-400 mx-2">≠</span>
-          <span className="line-through text-gray-400">(x + 3)(x - 3)</span>
-          <span className="text-red-500 ml-2">✗ No se puede factorizar</span>
-        </div>
-      </div>
-
-      {/* Verification tip */}
-      <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-6 border border-green-200 dark:border-green-700">
-        <h4 className="font-bold text-green-800 dark:text-green-200 mb-3 flex items-center gap-2">
-          <Lightbulb className="w-5 h-5 text-yellow-500" />
-          Verificación rápida:
-        </h4>
-        <p className="text-gray-700 dark:text-gray-300">
-          Para verificar, multiplica los factores. El término del medio <strong>siempre se cancela</strong>:
-        </p>
-        <div className="mt-3 bg-white dark:bg-gray-800 rounded-lg p-4 font-mono text-center text-sm">
-          <span className="text-green-600">(x + 5)(x - 5)</span>
-          <span className="text-gray-400 mx-2">=</span>
-          <span className="text-blue-600">x² - 5x + 5x - 25</span>
-          <span className="text-gray-400 mx-2">=</span>
-          <span className="text-purple-600">x² - 25</span>
-          <span className="text-green-500 ml-2">✓</span>
-        </div>
-      </div>
+        </>
+      )}
 
       <div className="flex justify-center">
         <button

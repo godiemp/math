@@ -5,7 +5,7 @@ import { ArrowRight, BookOpen, Lightbulb, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
-type TabId = 'zero' | 'negative' | 'fractions' | 'combined';
+type TabId = 'zero' | 'negative' | 'fractions' | 'combined' | 'tips';
 
 interface FormulaTab {
   id: TabId;
@@ -101,6 +101,12 @@ const colorClasses: Record<string, { bg: string; text: string; border: string; t
     border: 'border-pink-200 dark:border-pink-700',
     tab: 'bg-pink-500 text-white',
   },
+  amber: {
+    bg: 'bg-amber-50 dark:bg-amber-900/30',
+    text: 'text-amber-700 dark:text-amber-300',
+    border: 'border-amber-200 dark:border-amber-700',
+    tab: 'bg-amber-500 text-white',
+  },
 };
 
 export default function Step3Explain({ onComplete, isActive }: LessonStepProps) {
@@ -114,8 +120,8 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
     }
   };
 
-  const currentFormula = FORMULAS.find((f) => f.id === activeTab)!;
-  const colors = colorClasses[currentFormula.color];
+  const currentFormula = FORMULAS.find((f) => f.id === activeTab);
+  const colors = activeTab === 'tips' ? colorClasses.amber : colorClasses[currentFormula!.color];
 
   if (!isActive) return null;
 
@@ -155,76 +161,93 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             </button>
           );
         })}
+        <button
+          onClick={() => handleTabChange('tips')}
+          className={cn(
+            'px-4 py-2 rounded-lg font-medium transition-all text-sm',
+            activeTab === 'tips'
+              ? colorClasses.amber.tab
+              : visitedTabs.includes('tips')
+              ? 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500'
+          )}
+        >
+          <span>Tips</span>
+          {visitedTabs.includes('tips') && activeTab !== 'tips' && (
+            <span className="ml-1 text-green-500">✓</span>
+          )}
+        </button>
       </div>
 
-      {/* Formula content */}
-      <div className={cn('rounded-2xl p-6 border', colors.bg, colors.border)}>
-        <div className="flex items-center gap-3 mb-4">
-          <BookOpen className={cn('w-6 h-6', colors.text)} />
-          <h3 className={cn('text-xl font-bold', colors.text)}>{currentFormula.title}</h3>
+      {/* Tab content */}
+      {activeTab === 'tips' ? (
+        <div className={cn('rounded-2xl p-6 border', colors.bg, colors.border)}>
+          <div className="flex items-center gap-3 mb-4">
+            <AlertTriangle className={cn('w-6 h-6', colors.text)} />
+            <h3 className={cn('text-xl font-bold', colors.text)}>Tips y errores comunes</h3>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
+              <h5 className="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Correcto:</h5>
+              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                <li>• 5⁰ = 1 (no es 0 ni 5)</li>
+                <li>• 2⁻³ = 1/8 (no es -8)</li>
+                <li>• El exponente negativo NO hace al resultado negativo</li>
+              </ul>
+            </div>
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
+              <h5 className="font-semibold text-red-700 dark:text-red-300 mb-2">✗ Errores comunes:</h5>
+              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                <li>• ❌ 3⁰ = 0 (incorrecto, es 1)</li>
+                <li>• ❌ 2⁻² = -4 (incorrecto, es 1/4)</li>
+                <li>• ❌ 0⁰ está indefinido (cuidado)</li>
+              </ul>
+            </div>
+          </div>
         </div>
+      ) : (
+        <div className={cn('rounded-2xl p-6 border', colors.bg, colors.border)}>
+          <div className="flex items-center gap-3 mb-4">
+            <BookOpen className={cn('w-6 h-6', colors.text)} />
+            <h3 className={cn('text-xl font-bold', colors.text)}>{currentFormula!.title}</h3>
+          </div>
 
-        <p className="text-gray-600 dark:text-gray-400 mb-4">{currentFormula.description}</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{currentFormula!.description}</p>
 
-        {/* Main formula */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6">
-          <p className="text-center font-mono text-2xl text-gray-800 dark:text-gray-200">
-            {currentFormula.formula}
-          </p>
-        </div>
-
-        {/* Example */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
-          <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2">
-            <Lightbulb className="w-5 h-5 text-yellow-500" />
-            Ejemplo:
-          </h4>
-          <div className="space-y-3">
-            <p className="font-mono text-lg text-gray-800 dark:text-gray-200">
-              {currentFormula.example.input}
+          {/* Main formula */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6">
+            <p className="text-center font-mono text-2xl text-gray-800 dark:text-gray-200">
+              {currentFormula!.formula}
             </p>
-            <div className="pl-4 border-l-2 border-gray-300 dark:border-gray-600 space-y-2">
-              {currentFormula.example.steps.map((step, i) => (
-                <p key={i} className="text-gray-600 dark:text-gray-400 font-mono text-sm">
-                  {i === currentFormula.example.steps.length - 1 ? '→ ' : '• '}
-                  {step}
-                </p>
-              ))}
-            </div>
-            <div className={cn('p-3 rounded-lg mt-4', colors.bg)}>
-              <p className={cn('font-mono font-bold text-lg text-center', colors.text)}>
-                = {currentFormula.example.result}
-              </p>
-            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Tips and common errors */}
-      <div className="bg-amber-50 dark:bg-amber-900/30 rounded-xl p-6 border border-amber-200 dark:border-amber-700">
-        <h4 className="font-bold text-amber-800 dark:text-amber-200 mb-4 flex items-center gap-2">
-          <AlertTriangle className="w-5 h-5" />
-          Tips y errores comunes:
-        </h4>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
-            <h5 className="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Correcto:</h5>
-            <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-              <li>• 5⁰ = 1 (no es 0 ni 5)</li>
-              <li>• 2⁻³ = 1/8 (no es -8)</li>
-              <li>• El exponente negativo NO hace al resultado negativo</li>
-            </ul>
-          </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
-            <h5 className="font-semibold text-red-700 dark:text-red-300 mb-2">✗ Errores comunes:</h5>
-            <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-              <li>• ❌ 3⁰ = 0 (incorrecto, es 1)</li>
-              <li>• ❌ 2⁻² = -4 (incorrecto, es 1/4)</li>
-              <li>• ❌ 0⁰ está indefinido (cuidado)</li>
-            </ul>
+          {/* Example */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
+            <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2">
+              <Lightbulb className="w-5 h-5 text-yellow-500" />
+              Ejemplo:
+            </h4>
+            <div className="space-y-3">
+              <p className="font-mono text-lg text-gray-800 dark:text-gray-200">
+                {currentFormula!.example.input}
+              </p>
+              <div className="pl-4 border-l-2 border-gray-300 dark:border-gray-600 space-y-2">
+                {currentFormula!.example.steps.map((step, i) => (
+                  <p key={i} className="text-gray-600 dark:text-gray-400 font-mono text-sm">
+                    {i === currentFormula!.example.steps.length - 1 ? '→ ' : '• '}
+                    {step}
+                  </p>
+                ))}
+              </div>
+              <div className={cn('p-3 rounded-lg mt-4', colors.bg)}>
+                <p className={cn('font-mono font-bold text-lg text-center', colors.text)}>
+                  = {currentFormula!.example.result}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <div className="flex justify-center">
         <button
