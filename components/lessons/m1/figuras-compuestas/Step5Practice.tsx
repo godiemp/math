@@ -144,8 +144,10 @@ const QUESTIONS: PracticeQuestion[] = [
         {/* Dimensions */}
         <text x="75" y="28" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1f2937">10 m</text>
         <text x="10" y="75" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1f2937" transform="rotate(-90, 10, 75)">6 m</text>
-        <text x="155" y="75" textAnchor="middle" fontSize="9" fill="#16a34a">r = 3 m</text>
-        <line x1="130" y1="70" x2="165" y2="70" stroke="#16a34a" strokeWidth="1" strokeDasharray="3,3" />
+        {/* Radius indicator */}
+        <line x1="130" y1="70" x2="162" y2="70" stroke="#166534" strokeWidth="2" />
+        <circle cx="162" cy="70" r="2" fill="#166534" />
+        <text x="146" y="63" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#166534">r = 3 m</text>
       </svg>
     ),
     hint: 'Rectángulo + semicírculo. Semicírculo = πr²/2 ≈ 3.14 × 9 / 2',
