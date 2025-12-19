@@ -1,5 +1,14 @@
 export { schools } from './data';
-export type { School, SchoolFilters, SortField, SortDirection, ContactStatus } from './types';
+export type {
+  School,
+  SchoolFilters,
+  SortField,
+  SortDirection,
+  ContactStatus,
+  SchoolContact,
+  SchoolNote,
+  SchoolContactInfo,
+} from './types';
 export {
   DEPENDENCY_LABELS,
   DEPENDENCY_COLORS,

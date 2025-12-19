@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
-import { Card, Heading, Text } from '@/components/ui';
+import { Card, Heading, Text, SlidePanel } from '@/components/ui';
 import AdminLayout from '@/components/layout/AdminLayout';
 import {
   schools,
@@ -10,6 +10,9 @@ import {
   SortField,
   SortDirection,
   ContactStatus,
+  SchoolContact,
+  SchoolNote,
+  SchoolContactInfo,
   DEPENDENCY_LABELS,
   DEPENDENCY_COLORS,
   STATUS_LABELS,
@@ -30,6 +33,17 @@ function SchoolsSalesContent() {
 
   // Contact tracking (frontend-only mockup)
   const [contactStatuses, setContactStatuses] = useState<Record<number, ContactStatus>>({});
+
+  // Detail panel state
+  const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
+  const [schoolContactInfo, setSchoolContactInfo] = useState<Record<number, SchoolContactInfo>>({});
+
+  // Form state for adding contacts/notes
+  const [newContactName, setNewContactName] = useState('');
+  const [newContactEmail, setNewContactEmail] = useState('');
+  const [newContactPhone, setNewContactPhone] = useState('');
+  const [newContactRole, setNewContactRole] = useState('');
+  const [newNote, setNewNote] = useState('');
 
   // Sorting
   const [sortField, setSortField] = useState<SortField>('highSchoolEnrollment');
@@ -213,6 +227,95 @@ function SchoolsSalesContent() {
         return rest;
       }
       return { ...prev, [rbd]: status };
+    });
+  };
+
+  // Get contact info for a school
+  const getSchoolContactInfo = (rbd: number): SchoolContactInfo => {
+    return schoolContactInfo[rbd] || { contacts: [], notes: [] };
+  };
+
+  // Add a new contact
+  const handleAddContact = (rbd: number) => {
+    if (!newContactName.trim()) return;
+
+    const newContact: SchoolContact = {
+      id: crypto.randomUUID(),
+      name: newContactName.trim(),
+      email: newContactEmail.trim() || undefined,
+      phone: newContactPhone.trim() || undefined,
+      role: newContactRole.trim() || undefined,
+    };
+
+    setSchoolContactInfo((prev) => {
+      const current = prev[rbd] || { contacts: [], notes: [] };
+      return {
+        ...prev,
+        [rbd]: {
+          ...current,
+          contacts: [...current.contacts, newContact],
+        },
+      };
+    });
+
+    // Reset form
+    setNewContactName('');
+    setNewContactEmail('');
+    setNewContactPhone('');
+    setNewContactRole('');
+  };
+
+  // Remove a contact
+  const handleRemoveContact = (rbd: number, contactId: string) => {
+    setSchoolContactInfo((prev) => {
+      const current = prev[rbd];
+      if (!current) return prev;
+      return {
+        ...prev,
+        [rbd]: {
+          ...current,
+          contacts: current.contacts.filter((c) => c.id !== contactId),
+        },
+      };
+    });
+  };
+
+  // Add a new note
+  const handleAddNote = (rbd: number) => {
+    if (!newNote.trim()) return;
+
+    const note: SchoolNote = {
+      id: crypto.randomUUID(),
+      text: newNote.trim(),
+      createdAt: new Date().toISOString(),
+    };
+
+    setSchoolContactInfo((prev) => {
+      const current = prev[rbd] || { contacts: [], notes: [] };
+      return {
+        ...prev,
+        [rbd]: {
+          ...current,
+          notes: [note, ...current.notes], // Newest first
+        },
+      };
+    });
+
+    setNewNote('');
+  };
+
+  // Remove a note
+  const handleRemoveNote = (rbd: number, noteId: string) => {
+    setSchoolContactInfo((prev) => {
+      const current = prev[rbd];
+      if (!current) return prev;
+      return {
+        ...prev,
+        [rbd]: {
+          ...current,
+          notes: current.notes.filter((n) => n.id !== noteId),
+        },
+      };
     });
   };
 
@@ -535,7 +638,8 @@ function SchoolsSalesContent() {
                   paginatedSchools.map((school) => (
                     <tr
                       key={school.rbd}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-700"
+                      onClick={() => setSelectedSchool(school)}
+                      className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
                     >
                       <td className="px-4 py-3 whitespace-nowrap text-sm font-mono text-gray-900 dark:text-white">
                         {school.rbd}
@@ -666,6 +770,276 @@ function SchoolsSalesContent() {
           )}
         </Card>
       </div>
+
+      {/* School Detail Panel */}
+      <SlidePanel
+        isOpen={selectedSchool !== null}
+        onClose={() => setSelectedSchool(null)}
+        title={selectedSchool?.name || ''}
+        width="xl"
+      >
+        {selectedSchool && (
+          <div className="space-y-6">
+            {/* Header with RBD and Pipeline Status */}
+            <div className="flex items-center justify-between">
+              <div>
+                <Text size="sm" variant="secondary">
+                  RBD: {selectedSchool.rbd}
+                </Text>
+              </div>
+              <select
+                value={getContactStatus(selectedSchool.rbd)}
+                onChange={(e) =>
+                  handleContactStatusChange(
+                    selectedSchool.rbd,
+                    parseInt(e.target.value, 10) as ContactStatus
+                  )
+                }
+                className={`px-3 py-1.5 text-sm font-semibold rounded-full border-0 cursor-pointer ${
+                  CONTACT_STATUS_COLORS[getContactStatus(selectedSchool.rbd)]
+                }`}
+              >
+                {Object.entries(CONTACT_STATUS_LABELS).map(([code, label]) => (
+                  <option key={code} value={code}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* School Info */}
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-2">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <Text size="xs" variant="secondary">
+                    Región
+                  </Text>
+                  <Text size="sm">{selectedSchool.regionName}</Text>
+                </div>
+                <div>
+                  <Text size="xs" variant="secondary">
+                    Comuna
+                  </Text>
+                  <Text size="sm">{selectedSchool.communeName}</Text>
+                </div>
+                <div>
+                  <Text size="xs" variant="secondary">
+                    Dependencia
+                  </Text>
+                  <span
+                    className={`inline-block px-2 py-0.5 text-xs font-semibold rounded-full ${
+                      DEPENDENCY_COLORS[selectedSchool.dependencyCode] ||
+                      'bg-gray-100 text-gray-800'
+                    }`}
+                  >
+                    {DEPENDENCY_LABELS[selectedSchool.dependencyCode] || 'Desconocido'}
+                  </span>
+                </div>
+                <div>
+                  <Text size="xs" variant="secondary">
+                    Estado
+                  </Text>
+                  <span
+                    className={`inline-block px-2 py-0.5 text-xs font-semibold rounded-full ${
+                      STATUS_COLORS[selectedSchool.status] || 'bg-gray-100 text-gray-800'
+                    }`}
+                  >
+                    {STATUS_LABELS[selectedSchool.status] || 'Desconocido'}
+                  </span>
+                </div>
+                <div>
+                  <Text size="xs" variant="secondary">
+                    Matrícula Media
+                  </Text>
+                  <Text size="sm" className="text-purple-600 dark:text-purple-400 font-medium">
+                    {selectedSchool.highSchoolEnrollment.toLocaleString()}
+                  </Text>
+                </div>
+                <div>
+                  <Text size="xs" variant="secondary">
+                    Matrícula Total
+                  </Text>
+                  <Text size="sm" className="font-medium">
+                    {selectedSchool.totalEnrollment.toLocaleString()}
+                  </Text>
+                </div>
+              </div>
+            </div>
+
+            {/* Contacts Section */}
+            <div>
+              <Heading level={3} size="xs" className="mb-3">
+                Contactos
+              </Heading>
+
+              {/* Existing Contacts */}
+              {getSchoolContactInfo(selectedSchool.rbd).contacts.length > 0 ? (
+                <div className="space-y-2 mb-4">
+                  {getSchoolContactInfo(selectedSchool.rbd).contacts.map((contact) => (
+                    <div
+                      key={contact.id}
+                      className="flex items-start justify-between bg-gray-50 dark:bg-gray-800 rounded-lg p-3"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <Text size="sm" className="font-medium">
+                            {contact.name}
+                          </Text>
+                          {contact.role && (
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                              ({contact.role})
+                            </span>
+                          )}
+                        </div>
+                        {contact.email && (
+                          <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
+                            <span>✉</span>
+                            <a
+                              href={`mailto:${contact.email}`}
+                              className="hover:text-indigo-600 dark:hover:text-indigo-400"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {contact.email}
+                            </a>
+                          </div>
+                        )}
+                        {contact.phone && (
+                          <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
+                            <span>☎</span>
+                            <a
+                              href={`tel:${contact.phone}`}
+                              className="hover:text-indigo-600 dark:hover:text-indigo-400"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {contact.phone}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => handleRemoveContact(selectedSchool.rbd, contact.id)}
+                        className="text-gray-400 hover:text-red-500 text-sm"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <Text size="sm" variant="secondary" className="mb-4">
+                  No hay contactos registrados
+                </Text>
+              )}
+
+              {/* Add Contact Form */}
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 space-y-2">
+                <Text size="xs" variant="secondary" className="font-medium">
+                  Agregar contacto
+                </Text>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    placeholder="Nombre *"
+                    value={newContactName}
+                    onChange={(e) => setNewContactName(e.target.value)}
+                    className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Rol (ej: Director)"
+                    value={newContactRole}
+                    onChange={(e) => setNewContactRole(e.target.value)}
+                    className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={newContactEmail}
+                    onChange={(e) => setNewContactEmail(e.target.value)}
+                    className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                  />
+                  <input
+                    type="tel"
+                    placeholder="Teléfono"
+                    value={newContactPhone}
+                    onChange={(e) => setNewContactPhone(e.target.value)}
+                    className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                  />
+                </div>
+                <button
+                  onClick={() => handleAddContact(selectedSchool.rbd)}
+                  disabled={!newContactName.trim()}
+                  className="w-full px-3 py-1.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed rounded-lg transition-colors"
+                >
+                  + Agregar contacto
+                </button>
+              </div>
+            </div>
+
+            {/* Notes Section */}
+            <div>
+              <Heading level={3} size="xs" className="mb-3">
+                Notas
+              </Heading>
+
+              {/* Add Note Form */}
+              <div className="mb-4 space-y-2">
+                <textarea
+                  placeholder="Agregar una nota..."
+                  value={newNote}
+                  onChange={(e) => setNewNote(e.target.value)}
+                  rows={2}
+                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white resize-none"
+                />
+                <button
+                  onClick={() => handleAddNote(selectedSchool.rbd)}
+                  disabled={!newNote.trim()}
+                  className="px-3 py-1.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed rounded-lg transition-colors"
+                >
+                  + Agregar nota
+                </button>
+              </div>
+
+              {/* Existing Notes */}
+              {getSchoolContactInfo(selectedSchool.rbd).notes.length > 0 ? (
+                <div className="space-y-2">
+                  {getSchoolContactInfo(selectedSchool.rbd).notes.map((note) => (
+                    <div
+                      key={note.id}
+                      className="flex items-start justify-between bg-gray-50 dark:bg-gray-800 rounded-lg p-3"
+                    >
+                      <div className="flex-1">
+                        <Text size="sm" className="whitespace-pre-wrap">
+                          {note.text}
+                        </Text>
+                        <Text size="xs" variant="secondary" className="mt-1">
+                          {new Date(note.createdAt).toLocaleDateString('es-CL', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </Text>
+                      </div>
+                      <button
+                        onClick={() => handleRemoveNote(selectedSchool.rbd, note.id)}
+                        className="text-gray-400 hover:text-red-500 text-sm ml-2"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <Text size="sm" variant="secondary">
+                  No hay notas registradas
+                </Text>
+              )}
+            </div>
+          </div>
+        )}
+      </SlidePanel>
     </AdminLayout>
   );
 }

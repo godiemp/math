@@ -35,3 +35,22 @@ export type SortField =
 export type SortDirection = 'asc' | 'desc';
 
 export type ContactStatus = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+export interface SchoolContact {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  role?: string;
+}
+
+export interface SchoolNote {
+  id: string;
+  text: string;
+  createdAt: string;
+}
+
+export interface SchoolContactInfo {
+  contacts: SchoolContact[];
+  notes: SchoolNote[];
+}
