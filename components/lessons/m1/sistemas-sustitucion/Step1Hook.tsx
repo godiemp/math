@@ -29,16 +29,16 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl p-6 shadow-lg">
             <div className="text-center space-y-4">
               <p className="text-gray-700 dark:text-gray-300">
-                En una tienda de mascotas, un perro y un gato juntos cuestan <strong className="text-amber-600">$50.000</strong>.
+                En una tienda de tecnología, un notebook y una tablet juntos cuestan <strong className="text-amber-600">$500.000</strong>.
               </p>
               <p className="text-gray-700 dark:text-gray-300">
-                Sabemos que el perro cuesta <strong className="text-blue-600">$10.000 más</strong> que el gato.
+                Sabemos que el notebook cuesta <strong className="text-blue-600">$100.000 más</strong> que la tablet.
               </p>
 
               <div className="bg-white dark:bg-gray-800 rounded-xl p-4 inline-block">
                 <div className="flex flex-col gap-2 font-mono text-lg">
-                  <span className="text-blue-600 dark:text-blue-400">perro + gato = 50.000</span>
-                  <span className="text-emerald-600 dark:text-emerald-400">perro = gato + 10.000</span>
+                  <span className="text-blue-600 dark:text-blue-400">notebook + tablet = 500.000</span>
+                  <span className="text-emerald-600 dark:text-emerald-400">notebook = tablet + 100.000</span>
                 </div>
               </div>
 
@@ -67,7 +67,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               La Técnica de Sustitución
             </h2>
             <p className="text-gray-600 dark:text-gray-300">
-              Si sabemos que <strong>perro = gato + 10.000</strong>, podemos reemplazar:
+              Si sabemos que <strong>notebook = tablet + 100.000</strong>, podemos reemplazar:
             </p>
           </div>
 
@@ -76,8 +76,8 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold flex-shrink-0">1</div>
               <div>
-                <p className="font-semibold text-gray-800 dark:text-gray-200">Tenemos despejado "perro":</p>
-                <p className="font-mono text-blue-600 dark:text-blue-400 mt-1">perro = gato + 10.000</p>
+                <p className="font-semibold text-gray-800 dark:text-gray-200">Tenemos despejado &quot;notebook&quot;:</p>
+                <p className="font-mono text-blue-600 dark:text-blue-400 mt-1">notebook = tablet + 100.000</p>
               </div>
             </div>
 
@@ -87,11 +87,11 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               <div>
                 <p className="font-semibold text-gray-800 dark:text-gray-200">Sustituimos en la primera ecuación:</p>
                 <div className="font-mono mt-2 space-y-1">
-                  <p><span className="text-gray-500">perro</span> + gato = 50.000</p>
-                  <p><span className="text-emerald-600 dark:text-emerald-400">(gato + 10.000)</span> + gato = 50.000</p>
-                  <p className="text-purple-600 dark:text-purple-400">2·gato + 10.000 = 50.000</p>
-                  <p className="text-purple-600 dark:text-purple-400">2·gato = 40.000</p>
-                  <p className="font-bold text-purple-700 dark:text-purple-300">gato = 20.000</p>
+                  <p><span className="text-gray-500">notebook</span> + tablet = 500.000</p>
+                  <p><span className="text-emerald-600 dark:text-emerald-400">(tablet + 100.000)</span> + tablet = 500.000</p>
+                  <p className="text-purple-600 dark:text-purple-400">2·tablet + 100.000 = 500.000</p>
+                  <p className="text-purple-600 dark:text-purple-400">2·tablet = 400.000</p>
+                  <p className="font-bold text-purple-700 dark:text-purple-300">tablet = 200.000</p>
                 </div>
               </div>
             </div>
@@ -100,20 +100,20 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold flex-shrink-0">3</div>
               <div>
-                <p className="font-semibold text-gray-800 dark:text-gray-200">Encontramos "perro":</p>
+                <p className="font-semibold text-gray-800 dark:text-gray-200">Encontramos &quot;notebook&quot;:</p>
                 <div className="font-mono mt-2 space-y-1">
-                  <p>perro = <span className="text-emerald-600">20.000</span> + 10.000</p>
-                  <p className="font-bold text-blue-700 dark:text-blue-300">perro = 30.000</p>
+                  <p>notebook = <span className="text-emerald-600">200.000</span> + 100.000</p>
+                  <p className="font-bold text-blue-700 dark:text-blue-300">notebook = 300.000</p>
                 </div>
               </div>
             </div>
 
             <div className="bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 rounded-xl p-4 text-center">
               <p className="font-bold text-lg text-amber-800 dark:text-amber-200">
-                El gato cuesta $20.000 y el perro $30.000
+                La tablet cuesta $200.000 y el notebook $300.000
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Verificación: 30.000 + 20.000 = 50.000 ✓
+                Verificación: 300.000 + 200.000 = 500.000 ✓
               </p>
             </div>
           </div>
