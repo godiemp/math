@@ -36,48 +36,91 @@ function GraficarContent() {
         </div>
       </div>
 
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
-        <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
-          <span className="text-xl">📝</span> Ejemplo: Graficar x + y = 4
+      {/* Ejemplo 1: Pendiente negativa */}
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-xl p-5 border border-blue-200 dark:border-blue-800">
+        <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
+          <span className="text-lg">📝</span> Ejemplo 1: x + y = 4
         </h4>
-
         <div className="grid md:grid-cols-2 gap-4">
-          <div className="space-y-3">
-            <p className="text-gray-700 dark:text-gray-300">
-              <strong>Paso 1:</strong> Despejar y
-            </p>
-            <div className="font-mono bg-white dark:bg-gray-800 px-4 py-2 rounded-lg text-center">
-              y = 4 - x
+          <div className="space-y-2">
+            <p className="text-sm text-gray-700 dark:text-gray-300"><strong>Despejar:</strong> y = 4 - x</p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-2 text-sm">
+              <p className="font-mono">x = 0 → y = 4 → (0, 4)</p>
+              <p className="font-mono">x = 4 → y = 0 → (4, 0)</p>
             </div>
-
-            <p className="text-gray-700 dark:text-gray-300">
-              <strong>Paso 2:</strong> Encontrar 2 puntos
-            </p>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-3">
-              <p className="font-mono text-sm">Si x = 0 → y = 4 → (0, 4)</p>
-              <p className="font-mono text-sm">Si x = 4 → y = 0 → (4, 0)</p>
-            </div>
+            <p className="text-xs text-blue-600 dark:text-blue-400">Pendiente negativa: baja de izquierda a derecha</p>
           </div>
-
           <div className="flex justify-center">
-            <svg width="160" height="160" className="bg-white dark:bg-gray-800 rounded-lg">
-              {/* Grid */}
-              {[0, 1, 2, 3, 4].map(i => (
+            <svg width="120" height="120" className="bg-white dark:bg-gray-800 rounded-lg">
+              {[0, 1, 2, 3].map(i => (
                 <g key={i}>
-                  <line x1={20 + i * 30} y1={20} x2={20 + i * 30} y2={140} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
-                  <line x1={20} y1={20 + i * 30} x2={140} y2={20 + i * 30} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+                  <line x1={15 + i * 30} y1={15} x2={15 + i * 30} y2={105} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+                  <line x1={15} y1={15 + i * 30} x2={105} y2={15 + i * 30} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
                 </g>
               ))}
-              {/* Axes labels */}
-              <text x={145} y={143} className="text-xs fill-gray-500">x</text>
-              <text x={25} y={15} className="text-xs fill-gray-500">y</text>
-              {/* Line */}
-              <line x1={20} y1={20} x2={140} y2={140} stroke="#3B82F6" strokeWidth="3" />
-              {/* Points */}
-              <circle cx={20} cy={20} r="6" fill="#EF4444" />
-              <circle cx={140} cy={140} r="6" fill="#EF4444" />
-              <text x={30} y={18} className="text-xs fill-red-600">(0,4)</text>
-              <text x={100} y={155} className="text-xs fill-red-600">(4,0)</text>
+              <line x1={15} y1={15} x2={105} y2={105} stroke="#3B82F6" strokeWidth="2" />
+              <circle cx={15} cy={15} r="4" fill="#EF4444" />
+              <circle cx={105} cy={105} r="4" fill="#EF4444" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Ejemplo 2: Pendiente positiva */}
+      <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-xl p-5 border border-green-200 dark:border-green-800">
+        <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
+          <span className="text-lg">📝</span> Ejemplo 2: y = 2x - 2
+        </h4>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <p className="text-sm text-gray-700 dark:text-gray-300"><strong>Ya despejada:</strong> y = 2x - 2</p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-2 text-sm">
+              <p className="font-mono">x = 0 → y = -2 → (0, -2)</p>
+              <p className="font-mono">x = 2 → y = 2 → (2, 2)</p>
+            </div>
+            <p className="text-xs text-green-600 dark:text-green-400">Pendiente positiva: sube de izquierda a derecha</p>
+          </div>
+          <div className="flex justify-center">
+            <svg width="120" height="120" className="bg-white dark:bg-gray-800 rounded-lg">
+              {[0, 1, 2, 3].map(i => (
+                <g key={i}>
+                  <line x1={15 + i * 30} y1={15} x2={15 + i * 30} y2={105} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+                  <line x1={15} y1={15 + i * 30} x2={105} y2={15 + i * 30} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+                </g>
+              ))}
+              <line x1={15} y1={105} x2={75} y2={45} stroke="#10B981" strokeWidth="2" />
+              <circle cx={15} cy={105} r="4" fill="#EF4444" />
+              <circle cx={75} cy={45} r="4" fill="#EF4444" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Ejemplo 3: Requiere despejar */}
+      <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-xl p-5 border border-purple-200 dark:border-purple-800">
+        <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
+          <span className="text-lg">📝</span> Ejemplo 3: 2x - y = 4
+        </h4>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <p className="text-sm text-gray-700 dark:text-gray-300"><strong>Despejar:</strong> y = 2x - 4</p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-2 text-sm">
+              <p className="font-mono">x = 0 → y = -4 → (0, -4)</p>
+              <p className="font-mono">x = 3 → y = 2 → (3, 2)</p>
+            </div>
+            <p className="text-xs text-purple-600 dark:text-purple-400">Intercepto y negativo, pendiente 2</p>
+          </div>
+          <div className="flex justify-center">
+            <svg width="120" height="120" className="bg-white dark:bg-gray-800 rounded-lg">
+              {[0, 1, 2, 3].map(i => (
+                <g key={i}>
+                  <line x1={15 + i * 30} y1={15} x2={15 + i * 30} y2={105} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+                  <line x1={15} y1={15 + i * 30} x2={105} y2={15 + i * 30} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+                </g>
+              ))}
+              <line x1={15} y1={105} x2={105} y2={25} stroke="#8B5CF6" strokeWidth="2" />
+              <circle cx={15} cy={105} r="4" fill="#EF4444" />
+              <circle cx={105} cy={25} r="4" fill="#EF4444" />
             </svg>
           </div>
         </div>
