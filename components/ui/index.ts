@@ -8,6 +8,8 @@ export type { BadgeVariant, BadgeSize } from './Badge';
 
 export { Modal } from './Modal';
 
+export { SlidePanel } from './SlidePanel';
+
 export { Heading, Text } from './Typography';
 export type { HeadingLevel, HeadingSize, TextSize, TextVariant } from './Typography';
 
