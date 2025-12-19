@@ -300,13 +300,19 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 strokeWidth="3"
               />
 
-              {/* Dimensions */}
+              {/* Dimensions - positioned alongside each side */}
+              {/* Top left: 5m (40,30 to 140,30) */}
               <text x="90" y="22" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937">5 m</text>
-              <text x="155" y="22" textAnchor="middle" fontSize="11" fill="#6b7280">2 m</text>
-              <text x="200" y="65" textAnchor="middle" fontSize="11" fill="#6b7280">3.5 m</text>
-              <text x="200" y="140" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937">3.5 m</text>
+              {/* Step width: 2m (140,100 to 180,100) */}
+              <text x="160" y="93" textAnchor="middle" fontSize="11" fill="#6b7280">2 m</text>
+              {/* Inner vertical: 3.5m (140,30 to 140,100) */}
+              <text x="150" y="65" textAnchor="start" fontSize="11" fill="#6b7280">3.5 m</text>
+              {/* Right side: 3.5m (180,100 to 180,170) */}
+              <text x="188" y="135" textAnchor="start" fontSize="12" fontWeight="bold" fill="#1f2937">3.5 m</text>
+              {/* Bottom: 7m (40,170 to 180,170) */}
               <text x="110" y="188" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937">7 m</text>
-              <text x="25" y="105" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937" transform="rotate(-90, 25, 105)">7 m</text>
+              {/* Left side: 7m (40,30 to 40,170) */}
+              <text x="25" y="100" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937" transform="rotate(-90, 25, 100)">7 m</text>
             </svg>
           </div>
 
