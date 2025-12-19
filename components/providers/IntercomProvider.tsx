@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 const ALLOWED_ROUTES = [
   '/',
   '/signin',
+  '/instituciones',
   '/blog',
   '/dashboard',
   '/profile',
