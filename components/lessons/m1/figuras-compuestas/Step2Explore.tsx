@@ -120,7 +120,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
               {/* Dimensions */}
               <text x="140" y="12" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937">10 m</text>
-              <text x="255" y="50" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937">2.5 m</text>
+              <text x="248" y="50" textAnchor="start" fontSize="12" fontWeight="bold" fill="#1f2937">2.5 m</text>
               <text x="85" y="115" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937">4 m</text>
               <text x="140" y="175" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937">4.5 m</text>
 
