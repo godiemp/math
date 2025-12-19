@@ -133,14 +133,27 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             {/* Visual explanation */}
             <div className="bg-white dark:bg-gray-700 rounded-xl p-5 border border-gray-200 dark:border-gray-600">
               <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-4">
-                Ejemplo: Construir un muro
+                Ejemplo: Construir muros (combina directa e inversa)
               </h4>
+
+              <div className="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-3 mb-4">
+                <p className="text-amber-800 dark:text-amber-200 text-sm text-center">
+                  Si <strong>6 obreros</strong> construyen <strong>2 muros</strong> en{' '}
+                  <strong>10 días</strong>, ¿cuántos días tardarán <strong>4 obreros</strong> en
+                  construir <strong>3 muros</strong>?
+                </p>
+              </div>
 
               <div className="space-y-4">
                 <div className="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Situación original:</p>
-                  <p className="font-mono text-purple-700 dark:text-purple-300 text-center text-lg">
-                    6 obreros × 8 horas × 15 días = <strong>720</strong> unidades de trabajo
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    Trabajo por obrero-día:
+                  </p>
+                  <p className="font-mono text-purple-700 dark:text-purple-300 text-center">
+                    6 obreros × 10 días = <strong>60</strong> obrero-días para 2 muros
+                  </p>
+                  <p className="font-mono text-purple-700 dark:text-purple-300 text-center">
+                    → <strong>30</strong> obrero-días por muro
                   </p>
                 </div>
 
@@ -150,17 +163,13 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
 
                 <div className="bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                    Nueva situación (mismo trabajo total):
+                    Para 3 muros con 4 obreros:
                   </p>
-                  <p className="font-mono text-green-700 dark:text-green-300 text-center text-lg">
-                    4 obreros × 6 horas × <strong>x días</strong> = 720
+                  <p className="font-mono text-green-700 dark:text-green-300 text-center">
+                    3 muros × 30 = <strong>90</strong> obrero-días necesarios
                   </p>
-                </div>
-
-                <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Despejamos x:</p>
-                  <p className="font-mono text-blue-700 dark:text-blue-300 text-center">
-                    x = 720 ÷ (4 × 6) = 720 ÷ 24 = <strong>30 días</strong>
+                  <p className="font-mono text-green-700 dark:text-green-300 text-center">
+                    90 ÷ 4 obreros = <strong>22,5 días</strong>
                   </p>
                 </div>
               </div>
@@ -179,32 +188,34 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                       Obreros: 6 → 4 (Inversa)
                     </p>
                     <p className="text-sm text-orange-600 dark:text-orange-400">
-                      Tenemos <strong>4/6</strong> de los obreros.
+                      Menos obreros = más tiempo.
                     </p>
                     <p className="text-sm text-orange-600 dark:text-orange-400">
-                      Necesitamos <strong>6/4</strong> veces más tiempo.
+                      Multiplicamos por <strong>6/4</strong>
                     </p>
                   </div>
 
-                  <div className="bg-orange-50 dark:bg-orange-900/30 rounded-lg p-4">
-                    <p className="font-semibold text-orange-700 dark:text-orange-300 mb-2">
-                      Horas: 8 → 6 (Inversa)
+                  <div className="bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
+                    <p className="font-semibold text-green-700 dark:text-green-300 mb-2">
+                      Muros: 2 → 3 (Directa)
                     </p>
-                    <p className="text-sm text-orange-600 dark:text-orange-400">
-                      Trabajamos <strong>6/8</strong> de las horas.
+                    <p className="text-sm text-green-600 dark:text-green-400">
+                      Más muros = más tiempo.
                     </p>
-                    <p className="text-sm text-orange-600 dark:text-orange-400">
-                      Necesitamos <strong>8/6</strong> veces más días.
+                    <p className="text-sm text-green-600 dark:text-green-400">
+                      Multiplicamos por <strong>3/2</strong>
                     </p>
                   </div>
                 </div>
 
                 <div className="bg-purple-100 dark:bg-purple-900/50 rounded-lg p-4">
                   <p className="text-center font-mono text-purple-700 dark:text-purple-300">
-                    x = 15 × (6/4) × (8/6) = 15 × 2 = <strong>30 días</strong>
+                    x = 10 × <span className="text-orange-600">(6/4)</span> ×{' '}
+                    <span className="text-green-600">(3/2)</span> = 10 × 1,5 × 1,5 ={' '}
+                    <strong>22,5 días</strong>
                   </p>
                   <p className="text-center text-sm text-purple-600 dark:text-purple-400 mt-2">
-                    ¡El mismo resultado!
+                    ¡El mismo resultado! Una inversa y una directa.
                   </p>
                 </div>
               </div>
