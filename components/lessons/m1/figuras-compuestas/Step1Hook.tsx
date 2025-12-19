@@ -302,15 +302,23 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
           <p className="font-semibold text-blue-800 dark:text-blue-200 mb-2">Método 1: Sumar rectángulos</p>
           <div className="flex justify-center mb-2">
-            <svg viewBox="0 0 200 100" className="w-48 h-24">
-              {/* Rectangle A (top strip) */}
-              <rect x="20" y="10" width="120" height="30" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
-              <text x="80" y="30" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1e40af">A</text>
-              {/* Rectangle B (bottom left) */}
-              <rect x="20" y="40" width="75" height="50" fill="#c4b5fd" stroke="#7c3aed" strokeWidth="2" />
-              <text x="57" y="70" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#5b21b6">B</text>
+            <svg viewBox="0 0 200 115" className="w-52 h-32">
+              {/* Rectangle A (top strip): 8m x 2m */}
+              <rect x="20" y="15" width="120" height="30" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
+              <text x="80" y="35" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1e40af">A</text>
+              {/* A dimensions */}
+              <text x="80" y="10" textAnchor="middle" fontSize="9" fill="#1e40af">8 m</text>
+              <text x="145" y="33" textAnchor="start" fontSize="9" fill="#1e40af">2 m</text>
+
+              {/* Rectangle B (bottom left): 5m x 4m */}
+              <rect x="20" y="45" width="75" height="55" fill="#c4b5fd" stroke="#7c3aed" strokeWidth="2" />
+              <text x="57" y="77" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#5b21b6">B</text>
+              {/* B dimensions */}
+              <text x="57" y="108" textAnchor="middle" fontSize="9" fill="#5b21b6">5 m</text>
+              <text x="10" y="77" textAnchor="middle" fontSize="9" fill="#5b21b6" transform="rotate(-90, 10, 77)">4 m</text>
+
               {/* Plus sign */}
-              <text x="160" y="50" fontSize="20" fill="#1f2937">+</text>
+              <text x="165" y="55" fontSize="20" fill="#1f2937">+</text>
             </svg>
           </div>
           <div className="space-y-1 text-sm">
@@ -330,14 +338,22 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         <div className="p-3 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
           <p className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Método 2: Restar la esquina</p>
           <div className="flex justify-center mb-2">
-            <svg viewBox="0 0 200 100" className="w-48 h-24">
+            <svg viewBox="0 0 200 115" className="w-52 h-32">
               {/* Full rectangle 8x6 */}
-              <rect x="20" y="10" width="120" height="75" fill="#fed7aa" stroke="#ea580c" strokeWidth="2" />
+              <rect x="20" y="15" width="120" height="75" fill="#fed7aa" stroke="#ea580c" strokeWidth="2" />
+              {/* Full rectangle dimensions */}
+              <text x="80" y="10" textAnchor="middle" fontSize="9" fill="#ea580c">8 m</text>
+              <text x="10" y="55" textAnchor="middle" fontSize="9" fill="#ea580c" transform="rotate(-90, 10, 55)">6 m</text>
+
               {/* Corner to subtract 3x4 */}
-              <rect x="95" y="35" width="45" height="50" fill="#fecaca" stroke="#dc2626" strokeWidth="2" strokeDasharray="4,4" />
-              <text x="117" y="65" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#dc2626">quitar</text>
+              <rect x="95" y="40" width="45" height="50" fill="#fecaca" stroke="#dc2626" strokeWidth="2" strokeDasharray="4,4" />
+              <text x="117" y="70" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#dc2626">quitar</text>
+              {/* Corner dimensions */}
+              <text x="117" y="100" textAnchor="middle" fontSize="9" fill="#dc2626">3 m</text>
+              <text x="145" y="67" textAnchor="start" fontSize="9" fill="#dc2626">4 m</text>
+
               {/* Minus sign */}
-              <text x="160" y="50" fontSize="20" fill="#1f2937">−</text>
+              <text x="165" y="55" fontSize="20" fill="#1f2937">−</text>
             </svg>
           </div>
           <div className="space-y-1 text-sm">
