@@ -5,7 +5,7 @@ import { ArrowRight, ArrowUp, ArrowDown, AlertTriangle, Lightbulb, BookOpen } fr
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
-type Tab = 'concept' | 'method' | 'example1' | 'example2';
+type Tab = 'concept' | 'why' | 'method' | 'example1' | 'example2';
 
 export default function Step3Explain({ onComplete, isActive }: LessonStepProps) {
   const [activeTab, setActiveTab] = useState<Tab>('concept');
@@ -14,6 +14,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
 
   const tabs = [
     { id: 'concept' as Tab, label: 'Concepto', icon: '📚' },
+    { id: 'why' as Tab, label: '¿Por qué?', icon: '💡' },
     { id: 'method' as Tab, label: 'Método', icon: '🔧' },
     { id: 'example1' as Tab, label: 'Ejemplo 1', icon: '✏️' },
     { id: 'example2' as Tab, label: 'Ejemplo 2', icon: '✏️' },
@@ -105,6 +106,135 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 En proporcionalidad compuesta, analizas <strong>cada magnitud por separado</strong> y
                 luego combinas todos los efectos multiplicando.
               </p>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'why' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="text-2xl">💡</div>
+              <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">
+                ¿Por qué funciona la fórmula?
+              </h3>
+            </div>
+
+            {/* The key insight */}
+            <div className="bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 rounded-xl p-5 border border-yellow-200 dark:border-yellow-800">
+              <p className="text-lg font-semibold text-amber-800 dark:text-amber-200 mb-3">
+                La idea central: El trabajo total es constante
+              </p>
+              <p className="text-amber-700 dark:text-amber-300">
+                En problemas de trabajo, el <strong>esfuerzo total</strong> necesario para completar una
+                tarea no cambia. Lo que cambia es cómo distribuimos ese esfuerzo.
+              </p>
+            </div>
+
+            {/* Visual explanation */}
+            <div className="bg-white dark:bg-gray-700 rounded-xl p-5 border border-gray-200 dark:border-gray-600">
+              <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                Ejemplo: Construir un muro
+              </h4>
+
+              <div className="space-y-4">
+                <div className="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Situación original:</p>
+                  <p className="font-mono text-purple-700 dark:text-purple-300 text-center text-lg">
+                    6 obreros × 8 horas × 15 días = <strong>720</strong> unidades de trabajo
+                  </p>
+                </div>
+
+                <div className="flex justify-center">
+                  <ArrowDown className="w-6 h-6 text-gray-400" />
+                </div>
+
+                <div className="bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    Nueva situación (mismo trabajo total):
+                  </p>
+                  <p className="font-mono text-green-700 dark:text-green-300 text-center text-lg">
+                    4 obreros × 6 horas × <strong>x días</strong> = 720
+                  </p>
+                </div>
+
+                <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Despejamos x:</p>
+                  <p className="font-mono text-blue-700 dark:text-blue-300 text-center">
+                    x = 720 ÷ (4 × 6) = 720 ÷ 24 = <strong>30 días</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Why fractions work */}
+            <div className="bg-white dark:bg-gray-700 rounded-xl p-5 border border-gray-200 dark:border-gray-600">
+              <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                ¿Por qué las fracciones dan lo mismo?
+              </h4>
+
+              <div className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-orange-50 dark:bg-orange-900/30 rounded-lg p-4">
+                    <p className="font-semibold text-orange-700 dark:text-orange-300 mb-2">
+                      Obreros: 6 → 4 (Inversa)
+                    </p>
+                    <p className="text-sm text-orange-600 dark:text-orange-400">
+                      Tenemos <strong>4/6</strong> de los obreros.
+                    </p>
+                    <p className="text-sm text-orange-600 dark:text-orange-400">
+                      Necesitamos <strong>6/4</strong> veces más tiempo.
+                    </p>
+                  </div>
+
+                  <div className="bg-orange-50 dark:bg-orange-900/30 rounded-lg p-4">
+                    <p className="font-semibold text-orange-700 dark:text-orange-300 mb-2">
+                      Horas: 8 → 6 (Inversa)
+                    </p>
+                    <p className="text-sm text-orange-600 dark:text-orange-400">
+                      Trabajamos <strong>6/8</strong> de las horas.
+                    </p>
+                    <p className="text-sm text-orange-600 dark:text-orange-400">
+                      Necesitamos <strong>8/6</strong> veces más días.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-purple-100 dark:bg-purple-900/50 rounded-lg p-4">
+                  <p className="text-center font-mono text-purple-700 dark:text-purple-300">
+                    x = 15 × (6/4) × (8/6) = 15 × 2 = <strong>30 días</strong>
+                  </p>
+                  <p className="text-center text-sm text-purple-600 dark:text-purple-400 mt-2">
+                    ¡El mismo resultado!
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Summary rule */}
+            <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/50 dark:to-pink-900/50 rounded-xl p-5">
+              <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-3">
+                La regla intuitiva:
+              </h4>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-3">
+                  <p className="font-semibold text-green-700 dark:text-green-300">Directa:</p>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Si tengo <strong>más</strong> de algo → obtengo <strong>más</strong> resultado.
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-400 mt-1">
+                    Multiplico por nuevo/antiguo (número mayor que 1)
+                  </p>
+                </div>
+                <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-3">
+                  <p className="font-semibold text-orange-700 dark:text-orange-300">Inversa:</p>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Si tengo <strong>menos</strong> de algo → necesito <strong>más</strong> tiempo.
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-400 mt-1">
+                    Multiplico por antiguo/nuevo (invierte el efecto)
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         )}
