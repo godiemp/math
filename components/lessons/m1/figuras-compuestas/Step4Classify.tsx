@@ -9,87 +9,103 @@ interface ClassifyQuestion {
   id: string;
   figure: React.ReactNode;
   description: string;
-  bestStrategy: 'add' | 'subtract';
+  shownStrategy: 'add' | 'subtract';
   explanation: string;
 }
 
+// Questions show decompositions - students identify which strategy is being used
 const QUESTIONS: ClassifyQuestion[] = [
   {
     id: 'q1',
-    description: 'Figura en forma de L',
+    description: '¿Qué estrategia se muestra?',
     figure: (
-      <svg viewBox="0 0 100 80" className="w-full h-full">
-        <path
-          d="M 10 10 L 60 10 L 60 40 L 40 40 L 40 70 L 10 70 Z"
-          fill="#e0e7ff"
-          stroke="#4f46e5"
-          strokeWidth="2"
-        />
+      <svg viewBox="0 0 120 90" className="w-full h-full">
+        {/* L-shape divided into two rectangles with + sign */}
+        <rect x="10" y="10" width="50" height="25" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
+        <rect x="10" y="35" width="30" height="45" fill="#c4b5fd" stroke="#7c3aed" strokeWidth="2" />
+        <text x="35" y="27" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1e40af">A</text>
+        <text x="25" y="62" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#5b21b6">B</text>
+        {/* Plus sign between them */}
+        <text x="75" y="45" fontSize="24" fontWeight="bold" fill="#059669">+</text>
+        {/* Equals sign and result hint */}
+        <text x="95" y="45" fontSize="18" fill="#6b7280">=</text>
+        <text x="110" y="45" fontSize="14" fill="#6b7280">?</text>
       </svg>
     ),
-    bestStrategy: 'add',
-    explanation: 'La L se divide fácilmente en dos rectángulos: uno horizontal y uno vertical.',
+    shownStrategy: 'add',
+    explanation: 'Se suman las áreas de los rectángulos A y B para obtener el área total.',
   },
   {
     id: 'q2',
-    description: 'Cuadrado con esquina cortada',
+    description: '¿Qué estrategia se muestra?',
     figure: (
-      <svg viewBox="0 0 100 80" className="w-full h-full">
-        <path
-          d="M 10 10 L 70 10 L 70 50 L 50 50 L 50 70 L 10 70 Z"
-          fill="#fef3c7"
-          stroke="#f59e0b"
-          strokeWidth="2"
-        />
-        <rect x="50" y="50" width="20" height="20" fill="#fecaca" stroke="#dc2626" strokeWidth="1" strokeDasharray="3,3" opacity="0.5" />
+      <svg viewBox="0 0 120 90" className="w-full h-full">
+        {/* Full rectangle with corner to subtract */}
+        <rect x="10" y="10" width="60" height="60" fill="#fed7aa" stroke="#ea580c" strokeWidth="2" />
+        {/* Corner being subtracted (dashed) */}
+        <rect x="45" y="45" width="25" height="25" fill="#fecaca" stroke="#dc2626" strokeWidth="2" strokeDasharray="4,4" />
+        <text x="57" y="62" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#dc2626">quitar</text>
+        {/* Minus sign */}
+        <text x="85" y="45" fontSize="24" fontWeight="bold" fill="#dc2626">−</text>
+        {/* Equals sign and result hint */}
+        <text x="100" y="45" fontSize="18" fill="#6b7280">=</text>
+        <text x="112" y="45" fontSize="14" fill="#6b7280">?</text>
       </svg>
     ),
-    bestStrategy: 'subtract',
-    explanation: 'Es un rectángulo "casi completo". Más fácil calcular el total y restar la esquina.',
+    shownStrategy: 'subtract',
+    explanation: 'Se resta el área de la esquina del rectángulo completo.',
   },
   {
     id: 'q3',
-    description: 'Figura en forma de T',
+    description: '¿Qué estrategia se muestra?',
     figure: (
-      <svg viewBox="0 0 100 80" className="w-full h-full">
-        <path
-          d="M 10 10 L 90 10 L 90 30 L 60 30 L 60 70 L 40 70 L 40 30 L 10 30 Z"
-          fill="#d1fae5"
-          stroke="#059669"
-          strokeWidth="2"
-        />
+      <svg viewBox="0 0 120 90" className="w-full h-full">
+        {/* T-shape divided into two rectangles */}
+        <rect x="10" y="10" width="70" height="20" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
+        <rect x="30" y="30" width="30" height="50" fill="#c4b5fd" stroke="#7c3aed" strokeWidth="2" />
+        <text x="45" y="24" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1e40af">A</text>
+        <text x="45" y="58" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#5b21b6">B</text>
+        {/* Plus sign */}
+        <text x="95" y="45" fontSize="24" fontWeight="bold" fill="#059669">+</text>
       </svg>
     ),
-    bestStrategy: 'add',
-    explanation: 'La T se divide claramente en dos rectángulos: el horizontal arriba y el vertical abajo.',
+    shownStrategy: 'add',
+    explanation: 'La T se divide en dos rectángulos (A y B) que se suman.',
   },
   {
     id: 'q4',
-    description: 'Marco rectangular (con hueco)',
+    description: '¿Qué estrategia se muestra?',
     figure: (
-      <svg viewBox="0 0 100 80" className="w-full h-full">
-        <rect x="10" y="10" width="80" height="60" fill="#e0e7ff" stroke="#4f46e5" strokeWidth="2" />
-        <rect x="25" y="22" width="50" height="36" fill="white" stroke="#4f46e5" strokeWidth="2" strokeDasharray="3,3" />
+      <svg viewBox="0 0 120 90" className="w-full h-full">
+        {/* Frame: outer rectangle with inner hole */}
+        <rect x="10" y="10" width="70" height="60" fill="#fed7aa" stroke="#ea580c" strokeWidth="2" />
+        <rect x="22" y="22" width="46" height="36" fill="#fecaca" stroke="#dc2626" strokeWidth="2" strokeDasharray="4,4" />
+        <text x="45" y="44" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#dc2626">quitar</text>
+        {/* Minus sign */}
+        <text x="95" y="45" fontSize="24" fontWeight="bold" fill="#dc2626">−</text>
       </svg>
     ),
-    bestStrategy: 'subtract',
-    explanation: 'Es un rectángulo externo menos el rectángulo interno (el hueco).',
+    shownStrategy: 'subtract',
+    explanation: 'El área del marco = rectángulo exterior − rectángulo interior (hueco).',
   },
   {
     id: 'q5',
-    description: 'Escalera de dos peldaños',
+    description: '¿Qué estrategia se muestra?',
     figure: (
-      <svg viewBox="0 0 100 80" className="w-full h-full">
-        <path
-          d="M 10 70 L 10 50 L 35 50 L 35 30 L 60 30 L 60 10 L 90 10 L 90 70 Z"
-          fill="#fce7f3"
-          stroke="#db2777"
-          strokeWidth="2"
-        />
+      <svg viewBox="0 0 120 90" className="w-full h-full">
+        {/* Staircase divided into three rectangles */}
+        <rect x="10" y="55" width="25" height="25" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
+        <rect x="35" y="35" width="25" height="45" fill="#c4b5fd" stroke="#7c3aed" strokeWidth="2" />
+        <rect x="60" y="10" width="25" height="70" fill="#a5f3fc" stroke="#0891b2" strokeWidth="2" />
+        <text x="22" y="70" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1e40af">A</text>
+        <text x="47" y="60" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#5b21b6">B</text>
+        <text x="72" y="48" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#0e7490">C</text>
+        {/* Plus signs */}
+        <text x="100" y="45" fontSize="20" fontWeight="bold" fill="#059669">+</text>
       </svg>
     ),
-    bestStrategy: 'add',
-    explanation: 'La escalera se divide en tres rectángulos apilados de diferentes tamaños.',
+    shownStrategy: 'add',
+    explanation: 'La escalera se divide en tres rectángulos (A, B, C) que se suman.',
   },
 ];
 
@@ -103,7 +119,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
   if (!isActive) return null;
 
   const currentQuestion = QUESTIONS[currentIndex];
-  const isCorrect = selectedAnswer === currentQuestion.bestStrategy;
+  const isCorrect = selectedAnswer === currentQuestion.shownStrategy;
   const requiredCorrect = 4;
   const passed = correctCount >= requiredCorrect;
 
@@ -115,7 +131,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
   const handleCheck = () => {
     if (selectedAnswer === null) return;
     setShowFeedback(true);
-    if (selectedAnswer === currentQuestion.bestStrategy) {
+    if (selectedAnswer === currentQuestion.shownStrategy) {
       setCorrectCount(prev => prev + 1);
     }
   };
@@ -147,7 +163,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
             Resultados
           </h2>
           <p className="text-gray-600 dark:text-gray-300">
-            Clasificación de estrategias
+            Identificación de estrategias
           </p>
         </div>
 
@@ -172,7 +188,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
             passed ? 'text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300'
           )}>
             {passed
-              ? '¡Excelente! Ya sabes identificar la mejor estrategia.'
+              ? '¡Excelente! Reconoces bien las estrategias.'
               : `Necesitas ${requiredCorrect} correctas. ¡Inténtalo de nuevo!`}
           </p>
         </div>
@@ -181,9 +197,9 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
         <div className="bg-white dark:bg-gray-800 rounded-xl p-4">
           <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-3">Resumen:</h4>
           <div className="grid grid-cols-5 gap-2">
-            {QUESTIONS.map((q, i) => (
+            {QUESTIONS.map((_, i) => (
               <div
-                key={q.id}
+                key={i}
                 className={cn(
                   'w-12 h-12 rounded-lg flex items-center justify-center',
                   i < correctCount ? 'bg-green-100 dark:bg-green-900/50' : 'bg-red-100 dark:bg-red-900/50'
@@ -228,10 +244,10 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
     <div className="space-y-6 animate-fadeIn pb-32">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          ¿Sumar o Restar?
+          Identifica la Estrategia
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          Identifica la mejor estrategia para cada figura
+          ¿Se están sumando o restando partes?
         </p>
       </div>
 
@@ -261,22 +277,18 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
 
       {/* Question card */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-        <p className="text-gray-700 dark:text-gray-300 text-center mb-4">
+        <p className="text-gray-700 dark:text-gray-300 text-center mb-4 font-medium">
           {currentQuestion.description}
         </p>
 
-        {/* Figure */}
+        {/* Figure showing decomposition */}
         <div className="flex justify-center mb-6">
-          <div className="w-48 h-36 bg-gray-50 dark:bg-gray-700 rounded-lg p-2">
+          <div className="w-56 h-40 bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
             {currentQuestion.figure}
           </div>
         </div>
 
         {/* Strategy options */}
-        <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-3">
-          ¿Cuál estrategia es más conveniente?
-        </p>
-
         <div className="grid grid-cols-2 gap-4">
           {/* Add option */}
           <button
@@ -286,11 +298,11 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
               'p-4 rounded-xl transition-all border-2 flex flex-col items-center gap-2',
               selectedAnswer === 'add'
                 ? showFeedback
-                  ? currentQuestion.bestStrategy === 'add'
+                  ? currentQuestion.shownStrategy === 'add'
                     ? 'bg-green-100 dark:bg-green-900/50 border-green-500'
                     : 'bg-red-100 dark:bg-red-900/50 border-red-500'
                   : 'bg-blue-100 dark:bg-blue-900/50 border-blue-500'
-                : showFeedback && currentQuestion.bestStrategy === 'add'
+                : showFeedback && currentQuestion.shownStrategy === 'add'
                 ? 'bg-green-50 dark:bg-green-900/30 border-green-400'
                 : 'bg-gray-50 dark:bg-gray-700 border-transparent hover:border-gray-300 dark:hover:border-gray-500'
             )}
@@ -299,7 +311,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
               'w-12 h-12 rounded-full flex items-center justify-center',
               selectedAnswer === 'add'
                 ? showFeedback
-                  ? currentQuestion.bestStrategy === 'add'
+                  ? currentQuestion.shownStrategy === 'add'
                     ? 'bg-green-500 text-white'
                     : 'bg-red-500 text-white'
                   : 'bg-blue-500 text-white'
@@ -318,11 +330,11 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
               'p-4 rounded-xl transition-all border-2 flex flex-col items-center gap-2',
               selectedAnswer === 'subtract'
                 ? showFeedback
-                  ? currentQuestion.bestStrategy === 'subtract'
+                  ? currentQuestion.shownStrategy === 'subtract'
                     ? 'bg-green-100 dark:bg-green-900/50 border-green-500'
                     : 'bg-red-100 dark:bg-red-900/50 border-red-500'
                   : 'bg-orange-100 dark:bg-orange-900/50 border-orange-500'
-                : showFeedback && currentQuestion.bestStrategy === 'subtract'
+                : showFeedback && currentQuestion.shownStrategy === 'subtract'
                 ? 'bg-green-50 dark:bg-green-900/30 border-green-400'
                 : 'bg-gray-50 dark:bg-gray-700 border-transparent hover:border-gray-300 dark:hover:border-gray-500'
             )}
@@ -331,7 +343,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
               'w-12 h-12 rounded-full flex items-center justify-center',
               selectedAnswer === 'subtract'
                 ? showFeedback
-                  ? currentQuestion.bestStrategy === 'subtract'
+                  ? currentQuestion.shownStrategy === 'subtract'
                     ? 'bg-green-500 text-white'
                     : 'bg-red-500 text-white'
                   : 'bg-orange-500 text-white'
@@ -362,7 +374,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
                   'font-bold mb-1',
                   isCorrect ? 'text-green-800 dark:text-green-300' : 'text-amber-800 dark:text-amber-300'
                 )}>
-                  {isCorrect ? '¡Correcto!' : 'No exactamente'}
+                  {isCorrect ? '¡Correcto!' : 'No es esa'}
                 </h4>
                 <p className="text-sm text-gray-700 dark:text-gray-300">
                   {currentQuestion.explanation}
