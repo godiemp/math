@@ -34,13 +34,14 @@ export function HeroSection({ audience, onAudienceChange }: HeroSectionProps) {
     <section className="py-16 md:py-24 px-4">
       <div className="max-w-4xl mx-auto text-center">
         {/* Audience Toggle */}
-        <div
-          className="inline-flex gap-1 p-1 mb-8"
-          style={{
-            background: 'var(--color-fill)',
-            borderRadius: 'var(--radius-md)',
-          }}
-        >
+        <div className="mb-8">
+          <div
+            className="inline-flex gap-1 p-1"
+            style={{
+              background: 'var(--color-fill)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
           <button
             onClick={() => onAudienceChange('b2c')}
             className="flex items-center gap-2 px-4 py-2 spring-motion"
@@ -75,21 +76,24 @@ export function HeroSection({ audience, onAudienceChange }: HeroSectionProps) {
             <Building2 size={18} />
             Instituciones
           </button>
+          </div>
         </div>
 
         {/* Badge */}
-        <div
-          className="inline-block px-4 py-2 mb-6"
-          style={{
-            background: 'var(--color-tint)',
-            color: 'white',
-            borderRadius: 'var(--radius-md)',
-            fontSize: '13px',
-            fontWeight: 600,
-            letterSpacing: '0.5px',
-          }}
-        >
-          {current.badge}
+        <div className="mb-6">
+          <span
+            className="inline-block px-4 py-2"
+            style={{
+              background: 'var(--color-tint)',
+              color: 'white',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '13px',
+              fontWeight: 600,
+              letterSpacing: '0.5px',
+            }}
+          >
+            {current.badge}
+          </span>
         </div>
 
         {/* Title */}
