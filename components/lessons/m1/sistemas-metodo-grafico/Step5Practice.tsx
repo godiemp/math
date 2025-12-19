@@ -118,12 +118,20 @@ const QUESTIONS: GraphQuestion[] = [
 ];
 
 function GraphDisplay({ data }: { data: GraphQuestion['graphData'] }) {
-  const width = 220;
-  const height = 180;
   const padding = 30;
+  const pixelsPerUnit = 14; // Fixed scale ensures square grid cells
 
-  const xScale = (x: number) => padding + ((x - data.xRange[0]) / (data.xRange[1] - data.xRange[0])) * (width - 2 * padding);
-  const yScale = (y: number) => height - padding - ((y - data.yRange[0]) / (data.yRange[1] - data.yRange[0])) * (height - 2 * padding);
+  const xSpan = data.xRange[1] - data.xRange[0];
+  const ySpan = data.yRange[1] - data.yRange[0];
+
+  const plotWidth = xSpan * pixelsPerUnit;
+  const plotHeight = ySpan * pixelsPerUnit;
+
+  const width = plotWidth + 2 * padding;
+  const height = plotHeight + 2 * padding;
+
+  const xScale = (x: number) => padding + (x - data.xRange[0]) * pixelsPerUnit;
+  const yScale = (y: number) => height - padding - (y - data.yRange[0]) * pixelsPerUnit;
 
   // Generate integer grid lines
   const xGridLines: number[] = [];
