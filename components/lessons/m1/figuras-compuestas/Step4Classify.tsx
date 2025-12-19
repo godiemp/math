@@ -19,17 +19,12 @@ const QUESTIONS: ClassifyQuestion[] = [
     id: 'q1',
     description: '¿Qué estrategia se muestra?',
     figure: (
-      <svg viewBox="0 0 120 90" className="w-full h-full">
-        {/* L-shape divided into two rectangles with + sign */}
+      <svg viewBox="0 0 100 90" className="w-full h-full">
+        {/* L-shape divided into two rectangles */}
         <rect x="10" y="10" width="50" height="25" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
         <rect x="10" y="35" width="30" height="45" fill="#c4b5fd" stroke="#7c3aed" strokeWidth="2" />
         <text x="35" y="27" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1e40af">A</text>
         <text x="25" y="62" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#5b21b6">B</text>
-        {/* Plus sign between them */}
-        <text x="75" y="45" fontSize="24" fontWeight="bold" fill="#059669">+</text>
-        {/* Equals sign and result hint */}
-        <text x="95" y="45" fontSize="18" fill="#6b7280">=</text>
-        <text x="110" y="45" fontSize="14" fill="#6b7280">?</text>
       </svg>
     ),
     shownStrategy: 'add',
@@ -39,17 +34,12 @@ const QUESTIONS: ClassifyQuestion[] = [
     id: 'q2',
     description: '¿Qué estrategia se muestra?',
     figure: (
-      <svg viewBox="0 0 120 90" className="w-full h-full">
+      <svg viewBox="0 0 100 90" className="w-full h-full">
         {/* Full rectangle with corner to subtract */}
-        <rect x="10" y="10" width="60" height="60" fill="#fed7aa" stroke="#ea580c" strokeWidth="2" />
+        <rect x="15" y="10" width="70" height="70" fill="#fed7aa" stroke="#ea580c" strokeWidth="2" />
         {/* Corner being subtracted (dashed) */}
-        <rect x="45" y="45" width="25" height="25" fill="#fecaca" stroke="#dc2626" strokeWidth="2" strokeDasharray="4,4" />
-        <text x="57" y="62" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#dc2626">quitar</text>
-        {/* Minus sign */}
-        <text x="85" y="45" fontSize="24" fontWeight="bold" fill="#dc2626">−</text>
-        {/* Equals sign and result hint */}
-        <text x="100" y="45" fontSize="18" fill="#6b7280">=</text>
-        <text x="112" y="45" fontSize="14" fill="#6b7280">?</text>
+        <rect x="55" y="50" width="30" height="30" fill="#fecaca" stroke="#dc2626" strokeWidth="2" strokeDasharray="4,4" />
+        <text x="70" y="70" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#dc2626">quitar</text>
       </svg>
     ),
     shownStrategy: 'subtract',
@@ -59,14 +49,12 @@ const QUESTIONS: ClassifyQuestion[] = [
     id: 'q3',
     description: '¿Qué estrategia se muestra?',
     figure: (
-      <svg viewBox="0 0 120 90" className="w-full h-full">
+      <svg viewBox="0 0 100 90" className="w-full h-full">
         {/* T-shape divided into two rectangles */}
-        <rect x="10" y="10" width="70" height="20" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
-        <rect x="30" y="30" width="30" height="50" fill="#c4b5fd" stroke="#7c3aed" strokeWidth="2" />
-        <text x="45" y="24" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1e40af">A</text>
-        <text x="45" y="58" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#5b21b6">B</text>
-        {/* Plus sign */}
-        <text x="95" y="45" fontSize="24" fontWeight="bold" fill="#059669">+</text>
+        <rect x="15" y="10" width="70" height="25" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
+        <rect x="35" y="35" width="30" height="50" fill="#c4b5fd" stroke="#7c3aed" strokeWidth="2" />
+        <text x="50" y="27" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1e40af">A</text>
+        <text x="50" y="65" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#5b21b6">B</text>
       </svg>
     ),
     shownStrategy: 'add',
@@ -76,13 +64,11 @@ const QUESTIONS: ClassifyQuestion[] = [
     id: 'q4',
     description: '¿Qué estrategia se muestra?',
     figure: (
-      <svg viewBox="0 0 120 90" className="w-full h-full">
+      <svg viewBox="0 0 100 90" className="w-full h-full">
         {/* Frame: outer rectangle with inner hole */}
-        <rect x="10" y="10" width="70" height="60" fill="#fed7aa" stroke="#ea580c" strokeWidth="2" />
-        <rect x="22" y="22" width="46" height="36" fill="#fecaca" stroke="#dc2626" strokeWidth="2" strokeDasharray="4,4" />
-        <text x="45" y="44" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#dc2626">quitar</text>
-        {/* Minus sign */}
-        <text x="95" y="45" fontSize="24" fontWeight="bold" fill="#dc2626">−</text>
+        <rect x="15" y="10" width="70" height="70" fill="#fed7aa" stroke="#ea580c" strokeWidth="2" />
+        <rect x="28" y="23" width="44" height="44" fill="#fecaca" stroke="#dc2626" strokeWidth="2" strokeDasharray="4,4" />
+        <text x="50" y="50" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#dc2626">quitar</text>
       </svg>
     ),
     shownStrategy: 'subtract',
@@ -92,16 +78,14 @@ const QUESTIONS: ClassifyQuestion[] = [
     id: 'q5',
     description: '¿Qué estrategia se muestra?',
     figure: (
-      <svg viewBox="0 0 120 90" className="w-full h-full">
+      <svg viewBox="0 0 100 90" className="w-full h-full">
         {/* Staircase divided into three rectangles */}
-        <rect x="10" y="55" width="25" height="25" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
-        <rect x="35" y="35" width="25" height="45" fill="#c4b5fd" stroke="#7c3aed" strokeWidth="2" />
-        <rect x="60" y="10" width="25" height="70" fill="#a5f3fc" stroke="#0891b2" strokeWidth="2" />
-        <text x="22" y="70" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1e40af">A</text>
-        <text x="47" y="60" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#5b21b6">B</text>
-        <text x="72" y="48" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#0e7490">C</text>
-        {/* Plus signs */}
-        <text x="100" y="45" fontSize="20" fontWeight="bold" fill="#059669">+</text>
+        <rect x="15" y="55" width="25" height="30" fill="#93c5fd" stroke="#1d4ed8" strokeWidth="2" />
+        <rect x="40" y="35" width="25" height="50" fill="#c4b5fd" stroke="#7c3aed" strokeWidth="2" />
+        <rect x="65" y="10" width="25" height="75" fill="#a5f3fc" stroke="#0891b2" strokeWidth="2" />
+        <text x="27" y="73" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1e40af">A</text>
+        <text x="52" y="63" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#5b21b6">B</text>
+        <text x="77" y="50" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#0e7490">C</text>
       </svg>
     ),
     shownStrategy: 'add',
