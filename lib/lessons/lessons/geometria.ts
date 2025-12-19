@@ -16,6 +16,7 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-GEO-001',
     skills: ['teorema-pitagoras-aplicar', 'teorema-pitagoras-identificar'],
     estimatedMinutes: 12,
+    minEducOA: ['MA1M-OA-10'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Problema de la Escalera' },
       { id: 'discover', type: 'explore', title: 'Descubre el Patrón' },
@@ -35,6 +36,7 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-GEO-001',
     skills: ['area-rectangulo', 'area-triangulo'],
     estimatedMinutes: 12,
+    minEducOA: ['MA1M-OA-06'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Proyecto de Pintura' },
       { id: 'explore', type: 'explore', title: 'Descubriendo Fórmulas' },
@@ -53,6 +55,7 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-GEO-001',
     skills: ['area-paralelogramo', 'area-trapecio', 'descomponer-figuras'],
     estimatedMinutes: 12,
+    minEducOA: ['MA1M-OA-06'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Jardín Irregular' },
       { id: 'explore', type: 'explore', title: 'Transformando Figuras' },

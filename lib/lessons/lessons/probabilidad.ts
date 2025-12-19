@@ -56,6 +56,7 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M1-PROB-002',
     skills: ['estadistica-media', 'estadistica-mediana', 'estadistica-moda', 'estadistica-rango'],
     estimatedMinutes: 15,
+    minEducOA: ['MA1M-OA-12'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Batalla del Top 10' },
       { id: 'explore', type: 'explore', title: 'El Laboratorio de Datos' },
@@ -75,6 +76,7 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M2-PROB-001',
     skills: ['estadistica-rango', 'estadistica-varianza', 'estadistica-desviacion-estandar'],
     estimatedMinutes: 15,
+    minEducOA: ['MA2M-OA-12'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Torneo de Tiro con Arco' },
       { id: 'explore', type: 'explore', title: 'El Laboratorio de Dispersión' },
@@ -94,6 +96,7 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M1-PROB-003',
     skills: ['estadistica-cuartiles', 'estadistica-percentiles', 'estadistica-boxplot', 'interpretar-posicion'],
     estimatedMinutes: 15,
+    minEducOA: ['MA1M-OA-12'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Ranking de la Clase' },
       { id: 'explore', type: 'explore', title: 'El Divisor de Datos' },

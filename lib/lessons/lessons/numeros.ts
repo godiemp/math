@@ -16,6 +16,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-001',
     skills: ['numeros-enteros-orden', 'numeros-enteros-valor-absoluto'],
     estimatedMinutes: 10,
+    minEducOA: ['MA1M-OA-01'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Termómetro Loco' },
       { id: 'number-line', type: 'explore', title: 'La Recta Numérica' },
@@ -35,6 +36,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-001',
     skills: ['numeros-enteros-sumar-restar', 'numeros-enteros-opuesto'],
     estimatedMinutes: 10,
+    minEducOA: ['MA1M-OA-01'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Alcancía' },
       { id: 'number-line-addition', type: 'explore', title: 'Suma en la Recta' },
@@ -54,6 +56,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-001',
     skills: ['multiplicacion-enteros', 'division-enteros', 'reglas-signos'],
     estimatedMinutes: 15,
+    minEducOA: ['MA1M-OA-01'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Ascensor Mágico' },
       { id: 'sign-rules', type: 'explore', title: 'Descubre las Reglas' },
@@ -303,6 +306,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-004',
     skills: ['porcentaje-concepto', 'porcentaje-calcular', 'porcentaje-conversiones'],
     estimatedMinutes: 15,
+    minEducOA: ['MA1M-OA-01'],
     steps: [
       { id: 'hook', type: 'hook', title: 'Las Ofertas del Centro Comercial' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -322,6 +326,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-005',
     skills: ['porcentaje-problemas', 'porcentaje-sucesivos', 'porcentaje-inverso', 'porcentaje-comparacion'],
     estimatedMinutes: 16,
+    minEducOA: ['MA1M-OA-01'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Tienda de Electrónica' },
       { id: 'explore', type: 'explore', title: 'Tipos de Problemas' },
@@ -341,6 +346,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-007',
     skills: ['raices-concepto', 'raices-calcular', 'raices-exponente-fraccionario'],
     estimatedMinutes: 15,
+    minEducOA: ['MA1M-OA-02'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Jardín Cuadrado' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },

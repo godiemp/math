@@ -56,14 +56,38 @@ lib/lessons/types.ts             # Lesson registry (add definition here)
 Before creating a lesson, determine:
 
 1. **Topic**: What mathematical concept will this teach?
-2. **Thematic Unit**: Which curriculum unit does this belong to? (e.g., M1-ALG-001)
-3. **Lesson ID**: What's the next letter in the sequence? (a, b, c, d, e...)
-4. **Skills**: What skills from the taxonomy will this develop?
-5. **Duration**: Estimated completion time (typically 12-17 minutes)
+2. **Thematic Unit**: Which PAES curriculum unit does this belong to? (e.g., M1-ALG-001)
+3. **MINEDUC OA** (REQUIRED): Which learning objectives does this cover? (e.g., MA1M-OA-03)
+4. **Lesson ID**: What's the next letter in the sequence? (a, b, c, d, e...)
+5. **Skills**: What skills from the taxonomy will this develop?
+6. **Duration**: Estimated completion time (typically 12-17 minutes)
+
+### Dual Classification System
+
+Every lesson must be classified in TWO ways:
+
+| Classification | Purpose | Example |
+|----------------|---------|---------|
+| **Thematic Unit** | PAES exam topic organization | `M1-ALG-001` |
+| **MINEDUC OA** | School curriculum & grade level | `MA1M-OA-03` |
+
+**The MINEDUC OA code determines the school grade level:**
+
+| OA Prefix | Grade Level |
+|-----------|-------------|
+| `MA1M-OA-XX` | 1° Medio |
+| `MA2M-OA-XX` | 2° Medio |
+| `MA3M-OA-XX` | 3° Medio |
+| `MA4M-OA-XX` | 4° Medio |
 
 **Check existing lessons in the thematic unit:**
 ```bash
-grep -A5 "thematicUnit: 'M1-ALG-001'" lib/lessons/types.ts
+grep -A5 "thematicUnit: 'M1-ALG-001'" lib/lessons/lessons/algebra.ts
+```
+
+**Check MINEDUC OA definitions:**
+```bash
+grep -A10 "code: 'MA1M-OA-03'" lib/curriculum/mineduc.ts
 ```
 
 ### Phase 2: Create Directory Structure
@@ -166,7 +190,7 @@ export default function LessonPage() {
 
 ### Phase 6: Register in Lesson Types
 
-Add to `lib/lessons/types.ts` in the `M1_LESSONS` array:
+Add to the appropriate subject file in `lib/lessons/lessons/` (e.g., `algebra.ts`, `numeros.ts`, `geometria.ts`, `probabilidad.ts`):
 
 ```typescript
 {
@@ -174,11 +198,12 @@ Add to `lib/lessons/types.ts` in the `M1_LESSONS` array:
   slug: 'lesson-slug',          // URL-friendly, kebab-case
   title: 'Lesson Title',        // Spanish, descriptive
   description: 'Brief description of what the lesson teaches.',
-  level: 'M1',                  // M1 or M2
+  level: 'M1',                  // M1 or M2 (PAES level)
   subject: 'álgebra',           // 'números' | 'álgebra' | 'geometría' | 'probabilidad'
-  thematicUnit: 'M1-XXX-001',   // Must match existing thematic unit
+  thematicUnit: 'M1-XXX-001',   // PAES thematic unit
   skills: ['skill-1', 'skill-2'],  // From skill taxonomy
   estimatedMinutes: 14,         // Typical: 12-17 minutes
+  minEducOA: ['MA1M-OA-03'],    // REQUIRED: MINEDUC OA (determines grade level)
   steps: [
     { id: 'hook', type: 'hook', title: 'Step Title' },
     { id: 'explore', type: 'explore', title: 'Step Title' },
@@ -189,6 +214,12 @@ Add to `lib/lessons/types.ts` in the `M1_LESSONS` array:
   ],
 },
 ```
+
+**Important**: The `minEducOA` field is REQUIRED and determines the school grade level:
+- `MA1M-OA-XX` → Lesson is for 1° Medio
+- `MA2M-OA-XX` → Lesson is for 2° Medio
+- `MA3M-OA-XX` → Lesson is for 3° Medio
+- `MA4M-OA-XX` → Lesson is for 4° Medio
 
 ## Step Component Patterns
 
@@ -390,7 +421,9 @@ import {
 - [ ] All 6 step components created
 - [ ] Index.ts exports all steps
 - [ ] Page.tsx created with LessonShell
-- [ ] Lesson registered in types.ts
+- [ ] Lesson registered in subject file (algebra.ts, numeros.ts, etc.)
+- [ ] `thematicUnit` field set with PAES thematic unit code
+- [ ] `minEducOA` field set (REQUIRED - determines school grade level)
 - [ ] Step6Verify uses CheckpointQuiz component
 - [ ] All steps check `isActive` prop
 - [ ] All steps call `onComplete` when done
