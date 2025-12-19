@@ -9,10 +9,13 @@ import {
   School,
   SortField,
   SortDirection,
+  ContactStatus,
   DEPENDENCY_LABELS,
   DEPENDENCY_COLORS,
   STATUS_LABELS,
   STATUS_COLORS,
+  CONTACT_STATUS_LABELS,
+  CONTACT_STATUS_COLORS,
 } from '@/lib/schools';
 
 function SchoolsSalesContent() {
@@ -21,8 +24,12 @@ function SchoolsSalesContent() {
   const [selectedCommune, setSelectedCommune] = useState<number | 'all'>('all');
   const [selectedDependency, setSelectedDependency] = useState<number | 'all'>('all');
   const [selectedStatus, setSelectedStatus] = useState<number | 'all'>('all');
+  const [selectedContactStatus, setSelectedContactStatus] = useState<ContactStatus | 'all'>('all');
   const [hasHighSchool, setHasHighSchool] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Contact tracking (frontend-only mockup)
+  const [contactStatuses, setContactStatuses] = useState<Record<number, ContactStatus>>({});
 
   // Sorting
   const [sortField, setSortField] = useState<SortField>('highSchoolEnrollment');
@@ -67,6 +74,9 @@ function SchoolsSalesContent() {
     setSelectedCommune('all');
   }, [selectedRegion]);
 
+  // Helper to get contact status for a school
+  const getContactStatus = (rbd: number): ContactStatus => contactStatuses[rbd] || 1;
+
   // Filter schools
   const filteredSchools = useMemo(() => {
     return schools.filter((s) => {
@@ -75,6 +85,8 @@ function SchoolsSalesContent() {
       if (selectedDependency !== 'all' && s.dependencyCode !== selectedDependency)
         return false;
       if (selectedStatus !== 'all' && s.status !== selectedStatus) return false;
+      if (selectedContactStatus !== 'all' && getContactStatus(s.rbd) !== selectedContactStatus)
+        return false;
       if (hasHighSchool && s.highSchoolEnrollment === 0) return false;
       if (
         searchQuery &&
@@ -89,6 +101,8 @@ function SchoolsSalesContent() {
     selectedCommune,
     selectedDependency,
     selectedStatus,
+    selectedContactStatus,
+    contactStatuses,
     hasHighSchool,
     searchQuery,
   ]);
@@ -96,8 +110,16 @@ function SchoolsSalesContent() {
   // Sort schools
   const sortedSchools = useMemo(() => {
     const sorted = [...filteredSchools].sort((a, b) => {
-      let aVal: string | number = a[sortField];
-      let bVal: string | number = b[sortField];
+      let aVal: string | number;
+      let bVal: string | number;
+
+      if (sortField === 'contactStatus') {
+        aVal = getContactStatus(a.rbd);
+        bVal = getContactStatus(b.rbd);
+      } else {
+        aVal = a[sortField];
+        bVal = b[sortField];
+      }
 
       if (typeof aVal === 'string') {
         aVal = aVal.toLowerCase();
@@ -109,7 +131,7 @@ function SchoolsSalesContent() {
       return 0;
     });
     return sorted;
-  }, [filteredSchools, sortField, sortDirection]);
+  }, [filteredSchools, sortField, sortDirection, contactStatuses]);
 
   // Reset page when filters change
   useEffect(() => {
@@ -119,6 +141,7 @@ function SchoolsSalesContent() {
     selectedCommune,
     selectedDependency,
     selectedStatus,
+    selectedContactStatus,
     hasHighSchool,
     searchQuery,
   ]);
@@ -169,6 +192,30 @@ function SchoolsSalesContent() {
     functioning: schools.filter((s) => s.status === 1).length,
   };
 
+  // Pipeline stats (count schools by contact status)
+  const pipelineStats = useMemo(() => {
+    const counts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0 };
+    Object.values(contactStatuses).forEach((status) => {
+      counts[status]++;
+    });
+    // Schools without a status are "Sin contactar" (1)
+    counts[1] = schools.length - Object.keys(contactStatuses).length;
+    const contacted = Object.keys(contactStatuses).length;
+    return { counts, contacted };
+  }, [contactStatuses]);
+
+  // Handler to update contact status
+  const handleContactStatusChange = (rbd: number, status: ContactStatus) => {
+    setContactStatuses((prev) => {
+      if (status === 1) {
+        // Remove from tracking if set back to "Sin contactar"
+        const { [rbd]: _, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [rbd]: status };
+    });
+  };
+
   // Handle sort
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -215,7 +262,7 @@ function SchoolsSalesContent() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           <Card padding="md">
             <Heading level={2} size="sm" className="mb-1">
               {stats.total.toLocaleString()}
@@ -238,6 +285,14 @@ function SchoolsSalesContent() {
             </Heading>
             <Text size="xs" variant="secondary">
               Funcionando
+            </Text>
+          </Card>
+          <Card padding="md">
+            <Heading level={2} size="sm" className="text-blue-600 mb-1">
+              {pipelineStats.contacted.toLocaleString()}
+            </Heading>
+            <Text size="xs" variant="secondary">
+              En pipeline
             </Text>
           </Card>
           <Card padding="md">
@@ -267,7 +322,7 @@ function SchoolsSalesContent() {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {/* Region Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -359,6 +414,29 @@ function SchoolsSalesContent() {
                 ))}
               </select>
             </div>
+
+            {/* Contact Status Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Pipeline
+              </label>
+              <select
+                value={selectedContactStatus}
+                onChange={(e) =>
+                  setSelectedContactStatus(
+                    e.target.value === 'all' ? 'all' : (parseInt(e.target.value, 10) as ContactStatus)
+                  )
+                }
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+              >
+                <option value="all">Todos</option>
+                {Object.entries(CONTACT_STATUS_LABELS).map(([code, label]) => (
+                  <option key={code} value={code}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* High School Filter Checkbox */}
@@ -382,6 +460,7 @@ function SchoolsSalesContent() {
             selectedCommune !== 'all' ||
             selectedDependency !== 'all' ||
             selectedStatus !== 'all' ||
+            selectedContactStatus !== 'all' ||
             hasHighSchool ||
             searchQuery) && (
             <button
@@ -390,6 +469,7 @@ function SchoolsSalesContent() {
                 setSelectedCommune('all');
                 setSelectedDependency('all');
                 setSelectedStatus('all');
+                setSelectedContactStatus('all');
                 setHasHighSchool(false);
                 setSearchQuery('');
               }}
@@ -438,13 +518,14 @@ function SchoolsSalesContent() {
                   <SortHeader field="highSchoolEnrollment">Mat. Media</SortHeader>
                   <SortHeader field="totalEnrollment">Mat. Total</SortHeader>
                   <SortHeader field="status">Estado</SortHeader>
+                  <SortHeader field="contactStatus">Pipeline</SortHeader>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {sortedSchools.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={8}
+                      colSpan={9}
                       className="px-6 py-8 text-center text-gray-500 dark:text-gray-400"
                     >
                       No se encontraron colegios con los filtros seleccionados
@@ -497,6 +578,26 @@ function SchoolsSalesContent() {
                         >
                           {STATUS_LABELS[school.status] || 'Desconocido'}
                         </span>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <select
+                          value={getContactStatus(school.rbd)}
+                          onChange={(e) =>
+                            handleContactStatusChange(
+                              school.rbd,
+                              parseInt(e.target.value, 10) as ContactStatus
+                            )
+                          }
+                          className={`px-2 py-1 text-xs font-semibold rounded-full border-0 cursor-pointer ${
+                            CONTACT_STATUS_COLORS[getContactStatus(school.rbd)]
+                          }`}
+                        >
+                          {Object.entries(CONTACT_STATUS_LABELS).map(([code, label]) => (
+                            <option key={code} value={code}>
+                              {label}
+                            </option>
+                          ))}
+                        </select>
                       </td>
                     </tr>
                   ))

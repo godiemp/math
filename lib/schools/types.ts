@@ -29,6 +29,9 @@ export type SortField =
   | 'dependencyCode'
   | 'highSchoolEnrollment'
   | 'totalEnrollment'
-  | 'status';
+  | 'status'
+  | 'contactStatus';
 
 export type SortDirection = 'asc' | 'desc';
+
+export type ContactStatus = 1 | 2 | 3 | 4 | 5 | 6 | 7;
