@@ -92,8 +92,12 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                   3 o más magnitudes relacionadas
                 </p>
                 <div className="font-mono text-sm bg-white/50 dark:bg-gray-800/50 p-2 rounded">
-                  Si 4 obreros en 6 horas hacen X, ¿cuánto harán 6 obreros en 8 horas?
+                  Si 4 obreros en 8 horas hacen X, ¿cuánto harán 6 obreros en 5 horas?
                 </div>
+                <p className="text-xs text-purple-600 dark:text-purple-400 mt-2">
+                  Obreros ↑ (<span className="text-green-600">6/4</span>) · Horas ↓ (
+                  <span className="text-red-600">5/8</span>)
+                </p>
               </div>
             </div>
 
