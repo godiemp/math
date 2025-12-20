@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { LandingNav, HeroSection, StatsSection, FeaturesSection, CTASection } from '@/components/landing';
@@ -17,7 +17,7 @@ import Footer from '@/components/layout/Footer';
 
 type Audience = 'b2c' | 'b2b';
 
-export default function LandingPage() {
+function LandingPageContent() {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab');
   const initialAudience: Audience = tabParam === 'colegios' ? 'b2b' : 'b2c';
@@ -82,5 +82,13 @@ export default function LandingPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function LandingPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen" style={{ background: 'var(--color-bg)' }} />}>
+      <LandingPageContent />
+    </Suspense>
   );
 }
