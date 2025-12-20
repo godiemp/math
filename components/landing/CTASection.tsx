@@ -10,7 +10,7 @@ interface CTASectionProps {
 
 const openIntercomDemo = () => {
   if (typeof window !== 'undefined' && window.Intercom) {
-    window.Intercom('showNewMessage', 'Hola, quiero solicitar una demo para mi institución');
+    window.Intercom('showNewMessage', 'Hola, quiero solicitar una demo para mi colegio');
   }
 };
 
@@ -22,7 +22,7 @@ export function CTASection({ audience }: CTASectionProps) {
       cta: 'Comenzar Gratis',
     },
     b2b: {
-      title: 'Potencia el aprendizaje en tu institución',
+      title: 'Potencia el aprendizaje en tu colegio',
       subtitle: 'Plataforma de matemáticas para educación media con reportes y seguimiento.',
       cta: 'Solicitar Demo',
     },

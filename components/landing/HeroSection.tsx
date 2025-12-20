@@ -12,7 +12,7 @@ interface HeroSectionProps {
 
 const openIntercomDemo = () => {
   if (typeof window !== 'undefined' && window.Intercom) {
-    window.Intercom('showNewMessage', 'Hola, quiero solicitar una demo para mi institución');
+    window.Intercom('showNewMessage', 'Hola, quiero solicitar una demo para mi colegio');
   }
 };
 
@@ -25,8 +25,8 @@ export function HeroSection({ audience, onAudienceChange }: HeroSectionProps) {
       cta: 'Comenzar Gratis',
     },
     b2b: {
-      badge: 'PARA INSTITUCIONES',
-      title: 'Potencia el Aprendizaje en tu Institución',
+      badge: 'PARA COLEGIOS',
+      title: 'Potencia el Aprendizaje en tu Colegio',
       subtitle: 'Plataforma de matemáticas para educación media. Reportes detallados, asignación de tareas y seguimiento en tiempo real.',
       cta: 'Solicitar Demo',
     },
@@ -78,7 +78,7 @@ export function HeroSection({ audience, onAudienceChange }: HeroSectionProps) {
             }}
           >
             <Building2 size={18} />
-            Instituciones
+            Colegios
           </button>
           </div>
         </div>

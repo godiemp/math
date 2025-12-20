@@ -2,7 +2,7 @@
 
 const openIntercomDemo = () => {
   if (typeof window !== 'undefined' && window.Intercom) {
-    window.Intercom('showNewMessage', 'Hola, quiero solicitar una demo para mi institución');
+    window.Intercom('showNewMessage', 'Hola, quiero solicitar una demo para mi colegio');
   }
 };
 
