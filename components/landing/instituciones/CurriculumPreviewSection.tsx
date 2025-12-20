@@ -7,22 +7,50 @@ const levels = [
   {
     id: 'm1',
     name: '1° Medio',
-    topics: ['Números', 'Álgebra', 'Geometría', 'Probabilidad y Estadística'],
+    objectives: [
+      'Resolver problemas con potencias de base racional y exponente entero',
+      'Operar con raíces cuadradas y cúbicas',
+      'Modelar situaciones con expresiones algebraicas',
+      'Resolver ecuaciones lineales con una incógnita',
+      'Aplicar teorema de Pitágoras y sus recíprocos',
+      'Calcular probabilidades usando diagrama de árbol',
+    ],
   },
   {
     id: 'm2',
     name: '2° Medio',
-    topics: ['Números Racionales', 'Expresiones Algebraicas', 'Geometría Analítica', 'Funciones'],
+    objectives: [
+      'Operar con números racionales y resolver ecuaciones',
+      'Factorizar expresiones algebraicas',
+      'Resolver sistemas de ecuaciones lineales (2x2)',
+      'Representar funciones lineales y afines',
+      'Aplicar semejanza de triángulos',
+      'Analizar datos con medidas de posición y dispersión',
+    ],
   },
   {
     id: 'm3',
     name: '3° Medio',
-    topics: ['Números Complejos', 'Funciones Cuadráticas', 'Trigonometría', 'Probabilidad'],
+    objectives: [
+      'Resolver ecuaciones cuadráticas y analizar discriminante',
+      'Modelar con funciones cuadráticas y analizar sus gráficos',
+      'Aplicar razones trigonométricas en triángulos rectángulos',
+      'Resolver problemas con ley de senos y cosenos',
+      'Calcular probabilidades con regla multiplicativa',
+      'Aplicar distribución normal y binomial',
+    ],
   },
   {
     id: 'm4',
     name: '4° Medio',
-    topics: ['Logaritmos', 'Funciones Exponenciales', 'Límites', 'Derivadas'],
+    objectives: [
+      'Operar con logaritmos y resolver ecuaciones exponenciales',
+      'Modelar crecimiento y decrecimiento exponencial',
+      'Aplicar muestreo y analizar representatividad',
+      'Calcular intervalos de confianza y margen de error',
+      'Resolver problemas de combinatoria (permutaciones y combinaciones)',
+      'Aplicar probabilidad condicional e independencia',
+    ],
   },
 ];
 
@@ -41,7 +69,7 @@ export function CurriculumPreviewSection() {
             color: 'var(--color-label-primary)',
           }}
         >
-          Contenido Alineado al Currículo
+          Objetivos de Aprendizaje del Currículo
         </h2>
         <p
           className="text-center mb-12"
@@ -50,7 +78,7 @@ export function CurriculumPreviewSection() {
             color: 'var(--color-label-secondary)',
           }}
         >
-          Cubre matemáticas de 1° a 4° medio
+          Mini-lecciones alineadas a los OA de 1° a 4° medio
         </p>
 
         <div
@@ -104,22 +132,25 @@ export function CurriculumPreviewSection() {
                     borderBottom: '1px solid var(--color-separator)',
                   }}
                 >
-                  <div className="flex flex-wrap gap-2">
-                    {level.topics.map((topic, i) => (
-                      <span
+                  <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+                    {level.objectives.map((objective, i) => (
+                      <li
                         key={i}
                         style={{
-                          padding: '6px 12px',
-                          background: 'var(--color-fill)',
-                          borderRadius: 'var(--radius-sm)',
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: '10px',
                           fontSize: '14px',
+                          lineHeight: 1.5,
                           color: 'var(--color-label-secondary)',
+                          marginBottom: i < level.objectives.length - 1 ? '10px' : 0,
                         }}
                       >
-                        {topic}
-                      </span>
+                        <span style={{ color: 'var(--color-tint)', flexShrink: 0 }}>•</span>
+                        {objective}
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               )}
             </div>
