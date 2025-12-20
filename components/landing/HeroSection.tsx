@@ -26,7 +26,7 @@ export function HeroSection({ audience, onAudienceChange }: HeroSectionProps) {
     },
     b2b: {
       badge: 'PARA COLEGIOS',
-      title: 'Mini-Lecciones Listas para Proyectar en Clase',
+      title: 'Contenido Interactivo Listo para Proyectar y Practicar',
       subtitle: 'Tus profesores enseñan proyectando nuestras lecciones interactivas. Sin preparar material. Con reportes automáticos de cada alumno.',
       cta: 'Solicitar Demo',
     },
