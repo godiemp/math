@@ -42,10 +42,10 @@ export function B2BHeroSection() {
             marginBottom: '24px',
           }}
         >
-          Material Listo para Usar.
+          Mini-Lecciones Listas
           <br />
           <span style={{ color: 'var(--color-tint)' }}>
-            Resultados que Puedes Medir.
+            para Proyectar en Clase.
           </span>
         </h1>
 
@@ -59,9 +59,9 @@ export function B2BHeroSection() {
             margin: '0 auto 32px',
           }}
         >
-          Lecciones interactivas de matemáticas para 1° a 4° medio.
+          Tus profesores enseñan proyectando nuestras lecciones interactivas.
           <br />
-          Tus profesores enseñan, nosotros les damos el material.
+          Sin preparar material. Con reportes automáticos de cada alumno.
         </p>
 
         {/* CTA */}

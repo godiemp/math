@@ -26,8 +26,8 @@ export function HeroSection({ audience, onAudienceChange }: HeroSectionProps) {
     },
     b2b: {
       badge: 'PARA COLEGIOS',
-      title: 'Potencia el Aprendizaje en tu Colegio',
-      subtitle: 'Plataforma de matemáticas para educación media. Reportes detallados, asignación de tareas y seguimiento en tiempo real.',
+      title: 'Mini-Lecciones Listas para Proyectar en Clase',
+      subtitle: 'Tus profesores enseñan proyectando nuestras lecciones interactivas. Sin preparar material. Con reportes automáticos de cada alumno.',
       cta: 'Solicitar Demo',
     },
   };

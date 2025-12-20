@@ -26,11 +26,11 @@ const roles = [
   {
     icon: GraduationCap,
     title: 'Profesor de Aula',
-    subtitle: 'Menos preparación, más impacto',
+    subtitle: 'Enseña proyectando, sin preparar',
     features: [
-      'Lecciones listas para proyectar',
+      'Proyecta lecciones interactivas en clase',
       'Tareas que se corrigen solas',
-      'Reportes individuales por alumno',
+      'Ve el progreso de cada alumno',
     ],
   },
 ];

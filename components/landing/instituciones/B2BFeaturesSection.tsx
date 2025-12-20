@@ -5,13 +5,13 @@ import { BookOpen, Sparkles, ClipboardList, BarChart3, LineChart, Target } from 
 const features = [
   {
     icon: BookOpen,
-    title: 'Mini-Lecciones Listas para Usar',
-    description: '40+ lecciones interactivas alineadas al currículo. Asígnalas con un click, sin preparar nada.',
+    title: 'Lecciones Listas para Proyectar',
+    description: '40+ mini-lecciones interactivas. El profesor las proyecta en clase y enseña sin preparar material.',
   },
   {
     icon: Sparkles,
     title: 'Tutor AI para Cada Alumno',
-    description: 'Guía socrática cuando se traban. Como tener un profesor particular para cada estudiante.',
+    description: 'Después de clase, cada alumno practica con un tutor AI que lo guía cuando se traba.',
   },
   {
     icon: ClipboardList,

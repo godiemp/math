@@ -6,20 +6,20 @@ const steps = [
   {
     icon: BookOpen,
     number: '1',
-    title: 'Asigna lecciones listas',
-    description: 'Selecciona temas del currículo de 1° a 4° medio. Las mini-lecciones interactivas están listas para usar.',
+    title: 'Proyecta en clase',
+    description: 'El profesor proyecta la mini-lección y enseña con material interactivo listo. Sin preparar nada.',
   },
   {
     icon: Users,
     number: '2',
-    title: 'Los estudiantes practican',
-    description: 'Cada alumno avanza a su ritmo. El tutor AI los guía cuando se traban, sin necesitar al profesor.',
+    title: 'Los alumnos practican',
+    description: 'Después de la clase, cada alumno practica a su ritmo. El tutor AI los guía cuando se traban.',
   },
   {
     icon: LineChart,
     number: '3',
     title: 'Recibe reportes automáticos',
-    description: 'Ve qué temas domina cada alumno y dónde necesita refuerzo. Toma decisiones con datos, no intuición.',
+    description: 'Ve qué temas domina cada alumno y dónde necesita refuerzo. Interviene a tiempo con datos reales.',
   },
 ];
 
