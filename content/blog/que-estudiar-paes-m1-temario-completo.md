@@ -41,6 +41,8 @@ Lo básico que debes dominar:
 
 **Error típico**: Sumar numeradores y denominadores por separado. $\frac{1}{2} + \frac{1}{3} \neq \frac{2}{5}$. La respuesta correcta es $\frac{5}{6}$.
 
+Para más errores de números que cuestan puntos, revisa [los 7 errores de números más comunes en la PAES](/blog/errores-comunes-numeros-paes).
+
 ### Porcentajes
 
 Aparecen en casi todas las pruebas, muchas veces en contextos de la vida real:
@@ -190,6 +192,8 @@ Fórmulas y visualización espacial. Memorizar las fórmulas es solo la mitad—
 
 **Error típico**: Olvidar dividir por 2 en el área del triángulo.
 
+Para más errores de geometría que cuestan puntos, revisa [los 7 errores de geometría más comunes en la PAES](/blog/errores-comunes-geometria-paes).
+
 ### Teorema de Pitágoras
 
 Para triángulos rectángulos:
@@ -273,6 +277,8 @@ $$P(A) = \frac{\text{casos favorables}}{\text{casos totales}}$$
 - $P(\text{seguro}) = 1$
 - $P(\text{imposible}) = 0$
 - $P(\text{no A}) = 1 - P(A)$
+
+Para más errores de probabilidad y estadística que cuestan puntos, revisa [los 7 errores de probabilidad y estadística más comunes en la PAES](/blog/errores-comunes-probabilidad-estadistica-paes).
 
 ---
 
