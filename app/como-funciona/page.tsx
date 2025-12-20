@@ -39,7 +39,7 @@ export default function ComoFuncionaPage() {
             SimplePAES
           </h1>
           <Link
-            href="/"
+            href="/signin"
             className="spring-motion"
             style={{
               padding: '8px 16px',
@@ -201,7 +201,7 @@ export default function ComoFuncionaPage() {
             Comienza a entrenar para la PAES con práctica personalizada y métricas reales
           </p>
           <Link
-            href="/"
+            href="/signin"
             className="inline-block spring-emphasized"
             style={{
               padding: '14px 32px',

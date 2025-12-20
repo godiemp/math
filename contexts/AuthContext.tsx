@@ -92,8 +92,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Clear local state immediately for responsive UI
       setFullUser(null);
       clearCachedUser();
-      // Trigger NextAuth signOut which will redirect to home
-      signOut({ callbackUrl: '/' });
+      // Trigger NextAuth signOut which will redirect to signin
+      signOut({ callbackUrl: '/signin' });
     });
 
     // Cleanup on unmount

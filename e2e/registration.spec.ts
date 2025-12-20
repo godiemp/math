@@ -18,8 +18,8 @@ import { test, expect } from '@playwright/test';
 
 test.describe('User Registration', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to landing page
-    await page.goto('/');
+    // Navigate to signin page
+    await page.goto('/signin');
 
     // Dismiss cookie banner
     await page.evaluate(() => {

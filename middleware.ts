@@ -38,7 +38,7 @@ export default auth((req) => {
       console.log('[Middleware] Redirecting to home - no session');
     }
     const url = req.nextUrl.clone();
-    url.pathname = '/';
+    url.pathname = '/signin';
     return NextResponse.redirect(url);
   }
 
@@ -46,7 +46,7 @@ export default auth((req) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (isAdminRoute && (req.auth.user as any)?.role !== 'admin') {
     const url = req.nextUrl.clone();
-    url.pathname = '/';
+    url.pathname = '/signin';
     return NextResponse.redirect(url);
   }
 
