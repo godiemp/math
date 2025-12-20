@@ -69,11 +69,11 @@ test.describe('Subscription Trial Flow', () => {
           await subscribeButton.click();
           await newPage.waitForTimeout(2000);
 
-          // Should be redirected to login or see login prompt
-          const isOnLoginPage = newPage.url().match(/\/login|^\//);
+          // Should be redirected to signin or see login prompt
+          const isOnSigninPage = newPage.url().includes('/signin');
           const hasLoginForm = await newPage.locator('input[type="email"], input[type="password"]').first().isVisible();
 
-          expect(isOnLoginPage || hasLoginForm).toBeTruthy();
+          expect(isOnSigninPage || hasLoginForm).toBeTruthy();
         }
       } finally {
         await newContext.close();
@@ -241,7 +241,7 @@ test.describe('Subscription Trial Flow', () => {
 
   test.describe('Paywall & Feature Gating', () => {
     test.describe('Unauthenticated User Protection', () => {
-      test('should redirect unauthenticated users from Practice page to home', async ({ page, browser }) => {
+      test('should redirect unauthenticated users from Practice page to signin', async ({ page, browser }) => {
         // Create a completely fresh context without any cookies
         const newContext = await browser.newContext({
           storageState: undefined, // Ensure no storage state
@@ -264,9 +264,9 @@ test.describe('Subscription Trial Flow', () => {
           const cookies = await newContext.cookies();
           console.log('Cookies present:', cookies.map(c => c.name));
 
-          // Server-side middleware should redirect to home page (exact match)
-          const redirectedToHome = finalUrl === 'http://localhost:3000/' || finalUrl.match(/^https?:\/\/[^/]+\/?$/);
-          expect(redirectedToHome).toBeTruthy();
+          // Server-side middleware should redirect to signin page
+          const redirectedToSignin = finalUrl.includes('/signin');
+          expect(redirectedToSignin).toBeTruthy();
 
           // Should NOT be on the practice page
           const isOnPracticePage = finalUrl.includes('/practice');
@@ -276,7 +276,7 @@ test.describe('Subscription Trial Flow', () => {
         }
       });
 
-      test('should redirect unauthenticated users from Curriculum page to home', async ({ browser }) => {
+      test('should redirect unauthenticated users from Curriculum page to signin', async ({ browser }) => {
         const newContext = await browser.newContext({
           storageState: undefined,
         });
@@ -292,9 +292,9 @@ test.describe('Subscription Trial Flow', () => {
           const finalUrl = newPage.url();
           console.log('Final URL after navigation to /curriculum/m1:', finalUrl);
 
-          // Should be redirected to home (exact match)
-          const redirectedToHome = finalUrl === 'http://localhost:3000/' || finalUrl.match(/^https?:\/\/[^/]+\/?$/);
-          expect(redirectedToHome).toBeTruthy();
+          // Should be redirected to signin
+          const redirectedToSignin = finalUrl.includes('/signin');
+          expect(redirectedToSignin).toBeTruthy();
 
           // Should NOT be on the curriculum page
           const isOnCurriculumPage = finalUrl.includes('/curriculum');
@@ -304,7 +304,7 @@ test.describe('Subscription Trial Flow', () => {
         }
       });
 
-      test('should redirect unauthenticated users from Progress page to home', async ({ browser }) => {
+      test('should redirect unauthenticated users from Progress page to signin', async ({ browser }) => {
         const newContext = await browser.newContext({
           storageState: undefined,
         });
@@ -320,9 +320,9 @@ test.describe('Subscription Trial Flow', () => {
           const finalUrl = newPage.url();
           console.log('Final URL after navigation to /progress:', finalUrl);
 
-          // Should be redirected to home (exact match)
-          const redirectedToHome = finalUrl === 'http://localhost:3000/' || finalUrl.match(/^https?:\/\/[^/]+\/?$/);
-          expect(redirectedToHome).toBeTruthy();
+          // Should be redirected to signin
+          const redirectedToSignin = finalUrl.includes('/signin');
+          expect(redirectedToSignin).toBeTruthy();
 
           // Should NOT be on the progress page
           const isOnProgressPage = finalUrl.includes('/progress');

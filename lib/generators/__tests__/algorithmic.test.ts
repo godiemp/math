@@ -39,41 +39,34 @@ describe('Algorithmic Generators', () => {
     });
 
     it('should find min/max correctly', () => {
-      const context: GeneratorContext = {
-        config: { sequenceLength: 5, minValue: 1, maxValue: 10 },
+      // Test min
+      const minContext: GeneratorContext = {
+        config: { sequenceLength: 5, minValue: 1, maxValue: 10, sortingType: 'min' },
         level: 125,
       };
+      const minProblem = generateSorting(minContext);
+      expect(minProblem.expression).toContain('Mínimo');
+      expect(typeof minProblem.correctAnswer).toBe('number');
 
-      let foundMinOrMax = false;
-      for (let i = 0; i < 20; i++) {
-        const problem = generateSorting(context);
-        if (problem.expression.includes('Mínimo') || problem.expression.includes('Máximo')) {
-          expect(typeof problem.correctAnswer).toBe('number');
-          foundMinOrMax = true;
-          break;
-        }
-      }
-
-      expect(foundMinOrMax).toBe(true);
+      // Test max
+      const maxContext: GeneratorContext = {
+        config: { sequenceLength: 5, minValue: 1, maxValue: 10, sortingType: 'max' },
+        level: 125,
+      };
+      const maxProblem = generateSorting(maxContext);
+      expect(maxProblem.expression).toContain('Máximo');
+      expect(typeof maxProblem.correctAnswer).toBe('number');
     });
 
     it('should calculate median correctly', () => {
       const context: GeneratorContext = {
-        config: { sequenceLength: 5, minValue: 1, maxValue: 10 },
+        config: { sequenceLength: 5, minValue: 1, maxValue: 10, sortingType: 'median' },
         level: 127,
       };
 
-      let foundMedian = false;
-      for (let i = 0; i < 20; i++) {
-        const problem = generateSorting(context);
-        if (problem.expression.includes('Mediana')) {
-          expect(typeof problem.correctAnswer).toBe('number');
-          foundMedian = true;
-          break;
-        }
-      }
-
-      expect(foundMedian).toBe(true);
+      const problem = generateSorting(context);
+      expect(problem.expression).toContain('Mediana');
+      expect(typeof problem.correctAnswer).toBe('number');
     });
   });
 
