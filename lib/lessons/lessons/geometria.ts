@@ -71,7 +71,7 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-GEO-002',
     skills: ['circunferencia-circulo', 'area-circulo', 'pi-concepto'],
     estimatedMinutes: 12,
-    minEducOA: ['MA1M-OA-06'],
+    minEducOA: ['MA1M-OA-06', 'FG-MATE-3M-OAC-04'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Rueda de la Fortuna' },
       { id: 'explore', type: 'explore', title: 'Descubriendo Pi (π)' },
