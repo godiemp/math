@@ -16,9 +16,12 @@
  */
 
 /**
- * Educational level for PAES mathematics
- * M1 = First year of middle education
- * M2 = Second year of middle education
+ * PAES Competency Level for mathematics
+ * M1 = Competencia Matemática 1 (basic competency)
+ * M2 = Competencia Matemática 2 (advanced competency)
+ *
+ * Note: For school grade levels (1° Medio - 4° Medio), see GradeLevel in mineduc.ts
+ * Lessons are assigned to grades via minEducOA field mappings.
  */
 export type Level = 'M1' | 'M2';
 
