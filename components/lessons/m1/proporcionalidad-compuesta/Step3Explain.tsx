@@ -221,29 +221,104 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               </div>
             </div>
 
+            {/* Fractions explanation */}
+            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/30 dark:to-cyan-900/30 rounded-xl p-5 border border-blue-200 dark:border-blue-800">
+              <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-3">
+                El secreto de las fracciones:
+              </h4>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div className="bg-white/70 dark:bg-gray-800/50 rounded-lg p-3 border-l-4 border-green-500">
+                  <p className="font-semibold text-green-700 dark:text-green-300">
+                    Fracción {'>'} 1 → Aumenta
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-400 mt-1">
+                    Ejemplo: <span className="font-mono">6/4 = 1,5</span>
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Multiplica por algo mayor que 1 → el resultado crece
+                  </p>
+                </div>
+                <div className="bg-white/70 dark:bg-gray-800/50 rounded-lg p-3 border-l-4 border-red-500">
+                  <p className="font-semibold text-red-700 dark:text-red-300">
+                    Fracción {'<'} 1 → Disminuye
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-400 mt-1">
+                    Ejemplo: <span className="font-mono">4/6 = 0,67</span>
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Multiplica por algo menor que 1 → el resultado baja
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Contrasting example */}
+            <div className="bg-white dark:bg-gray-700 rounded-xl p-5 border border-gray-200 dark:border-gray-600">
+              <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                Contraejemplo: Cuando el resultado disminuye
+              </h4>
+
+              <div className="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-3 mb-4">
+                <p className="text-amber-800 dark:text-amber-200 text-sm text-center">
+                  Si <strong>4 obreros</strong> construyen <strong>3 muros</strong> en{' '}
+                  <strong>15 días</strong>, ¿cuántos días tardarán <strong>6 obreros</strong> en
+                  construir <strong>2 muros</strong>?
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-red-50 dark:bg-red-900/30 rounded-lg p-3">
+                    <p className="font-semibold text-red-700 dark:text-red-300 text-sm">
+                      Obreros: 4 → 6 (Inversa)
+                    </p>
+                    <p className="text-xs text-red-600 dark:text-red-400">
+                      Más obreros = menos días → <span className="font-mono">4/6 = 0,67</span>
+                    </p>
+                  </div>
+                  <div className="bg-red-50 dark:bg-red-900/30 rounded-lg p-3">
+                    <p className="font-semibold text-red-700 dark:text-red-300 text-sm">
+                      Muros: 3 → 2 (Directa)
+                    </p>
+                    <p className="text-xs text-red-600 dark:text-red-400">
+                      Menos muros = menos días → <span className="font-mono">2/3 = 0,67</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-purple-100 dark:bg-purple-900/50 rounded-lg p-3">
+                  <p className="text-center font-mono text-purple-700 dark:text-purple-300 text-sm">
+                    x = 15 × <span className="text-red-600">(4/6)</span> ×{' '}
+                    <span className="text-red-600">(2/3)</span> = 15 × 0,67 × 0,67 ≈{' '}
+                    <strong>6,7 días</strong>
+                  </p>
+                  <p className="text-center text-xs text-purple-600 dark:text-purple-400 mt-1">
+                    ¡Ambas fracciones {'<'} 1 → el resultado disminuye!
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* Summary rule */}
             <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/50 dark:to-pink-900/50 rounded-xl p-5">
               <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-3">
-                La regla intuitiva:
+                Resumen: ¿Cómo armar la fracción?
               </h4>
-              <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <div className="space-y-3 text-sm">
                 <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-3">
-                  <p className="font-semibold text-green-700 dark:text-green-300">Directa:</p>
                   <p className="text-gray-700 dark:text-gray-300">
-                    Si tengo <strong>más</strong> de algo → obtengo <strong>más</strong> resultado.
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400 mt-1">
-                    Multiplico por nuevo/antiguo (número mayor que 1)
+                    <strong>1.</strong> Pregúntate: si esta magnitud aumenta, ¿el resultado aumenta o
+                    disminuye?
                   </p>
                 </div>
                 <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-3">
-                  <p className="font-semibold text-orange-700 dark:text-orange-300">Inversa:</p>
                   <p className="text-gray-700 dark:text-gray-300">
-                    Si tengo <strong>menos</strong> de algo → necesito <strong>más</strong> tiempo.
+                    <strong>2.</strong> Arma la fracción para que refleje el efecto correcto:
                   </p>
-                  <p className="text-gray-600 dark:text-gray-400 mt-1">
-                    Multiplico por antiguo/nuevo (invierte el efecto)
-                  </p>
+                  <ul className="mt-2 ml-4 space-y-1 text-gray-600 dark:text-gray-400">
+                    <li>• Si el resultado debe <strong>aumentar</strong> → fracción {'>'} 1</li>
+                    <li>• Si el resultado debe <strong>disminuir</strong> → fracción {'<'} 1</li>
+                  </ul>
                 </div>
               </div>
             </div>
