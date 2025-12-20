@@ -41,12 +41,12 @@ export function PainPointsSection() {
           ¿Te suena familiar?
         </h2>
         <p
-          className="text-center mb-12"
+          className="text-center"
           style={{
             fontSize: '17px',
             color: 'var(--color-label-secondary)',
             maxWidth: '500px',
-            margin: '0 auto',
+            margin: '0 auto 48px',
           }}
         >
           Estos son los problemas que enfrentan los educadores todos los días.

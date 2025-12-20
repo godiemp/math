@@ -36,7 +36,7 @@ export function HowItWorksSection() {
             color: 'var(--color-label-primary)',
           }}
         >
-          Cómo Funciona SimplePAES para Instituciones
+          Cómo Funciona SimplePAES para Colegios
         </h2>
 
         <div className="grid md:grid-cols-3 gap-8">
