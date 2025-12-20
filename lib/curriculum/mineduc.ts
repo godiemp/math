@@ -421,7 +421,7 @@ const OA_3M: MinEducOA[] = [
     grade: '3M',
     eje: 'números',
     name: 'Números complejos',
-    description: 'Resolver problemas de operaciones con números complejos.',
+    description: 'Resolver problemas de adición, sustracción, multiplicación y división de números complejos C, en forma pictórica, simbólica y con uso de herramientas tecnológicas.',
     isBasal: true,
     lessonIds: [], // Out of scope for current lessons
   },
@@ -431,7 +431,7 @@ const OA_3M: MinEducOA[] = [
     grade: '3M',
     eje: 'probabilidad',
     name: 'Decisiones en incerteza',
-    description: 'Tomar decisiones involucrando medidas de dispersión y probabilidades condicionales.',
+    description: 'Tomar decisiones en situaciones de incerteza que involucren el análisis de datos estadísticos con medidas de dispersión y probabilidades condicionales.',
     isBasal: true,
     lessonIds: [
       'm2-prob-001-a', // Medidas de dispersión
@@ -445,7 +445,7 @@ const OA_3M: MinEducOA[] = [
     grade: '3M',
     eje: 'álgebra',
     name: 'Funciones exponencial y logarítmica',
-    description: 'Aplicar modelos con funciones exponencial y logarítmica.',
+    description: 'Aplicar modelos matemáticos que describen fenómenos o situaciones de crecimiento y decrecimiento, que involucran las funciones exponencial y logarítmica, de forma manuscrita, con uso de herramientas tecnológicas.',
     isBasal: true,
     lessonIds: [], // Needs new lessons
   },
@@ -455,7 +455,7 @@ const OA_3M: MinEducOA[] = [
     grade: '3M',
     eje: 'geometría',
     name: 'Geometría euclidiana circunferencia',
-    description: 'Resolver problemas de geometría euclidiana que involucran relaciones métricas en la circunferencia.',
+    description: 'Resolver problemas de geometría euclidiana que involucran relaciones métricas entre ángulos, arcos, cuerdas y secantes en la circunferencia, de forma manuscrita y con uso de herramientas tecnológicas.',
     isBasal: true,
     lessonIds: ['m1-geo-002-a'], // Circunferencia y área (foundational)
   },
@@ -472,7 +472,7 @@ const OA_4M: MinEducOA[] = [
     grade: '4M',
     eje: 'números',
     name: 'Matemática financiera',
-    description: 'Fundamentar decisiones financieras con porcentajes, tasas de interés e índices económicos.',
+    description: 'Fundamentar decisiones en el ámbito financiero y económico personal o comunitario, a partir de modelos que consideren porcentajes, tasas de interés e índices económicos.',
     isBasal: true,
     lessonIds: [
       'm1-num-004-a', // Concepto de porcentaje
@@ -485,7 +485,7 @@ const OA_4M: MinEducOA[] = [
     grade: '4M',
     eje: 'probabilidad',
     name: 'Modelos binomial y normal',
-    description: 'Fundamentar decisiones a partir de análisis crítico y modelos binomial y normal.',
+    description: 'Fundamentar decisiones en situaciones de incerteza, a partir del análisis crítico de datos estadísticos y con base en los modelos binomial y normal.',
     isBasal: true,
     lessonIds: [], // Needs new lessons
   },
@@ -495,7 +495,7 @@ const OA_4M: MinEducOA[] = [
     grade: '4M',
     eje: 'álgebra',
     name: 'Funciones potencia y trigonométricas',
-    description: 'Construir modelos con funciones potencias y trigonométricas sen(x) y cos(x).',
+    description: 'Construir modelos de situaciones o fenómenos de crecimiento, decrecimiento y periódicos que involucren funciones potencias de exponente entero y trigonométricas sen(x) y cos(x), de forma manuscrita y con uso de herramientas tecnológicas.',
     isBasal: true,
     lessonIds: [], // Needs new lessons
   },
@@ -505,7 +505,7 @@ const OA_4M: MinEducOA[] = [
     grade: '4M',
     eje: 'geometría',
     name: 'Geometría analítica',
-    description: 'Resolver problemas de rectas y circunferencias mediante representación analítica.',
+    description: 'Resolver problemas acerca de rectas y circunferencias en el plano, mediante su representación analítica, de forma manuscrita y con uso de herramientas tecnológicas.',
     isBasal: true,
     lessonIds: [], // Needs new lessons
   },
