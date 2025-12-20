@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { LandingNav, HeroSection, StatsSection, FeaturesSection, CTASection } from '@/components/landing';
 import {
@@ -18,9 +18,26 @@ import Footer from '@/components/layout/Footer';
 type Audience = 'b2c' | 'b2b';
 
 export default function LandingPage() {
-  const [audience, setAudience] = useState<Audience>('b2c');
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const initialAudience: Audience = tabParam === 'colegios' ? 'b2b' : 'b2c';
+
+  const [audience, setAudience] = useState<Audience>(initialAudience);
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+
+  // Sync state with URL param changes
+  useEffect(() => {
+    const newAudience: Audience = tabParam === 'colegios' ? 'b2b' : 'b2c';
+    setAudience(newAudience);
+  }, [tabParam]);
+
+  // Update URL when audience changes
+  const handleAudienceChange = (newAudience: Audience) => {
+    setAudience(newAudience);
+    const newTab = newAudience === 'b2b' ? 'colegios' : 'estudiantes';
+    router.replace(`/?tab=${newTab}`, { scroll: false });
+  };
 
   // Redirect authenticated users to dashboard
   useEffect(() => {
@@ -41,7 +58,7 @@ export default function LandingPage() {
       <main>
         <HeroSection
           audience={audience}
-          onAudienceChange={setAudience}
+          onAudienceChange={handleAudienceChange}
         />
 
         {audience === 'b2c' ? (
