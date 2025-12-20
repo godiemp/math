@@ -36,7 +36,7 @@ function GraficarContent() {
         </div>
       </div>
 
-      {/* Ejemplo 1: Pendiente negativa */}
+      {/* Ejemplo 1: Pendiente negativa - x + y = 4 */}
       <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-xl p-5 border border-blue-200 dark:border-blue-800">
         <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
           <span className="text-lg">📝</span> Ejemplo 1: x + y = 4
@@ -51,22 +51,34 @@ function GraficarContent() {
             <p className="text-xs text-blue-600 dark:text-blue-400">Pendiente negativa: baja de izquierda a derecha</p>
           </div>
           <div className="flex justify-center">
-            <svg width="120" height="120" className="bg-white dark:bg-gray-800 rounded-lg">
-              {[0, 1, 2, 3].map(i => (
+            <svg width="140" height="140" className="bg-white dark:bg-gray-800 rounded-lg">
+              {/* Grid */}
+              {[0, 1, 2, 3, 4].map(i => (
                 <g key={i}>
-                  <line x1={15 + i * 30} y1={15} x2={15 + i * 30} y2={105} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
-                  <line x1={15} y1={15 + i * 30} x2={105} y2={15 + i * 30} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+                  <line x1={20 + i * 25} y1={15} x2={20 + i * 25} y2={120} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+                  <line x1={20} y1={20 + i * 25} x2={125} y2={20 + i * 25} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
                 </g>
               ))}
-              <line x1={15} y1={15} x2={105} y2={105} stroke="#3B82F6" strokeWidth="2" />
-              <circle cx={15} cy={15} r="4" fill="#EF4444" />
-              <circle cx={105} cy={105} r="4" fill="#EF4444" />
+              {/* Axes */}
+              <line x1={20} y1={120} x2={125} y2={120} stroke="currentColor" className="text-gray-500" strokeWidth="2" />
+              <line x1={20} y1={15} x2={20} y2={120} stroke="currentColor" className="text-gray-500" strokeWidth="2" />
+              {/* Axis labels */}
+              <text x="130" y="123" fontSize="10" className="fill-gray-500">x</text>
+              <text x="14" y="12" fontSize="10" className="fill-gray-500">y</text>
+              {/* Line: from (0,4) to (4,0) */}
+              <line x1={20} y1={20} x2={120} y2={120} stroke="#3B82F6" strokeWidth="2.5" />
+              {/* Point (0, 4) */}
+              <circle cx={20} cy={20} r="5" fill="#EF4444" />
+              <text x={26} y={18} fontSize="9" className="fill-gray-700 dark:fill-gray-300 font-semibold">(0,4)</text>
+              {/* Point (4, 0) */}
+              <circle cx={120} cy={120} r="5" fill="#EF4444" />
+              <text x={100} y={115} fontSize="9" className="fill-gray-700 dark:fill-gray-300 font-semibold">(4,0)</text>
             </svg>
           </div>
         </div>
       </div>
 
-      {/* Ejemplo 2: Pendiente positiva */}
+      {/* Ejemplo 2: Pendiente positiva - y = 2x - 2 */}
       <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-xl p-5 border border-green-200 dark:border-green-800">
         <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
           <span className="text-lg">📝</span> Ejemplo 2: y = 2x - 2
@@ -81,22 +93,37 @@ function GraficarContent() {
             <p className="text-xs text-green-600 dark:text-green-400">Pendiente positiva: sube de izquierda a derecha</p>
           </div>
           <div className="flex justify-center">
-            <svg width="120" height="120" className="bg-white dark:bg-gray-800 rounded-lg">
-              {[0, 1, 2, 3].map(i => (
+            <svg width="140" height="140" className="bg-white dark:bg-gray-800 rounded-lg">
+              {/* Grid */}
+              {[0, 1, 2, 3, 4].map(i => (
                 <g key={i}>
-                  <line x1={15 + i * 30} y1={15} x2={15 + i * 30} y2={105} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
-                  <line x1={15} y1={15 + i * 30} x2={105} y2={15 + i * 30} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+                  <line x1={20 + i * 25} y1={15} x2={20 + i * 25} y2={120} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+                  <line x1={20} y1={20 + i * 25} x2={125} y2={20 + i * 25} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
                 </g>
               ))}
-              <line x1={15} y1={105} x2={75} y2={45} stroke="#10B981" strokeWidth="2" />
-              <circle cx={15} cy={105} r="4" fill="#EF4444" />
-              <circle cx={75} cy={45} r="4" fill="#EF4444" />
+              {/* Axes - x axis at y=0 (row 2 from bottom), y axis at x=0 */}
+              <line x1={20} y1={95} x2={125} y2={95} stroke="currentColor" className="text-gray-500" strokeWidth="2" />
+              <line x1={20} y1={15} x2={20} y2={120} stroke="currentColor" className="text-gray-500" strokeWidth="2" />
+              {/* Axis labels */}
+              <text x="130" y="98" fontSize="10" className="fill-gray-500">x</text>
+              <text x="14" y="12" fontSize="10" className="fill-gray-500">y</text>
+              {/* Scale labels */}
+              <text x="16" y="130" fontSize="8" className="fill-gray-400">0</text>
+              <text x="66" y="130" fontSize="8" className="fill-gray-400">2</text>
+              {/* Line: from (0,-2) to (2,2) - extends beyond */}
+              <line x1={20} y1={120} x2={70} y2={45} stroke="#10B981" strokeWidth="2.5" />
+              {/* Point (0, -2) */}
+              <circle cx={20} cy={120} r="5" fill="#EF4444" />
+              <text x={26} y={118} fontSize="9" className="fill-gray-700 dark:fill-gray-300 font-semibold">(0,-2)</text>
+              {/* Point (2, 2) */}
+              <circle cx={70} cy={45} r="5" fill="#EF4444" />
+              <text x={76} y={43} fontSize="9" className="fill-gray-700 dark:fill-gray-300 font-semibold">(2,2)</text>
             </svg>
           </div>
         </div>
       </div>
 
-      {/* Ejemplo 3: Requiere despejar */}
+      {/* Ejemplo 3: Requiere despejar - 2x - y = 4 → y = 2x - 4 */}
       <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-xl p-5 border border-purple-200 dark:border-purple-800">
         <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
           <span className="text-lg">📝</span> Ejemplo 3: 2x - y = 4
@@ -111,16 +138,31 @@ function GraficarContent() {
             <p className="text-xs text-purple-600 dark:text-purple-400">Intercepto y negativo, pendiente 2</p>
           </div>
           <div className="flex justify-center">
-            <svg width="120" height="120" className="bg-white dark:bg-gray-800 rounded-lg">
-              {[0, 1, 2, 3].map(i => (
+            <svg width="140" height="140" className="bg-white dark:bg-gray-800 rounded-lg">
+              {/* Grid */}
+              {[0, 1, 2, 3, 4].map(i => (
                 <g key={i}>
-                  <line x1={15 + i * 30} y1={15} x2={15 + i * 30} y2={105} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
-                  <line x1={15} y1={15 + i * 30} x2={105} y2={15 + i * 30} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+                  <line x1={20 + i * 25} y1={15} x2={20 + i * 25} y2={120} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
+                  <line x1={20} y1={20 + i * 25} x2={125} y2={20 + i * 25} stroke="currentColor" className="text-gray-200 dark:text-gray-700" strokeWidth="1" />
                 </g>
               ))}
-              <line x1={15} y1={105} x2={105} y2={25} stroke="#8B5CF6" strokeWidth="2" />
-              <circle cx={15} cy={105} r="4" fill="#EF4444" />
-              <circle cx={105} cy={25} r="4" fill="#EF4444" />
+              {/* Axes */}
+              <line x1={20} y1={70} x2={125} y2={70} stroke="currentColor" className="text-gray-500" strokeWidth="2" />
+              <line x1={20} y1={15} x2={20} y2={120} stroke="currentColor" className="text-gray-500" strokeWidth="2" />
+              {/* Axis labels */}
+              <text x="130" y="73" fontSize="10" className="fill-gray-500">x</text>
+              <text x="14" y="12" fontSize="10" className="fill-gray-500">y</text>
+              {/* Scale labels */}
+              <text x="16" y="130" fontSize="8" className="fill-gray-400">0</text>
+              <text x="91" y="130" fontSize="8" className="fill-gray-400">3</text>
+              {/* Line: from (0,-4) to (3,2) */}
+              <line x1={20} y1={120} x2={95} y2={45} stroke="#8B5CF6" strokeWidth="2.5" />
+              {/* Point (0, -4) */}
+              <circle cx={20} cy={120} r="5" fill="#EF4444" />
+              <text x={26} y={118} fontSize="9" className="fill-gray-700 dark:fill-gray-300 font-semibold">(0,-4)</text>
+              {/* Point (3, 2) */}
+              <circle cx={95} cy={45} r="5" fill="#EF4444" />
+              <text x={101} y={43} fontSize="9" className="fill-gray-700 dark:fill-gray-300 font-semibold">(3,2)</text>
             </svg>
           </div>
         </div>
