@@ -5,7 +5,7 @@ description: Create interactive mini-lessons for the PAES math curriculum. Use w
 
 # Mini-Lessons Creation Skill
 
-This skill guides you through creating interactive mini-lessons for the PAES mathematics curriculum. Each lesson follows a 6-step pedagogical structure with engaging hooks, interactive exploration, clear explanations, classification exercises, guided practice, and checkpoint assessments.
+This skill guides you through creating world-class interactive mini-lessons for the PAES mathematics curriculum. Each lesson follows a 6-step pedagogical structure designed to maximize learning.
 
 ## When to Use This Skill
 
@@ -14,92 +14,280 @@ Invoke this skill when:
 - User wants to implement a specific topic from the curriculum
 - User needs help with lesson step components
 - User asks about lesson structure or patterns
-- User wants to add content to an existing thematic unit
 
-## Lesson Architecture Overview
+---
 
-### The 6-Step Structure
+# TWO-PHASE WORKFLOW
 
-Every mini-lesson follows this pedagogical flow:
+Creating a mini-lesson requires TWO mandatory phases:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  PHASE 1: DEEP THINKING (Pedagogical Design)                │
+│  ─────────────────────────────────────────────────────────  │
+│  Use extended thinking to complete pedagogical design       │
+│  BEFORE writing any code.                                   │
+│                                                             │
+│  Read: .claude/skills/mini-lessons/pedagogical-design.md    │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│  PHASE 2: IMPLEMENTATION (Error-Free Execution)             │
+│  ─────────────────────────────────────────────────────────  │
+│  Follow the 5 Critical Rules and create all files.          │
+│                                                             │
+│  Read: .claude/skills/mini-lessons/anti-patterns.md         │
+│  Read: .claude/skills/mini-lessons/step-templates.md        │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# PHASE 1: DEEP THINKING (Summary)
+
+**MANDATORY**: Before writing ANY code, use extended thinking to complete:
+
+1. **Learning Objective Analysis** - What concept, prerequisites, misconceptions?
+2. **ZPD Analysis** - Scaffolding strategy from current ability to learning edge
+3. **Lesson Narrative Arc** - Cognitive AND emotional journey for all 6 steps
+4. **Real-World Hook Design** - Culturally relevant, genuinely puzzling scenario
+5. **Multiple Representations** - Visual, symbolic, verbal, kinesthetic, numeric
+
+**For detailed frameworks and templates, read:**
+→ `.claude/skills/mini-lessons/pedagogical-design.md`
+
+---
+
+# PHASE 2: IMPLEMENTATION
+
+## The 6-Step Structure
 
 | Step | Type | Purpose | Required |
 |------|------|---------|----------|
-| 1 | `hook` | Engage with real-world scenario or puzzle | ✅ |
-| 2 | `explore` | Interactive discovery of patterns | ✅ |
-| 3 | `explain` | Theory and concept explanation | ❌ |
-| 4 | `explore` | Classification or identification exercises | ✅ |
-| 5 | `practice` | Guided problem-solving practice | ✅ |
-| 6 | `verify` | Checkpoint quiz (3/4 to pass) | ✅ |
+| 1 | `hook` | Engage with real-world scenario | Yes |
+| 2 | `explore` | Interactive discovery of patterns | Yes |
+| 3 | `explain` | Theory with tabbed interface | Optional |
+| 4 | `explore` | Classification exercises | Yes |
+| 5 | `practice` | Guided problem-solving | Yes |
+| 6 | `verify` | Checkpoint quiz (3/4 to pass) | Yes |
 
-### File Organization
+### Acceptable Variations
+
+While the patterns above are preferred, these variations are also acceptable:
+
+1. **Phase-based Step3Explain**: For linear content, back/forward navigation is valid
+   - See `anti-patterns.md` → "Valid Alternative Patterns"
+
+2. **Custom Step6Verify**: When questions need embedded charts/diagrams
+   - Must document why CheckpointQuiz isn't sufficient
+
+3. **5-Step Pipeline**: Some geometry lessons skip Step3Explain
+   - Only for lessons where theory is integrated into exploration
+
+## File Organization
 
 ```
 app/lessons/m1/{lesson-slug}/
   └─ page.tsx                    # Main lesson page
 
 components/lessons/m1/{lesson-slug}/
-  ├─ Step1Hook.tsx               # Engaging scenario
-  ├─ Step2Explore.tsx            # Pattern discovery
-  ├─ Step3Explain.tsx            # Theory explanation
-  ├─ Step4Classify.tsx           # Classification exercise
-  ├─ Step5Practice.tsx           # Guided practice
-  ├─ Step6Verify.tsx             # Checkpoint quiz
+  ├─ Step1Hook.tsx
+  ├─ Step2Explore.tsx
+  ├─ Step3Explain.tsx
+  ├─ Step4Classify.tsx
+  ├─ Step5Practice.tsx
+  ├─ Step6Verify.tsx
   └─ index.ts                    # Barrel exports
 
-lib/lessons/types.ts             # Lesson registry (add definition here)
+lib/lessons/lessons/{subject}.ts  # Lesson registry
 ```
 
-## Step-by-Step Creation Process
+---
 
-### Phase 1: Gather Requirements
+## 5 CRITICAL IMPLEMENTATION RULES
 
-Before creating a lesson, determine:
+These rules are NON-NEGOTIABLE. Violating them creates broken lessons.
 
-1. **Topic**: What mathematical concept will this teach?
-2. **Thematic Unit**: Which curriculum unit does this belong to? (e.g., M1-ALG-001)
-3. **Lesson ID**: What's the next letter in the sequence? (a, b, c, d, e...)
-4. **Skills**: What skills from the taxonomy will this develop?
-5. **Duration**: Estimated completion time (typically 12-17 minutes)
-
-**Check existing lessons in the thematic unit:**
-```bash
-grep -A5 "thematicUnit: 'M1-ALG-001'" lib/lessons/types.ts
-```
-
-### Phase 2: Create Directory Structure
-
-```bash
-mkdir -p components/lessons/m1/{lesson-slug}
-mkdir -p app/lessons/m1/{lesson-slug}
-```
-
-### Phase 3: Create Step Components
-
-Create each step following the templates in `step-templates.md`.
-
-**Critical patterns for ALL steps:**
+### RULE 1: isActive Check (MANDATORY)
 
 ```typescript
-'use client';
-
-import { LessonStepProps } from '@/lib/lessons/types';
-
 export default function StepN({ onComplete, isActive }: LessonStepProps) {
-  // MUST check isActive - return null if not active
-  if (!isActive) return null;
+  const [state, setState] = useState(...);
 
+  if (!isActive) return null;  // THIS LINE IS MANDATORY
+
+  return <div>...</div>;
+}
+```
+
+### RULE 2: onComplete Call (MANDATORY)
+
+```typescript
+<button onClick={onComplete}>Continuar</button>
+```
+
+Every step MUST call `onComplete` when finished.
+
+### RULE 3: Tips INSIDE Tabs (Step3Explain)
+
+Tips MUST be inside a dedicated "Tips" tab, NOT as a standalone section.
+
+```typescript
+// 1. Include 'tips' in TabId type
+type TabId = 'formula1' | 'formula2' | 'tips';
+
+// 2. Conditional rendering
+{activeTab === 'tips' ? (
+  <TipsContent />
+) : (
+  <FormulaContent />
+)}
+```
+
+**CANONICAL EXAMPLE**: `components/lessons/m1/factor-comun/Step3Explain.tsx`
+
+### RULE 4: CheckpointQuiz for Step6 (MANDATORY)
+
+```typescript
+import { CheckpointQuiz, CheckpointQuestion } from '@/components/lessons/shared';
+
+const QUESTIONS: CheckpointQuestion[] = [
+  {
+    id: 'q1',
+    question: '¿Pregunta?',
+    options: ['A', 'B', 'C', 'D'],
+    correctAnswer: 0,
+    explanation: 'Explicación.',
+  },
+  // 3-4 questions total
+];
+
+export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
   return (
-    <div className="space-y-8 animate-fadeIn">
-      {/* Step content */}
-
-      {/* MUST call onComplete when step is done */}
-      <button onClick={onComplete}>Continue</button>
-    </div>
+    <CheckpointQuiz
+      onComplete={onComplete}
+      isActive={isActive}
+      questions={QUESTIONS}
+      requiredCorrect={3}
+      successMessage="¡Excelente!"
+    />
   );
 }
 ```
 
-### Phase 4: Create Index Exports
+### RULE 5: Dark Mode Classes (MANDATORY)
+
+```typescript
+// CORRECT
+<div className="bg-blue-50 dark:bg-blue-900/30 text-gray-700 dark:text-gray-300">
+
+// WRONG - missing dark: variants
+<div className="bg-blue-50 text-gray-700">
+```
+
+---
+
+## Anti-Pattern Detection
+
+Before completing, verify NO anti-patterns exist.
+
+**Read the full anti-pattern guide:**
+→ `.claude/skills/mini-lessons/anti-patterns.md`
+
+**Quick Checks:**
+- [ ] Search for "Tips" - must be inside `{activeTab === 'tips' ? ...}`
+- [ ] Search for `if (!isActive) return null;` - must exist in ALL steps
+- [ ] Step6Verify should be ~30-40 lines (using CheckpointQuiz)
+- [ ] Search for `bg-` - must have `dark:` variant
+
+---
+
+## Step Templates
+
+For complete code templates with placeholders, read:
+→ `.claude/skills/mini-lessons/step-templates.md`
+
+---
+
+## Lesson Registration
+
+Add to `lib/lessons/lessons/{subject}.ts`:
+
+```typescript
+{
+  id: 'm1-xxx-001-x',
+  slug: 'lesson-slug',
+  title: 'Título de la Lección',
+  description: 'Descripción breve.',
+  level: 'M1',
+  subject: 'álgebra',  // 'números' | 'álgebra' | 'geometría' | 'probabilidad'
+  thematicUnit: 'M1-XXX-001',
+  skills: ['skill-1', 'skill-2'],
+  estimatedMinutes: 14,
+  minEducOA: ['MA1M-OA-XX'],
+  steps: [
+    { id: 'hook', type: 'hook', title: 'Título del Hook' },
+    { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
+    { id: 'explain', type: 'explain', title: 'La Teoría' },
+    { id: 'classify', type: 'explore', title: 'Clasifica' },
+    { id: 'practice', type: 'practice', title: 'Practica' },
+    { id: 'verify', type: 'verify', title: 'Checkpoint' },
+  ],
+},
+```
+
+---
+
+## Page Component Template
+
+```typescript
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { LessonShell } from '@/components/lessons/shared';
+import { getLessonBySlug } from '@/lib/lessons/types';
+import {
+  Step1Hook, Step2Explore, Step3Explain,
+  Step4Classify, Step5Practice, Step6Verify,
+} from '@/components/lessons/m1/{lesson-slug}';
+
+const LESSON_SLUG = '{lesson-slug}';
+
+export default function LessonPage() {
+  const router = useRouter();
+  const lesson = getLessonBySlug(LESSON_SLUG);
+
+  if (!lesson) {
+    return <div className="min-h-screen flex items-center justify-center">
+      <p className="text-gray-500">Lección no encontrada</p>
+    </div>;
+  }
+
+  return (
+    <LessonShell
+      lesson={lesson}
+      onComplete={() => router.push('/mini-lessons')}
+      onExit={() => router.push('/mini-lessons')}
+    >
+      {({ currentStep, completeStep }) => {
+        const steps = [
+          <Step1Hook key="1" onComplete={completeStep} isActive={currentStep === 0} />,
+          <Step2Explore key="2" onComplete={completeStep} isActive={currentStep === 1} />,
+          <Step3Explain key="3" onComplete={completeStep} isActive={currentStep === 2} />,
+          <Step4Classify key="4" onComplete={completeStep} isActive={currentStep === 3} />,
+          <Step5Practice key="5" onComplete={completeStep} isActive={currentStep === 4} />,
+          <Step6Verify key="6" onComplete={completeStep} isActive={currentStep === 5} />,
+        ];
+        return steps[currentStep] || null;
+      }}
+    </LessonShell>
+  );
+}
+```
+
+---
+
+## Index Exports
 
 ```typescript
 // components/lessons/m1/{lesson-slug}/index.ts
@@ -111,314 +299,73 @@ export { default as Step5Practice } from './Step5Practice';
 export { default as Step6Verify } from './Step6Verify';
 ```
 
-### Phase 5: Create Page Component
+---
 
-```typescript
-// app/lessons/m1/{lesson-slug}/page.tsx
-'use client';
+## Quality Gates
 
-import { useRouter } from 'next/navigation';
-import { LessonShell } from '@/components/lessons/shared';
-import { getLessonBySlug } from '@/lib/lessons/types';
-import {
-  Step1Hook,
-  Step2Explore,
-  Step3Explain,
-  Step4Classify,
-  Step5Practice,
-  Step6Verify,
-} from '@/components/lessons/m1/{lesson-slug}';
+All gates must pass before completion.
 
-const LESSON_SLUG = '{lesson-slug}';
+### Gate 1: Pedagogical Quality
+- [ ] Hook uses real-world scenario (not abstract math)
+- [ ] Explore has discovery BEFORE explanation
+- [ ] Explain has Tips INSIDE tabs
+- [ ] Progressive difficulty curve
+- [ ] All text in Spanish
+- [ ] Growth mindset language ("¡Casi!" not "Incorrecto")
 
-export default function LessonPage() {
-  const router = useRouter();
-  const lesson = getLessonBySlug(LESSON_SLUG);
-
-  if (!lesson) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500">Lección no encontrada</p>
-      </div>
-    );
-  }
-
-  const handleComplete = () => router.push('/mini-lessons');
-  const handleExit = () => router.push('/mini-lessons');
-
-  return (
-    <LessonShell lesson={lesson} onComplete={handleComplete} onExit={handleExit}>
-      {({ currentStep, completeStep }) => {
-        const stepComponents = [
-          <Step1Hook key="step1" onComplete={completeStep} isActive={currentStep === 0} />,
-          <Step2Explore key="step2" onComplete={completeStep} isActive={currentStep === 1} />,
-          <Step3Explain key="step3" onComplete={completeStep} isActive={currentStep === 2} />,
-          <Step4Classify key="step4" onComplete={completeStep} isActive={currentStep === 3} />,
-          <Step5Practice key="step5" onComplete={completeStep} isActive={currentStep === 4} />,
-          <Step6Verify key="step6" onComplete={completeStep} isActive={currentStep === 5} />,
-        ];
-        return stepComponents[currentStep] || null;
-      }}
-    </LessonShell>
-  );
-}
-```
-
-### Phase 6: Register in Lesson Types
-
-Add to `lib/lessons/types.ts` in the `M1_LESSONS` array:
-
-```typescript
-{
-  id: 'm1-xxx-001-x',           // Format: m{level}-{subject}-{unit}-{letter}
-  slug: 'lesson-slug',          // URL-friendly, kebab-case
-  title: 'Lesson Title',        // Spanish, descriptive
-  description: 'Brief description of what the lesson teaches.',
-  level: 'M1',                  // M1 or M2
-  subject: 'álgebra',           // 'números' | 'álgebra' | 'geometría' | 'probabilidad'
-  thematicUnit: 'M1-XXX-001',   // Must match existing thematic unit
-  skills: ['skill-1', 'skill-2'],  // From skill taxonomy
-  estimatedMinutes: 14,         // Typical: 12-17 minutes
-  steps: [
-    { id: 'hook', type: 'hook', title: 'Step Title' },
-    { id: 'explore', type: 'explore', title: 'Step Title' },
-    { id: 'explain', type: 'explain', title: 'Step Title' },
-    { id: 'classify', type: 'explore', title: 'Step Title' },
-    { id: 'practice', type: 'practice', title: 'Step Title' },
-    { id: 'verify', type: 'verify', title: 'Checkpoint' },
-  ],
-},
-```
-
-## Step Component Patterns
-
-### Step 1: Hook (Engagement)
-
-**Purpose**: Capture attention with a relatable scenario or puzzle.
-
-**Pattern**:
-- Present a real-world problem or intriguing question
-- Use visual elements (SVG, emoji, illustrations)
-- Ask a multiple-choice prediction question
-- Reveal the connection to the math concept
-
-**Example scenarios by subject**:
-- **Algebra**: Carpenter calculating dimensions, organizing items
-- **Numbers**: Sharing pizza, temperature changes, elevator movements
-- **Geometry**: Architect designing, measuring real objects
-- **Probability**: Games, weather prediction, sports statistics
-
-### Step 2: Explore (Discovery)
-
-**Purpose**: Guide students to discover patterns through interaction.
-
-**Pattern**:
-- Show 3-4 examples of increasing complexity
-- Use interactive elements (clickable, draggable)
-- Reveal patterns progressively
-- Summarize discovered rules at the end
-
-### Step 3: Explain (Theory)
-
-**Purpose**: Formalize the concept with clear explanations.
-
-**Pattern**:
-- Use tabbed interface for multiple related formulas/concepts
-- Include worked examples for each concept
-- **CRITICAL: Tips and Common Errors MUST be inside a dedicated "Tips" tab** - never as a standalone section outside tabs
-- Keep theoretical but accessible
-
-**⚠️ DO NOT add Tips as a standalone amber section outside the tabs. The Tips tab uses amber color and is always the last tab after formula tabs.**
-
-### Step 4: Classify (Identification)
-
-**Purpose**: Practice identifying/categorizing the concept.
-
-**Pattern**:
-- 5 classification exercises
-- Clear category options (2-4 choices)
-- Immediate feedback with explanations
-- Progress tracking with visual indicators
-- Retry option if score < 4/5
-
-### Step 5: Practice (Application)
-
-**Purpose**: Apply knowledge through guided problem-solving.
-
-**Pattern**:
-- 4-5 problems with multiple-choice answers
-- Optional hints for each problem
-- Detailed step-by-step explanations
-- Progress tracking
-- Retry option if score < 3/5 or 4/5
-
-### Step 6: Verify (Assessment)
-
-**Purpose**: Confirm learning with checkpoint quiz.
-
-**ALWAYS use the shared CheckpointQuiz component:**
-
-```typescript
-'use client';
-
-import { LessonStepProps } from '@/lib/lessons/types';
-import { CheckpointQuiz, CheckpointQuestion } from '@/components/lessons/shared';
-
-const QUESTIONS: CheckpointQuestion[] = [
-  {
-    id: 'q1',
-    question: 'Question text here?',
-    options: ['Option A', 'Option B', 'Option C', 'Option D'],
-    correctAnswer: 1,  // 0-indexed
-    explanation: 'Explanation of why this answer is correct.',
-  },
-  // Add 3-4 questions total
-];
-
-export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
-  return (
-    <CheckpointQuiz
-      onComplete={onComplete}
-      isActive={isActive}
-      questions={QUESTIONS}
-      requiredCorrect={3}  // Default: 75% of questions
-      successMessage="Custom success message here!"
-    />
-  );
-}
-```
-
-## Shared Components
-
-Import from `@/components/lessons/shared`:
-
-| Component | Use For |
-|-----------|---------|
-| `LessonShell` | Wrapping the entire lesson page |
-| `CheckpointQuiz` | Step 6 verify component |
-| `Celebration` | Success animations (rarely needed with CheckpointQuiz) |
-| `NumberLine` | Visualizing number concepts |
-| `BarChart` | Data visualization |
-| `PieChart` | Probability/statistics |
-| `FrequencyTable` | Statistics lessons |
-| `FactorGrid` | Factorization concepts |
-| `VennDiagram` | Set theory, probability |
-
-## Styling Conventions
-
-### Colors by Context
-
-```
-- Hook/Scenario: amber/orange gradients
-- Explore/Discovery: blue/purple gradients
-- Explain/Theory: purple/pink gradients
-- Correct feedback: green
-- Incorrect feedback: red/amber
-- Hints: amber/yellow with Lightbulb icon
-```
-
-### Common Tailwind Patterns
-
-```typescript
-// Container with animation
-<div className="space-y-8 animate-fadeIn">
-
-// Gradient card
-<div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 rounded-2xl p-6 border border-blue-200 dark:border-blue-800">
-
-// Button styles
-<button className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg">
-
-// Progress indicator
-<div className={cn(
-  'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold',
-  isComplete ? 'bg-green-500 text-white' : 'bg-gray-200 dark:bg-gray-700'
-)}>
-```
-
-### Icons (from lucide-react)
-
-```typescript
-import {
-  Check, X,              // Feedback
-  ArrowRight,            // Navigation
-  Lightbulb,             // Hints
-  Sparkles,              // Discovery moments
-  RotateCcw,             // Retry
-  Trophy,                // Success
-  AlertTriangle,         // Warnings/tips
-  BookOpen,              // Theory/explain
-} from 'lucide-react';
-```
-
-## Thematic Units Reference
-
-### M1 - Algebra (M1-ALG-001 to M1-ALG-014)
-
-| Code | Topic |
-|------|-------|
-| M1-ALG-001 | Productos notables, factorizaciones y desarrollo |
-| M1-ALG-002 | Operatoria con expresiones algebraicas |
-| M1-ALG-003 | Problemas algebraicos en distintos contextos |
-| M1-ALG-006 | Resolución de ecuaciones e inecuaciones lineales |
-| M1-ALG-011 | Resolución de ecuaciones de segundo grado |
-
-### M1 - Numbers (M1-NUM-001 to M1-NUM-008)
-
-| Code | Topic |
-|------|-------|
-| M1-NUM-001 | Operaciones y orden en números enteros |
-| M1-NUM-002 | Operaciones y comparación entre racionales |
-| M1-NUM-003 | Potencias de base racional y exponente entero |
-
-### M1 - Geometry (M1-GEO-001 to M1-GEO-005)
-
-| Code | Topic |
-|------|-------|
-| M1-GEO-001 | Teorema de Pitágoras y aplicaciones |
-| M1-GEO-002 | Perímetros y áreas de figuras compuestas |
-| M1-GEO-003 | Teorema de Thales y semejanza |
-
-### M1 - Probability (M1-PROB-001 to M1-PROB-005)
-
-| Code | Topic |
-|------|-------|
-| M1-PROB-001 | Tablas y gráficos estadísticos |
-| M1-PROB-002 | Medidas de tendencia central |
-| M1-PROB-004 | Reglas de probabilidades |
-
-## Checklist Before Completion
-
+### Gate 2: Technical Compliance
 - [ ] All 6 step components created
-- [ ] Index.ts exports all steps
-- [ ] Page.tsx created with LessonShell
-- [ ] Lesson registered in types.ts
-- [ ] Step6Verify uses CheckpointQuiz component
-- [ ] **Step3Explain: Tips section is INSIDE a "Tips" tab (not standalone)**
-- [ ] All steps check `isActive` prop
-- [ ] All steps call `onComplete` when done
-- [ ] Dark mode classes included (`dark:`)
-- [ ] Responsive design considered
-- [ ] Spanish language used throughout
-- [ ] No lint or TypeScript errors
+- [ ] index.ts exports all steps
+- [ ] page.tsx uses LessonShell
+- [ ] Lesson registered in lib/lessons/lessons/{subject}.ts
+- [ ] No TypeScript errors
+- [ ] No lint errors
 
-## Quick Start Command
+### Gate 3: Implementation Rules
+- [ ] **RULE 1**: isActive check in ALL steps
+- [ ] **RULE 2**: onComplete called in ALL steps
+- [ ] **RULE 3**: Tips inside tabs (Step3)
+- [ ] **RULE 4**: CheckpointQuiz used (Step6)
+- [ ] **RULE 5**: Dark mode classes on ALL colors
 
-To create a new lesson skeleton:
+### Gate 4: Content Quality
+- [ ] Checkpoint questions test ALL steps
+- [ ] Explanations are clear and step-by-step
+- [ ] Hints are genuinely helpful
+- [ ] Duration is 12-17 minutes
 
-```bash
-# Create directories
-mkdir -p components/lessons/m1/{slug} app/lessons/m1/{slug}
+---
 
-# Then create files following the templates above
-```
+## Quick Reference
 
-## Example: Complete Lesson Reference
+**For detailed reference materials, read:**
+→ `.claude/skills/mini-lessons/reference.md`
 
-For a complete example of a well-structured lesson, refer to:
+### Exemplar Lessons (Study These)
+- `components/lessons/m1/factor-comun/` - Best Tips-in-tabs pattern
+- `components/lessons/m1/terminos-semejantes/` - Best hook design
+- `components/lessons/m1/figuras-compuestas/` - Best visual exploration
 
-- `components/lessons/m1/factor-comun/` - Factorización por Factor Común
-- `components/lessons/m1/productos-notables-cubos/` - Productos Notables: Cubos
-- `components/lessons/m1/terminos-semejantes/` - Términos Semejantes
+### DO NOT Copy
+- `components/lessons/m1/productos-notables-cubos/Step3Explain.tsx` - Tips outside tabs
 
-These lessons demonstrate all patterns and conventions described in this skill.
+### Shared Components
+Import from `@/components/lessons/shared`:
+- `LessonShell` - Lesson page wrapper
+- `CheckpointQuiz` - Step 6 verify (ALWAYS use)
+- `Celebration`, `NumberLine`, `BarChart`, `PieChart`, `VennDiagram`
+
+---
+
+## Final Checklist
+
+- [ ] Phase 1 thinking completed
+- [ ] All 6 step components created
+- [ ] index.ts exports all steps
+- [ ] page.tsx with LessonShell
+- [ ] Lesson registered in types
+- [ ] All 5 rules verified
+- [ ] No anti-patterns
+- [ ] All quality gates passed
+- [ ] Spanish throughout
+- [ ] No errors
