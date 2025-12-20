@@ -235,9 +235,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               </p>
               <p className="text-gray-500 dark:text-gray-400 text-xs">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="text-green-600">↑direct</span>&nbsp;&nbsp;&nbsp;
-                <span className="text-green-600">↑direct</span>&nbsp;&nbsp;&nbsp;
-                <span className="text-green-600">↑direct</span>
+                <span className="text-green-600">↑directa</span>&nbsp;&nbsp;&nbsp;
+                <span className="text-green-600">↑directa</span>&nbsp;&nbsp;&nbsp;
+                <span className="text-green-600">↑directa</span>
               </p>
               <p className="text-gray-700 dark:text-gray-300">
                 Sillas = 120 × (3/2) × (4/3) × 2
