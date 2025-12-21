@@ -20,7 +20,17 @@ import {
   GetDiagnosisQuestionsResponse,
   SkillDiagnosisRecord,
 } from '../types/diagnosis';
-import { SKILLS } from '../../../lib/skillTaxonomy';
+
+/**
+ * Convert skill code to readable name
+ * e.g., "numeros-enteros-orden" -> "Números enteros orden"
+ */
+function getSkillName(skillCode: string): string {
+  return skillCode
+    .split('-')
+    .map((word, index) => (index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word))
+    .join(' ');
+}
 
 // ========================================
 // Question Fetching
@@ -74,12 +84,11 @@ export async function getQuestionsForSkills(
     const questions: QuestionForDiagnosis[] = result.rows.map((row: any) => {
       // Find the first matching skill from the question's skills array
       const matchingSkill = row.skills?.find((s: string) => skills.includes(s)) || skills[0];
-      const skillInfo = SKILLS[matchingSkill];
 
       return {
         id: row.id,
         skillId: matchingSkill,
-        skillName: skillInfo?.name || matchingSkill,
+        skillName: getSkillName(matchingSkill),
         question: row.questionLatex || '',
         questionLatex: row.questionLatex,
         options: row.options || [],
@@ -139,12 +148,11 @@ async function getQuestionsFromContextProblems(
 
     const questions: QuestionForDiagnosis[] = result.rows.map((row: any) => {
       const matchingSkill = row.skills?.find((s: string) => skills.includes(s)) || skills[0];
-      const skillInfo = SKILLS[matchingSkill];
 
       return {
         id: row.id,
         skillId: matchingSkill,
-        skillName: skillInfo?.name || matchingSkill,
+        skillName: getSkillName(matchingSkill),
         question: row.question || row.questionLatex || '',
         questionLatex: row.questionLatex,
         options: row.optionsLatex || row.options || [],
@@ -478,11 +486,10 @@ function generateRecommendations(
   // Add recommendations for unverified skills without detected gaps
   for (const skillId of unverifiedSkills) {
     if (!gaps.find((g) => g.skillId === skillId)) {
-      const skillInfo = SKILLS[skillId];
       recommendations.push({
         type: 'practice',
         skillId,
-        skillName: skillInfo?.name || skillId,
+        skillName: getSkillName(skillId),
         reason: 'Necesita más práctica',
         priority: 1,
       });
