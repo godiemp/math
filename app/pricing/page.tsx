@@ -12,6 +12,14 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { analytics } from '@/lib/analytics';
 import { useTranslations } from 'next-intl';
+import { LandingNav } from '@/components/landing';
+import Footer from '@/components/layout/Footer';
+
+const openIntercomInstitutions = () => {
+  if (typeof window !== 'undefined' && window.Intercom) {
+    window.Intercom('showNewMessage', 'Hola, quiero información sobre planes para colegios/instituciones');
+  }
+};
 
 export default function PricingPage() {
   const t = useTranslations('pricing');
@@ -168,29 +176,39 @@ export default function PricingPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="flex justify-center items-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
+        <LandingNav />
+        <div className="container mx-auto px-4 py-16">
+          <div className="flex justify-center items-center min-h-[400px]">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-16">
-        <Card padding="lg">
-          <div className="text-center text-red-500">
-            <p className="text-lg font-semibold mb-2">Error al cargar los planes</p>
-            <p className="text-sm">{error.message}</p>
-          </div>
-        </Card>
+      <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
+        <LandingNav />
+        <div className="container mx-auto px-4 py-16">
+          <Card padding="lg">
+            <div className="text-center text-red-500">
+              <p className="text-lg font-semibold mb-2">Error al cargar los planes</p>
+              <p className="text-sm">{error.message}</p>
+            </div>
+          </Card>
+        </div>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
+      <LandingNav />
+      <div className="container mx-auto px-4 py-16">
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold mb-4">{t('header.title')}</h1>
@@ -449,6 +467,114 @@ export default function PricingPage() {
           </div>
         </div>
       )}
+      </div>
+
+      {/* Institution Pricing Section */}
+      <section
+        className="py-16 px-4"
+        style={{
+          background: 'linear-gradient(135deg, var(--color-tint) 0%, #5E5CE6 100%)',
+        }}
+      >
+        <div className="max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h2
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'clamp(24px, 4vw, 32px)',
+                  fontWeight: 600,
+                  color: 'white',
+                  marginBottom: '16px',
+                }}
+              >
+                {t('institutions.title')}
+              </h2>
+              <p
+                style={{
+                  fontSize: '17px',
+                  lineHeight: 1.6,
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  marginBottom: '24px',
+                }}
+              >
+                {t('institutions.description')}
+              </p>
+              <ul
+                style={{
+                  listStyle: 'none',
+                  padding: 0,
+                  margin: 0,
+                  marginBottom: '24px',
+                }}
+              >
+                {[
+                  t('institutions.feature1'),
+                  t('institutions.feature2'),
+                  t('institutions.feature3'),
+                  t('institutions.feature4'),
+                ].map((feature, index) => (
+                  <li
+                    key={index}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      marginBottom: '12px',
+                      color: 'rgba(255, 255, 255, 0.95)',
+                      fontSize: '15px',
+                    }}
+                  >
+                    <svg
+                      className="w-5 h-5 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="text-center md:text-right">
+              <p
+                style={{
+                  fontSize: '15px',
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  marginBottom: '16px',
+                }}
+              >
+                {t('institutions.customPricing')}
+              </p>
+              <button
+                onClick={openIntercomInstitutions}
+                className="spring-emphasized"
+                style={{
+                  padding: '16px 40px',
+                  background: 'white',
+                  color: 'var(--color-tint)',
+                  borderRadius: 'var(--radius-md)',
+                  fontSize: '17px',
+                  fontWeight: 600,
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {t('institutions.cta')}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
     </div>
   );
 }
