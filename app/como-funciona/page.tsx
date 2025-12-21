@@ -8,6 +8,7 @@ import { PracticeModesDemo } from '@/components/como-funciona/demos/PracticeMode
 import { AITutorDemo } from '@/components/como-funciona/demos/AITutorDemo';
 import { ProgressDemo } from '@/components/como-funciona/demos/ProgressDemo';
 import { LivePracticeDemo } from '@/components/como-funciona/demos/LivePracticeDemo';
+import { OperationsDemo } from '@/components/como-funciona/demos/OperationsDemo';
 
 export default function ComoFuncionaPage() {
   return (
@@ -186,6 +187,19 @@ export default function ComoFuncionaPage() {
           'Ranking y resultados al terminar',
         ]}
         demo={<LivePracticeDemo />}
+      />
+
+      <FeatureSection
+        title="Práctica de Operaciones"
+        description="Domina las operaciones básicas con ejercicios progresivos. Desde aritmética hasta álgebra, avanza a tu ritmo por más de 130 niveles."
+        bullets={[
+          'Suma, resta, multiplicación y división',
+          'Progresión gradual por niveles',
+          'Feedback inmediato en cada respuesta',
+        ]}
+        demo={<OperationsDemo />}
+        reversed
+        bgColor="var(--color-fill)"
       />
 
       {/* CTA Section */}
