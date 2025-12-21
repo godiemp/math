@@ -9,6 +9,8 @@ import { Breadcrumbs } from '@/components/blog/Breadcrumbs';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { SITE_URL } from '@/lib/constants';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { createBreadcrumbSchema } from '@/lib/seo/schemas';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -20,24 +22,41 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
+function createArticleSchemas(post: any, url: string) {
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: 'Inicio', url: SITE_URL },
+    { name: 'Blog', url: `${SITE_URL}/blog` },
+    { name: post.title, url: url },
+  ]);
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    ...(post.image && { image: post.image }),
+    author: { '@type': 'Organization', name: post.author },
+    publisher: { '@type': 'Organization', name: 'SimplePAES', url: SITE_URL },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  };
+
+  return { breadcrumbSchema, articleSchema };
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = getPostBySlug(slug);
 
   if (!post) {
-    return {
-      title: 'Post no encontrado - SimplePAES',
-    };
+    return { title: 'Post no encontrado - SimplePAES' };
   }
 
   const url = `${SITE_URL}/blog/${slug}`;
-
   return {
     title: `${post.title} - SimplePAES Blog`,
     description: post.description,
-    alternates: {
-      canonical: url,
-    },
+    alternates: { canonical: url },
     openGraph: {
       title: post.title,
       description: post.description,
@@ -67,37 +86,14 @@ export default async function BlogPostPage({ params }: PageProps) {
   }
 
   const url = `${SITE_URL}/blog/${slug}`;
+  const { breadcrumbSchema, articleSchema } = createArticleSchemas(post, url);
   const relatedPosts = getRelatedPosts(slug, post.tags);
   const headings = extractHeadings(post.content);
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: post.title,
-    description: post.description,
-    datePublished: post.date,
-    ...(post.image && { image: post.image }),
-    author: {
-      '@type': 'Organization',
-      name: post.author,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'SimplePAES',
-      url: SITE_URL,
-    },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': url,
-    },
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={articleSchema} />
+      <JsonLd data={breadcrumbSchema} />
       <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
         <BlogHeader backHref="/blog" backLabel="blog" />
 
