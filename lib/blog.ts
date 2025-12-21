@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import type { BlogPost, BlogPostMeta } from './blog-types';
 
 // Re-export client-safe types and utilities
 export type { BlogPost, BlogPostMeta, AudienceType } from './blog-types';
