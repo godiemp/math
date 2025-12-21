@@ -21,6 +21,7 @@ interface DashboardViewProps {
   } | null;
   isAdmin: boolean;
   isPaidUser: boolean;
+  isOnTrial: boolean;
   // Sessions
   nextSession: LiveSession | null;
   // Email verification
@@ -47,6 +48,7 @@ function DashboardView({
   user,
   isAdmin,
   isPaidUser,
+  isOnTrial,
   nextSession,
   isResendingEmail,
   emailSentMessage,
@@ -78,9 +80,9 @@ function DashboardView({
               <Button variant="ghost" onClick={() => onNavigate('/profile')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2" data-testid="nav-profile-button">
                 {t('menu.profile')}
               </Button>
-              {!isPaidUser && (
-                <Button variant="primary" onClick={() => onNavigate('/pricing')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2" data-testid="nav-premium-button">
-                  ⭐ {t('menu.premium')}
+              {(!isPaidUser || isOnTrial) && (
+                <Button variant="primary" onClick={() => onNavigate('/dashboard/subscribe')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2" data-testid="nav-premium-button">
+                  {t('menu.premium')}
                 </Button>
               )}
               {isAdmin && (
@@ -495,6 +497,7 @@ function DashboardContent() {
     user,
     isAdmin,
     isPaidUser,
+    isOnTrial,
     isLoading,
     nextSession,
     sessionsError,
@@ -536,6 +539,7 @@ function DashboardContent() {
       user={user}
       isAdmin={isAdmin}
       isPaidUser={isPaidUser}
+      isOnTrial={isOnTrial}
       nextSession={nextSession}
       isResendingEmail={isResendingEmail}
       emailSentMessage={emailSentMessage}
