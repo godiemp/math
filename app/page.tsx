@@ -4,13 +4,13 @@ import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { LandingNav, HeroSection, StatsSection, CTASection } from '@/components/landing';
-import { FeatureSection } from '@/components/como-funciona/FeatureSection';
+import { FeatureSection } from '@/components/landing/FeatureSections/FeatureSection';
 import { DemoShowcase } from '@/components/landing/DemoShowcase';
-import { PracticeModesDemo } from '@/components/como-funciona/demos/PracticeModesDemo';
-import { AITutorDemo } from '@/components/como-funciona/demos/AITutorDemo';
-import { ProgressDemo } from '@/components/como-funciona/demos/ProgressDemo';
-import { LivePracticeDemo } from '@/components/como-funciona/demos/LivePracticeDemo';
-import { OperationsDemo } from '@/components/como-funciona/demos/OperationsDemo';
+import { PracticeModesDemo } from '@/components/landing/FeatureSections/demos/PracticeModesDemo';
+import { AITutorDemo } from '@/components/landing/FeatureSections/demos/AITutorDemo';
+import { ProgressDemo } from '@/components/landing/FeatureSections/demos/ProgressDemo';
+import { LivePracticeDemo } from '@/components/landing/FeatureSections/demos/LivePracticeDemo';
+import { OperationsDemo } from '@/components/landing/FeatureSections/demos/OperationsDemo';
 import {
   PainPointsSection,
   HowItWorksSection,
