@@ -1,6 +1,6 @@
 /**
  * Geometría lessons
- * M1-GEO-001 to M1-GEO-002
+ * M1-GEO-001 to M1-GEO-003
  */
 
 import type { Lesson } from '../types';
@@ -96,6 +96,26 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
       { id: 'explore', type: 'explore', title: 'Dos Estrategias Poderosas' },
       { id: 'explain', type: 'explain', title: 'Fórmulas para Figuras Compuestas' },
       { id: 'classify', type: 'explore', title: '¿Sumar o Restar?' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
+  {
+    id: 'm1-geo-003-a',
+    slug: 'volumen-cono',
+    title: 'Volumen del Cono',
+    description: 'Descubre por qué el cono es un tercio del cilindro con una visualización 3D interactiva.',
+    level: 'M1',
+    subject: 'geometría',
+    thematicUnit: 'M1-GEO-003',
+    skills: ['geometria-volumen', 'geometria-volumen-cono'],
+    estimatedMinutes: 16,
+    minEducOA: ['MA1M-OA-07'],
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Cono de Helado Perfecto' },
+      { id: 'explore', type: 'explore', title: 'El Experimento de los 3 Conos' },
+      { id: 'explain', type: 'explain', title: 'La Fórmula del Cono' },
+      { id: 'classify', type: 'explore', title: 'Identifica las Dimensiones' },
       { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
       { id: 'verify', type: 'verify', title: 'Checkpoint' },
     ],
