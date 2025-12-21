@@ -37,7 +37,7 @@ La investigación en pruebas estandarizadas muestra que la estrategia de "dos pa
 
 Nadie nace resolviendo problemas rápido. La velocidad viene de la práctica repetida hasta que los procedimientos se vuelven automáticos—lo que los psicólogos llaman "automaticidad".
 
-Cuando has resuelto 50 problemas de funciones lineales, reconoces el patrón instantáneamente. Ya no piensas "pendiente es delta y sobre delta x", simplemente lo ves. Esa automaticidad libera tu mente para enfocarse en lo que realmente importa: entender qué te pide el problema.
+Cuando has resuelto 50 problemas de funciones lineales, reconoces el patrón instantáneamente. Ya no piensas "pendiente es delta y sobre delta x", simplemente lo ves. Esa automaticidad libera tu mente para enfocarse en lo que realmente importa: entender qué te pide el problema. Para saber exactamente qué temas practicar, revisa [qué estudiar para la PAES M1](/blog/que-estudiar-paes-m1-temario-completo).
 
 **La estrategia:** Practica bajo condiciones reales de tiempo. Si un tipo de pregunta te toma consistentemente más de 3 minutos, ese es exactamente el tema que debes reforzar. En SimplePAES puedes activar el modo práctica con tiempo, que simula la presión real del examen y te muestra cuánto tardas en cada tipo de pregunta.
 
@@ -57,7 +57,7 @@ El costo de oportunidad es real. Cada minuto extra en una pregunta que no sabes 
 
 **Dato clave:** En la PAES no hay descuento por respuestas incorrectas. Todas las preguntas valen lo mismo. Esto significa que siempre debes marcar una respuesta, aunque sea tu mejor estimación después de eliminar opciones.
 
-**La estrategia:** Si después de 30-40 segundos no tienes claro cómo empezar, elimina las opciones que puedas, marca tu mejor opción, señala la pregunta, y sigue adelante. Vuelve solo si te sobra tiempo.
+**La estrategia:** Si después de 30-40 segundos no tienes claro cómo empezar, elimina las opciones que puedas, marca tu mejor opción, señala la pregunta, y sigue adelante. Vuelve solo si te sobra tiempo. Para evitar errores comunes que cuestan tiempo, revisa [los errores de álgebra más frecuentes](/blog/errores-comunes-algebra-paes).
 
 ### 5. Los últimos 15 minutos definen resultados
 
