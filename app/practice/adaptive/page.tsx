@@ -4,8 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { UnifiedLatexRenderer } from '@/components/math/MathDisplay';
-import { api } from '@/lib/api-client';
-import { getQuestionsBySubject, questions as allQuestions } from '@/lib/questions';
+import { usePracticeSession } from '@/hooks/usePracticeSession';
+import { useAITutor } from '@/hooks/useAITutor';
 import type { Question } from '@/lib/types/core';
 
 // ============================================================================
@@ -23,11 +23,8 @@ interface ChatMessage {
   content: string;
 }
 
-type AppState = 'selecting' | 'practicing' | 'loading';
-type Subject = 'números' | 'álgebra' | 'geometría' | 'probabilidad';
-
 // ============================================================================
-// Topic Card Component
+// Constants
 // ============================================================================
 
 const TOPIC_EMOJIS: Record<string, string> = {
@@ -46,7 +43,6 @@ const TOPIC_COLORS: Record<string, string> = {
   'surprise': 'from-gray-500 to-gray-600',
 };
 
-// Default topics
 const DEFAULT_TOPICS: Topic[] = [
   { id: 'números', name: 'Números', type: 'subject' },
   { id: 'álgebra', name: 'Álgebra y Funciones', type: 'subject' },
@@ -54,6 +50,10 @@ const DEFAULT_TOPICS: Topic[] = [
   { id: 'probabilidad', name: 'Probabilidades y Estadística', type: 'subject' },
   { id: 'surprise', name: 'Sorpréndeme', type: 'subject' },
 ];
+
+// ============================================================================
+// Topic Card Component
+// ============================================================================
 
 function TopicCard({
   topic,
@@ -282,156 +282,35 @@ function ProblemDisplay({
 }
 
 // ============================================================================
-// Helper Functions
-// ============================================================================
-
-function getRandomQuestion(focus: string): Question | null {
-  let pool: Question[];
-
-  if (focus === 'surprise') {
-    pool = allQuestions;
-  } else {
-    pool = getQuestionsBySubject(focus as Subject);
-  }
-
-  if (pool.length === 0) return null;
-
-  const randomIndex = Math.floor(Math.random() * pool.length);
-  return pool[randomIndex];
-}
-
-// ============================================================================
 // Main Page Component
 // ============================================================================
 
 function AdaptivePracticeContent() {
-  const [state, setState] = useState<AppState>('selecting');
-  const [topics] = useState<Topic[]>(DEFAULT_TOPICS);
-  const [selectedFocus, setSelectedFocus] = useState<string>('');
-  const [currentProblem, setCurrentProblem] = useState<Question | null>(null);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [feedback, setFeedback] = useState<{ correct: boolean; message: string; explanation?: string } | null>(null);
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-  const [isChatLoading, setIsChatLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const practice = usePracticeSession();
+  const tutor = useAITutor();
 
-  const startPractice = (focus: string) => {
-    setState('loading');
-    setSelectedFocus(focus);
-    setError(null);
-    setChatMessages([]);
-
-    const problem = getRandomQuestion(focus);
-
-    if (problem) {
-      setCurrentProblem(problem);
-      setSelectedAnswer(null);
-      setFeedback(null);
-      setState('practicing');
-    } else {
-      setError('No hay problemas disponibles para este tema');
-      setState('selecting');
-    }
+  const handleStartPractice = (focus: string) => {
+    tutor.clearMessages();
+    practice.startPractice(focus);
   };
 
-  const handleSubmitAnswer = async () => {
-    if (!currentProblem || selectedAnswer === null) return;
-
-    const correct = selectedAnswer === currentProblem.correctAnswer;
-
-    setFeedback({
-      correct,
-      message: correct ? '¡Muy bien!' : 'Revisa la explicación e intenta el siguiente.',
-      explanation: correct ? undefined : currentProblem.explanation,
-    });
-
-    // Save attempt to backend (fire-and-forget)
-    try {
-      await api.post('/api/adaptive/attempt', {
-        questionId: currentProblem.id,
-        subject: currentProblem.subject,
-        topic: currentProblem.topic || currentProblem.subject,
-        difficulty: currentProblem.difficulty,
-        userAnswer: selectedAnswer,
-        correctAnswer: currentProblem.correctAnswer,
-        isCorrect: correct,
-        skills: currentProblem.skills || [],
-        hintUsed: chatMessages.length > 0,
-        question: currentProblem.questionLatex,
-        options: currentProblem.options,
-        explanation: currentProblem.explanation,
-      });
-    } catch (error) {
-      console.error('Failed to save attempt:', error);
-      // Silently fail - don't block UX
-    }
+  const handleSubmitAnswer = () => {
+    practice.submitAnswer(tutor.hasMessages);
   };
 
   const handleNextProblem = () => {
-    const problem = getRandomQuestion(selectedFocus);
-    if (problem) {
-      setCurrentProblem(problem);
-      setSelectedAnswer(null);
-      setFeedback(null);
-      setChatMessages([]);
+    tutor.clearMessages();
+    practice.nextProblem();
+  };
+
+  const handleSendChatMessage = (message: string) => {
+    if (practice.currentProblem) {
+      tutor.sendMessage(message, practice.currentProblem);
     }
   };
-
-  const handleSendChatMessage = async (message: string) => {
-    if (!currentProblem) return;
-
-    setChatMessages((prev) => [...prev, { role: 'user', content: message }]);
-    setIsChatLoading(true);
-
-    try {
-      const response = await api.post<{ hint: string }>('/api/adaptive/hint', {
-        problem: {
-          id: currentProblem.id,
-          question: currentProblem.questionLatex,
-          options: currentProblem.options,
-          correctAnswer: currentProblem.correctAnswer,
-          subject: currentProblem.subject,
-          difficulty: currentProblem.difficulty,
-        },
-        studentMessage: message,
-        conversationHistory: chatMessages,
-      });
-
-      setIsChatLoading(false);
-
-      const hint = response.data?.hint;
-      if (hint && hint !== 'undefined' && hint.trim() !== '') {
-        setChatMessages((prev) => [...prev, { role: 'assistant', content: hint }]);
-      } else {
-        setChatMessages((prev) => [
-          ...prev,
-          { role: 'assistant', content: 'Lo siento, hubo un error. Intenta de nuevo.' },
-        ]);
-      }
-    } catch (err) {
-      setIsChatLoading(false);
-      setChatMessages((prev) => [
-        ...prev,
-        { role: 'assistant', content: 'Lo siento, hubo un error de conexión. Intenta de nuevo.' },
-      ]);
-    }
-  };
-
-  const handleChangeTopic = () => {
-    setState('selecting');
-    setCurrentProblem(null);
-    setSelectedAnswer(null);
-    setFeedback(null);
-    setChatMessages([]);
-    setError(null);
-  };
-
-  // ============================================================================
-  // Render
-  // ============================================================================
 
   // Loading state
-  if (state === 'loading') {
+  if (practice.state === 'loading') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center">
         <div className="text-center text-white">
@@ -443,7 +322,7 @@ function AdaptivePracticeContent() {
   }
 
   // Topic selection
-  if (state === 'selecting') {
+  if (practice.state === 'selecting') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 py-8 px-4">
         <div className="max-w-4xl mx-auto">
@@ -463,15 +342,15 @@ function AdaptivePracticeContent() {
             </p>
           </div>
 
-          {error && (
+          {practice.error && (
             <div className="mb-6 p-4 bg-red-500/20 border border-red-400/50 rounded-xl text-red-200 text-center">
-              {error}
+              {practice.error}
             </div>
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {topics.map((topic) => (
-              <TopicCard key={topic.id} topic={topic} onSelect={startPractice} />
+            {DEFAULT_TOPICS.map((topic) => (
+              <TopicCard key={topic.id} topic={topic} onSelect={handleStartPractice} />
             ))}
           </div>
         </div>
@@ -486,15 +365,15 @@ function AdaptivePracticeContent() {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <button
-            onClick={handleChangeTopic}
+            onClick={practice.changeTopic}
             className="text-white/80 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/10 text-sm font-semibold"
           >
             ← Cambiar tema
           </button>
           <div className="flex items-center gap-2">
-            <span className="text-2xl">{TOPIC_EMOJIS[selectedFocus] || '📚'}</span>
+            <span className="text-2xl">{TOPIC_EMOJIS[practice.selectedFocus] || '📚'}</span>
             <span className="text-white font-medium capitalize">
-              {selectedFocus === 'surprise' ? 'Sorpresa' : selectedFocus}
+              {practice.selectedFocus === 'surprise' ? 'Sorpresa' : practice.selectedFocus}
             </span>
           </div>
         </div>
@@ -503,15 +382,15 @@ function AdaptivePracticeContent() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Problem area - 2 columns */}
           <div className="lg:col-span-2">
-            {currentProblem && (
+            {practice.currentProblem && (
               <ProblemDisplay
-                problem={currentProblem}
-                selectedAnswer={selectedAnswer}
-                onSelectAnswer={setSelectedAnswer}
+                problem={practice.currentProblem}
+                selectedAnswer={practice.selectedAnswer}
+                onSelectAnswer={practice.setSelectedAnswer}
                 onSubmit={handleSubmitAnswer}
                 onNext={handleNextProblem}
-                feedback={feedback}
-                showExplanation={!feedback?.correct}
+                feedback={practice.feedback}
+                showExplanation={!practice.feedback?.correct}
               />
             )}
           </div>
@@ -519,9 +398,9 @@ function AdaptivePracticeContent() {
           {/* Chat area - 1 column */}
           <div className="lg:col-span-1">
             <ChatPanel
-              messages={chatMessages}
+              messages={tutor.messages}
               onSendMessage={handleSendChatMessage}
-              isLoading={isChatLoading}
+              isLoading={tutor.isLoading}
             />
           </div>
         </div>
