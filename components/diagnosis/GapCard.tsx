@@ -19,7 +19,7 @@ interface GapCardProps {
 export function GapCard({ gap, showActions = true }: GapCardProps) {
   const severityConfig = {
     critical: {
-      badge: 'error' as const,
+      badge: 'danger' as const,
       label: 'Crítica',
       borderColor: 'border-l-red-500',
       bgColor: 'bg-red-50 dark:bg-red-900/10',

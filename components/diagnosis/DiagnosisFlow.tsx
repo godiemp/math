@@ -238,7 +238,7 @@ export function DiagnosisFlow({
   }
 
   return (
-    <Modal isOpen={true} onClose={onClose} size="lg">
+    <Modal isOpen={true} onClose={onClose} maxWidth="lg">
       <div className="p-6">
         {/* Header */}
         <div className="mb-6">
