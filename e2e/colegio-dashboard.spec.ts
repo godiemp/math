@@ -1,16 +1,14 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Colegio Dashboard', () => {
-  test.beforeEach(async ({ page }) => {
-    // Dismiss cookie banner
-    await page.evaluate(() => {
-      localStorage.setItem('cookie-consent', 'accepted');
-    });
-  });
-
   test.describe('Colegio Student Dashboard View', () => {
     test('should show colegio dashboard for student with grade level', async ({ page }) => {
       await page.goto('/signin');
+
+      // Dismiss cookie banner after page load
+      await page.evaluate(() => {
+        localStorage.setItem('cookie-consent', 'accepted');
+      });
 
       // Login as 1-medio student
       await page.fill('input[type="email"], input[name="email"], input[name="username"]', '1medio_student');
@@ -35,6 +33,11 @@ test.describe('Colegio Dashboard', () => {
     test('should navigate to grade-specific mini-lessons from dashboard', async ({ page }) => {
       await page.goto('/signin');
 
+      // Dismiss cookie banner after page load
+      await page.evaluate(() => {
+        localStorage.setItem('cookie-consent', 'accepted');
+      });
+
       // Login as 1-medio student
       await page.fill('input[type="email"], input[name="email"], input[name="username"]', '1medio_student');
       await page.fill('input[type="password"]', 'test123');
@@ -57,6 +60,11 @@ test.describe('Colegio Dashboard', () => {
     test('should show adaptive practice placeholder', async ({ page }) => {
       await page.goto('/signin');
 
+      // Dismiss cookie banner after page load
+      await page.evaluate(() => {
+        localStorage.setItem('cookie-consent', 'accepted');
+      });
+
       // Login as 1-medio student
       await page.fill('input[type="email"], input[name="email"], input[name="username"]', '1medio_student');
       await page.fill('input[type="password"]', 'test123');
@@ -73,6 +81,11 @@ test.describe('Colegio Dashboard', () => {
     test('should show progress placeholder', async ({ page }) => {
       await page.goto('/signin');
 
+      // Dismiss cookie banner after page load
+      await page.evaluate(() => {
+        localStorage.setItem('cookie-consent', 'accepted');
+      });
+
       // Login as 1-medio student
       await page.fill('input[type="email"], input[name="email"], input[name="username"]', '1medio_student');
       await page.fill('input[type="password"]', 'test123');
@@ -88,6 +101,11 @@ test.describe('Colegio Dashboard', () => {
 
     test('should show colegio account notice', async ({ page }) => {
       await page.goto('/signin');
+
+      // Dismiss cookie banner after page load
+      await page.evaluate(() => {
+        localStorage.setItem('cookie-consent', 'accepted');
+      });
 
       // Login as 1-medio student
       await page.fill('input[type="email"], input[name="email"], input[name="username"]', '1medio_student');
@@ -106,6 +124,11 @@ test.describe('Colegio Dashboard', () => {
   test.describe('Grade Mini-Lessons Page Navigation', () => {
     test('should navigate back to dashboard from grade mini-lessons for colegio student', async ({ page }) => {
       await page.goto('/signin');
+
+      // Dismiss cookie banner after page load
+      await page.evaluate(() => {
+        localStorage.setItem('cookie-consent', 'accepted');
+      });
 
       // Login as 1-medio student
       await page.fill('input[type="email"], input[name="email"], input[name="username"]', '1medio_student');
@@ -132,6 +155,11 @@ test.describe('Colegio Dashboard', () => {
     test('should show regular PAES dashboard for student without grade level', async ({ page }) => {
       await page.goto('/signin');
 
+      // Dismiss cookie banner after page load
+      await page.evaluate(() => {
+        localStorage.setItem('cookie-consent', 'accepted');
+      });
+
       // Login as PAES student (no grade level)
       await page.fill('input[type="email"], input[name="email"], input[name="username"]', 'paes_student');
       await page.fill('input[type="password"]', 'test123');
@@ -154,6 +182,11 @@ test.describe('Colegio Dashboard', () => {
     test('should navigate to general mini-lessons from PAES dashboard', async ({ page }) => {
       await page.goto('/signin');
 
+      // Dismiss cookie banner after page load
+      await page.evaluate(() => {
+        localStorage.setItem('cookie-consent', 'accepted');
+      });
+
       // Login as PAES student
       await page.fill('input[type="email"], input[name="email"], input[name="username"]', 'paes_student');
       await page.fill('input[type="password"]', 'test123');
@@ -173,6 +206,11 @@ test.describe('Colegio Dashboard', () => {
   test.describe('Logout Flow', () => {
     test('should logout colegio student and redirect to signin', async ({ page }) => {
       await page.goto('/signin');
+
+      // Dismiss cookie banner after page load
+      await page.evaluate(() => {
+        localStorage.setItem('cookie-consent', 'accepted');
+      });
 
       // Login as 1-medio student
       await page.fill('input[type="email"], input[name="email"], input[name="username"]', '1medio_student');
