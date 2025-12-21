@@ -183,6 +183,7 @@ interface UseDashboardResult {
   user: ReturnType<typeof useAuth>['user'];
   isAdmin: boolean;
   isPaidUser: boolean;
+  isOnTrial: boolean;
   isLoading: boolean;
   // Sessions
   nextSession: LiveSession | null;
@@ -209,6 +210,7 @@ interface UseDashboardResult {
  */
 export const useDashboard = (): UseDashboardResult => {
   const { user, isAdmin, isPaidUser, isLoading: authLoading } = useAuth();
+  const isOnTrial = user?.subscription?.status === 'trial';
 
   const {
     isLoadingData,
@@ -245,6 +247,7 @@ export const useDashboard = (): UseDashboardResult => {
     user,
     isAdmin,
     isPaidUser,
+    isOnTrial,
     isLoading,
     nextSession,
     registeredSessions,
