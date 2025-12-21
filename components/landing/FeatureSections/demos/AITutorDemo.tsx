@@ -55,14 +55,14 @@ export function AITutorDemo() {
     <div className="w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex flex-col">
       {/* Header */}
       <div
-        className="px-4 py-3 border-b flex items-center gap-2"
+        className="px-4 py-2 border-b flex items-center gap-2 flex-shrink-0"
         style={{ borderColor: 'var(--color-separator)' }}
       >
         <div
-          className="w-8 h-8 rounded-full flex items-center justify-center"
+          className="w-7 h-7 rounded-full flex items-center justify-center"
           style={{ background: 'var(--color-tint)' }}
         >
-          <Sparkles size={16} color="white" />
+          <Sparkles size={14} color="white" />
         </div>
         <div>
           <div className="text-sm font-semibold" style={{ color: 'var(--color-label-primary)' }}>
@@ -75,8 +75,8 @@ export function AITutorDemo() {
       </div>
 
       {/* Chat area */}
-      <div className="flex-1 p-4 overflow-hidden">
-        <div className="space-y-3">
+      <div className="flex-1 p-3 overflow-hidden min-h-0">
+        <div className="space-y-1.5">
           <AnimatePresence>
             {CONVERSATION.slice(0, visibleMessages).map((msg, i) => (
               <motion.div
@@ -87,7 +87,7 @@ export function AITutorDemo() {
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[80%] px-3 py-2 rounded-2xl text-sm ${
+                  className={`max-w-[80%] px-2.5 py-1 rounded-2xl text-xs ${
                     msg.role === 'user'
                       ? 'rounded-br-md'
                       : 'rounded-bl-md'
@@ -114,7 +114,7 @@ export function AITutorDemo() {
                 className="flex justify-start"
               >
                 <div
-                  className="px-4 py-3 rounded-2xl rounded-bl-md flex items-center gap-1"
+                  className="px-3 py-2 rounded-2xl rounded-bl-md flex items-center gap-1"
                   style={{ background: 'var(--color-surface)', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}
                 >
                   <TypingDot delay={0} />
@@ -129,7 +129,7 @@ export function AITutorDemo() {
 
       {/* Footer hint */}
       <div
-        className="px-4 py-2 text-center text-xs border-t"
+        className="px-4 py-1.5 text-center text-xs border-t flex-shrink-0"
         style={{
           color: 'var(--color-label-secondary)',
           borderColor: 'var(--color-separator)',

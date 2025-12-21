@@ -56,7 +56,7 @@ export function OperationsDemo() {
     <div className="w-full h-full bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-blue-900/30 dark:via-gray-900 dark:to-purple-900/30 flex flex-col">
       {/* Header */}
       <div
-        className="px-4 py-3 flex items-center justify-between"
+        className="px-4 py-2 flex items-center justify-between flex-shrink-0"
         style={{ borderBottom: '1px solid var(--color-separator)' }}
       >
         <div className="flex items-center gap-2">
@@ -73,7 +73,7 @@ export function OperationsDemo() {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col items-center justify-center p-4">
+      <div className="flex-1 flex flex-col items-center justify-center p-3 min-h-0">
         <AnimatePresence mode="wait">
           {phase !== 'next' ? (
             <motion.div
@@ -85,13 +85,13 @@ export function OperationsDemo() {
             >
               {/* Problem */}
               <motion.div
-                className="mb-6 px-6 py-4 rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/40 dark:to-purple-900/40"
+                className="mb-4 px-5 py-3 rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/40 dark:to-purple-900/40"
               >
-                <p className="text-xs mb-2" style={{ color: 'var(--color-label-secondary)' }}>
+                <p className="text-xs mb-1" style={{ color: 'var(--color-label-secondary)' }}>
                   Resuelve la operación
                 </p>
                 <div
-                  className="text-3xl font-bold"
+                  className="text-2xl font-bold"
                   style={{ color: 'var(--color-label-primary)' }}
                 >
                   {problem.expression} = <span style={{ color: problem.color }}>?</span>
@@ -99,9 +99,9 @@ export function OperationsDemo() {
               </motion.div>
 
               {/* Input */}
-              <div className="flex items-center justify-center gap-2 mb-4">
+              <div className="flex items-center justify-center gap-2 mb-2">
                 <motion.div
-                  className={`w-20 h-12 rounded-lg flex items-center justify-center text-xl font-bold ${
+                  className={`w-16 h-10 rounded-lg flex items-center justify-center text-lg font-bold ${
                     phase === 'correct' ? 'text-green-500 border-green-500' : 'border-[var(--color-separator)]'
                   }`}
                   style={{
@@ -119,19 +119,21 @@ export function OperationsDemo() {
               </div>
 
               {/* Feedback */}
-              <AnimatePresence>
-                {phase === 'correct' && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300"
-                  >
-                    <Check size={16} />
-                    <span className="text-sm font-medium">¡Correcto!</span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <div className="h-9">
+                <AnimatePresence>
+                  {phase === 'correct' && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300"
+                    >
+                      <Check size={16} />
+                      <span className="text-sm font-medium">¡Correcto!</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </motion.div>
           ) : (
             <motion.div
@@ -157,11 +159,11 @@ export function OperationsDemo() {
 
       {/* Footer stats */}
       <div
-        className="px-4 py-3 flex items-center justify-center gap-6"
+        className="px-4 py-2 flex items-center justify-center gap-6 flex-shrink-0"
         style={{ borderTop: '1px solid var(--color-separator)', background: 'var(--color-surface)' }}
       >
         <div className="text-center">
-          <div className="text-lg font-bold" style={{ color: '#22c55e' }}>
+          <div className="text-base font-bold" style={{ color: '#22c55e' }}>
             {correctCount}
           </div>
           <div className="text-xs" style={{ color: 'var(--color-label-secondary)' }}>
@@ -169,7 +171,7 @@ export function OperationsDemo() {
           </div>
         </div>
         <div className="text-center">
-          <div className="text-lg font-bold" style={{ color: 'var(--color-tint)' }}>
+          <div className="text-base font-bold" style={{ color: 'var(--color-tint)' }}>
             100%
           </div>
           <div className="text-xs" style={{ color: 'var(--color-label-secondary)' }}>
