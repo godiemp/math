@@ -70,7 +70,7 @@ function CircumferenceAnimation() {
         <rect x="0" y="0" width="340" height="140" fill="url(#gridCircPreview)" />
 
         {/* Ground line */}
-        <line x1="15" y1={lineY} x2="325" y2={lineY} stroke="#94a3b8" strokeWidth="2" />
+        <line x1="15" y1={lineY} x2="325" y2={lineY} className="stroke-slate-400 dark:stroke-slate-600" strokeWidth="2" />
 
         {/* Rolling circle */}
         <g transform={`translate(0, ${circleY})`}>
