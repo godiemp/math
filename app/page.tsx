@@ -3,7 +3,13 @@
 import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { LandingNav, HeroSection, StatsSection, FeaturesSection, CTASection } from '@/components/landing';
+import { LandingNav, HeroSection, StatsSection, CTASection } from '@/components/landing';
+import { FeatureSection } from '@/components/landing/FeatureSections/FeatureSection';
+import { PracticeModesDemo } from '@/components/landing/FeatureSections/demos/PracticeModesDemo';
+import { AITutorDemo } from '@/components/landing/FeatureSections/demos/AITutorDemo';
+import { ProgressDemo } from '@/components/landing/FeatureSections/demos/ProgressDemo';
+import { LivePracticeDemo } from '@/components/landing/FeatureSections/demos/LivePracticeDemo';
+import { OperationsDemo } from '@/components/landing/FeatureSections/demos/OperationsDemo';
 import {
   PainPointsSection,
   HowItWorksSection,
@@ -64,7 +70,66 @@ function LandingPageContent() {
         {audience === 'b2c' ? (
           <>
             <StatsSection />
-            <FeaturesSection audience={audience} />
+
+            <FeatureSection
+              title="Dos Modos de Práctica"
+              description="Elige cómo quieres entrenar: sin presión para aprender, o simulando las condiciones reales de la PAES."
+              bullets={[
+                'Modo Zen: A tu ritmo, sin límite de tiempo',
+                'Desafío Contra el Reloj: Simula condiciones PAES',
+                'El Tutor AI está disponible cuando te trabas',
+              ]}
+              demo={<PracticeModesDemo />}
+            />
+
+            <FeatureSection
+              title="Tutor AI Socrático"
+              description="Cuando te trabas, el tutor te guía con preguntas. No te da la respuesta — te ayuda a pensar y desarrollar tu razonamiento."
+              bullets={[
+                'Disponible 24/7 en el Modo Zen',
+                'Metodología Socrática: preguntas que guían',
+                'Desarrolla pensamiento crítico, no dependencia',
+              ]}
+              demo={<AITutorDemo />}
+              reversed
+              bgColor="var(--color-fill)"
+            />
+
+            <FeatureSection
+              title="Métricas de Progreso"
+              description="Ve exactamente dónde estás y qué necesitas mejorar. Sin adivinar, con datos reales de tu desempeño."
+              bullets={[
+                'Rendimiento detallado por tema',
+                'Habilidades dominadas vs en progreso',
+                'Predicción de tu puntaje PAES',
+              ]}
+              demo={<ProgressDemo />}
+            />
+
+            <FeatureSection
+              title="Ensayos en Vivo"
+              description="Practica con otros estudiantes en sesiones grupales que simulan el día de la prueba. Competencia sana y resultados inmediatos."
+              bullets={[
+                'Sesiones programadas con otros estudiantes',
+                'Competencia en tiempo real',
+                'Ranking y resultados al terminar',
+              ]}
+              demo={<LivePracticeDemo />}
+              reversed
+              bgColor="var(--color-fill)"
+            />
+
+            <FeatureSection
+              title="Práctica de Operaciones"
+              description="Domina las operaciones básicas con ejercicios progresivos. Desde aritmética hasta álgebra, avanza a tu ritmo por más de 130 niveles."
+              bullets={[
+                'Suma, resta, multiplicación y división',
+                'Progresión gradual por niveles',
+                'Feedback inmediato en cada respuesta',
+              ]}
+              demo={<OperationsDemo />}
+            />
+
             <CTASection audience={audience} />
           </>
         ) : (
