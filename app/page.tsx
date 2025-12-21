@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { LandingNav, HeroSection, StatsSection, CTASection } from '@/components/landing';
 import { FeatureSection } from '@/components/landing/FeatureSections/FeatureSection';
-import { DemoShowcase } from '@/components/landing/DemoShowcase';
 import { PracticeModesDemo } from '@/components/landing/FeatureSections/demos/PracticeModesDemo';
 import { AITutorDemo } from '@/components/landing/FeatureSections/demos/AITutorDemo';
 import { ProgressDemo } from '@/components/landing/FeatureSections/demos/ProgressDemo';
@@ -73,17 +72,6 @@ function LandingPageContent() {
             <StatsSection />
 
             <FeatureSection
-              title="Mini-Lecciones Interactivas"
-              description="Cada lección te explica el por qué, no solo el cómo. Con visualizaciones animadas que hacen que los conceptos matemáticos cobren vida."
-              bullets={[
-                '5 pasos: problema, explora, explica, practica, verifica',
-                'Visualizaciones interactivas de cada concepto',
-                'Quiz al final para confirmar que entendiste',
-              ]}
-              demo={<DemoShowcase />}
-            />
-
-            <FeatureSection
               title="Dos Modos de Práctica"
               description="Elige cómo quieres entrenar: sin presión para aprender, o simulando las condiciones reales de la PAES."
               bullets={[
@@ -92,8 +80,6 @@ function LandingPageContent() {
                 'El Tutor AI está disponible cuando te trabas',
               ]}
               demo={<PracticeModesDemo />}
-              reversed
-              bgColor="var(--color-fill)"
             />
 
             <FeatureSection
@@ -105,6 +91,8 @@ function LandingPageContent() {
                 'Desarrolla pensamiento crítico, no dependencia',
               ]}
               demo={<AITutorDemo />}
+              reversed
+              bgColor="var(--color-fill)"
             />
 
             <FeatureSection
@@ -116,8 +104,6 @@ function LandingPageContent() {
                 'Predicción de tu puntaje PAES',
               ]}
               demo={<ProgressDemo />}
-              reversed
-              bgColor="var(--color-fill)"
             />
 
             <FeatureSection
@@ -129,6 +115,8 @@ function LandingPageContent() {
                 'Ranking y resultados al terminar',
               ]}
               demo={<LivePracticeDemo />}
+              reversed
+              bgColor="var(--color-fill)"
             />
 
             <FeatureSection
@@ -140,8 +128,6 @@ function LandingPageContent() {
                 'Feedback inmediato en cada respuesta',
               ]}
               demo={<OperationsDemo />}
-              reversed
-              bgColor="var(--color-fill)"
             />
 
             <CTASection audience={audience} />
