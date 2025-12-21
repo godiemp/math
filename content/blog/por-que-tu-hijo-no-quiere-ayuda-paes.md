@@ -93,15 +93,15 @@ A veces el rechazo a la ayuda no es solo autonomía adolescente. Hay señales qu
 - Aislamiento social inusual
 - Comentarios negativos sobre sí mismo
 
-Si ves varias de estas señales, es momento de una conversación más profunda—o de buscar apoyo profesional. La salud mental es más importante que cualquier puntaje.
+Si ves varias de estas señales, es momento de una conversación más profunda—o de buscar apoyo profesional. La salud mental es más importante que cualquier puntaje. Para más orientación, lee [cómo saber si tu hijo está preparado para la PAES](/blog/como-saber-si-tu-hijo-esta-preparado-paes).
 
 ## El mejor apoyo es el que no se siente como presión
 
 Tu hijo quiere que le vaya bien. De verdad. Y en el fondo, probablemente agradece que te importe. Pero a los 17 años, necesita sentir que puede lograrlo solo—aunque tenga apoyo disponible.
 
-Tu rol es estar presente sin invadir. Proveer sin controlar. Confiar, aunque te cueste.
+Tu rol es estar presente sin invadir. Proveer sin controlar. Confiar, aunque te cueste. Para más estrategias de comunicación, lee [cómo hablar de la PAES sin que se cierre](/blog/como-hablar-paes-sin-conflicto).
 
-Y si quieres darle una herramienta concreta, busca algo que le permita recibir ayuda de forma independiente, sin tener que pedirla.
+Y si quieres darle una herramienta concreta, busca algo que le permita recibir ayuda de forma independiente, sin tener que pedirla. Si no sabes matemáticas tú mismo, revisa [cómo ayudar a tu hijo con matemáticas cuando no las entiendes](/blog/como-ayudar-hijo-matematicas-sin-saber).
 
 ---
 

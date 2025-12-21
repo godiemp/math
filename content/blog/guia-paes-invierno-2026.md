@@ -94,7 +94,7 @@ Tienes aproximadamente **3 meses** entre la inscripción y la prueba. Aquí hay 
 **Marzo (después de inscribirte)**
 
 1. **Diagnóstico inicial:** Identifica tus lagunas específicas. No estudies "matemáticas en general"—descubre exactamente qué temas te cuestan.
-2. **Revisa el temario oficial:** Asegúrate de que tu material de estudio cubra los contenidos del temario vigente en [demre.cl](https://demre.cl).
+2. **Revisa el temario oficial:** Asegúrate de que tu material de estudio cubra los contenidos del temario vigente en [demre.cl](https://demre.cl). Para una guía detallada de qué estudiar, revisa [qué estudiar para la PAES M1: temario completo](/blog/que-estudiar-paes-m1-temario-completo).
 
 **Abril-Mayo**
 
@@ -103,8 +103,8 @@ Tienes aproximadamente **3 meses** entre la inscripción y la prueba. Aquí hay 
 
 **Junio (semanas antes)**
 
-5. **Ensayos completos:** Simula la prueba real con 65 preguntas en 140 minutos.
-6. **Revisa errores, no solo respuestas:** Cada error es información sobre qué reforzar.
+5. **Ensayos completos:** Simula la prueba real con 65 preguntas en 140 minutos. Aprende [cómo manejar el tiempo en la PAES](/blog/manejar-tiempo-paes-matematica) para maximizar tu puntaje.
+6. **Revisa errores, no solo respuestas:** Cada error es información sobre qué reforzar. Revisa [los errores de álgebra más comunes](/blog/errores-comunes-algebra-paes) para saber qué evitar.
 
 ## ¿Vale la pena rendir la PAES de Invierno?
 

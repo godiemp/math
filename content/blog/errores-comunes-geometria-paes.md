@@ -210,6 +210,7 @@ La geometría tiene una ventaja: puedes verificar visualmente. Antes de marcar t
 Para más errores comunes que cuestan puntos, revisa:
 - [Los 7 errores de álgebra más frecuentes en la PAES](/blog/errores-comunes-algebra-paes)
 - [Los 7 errores de números más frecuentes en la PAES](/blog/errores-comunes-numeros-paes)
+- [Los 7 errores de probabilidad y estadística más frecuentes en la PAES](/blog/errores-comunes-probabilidad-estadistica-paes)
 
 ---
 
