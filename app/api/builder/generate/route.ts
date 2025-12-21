@@ -73,7 +73,7 @@ Cada lección debe tener EXACTAMENTE 5 pasos en este orden:
           "bridge": {
             "title": "Conexión con el Concepto",
             "concept": "Explicación de cómo el escenario se conecta con el tema matemático.",
-            "formula": "$formula\\\\_clave = resultado$",
+            "formula": "$ax + ay = a(x + y)$",
             "note": "Nota adicional opcional"
           }
         }
@@ -89,9 +89,9 @@ Cada lección debe tener EXACTAMENTE 5 pasos en este orden:
           "text": "Haz clic en cada ejemplo para ver cómo funciona."
         },
         "examples": [
-          { "id": "ex1", "expression": "$expresión_1$", "result": "$resultado_1$", "hint": "Pista para resolver" },
-          { "id": "ex2", "expression": "$expresión_2$", "result": "$resultado_2$", "hint": "Pista para resolver" },
-          { "id": "ex3", "expression": "$expresión_3$", "result": "$resultado_3$", "hint": "Pista para resolver" }
+          { "id": "ex1", "expression": "$10x + 15$", "result": "$5(2x + 3)$", "hint": "MCD de 10 y 15 es 5" },
+          { "id": "ex2", "expression": "$x^2 + 5x$", "result": "$x(x + 5)$", "hint": "Ambos términos tienen x" },
+          { "id": "ex3", "expression": "$6a^2 + 9a$", "result": "$3a(2a + 3)$", "hint": "Factor común: 3a" }
         ],
         "summary": {
           "title": "¡Patrón descubierto!",
@@ -108,15 +108,15 @@ Cada lección debe tener EXACTAMENTE 5 pasos en este orden:
         "tabs": [
           {
             "id": "tab1",
-            "title": "Título Completo del Tab",
-            "shortTitle": "Tab1",
-            "description": "Descripción del concepto explicado en este tab",
-            "formula": "$formula = resultado$",
+            "title": "Factor Numérico",
+            "shortTitle": "Números",
+            "description": "Cuando el factor común es solo un número",
+            "formula": "$ax + ay = a(x + y)$",
             "color": "blue",
             "example": {
-              "input": "$entrada$",
-              "steps": ["Paso 1", "Paso 2", "Paso 3"],
-              "result": "$resultado$"
+              "input": "$6x + 9$",
+              "steps": ["MCD(6, 9) = 3", "Dividir: $6x \\div 3 = 2x$, $9 \\div 3 = 3$", "Resultado: $3(2x + 3)$"],
+              "result": "$3(2x + 3)$"
             }
           },
           {
@@ -124,12 +124,12 @@ Cada lección debe tener EXACTAMENTE 5 pasos en este orden:
             "title": "Segundo Concepto",
             "shortTitle": "Tab2",
             "description": "Descripción del segundo concepto",
-            "formula": "$otra\\\\_formula$",
+            "formula": "$x^2 + 2x = x(x + 2)$",
             "color": "purple",
             "example": {
-              "input": "$entrada$",
-              "steps": ["Paso 1", "Paso 2"],
-              "result": "$resultado$"
+              "input": "$x^2 + 3x$",
+              "steps": ["Identificar: $x^2$ y $3x$", "Factor común: $x$", "Resultado: $x(x + 3)$"],
+              "result": "$x(x + 3)$"
             }
           }
         ],
@@ -152,27 +152,27 @@ Cada lección debe tener EXACTAMENTE 5 pasos en este orden:
         "problems": [
           {
             "id": "p1",
-            "question": "Pregunta 1 con $LaTeX$ si es necesario",
-            "hint": "Pista para ayudar al estudiante",
-            "options": ["Opción A", "Opción B (correcta)", "Opción C", "Opción D"],
+            "question": "Factoriza la expresión $8x + 12$",
+            "hint": "Busca el MCD de 8 y 12",
+            "options": ["$2(4x + 6)$", "$4(2x + 3)$", "$8(x + 4)$", "$4x(2 + 3)$"],
             "correctAnswer": 1,
-            "explanation": "Explicación de por qué B es correcta"
+            "explanation": "El MCD de 8 y 12 es 4. Dividiendo: $8x \\div 4 = 2x$ y $12 \\div 4 = 3$. Resultado: $4(2x + 3)$"
           },
           {
             "id": "p2",
-            "question": "Pregunta 2",
-            "hint": "Pista",
-            "options": ["A", "B", "C (correcta)", "D"],
-            "correctAnswer": 2,
-            "explanation": "Explicación"
+            "question": "¿Cuál es el factor común de $x^3 + x^2$?",
+            "hint": "Identifica la menor potencia de x",
+            "options": ["$x$", "$x^2$", "$x^3$", "$1$"],
+            "correctAnswer": 1,
+            "explanation": "Ambos términos tienen x. La menor potencia es $x^2$, que es el factor común."
           },
           {
             "id": "p3",
-            "question": "Pregunta 3",
-            "hint": "Pista",
-            "options": ["A (correcta)", "B", "C", "D"],
+            "question": "Factoriza $15a^2 + 10a$",
+            "hint": "Busca el factor numérico y la variable común",
+            "options": ["$5a(3a + 2)$", "$5(3a^2 + 2a)$", "$10a(1.5a + 1)$", "$a(15a + 10)$"],
             "correctAnswer": 0,
-            "explanation": "Explicación"
+            "explanation": "MCD(15, 10) = 5. Variable común: a. Factor común: $5a$. Resultado: $5a(3a + 2)$"
           }
         ],
         "requiredCorrect": 2
@@ -186,24 +186,24 @@ Cada lección debe tener EXACTAMENTE 5 pasos en este orden:
         "questions": [
           {
             "id": "q1",
-            "question": "Pregunta de verificación 1",
-            "options": ["A", "B (correcta)", "C", "D"],
+            "question": "¿Qué expresión es equivalente a $12x + 18$?",
+            "options": ["$2(6x + 9)$", "$6(2x + 3)$", "$3(4x + 18)$", "$12(x + 6)$"],
             "correctAnswer": 1,
-            "explanation": "Explicación"
+            "explanation": "El MCD de 12 y 18 es 6. Factorizando: $6(2x + 3)$"
           },
           {
             "id": "q2",
-            "question": "Pregunta de verificación 2",
-            "options": ["A", "B", "C (correcta)", "D"],
+            "question": "El factor común de $x^2y + xy^2$ es:",
+            "options": ["$x$", "$y$", "$xy$", "$x^2y^2$"],
             "correctAnswer": 2,
-            "explanation": "Explicación"
+            "explanation": "Ambos términos tienen $x$ y $y$, con potencia mínima 1 cada uno. Factor común: $xy$"
           },
           {
             "id": "q3",
-            "question": "Pregunta de verificación 3",
-            "options": ["A (correcta)", "B", "C", "D"],
+            "question": "¿Cuál es la factorización correcta de $20a^3 + 15a^2$?",
+            "options": ["$5a^2(4a + 3)$", "$5a(4a^2 + 3a)$", "$10a^2(2a + 1.5)$", "$a^2(20a + 15)$"],
             "correctAnswer": 0,
-            "explanation": "Explicación"
+            "explanation": "MCD(20, 15) = 5. Menor potencia de a: $a^2$. Factor común: $5a^2$. Resultado: $5a^2(4a + 3)$"
           }
         ],
         "requiredCorrect": 2,
@@ -217,10 +217,16 @@ Cada lección debe tener EXACTAMENTE 5 pasos en este orden:
 ## INSTRUCCIONES
 1. Crea contenido educativo de alta calidad en español chileno.
 2. Los escenarios del gancho deben ser culturalmente relevantes para Chile (ej: feria, metro de Santiago, estadio).
-3. Usa LaTeX para TODAS las fórmulas matemáticas ($...$ para inline, $$...$$ para display).
+3. Usa LaTeX para TODAS las fórmulas matemáticas:
+   - Formato inline: $x^2 + 3x$ (con un solo $)
+   - Operaciones: $\\cdot$ para multiplicación, $\\div$ para división, $\\frac{a}{b}$ para fracciones
+   - Potencias: $x^2$, $x^{10}$
+   - Subíndices: $a_1$, $x_{max}$
+   - IMPORTANTE: No uses underscores sin LaTeX. Ejemplo correcto: "$a_1$", incorrecto: "a_1"
 4. Incluye al menos 3 ejemplos en explore, 3 problemas en practice, y 3 preguntas en verify.
 5. Las explicaciones deben ser progresivas, de simple a complejo.
 6. Las opciones incorrectas deben ser errores comunes que cometen los estudiantes.
+7. Las opciones de las preguntas pueden usar LaTeX: ["$2x$", "$3x$", "$x^2$", "$x+1$"]
 
 ## FORMATO DE RESPUESTA
 1. Un mensaje corto explicando la lección que creaste

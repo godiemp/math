@@ -21,6 +21,10 @@ interface DynamicLessonRendererProps {
   onExit?: () => void;
   /** Whether in preview mode (for builder) */
   previewMode?: boolean;
+  /** Active step index (controlled, for preview mode) */
+  activeStep?: number;
+  /** Callback when step changes (for preview mode) */
+  onStepChange?: (step: number) => void;
 }
 
 /**
@@ -85,6 +89,8 @@ export default function DynamicLessonRenderer({
   onComplete,
   onExit,
   previewMode = false,
+  activeStep = 0,
+  onStepChange,
 }: DynamicLessonRendererProps) {
   const router = useRouter();
 
@@ -94,6 +100,27 @@ export default function DynamicLessonRenderer({
   // Default handlers
   const handleComplete = onComplete || (() => router.push('/mini-lessons'));
   const handleExit = onExit || (() => router.push('/mini-lessons'));
+
+  // In preview mode, render only the active step without full shell
+  if (previewMode) {
+    const step = lesson.steps[activeStep];
+    if (!step) return null;
+
+    const handleStepComplete = () => {
+      // In preview mode, advance to next step if available
+      if (onStepChange && activeStep < lesson.steps.length - 1) {
+        onStepChange(activeStep + 1);
+      }
+    };
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="max-w-4xl mx-auto px-4 py-6 pb-24">
+          {renderStep(step, true, handleStepComplete)}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <LessonShell

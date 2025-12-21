@@ -217,6 +217,8 @@ function LessonPreview({
         <DynamicLessonRenderer
           lesson={lesson}
           previewMode
+          activeStep={activeStep}
+          onStepChange={onStepChange}
           onComplete={() => {}}
           onExit={() => {}}
         />
