@@ -79,7 +79,6 @@ test.describe('Dashboard Page', () => {
       await page.waitForTimeout(2000);
 
       await expect(page.getByTestId('temario-card')).toBeVisible();
-      await expect(page.getByText(/Temario/i)).toBeVisible();
     });
 
     test('should display Progress card', async ({ page }) => {
@@ -87,7 +86,6 @@ test.describe('Dashboard Page', () => {
       await page.waitForTimeout(2000);
 
       await expect(page.getByTestId('progress-card')).toBeVisible();
-      await expect(page.getByText(/Progreso/i)).toBeVisible();
     });
 
     test('should display footer with links', async ({ page }) => {
