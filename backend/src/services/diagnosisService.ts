@@ -162,6 +162,11 @@ async function getQuestionsFromContextProblems(
       };
     });
 
+    // If still no questions, throw an error
+    if (questions.length === 0) {
+      throw new Error('No questions available for the requested skills');
+    }
+
     await createDiagnosisSession(sessionId, skills, level, questions);
 
     return { sessionId, questions };

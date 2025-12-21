@@ -97,21 +97,32 @@ export function DiagnosisFlow({
       setFlowState('loading');
       setError(null);
 
+      // Check if we have skills to verify
+      if (skillsToVerify.length === 0) {
+        setError('No hay habilidades para evaluar en este tema.');
+        return;
+      }
+
       const response = await api.get<{
         success: boolean;
         data: { sessionId: string; questions: DiagnosisQuestion[] };
       }>(`/api/diagnosis/questions?skills=${skillsToVerify.join(',')}&level=${level}&limit=5`);
 
-      if (response.data?.data) {
+      if (response.data?.data && response.data.data.questions.length > 0) {
         setSessionId(response.data.data.sessionId);
         setQuestions(response.data.data.questions);
         setFlowState('question');
       } else {
-        throw new Error('No questions returned');
+        throw new Error('No questions available');
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Failed to load questions:', err);
-      setError('No pudimos cargar las preguntas. Por favor intenta de nuevo.');
+      // Check for specific error messages
+      const errorMessage =
+        err instanceof Error && err.message.includes('No questions')
+          ? 'No hay preguntas disponibles para estas habilidades. Intenta con otro tema.'
+          : 'No pudimos cargar las preguntas. Por favor intenta de nuevo.';
+      setError(errorMessage);
       setFlowState('loading');
     }
   }

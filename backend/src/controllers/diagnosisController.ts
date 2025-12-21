@@ -57,7 +57,9 @@ export async function getDiagnosisQuestions(req: Request, res: Response): Promis
     });
   } catch (error) {
     console.error('Get diagnosis questions error:', error);
-    res.status(500).json({ error: 'Failed to get diagnosis questions' });
+    const message = error instanceof Error ? error.message : 'Failed to get diagnosis questions';
+    const statusCode = message.includes('No questions available') ? 404 : 500;
+    res.status(statusCode).json({ error: message });
   }
 }
 
