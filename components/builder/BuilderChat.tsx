@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Loader2, Sparkles, User, Bot, AlertCircle } from 'lucide-react';
+import { Send, Loader2, Sparkles, User, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { DynamicLesson } from '@/lib/builder/types';
 
@@ -10,32 +10,44 @@ interface Message {
   role: 'user' | 'assistant' | 'system';
   content: string;
   timestamp: Date;
-  lessonUpdate?: Partial<DynamicLesson>;
+  lessonUpdate?: DynamicLesson;
   error?: boolean;
 }
 
 interface BuilderChatProps {
-  lesson: DynamicLesson;
+  /** Current lesson (null when creating from scratch) */
+  lesson: DynamicLesson | null;
+  /** Callback when lesson is created or updated */
   onLessonUpdate: (lesson: DynamicLesson) => void;
+  /** Currently active step index */
   activeStep: number;
 }
 
 /**
  * BuilderChat - Chat interface for lesson building
  *
- * Allows teachers to modify lessons through natural language conversation.
- * Sends requests to the backend API which uses Claude to generate updates.
+ * Allows teachers to create or modify lessons through natural language conversation.
+ * When no lesson exists, it can generate a complete lesson from a topic description.
  */
 export default function BuilderChat({
   lesson,
   onLessonUpdate,
   activeStep,
 }: BuilderChatProps) {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 'welcome',
-      role: 'system',
-      content: `¡Hola! Soy tu asistente para crear lecciones. Estás editando "${lesson.title}".
+  const isCreatingNew = !lesson;
+
+  const getWelcomeMessage = (): string => {
+    if (isCreatingNew) {
+      return `¡Hola! Soy tu asistente para crear lecciones de matemáticas.
+
+Describe qué tema quieres enseñar y crearé una lección interactiva completa. Por ejemplo:
+• "Quiero una lección sobre el vértice de una ecuación cuadrática"
+• "Crea una lección para enseñar fracciones equivalentes"
+• "Necesito enseñar el teorema de Pitágoras"
+
+¿Qué tema te gustaría enseñar?`;
+    }
+    return `¡Hola! Estás editando "${lesson.title}".
 
 Puedo ayudarte a:
 • Cambiar el título o descripción
@@ -44,7 +56,14 @@ Puedo ayudarte a:
 • Agregar o editar preguntas de práctica
 • Personalizar el checkpoint final
 
-¿Qué te gustaría cambiar?`,
+¿Qué te gustaría cambiar?`;
+  };
+
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: 'welcome',
+      role: 'system',
+      content: getWelcomeMessage(),
       timestamp: new Date(),
     },
   ]);
@@ -52,6 +71,18 @@ Puedo ayudarte a:
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Update welcome message when lesson changes
+  useEffect(() => {
+    setMessages([
+      {
+        id: 'welcome',
+        role: 'system',
+        content: getWelcomeMessage(),
+        timestamp: new Date(),
+      },
+    ]);
+  }, [lesson?.id]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -89,6 +120,7 @@ Puedo ayudarte a:
             .concat([{ role: 'user', content: trimmedInput }]),
           currentLesson: lesson,
           activeStep,
+          mode: isCreatingNew ? 'create' : 'edit',
         }),
       });
 
@@ -102,7 +134,7 @@ Puedo ayudarte a:
       const assistantMessage: Message = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
-        content: data.message || 'He actualizado la lección.',
+        content: data.message || (isCreatingNew ? 'He creado tu lección.' : 'He actualizado la lección.'),
         timestamp: new Date(),
         lessonUpdate: data.lessonUpdate,
       };
@@ -138,6 +170,11 @@ Puedo ayudarte a:
     }
   };
 
+  const quickActions = isCreatingNew ? QUICK_ACTIONS_CREATE : QUICK_ACTIONS_EDIT;
+  const placeholder = isCreatingNew
+    ? 'Describe el tema de tu lección...'
+    : 'Describe los cambios que quieres hacer...';
+
   return (
     <div className="flex flex-col h-full">
       {/* Messages */}
@@ -152,7 +189,7 @@ Puedo ayudarte a:
               <Loader2 className="w-4 h-4 text-purple-600 dark:text-purple-400 animate-spin" />
             </div>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              Pensando...
+              {isCreatingNew ? 'Creando tu lección...' : 'Pensando...'}
             </span>
           </div>
         )}
@@ -168,7 +205,7 @@ Puedo ayudarte a:
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Describe los cambios que quieres hacer..."
+            placeholder={placeholder}
             rows={1}
             className="flex-1 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
             style={{ minHeight: '44px', maxHeight: '120px' }}
@@ -193,7 +230,7 @@ Puedo ayudarte a:
 
         {/* Quick actions */}
         <div className="flex flex-wrap gap-2 mt-3">
-          {QUICK_ACTIONS.map((action) => (
+          {quickActions.map((action) => (
             <button
               key={action.id}
               onClick={() => setInput(action.prompt)}
@@ -263,7 +300,7 @@ function ChatMessage({ message }: { message: Message }) {
           <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-600">
             <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
               <Sparkles className="w-3 h-3" />
-              Lección actualizada
+              {message.lessonUpdate.title ? `Lección creada: "${message.lessonUpdate.title}"` : 'Lección actualizada'}
             </span>
           </div>
         )}
@@ -273,9 +310,19 @@ function ChatMessage({ message }: { message: Message }) {
 }
 
 /**
- * Quick action prompts
+ * Quick actions for creating new lessons
  */
-const QUICK_ACTIONS = [
+const QUICK_ACTIONS_CREATE = [
+  { id: 'vertex', label: 'Vértice cuadrática', prompt: 'Crea una lección sobre cómo encontrar el vértice de una ecuación cuadrática' },
+  { id: 'fractions', label: 'Fracciones', prompt: 'Quiero enseñar fracciones equivalentes' },
+  { id: 'pythagoras', label: 'Pitágoras', prompt: 'Necesito una lección sobre el teorema de Pitágoras' },
+  { id: 'probability', label: 'Probabilidad', prompt: 'Crea una lección de probabilidad básica' },
+];
+
+/**
+ * Quick actions for editing existing lessons
+ */
+const QUICK_ACTIONS_EDIT = [
   { id: 'change-title', label: 'Cambiar título', prompt: 'Cambia el título de la lección a ' },
   { id: 'edit-hook', label: 'Editar gancho', prompt: 'Quiero cambiar el escenario del gancho. ' },
   { id: 'add-question', label: 'Agregar pregunta', prompt: 'Agrega una pregunta de práctica sobre ' },
