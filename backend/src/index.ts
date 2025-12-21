@@ -36,6 +36,7 @@ import predictionRoutes from './routes/predictionRoutes';
 import operationsPracticeRoutes from './routes/operationsPracticeRoutes';
 import certificateRoutes from './routes/certificateRoutes';
 import adaptivePracticeRoutes from './routes/adaptivePracticeRoutes';
+import diagnosisRoutes from './routes/diagnosisRoutes';
 import { serveImage } from './controllers/adminController';
 
 const app = express();
@@ -217,6 +218,7 @@ app.use('/api/prediction', predictionRoutes);
 app.use('/api/operations-practice', operationsPracticeRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/adaptive', adaptivePracticeRoutes);
+app.use('/api/diagnosis', diagnosisRoutes);
 
 // Public image serving route
 app.get('/api/images/:filename', serveImage);
@@ -242,6 +244,7 @@ console.log('✅ Prediction routes registered at /api/prediction');
 console.log('✅ Operations Practice routes registered at /api/operations-practice');
 console.log('✅ Certificate routes registered at /api/certificates');
 console.log('✅ Adaptive Practice routes registered at /api/adaptive');
+console.log('✅ Diagnosis routes registered at /api/diagnosis');
 
 // 404 handler
 app.use((req: Request, res: Response) => {
