@@ -28,6 +28,20 @@ SimplePAES serves multiple audiences. Consider which audience each post targets:
 | **Teachers** | Teaching math in classroom settings | Diagnosing student gaps, differentiating instruction, saving time |
 | **Schools/Coordinators** | Implementing math support programs | Scaling support, tracking outcomes, equity across students |
 
+### Audience-Specific Restrictions
+
+When writing for specific audiences, be aware of what they CAN and CANNOT access:
+
+| Audience | Can Work With | Cannot Work With |
+|----------|---------------|------------------|
+| **Directivos/UTP** | Current students (1°-4° medio) only | Egresados (graduates) - they no longer attend the school |
+| **Teachers** | Their assigned courses/students | Students from other teachers' classes |
+| **Parents** | Their own children (current or egresados) | Other families' children |
+
+**Example error to avoid:**
+- ❌ "Un jefe de UTP puede identificar a sus estudiantes de 4° medio o egresados que..."
+- ✅ "Un jefe de UTP puede identificar a sus estudiantes de 4° medio que..."
+
 ### Content Pillars (Matemáticas Educación Media)
 
 These cover the Chilean curriculum from 1° to 4° Medio, including PAES preparation:
@@ -133,18 +147,60 @@ published: true
 4. **Show, don't tell** - Examples and scenarios over abstract advice
 5. **End with action** - What should the reader do next?
 
+**Evergreen Content Rules:**
+
+Avoid content that will become outdated:
+
+| Avoid | Use Instead |
+|-------|-------------|
+| Specific prices ("$15.000/hora", "$50.000/mes") | Relative terms ("costo alto/medio/bajo por estudiante") |
+| Specific years as current ("en 2024...") | Relative time ("actualmente", "este año") |
+| Specific dates that change yearly | Relative timing ("en marzo", "antes de vacaciones de invierno") |
+| Current version numbers | Avoid versions or say "versión actual" |
+
+**Example:**
+- ❌ "Un tutor cobra entre $15.000 y $25.000 por hora"
+- ✅ "Un tutor tiene un costo alto por estudiante"
+
+**PAES Calendar Awareness:**
+
+There are TWO PAES per year. Always clarify which one when discussing calendars or preparation timelines:
+
+| PAES | When | Who Takes It |
+|------|------|--------------|
+| **PAES Regular** | November-December | Most 4° medio students |
+| **PAES de Invierno** | June-July | Egresados, students who want to improve score |
+
+When writing preparation calendars or timelines:
+- Default to PAES Regular (more common)
+- Always add a note about how to adapt for PAES de Invierno
+- Example: "Este calendario es para la PAES regular (noviembre-diciembre). Para la PAES de invierno, adelanta todo 5-6 meses."
+
 ### SEO Checklist
 
 Before publishing, verify:
 
 - [ ] Target keyword appears in title
 - [ ] Target keyword in first 100 words
-- [ ] H2 headings include related keywords naturally (not generic like "Cómo elegir bien" → "Cómo elegir el apoyo correcto en matemáticas")
+- [ ] H2 headings include related keywords naturally (see H2 examples below)
 - [ ] Meta description under 160 characters, includes keyword, aligns with title
 - [ ] Slug is descriptive, lowercase, hyphenated
 - [ ] **Minimum 3 internal links** to related posts (see Internal Linking Strategy below)
 - [ ] Alt text for any images
 - [ ] Length is 800-1500 words (condense if longer—1800+ is too long)
+
+**H2 Keyword Examples:**
+
+H2s should include keywords naturally. Generic headers waste SEO opportunity:
+
+| ❌ Generic (Bad) | ✅ Keyword-Rich (Good) |
+|------------------|------------------------|
+| "El ingrediente que falta" | "Por qué el diagnóstico es clave para el refuerzo" |
+| "Qué hacer el lunes" | "Cómo empezar a medir estas métricas en tu colegio" |
+| "Cómo elegir bien" | "Cómo elegir el apoyo correcto en matemáticas" |
+| "Lo que no funciona" | "Por qué los programas de refuerzo tradicionales fallan" |
+| "El problema" | "Por qué el promedio de notas no alcanza" |
+| "La solución" | "Cómo SimplePAES resuelve las lagunas de matemáticas" |
 
 ### Internal Linking Strategy
 
@@ -167,6 +223,7 @@ Before publishing, verify:
 | **Error posts** | errores-comunes-algebra-paes, errores-comunes-numeros-paes, errores-comunes-geometria-paes, errores-comunes-probabilidad-estadistica-paes |
 | **Parent posts** | por-que-tu-hijo-no-quiere-ayuda-paes, como-hablar-paes-sin-conflicto, como-ayudar-hijo-matematicas-sin-saber, como-saber-si-tu-hijo-esta-preparado-paes, lagunas-matematicas-anos-anteriores, error-padres-elegir-apoyo-matematicas |
 | **Teacher posts** | como-asignar-practica-paes-efectiva, diagnosticar-lagunas-matematicas-curso, diferenciar-instruccion-matematicas, mitad-curso-no-entiende |
+| **Directivo posts** | por-que-programa-refuerzo-no-funciona, reducir-carga-profesores-mejorar-resultados, 5-metricas-matematicas-jefe-utp, apoyo-paes-escala-colegios, programa-preparacion-paes-institucional |
 | **PAES prep** | que-estudiar-paes-m1-temario-completo, manejar-tiempo-paes-matematica, guia-paes-invierno-2026 |
 | **Learning/mindset** | por-que-no-entiendo-matematicas |
 
@@ -175,6 +232,29 @@ Before publishing, verify:
 - Parent posts → link to lagunas post (explains gaps concept for parents)
 - Teacher posts → link to error posts (what errors to watch for)
 - PAES prep posts → link to error posts and temario
+
+### Cluster Creation Checklist
+
+When creating multiple posts for a new audience or topic cluster:
+
+| Step | Action |
+|------|--------|
+| 1 | Define the cluster name and add it to the Content Clusters table above |
+| 2 | List all posts that will be in the cluster |
+| 3 | Create a linking matrix: which posts link to which |
+| 4 | For each post, include at least 2 links to OTHER posts in the same cluster |
+| 5 | After creating all posts, verify bidirectional links (A→B means B→A) |
+| 6 | Add cross-cluster links where relevant (e.g., directivo posts can link to teacher posts) |
+
+**Example linking matrix for a 5-post cluster:**
+
+| Post | Links TO |
+|------|----------|
+| Post 1 | Post 2, Post 3 |
+| Post 2 | Post 1, Post 4 |
+| Post 3 | Post 1, Post 5 |
+| Post 4 | Post 2, Post 5 |
+| Post 5 | Post 3, Post 4 |
 
 ### CTA Guidelines
 
@@ -329,3 +409,47 @@ For each post, check:
 3. Add contextual links (minimum 3 per post)
 4. Check H2s for keyword inclusion
 5. Simplify CTAs if too technical
+
+## Phase 4: Post-Creation Review
+
+After creating posts, run through this final review checklist to catch common errors:
+
+### Audience Validity Check
+
+| Question | If NO... |
+|----------|----------|
+| Can this audience actually access what I'm describing? | Remove the reference (e.g., UTP can't work with egresados) |
+| Is the pain point real for this audience? | Reframe or choose different angle |
+| Does the CTA make sense for this audience? | Use audience-appropriate CTA template |
+
+### Evergreen Content Check
+
+| Question | If NO... |
+|----------|----------|
+| Will this still be accurate in 2 years? | Remove specific prices, dates, versions |
+| Am I mentioning a specific PAES year? | Use relative timing instead |
+| Are there prices in CLP? | Replace with Alto/Medio/Bajo comparisons |
+
+### PAES Context Check
+
+| Question | If NO... |
+|----------|----------|
+| If I mention a PAES timeline, did I note which PAES? | Add note about PAES Regular vs Invierno |
+| If discussing egresados, is the audience appropriate? | Egresados = parents/students only, not directivos |
+
+### Cluster Linking Check
+
+| Question | If NO... |
+|----------|----------|
+| Does this post link to at least 3 other posts? | Add contextual internal links |
+| If part of a cluster, does it link to other cluster posts? | Add intra-cluster links |
+| Did I update existing posts to link back to this one? | Add bidirectional links |
+
+### H2 Quality Check
+
+| Question | If NO... |
+|----------|----------|
+| Do all H2s contain keywords? | Rewrite generic H2s with keywords |
+| Would someone searching find value in this H2? | Make more specific and searchable |
+
+Run through ALL these checks before considering the post complete.
