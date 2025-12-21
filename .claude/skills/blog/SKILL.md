@@ -319,6 +319,24 @@ Use these naturally when relevant (not forced into every post). Match the CTA to
 > ---
 > *¿Quieres darle a tu hijo una herramienta que lo ayude a mejorar de forma independiente? SimplePAES ofrece práctica con retroalimentación instantánea y un tutor con IA disponible 24/7.*
 
+#### For Directivos (UTP, Coordinadores, Directores)
+
+**For admin dashboard/metrics:**
+> SimplePAES te da estas métricas automáticamente. El panel de administración muestra lagunas por estudiante y por curso, distribución de errores, tasas de práctica, y seguimiento de brechas cerradas—todo actualizado en tiempo real, sin trabajo manual.
+
+**For diagnosing at scale:**
+> SimplePAES permite diagnosticar lagunas específicas de cada estudiante—desde contenidos de años anteriores hasta lo que están viendo ahora. El panel de administración te muestra qué temas necesitan refuerzo a nivel de curso o de colegio.
+
+**For reducing teacher workload:**
+> SimplePAES reduce la carga docente desde el día 1: retroalimentación automática, diagnóstico continuo, y un tutor IA que responde dudas 24/7. El profesor ve en su panel quién necesita atención—sin corregir, sin tabular, sin pasar horas extra.
+
+**For scaling support:**
+> SimplePAES ofrece diagnóstico adaptativo que identifica lagunas desde años anteriores, práctica con retroalimentación instantánea, y un panel de administración que te muestra exactamente dónde están los problemas por curso y por estudiante. Escala para todo tu colegio sin agregar carga docente.
+
+**Soft CTA (end of post - directivos):**
+> ---
+> *SimplePAES te da [specific metric/feature from the post]. [Conoce nuestros planes para colegios](https://simplepaes.cl/colegios).*
+
 ## File Conventions
 
 **Location:** `/content/blog/[slug].md`
