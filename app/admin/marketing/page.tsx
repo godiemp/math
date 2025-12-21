@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
-import { api } from '@/lib/api-client';
+import { api, getApiBaseUrl } from '@/lib/api-client';
 import AdminLayout from '@/components/layout/AdminLayout';
 import {
   MARKETING_SCENES,
@@ -31,6 +31,13 @@ interface CaptureResult {
   logs: string[];
   error?: string;
 }
+
+// Helper to get the full URL for marketing files (needs backend URL)
+const getFileUrl = (filename: string, download = false) => {
+  const baseUrl = getApiBaseUrl();
+  const downloadParam = download ? '?download=true' : '';
+  return `${baseUrl}/api/admin/marketing/files/${filename}${downloadParam}`;
+};
 
 export default function MarketingPage() {
   // Scene selection
@@ -434,13 +441,13 @@ export default function MarketingPage() {
                           className="relative group rounded-lg overflow-hidden border border-gray-200"
                         >
                           <img
-                            src={`/api/admin/marketing/files/${filename}`}
+                            src={getFileUrl(filename)}
                             alt={filename}
                             className="w-full h-24 object-cover"
                           />
                           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                             <a
-                              href={`/api/admin/marketing/files/${filename}?download=true`}
+                              href={getFileUrl(filename, true)}
                               className="p-2 bg-white rounded-full text-gray-700 hover:bg-gray-100"
                               title="Download"
                             >
@@ -476,7 +483,7 @@ export default function MarketingPage() {
                           className="relative group rounded-lg overflow-hidden border border-gray-200"
                         >
                           <video
-                            src={`/api/admin/marketing/files/${filename}`}
+                            src={getFileUrl(filename)}
                             className="w-full h-24 object-cover"
                             muted
                             onMouseEnter={(e) => e.currentTarget.play()}
@@ -487,7 +494,7 @@ export default function MarketingPage() {
                           />
                           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                             <a
-                              href={`/api/admin/marketing/files/${filename}?download=true`}
+                              href={getFileUrl(filename, true)}
                               className="p-2 bg-white rounded-full text-gray-700 hover:bg-gray-100"
                               title="Download"
                             >
@@ -523,13 +530,13 @@ export default function MarketingPage() {
                           className="relative group rounded-lg overflow-hidden border border-gray-200"
                         >
                           <img
-                            src={`/api/admin/marketing/files/${filename}`}
+                            src={getFileUrl(filename)}
                             alt={filename}
                             className="w-full h-24 object-cover"
                           />
                           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                             <a
-                              href={`/api/admin/marketing/files/${filename}?download=true`}
+                              href={getFileUrl(filename, true)}
                               className="p-2 bg-white rounded-full text-gray-700 hover:bg-gray-100"
                               title="Download"
                             >
