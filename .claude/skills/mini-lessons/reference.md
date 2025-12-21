@@ -44,14 +44,14 @@ Quick lookup for thematic units, shared components, styling, and exemplar lesson
 
 ---
 
-## Complete Lesson Inventory (47 Lessons)
+## Complete Lesson Inventory (48 Lessons)
 
-### Algebra Lessons (18)
+### Algebra Lessons (17)
 | Slug | Title | Pattern | Notes |
 |------|-------|---------|-------|
 | `terminos-semejantes` | Términos Semejantes | Tab-based | ⭐ Best hook |
 | `factor-comun` | Factor Común | Tab-based | ⭐ Canonical example |
-| `productos-notables-cuadrados` | Productos Notables (Cuadrados) | Tab-based | |
+| `productos-notables` | Productos Notables | Tab-based | |
 | `productos-notables-cubos` | Productos Notables (Cubos) | Tab-based | ⚠️ Tips outside tabs |
 | `ecuaciones-lineales` | Ecuaciones Lineales | Phase-based | ⭐ Great hook |
 | `propiedad-distributiva` | Propiedad Distributiva | Tab-based | ⭐ Great hook |
@@ -90,17 +90,342 @@ Quick lookup for thematic units, shared components, styling, and exemplar lesson
 
 Import from `@/components/lessons/shared`:
 
-| Component | Use For | Props |
-|-----------|---------|-------|
-| `LessonShell` | Lesson page wrapper | `lesson`, `onComplete`, `onExit` |
-| `CheckpointQuiz` | Step 6 verify (ALWAYS use) | `questions`, `requiredCorrect`, `successMessage`, `onComplete`, `isActive` |
-| `Celebration` | Success animations | (used internally by CheckpointQuiz) |
-| `NumberLine` | Visualizing number concepts | `min`, `max`, `value`, `showLabels` |
-| `BarChart` | Data visualization | `data`, `labels`, `colors` |
-| `PieChart` | Probability/statistics | `data`, `labels`, `colors` |
-| `FrequencyTable` | Statistics lessons | `data`, `headers` |
-| `FactorGrid` | Factorization concepts | `number`, `factors` |
-| `VennDiagram` | Set theory, probability | `sets`, `labels`, `intersection` |
+| Component | Use For | Subjects |
+|-----------|---------|----------|
+| `LessonShell` | Lesson page wrapper | All |
+| `CheckpointQuiz` | Step 6 verify (ALWAYS use) | All |
+| `Celebration` | Success animations | All (internal) |
+| `NumberLine` | Visualizing number concepts | Números |
+| `BarChart` | Data visualization | Probabilidad |
+| `PieChart` | Probability/statistics | Probabilidad |
+| `FrequencyTable` | Frequency tables with tally marks | Probabilidad |
+| `FactorGrid` | Visualizing divisors/factors | Números |
+| `VennDiagram` | Set theory, probability | Probabilidad |
+
+---
+
+## Component Props Reference
+
+### CheckpointQuiz
+
+```typescript
+interface CheckpointQuizProps extends LessonStepProps {
+  // From LessonStepProps:
+  onComplete: () => void;           // Called when quiz passed
+  isActive: boolean;                // Controls visibility
+
+  // Quiz-specific:
+  questions: CheckpointQuestion[];  // Required: 3-4 questions
+  requiredCorrect?: number;         // Pass threshold (default: 75% of questions)
+  title?: string;                   // Header (default: "Checkpoint Final")
+  subtitle?: string;                // Instruction text below title
+  successMessage?: string;          // Shown on pass (default: "¡Excelente!")
+  failureMessage?: string;          // Shown on fail (default: "Sigue practicando")
+}
+
+interface CheckpointQuestion {
+  id: string;                       // Unique identifier (e.g., 'q1')
+  question: string;                 // The question text
+  options: string[];                // Array of 4 options
+  correctAnswer: number;            // 0-indexed correct option
+  explanation: string;              // Shown after answer
+}
+```
+
+**Example with custom messages:**
+```typescript
+<CheckpointQuiz
+  onComplete={onComplete}
+  isActive={isActive}
+  questions={QUESTIONS}
+  title="¡Demuestra lo que sabes!"
+  subtitle="Responde correctamente 3 de 4 preguntas"
+  requiredCorrect={3}
+  successMessage="¡Dominaste la factorización!"
+  failureMessage="Repasa los conceptos y vuelve a intentar"
+/>
+```
+
+### FrequencyTable
+
+For statistics lessons showing frequency distributions with optional tally marks.
+
+```typescript
+interface FrequencyTableProps {
+  data: FrequencyTableData[];       // Required: rows of data
+  showTally?: boolean;              // Show tally marks column (||||)
+  showRelative?: boolean;           // Show relative frequency (hᵢ)
+  showPercentage?: boolean;         // Show percentage column
+  total?: number;                   // Override auto-calculated total
+  highlightRow?: number;            // Index of row to highlight
+  onRowClick?: (index: number) => void;  // Interactive row clicks
+  animated?: boolean;               // Animate number changes (default: true)
+  className?: string;               // Additional CSS classes
+}
+
+interface FrequencyTableData {
+  category: string;                 // Row label (e.g., "Manzanas")
+  frequency: number;                // Count (fᵢ)
+  color?: string;                   // Optional color indicator
+}
+```
+
+**Example usage:**
+```typescript
+import { FrequencyTable } from '@/components/lessons/shared';
+
+const data = [
+  { category: 'Manzanas', frequency: 5, color: '#ef4444' },
+  { category: 'Naranjas', frequency: 8, color: '#f97316' },
+  { category: 'Plátanos', frequency: 3, color: '#eab308' },
+];
+
+<FrequencyTable
+  data={data}
+  showTally={true}
+  showPercentage={true}
+  highlightRow={1}
+/>
+```
+
+### FactorGrid
+
+For visualizing divisors of a number in a grid format.
+
+```typescript
+interface FactorGridProps {
+  number: number;                   // Required: the number to factor
+  maxDisplay?: number;              // Max grid size (defaults to number)
+  highlightedFactors?: number[];    // Factors to highlight with scale
+  commonFactors?: number[];         // Common factors (yellow ring)
+  interactive?: boolean;            // Enable click interactions
+  onFactorClick?: (factor: number, isDivisor: boolean) => void;
+  size?: 'sm' | 'md' | 'lg';        // Cell size (default: 'md')
+  colorScheme?: 'blue' | 'green' | 'purple' | 'orange';
+  showLabel?: boolean;              // Show "Divisores de X" label
+  label?: string;                   // Custom label override
+  showFactorList?: boolean;         // Show badges below grid
+}
+```
+
+**Example usage:**
+```typescript
+import { FactorGrid } from '@/components/lessons/shared';
+
+// For MCD lesson - comparing two numbers
+<div className="grid grid-cols-2 gap-8">
+  <FactorGrid
+    number={12}
+    colorScheme="blue"
+    commonFactors={[1, 2, 3, 4]}
+  />
+  <FactorGrid
+    number={18}
+    colorScheme="green"
+    commonFactors={[1, 2, 3, 6]}
+  />
+</div>
+```
+
+### VennDiagram
+
+For probability and set theory visualizations with two circles (A and B).
+
+```typescript
+interface VennDiagramProps {
+  mode: 'exclusive' | 'overlapping' | 'interactive';  // Required: display mode
+  showLabels?: boolean;             // Show set labels (default: true)
+  labelA?: string;                  // Label for circle A (default: 'A')
+  labelB?: string;                  // Label for circle B (default: 'B')
+  countA?: number;                  // Count in A only (not B)
+  countB?: number;                  // Count in B only (not A)
+  countBoth?: number;               // Count in intersection (A ∩ B)
+  highlightRegion?: 'A' | 'B' | 'intersection' | 'union' | 'none';
+  onRegionClick?: (region: 'A' | 'B' | 'intersection') => void;
+  animated?: boolean;               // Enable transitions (default: true)
+  size?: 'sm' | 'md' | 'lg';        // Diagram size (default: 'md')
+  showCounts?: boolean;             // Show count numbers (default: false)
+  className?: string;               // Custom styling
+}
+```
+
+**Mode descriptions:**
+- `'exclusive'` - Circles apart (mutually exclusive events)
+- `'overlapping'` - Circles overlap (shows intersection)
+- `'interactive'` - Circles overlap + clickable regions
+
+**Example usage:**
+```typescript
+import { VennDiagram } from '@/components/lessons/shared';
+
+// Basic overlapping diagram with counts
+<VennDiagram
+  mode="overlapping"
+  labelA="Múltiplos de 2"
+  labelB="Múltiplos de 3"
+  countA={4}          // Only in A: 2, 4, 8, 10
+  countB={3}          // Only in B: 3, 9, 12
+  countBoth={1}       // In both: 6
+  highlightRegion="intersection"
+  showCounts={true}
+/>
+
+// Interactive diagram for exercises
+<VennDiagram
+  mode="interactive"
+  labelA="Evento A"
+  labelB="Evento B"
+  onRegionClick={(region) => handleAnswer(region)}
+  highlightRegion="none"
+/>
+
+// Mutually exclusive events
+<VennDiagram
+  mode="exclusive"
+  labelA="Par"
+  labelB="Impar"
+  showLabels={true}
+/>
+```
+
+### NumberLine
+
+Interactive number line for placement exercises and visualization. Supports drag-and-drop number placement with correctness feedback.
+
+```typescript
+interface NumberLineProps {
+  min?: number;                     // Left bound (default: -5)
+  max?: number;                     // Right bound (default: 5)
+  showTicks?: boolean;              // Show tick marks (default: true)
+  showLabels?: boolean;             // Show number labels (default: true)
+  markers?: number[];               // Fixed markers shown on line
+  draggableNumbers?: number[];      // Numbers in pool to drag onto line
+  onPlacement?: (number: number, position: number) => void;
+  onAllCorrect?: () => void;        // Called when all correctly placed
+  highlightZero?: boolean;          // Red tick at zero (default: true)
+  showDistanceFor?: number | null;  // Show |n| visualization
+  readOnly?: boolean;               // Disable dragging (default: false)
+  className?: string;
+}
+```
+
+**Example usage:**
+```typescript
+// Placement exercise
+<NumberLine
+  min={-10}
+  max={10}
+  draggableNumbers={[-3, 5, -7, 2]}
+  onAllCorrect={() => setComplete(true)}
+/>
+
+// Absolute value visualization
+<NumberLine
+  min={-5}
+  max={5}
+  markers={[-3]}
+  showDistanceFor={-3}  // Shows |-3| = 3
+  readOnly={true}
+/>
+```
+
+### BarChart
+
+For statistics and data visualization.
+
+```typescript
+interface BarChartData {
+  category: string;
+  value: number;
+  color?: string;
+}
+
+interface BarChartProps {
+  data: BarChartData[];             // Chart data
+  showValues?: boolean;             // Display values on bars
+  showLabels?: boolean;             // Show category labels
+  animated?: boolean;               // Animate on render (default: true)
+  height?: 'sm' | 'md' | 'lg';      // Chart height
+  valueType?: 'absolute' | 'percentage';
+  onBarClick?: (index: number) => void;
+  highlightIndex?: number;          // Highlight specific bar
+  maxValue?: number;                // Override max for scaling
+  className?: string;
+}
+```
+
+### PieChart
+
+For probability and data distribution.
+
+```typescript
+interface PieChartData {
+  category: string;
+  value: number;
+  color?: string;
+}
+
+interface PieChartProps {
+  data: PieChartData[];             // Chart data
+  showLegend?: boolean;             // Show legend (default: true)
+  showPercentages?: boolean;        // Show % on slices
+  size?: 'sm' | 'md' | 'lg';        // Chart size
+  interactive?: boolean;            // Enable slice clicks
+  highlightIndex?: number;          // Highlight specific slice
+  onSliceClick?: (index: number) => void;
+  donut?: boolean;                  // Render as donut chart
+  className?: string;
+}
+```
+
+**Example chart usage:**
+```typescript
+import { BarChart, PieChart } from '@/components/lessons/shared';
+
+const data = [
+  { category: 'Manzanas', value: 5, color: '#ef4444' },
+  { category: 'Naranjas', value: 8, color: '#f97316' },
+];
+
+<BarChart data={data} showValues height="md" />
+<PieChart data={data} showPercentages donut />
+```
+
+### Celebration
+
+For success animations after lesson/quiz completion. Used internally by CheckpointQuiz but can be used standalone.
+
+```typescript
+interface CelebrationProps {
+  title?: string;           // Default: '¡Lección Completada!'
+  message?: string;         // Default: 'Has demostrado que entiendes el tema.'
+  onContinue?: () => void;  // Callback when continue button clicked
+  continueLabel?: string;   // Default: 'Continuar'
+}
+```
+
+**Features:**
+- Confetti animation with stars, sparkles, and circles (3 seconds)
+- Modal overlay with gradient background
+- Bouncing Award icon
+- Dark mode support
+
+**Example usage:**
+```typescript
+import { Celebration } from '@/components/lessons/shared';
+
+// After quiz completion
+{showCelebration && (
+  <Celebration
+    title="¡Excelente!"
+    message="Has completado el quiz con éxito."
+    onContinue={() => router.push('/lessons')}
+    continueLabel="Ver más lecciones"
+  />
+)}
+```
+
+**Note:** CheckpointQuiz uses Celebration internally, so you typically don't need to import it directly unless building custom completion flows.
 
 ---
 
