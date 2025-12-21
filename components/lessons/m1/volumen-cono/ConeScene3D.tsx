@@ -274,13 +274,10 @@ function FormulaReveal({ visible }: { visible: boolean }) {
   if (!visible) return null;
 
   return (
-    <Html position={[0, -2.2, 0]} center>
-      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-xl shadow-xl animate-fadeIn">
-        <p className="text-center text-lg font-bold">
-          V<sub>cono</sub> = <span className="text-yellow-300">1/3</span> &times; V<sub>cilindro</sub>
-        </p>
-        <p className="text-center text-xl font-bold mt-1">
-          V = <span className="text-yellow-300">1/3</span> &times; &pi; &times; r&sup2; &times; h
+    <Html position={[0, -2, 0]} center style={{ pointerEvents: 'none' }}>
+      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg shadow-xl whitespace-nowrap">
+        <p className="text-center text-sm font-bold">
+          V<sub>cono</sub> = <span className="text-yellow-300">⅓</span> &times; &pi; &times; r&sup2; &times; h
         </p>
       </div>
     </Html>
