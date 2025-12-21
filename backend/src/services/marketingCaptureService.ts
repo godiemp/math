@@ -151,6 +151,21 @@ export async function captureContent(
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
     log(`Error: ${errorMsg}`);
+
+    // Provide helpful error message for missing Playwright browsers
+    if (errorMsg.includes("Executable doesn't exist") || errorMsg.includes('browserType.launch')) {
+      return {
+        success: false,
+        error: 'Playwright browsers not installed. The server needs to run: npx playwright install --with-deps chromium',
+        logs: [
+          ...logs,
+          'Playwright browser binaries are missing.',
+          'This typically happens when the server was deployed without installing Playwright browsers.',
+          'Solution: Add "npx playwright install --with-deps chromium" to the build command.',
+        ],
+      };
+    }
+
     return {
       success: false,
       error: errorMsg,
