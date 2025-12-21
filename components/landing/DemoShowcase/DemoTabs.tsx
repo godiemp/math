@@ -1,6 +1,6 @@
 'use client';
 
-import { Circle, Box, BarChart3 } from 'lucide-react';
+import { Circle, Box, BarChart3, PieChart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DemoIndex } from './useDemoCarousel';
 
@@ -15,6 +15,7 @@ const DEMOS = [
   { icon: Circle, label: 'Geometría', color: 'teal' },
   { icon: Box, label: 'Álgebra', color: 'purple' },
   { icon: BarChart3, label: 'Fracciones', color: 'blue' },
+  { icon: PieChart, label: 'Estadística', color: 'orange' },
 ] as const;
 
 export function DemoTabs({ activeDemo, onSelectDemo, progress, isPaused }: DemoTabsProps) {
@@ -44,7 +45,8 @@ export function DemoTabs({ activeDemo, onSelectDemo, progress, isPaused }: DemoT
                   'transition-colors',
                   isActive && demo.color === 'teal' && 'text-teal-500',
                   isActive && demo.color === 'purple' && 'text-purple-500',
-                  isActive && demo.color === 'blue' && 'text-blue-500'
+                  isActive && demo.color === 'blue' && 'text-blue-500',
+                  isActive && demo.color === 'orange' && 'text-orange-500'
                 )}
               />
               <span className="hidden sm:inline">{demo.label}</span>
@@ -60,7 +62,8 @@ export function DemoTabs({ activeDemo, onSelectDemo, progress, isPaused }: DemoT
             'h-full transition-all duration-100 ease-linear rounded-full',
             activeDemo === 0 && 'bg-teal-500',
             activeDemo === 1 && 'bg-purple-500',
-            activeDemo === 2 && 'bg-blue-500'
+            activeDemo === 2 && 'bg-blue-500',
+            activeDemo === 3 && 'bg-orange-500'
           )}
           style={{
             width: isPaused ? `${progress}%` : `${progress}%`,

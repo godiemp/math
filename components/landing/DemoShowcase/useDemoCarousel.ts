@@ -6,7 +6,7 @@ const DEMO_DURATION = 8000; // 8 seconds per demo
 const IDLE_TIMEOUT = 15000; // Resume after 15s of no interaction
 const PROGRESS_INTERVAL = 50; // Update progress every 50ms
 
-export type DemoIndex = 0 | 1 | 2;
+export type DemoIndex = 0 | 1 | 2 | 3;
 
 export interface UseDemoCarouselReturn {
   activeDemo: DemoIndex;
@@ -69,7 +69,7 @@ export function useDemoCarousel(): UseDemoCarouselReturn {
 
         if (next >= 100) {
           // Move to next demo
-          setActiveDemoState((d) => ((d + 1) % 3) as DemoIndex);
+          setActiveDemoState((d) => ((d + 1) % 4) as DemoIndex);
           return 0;
         }
         return next;

@@ -139,38 +139,9 @@ function CircumferenceAnimation() {
 }
 
 function AreaAnimation() {
-  const numSlices = 12;
-  const radius = 45;
-  const sliceAngle = (2 * Math.PI) / numSlices;
-  const halfAngle = sliceAngle / 2;
-  const slicePath = `M 0 0 L ${-radius * Math.sin(halfAngle)} ${-radius * Math.cos(halfAngle)} A ${radius} ${radius} 0 0 1 ${radius * Math.sin(halfAngle)} ${-radius * Math.cos(halfAngle)} Z`;
-
-  const sliceColors = Array.from({ length: numSlices }, (_, i) =>
-    i % 2 === 0 ? '#5eead4' : '#14b8a6'
-  );
-
-  const sliceChordWidth = 2 * radius * Math.sin(halfAngle);
-  const rectWidth = numSlices * (sliceChordWidth / 2);
   const centerX = 170;
-  const centerY = 70;
-  const rectStartX = centerX - rectWidth / 2;
-
-  // Circle positions
-  const getCirclePosition = (index: number) => ({
-    x: centerX,
-    y: centerY,
-    rotate: index * (360 / numSlices),
-  });
-
-  // Rectangle positions
-  const getRectanglePosition = (index: number) => {
-    const isDown = index % 2 === 0;
-    return {
-      x: rectStartX + (index + 0.5) * (sliceChordWidth / 2),
-      y: isDown ? centerY - radius / 2 : centerY + radius / 2,
-      rotate: isDown ? 180 : 0,
-    };
-  };
+  const centerY = 75;
+  const radius = 50;
 
   return (
     <motion.div
@@ -199,67 +170,74 @@ function AreaAnimation() {
         </defs>
         <rect x="0" y="0" width="340" height="150" fill="url(#gridAreaPreview)" />
 
-        {/* Animated slices */}
-        {Array.from({ length: numSlices }, (_, i) => {
-          const circlePos = getCirclePosition(i);
-          const rectPos = getRectanglePosition(i);
+        {/* Circle that fills up */}
+        <motion.circle
+          cx={centerX}
+          cy={centerY}
+          r={radius}
+          fill="#c4b5fd"
+          className="dark:fill-purple-700/50"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1, ease: 'easeOut' }}
+        />
 
-          return (
-            <motion.g
-              key={i}
-              initial={{
-                x: circlePos.x,
-                y: circlePos.y,
-                rotate: circlePos.rotate,
-              }}
-              animate={{
-                x: rectPos.x,
-                y: rectPos.y,
-                rotate: rectPos.rotate,
-              }}
-              transition={{
-                duration: 1.5,
-                delay: 0.5 + i * 0.05,
-                ease: [0.4, 0, 0.2, 1],
-              }}
-            >
-              <path
-                d={slicePath}
-                fill={sliceColors[i]}
-                stroke="#0d9488"
-                strokeWidth="1"
-              />
-            </motion.g>
-          );
-        })}
+        {/* Circle outline */}
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={radius}
+          fill="none"
+          stroke="#7c3aed"
+          strokeWidth="3"
+        />
 
-        {/* Labels that appear after animation */}
-        <motion.g
+        {/* Center point */}
+        <circle cx={centerX} cy={centerY} r="4" fill="#7c3aed" />
+
+        {/* Radius line */}
+        <motion.line
+          x1={centerX}
+          y1={centerY}
+          x2={centerX + radius}
+          y2={centerY}
+          stroke="#dc2626"
+          strokeWidth="3"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 0.8, delay: 1 }}
+        />
+
+        {/* Radius label */}
+        <motion.text
+          x={centerX + radius / 2}
+          y={centerY - 8}
+          textAnchor="middle"
+          fontSize="14"
+          fontWeight="bold"
+          fill="#dc2626"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2.5 }}
+          transition={{ delay: 1.5 }}
         >
-          {/* Base label */}
+          r
+        </motion.text>
+
+        {/* Formula appears */}
+        <motion.g
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2 }}
+        >
           <text
             x={centerX}
-            y={centerY + radius / 2 + 30}
+            y={centerY + radius + 25}
             textAnchor="middle"
-            fontSize="11"
+            fontSize="16"
             fontWeight="bold"
             fill="#7c3aed"
           >
-            base = πr
-          </text>
-          {/* Height label */}
-          <text
-            x={rectStartX + rectWidth + 15}
-            y={centerY + 4}
-            textAnchor="start"
-            fontSize="12"
-            fontWeight="bold"
-            fill="#dc2626"
-          >
-            r
+            A = π × r × r
           </text>
         </motion.g>
       </svg>

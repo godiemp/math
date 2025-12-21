@@ -16,6 +16,9 @@ const CubePreview = lazy(() =>
 const FractionBarsPreview = lazy(() =>
   import('./FractionBarsPreview').then((m) => ({ default: m.FractionBarsPreview }))
 );
+const StatsPreview = lazy(() =>
+  import('./StatsPreview').then((m) => ({ default: m.StatsPreview }))
+);
 
 export function DemoShowcase() {
   const { activeDemo, setActiveDemo, isPaused, pause, resume, progress } = useDemoCarousel();
@@ -54,6 +57,7 @@ export function DemoShowcase() {
               {activeDemo === 0 && <CirclePreview />}
               {activeDemo === 1 && <CubePreview />}
               {activeDemo === 2 && <FractionBarsPreview />}
+              {activeDemo === 3 && <StatsPreview />}
             </Suspense>
           </motion.div>
         </AnimatePresence>

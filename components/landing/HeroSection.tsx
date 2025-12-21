@@ -87,7 +87,7 @@ export function HeroSection({ audience, onAudienceChange }: HeroSectionProps) {
         {/* Grid layout: Text left, Demo right */}
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Left: Text content */}
-          <div className="text-center md:text-left order-2 md:order-1">
+          <div className="text-center md:text-left">
             {/* Badge */}
             <div className="mb-5">
               <span
@@ -122,13 +122,11 @@ export function HeroSection({ audience, onAudienceChange }: HeroSectionProps) {
 
             {/* Subtitle */}
             <p
-              className="mb-7 spring-motion"
+              className="mb-7 spring-motion md:max-w-[500px]"
               style={{
                 fontSize: '17px',
                 lineHeight: 1.6,
                 color: 'var(--color-label-secondary)',
-                maxWidth: '500px',
-                margin: '0 auto 28px',
               }}
             >
               {current.subtitle}
@@ -172,7 +170,7 @@ export function HeroSection({ audience, onAudienceChange }: HeroSectionProps) {
           </div>
 
           {/* Right: Demo showcase */}
-          <div className="order-1 md:order-2">
+          <div>
             <DemoShowcase />
           </div>
         </div>
