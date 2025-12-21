@@ -25,15 +25,7 @@ function SubscribePageContent() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
-  // Only redirect if user has active (paid) subscription, not trial
   const hasActiveSubscription = user?.subscription?.status === 'active';
-  const isOnTrial = user?.subscription?.status === 'trial';
-
-  useEffect(() => {
-    if (hasActiveSubscription) {
-      router.push('/dashboard');
-    }
-  }, [hasActiveSubscription, router]);
 
   // Fetch active plans
   const { data: plansResponse, error, isLoading } = useSWR(
