@@ -144,4 +144,294 @@ test.describe('Adaptive Practice', () => {
     const chatInput = page.getByPlaceholder(/Escribe tu pregunta/i);
     await expect(chatInput).toBeVisible();
   });
+
+  test.describe('AI Tutor Interaction', () => {
+    test('should send message and receive AI response', async ({ page }) => {
+      // Mock the hint API to return a predictable response
+      await page.route('**/api/adaptive/hint', route => {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ hint: '¿Qué operación usarías primero aquí?' }),
+        });
+      });
+
+      await page.goto('/practice/adaptive', { waitUntil: 'domcontentloaded' });
+      await page.getByText('Números').click();
+
+      // Wait for problem to load
+      await expect(page.getByRole('button', { name: /Verificar Respuesta/i })).toBeVisible({
+        timeout: 10000,
+      });
+
+      // Send a message
+      const chatInput = page.getByPlaceholder(/Escribe tu pregunta/i);
+      await chatInput.fill('No entiendo este problema');
+      await page.getByRole('button', { name: /Enviar/i }).click();
+
+      // Verify user message appears
+      await expect(page.getByText('No entiendo este problema')).toBeVisible();
+
+      // Verify AI response appears
+      await expect(page.getByText('¿Qué operación usarías primero aquí?')).toBeVisible({
+        timeout: 10000,
+      });
+    });
+
+    test('should handle multi-turn conversation', async ({ page }) => {
+      let messageCount = 0;
+
+      await page.route('**/api/adaptive/hint', route => {
+        messageCount++;
+        const responses = [
+          '¿Qué tipo de ecuación es esta?',
+          '¡Bien! Ahora, ¿cómo despejarías la variable?',
+        ];
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            hint: responses[messageCount - 1] || 'Sigue intentando',
+          }),
+        });
+      });
+
+      await page.goto('/practice/adaptive', { waitUntil: 'domcontentloaded' });
+      await page.getByText('Álgebra y Funciones').click();
+      await expect(page.getByRole('button', { name: /Verificar Respuesta/i })).toBeVisible({
+        timeout: 10000,
+      });
+
+      const chatInput = page.getByPlaceholder(/Escribe tu pregunta/i);
+
+      // First message
+      await chatInput.fill('Ayuda con este problema');
+      await page.getByRole('button', { name: /Enviar/i }).click();
+      await expect(page.getByText('¿Qué tipo de ecuación es esta?')).toBeVisible({ timeout: 10000 });
+
+      // Second message
+      await chatInput.fill('Es una ecuación lineal');
+      await page.getByRole('button', { name: /Enviar/i }).click();
+      await expect(page.getByText('¿cómo despejarías la variable?')).toBeVisible({ timeout: 10000 });
+
+      // Verify both user messages are visible
+      await expect(page.getByText('Ayuda con este problema')).toBeVisible();
+      await expect(page.getByText('Es una ecuación lineal')).toBeVisible();
+    });
+
+    test('should clear chat when moving to next problem', async ({ page }) => {
+      await page.route('**/api/adaptive/hint', route => {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ hint: 'Pista de prueba' }),
+        });
+      });
+
+      await page.goto('/practice/adaptive', { waitUntil: 'domcontentloaded' });
+      await page.getByText('Números').click();
+
+      const submitButton = page.getByRole('button', { name: /Verificar Respuesta/i });
+      await expect(submitButton).toBeVisible({ timeout: 10000 });
+
+      // Send a chat message
+      await page.getByPlaceholder(/Escribe tu pregunta/i).fill('Hola');
+      await page.getByRole('button', { name: /Enviar/i }).click();
+      await expect(page.getByText('Pista de prueba')).toBeVisible({ timeout: 10000 });
+
+      // Answer question and go to next
+      await page
+        .locator('button')
+        .filter({ has: page.locator('span.rounded-full') })
+        .first()
+        .click();
+      await submitButton.click();
+      await expect(page.getByText(/¡Correcto!|Incorrecto/i)).toBeVisible({ timeout: 5000 });
+      await page.getByRole('button', { name: /Siguiente Problema/i }).click();
+
+      // Verify chat is cleared - empty state text should be visible
+      await expect(page.getByText('Escribe tu pregunta o lo que has intentado')).toBeVisible();
+      await expect(page.getByText('Pista de prueba')).not.toBeVisible();
+    });
+
+    test('should handle AI API failure gracefully', async ({ page }) => {
+      await page.route('**/api/adaptive/hint', route => {
+        route.fulfill({
+          status: 500,
+          contentType: 'application/json',
+          body: JSON.stringify({ error: 'Internal server error' }),
+        });
+      });
+
+      await page.goto('/practice/adaptive', { waitUntil: 'domcontentloaded' });
+      await page.getByText('Geometría').click();
+      await expect(page.getByRole('button', { name: /Verificar Respuesta/i })).toBeVisible({
+        timeout: 10000,
+      });
+
+      // Send message
+      await page.getByPlaceholder(/Escribe tu pregunta/i).fill('Ayuda');
+      await page.getByRole('button', { name: /Enviar/i }).click();
+
+      // Should show error message from useAITutor hook
+      await expect(page.getByText(/Lo siento, hubo un error de conexión/i)).toBeVisible({
+        timeout: 10000,
+      });
+    });
+  });
+
+  test.describe('Error Handling', () => {
+    test('should handle empty hint response gracefully', async ({ page }) => {
+      await page.route('**/api/adaptive/hint', route => {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ hint: '' }),
+        });
+      });
+
+      await page.goto('/practice/adaptive', { waitUntil: 'domcontentloaded' });
+      await page.getByText('Probabilidades y Estadística').click();
+      await expect(page.getByRole('button', { name: /Verificar Respuesta/i })).toBeVisible({
+        timeout: 10000,
+      });
+
+      await page.getByPlaceholder(/Escribe tu pregunta/i).fill('Test');
+      await page.getByRole('button', { name: /Enviar/i }).click();
+
+      // Hook handles empty response with fallback message
+      await expect(page.getByText(/Lo siento, hubo un error/i)).toBeVisible({ timeout: 10000 });
+    });
+
+    test('should continue despite attempt API failure', async ({ page }) => {
+      // Mock attempt API to fail
+      await page.route('**/api/adaptive/attempt', route => {
+        route.fulfill({
+          status: 500,
+          contentType: 'application/json',
+          body: JSON.stringify({ error: 'Database error' }),
+        });
+      });
+
+      await page.goto('/practice/adaptive', { waitUntil: 'domcontentloaded' });
+      await page.getByText('Números').click();
+
+      const submitButton = page.getByRole('button', { name: /Verificar Respuesta/i });
+      await expect(submitButton).toBeVisible({ timeout: 10000 });
+
+      // Answer question
+      await page
+        .locator('button')
+        .filter({ has: page.locator('span.rounded-full') })
+        .first()
+        .click();
+      await submitButton.click();
+
+      // UX should continue despite API failure (fire-and-forget pattern)
+      await expect(page.getByText(/¡Correcto!|Incorrecto/i)).toBeVisible({ timeout: 5000 });
+
+      // Should be able to continue to next problem
+      await page.getByRole('button', { name: /Siguiente Problema/i }).click();
+      await expect(submitButton).toBeVisible({ timeout: 5000 });
+    });
+  });
+
+  test.describe('Answer Behavior', () => {
+    test('should allow changing answer before submitting', async ({ page }) => {
+      await page.goto('/practice/adaptive', { waitUntil: 'domcontentloaded' });
+      await page.getByText('Números').click();
+
+      await expect(page.getByRole('button', { name: /Verificar Respuesta/i })).toBeVisible({
+        timeout: 10000,
+      });
+
+      const options = page.locator('button').filter({ has: page.locator('span.rounded-full') });
+
+      // Select first option
+      await options.first().click();
+      // Verify first option is selected (has white background on the letter badge)
+      await expect(options.first().locator('span.rounded-full')).toHaveClass(/bg-white/);
+
+      // Select second option
+      await options.nth(1).click();
+      // Verify second option is now selected
+      await expect(options.nth(1).locator('span.rounded-full')).toHaveClass(/bg-white/);
+      // First option should no longer have white background
+      await expect(options.first().locator('span.rounded-full')).not.toHaveClass(/bg-white /);
+    });
+
+    test('should disable submit button when no answer selected', async ({ page }) => {
+      await page.goto('/practice/adaptive', { waitUntil: 'domcontentloaded' });
+      await page.getByText('Álgebra y Funciones').click();
+
+      const submitButton = page.getByRole('button', { name: /Verificar Respuesta/i });
+      await expect(submitButton).toBeVisible({ timeout: 10000 });
+
+      // Button should be disabled initially
+      await expect(submitButton).toBeDisabled();
+
+      // Select an answer
+      await page
+        .locator('button')
+        .filter({ has: page.locator('span.rounded-full') })
+        .first()
+        .click();
+
+      // Button should now be enabled
+      await expect(submitButton).toBeEnabled();
+    });
+
+    test('should disable options after submitting answer', async ({ page }) => {
+      await page.goto('/practice/adaptive', { waitUntil: 'domcontentloaded' });
+      await page.getByText('Geometría').click();
+
+      const submitButton = page.getByRole('button', { name: /Verificar Respuesta/i });
+      await expect(submitButton).toBeVisible({ timeout: 10000 });
+
+      const options = page.locator('button').filter({ has: page.locator('span.rounded-full') });
+
+      // Select and submit
+      await options.first().click();
+      await submitButton.click();
+
+      // Wait for feedback
+      await expect(page.getByText(/¡Correcto!|Incorrecto/i)).toBeVisible({ timeout: 5000 });
+
+      // Options should have cursor-default class (disabled state)
+      await expect(options.first()).toHaveClass(/cursor-default/);
+      await expect(options.nth(1)).toHaveClass(/cursor-default/);
+    });
+
+    test('should disable chat input while loading', async ({ page }) => {
+      // Delay the response to check loading state
+      await page.route('**/api/adaptive/hint', async route => {
+        await new Promise(r => setTimeout(r, 1500));
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ hint: 'Respuesta tardía' }),
+        });
+      });
+
+      await page.goto('/practice/adaptive', { waitUntil: 'domcontentloaded' });
+      await page.getByText('Probabilidades y Estadística').click();
+      await expect(page.getByRole('button', { name: /Verificar Respuesta/i })).toBeVisible({
+        timeout: 10000,
+      });
+
+      const chatInput = page.getByPlaceholder(/Escribe tu pregunta/i);
+      await chatInput.fill('Test');
+      await page.getByRole('button', { name: /Enviar/i }).click();
+
+      // Input and button should be disabled during loading
+      await expect(chatInput).toBeDisabled();
+      await expect(page.getByRole('button', { name: /Enviar/i })).toBeDisabled();
+
+      // Wait for response
+      await expect(page.getByText('Respuesta tardía')).toBeVisible({ timeout: 10000 });
+
+      // Should be enabled again
+      await expect(chatInput).toBeEnabled();
+    });
+  });
 });
