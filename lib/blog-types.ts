@@ -26,9 +26,10 @@ export interface BlogPostMeta {
   readingTime: number;
 }
 
-export type AudienceType = 'todos' | 'estudiantes' | 'padres' | 'profesores';
+export type AudienceType = 'todos' | 'estudiantes' | 'padres' | 'profesores' | 'directivos';
 
 export function getAudienceFromTags(tags: string[]): Exclude<AudienceType, 'todos'> {
+  if (tags.includes('directivos')) return 'directivos';
   if (tags.includes('padres')) return 'padres';
   if (tags.includes('profesores')) return 'profesores';
   return 'estudiantes';

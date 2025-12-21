@@ -1,7 +1,7 @@
 ---
 title: "Qué hacer cuando la mitad del curso no entiende"
 description: "Estrategias para cuando el problema es demasiado grande para diferenciación: cuándo parar, cómo re-enseñar, y cómo evitar que vuelva a pasar."
-date: "2024-12-20"
+date: "2025-12-20"
 author: "SimplePAES"
 tags: ["profesores", "matemáticas", "enseñanza", "educación media", "refuerzo"]
 published: true

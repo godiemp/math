@@ -1,7 +1,7 @@
 ---
 title: "Por qué no entiendo matemáticas (y cómo cambiar eso)"
 description: "Descubre las razones reales por las que las matemáticas se sienten tan difíciles y las estrategias respaldadas por la ciencia para superarlo."
-date: "2024-12-16"
+date: "2025-12-16"
 author: "SimplePAES"
 tags: ["matemáticas", "aprendizaje", "estrategias", "mentalidad"]
 published: true

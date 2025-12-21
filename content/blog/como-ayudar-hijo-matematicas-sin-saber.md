@@ -1,7 +1,7 @@
 ---
 title: "Cómo ayudar a tu hijo con matemáticas cuando tú no las entiendes"
 description: "No necesitas saber resolver ecuaciones para apoyar a tu hijo. Guía práctica para padres que olvidaron las matemáticas hace décadas."
-date: "2024-12-21"
+date: "2025-12-21"
 author: "SimplePAES"
 tags: ["padres", "matemáticas", "apoyo", "educación media", "consejos"]
 published: true

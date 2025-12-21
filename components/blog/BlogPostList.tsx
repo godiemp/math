@@ -23,6 +23,7 @@ export function BlogPostList({ posts }: BlogPostListProps) {
       estudiantes: 0,
       padres: 0,
       profesores: 0,
+      directivos: 0,
     };
 
     posts.forEach((post) => {

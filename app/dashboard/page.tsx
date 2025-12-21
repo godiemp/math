@@ -1,218 +1,94 @@
 'use client';
 
 import Link from "next/link";
-import { signOut } from 'next-auth/react';
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
-import { useAuth } from "@/contexts/AuthContext";
-import { useRouter, useSearchParams } from "next/navigation";
-import { logoutUser } from "@/lib/auth";
-import { getAllAvailableSessions, updateSessionStatuses } from "@/lib/sessionApi";
-import { useEffect, useState, Suspense } from "react";
+import { Suspense } from "react";
 import { LiveSession } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar, Callout } from "@/components/ui";
-import { StudyBuddy } from "@/components/interactive/StudyBuddy";
 import { ShareModal } from "@/components/shared/ShareModal";
 import { WelcomeMessage } from "@/components/shared/WelcomeMessage";
 import { Share2 } from "lucide-react";
 import { useTranslations } from 'next-intl';
-import { sendVerificationEmail } from "@/lib/auth/authApi";
+import { useDashboard } from "@/hooks/useDashboard";
 
-function DashboardContent() {
+interface DashboardViewProps {
+  // User info
+  user: {
+    displayName?: string;
+    username?: string;
+    emailVerified?: boolean;
+    targetLevel?: string;
+  } | null;
+  isAdmin: boolean;
+  isPaidUser: boolean;
+  // Sessions
+  nextSession: LiveSession | null;
+  // Email verification
+  isResendingEmail: boolean;
+  emailSentMessage: string | null;
+  onResendEmail: () => void;
+  // Welcome modal
+  isWelcomeOpen: boolean;
+  onWelcomeClose: () => void;
+  // Share modal
+  isShareModalOpen: boolean;
+  onOpenShareModal: () => void;
+  onCloseShareModal: () => void;
+  // Navigation
+  onLogout: () => void;
+  onNavigate: (path: string) => void;
+}
+
+/**
+ * Presentational component for the Dashboard
+ * Contains no business logic - only receives data and callbacks via props
+ */
+function DashboardView({
+  user,
+  isAdmin,
+  isPaidUser,
+  nextSession,
+  isResendingEmail,
+  emailSentMessage,
+  onResendEmail,
+  isWelcomeOpen,
+  onWelcomeClose,
+  isShareModalOpen,
+  onOpenShareModal,
+  onCloseShareModal,
+  onLogout,
+  onNavigate,
+}: DashboardViewProps) {
   const t = useTranslations('dashboard');
   const tCommon = useTranslations('common');
-  const { user, setUser, isAdmin, isPaidUser, isLoading: authLoading } = useAuth();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [isLoadingData, setIsLoadingData] = useState(true);
-  const [registeredSessions, setRegisteredSessions] = useState<LiveSession[]>([]);
-  const [nextSession, setNextSession] = useState<LiveSession | null>(null);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [isWelcomeOpen, setIsWelcomeOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isResendingEmail, setIsResendingEmail] = useState(false);
-  const [emailSentMessage, setEmailSentMessage] = useState<string | null>(null);
-
-  // Check if user should see welcome message (from query param)
-  useEffect(() => {
-    const welcomeParam = searchParams.get('welcome');
-    if (welcomeParam === 'true' && user) {
-      setIsWelcomeOpen(true);
-    }
-  }, [searchParams, user]);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    let isMounted = true;
-
-    const loadDashboardData = async () => {
-      if (!user) {
-        // No user yet, stop data loading
-        setIsLoadingData(false);
-        return;
-      }
-
-      try {
-        // Update session statuses
-        const statusUpdateResult = await updateSessionStatuses();
-        if (!statusUpdateResult.success) {
-          console.warn('Failed to update session statuses:', statusUpdateResult.error);
-          // Continue anyway - this is not critical for dashboard loading
-        }
-
-        // Get all available sessions from API
-        const allAvailableSessions = await getAllAvailableSessions();
-
-        // Only update state if component is still mounted
-        if (!isMounted) return;
-
-        // Filter for user's registered sessions
-        const userRegisteredSessions = allAvailableSessions.filter(s =>
-          s.registeredUsers?.some(r => r.userId === user.id)
-        );
-
-        // Filter for upcoming sessions only (scheduled, lobby, active)
-        const upcomingSessions = userRegisteredSessions.filter(s =>
-          s.status === 'scheduled' || s.status === 'lobby' || s.status === 'active'
-        );
-
-        // Sort by scheduled start time
-        upcomingSessions.sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
-
-        setRegisteredSessions(upcomingSessions);
-
-        // Get the next scheduled session (for all users, not just registered)
-        const allUpcoming = allAvailableSessions
-          .filter(s => s.status === 'scheduled' || s.status === 'lobby')
-          .sort((a, b) => a.scheduledStartTime - b.scheduledStartTime);
-
-        setNextSession(allUpcoming[0] || null);
-
-        // Mark loading as complete
-        setIsLoadingData(false);
-        setError(null);
-      } catch (err) {
-        console.error('Error loading dashboard data:', err);
-        if (isMounted) {
-          setError(t('errors.loadError'));
-          setIsLoadingData(false);
-        }
-      }
-    };
-
-    loadDashboardData();
-
-    // Cleanup function
-    return () => {
-      isMounted = false;
-      abortController.abort();
-    };
-  }, [user]);
-
-  const handleLogout = async () => {
-    // Also call backend logout to clear HttpOnly cookies
-    await logoutUser();
-    // Sign out from NextAuth (clears session)
-    await signOut({ callbackUrl: '/signin' });
-  };
-
-  const handleWelcomeClose = () => {
-    setIsWelcomeOpen(false);
-    // Remove welcome query param from URL
-    router.replace('/dashboard');
-  };
-
-  const handleResendEmail = async () => {
-    setIsResendingEmail(true);
-    setEmailSentMessage(null);
-
-    const result = await sendVerificationEmail();
-
-    if (result.success) {
-      setEmailSentMessage(t('emailVerification.sentSuccess'));
-    } else {
-      setEmailSentMessage(result.error || t('emailVerification.sentError'));
-    }
-
-    setIsResendingEmail(false);
-
-    // Clear message after 5 seconds
-    setTimeout(() => {
-      setEmailSentMessage(null);
-    }, 5000);
-  };
-
-  const formatDate = (timestamp: number) => {
-    const date = new Date(timestamp);
-    return date.toLocaleDateString('es-CL', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'scheduled':
-        return <Badge variant="info">{t('status.scheduled')}</Badge>;
-      case 'lobby':
-        return <Badge variant="warning">{t('status.lobbyOpen')}</Badge>;
-      case 'active':
-        return <Badge variant="success">{t('status.active')}</Badge>;
-      default:
-        return null;
-    }
-  };
-
-  // Show loading screen while auth or data is being loaded
-  if (authLoading || isLoadingData) {
-    return <LoadingScreen message={t('loading')} />;
-  }
-
-  // Show error UI if data loading failed
-  if (error) {
-    return (
-      <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] flex items-center justify-center p-4">
-        <Card className="max-w-md w-full p-6 text-center">
-          <div className="text-4xl mb-4">⚠️</div>
-          <Heading level={2} size="sm" className="mb-3">{t('errors.title')}</Heading>
-          <Text variant="secondary" className="mb-6">{error}</Text>
-          <Button onClick={() => window.location.reload()} className="w-full">
-            {t('errors.reload')}
-          </Button>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">
       {/* Navbar with variableBlur material */}
       <Navbar className="min-h-14">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 py-0 sm:h-10">
-          <Heading level={1} size="xs" className="text-[#0A84FF] text-sm sm:text-base">
+          <Heading level={1} size="xs" className="text-[#0A84FF] text-sm sm:text-base" data-testid="dashboard-title">
             {t('title')}
           </Heading>
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
-            <Text size="sm" variant="secondary" className="text-xs sm:text-sm">
+            <Text size="sm" variant="secondary" className="text-xs sm:text-sm" data-testid="user-greeting">
               {t('greeting', { username: user?.displayName || user?.username || 'Usuario' })}
             </Text>
             <div className="flex gap-2 ml-auto sm:ml-0">
-              <Button variant="ghost" onClick={() => router.push('/profile')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
+              <Button variant="ghost" onClick={() => onNavigate('/profile')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2" data-testid="nav-profile-button">
                 {t('menu.profile')}
               </Button>
               {!isPaidUser && (
-                <Button variant="primary" onClick={() => router.push('/dashboard/subscribe')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
+                <Button variant="primary" onClick={() => onNavigate('/dashboard/subscribe')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2" data-testid="nav-premium-button">
                   {t('menu.premium')}
                 </Button>
               )}
               {isAdmin && (
-                <Button variant="secondary" onClick={() => router.push('/admin')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
+                <Button variant="secondary" onClick={() => onNavigate('/admin')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2" data-testid="nav-admin-button">
                   {t('menu.admin')}
                 </Button>
               )}
-              <Button variant="danger" onClick={handleLogout} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
+              <Button variant="danger" onClick={onLogout} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2" data-testid="nav-logout-button">
                 {t('menu.logout')}
               </Button>
             </div>
@@ -223,7 +99,7 @@ function DashboardContent() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-8 md:py-12">
         {/* Email Verification Notification */}
         {user && user.emailVerified === false && (
-          <Callout type="warning" title={t('emailVerification.title')}>
+          <Callout type="warning" title={t('emailVerification.title')} data-testid="email-verification-callout">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <p className="text-sm">
                 {t('emailVerification.message')}
@@ -234,7 +110,7 @@ function DashboardContent() {
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={handleResendEmail}
+                onClick={onResendEmail}
                 disabled={isResendingEmail}
                 className="whitespace-nowrap"
               >
@@ -245,7 +121,7 @@ function DashboardContent() {
         )}
 
         {/* Mini Lessons Banner */}
-        <Link href="/mini-lessons" className="block mb-8 sm:mb-10 md:mb-12">
+        <Link href="/mini-lessons" className="block mb-8 sm:mb-10 md:mb-12" data-testid="mini-lessons-banner">
           <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
@@ -266,7 +142,7 @@ function DashboardContent() {
         </Link>
 
         {/* Study Buddy - Coming Soon Placeholder */}
-        <Card hover className="p-6 mb-8 sm:mb-10 md:mb-12">
+        <Card hover className="p-6 mb-8 sm:mb-10 md:mb-12" data-testid="adaptive-learning-card">
           <div className="text-center">
             <div className="text-4xl mb-4">📚</div>
             <div className="flex items-center justify-center gap-2 mb-3">
@@ -281,20 +157,8 @@ function DashboardContent() {
           </div>
         </Card>
 
-        {/* Original StudyBuddy component - Commented out for future use
-        {isAdmin && (
-          <div className="mb-8">
-            <StudyBuddy initialStreak={user ? {
-              currentStreak: user.currentStreak || 0,
-              longestStreak: user.longestStreak || 0,
-              lastPracticeDate: user.lastPracticeDate || null
-            } : undefined} />
-          </div>
-        )}
-        */}
-
         {/* Live Practice Featured Card with gradient */}
-        <div className="relative overflow-hidden backdrop-blur-[20px] bg-gradient-to-r from-[#5E5CE6] to-[#0A84FF] dark:from-[#9A99FF] dark:to-[#0A84FF] rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 mb-8 sm:mb-10 md:mb-12 shadow-[0_14px_36px_rgba(0,0,0,0.22)]">
+        <div className="relative overflow-hidden backdrop-blur-[20px] bg-gradient-to-r from-[#5E5CE6] to-[#0A84FF] dark:from-[#9A99FF] dark:to-[#0A84FF] rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 mb-8 sm:mb-10 md:mb-12 shadow-[0_14px_36px_rgba(0,0,0,0.22)]" data-testid="live-practice-card">
           <div className="text-center relative z-10">
             <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">📝</div>
             <Heading level={3} size="sm" className="mb-2 sm:mb-3 text-white text-lg sm:text-xl">
@@ -302,7 +166,7 @@ function DashboardContent() {
             </Heading>
             {nextSession ? (
               <>
-                <div className="bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-3 sm:mb-4 inline-block w-full sm:w-auto">
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-3 sm:mb-4 inline-block w-full sm:w-auto" data-testid="next-session-info">
                   <Text size="xs" className="text-white/80 font-semibold uppercase tracking-wider mb-1 text-[10px] sm:text-xs">
                     {t('liveSession.nextSession')}
                   </Text>
@@ -333,16 +197,17 @@ function DashboardContent() {
               </Text>
             )}
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-center justify-center px-2 sm:px-0">
-              <Button asChild className="bg-white text-[#5E5CE6] hover:bg-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] w-full sm:w-auto text-sm sm:text-base">
+              <Button asChild className="bg-white text-[#5E5CE6] hover:bg-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] w-full sm:w-auto text-sm sm:text-base" data-testid="live-practice-cta">
                 <Link href="/live-practice">
                   {nextSession ? t('liveSession.registerNow') : t('liveSession.viewAvailable')}
                 </Link>
               </Button>
               {nextSession && (
                 <Button
-                  onClick={() => setIsShareModalOpen(true)}
+                  onClick={onOpenShareModal}
                   variant="ghost"
                   className="bg-white/20 hover:bg-white/30 text-white border border-white/40 gap-2 w-full sm:w-auto text-sm sm:text-base"
+                  data-testid="live-practice-share-button"
                 >
                   <Share2 className="w-4 h-4" />
                   {t('liveSession.invite')}
@@ -353,9 +218,9 @@ function DashboardContent() {
         </div>
 
         {/* Practice Section - Operations, M1, and M2 */}
-        <Card hover className="p-5 mb-8 sm:mb-10 md:mb-12 relative">
+        <Card hover className="p-5 mb-8 sm:mb-10 md:mb-12 relative" data-testid="practice-section-card">
           {!isPaidUser && (
-            <div className="absolute top-2 right-2 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-1">
+            <div className="absolute top-2 right-2 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-1" data-testid="practice-premium-badge">
               <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
               </svg>
@@ -377,7 +242,7 @@ function DashboardContent() {
                   </Text>
                 </div>
               </div>
-              <Button asChild size="sm" className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-xs shrink-0">
+              <Button asChild size="sm" className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-xs shrink-0" data-testid="practice-operations-link">
                 <Link href="/practice/operations">
                   {t('operations.cta')}
                 </Link>
@@ -402,13 +267,13 @@ function DashboardContent() {
                   </div>
                 </div>
                 {isPaidUser ? (
-                  <Button asChild size="sm" className="text-xs shrink-0">
+                  <Button asChild size="sm" className="text-xs shrink-0" data-testid="practice-m1-link">
                     <Link href="/practice/m1">
                       {t('curriculum.practice')}
                     </Link>
                   </Button>
                 ) : (
-                  <Button disabled size="sm" className="opacity-60 text-xs shrink-0">
+                  <Button disabled size="sm" className="opacity-60 text-xs shrink-0" data-testid="practice-m1-locked">
                     <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                     </svg>
@@ -432,13 +297,13 @@ function DashboardContent() {
                     </div>
                   </div>
                   {isPaidUser ? (
-                    <Button asChild size="sm" className="text-xs shrink-0">
+                    <Button asChild size="sm" className="text-xs shrink-0" data-testid="practice-m2-link">
                       <Link href="/practice/m2">
                         {t('curriculum.practice')}
                       </Link>
                     </Button>
                   ) : (
-                    <Button disabled size="sm" className="opacity-60 text-xs shrink-0">
+                    <Button disabled size="sm" className="opacity-60 text-xs shrink-0" data-testid="practice-m2-locked">
                       <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                       </svg>
@@ -454,9 +319,9 @@ function DashboardContent() {
         {/* Temario and Progress Row */}
         <div className="grid md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mb-8 sm:mb-10 md:mb-12">
           {/* Temario Card */}
-          <Card hover className="p-6 relative">
+          <Card hover className="p-6 relative" data-testid="temario-card">
             {!isPaidUser && (
-              <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
+              <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5" data-testid="temario-premium-badge">
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
@@ -480,13 +345,13 @@ function DashboardContent() {
                 <div className="flex gap-3 justify-center flex-wrap">
                   {isPaidUser ? (
                     <>
-                      <Button asChild variant="primary" size="sm">
+                      <Button asChild variant="primary" size="sm" data-testid="curriculum-m1-link">
                         <Link href="/curriculum/m1">
                           {t('curriculum.m1')}
                         </Link>
                       </Button>
                       {user?.targetLevel !== 'M1_ONLY' && (
-                        <Button asChild variant="secondary" size="sm">
+                        <Button asChild variant="secondary" size="sm" data-testid="curriculum-m2-link">
                           <Link href="/curriculum/m2">
                             {t('curriculum.m2')}
                           </Link>
@@ -495,14 +360,14 @@ function DashboardContent() {
                     </>
                   ) : (
                     <>
-                      <Button disabled variant="primary" size="sm" className="opacity-60">
+                      <Button disabled variant="primary" size="sm" className="opacity-60" data-testid="curriculum-m1-locked">
                         <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                         </svg>
                         {t('curriculum.m1')}
                       </Button>
                       {user?.targetLevel !== 'M1_ONLY' && (
-                        <Button disabled variant="secondary" size="sm" className="opacity-60">
+                        <Button disabled variant="secondary" size="sm" className="opacity-60" data-testid="curriculum-m2-locked">
                           <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                           </svg>
@@ -513,57 +378,13 @@ function DashboardContent() {
                   )}
                 </div>
               </div>
-
-              {/* Documentation Buttons - Hidden for now */}
-              {/* TODO: Re-enable documentation section later
-              <div>
-                <Text size="xs" variant="secondary" className="mb-2 font-semibold">
-                  {t('curriculum.documentation')}
-                </Text>
-                <div className="flex gap-3 justify-center flex-wrap">
-                  {isPaidUser ? (
-                    <>
-                      <Button asChild variant="primary" size="sm">
-                        <Link href="/curriculum/m1/docs">
-                          {t('curriculum.docs')} {t('curriculum.m1')}
-                        </Link>
-                      </Button>
-                      {user?.targetLevel !== 'M1_ONLY' && (
-                        <Button asChild variant="secondary" size="sm">
-                          <Link href="/curriculum/m2/docs">
-                            {t('curriculum.docs')} {t('curriculum.m2')}
-                          </Link>
-                        </Button>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <Button disabled variant="primary" size="sm" className="opacity-60">
-                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                        </svg>
-                        {t('curriculum.docs')} {t('curriculum.m1')}
-                      </Button>
-                      {user?.targetLevel !== 'M1_ONLY' && (
-                        <Button disabled variant="secondary" size="sm" className="opacity-60">
-                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                          </svg>
-                          {t('curriculum.docs')} {t('curriculum.m2')}
-                        </Button>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-              */}
             </div>
           </Card>
 
           {/* Progress Tracking Card */}
-          <Card hover className="p-6 relative">
+          <Card hover className="p-6 relative" data-testid="progress-card">
             {!isPaidUser && (
-              <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
+              <div className="absolute top-3 right-3 bg-purple-500/20 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5" data-testid="progress-premium-badge">
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
@@ -579,13 +400,13 @@ function DashboardContent() {
                 {t('progress.subtitle')}
               </Text>
               {isPaidUser ? (
-                <Button asChild className="w-full">
+                <Button asChild className="w-full" data-testid="progress-link">
                   <Link href="/progress">
                     {t('progress.cta')}
                   </Link>
                 </Button>
               ) : (
-                <Button disabled className="w-full opacity-60">
+                <Button disabled className="w-full opacity-60" data-testid="progress-locked-button">
                   <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                   </svg>
@@ -615,13 +436,13 @@ function DashboardContent() {
       </main>
 
       {/* Welcome Modal */}
-      <WelcomeMessage isOpen={isWelcomeOpen} onClose={handleWelcomeClose} />
+      <WelcomeMessage isOpen={isWelcomeOpen} onClose={onWelcomeClose} />
 
       {/* Share Modal */}
       {nextSession && (
         <ShareModal
           isOpen={isShareModalOpen}
-          onClose={() => setIsShareModalOpen(false)}
+          onClose={onCloseShareModal}
           data={{
             title: '',
             message: `Ensayo PAES ${nextSession.level}\n${new Date(nextSession.scheduledStartTime).toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })} • ${new Date(nextSession.scheduledStartTime).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}\n\nVamos juntos 📝`,
@@ -644,12 +465,13 @@ function DashboardContent() {
       )}
 
       {/* Footer with hairline border */}
-      <footer className="backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-t border-black/[0.12] dark:border-white/[0.16] mt-8 sm:mt-10 md:mt-12">
+      <footer className="backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-t border-black/[0.12] dark:border-white/[0.16] mt-8 sm:mt-10 md:mt-12" data-testid="dashboard-footer">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-4 sm:py-5 md:py-6 text-center">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
             <Link
               href="/como-funciona"
               className="text-xs text-[#0A84FF] hover:underline"
+              data-testid="how-it-works-link"
             >
               {tCommon('howItWorks')}
             </Link>
@@ -661,6 +483,71 @@ function DashboardContent() {
         </div>
       </footer>
     </div>
+  );
+}
+
+/**
+ * Container component that uses the useDashboard hook and renders the presentational view
+ */
+function DashboardContent() {
+  const t = useTranslations('dashboard');
+  const {
+    user,
+    isAdmin,
+    isPaidUser,
+    isLoading,
+    nextSession,
+    sessionsError,
+    isResendingEmail,
+    emailSentMessage,
+    handleResendEmail,
+    isWelcomeOpen,
+    handleWelcomeClose,
+    isShareModalOpen,
+    openShareModal,
+    closeShareModal,
+    handleLogout,
+    navigateTo,
+  } = useDashboard();
+
+  // Show loading screen while auth or data is being loaded
+  if (isLoading) {
+    return <LoadingScreen message={t('loading')} />;
+  }
+
+  // Show error UI if data loading failed
+  if (sessionsError) {
+    return (
+      <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] flex items-center justify-center p-4">
+        <Card className="max-w-md w-full p-6 text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <Heading level={2} size="sm" className="mb-3">{t('errors.title')}</Heading>
+          <Text variant="secondary" className="mb-6">{sessionsError}</Text>
+          <Button onClick={() => window.location.reload()} className="w-full">
+            {t('errors.reload')}
+          </Button>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <DashboardView
+      user={user}
+      isAdmin={isAdmin}
+      isPaidUser={isPaidUser}
+      nextSession={nextSession}
+      isResendingEmail={isResendingEmail}
+      emailSentMessage={emailSentMessage}
+      onResendEmail={handleResendEmail}
+      isWelcomeOpen={isWelcomeOpen}
+      onWelcomeClose={handleWelcomeClose}
+      isShareModalOpen={isShareModalOpen}
+      onOpenShareModal={openShareModal}
+      onCloseShareModal={closeShareModal}
+      onLogout={handleLogout}
+      onNavigate={navigateTo}
+    />
   );
 }
 
