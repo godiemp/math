@@ -52,7 +52,7 @@ export function AITutorDemo() {
   }, [visibleMessages]);
 
   return (
-    <div className="w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col">
+    <div className="w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex flex-col">
       {/* Header */}
       <div
         className="px-4 py-3 border-b flex items-center gap-2"
@@ -93,7 +93,7 @@ export function AITutorDemo() {
                       : 'rounded-bl-md'
                   }`}
                   style={{
-                    background: msg.role === 'user' ? 'var(--color-tint)' : 'white',
+                    background: msg.role === 'user' ? 'var(--color-tint)' : 'var(--color-surface)',
                     color: msg.role === 'user' ? 'white' : 'var(--color-label-primary)',
                     boxShadow: msg.role === 'assistant' ? '0 1px 3px rgba(0,0,0,0.1)' : undefined,
                   }}
@@ -115,7 +115,7 @@ export function AITutorDemo() {
               >
                 <div
                   className="px-4 py-3 rounded-2xl rounded-bl-md flex items-center gap-1"
-                  style={{ background: 'white', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}
+                  style={{ background: 'var(--color-surface)', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}
                 >
                   <TypingDot delay={0} />
                   <TypingDot delay={0.15} />
@@ -133,7 +133,7 @@ export function AITutorDemo() {
         style={{
           color: 'var(--color-label-secondary)',
           borderColor: 'var(--color-separator)',
-          background: 'white',
+          background: 'var(--color-surface)',
         }}
       >
         Te guía sin darte la respuesta
