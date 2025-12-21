@@ -20,17 +20,20 @@ import Link from 'next/link';
 function SubscribePageContent() {
   const t = useTranslations('pricing');
   const router = useRouter();
-  const { isPaidUser } = useAuth();
+  const { user } = useAuth();
   const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
-  // Redirect if already paid
+  // Only redirect if user has active (paid) subscription, not trial
+  const hasActiveSubscription = user?.subscription?.status === 'active';
+  const isOnTrial = user?.subscription?.status === 'trial';
+
   useEffect(() => {
-    if (isPaidUser) {
+    if (hasActiveSubscription) {
       router.push('/dashboard');
     }
-  }, [isPaidUser, router]);
+  }, [hasActiveSubscription, router]);
 
   // Fetch active plans
   const { data: plansResponse, error, isLoading } = useSWR(
@@ -64,7 +67,7 @@ function SubscribePageContent() {
       source: 'dashboard_subscribe',
     });
 
-    if (isPaidUser) {
+    if (hasActiveSubscription) {
       toast.info(t('errors.alreadySubscribed'));
       return;
     }
@@ -302,7 +305,7 @@ function SubscribePageContent() {
                 <Button
                   variant="primary"
                   onClick={() => handleSubscribe(plan)}
-                  disabled={isLoadingPlan || isPaidUser}
+                  disabled={isLoadingPlan || hasActiveSubscription}
                   className="w-full"
                 >
                   {isLoadingPlan ? (
@@ -329,7 +332,7 @@ function SubscribePageContent() {
                       </svg>
                       {t('button.processing')}
                     </span>
-                  ) : isPaidUser ? (
+                  ) : hasActiveSubscription ? (
                     t('button.subscribed')
                   ) : (
                     t('button.subscribe')

@@ -78,7 +78,7 @@ function DashboardView({
               <Button variant="ghost" onClick={() => onNavigate('/profile')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2" data-testid="nav-profile-button">
                 {t('menu.profile')}
               </Button>
-              {!isPaidUser && (
+              {user?.subscription?.status !== 'active' && (
                 <Button variant="primary" onClick={() => onNavigate('/dashboard/subscribe')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2" data-testid="nav-premium-button">
                   {t('menu.premium')}
                 </Button>
