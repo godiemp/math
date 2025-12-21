@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Sparkles, Eye, MessageSquare, RotateCcw, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -8,6 +8,8 @@ import type { DynamicLesson } from '@/lib/builder/types';
 import { LESSON_TEMPLATES, getTemplateById } from '@/lib/builder/templates';
 import { DynamicLessonRenderer } from '@/components/builder';
 import BuilderChat from '@/components/builder/BuilderChat';
+
+const STORAGE_KEY = 'builder-lesson-draft';
 
 type View = 'split' | 'chat' | 'preview';
 
@@ -17,23 +19,43 @@ export default function BuildPage() {
   const [previewStep, setPreviewStep] = useState(0);
   const [showTemplates, setShowTemplates] = useState(false);
 
+  // Load lesson from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setLesson(parsed);
+      }
+    } catch (e) {
+      console.error('Failed to load lesson from localStorage:', e);
+    }
+  }, []);
+
   const handleTemplateSelect = (templateId: string) => {
     const template = getTemplateById(templateId);
     if (template?.lesson) {
-      setLesson(template.lesson as DynamicLesson);
+      const lessonData = template.lesson as DynamicLesson;
+      setLesson(lessonData);
       setPreviewStep(0);
       setShowTemplates(false);
+      // Save to localStorage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(lessonData));
     }
   };
 
   const handleLessonUpdate = (updatedLesson: DynamicLesson) => {
     setLesson(updatedLesson);
     setPreviewStep(0);
+    // Save to localStorage
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedLesson));
   };
 
   const handleReset = () => {
     setLesson(null);
     setPreviewStep(0);
+    // Clear from localStorage
+    localStorage.removeItem(STORAGE_KEY);
   };
 
   // Mobile view toggle buttons

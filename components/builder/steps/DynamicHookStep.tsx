@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Check, X, ArrowRight, Lightbulb, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { HookStep, DynamicStepProps } from '@/lib/builder/types';
-import { VisualRenderer, RichText } from '../primitives';
+import { VisualRenderer, RichText, HtmlWithLatex } from '../primitives';
 
 type Phase = 'scenario' | 'question' | 'result';
 
@@ -62,9 +62,9 @@ export default function DynamicHookStep({
         <div className="space-y-6 animate-fadeIn">
           {/* Scenario */}
           <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30 rounded-2xl p-6 border border-amber-200 dark:border-amber-800">
-            <div
+            <HtmlWithLatex
+              content={content.scenario.text}
               className="text-gray-700 dark:text-gray-300 text-lg mb-6"
-              dangerouslySetInnerHTML={{ __html: content.scenario.text }}
             />
 
             {/* Visual */}
@@ -78,7 +78,7 @@ export default function DynamicHookStep({
 
             {/* Question */}
             <p className="text-center text-gray-600 dark:text-gray-400 text-lg font-medium">
-              {content.scenario.question}
+              <RichText content={content.scenario.question} />
             </p>
           </div>
 
