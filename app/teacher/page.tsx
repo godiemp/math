@@ -231,6 +231,16 @@ export default function TeacherDashboard() {
 
               <div className="space-y-2">
                 <button
+                  onClick={() => router.push('/teacher/students')}
+                  className="w-full flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 transition-all text-left"
+                >
+                  <span className="text-xl">👥</span>
+                  <span className="font-medium text-gray-900 dark:text-white">
+                    Gestionar estudiantes
+                  </span>
+                </button>
+
+                <button
                   onClick={() => router.push('/teacher/classes/new')}
                   className="w-full flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 transition-all text-left"
                 >

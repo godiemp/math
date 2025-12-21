@@ -43,7 +43,7 @@ export function requireAdmin(): User | null {
 /**
  * Get current user's role
  */
-export function getUserRole(): 'admin' | 'student' | null {
+export function getUserRole(): 'admin' | 'student' | 'teacher' | null {
   const user = getCachedUser();
   return user?.role ?? null;
 }
@@ -51,6 +51,6 @@ export function getUserRole(): 'admin' | 'student' | null {
 /**
  * Check if user has a specific role
  */
-export function hasRole(role: 'admin' | 'student'): boolean {
+export function hasRole(role: 'admin' | 'student' | 'teacher'): boolean {
   return getUserRole() === role;
 }

@@ -1,8 +1,11 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Lock, CheckCircle } from 'lucide-react';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
+import { useContentAccess } from '@/hooks/useContentAccess';
 import { GRADE_LEVELS, getCoveredOACount, getLessonCountByGrade, type GradeLevelInfo } from '@/lib/curriculum/mineduc';
 
 interface GradeCardProps {
@@ -86,9 +89,28 @@ function GradeCard({ grade }: GradeCardProps) {
 }
 
 function ColegiosContent() {
+  const router = useRouter();
+  const { isGradeLevelStudent, assignedGrade } = useContentAccess();
+
   // Split grades into Básica and Media
   const basicaGrades = GRADE_LEVELS.filter(g => g.code.endsWith('B'));
   const mediaGrades = GRADE_LEVELS.filter(g => g.code.endsWith('M'));
+
+  // Redirect grade-level students directly to their grade
+  useEffect(() => {
+    if (isGradeLevelStudent && assignedGrade) {
+      router.replace(`/mini-lessons/colegios/${assignedGrade}`);
+    }
+  }, [isGradeLevelStudent, assignedGrade, router]);
+
+  // Show loading while redirecting
+  if (isGradeLevelStudent) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="text-gray-500 dark:text-gray-400">Cargando...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
