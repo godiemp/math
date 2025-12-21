@@ -47,6 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updatedAt: 0,
     } : undefined,
     emailVerified: sessionUserData.emailVerified,
+    gradeLevel: sessionUserData.gradeLevel,
   } : null;
 
   // Use full user if available, otherwise session user

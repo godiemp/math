@@ -30,13 +30,14 @@ interface CustomUser {
   username: string;
   email: string;
   displayName: string;
-  role: "student" | "admin";
+  role: "student" | "admin" | "teacher";
   subscription?: {
     status: "trial" | "active" | "expired" | "cancelled";
     expiresAt?: number;
     trialEndsAt?: number;
   };
   emailVerified?: boolean;
+  gradeLevel?: "1-medio" | "2-medio" | "3-medio" | "4-medio";
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -172,6 +173,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.role = customUser.role;
         token.subscription = customUser.subscription;
         token.emailVerified = customUser.emailVerified;
+        token.gradeLevel = customUser.gradeLevel;
       }
       return token;
     },
@@ -191,6 +193,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       (session.user as any).subscription = customToken.subscription;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (session.user as any).emailVerified = customToken.emailVerified;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (session.user as any).gradeLevel = customToken.gradeLevel;
       return session;
     },
   },
