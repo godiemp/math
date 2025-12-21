@@ -1,8 +1,10 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { useAuth } from '@/contexts/AuthContext';
+import { loginUser } from '@/lib/auth';
 import { LandingNav, HeroSection, StatsSection, FeaturesSection, CTASection } from '@/components/landing';
 import {
   PainPointsSection,
@@ -23,8 +25,10 @@ function LandingPageContent() {
   const initialAudience: Audience = tabParam === 'colegios' ? 'b2b' : 'b2c';
 
   const [audience, setAudience] = useState<Audience>(initialAudience);
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, refreshSession } = useAuth();
   const router = useRouter();
+  const autoLoginAttempted = useRef(false);
+  const isPreview = process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
 
   // Sync state with URL param changes
   useEffect(() => {
@@ -38,6 +42,24 @@ function LandingPageContent() {
     const newTab = newAudience === 'b2b' ? 'colegios' : 'estudiantes';
     router.replace(`/?tab=${newTab}`, { scroll: false });
   };
+
+  // Auto-login in Vercel preview deployments
+  useEffect(() => {
+    if (isPreview && !isLoading && !isAuthenticated && !autoLoginAttempted.current) {
+      autoLoginAttempted.current = true;
+      (async () => {
+        const loginResult = await loginUser('admin', 'admin123');
+        if (loginResult.success && loginResult.user) {
+          await signIn('credentials', {
+            user: JSON.stringify(loginResult.user),
+            redirect: false,
+          });
+          await refreshSession();
+          router.push('/dashboard');
+        }
+      })();
+    }
+  }, [isPreview, isLoading, isAuthenticated, refreshSession, router]);
 
   // Redirect authenticated users to dashboard
   useEffect(() => {
