@@ -50,7 +50,7 @@ export const m2Num001Questions: Question[] = [
     subject: 'números',
     operacionBase: '\\frac{\\frac{a}{b}}{\\frac{c}{d}} = \\frac{a}{b} \\times \\frac{d}{c}',
     questionLatex: '\\text{Un químico está preparando una solución y necesita calcular la concentración final. Para ello, debe dividir la suma de dos cantidades } \\left(\\frac{2}{3} + \\frac{1}{4}\\right) \\text{ entre la diferencia de otras dos } \\left(\\frac{5}{6} - \\frac{1}{3}\\right)\\text{. El químico debe simplificar la expresión } \\frac{\\frac{2}{3} + \\frac{1}{4}}{\\frac{5}{6} - \\frac{1}{3}}\\text{. ¿Cuál es el resultado de esta operación?}',
-    options: ['\\frac{11}{6}', '\\frac{6}{11}', '\\frac{22}{12}', '2'],
+    options: ['\\frac{11}{6}', '\\frac{6}{11}', '\\frac{7}{6}', '2'],
     correctAnswer: 0,
     explanation: '\\frac{\\frac{11}{12}}{\\frac{1}{2}} = \\frac{11}{12} \\times \\frac{2}{1} = \\frac{11}{6}',
     difficulty: 'extreme',
