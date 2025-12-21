@@ -1,7 +1,7 @@
 ---
 title: "Por qué tu hijo no quiere que le ayudes con la PAES (y qué hacer en vez)"
 description: "Entender por qué los adolescentes rechazan la ayuda de sus padres y las formas efectivas de apoyar sin agregar presión."
-date: "2024-12-17"
+date: "2025-12-17"
 author: "SimplePAES"
 tags: ["PAES", "padres", "apoyo", "familia", "consejos"]
 published: true

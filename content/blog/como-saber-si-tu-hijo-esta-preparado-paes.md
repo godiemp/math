@@ -1,7 +1,7 @@
 ---
 title: "Cómo saber si tu hijo está preparado para la PAES (sin preguntarle directamente)"
 description: "Señales concretas para evaluar si la preparación va por buen camino, cuándo preocuparse, y qué hacer en cada caso."
-date: "2024-12-21"
+date: "2025-12-21"
 author: "SimplePAES"
 tags: ["PAES", "padres", "preparación", "matemáticas", "consejos"]
 published: true

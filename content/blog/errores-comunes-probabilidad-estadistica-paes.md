@@ -1,7 +1,7 @@
 ---
 title: "Los 7 errores de probabilidad y estadística que más cuestan puntos en la PAES"
 description: "Media, mediana, probabilidad y gráficos: los errores más frecuentes en la PAES M1 y cómo evitarlos."
-date: "2024-12-19"
+date: "2025-12-19"
 author: "SimplePAES"
 tags: ["PAES", "probabilidad", "estadística", "errores", "matemáticas", "gráficos"]
 published: true

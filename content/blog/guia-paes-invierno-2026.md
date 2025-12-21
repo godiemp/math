@@ -1,7 +1,7 @@
 ---
 title: "PAES Invierno 2026: todo lo que necesitas saber para prepararte"
 description: "Fechas, costos, requisitos y estrategias para prepararte para la PAES de Invierno. Guía completa para egresados."
-date: "2024-12-17"
+date: "2025-12-17"
 author: "SimplePAES"
 tags: ["PAES", "PAES Invierno", "admisión 2026", "matemáticas", "guía"]
 published: true

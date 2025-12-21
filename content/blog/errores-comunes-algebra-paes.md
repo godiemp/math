@@ -1,7 +1,7 @@
 ---
 title: "Los 7 errores de álgebra que más cuestan puntos en la PAES"
 description: "Descubre los errores algebraicos más frecuentes en la PAES M1 y aprende a evitarlos con ejemplos claros."
-date: "2024-12-17"
+date: "2025-12-17"
 author: "SimplePAES"
 tags: ["PAES", "álgebra", "errores", "matemáticas", "consejos"]
 published: true
