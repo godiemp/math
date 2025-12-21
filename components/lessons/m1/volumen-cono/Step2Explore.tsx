@@ -30,7 +30,6 @@ const PHASE_DELAY = 2000; // 2 seconds between phases
 
 export default function Step2Explore({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>(0);
-  const [waterLevel, setWaterLevel] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasCompleted, setHasCompleted] = useState(false);
 
@@ -41,11 +40,6 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     const timer = setTimeout(() => {
       const nextPhase = (phase + 1) as Phase;
       setPhase(nextPhase);
-
-      // Update water level based on phase
-      if (nextPhase === 1) setWaterLevel(0.33);
-      else if (nextPhase === 2) setWaterLevel(0.66);
-      else if (nextPhase === 3) setWaterLevel(1);
 
       if (nextPhase === 4) {
         setIsPlaying(false);
@@ -60,7 +54,6 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     if (phase >= 4) {
       // Reset and replay
       setPhase(0);
-      setWaterLevel(0);
       setHasCompleted(false);
       setTimeout(() => setIsPlaying(true), 100);
     } else {
@@ -70,7 +63,6 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
   const handleReset = () => {
     setPhase(0);
-    setWaterLevel(0);
     setIsPlaying(false);
     setHasCompleted(false);
   };
@@ -90,7 +82,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
       {/* 3D Scene */}
       <div className="relative">
-        <ConeScene3D phase={phase} waterLevel={waterLevel} />
+        <ConeScene3D phase={phase} />
 
         {/* Rotate hint */}
         <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">

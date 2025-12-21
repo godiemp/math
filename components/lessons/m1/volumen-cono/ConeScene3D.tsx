@@ -2,36 +2,49 @@
 
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Html, Line } from '@react-three/drei';
+import { OrbitControls, Html } from '@react-three/drei';
 import * as THREE from 'three';
 
 // Dimensions
 const RADIUS = 1;
 const HEIGHT = 2;
-const CONE_SPACING = 1.8;
 
 interface ConeScene3DProps {
   phase: 0 | 1 | 2 | 3 | 4;
-  waterLevel: number; // 0 to 1
 }
 
-// Glass-like cylinder (container)
-function GlassCylinder({ waterLevel }: { waterLevel: number }) {
-  const cylinderRef = useRef<THREE.Group>(null);
+// Create a cylinder segment (1/3 of a cylinder) geometry
+function createCylinderSegment(radius: number, height: number, thetaStart: number, thetaLength: number) {
+  const shape = new THREE.Shape();
+  const segments = 32;
 
-  // Water inside cylinder
-  const waterHeight = HEIGHT * waterLevel;
-  const waterY = -HEIGHT / 2 + waterHeight / 2;
+  // Create pie slice shape
+  shape.moveTo(0, 0);
+  for (let i = 0; i <= segments; i++) {
+    const theta = thetaStart + (i / segments) * thetaLength;
+    shape.lineTo(Math.cos(theta) * radius, Math.sin(theta) * radius);
+  }
+  shape.lineTo(0, 0);
 
+  const extrudeSettings = {
+    depth: height,
+    bevelEnabled: false,
+  };
+
+  return new THREE.ExtrudeGeometry(shape, extrudeSettings);
+}
+
+// Glass-like cylinder (target container)
+function TargetCylinder() {
   return (
-    <group ref={cylinderRef} position={[-2, 0, 0]}>
+    <group position={[0, 0, 0]}>
       {/* Transparent cylinder shell */}
       <mesh>
         <cylinderGeometry args={[RADIUS, RADIUS, HEIGHT, 32, 1, true]} />
         <meshStandardMaterial
           color="#ffffff"
           transparent
-          opacity={0.15}
+          opacity={0.12}
           side={THREE.DoubleSide}
           depthWrite={false}
         />
@@ -55,62 +68,14 @@ function GlassCylinder({ waterLevel }: { waterLevel: number }) {
         <meshStandardMaterial
           color="#e2e8f0"
           transparent
-          opacity={0.3}
+          opacity={0.2}
           side={THREE.DoubleSide}
         />
       </mesh>
 
-      {/* Water fill */}
-      {waterLevel > 0 && (
-        <mesh position={[0, waterY, 0]}>
-          <cylinderGeometry args={[RADIUS * 0.98, RADIUS * 0.98, waterHeight, 32]} />
-          <meshStandardMaterial
-            color="#38bdf8"
-            transparent
-            opacity={0.7}
-          />
-        </mesh>
-      )}
-
-      {/* Water surface */}
-      {waterLevel > 0 && waterLevel < 1 && (
-        <mesh position={[0, -HEIGHT / 2 + waterHeight, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <circleGeometry args={[RADIUS * 0.98, 32]} />
-          <meshStandardMaterial
-            color="#7dd3fc"
-            transparent
-            opacity={0.8}
-          />
-        </mesh>
-      )}
-
-      {/* Height label */}
-      <Line
-        points={[[RADIUS + 0.2, -HEIGHT / 2, 0], [RADIUS + 0.2, HEIGHT / 2, 0]]}
-        color="#3b82f6"
-        lineWidth={2}
-      />
-      <Html position={[RADIUS + 0.5, 0, 0]} center>
-        <div className="font-mono font-bold text-blue-400 text-sm bg-gray-900/80 px-2 py-0.5 rounded">
-          h
-        </div>
-      </Html>
-
-      {/* Radius label */}
-      <Line
-        points={[[0, -HEIGHT / 2 - 0.2, 0], [RADIUS, -HEIGHT / 2 - 0.2, 0]]}
-        color="#ef4444"
-        lineWidth={2}
-      />
-      <Html position={[RADIUS / 2, -HEIGHT / 2 - 0.4, 0]} center>
-        <div className="font-mono font-bold text-red-400 text-sm bg-gray-900/80 px-2 py-0.5 rounded">
-          r
-        </div>
-      </Html>
-
       {/* Label */}
       <Html position={[0, HEIGHT / 2 + 0.4, 0]} center>
-        <div className="font-mono font-bold text-white text-sm bg-slate-700/90 px-3 py-1 rounded-lg">
+        <div className="font-mono font-bold text-white text-sm bg-slate-700/90 px-3 py-1 rounded-lg whitespace-nowrap">
           Cilindro
         </div>
       </Html>
@@ -118,101 +83,189 @@ function GlassCylinder({ waterLevel }: { waterLevel: number }) {
   );
 }
 
-// Colored cone (with optional tipping animation)
-interface ConeProps {
+// Animated cone that transforms into a cylinder segment
+interface TransformingConeProps {
   index: number;
   phase: number;
-  position: [number, number, number];
+  startPosition: [number, number, number];
+  color: string;
+  thetaStart: number;
 }
 
-function Cone({ index, phase, position }: ConeProps) {
-  const coneRef = useRef<THREE.Group>(null);
-  const targetRotation = useRef(0);
-  const currentRotation = useRef(0);
+function TransformingCone({ index, phase, startPosition, color, thetaStart }: TransformingConeProps) {
+  const groupRef = useRef<THREE.Group>(null);
+  const coneRef = useRef<THREE.Mesh>(null);
+  const segmentRef = useRef<THREE.Mesh>(null);
 
-  // Cone colors
-  const colors = ['#14b8a6', '#06b6d4', '#0ea5e9'];
-  const color = colors[index];
+  // Animation states
+  const animProgress = useRef(0);
+  const morphProgress = useRef(0);
 
-  // Determine if this cone has "poured"
-  const hasPoured = phase > index;
-  const isPouring = phase === index + 1;
+  // This cone activates at its specific phase (1, 2, or 3)
+  const activationPhase = index + 1;
+  const isActivated = phase >= activationPhase;
+  const isTransforming = phase === activationPhase;
+  const hasCompleted = phase > activationPhase;
 
-  // Target rotation based on state
-  if (hasPoured) {
-    targetRotation.current = Math.PI; // Upside down (poured)
-  } else if (isPouring) {
-    targetRotation.current = Math.PI * 0.7; // Tilting
-  } else {
-    targetRotation.current = 0; // Upright
-  }
+  // Create cylinder segment geometry
+  const segmentGeometry = useMemo(() => {
+    const geo = createCylinderSegment(RADIUS * 0.98, HEIGHT, thetaStart, Math.PI * 2 / 3);
+    geo.rotateX(-Math.PI / 2);
+    geo.translate(0, -HEIGHT / 2, 0);
+    return geo;
+  }, [thetaStart]);
 
   useFrame((_, delta) => {
-    if (coneRef.current) {
-      // Smooth rotation
-      currentRotation.current = THREE.MathUtils.lerp(
-        currentRotation.current,
-        targetRotation.current,
-        delta * 3
-      );
-      coneRef.current.rotation.z = currentRotation.current;
+    if (!groupRef.current || !coneRef.current || !segmentRef.current) return;
 
-      // Move up when poured
-      const targetY = hasPoured ? 0.5 : 0;
-      coneRef.current.position.y = THREE.MathUtils.lerp(
-        coneRef.current.position.y,
-        targetY,
-        delta * 3
-      );
+    const speed = 1.5;
+
+    if (isTransforming) {
+      // Phase 1: Morphing (cone fades, segment appears)
+      if (morphProgress.current < 1) {
+        morphProgress.current = Math.min(1, morphProgress.current + delta * speed);
+      } else {
+        // Phase 2: Moving to cylinder
+        animProgress.current = Math.min(1, animProgress.current + delta * speed * 0.8);
+      }
+    } else if (hasCompleted) {
+      morphProgress.current = 1;
+      animProgress.current = 1;
     }
+
+    // Update cone opacity (fade out during morph)
+    const coneMaterial = coneRef.current.material as THREE.MeshStandardMaterial;
+    coneMaterial.opacity = Math.max(0, 0.9 - morphProgress.current);
+
+    // Update segment opacity (fade in during morph)
+    const segmentMaterial = segmentRef.current.material as THREE.MeshStandardMaterial;
+    segmentMaterial.opacity = morphProgress.current * 0.85;
+
+    // Interpolate position from start to center (cylinder)
+    const targetX = 0;
+    const targetY = 0;
+    const targetZ = 0;
+
+    groupRef.current.position.x = THREE.MathUtils.lerp(startPosition[0], targetX, animProgress.current);
+    groupRef.current.position.y = THREE.MathUtils.lerp(startPosition[1], targetY, animProgress.current);
+    groupRef.current.position.z = THREE.MathUtils.lerp(startPosition[2], targetZ, animProgress.current);
+
+    // Scale down cone during morph
+    const coneScale = 1 - morphProgress.current * 0.3;
+    coneRef.current.scale.setScalar(coneScale);
   });
 
-  // Opacity based on pour state
-  const opacity = hasPoured ? 0.4 : 0.9;
+  // Don't render if not yet activated
+  if (!isActivated && phase < activationPhase) {
+    return (
+      <group position={startPosition}>
+        {/* Original cone (waiting) */}
+        <mesh rotation={[Math.PI, 0, 0]}>
+          <coneGeometry args={[RADIUS, HEIGHT, 32]} />
+          <meshStandardMaterial color={color} transparent opacity={0.9} />
+        </mesh>
+        <mesh position={[0, HEIGHT / 2, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[RADIUS, 0.015, 8, 32]} />
+          <meshStandardMaterial color="#0f172a" />
+        </mesh>
+        <Html position={[0, -HEIGHT / 2 - 0.4, 0]} center>
+          <div
+            className="font-mono font-bold text-white text-xs px-2 py-0.5 rounded whitespace-nowrap"
+            style={{ backgroundColor: `${color}dd` }}
+          >
+            Cono {index + 1}
+          </div>
+        </Html>
+      </group>
+    );
+  }
 
   return (
-    <group ref={coneRef} position={position}>
-      {/* Cone mesh - tip pointing down */}
-      <mesh rotation={[Math.PI, 0, 0]}>
+    <group ref={groupRef} position={startPosition}>
+      {/* Original cone (fades out) */}
+      <mesh ref={coneRef} rotation={[Math.PI, 0, 0]}>
         <coneGeometry args={[RADIUS, HEIGHT, 32]} />
         <meshStandardMaterial
           color={color}
           transparent
-          opacity={opacity}
+          opacity={0.9}
         />
       </mesh>
 
       {/* Cone edge */}
-      <mesh position={[0, HEIGHT / 2, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[RADIUS, 0.015, 8, 32]} />
-        <meshStandardMaterial color="#0f172a" />
-      </mesh>
-
-      {/* Water inside cone (only when not poured) */}
-      {!hasPoured && (
-        <mesh rotation={[Math.PI, 0, 0]} position={[0, 0.05, 0]}>
-          <coneGeometry args={[RADIUS * 0.9, HEIGHT * 0.9, 32]} />
-          <meshStandardMaterial
-            color="#38bdf8"
-            transparent
-            opacity={0.6}
-          />
+      {morphProgress.current < 1 && (
+        <mesh position={[0, HEIGHT / 2, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[RADIUS, 0.015, 8, 32]} />
+          <meshStandardMaterial color="#0f172a" transparent opacity={1 - morphProgress.current} />
         </mesh>
       )}
 
+      {/* Cylinder segment (fades in and moves) */}
+      <mesh ref={segmentRef} geometry={segmentGeometry}>
+        <meshStandardMaterial
+          color={color}
+          transparent
+          opacity={0}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
       {/* Label */}
-      <Html position={[0, -HEIGHT / 2 - 0.3, 0]} center>
-        <div
-          className="font-mono font-bold text-white text-xs px-2 py-0.5 rounded whitespace-nowrap"
-          style={{
-            backgroundColor: hasPoured ? 'rgba(100, 116, 139, 0.9)' : `${color}dd`,
-            textDecoration: hasPoured ? 'line-through' : 'none',
-          }}
-        >
-          Cono {index + 1}
-        </div>
-      </Html>
+      {!hasCompleted && (
+        <Html position={[0, -HEIGHT / 2 - 0.4, 0]} center>
+          <div
+            className="font-mono font-bold text-white text-xs px-2 py-0.5 rounded whitespace-nowrap transition-all"
+            style={{ backgroundColor: `${color}dd` }}
+          >
+            {morphProgress.current < 0.5 ? `Cono ${index + 1}` : `1/3 cilindro`}
+          </div>
+        </Html>
+      )}
     </group>
+  );
+}
+
+// Filled segments inside the cylinder (appear after animation completes)
+interface FilledSegmentProps {
+  index: number;
+  phase: number;
+  color: string;
+  thetaStart: number;
+}
+
+function FilledSegment({ index, phase, color, thetaStart }: FilledSegmentProps) {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const opacityRef = useRef(0);
+
+  const activationPhase = index + 1;
+  const shouldShow = phase > activationPhase;
+
+  const segmentGeometry = useMemo(() => {
+    const geo = createCylinderSegment(RADIUS * 0.97, HEIGHT * 0.99, thetaStart, Math.PI * 2 / 3 - 0.02);
+    geo.rotateX(-Math.PI / 2);
+    geo.translate(0, -HEIGHT / 2, 0);
+    return geo;
+  }, [thetaStart]);
+
+  useFrame((_, delta) => {
+    if (!meshRef.current) return;
+
+    const targetOpacity = shouldShow ? 0.75 : 0;
+    opacityRef.current = THREE.MathUtils.lerp(opacityRef.current, targetOpacity, delta * 3);
+
+    const material = meshRef.current.material as THREE.MeshStandardMaterial;
+    material.opacity = opacityRef.current;
+  });
+
+  return (
+    <mesh ref={meshRef} geometry={segmentGeometry}>
+      <meshStandardMaterial
+        color={color}
+        transparent
+        opacity={0}
+        side={THREE.DoubleSide}
+      />
+    </mesh>
   );
 }
 
@@ -221,13 +274,13 @@ function FormulaReveal({ visible }: { visible: boolean }) {
   if (!visible) return null;
 
   return (
-    <Html position={[0, -2, 0]} center>
+    <Html position={[0, -2.2, 0]} center>
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-xl shadow-xl animate-fadeIn">
         <p className="text-center text-lg font-bold">
-          V<sub>cono</sub> = <sup>1</sup>&frasl;<sub>3</sub> &times; V<sub>cilindro</sub>
+          V<sub>cono</sub> = <span className="text-yellow-300">1/3</span> &times; V<sub>cilindro</sub>
         </p>
         <p className="text-center text-xl font-bold mt-1">
-          V = <sup>1</sup>&frasl;<sub>3</sub> &times; &pi; &times; r&sup2; &times; h
+          V = <span className="text-yellow-300">1/3</span> &times; &pi; &times; r&sup2; &times; h
         </p>
       </div>
     </Html>
@@ -235,23 +288,29 @@ function FormulaReveal({ visible }: { visible: boolean }) {
 }
 
 // Progress indicator
-function ProgressIndicator({ waterLevel }: { waterLevel: number }) {
-  const percentage = Math.round(waterLevel * 100);
-  const fractionText = waterLevel === 0 ? '0' :
-                       waterLevel <= 0.34 ? '1/3' :
-                       waterLevel <= 0.67 ? '2/3' : '3/3';
+function ProgressIndicator({ phase }: { phase: number }) {
+  const filledCount = Math.min(phase, 3);
+  const fractionText = filledCount === 0 ? '0/3' :
+                       filledCount === 1 ? '1/3' :
+                       filledCount === 2 ? '2/3' : '3/3';
 
   return (
-    <Html position={[-2, -HEIGHT / 2 - 0.8, 0]} center>
+    <Html position={[0, -HEIGHT / 2 - 0.9, 0]} center>
       <div className="bg-gray-800/90 px-4 py-2 rounded-lg">
-        <div className="flex items-center gap-2">
-          <div className="w-24 h-3 bg-gray-700 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-500"
-              style={{ width: `${percentage}%` }}
-            />
+        <div className="flex items-center gap-3">
+          <div className="flex gap-1">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className={`w-6 h-4 rounded transition-all duration-500 ${
+                  i < filledCount
+                    ? i === 0 ? 'bg-teal-500' : i === 1 ? 'bg-cyan-500' : 'bg-blue-500'
+                    : 'bg-gray-600'
+                }`}
+              />
+            ))}
           </div>
-          <span className="text-white font-mono text-sm font-bold min-w-[40px]">
+          <span className="text-white font-mono text-sm font-bold">
             {fractionText}
           </span>
         </div>
@@ -261,47 +320,62 @@ function ProgressIndicator({ waterLevel }: { waterLevel: number }) {
 }
 
 // Main scene content
-function SceneContent({ phase, waterLevel }: ConeScene3DProps) {
+function SceneContent({ phase }: ConeScene3DProps) {
   const groupRef = useRef<THREE.Group>(null);
 
   // Slow auto-rotation
   useFrame((_, delta) => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.1;
+      groupRef.current.rotation.y += delta * 0.15;
     }
   });
 
-  // Cone positions
-  const conePositions: [number, number, number][] = useMemo(() => [
-    [1.5, 0, -CONE_SPACING * 0.8],
-    [1.5, 0, 0],
-    [1.5, 0, CONE_SPACING * 0.8],
+  // Cone colors and positions
+  const cones = useMemo(() => [
+    { color: '#14b8a6', position: [-2.5, 0, 0] as [number, number, number], thetaStart: 0 },
+    { color: '#06b6d4', position: [-2.5, 0, 2] as [number, number, number], thetaStart: Math.PI * 2 / 3 },
+    { color: '#3b82f6', position: [-2.5, 0, -2] as [number, number, number], thetaStart: Math.PI * 4 / 3 },
   ], []);
 
   return (
     <group ref={groupRef}>
-      <GlassCylinder waterLevel={waterLevel} />
+      {/* Target cylinder */}
+      <TargetCylinder />
 
-      {conePositions.map((pos, index) => (
-        <Cone
-          key={index}
+      {/* Filled segments (appear after each cone transforms) */}
+      {cones.map((cone, index) => (
+        <FilledSegment
+          key={`segment-${index}`}
           index={index}
           phase={phase}
-          position={pos}
+          color={cone.color}
+          thetaStart={cone.thetaStart}
         />
       ))}
 
-      <ProgressIndicator waterLevel={waterLevel} />
+      {/* Transforming cones */}
+      {cones.map((cone, index) => (
+        <TransformingCone
+          key={`cone-${index}`}
+          index={index}
+          phase={phase}
+          startPosition={cone.position}
+          color={cone.color}
+          thetaStart={cone.thetaStart}
+        />
+      ))}
+
+      <ProgressIndicator phase={phase} />
       <FormulaReveal visible={phase >= 4} />
     </group>
   );
 }
 
-export default function ConeScene3D({ phase, waterLevel }: ConeScene3DProps) {
+export default function ConeScene3D({ phase }: ConeScene3DProps) {
   return (
-    <div className="w-full h-[350px] rounded-xl overflow-hidden bg-gradient-to-b from-slate-900 to-slate-800">
+    <div className="w-full h-[400px] rounded-xl overflow-hidden bg-gradient-to-b from-slate-900 to-slate-800">
       <Canvas
-        camera={{ position: [6, 3, 6], fov: 45 }}
+        camera={{ position: [5, 4, 5], fov: 50 }}
         gl={{ antialias: true }}
       >
         <ambientLight intensity={0.5} />
@@ -309,14 +383,14 @@ export default function ConeScene3D({ phase, waterLevel }: ConeScene3DProps) {
         <pointLight position={[-10, -5, -10]} intensity={0.3} />
         <directionalLight position={[5, 5, 5]} intensity={0.5} />
 
-        <SceneContent phase={phase} waterLevel={waterLevel} />
+        <SceneContent phase={phase} />
 
         <OrbitControls
           enablePan={false}
           enableZoom={true}
-          minDistance={5}
+          minDistance={4}
           maxDistance={15}
-          maxPolarAngle={Math.PI / 1.8}
+          maxPolarAngle={Math.PI / 1.6}
         />
       </Canvas>
     </div>
