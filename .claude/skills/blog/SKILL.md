@@ -14,32 +14,47 @@ description: Analyze blog content gaps and create SEO-optimized posts for Simple
 
 When analyzing gaps, read all posts in `/content/blog/` and evaluate coverage across these frameworks:
 
-### Content Pillars (PAES M1 Curriculum)
+### Target Audiences
 
-| Pillar | Topics | Status |
-|--------|--------|--------|
-| Números | Integers, rationals, operations, order, absolute value | |
-| Álgebra | Expressions, equations, inequalities, functions, sequences | |
-| Geometría | Shapes, measurement, area, volume, coordinates, transformations | |
-| Probabilidad y Estadística | Data analysis, graphs, probability, combinations | |
+SimplePAES serves multiple audiences. Consider which audience each post targets:
 
-### Student Journey Stages
+| Audience | Context | Key Pain Points |
+|----------|---------|-----------------|
+| **Students (1°-4° Medio)** | Learning math throughout high school | Understanding concepts, passing tests, building foundations |
+| **Students (PAES prep)** | Preparing for university entrance exam | Time pressure, high stakes, gap identification |
+| **Parents** | Supporting their children's learning | Not knowing how to help, managing stress, tracking progress |
+| **Teachers** | Teaching math in classroom settings | Diagnosing student gaps, differentiating instruction, saving time |
+| **Schools/Coordinators** | Implementing math support programs | Scaling support, tracking outcomes, equity across students |
+
+### Content Pillars (Matemáticas Educación Media)
+
+These cover the Chilean curriculum from 1° to 4° Medio, including PAES preparation:
+
+| Pillar | Topics | Grade Levels |
+|--------|--------|--------------|
+| Números | Integers, rationals, reals, operations, percentages, proportions, powers | 1°-4° Medio |
+| Álgebra | Expressions, equations, inequalities, functions (linear, quadratic, exponential), sequences | 1°-4° Medio |
+| Geometría | Shapes, measurement, area, volume, coordinates, transformations, trigonometry | 1°-4° Medio |
+| Probabilidad y Estadística | Data analysis, graphs, probability, combinations, distributions | 1°-4° Medio |
+
+### User Journey Stages
 
 | Stage | Intent | Example Topics |
 |-------|--------|----------------|
-| **Awareness** | "What is this?" | What is PAES, how hard is it, what's on the exam |
-| **Consideration** | "How do I prepare?" | Study methods, time management, practice strategies |
+| **Awareness** | "What is this?" / "I have a problem" | Why math is hard, common struggles, what is PAES |
+| **Consideration** | "How do I solve this?" | Study methods, practice strategies, how to improve |
 | **Decision** | "Why this solution?" | Why SimplePAES, how AI tutoring helps, success stories |
 
 ### Content Types
 
-- [ ] Strategy/tips posts (exam techniques, time management)
-- [ ] Concept explainers (topic tutorials, formulas explained)
+- [ ] Strategy/tips posts (study techniques, time management, exam strategies)
+- [ ] Concept explainers (topic tutorials, formulas explained, worked examples)
 - [ ] Common mistakes posts (errors by topic, how to avoid them)
 - [ ] Study planning guides (schedules, routines, resources)
 - [ ] Success stories/testimonials (social proof)
-- [ ] News/updates (PAES dates, curriculum changes, scores)
-- [ ] Parent/teacher content (how to support students)
+- [ ] News/updates (PAES dates, curriculum changes, education news)
+- [ ] Parent content (how to support students, managing stress)
+- [ ] Teacher/school content (diagnosing gaps, differentiation, data-driven teaching)
 
 ### Gap Prioritization Matrix
 
@@ -131,7 +146,9 @@ Before publishing, verify:
 
 ### CTA Templates
 
-Use these naturally when relevant (not forced into every post):
+Use these naturally when relevant (not forced into every post). Match the CTA to the target audience:
+
+#### For Students
 
 **For practice features:**
 > ¿Quieres practicar este tema? SimplePAES tiene ejercicios con retroalimentación instantánea que te muestran exactamente dónde te equivocas.
@@ -139,18 +156,42 @@ Use these naturally when relevant (not forced into every post):
 **For AI tutor:**
 > Si te trabas en algún paso, nuestro tutor con IA te guía con preguntas—sin darte la respuesta directamente.
 
-**For timed practice:**
+**For timed practice (PAES prep):**
 > Practica bajo presión real con nuestro modo Rapid Fire, que simula las condiciones del examen.
 
-**For Zen mode:**
+**For Zen mode (learning/homework):**
 > ¿Prefieres aprender sin presión? El modo Zen te deja practicar a tu ritmo, con ayuda disponible cuando la necesites.
 
 **For live sessions:**
 > Únete a sesiones en vivo donde practicas junto a otros estudiantes y ves cómo te comparas.
 
-**Soft CTA (end of post):**
+**Soft CTA (end of post - students):**
 > ---
 > *¿Listo para practicar? SimplePAES te ayuda a dominar [topic] con práctica inteligente y retroalimentación instantánea.*
+
+#### For Teachers/Schools
+
+**For class dashboard:**
+> Con SimplePAES puedes crear tu clase, asignar práctica por tema, y ver desde tu panel qué estudiantes practicaron y dónde se están equivocando—todo sin corregir un solo ejercicio.
+
+**For diagnosing gaps:**
+> El diagnóstico de SimplePAES te muestra exactamente qué temas necesita reforzar cada estudiante, para que puedas diferenciar sin adivinar.
+
+**For saving time:**
+> Deja que SimplePAES corrija y dé retroalimentación automática. Tú enfócate en enseñar lo difícil.
+
+**Soft CTA (end of post - teachers):**
+> ---
+> *Con SimplePAES puedes ver qué temas necesitan refuerzo en tu curso y asignar práctica personalizada—sin agregar horas a tu semana. [Conoce nuestros planes para colegios](https://simplepaes.cl/profesores).*
+
+#### For Parents
+
+**For supporting learning:**
+> SimplePAES le da a tu hijo la ayuda que necesita, cuando la necesita, sin tener que pedirla. El tutor con IA responde sus dudas al instante—sin juicio, sin frustración.
+
+**Soft CTA (end of post - parents):**
+> ---
+> *¿Quieres darle a tu hijo una herramienta que lo ayude a mejorar de forma independiente? SimplePAES ofrece práctica con retroalimentación instantánea y un tutor con IA disponible 24/7.*
 
 ## File Conventions
 
@@ -166,7 +207,11 @@ Use these naturally when relevant (not forced into every post):
 **Tags guidelines:**
 - 3-5 tags per post
 - Reuse existing tags when applicable
-- Common tags: PAES, matemáticas, estrategia, álgebra, geometría, estudio, consejos
+- Common tags by category:
+  - **General:** matemáticas, estudio, consejos, estrategia
+  - **Topics:** álgebra, geometría, números, probabilidad, estadística
+  - **Audiences:** PAES, profesores, padres, educación media
+  - **Grade levels:** 1° medio, 2° medio, 3° medio, 4° medio (use when content is grade-specific)
 
 ## Reference: Existing Posts
 
