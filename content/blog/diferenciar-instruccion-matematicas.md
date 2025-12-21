@@ -1,7 +1,7 @@
 ---
 title: "Cómo diferenciar instrucción en matemáticas (sin morir en el intento)"
 description: "Estrategias realistas para enseñar a 35 estudiantes con niveles distintos, sin triplicar tu carga de trabajo."
-date: "2024-12-20"
+date: "2025-12-20"
 author: "SimplePAES"
 tags: ["profesores", "matemáticas", "diferenciación", "educación media", "enseñanza"]
 published: true

@@ -1,7 +1,7 @@
 ---
 title: "El error que cometen los padres al elegir apoyo en matemáticas"
 description: "Por qué más tutores, más horas y más clases no siempre funcionan, y cómo elegir la ayuda correcta para tu hijo."
-date: "2024-12-21"
+date: "2025-12-21"
 author: "SimplePAES"
 tags: ["padres", "matemáticas", "tutores", "educación media", "consejos"]
 published: true

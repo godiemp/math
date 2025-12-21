@@ -13,6 +13,7 @@ const AUDIENCES: { key: AudienceType; label: string }[] = [
   { key: 'estudiantes', label: 'Estudiantes' },
   { key: 'padres', label: 'Padres' },
   { key: 'profesores', label: 'Profesores' },
+  { key: 'directivos', label: 'Directivos' },
 ];
 
 export function AudienceFilter({ selected, onSelect, counts }: AudienceFilterProps) {

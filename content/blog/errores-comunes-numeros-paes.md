@@ -1,7 +1,7 @@
 ---
 title: "Los 7 errores de números que más cuestan puntos en la PAES"
 description: "Fracciones, porcentajes y potencias: los errores más frecuentes en la PAES M1 y cómo evitarlos."
-date: "2024-12-19"
+date: "2025-12-19"
 author: "SimplePAES"
 tags: ["PAES", "números", "errores", "fracciones", "porcentajes", "matemáticas"]
 published: true
