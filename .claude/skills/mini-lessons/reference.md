@@ -589,6 +589,28 @@ Common objectives for PAES M1:
 
 ---
 
+## Validation Scripts
+
+Scripts to validate question quality in `lib/questions/`:
+
+### Duplicate Options Validator
+
+Detects questions with equivalent answer options (e.g., `\frac{1}{2}` and `\frac{2}{4}`).
+
+```bash
+node scripts/validate-duplicate-options.mjs
+```
+
+**What it checks:**
+- Normalizes LaTeX fractions to decimals for comparison
+- Detects numeric equivalences (e.g., `0.5` = `\frac{1}{2}`)
+- Skips algebraic expressions with variables
+- Skips numbers with thousands separators (Chilean format)
+
+**Expected output:** Some questions intentionally have duplicate options when asking for "fracción irreducible" (simplified fraction form). These are valid and should not be "fixed."
+
+---
+
 ## Duration Guidelines
 
 | Step | Typical Duration |
