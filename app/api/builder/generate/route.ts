@@ -44,53 +44,59 @@ Cada lección debe tener EXACTAMENTE 5 pasos en este orden:
 
 ## ESQUEMA JSON REQUERIDO
 {
-  "id": "string (slug único basado en el tema)",
-  "slug": "string (igual al id)",
-  "title": "string (título corto y atractivo)",
-  "description": "string (descripción breve de la lección)",
-  "level": "m1" | "m2",
-  "subject": "algebra" | "numeros" | "geometria" | "probabilidad",
+  "id": "string-slug-basado-en-tema",
+  "slug": "string-slug-basado-en-tema",
+  "title": "Título Corto",
+  "description": "Descripción breve de la lección",
+  "level": "M1",
+  "subject": "álgebra",
   "steps": [
     {
       "id": "hook",
       "type": "hook",
-      "title": "¿Sabías que...?",
+      "title": "Título del Gancho",
       "content": {
-        "subtitle": "string",
+        "subtitle": "Subtítulo descriptivo del escenario...",
         "scenario": {
-          "text": "string (escenario de la vida real)",
-          "visual": "string (emoji o descripción visual)",
-          "question": "string (pregunta enganche)"
+          "text": "Descripción del escenario. Usa <strong class='text-blue-600'>texto resaltado</strong> para énfasis.",
+          "visual": { "type": "emoji", "content": "🔢📐", "size": "text-4xl" },
+          "question": "¿Pregunta que plantea el escenario?"
         },
         "quiz": {
-          "reminder": "string",
-          "options": ["opción1", "opción2", "opción3", "opción4"],
-          "correctIndex": 0-3
+          "reminder": "Recordatorio del contexto con $LaTeX$ si es necesario",
+          "options": ["Opción A", "Opción B", "Opción C (correcta)", "Opción D"],
+          "correctIndex": 2
         },
         "result": {
-          "title": "string",
-          "breakdown": [{ "type": "text", "content": "string" }],
-          "bridge": [{ "type": "text", "content": "string" }]
+          "title": "¡Título del Resultado!",
+          "breakdown": ["Paso 1: explicación", "Paso 2: desarrollo", "Paso 3: resultado final"],
+          "bridge": {
+            "title": "Conexión con el Concepto",
+            "concept": "Explicación de cómo el escenario se conecta con el tema matemático.",
+            "formula": "$formula\\\\_clave = resultado$",
+            "note": "Nota adicional opcional"
+          }
         }
       }
     },
     {
       "id": "explore",
       "type": "explore",
-      "title": "Exploremos",
+      "title": "Descubre el Patrón",
       "content": {
-        "introduction": "string",
+        "subtitle": "Explora diferentes ejemplos",
+        "intro": {
+          "text": "Haz clic en cada ejemplo para ver cómo funciona."
+        },
         "examples": [
-          {
-            "id": "string",
-            "title": "string",
-            "description": "string",
-            "visual": { "type": "text", "content": "string (usa LaTeX: $formula$)" },
-            "explanation": "string"
-          }
+          { "id": "ex1", "expression": "$expresión_1$", "result": "$resultado_1$", "hint": "Pista para resolver" },
+          { "id": "ex2", "expression": "$expresión_2$", "result": "$resultado_2$", "hint": "Pista para resolver" },
+          { "id": "ex3", "expression": "$expresión_3$", "result": "$resultado_3$", "hint": "Pista para resolver" }
         ],
-        "interactivePrompt": "string",
-        "insight": "string"
+        "summary": {
+          "title": "¡Patrón descubierto!",
+          "steps": ["Paso 1 del método", "Paso 2 del método", "Paso 3 del método"]
+        }
       }
     },
     {
@@ -98,64 +104,114 @@ Cada lección debe tener EXACTAMENTE 5 pasos en este orden:
       "type": "explain",
       "title": "La Teoría",
       "content": {
-        "introduction": "string",
+        "subtitle": "Conceptos y fórmulas clave",
         "tabs": [
           {
-            "id": "string",
-            "title": "string",
-            "content": [{ "type": "text", "content": "string (usa LaTeX para fórmulas)" }]
+            "id": "tab1",
+            "title": "Título Completo del Tab",
+            "shortTitle": "Tab1",
+            "description": "Descripción del concepto explicado en este tab",
+            "formula": "$formula = resultado$",
+            "color": "blue",
+            "example": {
+              "input": "$entrada$",
+              "steps": ["Paso 1", "Paso 2", "Paso 3"],
+              "result": "$resultado$"
+            }
+          },
+          {
+            "id": "tab2",
+            "title": "Segundo Concepto",
+            "shortTitle": "Tab2",
+            "description": "Descripción del segundo concepto",
+            "formula": "$otra\\\\_formula$",
+            "color": "purple",
+            "example": {
+              "input": "$entrada$",
+              "steps": ["Paso 1", "Paso 2"],
+              "result": "$resultado$"
+            }
           }
         ],
-        "keyFormula": {
-          "title": "string",
-          "formula": "string (LaTeX)",
-          "explanation": "string"
-        },
-        "summary": "string"
+        "tips": {
+          "correct": ["Consejo 1 para hacerlo bien", "Consejo 2 para hacerlo bien"],
+          "errors": ["Error común 1 a evitar", "Error común 2 a evitar"],
+          "insight": {
+            "title": "Dato importante:",
+            "text": "Información clave que el estudiante debe recordar."
+          }
+        }
       }
     },
     {
       "id": "practice",
       "type": "practice",
-      "title": "A Practicar",
+      "title": "Práctica Guiada",
       "content": {
-        "introduction": "string",
+        "subtitle": "Resuelve los siguientes ejercicios",
         "problems": [
           {
-            "id": "string",
-            "question": "string",
-            "options": ["opción1", "opción2", "opción3", "opción4"],
-            "correctIndex": 0-3,
-            "explanation": "string",
-            "hint": "string"
+            "id": "p1",
+            "question": "Pregunta 1 con $LaTeX$ si es necesario",
+            "hint": "Pista para ayudar al estudiante",
+            "options": ["Opción A", "Opción B (correcta)", "Opción C", "Opción D"],
+            "correctAnswer": 1,
+            "explanation": "Explicación de por qué B es correcta"
+          },
+          {
+            "id": "p2",
+            "question": "Pregunta 2",
+            "hint": "Pista",
+            "options": ["A", "B", "C (correcta)", "D"],
+            "correctAnswer": 2,
+            "explanation": "Explicación"
+          },
+          {
+            "id": "p3",
+            "question": "Pregunta 3",
+            "hint": "Pista",
+            "options": ["A (correcta)", "B", "C", "D"],
+            "correctAnswer": 0,
+            "explanation": "Explicación"
           }
         ],
-        "encouragement": "string"
+        "requiredCorrect": 2
       }
     },
     {
       "id": "verify",
       "type": "verify",
-      "title": "Checkpoint",
+      "title": "Checkpoint Final",
       "content": {
-        "introduction": "string",
         "questions": [
           {
-            "id": "string",
-            "question": "string",
-            "options": ["A", "B", "C", "D"],
-            "correctIndex": 0-3,
-            "explanation": "string"
+            "id": "q1",
+            "question": "Pregunta de verificación 1",
+            "options": ["A", "B (correcta)", "C", "D"],
+            "correctAnswer": 1,
+            "explanation": "Explicación"
+          },
+          {
+            "id": "q2",
+            "question": "Pregunta de verificación 2",
+            "options": ["A", "B", "C (correcta)", "D"],
+            "correctAnswer": 2,
+            "explanation": "Explicación"
+          },
+          {
+            "id": "q3",
+            "question": "Pregunta de verificación 3",
+            "options": ["A (correcta)", "B", "C", "D"],
+            "correctAnswer": 0,
+            "explanation": "Explicación"
           }
         ],
-        "passingScore": 2,
-        "successMessage": "string",
-        "retryMessage": "string"
+        "requiredCorrect": 2,
+        "successMessage": "¡Excelente! Dominas este tema.",
+        "failureMessage": "Repasa los conceptos y vuelve a intentar."
       }
     }
-  ],
-  "createdAt": "${new Date().toISOString()}",
-  "updatedAt": "${new Date().toISOString()}"
+  ]
 }
 
 ## INSTRUCCIONES

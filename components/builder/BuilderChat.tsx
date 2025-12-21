@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Loader2, Sparkles, User, AlertCircle } from 'lucide-react';
+import { Send, Loader2, Sparkles, User, AlertCircle, Code, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { DynamicLesson } from '@/lib/builder/types';
 
@@ -70,6 +70,8 @@ Puedo ayudarte a:
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [streamingContent, setStreamingContent] = useState('');
+  const [streamingJson, setStreamingJson] = useState('');
+  const [showJson, setShowJson] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -110,6 +112,8 @@ Puedo ayudarte a:
     setInput('');
     setIsLoading(true);
     setStreamingContent('');
+    setStreamingJson('');
+    setShowJson(false);
 
     try {
       const response = await fetch('/api/builder/generate', {
@@ -158,6 +162,12 @@ Puedo ayudarte a:
                 // Only show the message part (before ```json), strip the JSON code block
                 const displayText = accumulatedText.split('```json')[0].trim();
                 setStreamingContent(displayText);
+
+                // Track JSON separately for visibility
+                if (accumulatedText.includes('```json')) {
+                  const jsonPart = accumulatedText.split('```json')[1]?.split('```')[0] || '';
+                  setStreamingJson(jsonPart);
+                }
               } else if (data.type === 'done') {
                 finalResult = data;
               } else if (data.type === 'error') {
@@ -181,6 +191,7 @@ Puedo ayudarte a:
 
       setMessages(prev => [...prev, assistantMessage]);
       setStreamingContent('');
+      setStreamingJson('');
 
       // Apply lesson update if present
       if (finalResult.lessonUpdate) {
@@ -189,6 +200,7 @@ Puedo ayudarte a:
     } catch (error) {
       console.error('Chat error:', error);
       setStreamingContent('');
+      setStreamingJson('');
 
       // Add error message
       const errorMessage: Message = {
@@ -238,7 +250,28 @@ Puedo ayudarte a:
             {/* Streaming content or loading indicator */}
             <div className="flex-1 max-w-[80%] p-3 rounded-2xl bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-bl-sm">
               {streamingContent ? (
-                <p className="text-sm whitespace-pre-wrap">{streamingContent}<span className="inline-block w-1.5 h-4 ml-0.5 bg-purple-500 animate-pulse" /></p>
+                <>
+                  <p className="text-sm whitespace-pre-wrap">{streamingContent}<span className="inline-block w-1.5 h-4 ml-0.5 bg-purple-500 animate-pulse" /></p>
+
+                  {/* JSON visibility panel */}
+                  {streamingJson && (
+                    <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+                      <button
+                        onClick={() => setShowJson(!showJson)}
+                        className="flex items-center gap-1.5 text-xs text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300"
+                      >
+                        <Code className="w-3.5 h-3.5" />
+                        <span>Ver JSON ({(streamingJson.length / 1024).toFixed(1)} KB)</span>
+                        <ChevronDown className={cn('w-3.5 h-3.5 transition-transform', showJson && 'rotate-180')} />
+                      </button>
+                      {showJson && (
+                        <pre className="mt-2 p-2 text-xs bg-gray-900 text-green-400 rounded overflow-auto max-h-48 font-mono">
+                          {streamingJson}
+                        </pre>
+                      )}
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-500 dark:text-gray-400">
