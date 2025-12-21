@@ -55,6 +55,7 @@ const menuGroupsConfig: MenuGroup[] = [
     items: [
       { nameKey: 'generator', path: '/admin/qgen', icon: '🎲' },
       { nameKey: 'upload', path: '/admin/upload', icon: '📤' },
+      { nameKey: 'marketing', path: '/admin/marketing', icon: '📸' },
     ],
   },
   {
