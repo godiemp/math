@@ -555,6 +555,224 @@ const handleOperation = async () => {
 
 ---
 
+### 13. Presentational Components + Hooks Pattern (Frontend)
+
+**STANDARD - Separate logic from presentation:**
+
+This pattern ensures components remain maintainable by extracting business logic into custom hooks while keeping components focused on rendering.
+
+#### When to Apply This Pattern
+
+**MUST extract hooks when:**
+- Component has 3+ `useState` calls
+- Component has complex `useEffect` logic (API calls, subscriptions, timers)
+- Component handles form state with validation
+- Same logic could be reused across components
+- Component exceeds 80 lines of non-JSX code
+
+**Can keep inline when:**
+- Simple presentational component with 1-2 state variables
+- State is purely UI-related (hover, toggle, modal open)
+- No API calls or side effects
+
+#### File Structure Pattern
+
+```
+components/
+  FeatureName/
+    FeatureName.tsx          # Presentational component
+    useFeatureName.ts        # Business logic hook
+    FeatureName.types.ts     # Shared types (optional)
+    index.ts                 # Barrel export (optional)
+```
+
+Or for simpler cases:
+```
+components/
+  FeatureName.tsx           # Presentational component
+hooks/
+  useFeatureName.ts         # Business logic hook
+```
+
+#### Example: Complex Component Refactored
+
+**BEFORE - Mixed concerns (BAD):**
+```typescript
+// ❌ Component with mixed logic and presentation
+export default function LiveSession({ sessionId }: Props) {
+  const [session, setSession] = useState<LiveSession | null>(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [myAnswers, setMyAnswers] = useState<(number | null)[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const refreshSession = async () => {
+    // 20+ lines of API logic...
+  };
+
+  useEffect(() => {
+    refreshSession();
+    const interval = setInterval(refreshSession, 2000);
+    return () => clearInterval(interval);
+  }, [sessionId]);
+
+  // 100+ lines of JSX...
+}
+```
+
+**AFTER - Separated concerns (GOOD):**
+```typescript
+// ✅ hooks/useLiveSession.ts - All business logic
+interface UseLiveSessionReturn {
+  session: LiveSession | null;
+  currentQuestionIndex: number;
+  selectedAnswer: number | null;
+  isLoading: boolean;
+  handleAnswerSelect: (index: number) => Promise<void>;
+  handleNext: () => void;
+  handlePrevious: () => void;
+}
+
+export function useLiveSession(sessionId: string): UseLiveSessionReturn {
+  const [session, setSession] = useState<LiveSession | null>(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // All effects, API calls, and handlers here...
+
+  return {
+    session,
+    currentQuestionIndex,
+    selectedAnswer,
+    isLoading,
+    handleAnswerSelect,
+    handleNext,
+    handlePrevious,
+  };
+}
+
+// ✅ components/LiveSession.tsx - Pure presentation
+export default function LiveSession({ sessionId, onExit }: LiveSessionProps) {
+  const {
+    session,
+    currentQuestionIndex,
+    selectedAnswer,
+    isLoading,
+    handleAnswerSelect,
+    handleNext,
+    handlePrevious,
+  } = useLiveSession(sessionId);
+
+  if (isLoading) return <LoadingSpinner />;
+  if (!session) return <ErrorState />;
+
+  return (
+    <div className="...">
+      {/* Pure JSX, no logic */}
+    </div>
+  );
+}
+```
+
+#### Hook Design Guidelines
+
+**1. Hook Interface Design:**
+```typescript
+// ✅ GOOD - Clear, typed return object
+interface UseQuizReturn {
+  // State
+  questions: Question[];
+  currentIndex: number;
+  isSubmitted: boolean;
+
+  // Actions
+  selectAnswer: (index: number) => void;
+  submitQuiz: () => Promise<void>;
+  resetQuiz: () => void;
+
+  // Computed values
+  score: number;
+  progress: number;
+}
+
+export function useQuiz(config: QuizConfig): UseQuizReturn { ... }
+```
+
+**2. Separate Concerns Within Hooks:**
+```typescript
+// ✅ GOOD - Compose smaller hooks
+export function useQuiz(config: QuizConfig) {
+  const state = useQuizState(config);      // State management
+  const progress = useQuizProgress(state); // Progress tracking
+  const navigation = useQuizNavigation(state.questions.length);
+
+  return {
+    ...state,
+    ...progress,
+    ...navigation,
+  };
+}
+```
+
+**3. Handle Loading and Error States:**
+```typescript
+// ✅ GOOD - Include all UI states
+export function useDataFetch<T>(url: string) {
+  const [data, setData] = useState<T | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  // ... fetch logic
+
+  return { data, isLoading, error, refetch };
+}
+```
+
+#### Naming Conventions
+
+| Type | Convention | Example |
+|------|------------|---------|
+| Hook file | `use{Feature}.ts` | `useQuizState.ts` |
+| Hook function | `use{Feature}` | `useQuizState()` |
+| Component file | `{Feature}.tsx` | `QuizCard.tsx` |
+| Props interface | `{Component}Props` | `QuizCardProps` |
+| Hook return type | `Use{Feature}Return` | `UseQuizStateReturn` |
+
+#### Existing Good Examples in This Codebase
+
+Reference these files for the pattern:
+- `hooks/useQuizState.ts` - State management hook
+- `hooks/useQuizProgress.ts` - Progress tracking hook
+- `hooks/useQuizNavigation.ts` - Navigation hook
+- `components/quiz/ZenQuiz.tsx` - Component using multiple hooks
+- `components/ui/Card.tsx` - Simple presentational component
+
+#### ESLint Will Warn You
+
+The following warnings suggest extracting a hook:
+- `max-lines-per-function` exceeded (component too long)
+- `complexity` exceeded (too many branches)
+- `max-statements` exceeded (too much logic)
+
+---
+
+### 14. Refactor When Touched Policy
+
+When modifying existing components that don't follow the presentational + hooks pattern:
+
+**Substantial edits (MUST refactor):**
+- Adding new features that require understanding the component
+- Fixing bugs that require understanding the component logic
+- Any edit touching >10 lines of code
+
+**Minor edits (NO refactor required):**
+- Typo fixes
+- Style/CSS changes
+- Single-line fixes
+
+---
+
 ## Migration Priorities
 
 When refactoring existing code, address in this order:
@@ -569,10 +787,11 @@ When refactoring existing code, address in this order:
 5. **TypeScript 'any'** - Replace with proper types
 6. **Logging** - Add structured logging to new/modified code
 7. **Auth Imports** - Use new modular auth imports
+8. **Presentational + Hooks** - Extract hooks from complex components (see Refactor When Touched Policy)
 
 ### Low Priority (Nice to Have):
-8. **Form Validation** - Consider React Hook Form + Zod for complex forms
-9. **Query Builder** - Consider library for complex dynamic queries
+9. **Form Validation** - Consider React Hook Form + Zod for complex forms
+10. **Query Builder** - Consider library for complex dynamic queries
 
 ---
 
@@ -592,6 +811,12 @@ When reviewing or implementing code, check:
 - [ ] Parameterized queries (no SQL injection risk)
 - [ ] Service layer for complex business logic
 - [ ] Consistent with existing patterns in the codebase
+
+**Frontend Components:**
+- [ ] Complex components have logic extracted to hooks
+- [ ] Hooks return typed interfaces
+- [ ] Component focused on rendering (no inline API calls)
+- [ ] No ESLint warnings for complexity/length
 
 ---
 
