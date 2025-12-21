@@ -40,17 +40,62 @@ export default function Auth({ onSuccess }: AuthProps) {
   const router = useRouter();
   const { refreshSession } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
-  // Auto-fill credentials in Vercel preview for faster testing
+  // Show quick sign-in buttons in Vercel preview for faster testing
   const isPreview = process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
-  const [username, setUsername] = useState(isPreview ? 'admin' : '');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState(isPreview ? 'admin123' : '');
+  const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRetrying, setIsRetrying] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Quick sign-in for preview environments
+  const handleQuickSignIn = async (testUsername: string, testPassword: string) => {
+    setError('');
+    setIsLoading(true);
+    setIsLogin(true);
+
+    try {
+      const loginResult = await withRetry(
+        async () => {
+          const result = await loginUser(testUsername, testPassword);
+          if (!result.success && result.error?.includes('Network error')) {
+            setIsRetrying(true);
+          }
+          return result;
+        },
+        (result) => !result.success && Boolean(result.error?.includes('Network error') || result.error?.includes('Unable to connect'))
+      );
+      setIsRetrying(false);
+
+      if (!loginResult.success) {
+        const errorMsg = loginResult.error || t('login.errors.invalidCredentials');
+        setError(errorMsg);
+        return;
+      }
+
+      const result = await signIn('credentials', {
+        user: JSON.stringify(loginResult.user),
+        redirect: false,
+      });
+
+      if (result?.ok) {
+        analytics.track('user_logged_in', {
+          method: 'quick_signin',
+          username: testUsername,
+        });
+        await refreshSession();
+        onSuccess(false);
+      }
+    } catch (err) {
+      setError(tCommon('connectionError'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -666,6 +711,68 @@ export default function Auth({ onSuccess }: AuthProps) {
           >
             {isRetrying ? tCommon('connecting') : isLoading ? tCommon('loading') : (isLogin ? t('login.submit') : t('register.titleFree'))}
           </button>
+
+          {/* Quick Sign-In Buttons for Preview Environments */}
+          {isPreview && isLogin && (
+            <div style={{ marginTop: 'var(--spacing-8)' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'var(--spacing-4)',
+                  marginBottom: 'var(--spacing-4)',
+                }}
+              >
+                <div style={{ flex: 1, height: '1px', background: 'var(--color-separator)' }} />
+                <span style={{ fontSize: '12px', color: 'var(--color-label-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Preview Testing
+                </span>
+                <div style={{ flex: 1, height: '1px', background: 'var(--color-separator)' }} />
+              </div>
+              <div style={{ display: 'flex', gap: 'var(--spacing-4)' }}>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleQuickSignIn('paes_student', 'test123')}
+                  className="spring-motion"
+                  style={{
+                    flex: 1,
+                    height: '40px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    color: 'var(--color-label-primary)',
+                    background: 'var(--color-fill)',
+                    border: '1px solid var(--color-separator)',
+                    borderRadius: 'var(--radius-sm)',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    opacity: isLoading ? 0.5 : 1,
+                  }}
+                >
+                  PAES Student
+                </button>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleQuickSignIn('1medio_student', 'test123')}
+                  className="spring-motion"
+                  style={{
+                    flex: 1,
+                    height: '40px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    color: 'var(--color-label-primary)',
+                    background: 'var(--color-fill)',
+                    border: '1px solid var(--color-separator)',
+                    borderRadius: 'var(--radius-sm)',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    opacity: isLoading ? 0.5 : 1,
+                  }}
+                >
+                  1° Medio Student
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </form>
     </div>
