@@ -203,8 +203,8 @@ function DashboardContent() {
                 {t('menu.profile')}
               </Button>
               {!isPaidUser && (
-                <Button variant="primary" onClick={() => router.push('/pricing')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
-                  ⭐ {t('menu.premium')}
+                <Button variant="primary" onClick={() => router.push('/dashboard/subscribe')} className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
+                  {t('menu.premium')}
                 </Button>
               )}
               {isAdmin && (
