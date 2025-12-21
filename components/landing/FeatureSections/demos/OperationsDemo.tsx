@@ -53,7 +53,7 @@ export function OperationsDemo() {
   }, [phase, problem.answer, problemIndex]);
 
   return (
-    <div className="w-full h-full bg-gradient-to-br from-blue-50 via-white to-purple-50 flex flex-col">
+    <div className="w-full h-full bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-blue-900/30 dark:via-gray-900 dark:to-purple-900/30 flex flex-col">
       {/* Header */}
       <div
         className="px-4 py-3 flex items-center justify-between"
@@ -85,8 +85,7 @@ export function OperationsDemo() {
             >
               {/* Problem */}
               <motion.div
-                className="mb-6 px-6 py-4 rounded-xl"
-                style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #f3e8ff 100%)' }}
+                className="mb-6 px-6 py-4 rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/40 dark:to-purple-900/40"
               >
                 <p className="text-xs mb-2" style={{ color: 'var(--color-label-secondary)' }}>
                   Resuelve la operación
@@ -102,11 +101,14 @@ export function OperationsDemo() {
               {/* Input */}
               <div className="flex items-center justify-center gap-2 mb-4">
                 <motion.div
-                  className="w-20 h-12 rounded-lg flex items-center justify-center text-xl font-bold"
+                  className={`w-20 h-12 rounded-lg flex items-center justify-center text-xl font-bold ${
+                    phase === 'correct' ? 'text-green-500 border-green-500' : 'border-[var(--color-separator)]'
+                  }`}
                   style={{
-                    background: 'white',
-                    border: `2px solid ${phase === 'correct' ? '#22c55e' : 'var(--color-separator)'}`,
-                    color: phase === 'correct' ? '#22c55e' : 'var(--color-label-primary)',
+                    background: 'var(--color-surface)',
+                    borderWidth: '2px',
+                    borderStyle: 'solid',
+                    color: phase === 'correct' ? undefined : 'var(--color-label-primary)',
                   }}
                   animate={{
                     borderColor: phase === 'correct' ? '#22c55e' : 'var(--color-separator)',
@@ -123,8 +125,7 @@ export function OperationsDemo() {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0 }}
-                    className="flex items-center justify-center gap-2 px-4 py-2 rounded-full"
-                    style={{ background: '#dcfce7', color: '#166534' }}
+                    className="flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300"
                   >
                     <Check size={16} />
                     <span className="text-sm font-medium">¡Correcto!</span>
@@ -157,7 +158,7 @@ export function OperationsDemo() {
       {/* Footer stats */}
       <div
         className="px-4 py-3 flex items-center justify-center gap-6"
-        style={{ borderTop: '1px solid var(--color-separator)', background: 'white' }}
+        style={{ borderTop: '1px solid var(--color-separator)', background: 'var(--color-surface)' }}
       >
         <div className="text-center">
           <div className="text-lg font-bold" style={{ color: '#22c55e' }}>

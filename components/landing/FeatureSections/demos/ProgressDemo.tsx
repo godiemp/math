@@ -38,7 +38,7 @@ export function ProgressDemo() {
   }, []);
 
   return (
-    <div className="w-full h-full bg-gradient-to-br from-orange-50 to-amber-50 flex flex-col">
+    <div className="w-full h-full bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/30 dark:to-amber-900/30 flex flex-col">
       <AnimatePresence mode="wait">
         {phase === 'bars' && <BarsPhase key="bars" />}
         {phase === 'skills' && <SkillsPhase key="skills" />}
@@ -102,9 +102,9 @@ function BarsPhase() {
 
 function SkillsPhase() {
   const statusColors = {
-    mastered: { bg: '#dcfce7', text: '#166534', label: '✓' },
-    learning: { bg: '#fef3c7', text: '#92400e', label: '...' },
-    notStarted: { bg: '#f3f4f6', text: '#6b7280', label: '○' },
+    mastered: { bg: 'bg-green-100 dark:bg-green-900/50', text: 'text-green-700 dark:text-green-300', label: '✓' },
+    learning: { bg: 'bg-amber-100 dark:bg-amber-900/50', text: 'text-amber-700 dark:text-amber-300', label: '...' },
+    notStarted: { bg: 'bg-gray-100 dark:bg-gray-800', text: 'text-gray-500 dark:text-gray-400', label: '○' },
   };
 
   return (
@@ -134,8 +134,7 @@ function SkillsPhase() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 + i * 0.1 }}
-              className="px-2.5 py-1.5 rounded-full text-xs font-medium flex items-center gap-1"
-              style={{ background: colors.bg, color: colors.text }}
+              className={`px-2.5 py-1.5 rounded-full text-xs font-medium flex items-center gap-1 ${colors.bg} ${colors.text}`}
             >
               <span>{colors.label}</span>
               <span>{skill.name}</span>
@@ -212,7 +211,7 @@ function PredictionPhase() {
             cy="50"
             r="40"
             fill="none"
-            stroke="#e5e7eb"
+            className="stroke-gray-200 dark:stroke-gray-700"
             strokeWidth="8"
           />
           {/* Progress circle */}

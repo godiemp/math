@@ -36,7 +36,7 @@ export function LivePracticeDemo() {
   }, []);
 
   return (
-    <div className="w-full h-full bg-gradient-to-br from-pink-50 to-rose-50">
+    <div className="w-full h-full bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900/30 dark:to-rose-900/30">
       <AnimatePresence mode="wait">
         {phase === 'lobby' && <LobbyPhase key="lobby" />}
         {phase === 'active' && <ActivePhase key="active" />}
@@ -144,7 +144,7 @@ function ActivePhase() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
         className="w-full max-w-xs p-3 rounded-lg mb-4"
-        style={{ background: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
+        style={{ background: 'var(--color-surface)', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
       >
         <p className="text-xs font-medium mb-2" style={{ color: 'var(--color-label-primary)' }}>
           Pregunta 5 de 10
@@ -220,7 +220,7 @@ function ResultsPhase() {
             transition={{ delay: 0.3 + i * 0.1 }}
             className="flex items-center gap-3 p-2 rounded-lg"
             style={{
-              background: r.isYou ? 'var(--color-tint)' : 'white',
+              background: r.isYou ? 'var(--color-tint)' : 'var(--color-surface)',
               color: r.isYou ? 'white' : 'var(--color-label-primary)',
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
             }}
