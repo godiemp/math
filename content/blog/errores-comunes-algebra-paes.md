@@ -187,6 +187,11 @@ La mejor defensa contra estos errores tiene dos partes:
 
 Los errores no son señal de que "no eres bueno para matemáticas". Son información sobre qué patrones necesitas practicar más. Cada error que identificas y corriges es un punto que no vas a perder en la PAES.
 
+Para más errores comunes que cuestan puntos, revisa:
+- [Los 7 errores de números más frecuentes en la PAES](/blog/errores-comunes-numeros-paes)
+- [Los 7 errores de geometría más frecuentes en la PAES](/blog/errores-comunes-geometria-paes)
+- [Los 7 errores de probabilidad y estadística más frecuentes en la PAES](/blog/errores-comunes-probabilidad-estadistica-paes)
+
 ---
 
 *¿Quieres practicar hasta que estos errores desaparezcan? SimplePAES te da retroalimentación instantánea que te muestra exactamente dónde te equivocaste—para que no repitas el mismo error dos veces.*

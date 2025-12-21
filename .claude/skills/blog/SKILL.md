@@ -9,6 +9,8 @@ description: Analyze blog content gaps and create SEO-optimized posts for Simple
 - User wants to find blog content gaps
 - User wants to create a new blog post
 - User asks about content strategy or "what should we blog about"
+- User wants to review/improve existing posts for SEO
+- User asks about internal linking or content clusters
 
 ## Phase 1: Dynamic Gap Analysis
 
@@ -137,12 +139,56 @@ Before publishing, verify:
 
 - [ ] Target keyword appears in title
 - [ ] Target keyword in first 100 words
-- [ ] H2 headings include related keywords naturally
-- [ ] Meta description under 160 characters, includes keyword
+- [ ] H2 headings include related keywords naturally (not generic like "Cómo elegir bien" → "Cómo elegir el apoyo correcto en matemáticas")
+- [ ] Meta description under 160 characters, includes keyword, aligns with title
 - [ ] Slug is descriptive, lowercase, hyphenated
-- [ ] Internal links to related posts (if any exist)
+- [ ] **Minimum 3 internal links** to related posts (see Internal Linking Strategy below)
 - [ ] Alt text for any images
-- [ ] Reading time is reasonable (5-10 min sweet spot)
+- [ ] Length is 800-1500 words (condense if longer—1800+ is too long)
+
+### Internal Linking Strategy
+
+**Why it matters:**
+- Creates topic clusters that rank better together
+- Distributes "link juice" across the site
+- Increases time on site (users click to related content)
+- Helps Google understand content relationships and index pages
+
+**Rules:**
+1. **Minimum 3 internal links per post** - Every post must link to at least 3 other posts
+2. **Bidirectional linking within clusters** - If Post A links to Post B, Post B should link back to Post A
+3. **Link contextually** - Place links where they add value, not just at the end
+4. **Use descriptive anchor text** - "revisa [cómo manejar el tiempo en la PAES](/blog/...)" not "click here"
+
+**Content Clusters (link within these groups):**
+
+| Cluster | Posts |
+|---------|-------|
+| **Error posts** | errores-comunes-algebra-paes, errores-comunes-numeros-paes, errores-comunes-geometria-paes, errores-comunes-probabilidad-estadistica-paes |
+| **Parent posts** | por-que-tu-hijo-no-quiere-ayuda-paes, como-hablar-paes-sin-conflicto, como-ayudar-hijo-matematicas-sin-saber, como-saber-si-tu-hijo-esta-preparado-paes, lagunas-matematicas-anos-anteriores, error-padres-elegir-apoyo-matematicas |
+| **Teacher posts** | como-asignar-practica-paes-efectiva, diagnosticar-lagunas-matematicas-curso, diferenciar-instruccion-matematicas, mitad-curso-no-entiende |
+| **PAES prep** | que-estudiar-paes-m1-temario-completo, manejar-tiempo-paes-matematica, guia-paes-invierno-2026 |
+| **Learning/mindset** | por-que-no-entiendo-matematicas |
+
+**Cross-cluster linking:**
+- Error posts → link to from student/teacher posts when discussing common mistakes
+- Parent posts → link to lagunas post (explains gaps concept for parents)
+- Teacher posts → link to error posts (what errors to watch for)
+- PAES prep posts → link to error posts and temario
+
+### CTA Guidelines
+
+**Principle:** CTAs should feel natural and helpful, not salesy or technical. Keep them simple.
+
+**Common mistakes to avoid:**
+- Too technical: "retroalimentación instantánea y un tutor con IA que responde sus dudas 24/7"
+- Too long: Multiple sentences explaining features
+- Forced: Adding CTA where it doesn't fit the content
+
+**Better approach:**
+- Short and natural: "SimplePAES tiene un tutor disponible 24/7 que responde sin juicio."
+- Context-appropriate: Match CTA to what the post discusses
+- One clear action: Don't list multiple features
 
 ### CTA Templates
 
@@ -219,6 +265,48 @@ Read these to match voice and style:
 - `content/blog/manejar-tiempo-paes-matematica.md` - Strategy post example
 - `content/blog/por-que-no-entiendo-matematicas.md` - Psychology/mindset post example
 
+**Good examples of internal linking:**
+- `content/blog/error-padres-elegir-apoyo-matematicas.md` - Parent post with 4 internal links
+- `content/blog/errores-comunes-probabilidad-estadistica-paes.md` - Error post linking to all other error posts
+
+**Good examples of content clusters:**
+- Parent cluster (6 posts, all interconnected)
+- Error posts (4 posts, all link to each other bidirectionally)
+
+## Phase 3: Post Review & Improvement
+
+When reviewing existing posts for SEO improvements:
+
+### Review Checklist
+
+For each post, check:
+
+| Area | What to Look For | Action |
+|------|------------------|--------|
+| **Internal links** | Less than 3 links? | Add contextual links to related posts in same cluster |
+| **Bidirectional links** | Post A links to B, but B doesn't link back? | Add reciprocal link |
+| **H2 keywords** | Generic H2s like "Qué hacer" or "Cómo elegir bien" | Rewrite with target keywords: "Cómo elegir el apoyo correcto en matemáticas" |
+| **Post length** | Over 1800 words? | Condense repetitive sections, link to detailed posts instead |
+| **CTA** | Too long or technical? | Simplify to one short sentence |
+| **Description** | Doesn't match title keywords? | Align description with title |
+
+### Improvement Workflow
+
+1. **Audit all posts** - Count internal links, identify "dead ends" (posts with 0 outgoing links)
+2. **Prioritize fixes** - Start with posts that have 0 links (critical)
+3. **Add links contextually** - Insert where they add value, not just appended at end
+4. **Verify bidirectional** - Check that linked posts link back
+5. **Test clusters** - Each cluster should have interconnected posts
+
+### Common Issues We've Fixed
+
+| Issue | Example | Solution |
+|-------|---------|----------|
+| Dead-end posts | Error álgebra had 0 outgoing links | Add links to other error posts |
+| Asymmetric linking | Parent posts linked TO but not FROM original | Add links from original to new cluster |
+| Generic H2s | "Cómo saber si este es el problema" | "Cómo saber si tu hijo tiene lagunas profundas" |
+| Long sections | "Lo que NO debes hacer" with 4 verbose points | Condense to bullets with links |
+
 ## Quick Reference
 
 **To analyze gaps:**
@@ -231,5 +319,13 @@ Read these to match voice and style:
 1. Confirm topic and target keyword
 2. Generate outline for approval
 3. Write draft following guidelines
-4. Run through SEO checklist
+4. Run through SEO checklist (including 3+ internal links)
 5. Save to `/content/blog/[slug].md`
+6. Update related posts to link back (bidirectional)
+
+**To improve existing posts:**
+1. Audit internal links across all posts
+2. Identify dead-ends and asymmetric links
+3. Add contextual links (minimum 3 per post)
+4. Check H2s for keyword inclusion
+5. Simplify CTAs if too technical

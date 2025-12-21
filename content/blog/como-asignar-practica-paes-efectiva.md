@@ -68,7 +68,7 @@ La investigación en aprendizaje es clara sobre qué tipo de práctica produce r
 
 **Limitación**: No es práctica extensa; es diagnóstico.
 
-**Mejor para**: Identificar qué temas necesitan refuerzo antes de asignar práctica.
+**Mejor para**: Identificar qué temas necesitan refuerzo antes de asignar práctica. Para más técnicas de diagnóstico, revisa [cómo diagnosticar lagunas matemáticas en tu curso](/blog/diagnosticar-lagunas-matematicas-curso).
 
 ---
 
@@ -119,6 +119,8 @@ Revisa 5 cuadernos al azar cada semana. No corrijas todo—busca patrones: ¿hay
 En SimplePAES, el panel de profesor te muestra: quién practicó esta semana, cuántos ejercicios hizo cada estudiante, y qué temas tienen más errores a nivel de curso. Puedes identificar en 2 minutos si necesitas repasar ecuaciones lineales o si solo 3 estudiantes específicos necesitan refuerzo.
 
 ## Qué temas funcionan mejor para práctica independiente
+
+Para saber qué errores son más frecuentes en cada tema (y enfocar la práctica en evitarlos), revisa [los errores de álgebra más comunes](/blog/errores-comunes-algebra-paes) y [los errores de números más comunes](/blog/errores-comunes-numeros-paes).
 
 No todo se puede delegar a práctica autónoma. Algunos temas necesitan tu explicación:
 
