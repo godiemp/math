@@ -22,8 +22,8 @@ test.describe('Colegio Dashboard', () => {
       // Verify colegio-specific dashboard elements
       await expect(page.getByTestId('dashboard-title')).toContainText(/Mi Clase/i);
 
-      // Should show grade badge
-      await expect(page.getByText('1° Medio')).toBeVisible();
+      // Should show grade badge (use first() since grade appears in multiple places)
+      await expect(page.getByText('1° Medio').first()).toBeVisible();
 
       // Should show mini-lessons banner for grade
       await expect(page.getByTestId('mini-lessons-banner')).toBeVisible();
@@ -52,9 +52,9 @@ test.describe('Colegio Dashboard', () => {
       // Should go to grade-specific mini-lessons page
       await page.waitForURL(/\/mini-lessons\/colegios\/1-medio/, { timeout: 5000 });
 
-      // Verify page content
-      await expect(page.getByText('1° Medio')).toBeVisible();
-      await expect(page.getByText(/Objetivos de Aprendizaje/i)).toBeVisible();
+      // Verify page content (use first() since text appears in multiple places)
+      await expect(page.getByText('1° Medio').first()).toBeVisible();
+      await expect(page.getByText(/Objetivos de Aprendizaje/i).first()).toBeVisible();
     });
 
     test('should show adaptive practice placeholder', async ({ page }) => {
@@ -94,9 +94,9 @@ test.describe('Colegio Dashboard', () => {
       await page.waitForURL(/\/dashboard/, { timeout: 10000 });
       await page.waitForTimeout(2000);
 
-      // Should show progress card
+      // Should show progress card (use first() since text may appear in multiple places)
       await expect(page.getByTestId('progress-card')).toBeVisible();
-      await expect(page.getByText(/Tu Progreso/i)).toBeVisible();
+      await expect(page.getByText(/Tu Progreso/i).first()).toBeVisible();
     });
 
     test('should show colegio account notice', async ({ page }) => {
