@@ -3,6 +3,15 @@ import path from 'path';
 import crypto from 'crypto';
 import sharp from 'sharp';
 
+// Set Playwright browsers path BEFORE importing playwright
+// This ensures browsers installed during Railway build are found at runtime
+// Build command installs to: backend/playwright-browsers/
+// At runtime, __dirname is: backend/dist/services/
+// So ../../playwright-browsers resolves to: backend/playwright-browsers/
+if (!process.env.PLAYWRIGHT_BROWSERS_PATH) {
+  process.env.PLAYWRIGHT_BROWSERS_PATH = path.resolve(__dirname, '../../playwright-browsers');
+}
+
 // Types for the capture service
 export interface CaptureRequest {
   url: string;
@@ -85,7 +94,8 @@ export async function captureContent(
     log(`Starting ${request.type} capture for ${request.url}`);
     log(`Using preset: ${request.preset} (${preset.width}x${preset.height})`);
 
-    // Dynamic import of Playwright (it's a dev dependency)
+    // Dynamic import of Playwright
+    log(`Playwright browsers path: ${process.env.PLAYWRIGHT_BROWSERS_PATH}`);
     const { chromium } = await import('playwright');
 
     // Launch browser
@@ -154,14 +164,15 @@ export async function captureContent(
 
     // Provide helpful error message for missing Playwright browsers
     if (errorMsg.includes("Executable doesn't exist") || errorMsg.includes('browserType.launch')) {
+      const browsersPath = process.env.PLAYWRIGHT_BROWSERS_PATH || '(default ~/.cache/ms-playwright)';
       return {
         success: false,
-        error: 'Playwright browsers not installed. The server needs to run: npx playwright install --with-deps chromium',
+        error: `Playwright browsers not installed at: ${browsersPath}`,
         logs: [
           ...logs,
+          `PLAYWRIGHT_BROWSERS_PATH: ${browsersPath}`,
           'Playwright browser binaries are missing.',
-          'This typically happens when the server was deployed without installing Playwright browsers.',
-          'Solution: Add "npx playwright install --with-deps chromium" to the build command.',
+          'Ensure railway.json build command includes: PLAYWRIGHT_BROWSERS_PATH=./playwright-browsers npx playwright install --with-deps chromium',
         ],
       };
     }
