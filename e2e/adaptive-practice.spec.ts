@@ -273,8 +273,8 @@ test.describe('Adaptive Practice', () => {
       await page.getByPlaceholder(/Escribe tu pregunta/i).fill('Ayuda');
       await page.getByRole('button', { name: /Enviar/i }).click();
 
-      // Should show error message from useAITutor hook
-      await expect(page.getByText(/Lo siento, hubo un error de conexión/i)).toBeVisible({
+      // API returns error response (not throw), so hook shows fallback error message
+      await expect(page.getByText(/Lo siento, hubo un error/i)).toBeVisible({
         timeout: 10000,
       });
     });
