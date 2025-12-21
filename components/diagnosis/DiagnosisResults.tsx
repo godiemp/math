@@ -93,6 +93,13 @@ export function DiagnosisResults({ result, onClose }: DiagnosisResultsProps) {
               </Text>
             </div>
           )}
+
+          {/* Autoevaluación sync notice */}
+          <div className="mt-4 text-center">
+            <Text size="sm" className="text-gray-600 dark:text-gray-400">
+              Tu autoevaluación ha sido actualizada con estos resultados.
+            </Text>
+          </div>
         </div>
       </Card>
 

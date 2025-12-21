@@ -43,6 +43,11 @@ export interface GapRecommendation {
 // Diagnosis Session Types
 // ========================================
 
+export interface QuestionMisconception {
+  optionIndex: number;
+  misconception: string;
+}
+
 export interface DiagnosisQuestion {
   questionId: string;
   skillId: string;
@@ -53,6 +58,7 @@ export interface DiagnosisQuestion {
   answeredAt: number | null;
   followUpResponse: string | null;
   detectedGap: DetectedGap | null;
+  misconceptions?: QuestionMisconception[];  // For AI-generated questions
 }
 
 export interface DiagnosisSession {
@@ -189,6 +195,7 @@ export interface AIErrorAnalysisInput {
   followUpExplanation: string;
   skillId: string;
   skillName: string;
+  expectedMisconception?: string;  // From AI-generated question
 }
 
 export interface AIErrorAnalysisOutput {

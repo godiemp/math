@@ -272,7 +272,10 @@ export function DiagnosisFlow({
         {flowState === 'loading' && !error && (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4" />
-            <Text>Cargando preguntas...</Text>
+            <Text>Preparando preguntas diagnósticas...</Text>
+            <Text size="sm" className="text-gray-500 dark:text-gray-400 mt-2">
+              Esto puede tomar unos segundos
+            </Text>
           </div>
         )}
 

@@ -20,6 +20,7 @@ import {
   GetDiagnosisQuestionsResponse,
   SkillDiagnosisRecord,
 } from '../types/diagnosis';
+import { generateDiagnosticQuestions, DiagnosticQuestion } from './aiService';
 
 /**
  * Convert skill code to readable name
@@ -65,9 +66,60 @@ function inferSubjectFromSkills(skills: string[]): string | null {
   return null;
 }
 
+/**
+ * Get skills the user has declared they know for a subject
+ * Used to prioritize testing what user claims to know
+ */
+async function getDeclaredSkillsForSubject(
+  userId: string,
+  subject: string,
+  level: 'M1' | 'M2'
+): Promise<string[]> {
+  // Map subject names to skill prefixes
+  const subjectPrefixes: Record<string, string[]> = {
+    números: ['numeros', 'numero', 'porcentaje', 'potencias', 'raices'],
+    álgebra: ['algebra', 'ecuacion', 'funcion'],
+    geometría: ['geometria', 'area', 'perimetro', 'volumen', 'angulo', 'triangulo'],
+    probabilidad: ['probabilidad', 'estadistica'],
+  };
+
+  const prefixes = subjectPrefixes[subject] || [];
+  if (prefixes.length === 0) {
+    return [];
+  }
+
+  // Build LIKE conditions for each prefix
+  // Parameters: $1 = userId, $2 = level, $3+ = prefixes
+  const likeConditions = prefixes.map((_, i) => `item_code LIKE $${i + 3}`);
+  const likeParams = prefixes.map((p) => `${p}%`);
+
+  const query = `
+    SELECT item_code
+    FROM user_knowledge_declarations
+    WHERE user_id = $1
+      AND declaration_type = 'skill'
+      AND knows = true
+      AND level = $2
+      AND (${likeConditions.join(' OR ')})
+  `;
+
+  try {
+    const result = await pool.query(query, [userId, level, ...likeParams]);
+    return result.rows.map((r: { item_code: string }) => r.item_code);
+  } catch (error) {
+    console.error('Error fetching declared skills:', error);
+    return [];
+  }
+}
+
 // ========================================
 // Question Fetching
 // ========================================
+
+interface QuestionMisconception {
+  optionIndex: number;
+  misconception: string;
+}
 
 interface QuestionForDiagnosis {
   id: string;
@@ -78,6 +130,7 @@ interface QuestionForDiagnosis {
   options: string[];
   optionsLatex?: string[];
   correctAnswer: number;
+  misconceptions?: QuestionMisconception[];  // For AI-generated questions
   difficulty: string;
   subject: string;
 }
@@ -270,8 +323,10 @@ async function getQuestionsBySubject(
       result = await pool.query(contextQuery, [level, subject, limit]);
     }
 
+    // If no DB questions found, generate with AI
     if (result.rows.length === 0) {
-      throw new Error('No questions available for the requested skills');
+      console.log(`📝 No DB questions found for ${subject}, generating with AI...`);
+      return await generateDiagnosticQuestionsWithAI(skills, level, limit, sessionId, subject);
     }
 
     const questions: QuestionForDiagnosis[] = result.rows.map((row: any) => {
@@ -297,6 +352,51 @@ async function getQuestionsBySubject(
   } catch (error) {
     console.error('Error fetching questions by subject:', error);
     throw error;
+  }
+}
+
+/**
+ * Generate diagnostic questions using AI when no DB questions exist
+ * Stores misconceptions for use during error analysis
+ */
+async function generateDiagnosticQuestionsWithAI(
+  skills: string[],
+  level: 'M1' | 'M2',
+  limit: number,
+  sessionId: string,
+  subject: string
+): Promise<{ sessionId: string; questions: QuestionForDiagnosis[] }> {
+  try {
+    // Generate questions with AI
+    const aiQuestions = await generateDiagnosticQuestions({
+      subject: subject as 'números' | 'álgebra' | 'geometría' | 'probabilidad',
+      level,
+      skillsToTest: skills,
+      count: limit,
+    });
+
+    // Transform AI questions to QuestionForDiagnosis format
+    const questions: QuestionForDiagnosis[] = aiQuestions.map((q, index) => ({
+      id: `ai-${sessionId}-${index}`,  // Generated ID for AI questions
+      skillId: q.skillTested,
+      skillName: getSkillName(q.skillTested),
+      question: q.question,
+      questionLatex: q.questionLatex,
+      options: q.options,
+      optionsLatex: q.optionsLatex,
+      correctAnswer: q.correctAnswer,
+      misconceptions: q.misconceptions,  // Store for error analysis
+      difficulty: 'medium',
+      subject,
+    }));
+
+    await createDiagnosisSession(sessionId, skills, level, questions);
+
+    console.log(`✅ Generated ${questions.length} AI diagnostic questions for ${subject}`);
+    return { sessionId, questions };
+  } catch (error) {
+    console.error('Error generating AI diagnostic questions:', error);
+    throw new Error('No pudimos generar preguntas diagnósticas. Por favor intenta de nuevo.');
   }
 }
 
@@ -328,6 +428,7 @@ async function createDiagnosisSession(
       answeredAt: null,
       followUpResponse: null,
       detectedGap: null,
+      misconceptions: q.misconceptions,  // Store for error analysis (AI-generated questions)
     })),
     status: 'in_progress',
     startedAt: Date.now(),
@@ -427,6 +528,12 @@ export async function analyzeErrorWithAI(
     };
   }
 
+  // Build prompt with optional expected misconception
+  const misconceptionHint = input.expectedMisconception
+    ? `\n\nPista sobre el error esperado: "${input.expectedMisconception}"
+(Confirma si la explicación del estudiante coincide con este error, o identifica un error diferente si corresponde)`
+    : '';
+
   const userPrompt = `Pregunta: ${input.questionLatex || input.question}
 
 Opciones:
@@ -438,7 +545,7 @@ Respuesta del estudiante: ${String.fromCharCode(65 + input.userAnswer)}
 Explicación del estudiante sobre su razonamiento:
 "${input.followUpExplanation}"
 
-Habilidad evaluada: ${input.skillName}
+Habilidad evaluada: ${input.skillName}${misconceptionHint}
 
 Analiza el error y responde con el JSON.`;
 
@@ -501,8 +608,18 @@ export async function processFollowUp(
     throw new Error('Question not found');
   }
 
-  // Analyze error with AI
-  const analysis = await analyzeErrorWithAI(input);
+  // Check if question has pre-mapped misconception for the chosen answer
+  let expectedMisconception: string | undefined;
+  if (question.misconceptions) {
+    const match = question.misconceptions.find((m) => m.optionIndex === input.userAnswer);
+    expectedMisconception = match?.misconception;
+  }
+
+  // Analyze error with AI, passing expected misconception if available
+  const analysis = await analyzeErrorWithAI({
+    ...input,
+    expectedMisconception,
+  });
 
   // Create detected gap
   const gap: DetectedGap = {
