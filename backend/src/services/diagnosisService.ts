@@ -32,6 +32,39 @@ function getSkillName(skillCode: string): string {
     .join(' ');
 }
 
+/**
+ * Infer subject from skill codes
+ * Maps skill prefixes to subjects
+ */
+function inferSubjectFromSkills(skills: string[]): string | null {
+  const subjectMap: Record<string, string> = {
+    numeros: 'números',
+    numero: 'números',
+    porcentaje: 'números',
+    potencias: 'números',
+    raices: 'números',
+    algebra: 'álgebra',
+    ecuacion: 'álgebra',
+    funcion: 'álgebra',
+    geometria: 'geometría',
+    area: 'geometría',
+    perimetro: 'geometría',
+    volumen: 'geometría',
+    angulo: 'geometría',
+    triangulo: 'geometría',
+    probabilidad: 'probabilidad',
+    estadistica: 'probabilidad',
+  };
+
+  for (const skill of skills) {
+    const prefix = skill.split('-')[0].toLowerCase();
+    if (subjectMap[prefix]) {
+      return subjectMap[prefix];
+    }
+  }
+  return null;
+}
+
 // ========================================
 // Question Fetching
 // ========================================
@@ -162,9 +195,9 @@ async function getQuestionsFromContextProblems(
       };
     });
 
-    // If still no questions, throw an error
+    // If still no questions, try fetching by subject
     if (questions.length === 0) {
-      throw new Error('No questions available for the requested skills');
+      return await getQuestionsBySubject(skills, level, limit, sessionId);
     }
 
     await createDiagnosisSession(sessionId, skills, level, questions);
@@ -172,6 +205,97 @@ async function getQuestionsFromContextProblems(
     return { sessionId, questions };
   } catch (error) {
     console.error('Error fetching from context_problems:', error);
+    throw error;
+  }
+}
+
+/**
+ * Last resort: Get any questions from the same subject
+ * Used when no skill-matched questions exist
+ */
+async function getQuestionsBySubject(
+  skills: string[],
+  level: 'M1' | 'M2',
+  limit: number,
+  sessionId: string
+): Promise<{ sessionId: string; questions: QuestionForDiagnosis[] }> {
+  const subject = inferSubjectFromSkills(skills);
+
+  if (!subject) {
+    throw new Error('No questions available for the requested skills');
+  }
+
+  // Try questions table by subject
+  const questionsQuery = `
+    SELECT
+      q.id,
+      q.question_latex as "questionLatex",
+      q.options,
+      q.correct_answer as "correctAnswer",
+      q.difficulty,
+      q.subject,
+      q.skills
+    FROM questions q
+    WHERE q.level = $1
+      AND q.subject = $2
+    ORDER BY RANDOM()
+    LIMIT $3
+  `;
+
+  try {
+    let result = await pool.query(questionsQuery, [level, subject, limit]);
+
+    // If no questions in questions table, try context_problems by subject
+    if (result.rows.length === 0) {
+      const contextQuery = `
+        SELECT
+          cp.id,
+          cp.question,
+          cp.question_latex as "questionLatex",
+          cp.options,
+          cp.options_latex as "optionsLatex",
+          cp.correct_answer as "correctAnswer",
+          ap.difficulty,
+          ap.subject,
+          ap.primary_skills as skills
+        FROM context_problems cp
+        JOIN abstract_problems ap ON cp.abstract_problem_id = ap.id
+        WHERE ap.level = $1
+          AND ap.subject = $2
+          AND cp.status = 'active'
+          AND ap.status = 'active'
+        ORDER BY RANDOM()
+        LIMIT $3
+      `;
+      result = await pool.query(contextQuery, [level, subject, limit]);
+    }
+
+    if (result.rows.length === 0) {
+      throw new Error('No questions available for the requested skills');
+    }
+
+    const questions: QuestionForDiagnosis[] = result.rows.map((row: any) => {
+      // Use first skill from the question, or the requested skill as fallback
+      const skillId = row.skills?.[0] || skills[0];
+
+      return {
+        id: row.id,
+        skillId,
+        skillName: getSkillName(skillId),
+        question: row.question || row.questionLatex || '',
+        questionLatex: row.questionLatex,
+        options: row.optionsLatex || row.options || [],
+        correctAnswer: row.correctAnswer,
+        difficulty: row.difficulty,
+        subject: row.subject,
+      };
+    });
+
+    await createDiagnosisSession(sessionId, skills, level, questions);
+
+    return { sessionId, questions };
+  } catch (error) {
+    console.error('Error fetching questions by subject:', error);
     throw error;
   }
 }
