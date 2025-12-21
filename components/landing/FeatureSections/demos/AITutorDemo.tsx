@@ -75,8 +75,8 @@ export function AITutorDemo() {
       </div>
 
       {/* Chat area */}
-      <div className="flex-1 p-4 overflow-hidden">
-        <div className="space-y-3">
+      <div className="flex-1 p-4 overflow-hidden min-h-[180px]">
+        <div className="space-y-2">
           <AnimatePresence>
             {CONVERSATION.slice(0, visibleMessages).map((msg, i) => (
               <motion.div
@@ -87,7 +87,7 @@ export function AITutorDemo() {
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[80%] px-3 py-2 rounded-2xl text-sm ${
+                  className={`max-w-[80%] px-3 py-1.5 rounded-2xl text-xs ${
                     msg.role === 'user'
                       ? 'rounded-br-md'
                       : 'rounded-bl-md'

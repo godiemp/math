@@ -119,19 +119,21 @@ export function OperationsDemo() {
               </div>
 
               {/* Feedback */}
-              <AnimatePresence>
-                {phase === 'correct' && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300"
-                  >
-                    <Check size={16} />
-                    <span className="text-sm font-medium">¡Correcto!</span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <div className="h-9">
+                <AnimatePresence>
+                  {phase === 'correct' && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300"
+                    >
+                      <Check size={16} />
+                      <span className="text-sm font-medium">¡Correcto!</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </motion.div>
           ) : (
             <motion.div
