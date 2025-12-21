@@ -50,7 +50,7 @@ export function HeroSection({ audience, onAudienceChange }: HeroSectionProps) {
             onClick={() => onAudienceChange('b2c')}
             className="flex items-center gap-2 px-4 py-2 spring-motion"
             style={{
-              background: audience === 'b2c' ? 'white' : 'transparent',
+              background: audience === 'b2c' ? 'var(--color-surface)' : 'transparent',
               borderRadius: 'var(--radius-sm)',
               border: 'none',
               cursor: 'pointer',
@@ -67,7 +67,7 @@ export function HeroSection({ audience, onAudienceChange }: HeroSectionProps) {
             onClick={() => onAudienceChange('b2b')}
             className="flex items-center gap-2 px-4 py-2 spring-motion"
             style={{
-              background: audience === 'b2b' ? 'white' : 'transparent',
+              background: audience === 'b2b' ? 'var(--color-surface)' : 'transparent',
               borderRadius: 'var(--radius-sm)',
               border: 'none',
               cursor: 'pointer',

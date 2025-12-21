@@ -57,7 +57,7 @@ export function DecisionMakersSection() {
               key={i}
               className="p-6 spring-motion"
               style={{
-                background: 'white',
+                background: 'var(--color-surface)',
                 borderRadius: 'var(--radius-lg)',
                 border: '1px solid var(--color-separator)',
               }}

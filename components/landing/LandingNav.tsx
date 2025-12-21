@@ -15,9 +15,8 @@ export function LandingNav() {
 
   return (
     <header
-      className="sticky top-0 z-50 backdrop-blur-xl"
+      className="sticky top-0 z-50 translucent"
       style={{
-        background: 'rgba(255, 255, 255, 0.8)',
         borderBottom: '1px solid var(--color-separator)'
       }}
     >

@@ -98,7 +98,7 @@ export function CurriculumPreviewSection() {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   padding: '16px 20px',
-                  background: expandedLevel === level.id ? 'var(--color-fill)' : 'white',
+                  background: expandedLevel === level.id ? 'var(--color-fill)' : 'var(--color-surface)',
                   border: 'none',
                   borderBottom: '1px solid var(--color-separator)',
                   cursor: 'pointer',
@@ -128,7 +128,7 @@ export function CurriculumPreviewSection() {
                 <div
                   style={{
                     padding: '16px 20px 16px 52px',
-                    background: 'white',
+                    background: 'var(--color-surface)',
                     borderBottom: '1px solid var(--color-separator)',
                   }}
                 >
