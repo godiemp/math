@@ -8,7 +8,6 @@ type Phase = 'circumference' | 'area';
 // Constants
 const PHASE_DURATION = 4000; // 4 seconds per phase
 const CIRCLE_RADIUS = 40;
-const LINE_LENGTH = 250;
 
 export function CirclePreview() {
   const [phase, setPhase] = useState<Phase>('circumference');
@@ -39,6 +38,8 @@ export function CirclePreview() {
 
 function CircumferenceAnimation() {
   const circleStartX = 50;
+  const circleEndX = 250; // End position that keeps circle within viewBox (250 + 40 radius = 290 < 340)
+  const lineLength = circleEndX - circleStartX;
   const circleY = 60;
   const lineY = circleY + CIRCLE_RADIUS;
 
@@ -76,7 +77,7 @@ function CircumferenceAnimation() {
         <g transform={`translate(0, ${circleY})`}>
           <motion.g
             initial={{ x: circleStartX, rotate: 0 }}
-            animate={{ x: circleStartX + LINE_LENGTH, rotate: 360 }}
+            animate={{ x: circleEndX, rotate: 360 }}
             transition={{ duration: 2.5, ease: [0.4, 0, 0.2, 1] }}
           >
             {/* Circle fill */}
@@ -102,7 +103,7 @@ function CircumferenceAnimation() {
           stroke="#0d9488"
           strokeWidth="3"
           strokeLinecap="round"
-          animate={{ x2: circleStartX + LINE_LENGTH }}
+          animate={{ x2: circleEndX }}
           transition={{ duration: 2.5, ease: [0.4, 0, 0.2, 1] }}
         />
 
@@ -112,7 +113,7 @@ function CircumferenceAnimation() {
           cy={lineY}
           r="5"
           fill="#dc2626"
-          animate={{ cx: circleStartX + LINE_LENGTH }}
+          animate={{ cx: circleEndX }}
           transition={{ duration: 2.5, ease: [0.4, 0, 0.2, 1] }}
         />
 
@@ -123,7 +124,7 @@ function CircumferenceAnimation() {
           transition={{ delay: 2.5 }}
         >
           <text
-            x={circleStartX + LINE_LENGTH / 2}
+            x={circleStartX + lineLength / 2}
             y={lineY + 25}
             textAnchor="middle"
             fontSize="14"

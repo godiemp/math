@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { InlineMath } from '@/components/math/MathDisplay';
 
 type Phase = 'bars' | 'mean';
 
@@ -131,13 +132,13 @@ function MeanAnimation() {
 
         {/* Mean label */}
         <motion.div
-          className="absolute right-0 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded"
+          className="absolute left-0 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded flex items-center gap-1"
           style={{ bottom: `${(MEAN / MAX_VALUE) * 100 + 4}px` }}
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4, delay: 1.3 }}
         >
-          x̄ = {MEAN}
+          <InlineMath latex="\bar{x}" /> = {MEAN}
         </motion.div>
 
         {DATA.map((item, index) => (
@@ -162,8 +163,8 @@ function MeanAnimation() {
         transition={{ delay: 1.8 }}
         className="mt-3 text-center"
       >
-        <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          x̄ = Σx / n = {DATA.reduce((s, d) => s + d.value, 0)} / {DATA.length} = <span className="text-red-600 font-bold">{MEAN}</span>
+        <p className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center justify-center gap-1">
+          <InlineMath latex="\bar{x}" /> = Σx / n = {DATA.reduce((s, d) => s + d.value, 0)} / {DATA.length} = <span className="text-red-600 font-bold">{MEAN}</span>
         </p>
       </motion.div>
     </motion.div>
