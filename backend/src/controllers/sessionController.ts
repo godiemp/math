@@ -1,15 +1,19 @@
 import { Request, Response } from 'express';
 import { pool } from '../config/database';
 import { PAES_SESSION_TEMPLATES, PRACTICE_SESSION_TEMPLATE } from '../config/sessionTemplates';
+import {
+  generateSessionId,
+  calculateSessionTimes,
+  formatSessionResponse,
+  formatRegisteredUsers,
+  formatParticipants,
+  getUserInfo,
+  calculateScore,
+  parseQuestions,
+  parseAnswers,
+} from '../services/sessionService';
 
 const LOBBY_OPEN_MINUTES = 15;
-
-/**
- * Generate unique session ID
- */
-function generateSessionId(): string {
-  return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-}
 
 /**
  * Create a new scheduled session
@@ -46,21 +50,14 @@ export const createSession = async (req: Request, res: Response): Promise<void> 
     }
 
     // Get user info
-    const userResult = await pool.query(
-      'SELECT username, display_name FROM users WHERE id = $1',
-      [userId]
-    );
-
-    if (userResult.rows.length === 0) {
+    const userInfo = await getUserInfo(userId);
+    if (!userInfo) {
       res.status(404).json({ error: 'User not found' });
       return;
     }
 
-    const { display_name: hostName } = userResult.rows[0];
-
     const sessionId = generateSessionId();
-    const scheduledEndTime = scheduledStartTime + (durationMinutes * 60 * 1000);
-    const lobbyOpenTime = scheduledStartTime - (LOBBY_OPEN_MINUTES * 60 * 1000);
+    const { scheduledEndTime, lobbyOpenTime } = calculateSessionTimes(scheduledStartTime, durationMinutes);
     const createdAt = Date.now();
 
     const result = await pool.query(
@@ -76,7 +73,7 @@ export const createSession = async (req: Request, res: Response): Promise<void> 
         description || '',
         level,
         userId,
-        hostName,
+        userInfo.displayName,
         JSON.stringify(questions),
         'scheduled',
         0,
@@ -89,28 +86,7 @@ export const createSession = async (req: Request, res: Response): Promise<void> 
       ]
     );
 
-    const row = result.rows[0];
-    const session = {
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      level: row.level,
-      hostId: row.host_id,
-      hostName: row.host_name,
-      questions: row.questions,
-      status: row.status,
-      currentQuestionIndex: row.current_question_index,
-      createdAt: parseInt(row.created_at),
-      scheduledStartTime: parseInt(row.scheduled_start_time),
-      scheduledEndTime: parseInt(row.scheduled_end_time),
-      durationMinutes: row.duration_minutes,
-      lobbyOpenTime: parseInt(row.lobby_open_time),
-      maxParticipants: row.max_participants,
-      startedAt: row.started_at ? parseInt(row.started_at) : undefined,
-      completedAt: row.completed_at ? parseInt(row.completed_at) : undefined,
-      registeredUsers: [],
-      participants: [],
-    };
+    const session = formatSessionResponse(result.rows[0]);
 
     res.json({
       success: true,
@@ -181,33 +157,13 @@ export const getSessions = async (req: Request, res: Response): Promise<void> =>
 
     const result = await pool.query(query, params);
 
-    const sessions = result.rows.map((row: any) => ({
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      level: row.level,
-      hostId: row.host_id,
-      hostName: row.host_name,
-      questions: row.questions, // Already parsed by JSONB
-      status: row.status,
-      currentQuestionIndex: row.current_question_index,
-      createdAt: parseInt(row.created_at),
-      scheduledStartTime: parseInt(row.scheduled_start_time),
-      scheduledEndTime: parseInt(row.scheduled_end_time),
-      durationMinutes: row.duration_minutes,
-      lobbyOpenTime: parseInt(row.lobby_open_time),
-      maxParticipants: row.max_participants,
-      startedAt: row.started_at ? parseInt(row.started_at) : undefined,
-      completedAt: row.completed_at ? parseInt(row.completed_at) : undefined,
-      registeredUsers: (row.registered_users || []).map((u: any) => ({
-        ...u,
-        registeredAt: parseInt(u.registeredAt),
-      })),
-      participants: (row.participants || []).map((p: any) => ({
-        ...p,
-        joinedAt: parseInt(p.joinedAt),
-      })),
-    }));
+    const sessions = result.rows.map((row: any) =>
+      formatSessionResponse(
+        row,
+        formatRegisteredUsers(row.registered_users),
+        formatParticipants(row.participants)
+      )
+    );
 
     res.json({
       success: true,
@@ -267,33 +223,11 @@ export const getSession = async (req: Request, res: Response): Promise<void> => 
     }
 
     const row = result.rows[0];
-    const session = {
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      level: row.level,
-      hostId: row.host_id,
-      hostName: row.host_name,
-      questions: row.questions,
-      status: row.status,
-      currentQuestionIndex: row.current_question_index,
-      createdAt: parseInt(row.created_at),
-      scheduledStartTime: parseInt(row.scheduled_start_time),
-      scheduledEndTime: parseInt(row.scheduled_end_time),
-      durationMinutes: row.duration_minutes,
-      lobbyOpenTime: parseInt(row.lobby_open_time),
-      maxParticipants: row.max_participants,
-      startedAt: row.started_at ? parseInt(row.started_at) : undefined,
-      completedAt: row.completed_at ? parseInt(row.completed_at) : undefined,
-      registeredUsers: (row.registered_users || []).map((u: any) => ({
-        ...u,
-        registeredAt: parseInt(u.registeredAt),
-      })),
-      participants: (row.participants || []).map((p: any) => ({
-        ...p,
-        joinedAt: parseInt(p.joinedAt),
-      })),
-    };
+    const session = formatSessionResponse(
+      row,
+      formatRegisteredUsers(row.registered_users),
+      formatParticipants(row.participants)
+    );
 
     res.json({
       success: true,
@@ -412,28 +346,7 @@ export const updateSession = async (req: Request, res: Response): Promise<void> 
     const query = `UPDATE sessions SET ${updates.join(', ')} WHERE id = $${paramCount} RETURNING *`;
 
     const result = await pool.query(query, params);
-    const row = result.rows[0];
-    const session = {
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      level: row.level,
-      hostId: row.host_id,
-      hostName: row.host_name,
-      questions: row.questions,
-      status: row.status,
-      currentQuestionIndex: row.current_question_index,
-      createdAt: parseInt(row.created_at),
-      scheduledStartTime: parseInt(row.scheduled_start_time),
-      scheduledEndTime: parseInt(row.scheduled_end_time),
-      durationMinutes: row.duration_minutes,
-      lobbyOpenTime: parseInt(row.lobby_open_time),
-      maxParticipants: row.max_participants,
-      startedAt: row.started_at ? parseInt(row.started_at) : undefined,
-      completedAt: row.completed_at ? parseInt(row.completed_at) : undefined,
-      registeredUsers: [],
-      participants: [],
-    };
+    const session = formatSessionResponse(result.rows[0]);
 
     res.json({
       success: true,
@@ -502,28 +415,7 @@ export const cancelSession = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
-    const row = result.rows[0];
-    const session = {
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      level: row.level,
-      hostId: row.host_id,
-      hostName: row.host_name,
-      questions: row.questions,
-      status: row.status,
-      currentQuestionIndex: row.current_question_index,
-      createdAt: parseInt(row.created_at),
-      scheduledStartTime: parseInt(row.scheduled_start_time),
-      scheduledEndTime: parseInt(row.scheduled_end_time),
-      durationMinutes: row.duration_minutes,
-      lobbyOpenTime: parseInt(row.lobby_open_time),
-      maxParticipants: row.max_participants,
-      startedAt: row.started_at ? parseInt(row.started_at) : undefined,
-      completedAt: row.completed_at ? parseInt(row.completed_at) : undefined,
-      registeredUsers: [],
-      participants: [],
-    };
+    const session = formatSessionResponse(result.rows[0]);
 
     res.json({
       success: true,
@@ -879,22 +771,14 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
       return;
     }
 
-    let answers = participantResult.rows[0].answers;
-    if (typeof answers === 'string') {
-      answers = JSON.parse(answers);
-    }
+    let answers = parseAnswers(participantResult.rows[0].answers);
 
     // Update answer at index
     answers[questionIndex] = answer;
 
     // Calculate score
-    const questionsArray = typeof questions === 'string' ? JSON.parse(questions) : questions;
-    let score = 0;
-    for (let i = 0; i < answers.length; i++) {
-      if (answers[i] !== null && answers[i] === questionsArray[i]?.correctAnswer) {
-        score++;
-      }
-    }
+    const questionsArray = parseQuestions(questions);
+    const score = calculateScore(answers, questionsArray);
 
     // Update participant
     await pool.query(
@@ -1260,56 +1144,7 @@ export const regenerateQuestions = async (req: Request, res: Response): Promise<
       [JSON.stringify(updatedQuestions), id]
     );
 
-    const row = updateResult.rows[0];
-
-    // Fetch related data
-    const registrationsResult = await pool.query(
-      `SELECT json_agg(json_build_object(
-        'userId', user_id,
-        'username', username,
-        'displayName', display_name,
-        'registeredAt', registered_at
-      )) as registered_users
-      FROM session_registrations
-      WHERE session_id = $1`,
-      [id]
-    );
-
-    const participantsResult = await pool.query(
-      `SELECT json_agg(json_build_object(
-        'userId', user_id,
-        'username', username,
-        'displayName', display_name,
-        'answers', answers,
-        'score', score,
-        'joinedAt', joined_at
-      )) as participants
-      FROM session_participants
-      WHERE session_id = $1`,
-      [id]
-    );
-
-    const session_updated = {
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      level: row.level,
-      hostId: row.host_id,
-      hostName: row.host_name,
-      questions: row.questions,
-      status: row.status,
-      currentQuestionIndex: row.current_question_index,
-      createdAt: parseInt(row.created_at),
-      scheduledStartTime: parseInt(row.scheduled_start_time),
-      scheduledEndTime: parseInt(row.scheduled_end_time),
-      durationMinutes: row.duration_minutes,
-      lobbyOpenTime: parseInt(row.lobby_open_time),
-      maxParticipants: row.max_participants,
-      startedAt: row.started_at ? parseInt(row.started_at) : undefined,
-      completedAt: row.completed_at ? parseInt(row.completed_at) : undefined,
-      registeredUsers: registrationsResult.rows[0]?.registered_users || [],
-      participants: participantsResult.rows[0]?.participants || [],
-    };
+    const session_updated = formatSessionResponse(updateResult.rows[0]);
 
     res.json({
       success: true,
