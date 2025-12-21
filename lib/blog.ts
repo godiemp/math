@@ -2,32 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
+// Re-export client-safe types and utilities
+export type { BlogPost, BlogPostMeta, AudienceType } from './blog-types';
+export { getAudienceFromTags } from './blog-types';
+
 const BLOG_DIR = path.join(process.cwd(), 'content', 'blog');
-
-export interface BlogPost {
-  slug: string;
-  title: string;
-  description: string;
-  date: string;
-  author: string;
-  tags: string[];
-  image?: string;
-  published: boolean;
-  content: string;
-  readingTime: number;
-}
-
-export interface BlogPostMeta {
-  slug: string;
-  title: string;
-  description: string;
-  date: string;
-  author: string;
-  tags: string[];
-  image?: string;
-  published: boolean;
-  readingTime: number;
-}
 
 function calculateReadingTime(content: string): number {
   const wordsPerMinute = 200;
