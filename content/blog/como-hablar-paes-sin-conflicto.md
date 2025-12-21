@@ -1,7 +1,7 @@
 ---
 title: "Cómo hablar de la PAES con tu hijo sin que se cierre"
 description: "Las frases que cierran la conversación, las que la abren, y cómo comunicarte sobre la PAES sin que tu hijo se cierre."
-date: "2024-12-21"
+date: "2025-12-21"
 author: "SimplePAES"
 tags: ["PAES", "padres", "comunicación", "familia", "consejos"]
 published: true

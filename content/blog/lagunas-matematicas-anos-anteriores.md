@@ -1,7 +1,7 @@
 ---
 title: "Qué hacer cuando tu hijo tiene lagunas de matemáticas de hace años"
 description: "Por qué los tutores tradicionales no resuelven este problema, y cómo identificar exactamente qué contenidos faltan para cerrar la brecha."
-date: "2024-12-21"
+date: "2025-12-21"
 author: "SimplePAES"
 tags: ["padres", "matemáticas", "lagunas", "educación media", "diagnóstico"]
 published: true

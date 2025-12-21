@@ -1,7 +1,7 @@
 ---
 title: "Qué estudiar para la PAES M1: temario completo explicado"
 description: "Guía completa del temario PAES M1 con los 4 ejes temáticos, temas específicos y cuánto pesa cada uno. Organiza tu estudio con claridad."
-date: "2024-12-17"
+date: "2025-12-17"
 author: "SimplePAES"
 tags: ["PAES", "temario", "matemáticas", "M1", "guía"]
 published: true

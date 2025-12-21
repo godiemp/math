@@ -24,6 +24,11 @@ const AUDIENCE_STYLES: Record<Exclude<AudienceType, 'todos'>, { label: string; b
     bg: 'rgba(34, 197, 94, 0.1)',
     color: 'rgb(34, 197, 94)',
   },
+  directivos: {
+    label: 'Directivos',
+    bg: 'rgba(249, 115, 22, 0.1)',
+    color: 'rgb(249, 115, 22)',
+  },
 };
 
 export function BlogPostCard({ post }: BlogPostCardProps) {

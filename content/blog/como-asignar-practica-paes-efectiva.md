@@ -1,7 +1,7 @@
 ---
 title: "Cómo asignar práctica PAES que realmente funcione"
 description: "Guía práctica para profesores: qué asignar, cómo estructurarlo, y cómo saber si tus estudiantes están practicando de verdad."
-date: "2024-12-17"
+date: "2025-12-17"
 author: "SimplePAES"
 tags: ["profesores", "PAES", "práctica", "matemáticas", "enseñanza"]
 published: true

@@ -1,7 +1,7 @@
 ---
 title: "Cómo manejar el tiempo en la PAES de matemática: estrategias que realmente funcionan"
 description: "Aprende a distribuir tus 140 minutos en la PAES M1, identificar preguntas rápidas, y evitar perder tiempo en lo que no sabes."
-date: "2024-12-16"
+date: "2025-12-16"
 author: "SimplePAES"
 tags: ["PAES", "estrategia", "tiempo", "matemáticas", "consejos"]
 published: true
