@@ -69,6 +69,7 @@ Puedo ayudarte a:
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [streamingContent, setStreamingContent] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -108,6 +109,7 @@ Puedo ayudarte a:
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
+    setStreamingContent('');
 
     try {
       const response = await fetch('/api/builder/generate', {
@@ -128,25 +130,65 @@ Puedo ayudarte a:
         throw new Error('Error al procesar la solicitud');
       }
 
-      const data = await response.json();
+      // Handle streaming response
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
 
-      // Add assistant response
+      if (!reader) {
+        throw new Error('No response body');
+      }
+
+      let accumulatedText = '';
+      let finalResult: { message?: string; lessonUpdate?: DynamicLesson } = {};
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+
+              if (data.type === 'text') {
+                accumulatedText += data.content;
+                // Only show the message part (before ```json), strip the JSON code block
+                const displayText = accumulatedText.split('```json')[0].trim();
+                setStreamingContent(displayText);
+              } else if (data.type === 'done') {
+                finalResult = data;
+              } else if (data.type === 'error') {
+                throw new Error(data.message);
+              }
+            } catch (parseError) {
+              // Ignore parse errors for incomplete chunks
+            }
+          }
+        }
+      }
+
+      // Add the final assistant message
       const assistantMessage: Message = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
-        content: data.message || (isCreatingNew ? 'He creado tu lección.' : 'He actualizado la lección.'),
+        content: finalResult.message || (isCreatingNew ? 'He creado tu lección.' : 'He actualizado la lección.'),
         timestamp: new Date(),
-        lessonUpdate: data.lessonUpdate,
+        lessonUpdate: finalResult.lessonUpdate,
       };
 
       setMessages(prev => [...prev, assistantMessage]);
+      setStreamingContent('');
 
       // Apply lesson update if present
-      if (data.lessonUpdate) {
-        onLessonUpdate(data.lessonUpdate);
+      if (finalResult.lessonUpdate) {
+        onLessonUpdate(finalResult.lessonUpdate);
       }
     } catch (error) {
       console.error('Chat error:', error);
+      setStreamingContent('');
 
       // Add error message
       const errorMessage: Message = {
@@ -184,13 +226,32 @@ Puedo ayudarte a:
         ))}
 
         {isLoading && (
-          <div className="flex items-center gap-3 p-4">
-            <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-              <Loader2 className="w-4 h-4 text-purple-600 dark:text-purple-400 animate-spin" />
+          <div className="flex gap-3">
+            {/* Avatar */}
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
+              {streamingContent ? (
+                <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+              ) : (
+                <Loader2 className="w-4 h-4 text-purple-600 dark:text-purple-400 animate-spin" />
+              )}
             </div>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              {isCreatingNew ? 'Creando tu lección...' : 'Pensando...'}
-            </span>
+            {/* Streaming content or loading indicator */}
+            <div className="flex-1 max-w-[80%] p-3 rounded-2xl bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-bl-sm">
+              {streamingContent ? (
+                <p className="text-sm whitespace-pre-wrap">{streamingContent}<span className="inline-block w-1.5 h-4 ml-0.5 bg-purple-500 animate-pulse" /></p>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    {isCreatingNew ? 'Creando tu lección...' : 'Pensando...'}
+                  </span>
+                  <span className="flex gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

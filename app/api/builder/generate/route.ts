@@ -268,8 +268,8 @@ export async function POST(request: NextRequest) {
       ? buildCreateSystemPrompt()
       : buildEditSystemPrompt(currentLesson, activeStep);
 
-    // Call Claude API
-    const response = await anthropic.messages.create({
+    // Create streaming response
+    const stream = await anthropic.messages.stream({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 8192,
       system: systemPrompt,
@@ -279,21 +279,52 @@ export async function POST(request: NextRequest) {
       })),
     });
 
-    // Extract text from response
-    const responseText = response.content
-      .filter(block => block.type === 'text')
-      .map(block => (block as { type: 'text'; text: string }).text)
-      .join('\n');
+    // Create a TransformStream to handle the response
+    const encoder = new TextEncoder();
+    let fullText = '';
 
-    // Parse the response
-    const { message, lessonJson } = parseAIResponse(responseText);
+    const readable = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const event of stream) {
+            if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+              const text = event.delta.text;
+              fullText += text;
 
-    const result: GenerateResponse = {
-      message,
-      lessonUpdate: lessonJson || undefined,
-    };
+              // Send the text chunk to the client
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'text', content: text })}\n\n`));
+            }
+          }
 
-    return NextResponse.json(result);
+          // Parse the complete response for lesson JSON
+          const { message, lessonJson } = parseAIResponse(fullText);
+
+          // Send the final result with the parsed lesson
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({
+            type: 'done',
+            message,
+            lessonUpdate: lessonJson || undefined
+          })}\n\n`));
+
+          controller.close();
+        } catch (error) {
+          console.error('Streaming error:', error);
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({
+            type: 'error',
+            message: 'Error al generar la lección'
+          })}\n\n`));
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(readable, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      },
+    });
   } catch (error) {
     console.error('Builder generate error:', error);
 
