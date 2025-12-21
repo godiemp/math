@@ -12,59 +12,71 @@ interface ClassifyItem {
   givenValue: string;
   radiusAnswer: string;
   heightAnswer: string;
-  category: 'direct' | 'diameter' | 'circumference';
+  category: 'diameter' | 'circumference' | 'slant' | 'area' | 'combined';
+  hint: string;
+  explanation: string;
   icon: string;
 }
 
 const ITEMS: ClassifyItem[] = [
   {
     id: 1,
-    name: 'Cono de trafico',
-    description: 'Radio de la base: 15 cm, Altura: 45 cm',
-    givenValue: 'r = 15 cm, h = 45 cm',
-    radiusAnswer: '15',
-    heightAnswer: '45',
-    category: 'direct',
-    icon: '🚧',
-  },
-  {
-    id: 2,
     name: 'Cono de helado',
-    description: 'Diametro de la abertura: 8 cm, Profundidad: 12 cm',
-    givenValue: 'd = 8 cm, h = 12 cm',
-    radiusAnswer: '4',
-    heightAnswer: '12',
+    description: 'Diametro de la abertura: 6 cm, Profundidad: 10 cm',
+    givenValue: 'd = 6 cm, h = 10 cm',
+    radiusAnswer: '3',
+    heightAnswer: '10',
     category: 'diameter',
+    hint: 'radio = diametro ÷ 2',
+    explanation: 'r = 6 ÷ 2 = 3 cm',
     icon: '🍦',
   },
   {
-    id: 3,
-    name: 'Embudo de cocina',
-    description: 'Radio superior: 10 cm, Altura del cono: 15 cm',
-    givenValue: 'r = 10 cm, h = 15 cm',
+    id: 2,
+    name: 'Gorro de fiesta',
+    description: 'Circunferencia de la base: 62.8 cm, Altura: 25 cm',
+    givenValue: 'C = 62.8 cm, h = 25 cm',
     radiusAnswer: '10',
-    heightAnswer: '15',
-    category: 'direct',
-    icon: '🔽',
+    heightAnswer: '25',
+    category: 'circumference',
+    hint: 'C = 2πr → r = C ÷ (2π) ≈ C ÷ 6.28',
+    explanation: 'r = 62.8 ÷ 6.28 = 10 cm',
+    icon: '🎉',
+  },
+  {
+    id: 3,
+    name: 'Cono de trafico',
+    description: 'Radio de la base: 15 cm, Generatriz (lado inclinado): 39 cm',
+    givenValue: 'r = 15 cm, g = 39 cm',
+    radiusAnswer: '15',
+    heightAnswer: '36',
+    category: 'slant',
+    hint: 'Pitagoras: h² + r² = g² → h = √(g² − r²)',
+    explanation: 'h = √(39² − 15²) = √(1521 − 225) = √1296 = 36 cm',
+    icon: '🚧',
   },
   {
     id: 4,
-    name: 'Gorro de cumpleanos',
-    description: 'Circunferencia de la base: 31.4 cm, Altura: 20 cm',
-    givenValue: 'C = 31.4 cm, h = 20 cm',
-    radiusAnswer: '5',
+    name: 'Embudo industrial',
+    description: 'Area de la base circular: 314 cm², Altura: 20 cm',
+    givenValue: 'A = 314 cm², h = 20 cm',
+    radiusAnswer: '10',
     heightAnswer: '20',
-    category: 'circumference',
-    icon: '🎉',
+    category: 'area',
+    hint: 'A = πr² → r = √(A ÷ π) ≈ √(A ÷ 3.14)',
+    explanation: 'r = √(314 ÷ 3.14) = √100 = 10 cm',
+    icon: '🔽',
   },
   {
     id: 5,
     name: 'Volcan en miniatura',
-    description: 'Diametro del crater: 200 m, Altura: 150 m',
-    givenValue: 'd = 200 m, h = 150 m',
-    radiusAnswer: '100',
-    heightAnswer: '150',
-    category: 'diameter',
+    description: 'Diametro del crater: 24 m, Generatriz: 13 m',
+    givenValue: 'd = 24 m, g = 13 m',
+    radiusAnswer: '12',
+    heightAnswer: '5',
+    category: 'combined',
+    hint: 'Primero r = d ÷ 2, luego h = √(g² − r²)',
+    explanation: 'r = 24 ÷ 2 = 12 m; h = √(13² − 12²) = √(169 − 144) = √25 = 5 m',
     icon: '🌋',
   },
 ];
@@ -156,16 +168,18 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
         <div
           className={cn(
             'text-sm text-center rounded-lg p-2 mb-4',
-            currentItem.category === 'direct'
-              ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
-              : currentItem.category === 'diameter'
+            currentItem.category === 'diameter'
               ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
-              : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300'
+              : currentItem.category === 'circumference'
+              ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300'
+              : currentItem.category === 'slant'
+              ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
+              : currentItem.category === 'area'
+              ? 'bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300'
+              : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
           )}
         >
-          {currentItem.category === 'direct' && 'Pista: Los valores estan dados directamente'}
-          {currentItem.category === 'diameter' && 'Pista: Recuerda que radio = diametro ÷ 2'}
-          {currentItem.category === 'circumference' && 'Pista: C = 2πr, entonces r = C ÷ (2π)'}
+          <span className="font-medium">Pista:</span> {currentItem.hint}
         </div>
 
         {/* Input fields */}
@@ -263,14 +277,9 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
               <p className="text-gray-700 dark:text-gray-300 mt-1">
                 r = <strong>{currentItem.radiusAnswer}</strong>, h = <strong>{currentItem.heightAnswer}</strong>
               </p>
-              {currentItem.category === 'diameter' && !isCorrect && (
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Recuerda: radio = diametro ÷ 2 = {parseInt(currentItem.radiusAnswer) * 2} ÷ 2 = {currentItem.radiusAnswer}
-                </p>
-              )}
-              {currentItem.category === 'circumference' && !isCorrect && (
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Recuerda: r = C ÷ (2π) = 31.4 ÷ 6.28 = 5
+              {!isCorrect && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 font-mono">
+                  {currentItem.explanation}
                 </p>
               )}
             </div>
