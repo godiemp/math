@@ -188,21 +188,13 @@ describe('Algorithmic Generators', () => {
 
     it('should handle reduce operations', () => {
       const context: GeneratorContext = {
-        config: { sequenceLength: 3, minValue: 1, maxValue: 10 },
+        config: { sequenceLength: 3, minValue: 1, maxValue: 10, compositionType: 'map-then-reduce' as const },
         level: 147,
       };
 
-      let foundReduce = false;
-      for (let i = 0; i < 20; i++) {
-        const problem = generateComposition(context);
-        if (problem.expression.includes('suma')) {
-          expect(typeof problem.correctAnswer).toBe('number');
-          foundReduce = true;
-          break;
-        }
-      }
-
-      expect(foundReduce).toBe(true);
+      const problem = generateComposition(context);
+      expect(problem.expression).toContain('suma');
+      expect(typeof problem.correctAnswer).toBe('number');
     });
   });
 });
