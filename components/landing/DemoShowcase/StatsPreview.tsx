@@ -131,10 +131,10 @@ function MeanAnimation() {
 
         {/* Mean label */}
         <motion.div
-          className="absolute right-0 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded"
+          className="absolute left-1/2 -translate-x-1/2 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded"
           style={{ bottom: `${(MEAN / MAX_VALUE) * 100 + 4}px` }}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 1.3 }}
         >
           x̄ = {MEAN}
