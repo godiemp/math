@@ -7,7 +7,7 @@
  * 3. Generating recommendations
  */
 
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { pool } from '../config/database';
 import {
   DiagnosisSession,
@@ -58,7 +58,7 @@ export async function getQuestionsForSkills(
   level: 'M1' | 'M2',
   limit: number = 5
 ): Promise<{ sessionId: string; questions: QuestionForDiagnosis[] }> {
-  const sessionId = uuidv4();
+  const sessionId = randomUUID();
 
   // Query questions from database that match the requested skills
   const query = `
