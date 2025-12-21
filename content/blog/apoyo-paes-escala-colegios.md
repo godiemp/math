@@ -1,7 +1,7 @@
 ---
 title: "Apoyo PAES a escala: qué funciona para colegios (y qué no)"
 description: "Comparación honesta de tutores, preuniversitarios, refuerzo interno y plataformas. Cuándo sirve cada uno y cuándo es pérdida de recursos."
-date: "2024-12-21"
+date: "2025-12-21"
 author: "SimplePAES"
 tags: ["directivos", "PAES", "colegios", "estrategia", "matemáticas"]
 published: true

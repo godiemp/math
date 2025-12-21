@@ -1,7 +1,7 @@
 ---
 title: "Por qué tu programa de refuerzo en matemáticas no está funcionando"
 description: "Los 3 errores que cometen los colegios al implementar refuerzo matemático y qué hacer en su lugar para ver resultados reales."
-date: "2024-12-21"
+date: "2025-12-21"
 author: "SimplePAES"
 tags: ["directivos", "colegios", "refuerzo", "matemáticas", "PAES"]
 published: true

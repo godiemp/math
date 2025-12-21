@@ -1,7 +1,7 @@
 ---
 title: "Cómo reducir la carga de tus profesores mientras mejoras resultados en matemáticas"
 description: "El falso dilema entre calidad y carga docente. Estrategias para que tus profesores trabajen menos horas extra y tus estudiantes aprendan más."
-date: "2024-12-21"
+date: "2025-12-21"
 author: "SimplePAES"
 tags: ["directivos", "profesores", "colegios", "matemáticas", "gestión"]
 published: true

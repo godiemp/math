@@ -1,7 +1,7 @@
 ---
 title: "Las 5 métricas de matemáticas que todo jefe de UTP debería revisar"
 description: "Más allá del promedio de notas: qué indicadores te dicen realmente cómo van tus estudiantes en matemáticas y dónde intervenir."
-date: "2024-12-21"
+date: "2025-12-21"
 author: "SimplePAES"
 tags: ["directivos", "UTP", "métricas", "matemáticas", "gestión"]
 published: true

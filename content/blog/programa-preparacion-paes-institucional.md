@@ -1,7 +1,7 @@
 ---
 title: "Cómo estructurar un programa de preparación PAES institucional"
 description: "Guía completa para diseñar un programa PAES a nivel de colegio: componentes, cronograma, roles y métricas de éxito."
-date: "2024-12-21"
+date: "2025-12-21"
 author: "SimplePAES"
 tags: ["directivos", "PAES", "colegios", "programa", "planificación"]
 published: true
