@@ -1,25 +1,24 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
 import useSWR from 'swr';
-import { toast } from 'sonner';
 import { Plan } from '@/lib/types';
-import { getActivePlans, createPaymentPreference } from '@/lib/api/payments';
-import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/Button';
+import { getActivePlans } from '@/lib/api/payments';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { analytics } from '@/lib/analytics';
 import { useTranslations } from 'next-intl';
+import { LandingNav } from '@/components/landing';
+import Footer from '@/components/layout/Footer';
+
+const openIntercomInstitutions = () => {
+  if (typeof window !== 'undefined' && window.Intercom) {
+    window.Intercom('showNewMessage', 'Hola, quiero información sobre planes para colegios/instituciones');
+  }
+};
 
 export default function PricingPage() {
   const t = useTranslations('pricing');
-  const router = useRouter();
-  const { isAuthenticated, isPaidUser } = useAuth();
-  const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
   // Fetch active plans
   const { data: plansResponse, error, isLoading } = useSWR(
@@ -42,108 +41,6 @@ export default function PricingPage() {
       plansAvailable: plans.length,
     });
   }, [plans.length]);
-
-  const handleSubscribe = async (plan: Plan) => {
-    // Track checkout started
-    analytics.track('checkout_started', {
-      plan: plan.name,
-      planId: plan.id,
-      amount: plan.price,
-      hasTrial: plan.trialDurationDays > 0,
-      source: 'pricing_page',
-    });
-
-    if (!isAuthenticated) {
-      toast.error(t('errors.mustLogin'));
-      router.push('/login?redirect=/pricing');
-      return;
-    }
-
-    if (isPaidUser) {
-      toast.info(t('errors.alreadySubscribed'));
-      return;
-    }
-
-    // If plan has trial and costs money, show payment options modal
-    if (plan.trialDurationDays > 0 && plan.price > 0) {
-      setSelectedPlan(plan);
-      setShowPaymentModal(true);
-      return;
-    }
-
-    // Otherwise, proceed directly
-    await proceedWithPayment(plan.id, false);
-  };
-
-  const proceedWithPayment = async (planId: string, startTrialWithoutCard: boolean) => {
-    setLoadingPlanId(planId);
-    setShowPaymentModal(false);
-
-    try {
-      if (startTrialWithoutCard) {
-        // Start trial without payment - call backend to create trial subscription
-        const response = await fetch('/api/payments/start-trial', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ planId }),
-          credentials: 'include',
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || result.error) {
-          toast.error(result.error || t('errors.trialError'));
-          return;
-        }
-
-        toast.success(t('trial.activated'));
-        router.push('/dashboard');
-      } else {
-        // Proceed with payment - redirect to MercadoPago (or activate trial in MVP mode)
-        const result = await createPaymentPreference(planId);
-
-        if (result.error) {
-          toast.error(result.error.error || t('errors.paymentError'));
-          return;
-        }
-
-        const data = result.data?.data;
-        if (!data) {
-          toast.error(t('errors.paymentError'));
-          return;
-        }
-
-        // MVP MODE: If backend returns mvpMode, it activated the trial directly
-        if ('mvpMode' in data && data.mvpMode) {
-          if (data.alreadyHasSubscription) {
-            toast.info(data.message || 'Ya tienes una suscripción activa');
-          } else {
-            toast.success(data.message || '¡Prueba activada! Disfruta 7 días gratis.');
-            setTimeout(() => {
-              router.push('/dashboard');
-            }, 1000);
-          }
-          return;
-        }
-
-        // PRODUCTION MODE: Redirect to MercadoPago
-        if ('initPoint' in data) {
-          const checkoutUrl = process.env.NODE_ENV === 'production'
-            ? data.initPoint
-            : data.sandboxInitPoint;
-
-          window.location.href = checkoutUrl;
-        }
-      }
-    } catch (error) {
-      console.error('Error processing subscription:', error);
-      toast.error(t('errors.processingError'));
-    } finally {
-      setLoadingPlanId(null);
-    }
-  };
 
   const formatPrice = (price: number, currency: string) => {
     if (currency === 'CLP') {
@@ -168,29 +65,39 @@ export default function PricingPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="flex justify-center items-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
+        <LandingNav />
+        <div className="container mx-auto px-4 py-16">
+          <div className="flex justify-center items-center min-h-[400px]">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-16">
-        <Card padding="lg">
-          <div className="text-center text-red-500">
-            <p className="text-lg font-semibold mb-2">Error al cargar los planes</p>
-            <p className="text-sm">{error.message}</p>
-          </div>
-        </Card>
+      <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
+        <LandingNav />
+        <div className="container mx-auto px-4 py-16">
+          <Card padding="lg">
+            <div className="text-center text-red-500">
+              <p className="text-lg font-semibold mb-2">Error al cargar los planes</p>
+              <p className="text-sm">{error.message}</p>
+            </div>
+          </Card>
+        </div>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
+      <LandingNav />
+      <div className="container mx-auto px-4 py-16">
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold mb-4">{t('header.title')}</h1>
@@ -199,33 +106,9 @@ export default function PricingPage() {
         </p>
       </div>
 
-      {/* Current Status */}
-      {isAuthenticated && (
-        <div className="max-w-2xl mx-auto mb-8">
-          <Card padding="md">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{t('currentStatus.label')}</p>
-                <p className="font-semibold">
-                  {isPaidUser ? (
-                    <span className="text-green-500">{t('currentStatus.active')}</span>
-                  ) : (
-                    <span className="text-gray-500">{t('currentStatus.free')}</span>
-                  )}
-                </p>
-              </div>
-              {isPaidUser && (
-                <Badge variant="success">{t('badge.premium')}</Badge>
-              )}
-            </div>
-          </Card>
-        </div>
-      )}
-
       {/* Plans Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {plans.map((plan: Plan) => {
-          const isLoading = loadingPlanId === plan.id;
           const hasFreeTrial = plan.trialDurationDays > 0;
 
           return (
@@ -269,7 +152,7 @@ export default function PricingPage() {
               </div>
 
               {/* Features */}
-              <div className="flex-1 mb-6">
+              <div className="flex-1">
                 <ul className="space-y-3">
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-start">
@@ -291,44 +174,6 @@ export default function PricingPage() {
                   ))}
                 </ul>
               </div>
-
-              {/* Subscribe Button */}
-              <Button
-                variant="primary"
-                onClick={() => handleSubscribe(plan)}
-                disabled={isLoading || (isAuthenticated && isPaidUser)}
-                className="w-full"
-              >
-                {isLoading ? (
-                  <span className="flex items-center justify-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    {t('button.processing')}
-                  </span>
-                ) : isPaidUser ? (
-                  t('button.subscribed')
-                ) : (
-                  t('button.subscribe')
-                )}
-              </Button>
             </Card>
           );
         })}
@@ -372,83 +217,114 @@ export default function PricingPage() {
         </Card>
       </div>
 
-      {/* Payment Options Modal */}
-      {showPaymentModal && selectedPlan && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-white rounded-lg shadow-xl max-w-lg w-full p-8">
-            <div className="mb-6">
-              <h3 className="text-2xl font-bold mb-2 text-gray-900">{t('modal.title')}</h3>
-              <p className="text-gray-600">
-                {selectedPlan.name} - {formatPrice(selectedPlan.price, selectedPlan.currency)}/mes
+      </div>
+
+      {/* Institution Pricing Section */}
+      <section
+        className="py-16 px-4"
+        style={{
+          background: 'linear-gradient(135deg, var(--color-tint) 0%, #5E5CE6 100%)',
+        }}
+      >
+        <div className="max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h2
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'clamp(24px, 4vw, 32px)',
+                  fontWeight: 600,
+                  color: 'white',
+                  marginBottom: '16px',
+                }}
+              >
+                {t('institutions.title')}
+              </h2>
+              <p
+                style={{
+                  fontSize: '17px',
+                  lineHeight: 1.6,
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  marginBottom: '24px',
+                }}
+              >
+                {t('institutions.description')}
               </p>
-            </div>
-
-            <div className="space-y-4 mb-6">
-              {/* Option 1: Start trial without card */}
-              <button
-                onClick={() => proceedWithPayment(selectedPlan.id, true)}
-                disabled={loadingPlanId === selectedPlan.id}
-                className="w-full p-6 border-2 border-blue-500 rounded-lg hover:bg-blue-50 transition-colors text-left"
+              <ul
+                style={{
+                  listStyle: 'none',
+                  padding: 0,
+                  margin: 0,
+                  marginBottom: '24px',
+                }}
               >
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex-1">
-                    <h4 className="text-lg font-semibold mb-1 text-gray-900">{t('modal.tryFirst.title')}</h4>
-                    <p className="text-sm text-gray-600">
-                      {t('modal.tryFirst.description')}
-                    </p>
-                  </div>
-                  <Badge variant="success" className="ml-2">{t('badge.recommended')}</Badge>
-                </div>
-                <ul className="text-sm text-gray-600 space-y-1 mt-3">
-                  <li>{t('modal.tryFirst.benefit1')}</li>
-                  <li>{t('modal.tryFirst.benefit2')}</li>
-                  <li>{t('modal.tryFirst.benefit3')}</li>
-                </ul>
-              </button>
-
-              {/* Option 2: Pay now with trial */}
-              <button
-                onClick={() => proceedWithPayment(selectedPlan.id, false)}
-                disabled={loadingPlanId === selectedPlan.id}
-                className="w-full p-6 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-left"
+                {[
+                  t('institutions.feature1'),
+                  t('institutions.feature2'),
+                  t('institutions.feature3'),
+                  t('institutions.feature4'),
+                ].map((feature, index) => (
+                  <li
+                    key={index}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      marginBottom: '12px',
+                      color: 'rgba(255, 255, 255, 0.95)',
+                      fontSize: '15px',
+                    }}
+                  >
+                    <svg
+                      className="w-5 h-5 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="text-center md:text-right">
+              <p
+                style={{
+                  fontSize: '15px',
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  marginBottom: '16px',
+                }}
               >
-                <div className="flex-1">
-                  <h4 className="text-lg font-semibold mb-1 text-gray-900">{t('modal.payNow.title')}</h4>
-                  <p className="text-sm text-gray-600">
-                    {t('modal.payNow.description')}
-                  </p>
-                </div>
-                <ul className="text-sm text-gray-600 space-y-1 mt-3">
-                  <li>{t('modal.payNow.benefit1')}</li>
-                  <li>{t('modal.payNow.benefit2')}</li>
-                  <li>{t('modal.payNow.benefit3')}</li>
-                </ul>
+                {t('institutions.customPricing')}
+              </p>
+              <button
+                onClick={openIntercomInstitutions}
+                className="spring-emphasized"
+                style={{
+                  padding: '16px 40px',
+                  background: 'white',
+                  color: 'var(--color-tint)',
+                  borderRadius: 'var(--radius-md)',
+                  fontSize: '17px',
+                  fontWeight: 600,
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {t('institutions.cta')}
               </button>
             </div>
-
-            {/* Close button */}
-            <Button
-              variant="secondary"
-              onClick={() => {
-                setShowPaymentModal(false);
-                setSelectedPlan(null);
-              }}
-              disabled={loadingPlanId === selectedPlan.id}
-              className="w-full"
-            >
-              {t('modal.cancel')}
-            </Button>
-
-            {loadingPlanId === selectedPlan.id && (
-              <div className="mt-4 text-center">
-                <p className="text-sm text-gray-600">
-                  {t('button.processing')}
-                </p>
-              </div>
-            )}
           </div>
         </div>
-      )}
+      </section>
+
+      <Footer />
     </div>
   );
 }

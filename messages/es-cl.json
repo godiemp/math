@@ -588,6 +588,16 @@
         "benefit2": "✓ Acceso completo inmediato",
         "benefit3": "✓ Cancela en cualquier momento"
       }
+    },
+    "institutions": {
+      "title": "¿Eres un colegio o institución?",
+      "description": "Ofrecemos planes especiales para colegios, preuniversitarios e instituciones educativas con licencias por volumen, panel de administración y reportes de progreso.",
+      "feature1": "Licencias por volumen con descuento",
+      "feature2": "Panel de administración para profesores",
+      "feature3": "Reportes de progreso por estudiante",
+      "feature4": "Soporte prioritario dedicado",
+      "customPricing": "Precios personalizados según tus necesidades",
+      "cta": "Contactar Ventas"
     }
   },
   "contact": {
