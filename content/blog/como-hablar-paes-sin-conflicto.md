@@ -1,6 +1,6 @@
 ---
 title: "Cómo hablar de la PAES con tu hijo sin que se cierre"
-description: "Las frases que cierran la conversación, las que la abren, y cómo tener una comunicación real sobre la preparación sin generar conflicto."
+description: "Las frases que cierran la conversación, las que la abren, y cómo comunicarte sobre la PAES sin que tu hijo se cierre."
 date: "2024-12-21"
 author: "SimplePAES"
 tags: ["PAES", "padres", "comunicación", "familia", "consejos"]
@@ -123,7 +123,7 @@ En vez de preguntas sueltas todos los días, considera una conversación estruct
 - "¿Hay algo que te esté costando?"
 - "¿Necesitas algo de mi parte?"
 
-Y luego: respetar lo que diga. Si dice "estoy bien", confiar. Si dice "me está costando probabilidad", ofrecer recursos sin dar un sermón.
+Y luego: respetar lo que diga. Si dice "estoy bien", confiar. Si dice "me está costando probabilidad", [ofrecer recursos sin dar un sermón](/blog/error-padres-elegir-apoyo-matematicas).
 
 **La regla de oro:** La conversación debe tomar menos de 5 minutos. Si se alarga, probablemente estás sermoneando.
 

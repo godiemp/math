@@ -49,7 +49,7 @@ Y ahí está el problema. Si tu hijo no entiende sistemas porque no sabe despeja
 
 Un buen tutor debería empezar preguntando "¿qué no entiendes de los pasos anteriores?" Pero la mayoría asume que lo anterior está dominado—porque eso es lo que dice el currículum.
 
-**Resultado:** Horas de tutoría explicando lo mismo, sin que el estudiante mejore, porque el bloqueo real está en otro lado.
+**Resultado:** Horas de tutoría explicando lo mismo, sin que el estudiante mejore, porque el bloqueo real está en otro lado. Para entender mejor este problema, lee [el error que cometen los padres al elegir apoyo en matemáticas](/blog/error-padres-elegir-apoyo-matematicas).
 
 ### El preuniversitario que va muy rápido
 
@@ -63,7 +63,7 @@ En teoría, la solución es obvia: si el problema es de 6° básico, hay que vol
 
 En práctica: ¿quién tiene tiempo? El estudiante tiene pruebas de 2° medio esta semana. El tutor cobra por hora. El preu sigue avanzando. Y mientras tu hijo repasa fracciones, el curso está viendo sistemas de ecuaciones.
 
-Además, no necesita TODO 6° básico. Necesita el concepto específico que le falta. Pero sin un diagnóstico preciso, no sabes cuál es.
+Además, no necesita TODO 6° básico. Necesita el concepto específico que le falta. Pero sin un diagnóstico preciso, no sabes cuál es. Y si [tú no puedes ayudarle directamente con el contenido](/blog/como-ayudar-hijo-matematicas-sin-saber), la frustración se multiplica.
 
 ## La solución real: diagnóstico antes de intervención
 
@@ -80,7 +80,7 @@ Con matemáticas pasa lo contrario: se receta la "cirugía" (más clases, más t
 
 Este proceso puede tomar semanas en vez de meses, porque no estás repitiendo todo—estás reparando quirúrgicamente los huecos específicos.
 
-## Cómo saber si este es el problema de tu hijo
+## Cómo saber si tu hijo tiene lagunas profundas
 
 ### Señales claras
 
@@ -89,21 +89,20 @@ Este proceso puede tomar semanas en vez de meses, porque no estás repitiendo to
 - **Entiende cuando le explican, pero después no puede solo**: Sin los fundamentos, no puede reconstruir el razonamiento
 - **El problema es transversal**: Le va mal en todo lo que involucra ese prerrequisito que falta
 
+Para más señales de alerta, revisa [cómo saber si tu hijo está preparado para la PAES](/blog/como-saber-si-tu-hijo-esta-preparado-paes).
+
 ### Una prueba rápida
 
 Hazle estas preguntas (sin calculadora):
 
-**De 6° básico:**
-- ¿Cuánto es 3/4 + 1/2?
-- ¿Cuánto es 2/3 de 18?
-
-**De 7° básico:**
-- ¿Cuánto es -5 + (-3)?
-- ¿Cuánto es (-2) × (-4)?
-
-**De 8° básico:**
-- Si 2x + 6 = 14, ¿cuánto vale x?
-- ¿Cuánto es 3(x + 2)?
+| Si falla en... | El problema está en... |
+|----------------|------------------------|
+| 3/4 + 1/2 = ? | Fracciones (6° básico) |
+| 2/3 de 18 = ? | Fracciones (6° básico) |
+| -5 + (-3) = ? | Números negativos (7° básico) |
+| (-2) × (-4) = ? | Números negativos (7° básico) |
+| Si 2x + 6 = 14, x = ? | Despeje (8° básico) |
+| 3(x + 2) = ? | Propiedad distributiva (8° básico) |
 
 Si duda o se equivoca en algo de estos, ahí está tu respuesta. El problema no es 2° medio—el problema viene de antes.
 

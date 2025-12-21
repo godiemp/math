@@ -39,7 +39,7 @@ Pregúntale casualmente: "¿Qué es lo que más te cuesta de matemáticas?" Si p
 
 **Buena señal:** Identifica 2-3 temas que le cuestan. Eso significa que ha practicado lo suficiente para saber dónde falla.
 
-**Señal de alerta:** Dice "todo" o "nada" o "no sé". Eso sugiere que no ha hecho suficiente práctica como para conocer sus brechas.
+**Señal de alerta:** Dice "todo" o "nada" o "no sé". Eso sugiere que no ha hecho suficiente práctica como para conocer sus brechas—o que tiene [lagunas de años anteriores](/blog/lagunas-matematicas-anos-anteriores) que no ha identificado.
 
 ### 4. Ha hecho ensayos completos
 
@@ -135,7 +135,7 @@ Es momento de ofrecer recursos concretos. No más estudio—mejor estudio:
 - Un diagnóstico que identifique lagunas específicas
 - Ensayos con análisis de errores
 
-El problema usualmente no es falta de esfuerzo. Es esfuerzo mal dirigido.
+El problema usualmente no es falta de esfuerzo. Es esfuerzo mal dirigido. Lee [el error que cometen los padres al elegir apoyo](/blog/error-padres-elegir-apoyo-matematicas) para evitar invertir en lo que no funciona.
 
 ### Si hay señales de alerta graves
 
@@ -143,21 +143,10 @@ Busca ayuda profesional. Un tutor, un preuniversitario, o al menos una plataform
 
 ## Lo que NO debes hacer
 
-### No compares con hermanos, primos, o "el hijo de mi amiga"
-
-"Tu hermano sacó 800" no motiva. Paraliza.
-
-### No proyectes tu ansiedad
-
-Si cada conversación sobre la PAES viene cargada de tu estrés, estás agregando peso, no quitándolo. [Maneja tu propia ansiedad por separado](/blog/por-que-tu-hijo-no-quiere-ayuda-paes).
-
-### No asumas que "no le importa"
-
-Muchas veces la inacción viene de sentirse abrumado, no de indiferencia. Un estudiante que no estudia puede estar paralizado, no desinteresado.
-
-### No ofrezcas ayudar con el contenido (a menos que realmente puedas)
-
-Si no te acuerdas cómo resolver ecuaciones cuadráticas, tu "ayuda" se convierte en frustración para ambos. Es mejor proveer herramientas que explicaciones.
+- **No compares** con hermanos, primos, o "el hijo de mi amiga". Paraliza.
+- **No proyectes tu ansiedad.** Si cada conversación viene cargada de estrés, estás agregando peso. [Maneja tu propia ansiedad por separado](/blog/por-que-tu-hijo-no-quiere-ayuda-paes).
+- **No asumas que "no le importa."** La inacción viene de sentirse abrumado, no de indiferencia.
+- **No ofrezcas ayudar con el contenido** si no te acuerdas. [Hay mejores formas de apoyar](/blog/como-ayudar-hijo-matematicas-sin-saber).
 
 ## El balance correcto
 

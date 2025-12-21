@@ -121,9 +121,9 @@ Trabaja tu propia relación con el tema, aunque sea solo fingiendo neutralidad. 
 Hay un punto donde tu apoyo no es suficiente. Señales:
 
 - Las notas siguen bajando a pesar de tus esfuerzos
-- Tu hijo tiene lagunas de años anteriores que tú no puedes diagnosticar
-- La relación se está dañando por los conflictos de estudio
-- Hay ansiedad o evitación severa
+- Tu hijo tiene [lagunas de años anteriores](/blog/lagunas-matematicas-anos-anteriores) que tú no puedes diagnosticar
+- La relación se está dañando por los [conflictos de estudio](/blog/como-hablar-paes-sin-conflicto)
+- Hay [ansiedad o evitación severa](/blog/por-que-tu-hijo-no-quiere-ayuda-paes)
 
 En ese punto, necesitas ayuda externa. Las opciones:
 
@@ -166,4 +166,4 @@ Eso es más importante que saber resolver ecuaciones. Y eso sí puedes hacerlo.
 
 ---
 
-*Si tu hijo necesita explicaciones y retroalimentación que tú no puedes darle, SimplePAES tiene un tutor con IA disponible 24/7 que responde sus dudas sin juicio, y retroalimentación instantánea que le muestra exactamente dónde se equivocó—para que pueda aprender de forma independiente, a su ritmo.*
+*Si tu hijo necesita explicaciones que tú no puedes darle, SimplePAES tiene un tutor disponible 24/7 que responde sin juicio y retroalimentación instantánea para aprender de forma independiente.*

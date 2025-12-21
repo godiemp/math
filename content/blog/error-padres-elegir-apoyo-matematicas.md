@@ -60,7 +60,7 @@ El problema: si tu hijo no entiende sistemas de ecuaciones porque no sabe despej
 
 **Cuándo funciona el tutor:** Cuando el problema es reciente y específico. "No entendí la clase de ayer" es solucionable con un tutor.
 
-**Cuándo no funciona:** Cuando hay lagunas de años anteriores. El tutor explica el presente, pero el problema está en el pasado.
+**Cuándo no funciona:** Cuando hay [lagunas de años anteriores](/blog/lagunas-matematicas-anos-anteriores). El tutor explica el presente, pero el problema está en el pasado.
 
 ### El preuniversitario que asume base
 
@@ -104,7 +104,7 @@ No "le cuesta matemáticas". No "no entiende álgebra". Sino: "no domina operaci
 
 Si no puedes responder eso, ninguna ayuda va a ser efectiva, porque nadie sabe qué atacar.
 
-## Cómo elegir bien
+## Cómo elegir el apoyo correcto en matemáticas
 
 ### Paso 1: Diagnosticar primero
 
@@ -123,7 +123,7 @@ Con el diagnóstico claro, puedes elegir la ayuda correcta.
 | Un tema específico reciente | Tutor de 1-2 sesiones |
 | Lagunas de años anteriores | Plataforma con diagnóstico + práctica adaptativa |
 | Falta de estructura general | Preuniversitario (si tiene base suficiente) |
-| Ansiedad o bloqueo emocional | Apoyo psicológico primero |
+| Ansiedad o bloqueo emocional | [Entender qué hay detrás](/blog/por-que-tu-hijo-no-quiere-ayuda-paes) + apoyo profesional |
 | No sabe estudiar solo | Tutor o plataforma con seguimiento |
 
 ### Paso 3: Verificar que está funcionando
@@ -142,7 +142,7 @@ Después de un mes de cualquier intervención, deberías ver señales de mejora:
 - Depende completamente del tutor/recurso para hacer cualquier cosa
 - No puede hacer solo lo que "aprendió" con ayuda
 
-Si después de un mes no hay señales positivas, la intervención no está funcionando. No la dupliques—cámbiala.
+Si después de un mes no hay señales positivas, la intervención no está funcionando. No la dupliques—cámbiala. Para más señales de alerta, lee [cómo saber si tu hijo está preparado para la PAES](/blog/como-saber-si-tu-hijo-esta-preparado-paes).
 
 ## Las preguntas que debes hacer antes de contratar
 
@@ -152,7 +152,7 @@ Si después de un mes no hay señales positivas, la intervención no está funci
 - "¿Cómo va a verificar si están cerrando las lagunas?"
 - "¿Qué pasa si el problema es de años anteriores?"
 
-Si las respuestas son vagas, probablemente va a enseñar lo que están viendo en el colegio sin atacar el problema real.
+Si las respuestas son vagas, probablemente va a enseñar lo que están viendo en el colegio sin atacar el problema real. Esto es especialmente cierto si [tú no puedes ayudar directamente con el contenido](/blog/como-ayudar-hijo-matematicas-sin-saber).
 
 ### A un preuniversitario:
 
