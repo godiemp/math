@@ -61,8 +61,8 @@ export default defineConfig({
         storageState: '.auth/student.json',
       },
       dependencies: ['setup'],
-      // Exclude auth and registration tests which need to start unauthenticated
-      testIgnore: ['**/auth.spec.ts', '**/registration.spec.ts'],
+      // Exclude tests that need their own login flow
+      testIgnore: ['**/auth.spec.ts', '**/registration.spec.ts', '**/colegio-dashboard.spec.ts'],
     },
     // Unauthenticated tests - for login/registration flows
     {
@@ -71,8 +71,8 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         // No storage state - start fresh
       },
-      // Only run auth and registration tests
-      testMatch: ['**/auth.spec.ts', '**/registration.spec.ts'],
+      // Run auth, registration, and colegio-dashboard tests (which need their own login)
+      testMatch: ['**/auth.spec.ts', '**/registration.spec.ts', '**/colegio-dashboard.spec.ts'],
     },
 
     // Uncomment to test on more browsers

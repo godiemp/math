@@ -134,8 +134,9 @@ export async function login(req: Request, res: Response): Promise<void> {
     const message = error instanceof Error ? error.message : 'Login failed';
 
     // Determine status code based on error message
+    // Use 400 (not 401) for invalid credentials to avoid triggering token refresh logic in api-client
     if (message.includes('Invalid credentials') || message.includes('required')) {
-      res.status(401).json({ error: message });
+      res.status(400).json({ error: message });
     } else {
       res.status(500).json({ error: 'Login failed' });
     }

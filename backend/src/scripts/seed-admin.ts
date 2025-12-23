@@ -367,10 +367,64 @@ async function seedAdmin() {
 
     console.log(`✅ Created session 3: ${practiceTemplate.name} (${session3Score}/${practiceTemplate.questionCount} correct, ${Math.round((session3Score/practiceTemplate.questionCount)*100)}%)`);
 
+    // Create test student accounts for preview environments
+    console.log('\n👤 Creating test student accounts...');
+
+    // Test PAES student (no grade level - full PAES access)
+    const paesStudentId = 'test-paes-student';
+    const paesStudentUsername = 'paes_student';
+    const paesStudentEmail = 'paes@test.cl';
+    const paesStudentPassword = 'test123';
+    const paesStudentDisplayName = 'Estudiante PAES';
+
+    const existingPaesStudent = await pool.query(
+      'SELECT id FROM users WHERE id = $1 OR username = $2',
+      [paesStudentId, paesStudentUsername]
+    );
+
+    if (existingPaesStudent.rows.length > 0) {
+      console.log('ℹ️  PAES student already exists, skipping...');
+    } else {
+      const paesPasswordHash = await bcrypt.hash(paesStudentPassword, 10);
+      await pool.query(
+        `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        [paesStudentId, paesStudentUsername, paesStudentEmail, paesPasswordHash, paesStudentDisplayName, 'student', now, now]
+      );
+      console.log(`✅ PAES student created: ${paesStudentUsername} (password: ${paesStudentPassword})`);
+    }
+
+    // Test 1-Medio student (grade level assigned - school content only)
+    const medioStudentId = 'test-1medio-student';
+    const medioStudentUsername = '1medio_student';
+    const medioStudentEmail = '1medio@test.cl';
+    const medioStudentPassword = 'test123';
+    const medioStudentDisplayName = 'Estudiante 1° Medio';
+
+    const existingMedioStudent = await pool.query(
+      'SELECT id FROM users WHERE id = $1 OR username = $2',
+      [medioStudentId, medioStudentUsername]
+    );
+
+    if (existingMedioStudent.rows.length > 0) {
+      console.log('ℹ️  1-Medio student already exists, skipping...');
+    } else {
+      const medioPasswordHash = await bcrypt.hash(medioStudentPassword, 10);
+      await pool.query(
+        `INSERT INTO users (id, username, email, password_hash, display_name, role, grade_level, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+        [medioStudentId, medioStudentUsername, medioStudentEmail, medioPasswordHash, medioStudentDisplayName, 'student', '1-medio', now, now]
+      );
+      console.log(`✅ 1-Medio student created: ${medioStudentUsername} (password: ${medioStudentPassword})`);
+    }
+
     console.log('\n✅ Seed script completed successfully!');
     console.log(`
 📋 Summary:
 - Admin user: ${username} (password: ${password})
+- Test accounts:
+  * PAES student: ${paesStudentUsername} (password: ${paesStudentPassword}) - Full PAES access
+  * 1-Medio student: ${medioStudentUsername} (password: ${medioStudentPassword}) - School content only
 - 3 completed sessions created with realistic PAES templates:
   1. ${m1Template.name} - ${m1Template.questionCount} preguntas, ${m1Template.durationMinutes} min
   2. ${m2Template.name} - ${m2Template.questionCount} preguntas, ${m2Template.durationMinutes} min

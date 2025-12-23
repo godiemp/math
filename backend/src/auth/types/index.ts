@@ -13,7 +13,7 @@ export interface TokenPayload {
   userId: string;
   username: string;
   email: string;
-  role: 'student' | 'admin';
+  role: 'student' | 'admin' | 'teacher';
 }
 
 /**
@@ -44,7 +44,7 @@ export interface UserRecord {
   email: string;
   password_hash: string;
   display_name: string;
-  role: 'student' | 'admin';
+  role: 'student' | 'admin' | 'teacher';
   created_at: number;
   updated_at: number;
   current_streak: number;
@@ -59,6 +59,8 @@ export interface UserRecord {
   password_reset_token: string | null;
   password_reset_token_expires_at: number | null;
   cookie_consent: 'accepted' | 'declined' | null;
+  grade_level: '1-medio' | '2-medio' | '3-medio' | '4-medio' | null;
+  assigned_by_teacher_id: string | null;
 }
 
 /**
@@ -69,7 +71,7 @@ export interface UserResponse {
   username: string;
   email: string;
   displayName: string;
-  role: 'student' | 'admin';
+  role: 'student' | 'admin' | 'teacher';
   createdAt: number;
   updatedAt?: number;
   currentStreak?: number;
@@ -79,6 +81,8 @@ export interface UserResponse {
   hasSeenWelcome?: boolean;
   emailVerified?: boolean;
   cookieConsent?: 'accepted' | 'declined' | null;
+  gradeLevel?: '1-medio' | '2-medio' | '3-medio' | '4-medio' | null;
+  assignedByTeacherId?: string | null;
 }
 
 /**

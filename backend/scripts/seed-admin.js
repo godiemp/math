@@ -47,6 +47,25 @@ async function initializeDatabase(pool) {
       END $$;
     `);
 
+    // Add grade_level and teacher assignment columns for school-based students
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='grade_level') THEN
+          ALTER TABLE users ADD COLUMN grade_level VARCHAR(20);
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='assigned_by_teacher_id') THEN
+          ALTER TABLE users ADD COLUMN assigned_by_teacher_id VARCHAR(50) REFERENCES users(id);
+        END IF;
+        IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_role_check') THEN
+          ALTER TABLE users DROP CONSTRAINT users_role_check;
+        END IF;
+        ALTER TABLE users ADD CONSTRAINT users_role_check CHECK (role IN ('student', 'admin', 'teacher'));
+      END $$;
+    `);
+
     // Create other tables
     await client.query(`
       CREATE TABLE IF NOT EXISTS refresh_tokens (
@@ -159,6 +178,8 @@ async function seedAdmin() {
     const password = 'admin123'; // Default password - CHANGE IN PRODUCTION
     const displayName = 'Administrador';
 
+    const now = Date.now();
+
     // Check if admin already exists
     const existingAdmin = await pool.query(
       'SELECT id FROM users WHERE username = $1 OR email = $2',
@@ -166,32 +187,83 @@ async function seedAdmin() {
     );
 
     if (existingAdmin.rows.length > 0) {
-      console.log('❌ Admin user already exists');
-      await pool.end();
-      process.exit(0);
+      console.log('ℹ️  Admin user already exists, skipping user creation...');
+    } else {
+      // Hash password
+      const passwordHash = await bcrypt.hash(password, 10);
+
+      // Generate user ID
+      const userId = 'admin-default';
+
+      // Insert admin user
+      await pool.query(
+        `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        [userId, username, email, passwordHash, displayName, 'admin', now, now]
+      );
+
+      console.log('✅ Admin user created successfully!');
     }
 
-    // Hash password
-    const passwordHash = await bcrypt.hash(password, 10);
+    // Create test student accounts for preview environments
+    console.log('\n👤 Creating test student accounts...');
 
-    // Generate user ID
-    const userId = 'admin-default';
-    const now = Date.now();
+    // Test PAES student (no grade level - full PAES access)
+    const paesStudentId = 'test-paes-student';
+    const paesStudentUsername = 'paes_student';
+    const paesStudentEmail = 'paes@test.cl';
+    const paesStudentPassword = 'test123';
+    const paesStudentDisplayName = 'Estudiante PAES';
 
-    // Insert admin user
-    await pool.query(
-      `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-      [userId, username, email, passwordHash, displayName, 'admin', now, now]
+    const existingPaesStudent = await pool.query(
+      'SELECT id FROM users WHERE id = $1 OR username = $2',
+      [paesStudentId, paesStudentUsername]
     );
 
-    console.log('✅ Admin user created successfully!');
-    console.log('');
-    console.log('Login credentials:');
-    console.log('  Username: admin');
-    console.log('  Password: admin123');
-    console.log('');
-    console.log('⚠️  IMPORTANT: Change this password in production!');
+    if (existingPaesStudent.rows.length > 0) {
+      console.log('ℹ️  PAES student already exists, skipping...');
+    } else {
+      const paesPasswordHash = await bcrypt.hash(paesStudentPassword, 10);
+      await pool.query(
+        `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        [paesStudentId, paesStudentUsername, paesStudentEmail, paesPasswordHash, paesStudentDisplayName, 'student', now, now]
+      );
+      console.log(`✅ PAES student created: ${paesStudentUsername} (password: ${paesStudentPassword})`);
+    }
+
+    // Test 1-Medio student (grade level assigned - school content only)
+    const medioStudentId = 'test-1medio-student';
+    const medioStudentUsername = '1medio_student';
+    const medioStudentEmail = '1medio@test.cl';
+    const medioStudentPassword = 'test123';
+    const medioStudentDisplayName = 'Estudiante 1° Medio';
+
+    const existingMedioStudent = await pool.query(
+      'SELECT id FROM users WHERE id = $1 OR username = $2',
+      [medioStudentId, medioStudentUsername]
+    );
+
+    if (existingMedioStudent.rows.length > 0) {
+      console.log('ℹ️  1-Medio student already exists, skipping...');
+    } else {
+      const medioPasswordHash = await bcrypt.hash(medioStudentPassword, 10);
+      await pool.query(
+        `INSERT INTO users (id, username, email, password_hash, display_name, role, grade_level, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+        [medioStudentId, medioStudentUsername, medioStudentEmail, medioPasswordHash, medioStudentDisplayName, 'student', '1-medio', now, now]
+      );
+      console.log(`✅ 1-Medio student created: ${medioStudentUsername} (password: ${medioStudentPassword})`);
+    }
+
+    console.log('\n✅ Seed script completed successfully!');
+    console.log(`
+📋 Summary:
+- Admin user: ${username} (password: ${password})
+- Test accounts:
+  * PAES student: ${paesStudentUsername} (password: ${paesStudentPassword}) - Full PAES access
+  * 1-Medio student: ${medioStudentUsername} (password: ${medioStudentPassword}) - School content only
+    `);
 
     await pool.end();
     process.exit(0);

@@ -184,6 +184,8 @@ interface UseDashboardResult {
   isAdmin: boolean;
   isPaidUser: boolean;
   isOnTrial: boolean;
+  isColegioStudent: boolean;
+  gradeLevel: string | undefined;
   isLoading: boolean;
   // Sessions
   nextSession: LiveSession | null;
@@ -211,6 +213,10 @@ interface UseDashboardResult {
 export const useDashboard = (): UseDashboardResult => {
   const { user, isAdmin, isPaidUser, isLoading: authLoading } = useAuth();
   const isOnTrial = user?.subscription?.status === 'trial';
+
+  // Determine if user is a colegio (school) student based on gradeLevel
+  const isColegioStudent = !!user?.gradeLevel;
+  const gradeLevel = user?.gradeLevel;
 
   const {
     isLoadingData,
@@ -248,6 +254,8 @@ export const useDashboard = (): UseDashboardResult => {
     isAdmin,
     isPaidUser,
     isOnTrial,
+    isColegioStudent,
+    gradeLevel,
     isLoading,
     nextSession,
     registeredSessions,

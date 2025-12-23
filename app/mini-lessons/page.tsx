@@ -1,9 +1,12 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Calculator, FunctionSquare, Shapes, BarChart3, type LucideIcon } from 'lucide-react';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
+import { useContentAccess } from '@/hooks/useContentAccess';
 import { SUBJECTS, SUBJECT_LABELS, getUnitCount, subjectToSlug, type Subject } from '@/lib/lessons/thematicUnits';
 
 const SUBJECT_ICONS: Record<Subject, LucideIcon> = {
@@ -85,8 +88,26 @@ function LevelSection({ level, title }: LevelSectionProps) {
 }
 
 function MiniLessonsContent() {
+  const router = useRouter();
   const { user } = useAuth();
+  const { isGradeLevelStudent, assignedGrade } = useContentAccess();
   const showM2 = user?.targetLevel !== 'M1_ONLY';
+
+  // Redirect grade-level students to their grade content
+  useEffect(() => {
+    if (isGradeLevelStudent && assignedGrade) {
+      router.replace(`/mini-lessons/colegios/${assignedGrade}`);
+    }
+  }, [isGradeLevelStudent, assignedGrade, router]);
+
+  // Show loading while redirecting
+  if (isGradeLevelStudent) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="text-gray-500 dark:text-gray-400">Cargando...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
