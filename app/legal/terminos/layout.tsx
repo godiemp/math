@@ -6,7 +6,7 @@ import { createBreadcrumbSchema } from "@/lib/seo/schemas";
 export const metadata: Metadata = {
   title: "Términos y Condiciones",
   description:
-    "Términos y condiciones de uso de SimplePAES, plataforma de preparación PAES de Matemática en Chile.",
+    "Términos y condiciones de uso de SimplePAES, plataforma de matemáticas para enseñanza media y PAES en Chile.",
   alternates: {
     canonical: `${SITE_URL}/legal/terminos`,
   },

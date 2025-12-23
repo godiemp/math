@@ -8,13 +8,13 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Blog - SimplePAES',
-  description: 'Consejos, estrategias y recursos para mejorar en matemáticas y prepararte para la PAES.',
+  description: 'Consejos, estrategias y recursos para dominar matemáticas de enseñanza media y prepararte para la PAES.',
   alternates: {
     canonical: `${SITE_URL}/blog`,
   },
   openGraph: {
     title: 'Blog - SimplePAES',
-    description: 'Consejos, estrategias y recursos para mejorar en matemáticas y prepararte para la PAES.',
+    description: 'Consejos, estrategias y recursos para dominar matemáticas de enseñanza media y prepararte para la PAES.',
     type: 'website',
     url: `${SITE_URL}/blog`,
     siteName: 'SimplePAES',
@@ -28,7 +28,7 @@ export default function BlogPage() {
     '@context': 'https://schema.org',
     '@type': 'Blog',
     name: 'Blog SimplePAES',
-    description: 'Consejos, estrategias y recursos para mejorar en matemáticas y prepararte para la PAES.',
+    description: 'Consejos, estrategias y recursos para dominar matemáticas de enseñanza media y prepararte para la PAES.',
     url: `${SITE_URL}/blog`,
     publisher: {
       '@type': 'Organization',

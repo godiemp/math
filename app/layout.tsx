@@ -16,12 +16,19 @@ import { SITE_URL, SITE_NAME, BRAND_COLOR } from "@/lib/constants";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} - Preparación PAES Matemática Chile 2025`,
+    default: `${SITE_NAME} - Matemáticas Enseñanza Media + PAES Chile`,
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Plataforma de preparación para la PAES de Matemática en Chile. Practica con +900 ejercicios del temario oficial, feedback personalizado, y seguimiento de progreso. Prepárate para la Prueba de Acceso a la Educación Superior.",
+    "Domina matemáticas de enseñanza media con +900 ejercicios, mini-lecciones y Tutor AI 24/7. De 1° a 4° medio. Prepárate para la PAES con feedback personalizado.",
   keywords: [
+    "matemáticas enseñanza media",
+    "matemáticas 1 medio",
+    "matemáticas 2 medio",
+    "matemáticas 3 medio",
+    "matemáticas 4 medio",
+    "ejercicios matemáticas enseñanza media",
+    "aprender matemáticas Chile",
     "PAES",
     "PAES matemática",
     "preparación PAES",
@@ -63,17 +70,17 @@ export const metadata: Metadata = {
     locale: "es_CL",
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: `${SITE_NAME} - Preparación PAES Matemática Chile`,
+    title: `${SITE_NAME} - Matemáticas Enseñanza Media y PAES Chile`,
     description:
-      "Prepara la PAES de Matemática con +900 ejercicios del temario oficial, feedback personalizado y seguimiento de progreso.",
+      "Domina matemáticas de 1° a 4° medio con +900 ejercicios y Tutor AI 24/7. Preparación PAES incluida.",
   },
   twitter: {
     card: "summary_large_image",
     site: "@simplepaes",
     creator: "@simplepaes",
-    title: `${SITE_NAME} - Preparación PAES Matemática Chile`,
+    title: `${SITE_NAME} - Matemáticas Enseñanza Media y PAES Chile`,
     description:
-      "Prepara la PAES de Matemática con +900 ejercicios del temario oficial y feedback personalizado.",
+      "Domina matemáticas de 1° a 4° medio con +900 ejercicios y Tutor AI 24/7. Preparación PAES incluida.",
   },
   verification: {
     google: "GOOGLE_SITE_VERIFICATION_CODE",
