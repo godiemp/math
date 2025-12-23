@@ -54,7 +54,7 @@ export function requireAdmin(
 /**
  * Middleware to require specific role
  */
-export function requireRole(role: 'student' | 'admin') {
+export function requireRole(role: 'student' | 'admin' | 'teacher') {
   return (req: Request, res: Response, next: NextFunction): void => {
     if (!req.user) {
       res.status(401).json({ error: 'Authentication required' });
@@ -68,4 +68,30 @@ export function requireRole(role: 'student' | 'admin') {
 
     next();
   };
+}
+
+/**
+ * Middleware to require teacher or admin role
+ */
+export function requireTeacher(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
+  // Skip for OPTIONS requests (CORS preflight)
+  if (req.method === 'OPTIONS') {
+    return next();
+  }
+
+  if (!req.user) {
+    res.status(401).json({ error: 'Authentication required' });
+    return;
+  }
+
+  if (req.user.role !== 'teacher' && req.user.role !== 'admin') {
+    res.status(403).json({ error: 'Teacher access required' });
+    return;
+  }
+
+  next();
 }

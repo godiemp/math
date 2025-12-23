@@ -27,6 +27,7 @@ export type {
   Subject,
   QuizMode,
   UserRole,
+  StudentGradeLevel,
   SessionStatus,
   MasteryLevel,
   VisualDataType,

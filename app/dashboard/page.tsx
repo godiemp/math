@@ -7,6 +7,7 @@ import { LiveSession } from "@/lib/types";
 import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar, Callout } from "@/components/ui";
 import { ShareModal } from "@/components/shared/ShareModal";
 import { WelcomeMessage } from "@/components/shared/WelcomeMessage";
+import { ColegioDashboardView } from "@/components/dashboard/ColegioDashboardView";
 import { Share2 } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { useDashboard } from "@/hooks/useDashboard";
@@ -498,6 +499,8 @@ function DashboardContent() {
     isAdmin,
     isPaidUser,
     isOnTrial,
+    isColegioStudent,
+    gradeLevel,
     isLoading,
     nextSession,
     sessionsError,
@@ -531,6 +534,24 @@ function DashboardContent() {
           </Button>
         </Card>
       </div>
+    );
+  }
+
+  // Render different dashboard for colegio (school) students
+  if (isColegioStudent && gradeLevel) {
+    return (
+      <ColegioDashboardView
+        user={user}
+        gradeLevel={gradeLevel}
+        isAdmin={isAdmin}
+        isResendingEmail={isResendingEmail}
+        emailSentMessage={emailSentMessage}
+        onResendEmail={handleResendEmail}
+        isWelcomeOpen={isWelcomeOpen}
+        onWelcomeClose={handleWelcomeClose}
+        onLogout={handleLogout}
+        onNavigate={navigateTo}
+      />
     );
   }
 

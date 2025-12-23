@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp, Clock, Lock, Star, CheckCircle } from 'lucide-react';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
+import { useContentAccess } from '@/hooks/useContentAccess';
 import {
   getGradeBySlug,
   getOAByGradeGroupedByEje,
@@ -175,6 +176,10 @@ function GradeContent() {
   const params = useParams();
   const gradeSlug = params.grade as string;
   const gradeInfo = getGradeBySlug(gradeSlug);
+  const { isGradeLevelStudent } = useContentAccess();
+
+  // Colegio students go back to dashboard, others go to grade selection
+  const backLink = isGradeLevelStudent ? '/dashboard' : '/mini-lessons/colegios';
 
   if (!gradeInfo || !gradeInfo.isAvailable) {
     return (
@@ -184,10 +189,10 @@ function GradeContent() {
             Nivel no encontrado
           </h1>
           <Link
-            href="/mini-lessons/colegios"
+            href={backLink}
             className="text-purple-600 hover:text-purple-700 dark:text-purple-400"
           >
-            Volver a niveles
+            Volver
           </Link>
         </div>
       </div>
@@ -203,7 +208,7 @@ function GradeContent() {
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link
-              href="/mini-lessons/colegios"
+              href={backLink}
               className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               <ArrowLeft size={20} />

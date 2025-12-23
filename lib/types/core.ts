@@ -46,8 +46,16 @@ export type QuizMode = 'zen' | 'rapidfire';
  * User role types
  * - student: Regular user who can take quizzes and join sessions
  * - admin: Administrator who can create and manage sessions
+ * - teacher: Teacher who can assign students to grade levels and view progress
  */
-export type UserRole = 'student' | 'admin';
+export type UserRole = 'student' | 'admin' | 'teacher';
+
+/**
+ * Student grade level (school-based)
+ * When set, students see only grade-appropriate content (no M1/M2)
+ * NULL means PAES student who sees M1/M2 content based on targetLevel
+ */
+export type StudentGradeLevel = '1-medio' | '2-medio' | '3-medio' | '4-medio';
 
 /**
  * Live session status lifecycle
@@ -147,6 +155,10 @@ export interface User {
   longestStreak?: number;
   lastPracticeDate?: string | null;
   targetLevel?: 'M1_ONLY' | 'M1_AND_M2';
+  /** School grade level assigned by teacher. When set, user sees grade content instead of M1/M2 */
+  gradeLevel?: StudentGradeLevel;
+  /** ID of the teacher who assigned the grade level */
+  assignedByTeacherId?: string;
   hasSeenWelcome?: boolean;
   emailVerified?: boolean;
   cookieConsent?: 'accepted' | 'declined' | null;

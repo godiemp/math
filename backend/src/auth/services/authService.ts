@@ -47,6 +47,8 @@ function formatUserResponse(user: UserRecord): UserResponse {
     hasSeenWelcome: user.has_seen_welcome,
     emailVerified: user.email_verified,
     cookieConsent: user.cookie_consent,
+    gradeLevel: user.grade_level,
+    assignedByTeacherId: user.assigned_by_teacher_id,
   };
 }
 
