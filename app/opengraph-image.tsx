@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "SimplePAES - Preparación PAES Matemática Chile";
+export const alt = "SimplePAES - Matemáticas Enseñanza Media y PAES Chile";
 export const size = {
   width: 1200,
   height: 630,
@@ -91,7 +91,7 @@ export default async function Image() {
             textAlign: "center",
           }}
         >
-          Preparación PAES Matemática Chile
+          Matemáticas Enseñanza Media + PAES Chile
         </div>
 
         {/* Stats */}
