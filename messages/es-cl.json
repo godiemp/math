@@ -945,6 +945,7 @@
       "generator": "generator",
       "upload": "upload",
       "schools": "colegios",
+      "colegiosDemo": "demos colegios",
       "studyBuddyDebug": "study buddy debug",
       "rapidFireDebug": "rapid fire debug",
       "zenDebug": "zen debug",
