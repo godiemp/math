@@ -83,10 +83,7 @@ export const metadata: Metadata = {
       "Domina matemáticas de 1° a 4° medio con +900 ejercicios y Tutor AI 24/7. Preparación PAES incluida.",
   },
   verification: {
-    google: "GOOGLE_SITE_VERIFICATION_CODE",
-    other: {
-      "msvalidate.01": "BING_SITE_VERIFICATION_CODE",
-    },
+    google: "qUpZQBRnFZsJlAUvhjXsEIqyvGOpKlJUq-nQNONxrXc",
   },
   alternates: {
     canonical: SITE_URL,
