@@ -172,3 +172,16 @@ export type {
   UpdateKnowledgeDeclarationsRequest,
   UpdateKnowledgeDeclarationsResponse,
 } from './knowledge';
+
+// ============================================================================
+// DEMO ACCOUNT TYPES (School Free Trials)
+// ============================================================================
+export type {
+  GradeLevel,
+  CreateDemoAccountRequest,
+  CreateDemoAccountResponse,
+  DemoAccount,
+  GetDemoAccountsResponse,
+} from './demo-accounts';
+
+export { GRADE_LEVEL_LABELS, GRADE_LEVELS } from './demo-accounts';

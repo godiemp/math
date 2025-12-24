@@ -125,6 +125,38 @@ export const initializeDatabase = async (): Promise<void> => {
       END $$;
     `);
 
+    // Add demo account columns for school free trials
+    await client.query(`
+      DO $$
+      BEGIN
+        -- Flag to identify demo accounts
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='is_demo_account') THEN
+          ALTER TABLE users ADD COLUMN is_demo_account BOOLEAN DEFAULT FALSE;
+        END IF;
+        -- School RBD code (links to school data)
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='demo_school_rbd') THEN
+          ALTER TABLE users ADD COLUMN demo_school_rbd INTEGER;
+        END IF;
+        -- School name (denormalized for easy display)
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='demo_school_name') THEN
+          ALTER TABLE users ADD COLUMN demo_school_name VARCHAR(255);
+        END IF;
+        -- When the demo was created
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='demo_created_at') THEN
+          ALTER TABLE users ADD COLUMN demo_created_at BIGINT;
+        END IF;
+        -- Admin who created the demo account
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='demo_created_by') THEN
+          ALTER TABLE users ADD COLUMN demo_created_by VARCHAR(50) REFERENCES users(id);
+        END IF;
+      END $$;
+    `);
+
     // Create refresh_tokens table
     await client.query(`
       CREATE TABLE IF NOT EXISTS refresh_tokens (
@@ -542,6 +574,8 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_grade_level ON users(grade_level)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_assigned_by_teacher ON users(assigned_by_teacher_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_users_is_demo_account ON users(is_demo_account)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_users_demo_school_rbd ON users(demo_school_rbd)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_verification_token ON users(verification_token)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_password_reset_token ON users(password_reset_token)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id)');
