@@ -1,0 +1,184 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check, X, Award } from 'lucide-react';
+
+type Phase = 'problem' | 'correct' | 'next';
+const PHASE_DURATIONS = { problem: 1500, correct: 1200, next: 800 };
+
+const PROBLEMS = [
+  { expression: '12 + 8', answer: '20', color: '#22c55e', op: '+' },
+  { expression: '45 − 17', answer: '28', color: '#3b82f6', op: '−' },
+  { expression: '7 × 6', answer: '42', color: '#8b5cf6', op: '×' },
+  { expression: '56 ÷ 8', answer: '7', color: '#f59e0b', op: '÷' },
+];
+
+export function OperationsDemo() {
+  const [problemIndex, setProblemIndex] = useState(0);
+  const [phase, setPhase] = useState<Phase>('problem');
+  const [inputValue, setInputValue] = useState('');
+  const [correctCount, setCorrectCount] = useState(0);
+
+  const problem = PROBLEMS[problemIndex];
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (phase === 'problem') {
+      // Simulate typing the answer
+      timer = setTimeout(() => {
+        setInputValue(problem.answer);
+        setTimeout(() => {
+          setPhase('correct');
+          setCorrectCount((c) => c + 1);
+        }, 400);
+      }, PHASE_DURATIONS.problem);
+    } else if (phase === 'correct') {
+      timer = setTimeout(() => {
+        setPhase('next');
+      }, PHASE_DURATIONS.correct);
+    } else if (phase === 'next') {
+      timer = setTimeout(() => {
+        setProblemIndex((i) => (i + 1) % PROBLEMS.length);
+        setPhase('problem');
+        setInputValue('');
+        if (problemIndex === PROBLEMS.length - 1) {
+          setCorrectCount(0);
+        }
+      }, PHASE_DURATIONS.next);
+    }
+
+    return () => clearTimeout(timer);
+  }, [phase, problem.answer, problemIndex]);
+
+  return (
+    <div className="w-full h-full bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-blue-900/30 dark:via-gray-900 dark:to-purple-900/30 flex flex-col">
+      {/* Header */}
+      <div
+        className="px-4 py-2 flex items-center justify-between flex-shrink-0"
+        style={{ borderBottom: '1px solid var(--color-separator)' }}
+      >
+        <div className="flex items-center gap-2">
+          <div
+            className="px-2 py-1 rounded-full text-xs font-medium text-white"
+            style={{ background: problem.color }}
+          >
+            Nivel {problemIndex + 1}
+          </div>
+        </div>
+        <div className="text-xs" style={{ color: 'var(--color-label-secondary)' }}>
+          {problemIndex + 1} / {PROBLEMS.length}
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className="flex-1 flex flex-col items-center justify-center p-3 min-h-0">
+        <AnimatePresence mode="wait">
+          {phase !== 'next' ? (
+            <motion.div
+              key={`problem-${problemIndex}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="text-center"
+            >
+              {/* Problem */}
+              <motion.div
+                className="mb-4 px-5 py-3 rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/40 dark:to-purple-900/40"
+              >
+                <p className="text-xs mb-1" style={{ color: 'var(--color-label-secondary)' }}>
+                  Resuelve la operación
+                </p>
+                <div
+                  className="text-2xl font-bold"
+                  style={{ color: 'var(--color-label-primary)' }}
+                >
+                  {problem.expression} = <span style={{ color: problem.color }}>?</span>
+                </div>
+              </motion.div>
+
+              {/* Input */}
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <motion.div
+                  className={`w-16 h-10 rounded-lg flex items-center justify-center text-lg font-bold ${
+                    phase === 'correct' ? 'text-green-500 border-green-500' : 'border-[var(--color-separator)]'
+                  }`}
+                  style={{
+                    background: 'var(--color-surface)',
+                    borderWidth: '2px',
+                    borderStyle: 'solid',
+                    color: phase === 'correct' ? undefined : 'var(--color-label-primary)',
+                  }}
+                  animate={{
+                    borderColor: phase === 'correct' ? '#22c55e' : 'var(--color-separator)',
+                  }}
+                >
+                  {inputValue || '|'}
+                </motion.div>
+              </div>
+
+              {/* Feedback */}
+              <div className="h-9">
+                <AnimatePresence>
+                  {phase === 'correct' && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300"
+                    >
+                      <Check size={16} />
+                      <span className="text-sm font-medium">¡Correcto!</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="level-complete"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center"
+            >
+              <motion.div
+                animate={{ y: [0, -5, 0] }}
+                transition={{ duration: 0.5, repeat: Infinity }}
+              >
+                <Award size={40} className="mx-auto mb-2" style={{ color: '#f59e0b' }} />
+              </motion.div>
+              <p className="text-sm font-semibold" style={{ color: 'var(--color-label-primary)' }}>
+                ¡Nivel completado!
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Footer stats */}
+      <div
+        className="px-4 py-2 flex items-center justify-center gap-6 flex-shrink-0"
+        style={{ borderTop: '1px solid var(--color-separator)', background: 'var(--color-surface)' }}
+      >
+        <div className="text-center">
+          <div className="text-base font-bold" style={{ color: '#22c55e' }}>
+            {correctCount}
+          </div>
+          <div className="text-xs" style={{ color: 'var(--color-label-secondary)' }}>
+            correctas
+          </div>
+        </div>
+        <div className="text-center">
+          <div className="text-base font-bold" style={{ color: 'var(--color-tint)' }}>
+            100%
+          </div>
+          <div className="text-xs" style={{ color: 'var(--color-label-secondary)' }}>
+            precisión
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

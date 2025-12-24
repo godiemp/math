@@ -8,7 +8,6 @@ export function LandingNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { href: '/como-funciona', label: 'Cómo Funciona' },
     { href: '/pricing', label: 'Precios' },
     { href: '/blog', label: 'Blog' },
   ];

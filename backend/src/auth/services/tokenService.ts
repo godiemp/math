@@ -97,7 +97,7 @@ export function createTokenPayload(user: {
   id: string;
   username: string;
   email: string;
-  role: 'student' | 'admin';
+  role: 'student' | 'admin' | 'teacher';
 }): TokenPayload {
   return {
     userId: user.id,

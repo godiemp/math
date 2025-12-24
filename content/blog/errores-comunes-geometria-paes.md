@@ -1,7 +1,7 @@
 ---
 title: "Los 7 errores de geometría que más cuestan puntos en la PAES"
 description: "Áreas, volúmenes y Pitágoras: los errores geométricos más frecuentes en la PAES M1 y cómo evitarlos."
-date: "2024-12-19"
+date: "2025-12-19"
 author: "SimplePAES"
 tags: ["PAES", "geometría", "errores", "matemáticas", "Pitágoras", "áreas"]
 published: true
@@ -210,6 +210,7 @@ La geometría tiene una ventaja: puedes verificar visualmente. Antes de marcar t
 Para más errores comunes que cuestan puntos, revisa:
 - [Los 7 errores de álgebra más frecuentes en la PAES](/blog/errores-comunes-algebra-paes)
 - [Los 7 errores de números más frecuentes en la PAES](/blog/errores-comunes-numeros-paes)
+- [Los 7 errores de probabilidad y estadística más frecuentes en la PAES](/blog/errores-comunes-probabilidad-estadistica-paes)
 
 ---
 

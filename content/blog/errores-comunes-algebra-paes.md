@@ -1,7 +1,7 @@
 ---
 title: "Los 7 errores de álgebra que más cuestan puntos en la PAES"
 description: "Descubre los errores algebraicos más frecuentes en la PAES M1 y aprende a evitarlos con ejemplos claros."
-date: "2024-12-17"
+date: "2025-12-17"
 author: "SimplePAES"
 tags: ["PAES", "álgebra", "errores", "matemáticas", "consejos"]
 published: true
@@ -186,6 +186,11 @@ La mejor defensa contra estos errores tiene dos partes:
 **2. Práctica deliberada:** Cada uno de estos errores es un patrón. Cuando has resuelto 50 ejercicios de binomios al cuadrado, tu cerebro deja de tomar el atajo incorrecto. La velocidad viene de la práctica, no de saltar pasos.
 
 Los errores no son señal de que "no eres bueno para matemáticas". Son información sobre qué patrones necesitas practicar más. Cada error que identificas y corriges es un punto que no vas a perder en la PAES.
+
+Para más errores comunes que cuestan puntos, revisa:
+- [Los 7 errores de números más frecuentes en la PAES](/blog/errores-comunes-numeros-paes)
+- [Los 7 errores de geometría más frecuentes en la PAES](/blog/errores-comunes-geometria-paes)
+- [Los 7 errores de probabilidad y estadística más frecuentes en la PAES](/blog/errores-comunes-probabilidad-estadistica-paes)
 
 ---
 

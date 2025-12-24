@@ -1,7 +1,7 @@
 ---
 title: "Cómo diagnosticar lagunas matemáticas en tu curso (sin corregir 35 pruebas)"
 description: "Métodos prácticos para identificar qué temas necesita reforzar cada estudiante, sin pasar horas corrigiendo."
-date: "2024-12-20"
+date: "2025-12-20"
 author: "SimplePAES"
 tags: ["profesores", "matemáticas", "diagnóstico", "educación media", "enseñanza"]
 published: true

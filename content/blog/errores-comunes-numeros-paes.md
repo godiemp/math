@@ -1,7 +1,7 @@
 ---
 title: "Los 7 errores de números que más cuestan puntos en la PAES"
 description: "Fracciones, porcentajes y potencias: los errores más frecuentes en la PAES M1 y cómo evitarlos."
-date: "2024-12-19"
+date: "2025-12-19"
 author: "SimplePAES"
 tags: ["PAES", "números", "errores", "fracciones", "porcentajes", "matemáticas"]
 published: true
@@ -179,7 +179,10 @@ Los errores de números son los más fáciles de corregir porque son mecánicos.
 
 **3. Usa sentido común como verificación:** Si calculas que "el 30% de 200 es 230", pregúntate: ¿tiene sentido que el 30% de algo sea mayor que el número original? No. Algo está mal.
 
-Para más errores comunes que cuestan puntos, revisa [los 7 errores de álgebra más frecuentes en la PAES](/blog/errores-comunes-algebra-paes).
+Para más errores comunes que cuestan puntos, revisa:
+- [Los 7 errores de álgebra más frecuentes en la PAES](/blog/errores-comunes-algebra-paes)
+- [Los 7 errores de geometría más frecuentes en la PAES](/blog/errores-comunes-geometria-paes)
+- [Los 7 errores de probabilidad y estadística más frecuentes en la PAES](/blog/errores-comunes-probabilidad-estadistica-paes)
 
 ---
 

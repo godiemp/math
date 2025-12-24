@@ -221,7 +221,7 @@ export const m2Prob002Questions: Question[] = [
     subject: 'probabilidad',
     operacionBase: 'P(E|+) = \\frac{P(+|E) \\times P(E)}{P(+)}',
     questionLatex: '\\text{Un examen de laboratorio detecta una enfermedad rara que afecta al 1\\% de la población. La prueba acierta en el 99\\% de los casos (tanto para enfermos como para sanos). Si el resultado es positivo, ¿cuál es la probabilidad de estar enfermo?}',
-    options: ['\\frac{1}{2}', '\\frac{99}{100}', '\\frac{1}{100}', '\\frac{99}{198}'],
+    options: ['\\frac{1}{2}', '\\frac{99}{100}', '\\frac{1}{100}', '\\frac{49}{100}'],
     correctAnswer: 0,
     explanation: 'P(E|+) = \\frac{0.99 \\times 0.01}{0.99 \\times 0.01 + 0.01 \\times 0.99} = \\frac{0.0099}{0.0198} = \\frac{1}{2}',
     difficulty: 'hard',

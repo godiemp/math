@@ -17,16 +17,58 @@ Invoke this skill when:
 
 ---
 
-# TWO-PHASE WORKFLOW
+# STEP 0: IDENTIFY THE SUBJECT
 
-Creating a mini-lesson requires TWO mandatory phases:
+**Before anything else, identify which mathematical subject the lesson covers:**
 
 ```
+┌─────────────────────────────────────────────────────────────┐
+│  📐 ÁLGEBRA (Algebra)                                       │
+│  Variables, equations, expressions, factoring               │
+│  → Read: .claude/skills/mini-lessons/subjects/algebra-patterns.md │
+├─────────────────────────────────────────────────────────────┤
+│  🔢 NÚMEROS (Numbers)                                       │
+│  Fractions, percentages, decimals, operations               │
+│  → Read: .claude/skills/mini-lessons/subjects/numbers-patterns.md │
+├─────────────────────────────────────────────────────────────┤
+│  📏 GEOMETRÍA (Geometry)                                    │
+│  Shapes, areas, perimeters, theorems                        │
+│  → Read: .claude/skills/mini-lessons/subjects/geometry-patterns.md │
+├─────────────────────────────────────────────────────────────┤
+│  🎲 PROBABILIDAD (Probability & Statistics)                 │
+│  Probability, data, counting, graphs                        │
+│  → Read: .claude/skills/mini-lessons/subjects/probability-patterns.md │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Each subject has distinct patterns for hooks, explore steps, and explain steps.**
+Read the subject-specific guide BEFORE proceeding to Phase 1.
+
+**Subject Selection Guide:**
+→ `.claude/skills/mini-lessons/subjects/README.md`
+
+---
+
+# THREE-STEP WORKFLOW
+
+Creating a mini-lesson requires THREE steps:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  STEP 0: IDENTIFY SUBJECT                                   │
+│  ─────────────────────────────────────────────────────────  │
+│  Determine if this is Álgebra, Números, Geometría, or       │
+│  Probabilidad. Read the subject-specific pattern guide.     │
+│                                                             │
+│  Read: .claude/skills/mini-lessons/subjects/README.md       │
+│  Read: .claude/skills/mini-lessons/subjects/{subject}-patterns.md │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
 ┌─────────────────────────────────────────────────────────────┐
 │  PHASE 1: DEEP THINKING (Pedagogical Design)                │
 │  ─────────────────────────────────────────────────────────  │
 │  Use extended thinking to complete pedagogical design       │
-│  BEFORE writing any code.                                   │
+│  BEFORE writing any code. Apply subject-specific patterns.  │
 │                                                             │
 │  Read: .claude/skills/mini-lessons/pedagogical-design.md    │
 └─────────────────────────────────────────────────────────────┘
@@ -35,6 +77,7 @@ Creating a mini-lesson requires TWO mandatory phases:
 │  PHASE 2: IMPLEMENTATION (Error-Free Execution)             │
 │  ─────────────────────────────────────────────────────────  │
 │  Follow the 5 Critical Rules and create all files.          │
+│  Use subject-specific templates and patterns.               │
 │                                                             │
 │  Read: .claude/skills/mini-lessons/anti-patterns.md         │
 │  Read: .claude/skills/mini-lessons/step-templates.md        │
@@ -62,14 +105,118 @@ Creating a mini-lesson requires TWO mandatory phases:
 
 ## The 6-Step Structure
 
-| Step | Type | Purpose | Required |
-|------|------|---------|----------|
-| 1 | `hook` | Engage with real-world scenario | Yes |
-| 2 | `explore` | Interactive discovery of patterns | Yes |
-| 3 | `explain` | Theory with tabbed interface | Optional |
-| 4 | `explore` | Classification exercises | Yes |
-| 5 | `practice` | Guided problem-solving | Yes |
-| 6 | `verify` | Checkpoint quiz (3/4 to pass) | Yes |
+| Step | File Name | Type in Registry | Purpose | Required |
+|------|-----------|------------------|---------|----------|
+| 1 | `Step1Hook.tsx` | `hook` | Engage with real-world scenario | Yes |
+| 2 | `Step2Explore.tsx` | `explore` | Interactive discovery of patterns | Yes |
+| 3 | `Step3Explain.tsx` | `explain` | Theory with tabbed interface | Optional |
+| 4 | `Step4Classify.tsx` | `explore` | Classification exercises | Yes |
+| 5 | `Step5Practice.tsx` | `practice` | Guided problem-solving | Yes |
+| 6 | `Step6Verify.tsx` | `verify` | Checkpoint quiz (3/4 to pass) | Yes |
+
+> **Important: Step Types vs File Names**
+>
+> The TypeScript types define 5 step types: `'hook' | 'explore' | 'explain' | 'practice' | 'verify'`
+>
+> Component files are named `Step4Classify.tsx` but the **step type** in the lesson registration
+> must use `type: 'explore'` (since 'classify' is not a valid type). The step `id` can be 'classify'.
+>
+> ```typescript
+> // CORRECT registration - id is 'classify', type is 'explore'
+> { id: 'classify', type: 'explore', title: 'Clasifica las Expresiones' }
+> ```
+
+### 5-Step Lessons (Variation)
+
+Some lessons skip Step3Explain when theory is integrated into exploration:
+
+```
+components/lessons/m1/{lesson-slug}/
+  ├─ Step1Hook.tsx
+  ├─ Step2Explore.tsx      # Contains embedded theory
+  ├─ Step3Classify.tsx     # Replaces Step4, numbered Step3
+  ├─ Step4Practice.tsx     # Replaces Step5, numbered Step4
+  ├─ Step5Verify.tsx       # Replaces Step6, numbered Step5
+  └─ index.ts
+```
+
+**When to use 5-step:**
+- Geometry lessons where visual exploration IS the explanation
+- Simple concepts that don't need separate theory step
+- Example: `area-paralelogramos-trapecios`
+
+### Step1Hook: Multi-Phase Pattern (Recommended)
+
+80%+ of lessons use the 4-phase hook pattern. This is the PRIMARY approach:
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│ Phase 1: SCENARIO                                            │
+│ Present real-world situation with visual (emoji, SVG, image) │
+│ "Don Pedro tiene una frutería..."                            │
+│ [Explorar →]                                                 │
+└──────────────────────────────────────────────────────────────┘
+                              ↓
+┌──────────────────────────────────────────────────────────────┐
+│ Phase 2: QUESTION                                            │
+│ Pose the puzzle with multiple-choice options                 │
+│ Show options A, B, C, D                                      │
+│ [Verificar]                                                  │
+└──────────────────────────────────────────────────────────────┘
+                              ↓
+┌──────────────────────────────────────────────────────────────┐
+│ Phase 3: REVEAL                                              │
+│ Show if correct/incorrect with brief feedback                │
+│ "¡Correcto!" or "¡Casi!"                                     │
+│ (auto-advance after 1.5s)                                    │
+└──────────────────────────────────────────────────────────────┘
+                              ↓
+┌──────────────────────────────────────────────────────────────┐
+│ Phase 4: RESULT                                              │
+│ Bridge to the math concept                                   │
+│ "Esto es exactamente lo que hacemos con..."                  │
+│ [Descubrir el patrón →]                                      │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**Implementation:**
+```typescript
+type Phase = 'scenario' | 'question' | 'reveal' | 'result';
+const [phase, setPhase] = useState<Phase>('scenario');
+```
+
+### Step3Explain: Pattern Decision Tree
+
+Choose the right pattern for your Explain step:
+
+```
+                    ┌─────────────────────────────────────┐
+                    │ Does the content have multiple      │
+                    │ PARALLEL concepts that can be       │
+                    │ explored in any order?              │
+                    └───────────────┬─────────────────────┘
+                                    │
+               ┌────────────────────┴────────────────────┐
+               │                                         │
+              YES                                       NO
+               │                                         │
+               ▼                                         ▼
+    ┌──────────────────────┐              ┌──────────────────────┐
+    │ Use TABBED Interface │              │ Use PHASE-BASED      │
+    │                      │              │ Navigation           │
+    │ • Factor Numérico    │              │                      │
+    │ • Factor Variable    │              │ • Definition → Method│
+    │ • Factor Combinado   │              │ • Method → Formula   │
+    │ • Tips               │              │ • Formula → Tips     │
+    │                      │              │                      │
+    │ User can jump to any │              │ Content builds on    │
+    │ tab in any order     │              │ previous phase       │
+    └──────────────────────┘              └──────────────────────┘
+```
+
+**Examples:**
+- **Tabbed**: Factor Común (4 types), Productos Notables (4 formulas)
+- **Phase-based**: MCM/MCD (definition → method → formula), Ecuaciones Lineales
 
 ### Acceptable Variations
 
@@ -83,6 +230,37 @@ While the patterns above are preferred, these variations are also acceptable:
 
 3. **5-Step Pipeline**: Some geometry lessons skip Step3Explain
    - Only for lessons where theory is integrated into exploration
+
+### Custom Step File Names
+
+While the standard naming is `Step2Explore.tsx`, you can use descriptive names to clarify the step's purpose. **43 of 48 lessons use custom names.** The step number must match the progression.
+
+**Common custom names:**
+```
+Step2ExploreMultiples.tsx    # Múltiplos lesson
+Step2ExploreDice.tsx         # Probabilidad with dice
+Step2FractionBars.tsx        # Fracciones visualization
+Step3Proof.tsx               # Teorema Pitágoras
+Step4Comparison.tsx          # Comparing numbers
+Step5ExploreTiles.tsx        # MCD with tile visualization
+Step5AbsoluteValue.tsx       # Valor absoluto exploration
+```
+
+**Rules for custom names:**
+1. **Keep step number prefix** - `Step2...`, `Step3...`, etc.
+2. **Be descriptive** - Name describes the activity or content
+3. **Update index.ts exports** - Match the actual file names
+4. **Match lesson registry** - The `id` in steps array should align
+
+**Example index.ts with custom names:**
+```typescript
+export { default as Step1Hook } from './Step1Hook';
+export { default as Step2ExploreMultiples } from './Step2ExploreMultiples';
+export { default as Step3Explain } from './Step3Explain';
+export { default as Step4Practice } from './Step4Practice';
+export { default as Step5ExploreSynchronization } from './Step5ExploreSynchronization';
+export { default as Step6Verify } from './Step6Verify';
+```
 
 ## File Organization
 
@@ -224,17 +402,39 @@ Add to `lib/lessons/lessons/{subject}.ts`:
   thematicUnit: 'M1-XXX-001',
   skills: ['skill-1', 'skill-2'],
   estimatedMinutes: 14,
-  minEducOA: ['MA1M-OA-XX'],
+  minEducOA: ['MA1M-OA-03'],  // MINEDUC Learning Objectives
   steps: [
     { id: 'hook', type: 'hook', title: 'Título del Hook' },
     { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
     { id: 'explain', type: 'explain', title: 'La Teoría' },
-    { id: 'classify', type: 'explore', title: 'Clasifica' },
+    { id: 'classify', type: 'explore', title: 'Clasifica' },  // Note: type is 'explore'
     { id: 'practice', type: 'practice', title: 'Practica' },
     { id: 'verify', type: 'verify', title: 'Checkpoint' },
   ],
 },
 ```
+
+### minEducOA Field
+
+The `minEducOA` field maps lessons to Chile's official MINEDUC Learning Objectives (Objetivos de Aprendizaje). This enables:
+- Curriculum alignment tracking
+- Teacher lesson planning
+- PAES coverage analysis
+
+**Common M1 codes:**
+
+| Code | Area |
+|------|------|
+| `MA1M-OA-01` | Operaciones con números enteros y racionales |
+| `MA1M-OA-02` | Potencias y raíces |
+| `MA1M-OA-03` | Expresiones algebraicas y factorización |
+| `MA1M-OA-04` | Ecuaciones e inecuaciones |
+| `MA1M-OA-05` | Proporcionalidad y porcentajes |
+| `MA1M-OA-06` | Geometría: perímetros, áreas, volúmenes |
+| `MA1M-OA-07` | Transformaciones geométricas |
+| `MA1M-OA-08` | Probabilidad y estadística |
+
+**For complete OA reference, see:** `.claude/skills/mini-lessons/reference.md`
 
 ---
 
@@ -341,6 +541,9 @@ All gates must pass before completion.
 **For detailed reference materials, read:**
 → `.claude/skills/mini-lessons/reference.md`
 
+**For pedagogical design guidance (Phase 1 planning), read:**
+→ `.claude/skills/mini-lessons/pedagogical-design.md`
+
 ### Exemplar Lessons (Study These)
 - `components/lessons/m1/factor-comun/` - Best Tips-in-tabs pattern
 - `components/lessons/m1/terminos-semejantes/` - Best hook design
@@ -353,7 +556,14 @@ All gates must pass before completion.
 Import from `@/components/lessons/shared`:
 - `LessonShell` - Lesson page wrapper
 - `CheckpointQuiz` - Step 6 verify (ALWAYS use)
-- `Celebration`, `NumberLine`, `BarChart`, `PieChart`, `VennDiagram`
+- `Celebration` - Success animations
+- `NumberLine` - Number visualization (Números)
+- `BarChart`, `PieChart` - Data visualization (Probabilidad)
+- `FrequencyTable` - Frequency tables with tally marks (Probabilidad)
+- `FactorGrid` - Divisor/factor visualization (Números)
+- `VennDiagram` - Set theory diagrams (Probabilidad)
+
+**For full component props, see:** `.claude/skills/mini-lessons/reference.md`
 
 ---
 

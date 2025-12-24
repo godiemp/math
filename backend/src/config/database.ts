@@ -103,6 +103,28 @@ export const initializeDatabase = async (): Promise<void> => {
       END $$;
     `);
 
+    // Add grade_level and teacher assignment columns for school-based students
+    await client.query(`
+      DO $$
+      BEGIN
+        -- Add grade_level column (NULL = PAES student, '1-medio' to '4-medio' = school student)
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='grade_level') THEN
+          ALTER TABLE users ADD COLUMN grade_level VARCHAR(20);
+        END IF;
+        -- Add assigned_by_teacher_id to track which teacher assigned the grade
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                      WHERE table_name='users' AND column_name='assigned_by_teacher_id') THEN
+          ALTER TABLE users ADD COLUMN assigned_by_teacher_id VARCHAR(50) REFERENCES users(id);
+        END IF;
+        -- Update role constraint to include 'teacher'
+        IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_role_check') THEN
+          ALTER TABLE users DROP CONSTRAINT users_role_check;
+        END IF;
+        ALTER TABLE users ADD CONSTRAINT users_role_check CHECK (role IN ('student', 'admin', 'teacher'));
+      END $$;
+    `);
+
     // Create refresh_tokens table
     await client.query(`
       CREATE TABLE IF NOT EXISTS refresh_tokens (
@@ -518,6 +540,8 @@ export const initializeDatabase = async (): Promise<void> => {
     // Create indexes
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_users_grade_level ON users(grade_level)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_users_assigned_by_teacher ON users(assigned_by_teacher_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_verification_token ON users(verification_token)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_password_reset_token ON users(password_reset_token)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id)');

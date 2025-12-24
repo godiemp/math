@@ -72,6 +72,26 @@ export async function seedTestData() {
       [studentId, 'teststudent', 'student@test.com', studentPassword, 'Test Student', 'student', now, now]
     );
 
+    // Create PAES test student (no grade level - full PAES access)
+    const paesStudentPassword = await bcrypt.hash('test123', 10);
+    const paesStudentId = 'test-paes-student';
+
+    await client.query(
+      `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [paesStudentId, 'paes_student', 'paes@test.cl', paesStudentPassword, 'Estudiante PAES', 'student', now, now]
+    );
+
+    // Create 1-Medio test student (grade level assigned - school content only)
+    const medioStudentPassword = await bcrypt.hash('test123', 10);
+    const medioStudentId = 'test-1medio-student';
+
+    await client.query(
+      `INSERT INTO users (id, username, email, password_hash, display_name, role, grade_level, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      [medioStudentId, '1medio_student', '1medio@test.cl', medioStudentPassword, 'Estudiante 1° Medio', 'student', '1-medio', now, now]
+    );
+
     // Create test plan (if it doesn't exist)
     const testPlanId = 'test-plan';
     await client.query(

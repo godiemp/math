@@ -1,19 +1,20 @@
+import { Suspense } from 'react';
 import { getAllPosts } from '@/lib/blog';
 import { BlogHeader } from '@/components/blog/BlogHeader';
-import { BlogPostCard } from '@/components/blog/BlogPostCard';
+import { BlogPostList } from '@/components/blog/BlogPostList';
 import { Breadcrumbs } from '@/components/blog/Breadcrumbs';
 import { SITE_URL } from '@/lib/constants';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Blog - SimplePAES',
-  description: 'Consejos, estrategias y recursos para mejorar en matemáticas y prepararte para la PAES.',
+  description: 'Consejos, estrategias y recursos para dominar matemáticas de enseñanza media y prepararte para la PAES.',
   alternates: {
     canonical: `${SITE_URL}/blog`,
   },
   openGraph: {
     title: 'Blog - SimplePAES',
-    description: 'Consejos, estrategias y recursos para mejorar en matemáticas y prepararte para la PAES.',
+    description: 'Consejos, estrategias y recursos para dominar matemáticas de enseñanza media y prepararte para la PAES.',
     type: 'website',
     url: `${SITE_URL}/blog`,
     siteName: 'SimplePAES',
@@ -27,7 +28,7 @@ export default function BlogPage() {
     '@context': 'https://schema.org',
     '@type': 'Blog',
     name: 'Blog SimplePAES',
-    description: 'Consejos, estrategias y recursos para mejorar en matemáticas y prepararte para la PAES.',
+    description: 'Consejos, estrategias y recursos para dominar matemáticas de enseñanza media y prepararte para la PAES.',
     url: `${SITE_URL}/blog`,
     publisher: {
       '@type': 'Organization',
@@ -46,8 +47,8 @@ export default function BlogPage() {
         <BlogHeader />
 
         {/* Hero */}
-        <section className="py-16 px-4 text-center">
-          <div className="max-w-4xl mx-auto">
+        <section className="py-12 px-4 text-center">
+          <div className="max-w-6xl mx-auto">
             {/* Breadcrumbs */}
             <div className="mb-8 flex justify-center">
               <Breadcrumbs items={[{ label: 'Blog' }]} />
@@ -83,21 +84,10 @@ export default function BlogPage() {
 
         {/* Posts Grid */}
         <section className="px-4 pb-16">
-          <div className="max-w-4xl mx-auto">
-            {posts.length === 0 ? (
-              <div
-                className="text-center py-16"
-                style={{ color: 'var(--color-label-secondary)' }}
-              >
-                <p>Próximamente nuevos artículos...</p>
-              </div>
-            ) : (
-              <div className="grid gap-6">
-                {posts.map((post) => (
-                  <BlogPostCard key={post.slug} post={post} />
-                ))}
-              </div>
-            )}
+          <div className="max-w-6xl mx-auto">
+            <Suspense fallback={<div className="text-center py-8" style={{ color: 'var(--color-label-secondary)' }}>Cargando...</div>}>
+              <BlogPostList posts={posts} />
+            </Suspense>
           </div>
         </section>
       </div>

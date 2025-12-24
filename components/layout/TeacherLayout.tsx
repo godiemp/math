@@ -15,6 +15,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { name: 'Dashboard', path: '/teacher', icon: '🏠' },
+  { name: 'Estudiantes', path: '/teacher/students', icon: '👥' },
   { name: 'Mis Clases', path: '/teacher/classes', icon: '📚' },
   { name: 'Mini-Lecciones', path: '/mini-lessons', icon: '📖' },
   { name: 'Configuración', path: '/teacher/settings', icon: '⚙️' },

@@ -1,7 +1,7 @@
 {
-  "name": "SimplePAES - Preparación PAES Matemática Chile",
+  "name": "SimplePAES - Matemáticas Enseñanza Media + PAES",
   "short_name": "SimplePAES",
-  "description": "Preparación PAES Matemática: mini-lecciones que explican el por qué + Tutor AI Socrático 24/7.",
+  "description": "Matemáticas de 1° a 4° medio: mini-lecciones + Tutor AI 24/7 + preparación PAES.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

@@ -6,7 +6,7 @@ import { createBreadcrumbSchema } from "@/lib/seo/schemas";
 export const metadata: Metadata = {
   title: "Política de Cookies",
   description:
-    "Información sobre las cookies utilizadas en SimplePAES, plataforma de preparación PAES de Matemática.",
+    "Información sobre las cookies utilizadas en SimplePAES, plataforma de matemáticas para enseñanza media.",
   alternates: {
     canonical: `${SITE_URL}/legal/cookies`,
   },

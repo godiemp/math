@@ -1,7 +1,7 @@
 ---
 title: "Por qué no entiendo matemáticas (y cómo cambiar eso)"
 description: "Descubre las razones reales por las que las matemáticas se sienten tan difíciles y las estrategias respaldadas por la ciencia para superarlo."
-date: "2024-12-16"
+date: "2025-12-16"
 author: "SimplePAES"
 tags: ["matemáticas", "aprendizaje", "estrategias", "mentalidad"]
 published: true
@@ -18,7 +18,7 @@ Pero aquí está la buena noticia: **el problema casi nunca es tu capacidad**. L
 
 Las matemáticas son acumulativas. Si no entendiste bien las fracciones en 6° básico, álgebra en 1° medio será confuso. Y si álgebra quedó débil, funciones en 3° medio parecerá imposible.
 
-**La solución:** Identificar y llenar esas lagunas específicas. No necesitas volver a 6° básico completo, solo los conceptos que te faltan. Herramientas de diagnóstico pueden ayudarte a detectar exactamente dónde están los vacíos.
+**La solución:** Identificar y llenar esas lagunas específicas. No necesitas volver a 6° básico completo, solo los conceptos que te faltan. Herramientas de diagnóstico pueden ayudarte a detectar exactamente dónde están los vacíos. Para entender mejor este fenómeno, lee [qué hacer cuando tienes lagunas de años anteriores](/blog/lagunas-matematicas-anos-anteriores).
 
 ### 2. Aprendizaje pasivo vs. activo
 
@@ -32,7 +32,7 @@ Un estudio de la Universidad de Stanford encontró que los estudiantes que resue
 
 Creer que la habilidad matemática es un talento innato es uno de los mayores obstáculos. Carol Dweck, psicóloga de Stanford, demostró que esta "mentalidad fija" literalmente bloquea el aprendizaje.
 
-**La solución:** Cambiar el "no puedo" por "aún no puedo". Suena simple, pero la investigación muestra que este cambio de perspectiva mejora significativamente el rendimiento. Cada error es información sobre qué practicar, no evidencia de incapacidad.
+**La solución:** Cambiar el "no puedo" por "aún no puedo". Suena simple, pero la investigación muestra que este cambio de perspectiva mejora significativamente el rendimiento. Cada error es información sobre qué practicar, no evidencia de incapacidad. Para ver exactamente qué errores son más comunes, revisa [los errores de álgebra que más cuestan puntos](/blog/errores-comunes-algebra-paes).
 
 ### 4. Falta de práctica espaciada
 

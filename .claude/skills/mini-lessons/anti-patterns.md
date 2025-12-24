@@ -403,6 +403,61 @@ Run these checks before considering implementation complete:
 
 ---
 
+## Anti-Pattern 7: Premature Auto-Complete
+
+Auto-completing a step without user interaction is generally an anti-pattern.
+
+### WRONG (auto-complete on timer)
+
+```typescript
+// Auto-completing without user action - usually wrong
+useEffect(() => {
+  const timer = setTimeout(() => {
+    onComplete();  // Moves to next step automatically!
+  }, 3000);
+  return () => clearTimeout(timer);
+}, []);
+```
+
+### CORRECT (user-initiated completion)
+
+```typescript
+// User must click to advance
+<button onClick={onComplete}>
+  Continuar
+</button>
+```
+
+### Exception: Guided Phase-Based Explain Steps
+
+Auto-advancing to a final "ready" phase (NOT calling onComplete) is acceptable in phase-based Explain steps where the user has already engaged with all content:
+
+```typescript
+// ACCEPTABLE: Auto-advance to final phase after all content viewed
+const handleTabChange = (tabId: TabId) => {
+  setActiveTab(tabId);
+  const newVisited = [...visitedTabs, tabId];
+  setVisitedTabs(newVisited);
+
+  // All tabs visited - can show "ready" phase
+  if (newVisited.length === ALL_TABS.length) {
+    setShowReady(true);  // This is OK - not calling onComplete
+  }
+};
+
+// User still has to click to advance
+{showReady && (
+  <button onClick={onComplete}>Continuar</button>
+)}
+```
+
+### Detection Method
+1. Search for `setTimeout` near `onComplete`
+2. Search for `useEffect` that calls `onComplete`
+3. If found, verify user has explicit control over advancing
+
+---
+
 ## Valid Alternative Patterns (NOT Anti-Patterns)
 
 Some lessons use different patterns that are VALID alternatives, not mistakes.
