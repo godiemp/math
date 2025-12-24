@@ -5,7 +5,7 @@ import { SITE_URL, SITE_NAME } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Página no encontrada",
   description:
-    "La página que buscas no existe. Vuelve al inicio de SimplePAES para continuar tu preparación PAES.",
+    "La página que buscas no existe. Vuelve al inicio de SimplePAES para continuar aprendiendo matemáticas.",
   alternates: {
     canonical: `${SITE_URL}/404`,
   },
@@ -25,7 +25,7 @@ export default function NotFound() {
         </h2>
         <p className="text-gray-600 mb-8">
           La página que buscas no existe o ha sido movida. Vuelve al inicio para
-          continuar tu preparación PAES.
+          continuar aprendiendo matemáticas.
         </p>
         <Link
           href="/"

@@ -14,7 +14,7 @@ export const organizationSchema = {
     height: 630,
   },
   description:
-    "Plataforma de preparación PAES Matemática con mini-lecciones que explican el por qué y Tutor AI Socrático disponible 24/7.",
+    "Plataforma de matemáticas para enseñanza media. Mini-lecciones que explican el por qué, Tutor AI 24/7, y preparación PAES.",
   areaServed: {
     "@type": "Country",
     name: "Chile",
@@ -42,7 +42,7 @@ export const websiteSchema = {
   "@id": `${SITE_URL}/#website`,
   url: SITE_URL,
   name: SITE_NAME,
-  description: "Preparación PAES Matemática Chile - Mini-lecciones + Tutor AI Socrático",
+  description: "Matemáticas Enseñanza Media Chile - Mini-lecciones + Tutor AI + PAES",
   publisher: { "@id": `${SITE_URL}/#organization` },
   inLanguage: "es-CL",
 };
@@ -52,9 +52,9 @@ export const courseSchema = {
   "@context": "https://schema.org",
   "@type": "Course",
   "@id": `${SITE_URL}/#course`,
-  name: "Preparación PAES Matemática",
+  name: "Matemáticas Enseñanza Media + PAES",
   description:
-    "Preparación PAES Matemática con mini-lecciones que explican el por qué (no solo el cómo), Tutor AI Socrático 24/7, y más de 900 ejercicios del temario oficial.",
+    "Curso de matemáticas para enseñanza media (1° a 4° medio) con mini-lecciones, Tutor AI 24/7, y +900 ejercicios. Preparación PAES incluida.",
   provider: { "@id": `${SITE_URL}/#organization` },
   educationalLevel: "Educación Media / Preparación Universitaria",
   inLanguage: "es-CL",
@@ -82,7 +82,7 @@ export const faqSchema = {
       name: "¿Qué es SimplePAES?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "SimplePAES es una plataforma de preparación para la PAES de Matemática en Chile. Ofrece más de 900 ejercicios, mini-lecciones interactivas que te explican el por qué (no solo el cómo), un Tutor AI Socrático que te guía sin darte las respuestas, y seguimiento de progreso por habilidad.",
+        text: "SimplePAES es una plataforma de matemáticas para enseñanza media en Chile (1° a 4° medio). Ofrece más de 900 ejercicios, mini-lecciones interactivas que te explican el por qué, un Tutor AI Socrático, y preparación completa para la PAES.",
       },
     },
     {
@@ -132,9 +132,9 @@ export const faqSchema = {
 export const howToSchema = {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  name: "Cómo prepararse para la PAES de Matemática con SimplePAES",
+  name: "Cómo dominar matemáticas de enseñanza media con SimplePAES",
   description:
-    "Guía paso a paso para usar SimplePAES y mejorar tu puntaje en la PAES de Matemática",
+    "Guía paso a paso para usar SimplePAES y dominar matemáticas de 1° a 4° medio, con preparación PAES",
   totalTime: "P1M",
   tool: [{ "@type": "HowToTool", name: "Computador o celular con internet" }],
   step: [
@@ -172,7 +172,7 @@ export const contactPageSchema = {
   "@id": `${SITE_URL}/contacto#webpage`,
   name: "Contacto SimplePAES",
   description:
-    "Contacta al equipo de SimplePAES para soporte y ayuda con tu preparación PAES.",
+    "Contacta al equipo de SimplePAES para soporte y ayuda con matemáticas.",
   url: `${SITE_URL}/contacto`,
   mainEntity: {
     "@type": "Organization",
