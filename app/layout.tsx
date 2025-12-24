@@ -76,10 +76,7 @@ export const metadata: Metadata = {
       "Prepara la PAES de Matemática con +900 ejercicios del temario oficial y feedback personalizado.",
   },
   verification: {
-    google: "GOOGLE_SITE_VERIFICATION_CODE",
-    other: {
-      "msvalidate.01": "BING_SITE_VERIFICATION_CODE",
-    },
+    google: "qUpZQBRnFZsJlAUvhjXsEIqyvGOpKlJUq-nQNONxrXc",
   },
   alternates: {
     canonical: SITE_URL,
