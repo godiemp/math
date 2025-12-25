@@ -44,9 +44,13 @@ function inferSubjectFromSkills(skills: string[]): string | null {
     porcentaje: 'números',
     potencias: 'números',
     raices: 'números',
+    racionales: 'números',
+    enteros: 'números',
+    decimales: 'números',
     algebra: 'álgebra',
     ecuacion: 'álgebra',
     funcion: 'álgebra',
+    expresion: 'álgebra',
     geometria: 'geometría',
     area: 'geometría',
     perimetro: 'geometría',
@@ -55,14 +59,30 @@ function inferSubjectFromSkills(skills: string[]): string | null {
     triangulo: 'geometría',
     probabilidad: 'probabilidad',
     estadistica: 'probabilidad',
+    datos: 'probabilidad',
   };
 
+  console.log(`🔍 Inferring subject from skills: ${JSON.stringify(skills)}`);
+
   for (const skill of skills) {
+    // Try first part of skill code
     const prefix = skill.split('-')[0].toLowerCase();
     if (subjectMap[prefix]) {
+      console.log(`✅ Found subject "${subjectMap[prefix]}" from prefix "${prefix}"`);
       return subjectMap[prefix];
     }
+
+    // Try second part of skill code (e.g., "numeros-enteros" → "enteros")
+    const parts = skill.toLowerCase().split('-');
+    for (const part of parts) {
+      if (subjectMap[part]) {
+        console.log(`✅ Found subject "${subjectMap[part]}" from part "${part}"`);
+        return subjectMap[part];
+      }
+    }
   }
+
+  console.log(`⚠️ Could not infer subject from skills: ${JSON.stringify(skills)}`);
   return null;
 }
 
@@ -272,10 +292,15 @@ async function getQuestionsBySubject(
   limit: number,
   sessionId: string
 ): Promise<{ sessionId: string; questions: QuestionForDiagnosis[] }> {
-  const subject = inferSubjectFromSkills(skills);
+  let subject = inferSubjectFromSkills(skills);
 
+  // If subject inference fails, try to generate AI questions directly
+  // Default to 'números' as it's the most common subject
   if (!subject) {
-    throw new Error('No questions available for the requested skills');
+    console.log(`⚠️ Subject inference failed, defaulting to 'números' for AI generation`);
+    subject = 'números';
+    // Skip DB queries and go straight to AI generation
+    return await generateDiagnosticQuestionsWithAI(skills, level, limit, sessionId, subject);
   }
 
   // Try questions table by subject
