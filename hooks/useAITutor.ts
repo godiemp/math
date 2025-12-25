@@ -43,12 +43,24 @@ export function useAITutor() {
           { role: 'assistant', content: 'Lo siento, hubo un error. Intenta de nuevo.' },
         ]);
       }
-    } catch {
+    } catch (error) {
+      console.error('AI Tutor error:', error);
       setIsLoading(false);
-      setMessages(prev => [
-        ...prev,
-        { role: 'assistant', content: 'Lo siento, hubo un error de conexión. Intenta de nuevo.' },
-      ]);
+
+      // Provide more specific error messages based on error type
+      let errorMessage = 'Lo siento, hubo un error de conexión. Intenta de nuevo.';
+
+      if (error instanceof Error) {
+        if (error.message.includes('503') || error.message.includes('no está disponible')) {
+          errorMessage = 'El servicio de tutor AI no está disponible en este momento. Intenta más tarde.';
+        } else if (error.message.includes('401') || error.message.includes('unauthorized')) {
+          errorMessage = 'Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.';
+        } else if (error.message.includes('timeout') || error.message.includes('network')) {
+          errorMessage = 'Problema de conexión. Verifica tu internet e intenta de nuevo.';
+        }
+      }
+
+      setMessages(prev => [...prev, { role: 'assistant', content: errorMessage }]);
     }
   }, [messages]);
 
