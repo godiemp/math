@@ -40,8 +40,8 @@ export default function Auth({ onSuccess }: AuthProps) {
   const router = useRouter();
   const { refreshSession } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
-  // Show quick sign-in buttons in Vercel preview for faster testing
-  const isPreview = process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
+  // Show quick sign-in buttons on vercel.app URLs (excludes simplepaes.cl)
+  const isPreview = typeof window !== 'undefined' && window.location.hostname.includes('vercel.app');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
