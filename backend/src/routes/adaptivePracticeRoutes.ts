@@ -95,9 +95,38 @@ router.post('/hint', authenticate, async (req, res) => {
     res.json({ hint });
   } catch (error) {
     console.error('Get hint error:', error);
-    res.status(500).json({
-      error: error instanceof Error ? error.message : 'Error al obtener pista',
-    });
+
+    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+
+    // Categorize errors for appropriate status codes and user messages
+    let statusCode = 500;
+    let userMessage = 'Error al obtener pista. Intenta de nuevo.';
+
+    if (errorMessage.includes('OPENAI_API_KEY')) {
+      statusCode = 503;
+      userMessage = 'El servicio de tutor AI no está configurado.';
+      console.error('OpenAI API key not configured');
+    } else if (errorMessage.includes('rate limit') || errorMessage.includes('429')) {
+      statusCode = 429;
+      userMessage = 'Demasiadas solicitudes. Espera un momento antes de intentar de nuevo.';
+      console.error('OpenAI rate limit exceeded');
+    } else if (errorMessage.includes('insufficient_quota') || errorMessage.includes('billing')) {
+      statusCode = 503;
+      userMessage = 'El servicio de tutor AI no está disponible temporalmente.';
+      console.error('OpenAI quota/billing issue:', errorMessage);
+    } else if (errorMessage.includes('timeout') || errorMessage.includes('ECONNREFUSED')) {
+      statusCode = 504;
+      userMessage = 'El servicio tardó demasiado en responder. Intenta de nuevo.';
+      console.error('OpenAI connection timeout');
+    } else if (errorMessage.includes('invalid_api_key') || errorMessage.includes('401')) {
+      statusCode = 503;
+      userMessage = 'Error de configuración del servicio AI.';
+      console.error('OpenAI authentication failed');
+    } else {
+      console.error('Unexpected OpenAI error:', errorMessage);
+    }
+
+    res.status(statusCode).json({ error: userMessage });
   }
 });
 
