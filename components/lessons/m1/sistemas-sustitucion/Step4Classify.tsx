@@ -49,11 +49,11 @@ const QUESTIONS: ClassifyQuestion[] = [
   },
   {
     id: 5,
-    system: ['-y + 2x = 4', 'x + 3y = 7'],
+    system: ['3x + y = 11', '2x + 5y = 18'],
     question: '¿Qué variable es más fácil de despejar?',
     options: ['x de la primera', 'y de la primera', 'x de la segunda', 'y de la segunda'],
     correctAnswer: 1,
-    explanation: 'De la primera ecuación: -y = 4 - 2x, entonces y = 2x - 4. El coeficiente -1 de y facilita el despeje.',
+    explanation: 'De la primera ecuación: y = 11 - 3x. El coeficiente 1 de y permite despejar sin fracciones. Las otras opciones generarían fracciones.',
   },
 ];
 
