@@ -1,40 +1,25 @@
 'use client';
 
-import { useState } from 'react';
-import { ShoppingCart, Check, X, ArrowRight, Lightbulb } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { ShoppingCart, ArrowRight, Lightbulb } from 'lucide-react';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { useStep1Phase } from '@/hooks/lessons';
+import {
+  ScenarioCard,
+  QuestionPrompt,
+  OptionGrid,
+  OptionButton,
+  ActionButton,
+  FeedbackPanel,
+} from '@/components/lessons/primitives';
 
-type Phase = 'scenario' | 'question' | 'result';
+const OPTIONS = ['x + 5 = 17', '2x + 5 = 17', '2x - 5 = 17', '2(x + 5) = 17'];
+const CORRECT_ANSWER = 1;
 
 export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
-  const [phase, setPhase] = useState<Phase>('scenario');
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [showFeedback, setShowFeedback] = useState(false);
-
-  const correctAnswer = 1; // "2x + 5 = 17"
-
-  const options = [
-    'x + 5 = 17',
-    '2x + 5 = 17',
-    '2x - 5 = 17',
-    '2(x + 5) = 17',
-  ];
-
-  const handleSelect = (index: number) => {
-    if (showFeedback) return;
-    setSelectedAnswer(index);
-  };
-
-  const handleCheck = () => {
-    if (selectedAnswer === null) return;
-    setShowFeedback(true);
-    setTimeout(() => {
-      setPhase('result');
-    }, 1500);
-  };
-
-  const isCorrect = selectedAnswer === correctAnswer;
+  const { phase, setPhase, selectedAnswer, showFeedback, isCorrect, select, check } = useStep1Phase({
+    phases: ['scenario', 'question', 'result'],
+    correctAnswer: CORRECT_ANSWER,
+  });
 
   if (!isActive) return null;
 
@@ -52,15 +37,12 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
       {phase === 'scenario' && (
         <div className="space-y-6 animate-fadeIn">
-          {/* Scenario */}
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-2xl p-6 border border-blue-200 dark:border-blue-800">
+          <ScenarioCard variant="cool">
             <p className="text-gray-700 dark:text-gray-300 text-lg mb-6">
               Claudia fue a la tienda y compró lo siguiente:
             </p>
 
-            {/* Shopping display */}
             <div className="flex flex-wrap justify-center gap-6 mb-6">
-              {/* 2 notebooks */}
               <div className="flex flex-col items-center bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md">
                 <div className="flex gap-2 mb-2">
                   <div className="w-12 h-14 bg-blue-500 rounded-sm flex items-center justify-center">
@@ -78,7 +60,6 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
               <div className="flex items-center text-2xl font-bold text-gray-400">+</div>
 
-              {/* 1 pen */}
               <div className="flex flex-col items-center bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md">
                 <div className="w-16 h-4 bg-green-500 rounded-full mb-2"></div>
                 <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -89,7 +70,6 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
               <div className="flex items-center text-2xl font-bold text-gray-400">=</div>
 
-              {/* Total */}
               <div className="flex flex-col items-center bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md border-2 border-amber-400">
                 <ShoppingCart className="w-10 h-10 text-amber-500 mb-2" />
                 <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -102,109 +82,56 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             <p className="text-center text-gray-600 dark:text-gray-400 text-lg font-medium">
               ¿Cuánto cuesta cada cuaderno?
             </p>
-          </div>
+          </ScenarioCard>
 
-          {/* Continue button */}
           <div className="flex justify-center">
-            <button
-              onClick={() => setPhase('question')}
-              className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg"
-            >
-              <span>¿Cuál ecuación representa esto?</span>
-              <ArrowRight size={20} />
-            </button>
+            <ActionButton onClick={() => setPhase('question')} icon={<ArrowRight size={20} />}>
+              ¿Cuál ecuación representa esto?
+            </ActionButton>
           </div>
         </div>
       )}
 
       {phase === 'question' && (
         <div className="space-y-6 animate-fadeIn">
-          {/* Question */}
-          <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-6 text-center border border-purple-200 dark:border-purple-700">
+          <QuestionPrompt variant="default">
             <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
               Si x es el precio de cada cuaderno, ¿cuál ecuación representa el problema?
             </p>
-          </div>
+          </QuestionPrompt>
 
-          {/* Options */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {options.map((option, index) => (
-              <button
+          <OptionGrid>
+            {OPTIONS.map((option, index) => (
+              <OptionButton
                 key={index}
-                onClick={() => handleSelect(index)}
-                disabled={showFeedback}
-                className={cn(
-                  'p-4 rounded-xl text-left font-mono font-bold text-lg transition-all border-2',
-                  selectedAnswer === index
-                    ? showFeedback
-                      ? index === correctAnswer
-                        ? 'bg-green-100 dark:bg-green-900/50 border-green-500 text-green-800 dark:text-green-200'
-                        : 'bg-red-100 dark:bg-red-900/50 border-red-500 text-red-800 dark:text-red-200'
-                      : 'bg-purple-100 dark:bg-purple-900/50 border-purple-500 text-purple-800 dark:text-purple-200'
-                    : showFeedback && index === correctAnswer
-                    ? 'bg-green-50 dark:bg-green-900/30 border-green-400'
-                    : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-purple-400 dark:hover:border-purple-500'
-                )}
-              >
-                <div className="flex items-center gap-3">
-                  <span
-                    className={cn(
-                      'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold',
-                      selectedAnswer === index
-                        ? showFeedback
-                          ? index === correctAnswer
-                            ? 'bg-green-500 text-white'
-                            : 'bg-red-500 text-white'
-                          : 'bg-purple-500 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
-                    )}
-                  >
-                    {showFeedback && index === correctAnswer ? (
-                      <Check size={16} />
-                    ) : showFeedback && selectedAnswer === index && index !== correctAnswer ? (
-                      <X size={16} />
-                    ) : (
-                      String.fromCharCode(65 + index)
-                    )}
-                  </span>
-                  <span className="text-gray-800 dark:text-gray-200">{option}</span>
-                </div>
-              </button>
+                label={option}
+                index={index}
+                isSelected={selectedAnswer === index}
+                isCorrect={index === CORRECT_ANSWER}
+                showFeedback={showFeedback}
+                onClick={() => select(index)}
+                isMono
+              />
             ))}
-          </div>
+          </OptionGrid>
 
-          {/* Check button */}
           {!showFeedback && (
             <div className="flex justify-center">
-              <button
-                onClick={handleCheck}
+              <ActionButton
+                onClick={check}
                 disabled={selectedAnswer === null}
-                className={cn(
-                  'px-8 py-3 rounded-xl font-semibold transition-all',
-                  selectedAnswer !== null
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 shadow-lg'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
-                )}
+                variant={selectedAnswer !== null ? 'primary' : 'disabled'}
               >
                 Verificar
-              </button>
+              </ActionButton>
             </div>
           )}
 
-          {/* Feedback */}
           {showFeedback && (
-            <div
-              className={cn(
-                'p-4 rounded-xl animate-fadeIn text-center',
-                isCorrect
-                  ? 'bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700'
-                  : 'bg-amber-100 dark:bg-amber-900/30 border border-amber-300 dark:border-amber-700'
-              )}
-            >
-              <p className={cn('font-semibold', isCorrect ? 'text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300')}>
-                {isCorrect ? '¡Exacto!' : '¡Casi!'} Veamos cómo resolver este problema...
-              </p>
-            </div>
+            <FeedbackPanel
+              isCorrect={isCorrect}
+              explanation={isCorrect ? '¡Exacto! Veamos cómo resolver este problema...' : '¡Casi! Veamos cómo resolver este problema...'}
+            />
           )}
         </div>
       )}
@@ -282,15 +209,10 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             </div>
           </div>
 
-          {/* Continue button */}
           <div className="flex justify-center">
-            <button
-              onClick={onComplete}
-              className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg"
-            >
-              <span>Continuar</span>
-              <ArrowRight size={20} />
-            </button>
+            <ActionButton onClick={onComplete} variant="secondary" icon={<ArrowRight size={20} />}>
+              Continuar
+            </ActionButton>
           </div>
         </div>
       )}
