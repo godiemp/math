@@ -246,10 +246,10 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
         {/* Progress */}
         <ExampleProgressDots
-          examples={EXAMPLES}
+          total={EXAMPLES.length}
           currentIndex={currentExampleIndex}
           discoveredIds={discoveredIds}
-          getExampleId={(ex) => ex.id}
+          getExampleId={(index) => EXAMPLES[index].id}
         />
 
         {/* Question card */}
@@ -330,7 +330,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           {!showResult && (
             <HintPanel
               hint={example.hint}
-              showHint={showHint}
+              isVisible={showHint}
               onToggle={toggleHint}
             />
           )}

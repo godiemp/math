@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ArrowRight, Lightbulb } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 import { useExplorePhases } from '@/hooks/lessons';
 import { ExampleProgressDots, ActionButton } from '@/components/lessons/primitives';
