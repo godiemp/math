@@ -97,31 +97,44 @@ export function DiagnosisFlow({
       setFlowState('loading');
       setError(null);
 
+      console.log('[DiagnosisFlow] loadQuestions called');
+      console.log('[DiagnosisFlow] skillsToVerify:', skillsToVerify);
+      console.log('[DiagnosisFlow] level:', level);
+
       // Check if we have skills to verify
       if (skillsToVerify.length === 0) {
+        console.log('[DiagnosisFlow] No skills to verify - showing error');
         setError('No hay habilidades para evaluar en este tema.');
         return;
       }
 
+      const url = `/api/diagnosis/questions?skills=${skillsToVerify.join(',')}&level=${level}&limit=5`;
+      console.log('[DiagnosisFlow] Fetching:', url);
+
       const response = await api.get<{
         success: boolean;
         data: { sessionId: string; questions: DiagnosisQuestion[] };
-      }>(`/api/diagnosis/questions?skills=${skillsToVerify.join(',')}&level=${level}&limit=5`);
+      }>(url);
+
+      console.log('[DiagnosisFlow] Response:', response);
 
       if (response.data?.data && response.data.data.questions.length > 0) {
+        console.log('[DiagnosisFlow] Got', response.data.data.questions.length, 'questions');
         setSessionId(response.data.data.sessionId);
         setQuestions(response.data.data.questions);
         setFlowState('question');
       } else {
+        console.log('[DiagnosisFlow] No questions in response - throwing error');
         throw new Error('No questions available');
       }
     } catch (err: unknown) {
-      console.error('Failed to load questions:', err);
+      console.error('[DiagnosisFlow] Failed to load questions:', err);
       // Check for specific error messages
       const errorMessage =
         err instanceof Error && err.message.includes('No questions')
           ? 'No hay preguntas disponibles para estas habilidades. Intenta con otro tema.'
           : 'No pudimos cargar las preguntas. Por favor intenta de nuevo.';
+      console.log('[DiagnosisFlow] Setting error message:', errorMessage);
       setError(errorMessage);
       setFlowState('loading');
     }
