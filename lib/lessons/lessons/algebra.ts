@@ -449,4 +449,30 @@ export const ALGEBRA_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint' },
     ],
   },
+  {
+    id: 'm1-alg-010-a',
+    slug: 'relaciones-lineales',
+    title: 'Relaciones Lineales en Dos Variables',
+    description:
+      'Grafica relaciones lineales ax + by = c usando tablas de valores e interceptos.',
+    level: 'M1',
+    subject: 'álgebra',
+    thematicUnit: 'M1-ALG-010',
+    skills: [
+      'relacion-lineal-forma-general',
+      'interceptos',
+      'tabla-valores',
+      'graficar-recta',
+    ],
+    estimatedMinutes: 16,
+    minEducOA: ['MA1M-OA-05'],
+    steps: [
+      { id: 'hook', type: 'hook', title: 'La Panadería Matemática' },
+      { id: 'explore', type: 'explore', title: 'Descubre la Relación' },
+      { id: 'explain', type: 'explain', title: 'Forma General ax + by = c' },
+      { id: 'classify', type: 'explore', title: 'Identifica Interceptos' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
 ];

@@ -157,7 +157,7 @@ const OA_1M: MinEducOA[] = [
     name: 'Relaciones lineales',
     description: 'Graficar relaciones lineales en dos variables de la forma f(x, y) = ax + by mediante tablas de valores, representaciones gráficas y escritura de relaciones entre variables.',
     isBasal: false,
-    lessonIds: [], // Pendiente
+    lessonIds: ['m1-alg-010-a'],
   },
 
   // GEOMETRÍA (6 OA)
