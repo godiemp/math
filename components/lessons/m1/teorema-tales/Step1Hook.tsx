@@ -35,14 +35,14 @@ function ShadowScene({ showSolution = false }: { showSolution?: boolean }) {
       <rect x="0" y="180" width="400" height="40" className="fill-amber-100 dark:fill-amber-900/50" />
       <line x1="0" y1="180" x2="400" y2="180" className="stroke-amber-300 dark:stroke-amber-700" strokeWidth="2" />
 
-      {/* Sun */}
-      <circle cx="350" cy="40" r="25" className="fill-yellow-400" />
+      {/* Sun - positioned on upper LEFT so shadows extend to the right */}
+      <circle cx="50" cy="40" r="25" className="fill-yellow-400" />
 
-      {/* Sun rays (parallel lines) */}
+      {/* Sun rays (parallel lines going from upper-left to lower-right) */}
       <g className="stroke-yellow-500/60" strokeWidth="1" strokeDasharray="4,4">
-        <line x1="350" y1="40" x2="80" y2="180" />
-        <line x1="350" y1="40" x2="180" y2="180" />
-        <line x1="350" y1="40" x2="300" y2="180" />
+        <line x1="50" y1="40" x2="100" y2="180" />
+        <line x1="50" y1="40" x2="210" y2="180" />
+        <line x1="50" y1="40" x2="330" y2="180" />
       </g>
 
       {/* Person (Sofia) */}
@@ -95,8 +95,8 @@ function ShadowScene({ showSolution = false }: { showSolution?: boolean }) {
       {/* Parallel indicator for sun rays */}
       {showSolution && (
         <g className="animate-fadeIn">
-          <text x="290" y="100" className="fill-yellow-600 dark:fill-yellow-400 text-xs">Rayos</text>
-          <text x="290" y="112" className="fill-yellow-600 dark:fill-yellow-400 text-xs">paralelos</text>
+          <text x="85" y="100" className="fill-yellow-600 dark:fill-yellow-400 text-xs">Rayos</text>
+          <text x="85" y="112" className="fill-yellow-600 dark:fill-yellow-400 text-xs">paralelos</text>
         </g>
       )}
     </svg>
