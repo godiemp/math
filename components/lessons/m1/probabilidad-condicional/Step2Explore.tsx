@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, Lightbulb, Check, Users, Dumbbell, Music } from 'lucide-react';
+import { ArrowRight, Dumbbell, Music } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { useExplorePhases } from '@/hooks/lessons';
+import { ActionButton, HintPanel, ExampleProgressDots } from '@/components/lessons/primitives';
 
 type Phase = 'intro' | 'discover' | 'pattern';
 
@@ -102,28 +104,32 @@ const EXAMPLES: Example[] = [
 ];
 
 export default function Step2Explore({ onComplete, isActive }: LessonStepProps) {
-  const [phase, setPhase] = useState<Phase>('intro');
-  const [currentExample, setCurrentExample] = useState(0);
-  const [discoveredExamples, setDiscoveredExamples] = useState<string[]>([]);
-  const [showHint, setShowHint] = useState(false);
+  const {
+    phase, nextPhase,
+    currentExample: example,
+    currentExampleIndex, discoveredIds, isLastExample,
+    discoverCurrent, nextExample,
+    showHint, toggleHint, hideHint,
+  } = useExplorePhases<Phase, Example>({
+    phases: ['intro', 'discover', 'pattern'],
+    examples: EXAMPLES,
+    getExampleId: (ex) => ex.id,
+  });
+
   const [showResult, setShowResult] = useState(false);
 
-  const example = EXAMPLES[currentExample];
-
   const handleDiscoverExample = () => {
-    if (!discoveredExamples.includes(example.id)) {
-      setDiscoveredExamples([...discoveredExamples, example.id]);
-    }
+    discoverCurrent();
     setShowResult(true);
   };
 
   const handleNextExample = () => {
-    if (currentExample < EXAMPLES.length - 1) {
-      setCurrentExample(currentExample + 1);
-      setShowHint(false);
+    if (!isLastExample) {
+      nextExample();
+      hideHint();
       setShowResult(false);
     } else {
-      setPhase('pattern');
+      nextPhase();
     }
   };
 
@@ -214,20 +220,16 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
         </div>
 
         <div className="flex justify-center">
-          <button
-            onClick={() => setPhase('discover')}
-            className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
-          >
-            <span>Explorar probabilidades</span>
-            <ArrowRight size={20} />
-          </button>
+          <ActionButton onClick={nextPhase} variant="primary" icon={<ArrowRight size={20} />}>
+            Explorar probabilidades
+          </ActionButton>
         </div>
       </div>
     );
   }
 
   // ============ PHASE 2: DISCOVER ============
-  if (phase === 'discover') {
+  if (phase === 'discover' && example) {
     const filteredStudents = STUDENTS.filter(example.filterFn);
     const favoriteStudents = STUDENTS.filter(example.favoriteFn);
 
@@ -243,23 +245,12 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
         </div>
 
         {/* Progress */}
-        <div className="flex justify-center gap-2">
-          {EXAMPLES.map((ex, i) => (
-            <div
-              key={ex.id}
-              className={cn(
-                'w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all',
-                discoveredExamples.includes(ex.id)
-                  ? 'bg-green-500 text-white'
-                  : i === currentExample
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-500'
-              )}
-            >
-              {discoveredExamples.includes(ex.id) ? <Check size={18} /> : i + 1}
-            </div>
-          ))}
-        </div>
+        <ExampleProgressDots
+          examples={EXAMPLES}
+          currentIndex={currentExampleIndex}
+          discoveredIds={discoveredIds}
+          getExampleId={(ex) => ex.id}
+        />
 
         {/* Question card */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
@@ -335,35 +326,20 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             )}
           </div>
 
-          {/* Hint button */}
+          {/* Hint */}
           {!showResult && (
-            <div className="text-center mb-4">
-              <button
-                onClick={() => setShowHint(!showHint)}
-                className="flex items-center gap-2 mx-auto text-sm text-amber-600 hover:text-amber-700 dark:text-amber-400"
-              >
-                <Lightbulb size={16} />
-                <span>{showHint ? 'Ocultar pista' : 'Ver pista'}</span>
-              </button>
-            </div>
-          )}
-
-          {showHint && !showResult && (
-            <div className="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-4 mb-4 animate-fadeIn border border-amber-200 dark:border-amber-700">
-              <p className="text-sm text-amber-800 dark:text-amber-200 text-center">
-                {example.hint}
-              </p>
-            </div>
+            <HintPanel
+              hint={example.hint}
+              showHint={showHint}
+              onToggle={toggleHint}
+            />
           )}
 
           {!showResult && (
             <div className="flex justify-center">
-              <button
-                onClick={handleDiscoverExample}
-                className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
-              >
+              <ActionButton onClick={handleDiscoverExample} variant="success">
                 Ver resultado
-              </button>
+              </ActionButton>
             </div>
           )}
 
@@ -385,13 +361,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               </div>
 
               <div className="flex justify-center">
-                <button
-                  onClick={handleNextExample}
-                  className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
-                >
-                  <span>{currentExample < EXAMPLES.length - 1 ? 'Siguiente ejemplo' : 'Ver resumen'}</span>
-                  <ArrowRight size={20} />
-                </button>
+                <ActionButton onClick={handleNextExample} variant="primary" icon={<ArrowRight size={20} />}>
+                  {!isLastExample ? 'Siguiente ejemplo' : 'Ver resumen'}
+                </ActionButton>
               </div>
             </div>
           )}
@@ -474,13 +446,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
       </div>
 
       <div className="flex justify-center">
-        <button
-          onClick={onComplete}
-          className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg"
-        >
-          <span>Continuar</span>
-          <ArrowRight size={20} />
-        </button>
+        <ActionButton onClick={onComplete} variant="primary" icon={<ArrowRight size={20} />}>
+          Continuar
+        </ActionButton>
       </div>
     </div>
   );
