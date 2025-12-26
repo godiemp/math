@@ -89,7 +89,7 @@ El despeje es la base de todo álgebra. Sin él, no hay forma de:
 
 **Por qué importa:**
 
-La confusión área/perímetro persiste hasta la PAES. Es uno de [los errores más comunes en geometría](/blog/errores-comunes-geometria-paes). Detectarla temprano permite corregirla antes de que se calcifique.
+La confusión área/perímetro persiste hasta la PAES y es uno de los errores más comunes en geometría. Detectarla temprano permite corregirla antes de que se calcifique.
 
 ### Pregunta 4: Proporcionalidad (porcentajes)
 
