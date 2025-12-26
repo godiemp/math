@@ -242,6 +242,8 @@ Si la respuesta es "no sé" o "creo que sí", las 5 preguntas te dan una respues
 
 El diagnóstico no tiene que ser perfecto. Tiene que ser suficiente para actuar antes de que las lagunas se agranden.
 
+Para que lo que detectas se mantenga en el tiempo, considera implementar [práctica espaciada](/blog/practica-espaciada-recuperacion-matematicas)—la técnica más respaldada por la ciencia para la retención a largo plazo.
+
 ---
 
 *Con SimplePAES puedes diagnosticar lagunas automáticamente, desde contenidos de años anteriores hasta lo que están viendo ahora. El panel de profesor te muestra exactamente qué le falta a cada estudiante—sin corregir ni analizar. [Conoce cómo funciona](https://simplepaes.cl/profesores).*

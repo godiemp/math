@@ -116,7 +116,7 @@ El estudiante con ansiedad severa, el que tiene problemas en casa, el que necesi
 Qué enseñar, en qué orden, con qué énfasis—esas son decisiones docentes que requieren conocimiento del grupo y del contexto.
 
 ### Modelar pensamiento matemático
-Mostrar cómo piensa un experto cuando enfrenta un problema nuevo. Verbalizar el proceso. Cometer errores y corregirlos en vivo. Eso requiere un humano.
+Mostrar cómo piensa un experto cuando enfrenta un problema nuevo. Verbalizar el proceso. Cometer errores y corregirlos en vivo. Eso requiere un humano. [Hacer buenas preguntas](/blog/preguntas-efectivas-clase-matematicas) que activen el pensamiento matemático de los estudiantes es parte esencial de este rol.
 
 ## El nuevo rol del profesor
 

@@ -43,14 +43,14 @@ Explicaste bien, pero solo para un tipo de estudiante. Los que aprenden de otra 
 
 ### Causa 3: No hubo suficiente práctica guiada
 
-Explicaste, diste un ejemplo, y soltaste. Pero la transición de "ver cómo tú lo haces" a "hacerlo solos" fue muy abrupta.
+Explicaste, diste un ejemplo, y soltaste. Pero la transición de "ver cómo tú lo haces" a "hacerlo solos" fue muy abrupta. Esto está relacionado con la [carga cognitiva](/blog/carga-cognitiva-ejercicios-matematicas): los estudiantes se saturaron antes de poder practicar.
 
 **Señales:**
 - Entendieron tu ejemplo pero no pudieron replicarlo
 - Preguntan "¿qué hago primero?" cuando enfrentan el ejercicio solos
 - Con un poco de ayuda, lo logran
 
-**Qué hacer:** Más práctica guiada antes de soltar. No re-explicar—acompañar.
+**Qué hacer:** Más práctica guiada antes de soltar. No re-explicar—acompañar. La clave es permitir que trabajen con problemas desafiantes a través de [lucha productiva](/blog/lucha-productiva-matematicas).
 
 ### Causa 4: Problema de atención/contexto
 
