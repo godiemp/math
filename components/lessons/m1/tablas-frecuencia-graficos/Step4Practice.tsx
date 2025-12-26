@@ -1,10 +1,16 @@
 'use client';
 
-import { useState } from 'react';
-import { ArrowRight, Check, X, RotateCcw, BarChart2, PieChart as PieChartIcon, Table } from 'lucide-react';
+import { Check, X, BarChart2, PieChart as PieChartIcon, Table } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { useMultipleChoice } from '@/hooks/lessons';
 import { BarChart, PieChart, FrequencyTable } from '@/components/lessons/shared';
+import {
+  ProgressDots,
+  FeedbackPanel,
+  ActionButton,
+  ResultsSummary,
+} from '@/components/lessons/primitives';
 
 interface Question {
   id: string;
@@ -113,60 +119,36 @@ const typeLabels: Record<string, string> = {
   'table-match': 'Correspondencia',
 };
 
+const REQUIRED_CORRECT = 3;
+
 export default function Step4Practice({ onComplete, isActive }: LessonStepProps) {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [correctCount, setCorrectCount] = useState(0);
+  const mc = useMultipleChoice({
+    items: QUESTIONS,
+    getCorrectAnswer: (item) => item.correctIndex,
+    passThreshold: REQUIRED_CORRECT,
+  });
 
   if (!isActive) return null;
 
-  const question = QUESTIONS[currentQuestion];
-  const isLastQuestion = currentQuestion === QUESTIONS.length - 1;
-  const isCorrect = selectedAnswer === question.correctIndex;
-  const TypeIcon = typeIcons[question.type];
-
-  const handleAnswer = (index: number) => {
-    if (showFeedback) return;
-    setSelectedAnswer(index);
-    setShowFeedback(true);
-    if (index === question.correctIndex) {
-      setCorrectCount((prev) => prev + 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (isLastQuestion) {
-      onComplete();
-    } else {
-      setCurrentQuestion((prev) => prev + 1);
-      setSelectedAnswer(null);
-      setShowFeedback(false);
-    }
-  };
-
-  const handleRetry = () => {
-    setSelectedAnswer(null);
-    setShowFeedback(false);
-  };
+  const TypeIcon = typeIcons[mc.currentItem.type];
 
   // Prepare visual data
-  const chartData = question.visualData.categories.map((cat, i) => ({
+  const chartData = mc.currentItem.visualData.categories.map((cat, i) => ({
     category: cat,
-    value: question.visualData.values[i],
-    color: question.visualData.colors[i],
+    value: mc.currentItem.visualData.values[i],
+    color: mc.currentItem.visualData.colors[i],
   }));
 
-  const tableData = question.visualData.categories.map((cat, i) => ({
+  const tableData = mc.currentItem.visualData.categories.map((cat, i) => ({
     category: cat,
-    frequency: question.visualData.values[i],
-    color: question.visualData.colors[i],
+    frequency: mc.currentItem.visualData.values[i],
+    color: mc.currentItem.visualData.colors[i],
   }));
 
-  const pieData = question.visualData.categories.map((cat, i) => ({
+  const pieData = mc.currentItem.visualData.categories.map((cat, i) => ({
     category: cat,
-    value: question.visualData.values[i],
-    color: question.visualData.colors[i],
+    value: mc.currentItem.visualData.values[i],
+    color: mc.currentItem.visualData.colors[i],
   }));
 
   return (
@@ -176,150 +158,144 @@ export default function Step4Practice({ onComplete, isActive }: LessonStepProps)
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Practica Guiada
         </h2>
-        <div className="flex items-center justify-center gap-2">
-          {QUESTIONS.map((_, i) => (
-            <div
-              key={i}
-              className={cn(
-                'w-3 h-3 rounded-full transition-all',
-                i === currentQuestion
-                  ? 'bg-blue-500 scale-125'
-                  : i < currentQuestion
-                    ? 'bg-green-500'
-                    : 'bg-gray-300 dark:bg-gray-600'
-              )}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Question type badge */}
-      <div className="flex justify-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-          <TypeIcon className="w-4 h-4 text-blue-600" />
-          <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-            {typeLabels[question.type]}
-          </span>
-        </div>
-      </div>
-
-      {/* Visual */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
-        {question.visual === 'bar' && (
-          <BarChart data={chartData} height="md" animated />
-        )}
-        {question.visual === 'pie' && (
-          <PieChart data={pieData} showPercentages size="md" />
-        )}
-        {question.visual === 'table' && (
-          <FrequencyTable
-            data={tableData}
-            total={question.visualData.total}
-            showRelative={question.type === 'relative-calc'}
-          />
-        )}
-      </div>
-
-      {/* Question */}
-      <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4">
-        <p className="text-lg font-medium text-gray-800 dark:text-gray-200 text-center">
-          {question.question}
+        <p className="text-gray-600 dark:text-gray-300">
+          Necesitas {REQUIRED_CORRECT} de {QUESTIONS.length} correctas
         </p>
       </div>
 
-      {/* Options */}
-      <div className="grid grid-cols-2 gap-3">
-        {question.options.map((option, index) => {
-          const isSelected = selectedAnswer === index;
-          const isCorrectOption = index === question.correctIndex;
-          const showResult = showFeedback && isSelected;
+      {!mc.isComplete ? (
+        <>
+          <ProgressDots
+            items={QUESTIONS}
+            currentIndex={mc.currentIndex}
+            getStatus={(_, i) =>
+              mc.answers[i] !== null
+                ? mc.answers[i] === QUESTIONS[i].correctIndex
+                  ? 'correct'
+                  : 'incorrect'
+                : i === mc.currentIndex
+                  ? 'current'
+                  : 'pending'
+            }
+          />
 
-          return (
-            <button
-              key={index}
-              onClick={() => handleAnswer(index)}
-              disabled={showFeedback}
-              className={cn(
-                'p-4 rounded-xl border-2 font-medium transition-all',
-                !showFeedback && 'hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-blue-300',
-                !showFeedback && !isSelected && 'border-gray-200 dark:border-gray-700',
-                isSelected && !showFeedback && 'border-blue-500 bg-blue-50 dark:bg-blue-900/30',
-                showResult && isCorrectOption && 'border-green-500 bg-green-50 dark:bg-green-900/30',
-                showResult && !isCorrectOption && 'border-red-500 bg-red-50 dark:bg-red-900/30',
-                showFeedback && !isSelected && isCorrectOption && 'border-green-500 bg-green-50/50 dark:bg-green-900/20',
-                showFeedback && !isSelected && !isCorrectOption && 'opacity-50'
-              )}
-            >
-              <span className="text-gray-700 dark:text-gray-300">{option}</span>
-              {showFeedback && isSelected && (
-                <span className="ml-2">
-                  {isCorrectOption ? (
-                    <Check className="w-5 h-5 text-green-600 inline" />
-                  ) : (
-                    <X className="w-5 h-5 text-red-600 inline" />
+          {/* Question type badge */}
+          <div className="flex justify-center">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+              <TypeIcon className="w-4 h-4 text-blue-600" />
+              <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                {typeLabels[mc.currentItem.type]}
+              </span>
+            </div>
+          </div>
+
+          {/* Visual */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+            {mc.currentItem.visual === 'bar' && (
+              <BarChart data={chartData} height="md" animated />
+            )}
+            {mc.currentItem.visual === 'pie' && (
+              <PieChart data={pieData} showPercentages size="md" />
+            )}
+            {mc.currentItem.visual === 'table' && (
+              <FrequencyTable
+                data={tableData}
+                total={mc.currentItem.visualData.total}
+                showRelative={mc.currentItem.type === 'relative-calc'}
+              />
+            )}
+          </div>
+
+          {/* Question */}
+          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4">
+            <p className="text-lg font-medium text-gray-800 dark:text-gray-200 text-center">
+              {mc.currentItem.question}
+            </p>
+          </div>
+
+          {/* Options */}
+          <div className="grid grid-cols-2 gap-3">
+            {mc.currentItem.options.map((option, index) => {
+              const isSelected = mc.selectedAnswer === index;
+              const isCorrectOption = index === mc.currentItem.correctIndex;
+
+              return (
+                <button
+                  key={index}
+                  onClick={() => mc.select(index)}
+                  disabled={mc.showFeedback}
+                  className={cn(
+                    'p-4 rounded-xl border-2 font-medium transition-all',
+                    !mc.showFeedback && 'hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-blue-300',
+                    !mc.showFeedback && !isSelected && 'border-gray-200 dark:border-gray-700',
+                    isSelected && !mc.showFeedback && 'border-blue-500 bg-blue-50 dark:bg-blue-900/30',
+                    mc.showFeedback && isSelected && isCorrectOption && 'border-green-500 bg-green-50 dark:bg-green-900/30',
+                    mc.showFeedback && isSelected && !isCorrectOption && 'border-red-500 bg-red-50 dark:bg-red-900/30',
+                    mc.showFeedback && !isSelected && isCorrectOption && 'border-green-500 bg-green-50/50 dark:bg-green-900/20',
+                    mc.showFeedback && !isSelected && !isCorrectOption && 'opacity-50'
                   )}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
+                >
+                  <span className="text-gray-700 dark:text-gray-300">{option}</span>
+                  {mc.showFeedback && isSelected && (
+                    <span className="ml-2">
+                      {isCorrectOption ? (
+                        <Check className="w-5 h-5 text-green-600 inline" />
+                      ) : (
+                        <X className="w-5 h-5 text-red-600 inline" />
+                      )}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
 
-      {/* Feedback */}
-      {showFeedback && (
-        <div
-          className={cn(
-            'p-4 rounded-xl animate-fadeIn',
-            isCorrect
-              ? 'bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700'
-              : 'bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700'
+          {mc.showFeedback && (
+            <FeedbackPanel
+              isCorrect={mc.isCorrect}
+              explanation={mc.currentItem.explanation}
+            />
           )}
-        >
-          <p
-            className={cn(
-              'font-semibold mb-1',
-              isCorrect ? 'text-green-800 dark:text-green-200' : 'text-amber-800 dark:text-amber-200'
-            )}
-          >
-            {isCorrect ? '¡Correcto!' : 'No exactamente'}
-          </p>
-          <p
-            className={cn(
-              'text-sm',
-              isCorrect ? 'text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300'
-            )}
-          >
-            {question.explanation}
-          </p>
-        </div>
-      )}
 
-      {/* Actions */}
-      {showFeedback && (
-        <div className="flex justify-center gap-3">
-          {!isCorrect && (
-            <button
-              onClick={handleRetry}
-              className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+          {/* Actions */}
+          <div className="flex justify-center">
+            <ActionButton
+              onClick={mc.showFeedback ? mc.next : mc.check}
+              disabled={!mc.showFeedback && mc.selectedAnswer === null}
             >
-              <RotateCcw size={18} />
-              <span>Reintentar</span>
-            </button>
+              {mc.showFeedback
+                ? mc.currentIndex < QUESTIONS.length - 1
+                  ? 'Siguiente'
+                  : 'Ver Resultados'
+                : 'Verificar'}
+            </ActionButton>
+          </div>
+        </>
+      ) : (
+        <ResultsSummary
+          correctCount={mc.correctCount}
+          totalCount={QUESTIONS.length}
+          passed={mc.passed}
+          passThreshold={REQUIRED_CORRECT}
+          successMessage="¡Excelente trabajo!"
+          successSubtext="Sabes interpretar tablas y gráficos"
+          failureSubtext={`Necesitas ${REQUIRED_CORRECT} respuestas correctas. ¡Puedes intentarlo de nuevo!`}
+          items={QUESTIONS}
+          getIsCorrect={(_, i) => mc.answers[i] === QUESTIONS[i].correctIndex}
+          renderItem={(item, _, isCorrect) => (
+            <>
+              {isCorrect ? (
+                <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
+              ) : (
+                <X className="w-5 h-5 text-red-600 flex-shrink-0" />
+              )}
+              <span className="text-sm text-gray-700 dark:text-gray-300">{item.question}</span>
+            </>
           )}
-          <button
-            onClick={handleNext}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
-          >
-            <span>{isLastQuestion ? 'Continuar' : 'Siguiente'}</span>
-            <ArrowRight size={20} />
-          </button>
-        </div>
+          onRetry={mc.reset}
+          onContinue={onComplete}
+        />
       )}
-
-      {/* Score indicator */}
-      <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-        Correctas: {correctCount} / {currentQuestion + (showFeedback ? 1 : 0)}
-      </div>
     </div>
   );
 }
