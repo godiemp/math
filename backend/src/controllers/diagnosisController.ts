@@ -27,8 +27,12 @@ import {
  * GET /api/diagnosis/questions?skills=skill1,skill2&level=M1&limit=5
  */
 export async function getDiagnosisQuestions(req: Request, res: Response): Promise<void> {
+  console.log(`\n📥 [Controller] GET /api/diagnosis/questions`);
+  console.log(`📥 [Controller] Query params:`, req.query);
+
   try {
     if (!req.user) {
+      console.log(`📥 [Controller] User not authenticated`);
       res.status(401).json({ error: 'Not authenticated' });
       return;
     }
@@ -38,27 +42,34 @@ export async function getDiagnosisQuestions(req: Request, res: Response): Promis
     const limit = parseInt(req.query.limit as string) || 5;
 
     if (!skillsParam) {
+      console.log(`📥 [Controller] Missing skills parameter`);
       res.status(400).json({ error: 'skills parameter is required' });
       return;
     }
 
     const skills = skillsParam.split(',').map((s) => s.trim()).filter(Boolean);
+    console.log(`📥 [Controller] Parsed skills:`, skills);
 
     if (skills.length === 0) {
+      console.log(`📥 [Controller] No skills after parsing`);
       res.status(400).json({ error: 'At least one skill is required' });
       return;
     }
 
+    console.log(`📥 [Controller] Calling getQuestionsForSkills(${JSON.stringify(skills)}, ${level}, ${limit})`);
     const result = await getQuestionsForSkills(skills, level, limit);
+    console.log(`📥 [Controller] Got ${result.questions.length} questions`);
 
     res.json({
       success: true,
       data: result,
     });
   } catch (error) {
-    console.error('Get diagnosis questions error:', error);
+    console.error('❌ [Controller] Get diagnosis questions error:', error);
     const message = error instanceof Error ? error.message : 'Failed to get diagnosis questions';
+    console.error(`❌ [Controller] Error message: ${message}`);
     const statusCode = message.includes('No questions available') ? 404 : 500;
+    console.error(`❌ [Controller] Responding with status ${statusCode}`);
     res.status(statusCode).json({ error: message });
   }
 }

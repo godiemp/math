@@ -882,11 +882,16 @@ export interface DiagnosticQuestion {
 export async function generateDiagnosticQuestions(
   input: GenerateDiagnosticQuestionsInput
 ): Promise<DiagnosticQuestion[]> {
+  console.log(`      🔑 [aiService] generateDiagnosticQuestions called`);
+  console.log(`      🔑 [aiService] Input: ${JSON.stringify(input)}`);
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
   if (!apiKey) {
+    console.error(`      ❌ [aiService] ANTHROPIC_API_KEY not found in environment`);
     throw new Error('ANTHROPIC_API_KEY not configured');
   }
+  console.log(`      🔑 [aiService] API key found (length: ${apiKey.length})`);
 
   const { subject, level, skillsToTest, count } = input;
 
@@ -951,6 +956,7 @@ IMPORTANTE:
 - skillTested debe ser exactamente uno de los skill codes proporcionados`;
 
   try {
+    console.log(`      🌐 [aiService] Calling Anthropic API...`);
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -972,22 +978,29 @@ IMPORTANTE:
       }),
     });
 
+    console.log(`      🌐 [aiService] API Response status: ${response.status} ${response.statusText}`);
+
     if (!response.ok) {
       const error = await response.text();
-      console.error('Anthropic API error:', error);
+      console.error(`      ❌ [aiService] Anthropic API error response: ${error}`);
       throw new Error(`AI service error: ${response.statusText}`);
     }
 
     const data = (await response.json()) as { content: Array<{ text: string }> };
     const responseText = data.content[0].text;
+    console.log(`      🌐 [aiService] Received response text (length: ${responseText.length})`);
 
     // Extract JSON array from response
     const jsonMatch = responseText.match(/\[[\s\S]*\]/);
     if (!jsonMatch) {
+      console.error(`      ❌ [aiService] Failed to extract JSON array from response`);
+      console.error(`      ❌ [aiService] Response text (first 500 chars): ${responseText.substring(0, 500)}`);
       throw new Error('Failed to extract JSON array from AI response');
     }
+    console.log(`      🌐 [aiService] Extracted JSON array, parsing...`);
 
     const questions = JSON.parse(jsonMatch[0]) as DiagnosticQuestion[];
+    console.log(`      🌐 [aiService] Parsed ${questions.length} questions from JSON`);
 
     // Validate each question
     for (const q of questions) {
@@ -1015,10 +1028,12 @@ IMPORTANTE:
       }
     }
 
-    console.log(`✅ Generated ${questions.length} diagnostic questions for ${subject}`);
+    console.log(`      ✅ [aiService] Generated ${questions.length} diagnostic questions for ${subject}`);
     return questions;
   } catch (error) {
-    console.error('Error generating diagnostic questions:', error);
+    console.error(`      ❌ [aiService] Error generating diagnostic questions:`, error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`      ❌ [aiService] Error details: ${errorMessage}`);
     throw error;
   }
 }

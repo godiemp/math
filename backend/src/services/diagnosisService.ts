@@ -166,6 +166,11 @@ export async function getQuestionsForSkills(
 ): Promise<{ sessionId: string; questions: QuestionForDiagnosis[] }> {
   const sessionId = randomUUID();
 
+  console.log(`\n🔍 [DIAGNOSIS] Starting getQuestionsForSkills`);
+  console.log(`   Skills: ${JSON.stringify(skills)}`);
+  console.log(`   Level: ${level}, Limit: ${limit}`);
+  console.log(`   SessionId: ${sessionId}`);
+
   // Query questions from database that match the requested skills
   const query = `
     SELECT
@@ -184,7 +189,9 @@ export async function getQuestionsForSkills(
   `;
 
   try {
+    console.log(`   📊 Querying 'questions' table...`);
     const result = await pool.query(query, [level, skills, limit]);
+    console.log(`   📊 Found ${result.rows.length} questions in 'questions' table`);
 
     // Transform questions and add skill info
     const questions: QuestionForDiagnosis[] = result.rows.map((row: any) => {
@@ -206,8 +213,10 @@ export async function getQuestionsForSkills(
 
     // If no questions in DB, try to get from context_problems
     if (questions.length === 0) {
+      console.log(`   ⚠️ No questions in 'questions' table, trying context_problems...`);
       return await getQuestionsFromContextProblems(skills, level, limit, sessionId);
     }
+    console.log(`   ✅ Returning ${questions.length} questions from 'questions' table`);
 
     // Create session in memory (could also store in DB for persistence)
     await createDiagnosisSession(sessionId, skills, level, questions);
@@ -228,6 +237,7 @@ async function getQuestionsFromContextProblems(
   limit: number,
   sessionId: string
 ): Promise<{ sessionId: string; questions: QuestionForDiagnosis[] }> {
+  console.log(`   📊 Querying 'context_problems' table...`);
   const query = `
     SELECT
       cp.id,
@@ -251,6 +261,7 @@ async function getQuestionsFromContextProblems(
 
   try {
     const result = await pool.query(query, [level, skills, limit]);
+    console.log(`   📊 Found ${result.rows.length} questions in 'context_problems' table`);
 
     const questions: QuestionForDiagnosis[] = result.rows.map((row: any) => {
       const matchingSkill = row.skills?.find((s: string) => skills.includes(s)) || skills[0];
@@ -270,14 +281,16 @@ async function getQuestionsFromContextProblems(
 
     // If still no questions, try fetching by subject
     if (questions.length === 0) {
+      console.log(`   ⚠️ No questions in 'context_problems' table, trying by subject...`);
       return await getQuestionsBySubject(skills, level, limit, sessionId);
     }
+    console.log(`   ✅ Returning ${questions.length} questions from 'context_problems' table`);
 
     await createDiagnosisSession(sessionId, skills, level, questions);
 
     return { sessionId, questions };
   } catch (error) {
-    console.error('Error fetching from context_problems:', error);
+    console.error('❌ Error fetching from context_problems:', error);
     throw error;
   }
 }
@@ -292,16 +305,18 @@ async function getQuestionsBySubject(
   limit: number,
   sessionId: string
 ): Promise<{ sessionId: string; questions: QuestionForDiagnosis[] }> {
+  console.log(`   🎯 Attempting to get questions by subject...`);
   let subject = inferSubjectFromSkills(skills);
 
   // If subject inference fails, try to generate AI questions directly
   // Default to 'números' as it's the most common subject
   if (!subject) {
-    console.log(`⚠️ Subject inference failed, defaulting to 'números' for AI generation`);
+    console.log(`   ⚠️ Subject inference failed, defaulting to 'números' for AI generation`);
     subject = 'números';
     // Skip DB queries and go straight to AI generation
     return await generateDiagnosticQuestionsWithAI(skills, level, limit, sessionId, subject);
   }
+  console.log(`   🎯 Inferred subject: ${subject}`);
 
   // Try questions table by subject
   const questionsQuery = `
@@ -321,10 +336,13 @@ async function getQuestionsBySubject(
   `;
 
   try {
+    console.log(`   📊 Querying 'questions' table by subject '${subject}'...`);
     let result = await pool.query(questionsQuery, [level, subject, limit]);
+    console.log(`   📊 Found ${result.rows.length} questions by subject in 'questions' table`);
 
     // If no questions in questions table, try context_problems by subject
     if (result.rows.length === 0) {
+      console.log(`   📊 Querying 'context_problems' table by subject '${subject}'...`);
       const contextQuery = `
         SELECT
           cp.id,
@@ -346,13 +364,15 @@ async function getQuestionsBySubject(
         LIMIT $3
       `;
       result = await pool.query(contextQuery, [level, subject, limit]);
+      console.log(`   📊 Found ${result.rows.length} questions by subject in 'context_problems' table`);
     }
 
     // If no DB questions found, generate with AI
     if (result.rows.length === 0) {
-      console.log(`📝 No DB questions found for ${subject}, generating with AI...`);
+      console.log(`   📝 No DB questions found for ${subject}, generating with AI...`);
       return await generateDiagnosticQuestionsWithAI(skills, level, limit, sessionId, subject);
     }
+    console.log(`   ✅ Found ${result.rows.length} questions in DB by subject`);
 
     const questions: QuestionForDiagnosis[] = result.rows.map((row: any) => {
       // Use first skill from the question, or the requested skill as fallback
@@ -391,14 +411,29 @@ async function generateDiagnosticQuestionsWithAI(
   sessionId: string,
   subject: string
 ): Promise<{ sessionId: string; questions: QuestionForDiagnosis[] }> {
+  console.log(`   🤖 [AI] Generating diagnostic questions with AI...`);
+  console.log(`   🤖 [AI] Subject: ${subject}, Level: ${level}, Count: ${limit}`);
+  console.log(`   🤖 [AI] Skills: ${JSON.stringify(skills)}`);
+
+  // Check if API key is configured
+  const hasApiKey = !!process.env.ANTHROPIC_API_KEY;
+  console.log(`   🤖 [AI] ANTHROPIC_API_KEY configured: ${hasApiKey}`);
+
+  if (!hasApiKey) {
+    console.error(`   ❌ [AI] ANTHROPIC_API_KEY is not configured!`);
+    throw new Error('AI service not configured. Please set ANTHROPIC_API_KEY environment variable.');
+  }
+
   try {
     // Generate questions with AI
+    console.log(`   🤖 [AI] Calling generateDiagnosticQuestions...`);
     const aiQuestions = await generateDiagnosticQuestions({
       subject: subject as 'números' | 'álgebra' | 'geometría' | 'probabilidad',
       level,
       skillsToTest: skills,
       count: limit,
     });
+    console.log(`   🤖 [AI] Received ${aiQuestions.length} questions from AI`);
 
     // Transform AI questions to QuestionForDiagnosis format
     const questions: QuestionForDiagnosis[] = aiQuestions.map((q, index) => ({
@@ -417,11 +452,13 @@ async function generateDiagnosticQuestionsWithAI(
 
     await createDiagnosisSession(sessionId, skills, level, questions);
 
-    console.log(`✅ Generated ${questions.length} AI diagnostic questions for ${subject}`);
+    console.log(`   ✅ [AI] Generated ${questions.length} AI diagnostic questions for ${subject}`);
     return { sessionId, questions };
   } catch (error) {
-    console.error('Error generating AI diagnostic questions:', error);
-    throw new Error('No pudimos generar preguntas diagnósticas. Por favor intenta de nuevo.');
+    console.error(`   ❌ [AI] Error generating AI diagnostic questions:`, error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`   ❌ [AI] Error message: ${errorMessage}`);
+    throw new Error(`No pudimos generar preguntas diagnósticas: ${errorMessage}`);
   }
 }
 
