@@ -8,6 +8,7 @@ Una aplicación web completa diseñada para ayudar a estudiantes chilenos a prep
 
 SimplePAES es una plataforma de práctica completa que incluye:
 
+- **Mini-Lecciones Interactivas (50+)** - Lecciones estructuradas con metodología pedagógica de 6 pasos alineada al currículum MINEDUC
 - **Quizzes de Práctica Interactivos** - Estudia a tu ritmo o desafíate con pruebas cronometradas
 - **Sesiones de Práctica en Vivo (Ensayos)** - Únete a simulaciones PAES programadas con otros estudiantes
 - **Tutor con IA** - Asistente personalizado con metodología Socrática que te ayuda a entender cada problema
@@ -15,14 +16,42 @@ SimplePAES es una plataforma de práctica completa que incluye:
 - **Sistema de Rachas** - Mantén tu motivación con streaks diarios
 - **Dos Niveles de Competencia** - M1 (básico) y M2 (avanzado) alineados con estándares PAES
 - **Generador Dinámico de Preguntas (QGen)** - Sistema inteligente para generar preguntas personalizadas
+- **Sistema para Colegios** - Dashboard para profesores con asignación de estudiantes por nivel
 - **Sistema de Suscripciones** - Planes de acceso con gestión completa de usuarios
 - **Integración de Pagos** - Procesamiento de pagos con MercadoPago para Chile
 - **Analytics Completo** - Métricas de uso, desempeño y análisis de interacciones con IA
-- **Panel de Administración** - Gestiona sesiones en vivo, usuarios, planes, y el banco de preguntas
+- **Panel de Administración** - Gestiona sesiones en vivo, usuarios, planes, colegios y el banco de preguntas
 - **Sistema de Documentación** - Accede a material de estudio completo con LaTeX
 - **Módulo de Aprendizaje Interactivo** - Aprende con metodología Socrática proactiva
 
 ## Características Principales
+
+### 📚 Mini-Lecciones Interactivas (50+ Lecciones)
+
+**Sistema de Aprendizaje Estructurado** - Lecciones con metodología pedagógica de 6 pasos
+
+Cada mini-lección sigue un pipeline pedagógico probado:
+
+| Paso | Nombre | Descripción |
+|------|--------|-------------|
+| 1 | **Hook** | Escenario del mundo real que engancha al estudiante |
+| 2 | **Explore** | Descubrimiento interactivo de patrones |
+| 3 | **Explain** | Explicación teórica con pestañas organizadas |
+| 4 | **Classify** | Ejercicios de clasificación y aplicación |
+| 5 | **Practice** | Resolución guiada con hints |
+| 6 | **Verify** | Quiz checkpoint (3/4 correctas para aprobar) |
+
+**Cobertura por Materia (M1):**
+- **Números**: 17 lecciones (enteros, fracciones, porcentajes, potencias)
+- **Álgebra**: 21 lecciones (términos semejantes, factorización, productos notables, ecuaciones)
+- **Geometría**: 7 lecciones (áreas, perímetros, volúmenes, coordenadas)
+- **Probabilidad**: 8 lecciones (frecuencia, histogramas, estadística)
+
+**Características Técnicas:**
+- **Alineación MINEDUC**: Cada lección vinculada a Objetivos de Aprendizaje oficiales (OA)
+- **Componentes Reutilizables**: Toolbox con hooks y primitivas para desarrollo rápido
+- **Constructor de Lecciones**: Interfaz de chat con IA para crear nuevas lecciones
+- **Tiempo Estimado**: 10-15 minutos por lección
 
 ### 📖 Módulo de Aprendizaje Interactivo (Learn)
 
@@ -228,6 +257,22 @@ npm run seed:abstract-problems
 - **System Health** - Monitoreo en tiempo real del estado del sistema
 - **Backup & Restore** - Sistema automatizado de respaldos de base de datos
 
+### 🏫 Sistema para Colegios
+
+**Gestión de Cuentas Demo** - Panel administrativo para instituciones educativas
+
+- **Base de Datos de Colegios**: Búsqueda por nombre o RBD (código identificador chileno)
+- **Creación de Cuentas Demo**: Genera credenciales para colegios con período de prueba configurable (1-90 días)
+- **Gestión de Trials**: Seguimiento de cuentas demo, días restantes y estados
+- **Credenciales Seguras**: Generación con funcionalidad de copiar al portapapeles
+
+**Dashboard de Profesores** - Herramientas para docentes
+
+- **Asignación por Nivel**: Asigna estudiantes a grados específicos (1° a 4° Medio)
+- **Filtrado de Estudiantes**: Busca por email, nombre o nivel asignado
+- **Vista Colegio**: Dashboard especializado para estudiantes asignados a un nivel
+- **Contenido por Grado**: Mini-lecciones apropiadas según el nivel del estudiante
+
 ### 📊 Analytics y Monitoring
 
 **Dashboard de Analytics General** - Métricas completas del sistema
@@ -383,8 +428,15 @@ npm run monitor-backups:alert
 ├── app/                          # Páginas Next.js App Router
 │   ├── page.tsx                  # Landing page con autenticación
 │   ├── dashboard/                # Dashboard principal del estudiante
+│   ├── mini-lessons/             # Sistema de mini-lecciones
+│   │   ├── page.tsx              # Landing de mini-lecciones
+│   │   └── [level]/[subject]/    # Navegación por nivel y materia
+│   ├── lessons/m1/               # Páginas individuales de lecciones
 │   ├── learn/                    # Módulo de aprendizaje interactivo Socrático
+│   ├── teacher/                  # Dashboard de profesores
+│   │   └── students/             # Gestión de estudiantes por grado
 │   ├── practice/                 # Páginas de práctica (M1/M2)
+│   ├── pricing/                  # Página de precios (B2C y B2B)
 │   ├── curriculum/               # Páginas de curriculum overview
 │   │   ├── m1/                   # Curriculum M1
 │   │   │   ├── docs/[[...slug]]  # Sistema de documentación M1
@@ -405,6 +457,7 @@ npm run monitor-backups:alert
 │   │   ├── analytics/            # Dashboard de analytics general
 │   │   ├── ai-analytics/         # Analytics de interacciones IA
 │   │   ├── users/                # Gestión de usuarios y suscripciones
+│   │   ├── colegios/             # Gestión de cuentas demo para colegios
 │   │   ├── qgen/                 # Generador dinámico de preguntas
 │   │   ├── live-sessions/        # Gestión de sesiones en vivo
 │   │   ├── system-health/        # Monitoreo de salud del sistema
@@ -435,6 +488,8 @@ npm run monitor-backups:alert
 │   │   │   ├── quizRoutes.ts     # Quiz tracking
 │   │   │   ├── qgenRoutes.ts     # Generador de preguntas
 │   │   │   ├── paymentRoutes.ts  # Procesamiento de pagos MercadoPago
+│   │   │   ├── teacherRoutes.ts  # Dashboard de profesores
+│   │   │   ├── demoAccountRoutes.ts # Cuentas demo para colegios
 │   │   │   └── userManagementRoutes.ts # Gestión de usuarios
 │   │   ├── scripts/              # Scripts de utilidad
 │   │   └── services/             # Servicios de negocio
@@ -447,6 +502,11 @@ npm run monitor-backups:alert
 │   │       └── emailService.ts   # Servicio de notificaciones email
 │   └── package.json
 ├── components/                   # Componentes React
+│   ├── lessons/                  # Sistema de mini-lecciones
+│   │   ├── m1/                   # 53 directorios de lecciones M1
+│   │   ├── shared/               # Componentes compartidos (CheckpointQuiz, etc.)
+│   │   ├── primitives/           # Toolbox primitivas (ProgressDots, FeedbackPanel)
+│   │   └── builder/              # Constructor de lecciones con IA
 │   ├── Quiz.tsx                  # Componente principal de quiz
 │   ├── AIChatModal.tsx           # Interfaz de chat con tutor IA
 │   ├── LiveSession.tsx           # Sesión de práctica en vivo
@@ -477,6 +537,14 @@ npm run monitor-backups:alert
 │   ├── live-practice.spec.ts     # Tests de sesiones en vivo
 │   └── helpers/                  # Utilidades de testing
 ├── lib/                          # Lógica core y datos
+│   ├── lessons/                  # Sistema de mini-lecciones
+│   │   ├── lessons/              # Registros por materia (53 lecciones)
+│   │   ├── types.ts              # Tipos de lección
+│   │   ├── thematicUnits.ts      # Organización curricular
+│   │   └── styles.ts             # Sistema de colores
+│   ├── builder/                  # Constructor de lecciones
+│   │   └── types.ts              # Tipos DynamicLesson
+│   ├── schools.ts                # Base de datos de colegios chilenos
 │   ├── questions/                # Banco de preguntas por módulo
 │   │   ├── m1/                   # 406 preguntas M1
 │   │   │   ├── numeros/          # 91 preguntas
@@ -506,7 +574,10 @@ npm run monitor-backups:alert
 │   │   ├── sessions.ts           # Tipos de sesiones en vivo
 │   │   └── practice.ts           # Tipos de práctica
 │   ├── hooks/                    # Custom React hooks
-│   │   └── useSessions.ts        # Hook para sesiones en vivo
+│   │   ├── useSessions.ts        # Hook para sesiones en vivo
+│   │   └── lessons/              # Hooks para mini-lecciones
+│   │       ├── useMultipleChoice.ts  # Estado para secuencias de opciones
+│   │       └── useHintToggle.ts      # Visibilidad de pistas
 │   ├── questions.ts              # Utilidades de preguntas
 │   ├── api-client.ts             # Cliente HTTP centralizado
 │   ├── liveSessions.ts           # Gestión de sesiones en vivo
@@ -570,7 +641,7 @@ Cada pregunta incluye:
 ### Tablas Principales
 
 **Usuarios y Autenticación:**
-- `users` - Información de usuarios con roles (student/admin)
+- `users` - Información de usuarios con roles (student/admin/teacher), grade_level y assigned_by_teacher_id
 - `streaks` - Rachas diarias de práctica por usuario
 
 **Sistema de Suscripciones:**
@@ -780,6 +851,28 @@ El skill te guiará para crear:
 - `/backend/src/services/notificationService.ts` (si es necesario)
 - Instrucciones de registro
 
+### 📚 Skill: mini-lessons
+
+**Uso:** Crear mini-lecciones siguiendo la metodología pedagógica de 6 pasos
+
+**Qué hace:**
+- Guía el diseño pedagógico (objetivos, ZPD, misconceptions)
+- Genera componentes Step1-Step6 con patrones correctos
+- Enforza reglas críticas (isActive, onComplete, Tips en tabs)
+- Provee templates específicos por materia
+
+**Cuándo usar:**
+- Creando nuevas mini-lecciones
+- Agregando steps a lecciones existentes
+- Revisando calidad pedagógica de lecciones
+
+**Documentación incluida:**
+- `SKILL.md` - Guía principal
+- `pedagogical-design.md` - Framework de diseño
+- `step-templates.md` - Templates de código
+- `toolbox.md` - Hooks y primitivas reutilizables
+- `subjects/*.md` - Patrones por materia
+
 ## Uso
 
 ### Para Estudiantes
@@ -813,8 +906,20 @@ El skill te guiará para crear:
 10. **QGen System** - Gestiona el generador dinámico de preguntas en `/admin/qgen`
     - Administrar contextos, objetivos y templates
     - Generar y validar preguntas dinámicas
-11. **Debug Tools** - Herramientas de debug en `/admin/zen-debug` y `/admin/rapidfire-debug`
-12. **Backup & Restore** - Ejecuta comandos de backup desde el backend (ver sección de Operaciones)
+11. **Gestión de Colegios** - Crea cuentas demo para instituciones en `/admin/colegios`
+    - Buscar colegios por nombre o RBD
+    - Crear credenciales con período de prueba configurable
+    - Ver y eliminar cuentas demo existentes
+12. **Debug Tools** - Herramientas de debug en `/admin/zen-debug` y `/admin/rapidfire-debug`
+13. **Backup & Restore** - Ejecuta comandos de backup desde el backend (ver sección de Operaciones)
+
+### Para Profesores
+
+1. **Acceder al Dashboard** - Navega a `/teacher` (requiere rol teacher)
+2. **Gestión de Estudiantes** - Asigna estudiantes a grados en `/teacher/students`
+   - Filtrar por grado, email o nombre
+   - Asignar nivel (1° a 4° Medio)
+   - Ver estudiantes asignados por ti
 
 ## API Endpoints
 
@@ -897,6 +1002,17 @@ El skill te guiará para crear:
 - `POST /api/qgen/generate` - Generar pregunta dinámica
 - `POST /api/qgen/validate` - Validar pregunta generada
 
+### Teacher - Dashboard de Profesores
+- `GET /api/teacher/students` - Listar estudiantes (filtrable por grado)
+- `PUT /api/teacher/students/:id/grade` - Asignar grado a estudiante
+- `GET /api/teacher/stats` - Estadísticas del profesor
+
+### Admin - Cuentas Demo para Colegios
+- `GET /api/admin/demo-accounts` - Listar cuentas demo creadas
+- `POST /api/admin/demo-accounts` - Crear cuenta demo para colegio
+- `DELETE /api/admin/demo-accounts/:id` - Eliminar cuenta demo
+- `GET /api/schools/search` - Buscar colegios por nombre o RBD
+
 ### IA
 - `POST /api/ai-chat` - Chat con tutor IA (metodología Socrática)
 - `POST /api/ai-help` - Obtener ayuda IA para respuestas incorrectas
@@ -916,15 +1032,17 @@ El skill te guiará para crear:
 
 **Core Features:**
 - Sistema completo de práctica con dos modos (Zen y Rapid Fire)
-- 432 preguntas en el banco (406 M1 + 26 M2)
+- 53 mini-lecciones M1 con metodología pedagógica de 6 pasos
+- 900+ preguntas en el banco (406 M1 + 210 M2 + PDFs)
 - Tutor IA con metodología Socrática (Claude Sonnet 4.5)
 - Sistema de rachas diarias con persistencia en base de datos
 - Sesiones de práctica en vivo con sistema de lobby
 - Tracking de progreso con análisis de habilidades (500+ skills)
 - Sistema completo de documentación con markdown y LaTeX
 - Herramienta de upload y extracción de PDFs con IA
-- Autenticación JWT con roles de usuario
+- Autenticación JWT con roles de usuario (student/admin/teacher)
 - Panel de administración completo
+- Sistema para colegios con dashboard de profesores
 - Renderizado matemático profesional con KaTeX
 - Sistema de diseño personalizado inspirado en Apple
 - Modo de lectura para documentación
@@ -958,6 +1076,20 @@ El skill te guiará para crear:
 - ✅ **Generador de Valores** - Creación inteligente de valores numéricos
 - ✅ **Algoritmo de Generación** - Combina contextos, objetivos y templates
 - ✅ **Admin Interface** - Panel para gestionar el sistema QGen
+
+**Sistema de Mini-Lecciones:**
+- ✅ **53 Lecciones M1** - Cobertura completa de Números, Álgebra, Geometría, Probabilidad
+- ✅ **Pipeline de 6 Pasos** - Hook → Explore → Explain → Classify → Practice → Verify
+- ✅ **Alineación MINEDUC** - Vinculación a Objetivos de Aprendizaje oficiales
+- ✅ **Toolbox de Componentes** - Hooks y primitivas reutilizables
+- ✅ **Constructor con IA** - Interfaz de chat para crear nuevas lecciones
+- ✅ **Componentes Compartidos** - CheckpointQuiz, ProgressDots, FeedbackPanel
+
+**Sistema para Colegios:**
+- ✅ **Dashboard de Profesores** - Gestión de estudiantes por nivel de grado
+- ✅ **Panel Admin Colegios** - Creación de cuentas demo para instituciones
+- ✅ **Base de Datos RBD** - Búsqueda de colegios chilenos por código oficial
+- ✅ **Asignación por Grado** - Contenido filtrado automáticamente por nivel
 
 **Sistema de Problemas Abstractos:**
 - ✅ **46 Unidades Temáticas** - Taxonomía completa de PAES M1 y M2
@@ -1058,6 +1190,7 @@ Para más información detallada, ver:
 ### 🛠️ Claude Code Skills
 - [Code Patterns Skill](./.claude/skills/code-patterns/SKILL.md) - Guía de patrones y estándares
 - [Endpoint Generator](./.claude/skills/endpoint/SKILL.md) - Generador de endpoints Express.js
+- [Mini-Lessons Skill](./.claude/skills/mini-lessons/SKILL.md) - Guía para crear mini-lecciones pedagógicas
 
 ### 💳 Pagos y Suscripciones
 - [PAYMENT_INTEGRATION.md](./PAYMENT_INTEGRATION.md) - Guía completa de integración de pagos MercadoPago
@@ -1075,6 +1208,37 @@ Para más información detallada, ver:
 - [AI Setup](./docs/AI_SETUP.md) - Configuración del sistema de IA
 
 ## Mejoras Recientes
+
+### Sistema de Mini-Lecciones (NUEVO ⭐ Diciembre 2025)
+- ✅ **53 mini-lecciones M1** con metodología pedagógica de 6 pasos
+- ✅ Pipeline pedagógico: Hook → Explore → Explain → Classify → Practice → Verify
+- ✅ Cobertura por materia: Números (17), Álgebra (21), Geometría (7), Probabilidad (8)
+- ✅ **Alineación MINEDUC** - Cada lección vinculada a Objetivos de Aprendizaje oficiales (OA)
+- ✅ **Mini-Lesson Toolbox** - Hooks y primitivas reutilizables para desarrollo rápido
+- ✅ **Constructor de Lecciones** - Interfaz de chat con IA para crear nuevas lecciones
+- ✅ Componentes compartidos: CheckpointQuiz, ProgressDots, FeedbackPanel, HintPanel
+
+### Sistema para Colegios (NUEVO ⭐ Diciembre 2025)
+- ✅ **Dashboard de Profesores** - Gestión de estudiantes por nivel de grado
+- ✅ **Asignación por Grado** - Estudiantes asignados a 1° a 4° Medio
+- ✅ **Vista Colegio** - Dashboard especializado para estudiantes con grado asignado
+- ✅ **Panel Admin de Colegios** - Creación de cuentas demo para instituciones
+- ✅ **Base de Datos RBD** - Búsqueda de colegios chilenos por código oficial
+- ✅ **Credenciales Demo** - Generación con período de prueba configurable (1-90 días)
+
+### Mejoras SEO y Landing (NUEVO ⭐ Diciembre 2025)
+- ✅ **Breadcrumb Schema** - JSON-LD para mejor posicionamiento en buscadores
+- ✅ **Dynamic OG Images** - Imágenes de preview únicas por post de blog
+- ✅ **Google Site Verification** - Verificación para Search Console
+- ✅ **Tour Interactivo** - Demos animados en landing page
+- ✅ **Pricing Institucional** - Sección B2B con integración Intercom
+- ✅ **Audience Toggle** - Landing diferenciada para estudiantes vs colegios
+
+### E2E Tests y Calidad (Diciembre 2025)
+- ✅ **Tests Adaptive Practice** - Cobertura E2E completa del tutor IA
+- ✅ **Tests Colegio Dashboard** - Validación de flujos para estudiantes asignados
+- ✅ **Error Handling Mejorado** - Mensajes más claros en tutor IA
+- ✅ **Dark Mode Fixes** - Correcciones de visibilidad en modo oscuro
 
 ### Módulo de Aprendizaje Interactivo (NUEVO ⭐ Noviembre 2025)
 - ✅ Experiencia de aprendizaje con metodología Socrática proactiva
@@ -1218,9 +1382,9 @@ Para preguntas o soporte, por favor abre un issue en GitHub.
 
 <div align="center">
 
-**900+ problemas** | **Tutor IA Socrático** | **Sesiones en Vivo** | **Progreso Personalizado**
+**50+ Mini-Lecciones** | **900+ Problemas** | **Tutor IA Socrático** | **Sistema para Colegios**
 
-*La plataforma que combina inteligencia artificial, práctica adaptativa y metodología pedagógica probada para prepararte con éxito para la PAES.*
+*La plataforma que combina inteligencia artificial, mini-lecciones estructuradas y metodología pedagógica probada para prepararte con éxito para la PAES.*
 
 </div>
 
@@ -1242,6 +1406,21 @@ SimplePAES es una **plataforma de preparación matemática** diseñada específi
 ### Tu Camino al Éxito en la PAES
 
 SimplePAES no es un sitio más de práctica. Es tu **compañero de estudio inteligente** que se adapta a ti.
+
+---
+
+### 📚 Mini-Lecciones: Tu Ruta de Aprendizaje Estructurada
+
+**50+ lecciones interactivas** diseñadas para que domines cada concepto paso a paso:
+
+1. **Hook** - Comenzamos con un problema del mundo real que te engancha
+2. **Explora** - Descubres patrones y relaciones por ti mismo
+3. **Aprende** - Teoría clara con ejemplos y fórmulas
+4. **Clasifica** - Practicas identificando y aplicando conceptos
+5. **Resuelve** - Ejercicios guiados con pistas cuando las necesitas
+6. **Verifica** - Quiz final para confirmar que dominaste el tema
+
+*Cada lección toma solo 10-15 minutos y cubre exactamente lo que necesitas para la PAES*
 
 ---
 
@@ -1406,6 +1585,21 @@ Tu dashboard personal te muestra:
 
 ---
 
+### 📚 Currículum Estructurado y Oficial
+
+**50+ mini-lecciones alineadas al currículum MINEDUC:**
+
+Tu hijo no estudia contenido aleatorio. Cada lección está vinculada a los **Objetivos de Aprendizaje oficiales** del Ministerio de Educación de Chile:
+
+- **Progresión clara** - De conceptos básicos a avanzados en orden lógico
+- **6 pasos pedagógicos** - Metodología probada en cada lección
+- **Cobertura completa** - Números, Álgebra, Geometría y Probabilidad
+- **10-15 minutos por lección** - Sesiones cortas pero efectivas
+
+*Tu hijo estudia exactamente lo que necesita para la PAES, en el orden correcto*
+
+---
+
 ### 💡 Tecnología de Punta al Servicio de la Educación
 
 **¿Qué significa "Tutor IA Socrático"?**
@@ -1514,7 +1708,7 @@ SimplePAES implementa el **método socrático** (preguntas guiadas para desarrol
 
 ---
 
-### 🎯 Alineación Curricular PAES
+### 🎯 Alineación Curricular PAES y MINEDUC
 
 **Cobertura completa del programa oficial:**
 
@@ -1531,6 +1725,12 @@ SimplePAES implementa el **método socrático** (preguntas guiadas para desarrol
 - Probabilidad condicional y distribuciones
 
 **46 unidades temáticas** organizadas según taxonomía PAES oficial
+
+**Alineación MINEDUC (Nuevo):**
+- Cada mini-lección vinculada a **Objetivos de Aprendizaje (OA)** oficiales
+- Códigos OA del currículum nacional (ej: MA1M-OA-03)
+- Fácil mapeo a planificaciones curriculares existentes
+- Soporte para reportes de cobertura curricular
 
 ---
 
@@ -1597,6 +1797,24 @@ SimplePAES implementa el **método socrático** (preguntas guiadas para desarrol
 - Actividad y progreso por usuario
 - Identificación de patrones de estudio
 - Alertas de estudiantes inactivos
+
+**Dashboard de Profesores (Nuevo):**
+- Asignar estudiantes a niveles específicos (1° a 4° Medio)
+- Filtrar estudiantes por nivel, email o nombre
+- Vista especializada para estudiantes de colegio
+- Contenido automáticamente filtrado por grado asignado
+
+---
+
+### 🏫 Sistema para Colegios
+
+**Funcionalidades especiales para instituciones educativas:**
+
+- **Cuentas Demo**: Creación rápida de cuentas de prueba para colegios
+- **Base de Datos RBD**: Búsqueda de colegios chilenos por código oficial
+- **Gestión de Profesores**: Rol docente con permisos especiales
+- **Asignación por Grado**: Estudiantes ven contenido apropiado a su nivel
+- **Planes Institucionales**: Precios especiales para colegios (contactar vía Intercom)
 
 ---
 
@@ -1708,7 +1926,7 @@ SimplePAES ofrece diferentes planes adaptados a tus necesidades:
 
 ### SimplePAES en 3 Puntos:
 
-1. **Para Estudiantes**: Tu tutor personal 24/7 que te enseña a PENSAR matemáticamente, con 900+ problemas y práctica adaptativa.
+1. **Para Estudiantes**: Tu tutor personal 24/7 que te enseña a PENSAR matemáticamente, con 50+ mini-lecciones estructuradas y 900+ problemas.
 
 2. **Para Padres**: Inversión inteligente en el futuro de tu hijo con tecnología de punta, seguridad total y resultados medibles.
 
@@ -1726,7 +1944,7 @@ SimplePAES ofrece diferentes planes adaptados a tus necesidades:
 
 ---
 
-**900+ problemas** · **IA Socrática** · **Progreso medible** · **Comunidad activa**
+**50+ Mini-Lecciones** · **900+ Problemas** · **IA Socrática** · **Sistema para Colegios**
 
 </div>
 
@@ -1744,9 +1962,9 @@ Para desarrolladores, administradores de sistema o información técnica detalla
 
 ---
 
-**Última actualización**: Noviembre 2025
+**Última actualización**: Diciembre 2025
 
-**Versión**: 2.0 - Incluye Módulo de Aprendizaje Interactivo, 210 problemas M2, y integraciones PostHog/Intercom
+**Versión**: 3.0 - Incluye Sistema de Mini-Lecciones (53 lecciones), Sistema para Colegios con Dashboard de Profesores, y mejoras SEO
 
 ---
 
