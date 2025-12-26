@@ -554,6 +554,15 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
             Donde P es un punto original, O es el centro, k es la razón, y P&apos; es el punto imagen
           </p>
+          {/* Quick example */}
+          <div className="mt-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg p-3 text-left">
+            <p className="text-sm text-teal-800 dark:text-teal-200">
+              <strong>Ejemplo rápido:</strong> Si <span className="font-mono">O=(0,0)</span>, <span className="font-mono">P=(3,4)</span> y <span className="font-mono">k=2</span>:
+            </p>
+            <p className="text-sm font-mono text-teal-700 dark:text-teal-300 mt-1">
+              P&apos; = (0,0) + 2·(3-0, 4-0) = (0,0) + (6,8) = <strong className="text-teal-600 dark:text-teal-400">(6,8)</strong>
+            </p>
+          </div>
         </div>
 
         <button

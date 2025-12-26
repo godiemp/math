@@ -116,6 +116,46 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                   <span className="font-mono">k</span> = razón,{' '}
                   <span className="font-mono">P&apos;</span> = punto imagen
                 </div>
+
+                {/* Worked example */}
+                <div className="mt-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-4 border border-indigo-200 dark:border-indigo-700">
+                  <h5 className="font-bold text-indigo-800 dark:text-indigo-200 mb-3 text-center">
+                    Ejemplo paso a paso
+                  </h5>
+                  <div className="text-sm space-y-2">
+                    <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                      <span className="font-medium">Datos:</span>
+                      <span>Centro <span className="font-mono bg-red-100 dark:bg-red-900/50 px-1 rounded">O = (2, 3)</span></span>
+                      <span>Punto <span className="font-mono bg-blue-100 dark:bg-blue-900/50 px-1 rounded">P = (6, 5)</span></span>
+                      <span>Razón <span className="font-mono bg-purple-100 dark:bg-purple-900/50 px-1 rounded">k = 2</span></span>
+                    </div>
+                    <div className="border-t border-indigo-200 dark:border-indigo-600 pt-2 space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <span className="w-5 h-5 rounded-full bg-indigo-500 text-white text-xs flex items-center justify-center font-bold">1</span>
+                        <span className="text-gray-700 dark:text-gray-300">
+                          Restar el centro: <span className="font-mono">P - O = (6-2, 5-3) = <strong>(4, 2)</strong></span>
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-5 h-5 rounded-full bg-indigo-500 text-white text-xs flex items-center justify-center font-bold">2</span>
+                        <span className="text-gray-700 dark:text-gray-300">
+                          Multiplicar por k: <span className="font-mono">2 · (4, 2) = <strong>(8, 4)</strong></span>
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-5 h-5 rounded-full bg-indigo-500 text-white text-xs flex items-center justify-center font-bold">3</span>
+                        <span className="text-gray-700 dark:text-gray-300">
+                          Sumar el centro: <span className="font-mono">O + (8, 4) = (2+8, 3+4) = <strong className="text-green-600 dark:text-green-400">(10, 7)</strong></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div className="bg-white dark:bg-gray-800 rounded p-2 text-center mt-2">
+                      <span className="font-mono text-lg">
+                        P&apos; = <span className="text-green-600 dark:text-green-400 font-bold">(10, 7)</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* K values summary */}
