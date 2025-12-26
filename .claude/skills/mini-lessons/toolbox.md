@@ -1,6 +1,6 @@
 # Mini-Lesson Toolbox
 
-Composable hooks and primitives to build Step4/Step5 components faster while keeping full control.
+Composable hooks and primitives to build lesson step components faster while keeping full control.
 
 ---
 
@@ -274,6 +274,106 @@ import { ResultsSummary } from '@/components/lessons/primitives';
 
 ---
 
+## Step1 Hook Primitives
+
+Import from `@/components/lessons/primitives`:
+
+### ScenarioCard
+
+Wrapper for the scenario/story presentation with warm or cool gradients.
+
+```typescript
+import { ScenarioCard } from '@/components/lessons/primitives';
+
+<ScenarioCard variant="warm">  {/* 'warm' | 'cool' | 'neutral' */}
+  <p>Tu familia quiere cambiar de plan...</p>
+  {/* Visual content */}
+</ScenarioCard>
+```
+
+**Props:**
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `children` | `ReactNode` | Yes | Content to display |
+| `variant` | `'warm' \| 'cool' \| 'neutral'` | No | Color theme (default: 'warm') |
+| `className` | `string` | No | Additional CSS classes |
+
+---
+
+### QuestionPrompt
+
+Styled container for the question in the question phase.
+
+```typescript
+import { QuestionPrompt } from '@/components/lessons/primitives';
+
+<QuestionPrompt variant="default">  {/* 'default' | 'math' */}
+  <p className="text-lg font-semibold text-center">
+    ¿Cuál plan es más barato?
+  </p>
+</QuestionPrompt>
+```
+
+**Props:**
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `children` | `ReactNode` | Yes | Question content |
+| `variant` | `'default' \| 'math'` | No | Style variant (default: 'default') |
+| `className` | `string` | No | Additional CSS classes |
+
+---
+
+### OptionGrid
+
+Responsive grid layout for answer options.
+
+```typescript
+import { OptionGrid } from '@/components/lessons/primitives';
+
+<OptionGrid columns={2}>  {/* 1 | 2 */}
+  {options.map((option, index) => (
+    <OptionButton key={index} ... />
+  ))}
+</OptionGrid>
+```
+
+**Props:**
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `children` | `ReactNode` | Yes | Option buttons |
+| `columns` | `1 \| 2` | No | Number of columns (default: 2) |
+| `className` | `string` | No | Additional CSS classes |
+
+---
+
+### InsightCard
+
+Highlight card for the concept bridge/reveal at the end of the hook.
+
+```typescript
+import { InsightCard } from '@/components/lessons/primitives';
+
+<InsightCard
+  title="Esto es una Función Afín"
+  icon={<Lightbulb className="w-8 h-8 text-yellow-500" />}
+  variant="purple"  {/* 'purple' | 'green' | 'blue' */}
+>
+  <p className="font-mono text-lg">y = mx + b</p>
+  <p className="text-sm">Donde m es la pendiente...</p>
+</InsightCard>
+```
+
+**Props:**
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `title` | `string` | Yes | Card title |
+| `children` | `ReactNode` | Yes | Card content |
+| `icon` | `ReactNode` | No | Icon element (default: Lightbulb + Sparkles) |
+| `variant` | `'purple' \| 'green' \| 'blue'` | No | Color variant (default: 'purple') |
+| `className` | `string` | No | Additional CSS classes |
+
+---
+
 ## Color Utilities
 
 Import from `@/lib/lessons/styles`:
@@ -323,6 +423,7 @@ Study these refactored files:
 
 | File | Features Used |
 |------|---------------|
+| `components/lessons/m1/funcion-lineal-afin/Step1Hook.tsx` | `ScenarioCard`, `QuestionPrompt`, `OptionGrid`, `OptionButton`, `ActionButton`, `FeedbackPanel`, `InsightCard` |
 | `components/lessons/m1/completar-cuadrado/Step4Classify.tsx` | `useMultipleChoice`, `ProgressDots`, `OptionButton`, `FeedbackPanel`, `ActionButton`, `ResultsSummary` |
 | `components/lessons/m1/completar-cuadrado/Step5Practice.tsx` | All above + `useHintToggle`, `colors.hint` |
 
@@ -331,9 +432,8 @@ Study these refactored files:
 ## When to Use
 
 ### Use Toolbox For:
-- Standard multiple-choice Step4/Step5 patterns
-- Classification exercises
-- Practice with hints
+- **Step1 Hook**: Scenario cards, question prompts, option grids, insight reveals
+- **Step4/Step5**: Multiple-choice patterns, classification exercises, practice with hints
 - Any step with progress dots and feedback
 
 ### Go Custom For:
@@ -367,6 +467,12 @@ components/
   lessons/
     primitives/
       index.ts
+      # Step1 Hook primitives
+      ScenarioCard.tsx
+      QuestionPrompt.tsx
+      OptionGrid.tsx
+      InsightCard.tsx
+      # Step4/Step5 primitives
       ProgressDots.tsx
       FeedbackPanel.tsx
       OptionButton.tsx
