@@ -127,7 +127,9 @@ Un estudiante está en riesgo alto si:
 | 25-40% | Problema serio que requiere recursos adicionales |
 | > 40% | Crisis que afectará resultados institucionales |
 
-**La ventaja de esta métrica:** Te permite priorizar. Con recursos limitados, enfócate en el grupo de riesgo alto que todavía puede mejorar.
+**La ventaja de esta métrica:** Te permite priorizar. Con recursos limitados, enfócate en el grupo de riesgo alto que todavía puede mejorar. [Un framework de priorización te ayuda a decidir dónde concentrar esos recursos](/blog/matriz-priorizacion-refuerzo-matematicas).
+
+Los indicadores de riesgo también funcionan como [señales de alerta temprana que predicen malos resultados PAES](/blog/indicadores-predicen-malos-resultados-paes)—detectar estos patrones antes de que sea crisis es clave.
 
 ## Cómo pasar de "no tengo estos datos" a "tomo decisiones con datos"
 

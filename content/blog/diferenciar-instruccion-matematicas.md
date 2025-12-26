@@ -32,7 +32,7 @@ En la práctica:
 **El problema del tiempo**
 
 La diferenciación efectiva requiere:
-- Conocer el nivel exacto de cada estudiante (tiempo de diagnóstico)
+- Conocer el nivel exacto de cada estudiante (tiempo de diagnóstico) — [hay formas de hacerlo en 10 minutos](/blog/preguntas-diagnosticas-matematicas-10-minutos)
 - Preparar materiales diferenciados (tiempo de planificación)
 - Gestionar grupos distintos en clase (tiempo de gestión)
 - Dar retroalimentación diferenciada (tiempo de corrección)

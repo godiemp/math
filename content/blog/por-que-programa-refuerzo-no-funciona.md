@@ -128,7 +128,7 @@ Antes de agregar más horas de refuerzo, hazte esta pregunta:
 
 Si la respuesta es "les cuesta matemáticas" o "tienen malas notas", no tienes diagnóstico—tienes síntomas. Y tratar síntomas sin diagnóstico es la razón por la que el refuerzo no funciona.
 
-El primer paso no es más intervención. Es mejor información.
+El primer paso no es más intervención. Es mejor información. Y una vez que tienes esa información, necesitas [saber cómo justificar la inversión necesaria ante sostenedores](/blog/justificar-inversion-refuerzo-matematicas) y [priorizar dónde concentrar recursos limitados](/blog/matriz-priorizacion-refuerzo-matematicas).
 
 Con diagnóstico específico, cada hora de refuerzo trabaja exactamente lo que el estudiante necesita. Sin diagnóstico, cada hora es un tiro al aire que puede o no dar en el blanco.
 

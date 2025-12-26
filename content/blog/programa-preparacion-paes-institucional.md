@@ -195,7 +195,7 @@ Esta guía te muestra cómo diseñar un programa de preparación PAES que funcio
 
 **El problema:** Octubre es demasiado tarde para cerrar lagunas de años anteriores. A esa altura, solo puedes hacer control de daños.
 
-**Cómo evitarlo:** El programa empieza en marzo. El diagnóstico es lo primero.
+**Cómo evitarlo:** El programa empieza en marzo. El diagnóstico es lo primero. [Conoce los indicadores tempranos que predicen problemas PAES](/blog/indicadores-predicen-malos-resultados-paes) para actuar a tiempo.
 
 ### Error 2: No tener datos reales
 
@@ -245,9 +245,9 @@ Si respondiste NO a más de 2, no tienes un programa—tienes actividades suelta
 
 ### Semana 1-2: Decisiones básicas
 
-1. ¿Qué herramienta de diagnóstico y práctica vas a usar?
+1. ¿Qué herramienta de diagnóstico y práctica vas a usar? [Evalúa las opciones con las preguntas correctas](/blog/evaluar-plataformas-matematicas-colegio).
 2. ¿Quién va a liderar el programa?
-3. ¿Cuánto presupuesto hay disponible?
+3. ¿Cuánto presupuesto hay disponible? [Aprende a justificar la inversión ante sostenedores](/blog/justificar-inversion-refuerzo-matematicas).
 
 ### Semana 3-4: Implementación inicial
 
