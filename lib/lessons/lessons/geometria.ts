@@ -120,4 +120,24 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint' },
     ],
   },
+  {
+    id: 'm1-geo-004-a',
+    slug: 'coordenadas-cartesianas',
+    title: 'Sistema de Coordenadas Cartesianas',
+    description:
+      'Descubre el plano cartesiano, los cuatro cuadrantes, y aprende a ubicar puntos usando coordenadas (x, y).',
+    level: 'M1',
+    subject: 'geometría',
+    thematicUnit: 'M1-GEO-004',
+    skills: ['geometria-coordenadas', 'geometria-cuadrantes', 'geometria-plano-cartesiano'],
+    estimatedMinutes: 14,
+    minEducOA: ['MA1M-OA-06'],
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Tesoro Escondido' },
+      { id: 'explore', type: 'explore', title: 'Descubre el Plano' },
+      { id: 'classify', type: 'explore', title: 'Cuadrantes y Signos' },
+      { id: 'practice', type: 'practice', title: 'Practica Coordenadas' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
 ];
