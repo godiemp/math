@@ -246,6 +246,25 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <text x="180" y="170" textAnchor="middle" fontSize="11" fill="#1d4ed8" fontWeight="bold">
                 Original
               </text>
+              {/* Label for transformed triangle - positioned at centroid */}
+              {(() => {
+                const centroidX = (transformedTriangle[0].x + transformedTriangle[1].x + transformedTriangle[2].x) / 3;
+                const centroidY = (transformedTriangle[0].y + transformedTriangle[1].y + transformedTriangle[2].y) / 3;
+                // Position label below the centroid
+                const labelY = Math.min(centroidY + 25, 270);
+                return (
+                  <text
+                    x={centroidX}
+                    y={labelY}
+                    textAnchor="middle"
+                    fontSize="11"
+                    fill={isEnlargement ? '#16a34a' : '#ea580c'}
+                    fontWeight="bold"
+                  >
+                    Imagen
+                  </text>
+                );
+              })()}
 
               {/* K value display */}
               <rect x="10" y="10" width="100" height="35" rx="8" fill="#7c3aed" />
