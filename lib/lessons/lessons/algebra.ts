@@ -423,4 +423,30 @@ export const ALGEBRA_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint' },
     ],
   },
+  {
+    id: 'm1-alg-009-a',
+    slug: 'funcion-lineal-afin',
+    title: 'Función Lineal y Afín',
+    description:
+      'Distingue funciones lineales (y = mx) de afines (y = mx + b), calcula pendientes y grafica rectas.',
+    level: 'M1',
+    subject: 'álgebra',
+    thematicUnit: 'M1-ALG-009',
+    skills: [
+      'funcion-concepto',
+      'funcion-lineal-concepto',
+      'funcion-afin-pendiente',
+      'funcion-lineal-grafica',
+    ],
+    estimatedMinutes: 18,
+    minEducOA: ['MA1M-OA-03', 'MA1M-OA-04', 'MA1M-OA-10'],
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Plan de Datos' },
+      { id: 'explore', type: 'explore', title: 'Descubriendo el Patrón' },
+      { id: 'explain', type: 'explain', title: 'Función Lineal vs Afín' },
+      { id: 'classify', type: 'explore', title: 'Clasificación' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
 ];
