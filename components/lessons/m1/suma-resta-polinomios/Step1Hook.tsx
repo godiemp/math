@@ -1,40 +1,25 @@
 'use client';
 
-import { useState } from 'react';
-import { Check, X, ArrowRight, Lightbulb, Calculator, Package } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { ArrowRight, Lightbulb, Calculator, Package } from 'lucide-react';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { useStep1Phase } from '@/hooks/lessons';
+import {
+  ScenarioCard,
+  QuestionPrompt,
+  OptionGrid,
+  OptionButton,
+  ActionButton,
+  FeedbackPanel,
+} from '@/components/lessons/primitives';
 
-type Phase = 'scenario' | 'question' | 'result';
+const OPTIONS = ['4x² + 6x - 8', '4x² - 2x - 2', '3x² - 2x + 2', '4x² - 2x + 8'];
+const CORRECT_ANSWER = 1;
 
 export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
-  const [phase, setPhase] = useState<Phase>('scenario');
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [showFeedback, setShowFeedback] = useState(false);
-
-  const correctAnswer = 1; // "4x² - 2x - 2"
-
-  const options = [
-    '4x² + 6x - 8',
-    '4x² - 2x - 2',
-    '3x² - 2x + 2',
-    '4x² - 2x + 8',
-  ];
-
-  const handleSelect = (index: number) => {
-    if (showFeedback) return;
-    setSelectedAnswer(index);
-  };
-
-  const handleCheck = () => {
-    if (selectedAnswer === null) return;
-    setShowFeedback(true);
-    setTimeout(() => {
-      setPhase('result');
-    }, 1500);
-  };
-
-  const isCorrect = selectedAnswer === correctAnswer;
+  const { phase, setPhase, selectedAnswer, showFeedback, isCorrect, select, check } = useStep1Phase({
+    phases: ['scenario', 'question', 'result'],
+    correctAnswer: CORRECT_ANSWER,
+  });
 
   if (!isActive) return null;
 
@@ -52,17 +37,15 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
       {phase === 'scenario' && (
         <div className="space-y-6 animate-fadeIn">
-          {/* Scenario */}
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-2xl p-6 border border-blue-200 dark:border-blue-800">
+          <ScenarioCard variant="cool">
             <div className="flex items-center gap-3 mb-4">
               <Calculator className="w-8 h-8 text-blue-500" />
-              <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200">
-                Situación
-              </h3>
+              <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200">Situación</h3>
             </div>
             <p className="text-gray-700 dark:text-gray-300 mb-6">
               Una empresa de logística calcula sus costos operativos mensuales usando dos expresiones
-              algebraicas, donde <strong className="text-blue-600">x</strong> representa el número de rutas operativas:
+              algebraicas, donde <strong className="text-blue-600">x</strong> representa el número de rutas
+              operativas:
             </p>
 
             {/* Cost expressions */}
@@ -71,143 +54,78 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md border-l-4 border-green-500">
                 <div className="flex items-center gap-2 mb-2">
                   <Package className="w-5 h-5 text-green-500" />
-                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    Costos Fijos
-                  </span>
+                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Costos Fijos</span>
                 </div>
-                <p className="text-2xl font-mono font-bold text-gray-800 dark:text-gray-200">
-                  3x² + 2x - 5
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  (miles de dólares)
-                </p>
+                <p className="text-2xl font-mono font-bold text-gray-800 dark:text-gray-200">3x² + 2x - 5</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">(miles de dólares)</p>
               </div>
 
               {/* Variable costs */}
               <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md border-l-4 border-orange-500">
                 <div className="flex items-center gap-2 mb-2">
                   <Package className="w-5 h-5 text-orange-500" />
-                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    Costos Variables
-                  </span>
+                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Costos Variables</span>
                 </div>
-                <p className="text-2xl font-mono font-bold text-gray-800 dark:text-gray-200">
-                  x² - 4x + 3
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  (miles de dólares)
-                </p>
+                <p className="text-2xl font-mono font-bold text-gray-800 dark:text-gray-200">x² - 4x + 3</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">(miles de dólares)</p>
               </div>
             </div>
 
             <p className="text-gray-700 dark:text-gray-300 text-center font-medium">
-              El gerente necesita <span className="text-purple-600 font-bold">sumar</span> ambas expresiones
-              para obtener el costo total mensual.
+              El gerente necesita <span className="text-purple-600 font-bold">sumar</span> ambas expresiones para
+              obtener el costo total mensual.
             </p>
-          </div>
+          </ScenarioCard>
 
-          {/* Continue button */}
           <div className="flex justify-center">
-            <button
-              onClick={() => setPhase('question')}
-              className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg"
-            >
-              <span>¿Cuál es el costo total?</span>
-              <ArrowRight size={20} />
-            </button>
+            <ActionButton onClick={() => setPhase('question')} icon={<ArrowRight size={20} />}>
+              ¿Cuál es el costo total?
+            </ActionButton>
           </div>
         </div>
       )}
 
       {phase === 'question' && (
         <div className="space-y-6 animate-fadeIn">
-          {/* Question reminder */}
-          <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-4 text-center border border-purple-200 dark:border-purple-700">
+          <QuestionPrompt variant="math">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Calcula:</p>
             <p className="text-xl font-mono font-bold text-gray-800 dark:text-gray-200">
               (3x² + 2x - 5) + (x² - 4x + 3) = ?
             </p>
-          </div>
+          </QuestionPrompt>
 
-          {/* Options */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {options.map((option, index) => (
-              <button
+          <OptionGrid>
+            {OPTIONS.map((option, index) => (
+              <OptionButton
                 key={index}
-                onClick={() => handleSelect(index)}
-                disabled={showFeedback}
-                className={cn(
-                  'p-4 rounded-xl text-center font-mono font-bold text-lg transition-all border-2',
-                  selectedAnswer === index
-                    ? showFeedback
-                      ? index === correctAnswer
-                        ? 'bg-green-100 dark:bg-green-900/50 border-green-500 text-green-800 dark:text-green-200'
-                        : 'bg-red-100 dark:bg-red-900/50 border-red-500 text-red-800 dark:text-red-200'
-                      : 'bg-purple-100 dark:bg-purple-900/50 border-purple-500 text-purple-800 dark:text-purple-200'
-                    : showFeedback && index === correctAnswer
-                    ? 'bg-green-50 dark:bg-green-900/30 border-green-400'
-                    : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-purple-400 dark:hover:border-purple-500'
-                )}
-              >
-                <div className="flex items-center justify-center gap-3">
-                  <span
-                    className={cn(
-                      'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold',
-                      selectedAnswer === index
-                        ? showFeedback
-                          ? index === correctAnswer
-                            ? 'bg-green-500 text-white'
-                            : 'bg-red-500 text-white'
-                          : 'bg-purple-500 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
-                    )}
-                  >
-                    {showFeedback && index === correctAnswer ? (
-                      <Check size={16} />
-                    ) : showFeedback && selectedAnswer === index && index !== correctAnswer ? (
-                      <X size={16} />
-                    ) : (
-                      String.fromCharCode(65 + index)
-                    )}
-                  </span>
-                  <span className="text-gray-800 dark:text-gray-200">{option}</span>
-                </div>
-              </button>
+                label={option}
+                index={index}
+                isSelected={selectedAnswer === index}
+                isCorrect={index === CORRECT_ANSWER}
+                showFeedback={showFeedback}
+                onClick={() => select(index)}
+                isMono
+              />
             ))}
-          </div>
+          </OptionGrid>
 
-          {/* Check button */}
           {!showFeedback && (
             <div className="flex justify-center">
-              <button
-                onClick={handleCheck}
+              <ActionButton
+                onClick={check}
                 disabled={selectedAnswer === null}
-                className={cn(
-                  'px-8 py-3 rounded-xl font-semibold transition-all',
-                  selectedAnswer !== null
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 shadow-lg'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
-                )}
+                variant={selectedAnswer !== null ? 'primary' : 'disabled'}
               >
                 Verificar
-              </button>
+              </ActionButton>
             </div>
           )}
 
-          {/* Feedback */}
           {showFeedback && (
-            <div
-              className={cn(
-                'p-4 rounded-xl animate-fadeIn text-center',
-                isCorrect
-                  ? 'bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700'
-                  : 'bg-amber-100 dark:bg-amber-900/30 border border-amber-300 dark:border-amber-700'
-              )}
-            >
-              <p className={cn('font-semibold', isCorrect ? 'text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300')}>
-                {isCorrect ? '¡Exacto!' : '¡Casi!'} Veamos cómo se hace paso a paso...
-              </p>
-            </div>
+            <FeedbackPanel
+              isCorrect={isCorrect}
+              explanation={isCorrect ? '¡Exacto! Veamos cómo se hace paso a paso...' : '¡Casi! Veamos cómo se hace paso a paso...'}
+            />
           )}
         </div>
       )}
@@ -293,15 +211,10 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             </div>
           </div>
 
-          {/* Continue button */}
           <div className="flex justify-center">
-            <button
-              onClick={onComplete}
-              className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg"
-            >
-              <span>Continuar</span>
-              <ArrowRight size={20} />
-            </button>
+            <ActionButton onClick={onComplete} variant="secondary" icon={<ArrowRight size={20} />}>
+              Continuar
+            </ActionButton>
           </div>
         </div>
       )}
