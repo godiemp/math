@@ -1,16 +1,9 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import Matter from 'matter-js';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-
-interface Ball {
-  id: string;
-  path: ('L' | 'R')[];
-  currentStep: number;
-  finalBin: number;
-  isComplete: boolean;
-}
 
 interface GaltonBoardProps {
   rows?: number;
@@ -29,22 +22,32 @@ const SPEED_MAP = {
   fast: 80,
 };
 
-// Generate random path for a ball
-const generatePath = (rows: number): ('L' | 'R')[] => {
-  return Array.from({ length: rows }, () => (Math.random() < 0.5 ? 'L' : 'R'));
-};
-
-// Calculate which bin the ball lands in based on path
-const calculateBin = (path: ('L' | 'R')[]): number => {
-  return path.filter((p) => p === 'R').length;
+// Color schemes for light/dark mode
+const COLORS = {
+  light: {
+    background: '#f3f4f6',
+    peg: '#9ca3af',
+    ball: '#f59e0b',
+    histogram: '#3b82f6',
+    bellCurve: '#22c55e',
+    text: '#4b5563',
+    divider: '#d1d5db',
+  },
+  dark: {
+    background: '#1f2937',
+    peg: '#6b7280',
+    ball: '#fbbf24',
+    histogram: '#60a5fa',
+    bellCurve: '#4ade80',
+    text: '#9ca3af',
+    divider: '#4b5563',
+  },
 };
 
 // Calculate theoretical bell curve (binomial distribution)
 const calculateBellCurve = (rows: number, totalBalls: number): number[] => {
-  const bins = rows + 1;
   const curve: number[] = [];
   for (let k = 0; k <= rows; k++) {
-    // Binomial coefficient C(n, k) * (0.5)^n
     const coeff = factorial(rows) / (factorial(k) * factorial(rows - k));
     const prob = coeff * Math.pow(0.5, rows);
     curve.push(prob * totalBalls);
@@ -69,135 +72,295 @@ export default function GaltonBoard({
   autoStart = false,
   className,
 }: GaltonBoardProps) {
-  const [balls, setBalls] = useState<Ball[]>([]);
-  const [distribution, setDistribution] = useState<number[]>(
-    Array(rows + 1).fill(0)
-  );
+  const [distribution, setDistribution] = useState<number[]>(Array(rows + 1).fill(0));
   const [isRunning, setIsRunning] = useState(false);
   const [completedCount, setCompletedCount] = useState(0);
-  const ballIdRef = useRef(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [isDark, setIsDark] = useState(false);
 
-  const numBins = rows + 1;
+  // Refs for physics
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const engineRef = useRef<Matter.Engine | null>(null);
+  const runnerRef = useRef<Matter.Runner | null>(null);
+  const activeBallsRef = useRef<Set<Matter.Body>>(new Set());
+  const ballsReleasedRef = useRef(0);
+  const releaseIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const renderLoopRef = useRef<number>(0);
+  const distributionRef = useRef<number[]>(Array(rows + 1).fill(0));
+  const completedCountRef = useRef(0);
+
+  // Board dimensions
   const boardWidth = 320;
   const boardHeight = 300;
   const histogramHeight = 100;
   const pegRadius = 4;
-  const ballRadius = 6;
+  const ballRadius = 5;
+  const numBins = rows + 1;
 
-  // Calculate peg positions
+  // Detect dark mode
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    };
+
+    checkDarkMode();
+
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Calculate peg position
   const getPegPosition = useCallback(
     (row: number, col: number) => {
-      const verticalSpacing = (boardHeight - 40) / (rows + 1);
-      const horizontalSpacing = 24;
-      const rowStartX =
-        boardWidth / 2 - (row * horizontalSpacing) / 2;
+      const verticalSpacing = (boardHeight - 60) / rows;
+      const horizontalSpacing = 22;
+      const rowStartX = boardWidth / 2 - (row * horizontalSpacing) / 2;
       return {
         x: rowStartX + col * horizontalSpacing,
-        y: 30 + row * verticalSpacing,
+        y: 40 + row * verticalSpacing,
       };
     },
-    [rows, boardWidth, boardHeight]
+    [rows]
   );
 
-  // Calculate ball position at each step
-  const getBallPosition = useCallback(
-    (path: ('L' | 'R')[], step: number) => {
-      if (step === 0) {
-        return { x: boardWidth / 2, y: 10 };
-      }
-
-      const row = step - 1;
-      let col = 0;
-      for (let i = 0; i < step; i++) {
-        if (path[i] === 'R') col++;
-      }
-
-      const peg = getPegPosition(row, col);
-      return {
-        x: peg.x + (path[step - 1] === 'R' ? 8 : -8),
-        y: peg.y + 10,
-      };
-    },
-    [getPegPosition, boardWidth]
-  );
-
-  // Get bin position at bottom
+  // Get bin X position
   const getBinX = useCallback(
     (binIndex: number) => {
       const binWidth = boardWidth / numBins;
       return binWidth / 2 + binIndex * binWidth;
     },
-    [boardWidth, numBins]
+    [numBins]
   );
 
-  // Release a single ball
-  const releaseBall = useCallback(() => {
-    const path = generatePath(rows);
-    const finalBin = calculateBin(path);
-    const newBall: Ball = {
-      id: `ball-${ballIdRef.current++}`,
-      path,
-      currentStep: 0,
-      finalBin,
-      isComplete: false,
-    };
-    setBalls((prev) => [...prev, newBall]);
-  }, [rows]);
-
-  // Animate balls through the board
+  // Initialize physics engine
   useEffect(() => {
-    if (!isRunning) return;
+    const engine = Matter.Engine.create({
+      gravity: { x: 0, y: 0.8, scale: 0.001 },
+    });
+    engineRef.current = engine;
 
-    const animationInterval = setInterval(() => {
-      setBalls((prevBalls) => {
-        const updatedBalls = prevBalls.map((ball) => {
-          if (ball.isComplete) return ball;
+    // Create pegs
+    const pegs: Matter.Body[] = [];
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col <= row; col++) {
+        const pos = getPegPosition(row, col);
+        const peg = Matter.Bodies.circle(pos.x, pos.y, pegRadius, {
+          isStatic: true,
+          restitution: 0.5,
+          friction: 0.05,
+          label: 'peg',
+        });
+        pegs.push(peg);
+      }
+    }
 
-          const nextStep = ball.currentStep + 1;
-          if (nextStep > rows) {
-            // Ball reached bottom
-            return { ...ball, isComplete: true };
-          }
-          return { ...ball, currentStep: nextStep };
+    // Create walls
+    const wallThickness = 20;
+    const walls = [
+      // Left wall
+      Matter.Bodies.rectangle(
+        -wallThickness / 2,
+        boardHeight / 2,
+        wallThickness,
+        boardHeight,
+        { isStatic: true, label: 'wall' }
+      ),
+      // Right wall
+      Matter.Bodies.rectangle(
+        boardWidth + wallThickness / 2,
+        boardHeight / 2,
+        wallThickness,
+        boardHeight,
+        { isStatic: true, label: 'wall' }
+      ),
+      // Bottom
+      Matter.Bodies.rectangle(
+        boardWidth / 2,
+        boardHeight + wallThickness / 2,
+        boardWidth,
+        wallThickness,
+        { isStatic: true, label: 'floor' }
+      ),
+    ];
+
+    // Create bin sensors
+    const binSensors: Matter.Body[] = [];
+    const binWidth = boardWidth / numBins;
+    for (let i = 0; i < numBins; i++) {
+      const sensor = Matter.Bodies.rectangle(
+        getBinX(i),
+        boardHeight - 15,
+        binWidth - 4,
+        20,
+        {
+          isStatic: true,
+          isSensor: true,
+          label: `bin-sensor-${i}`,
+        }
+      );
+      binSensors.push(sensor);
+    }
+
+    // Create bin dividers
+    const dividers: Matter.Body[] = [];
+    for (let i = 0; i <= numBins; i++) {
+      const x = (i * boardWidth) / numBins;
+      const divider = Matter.Bodies.rectangle(
+        x,
+        boardHeight - 25,
+        2,
+        50,
+        { isStatic: true, label: 'divider' }
+      );
+      dividers.push(divider);
+    }
+
+    Matter.Composite.add(engine.world, [...pegs, ...walls, ...binSensors, ...dividers]);
+
+    // Collision detection for bin sensors
+    const processedBalls = new Set<string>();
+
+    Matter.Events.on(engine, 'collisionStart', (event) => {
+      event.pairs.forEach((pair) => {
+        const { bodyA, bodyB } = pair;
+        const ball = bodyA.label.startsWith('ball-')
+          ? bodyA
+          : bodyB.label.startsWith('ball-')
+          ? bodyB
+          : null;
+        const sensor = bodyA.label.startsWith('bin-sensor-')
+          ? bodyA
+          : bodyB.label.startsWith('bin-sensor-')
+          ? bodyB
+          : null;
+
+        if (ball && sensor && !processedBalls.has(ball.label)) {
+          processedBalls.add(ball.label);
+          const binIndex = parseInt(sensor.label.split('-')[2]);
+
+          // Remove ball from world
+          Matter.Composite.remove(engine.world, ball);
+          activeBallsRef.current.delete(ball);
+
+          // Update distribution
+          distributionRef.current = [...distributionRef.current];
+          distributionRef.current[binIndex]++;
+          setDistribution([...distributionRef.current]);
+
+          // Update completed count
+          completedCountRef.current++;
+          setCompletedCount(completedCountRef.current);
+        }
+      });
+    });
+
+    // Create runner
+    const runner = Matter.Runner.create();
+    runnerRef.current = runner;
+
+    return () => {
+      Matter.Runner.stop(runner);
+      Matter.Engine.clear(engine);
+      cancelAnimationFrame(renderLoopRef.current);
+      if (releaseIntervalRef.current) {
+        clearInterval(releaseIntervalRef.current);
+      }
+    };
+  }, [rows, getPegPosition, getBinX, numBins]);
+
+  // Render loop
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const engine = engineRef.current;
+    if (!canvas || !engine) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const colors = isDark ? COLORS.dark : COLORS.light;
+
+    const render = () => {
+      ctx.clearRect(0, 0, boardWidth, boardHeight);
+
+      // Draw background with rounded corners
+      ctx.fillStyle = colors.background;
+      ctx.beginPath();
+      ctx.roundRect(0, 0, boardWidth, boardHeight, 12);
+      ctx.fill();
+
+      // Draw pegs
+      ctx.fillStyle = colors.peg;
+      engine.world.bodies
+        .filter((b) => b.label === 'peg')
+        .forEach((peg) => {
+          ctx.beginPath();
+          ctx.arc(peg.position.x, peg.position.y, pegRadius, 0, Math.PI * 2);
+          ctx.fill();
         });
 
-        // Check for newly completed balls
-        const newlyCompleted = updatedBalls.filter(
-          (b, i) => b.isComplete && !prevBalls[i].isComplete
-        );
+      // Draw entry funnel
+      ctx.strokeStyle = colors.peg;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(boardWidth / 2 - 15, 0);
+      ctx.lineTo(boardWidth / 2, 20);
+      ctx.lineTo(boardWidth / 2 + 15, 0);
+      ctx.stroke();
 
-        if (newlyCompleted.length > 0) {
-          setDistribution((prev) => {
-            const newDist = [...prev];
-            newlyCompleted.forEach((ball) => {
-              newDist[ball.finalBin]++;
-            });
-            return newDist;
-          });
-          setCompletedCount((prev) => prev + newlyCompleted.length);
-        }
-
-        return updatedBalls;
-      });
-    }, SPEED_MAP[speed]);
-
-    return () => clearInterval(animationInterval);
-  }, [isRunning, rows, speed]);
-
-  // Release balls at intervals
-  useEffect(() => {
-    if (!isRunning || completedCount >= ballsToRelease) return;
-
-    const releaseInterval = setInterval(() => {
-      const activeBalls = balls.filter((b) => !b.isComplete);
-      if (activeBalls.length < 10 && balls.length < ballsToRelease) {
-        releaseBall();
+      // Draw bin dividers
+      ctx.strokeStyle = colors.divider;
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= numBins; i++) {
+        const x = (i * boardWidth) / numBins;
+        ctx.beginPath();
+        ctx.moveTo(x, boardHeight - 50);
+        ctx.lineTo(x, boardHeight);
+        ctx.stroke();
       }
-    }, SPEED_MAP[speed] * 2);
 
-    return () => clearInterval(releaseInterval);
-  }, [isRunning, balls, ballsToRelease, releaseBall, speed, completedCount]);
+      // Draw active balls
+      ctx.fillStyle = colors.ball;
+      activeBallsRef.current.forEach((ball) => {
+        ctx.beginPath();
+        ctx.arc(ball.position.x, ball.position.y, ballRadius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      renderLoopRef.current = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      cancelAnimationFrame(renderLoopRef.current);
+    };
+  }, [isDark, numBins]);
+
+  // Release a ball
+  const releaseBall = useCallback(() => {
+    const engine = engineRef.current;
+    if (!engine) return;
+
+    const ball = Matter.Bodies.circle(
+      boardWidth / 2 + (Math.random() - 0.5) * 6,
+      5,
+      ballRadius,
+      {
+        restitution: 0.4,
+        friction: 0.001,
+        frictionAir: 0.0005,
+        density: 0.002,
+        label: `ball-${ballsReleasedRef.current++}`,
+      }
+    );
+
+    Matter.Composite.add(engine.world, ball);
+    activeBallsRef.current.add(ball);
+  }, []);
 
   // Notify when distribution changes
   useEffect(() => {
@@ -206,187 +369,163 @@ export default function GaltonBoard({
 
   // Check if all balls are complete
   useEffect(() => {
-    if (completedCount >= ballsToRelease && balls.every((b) => b.isComplete)) {
+    if (
+      completedCount >= ballsToRelease &&
+      completedCount > 0 &&
+      activeBallsRef.current.size === 0
+    ) {
       setIsRunning(false);
+      if (releaseIntervalRef.current) {
+        clearInterval(releaseIntervalRef.current);
+        releaseIntervalRef.current = null;
+      }
       onAllBallsComplete?.();
     }
-  }, [completedCount, ballsToRelease, balls, onAllBallsComplete]);
+  }, [completedCount, ballsToRelease, onAllBallsComplete]);
 
   // Auto-start if enabled
   useEffect(() => {
     if (autoStart && !isRunning && completedCount === 0) {
-      setIsRunning(true);
-      releaseBall();
+      handleStart();
     }
-  }, [autoStart, isRunning, completedCount, releaseBall]);
+  }, [autoStart]);
 
   const handleStart = () => {
     if (isRunning) return;
+
+    const engine = engineRef.current;
+    const runner = runnerRef.current;
+    if (!engine || !runner) return;
+
     // Reset state
-    setBalls([]);
+    activeBallsRef.current.forEach((ball) => {
+      Matter.Composite.remove(engine.world, ball);
+    });
+    activeBallsRef.current.clear();
+    distributionRef.current = Array(rows + 1).fill(0);
     setDistribution(Array(rows + 1).fill(0));
+    completedCountRef.current = 0;
     setCompletedCount(0);
-    ballIdRef.current = 0;
+    ballsReleasedRef.current = 0;
+
     setIsRunning(true);
+
+    // Start physics
+    Matter.Runner.run(runner, engine);
+
+    // Release balls at intervals
     releaseBall();
+    releaseIntervalRef.current = setInterval(() => {
+      if (ballsReleasedRef.current < ballsToRelease) {
+        releaseBall();
+      } else {
+        if (releaseIntervalRef.current) {
+          clearInterval(releaseIntervalRef.current);
+          releaseIntervalRef.current = null;
+        }
+      }
+    }, SPEED_MAP[speed]);
   };
 
   const maxBinCount = Math.max(...distribution, 1);
-  const bellCurve = showBellCurve
-    ? calculateBellCurve(rows, ballsToRelease)
-    : [];
+  const bellCurve = showBellCurve ? calculateBellCurve(rows, ballsToRelease) : [];
+  const colors = isDark ? COLORS.dark : COLORS.light;
 
   return (
     <div className={cn('flex flex-col items-center gap-4', className)}>
-      {/* Board */}
+      {/* Physics canvas */}
       <div className="relative">
-        <svg
+        <canvas
+          ref={canvasRef}
           width={boardWidth}
-          height={boardHeight + histogramHeight + 20}
-          className="overflow-visible"
-        >
-          {/* Background */}
-          <rect
-            x={0}
-            y={0}
-            width={boardWidth}
-            height={boardHeight}
-            rx={12}
-            className="fill-gray-100 dark:fill-gray-800"
-          />
-
-          {/* Pegs */}
-          {Array.from({ length: rows }).map((_, row) =>
-            Array.from({ length: row + 1 }).map((_, col) => {
-              const pos = getPegPosition(row, col);
-              return (
-                <circle
-                  key={`peg-${row}-${col}`}
-                  cx={pos.x}
-                  cy={pos.y}
-                  r={pegRadius}
-                  className="fill-gray-400 dark:fill-gray-500"
-                />
-              );
-            })
-          )}
-
-          {/* Entry point */}
-          <path
-            d={`M${boardWidth / 2 - 15} 0 L${boardWidth / 2} 15 L${boardWidth / 2 + 15} 0`}
-            className="fill-none stroke-gray-400 dark:stroke-gray-500"
-            strokeWidth={2}
-          />
-
-          {/* Bin dividers */}
-          {Array.from({ length: numBins + 1 }).map((_, i) => {
-            const x = (i * boardWidth) / numBins;
-            return (
-              <line
-                key={`divider-${i}`}
-                x1={x}
-                y1={boardHeight - 5}
-                x2={x}
-                y2={boardHeight + histogramHeight}
-                className="stroke-gray-300 dark:stroke-gray-600"
-                strokeWidth={1}
-              />
-            );
-          })}
-
-          {/* Histogram base line */}
-          <line
-            x1={0}
-            y1={boardHeight + histogramHeight}
-            x2={boardWidth}
-            y2={boardHeight + histogramHeight}
-            className="stroke-gray-400 dark:stroke-gray-500"
-            strokeWidth={2}
-          />
-
-          {/* Histogram bars */}
-          {distribution.map((count, i) => {
-            const barHeight = (count / maxBinCount) * (histogramHeight - 10);
-            const binWidth = boardWidth / numBins;
-            return (
-              <motion.rect
-                key={`bar-${i}`}
-                x={i * binWidth + 2}
-                y={boardHeight + histogramHeight - barHeight}
-                width={binWidth - 4}
-                height={barHeight}
-                rx={2}
-                initial={{ height: 0 }}
-                animate={{ height: barHeight }}
-                className="fill-blue-500 dark:fill-blue-400"
-              />
-            );
-          })}
-
-          {/* Bell curve overlay */}
-          {showBellCurve && completedCount > 0 && (
-            <path
-              d={bellCurve
-                .map((val, i) => {
-                  const x = getBinX(i);
-                  const y =
-                    boardHeight +
-                    histogramHeight -
-                    (val / maxBinCount) * (histogramHeight - 10);
-                  return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
-                })
-                .join(' ')}
-              className="fill-none stroke-green-500 dark:stroke-green-400"
-              strokeWidth={2}
-              strokeDasharray="4 4"
-            />
-          )}
-
-          {/* Bin labels */}
-          {distribution.map((count, i) => (
-            <text
-              key={`label-${i}`}
-              x={getBinX(i)}
-              y={boardHeight + histogramHeight + 15}
-              textAnchor="middle"
-              className="fill-gray-600 dark:fill-gray-400 text-xs"
-            >
-              {count}
-            </text>
-          ))}
-
-          {/* Animated balls */}
-          <AnimatePresence>
-            {balls
-              .filter((b) => !b.isComplete)
-              .map((ball) => {
-                const pos = getBallPosition(ball.path, ball.currentStep);
-                return (
-                  <motion.circle
-                    key={ball.id}
-                    cx={pos.x}
-                    cy={pos.y}
-                    r={ballRadius}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{
-                      opacity: 1,
-                      scale: 1,
-                      cx: pos.x,
-                      cy: pos.y,
-                    }}
-                    exit={{ opacity: 0, scale: 0 }}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 300,
-                      damping: 20,
-                    }}
-                    className="fill-amber-500 dark:fill-amber-400"
-                  />
-                );
-              })}
-          </AnimatePresence>
-        </svg>
+          height={boardHeight}
+          className="rounded-xl"
+        />
       </div>
+
+      {/* Histogram (SVG) */}
+      <svg
+        width={boardWidth}
+        height={histogramHeight + 20}
+        className="overflow-visible"
+        style={{ marginTop: -8 }}
+      >
+        {/* Bin dividers */}
+        {Array.from({ length: numBins + 1 }).map((_, i) => {
+          const x = (i * boardWidth) / numBins;
+          return (
+            <line
+              key={`divider-${i}`}
+              x1={x}
+              y1={0}
+              x2={x}
+              y2={histogramHeight}
+              stroke={colors.divider}
+              strokeWidth={1}
+            />
+          );
+        })}
+
+        {/* Histogram base line */}
+        <line
+          x1={0}
+          y1={histogramHeight}
+          x2={boardWidth}
+          y2={histogramHeight}
+          stroke={colors.peg}
+          strokeWidth={2}
+        />
+
+        {/* Histogram bars */}
+        {distribution.map((count, i) => {
+          const barHeight = (count / maxBinCount) * (histogramHeight - 10);
+          const binWidth = boardWidth / numBins;
+          return (
+            <motion.rect
+              key={`bar-${i}`}
+              x={i * binWidth + 2}
+              y={histogramHeight - barHeight}
+              width={binWidth - 4}
+              height={barHeight}
+              rx={2}
+              initial={{ height: 0 }}
+              animate={{ height: barHeight }}
+              fill={colors.histogram}
+            />
+          );
+        })}
+
+        {/* Bell curve overlay */}
+        {showBellCurve && completedCount > 0 && (
+          <path
+            d={bellCurve
+              .map((val, i) => {
+                const x = getBinX(i);
+                const y = histogramHeight - (val / maxBinCount) * (histogramHeight - 10);
+                return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
+              })
+              .join(' ')}
+            fill="none"
+            stroke={colors.bellCurve}
+            strokeWidth={2}
+            strokeDasharray="4 4"
+          />
+        )}
+
+        {/* Bin labels */}
+        {distribution.map((count, i) => (
+          <text
+            key={`label-${i}`}
+            x={getBinX(i)}
+            y={histogramHeight + 15}
+            textAnchor="middle"
+            fill={colors.text}
+            className="text-xs"
+          >
+            {count}
+          </text>
+        ))}
+      </svg>
 
       {/* Controls */}
       <div className="flex items-center gap-4">
@@ -417,15 +556,11 @@ export default function GaltonBoard({
         <div className="flex items-center gap-4 text-sm">
           <div className="flex items-center gap-2">
             <div className="w-4 h-3 bg-blue-500 dark:bg-blue-400 rounded" />
-            <span className="text-gray-600 dark:text-gray-400">
-              Frecuencia real
-            </span>
+            <span className="text-gray-600 dark:text-gray-400">Frecuencia real</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-6 h-0 border-t-2 border-dashed border-green-500 dark:border-green-400" />
-            <span className="text-gray-600 dark:text-gray-400">
-              Curva teórica
-            </span>
+            <span className="text-gray-600 dark:text-gray-400">Curva teorica</span>
           </div>
         </div>
       )}
