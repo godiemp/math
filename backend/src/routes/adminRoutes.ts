@@ -1,6 +1,13 @@
 import { Router } from 'express';
 import multer from 'multer';
 import { uploadPDF, uploadPDFWithVision, saveQuestions, getQuestions, getUploads, serveImage } from '../controllers/adminController';
+import {
+  captureHandler,
+  listFilesHandler,
+  serveFileHandler,
+  deleteFileHandler,
+  getConfigHandler,
+} from '../controllers/marketingController';
 import { authenticate, requireAdmin } from '../auth/middleware';
 
 const router = Router();
@@ -54,5 +61,44 @@ router.get('/questions', authenticate, requireAdmin, getQuestions);
  * @access  Private (Admin only)
  */
 router.get('/uploads', authenticate, requireAdmin, getUploads);
+
+// ============================================================================
+// MARKETING CONTENT GENERATION ROUTES
+// ============================================================================
+
+/**
+ * @route   GET /api/admin/marketing/config
+ * @desc    Get available presets and capture types
+ * @access  Private (Admin only)
+ */
+router.get('/marketing/config', authenticate, requireAdmin, getConfigHandler);
+
+/**
+ * @route   POST /api/admin/marketing/capture
+ * @desc    Capture marketing content (screenshot, GIF, or video)
+ * @access  Private (Admin only)
+ */
+router.post('/marketing/capture', authenticate, requireAdmin, captureHandler);
+
+/**
+ * @route   GET /api/admin/marketing/files
+ * @desc    List all captured marketing files
+ * @access  Private (Admin only)
+ */
+router.get('/marketing/files', authenticate, requireAdmin, listFilesHandler);
+
+/**
+ * @route   GET /api/admin/marketing/files/:filename
+ * @desc    Serve a captured file for viewing/download
+ * @access  Private (Admin only)
+ */
+router.get('/marketing/files/:filename', authenticate, requireAdmin, serveFileHandler);
+
+/**
+ * @route   DELETE /api/admin/marketing/files/:filename
+ * @desc    Delete a captured file
+ * @access  Private (Admin only)
+ */
+router.delete('/marketing/files/:filename', authenticate, requireAdmin, deleteFileHandler);
 
 export default router;

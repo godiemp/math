@@ -12,7 +12,7 @@
  * are available, especially for PR deployments where VERCEL_GIT_PULL_REQUEST_ID
  * might not be available at build time.
  */
-function getApiBaseUrl(): string {
+export function getApiBaseUrl(): string {
   // Explicit env var takes precedence
   if (process.env.NEXT_PUBLIC_API_URL) {
     return process.env.NEXT_PUBLIC_API_URL;
