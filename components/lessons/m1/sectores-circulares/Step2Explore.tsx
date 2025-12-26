@@ -176,45 +176,33 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               />
 
               {/* Sector (highlighted) */}
-              <motion.path
+              <path
                 d={sectorPath(cx, cy, circleRadius, 0, angle)}
                 fill="#5eead4"
                 fillOpacity="0.7"
                 stroke="#0d9488"
                 strokeWidth="3"
-                initial={false}
-                animate={{ d: sectorPath(cx, cy, circleRadius, 0, angle) }}
-                transition={{ duration: 0.1 }}
               />
 
               {/* Arc highlight */}
-              <motion.path
+              <path
                 d={arcPath(cx, cy, circleRadius, 0, angle)}
                 fill="none"
                 stroke="#7c3aed"
                 strokeWidth="5"
                 strokeLinecap="round"
-                initial={false}
-                animate={{ d: arcPath(cx, cy, circleRadius, 0, angle) }}
-                transition={{ duration: 0.1 }}
               />
 
               {/* Radius lines */}
               <line x1={cx} y1={cy} x2={cx} y2={cy - circleRadius} stroke="#dc2626" strokeWidth="2" />
               {angle > 0 && (
-                <motion.line
+                <line
                   x1={cx}
                   y1={cy}
                   x2={cx + circleRadius * Math.cos((angle - 90) * Math.PI / 180)}
                   y2={cy + circleRadius * Math.sin((angle - 90) * Math.PI / 180)}
                   stroke="#dc2626"
                   strokeWidth="2"
-                  initial={false}
-                  animate={{
-                    x2: cx + circleRadius * Math.cos((angle - 90) * Math.PI / 180),
-                    y2: cy + circleRadius * Math.sin((angle - 90) * Math.PI / 180),
-                  }}
-                  transition={{ duration: 0.1 }}
                 />
               )}
 
