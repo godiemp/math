@@ -27,14 +27,17 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   if (!isActive) return null;
 
   // Original triangle vertices (in SVG coordinates)
+  // Original triangle positioned to fit when scaled up to k=2.5
+  // With center at (120,160) and max point at (200,155):
+  // k=2.5: 120 + 2.5*(200-120) = 320 < 350 ✓
   const originalTriangle = [
-    { x: 200, y: 160 },
-    { x: 260, y: 160 },
-    { x: 230, y: 100 },
+    { x: 160, y: 155 },
+    { x: 200, y: 155 },
+    { x: 180, y: 115 },
   ];
 
   // Center point
-  const center = { x: 150, y: 150 };
+  const center = { x: 120, y: 160 };
 
   // Transform points based on k
   const transformedTriangle = originalTriangle.map((p) => applyHomotecia(p, center, k));
@@ -234,7 +237,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               />
 
               {/* Labels */}
-              <text x="235" y="175" textAnchor="middle" fontSize="11" fill="#1d4ed8" fontWeight="bold">
+              <text x="180" y="170" textAnchor="middle" fontSize="11" fill="#1d4ed8" fontWeight="bold">
                 Original
               </text>
 
