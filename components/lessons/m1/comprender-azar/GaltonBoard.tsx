@@ -87,6 +87,8 @@ export default function GaltonBoard({
   const renderLoopRef = useRef<number>(0);
   const distributionRef = useRef<number[]>(Array(rows + 1).fill(0));
   const completedCountRef = useRef(0);
+  const processedBallsRef = useRef<Set<string>>(new Set());
+  const runIdRef = useRef(0);
 
   // Board dimensions
   const boardWidth = 320;
@@ -222,8 +224,6 @@ export default function GaltonBoard({
     Matter.Composite.add(engine.world, [...pegs, ...walls, ...binSensors, ...dividers]);
 
     // Collision detection for bin sensors
-    const processedBalls = new Set<string>();
-
     Matter.Events.on(engine, 'collisionStart', (event) => {
       event.pairs.forEach((pair) => {
         const { bodyA, bodyB } = pair;
@@ -238,8 +238,8 @@ export default function GaltonBoard({
           ? bodyB
           : null;
 
-        if (ball && sensor && !processedBalls.has(ball.label)) {
-          processedBalls.add(ball.label);
+        if (ball && sensor && !processedBallsRef.current.has(ball.label)) {
+          processedBallsRef.current.add(ball.label);
           const binIndex = parseInt(sensor.label.split('-')[2]);
 
           // Remove ball from world
@@ -354,7 +354,7 @@ export default function GaltonBoard({
         friction: 0.001,
         frictionAir: 0.0005,
         density: 0.002,
-        label: `ball-${ballsReleasedRef.current++}`,
+        label: `ball-${runIdRef.current}-${ballsReleasedRef.current++}`,
       }
     );
 
@@ -407,6 +407,8 @@ export default function GaltonBoard({
     completedCountRef.current = 0;
     setCompletedCount(0);
     ballsReleasedRef.current = 0;
+    processedBallsRef.current.clear();
+    runIdRef.current++;
 
     setIsRunning(true);
 
