@@ -14,22 +14,22 @@ type ProofPhase =
   | 'mark-D'          // Mark point D on AB
   | 'mark-E'          // Mark point E on AC
   | 'label-segments'  // Label AD, DB, AE, EC
-  | 'draw-heights'    // Draw heights from D and E to BC
-  | 'area-intro'      // Explain area comparison
-  | 'area-ADE'        // Highlight triangle ADE
+  | 'area-intro'      // Explain area comparison strategy
   | 'area-BDE'        // Highlight triangle BDE
   | 'area-CDE'        // Highlight triangle CDE
   | 'equal-base'      // BDE and CDE share base DE
+  | 'show-heights'    // Show heights from B and C to DE
   | 'equal-height'    // Equal heights (parallel lines)
   | 'conclude-equal'  // Area(BDE) = Area(CDE)
+  | 'ratio-explain'   // Explain the ratio relationship
   | 'ratio-setup'     // Derive ratio equations
   | 'conclude';       // Final theorem statement
 
 const PHASE_ORDER: ProofPhase[] = [
   'intro', 'setup-triangle', 'draw-parallel', 'mark-D', 'mark-E',
-  'label-segments', 'draw-heights', 'area-intro', 'area-ADE',
-  'area-BDE', 'area-CDE', 'equal-base', 'equal-height',
-  'conclude-equal', 'ratio-setup', 'conclude'
+  'label-segments', 'area-intro', 'area-BDE', 'area-CDE',
+  'equal-base', 'show-heights', 'equal-height', 'conclude-equal',
+  'ratio-explain', 'ratio-setup', 'conclude'
 ];
 
 export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
@@ -63,14 +63,14 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
 
   // Auto-advance for quick phases
   useEffect(() => {
-    const autoAdvancePhases: ProofPhase[] = ['mark-D', 'mark-E', 'label-segments'];
+    const autoAdvancePhases: ProofPhase[] = ['mark-D', 'mark-E'];
     if (autoAdvancePhases.includes(phase)) {
       const timer = setTimeout(() => {
         const nextIndex = PHASE_ORDER.indexOf(phase) + 1;
         if (nextIndex < PHASE_ORDER.length) {
           setPhase(PHASE_ORDER[nextIndex]);
         }
-      }, 1000);
+      }, 1200);
       return () => clearTimeout(timer);
     }
   }, [phase]);
@@ -96,31 +96,30 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
   const showPointD = currentIndex >= 3;
   const showPointE = currentIndex >= 4;
   const showSegmentLabels = currentIndex >= 5;
-  const showHeights = currentIndex >= 6;
-  const showTriangleADE = currentIndex >= 8;
-  const showTriangleBDE = currentIndex >= 9;
-  const showTriangleCDE = currentIndex >= 10;
-  const highlightBase = currentIndex >= 11;
-  const highlightHeights = currentIndex >= 12;
+  const showTriangleBDE = currentIndex >= 7;
+  const showTriangleCDE = currentIndex >= 8;
+  const highlightBase = currentIndex >= 9;
+  const showHeightsFromBC = currentIndex >= 10;
+  const highlightHeights = currentIndex >= 11;
 
   // Phase descriptions
   const getPhaseDescription = () => {
     switch (phase) {
       case 'intro': return 'Vamos a demostrar por que el teorema siempre funciona';
       case 'setup-triangle': return 'Empezamos con un triangulo cualquiera ABC';
-      case 'draw-parallel': return 'Trazamos una linea paralela a BC';
+      case 'draw-parallel': return 'Trazamos una linea paralela a BC que pasa por el triangulo';
       case 'mark-D': return 'Esta linea corta AB en el punto D...';
       case 'mark-E': return '...y corta AC en el punto E';
-      case 'label-segments': return 'Ahora tenemos los segmentos AD, DB, AE, EC';
-      case 'draw-heights': return 'Dibujamos las alturas de los triangulos';
-      case 'area-intro': return 'Vamos a comparar las areas de tres triangulos';
-      case 'area-ADE': return 'Triangulo ADE (amarillo)';
-      case 'area-BDE': return 'Triangulo BDE (azul)';
-      case 'area-CDE': return 'Triangulo CDE (verde)';
-      case 'equal-base': return 'BDE y CDE comparten la misma base DE';
-      case 'equal-height': return 'Como DE || BC, las alturas son IGUALES';
-      case 'conclude-equal': return 'Por lo tanto: Area(BDE) = Area(CDE)';
-      case 'ratio-setup': return 'Usamos las razones de areas...';
+      case 'label-segments': return 'Queremos probar que AD/DB = AE/EC';
+      case 'area-intro': return 'La clave: comparar las areas de dos triangulos';
+      case 'area-BDE': return 'Triangulo BDE (azul) - vertices B, D, E';
+      case 'area-CDE': return 'Triangulo CDE (verde) - vertices C, D, E';
+      case 'equal-base': return 'Ambos triangulos comparten la misma base DE';
+      case 'show-heights': return 'Sus alturas van desde B y C hasta la linea DE';
+      case 'equal-height': return '¡Como DE || BC, B y C estan a la MISMA distancia de DE!';
+      case 'conclude-equal': return 'Misma base + misma altura = misma area';
+      case 'ratio-explain': return 'Ahora usamos una propiedad de triangulos...';
+      case 'ratio-setup': return 'Si dos triangulos comparten un vertice...';
       case 'conclude': return '¡El Teorema de Tales queda demostrado!';
       default: return '';
     }
@@ -232,18 +231,6 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
               </g>
             )}
 
-            {/* Triangle ADE (yellow) */}
-            {showTriangleADE && (
-              <polygon
-                points={`${A.x},${A.y} ${D.x},${D.y} ${E.x},${E.y}`}
-                fill={colors.ADE.fill}
-                stroke={colors.ADE.stroke}
-                strokeWidth="2"
-                className="animate-fadeIn"
-                fillOpacity={0.7}
-              />
-            )}
-
             {/* Triangle BDE (blue) */}
             {showTriangleBDE && (
               <polygon
@@ -262,6 +249,18 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
                 points={`${C.x},${C.y} ${D.x},${D.y} ${E.x},${E.y}`}
                 fill={colors.CDE.fill}
                 stroke={colors.CDE.stroke}
+                strokeWidth="2"
+                className="animate-fadeIn"
+                fillOpacity={0.7}
+              />
+            )}
+
+            {/* Triangle ADE (amber) - shown in ratio phases */}
+            {(phase === 'ratio-explain' || phase === 'ratio-setup') && (
+              <polygon
+                points={`${A.x},${A.y} ${D.x},${D.y} ${E.x},${E.y}`}
+                fill={colors.ADE.fill}
+                stroke={colors.ADE.stroke}
                 strokeWidth="2"
                 className="animate-fadeIn"
                 fillOpacity={0.7}
@@ -317,32 +316,32 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
               </g>
             )}
 
-            {/* Heights */}
-            {showHeights && (
+            {/* Heights from B and C to line DE */}
+            {showHeightsFromBC && (
               <g className="animate-fadeIn">
-                {/* Height from D to BC */}
+                {/* Height from B to line DE (perpendicular) */}
                 <line
-                  x1={D.x}
-                  y1={D.y}
-                  x2={D.x}
-                  y2={220}
-                  stroke="#9CA3AF"
-                  strokeWidth="1"
+                  x1={B.x}
+                  y1={B.y}
+                  x2={B.x + (D.y - B.y) * 0.3}
+                  y2={D.y}
+                  stroke="#2563EB"
+                  strokeWidth="2"
                   strokeDasharray="4"
                 />
-                {/* Height from E to BC */}
+                {/* Height from C to line DE (perpendicular) */}
                 <line
-                  x1={E.x}
-                  y1={E.y}
-                  x2={E.x}
-                  y2={220}
-                  stroke="#9CA3AF"
-                  strokeWidth="1"
+                  x1={C.x}
+                  y1={C.y}
+                  x2={C.x - (C.y - E.y) * 0.3}
+                  y2={E.y}
+                  stroke="#059669"
+                  strokeWidth="2"
                   strokeDasharray="4"
                 />
                 {/* Height labels */}
-                <text x={D.x + 5} y={(D.y + 220) / 2} className="text-xs fill-gray-500">h</text>
-                <text x={E.x + 5} y={(E.y + 220) / 2} className="text-xs fill-gray-500">h</text>
+                <text x={B.x + 15} y={(B.y + D.y) / 2} className="text-sm fill-blue-600 font-bold">h</text>
+                <text x={C.x - 25} y={(C.y + E.y) / 2} className="text-sm fill-green-600 font-bold">h</text>
               </g>
             )}
 
@@ -373,59 +372,95 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
           <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
             {phase === 'area-intro' && (
               <p className="text-gray-700 dark:text-gray-300 text-center">
-                Vamos a analizar las areas de los triangulos <strong className="text-amber-600">ADE</strong>,{' '}
-                <strong className="text-blue-600">BDE</strong>, y <strong className="text-green-600">CDE</strong>.
-              </p>
-            )}
-            {phase === 'area-ADE' && (
-              <p className="text-gray-700 dark:text-gray-300 text-center">
-                El triangulo <strong className="text-amber-600">ADE</strong> tiene base DE y altura desde A.
+                Vamos a demostrar que los triangulos <strong className="text-blue-600">BDE</strong> y{' '}
+                <strong className="text-green-600">CDE</strong> tienen la <strong>misma area</strong>.
               </p>
             )}
             {phase === 'area-BDE' && (
-              <p className="text-gray-700 dark:text-gray-300 text-center">
-                El triangulo <strong className="text-blue-600">BDE</strong> tiene base DE y altura desde B.
-              </p>
-            )}
-            {phase === 'area-CDE' && (
-              <p className="text-gray-700 dark:text-gray-300 text-center">
-                El triangulo <strong className="text-green-600">CDE</strong> tiene base DE y altura desde C.
-              </p>
-            )}
-            {phase === 'equal-base' && (
-              <p className="text-gray-700 dark:text-gray-300 text-center">
-                Los triangulos <strong className="text-blue-600">BDE</strong> y{' '}
-                <strong className="text-green-600">CDE</strong> comparten la misma{' '}
-                <strong className="text-amber-600">base DE</strong>.
-              </p>
-            )}
-            {phase === 'equal-height' && (
-              <p className="text-gray-700 dark:text-gray-300 text-center">
-                Como <strong className="text-red-500">DE || BC</strong>, la distancia entre las lineas paralelas
-                es constante. ¡Las alturas desde B y C a DE son <strong className="text-green-600">IGUALES</strong>!
-              </p>
-            )}
-            {phase === 'conclude-equal' && (
               <div className="text-center space-y-2">
                 <p className="text-gray-700 dark:text-gray-300">
-                  Misma base + misma altura = <strong className="text-green-600">misma area</strong>
+                  El triangulo <strong className="text-blue-600">BDE</strong> tiene:
                 </p>
-                <MathDisplay latex="\text{Area}(BDE) = \text{Area}(CDE)" />
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Base = <strong>DE</strong> y Altura = distancia de <strong>B</strong> a la linea DE
+                </p>
+              </div>
+            )}
+            {phase === 'area-CDE' && (
+              <div className="text-center space-y-2">
+                <p className="text-gray-700 dark:text-gray-300">
+                  El triangulo <strong className="text-green-600">CDE</strong> tiene:
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Base = <strong>DE</strong> y Altura = distancia de <strong>C</strong> a la linea DE
+                </p>
+              </div>
+            )}
+            {phase === 'equal-base' && (
+              <div className="text-center space-y-2">
+                <p className="text-gray-700 dark:text-gray-300">
+                  Ambos triangulos comparten la misma <strong className="text-amber-600">base DE</strong>.
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Si tambien tienen la misma altura, ¡tendran la misma area!
+                </p>
+              </div>
+            )}
+            {phase === 'show-heights' && (
+              <div className="text-center space-y-2">
+                <p className="text-gray-700 dark:text-gray-300">
+                  Las alturas son las distancias <strong>perpendiculares</strong> desde B y C hasta la linea DE.
+                </p>
+              </div>
+            )}
+            {phase === 'equal-height' && (
+              <div className="text-center space-y-2">
+                <p className="text-gray-700 dark:text-gray-300">
+                  Como <strong className="text-red-500">DE es paralela a BC</strong>, ambos puntos B y C
+                  estan a la <strong className="text-green-600">misma distancia</strong> de la linea DE.
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  (La distancia entre lineas paralelas es constante)
+                </p>
+              </div>
+            )}
+            {phase === 'conclude-equal' && (
+              <div className="text-center space-y-3">
+                <p className="text-gray-700 dark:text-gray-300">
+                  <strong>Misma base</strong> (DE) + <strong>misma altura</strong> (h) = <strong className="text-green-600">misma area</strong>
+                </p>
+                <div className="bg-green-100 dark:bg-green-900/40 rounded-lg p-3">
+                  <MathDisplay latex="\text{Area}(BDE) = \text{Area}(CDE)" />
+                </div>
+              </div>
+            )}
+            {phase === 'ratio-explain' && (
+              <div className="text-center space-y-3">
+                <p className="text-gray-700 dark:text-gray-300">
+                  Ahora consideramos el triangulo <strong className="text-amber-600">ADE</strong> (el pequeño de arriba).
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Los triangulos ADE y BDE comparten el <strong>vertice E</strong>.
+                  <br />
+                  Por eso: Area(ADE)/Area(BDE) = AD/DB
+                </p>
               </div>
             )}
             {phase === 'ratio-setup' && (
               <div className="text-center space-y-3">
                 <p className="text-gray-700 dark:text-gray-300 text-sm">
-                  Usando razones de areas con base comun DE:
+                  Triangulos que comparten un vertice: su razon de areas = razon de bases
                 </p>
                 <div className="space-y-2">
                   <MathDisplay latex="\frac{\text{Area}(ADE)}{\text{Area}(BDE)} = \frac{AD}{DB}" displayMode />
                   <MathDisplay latex="\frac{\text{Area}(ADE)}{\text{Area}(CDE)} = \frac{AE}{EC}" displayMode />
                 </div>
-                <p className="text-sm text-green-600 dark:text-green-400 font-semibold">
-                  Como Area(BDE) = Area(CDE), entonces:
-                </p>
-                <MathDisplay latex="\frac{AD}{DB} = \frac{AE}{EC}" displayMode />
+                <div className="bg-green-100 dark:bg-green-900/40 rounded-lg p-3 mt-2">
+                  <p className="text-sm text-green-700 dark:text-green-300 font-semibold mb-2">
+                    Como Area(BDE) = Area(CDE):
+                  </p>
+                  <MathDisplay latex="\frac{AD}{DB} = \frac{AE}{EC}" displayMode />
+                </div>
               </div>
             )}
           </div>
@@ -440,7 +475,7 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
               Reiniciar
             </button>
 
-            {!['mark-D', 'mark-E', 'label-segments'].includes(phase) && (
+            {!['mark-D', 'mark-E'].includes(phase) && (
               <button
                 onClick={handleNext}
                 className="flex items-center gap-2 px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition-colors"
