@@ -94,14 +94,15 @@ const scenarios: Scenario[] = [
             />
           );
         })}
-        {/* Arc swept by minute hand */}
-        <path d={arcPath(60, 60, 42, 0, 30)} fill="none" stroke="#7c3aed" strokeWidth="4" strokeLinecap="round" />
-        {/* Minute hand */}
-        <line x1="60" y1="60" x2="60" y2="18" stroke="#1f2937" strokeWidth="2" />
-        <line x1="60" y1="60" x2={60 + 42 * Math.cos((-60) * Math.PI / 180)} y2={60 + 42 * Math.sin((-60) * Math.PI / 180)} stroke="#7c3aed" strokeWidth="2" strokeDasharray="4,2" />
+        {/* Arc swept by minute hand - at clock face edge */}
+        <path d={arcPath(60, 60, 46, 0, 30)} fill="none" stroke="#7c3aed" strokeWidth="4" strokeLinecap="round" />
+        {/* Minute hand at 12 o'clock */}
+        <line x1="60" y1="60" x2="60" y2="14" stroke="#1f2937" strokeWidth="2" />
+        {/* Minute hand end position (5 min later) */}
+        <line x1="60" y1="60" x2={60 + 46 * Math.cos((-60) * Math.PI / 180)} y2={60 + 46 * Math.sin((-60) * Math.PI / 180)} stroke="#7c3aed" strokeWidth="2" strokeDasharray="4,2" />
         <circle cx="60" cy="60" r="4" fill="#1f2937" />
-        <text x="75" y="45" fontSize="8" fontWeight="bold" fill="#7c3aed">30°</text>
-        <text x="62" y="30" fontSize="7" fill="#dc2626">12cm</text>
+        <text x="80" y="40" fontSize="8" fontWeight="bold" fill="#7c3aed">30°</text>
+        <text x="65" y="22" fontSize="7" fill="#dc2626">12cm</text>
       </svg>
     ),
     options: ['π cm ≈ 3.14 cm', '2π cm ≈ 6.28 cm', '4π cm ≈ 12.57 cm', '6π cm ≈ 18.85 cm'],
