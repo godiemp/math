@@ -567,6 +567,37 @@ Import from `@/components/lessons/shared`:
 
 ---
 
+## Mini-Lesson Toolbox
+
+Composable hooks and primitives to build Step4/Step5 faster while keeping full control.
+
+**For full documentation, read:**
+→ `.claude/skills/mini-lessons/toolbox.md`
+
+### Quick Reference
+
+**Hooks** (`@/hooks/lessons`):
+- `useMultipleChoice` - State for multiple-choice sequences
+- `useHintToggle` - Toggle hint visibility
+
+**Primitives** (`@/components/lessons/primitives`):
+- `ProgressDots` - Progress indicator dots
+- `FeedbackPanel` - Correct/incorrect feedback
+- `OptionButton` - Answer option with states
+- `HintPanel` - Collapsible hint
+- `ActionButton` - Primary action button
+- `ResultsSummary` - End-of-step results
+
+**Colors** (`@/lib/lessons/styles`):
+- `colors.feedback`, `colors.option`, `colors.progressDot`, `colors.gradient`, `colors.hint`
+
+### Canonical Examples
+
+- `components/lessons/m1/completar-cuadrado/Step4Classify.tsx`
+- `components/lessons/m1/completar-cuadrado/Step5Practice.tsx`
+
+---
+
 ## Final Checklist
 
 - [ ] Phase 1 thinking completed
