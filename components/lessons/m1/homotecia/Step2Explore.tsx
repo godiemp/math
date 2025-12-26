@@ -338,12 +338,12 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <circle cx="175" cy="140" r="6" fill="#dc2626" />
               <text x="175" y="125" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#dc2626">O</text>
 
-              {/* Adjusted original triangle (right side) */}
+              {/* Adjusted original triangle (right side, sized to fit with k=-2) */}
               {(() => {
                 const origTri = [
-                  { x: 225, y: 120 },
-                  { x: 275, y: 120 },
-                  { x: 250, y: 70 },
+                  { x: 210, y: 130 },
+                  { x: 250, y: 130 },
+                  { x: 230, y: 95 },
                 ];
                 const centerNeg = { x: 175, y: 140 };
                 const negTri = origTri.map((p) => applyHomotecia(p, centerNeg, kNegative));
@@ -371,7 +371,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                       stroke="#1d4ed8"
                       strokeWidth="2"
                     />
-                    <text x="250" y="135" textAnchor="middle" fontSize="11" fill="#1d4ed8" fontWeight="bold">
+                    <text x="230" y="145" textAnchor="middle" fontSize="11" fill="#1d4ed8" fontWeight="bold">
                       Original
                     </text>
 
@@ -383,7 +383,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                       stroke="#7c3aed"
                       strokeWidth="2"
                     />
-                    <text x="100" y="180" textAnchor="middle" fontSize="11" fill="#7c3aed" fontWeight="bold">
+                    <text x="65" y="175" textAnchor="middle" fontSize="11" fill="#7c3aed" fontWeight="bold">
                       Imagen (k={kNegative})
                     </text>
                   </>
