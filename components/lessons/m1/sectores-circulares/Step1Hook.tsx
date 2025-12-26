@@ -138,8 +138,8 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 />
 
                 {/* Radius label */}
-                <rect x="145" y="95" width="50" height="20" fill="white" rx="3" />
-                <text x="170" y="109" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#7c3aed">
+                <rect x="145" y="115" width="60" height="22" fill="white" stroke="#7c3aed" strokeWidth="1" rx="4" />
+                <text x="175" y="130" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#7c3aed">
                   r = 20 cm
                 </text>
 
