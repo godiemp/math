@@ -6,7 +6,7 @@ const features = [
   {
     icon: BookOpen,
     title: 'Lecciones Listas para Proyectar',
-    description: '40+ mini-lecciones interactivas. El profesor las proyecta en clase y enseña sin preparar material.',
+    description: '50+ mini-lecciones interactivas. El profesor las proyecta en clase y enseña sin preparar material.',
   },
   {
     icon: Sparkles,
