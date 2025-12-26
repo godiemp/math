@@ -1,14 +1,20 @@
 'use client';
 
-import { useState } from 'react';
-import { ArrowRight, Check, X, RotateCcw } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { useMultipleChoice } from '@/hooks/lessons';
+import {
+  ProgressDots,
+  FeedbackPanel,
+  ActionButton,
+  ResultsSummary,
+} from '@/components/lessons/primitives';
 
 interface ClassifyItem {
   id: string;
   number: string;
-  correctAnswer: 'valid' | 'invalid-coefficient' | 'invalid-format';
+  correctAnswer: 'valid' | 'invalid-coefficient';
   explanation: string;
 }
 
@@ -50,48 +56,19 @@ const ANSWER_OPTIONS = [
   { id: 'invalid-coefficient', label: '✗ Coeficiente incorrecto', color: 'red' },
 ];
 
+// Map string answer to index
+const answerToIndex = (answer: 'valid' | 'invalid-coefficient'): number => {
+  return answer === 'valid' ? 0 : 1;
+};
+
+const REQUIRED_CORRECT = 4;
+
 export default function Step4Classify({ onComplete, isActive }: LessonStepProps) {
-  const [currentItem, setCurrentItem] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [correctCount, setCorrectCount] = useState(0);
-  const [isComplete, setIsComplete] = useState(false);
-
-  const item = ITEMS[currentItem];
-  const isCorrect = selectedAnswer === item?.correctAnswer;
-
-  const handleSelect = (answer: string) => {
-    if (showFeedback) return;
-    setSelectedAnswer(answer);
-  };
-
-  const handleCheck = () => {
-    if (!selectedAnswer) return;
-    setShowFeedback(true);
-    if (selectedAnswer === item.correctAnswer) {
-      setCorrectCount(prev => prev + 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentItem < ITEMS.length - 1) {
-      setCurrentItem(prev => prev + 1);
-      setSelectedAnswer(null);
-      setShowFeedback(false);
-    } else {
-      setIsComplete(true);
-    }
-  };
-
-  const handleReset = () => {
-    setCurrentItem(0);
-    setSelectedAnswer(null);
-    setShowFeedback(false);
-    setCorrectCount(0);
-    setIsComplete(false);
-  };
-
-  const passed = correctCount >= 4;
+  const mc = useMultipleChoice({
+    items: ITEMS,
+    getCorrectAnswer: (item) => answerToIndex(item.correctAnswer),
+    passThreshold: REQUIRED_CORRECT,
+  });
 
   if (!isActive) return null;
 
@@ -107,31 +84,21 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
         </p>
       </div>
 
-      {!isComplete ? (
+      {!mc.isComplete ? (
         <>
-          {/* Progress */}
-          <div className="flex items-center justify-between px-2">
-            <div className="text-sm text-gray-600 dark:text-gray-300">
-              Ejercicio {currentItem + 1} de {ITEMS.length}
-            </div>
-            <div className="flex gap-1">
-              {ITEMS.map((_, i) => (
-                <div
-                  key={i}
-                  className={cn(
-                    'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all',
-                    i < currentItem
-                      ? 'bg-green-500 text-white'
-                      : i === currentItem
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-500'
-                  )}
-                >
-                  {i < currentItem ? <Check size={14} /> : i + 1}
-                </div>
-              ))}
-            </div>
-          </div>
+          <ProgressDots
+            items={ITEMS}
+            currentIndex={mc.currentIndex}
+            getStatus={(_, i) =>
+              mc.answers[i] !== null
+                ? mc.answers[i] === answerToIndex(ITEMS[i].correctAnswer)
+                  ? 'correct'
+                  : 'incorrect'
+                : i === mc.currentIndex
+                  ? 'current'
+                  : 'pending'
+            }
+          />
 
           {/* Number display */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
@@ -140,26 +107,26 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
                 ¿Esta expresión está en notación científica correcta?
               </p>
               <p className="text-4xl font-mono font-bold text-gray-900 dark:text-white">
-                {item.number}
+                {mc.currentItem.number}
               </p>
             </div>
 
             {/* Options */}
             <div className="grid gap-3">
-              {ANSWER_OPTIONS.map((option) => (
+              {ANSWER_OPTIONS.map((option, index) => (
                 <button
                   key={option.id}
-                  onClick={() => handleSelect(option.id)}
-                  disabled={showFeedback}
+                  onClick={() => mc.select(index)}
+                  disabled={mc.showFeedback}
                   className={cn(
                     'w-full p-4 rounded-xl text-left font-medium transition-all border-2',
-                    selectedAnswer === option.id
-                      ? showFeedback
-                        ? option.id === item.correctAnswer
+                    mc.selectedAnswer === index
+                      ? mc.showFeedback
+                        ? index === answerToIndex(mc.currentItem.correctAnswer)
                           ? 'bg-green-100 dark:bg-green-900/50 border-green-500'
                           : 'bg-red-100 dark:bg-red-900/50 border-red-500'
                         : 'bg-blue-100 dark:bg-blue-900/50 border-blue-500'
-                      : showFeedback && option.id === item.correctAnswer
+                      : mc.showFeedback && index === answerToIndex(mc.currentItem.correctAnswer)
                       ? 'bg-green-50 dark:bg-green-900/30 border-green-400'
                       : 'bg-gray-50 dark:bg-gray-700 border-transparent hover:border-gray-300 dark:hover:border-gray-500'
                   )}
@@ -178,119 +145,61 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
                 </button>
               ))}
             </div>
-
-            {/* Feedback */}
-            {showFeedback && (
-              <div className={cn(
-                'mt-6 p-4 rounded-xl animate-fadeIn',
-                isCorrect
-                  ? 'bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800'
-                  : 'bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800'
-              )}>
-                <div className="flex items-start gap-3">
-                  {isCorrect ? (
-                    <Check className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
-                  ) : (
-                    <X className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
-                  )}
-                  <div>
-                    <h4 className={cn(
-                      'font-bold mb-1',
-                      isCorrect ? 'text-green-800 dark:text-green-300' : 'text-amber-800 dark:text-amber-300'
-                    )}>
-                      {isCorrect ? '¡Correcto!' : 'No exactamente'}
-                    </h4>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">
-                      {item.explanation}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Reminder card */}
-          <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4 border border-blue-200 dark:border-blue-700">
-            <p className="text-sm text-blue-800 dark:text-blue-200">
-              💡 <strong>Recuerda:</strong> En notación científica válida, el coeficiente debe ser ≥ 1 y &lt; 10
-            </p>
-          </div>
+          {!mc.showFeedback && (
+            <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4 border border-blue-200 dark:border-blue-700">
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                💡 <strong>Recuerda:</strong> En notación científica válida, el coeficiente debe ser ≥ 1 y &lt; 10
+              </p>
+            </div>
+          )}
 
-          {/* Action button */}
+          {mc.showFeedback && (
+            <FeedbackPanel isCorrect={mc.isCorrect} explanation={mc.currentItem.explanation} />
+          )}
+
           <div className="flex justify-center">
-            {!showFeedback ? (
-              <button
-                onClick={handleCheck}
-                disabled={!selectedAnswer}
-                className={cn(
-                  'px-8 py-3 rounded-xl font-semibold transition-all',
-                  selectedAnswer
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 shadow-lg'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
-                )}
-              >
-                Verificar
-              </button>
-            ) : (
-              <button
-                onClick={handleNext}
-                className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
-              >
-                <span>{currentItem < ITEMS.length - 1 ? 'Siguiente' : 'Ver resultados'}</span>
-                <ArrowRight size={20} />
-              </button>
-            )}
+            <ActionButton
+              onClick={mc.showFeedback ? mc.next : mc.check}
+              disabled={!mc.showFeedback && mc.selectedAnswer === null}
+            >
+              {mc.showFeedback
+                ? mc.currentIndex < ITEMS.length - 1
+                  ? 'Siguiente'
+                  : 'Ver resultados'
+                : 'Verificar'}
+            </ActionButton>
           </div>
         </>
       ) : (
-        // Results
-        <div className="space-y-6 animate-fadeIn">
-          <div className={cn(
-            'rounded-2xl p-8 text-center',
-            passed
-              ? 'bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30'
-              : 'bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30'
-          )}>
-            <div className="text-6xl mb-4">{passed ? '🎉' : '💪'}</div>
-            <h3 className={cn(
-              'text-2xl font-bold mb-2',
-              passed ? 'text-green-800 dark:text-green-300' : 'text-amber-800 dark:text-amber-300'
-            )}>
-              {passed ? '¡Excelente trabajo!' : '¡Casi lo logras!'}
-            </h3>
-            <div className="text-5xl font-bold text-gray-900 dark:text-white mb-2">
-              {correctCount} / {ITEMS.length}
-            </div>
-            <p className={cn(
-              passed ? 'text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300'
-            )}>
-              {passed
-                ? '¡Dominas la identificación de notación científica!'
-                : 'Necesitas 4 respuestas correctas. ¡Inténtalo de nuevo!'}
-            </p>
-          </div>
-
-          <div className="flex justify-center gap-4">
-            {!passed && (
-              <button
-                onClick={handleReset}
-                className="flex items-center gap-2 px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-xl font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
-              >
-                <RotateCcw size={18} />
-                <span>Intentar de nuevo</span>
-              </button>
-            )}
-            {passed && (
-              <button
-                onClick={onComplete}
-                className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
-              >
-                <span>Continuar</span>
-                <ArrowRight size={20} />
-              </button>
-            )}
-          </div>
-        </div>
+        <ResultsSummary
+          correctCount={mc.correctCount}
+          totalCount={ITEMS.length}
+          passed={mc.passed}
+          passThreshold={REQUIRED_CORRECT}
+          successMessage="¡Excelente!"
+          successSubtext="Dominas la identificación de notación científica"
+          failureSubtext="Necesitas 4 respuestas correctas"
+          items={ITEMS}
+          getIsCorrect={(_, i) => mc.answers[i] === answerToIndex(ITEMS[i].correctAnswer)}
+          renderItem={(item, i, isCorrect) => (
+            <>
+              {isCorrect ? (
+                <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
+              ) : (
+                <X className="w-5 h-5 text-red-600 flex-shrink-0" />
+              )}
+              <span className="font-mono text-gray-700 dark:text-gray-300">{item.number}</span>
+              <span className="text-sm text-purple-600 ml-auto">
+                {item.correctAnswer === 'valid' ? '✓ Válida' : '✗ Inválida'}
+              </span>
+            </>
+          )}
+          onRetry={mc.reset}
+          onContinue={onComplete}
+        />
       )}
     </div>
   );
