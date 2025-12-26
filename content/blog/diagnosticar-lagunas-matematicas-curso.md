@@ -65,6 +65,8 @@ Proyectas:
 
 **Limitación honesta:** Te da información grupal, no individual. Sabes que "la mitad no domina esto", pero no exactamente quiénes. Para eso necesitas los otros métodos.
 
+Para un set de preguntas diagnósticas ya listas para usar, revisa [las 5 preguntas que revelan lagunas críticas en 10 minutos](/blog/preguntas-diagnosticas-matematicas-10-minutos).
+
 ### 2. Exit tickets con clasificación rápida
 
 Los últimos 5 minutos de clase, un ejercicio. Pero el truco está en cómo "corriges": no corriges, clasificas.

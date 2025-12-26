@@ -215,6 +215,8 @@ Este modelo escala mejor que cualquier opción sola, porque usa cada recurso par
 
 Si las respuestas son vagas o genéricas, probablemente la opción no va a funcionar.
 
+Para una guía más detallada sobre evaluación de plataformas específicamente, revisa [las 10 preguntas que debes hacer antes de comprar una plataforma matemática](/blog/evaluar-plataformas-matematicas-colegio).
+
 ## El costo de elegir mal
 
 Elegir la opción incorrecta tiene costos más allá del presupuesto:
