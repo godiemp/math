@@ -520,7 +520,10 @@
     "cta": "Elegir Plan",
     "errors": {
       "mustLogin": "Debes iniciar sesión para suscribirte",
-      "alreadySubscribed": "Ya tienes una suscripción activa"
+      "alreadySubscribed": "Ya tienes una suscripción activa",
+      "trialError": "Error al activar la prueba gratuita",
+      "paymentError": "Error al procesar el pago",
+      "processingError": "Error al procesar la solicitud"
     },
     "trial": {
       "activated": "¡Prueba gratuita activada! Disfruta 7 días de acceso completo"
@@ -574,6 +577,7 @@
     },
     "modal": {
       "title": "Elige Cómo Empezar",
+      "cancel": "Cancelar",
       "tryFirst": {
         "title": "Probar y Pagar Después",
         "description": "Comienza tu prueba gratuita de 7 días ahora. No se requiere tarjeta.",
