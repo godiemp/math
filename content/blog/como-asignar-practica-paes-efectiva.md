@@ -34,6 +34,8 @@ La investigación en aprendizaje es clara sobre qué tipo de práctica produce r
 | **Repetición espaciada** | 20 minutos diarios supera 2 horas el domingo |
 | **Retrieval activo** | Intentar recordar es más efectivo que releer |
 
+Para profundizar en estas técnicas basadas en investigación, revisa nuestra guía sobre [práctica espaciada y recuperación activa](/blog/practica-espaciada-recuperacion-matematicas).
+
 ## Opciones prácticas (de menor a mayor efectividad)
 
 ### Opción 1: Guía con respuestas al final

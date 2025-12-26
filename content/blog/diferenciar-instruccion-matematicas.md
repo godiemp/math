@@ -145,6 +145,8 @@ En vez de intentar atender 35 niveles distintos, crea pares donde uno ayuda al o
 - Los pares trabajan a su propio ritmo
 - Crea cultura de colaboración
 
+Para más estrategias de [aprendizaje colaborativo estructurado](/blog/aprendizaje-colaborativo-matematicas), incluyendo técnicas como Jigsaw y Numbered Heads Together, revisa nuestra guía completa.
+
 **El riesgo:** Si el tutor no sabe bien el tema, refuerza errores. Por eso necesitas [diagnosticar primero](/blog/diagnosticar-lagunas-matematicas-curso) quién realmente domina cada contenido.
 
 ### 5. Diferenciación asíncrona (fuera de clase)

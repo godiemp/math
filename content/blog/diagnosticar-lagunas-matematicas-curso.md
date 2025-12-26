@@ -106,7 +106,7 @@ Los estudiantes se evalúan entre ellos. Suena arriesgado—¿y si el evaluador 
 
 **Lo que obtienes:** En 20 minutos, cada estudiante fue evaluado en 4 ejercicios, y tú revisas solo las pautas con "?" (típicamente 5-8 por curso, no 35).
 
-**Bonus real:** El estudiante que verifica aprende más que el que resuelve. Identificar errores en el trabajo de otro consolida tu propio entendimiento.
+**Bonus real:** El estudiante que verifica aprende más que el que resuelve. Identificar errores en el trabajo de otro consolida tu propio entendimiento. Para más sobre [aprendizaje colaborativo estructurado](/blog/aprendizaje-colaborativo-matematicas), revisa nuestra guía completa.
 
 **Armado de parejas:** Evita juntar a los dos que más saben o a los dos que más les cuesta. Busca pares donde uno sea ligeramente más fuerte que el otro en el tema específico.
 
@@ -170,7 +170,7 @@ Pero las lagunas no son estáticas:
 
 - Algunas se cierran con tu enseñanza
 - Otras aparecen cuando introduces contenido nuevo que revela brechas previas
-- Algunas que parecían cerradas reaparecen porque sin práctica, se olvidan
+- Algunas que parecían cerradas reaparecen porque sin práctica, se olvidan (la [práctica espaciada](/blog/practica-espaciada-recuperacion-matematicas) ayuda a prevenir esto)
 
 **Modelo que funciona:**
 
