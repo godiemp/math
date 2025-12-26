@@ -194,28 +194,34 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <circle cx={center.x} cy={center.y} r="6" fill="#dc2626" />
               <text x={center.x - 15} y={center.y - 10} fontSize="14" fontWeight="bold" fill="#dc2626">O</text>
 
-              {/* Dashed rays from center through both triangles */}
+              {/* Dashed rays from center through all 3 pairs of vertices */}
               {originalTriangle.map((p, i) => {
                 const t = transformedTriangle[i];
-                // Always extend through the farthest point from center
+                // Extend through the farthest point
                 const endPoint = k >= 1 ? t : p;
-                // Extend 10% beyond the farthest point for visual clarity
                 const dx = endPoint.x - center.x;
                 const dy = endPoint.y - center.y;
-                const extendedX = center.x + dx * 1.1;
-                const extendedY = center.y + dy * 1.1;
+                const extendedX = center.x + dx * 1.15;
+                const extendedY = center.y + dy * 1.15;
 
                 return (
-                  <line
-                    key={i}
-                    x1={center.x}
-                    y1={center.y}
-                    x2={Math.max(0, Math.min(350, extendedX))}
-                    y2={Math.max(0, Math.min(280, extendedY))}
-                    stroke="#9ca3af"
-                    strokeWidth="1"
-                    strokeDasharray="4,4"
-                  />
+                  <g key={i}>
+                    {/* Ray line */}
+                    <line
+                      x1={center.x}
+                      y1={center.y}
+                      x2={Math.max(0, Math.min(350, extendedX))}
+                      y2={Math.max(0, Math.min(280, extendedY))}
+                      stroke="#6b7280"
+                      strokeWidth="1.5"
+                      strokeDasharray="6,4"
+                      opacity="0.7"
+                    />
+                    {/* Vertex marker on original */}
+                    <circle cx={p.x} cy={p.y} r="4" fill="#1d4ed8" />
+                    {/* Vertex marker on transformed */}
+                    <circle cx={t.x} cy={t.y} r="4" fill={k >= 1 ? '#16a34a' : '#ea580c'} />
+                  </g>
                 );
               })}
 
