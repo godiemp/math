@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, BookOpen, Lightbulb, AlertTriangle, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { ArrowRight, BookOpen, Lightbulb, AlertTriangle, ZoomIn, ZoomOut, RotateCcw, LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
@@ -13,7 +13,7 @@ interface FormulaTab {
   shortTitle: string;
   description: string;
   condition: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   example: {
     k: number;
     center: { x: number; y: number };
