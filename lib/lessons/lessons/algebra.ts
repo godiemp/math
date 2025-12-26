@@ -439,7 +439,7 @@ export const ALGEBRA_LESSONS: Lesson[] = [
       'funcion-lineal-grafica',
     ],
     estimatedMinutes: 18,
-    minEducOA: ['MA1M-OA-05', 'MA1M-OA-10'],
+    minEducOA: ['MA1M-OA-05'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Plan de Datos' },
       { id: 'explore', type: 'explore', title: 'Descubriendo el Patrón' },
