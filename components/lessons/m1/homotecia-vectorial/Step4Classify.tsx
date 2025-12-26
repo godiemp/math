@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, Check, X, RotateCcw, ZoomIn, ZoomOut } from 'lucide-react';
+import { ArrowRight, Check, X, RotateCcw, ZoomIn, ZoomOut, LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
@@ -60,7 +60,7 @@ const EXPRESSIONS: Expression[] = [
   },
 ];
 
-const TYPE_OPTIONS: { id: HomothecyType; label: string; color: string; icon: React.ElementType }[] = [
+const TYPE_OPTIONS: { id: HomothecyType; label: string; color: string; icon: LucideIcon }[] = [
   { id: 'amplificacion', label: 'Amplificación (k > 1)', color: 'green', icon: ZoomIn },
   { id: 'reduccion', label: 'Reducción (0 < k < 1)', color: 'amber', icon: ZoomOut },
   { id: 'inversion', label: 'Inversión (k < 0)', color: 'red', icon: RotateCcw },
