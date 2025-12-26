@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Check, X, RotateCcw, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { MathText } from '@/components/math/MathDisplay';
 
 export interface CheckpointQuestion {
   id: string;
@@ -132,7 +133,7 @@ export default function CheckpointQuiz({
           {/* Question card */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
-              {question.question}
+              <MathText content={question.question} />
             </h3>
 
             {/* Options */}
@@ -174,7 +175,7 @@ export default function CheckpointQuiz({
                         String.fromCharCode(65 + index)
                       )}
                     </span>
-                    <span className="text-gray-800 dark:text-gray-200">{option}</span>
+                    <span className="text-gray-800 dark:text-gray-200"><MathText content={option} /></span>
                   </div>
                 </button>
               ))}
@@ -202,7 +203,7 @@ export default function CheckpointQuiz({
                       {isCorrect ? '¡Correcto!' : 'Incorrecto'}
                     </h4>
                     <p className="text-sm text-gray-700 dark:text-gray-300">
-                      {question.explanation}
+                      <MathText content={question.explanation} />
                     </p>
                   </div>
                 </div>
@@ -288,7 +289,7 @@ export default function CheckpointQuiz({
                     <X className="w-5 h-5 text-red-600 flex-shrink-0" />
                   )}
                   <span className="text-sm text-gray-700 dark:text-gray-300 truncate">
-                    {q.question}
+                    <MathText content={q.question} />
                   </span>
                 </div>
               ))}
