@@ -91,18 +91,13 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   </text>
                   {/* Wall background */}
                   <rect x="160" y="30" width="180" height="135" fill="#e0e7ff" stroke="#4f46e5" strokeWidth="3" rx="4" />
-                  {/* Scaled art */}
-                  <circle cx="210" cy="80" r="27" fill="#f472b6" opacity="0.7" />
-                  <rect x="245" y="55" width="45" height="56" fill="#60a5fa" opacity="0.7" />
-                  <polygon points="178,145 200,110 222,145" fill="#34d399" opacity="0.7" />
-                  {/* Metro train icon */}
-                  <g transform="translate(280, 120)">
-                    <rect x="0" y="0" width="40" height="20" fill="#374151" rx="3" />
-                    <rect x="5" y="3" width="10" height="8" fill="#93c5fd" rx="1" />
-                    <rect x="18" y="3" width="10" height="8" fill="#93c5fd" rx="1" />
-                    <circle cx="10" cy="22" r="4" fill="#1f2937" />
-                    <circle cx="30" cy="22" r="4" fill="#1f2937" />
-                  </g>
+                  {/* Scaled art - proportionally placed from original */}
+                  {/* Original circle at (50,55) in 80x60 container → scaled to (228,86) in 180x135 */}
+                  <circle cx="228" cy="86" r="27" fill="#f472b6" opacity="0.7" />
+                  {/* Original rect at (65,45) → scaled to (261,64) */}
+                  <rect x="261" y="64" width="45" height="56" fill="#60a5fa" opacity="0.7" />
+                  {/* Original triangle points scaled proportionally */}
+                  <polygon points="194,143 216,109 239,143" fill="#34d399" opacity="0.7" />
                   {/* Width label */}
                   <text x="250" y="178" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937" className="dark:fill-gray-300">
                     2 m de ancho
