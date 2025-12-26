@@ -175,10 +175,10 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
               <svg viewBox="0 0 200 140" className="w-48 border border-gray-200 dark:border-gray-600 rounded">
                 <polygon points="100,10 30,130 180,130" fill="#F3F4F6" stroke="#6B7280" strokeWidth="2" />
                 <line x1="58" y1="58" x2="142" y2="58" stroke="#EF4444" strokeWidth="2" strokeDasharray="4" />
-                <text x="50" y="50" className="text-[10px] fill-red-500">DE || BC</text>
+                <text x="50" y="48" className="text-sm fill-red-500 font-semibold">DE ∥ BC</text>
                 <circle cx="58" cy="58" r="3" fill="#3B82F6" />
                 <circle cx="142" cy="58" r="3" fill="#3B82F6" />
-                <text x="100" y="90" textAnchor="middle" className="text-[8px] fill-gray-500">
+                <text x="100" y="95" textAnchor="middle" className="text-xs fill-gray-500">
                   AD/DB = AE/EC
                 </text>
               </svg>
@@ -333,8 +333,8 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
                   strokeDasharray="4"
                 />
                 {/* Height labels */}
-                <text x={D.x + 5} y={(D.y + 220) / 2} className="text-[10px] fill-gray-500">h</text>
-                <text x={E.x + 5} y={(E.y + 220) / 2} className="text-[10px] fill-gray-500">h</text>
+                <text x={D.x + 5} y={(D.y + 220) / 2} className="text-xs fill-gray-500">h</text>
+                <text x={E.x + 5} y={(E.y + 220) / 2} className="text-xs fill-gray-500">h</text>
               </g>
             )}
 
