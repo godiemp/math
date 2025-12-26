@@ -90,31 +90,32 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           <div className="space-y-6">
             {/* Horizontal number line */}
             <div className="bg-white dark:bg-gray-800 rounded-xl p-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 text-center">
                 Una recta horizontal (izquierda ↔ derecha):
               </p>
-              <svg viewBox="0 0 300 60" className="w-full max-w-md mx-auto">
-                <defs>
-                  <marker id="arrowH" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                    <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6" />
-                  </marker>
-                </defs>
-                <line x1="20" y1="30" x2="280" y2="30" stroke="#3b82f6" strokeWidth="3" markerEnd="url(#arrowH)" />
+              <svg viewBox="0 0 340 70" className="w-full max-w-md mx-auto">
+                {/* Main line */}
+                <line x1="15" y1="30" x2="310" y2="30" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" />
+                {/* Arrow head */}
+                <polygon points="310,30 298,24 298,36" fill="#3b82f6" />
+                {/* Tick marks and numbers */}
                 {[-4, -3, -2, -1, 0, 1, 2, 3, 4].map((n) => (
                   <g key={n}>
                     <line
-                      x1={150 + n * 30}
-                      y1="25"
-                      x2={150 + n * 30}
-                      y2="35"
+                      x1={170 + n * 30}
+                      y1="22"
+                      x2={170 + n * 30}
+                      y2="38"
                       stroke="#3b82f6"
                       strokeWidth="2"
+                      strokeLinecap="round"
                     />
                     <text
-                      x={150 + n * 30}
-                      y="50"
+                      x={170 + n * 30}
+                      y="56"
                       textAnchor="middle"
-                      fontSize="12"
+                      fontSize="14"
+                      fontWeight="500"
                       className="fill-gray-700 dark:fill-gray-300"
                     >
                       {n}
@@ -126,31 +127,32 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
             {/* Vertical number line */}
             <div className="bg-white dark:bg-gray-800 rounded-xl p-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 text-center">
                 Y otra recta vertical (abajo ↕ arriba):
               </p>
-              <svg viewBox="0 0 100 200" className="w-24 h-48 mx-auto">
-                <defs>
-                  <marker id="arrowV" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                    <polygon points="0 0, 10 3.5, 0 7" fill="#22c55e" />
-                  </marker>
-                </defs>
-                <line x1="50" y1="180" x2="50" y2="20" stroke="#22c55e" strokeWidth="3" markerEnd="url(#arrowV)" />
+              <svg viewBox="0 0 80 240" className="w-20 h-60 mx-auto">
+                {/* Main line */}
+                <line x1="50" y1="225" x2="50" y2="20" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" />
+                {/* Arrow head */}
+                <polygon points="50,20 44,32 56,32" fill="#22c55e" />
+                {/* Tick marks and numbers */}
                 {[-3, -2, -1, 0, 1, 2, 3].map((n) => (
                   <g key={n}>
                     <line
-                      x1="45"
-                      y1={100 - n * 25}
-                      x2="55"
-                      y2={100 - n * 25}
+                      x1="42"
+                      y1={120 - n * 28}
+                      x2="58"
+                      y2={120 - n * 28}
                       stroke="#22c55e"
                       strokeWidth="2"
+                      strokeLinecap="round"
                     />
                     <text
-                      x="30"
-                      y={100 - n * 25 + 4}
+                      x="25"
+                      y={120 - n * 28 + 5}
                       textAnchor="middle"
-                      fontSize="12"
+                      fontSize="14"
+                      fontWeight="500"
                       className="fill-gray-700 dark:fill-gray-300"
                     >
                       {n}
