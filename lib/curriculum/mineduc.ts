@@ -201,7 +201,7 @@ const OA_1M: MinEducOA[] = [
     name: 'Teorema de Tales',
     description: 'Desarrollar el teorema de Tales mediante propiedades de homotecia para resolver problemas.',
     isBasal: false,
-    lessonIds: [], // Pendiente
+    lessonIds: ['m1-geo-005-a'],
   },
   {
     code: 'MA1M-OA-10',
