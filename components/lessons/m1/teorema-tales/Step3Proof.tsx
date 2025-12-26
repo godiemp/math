@@ -174,11 +174,19 @@ export default function Step3Proof({ onComplete, isActive }: LessonStepProps) {
             <div className="flex justify-center my-4">
               <svg viewBox="0 0 200 140" className="w-48 border border-gray-200 dark:border-gray-600 rounded">
                 <polygon points="100,10 30,130 180,130" fill="#F3F4F6" stroke="#6B7280" strokeWidth="2" />
-                <line x1="58" y1="58" x2="142" y2="58" stroke="#EF4444" strokeWidth="2" strokeDasharray="4" />
-                <text x="50" y="48" className="text-sm fill-red-500 font-semibold">DE ∥ BC</text>
-                <circle cx="58" cy="58" r="3" fill="#3B82F6" />
-                <circle cx="142" cy="58" r="3" fill="#3B82F6" />
-                <text x="100" y="95" textAnchor="middle" className="text-xs fill-gray-500">
+                {/* Points D and E */}
+                <circle cx="58" cy="58" r="4" fill="#3B82F6" />
+                <circle cx="142" cy="58" r="4" fill="#3B82F6" />
+                {/* Dashed line DE - exactly between the points */}
+                <line x1="62" y1="58" x2="138" y2="58" stroke="#EF4444" strokeWidth="2" strokeDasharray="5,3" />
+                {/* Labels */}
+                <text x="48" y="62" className="text-xs fill-blue-600 font-bold">D</text>
+                <text x="146" y="62" className="text-xs fill-blue-600 font-bold">E</text>
+                {/* Parallel indicator - centered above line */}
+                <text x="100" y="48" textAnchor="middle" className="text-xs fill-red-500 font-semibold">
+                  DE paralela a BC
+                </text>
+                <text x="100" y="100" textAnchor="middle" className="text-xs fill-gray-500">
                   AD/DB = AE/EC
                 </text>
               </svg>
