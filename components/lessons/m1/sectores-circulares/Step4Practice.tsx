@@ -62,8 +62,12 @@ const scenarios: Scenario[] = [
           return <line key={angle} x1="60" y1="60" x2={60 + 48 * Math.cos(rad)} y2={60 + 48 * Math.sin(rad)} stroke="#92400e" strokeWidth="1" />;
         })}
         <circle cx="60" cy="60" r="3" fill="#92400e" />
-        <text x="75" y="55" fontSize="9" fontWeight="bold" fill="#dc2626">60°</text>
-        <text x="80" y="70" fontSize="8" fill="#7c3aed">r=15cm</text>
+        {/* Angle label with background */}
+        <rect x="68" y="42" width="24" height="14" fill="white" rx="2" />
+        <text x="80" y="53" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#dc2626">60°</text>
+        {/* Radius label */}
+        <rect x="72" y="58" width="38" height="14" fill="white" rx="2" />
+        <text x="91" y="69" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#7c3aed">r=15cm</text>
       </svg>
     ),
     options: ['37.5π cm² ≈ 118 cm²', '75π cm² ≈ 236 cm²', '225π cm² ≈ 707 cm²', '12.5π cm² ≈ 39 cm²'],
