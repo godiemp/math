@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Matter from 'matter-js';
-import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface GaltonBoardProps {
@@ -28,8 +27,6 @@ const COLORS = {
     background: '#f3f4f6',
     peg: '#9ca3af',
     ball: '#f59e0b',
-    histogram: '#3b82f6',
-    bellCurve: '#22c55e',
     text: '#4b5563',
     divider: '#d1d5db',
   },
@@ -37,29 +34,9 @@ const COLORS = {
     background: '#1f2937',
     peg: '#6b7280',
     ball: '#fbbf24',
-    histogram: '#60a5fa',
-    bellCurve: '#4ade80',
     text: '#9ca3af',
     divider: '#4b5563',
   },
-};
-
-// Calculate theoretical bell curve (binomial distribution)
-const calculateBellCurve = (rows: number, totalBalls: number): number[] => {
-  const curve: number[] = [];
-  for (let k = 0; k <= rows; k++) {
-    const coeff = factorial(rows) / (factorial(k) * factorial(rows - k));
-    const prob = coeff * Math.pow(0.5, rows);
-    curve.push(prob * totalBalls);
-  }
-  return curve;
-};
-
-const factorial = (n: number): number => {
-  if (n <= 1) return 1;
-  let result = 1;
-  for (let i = 2; i <= n; i++) result *= i;
-  return result;
 };
 
 export default function GaltonBoard({
@@ -68,7 +45,6 @@ export default function GaltonBoard({
   speed = 'normal',
   onDistributionChange,
   onAllBallsComplete,
-  showBellCurve = false,
   autoStart = false,
   className,
 }: GaltonBoardProps) {
@@ -81,7 +57,7 @@ export default function GaltonBoard({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const runnerRef = useRef<Matter.Runner | null>(null);
-  const activeBallsRef = useRef<Set<Matter.Body>>(new Set());
+  const allBallsRef = useRef<Set<Matter.Body>>(new Set());
   const ballsReleasedRef = useRef(0);
   const releaseIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const renderLoopRef = useRef<number>(0);
@@ -90,13 +66,14 @@ export default function GaltonBoard({
   const processedBallsRef = useRef<Set<string>>(new Set());
   const runIdRef = useRef(0);
 
-  // Board dimensions
+  // Board dimensions - taller to show balls stacking
   const boardWidth = 320;
-  const boardHeight = 300;
-  const histogramHeight = 100;
+  const boardHeight = 400;
   const pegRadius = 4;
   const ballRadius = 5;
   const numBins = rows + 1;
+  const binAreaHeight = 120; // Height reserved for ball stacking
+  const pegAreaBottom = boardHeight - binAreaHeight;
 
   // Detect dark mode
   useEffect(() => {
@@ -118,7 +95,7 @@ export default function GaltonBoard({
   // Calculate peg position
   const getPegPosition = useCallback(
     (row: number, col: number) => {
-      const verticalSpacing = (boardHeight - 60) / rows;
+      const verticalSpacing = (pegAreaBottom - 60) / rows;
       const horizontalSpacing = 22;
       const rowStartX = boardWidth / 2 - (row * horizontalSpacing) / 2;
       return {
@@ -126,7 +103,7 @@ export default function GaltonBoard({
         y: 40 + row * verticalSpacing,
       };
     },
-    [rows]
+    [rows, pegAreaBottom]
   );
 
   // Get bin X position
@@ -189,15 +166,15 @@ export default function GaltonBoard({
       ),
     ];
 
-    // Create bin sensors
+    // Create bin sensors (invisible, just for counting)
     const binSensors: Matter.Body[] = [];
     const binWidth = boardWidth / numBins;
     for (let i = 0; i < numBins; i++) {
       const sensor = Matter.Bodies.rectangle(
         getBinX(i),
-        boardHeight - 15,
+        pegAreaBottom + 10,
         binWidth - 4,
-        20,
+        10,
         {
           isStatic: true,
           isSensor: true,
@@ -207,23 +184,23 @@ export default function GaltonBoard({
       binSensors.push(sensor);
     }
 
-    // Create bin dividers
+    // Create bin dividers (physical walls between bins)
     const dividers: Matter.Body[] = [];
     for (let i = 0; i <= numBins; i++) {
       const x = (i * boardWidth) / numBins;
       const divider = Matter.Bodies.rectangle(
         x,
-        boardHeight - 25,
+        pegAreaBottom + binAreaHeight / 2,
         2,
-        50,
-        { isStatic: true, label: 'divider' }
+        binAreaHeight,
+        { isStatic: true, label: 'divider', restitution: 0.3 }
       );
       dividers.push(divider);
     }
 
     Matter.Composite.add(engine.world, [...pegs, ...walls, ...binSensors, ...dividers]);
 
-    // Collision detection for bin sensors
+    // Collision detection for bin sensors - just count, don't remove balls
     Matter.Events.on(engine, 'collisionStart', (event) => {
       event.pairs.forEach((pair) => {
         const { bodyA, bodyB } = pair;
@@ -242,11 +219,7 @@ export default function GaltonBoard({
           processedBallsRef.current.add(ball.label);
           const binIndex = parseInt(sensor.label.split('-')[2]);
 
-          // Remove ball from world
-          Matter.Composite.remove(engine.world, ball);
-          activeBallsRef.current.delete(ball);
-
-          // Update distribution
+          // Update distribution (ball stays in world, just counted)
           distributionRef.current = [...distributionRef.current];
           distributionRef.current[binIndex]++;
           setDistribution([...distributionRef.current]);
@@ -270,7 +243,7 @@ export default function GaltonBoard({
         clearInterval(releaseIntervalRef.current);
       }
     };
-  }, [rows, getPegPosition, getBinX, numBins]);
+  }, [rows, getPegPosition, getBinX, numBins, pegAreaBottom, binAreaHeight]);
 
   // Render loop
   useEffect(() => {
@@ -282,6 +255,7 @@ export default function GaltonBoard({
     if (!ctx) return;
 
     const colors = isDark ? COLORS.dark : COLORS.light;
+    const binWidth = boardWidth / numBins;
 
     const render = () => {
       ctx.clearRect(0, 0, boardWidth, boardHeight);
@@ -313,22 +287,42 @@ export default function GaltonBoard({
 
       // Draw bin dividers
       ctx.strokeStyle = colors.divider;
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 2;
       for (let i = 0; i <= numBins; i++) {
         const x = (i * boardWidth) / numBins;
         ctx.beginPath();
-        ctx.moveTo(x, boardHeight - 50);
+        ctx.moveTo(x, pegAreaBottom);
         ctx.lineTo(x, boardHeight);
         ctx.stroke();
       }
 
-      // Draw active balls
+      // Draw horizontal line separating pegs from bins
+      ctx.strokeStyle = colors.divider;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, pegAreaBottom);
+      ctx.lineTo(boardWidth, pegAreaBottom);
+      ctx.stroke();
+
+      // Draw all balls (they stay in the world now)
       ctx.fillStyle = colors.ball;
-      activeBallsRef.current.forEach((ball) => {
+      allBallsRef.current.forEach((ball) => {
         ctx.beginPath();
         ctx.arc(ball.position.x, ball.position.y, ballRadius, 0, Math.PI * 2);
         ctx.fill();
       });
+
+      // Draw bin count labels
+      ctx.fillStyle = colors.text;
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      for (let i = 0; i < numBins; i++) {
+        const x = getBinX(i);
+        const count = distributionRef.current[i];
+        if (count > 0) {
+          ctx.fillText(count.toString(), x, boardHeight - 8);
+        }
+      }
 
       renderLoopRef.current = requestAnimationFrame(render);
     };
@@ -338,7 +332,7 @@ export default function GaltonBoard({
     return () => {
       cancelAnimationFrame(renderLoopRef.current);
     };
-  }, [isDark, numBins]);
+  }, [isDark, numBins, pegAreaBottom, getBinX]);
 
   // Release a ball
   const releaseBall = useCallback(() => {
@@ -359,7 +353,7 @@ export default function GaltonBoard({
     );
 
     Matter.Composite.add(engine.world, ball);
-    activeBallsRef.current.add(ball);
+    allBallsRef.current.add(ball);
   }, []);
 
   // Notify when distribution changes
@@ -369,17 +363,17 @@ export default function GaltonBoard({
 
   // Check if all balls are complete
   useEffect(() => {
-    if (
-      completedCount >= ballsToRelease &&
-      completedCount > 0 &&
-      activeBallsRef.current.size === 0
-    ) {
-      setIsRunning(false);
-      if (releaseIntervalRef.current) {
-        clearInterval(releaseIntervalRef.current);
-        releaseIntervalRef.current = null;
-      }
-      onAllBallsComplete?.();
+    if (completedCount >= ballsToRelease && completedCount > 0) {
+      // Small delay to let balls settle
+      const timeout = setTimeout(() => {
+        setIsRunning(false);
+        if (releaseIntervalRef.current) {
+          clearInterval(releaseIntervalRef.current);
+          releaseIntervalRef.current = null;
+        }
+        onAllBallsComplete?.();
+      }, 500);
+      return () => clearTimeout(timeout);
     }
   }, [completedCount, ballsToRelease, onAllBallsComplete]);
 
@@ -397,11 +391,11 @@ export default function GaltonBoard({
     const runner = runnerRef.current;
     if (!engine || !runner) return;
 
-    // Reset state
-    activeBallsRef.current.forEach((ball) => {
+    // Reset state - remove all balls from world
+    allBallsRef.current.forEach((ball) => {
       Matter.Composite.remove(engine.world, ball);
     });
-    activeBallsRef.current.clear();
+    allBallsRef.current.clear();
     distributionRef.current = Array(rows + 1).fill(0);
     setDistribution(Array(rows + 1).fill(0));
     completedCountRef.current = 0;
@@ -429,10 +423,6 @@ export default function GaltonBoard({
     }, SPEED_MAP[speed]);
   };
 
-  const maxBinCount = Math.max(...distribution, 1);
-  const bellCurve = showBellCurve ? calculateBellCurve(rows, ballsToRelease) : [];
-  const colors = isDark ? COLORS.dark : COLORS.light;
-
   return (
     <div className={cn('flex flex-col items-center gap-4', className)}>
       {/* Physics canvas */}
@@ -444,90 +434,6 @@ export default function GaltonBoard({
           className="rounded-xl"
         />
       </div>
-
-      {/* Histogram (SVG) */}
-      <svg
-        width={boardWidth}
-        height={histogramHeight + 20}
-        className="overflow-visible"
-        style={{ marginTop: -8 }}
-      >
-        {/* Bin dividers */}
-        {Array.from({ length: numBins + 1 }).map((_, i) => {
-          const x = (i * boardWidth) / numBins;
-          return (
-            <line
-              key={`divider-${i}`}
-              x1={x}
-              y1={0}
-              x2={x}
-              y2={histogramHeight}
-              stroke={colors.divider}
-              strokeWidth={1}
-            />
-          );
-        })}
-
-        {/* Histogram base line */}
-        <line
-          x1={0}
-          y1={histogramHeight}
-          x2={boardWidth}
-          y2={histogramHeight}
-          stroke={colors.peg}
-          strokeWidth={2}
-        />
-
-        {/* Histogram bars */}
-        {distribution.map((count, i) => {
-          const barHeight = (count / maxBinCount) * (histogramHeight - 10);
-          const binWidth = boardWidth / numBins;
-          return (
-            <motion.rect
-              key={`bar-${i}`}
-              x={i * binWidth + 2}
-              y={histogramHeight - barHeight}
-              width={binWidth - 4}
-              height={barHeight}
-              rx={2}
-              initial={{ height: 0 }}
-              animate={{ height: barHeight }}
-              fill={colors.histogram}
-            />
-          );
-        })}
-
-        {/* Bell curve overlay */}
-        {showBellCurve && completedCount > 0 && (
-          <path
-            d={bellCurve
-              .map((val, i) => {
-                const x = getBinX(i);
-                const y = histogramHeight - (val / maxBinCount) * (histogramHeight - 10);
-                return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
-              })
-              .join(' ')}
-            fill="none"
-            stroke={colors.bellCurve}
-            strokeWidth={2}
-            strokeDasharray="4 4"
-          />
-        )}
-
-        {/* Bin labels */}
-        {distribution.map((count, i) => (
-          <text
-            key={`label-${i}`}
-            x={getBinX(i)}
-            y={histogramHeight + 15}
-            textAnchor="middle"
-            fill={colors.text}
-            className="text-xs"
-          >
-            {count}
-          </text>
-        ))}
-      </svg>
 
       {/* Controls */}
       <div className="flex items-center gap-4">
@@ -552,20 +458,6 @@ export default function GaltonBoard({
           {ballsToRelease} bolas
         </div>
       </div>
-
-      {/* Legend */}
-      {showBellCurve && completedCount > 0 && (
-        <div className="flex items-center gap-4 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-3 bg-blue-500 dark:bg-blue-400 rounded" />
-            <span className="text-gray-600 dark:text-gray-400">Frecuencia real</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-0 border-t-2 border-dashed border-green-500 dark:border-green-400" />
-            <span className="text-gray-600 dark:text-gray-400">Curva teorica</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
