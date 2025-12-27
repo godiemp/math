@@ -217,23 +217,24 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 strokeWidth="2"
               />
 
-              {/* Labels */}
-              <text x={cx} y={cy - circleRadius - 8} textAnchor="middle" fontSize="12" fontWeight="bold" fill="#dc2626">
-                r = {radius} m
-              </text>
-
-              {angle >= 30 && (
+              {/* Theta label - near the angle arc */}
+              {angle >= 20 && (
                 <text
-                  x={cx + 35 * Math.cos(((angle / 2) - 90) * Math.PI / 180)}
-                  y={cy + 35 * Math.sin(((angle / 2) - 90) * Math.PI / 180)}
+                  x={cx + 38 * Math.cos(((angle / 2) - 90) * Math.PI / 180)}
+                  y={cy + 38 * Math.sin(((angle / 2) - 90) * Math.PI / 180)}
                   textAnchor="middle"
-                  fontSize="12"
+                  fontSize="14"
                   fontWeight="bold"
                   fill="#f59e0b"
                 >
-                  {angle}°
+                  θ
                 </text>
               )}
+
+              {/* Radius label - along the first radius line (pointing up) */}
+              <text x={cx + 12} y={cy - circleRadius / 2} textAnchor="start" fontSize="12" fontWeight="bold" fill="#dc2626">
+                r
+              </text>
             </svg>
           </div>
 
