@@ -37,11 +37,24 @@ const ITEMS: ClassifyItem[] = [
     explanation: 'k = 2 > 1, por lo tanto es una ampliación. La imagen es el doble de grande.',
     svgContent: (
       <svg viewBox="0 0 200 120" className="w-full">
+        {/* Rays from center through each vertex pair */}
+        <line x1="30" y1="60" x2="90" y2="40" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        <line x1="30" y1="60" x2="130" y2="40" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        <line x1="30" y1="60" x2="110" y2="10" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        {/* Center */}
         <circle cx="30" cy="60" r="5" fill="#dc2626" />
         <text x="20" y="50" fontSize="10" fill="#dc2626" fontWeight="bold">O</text>
+        {/* Original triangle */}
         <polygon points="60,50 80,50 70,35" fill="#bfdbfe" stroke="#1d4ed8" strokeWidth="1.5" />
+        {/* Transformed triangle */}
         <polygon points="90,40 130,40 110,10" fill="#bbf7d0" stroke="#16a34a" strokeWidth="1.5" />
-        <line x1="30" y1="60" x2="130" y2="10" stroke="#9ca3af" strokeWidth="1" strokeDasharray="3,3" />
+        {/* Vertex markers */}
+        <circle cx="60" cy="50" r="3" fill="#1d4ed8" />
+        <circle cx="80" cy="50" r="3" fill="#1d4ed8" />
+        <circle cx="70" cy="35" r="3" fill="#1d4ed8" />
+        <circle cx="90" cy="40" r="3" fill="#16a34a" />
+        <circle cx="130" cy="40" r="3" fill="#16a34a" />
+        <circle cx="110" cy="10" r="3" fill="#16a34a" />
         <text x="100" y="110" textAnchor="middle" fontSize="11" fill="#6b7280">k = 2</text>
       </svg>
     ),
@@ -54,11 +67,25 @@ const ITEMS: ClassifyItem[] = [
     explanation: 'k = 0.5, es decir 0 < k < 1, por lo tanto es una reducción. La imagen es la mitad.',
     svgContent: (
       <svg viewBox="0 0 200 120" className="w-full">
+        {/* Rays from center through each vertex pair */}
+        <line x1="30" y1="60" x2="140" y2="40" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        <line x1="30" y1="60" x2="80" y2="40" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        <line x1="30" y1="60" x2="110" y2="10" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        {/* Center */}
         <circle cx="30" cy="60" r="5" fill="#dc2626" />
         <text x="20" y="50" fontSize="10" fill="#dc2626" fontWeight="bold">O</text>
+        {/* Original triangle (larger) */}
         <polygon points="80,40 140,40 110,10" fill="#bfdbfe" stroke="#1d4ed8" strokeWidth="1.5" />
+        {/* Transformed triangle (smaller - reduction) */}
         <polygon points="55,50 85,50 70,35" fill="#fed7aa" stroke="#ea580c" strokeWidth="1.5" />
-        <line x1="30" y1="60" x2="140" y2="10" stroke="#9ca3af" strokeWidth="1" strokeDasharray="3,3" />
+        {/* Vertex markers - original */}
+        <circle cx="80" cy="40" r="3" fill="#1d4ed8" />
+        <circle cx="140" cy="40" r="3" fill="#1d4ed8" />
+        <circle cx="110" cy="10" r="3" fill="#1d4ed8" />
+        {/* Vertex markers - image */}
+        <circle cx="55" cy="50" r="3" fill="#ea580c" />
+        <circle cx="85" cy="50" r="3" fill="#ea580c" />
+        <circle cx="70" cy="35" r="3" fill="#ea580c" />
         <text x="100" y="110" textAnchor="middle" fontSize="11" fill="#6b7280">k = 0.5</text>
       </svg>
     ),
@@ -71,11 +98,25 @@ const ITEMS: ClassifyItem[] = [
     explanation: 'k = -1 < 0, por lo tanto es una inversión. El tamaño se mantiene (|k| = 1) pero la posición se invierte.',
     svgContent: (
       <svg viewBox="0 0 200 120" className="w-full">
+        {/* Rays through center connecting vertex pairs */}
+        <line x1="130" y1="50" x2="70" y2="70" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        <line x1="160" y1="50" x2="40" y2="70" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        <line x1="145" y1="30" x2="55" y2="90" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        {/* Center */}
         <circle cx="100" cy="60" r="5" fill="#dc2626" />
         <text x="100" y="50" textAnchor="middle" fontSize="10" fill="#dc2626" fontWeight="bold">O</text>
+        {/* Original triangle */}
         <polygon points="130,50 160,50 145,30" fill="#bfdbfe" stroke="#1d4ed8" strokeWidth="1.5" />
+        {/* Inverted triangle */}
         <polygon points="70,70 40,70 55,90" fill="#ddd6fe" stroke="#7c3aed" strokeWidth="1.5" />
-        <line x1="40" y1="70" x2="160" y2="50" stroke="#9ca3af" strokeWidth="1" strokeDasharray="3,3" />
+        {/* Vertex markers - original */}
+        <circle cx="130" cy="50" r="3" fill="#1d4ed8" />
+        <circle cx="160" cy="50" r="3" fill="#1d4ed8" />
+        <circle cx="145" cy="30" r="3" fill="#1d4ed8" />
+        {/* Vertex markers - image */}
+        <circle cx="70" cy="70" r="3" fill="#7c3aed" />
+        <circle cx="40" cy="70" r="3" fill="#7c3aed" />
+        <circle cx="55" cy="90" r="3" fill="#7c3aed" />
         <text x="100" y="110" textAnchor="middle" fontSize="11" fill="#6b7280">k = -1</text>
       </svg>
     ),
@@ -88,11 +129,28 @@ const ITEMS: ClassifyItem[] = [
     explanation: 'k = 3 > 1, es una ampliación. Todas las distancias se multiplican por 3.',
     svgContent: (
       <svg viewBox="0 0 200 120" className="w-full">
+        {/* Rays from center through corners */}
+        <line x1="20" y1="80" x2="80" y2="20" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        <line x1="20" y1="80" x2="155" y2="20" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        <line x1="20" y1="80" x2="155" y2="80" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        <line x1="20" y1="80" x2="80" y2="80" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        {/* Center */}
         <circle cx="20" cy="80" r="5" fill="#dc2626" />
         <text x="10" y="70" fontSize="10" fill="#dc2626" fontWeight="bold">O</text>
+        {/* Original rectangle */}
         <rect x="40" y="60" width="25" height="20" fill="#bfdbfe" stroke="#1d4ed8" strokeWidth="1.5" />
+        {/* Transformed rectangle */}
         <rect x="80" y="20" width="75" height="60" fill="#bbf7d0" fillOpacity="0.6" stroke="#16a34a" strokeWidth="1.5" />
-        <line x1="20" y1="80" x2="155" y2="20" stroke="#9ca3af" strokeWidth="1" strokeDasharray="3,3" />
+        {/* Vertex markers - original */}
+        <circle cx="40" cy="60" r="3" fill="#1d4ed8" />
+        <circle cx="65" cy="60" r="3" fill="#1d4ed8" />
+        <circle cx="40" cy="80" r="3" fill="#1d4ed8" />
+        <circle cx="65" cy="80" r="3" fill="#1d4ed8" />
+        {/* Vertex markers - image */}
+        <circle cx="80" cy="20" r="3" fill="#16a34a" />
+        <circle cx="155" cy="20" r="3" fill="#16a34a" />
+        <circle cx="80" cy="80" r="3" fill="#16a34a" />
+        <circle cx="155" cy="80" r="3" fill="#16a34a" />
         <text x="100" y="110" textAnchor="middle" fontSize="11" fill="#6b7280">k = 3</text>
       </svg>
     ),
@@ -105,11 +163,25 @@ const ITEMS: ClassifyItem[] = [
     explanation: 'k = -1.5 < 0, es una inversión. Aunque |k| = 1.5 > 1 significa que también hay ampliación, el signo negativo indica inversión.',
     svgContent: (
       <svg viewBox="0 0 200 120" className="w-full">
+        {/* Rays through center connecting vertex pairs */}
+        <line x1="130" y1="55" x2="55" y2="67" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        <line x1="150" y1="55" x2="25" y2="67" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        <line x1="140" y1="40" x2="40" y2="90" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        {/* Center */}
         <circle cx="100" cy="60" r="5" fill="#dc2626" />
         <text x="100" y="50" textAnchor="middle" fontSize="10" fill="#dc2626" fontWeight="bold">O</text>
+        {/* Original triangle (smaller) */}
         <polygon points="130,55 150,55 140,40" fill="#bfdbfe" stroke="#1d4ed8" strokeWidth="1.5" />
+        {/* Inverted + larger triangle */}
         <polygon points="55,67 25,67 40,90" fill="#ddd6fe" stroke="#7c3aed" strokeWidth="1.5" />
-        <line x1="25" y1="67" x2="150" y2="55" stroke="#9ca3af" strokeWidth="1" strokeDasharray="3,3" />
+        {/* Vertex markers - original */}
+        <circle cx="130" cy="55" r="3" fill="#1d4ed8" />
+        <circle cx="150" cy="55" r="3" fill="#1d4ed8" />
+        <circle cx="140" cy="40" r="3" fill="#1d4ed8" />
+        {/* Vertex markers - image */}
+        <circle cx="55" cy="67" r="3" fill="#7c3aed" />
+        <circle cx="25" cy="67" r="3" fill="#7c3aed" />
+        <circle cx="40" cy="90" r="3" fill="#7c3aed" />
         <text x="100" y="110" textAnchor="middle" fontSize="11" fill="#6b7280">k = -1.5</text>
       </svg>
     ),
