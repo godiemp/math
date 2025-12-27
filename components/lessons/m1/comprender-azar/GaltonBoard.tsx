@@ -69,8 +69,8 @@ export default function GaltonBoard({
   // Board dimensions - taller to show balls stacking
   const boardWidth = 320;
   const boardHeight = 400;
-  const pegRadius = 4;
-  const ballRadius = 5;
+  const pegRadius = 3;
+  const ballRadius = 4;
   const numBins = rows + 1;
   const binAreaHeight = 120; // Height reserved for ball stacking
   const pegAreaBottom = boardHeight - binAreaHeight;
@@ -93,9 +93,12 @@ export default function GaltonBoard({
   }, []);
 
   // Calculate peg position
-  // horizontalSpacing must be < ballDiameter + pegDiameter to force collisions
-  // With ballRadius=5 (diameter=10) and pegRadius=4 (diameter=8), spacing should be ~14-16
-  const horizontalSpacing = 15;
+  // For proper bell curve distribution:
+  // 1. gap = spacing - pegDiameter must be <= ballDiameter (ball can't slip through)
+  // 2. spacing - 2*pegRadius should be close to ballDiameter (ball touches pegs but not both at once)
+  // With pegRadius=3 (diameter=6) and ballRadius=4 (diameter=8):
+  // spacing=14 gives gap=8 (exactly ballDiameter) and inner gap=8 (exactly ballDiameter)
+  const horizontalSpacing = 14;
 
   const getPegPosition = useCallback(
     (row: number, col: number) => {
@@ -132,8 +135,8 @@ export default function GaltonBoard({
         const pos = getPegPosition(row, col);
         const peg = Matter.Bodies.circle(pos.x, pos.y, pegRadius, {
           isStatic: true,
-          restitution: 0.5,
-          friction: 0.05,
+          restitution: 0.4,
+          friction: 0.1,
           label: 'peg',
         });
         pegs.push(peg);
@@ -347,9 +350,13 @@ export default function GaltonBoard({
       5,
       ballRadius,
       {
-        restitution: 0.4,
-        friction: 0.001,
-        frictionAir: 0.0005,
+        // Physics tuned for bell curve distribution:
+        // - High frictionAir dampens horizontal velocity between rows (critical for 50-50 bounce)
+        // - Lower restitution = less chaotic bounces
+        // - Higher friction = better energy dissipation at peg contact
+        restitution: 0.3,
+        friction: 0.1,
+        frictionAir: 0.025,
         density: 0.002,
         label: `ball-${runIdRef.current}-${ballsReleasedRef.current++}`,
       }
