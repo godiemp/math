@@ -143,16 +143,16 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   r = 20 cm
                 </text>
 
-                {/* Angle arc */}
+                {/* Angle arc - from 12 o'clock to 45° position */}
                 <path
-                  d={`M 130 110 A 20 20 0 0 0 ${110 + 20 * Math.cos(-Math.PI / 4)} ${110 + 20 * Math.sin(-Math.PI / 4)}`}
+                  d={`M 110 90 A 20 20 0 0 1 ${110 + 20 * Math.cos((-45) * Math.PI / 180)} ${110 + 20 * Math.sin((-45) * Math.PI / 180)}`}
                   fill="none"
                   stroke="#dc2626"
                   strokeWidth="2"
                 />
 
-                {/* Angle label */}
-                <text x="140" y="95" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#dc2626">
+                {/* Angle label - positioned at ~22.5° (middle of the arc) */}
+                <text x={110 + 28 * Math.cos((-22.5) * Math.PI / 180)} y={110 + 28 * Math.sin((-22.5) * Math.PI / 180)} textAnchor="middle" fontSize="11" fontWeight="bold" fill="#dc2626">
                   45°
                 </text>
               </svg>
