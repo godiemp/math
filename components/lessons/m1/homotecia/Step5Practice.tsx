@@ -212,40 +212,38 @@ function PerimeterVisualization({ problem, showHint }: { problem: Problem; showH
   if (!perimeter || k === undefined) return null;
 
   const resultPerimeter = perimeter * Math.abs(k);
-  const sideOriginal = perimeter / 4; // Assuming square
-  const sideImage = sideOriginal * Math.abs(k);
 
   return (
     <div className="flex justify-center mb-4">
       <svg viewBox="0 0 240 100" className="w-72 h-28">
         {/* Original square */}
         <g>
-          <rect x="25" y="20" width="45" height="45" fill="#bfdbfe" stroke="#1d4ed8" strokeWidth="2" rx="2" />
-          <text x="47" y="50" textAnchor="middle" fontSize="9" fill="#1d4ed8" fontWeight="bold">
+          <rect x="25" y="15" width="45" height="45" fill="#bfdbfe" stroke="#1d4ed8" strokeWidth="2" rx="2" />
+          <text x="47" y="75" textAnchor="middle" fontSize="10" fill="#1d4ed8" fontWeight="bold">
             P = {perimeter} cm
           </text>
         </g>
 
         {/* Arrow */}
         <g>
-          <line x1="80" y1="42" x2="100" y2="42" stroke="#9ca3af" strokeWidth="2" />
-          <polygon points="105,42 98,37 98,47" fill="#9ca3af" />
-          <text x="92" y="62" textAnchor="middle" fontSize="9" className="fill-gray-500">
+          <line x1="80" y1="37" x2="100" y2="37" stroke="#9ca3af" strokeWidth="2" />
+          <polygon points="105,37 98,32 98,42" fill="#9ca3af" />
+          <text x="92" y="55" textAnchor="middle" fontSize="9" className="fill-gray-500">
             k = {k}
           </text>
         </g>
 
         {/* Image square (smaller) */}
         <g>
-          <rect x="120" y="30" width="25" height="25" fill="#bbf7d0" fillOpacity="0.7" stroke="#16a34a" strokeWidth="2" rx="2" />
-          <text x="132" y="47" textAnchor="middle" fontSize="9" fill="#16a34a" fontWeight="bold">
+          <rect x="120" y="25" width="25" height="25" fill="#bbf7d0" fillOpacity="0.7" stroke="#16a34a" strokeWidth="2" rx="2" />
+          <text x="132" y="65" textAnchor="middle" fontSize="10" fill="#16a34a" fontWeight="bold">
             {showHint ? `P = ${resultPerimeter} cm` : 'P = ?'}
           </text>
         </g>
 
         {/* Formula hint */}
         {showHint && (
-          <text x="132" y="75" textAnchor="middle" fontSize="8" className="fill-gray-500">
+          <text x="120" y="90" textAnchor="middle" fontSize="9" className="fill-gray-500">
             {perimeter} × {k} = {resultPerimeter}
           </text>
         )}
