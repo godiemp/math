@@ -163,10 +163,17 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               {/* Visual */}
               <div className="flex justify-center mb-4">
                 <svg viewBox="0 0 140 140" className="w-36 h-36">
+                  {/* Gray circle outline */}
                   <circle cx="70" cy="70" r="55" fill="none" stroke="#e5e7eb" strokeWidth="2" />
-                  <path d={arcPath(70, 70, 55, 0, 90)} fill="none" stroke="#7c3aed" strokeWidth="5" strokeLinecap="round" />
+                  {/* Purple arc - using butt linecap for precise endpoints */}
+                  <path d={arcPath(70, 70, 55, 0, 90)} fill="none" stroke="#7c3aed" strokeWidth="4" strokeLinecap="butt" />
+                  {/* Radius lines - from center to arc endpoints */}
                   <line x1="70" y1="70" x2="70" y2="15" stroke="#dc2626" strokeWidth="2" strokeDasharray="4,2" />
                   <line x1="70" y1="70" x2="125" y2="70" stroke="#dc2626" strokeWidth="2" strokeDasharray="4,2" />
+                  {/* Endpoint markers to show exact connection points */}
+                  <circle cx="70" cy="15" r="3" fill="#7c3aed" />
+                  <circle cx="125" cy="70" r="3" fill="#7c3aed" />
+                  {/* Center point */}
                   <circle cx="70" cy="70" r="3" fill="#7c3aed" />
                   {/* Angle arc indicator near center */}
                   <path d={arcPath(70, 70, 18, 0, 90)} fill="none" stroke="#f59e0b" strokeWidth="2" />
