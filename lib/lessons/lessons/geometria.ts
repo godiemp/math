@@ -161,4 +161,25 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint' },
     ],
   },
+  {
+    id: 'm2-geo-005-a',
+    slug: 'teorema-tales',
+    title: 'Teorema de Tales',
+    description:
+      'Descubre como las lineas paralelas crean proporciones perfectas y aprende a calcular distancias usando semejanza.',
+    level: 'M2',
+    subject: 'geometría',
+    thematicUnit: 'M2-GEO-005',
+    skills: ['teorema-tales-aplicar', 'triangulos-semejantes', 'proporcionalidad-geometrica'],
+    estimatedMinutes: 14,
+    minEducOA: ['MA1M-OA-09'], // Taught in 1° Medio, but M2 PAES difficulty
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Desafio de la Altura' },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patron' },
+      { id: 'proof', type: 'explore', title: 'La Prueba Visual' },
+      { id: 'explain', type: 'explain', title: 'El Teorema de Tales' },
+      { id: 'practice', type: 'practice', title: 'Practica Guiada' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
 ];
