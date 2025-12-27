@@ -562,14 +562,24 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
             Donde P es un punto original, O es el centro, k es la razón, y P&apos; es el punto imagen
           </p>
-          {/* Quick example */}
-          <div className="mt-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg p-3 text-left">
-            <p className="text-sm text-teal-800 dark:text-teal-200">
-              <strong>Ejemplo rápido:</strong> Si <span className="font-mono">O=(0,0)</span>, <span className="font-mono">P=(3,4)</span> y <span className="font-mono">k=2</span>:
-            </p>
-            <p className="text-sm font-mono text-teal-700 dark:text-teal-300 mt-1">
-              P&apos; = (0,0) + 2·(3-0, 4-0) = (0,0) + (6,8) = <strong className="text-teal-600 dark:text-teal-400">(6,8)</strong>
-            </p>
+          {/* Quick examples */}
+          <div className="mt-4 space-y-3">
+            <div className="bg-teal-50 dark:bg-teal-900/30 rounded-lg p-3 text-left">
+              <p className="text-sm text-teal-800 dark:text-teal-200">
+                <strong>Ejemplo 1:</strong> Si <span className="font-mono">O=(0,0)</span>, <span className="font-mono">P=(3,4)</span> y <span className="font-mono">k=2</span>:
+              </p>
+              <p className="text-sm font-mono text-teal-700 dark:text-teal-300 mt-1">
+                P&apos; = (0,0) + 2·(3,4) = <strong className="text-teal-600 dark:text-teal-400">(6,8)</strong>
+              </p>
+            </div>
+            <div className="bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-3 text-left border border-indigo-200 dark:border-indigo-700">
+              <p className="text-sm text-indigo-800 dark:text-indigo-200">
+                <strong>Ejemplo 2 (centro ≠ origen):</strong> Si <span className="font-mono">O=(1,2)</span>, <span className="font-mono">P=(4,6)</span> y <span className="font-mono">k=2</span>:
+              </p>
+              <p className="text-sm font-mono text-indigo-700 dark:text-indigo-300 mt-1">
+                P&apos; = (1,2) + 2·(4-1, 6-2) = (1,2) + 2·(3,4) = (1,2) + (6,8) = <strong className="text-indigo-600 dark:text-indigo-400">(7,10)</strong>
+              </p>
+            </div>
           </div>
         </div>
 
