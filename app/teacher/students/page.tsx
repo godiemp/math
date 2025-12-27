@@ -1,17 +1,15 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import TeacherLayout from '@/components/layout/TeacherLayout';
 import { Card, Heading, Text } from '@/components/ui';
-import {
-  getStudents,
-  assignStudentGrade,
-  createStudent,
-  type StudentForTeacher,
-  type GetStudentsParams,
-  type CreateStudentResponse,
-} from '@/lib/api/teacher';
+import { type StudentForTeacher } from '@/lib/api/teacher';
 import type { StudentGradeLevel } from '@/lib/types';
+import {
+  useStudentsList,
+  useAddStudentModal,
+  useCredentialsModal,
+} from '@/hooks/teacher';
 
 const GRADE_LEVELS: { value: StudentGradeLevel; label: string }[] = [
   { value: '1-medio', label: '1° Medio' },
@@ -98,151 +96,24 @@ function StudentRow({
 }
 
 export default function TeacherStudentsPage() {
-  const [students, setStudents] = useState<StudentForTeacher[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [updatingStudentId, setUpdatingStudentId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterGrade, setFilterGrade] = useState<string>('all');
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-  // Add Student Modal State
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [addingStudent, setAddingStudent] = useState(false);
-  const [newStudentFirstName, setNewStudentFirstName] = useState('');
-  const [newStudentLastName, setNewStudentLastName] = useState('');
-  const [newStudentGradeLevel, setNewStudentGradeLevel] = useState<StudentGradeLevel>('1-medio');
-
-  // Credentials Modal State (shown after student is created)
-  const [showCredentialsModal, setShowCredentialsModal] = useState(false);
-  const [createdStudentCredentials, setCreatedStudentCredentials] = useState<{
-    displayName: string;
-    username: string;
-    password: string;
-  } | null>(null);
-  const [copiedField, setCopiedField] = useState<string | null>(null);
-
-  const loadStudents = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const params: GetStudentsParams = {};
-      if (searchQuery.trim()) {
-        params.search = searchQuery.trim();
-      }
-      if (filterGrade !== 'all') {
-        params.gradeLevel = filterGrade as StudentGradeLevel | 'unassigned';
-      }
-
-      const response = await getStudents(params);
-      if (response.error) {
-        throw new Error(response.error.error);
-      }
-      setStudents(response.data?.students || []);
-    } catch (err) {
-      console.error('Error loading students:', err);
-      setError('Error al cargar estudiantes. Por favor intenta de nuevo.');
-    } finally {
-      setLoading(false);
-    }
-  }, [searchQuery, filterGrade]);
-
-  useEffect(() => {
-    loadStudents();
-  }, [loadStudents]);
-
-  const handleGradeChange = async (studentId: string, gradeLevel: StudentGradeLevel | null) => {
-    try {
-      setUpdatingStudentId(studentId);
-      setError(null);
-
-      const response = await assignStudentGrade(studentId, gradeLevel);
-
-      if (response.error) {
-        throw new Error(response.error.error);
-      }
-
-      // Update local state
-      setStudents((prev) =>
-        prev.map((s) =>
-          s.id === studentId
-            ? { ...s, gradeLevel: response.data?.student.gradeLevel || null }
-            : s
-        )
-      );
-
-      setSuccessMessage(response.data?.message || 'Nivel asignado correctamente');
-      setTimeout(() => setSuccessMessage(null), 3000);
-    } catch (err) {
-      console.error('Error assigning grade:', err);
-      setError('Error al asignar nivel. Por favor intenta de nuevo.');
-    } finally {
-      setUpdatingStudentId(null);
-    }
-  };
+  const studentsList = useStudentsList();
+  const credentialsModal = useCredentialsModal();
+  const addStudentModal = useAddStudentModal({
+    onSuccess: (credentials) => {
+      credentialsModal.show(credentials);
+      studentsList.loadStudents();
+    },
+    onError: (error) => studentsList.setError(error),
+  });
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    loadStudents();
+    studentsList.loadStudents();
   };
 
-  const handleCreateStudent = async (e: React.FormEvent) => {
+  const handleCreateStudent = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!newStudentFirstName.trim() || !newStudentLastName.trim()) {
-      setError('Por favor completa nombre y apellido');
-      return;
-    }
-
-    try {
-      setAddingStudent(true);
-      setError(null);
-
-      const response = await createStudent({
-        firstName: newStudentFirstName.trim(),
-        lastName: newStudentLastName.trim(),
-        gradeLevel: newStudentGradeLevel,
-      });
-
-      if (response.error) {
-        throw new Error(response.error.error);
-      }
-
-      // Store credentials and show modal
-      setCreatedStudentCredentials({
-        displayName: response.data?.student.displayName || '',
-        username: response.data?.credentials.username || '',
-        password: response.data?.credentials.password || '',
-      });
-
-      // Reset form and close add modal
-      setNewStudentFirstName('');
-      setNewStudentLastName('');
-      setNewStudentGradeLevel('1-medio');
-      setShowAddModal(false);
-
-      // Show credentials modal
-      setShowCredentialsModal(true);
-
-      // Reload students list
-      loadStudents();
-    } catch (err) {
-      console.error('Error creating student:', err);
-      setError('Error al crear estudiante. Por favor intenta de nuevo.');
-    } finally {
-      setAddingStudent(false);
-    }
-  };
-
-  const copyToClipboard = async (text: string, field: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedField(field);
-      setTimeout(() => setCopiedField(null), 2000);
-    } catch (err) {
-      console.error('Error copying to clipboard:', err);
-    }
+    addStudentModal.submit();
   };
 
   return (
@@ -259,7 +130,7 @@ export default function TeacherStudentsPage() {
             </Text>
           </div>
           <button
-            onClick={() => setShowAddModal(true)}
+            onClick={addStudentModal.open}
             className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors"
           >
             <span className="text-lg">+</span>
@@ -268,16 +139,16 @@ export default function TeacherStudentsPage() {
         </div>
 
         {/* Success Message */}
-        {successMessage && (
+        {studentsList.successMessage && (
           <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl text-emerald-700 dark:text-emerald-300">
-            {successMessage}
+            {studentsList.successMessage}
           </div>
         )}
 
         {/* Error Message */}
-        {error && (
+        {studentsList.error && (
           <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-300">
-            {error}
+            {studentsList.error}
           </div>
         )}
 
@@ -288,15 +159,15 @@ export default function TeacherStudentsPage() {
               <input
                 type="text"
                 placeholder="Buscar por nombre o email..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={studentsList.searchQuery}
+                onChange={(e) => studentsList.setSearchQuery(e.target.value)}
                 className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
             <div>
               <select
-                value={filterGrade}
-                onChange={(e) => setFilterGrade(e.target.value)}
+                value={studentsList.filterGrade}
+                onChange={(e) => studentsList.setFilterGrade(e.target.value)}
                 className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               >
                 <option value="all">Todos los niveles</option>
@@ -319,22 +190,19 @@ export default function TeacherStudentsPage() {
 
         {/* Students Table */}
         <Card className="!p-0">
-          {loading ? (
+          {studentsList.loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="text-gray-500 dark:text-gray-400">Cargando...</div>
             </div>
-          ) : students.length === 0 ? (
+          ) : studentsList.students.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12">
               <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
                 <span className="text-3xl">👥</span>
               </div>
               <Text variant="secondary">No se encontraron estudiantes</Text>
-              {(searchQuery || filterGrade !== 'all') && (
+              {(studentsList.searchQuery || studentsList.filterGrade !== 'all') && (
                 <button
-                  onClick={() => {
-                    setSearchQuery('');
-                    setFilterGrade('all');
-                  }}
+                  onClick={studentsList.clearFilters}
                   className="mt-2 text-sm text-emerald-600 hover:underline"
                 >
                   Limpiar filtros
@@ -361,12 +229,12 @@ export default function TeacherStudentsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {students.map((student) => (
+                  {studentsList.students.map((student) => (
                     <StudentRow
                       key={student.id}
                       student={student}
-                      onGradeChange={handleGradeChange}
-                      isUpdating={updatingStudentId === student.id}
+                      onGradeChange={studentsList.handleGradeChange}
+                      isUpdating={studentsList.updatingStudentId === student.id}
                     />
                   ))}
                 </tbody>
@@ -395,7 +263,7 @@ export default function TeacherStudentsPage() {
       </div>
 
       {/* Add Student Modal */}
-      {showAddModal && (
+      {addStudentModal.isOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full p-6 shadow-xl">
             <div className="flex items-center justify-between mb-6">
@@ -403,7 +271,7 @@ export default function TeacherStudentsPage() {
                 Agregar Estudiante
               </Heading>
               <button
-                onClick={() => setShowAddModal(false)}
+                onClick={addStudentModal.close}
                 className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               >
                 ✕
@@ -417,8 +285,8 @@ export default function TeacherStudentsPage() {
                 </label>
                 <input
                   type="text"
-                  value={newStudentFirstName}
-                  onChange={(e) => setNewStudentFirstName(e.target.value)}
+                  value={addStudentModal.firstName}
+                  onChange={(e) => addStudentModal.setFirstName(e.target.value)}
                   placeholder="Ej: María"
                   className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   required
@@ -431,8 +299,8 @@ export default function TeacherStudentsPage() {
                 </label>
                 <input
                   type="text"
-                  value={newStudentLastName}
-                  onChange={(e) => setNewStudentLastName(e.target.value)}
+                  value={addStudentModal.lastName}
+                  onChange={(e) => addStudentModal.setLastName(e.target.value)}
                   placeholder="Ej: González"
                   className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   required
@@ -444,8 +312,8 @@ export default function TeacherStudentsPage() {
                   Nivel
                 </label>
                 <select
-                  value={newStudentGradeLevel}
-                  onChange={(e) => setNewStudentGradeLevel(e.target.value as StudentGradeLevel)}
+                  value={addStudentModal.gradeLevel}
+                  onChange={(e) => addStudentModal.setGradeLevel(e.target.value as StudentGradeLevel)}
                   className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 >
                   {GRADE_LEVELS.map((grade) => (
@@ -459,17 +327,17 @@ export default function TeacherStudentsPage() {
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
-                  onClick={() => setShowAddModal(false)}
+                  onClick={addStudentModal.close}
                   className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  disabled={addingStudent}
+                  disabled={addStudentModal.isSubmitting}
                   className="flex-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-medium rounded-lg transition-colors"
                 >
-                  {addingStudent ? 'Creando...' : 'Crear Estudiante'}
+                  {addStudentModal.isSubmitting ? 'Creando...' : 'Crear Estudiante'}
                 </button>
               </div>
             </form>
@@ -478,7 +346,7 @@ export default function TeacherStudentsPage() {
       )}
 
       {/* Credentials Modal */}
-      {showCredentialsModal && createdStudentCredentials && (
+      {credentialsModal.isOpen && credentialsModal.credentials && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full p-6 shadow-xl">
             <div className="text-center mb-6">
@@ -489,7 +357,7 @@ export default function TeacherStudentsPage() {
                 Estudiante Creado
               </Heading>
               <Text variant="secondary" className="mt-2">
-                Comparte estas credenciales con <strong>{createdStudentCredentials.displayName}</strong>
+                Comparte estas credenciales con <strong>{credentialsModal.credentials.displayName}</strong>
               </Text>
             </div>
 
@@ -499,14 +367,14 @@ export default function TeacherStudentsPage() {
                   <div>
                     <Text size="sm" variant="secondary">Usuario</Text>
                     <Text className="font-mono font-medium">
-                      {createdStudentCredentials.username}
+                      {credentialsModal.credentials.username}
                     </Text>
                   </div>
                   <button
-                    onClick={() => copyToClipboard(createdStudentCredentials.username, 'username')}
+                    onClick={() => credentialsModal.copyToClipboard(credentialsModal.credentials!.username, 'username')}
                     className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors"
                   >
-                    {copiedField === 'username' ? '✓ Copiado' : 'Copiar'}
+                    {credentialsModal.copiedField === 'username' ? '✓ Copiado' : 'Copiar'}
                   </button>
                 </div>
               </div>
@@ -516,14 +384,14 @@ export default function TeacherStudentsPage() {
                   <div>
                     <Text size="sm" variant="secondary">Contraseña</Text>
                     <Text className="font-mono font-medium">
-                      {createdStudentCredentials.password}
+                      {credentialsModal.credentials.password}
                     </Text>
                   </div>
                   <button
-                    onClick={() => copyToClipboard(createdStudentCredentials.password, 'password')}
+                    onClick={() => credentialsModal.copyToClipboard(credentialsModal.credentials!.password, 'password')}
                     className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors"
                   >
-                    {copiedField === 'password' ? '✓ Copiado' : 'Copiar'}
+                    {credentialsModal.copiedField === 'password' ? '✓ Copiado' : 'Copiar'}
                   </button>
                 </div>
               </div>
@@ -536,10 +404,7 @@ export default function TeacherStudentsPage() {
             </div>
 
             <button
-              onClick={() => {
-                setShowCredentialsModal(false);
-                setCreatedStudentCredentials(null);
-              }}
+              onClick={credentialsModal.close}
               className="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors"
             >
               Entendido
