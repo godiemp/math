@@ -16,16 +16,17 @@ interface ClassifyItem {
   id: string;
   kValue: string;
   description: string;
-  correctAnswer: number; // 0=Ampliación, 1=Reducción, 2=Inversión
+  correctAnswer: number; // 0=Ampliación, 1=Reducción, 2=Inv+Red, 3=Inv+Amp
   explanation: string;
   svgContent: React.ReactNode;
 }
 
-const OPTIONS = ['Ampliación', 'Reducción', 'Inversión'];
+const OPTIONS = ['Ampliación', 'Reducción', 'Inversión + reducción', 'Inversión + ampliación'];
 const OPTION_ICONS = [
   <ZoomIn key="amp" size={18} />,
   <ZoomOut key="red" size={18} />,
-  <RotateCcw key="inv" size={18} />,
+  <RotateCcw key="inv-red" size={18} />,
+  <RotateCcw key="inv-amp" size={18} />,
 ];
 
 const ITEMS: ClassifyItem[] = [
@@ -92,32 +93,32 @@ const ITEMS: ClassifyItem[] = [
   },
   {
     id: 'q3',
-    kValue: 'k = -1',
-    description: 'La figura imagen tiene el mismo tamaño pero está al lado opuesto del centro.',
+    kValue: 'k = -0.5',
+    description: 'La figura imagen es más pequeña y está al lado opuesto del centro.',
     correctAnswer: 2,
-    explanation: 'k = -1: INVERSIÓN pura. La imagen tiene el mismo tamaño que el original (|k| = 1) pero está al lado opuesto del centro.',
+    explanation: 'k = -0.5: Como -1 < k < 0, es INVERSIÓN + REDUCCIÓN. La imagen es la mitad del tamaño y está al lado opuesto.',
     svgContent: (
       <svg viewBox="0 0 200 120" className="w-full">
         {/* Rays through center connecting vertex pairs */}
-        <line x1="130" y1="50" x2="70" y2="70" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
-        <line x1="160" y1="50" x2="40" y2="70" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
-        <line x1="145" y1="30" x2="55" y2="90" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        <line x1="130" y1="50" x2="85" y2="65" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        <line x1="170" y1="50" x2="65" y2="65" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
+        <line x1="150" y1="25" x2="75" y2="82" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3" />
         {/* Center */}
         <circle cx="100" cy="60" r="5" fill="#dc2626" />
         <text x="100" y="50" textAnchor="middle" fontSize="10" fill="#dc2626" fontWeight="bold">O</text>
-        {/* Original triangle */}
-        <polygon points="130,50 160,50 145,30" fill="#bfdbfe" stroke="#1d4ed8" strokeWidth="1.5" />
-        {/* Inverted triangle */}
-        <polygon points="70,70 40,70 55,90" fill="#ddd6fe" stroke="#7c3aed" strokeWidth="1.5" />
+        {/* Original triangle (larger) */}
+        <polygon points="130,50 170,50 150,25" fill="#bfdbfe" stroke="#1d4ed8" strokeWidth="1.5" />
+        {/* Inverted + reduced triangle (smaller, opposite side) */}
+        <polygon points="85,65 65,65 75,82" fill="#ddd6fe" stroke="#7c3aed" strokeWidth="1.5" />
         {/* Vertex markers - original */}
         <circle cx="130" cy="50" r="3" fill="#1d4ed8" />
-        <circle cx="160" cy="50" r="3" fill="#1d4ed8" />
-        <circle cx="145" cy="30" r="3" fill="#1d4ed8" />
+        <circle cx="170" cy="50" r="3" fill="#1d4ed8" />
+        <circle cx="150" cy="25" r="3" fill="#1d4ed8" />
         {/* Vertex markers - image */}
-        <circle cx="70" cy="70" r="3" fill="#7c3aed" />
-        <circle cx="40" cy="70" r="3" fill="#7c3aed" />
-        <circle cx="55" cy="90" r="3" fill="#7c3aed" />
-        <text x="100" y="110" textAnchor="middle" fontSize="11" fill="#6b7280">k = -1</text>
+        <circle cx="85" cy="65" r="3" fill="#7c3aed" />
+        <circle cx="65" cy="65" r="3" fill="#7c3aed" />
+        <circle cx="75" cy="82" r="3" fill="#7c3aed" />
+        <text x="100" y="110" textAnchor="middle" fontSize="11" fill="#6b7280">k = -0.5</text>
       </svg>
     ),
   },
@@ -159,8 +160,8 @@ const ITEMS: ClassifyItem[] = [
     id: 'q5',
     kValue: 'k = -1.5',
     description: 'La imagen es más grande y está al lado opuesto del centro.',
-    correctAnswer: 2,
-    explanation: 'k = -1.5: Como k < -1, es una INVERSIÓN con AMPLIACIÓN. La imagen es 1.5 veces más grande y está al lado opuesto del centro.',
+    correctAnswer: 3,
+    explanation: 'k = -1.5: Como k < -1, es INVERSIÓN + AMPLIACIÓN. La imagen es 1.5 veces más grande y está al lado opuesto del centro.',
     svgContent: (
       <svg viewBox="0 0 200 120" className="w-full">
         {/* Rays through center connecting vertex pairs */}
@@ -283,14 +284,14 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           </p>
 
           {/* Options */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             {OPTIONS.map((option, index) => (
               <button
                 key={index}
                 onClick={() => !mc.showFeedback && mc.select(index)}
                 disabled={mc.showFeedback}
                 className={cn(
-                  'flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all font-medium',
+                  'flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all font-medium text-sm',
                   mc.showFeedback
                     ? index === currentItem.correctAnswer
                       ? 'border-green-500 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200'

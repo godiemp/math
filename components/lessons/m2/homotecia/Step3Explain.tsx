@@ -140,6 +140,39 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                     </div>
                   </div>
                 </div>
+
+                {/* Visual demo: Why k² for area */}
+                <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-4 border border-purple-200 dark:border-purple-800">
+                  <h4 className="font-bold text-purple-800 dark:text-purple-200 mb-3 text-center">
+                    ¿Por qué k² para el área?
+                  </h4>
+                  <div className="flex items-center justify-center gap-4 mb-3">
+                    <svg viewBox="0 0 220 90" className="w-full max-w-xs">
+                      {/* Original rectangle */}
+                      <rect x="10" y="30" width="30" height="40" fill="#bfdbfe" stroke="#1d4ed8" strokeWidth="2" />
+                      <text x="25" y="55" textAnchor="middle" fontSize="10" fill="#1d4ed8" fontWeight="bold">3×4</text>
+                      <text x="25" y="80" textAnchor="middle" fontSize="9" fill="#6b7280">12 cm²</text>
+
+                      {/* Arrow with k=2 */}
+                      <line x1="50" y1="50" x2="80" y2="50" stroke="#7c3aed" strokeWidth="2" markerEnd="url(#arrowhead)" />
+                      <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                          <polygon points="0 0, 10 3.5, 0 7" fill="#7c3aed" />
+                        </marker>
+                      </defs>
+                      <text x="65" y="42" textAnchor="middle" fontSize="10" fill="#7c3aed" fontWeight="bold">k=2</text>
+
+                      {/* Transformed rectangle */}
+                      <rect x="90" y="10" width="60" height="80" fill="#ddd6fe" stroke="#7c3aed" strokeWidth="2" />
+                      <text x="120" y="55" textAnchor="middle" fontSize="10" fill="#7c3aed" fontWeight="bold">6×8</text>
+                      <text x="165" y="55" textAnchor="start" fontSize="9" fill="#6b7280">48 cm²</text>
+                    </svg>
+                  </div>
+                  <div className="text-center text-sm text-purple-700 dark:text-purple-300 space-y-1">
+                    <p>Ancho: 3 × 2 = <strong>6</strong> &nbsp;|&nbsp; Alto: 4 × 2 = <strong>8</strong></p>
+                    <p>Área = 6 × 8 = 48 = 12 × 2² = <strong>área × k²</strong></p>
+                  </div>
+                </div>
               </div>
 
               {/* K values summary */}

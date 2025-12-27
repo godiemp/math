@@ -493,19 +493,19 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <div className="flex items-center gap-3 bg-purple-50 dark:bg-purple-800/30 rounded-lg p-2">
                 <span className="font-mono font-bold text-purple-700 dark:text-purple-300 min-w-[80px]">-1 &lt; k &lt; 0</span>
                 <span className="text-purple-600 dark:text-purple-400">
-                  Reducción + inversión <span className="opacity-70">(ej: k = -0.5)</span>
+                  Inversión + reducción <span className="opacity-70">(ej: k = -0.5)</span>
                 </span>
               </div>
               <div className="flex items-center gap-3 bg-purple-50 dark:bg-purple-800/30 rounded-lg p-2">
                 <span className="font-mono font-bold text-purple-700 dark:text-purple-300 min-w-[80px]">k = -1</span>
                 <span className="text-purple-600 dark:text-purple-400">
-                  Mismo tamaño + inversión
+                  Inversión (mismo tamaño)
                 </span>
               </div>
               <div className="flex items-center gap-3 bg-purple-50 dark:bg-purple-800/30 rounded-lg p-2">
                 <span className="font-mono font-bold text-purple-700 dark:text-purple-300 min-w-[80px]">k &lt; -1</span>
                 <span className="text-purple-600 dark:text-purple-400">
-                  Ampliación + inversión <span className="opacity-70">(ej: k = -2)</span>
+                  Inversión + ampliación <span className="opacity-70">(ej: k = -2)</span>
                 </span>
               </div>
             </div>
