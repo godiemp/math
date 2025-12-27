@@ -166,8 +166,11 @@ const scenarios: Scenario[] = [
           );
         })}
         <circle cx="60" cy="60" r="5" fill="#374151" />
-        <text x="60" y="105" textAnchor="middle" fontSize="8" fill="#15803d">120°</text>
-        <text x="85" y="55" fontSize="8" fill="#dc2626">5m</text>
+        {/* Labels with backgrounds */}
+        <rect x="45" y="20" width="30" height="14" fill="white" rx="2" />
+        <text x="60" y="31" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#15803d">120°</text>
+        <rect x="78" y="43" width="24" height="14" fill="white" rx="2" />
+        <text x="90" y="54" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#dc2626">5m</text>
       </svg>
     ),
     options: ['25π/6 m² ≈ 13 m²', '25π/3 m² ≈ 26 m²', '25π m² ≈ 79 m²', '50π/3 m² ≈ 52 m²'],
