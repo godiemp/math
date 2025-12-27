@@ -1152,14 +1152,39 @@ const labelRadius = r + 10; // Outside the circle
 | Center point | `#0d9488` | teal-600 |
 | Circle outline | `#e5e7eb` | gray-200 |
 
+### Shared Constants Pattern (RECOMMENDED)
+
+When creating multiple circular diagrams in one component, **define shared constants** at the top:
+
+```typescript
+// Constants for consistent diagram styling
+const CX = 60, CY = 60, R = 50;        // Center and radius
+const ANGLE_ARC_RADIUS = 18;           // Orange angle indicator arc
+const LABEL_RADIUS = 28;               // Where to place angle labels
+
+// Then use in ALL diagrams:
+<path d={arcPath(CX, CY, ANGLE_ARC_RADIUS, 0, angle)} stroke="#f59e0b" strokeWidth="2.5" />
+<text
+  x={CX + LABEL_RADIUS * Math.cos(((angle / 2) - 90) * Math.PI / 180)}
+  y={CY + LABEL_RADIUS * Math.sin(((angle / 2) - 90) * Math.PI / 180) + 3}
+  textAnchor="middle" fontSize="9" fontWeight="bold" fill="#f59e0b">{angle}°</text>
+```
+
+**Benefits:**
+- All diagrams have identical sizing and proportions
+- Angle labels are always positioned consistently
+- Easy to adjust all diagrams at once
+- Prevents hardcoded positions that cause misalignment
+
 ### Anti-Patterns for Circular Geometry
 
 1. **Using `strokeLinecap="round"`** on arcs - causes visual misalignment at endpoints
 2. **Forgetting the -90° offset** - angles will be rotated 90° from expected position
-3. **Hardcoding endpoints** instead of using `pointOnCircle()` - prone to errors
+3. **Hardcoding label positions** instead of calculating from angles - causes misalignment
 4. **Missing angle arc indicator** - makes it unclear what angle is being measured
 5. **Labels outside viewBox** - always verify labels are visible
 6. **Different radii for arc and radius lines** - they won't connect properly
+7. **Drawing center dot before angle arc** - arc gets hidden behind the dot
 
 ### Exemplar Circular Lessons
 
