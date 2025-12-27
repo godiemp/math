@@ -10,7 +10,7 @@ import {
   Step4Explain,
   Step5Practice,
   Step6Verify,
-} from '@/components/lessons/m1/teorema-tales';
+} from '@/components/lessons/m2/teorema-tales';
 
 const LESSON_SLUG = 'teorema-tales';
 

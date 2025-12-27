@@ -7,6 +7,35 @@ description: Create interactive mini-lessons for the PAES math curriculum. Use w
 
 This skill guides you through creating world-class interactive mini-lessons for the PAES mathematics curriculum. Each lesson follows a 6-step pedagogical structure designed to maximize learning.
 
+---
+
+## ⚠️ CRITICAL: M1 vs 1° Medio - DO NOT CONFUSE THESE!
+
+This project uses **TWO SEPARATE classification systems**:
+
+| Concept | Meaning | Example |
+|---------|---------|---------|
+| **M1, M2** | PAES competency levels | M1 = Nivel Básico, M2 = Nivel Avanzado |
+| **1° Medio (1M)** | School grade | First year of high school |
+
+**They are NOT the same thing!**
+
+- `m1-xxx` lesson IDs → PAES level M1 (basic difficulty)
+- `MA1M-OA-xx` codes → 1° Medio curriculum (when it's taught in school)
+
+**Example:** Teorema de Tales
+- Is taught in 1° Medio (MA1M-OA-09)
+- But is M2 difficulty (advanced PAES level)
+- Should NOT be placed in `components/lessons/m1/`
+
+**When creating lessons, ask:**
+1. What PAES level is this? (M1 = basic, M2 = advanced)
+2. What school grade teaches this? (1° Medio, 2° Medio, etc.)
+
+Place lessons in folders based on **PAES level**, not school grade.
+
+---
+
 ## When to Use This Skill
 
 Invoke this skill when:

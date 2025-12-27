@@ -6,6 +6,34 @@
  *
  * MVP: 1° Medio (15 OA)
  * Future: 1° Básico to 4° Medio (12 levels)
+ *
+ * ============================================================================
+ * IMPORTANT: M1 vs 1° Medio - These Are DIFFERENT Concepts!
+ * ============================================================================
+ *
+ * This project uses TWO SEPARATE classification systems:
+ *
+ * 1. SCHOOL GRADES (used in this file):
+ *    - 1M, 2M, 3M, 4M = 1° Medio, 2° Medio, 3° Medio, 4° Medio
+ *    - These are school years in Chilean education system
+ *    - MA1M-OA-xx = Objetivos de Aprendizaje for 1° Medio curriculum
+ *
+ * 2. PAES COMPETENCY LEVELS (used in lessons and practice):
+ *    - M1 = Nivel Básico PAES (basic competency level)
+ *    - M2 = Nivel Avanzado PAES (advanced competency level)
+ *    - These indicate DIFFICULTY/COMPLEXITY, not school grade
+ *
+ * WHY THIS MATTERS:
+ * - A topic taught in 1° Medio may be too advanced for PAES M1 level
+ * - Example: Teorema de Tales is MA1M-OA-09 (taught in 1° Medio)
+ *   but it's NOT appropriate for M1 PAES level - it's M2 difficulty
+ * - Lesson IDs like 'm1-xxx' refer to PAES level M1, NOT 1° Medio
+ *
+ * SUMMARY:
+ * - minEducOA codes (MA1M-OA-xx) → School curriculum (when it's taught)
+ * - Lesson IDs (m1-xxx, m2-xxx) → PAES difficulty (how hard it is)
+ * - These CAN overlap but are NOT the same thing!
+ * ============================================================================
  */
 
 // ============================================================================
@@ -201,7 +229,7 @@ const OA_1M: MinEducOA[] = [
     name: 'Teorema de Tales',
     description: 'Desarrollar el teorema de Tales mediante propiedades de homotecia para resolver problemas.',
     isBasal: false,
-    lessonIds: ['m1-geo-005-a'],
+    lessonIds: ['m2-geo-005-a'], // M2 difficulty despite being 1° Medio curriculum
   },
   {
     code: 'MA1M-OA-10',
