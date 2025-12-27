@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, Heading, Text } from '@/components/ui';
+import { Card, Heading, Text, Button } from '@/components/ui';
 import { useKnowledgeDeclarations } from '@/lib/hooks/useKnowledgeDeclarations';
 import { getGroupedUnits, type ThematicUnit } from '@/lib/services/thematicUnitsService';
 import { UnitDeclarationRow } from './UnitDeclarationRow';
+import { DiagnosisFlow } from '@/components/diagnosis';
 import type { Level, Subject } from '@/lib/types';
 
 interface KnowledgeDeclarationPanelProps {
@@ -50,8 +51,21 @@ export function KnowledgeDeclarationPanel({ initialLevel = 'M1' }: KnowledgeDecl
   const [units, setUnits] = useState<Record<Subject, ThematicUnit[]> | null>(null);
   const [loading, setLoading] = useState(true);
   const [expandedUnits, setExpandedUnits] = useState<Set<string>>(new Set());
+  const [diagnosisSubject, setDiagnosisSubject] = useState<Subject | null>(null);
 
   const { summary, isKnown, setKnowledge, updateError, isLoading: declarationsLoading } = useKnowledgeDeclarations(level);
+
+  // Get skills for a specific subject
+  const getSkillsForSubject = (subject: Subject): string[] => {
+    if (!units) return [];
+    const skills: string[] = [];
+    for (const unit of units[subject] || []) {
+      for (const subsection of unit.subsections || []) {
+        skills.push(...(subsection.primary_skills || []));
+      }
+    }
+    return [...new Set(skills)].slice(0, 10); // Limit to 10 skills
+  };
 
   // Load units when level changes
   useEffect(() => {
@@ -173,7 +187,7 @@ export function KnowledgeDeclarationPanel({ initialLevel = 'M1' }: KnowledgeDecl
         </div>
 
         {/* Progress bar */}
-        <div className="mb-2">
+        <div className="mb-4">
           <div className="flex justify-between mb-1">
             <Text size="xs" variant="secondary">Progreso declarado</Text>
             <Text size="xs" variant="secondary" className="font-semibold">{knowledgePercentage}%</Text>
@@ -183,6 +197,31 @@ export function KnowledgeDeclarationPanel({ initialLevel = 'M1' }: KnowledgeDecl
               className="bg-[#30D158] h-2 rounded-full transition-all duration-[300ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
               style={{ width: `${knowledgePercentage}%` }}
             />
+          </div>
+        </div>
+
+        {/* Evaluate knowledge by subject */}
+        <div className="mb-4 p-4 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800">
+          <Text className="font-medium text-indigo-900 dark:text-indigo-100 mb-1">
+            Evaluar mis conocimientos
+          </Text>
+          <Text size="xs" className="text-indigo-700 dark:text-indigo-300 mb-3">
+            Haz un diagnóstico rápido con IA para detectar lagunas
+          </Text>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {subjectOrder.map((subject) => {
+              const config = subjectConfig[subject];
+              return (
+                <button
+                  key={subject}
+                  onClick={() => setDiagnosisSubject(subject)}
+                  className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${config.color} ${config.borderColor} border hover:opacity-80`}
+                >
+                  <span>{config.icon}</span>
+                  <span className={config.textColor}>{config.displayName.split(' ')[0]}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -246,6 +285,19 @@ export function KnowledgeDeclarationPanel({ initialLevel = 'M1' }: KnowledgeDecl
           </Card>
         );
       })}
+
+      {/* Diagnosis Flow Modal */}
+      {diagnosisSubject && (
+        <DiagnosisFlow
+          skillsToVerify={getSkillsForSubject(diagnosisSubject)}
+          level={level}
+          onComplete={(result) => {
+            console.log('Diagnosis completed:', result);
+            setDiagnosisSubject(null);
+          }}
+          onClose={() => setDiagnosisSubject(null)}
+        />
+      )}
     </div>
   );
 }

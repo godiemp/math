@@ -963,6 +963,24 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_knowledge_decl_level ON user_knowledge_declarations(level)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_knowledge_decl_type ON user_knowledge_declarations(declaration_type)');
 
+    // Create skill_diagnosis table for AI-verified knowledge gaps
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS skill_diagnosis (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        skill_code VARCHAR(100) NOT NULL,
+        declared_knows BOOLEAN NOT NULL DEFAULT TRUE,
+        verified_knows BOOLEAN NOT NULL DEFAULT FALSE,
+        specific_gap TEXT,
+        diagnosed_at BIGINT NOT NULL,
+        UNIQUE(user_id, skill_code)
+      )
+    `);
+
+    // Skill diagnosis indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_skill_diagnosis_user_id ON skill_diagnosis(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_skill_diagnosis_skill_code ON skill_diagnosis(skill_code)');
+
     // Create certificates table
     await client.query(`
       CREATE TABLE IF NOT EXISTS certificates (

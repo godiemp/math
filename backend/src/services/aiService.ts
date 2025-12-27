@@ -844,3 +844,196 @@ NOTA:
     throw error;
   }
 }
+
+// ========================================
+// Diagnostic Question Generation
+// ========================================
+
+interface GenerateDiagnosticQuestionsInput {
+  subject: 'números' | 'álgebra' | 'geometría' | 'probabilidad';
+  level: 'M1' | 'M2';
+  skillsToTest: string[];
+  count: number;
+}
+
+interface DiagnosticQuestionMisconception {
+  optionIndex: number;
+  misconception: string;
+}
+
+export interface DiagnosticQuestion {
+  question: string;
+  questionLatex: string;
+  options: string[];
+  optionsLatex: string[];
+  correctAnswer: number;
+  skillTested: string;
+  misconceptions: DiagnosticQuestionMisconception[];
+}
+
+/**
+ * Generate diagnostic questions with misconception-mapped distractors
+ *
+ * Key difference from generateCompleteQuestion():
+ * - Generates MULTIPLE questions in one API call (faster)
+ * - Each wrong answer has a NAMED misconception
+ * - Questions test CORE concepts to reveal WHY student doesn't understand
+ */
+export async function generateDiagnosticQuestions(
+  input: GenerateDiagnosticQuestionsInput
+): Promise<DiagnosticQuestion[]> {
+  console.log(`      🔑 [aiService] generateDiagnosticQuestions called`);
+  console.log(`      🔑 [aiService] Input: ${JSON.stringify(input)}`);
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+
+  if (!apiKey) {
+    console.error(`      ❌ [aiService] ANTHROPIC_API_KEY not found in environment`);
+    throw new Error('ANTHROPIC_API_KEY not configured');
+  }
+  console.log(`      🔑 [aiService] API key found (length: ${apiKey.length})`);
+
+  const { subject, level, skillsToTest, count } = input;
+
+  // Map skill codes to readable names
+  const skillNames = skillsToTest.map((skill) => {
+    return skill
+      .split('-')
+      .map((word, i) => (i === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word))
+      .join(' ');
+  });
+
+  const systemPrompt = `Eres un experto en diseño de evaluaciones diagnósticas para matemáticas PAES Chile.
+
+Tu tarea es crear preguntas diagnósticas que:
+1. Evalúen directamente las habilidades especificadas
+2. Tengan 4 opciones donde cada respuesta incorrecta revele una confusión ESPECÍFICA y NOMBRADA
+3. Sean de dificultad apropiada para ${level}
+
+Las preguntas deben:
+- Ir al corazón del concepto, no a detalles periféricos
+- Usar números/valores que hagan evidentes los errores comunes
+- Estar en español chileno, formato LaTeX para matemáticas
+- Cada distractor debe revelar UN error conceptual específico (no simplemente "error de cálculo")
+
+IMPORTANTE:
+- La respuesta debe ser SOLO un array JSON válido, sin texto adicional
+- Cada pregunta debe evaluar UNA habilidad de la lista proporcionada
+- Los distractores deben ser errores REALES que los estudiantes cometen`;
+
+  const userPrompt = `Genera ${count} preguntas diagnósticas para el tema "${subject}" nivel ${level}.
+
+Habilidades a evaluar:
+${skillsToTest.map((s, i) => `- ${s} (${skillNames[i]})`).join('\n')}
+
+Para cada pregunta, genera:
+1. Una pregunta clara que evalúe el corazón del concepto
+2. 4 opciones de respuesta en LaTeX
+3. La posición de la respuesta correcta (0-3)
+4. Para cada distractor, la confusión específica que revela
+
+Responde con un array JSON:
+[
+  {
+    "question": "texto de la pregunta",
+    "questionLatex": "pregunta con $LaTeX$",
+    "options": ["opción A", "opción B", "opción C", "opción D"],
+    "optionsLatex": ["$A$", "$B$", "$C$", "$D$"],
+    "correctAnswer": 0,
+    "skillTested": "skill-code-exacto",
+    "misconceptions": [
+      { "optionIndex": 1, "misconception": "descripción del error conceptual" },
+      { "optionIndex": 2, "misconception": "descripción del error conceptual" },
+      { "optionIndex": 3, "misconception": "descripción del error conceptual" }
+    ]
+  }
+]
+
+IMPORTANTE:
+- Las opciones deben ser en formato LaTeX puro (sin delimitadores $)
+- correctAnswer es el índice (0-3) de la respuesta correcta
+- misconceptions solo incluye los índices de respuestas INCORRECTAS
+- skillTested debe ser exactamente uno de los skill codes proporcionados`;
+
+  try {
+    console.log(`      🌐 [aiService] Calling Anthropic API...`);
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 4096,
+        temperature: 0.7,
+        messages: [
+          {
+            role: 'user',
+            content: userPrompt,
+          },
+        ],
+        system: systemPrompt,
+      }),
+    });
+
+    console.log(`      🌐 [aiService] API Response status: ${response.status} ${response.statusText}`);
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error(`      ❌ [aiService] Anthropic API error response: ${error}`);
+      throw new Error(`AI service error: ${response.statusText}`);
+    }
+
+    const data = (await response.json()) as { content: Array<{ text: string }> };
+    const responseText = data.content[0].text;
+    console.log(`      🌐 [aiService] Received response text (length: ${responseText.length})`);
+
+    // Extract JSON array from response
+    const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      console.error(`      ❌ [aiService] Failed to extract JSON array from response`);
+      console.error(`      ❌ [aiService] Response text (first 500 chars): ${responseText.substring(0, 500)}`);
+      throw new Error('Failed to extract JSON array from AI response');
+    }
+    console.log(`      🌐 [aiService] Extracted JSON array, parsing...`);
+
+    const questions = JSON.parse(jsonMatch[0]) as DiagnosticQuestion[];
+    console.log(`      🌐 [aiService] Parsed ${questions.length} questions from JSON`);
+
+    // Validate each question
+    for (const q of questions) {
+      if (
+        typeof q.correctAnswer !== 'number' ||
+        q.correctAnswer < 0 ||
+        q.correctAnswer > 3
+      ) {
+        throw new Error('Invalid correctAnswer index in diagnostic question');
+      }
+
+      if (!Array.isArray(q.options) || q.options.length !== 4) {
+        throw new Error('Invalid options array in diagnostic question');
+      }
+
+      if (!q.question || !q.skillTested) {
+        throw new Error('Missing required fields in diagnostic question');
+      }
+
+      // Ensure misconceptions don't include the correct answer
+      if (q.misconceptions) {
+        q.misconceptions = q.misconceptions.filter(
+          (m) => m.optionIndex !== q.correctAnswer
+        );
+      }
+    }
+
+    console.log(`      ✅ [aiService] Generated ${questions.length} diagnostic questions for ${subject}`);
+    return questions;
+  } catch (error) {
+    console.error(`      ❌ [aiService] Error generating diagnostic questions:`, error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`      ❌ [aiService] Error details: ${errorMessage}`);
+    throw error;
+  }
+}
