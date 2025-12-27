@@ -105,11 +105,12 @@ const scenarios: Scenario[] = [
         {/* Minute hand end position (5 min later = 30°) */}
         <line x1="60" y1="60" x2={60 + 50 * Math.cos((-60) * Math.PI / 180)} y2={60 + 50 * Math.sin((-60) * Math.PI / 180)} stroke="#7c3aed" strokeWidth="2" strokeDasharray="4,2" />
         <circle cx="60" cy="60" r="4" fill="#1f2937" />
-        {/* Angle arc indicator near center */}
-        <path d={arcPath(60, 60, 15, 0, 30)} fill="none" stroke="#f59e0b" strokeWidth="2" />
-        {/* Angle label positioned at middle of angle (15°) */}
-        <text x={60 + 24 * Math.cos((-75) * Math.PI / 180)} y={60 + 24 * Math.sin((-75) * Math.PI / 180)} fontSize="8" fontWeight="bold" fill="#7c3aed">30°</text>
-        <text x="65" y="22" fontSize="7" fill="#dc2626">12cm</text>
+        {/* Angle arc indicator near center - radius 22 for visibility */}
+        <path d={arcPath(60, 60, 22, 0, 30)} fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+        {/* Angle label - amber color to match arc, positioned at middle of angle (15°) */}
+        <text x={60 + 32 * Math.cos((-75) * Math.PI / 180)} y={60 + 32 * Math.sin((-75) * Math.PI / 180)} fontSize="9" fontWeight="bold" fill="#f59e0b">30°</text>
+        {/* Radius label - moved left of minute hand */}
+        <text x="50" y="35" fontSize="7" fill="#dc2626">12cm</text>
       </svg>
     ),
     options: ['π cm ≈ 3.14 cm', '2π cm ≈ 6.28 cm', '4π cm ≈ 12.57 cm', '6π cm ≈ 18.85 cm'],
