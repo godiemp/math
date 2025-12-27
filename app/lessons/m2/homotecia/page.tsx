@@ -10,7 +10,7 @@ import {
   Step4Classify,
   Step5Practice,
   Step6Verify,
-} from '@/components/lessons/m1/homotecia';
+} from '@/components/lessons/m2/homotecia';
 
 const LESSON_SLUG = 'homotecia';
 

@@ -141,14 +141,14 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     ],
   },
   {
-    id: 'm1-geo-005-a',
+    id: 'm2-geo-001-a',
     slug: 'homotecia',
     title: 'Homotecia: Ampliaciones y Reducciones',
     description:
       'Descubre cómo transformar figuras manteniendo su forma usando el centro y la razón de homotecia.',
-    level: 'M1',
+    level: 'M2',
     subject: 'geometría',
-    thematicUnit: 'M1-GEO-005',
+    thematicUnit: 'M2-GEO-001',
     skills: ['homotecia-concepto', 'homotecia-razon', 'homotecia-construccion'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-08'],
