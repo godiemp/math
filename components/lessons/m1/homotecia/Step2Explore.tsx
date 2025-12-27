@@ -563,32 +563,38 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           </div>
         </div>
 
-        {/* Formula */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center">
-          <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-3">Fórmula de Transformación</h4>
-          <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 font-mono text-xl">
-            P&apos; = O + k · (P - O)
-          </div>
-          <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
-            Donde P es un punto original, O es el centro, k es la razón, y P&apos; es el punto imagen
-          </p>
-          {/* Quick examples */}
-          <div className="mt-4 space-y-3">
-            <div className="bg-teal-50 dark:bg-teal-900/30 rounded-lg p-3 text-left">
-              <p className="text-sm text-teal-800 dark:text-teal-200">
-                <strong>Ejemplo 1:</strong> Si <span className="font-mono">O=(0,0)</span>, <span className="font-mono">P=(3,4)</span> y <span className="font-mono">k=2</span>:
-              </p>
-              <p className="text-sm font-mono text-teal-700 dark:text-teal-300 mt-1">
-                P&apos; = (0,0) + 2·(3,4) = <strong className="text-teal-600 dark:text-teal-400">(6,8)</strong>
-              </p>
+        {/* Properties of figures */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
+          <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-4 text-center">
+            Propiedades de las Figuras
+          </h4>
+          <div className="space-y-3">
+            <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+              <span className="text-2xl">📐</span>
+              <div>
+                <h5 className="font-bold text-blue-800 dark:text-blue-200">Los ángulos se conservan</h5>
+                <p className="text-sm text-blue-700 dark:text-blue-300">
+                  La figura imagen es <strong>semejante</strong> a la original
+                </p>
+              </div>
             </div>
-            <div className="bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-3 text-left border border-indigo-200 dark:border-indigo-700">
-              <p className="text-sm text-indigo-800 dark:text-indigo-200">
-                <strong>Ejemplo 2 (centro ≠ origen):</strong> Si <span className="font-mono">O=(1,2)</span>, <span className="font-mono">P=(4,6)</span> y <span className="font-mono">k=2</span>:
-              </p>
-              <p className="text-sm font-mono text-indigo-700 dark:text-indigo-300 mt-1">
-                P&apos; = (1,2) + 2·(4-1, 6-2) = (1,2) + 2·(3,4) = (1,2) + (6,8) = <strong className="text-indigo-600 dark:text-indigo-400">(7,10)</strong>
-              </p>
+            <div className="flex items-start gap-3 p-3 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+              <span className="text-2xl">📏</span>
+              <div>
+                <h5 className="font-bold text-teal-800 dark:text-teal-200">Las distancias se multiplican por |k|</h5>
+                <p className="text-sm text-teal-700 dark:text-teal-300">
+                  Si k = 2, todos los lados miden el doble
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 p-3 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+              <span className="text-2xl">⬛</span>
+              <div>
+                <h5 className="font-bold text-purple-800 dark:text-purple-200">El área se multiplica por k²</h5>
+                <p className="text-sm text-purple-700 dark:text-purple-300">
+                  Si k = 2, el área es 4 veces mayor (2² = 4)
+                </p>
+              </div>
             </div>
           </div>
         </div>

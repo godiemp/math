@@ -13,18 +13,17 @@ import {
 } from '@/components/lessons/primitives';
 import { colors } from '@/lib/lessons/styles';
 
-type ProblemType = 'coordinate' | 'segment' | 'area' | 'find-k';
+type ProblemType = 'segment' | 'area' | 'perimeter' | 'find-k';
 
 interface Problem {
   id: string;
   type: ProblemType;
   question: string;
   givenData?: {
-    original?: { x: number; y: number };
-    center?: { x: number; y: number };
     k?: number;
     segmentLength?: number;
     area?: number;
+    perimeter?: number;
   };
   options: string[];
   correctIndex: number;
@@ -35,17 +34,16 @@ interface Problem {
 const PROBLEMS: Problem[] = [
   {
     id: 'p1',
-    type: 'coordinate',
-    question: 'Si A(4, 6) se transforma con centro O(0, 0) y k = 2, ¿cuáles son las coordenadas de A\'?',
+    type: 'segment',
+    question: 'Un lado de un triángulo mide 6 cm. Si se aplica una homotecia con k = 2, ¿cuánto mide el lado imagen?',
     givenData: {
-      original: { x: 4, y: 6 },
-      center: { x: 0, y: 0 },
+      segmentLength: 6,
       k: 2,
     },
-    options: ['(2, 3)', '(8, 12)', '(6, 8)', '(4, 6)'],
-    correctIndex: 1,
-    explanation: 'A\' = O + k(A - O) = (0,0) + 2((4,6) - (0,0)) = 2(4, 6) = (8, 12)',
-    hint: 'Multiplica cada coordenada del punto por k.',
+    options: ['3 cm', '8 cm', '12 cm', '36 cm'],
+    correctIndex: 2,
+    explanation: 'Lado imagen = lado original × |k| = 6 × 2 = 12 cm',
+    hint: 'Las longitudes se multiplican por |k|.',
   },
   {
     id: 'p2',
@@ -75,17 +73,16 @@ const PROBLEMS: Problem[] = [
   },
   {
     id: 'p4',
-    type: 'coordinate',
-    question: 'Si P(3, 5) se transforma con centro O(1, 1) y k = 1.5, ¿cuáles son las coordenadas de P\'?',
+    type: 'perimeter',
+    question: 'Un cuadrado tiene perímetro de 20 cm. Si se aplica k = 0.5, ¿cuál es el perímetro de la imagen?',
     givenData: {
-      original: { x: 3, y: 5 },
-      center: { x: 1, y: 1 },
-      k: 1.5,
+      perimeter: 20,
+      k: 0.5,
     },
-    options: ['(4, 7)', '(4.5, 7.5)', '(3.5, 6.5)', '(2, 4)'],
-    correctIndex: 0,
-    explanation: 'P\' = O + k(P - O) = (1,1) + 1.5((3,5) - (1,1)) = (1,1) + 1.5(2,4) = (1,1) + (3,6) = (4, 7)',
-    hint: 'P\' = O + k × (P - O). Resta primero, multiplica por k, y suma O.',
+    options: ['40 cm', '10 cm', '5 cm', '100 cm'],
+    correctIndex: 1,
+    explanation: 'Perímetro imagen = perímetro original × |k| = 20 × 0.5 = 10 cm',
+    hint: 'El perímetro (suma de lados) también se multiplica por |k|.',
   },
   {
     id: 'p5',
@@ -102,116 +99,6 @@ const PROBLEMS: Problem[] = [
 ];
 
 const REQUIRED_CORRECT = 4;
-
-// Helper to convert coordinates to SVG position
-const toSvgX = (x: number, scale: number = 15) => 100 + x * scale;
-const toSvgY = (y: number, scale: number = 15) => 100 - y * scale;
-
-// SVG visualization for coordinate problems
-function CoordinateVisualization({ problem, showHint }: { problem: Problem; showHint: boolean }) {
-  const { original, center, k } = problem.givenData || {};
-  if (!original || !center || k === undefined) return null;
-
-  // Calculate image point
-  const imageX = center.x + k * (original.x - center.x);
-  const imageY = center.y + k * (original.y - center.y);
-
-  const scale = 12;
-
-  return (
-    <div className="flex justify-center mb-4">
-      <svg viewBox="0 0 200 200" className="w-56 h-56">
-        {/* Grid */}
-        {[-6, -4, -2, 0, 2, 4, 6, 8, 10, 12].map((i) => (
-          <g key={`grid-${i}`}>
-            <line
-              x1={toSvgX(i, scale)}
-              y1={20}
-              x2={toSvgX(i, scale)}
-              y2={180}
-              className="stroke-gray-200 dark:stroke-gray-700"
-              strokeWidth="0.5"
-            />
-            <line
-              x1={20}
-              y1={toSvgY(i, scale)}
-              x2={180}
-              y2={toSvgY(i, scale)}
-              className="stroke-gray-200 dark:stroke-gray-700"
-              strokeWidth="0.5"
-            />
-          </g>
-        ))}
-
-        {/* Axes */}
-        <line x1="20" y1={toSvgY(0, scale)} x2="180" y2={toSvgY(0, scale)} stroke="#6b7280" strokeWidth="1.5" />
-        <line x1={toSvgX(0, scale)} y1="180" x2={toSvgX(0, scale)} y2="20" stroke="#6b7280" strokeWidth="1.5" />
-
-        {/* Center point O */}
-        <circle cx={toSvgX(center.x, scale)} cy={toSvgY(center.y, scale)} r="6" fill="#dc2626" />
-        <text
-          x={toSvgX(center.x, scale) - 12}
-          y={toSvgY(center.y, scale) + 4}
-          fontSize="11"
-          fontWeight="bold"
-          fill="#dc2626"
-        >
-          O
-        </text>
-
-        {/* Dashed line from center through both points */}
-        <line
-          x1={toSvgX(center.x, scale)}
-          y1={toSvgY(center.y, scale)}
-          x2={toSvgX(imageX, scale)}
-          y2={toSvgY(imageY, scale)}
-          stroke="#9ca3af"
-          strokeWidth="1"
-          strokeDasharray="4,4"
-        />
-
-        {/* Original point */}
-        <circle cx={toSvgX(original.x, scale)} cy={toSvgY(original.y, scale)} r="7" fill="#1d4ed8" />
-        <text
-          x={toSvgX(original.x, scale) + 10}
-          y={toSvgY(original.y, scale) - 6}
-          fontSize="10"
-          fontWeight="bold"
-          fill="#1d4ed8"
-        >
-          {problem.id === 'p1' ? 'A' : 'P'}({original.x},{original.y})
-        </text>
-
-        {/* Image point (only when showing hint) */}
-        {showHint && (
-          <>
-            <circle cx={toSvgX(imageX, scale)} cy={toSvgY(imageY, scale)} r="7" fill="#16a34a" />
-            <text
-              x={toSvgX(imageX, scale) + 10}
-              y={toSvgY(imageY, scale) - 6}
-              fontSize="10"
-              fontWeight="bold"
-              fill="#16a34a"
-            >
-              {problem.id === 'p1' ? 'A\'' : 'P\''}
-            </text>
-          </>
-        )}
-
-        {/* k label */}
-        <text
-          x={100}
-          y={190}
-          textAnchor="middle"
-          fontSize="11"
-          className="fill-gray-600 dark:fill-gray-400"
-        >
-          k = {k}
-        </text>
-      </svg>
-    </div>
-  );
-}
 
 // SVG visualization for segment problems
 function SegmentVisualization({ problem, showHint }: { problem: Problem; showHint: boolean }) {
@@ -319,6 +206,54 @@ function AreaVisualization({ problem, showHint }: { problem: Problem; showHint: 
   );
 }
 
+// SVG visualization for perimeter problems
+function PerimeterVisualization({ problem, showHint }: { problem: Problem; showHint: boolean }) {
+  const { perimeter, k } = problem.givenData || {};
+  if (!perimeter || k === undefined) return null;
+
+  const resultPerimeter = perimeter * Math.abs(k);
+  const sideOriginal = perimeter / 4; // Assuming square
+  const sideImage = sideOriginal * Math.abs(k);
+
+  return (
+    <div className="flex justify-center mb-4">
+      <svg viewBox="0 0 240 100" className="w-72 h-28">
+        {/* Original square */}
+        <g>
+          <rect x="25" y="20" width="45" height="45" fill="#bfdbfe" stroke="#1d4ed8" strokeWidth="2" rx="2" />
+          <text x="47" y="50" textAnchor="middle" fontSize="9" fill="#1d4ed8" fontWeight="bold">
+            P = {perimeter} cm
+          </text>
+        </g>
+
+        {/* Arrow */}
+        <g>
+          <line x1="80" y1="42" x2="100" y2="42" stroke="#9ca3af" strokeWidth="2" />
+          <polygon points="105,42 98,37 98,47" fill="#9ca3af" />
+          <text x="92" y="62" textAnchor="middle" fontSize="9" className="fill-gray-500">
+            k = {k}
+          </text>
+        </g>
+
+        {/* Image square (smaller) */}
+        <g>
+          <rect x="120" y="30" width="25" height="25" fill="#bbf7d0" fillOpacity="0.7" stroke="#16a34a" strokeWidth="2" rx="2" />
+          <text x="132" y="47" textAnchor="middle" fontSize="9" fill="#16a34a" fontWeight="bold">
+            {showHint ? `P = ${resultPerimeter} cm` : 'P = ?'}
+          </text>
+        </g>
+
+        {/* Formula hint */}
+        {showHint && (
+          <text x="132" y="75" textAnchor="middle" fontSize="8" className="fill-gray-500">
+            {perimeter} × {k} = {resultPerimeter}
+          </text>
+        )}
+      </svg>
+    </div>
+  );
+}
+
 export default function Step5Practice({ onComplete, isActive }: LessonStepProps) {
   const mc = useMultipleChoice({
     items: PROBLEMS,
@@ -373,14 +308,14 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
             </p>
 
             {/* Visual based on problem type */}
-            {mc.currentItem.type === 'coordinate' && (
-              <CoordinateVisualization problem={mc.currentItem} showHint={hint.showHint} />
-            )}
             {mc.currentItem.type === 'segment' && (
               <SegmentVisualization problem={mc.currentItem} showHint={hint.showHint} />
             )}
             {mc.currentItem.type === 'area' && (
               <AreaVisualization problem={mc.currentItem} showHint={hint.showHint} />
+            )}
+            {mc.currentItem.type === 'perimeter' && (
+              <PerimeterVisualization problem={mc.currentItem} showHint={hint.showHint} />
             )}
 
             {/* Hint button */}
@@ -468,9 +403,9 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                 <X className="w-5 h-5 text-red-600 flex-shrink-0" />
               )}
               <span className="text-gray-700 dark:text-gray-300 text-sm flex-1">
-                {problem.type === 'coordinate' ? 'Coordenadas' :
-                 problem.type === 'segment' ? 'Segmento' :
-                 problem.type === 'area' ? 'Área' : 'Razón k'}
+                {problem.type === 'segment' ? 'Segmento' :
+                 problem.type === 'area' ? 'Área' :
+                 problem.type === 'perimeter' ? 'Perímetro' : 'Razón k'}
               </span>
               <span className="font-mono text-sm text-purple-600 dark:text-purple-400">
                 {problem.options[problem.correctIndex]}

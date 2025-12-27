@@ -100,59 +100,43 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 </div>
               </div>
 
-              {/* Formula */}
+              {/* How figures change */}
               <div className="bg-gray-100 dark:bg-gray-700 rounded-xl p-4">
                 <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-3 text-center">
-                  Fórmula de Transformación
+                  ¿Cómo cambian las figuras?
                 </h4>
-                <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center">
-                  <p className="font-mono text-2xl text-indigo-600 dark:text-indigo-400">
-                    P&apos; = O + k · (P - O)
-                  </p>
-                </div>
-                <div className="mt-3 text-sm text-gray-600 dark:text-gray-400 text-center">
-                  <span className="font-mono">P</span> = punto original,{' '}
-                  <span className="font-mono">O</span> = centro,{' '}
-                  <span className="font-mono">k</span> = razón,{' '}
-                  <span className="font-mono">P&apos;</span> = punto imagen
-                </div>
-
-                {/* Worked example */}
-                <div className="mt-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-4 border border-indigo-200 dark:border-indigo-700">
-                  <h5 className="font-bold text-indigo-800 dark:text-indigo-200 mb-3 text-center">
-                    Ejemplo paso a paso
-                  </h5>
-                  <div className="text-sm space-y-2">
-                    <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                      <span className="font-medium">Datos:</span>
-                      <span>Centro <span className="font-mono bg-red-100 dark:bg-red-900/50 px-1 rounded">O = (2, 3)</span></span>
-                      <span>Punto <span className="font-mono bg-blue-100 dark:bg-blue-900/50 px-1 rounded">P = (6, 5)</span></span>
-                      <span>Razón <span className="font-mono bg-purple-100 dark:bg-purple-900/50 px-1 rounded">k = 2</span></span>
-                    </div>
-                    <div className="border-t border-indigo-200 dark:border-indigo-600 pt-2 space-y-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="w-5 h-5 rounded-full bg-indigo-500 text-white text-xs flex items-center justify-center font-bold">1</span>
-                        <span className="text-gray-700 dark:text-gray-300">
-                          Restar el centro: <span className="font-mono">P - O = (6-2, 5-3) = <strong>(4, 2)</strong></span>
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="w-5 h-5 rounded-full bg-indigo-500 text-white text-xs flex items-center justify-center font-bold">2</span>
-                        <span className="text-gray-700 dark:text-gray-300">
-                          Multiplicar por k: <span className="font-mono">2 · (4, 2) = <strong>(8, 4)</strong></span>
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="w-5 h-5 rounded-full bg-indigo-500 text-white text-xs flex items-center justify-center font-bold">3</span>
-                        <span className="text-gray-700 dark:text-gray-300">
-                          Sumar el centro: <span className="font-mono">O + (8, 4) = (2+8, 3+4) = <strong className="text-green-600 dark:text-green-400">(10, 7)</strong></span>
-                        </span>
+                <div className="space-y-3">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">📐</span>
+                      <div>
+                        <h5 className="font-bold text-gray-800 dark:text-gray-200">Ángulos</h5>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          <strong className="text-green-600 dark:text-green-400">Se conservan</strong> — La figura imagen es semejante a la original
+                        </p>
                       </div>
                     </div>
-                    <div className="bg-white dark:bg-gray-800 rounded p-2 text-center mt-2">
-                      <span className="font-mono text-lg">
-                        P&apos; = <span className="text-green-600 dark:text-green-400 font-bold">(10, 7)</span>
-                      </span>
+                  </div>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">📏</span>
+                      <div>
+                        <h5 className="font-bold text-gray-800 dark:text-gray-200">Lados y distancias</h5>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Se multiplican por <strong className="text-indigo-600 dark:text-indigo-400">|k|</strong> — Si k=3, los lados miden el triple
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">⬛</span>
+                      <div>
+                        <h5 className="font-bold text-gray-800 dark:text-gray-200">Área</h5>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Se multiplica por <strong className="text-purple-600 dark:text-purple-400">k²</strong> — Si k=3, el área es 9 veces mayor
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
