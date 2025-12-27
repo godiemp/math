@@ -96,8 +96,11 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                   <line x1="70" y1="70" x2="70" y2="15" stroke="#dc2626" strokeWidth="2" />
                   <line x1="70" y1="70" x2={70 + 55 * Math.cos((-30) * Math.PI / 180)} y2={70 + 55 * Math.sin((-30) * Math.PI / 180)} stroke="#dc2626" strokeWidth="2" />
                   <circle cx="70" cy="70" r="3" fill="#0d9488" />
+                  {/* Angle arc indicator near center */}
+                  <path d={arcPath(70, 70, 18, 0, 60)} fill="none" stroke="#f59e0b" strokeWidth="2" />
+                  {/* Labels */}
                   <text x="85" y="60" fontSize="12" fontWeight="bold" fill="#dc2626">r</text>
-                  <text x="82" y="78" fontSize="11" fontWeight="bold" fill="#f59e0b">θ</text>
+                  <text x={70 + 28 * Math.cos((-60) * Math.PI / 180)} y={70 + 28 * Math.sin((-60) * Math.PI / 180)} fontSize="11" fontWeight="bold" fill="#f59e0b">θ</text>
                 </svg>
               </div>
 
@@ -165,8 +168,11 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                   <line x1="70" y1="70" x2="70" y2="15" stroke="#dc2626" strokeWidth="2" strokeDasharray="4,2" />
                   <line x1="70" y1="70" x2="125" y2="70" stroke="#dc2626" strokeWidth="2" strokeDasharray="4,2" />
                   <circle cx="70" cy="70" r="3" fill="#7c3aed" />
+                  {/* Angle arc indicator near center */}
+                  <path d={arcPath(70, 70, 18, 0, 90)} fill="none" stroke="#f59e0b" strokeWidth="2" />
+                  {/* Labels */}
                   <text x="98" y="65" fontSize="12" fontWeight="bold" fill="#dc2626">r</text>
-                  <text x="80" y="50" fontSize="11" fontWeight="bold" fill="#f59e0b">θ</text>
+                  <text x={70 + 28 * Math.cos((-45) * Math.PI / 180)} y={70 + 28 * Math.sin((-45) * Math.PI / 180)} fontSize="11" fontWeight="bold" fill="#f59e0b">θ</text>
                   <text x="90" y="25" fontSize="10" fontWeight="bold" fill="#7c3aed">L</text>
                 </svg>
               </div>
