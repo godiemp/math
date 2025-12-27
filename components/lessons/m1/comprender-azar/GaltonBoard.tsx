@@ -93,17 +93,20 @@ export default function GaltonBoard({
   }, []);
 
   // Calculate peg position
+  // horizontalSpacing must be < ballDiameter + pegDiameter to force collisions
+  // With ballRadius=5 (diameter=10) and pegRadius=4 (diameter=8), spacing should be ~14-16
+  const horizontalSpacing = 15;
+
   const getPegPosition = useCallback(
     (row: number, col: number) => {
       const verticalSpacing = (pegAreaBottom - 60) / rows;
-      const horizontalSpacing = 22;
       const rowStartX = boardWidth / 2 - (row * horizontalSpacing) / 2;
       return {
         x: rowStartX + col * horizontalSpacing,
         y: 40 + row * verticalSpacing,
       };
     },
-    [rows, pegAreaBottom]
+    [rows, pegAreaBottom, horizontalSpacing]
   );
 
   // Get bin X position
@@ -340,7 +343,7 @@ export default function GaltonBoard({
     if (!engine) return;
 
     const ball = Matter.Bodies.circle(
-      boardWidth / 2 + (Math.random() - 0.5) * 6,
+      boardWidth / 2 + (Math.random() - 0.5) * 2, // Small random offset to hit first peg
       5,
       ballRadius,
       {
