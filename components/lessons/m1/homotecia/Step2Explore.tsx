@@ -422,9 +422,17 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                       stroke="#7c3aed"
                       strokeWidth="2"
                     />
-                    <text x="65" y="175" textAnchor="middle" fontSize="11" fill="#7c3aed" fontWeight="bold">
-                      Imagen (k={kNegative})
-                    </text>
+                    {/* Dynamic label positioned below the transformed triangle */}
+                    {(() => {
+                      const centroidX = (negTri[0].x + negTri[1].x + negTri[2].x) / 3;
+                      const maxY = Math.max(negTri[0].y, negTri[1].y, negTri[2].y);
+                      const labelY = Math.min(maxY + 15, 270);
+                      return (
+                        <text x={centroidX} y={labelY} textAnchor="middle" fontSize="11" fill="#7c3aed" fontWeight="bold">
+                          Imagen
+                        </text>
+                      );
+                    })()}
                   </>
                 );
               })()}
