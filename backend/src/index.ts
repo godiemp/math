@@ -8,7 +8,9 @@ import './instrument';
 // All other imports below
 import * as Sentry from '@sentry/node';
 import express, { Request, Response, NextFunction } from 'express';
+import { createServer } from 'http';
 import cors from 'cors';
+import { initializeWebSocket, closeWebSocket } from './websocket';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
@@ -41,6 +43,7 @@ import demoAccountRoutes from './routes/demoAccountRoutes';
 import { serveImage } from './controllers/adminController';
 
 const app = express();
+const httpServer = createServer(app);
 const PORT = process.env.PORT || 3001;
 
 // Trust proxy - Railway uses 1 proxy hop to forward the real client IP
@@ -383,8 +386,15 @@ const startServer = async () => {
     // Start session status auto-updater
     startSessionStatusUpdater();
 
+    // Initialize WebSocket server with same CORS config
+    initializeWebSocket(httpServer, {
+      origin: corsOptions.origin,
+      credentials: corsOptions.credentials,
+      methods: corsOptions.methods,
+    });
+
     // Start listening
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
       console.log(`
 ╔════════════════════════════════════════════════════════════╗
 ║                                                            ║
@@ -435,6 +445,7 @@ const startServer = async () => {
 process.on('SIGINT', async () => {
   console.log('\n🛑 Shutting down gracefully...');
   stopSessionStatusUpdater();
+  await closeWebSocket();
   await closeDatabase();
   process.exit(0);
 });
@@ -442,6 +453,7 @@ process.on('SIGINT', async () => {
 process.on('SIGTERM', async () => {
   console.log('\n🛑 Shutting down gracefully...');
   stopSessionStatusUpdater();
+  await closeWebSocket();
   await closeDatabase();
   process.exit(0);
 });
