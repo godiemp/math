@@ -83,3 +83,61 @@ export async function assignStudentGrade(
     { gradeLevel }
   );
 }
+
+// ============================================================================
+// STUDENT ACCOUNT CREATION
+// ============================================================================
+
+export interface CreateStudentRequest {
+  firstName: string;
+  lastName: string;
+  gradeLevel: StudentGradeLevel;
+}
+
+export interface CreateStudentResponse {
+  success: boolean;
+  student: {
+    id: string;
+    username: string;
+    email: string;
+    displayName: string;
+    gradeLevel: StudentGradeLevel;
+  };
+  credentials: {
+    username: string;
+    password: string;
+  };
+}
+
+export interface ResetPasswordResponse {
+  success: boolean;
+  credentials: {
+    password: string;
+  };
+}
+
+export interface DeleteStudentResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Create a new student account linked to the current teacher
+ */
+export async function createStudent(data: CreateStudentRequest) {
+  return api.post<CreateStudentResponse>('/api/teacher/students', data);
+}
+
+/**
+ * Reset a student's password
+ */
+export async function resetStudentPassword(studentId: string) {
+  return api.post<ResetPasswordResponse>(`/api/teacher/students/${studentId}/reset-password`, {});
+}
+
+/**
+ * Delete a student account
+ */
+export async function deleteStudent(studentId: string) {
+  return api.delete<DeleteStudentResponse>(`/api/teacher/students/${studentId}`);
+}

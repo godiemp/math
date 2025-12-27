@@ -160,7 +160,7 @@ export async function loginUser(data: LoginRequest): Promise<AuthResponse> {
   );
 
   if (result.rows.length === 0) {
-    throw new Error('Invalid credentials');
+    throw new Error('Usuario no encontrado');
   }
 
   const user = result.rows[0];
@@ -169,7 +169,7 @@ export async function loginUser(data: LoginRequest): Promise<AuthResponse> {
   const isValidPassword = await bcrypt.compare(password, user.password_hash);
 
   if (!isValidPassword) {
-    throw new Error('Invalid credentials');
+    throw new Error('Contraseña incorrecta');
   }
 
   // Generate tokens
