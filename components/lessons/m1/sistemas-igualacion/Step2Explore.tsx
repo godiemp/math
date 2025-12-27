@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { ArrowRight, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { useStepWalkthrough } from '@/hooks/lessons';
 
 interface ExploreStep {
   id: number;
@@ -62,22 +62,17 @@ const STEPS: ExploreStep[] = [
 ];
 
 export default function Step2Explore({ onComplete, isActive }: LessonStepProps) {
-  const [currentStep, setCurrentStep] = useState(0);
-
-  const step = STEPS[currentStep];
-  const isLastStep = currentStep === STEPS.length - 1;
-
-  const handleNext = () => {
-    if (isLastStep) {
-      onComplete();
-    } else {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
-  const handleReset = () => {
-    setCurrentStep(0);
-  };
+  const {
+    step,
+    currentIndex,
+    isLastStep,
+    isFirstStep,
+    next,
+    reset,
+  } = useStepWalkthrough({
+    steps: STEPS,
+    onComplete,
+  });
 
   if (!isActive) return null;
 
@@ -99,7 +94,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             key={i}
             className={cn(
               'w-10 h-2 rounded-full transition-all',
-              i <= currentStep
+              i <= currentIndex
                 ? 'bg-gradient-to-r from-cyan-500 to-teal-500'
                 : 'bg-gray-200 dark:bg-gray-700'
             )}
@@ -165,9 +160,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
       {/* Navigation */}
       <div className="flex justify-center gap-4">
-        {currentStep > 0 && (
+        {!isFirstStep && (
           <button
-            onClick={handleReset}
+            onClick={reset}
             className="flex items-center gap-2 px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
           >
             <RotateCcw size={18} />
@@ -175,7 +170,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           </button>
         )}
         <button
-          onClick={handleNext}
+          onClick={next}
           className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-cyan-500 to-teal-500 text-white rounded-xl font-semibold hover:from-cyan-600 hover:to-teal-600 transition-all shadow-lg"
         >
           <span>{isLastStep ? 'Continuar' : 'Siguiente paso'}</span>

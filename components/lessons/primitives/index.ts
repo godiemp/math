@@ -28,3 +28,7 @@ export type { OptionGridProps } from './OptionGrid';
 
 export { InsightCard } from './InsightCard';
 export type { InsightCardProps } from './InsightCard';
+
+// Step2 Explore primitives
+export { ExampleProgressDots } from './ExampleProgressDots';
+export type { ExampleProgressDotsProps } from './ExampleProgressDots';
