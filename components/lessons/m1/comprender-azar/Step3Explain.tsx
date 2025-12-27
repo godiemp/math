@@ -237,10 +237,10 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
 
             {/* Bell curve visualization */}
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6">
-              <svg viewBox="0 0 200 80" className="w-full max-w-xs mx-auto">
-                {/* Gaussian bell curve - proper normal distribution shape */}
+              <svg viewBox="0 0 200 90" className="w-full max-w-xs mx-auto">
+                {/* Gaussian bell curve - pronounced normal distribution shape */}
                 <path
-                  d="M 10 70 C 10 70 25 70 35 69 C 45 68 55 65 65 58 C 75 48 85 35 100 20 C 115 35 125 48 135 58 C 145 65 155 68 165 69 C 175 70 190 70 190 70"
+                  d="M 10 75 C 30 75 45 74 55 71 C 65 67 75 58 85 42 C 92 28 96 16 100 12 C 104 16 108 28 115 42 C 125 58 135 67 145 71 C 155 74 170 75 190 75"
                   fill="none"
                   className="stroke-teal-500 dark:stroke-teal-400"
                   strokeWidth="3"
@@ -248,15 +248,15 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 />
                 {/* Filled area under curve */}
                 <path
-                  d="M 10 70 C 10 70 25 70 35 69 C 45 68 55 65 65 58 C 75 48 85 35 100 20 C 115 35 125 48 135 58 C 145 65 155 68 165 69 C 175 70 190 70 190 70 L 190 70 L 10 70 Z"
+                  d="M 10 75 C 30 75 45 74 55 71 C 65 67 75 58 85 42 C 92 28 96 16 100 12 C 104 16 108 28 115 42 C 125 58 135 67 145 71 C 155 74 170 75 190 75 L 190 75 L 10 75 Z"
                   className="fill-teal-100 dark:fill-teal-900/30"
                 />
                 {/* Baseline */}
-                <line x1="10" y1="70" x2="190" y2="70" className="stroke-gray-300 dark:stroke-gray-600" strokeWidth="1" />
+                <line x1="10" y1="75" x2="190" y2="75" className="stroke-gray-300 dark:stroke-gray-600" strokeWidth="1" />
                 {/* Center line */}
-                <line x1="100" y1="20" x2="100" y2="70" className="stroke-gray-400 dark:stroke-gray-500" strokeWidth="1" strokeDasharray="4" />
+                <line x1="100" y1="12" x2="100" y2="75" className="stroke-gray-400 dark:stroke-gray-500" strokeWidth="1" strokeDasharray="4" />
                 {/* Labels */}
-                <text x="100" y="78" textAnchor="middle" className="fill-gray-500 dark:fill-gray-400 text-xs">
+                <text x="100" y="86" textAnchor="middle" className="fill-gray-500 dark:fill-gray-400 text-xs">
                   promedio
                 </text>
               </svg>
