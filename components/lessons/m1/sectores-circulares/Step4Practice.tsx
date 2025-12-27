@@ -127,9 +127,13 @@ const scenarios: Scenario[] = [
         <path d={sectorPath(60, 60, 50, 180, 270)} fill="#a3a3a3" fillOpacity="0.5" stroke="#737373" strokeWidth="1" />
         <path d={sectorPath(60, 60, 50, 270, 360)} fill="#a3a3a3" fillOpacity="0.5" stroke="#737373" strokeWidth="1" />
         <circle cx="60" cy="60" r="3" fill="#374151" />
-        <text x="45" y="45" fontSize="10" fontWeight="bold" fill="#1d4ed8">25%</text>
-        <text x="85" y="60" fontSize="8" fill="#7c3aed">r=8cm</text>
-        <text x="70" y="80" fontSize="8" fill="#f59e0b">90°</text>
+        {/* Labels with backgrounds */}
+        <rect x="38" y="33" width="28" height="14" fill="white" rx="2" />
+        <text x="52" y="44" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1d4ed8">25%</text>
+        <rect x="78" y="48" width="36" height="14" fill="white" rx="2" />
+        <text x="96" y="59" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#7c3aed">r=8cm</text>
+        <rect x="63" y="68" width="22" height="14" fill="white" rx="2" />
+        <text x="74" y="79" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#f59e0b">90°</text>
       </svg>
     ),
     options: ['8π cm² ≈ 25 cm²', '16π cm² ≈ 50 cm²', '32π cm² ≈ 100 cm²', '64π cm² ≈ 201 cm²'],
