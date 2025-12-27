@@ -191,7 +191,7 @@ const OA_1M: MinEducOA[] = [
     name: 'Homotecia',
     description: 'Comprender homotecia relacionándola con perspectiva, instrumentos ópticos, midiendo segmentos y aplicando propiedades en construcciones.',
     isBasal: true,
-    lessonIds: [], // Pendiente
+    lessonIds: ['m2-geo-001-a'],
   },
   {
     code: 'MA1M-OA-09',

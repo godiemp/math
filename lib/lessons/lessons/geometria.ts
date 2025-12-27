@@ -161,4 +161,25 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint' },
     ],
   },
+  {
+    id: 'm2-geo-001-a',
+    slug: 'homotecia',
+    title: 'Homotecia: Ampliaciones y Reducciones',
+    description:
+      'Descubre cómo transformar figuras manteniendo su forma usando el centro y la razón de homotecia.',
+    level: 'M2',
+    subject: 'geometría',
+    thematicUnit: 'M2-GEO-001',
+    skills: ['homotecia-concepto', 'homotecia-razon', 'homotecia-construccion'],
+    estimatedMinutes: 15,
+    minEducOA: ['MA1M-OA-08'],
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Mural del Metro' },
+      { id: 'explore', type: 'explore', title: 'Descubre la Homotecia' },
+      { id: 'explain', type: 'explain', title: 'Conceptos Clave' },
+      { id: 'classify', type: 'explore', title: 'Identifica el Tipo' },
+      { id: 'practice', type: 'practice', title: 'Practica Cálculos' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
 ];
