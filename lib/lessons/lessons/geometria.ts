@@ -141,6 +141,27 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     ],
   },
   {
+    id: 'm1-geo-005-a',
+    slug: 'homotecia-vectorial',
+    title: 'Homotecia Vectorial',
+    description:
+      'Aprende a escalar figuras desde un centro fijo usando la razón de homotecia k para amplificar, reducir o invertir.',
+    level: 'M1',
+    subject: 'geometría',
+    thematicUnit: 'M1-GEO-005',
+    skills: ['geometria-homotecia', 'geometria-transformaciones', 'geometria-vectores'],
+    estimatedMinutes: 15,
+    minEducOA: ['MA1M-OA-11'],
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Arquitecto Digital' },
+      { id: 'explore', type: 'explore', title: 'Explora la Transformación' },
+      { id: 'explain', type: 'explain', title: 'Tipos de Homotecia' },
+      { id: 'classify', type: 'explore', title: 'Clasifica la Homotecia' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
+  {
     id: 'm2-geo-001-a',
     slug: 'homotecia',
     title: 'Homotecia: Ampliaciones y Reducciones',
