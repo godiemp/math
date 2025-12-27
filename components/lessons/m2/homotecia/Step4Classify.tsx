@@ -95,7 +95,7 @@ const ITEMS: ClassifyItem[] = [
     kValue: 'k = -1',
     description: 'La figura imagen tiene el mismo tamaño pero está al lado opuesto del centro.',
     correctAnswer: 2,
-    explanation: 'k = -1 < 0, por lo tanto es una inversión. El tamaño se mantiene (|k| = 1) pero la posición se invierte.',
+    explanation: 'k = -1: INVERSIÓN pura. La imagen tiene el mismo tamaño que el original (|k| = 1) pero está al lado opuesto del centro.',
     svgContent: (
       <svg viewBox="0 0 200 120" className="w-full">
         {/* Rays through center connecting vertex pairs */}
@@ -160,7 +160,7 @@ const ITEMS: ClassifyItem[] = [
     kValue: 'k = -1.5',
     description: 'La imagen es más grande y está al lado opuesto del centro.',
     correctAnswer: 2,
-    explanation: 'k = -1.5 < 0, es una inversión. Aunque |k| = 1.5 > 1 significa que también hay ampliación, el signo negativo indica inversión.',
+    explanation: 'k = -1.5: Como k < -1, es una INVERSIÓN con AMPLIACIÓN. La imagen es 1.5 veces más grande y está al lado opuesto del centro.',
     svgContent: (
       <svg viewBox="0 0 200 120" className="w-full">
         {/* Rays through center connecting vertex pairs */}

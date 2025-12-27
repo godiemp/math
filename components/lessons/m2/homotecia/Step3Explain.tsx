@@ -276,7 +276,11 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                     <div>
                       <h4 className="font-bold text-purple-800 dark:text-purple-200">El área se multiplica por k²</h4>
                       <p className="text-sm text-purple-700 dark:text-purple-300">
-                        Si k = 3, el área es 9 veces mayor (3² = 9).
+                        ¿Por qué k²? Porque AMBAS dimensiones se multiplican por k.
+                      </p>
+                      <p className="text-sm text-purple-600 dark:text-purple-400 mt-1">
+                        Ejemplo: rectángulo 3×4 cm con k = 2 → 6×8 cm.
+                        Área original: 12 cm², Área imagen: 48 = 12 × 2² cm².
                       </p>
                     </div>
                   </div>
@@ -308,12 +312,13 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-red-500 font-bold">✗</span>
                       <span className="font-medium text-red-800 dark:text-red-200">
-                        Olvidar restar el centro antes de multiplicar
+                        Confundir el efecto de k negativo
                       </span>
                     </div>
                     <p className="text-sm text-red-700 dark:text-red-300 ml-6">
-                      La fórmula es P&apos; = O + k(P - O), no P&apos; = k · P.
-                      Primero resta O, multiplica, luego suma O.
+                      k = -0.5 → imagen <strong>reducida</strong> e invertida (|k| &lt; 1).
+                      k = -2 → imagen <strong>ampliada</strong> e invertida (|k| &gt; 1).
+                      El tamaño depende de |k|, la posición del signo.
                     </p>
                   </div>
                 </div>

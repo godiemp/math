@@ -483,16 +483,30 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             </div>
           </div>
 
-          {/* Key insight */}
+          {/* Key insight - Negative k ranges table */}
           <div className="bg-purple-100 dark:bg-purple-900/40 border border-purple-300 dark:border-purple-700 rounded-xl p-4 mb-4">
-            <div className="flex items-center gap-3">
-              <RotateCcw className="w-8 h-8 text-purple-600 dark:text-purple-400" />
-              <div>
-                <h4 className="font-bold text-purple-800 dark:text-purple-200">k negativo = Inversión</h4>
-                <p className="text-sm text-purple-700 dark:text-purple-300">
-                  La imagen aparece al <strong>lado opuesto</strong> del centro y está <strong>invertida</strong>.
-                  El tamaño depende de |k|.
-                </p>
+            <div className="flex items-center gap-2 mb-3">
+              <RotateCcw className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+              <h4 className="font-bold text-purple-800 dark:text-purple-200">k negativo = Inversión + ¿Qué tamaño?</h4>
+            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center gap-3 bg-purple-50 dark:bg-purple-800/30 rounded-lg p-2">
+                <span className="font-mono font-bold text-purple-700 dark:text-purple-300 min-w-[80px]">-1 &lt; k &lt; 0</span>
+                <span className="text-purple-600 dark:text-purple-400">
+                  Reducción + inversión <span className="opacity-70">(ej: k = -0.5)</span>
+                </span>
+              </div>
+              <div className="flex items-center gap-3 bg-purple-50 dark:bg-purple-800/30 rounded-lg p-2">
+                <span className="font-mono font-bold text-purple-700 dark:text-purple-300 min-w-[80px]">k = -1</span>
+                <span className="text-purple-600 dark:text-purple-400">
+                  Mismo tamaño + inversión
+                </span>
+              </div>
+              <div className="flex items-center gap-3 bg-purple-50 dark:bg-purple-800/30 rounded-lg p-2">
+                <span className="font-mono font-bold text-purple-700 dark:text-purple-300 min-w-[80px]">k &lt; -1</span>
+                <span className="text-purple-600 dark:text-purple-400">
+                  Ampliación + inversión <span className="opacity-70">(ej: k = -2)</span>
+                </span>
               </div>
             </div>
           </div>
@@ -592,7 +606,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <div>
                 <h5 className="font-bold text-purple-800 dark:text-purple-200">El área se multiplica por k²</h5>
                 <p className="text-sm text-purple-700 dark:text-purple-300">
-                  Si k = 2, el área es 4 veces mayor (2² = 4)
+                  Si k = 2, el área es 4 veces mayor (2² = 4).
+                  ¿Por qué? Porque AMBAS dimensiones (ancho y alto) se multiplican por k.
                 </p>
               </div>
             </div>
