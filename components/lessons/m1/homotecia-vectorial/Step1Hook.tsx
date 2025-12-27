@@ -378,18 +378,20 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               </svg>
             </div>
 
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+            <div className="space-y-3 text-sm">
+              <div className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
+                <div className="w-3 h-3 rounded-full bg-red-500 mt-1 flex-shrink-0"></div>
                 <span>
-                  <strong>Centro:</strong> La puerta (2, 1) no se mueve
+                  <strong>Centro:</strong> La puerta (2, 1) no se mueve porque es el punto de
+                  referencia
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                <span>
-                  <strong>Ventana:</strong> Se aleja del centro al doble de distancia
-                </span>
+              <div className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
+                <div className="w-3 h-3 rounded-full bg-green-500 mt-1 flex-shrink-0"></div>
+                <div>
+                  <strong>Ventana:</strong> Estaba a distancia (2, 2) del centro. Al escalar con
+                  k=2, esa distancia se duplica a (4, 4), llegando a (2+4, 1+4) = (6, 5)
+                </div>
               </div>
             </div>
           </div>
@@ -405,13 +407,24 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 La <strong className="text-purple-600">homotecia</strong> es una transformación que
                 escala figuras desde un punto fijo llamado <strong>centro</strong>.
               </p>
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
-                <p className="font-mono text-lg text-gray-800 dark:text-gray-200">
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+                <p className="font-mono text-lg text-gray-800 dark:text-gray-200 text-center mb-3">
                   P&apos; = C + k · (P - C)
                 </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  k = razón de homotecia, C = centro
-                </p>
+                <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+                  <p>
+                    <strong className="text-blue-600">(P - C)</strong> = vector del centro al punto
+                    original
+                  </p>
+                  <p>
+                    <strong className="text-purple-600">k · (P - C)</strong> = ese vector escalado k
+                    veces
+                  </p>
+                  <p>
+                    <strong className="text-green-600">C + ...</strong> = partir del centro y
+                    avanzar el vector escalado
+                  </p>
+                </div>
               </div>
             </div>
           </InsightCard>

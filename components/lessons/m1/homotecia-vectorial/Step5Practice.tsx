@@ -21,7 +21,7 @@ const PROBLEMS: Problem[] = [
     expression: "P' = ?",
     options: ['(4, 6)', '(1, 1.5)', '(2, 3)', '(-4, -6)'],
     correctIndex: 0,
-    hint: "P' = C + k·(P - C) = (0,0) + 2·(2,3) = (4, 6). Amplificación al doble.",
+    hint: 'Vector de C a P: (2,3) - (0,0) = (2,3). Escalar ×2: el vector se estira al doble → (4,6). Como k > 1, el punto se aleja del centro.',
   },
   {
     id: 'p2',
@@ -29,7 +29,7 @@ const PROBLEMS: Problem[] = [
     expression: "P' = ?",
     options: ['(12, 8)', '(3, 2)', '(6, 4)', '(-3, -2)'],
     correctIndex: 1,
-    hint: "P' = C + k·(P - C) = (0,0) + 0.5·(6,4) = (3, 2). Reducción a la mitad.",
+    hint: 'Vector de C a P: (6,4). Escalar ×0.5: el vector se comprime a la mitad → (3,2). Como 0 < k < 1, el punto se acerca al centro.',
   },
   {
     id: 'p3',
@@ -37,7 +37,7 @@ const PROBLEMS: Problem[] = [
     expression: "P' = ?",
     options: ['(4, 3)', '(-2, -1)', '(7, 5)', '(1, 1)'],
     correctIndex: 1,
-    hint: "P' = (1,1) + (-1)·((4,3) - (1,1)) = (1,1) + (-1)·(3,2) = (-2, -1). Inversión.",
+    hint: 'Vector de C a P: (4,3) - (1,1) = (3,2). Escalar ×(-1): el vector invierte dirección → (-3,-2). Sumar al centro: (1,1) + (-3,-2) = (-2,-1). El punto pasa al lado opuesto.',
   },
   {
     id: 'p4',
@@ -45,7 +45,7 @@ const PROBLEMS: Problem[] = [
     expression: "P' = ?",
     options: ['(8, 8)', '(6, 6)', '(12, 12)', '(2, 2)'],
     correctIndex: 0,
-    hint: "P' = (2,2) + 3·((4,4) - (2,2)) = (2,2) + 3·(2,2) = (8, 8). Amplificación.",
+    hint: 'Vector de C a P: (4,4) - (2,2) = (2,2). Escalar ×3: el vector se estira al triple → (6,6). Sumar al centro: (2,2) + (6,6) = (8,8). Como k > 1, el punto se aleja del centro.',
   },
   {
     id: 'p5',
@@ -53,7 +53,7 @@ const PROBLEMS: Problem[] = [
     expression: "P' = ?",
     options: ['(32, 24)', '(4, 3)', '(2, 1.5)', '(16, 12)'],
     correctIndex: 2,
-    hint: "P' = (0,0) + 0.25·(8,6) = (2, 1.5). Reducción a un cuarto.",
+    hint: 'Vector de C a P: (8,6). Escalar ×0.25: el vector se comprime a un cuarto → (2,1.5). Como 0 < k < 1, el punto se acerca mucho al centro.',
   },
   {
     id: 'p6',
@@ -61,7 +61,7 @@ const PROBLEMS: Problem[] = [
     expression: "P' = ?",
     options: ['(-1, -2)', '(7, 6)', '(-4, -4)', '(11, 8)'],
     correctIndex: 0,
-    hint: "P' = (3,2) + (-2)·((5,4) - (3,2)) = (3,2) + (-2)·(2,2) = (-1, -2). Inversión con amplificación.",
+    hint: 'Vector de C a P: (5,4) - (3,2) = (2,2). Escalar ×(-2): el signo invierte dirección y |k|=2 lo estira → (-4,-4). Sumar al centro: (3,2) + (-4,-4) = (-1,-2). El punto pasa al lado opuesto y más lejos.',
   },
   {
     id: 'p7',
@@ -69,7 +69,7 @@ const PROBLEMS: Problem[] = [
     expression: "P' = ?",
     options: ['(7, 6)', '(5, 4)', '(9, 8)', '(3, 2)'],
     correctIndex: 0,
-    hint: "P' = (1,0) + 1.5·((5,4) - (1,0)) = (1,0) + 1.5·(4,4) = (7, 6). Amplificación.",
+    hint: 'Vector de C a P: (5,4) - (1,0) = (4,4). Escalar ×1.5: el vector se estira 1.5 veces → (6,6). Sumar al centro: (1,0) + (6,6) = (7,6). Como k > 1, el punto se aleja del centro.',
   },
   {
     id: 'p8',
@@ -77,7 +77,7 @@ const PROBLEMS: Problem[] = [
     expression: "P' = ?",
     options: ['(9, 18)', '(1, 2)', '(3, 6)', '(-1, -2)'],
     correctIndex: 1,
-    hint: "P' = (0,0) + (1/3)·(3,6) = (1, 2). Reducción a un tercio.",
+    hint: 'Vector de C a P: (3,6). Escalar ×⅓: el vector se comprime a un tercio → (1,2). Como 0 < k < 1, el punto se acerca al centro.',
   },
   {
     id: 'p9',
@@ -85,7 +85,7 @@ const PROBLEMS: Problem[] = [
     expression: "P' = ?",
     options: ['(10, 15)', '(2, 3)', '(0, 0)', '(7, 8)'],
     correctIndex: 1,
-    hint: "Cuando P = C, el punto no se mueve: P' = C + k·(0,0) = C = (2, 3).",
+    hint: '¡Caso especial! Vector de C a P: (2,3) - (2,3) = (0,0). No importa cuánto escales el vector cero, sigue siendo cero. El centro siempre queda fijo: P\' = C.',
   },
   {
     id: 'p10',
@@ -93,7 +93,7 @@ const PROBLEMS: Problem[] = [
     expression: "P' = ?",
     options: ['(-2, 1)', '(8, -4)', '(2, -1)', '(-4, 2)'],
     correctIndex: 0,
-    hint: "P' = (0,0) + (-0.5)·(4,-2) = (-2, 1). Inversión con reducción.",
+    hint: 'Vector de C a P: (4,-2). Escalar ×(-0.5): el signo invierte dirección y |k|=0.5 lo comprime → (-2,1). El punto pasa al lado opuesto pero más cerca del centro.',
   },
 ];
 

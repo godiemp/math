@@ -21,42 +21,48 @@ const EXPRESSIONS: Expression[] = [
     k: 'k = 3',
     kValue: 3,
     correctType: 'amplificacion',
-    explanation: 'Como k = 3 > 1, es una amplificación. La figura se agranda 3 veces.',
+    explanation:
+      'k = 3 es mayor que 1, así que el vector (P - C) se estira 3 veces. Cada punto se aleja del centro → amplificación.',
   },
   {
     id: 'e2',
     k: 'k = 0.5',
     kValue: 0.5,
     correctType: 'reduccion',
-    explanation: 'Como 0 < k = 0.5 < 1, es una reducción. La figura se reduce a la mitad.',
+    explanation:
+      'Multiplicar por 0.5 comprime el vector a la mitad. Cada punto se acerca al centro → reducción.',
   },
   {
     id: 'e3',
     k: 'k = -2',
     kValue: -2,
     correctType: 'inversion',
-    explanation: 'Como k = -2 < 0, es una inversión. La figura pasa al lado opuesto y se agranda.',
+    explanation:
+      'El signo negativo invierte la dirección del vector. Además, |k| = 2 lo estira al doble. El punto queda al lado opuesto del centro → inversión.',
   },
   {
     id: 'e4',
     k: 'k = ¾',
     kValue: 0.75,
     correctType: 'reduccion',
-    explanation: 'Como 0 < k = 0.75 < 1, es una reducción. La figura se reduce a ¾ del tamaño.',
+    explanation:
+      'Multiplicar por ¾ comprime el vector a tres cuartos de su longitud. Los puntos se acercan al centro → reducción.',
   },
   {
     id: 'e5',
     k: 'k = -0.5',
     kValue: -0.5,
     correctType: 'inversion',
-    explanation: 'Como k = -0.5 < 0, es una inversión. La figura se invierte y reduce a la mitad.',
+    explanation:
+      'El signo negativo invierte la dirección. Aunque |k| = 0.5 comprime el vector, lo clave es que k < 0 cambia el sentido → inversión.',
   },
   {
     id: 'e6',
     k: 'k = 1.5',
     kValue: 1.5,
     correctType: 'amplificacion',
-    explanation: 'Como k = 1.5 > 1, es una amplificación. La figura se agranda 1.5 veces.',
+    explanation:
+      'k = 1.5 es mayor que 1, así que el vector se estira 1.5 veces. Cada punto se aleja del centro → amplificación.',
   },
 ];
 

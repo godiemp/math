@@ -30,7 +30,7 @@ const FORMULAS: FormulaTab[] = [
     title: 'Amplificación',
     shortTitle: 'k > 1',
     description:
-      'Cuando k es mayor que 1, la figura se agranda. Las distancias desde el centro se multiplican por k.',
+      'Cuando k > 1, el vector (P - C) se estira. Al multiplicar por un número mayor que 1, el punto imagen queda más lejos del centro.',
     condition: 'k > 1',
     icon: ZoomIn,
     example: {
@@ -39,10 +39,10 @@ const FORMULAS: FormulaTab[] = [
       point: { x: 3, y: 2 },
       result: { x: 6, y: 4 },
       steps: [
-        "P' = C + k · (P - C)",
-        "P' = (0, 0) + 2 · ((3, 2) - (0, 0))",
-        "P' = (0, 0) + 2 · (3, 2)",
-        "P' = (6, 4)",
+        'Vector del centro al punto: (3, 2) - (0, 0) = (3, 2)',
+        'Escalar ×2: el vector se estira al doble → 2·(3, 2) = (6, 4)',
+        'Partir del centro y avanzar: (0, 0) + (6, 4) = (6, 4)',
+        "Resultado: P' = (6, 4) — más lejos del centro",
       ],
     },
     color: 'green',
@@ -52,7 +52,7 @@ const FORMULAS: FormulaTab[] = [
     title: 'Reducción',
     shortTitle: '0 < k < 1',
     description:
-      'Cuando k está entre 0 y 1, la figura se reduce. El punto imagen está más cerca del centro.',
+      'Cuando 0 < k < 1, el vector (P - C) se comprime. Al multiplicar por una fracción, el punto imagen queda más cerca del centro.',
     condition: '0 < k < 1',
     icon: ZoomOut,
     example: {
@@ -61,10 +61,10 @@ const FORMULAS: FormulaTab[] = [
       point: { x: 4, y: 6 },
       result: { x: 2, y: 3 },
       steps: [
-        "P' = C + k · (P - C)",
-        "P' = (0, 0) + 0.5 · ((4, 6) - (0, 0))",
-        "P' = (0, 0) + 0.5 · (4, 6)",
-        "P' = (2, 3)",
+        'Vector del centro al punto: (4, 6) - (0, 0) = (4, 6)',
+        'Escalar ×0.5: el vector se comprime a la mitad → 0.5·(4, 6) = (2, 3)',
+        'Partir del centro y avanzar: (0, 0) + (2, 3) = (2, 3)',
+        "Resultado: P' = (2, 3) — más cerca del centro",
       ],
     },
     color: 'amber',
@@ -74,7 +74,7 @@ const FORMULAS: FormulaTab[] = [
     title: 'Inversión',
     shortTitle: 'k < 0',
     description:
-      'Cuando k es negativo, el punto imagen aparece al lado opuesto del centro. La figura se "invierte".',
+      'Cuando k < 0, el vector (P - C) cambia de sentido. El signo negativo invierte la dirección: el punto se mueve al lado opuesto del centro.',
     condition: 'k < 0',
     icon: RotateCcw,
     example: {
@@ -83,10 +83,10 @@ const FORMULAS: FormulaTab[] = [
       point: { x: 5, y: 4 },
       result: { x: -1, y: 0 },
       steps: [
-        "P' = C + k · (P - C)",
-        "P' = (2, 2) + (-1) · ((5, 4) - (2, 2))",
-        "P' = (2, 2) + (-1) · (3, 2)",
-        "P' = (2 - 3, 2 - 2) = (-1, 0)",
+        'Vector del centro al punto: (5, 4) - (2, 2) = (3, 2)',
+        'Escalar ×(-1): el vector invierte su dirección → (-1)·(3, 2) = (-3, -2)',
+        'Partir del centro y retroceder: (2, 2) + (-3, -2) = (-1, 0)',
+        "Resultado: P' = (-1, 0) — al lado opuesto del centro",
       ],
     },
     color: 'red',

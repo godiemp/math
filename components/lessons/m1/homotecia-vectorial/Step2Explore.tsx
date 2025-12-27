@@ -101,6 +101,13 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             </div>
           </div>
 
+          <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-3 border border-amber-200 dark:border-amber-700 mb-4">
+            <p className="text-sm text-amber-800 dark:text-amber-200 text-center">
+              <strong>Ojo:</strong> k negativo NO significa reducción. El signo controla la{' '}
+              <em>dirección</em> (al lado opuesto). El tamaño lo determina |k|.
+            </p>
+          </div>
+
           <p className="text-center text-gray-700 dark:text-gray-300">
             Vamos a explorar cada caso con un triángulo
           </p>
@@ -204,7 +211,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   const phaseConfig = {
     enlarge: {
       title: 'Amplificación (k = 2)',
-      description: 'La figura se agranda manteniendo la forma',
+      description: 'Cada punto se aleja del centro: su vector desde C se estira al doble',
       color: 'green',
       icon: ZoomIn,
       next: 'reduce' as Phase,
@@ -212,7 +219,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     },
     reduce: {
       title: 'Reducción (k = 0.5)',
-      description: 'La figura se reduce a la mitad',
+      description: 'Cada punto se acerca al centro: su vector desde C se comprime a la mitad',
       color: 'amber',
       icon: ZoomOut,
       next: 'invert' as Phase,
@@ -220,7 +227,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     },
     invert: {
       title: 'Inversión (k = -1)',
-      description: 'La figura pasa al lado opuesto del centro',
+      description: 'El signo negativo invierte la dirección: el punto pasa al lado opuesto del centro',
       color: 'red',
       icon: RotateCcw,
       next: 'summary' as Phase,
@@ -270,55 +277,66 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
       {/* Interactive SVG */}
       <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md">
-        <svg viewBox="0 0 280 240" className="w-full max-w-lg mx-auto">
-          {/* Grid */}
-          {Array.from({ length: 9 }).map((_, i) => (
-            <g key={i}>
-              <line
-                x1={toSvgX(i)}
-                y1={20}
-                x2={toSvgX(i)}
-                y2={220}
-                className="stroke-gray-200 dark:stroke-gray-700"
-                strokeWidth="0.5"
-              />
-              <line
-                x1={30}
-                y1={toSvgY(i)}
-                x2={270}
-                y2={toSvgY(i)}
-                className="stroke-gray-200 dark:stroke-gray-700"
-                strokeWidth="0.5"
-              />
-            </g>
+        <svg viewBox="-30 0 340 290" className="w-full max-w-lg mx-auto">
+          {/* Grid - vertical lines (x from -2 to 8) */}
+          {Array.from({ length: 11 }).map((_, i) => (
+            <line
+              key={`v-${i}`}
+              x1={toSvgX(i - 2)}
+              y1={20}
+              x2={toSvgX(i - 2)}
+              y2={280}
+              className="stroke-gray-200 dark:stroke-gray-700"
+              strokeWidth="0.5"
+            />
+          ))}
+          {/* Grid - horizontal lines (y from -2 to 7) */}
+          {Array.from({ length: 10 }).map((_, i) => (
+            <line
+              key={`h-${i}`}
+              x1={toSvgX(-2)}
+              y1={toSvgY(i - 2)}
+              x2={toSvgX(8)}
+              y2={toSvgY(i - 2)}
+              className="stroke-gray-200 dark:stroke-gray-700"
+              strokeWidth="0.5"
+            />
           ))}
 
           {/* Axes */}
           <line
-            x1={30}
-            y1={220}
-            x2={270}
-            y2={220}
+            x1={toSvgX(-2)}
+            y1={toSvgY(0)}
+            x2={toSvgX(8)}
+            y2={toSvgY(0)}
             className="stroke-gray-500"
             strokeWidth="1.5"
           />
-          <line x1={30} y1={220} x2={30} y2={20} className="stroke-gray-500" strokeWidth="1.5" />
+          <line x1={toSvgX(0)} y1={280} x2={toSvgX(0)} y2={20} className="stroke-gray-500" strokeWidth="1.5" />
 
-          {/* Axis labels */}
-          {Array.from({ length: 8 }).map((_, i) => (
-            <g key={i}>
-              <text
-                x={toSvgX(i)}
-                y={235}
-                textAnchor="middle"
-                className="fill-gray-500 text-[8px]"
-              >
-                {i}
-              </text>
-              <text x={20} y={toSvgY(i) + 3} textAnchor="end" className="fill-gray-500 text-[8px]">
-                {i}
-              </text>
-            </g>
+          {/* Axis labels - x axis (from -2 to 8) */}
+          {Array.from({ length: 11 }).map((_, i) => (
+            <text
+              key={`x-${i}`}
+              x={toSvgX(i - 2)}
+              y={toSvgY(0) + 12}
+              textAnchor="middle"
+              className="fill-gray-500 text-[8px]"
+            >
+              {i - 2}
+            </text>
+          ))}
+          {/* Axis labels - y axis (from -2 to 7) */}
+          {Array.from({ length: 10 }).map((_, i) => (
+            <text
+              key={`y-${i}`}
+              x={toSvgX(0) - 5}
+              y={toSvgY(i - 2) + 3}
+              textAnchor="end"
+              className="fill-gray-500 text-[8px]"
+            >
+              {i - 2}
+            </text>
           ))}
 
           {/* Center of homothety */}
@@ -379,27 +397,38 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 )}
               />
               {/* Transformed point labels */}
-              {transformedPoints.map((p, i) => (
-                <g key={p.label}>
-                  <circle
-                    cx={toSvgX(p.x)}
-                    cy={toSvgY(p.y)}
-                    r={5}
-                    className={cn(
-                      config.color === 'green' && 'fill-green-500',
-                      config.color === 'amber' && 'fill-amber-500',
-                      config.color === 'red' && 'fill-red-500'
-                    )}
-                  />
-                  <text
-                    x={toSvgX(p.x) + 8}
-                    y={toSvgY(p.y) - 5}
-                    className={cn('text-[8px] font-bold', colors.text.replace('text', 'fill'))}
-                  >
-                    {p.label}({p.x},{p.y})
-                  </text>
-                </g>
-              ))}
+              {transformedPoints.map((p, i) => {
+                // Custom label offsets to avoid overlap
+                // A' (i=0): right, B' (i=1): left, C' (i=2): below
+                const labelOffsets = [
+                  { x: 8, y: -5 }, // A': to the right
+                  { x: -50, y: 4 }, // B': to the left
+                  { x: 8, y: 15 }, // C': below
+                ];
+                const offset = labelOffsets[i] || { x: 8, y: -5 };
+
+                return (
+                  <g key={p.label}>
+                    <circle
+                      cx={toSvgX(p.x)}
+                      cy={toSvgY(p.y)}
+                      r={5}
+                      className={cn(
+                        config.color === 'green' && 'fill-green-500',
+                        config.color === 'amber' && 'fill-amber-500',
+                        config.color === 'red' && 'fill-red-500'
+                      )}
+                    />
+                    <text
+                      x={toSvgX(p.x) + offset.x}
+                      y={toSvgY(p.y) + offset.y}
+                      className={cn('text-[8px] font-bold', colors.text.replace('text', 'fill'))}
+                    >
+                      {p.label}({p.x},{p.y})
+                    </text>
+                  </g>
+                );
+              })}
 
               {/* Dashed lines from center to points */}
               {originalPoints.map((original, i) => {
@@ -475,15 +504,24 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
                 <strong>Ejemplo:</strong> Punto A(4, 3) con k = {k}
               </p>
-              <div className="font-mono text-sm space-y-1">
+              <div className="text-sm space-y-2">
                 <p className="text-gray-600 dark:text-gray-400">
-                  A&apos; = (2, 2) + {k} · ((4, 3) - (2, 2))
+                  <span className="font-semibold">Paso 1:</span> Vector de C a A: (4, 3) - (2, 2) ={' '}
+                  <span className="font-mono">(2, 1)</span>
                 </p>
                 <p className="text-gray-600 dark:text-gray-400">
-                  A&apos; = (2, 2) + {k} · (2, 1)
+                  <span className="font-semibold">Paso 2:</span> Escalar el vector: {k} · (2, 1) ={' '}
+                  <span className="font-mono">({k * 2}, {k * 1})</span>
+                  {k > 1 && ' → se estira'}
+                  {k > 0 && k < 1 && ' → se comprime'}
+                  {k < 0 && ' → cambia de dirección'}
                 </p>
                 <p className={cn('font-bold', colors.text)}>
-                  A&apos; = (2 + {k * 2}, 2 + {k * 1}) = ({2 + k * 2}, {2 + k * 1})
+                  <span className="font-semibold">Paso 3:</span> Partir del centro: (2, 2) + ({k * 2}
+                  , {k * 1}) ={' '}
+                  <span className="font-mono">
+                    ({2 + k * 2}, {2 + k * 1})
+                  </span>
                 </p>
               </div>
             </div>
