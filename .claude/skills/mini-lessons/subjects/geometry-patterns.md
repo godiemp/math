@@ -932,6 +932,269 @@ The lesson `productos-notables-cubos` uses 3D to visualize (a+b)³ decomposition
 
 ---
 
+## Circular Geometry Patterns (Sectors, Arcs, Angles)
+
+Circular geometry requires precise coordinate math and consistent visual conventions.
+
+### Coordinate Convention
+
+**CRITICAL:** All circular geometry uses this convention:
+- **0° = 12 o'clock** (top of circle)
+- **Angles increase clockwise** (90° = 3 o'clock)
+- **Center is typically (cx, cy)**
+
+This matches mathematical convention where we subtract 90° from the angle to convert from "standard position" (0° = right) to "clock position" (0° = top).
+
+### Standard Helper Functions
+
+**ALWAYS** use these exact helper functions for circular geometry. Copy them verbatim:
+
+```typescript
+/**
+ * Creates a filled sector (pie slice) path
+ * @param cx - Center X coordinate
+ * @param cy - Center Y coordinate
+ * @param r - Radius
+ * @param startAngle - Start angle in degrees (0° = 12 o'clock, clockwise)
+ * @param endAngle - End angle in degrees
+ */
+function sectorPath(cx: number, cy: number, r: number, startAngle: number, endAngle: number): string {
+  const startRad = (startAngle - 90) * (Math.PI / 180);
+  const endRad = (endAngle - 90) * (Math.PI / 180);
+
+  const x1 = cx + r * Math.cos(startRad);
+  const y1 = cy + r * Math.sin(startRad);
+  const x2 = cx + r * Math.cos(endRad);
+  const y2 = cy + r * Math.sin(endRad);
+
+  const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+
+  return `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+}
+
+/**
+ * Creates an arc (curved line) path - no fill, just the curve
+ * @param cx - Center X coordinate
+ * @param cy - Center Y coordinate
+ * @param r - Radius
+ * @param startAngle - Start angle in degrees (0° = 12 o'clock, clockwise)
+ * @param endAngle - End angle in degrees
+ */
+function arcPath(cx: number, cy: number, r: number, startAngle: number, endAngle: number): string {
+  const startRad = (startAngle - 90) * (Math.PI / 180);
+  const endRad = (endAngle - 90) * (Math.PI / 180);
+
+  const x1 = cx + r * Math.cos(startRad);
+  const y1 = cy + r * Math.sin(startRad);
+  const x2 = cx + r * Math.cos(endRad);
+  const y2 = cy + r * Math.sin(endRad);
+
+  const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+
+  return `M ${x1} ${y1} A ${r} ${r} 0 ${largeArcFlag} 1 ${x2} ${y2}`;
+}
+
+/**
+ * Calculate a point on a circle at a given angle
+ * @param cx - Center X coordinate
+ * @param cy - Center Y coordinate
+ * @param r - Radius
+ * @param angle - Angle in degrees (0° = 12 o'clock, clockwise)
+ */
+function pointOnCircle(cx: number, cy: number, r: number, angle: number): { x: number; y: number } {
+  const rad = (angle - 90) * (Math.PI / 180);
+  return {
+    x: cx + r * Math.cos(rad),
+    y: cy + r * Math.sin(rad),
+  };
+}
+```
+
+### Visual Alignment Best Practices
+
+**Problem:** Thick strokes with rounded caps can appear misaligned with thin radius lines.
+
+**Solution:** Use these techniques for precise visual alignment:
+
+```typescript
+// 1. Use strokeLinecap="butt" for arcs (not "round")
+<path
+  d={arcPath(cx, cy, r, 0, 90)}
+  stroke="#7c3aed"
+  strokeWidth="4"
+  strokeLinecap="butt"  // Precise endpoints
+/>
+
+// 2. Add endpoint markers to show exact connection points
+<circle cx={pointOnCircle(cx, cy, r, 0).x} cy={pointOnCircle(cx, cy, r, 0).y} r="3" fill="#7c3aed" />
+<circle cx={pointOnCircle(cx, cy, r, 90).x} cy={pointOnCircle(cx, cy, r, 90).y} r="3" fill="#7c3aed" />
+
+// 3. Draw radius lines AFTER arcs so they appear on top
+<line x1={cx} y1={cy} x2={cx} y2={cy - r} stroke="#dc2626" strokeWidth="2" />
+```
+
+### Complete Circular Diagram Template
+
+```typescript
+const cx = 70, cy = 70, r = 55;
+const angle = 90; // 90° sector
+
+<svg viewBox="0 0 140 140" className="w-36 h-36">
+  {/* 1. Background circle (optional) */}
+  <circle cx={cx} cy={cy} r={r} fill="none" stroke="#e5e7eb" strokeWidth="2" />
+
+  {/* 2. Highlighted arc */}
+  <path
+    d={arcPath(cx, cy, r, 0, angle)}
+    fill="none"
+    stroke="#7c3aed"
+    strokeWidth="4"
+    strokeLinecap="butt"
+  />
+
+  {/* 3. Radius lines (from center to circle edge) */}
+  <line x1={cx} y1={cy} x2={cx} y2={cy - r} stroke="#dc2626" strokeWidth="2" strokeDasharray="4,2" />
+  <line
+    x1={cx}
+    y1={cy}
+    x2={cx + r * Math.cos((angle - 90) * Math.PI / 180)}
+    y2={cy + r * Math.sin((angle - 90) * Math.PI / 180)}
+    stroke="#dc2626"
+    strokeWidth="2"
+    strokeDasharray="4,2"
+  />
+
+  {/* 4. Endpoint markers */}
+  <circle cx={cx} cy={cy - r} r="3" fill="#7c3aed" />
+  <circle
+    cx={cx + r * Math.cos((angle - 90) * Math.PI / 180)}
+    cy={cy + r * Math.sin((angle - 90) * Math.PI / 180)}
+    r="3"
+    fill="#7c3aed"
+  />
+
+  {/* 5. Center point */}
+  <circle cx={cx} cy={cy} r="3" fill="#7c3aed" />
+
+  {/* 6. Angle arc indicator (small arc near center) */}
+  <path d={arcPath(cx, cy, 18, 0, angle)} fill="none" stroke="#f59e0b" strokeWidth="2" />
+
+  {/* 7. Labels - positioned using pointOnCircle */}
+  <text
+    x={cx + 28 * Math.cos(((angle / 2) - 90) * Math.PI / 180)}
+    y={cy + 28 * Math.sin(((angle / 2) - 90) * Math.PI / 180)}
+    textAnchor="middle"
+    fontSize="11"
+    fontWeight="bold"
+    fill="#f59e0b"
+  >
+    θ
+  </text>
+  <text x={cx + 12} y={cy - r/2} fontSize="12" fontWeight="bold" fill="#dc2626">r</text>
+</svg>
+```
+
+### Label Positioning for Circular Diagrams
+
+**θ (angle) label:** Position at the middle of the angle, near the angle arc indicator:
+
+```typescript
+// Position θ at half the angle, slightly outside the angle arc
+const thetaAngle = startAngle + (endAngle - startAngle) / 2;
+const thetaRadius = angleArcRadius + 10; // Slightly outside the small arc
+<text
+  x={cx + thetaRadius * Math.cos((thetaAngle - 90) * Math.PI / 180)}
+  y={cy + thetaRadius * Math.sin((thetaAngle - 90) * Math.PI / 180)}
+  textAnchor="middle"
+>θ</text>
+```
+
+**r (radius) label:** Position along the first radius line:
+
+```typescript
+// Position r at midpoint of first radius, offset slightly
+<text x={cx + 10} y={cy - r/2} textAnchor="start">r</text>
+```
+
+**L (arc length) label:** Position near the arc, outside the circle:
+
+```typescript
+// Position L near the middle of the arc, outside
+const arcMidAngle = startAngle + (endAngle - startAngle) / 2;
+const labelRadius = r + 10; // Outside the circle
+<text
+  x={cx + labelRadius * Math.cos((arcMidAngle - 90) * Math.PI / 180)}
+  y={cy + labelRadius * Math.sin((arcMidAngle - 90) * Math.PI / 180)}
+>L</text>
+```
+
+### Common Angle Reference
+
+| Angle | Position | Math Radians |
+|-------|----------|--------------|
+| 0° | 12 o'clock (top) | -π/2 |
+| 30° | 1 o'clock | -π/3 |
+| 45° | 1:30 position | -π/4 |
+| 60° | 2 o'clock | -π/6 |
+| 90° | 3 o'clock (right) | 0 |
+| 180° | 6 o'clock (bottom) | π/2 |
+| 270° | 9 o'clock (left) | π |
+| 360° | 12 o'clock (full circle) | 3π/2 |
+
+### Circular Geometry Color Palette
+
+| Element | Color (Hex) | Tailwind |
+|---------|-------------|----------|
+| Arc highlight | `#7c3aed` | purple-600 |
+| Radius lines | `#dc2626` | red-600 |
+| Angle indicator | `#f59e0b` | amber-500 |
+| Sector fill | `#5eead4` | teal-300 |
+| Center point | `#0d9488` | teal-600 |
+| Circle outline | `#e5e7eb` | gray-200 |
+
+### Shared Constants Pattern (RECOMMENDED)
+
+When creating multiple circular diagrams in one component, **define shared constants** at the top:
+
+```typescript
+// Constants for consistent diagram styling
+const CX = 60, CY = 60, R = 50;        // Center and radius
+const ANGLE_ARC_RADIUS = 18;           // Orange angle indicator arc
+const LABEL_RADIUS = 28;               // Where to place angle labels
+
+// Then use in ALL diagrams:
+<path d={arcPath(CX, CY, ANGLE_ARC_RADIUS, 0, angle)} stroke="#f59e0b" strokeWidth="2.5" />
+<text
+  x={CX + LABEL_RADIUS * Math.cos(((angle / 2) - 90) * Math.PI / 180)}
+  y={CY + LABEL_RADIUS * Math.sin(((angle / 2) - 90) * Math.PI / 180) + 3}
+  textAnchor="middle" fontSize="9" fontWeight="bold" fill="#f59e0b">{angle}°</text>
+```
+
+**Benefits:**
+- All diagrams have identical sizing and proportions
+- Angle labels are always positioned consistently
+- Easy to adjust all diagrams at once
+- Prevents hardcoded positions that cause misalignment
+
+### Anti-Patterns for Circular Geometry
+
+1. **Using `strokeLinecap="round"`** on arcs - causes visual misalignment at endpoints
+2. **Forgetting the -90° offset** - angles will be rotated 90° from expected position
+3. **Hardcoding label positions** instead of calculating from angles - causes misalignment
+4. **Missing angle arc indicator** - makes it unclear what angle is being measured
+5. **Labels outside viewBox** - always verify labels are visible
+6. **Different radii for arc and radius lines** - they won't connect properly
+7. **Drawing center dot before angle arc** - arc gets hidden behind the dot
+
+### Exemplar Circular Lessons
+
+| Lesson | Key Patterns |
+|--------|--------------|
+| `circulo-perimetro-area` | Circle unrolling animation, pizza slice convergence |
+| `sectores-circulares` | Sector/arc formulas, angle slider interaction |
+
+---
+
 ## Missing Patterns to Consider
 
 1. **Interactive Measurement Tool** - Drag dimensions and see formulas update
