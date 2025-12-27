@@ -8,6 +8,7 @@
 
 import { Request, Response } from 'express';
 import { pool } from '../config/database';
+import { StudentAccountService, type GradeLevel } from '../services/studentAccountService';
 
 type StudentGradeLevel = '1-medio' | '2-medio' | '3-medio' | '4-medio';
 
@@ -216,5 +217,119 @@ export async function getMyStudents(req: Request, res: Response): Promise<void> 
   } catch (error) {
     console.error('Get my students error:', error);
     res.status(500).json({ error: 'Failed to fetch students' });
+  }
+}
+
+/**
+ * Create a new student account linked to the current teacher
+ */
+export async function createStudent(req: Request, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
+
+    const { firstName, lastName, gradeLevel } = req.body;
+
+    // Validate required fields
+    if (!firstName || typeof firstName !== 'string' || !firstName.trim()) {
+      res.status(400).json({ error: 'First name is required' });
+      return;
+    }
+
+    if (!lastName || typeof lastName !== 'string' || !lastName.trim()) {
+      res.status(400).json({ error: 'Last name is required' });
+      return;
+    }
+
+    if (!gradeLevel || !VALID_GRADE_LEVELS.includes(gradeLevel)) {
+      res.status(400).json({
+        error: `Grade level is required. Must be one of: ${VALID_GRADE_LEVELS.join(', ')}`,
+      });
+      return;
+    }
+
+    // Create the student account
+    const result = await StudentAccountService.createStudentAccount(
+      {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        gradeLevel: gradeLevel as GradeLevel,
+      },
+      req.user.userId
+    );
+
+    res.status(201).json(result);
+  } catch (error) {
+    console.error('Create student error:', error);
+    res.status(500).json({ error: 'Failed to create student account' });
+  }
+}
+
+/**
+ * Reset a student's password
+ */
+export async function resetStudentPassword(req: Request, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
+
+    const { studentId } = req.params;
+
+    if (!studentId) {
+      res.status(400).json({ error: 'Student ID is required' });
+      return;
+    }
+
+    const result = await StudentAccountService.resetStudentPassword(studentId, req.user.userId);
+
+    if (!result.success) {
+      res.status(404).json({ error: result.error });
+      return;
+    }
+
+    res.json({
+      success: true,
+      credentials: {
+        password: result.password,
+      },
+    });
+  } catch (error) {
+    console.error('Reset student password error:', error);
+    res.status(500).json({ error: 'Failed to reset password' });
+  }
+}
+
+/**
+ * Delete a student account
+ */
+export async function deleteStudent(req: Request, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
+
+    const { studentId } = req.params;
+
+    if (!studentId) {
+      res.status(400).json({ error: 'Student ID is required' });
+      return;
+    }
+
+    const result = await StudentAccountService.deleteStudentAccount(studentId, req.user.userId);
+
+    if (!result.success) {
+      res.status(404).json({ error: result.error });
+      return;
+    }
+
+    res.json({ success: true, message: 'Student deleted successfully' });
+  } catch (error) {
+    console.error('Delete student error:', error);
+    res.status(500).json({ error: 'Failed to delete student' });
   }
 }

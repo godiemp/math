@@ -6,8 +6,10 @@ import { Card, Heading, Text } from '@/components/ui';
 import {
   getStudents,
   assignStudentGrade,
+  createStudent,
   type StudentForTeacher,
   type GetStudentsParams,
+  type CreateStudentResponse,
 } from '@/lib/api/teacher';
 import type { StudentGradeLevel } from '@/lib/types';
 
@@ -104,6 +106,22 @@ export default function TeacherStudentsPage() {
   const [filterGrade, setFilterGrade] = useState<string>('all');
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+  // Add Student Modal State
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addingStudent, setAddingStudent] = useState(false);
+  const [newStudentFirstName, setNewStudentFirstName] = useState('');
+  const [newStudentLastName, setNewStudentLastName] = useState('');
+  const [newStudentGradeLevel, setNewStudentGradeLevel] = useState<StudentGradeLevel>('1-medio');
+
+  // Credentials Modal State (shown after student is created)
+  const [showCredentialsModal, setShowCredentialsModal] = useState(false);
+  const [createdStudentCredentials, setCreatedStudentCredentials] = useState<{
+    displayName: string;
+    username: string;
+    password: string;
+  } | null>(null);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
   const loadStudents = useCallback(async () => {
     try {
       setLoading(true);
@@ -169,6 +187,64 @@ export default function TeacherStudentsPage() {
     loadStudents();
   };
 
+  const handleCreateStudent = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!newStudentFirstName.trim() || !newStudentLastName.trim()) {
+      setError('Por favor completa nombre y apellido');
+      return;
+    }
+
+    try {
+      setAddingStudent(true);
+      setError(null);
+
+      const response = await createStudent({
+        firstName: newStudentFirstName.trim(),
+        lastName: newStudentLastName.trim(),
+        gradeLevel: newStudentGradeLevel,
+      });
+
+      if (response.error) {
+        throw new Error(response.error.error);
+      }
+
+      // Store credentials and show modal
+      setCreatedStudentCredentials({
+        displayName: response.data?.student.displayName || '',
+        username: response.data?.credentials.username || '',
+        password: response.data?.credentials.password || '',
+      });
+
+      // Reset form and close add modal
+      setNewStudentFirstName('');
+      setNewStudentLastName('');
+      setNewStudentGradeLevel('1-medio');
+      setShowAddModal(false);
+
+      // Show credentials modal
+      setShowCredentialsModal(true);
+
+      // Reload students list
+      loadStudents();
+    } catch (err) {
+      console.error('Error creating student:', err);
+      setError('Error al crear estudiante. Por favor intenta de nuevo.');
+    } finally {
+      setAddingStudent(false);
+    }
+  };
+
+  const copyToClipboard = async (text: string, field: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch (err) {
+      console.error('Error copying to clipboard:', err);
+    }
+  };
+
   return (
     <TeacherLayout>
       <div className="space-y-6">
@@ -179,9 +255,16 @@ export default function TeacherStudentsPage() {
               Gestionar Estudiantes
             </Heading>
             <Text variant="secondary" className="mt-1">
-              Asigna niveles escolares a tus estudiantes para filtrar su contenido.
+              Crea y administra las cuentas de tus estudiantes.
             </Text>
           </div>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors"
+          >
+            <span className="text-lg">+</span>
+            Agregar Estudiante
+          </button>
         </div>
 
         {/* Success Message */}
@@ -310,6 +393,160 @@ export default function TeacherStudentsPage() {
           </div>
         </Card>
       </div>
+
+      {/* Add Student Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full p-6 shadow-xl">
+            <div className="flex items-center justify-between mb-6">
+              <Heading level={2} size="md">
+                Agregar Estudiante
+              </Heading>
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateStudent} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  value={newStudentFirstName}
+                  onChange={(e) => setNewStudentFirstName(e.target.value)}
+                  placeholder="Ej: María"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Apellido
+                </label>
+                <input
+                  type="text"
+                  value={newStudentLastName}
+                  onChange={(e) => setNewStudentLastName(e.target.value)}
+                  placeholder="Ej: González"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Nivel
+                </label>
+                <select
+                  value={newStudentGradeLevel}
+                  onChange={(e) => setNewStudentGradeLevel(e.target.value as StudentGradeLevel)}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                >
+                  {GRADE_LEVELS.map((grade) => (
+                    <option key={grade.value} value={grade.value}>
+                      {grade.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={addingStudent}
+                  className="flex-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-medium rounded-lg transition-colors"
+                >
+                  {addingStudent ? 'Creando...' : 'Crear Estudiante'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Credentials Modal */}
+      {showCredentialsModal && createdStudentCredentials && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full p-6 shadow-xl">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl">✓</span>
+              </div>
+              <Heading level={2} size="md">
+                Estudiante Creado
+              </Heading>
+              <Text variant="secondary" className="mt-2">
+                Comparte estas credenciales con <strong>{createdStudentCredentials.displayName}</strong>
+              </Text>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Text size="sm" variant="secondary">Usuario</Text>
+                    <Text className="font-mono font-medium">
+                      {createdStudentCredentials.username}
+                    </Text>
+                  </div>
+                  <button
+                    onClick={() => copyToClipboard(createdStudentCredentials.username, 'username')}
+                    className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors"
+                  >
+                    {copiedField === 'username' ? '✓ Copiado' : 'Copiar'}
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Text size="sm" variant="secondary">Contraseña</Text>
+                    <Text className="font-mono font-medium">
+                      {createdStudentCredentials.password}
+                    </Text>
+                  </div>
+                  <button
+                    onClick={() => copyToClipboard(createdStudentCredentials.password, 'password')}
+                    className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors"
+                  >
+                    {copiedField === 'password' ? '✓ Copiado' : 'Copiar'}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl mb-6">
+              <Text size="sm" className="text-amber-700 dark:text-amber-300">
+                ⚠️ Guarda estas credenciales ahora. La contraseña no se puede recuperar después.
+              </Text>
+            </div>
+
+            <button
+              onClick={() => {
+                setShowCredentialsModal(false);
+                setCreatedStudentCredentials(null);
+              }}
+              className="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors"
+            >
+              Entendido
+            </button>
+          </div>
+        </div>
+      )}
     </TeacherLayout>
   );
 }
