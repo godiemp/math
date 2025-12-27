@@ -47,6 +47,11 @@ interface Scenario {
   hint: string;
 }
 
+// Constants for consistent diagram styling
+const CX = 60, CY = 60, R = 50;
+const ANGLE_ARC_RADIUS = 18;
+const LABEL_RADIUS = 28;
+
 const scenarios: Scenario[] = [
   {
     id: 'pizza',
@@ -55,19 +60,26 @@ const scenarios: Scenario[] = [
     question: '¿Cual es el area de una porcion?',
     visual: (
       <svg viewBox="0 0 120 120" className="w-32 h-32">
-        <circle cx="60" cy="60" r="50" fill="#fbbf24" stroke="#92400e" strokeWidth="2" />
-        <path d={sectorPath(60, 60, 50, 0, 60)} fill="#ef4444" fillOpacity="0.6" stroke="#dc2626" strokeWidth="2" />
-        {[60, 120, 180, 240, 300, 360].map((angle) => {
+        {/* Pizza base */}
+        <circle cx={CX} cy={CY} r={R} fill="#fbbf24" stroke="#92400e" strokeWidth="2" />
+        {/* Highlighted sector (one slice) */}
+        <path d={sectorPath(CX, CY, R, 0, 60)} fill="#ef4444" fillOpacity="0.6" stroke="#dc2626" strokeWidth="2" />
+        {/* Pizza slice lines */}
+        {[0, 60, 120, 180, 240, 300].map((angle) => {
           const rad = (angle - 90) * (Math.PI / 180);
-          return <line key={angle} x1="60" y1="60" x2={60 + 48 * Math.cos(rad)} y2={60 + 48 * Math.sin(rad)} stroke="#92400e" strokeWidth="1" />;
+          return <line key={angle} x1={CX} y1={CY} x2={CX + 48 * Math.cos(rad)} y2={CY + 48 * Math.sin(rad)} stroke="#92400e" strokeWidth="1" />;
         })}
-        <circle cx="60" cy="60" r="3" fill="#92400e" />
-        {/* Angle label with background */}
-        <rect x="68" y="42" width="24" height="14" fill="white" rx="2" />
-        <text x="80" y="53" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#dc2626">60°</text>
-        {/* Radius label */}
-        <rect x="72" y="58" width="38" height="14" fill="white" rx="2" />
-        <text x="91" y="69" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#7c3aed">r=15cm</text>
+        {/* Center point */}
+        <circle cx={CX} cy={CY} r="3" fill="#92400e" />
+        {/* Angle arc indicator (orange) */}
+        <path d={arcPath(CX, CY, ANGLE_ARC_RADIUS, 0, 60)} fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+        {/* Angle label - positioned at middle of angle (30°) */}
+        <text
+          x={CX + LABEL_RADIUS * Math.cos((30 - 90) * Math.PI / 180)}
+          y={CY + LABEL_RADIUS * Math.sin((30 - 90) * Math.PI / 180) + 3}
+          textAnchor="middle" fontSize="10" fontWeight="bold" fill="#f59e0b">60°</text>
+        {/* Radius label - along the first radius */}
+        <text x={CX + 8} y={CY - R/2} textAnchor="start" fontSize="9" fontWeight="bold" fill="#7c3aed">r=15cm</text>
       </svg>
     ),
     options: ['37.5π cm² ≈ 118 cm²', '75π cm² ≈ 236 cm²', '225π cm² ≈ 707 cm²', '12.5π cm² ≈ 39 cm²'],
@@ -82,35 +94,44 @@ const scenarios: Scenario[] = [
     question: '¿Cual es la longitud del arco que recorre en 5 minutos?',
     visual: (
       <svg viewBox="0 0 120 120" className="w-32 h-32">
-        <circle cx="60" cy="60" r="50" fill="#e5e7eb" stroke="#374151" strokeWidth="3" />
+        {/* Clock face */}
+        <circle cx={CX} cy={CY} r={R} fill="#e5e7eb" stroke="#374151" strokeWidth="3" />
         {/* Hour markers */}
         {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle) => {
           const rad = (angle - 90) * (Math.PI / 180);
           return (
             <line
               key={angle}
-              x1={60 + 40 * Math.cos(rad)}
-              y1={60 + 40 * Math.sin(rad)}
-              x2={60 + 47 * Math.cos(rad)}
-              y2={60 + 47 * Math.sin(rad)}
+              x1={CX + 40 * Math.cos(rad)}
+              y1={CY + 40 * Math.sin(rad)}
+              x2={CX + 47 * Math.cos(rad)}
+              y2={CY + 47 * Math.sin(rad)}
               stroke="#374151"
               strokeWidth="2"
             />
           );
         })}
-        {/* Arc swept by minute hand - on clock frame */}
-        <path d={arcPath(60, 60, 50, 0, 30)} fill="none" stroke="#7c3aed" strokeWidth="4" strokeLinecap="round" />
+        {/* Arc swept by minute hand (purple) */}
+        <path d={arcPath(CX, CY, R, 0, 30)} fill="none" stroke="#7c3aed" strokeWidth="4" strokeLinecap="butt" />
         {/* Minute hand at 12 o'clock */}
-        <line x1="60" y1="60" x2="60" y2="10" stroke="#1f2937" strokeWidth="2" />
-        {/* Minute hand end position (5 min later = 30°) */}
-        <line x1="60" y1="60" x2={60 + 50 * Math.cos((-60) * Math.PI / 180)} y2={60 + 50 * Math.sin((-60) * Math.PI / 180)} stroke="#7c3aed" strokeWidth="2" strokeDasharray="4,2" />
-        <circle cx="60" cy="60" r="4" fill="#1f2937" />
-        {/* Angle arc indicator near center - radius 22 for visibility */}
-        <path d={arcPath(60, 60, 22, 0, 30)} fill="none" stroke="#f59e0b" strokeWidth="2.5" />
-        {/* Angle label - amber color to match arc, positioned at middle of angle (15°) */}
-        <text x={60 + 32 * Math.cos((-75) * Math.PI / 180)} y={60 + 32 * Math.sin((-75) * Math.PI / 180)} fontSize="9" fontWeight="bold" fill="#f59e0b">30°</text>
-        {/* Radius label - moved left of minute hand */}
-        <text x="50" y="35" fontSize="7" fill="#dc2626">12cm</text>
+        <line x1={CX} y1={CY} x2={CX} y2={CY - R} stroke="#1f2937" strokeWidth="2" />
+        {/* Minute hand end position (5 min = 30°) - dashed */}
+        <line
+          x1={CX} y1={CY}
+          x2={CX + R * Math.cos((30 - 90) * Math.PI / 180)}
+          y2={CY + R * Math.sin((30 - 90) * Math.PI / 180)}
+          stroke="#7c3aed" strokeWidth="2" strokeDasharray="4,2" />
+        {/* Angle arc indicator (orange) - drawn BEFORE center dot */}
+        <path d={arcPath(CX, CY, ANGLE_ARC_RADIUS, 0, 30)} fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+        {/* Angle label - positioned at middle of angle (15°) */}
+        <text
+          x={CX + LABEL_RADIUS * Math.cos((15 - 90) * Math.PI / 180)}
+          y={CY + LABEL_RADIUS * Math.sin((15 - 90) * Math.PI / 180) + 3}
+          textAnchor="middle" fontSize="9" fontWeight="bold" fill="#f59e0b">30°</text>
+        {/* Radius label - along the minute hand */}
+        <text x={CX + 8} y={CY - R/2} textAnchor="start" fontSize="8" fontWeight="bold" fill="#dc2626">12cm</text>
+        {/* Center point - drawn LAST so it's on top */}
+        <circle cx={CX} cy={CY} r="3" fill="#1f2937" />
       </svg>
     ),
     options: ['π cm ≈ 3.14 cm', '2π cm ≈ 6.28 cm', '4π cm ≈ 12.57 cm', '6π cm ≈ 18.85 cm'],
@@ -125,19 +146,29 @@ const scenarios: Scenario[] = [
     question: '¿Cual es el area del sector?',
     visual: (
       <svg viewBox="0 0 120 120" className="w-32 h-32">
-        <circle cx="60" cy="60" r="50" fill="#e5e7eb" stroke="#9ca3af" strokeWidth="1" />
-        <path d={sectorPath(60, 60, 50, 0, 90)} fill="#3b82f6" fillOpacity="0.7" stroke="#1d4ed8" strokeWidth="2" />
-        <path d={sectorPath(60, 60, 50, 90, 180)} fill="#a3a3a3" fillOpacity="0.5" stroke="#737373" strokeWidth="1" />
-        <path d={sectorPath(60, 60, 50, 180, 270)} fill="#a3a3a3" fillOpacity="0.5" stroke="#737373" strokeWidth="1" />
-        <path d={sectorPath(60, 60, 50, 270, 360)} fill="#a3a3a3" fillOpacity="0.5" stroke="#737373" strokeWidth="1" />
-        <circle cx="60" cy="60" r="3" fill="#374151" />
-        {/* Labels with backgrounds */}
-        <rect x="38" y="33" width="28" height="14" fill="white" rx="2" />
-        <text x="52" y="44" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1d4ed8">25%</text>
-        <rect x="78" y="48" width="36" height="14" fill="white" rx="2" />
-        <text x="96" y="59" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#7c3aed">r=8cm</text>
-        <rect x="63" y="68" width="22" height="14" fill="white" rx="2" />
-        <text x="74" y="79" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#f59e0b">90°</text>
+        {/* Background circle */}
+        <circle cx={CX} cy={CY} r={R} fill="#e5e7eb" stroke="#9ca3af" strokeWidth="1" />
+        {/* All sectors */}
+        <path d={sectorPath(CX, CY, R, 0, 90)} fill="#3b82f6" fillOpacity="0.7" stroke="#1d4ed8" strokeWidth="2" />
+        <path d={sectorPath(CX, CY, R, 90, 180)} fill="#a3a3a3" fillOpacity="0.5" stroke="#737373" strokeWidth="1" />
+        <path d={sectorPath(CX, CY, R, 180, 270)} fill="#a3a3a3" fillOpacity="0.5" stroke="#737373" strokeWidth="1" />
+        <path d={sectorPath(CX, CY, R, 270, 360)} fill="#a3a3a3" fillOpacity="0.5" stroke="#737373" strokeWidth="1" />
+        {/* Angle arc indicator (orange) */}
+        <path d={arcPath(CX, CY, ANGLE_ARC_RADIUS, 0, 90)} fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+        {/* Angle label - positioned at middle of angle (45°) */}
+        <text
+          x={CX + LABEL_RADIUS * Math.cos((45 - 90) * Math.PI / 180)}
+          y={CY + LABEL_RADIUS * Math.sin((45 - 90) * Math.PI / 180) + 3}
+          textAnchor="middle" fontSize="9" fontWeight="bold" fill="#f59e0b">90°</text>
+        {/* 25% label inside the sector */}
+        <text
+          x={CX + 30 * Math.cos((45 - 90) * Math.PI / 180)}
+          y={CY + 30 * Math.sin((45 - 90) * Math.PI / 180) + 3}
+          textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1d4ed8">25%</text>
+        {/* Radius label - along the first radius */}
+        <text x={CX + 8} y={CY - R/2} textAnchor="start" fontSize="9" fontWeight="bold" fill="#7c3aed">r=8cm</text>
+        {/* Center point */}
+        <circle cx={CX} cy={CY} r="3" fill="#374151" />
       </svg>
     ),
     options: ['8π cm² ≈ 25 cm²', '16π cm² ≈ 50 cm²', '32π cm² ≈ 100 cm²', '64π cm² ≈ 201 cm²'],
@@ -152,29 +183,50 @@ const scenarios: Scenario[] = [
     question: '¿Cual es el area del jardin que riega?',
     visual: (
       <svg viewBox="0 0 120 120" className="w-32 h-32">
-        <circle cx="60" cy="60" r="50" fill="#dcfce7" fillOpacity="0.3" stroke="#d1d5db" strokeWidth="1" strokeDasharray="4,4" />
-        <path d={sectorPath(60, 60, 50, -60, 60)} fill="#22c55e" fillOpacity="0.5" stroke="#15803d" strokeWidth="2" />
+        {/* Background circle (dashed) */}
+        <circle cx={CX} cy={CY} r={R} fill="#dcfce7" fillOpacity="0.3" stroke="#d1d5db" strokeWidth="1" strokeDasharray="4,4" />
+        {/* Sprinkler sector (centered on 12 o'clock: -60° to +60°) */}
+        <path d={sectorPath(CX, CY, R, -60, 60)} fill="#22c55e" fillOpacity="0.5" stroke="#15803d" strokeWidth="2" />
+        {/* Radius lines bounding the sector */}
+        <line
+          x1={CX} y1={CY}
+          x2={CX + R * Math.cos((-60 - 90) * Math.PI / 180)}
+          y2={CY + R * Math.sin((-60 - 90) * Math.PI / 180)}
+          stroke="#15803d" strokeWidth="2" />
+        <line
+          x1={CX} y1={CY}
+          x2={CX + R * Math.cos((60 - 90) * Math.PI / 180)}
+          y2={CY + R * Math.sin((60 - 90) * Math.PI / 180)}
+          stroke="#15803d" strokeWidth="2" />
         {/* Water droplets */}
-        {[0, 20, -20, 40, -40].map((angle, i) => {
+        {[0, 25, -25, 45, -45].map((angle, i) => {
           const rad = (angle - 90) * (Math.PI / 180);
-          const r = 30 + (i % 2) * 10;
+          const dropR = 25 + (i % 2) * 12;
           return (
             <circle
               key={i}
-              cx={60 + r * Math.cos(rad)}
-              cy={60 + r * Math.sin(rad)}
+              cx={CX + dropR * Math.cos(rad)}
+              cy={CY + dropR * Math.sin(rad)}
               r="3"
               fill="#3b82f6"
               fillOpacity="0.6"
             />
           );
         })}
-        <circle cx="60" cy="60" r="5" fill="#374151" />
-        {/* Labels with backgrounds */}
-        <rect x="45" y="20" width="30" height="14" fill="white" rx="2" />
-        <text x="60" y="31" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#15803d">120°</text>
-        <rect x="78" y="43" width="24" height="14" fill="white" rx="2" />
-        <text x="90" y="54" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#dc2626">5m</text>
+        {/* Angle arc indicator (orange) - showing the 120° sweep */}
+        <path d={arcPath(CX, CY, ANGLE_ARC_RADIUS, -60, 60)} fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+        {/* Angle label - positioned at middle of angle (0° = 12 o'clock) */}
+        <text
+          x={CX}
+          y={CY - LABEL_RADIUS + 3}
+          textAnchor="middle" fontSize="9" fontWeight="bold" fill="#f59e0b">120°</text>
+        {/* Radius label - along one of the radius lines */}
+        <text
+          x={CX + (R/2 + 5) * Math.cos((60 - 90) * Math.PI / 180) + 8}
+          y={CY + (R/2 + 5) * Math.sin((60 - 90) * Math.PI / 180)}
+          textAnchor="start" fontSize="9" fontWeight="bold" fill="#dc2626">5m</text>
+        {/* Center point (sprinkler head) */}
+        <circle cx={CX} cy={CY} r="4" fill="#374151" />
       </svg>
     ),
     options: ['25π/6 m² ≈ 13 m²', '25π/3 m² ≈ 26 m²', '25π m² ≈ 79 m²', '50π/3 m² ≈ 52 m²'],
