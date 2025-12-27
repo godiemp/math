@@ -274,28 +274,38 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               Los triangulos formados son semejantes
             </h3>
 
-            <svg viewBox="0 0 400 180" className="w-full max-w-md mx-auto">
+            <svg viewBox="0 0 400 200" className="w-full max-w-md mx-auto">
               {/* Small triangle (person) */}
               <polygon
-                points="60,140 60,180 100,180"
+                points="80,140 80,180 120,180"
                 className="fill-blue-200/50 dark:fill-blue-800/50 stroke-blue-600 dark:stroke-blue-400"
                 strokeWidth="2"
               />
-              <text x="50" y="165" className="fill-blue-600 dark:fill-blue-400 text-xs">1.6m</text>
-              <text x="75" y="195" className="fill-gray-600 dark:fill-gray-400 text-xs">2m</text>
+              {/* Height label - positioned to the LEFT of the triangle */}
+              <line x1="70" y1="140" x2="70" y2="180" className="stroke-blue-500" strokeWidth="1" />
+              <line x1="65" y1="140" x2="75" y2="140" className="stroke-blue-500" strokeWidth="1" />
+              <line x1="65" y1="180" x2="75" y2="180" className="stroke-blue-500" strokeWidth="1" />
+              <text x="40" y="165" className="fill-blue-600 dark:fill-blue-400 text-xs font-bold">1.6m</text>
+              {/* Base label - positioned BELOW the triangle */}
+              <text x="100" y="195" textAnchor="middle" className="fill-gray-600 dark:fill-gray-400 text-xs">2m</text>
 
               {/* Large triangle (building) */}
               <polygon
-                points="180,60 180,180 330,180"
+                points="200,40 200,180 350,180"
                 className="fill-purple-200/50 dark:fill-purple-800/50 stroke-purple-600 dark:stroke-purple-400"
                 strokeWidth="2"
               />
-              <text x="165" y="125" className="fill-purple-600 dark:fill-purple-400 text-xs">12m</text>
-              <text x="250" y="195" className="fill-gray-600 dark:fill-gray-400 text-xs">15m</text>
+              {/* Height label - positioned to the LEFT of the triangle */}
+              <line x1="190" y1="40" x2="190" y2="180" className="stroke-purple-500" strokeWidth="1" />
+              <line x1="185" y1="40" x2="195" y2="40" className="stroke-purple-500" strokeWidth="1" />
+              <line x1="185" y1="180" x2="195" y2="180" className="stroke-purple-500" strokeWidth="1" />
+              <text x="165" y="115" className="fill-purple-600 dark:fill-purple-400 text-xs font-bold">12m</text>
+              {/* Base label - positioned BELOW the triangle */}
+              <text x="275" y="195" textAnchor="middle" className="fill-gray-600 dark:fill-gray-400 text-xs">15m</text>
 
-              {/* Similarity indicator */}
-              <text x="130" y="100" className="fill-green-600 dark:fill-green-400 text-sm font-bold">~</text>
-              <text x="120" y="115" className="fill-gray-600 dark:fill-gray-400 text-xs">semejantes</text>
+              {/* Similarity indicator - positioned between triangles */}
+              <text x="155" y="110" textAnchor="middle" className="fill-green-600 dark:fill-green-400 text-lg font-bold">~</text>
+              <text x="155" y="125" textAnchor="middle" className="fill-gray-500 dark:fill-gray-400 text-xs">semejantes</text>
             </svg>
 
             <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg p-4">
