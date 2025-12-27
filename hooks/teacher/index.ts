@@ -10,3 +10,8 @@ export {
   type UseCredentialsModalReturn,
   type Credentials,
 } from './useCredentialsModal';
+export {
+  useStudentActions,
+  type UseStudentActionsOptions,
+  type UseStudentActionsReturn,
+} from './useStudentActions';

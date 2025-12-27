@@ -9,6 +9,7 @@ import {
   useStudentsList,
   useAddStudentModal,
   useCredentialsModal,
+  useStudentActions,
 } from '@/hooks/teacher';
 
 const GRADE_LEVELS: { value: StudentGradeLevel; label: string }[] = [
@@ -39,11 +40,15 @@ function GradeBadge({ gradeLevel }: { gradeLevel: StudentGradeLevel | null }) {
 function StudentRow({
   student,
   onGradeChange,
+  onResetPassword,
   isUpdating,
+  isProcessing,
 }: {
   student: StudentForTeacher;
   onGradeChange: (studentId: string, gradeLevel: StudentGradeLevel | null) => void;
+  onResetPassword: (studentId: string, studentName: string) => void;
   isUpdating: boolean;
+  isProcessing: boolean;
 }) {
   const [selectedGrade, setSelectedGrade] = useState<string>(student.gradeLevel || '');
 
@@ -91,6 +96,15 @@ function StudentRow({
       <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
         {student.lastPracticeDate || 'Nunca'}
       </td>
+      <td className="px-4 py-3">
+        <button
+          onClick={() => onResetPassword(student.id, student.displayName)}
+          disabled={isProcessing}
+          className="px-3 py-1.5 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors disabled:opacity-50"
+        >
+          {isProcessing ? 'Reseteando...' : 'Reset Password'}
+        </button>
+      </td>
     </tr>
   );
 }
@@ -102,6 +116,16 @@ export default function TeacherStudentsPage() {
     onSuccess: (credentials) => {
       credentialsModal.show(credentials);
       studentsList.loadStudents();
+    },
+    onError: (error) => studentsList.setError(error),
+  });
+  const studentActions = useStudentActions({
+    onPasswordReset: (studentName, password) => {
+      credentialsModal.show({
+        displayName: studentName,
+        username: '',
+        password,
+      });
     },
     onError: (error) => studentsList.setError(error),
   });
@@ -226,6 +250,9 @@ export default function TeacherStudentsPage() {
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Última Práctica
                     </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Acciones
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -234,7 +261,9 @@ export default function TeacherStudentsPage() {
                       key={student.id}
                       student={student}
                       onGradeChange={studentsList.handleGradeChange}
+                      onResetPassword={studentActions.resetPassword}
                       isUpdating={studentsList.updatingStudentId === student.id}
+                      isProcessing={studentActions.processingStudentId === student.id}
                     />
                   ))}
                 </tbody>
@@ -354,30 +383,35 @@ export default function TeacherStudentsPage() {
                 <span className="text-3xl">✓</span>
               </div>
               <Heading level={2} size="md">
-                Estudiante Creado
+                {credentialsModal.credentials.username ? 'Estudiante Creado' : 'Nueva Contraseña'}
               </Heading>
               <Text variant="secondary" className="mt-2">
-                Comparte estas credenciales con <strong>{credentialsModal.credentials.displayName}</strong>
+                {credentialsModal.credentials.username
+                  ? <>Comparte estas credenciales con <strong>{credentialsModal.credentials.displayName}</strong></>
+                  : <>Nueva contraseña para <strong>{credentialsModal.credentials.displayName}</strong></>
+                }
               </Text>
             </div>
 
             <div className="space-y-4 mb-6">
-              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Text size="sm" variant="secondary">Usuario</Text>
-                    <Text className="font-mono font-medium">
-                      {credentialsModal.credentials.username}
-                    </Text>
+              {credentialsModal.credentials.username && (
+                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Text size="sm" variant="secondary">Usuario</Text>
+                      <Text className="font-mono font-medium">
+                        {credentialsModal.credentials.username}
+                      </Text>
+                    </div>
+                    <button
+                      onClick={() => credentialsModal.copyToClipboard(credentialsModal.credentials!.username, 'username')}
+                      className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors"
+                    >
+                      {credentialsModal.copiedField === 'username' ? '✓ Copiado' : 'Copiar'}
+                    </button>
                   </div>
-                  <button
-                    onClick={() => credentialsModal.copyToClipboard(credentialsModal.credentials!.username, 'username')}
-                    className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors"
-                  >
-                    {credentialsModal.copiedField === 'username' ? '✓ Copiado' : 'Copiar'}
-                  </button>
                 </div>
-              </div>
+              )}
 
               <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
                 <div className="flex items-center justify-between">
@@ -399,7 +433,10 @@ export default function TeacherStudentsPage() {
 
             <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl mb-6">
               <Text size="sm" className="text-amber-700 dark:text-amber-300">
-                ⚠️ Guarda estas credenciales ahora. La contraseña no se puede recuperar después.
+                {credentialsModal.credentials.username
+                  ? 'Guarda estas credenciales. Puedes resetear la contraseña desde la tabla si es necesario.'
+                  : 'Comparte esta nueva contraseña con el estudiante.'
+                }
               </Text>
             </div>
 
