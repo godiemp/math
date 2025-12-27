@@ -126,33 +126,44 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 {/* Center point */}
                 <circle cx="110" cy="110" r="4" fill="#92400e" />
 
-                {/* Radius line */}
+                {/* Radius lines - bounding the sector */}
+                {/* First radius: from center to top (0° = 12 o'clock) */}
                 <line
                   x1="110"
                   y1="110"
-                  x2="192"
-                  y2="110"
+                  x2="110"
+                  y2="28"
+                  stroke="#7c3aed"
+                  strokeWidth="3"
+                  strokeDasharray="6,3"
+                />
+                {/* Second radius: from center to 45° position */}
+                <line
+                  x1="110"
+                  y1="110"
+                  x2={110 + 82 * Math.cos((-45) * Math.PI / 180)}
+                  y2={110 + 82 * Math.sin((-45) * Math.PI / 180)}
                   stroke="#7c3aed"
                   strokeWidth="3"
                   strokeDasharray="6,3"
                 />
 
-                {/* Radius label */}
-                <rect x="120" y="115" width="70" height="22" fill="white" stroke="#7c3aed" strokeWidth="1" rx="4" />
-                <text x="155" y="130" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#7c3aed">
+                {/* Radius label - along the second radius */}
+                <rect x="140" y="55" width="70" height="22" fill="white" stroke="#7c3aed" strokeWidth="1" rx="4" />
+                <text x="175" y="70" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#7c3aed">
                   r = 20 cm
                 </text>
 
                 {/* Angle arc - from 12 o'clock to 45° position */}
                 <path
-                  d={`M 110 90 A 20 20 0 0 1 ${110 + 20 * Math.cos((-45) * Math.PI / 180)} ${110 + 20 * Math.sin((-45) * Math.PI / 180)}`}
+                  d={`M 110 85 A 25 25 0 0 1 ${110 + 25 * Math.cos((-45) * Math.PI / 180)} ${110 + 25 * Math.sin((-45) * Math.PI / 180)}`}
                   fill="none"
                   stroke="#dc2626"
                   strokeWidth="2"
                 />
 
                 {/* Angle label - positioned at ~22.5° (middle of the arc) */}
-                <text x={110 + 28 * Math.cos((-22.5) * Math.PI / 180)} y={110 + 28 * Math.sin((-22.5) * Math.PI / 180)} textAnchor="middle" fontSize="11" fontWeight="bold" fill="#dc2626">
+                <text x={110 + 38 * Math.cos((-22.5) * Math.PI / 180)} y={110 + 38 * Math.sin((-22.5) * Math.PI / 180)} textAnchor="middle" fontSize="12" fontWeight="bold" fill="#dc2626">
                   45°
                 </text>
               </svg>
@@ -253,13 +264,33 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             {/* Center point */}
             <circle cx="90" cy="90" r="4" fill="#92400e" />
 
+            {/* Radius lines - bounding the sector */}
+            <line x1="90" y1="90" x2="90" y2="15" stroke="#7c3aed" strokeWidth="2" strokeDasharray="4,2" />
+            <line
+              x1="90"
+              y1="90"
+              x2={90 + 75 * Math.cos((-45) * Math.PI / 180)}
+              y2={90 + 75 * Math.sin((-45) * Math.PI / 180)}
+              stroke="#7c3aed"
+              strokeWidth="2"
+              strokeDasharray="4,2"
+            />
+
+            {/* Angle arc indicator */}
+            <path
+              d={`M 90 70 A 20 20 0 0 1 ${90 + 20 * Math.cos((-45) * Math.PI / 180)} ${90 + 20 * Math.sin((-45) * Math.PI / 180)}`}
+              fill="none"
+              stroke="#dc2626"
+              strokeWidth="2"
+            />
+
             {/* Radius label */}
-            <text x="130" y="85" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#7c3aed">
-              r = 20
+            <text x={90 + 45 * Math.cos((-22.5) * Math.PI / 180) + 20} y={90 + 45 * Math.sin((-22.5) * Math.PI / 180)} textAnchor="middle" fontSize="11" fontWeight="bold" fill="#7c3aed">
+              r=20
             </text>
 
-            {/* Angle label */}
-            <text x="108" y="78" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#dc2626">
+            {/* Angle label - positioned at middle of angle arc */}
+            <text x={90 + 32 * Math.cos((-22.5) * Math.PI / 180)} y={90 + 32 * Math.sin((-22.5) * Math.PI / 180)} textAnchor="middle" fontSize="11" fontWeight="bold" fill="#dc2626">
               45°
             </text>
 
