@@ -102,10 +102,13 @@ const scenarios: Scenario[] = [
         <path d={arcPath(60, 60, 50, 0, 30)} fill="none" stroke="#7c3aed" strokeWidth="4" strokeLinecap="round" />
         {/* Minute hand at 12 o'clock */}
         <line x1="60" y1="60" x2="60" y2="10" stroke="#1f2937" strokeWidth="2" />
-        {/* Minute hand end position (5 min later) */}
+        {/* Minute hand end position (5 min later = 30°) */}
         <line x1="60" y1="60" x2={60 + 50 * Math.cos((-60) * Math.PI / 180)} y2={60 + 50 * Math.sin((-60) * Math.PI / 180)} stroke="#7c3aed" strokeWidth="2" strokeDasharray="4,2" />
         <circle cx="60" cy="60" r="4" fill="#1f2937" />
-        <text x="80" y="40" fontSize="8" fontWeight="bold" fill="#7c3aed">30°</text>
+        {/* Angle arc indicator near center */}
+        <path d={arcPath(60, 60, 15, 0, 30)} fill="none" stroke="#f59e0b" strokeWidth="2" />
+        {/* Angle label positioned at middle of angle (15°) */}
+        <text x={60 + 24 * Math.cos((-75) * Math.PI / 180)} y={60 + 24 * Math.sin((-75) * Math.PI / 180)} fontSize="8" fontWeight="bold" fill="#7c3aed">30°</text>
         <text x="65" y="22" fontSize="7" fill="#dc2626">12cm</text>
       </svg>
     ),
