@@ -98,20 +98,30 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 Imagen (k=2)
               </text>
 
-              {/* Dashed rays from center */}
+              {/* Dashed rays from center through all 3 vertices */}
               {originalTriangle.map((p, i) => {
                 const t = applyHomotecia(p, center, 2);
+                // Extend line slightly past the transformed point
+                const dx = t.x - center.x;
+                const dy = t.y - center.y;
+                const extendedX = center.x + dx * 1.1;
+                const extendedY = center.y + dy * 1.1;
                 return (
-                  <line
-                    key={i}
-                    x1={center.x}
-                    y1={center.y}
-                    x2={t.x}
-                    y2={t.y}
-                    stroke="#6b7280"
-                    strokeWidth="1"
-                    strokeDasharray="5,5"
-                  />
+                  <g key={i}>
+                    <line
+                      x1={center.x}
+                      y1={center.y}
+                      x2={Math.max(0, Math.min(350, extendedX))}
+                      y2={Math.max(0, Math.min(280, extendedY))}
+                      stroke="#6b7280"
+                      strokeWidth="1.5"
+                      strokeDasharray="6,4"
+                      opacity="0.7"
+                    />
+                    {/* Vertex markers */}
+                    <circle cx={p.x} cy={p.y} r="4" fill="#1d4ed8" />
+                    <circle cx={t.x} cy={t.y} r="4" fill="#16a34a" />
+                  </g>
                 );
               })}
             </svg>
