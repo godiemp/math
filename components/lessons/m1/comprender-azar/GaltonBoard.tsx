@@ -69,8 +69,10 @@ export default function GaltonBoard({
   // Board dimensions - taller to show balls stacking
   const boardWidth = 320;
   const boardHeight = 400;
-  const pegRadius = 3;
-  const ballRadius = 4;
+  // Peg and ball sizes must satisfy: gap = spacing - pegDiameter < ballDiameter
+  // With spacing ≈ 29 (boardWidth/numBins), we need larger pegs and balls
+  const pegRadius = 8;
+  const ballRadius = 7;
   const numBins = rows + 1;
   const binAreaHeight = 120; // Height reserved for ball stacking
   const pegAreaBottom = boardHeight - binAreaHeight;
@@ -93,12 +95,11 @@ export default function GaltonBoard({
   }, []);
 
   // Calculate peg position
-  // For proper bell curve distribution:
-  // 1. gap = spacing - pegDiameter must be <= ballDiameter (ball can't slip through)
-  // 2. spacing - 2*pegRadius should be close to ballDiameter (ball touches pegs but not both at once)
-  // With pegRadius=3 (diameter=6) and ballRadius=4 (diameter=8):
-  // spacing=14 gives gap=8 (exactly ballDiameter) and inner gap=8 (exactly ballDiameter)
-  const horizontalSpacing = 14;
+  // CRITICAL: horizontalSpacing must equal bin width so peg grid aligns with bins!
+  // The bottom row of pegs (10 pegs) creates 11 gaps that map to 11 bins.
+  // With pegRadius=8 (diameter=16) and ballRadius=7 (diameter=14):
+  // gap = 29 - 16 = 13 < 14 (ballDiameter) ✓ balls can't slip through
+  const horizontalSpacing = boardWidth / numBins; // ≈ 29.09
 
   const getPegPosition = useCallback(
     (row: number, col: number) => {
