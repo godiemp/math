@@ -15,15 +15,12 @@ import {
 import MathDisplay from '@/components/math/MathDisplay';
 
 type Phase = 'scenario' | 'question' | 'reveal' | 'result';
-type WhyPhase = 'triangles' | 'parallel' | 'angle-alpha' | 'angle-90' | 'angle-beta' | 'conclusion';
+type WhyPhase = 'overlay' | 'angles' | 'conclusion';
 
-const WHY_PHASES: WhyPhase[] = ['triangles', 'parallel', 'angle-alpha', 'angle-90', 'angle-beta', 'conclusion'];
+const WHY_PHASES: WhyPhase[] = ['overlay', 'angles', 'conclusion'];
 const WHY_PHASE_DURATIONS: Record<WhyPhase, number> = {
-  'triangles': 1500,
-  'parallel': 2000,
-  'angle-alpha': 2500,
-  'angle-90': 2000,
-  'angle-beta': 2500,
+  'overlay': 2500,
+  'angles': 3000,
   'conclusion': 0, // Manual advance
 };
 
@@ -116,167 +113,126 @@ function ShadowScene({ showSolution = false }: { showSolution?: boolean }) {
 
 interface SimilarTrianglesProps {
   whyPhase: WhyPhase;
-  onAdvance: () => void;
   isPlaying: boolean;
   onTogglePlay: () => void;
 }
 
-function SimilarTrianglesExplanation({ whyPhase, onAdvance, isPlaying, onTogglePlay }: SimilarTrianglesProps) {
+function SimilarTrianglesExplanation({ whyPhase, isPlaying, onTogglePlay }: SimilarTrianglesProps) {
   const phaseIndex = WHY_PHASES.indexOf(whyPhase);
 
   // Visibility flags
-  const showTriangles = phaseIndex >= 0;
-  const showParallel = phaseIndex >= 1;
-  const showAlpha = phaseIndex >= 2;
-  const show90 = phaseIndex >= 3;
-  const showBeta = phaseIndex >= 4;
-  const showConclusion = phaseIndex >= 5;
+  const showOverlay = phaseIndex >= 0;
+  const showAngles = phaseIndex >= 1;
+  const showConclusion = phaseIndex >= 2;
 
   const phaseTexts: Record<WhyPhase, string> = {
-    'triangles': 'Observa los dos triangulos formados',
-    'parallel': 'Los rayos del sol son PARALELOS',
-    'angle-alpha': 'Crean el MISMO angulo α con el suelo',
-    'angle-90': 'Los objetos verticales forman angulo de 90°',
-    'angle-beta': 'Por lo tanto β = 180° - 90° - α es IGUAL en ambos',
-    'conclusion': '¡Los 3 angulos son iguales → Triangulos SEMEJANTES!',
+    'overlay': 'El triangulo pequeño esta DENTRO del grande, compartiendo el angulo α',
+    'angles': '¡Comparten los 3 angulos: α, 90°, y β!',
+    'conclusion': 'Triangulos SEMEJANTES → Lados PROPORCIONALES',
   };
 
   return (
     <div className="space-y-4">
-      {/* SVG with animated elements */}
-      <svg viewBox="0 0 520 240" className="w-full max-w-xl mx-auto">
+      {/* SVG with superimposed triangles */}
+      <svg viewBox="0 0 420 220" className="w-full max-w-lg mx-auto">
         {/* Background */}
-        <rect x="0" y="0" width="520" height="240" className="fill-gray-50 dark:fill-gray-900" rx="8" />
+        <rect x="0" y="0" width="420" height="220" className="fill-gray-50 dark:fill-gray-900" rx="8" />
 
         {/* Ground line */}
-        <line x1="20" y1="200" x2="500" y2="200" className="stroke-gray-300 dark:stroke-gray-600" strokeWidth="2" />
+        <line x1="30" y1="190" x2="390" y2="190" className="stroke-gray-300 dark:stroke-gray-600" strokeWidth="2" />
 
-        {/* Parallel sun rays - shown from phase 2 */}
-        {showParallel && (
-          <g className="animate-fadeIn">
-            <defs>
-              <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-                <polygon points="0,0 6,3 0,6" className="fill-yellow-500" />
-              </marker>
-            </defs>
-            <line x1="10" y1="20" x2="120" y2="200" className="stroke-yellow-500" strokeWidth="2" strokeDasharray="8,4" />
-            <line x1="60" y1="20" x2="170" y2="200" className="stroke-yellow-500" strokeWidth="2" strokeDasharray="8,4" />
-            <line x1="280" y1="20" x2="500" y2="200" className="stroke-yellow-500" strokeWidth="2" strokeDasharray="8,4" />
-            <line x1="330" y1="20" x2="450" y2="140" className="stroke-yellow-500" strokeWidth="2" strokeDasharray="8,4" />
-            {/* Parallel symbol */}
-            <text x="180" y="30" className="fill-yellow-600 dark:fill-yellow-400 text-xs font-bold">∥ paralelos</text>
-          </g>
-        )}
-
-        {/* SMALL TRIANGLE (person) */}
-        {showTriangles && (
+        {/* LARGE TRIANGLE (building) - vértice α en (370, 190) */}
+        {showOverlay && (
           <g className="animate-fadeIn">
             <polygon
-              points="60,160 60,200 120,200"
-              className="fill-blue-200/60 dark:fill-blue-800/40 stroke-blue-600 dark:stroke-blue-400"
+              points="70,50 70,190 370,190"
+              className="fill-purple-200/40 dark:fill-purple-800/30 stroke-purple-600 dark:stroke-purple-400"
               strokeWidth="2"
             />
-            {/* Height dimension line */}
-            <line x1="45" y1="160" x2="45" y2="200" className="stroke-blue-500" strokeWidth="1" />
-            <line x1="40" y1="160" x2="50" y2="160" className="stroke-blue-500" strokeWidth="1" />
-            <line x1="40" y1="200" x2="50" y2="200" className="stroke-blue-500" strokeWidth="1" />
-            <text x="20" y="185" className="fill-blue-600 dark:fill-blue-400 text-xs font-bold">1.6m</text>
+            {/* Height dimension line - left side */}
+            <line x1="55" y1="50" x2="55" y2="190" className="stroke-purple-500" strokeWidth="1" />
+            <line x1="50" y1="50" x2="60" y2="50" className="stroke-purple-500" strokeWidth="1" />
+            <line x1="50" y1="190" x2="60" y2="190" className="stroke-purple-500" strokeWidth="1" />
+            <text x="35" y="125" className="fill-purple-600 dark:fill-purple-400 text-xs font-bold">12m</text>
             {/* Base label */}
-            <text x="90" y="218" textAnchor="middle" className="fill-gray-600 dark:fill-gray-400 text-xs font-medium">2m</text>
+            <text x="220" y="208" textAnchor="middle" className="fill-gray-500 dark:fill-gray-400 text-xs">15m</text>
           </g>
         )}
 
-        {/* LARGE TRIANGLE (building) */}
-        {showTriangles && (
-          <g className="animate-fadeIn">
+        {/* SMALL TRIANGLE (person) - comparte vértice α en (370, 190) */}
+        {showOverlay && (
+          <g className="animate-fadeIn" style={{ animationDelay: '0.3s' }}>
             <polygon
-              points="320,60 320,200 460,200"
-              className="fill-purple-200/60 dark:fill-purple-800/40 stroke-purple-600 dark:stroke-purple-400"
-              strokeWidth="2"
+              points="330,150 330,190 370,190"
+              className="fill-blue-300/70 dark:fill-blue-700/50 stroke-blue-600 dark:stroke-blue-400"
+              strokeWidth="3"
             />
             {/* Height dimension line */}
-            <line x1="305" y1="60" x2="305" y2="200" className="stroke-purple-500" strokeWidth="1" />
-            <line x1="300" y1="60" x2="310" y2="60" className="stroke-purple-500" strokeWidth="1" />
-            <line x1="300" y1="200" x2="310" y2="200" className="stroke-purple-500" strokeWidth="1" />
-            <text x="280" y="135" className="fill-purple-600 dark:fill-purple-400 text-xs font-bold">12m</text>
+            <line x1="318" y1="150" x2="318" y2="190" className="stroke-blue-500" strokeWidth="1" />
+            <line x1="313" y1="150" x2="323" y2="150" className="stroke-blue-500" strokeWidth="1" />
+            <line x1="313" y1="190" x2="323" y2="190" className="stroke-blue-500" strokeWidth="1" />
+            <text x="295" y="175" className="fill-blue-600 dark:fill-blue-400 text-xs font-bold">1.6m</text>
             {/* Base label */}
-            <text x="390" y="218" textAnchor="middle" className="fill-gray-600 dark:fill-gray-400 text-xs font-medium">15m</text>
+            <text x="350" y="208" textAnchor="middle" className="fill-gray-500 dark:fill-gray-400 text-xs">2m</text>
           </g>
         )}
 
-        {/* ANGLE ALPHA (α) - hypotenuse with base */}
-        {showAlpha && (
+        {/* ANGLE MARKERS - shown in 'angles' phase */}
+        {showAngles && (
           <g className="animate-fadeIn">
-            {/* Small triangle α arc */}
+            {/* Ángulo α COMPARTIDO (esquina inferior derecha) */}
             <path
-              d="M 108,200 A 12,12 0 0,1 117,192"
+              d="M 350,190 A 20,20 0 0,1 366,178"
               className="stroke-orange-500"
-              strokeWidth="2"
+              strokeWidth="3"
               fill="none"
             />
-            <text x="125" y="195" className="fill-orange-600 dark:fill-orange-400 text-sm font-bold">α</text>
+            <text x="378" y="195" className="fill-orange-600 dark:fill-orange-400 text-base font-bold">α</text>
 
-            {/* Large triangle α arc */}
+            {/* 90° triángulo grande (esquina inferior izquierda) */}
+            <rect x="70" y="178" width="12" height="12" className="fill-none stroke-purple-500" strokeWidth="2" />
+            <text x="88" y="175" className="fill-purple-600 dark:fill-purple-400 text-xs font-bold">90°</text>
+
+            {/* 90° triángulo pequeño */}
+            <rect x="330" y="180" width="10" height="10" className="fill-none stroke-blue-500" strokeWidth="2" />
+
+            {/* β triángulo grande (vértice superior) */}
             <path
-              d="M 440,200 A 20,20 0 0,1 454,186"
-              className="stroke-orange-500"
-              strokeWidth="2"
-              fill="none"
-            />
-            <text x="465" y="192" className="fill-orange-600 dark:fill-orange-400 text-sm font-bold">α</text>
-
-            {/* Equality indicator */}
-            <text x="220" y="195" className="fill-orange-600 dark:fill-orange-400 text-sm font-bold">=</text>
-          </g>
-        )}
-
-        {/* ANGLE 90° - right angle markers */}
-        {show90 && (
-          <g className="animate-fadeIn">
-            {/* Small triangle 90° square */}
-            <rect x="60" y="188" width="12" height="12" className="fill-none stroke-blue-500" strokeWidth="1.5" />
-            <text x="78" y="182" className="fill-blue-600 dark:fill-blue-400 text-xs font-bold">90°</text>
-
-            {/* Large triangle 90° square */}
-            <rect x="320" y="188" width="12" height="12" className="fill-none stroke-purple-500" strokeWidth="1.5" />
-            <text x="338" y="182" className="fill-purple-600 dark:fill-purple-400 text-xs font-bold">90°</text>
-
-            {/* Equality indicator */}
-            <text x="220" y="175" className="fill-blue-600 dark:fill-blue-400 text-sm font-bold">=</text>
-          </g>
-        )}
-
-        {/* ANGLE BETA (β) - top angle */}
-        {showBeta && (
-          <g className="animate-fadeIn">
-            {/* Small triangle β arc */}
-            <path
-              d="M 60,172 A 12,12 0 0,1 70,165"
+              d="M 70,68 A 18,18 0 0,1 85,55"
               className="stroke-green-500"
               strokeWidth="2"
               fill="none"
             />
-            <text x="72" y="158" className="fill-green-600 dark:fill-green-400 text-sm font-bold">β</text>
+            <text x="92" y="52" className="fill-green-600 dark:fill-green-400 text-sm font-bold">β</text>
 
-            {/* Large triangle β arc */}
+            {/* β triángulo pequeño */}
             <path
-              d="M 320,80 A 20,20 0 0,1 336,68"
+              d="M 330,162 A 12,12 0 0,1 340,153"
               className="stroke-green-500"
               strokeWidth="2"
               fill="none"
             />
-            <text x="342" y="62" className="fill-green-600 dark:fill-green-400 text-sm font-bold">β</text>
-
-            {/* Equality indicator */}
-            <text x="220" y="155" className="fill-green-600 dark:fill-green-400 text-sm font-bold">=</text>
+            <text x="343" y="148" className="fill-green-600 dark:fill-green-400 text-sm font-bold">β</text>
           </g>
         )}
 
-        {/* CONCLUSION - similarity symbol */}
+        {/* CONCLUSION - similarity indicators */}
         {showConclusion && (
           <g className="animate-fadeIn">
-            <rect x="190" y="100" width="80" height="40" rx="8" className="fill-green-100 dark:fill-green-900/50 stroke-green-500" strokeWidth="2" />
-            <text x="230" y="125" textAnchor="middle" className="fill-green-700 dark:fill-green-300 text-lg font-bold">∼</text>
+            {/* Similarity symbol between triangles */}
+            <rect x="175" y="85" width="70" height="35" rx="6" className="fill-green-100 dark:fill-green-900/50 stroke-green-500" strokeWidth="2" />
+            <text x="210" y="108" textAnchor="middle" className="fill-green-700 dark:fill-green-300 text-lg font-bold">∼</text>
+
+            {/* Connecting arrows */}
+            <line x1="140" y1="100" x2="175" y2="100" className="stroke-green-500" strokeWidth="1.5" markerEnd="url(#arrow)" />
+            <line x1="245" y1="100" x2="290" y2="130" className="stroke-green-500" strokeWidth="1.5" markerEnd="url(#arrow)" />
+
+            {/* Arrow marker definition */}
+            <defs>
+              <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                <polygon points="0,0 8,4 0,8" className="fill-green-500" />
+              </marker>
+            </defs>
           </g>
         )}
       </svg>
@@ -305,8 +261,8 @@ function SimilarTrianglesExplanation({ whyPhase, onAdvance, isPlaying, onToggleP
       </div>
 
       {/* Controls */}
-      <div className="flex justify-center gap-3">
-        {whyPhase !== 'conclusion' && (
+      {whyPhase !== 'conclusion' && (
+        <div className="flex justify-center">
           <button
             onClick={onTogglePlay}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -318,16 +274,8 @@ function SimilarTrianglesExplanation({ whyPhase, onAdvance, isPlaying, onToggleP
             <Play size={16} className={isPlaying ? 'animate-pulse' : ''} />
             {isPlaying ? 'Reproduciendo...' : 'Reproducir'}
           </button>
-        )}
-        {whyPhase === 'conclusion' && (
-          <button
-            onClick={onAdvance}
-            className="flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 transition-colors"
-          >
-            ¡Entendido! <ArrowRight size={18} />
-          </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -336,7 +284,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('scenario');
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
-  const [whyPhase, setWhyPhase] = useState<WhyPhase>('triangles');
+  const [whyPhase, setWhyPhase] = useState<WhyPhase>('overlay');
   const [isPlaying, setIsPlaying] = useState(false);
 
   const isCorrect = selectedAnswer === CORRECT_ANSWER;
@@ -366,7 +314,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   // Start playing automatically when entering result phase
   useEffect(() => {
     if (phase === 'result') {
-      setWhyPhase('triangles');
+      setWhyPhase('overlay');
       setIsPlaying(true);
     }
   }, [phase]);
@@ -537,9 +485,6 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
             <SimilarTrianglesExplanation
               whyPhase={whyPhase}
-              onAdvance={() => {
-                // Move to showing the InsightCard after conclusion
-              }}
               isPlaying={isPlaying}
               onTogglePlay={() => setIsPlaying(!isPlaying)}
             />
