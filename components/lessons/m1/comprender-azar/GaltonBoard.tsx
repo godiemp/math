@@ -69,10 +69,12 @@ export default function GaltonBoard({
   // Board dimensions - taller to show balls stacking
   const boardWidth = 320;
   const boardHeight = 400;
-  // Peg and ball sizes must satisfy: gap = spacing - pegDiameter < ballDiameter
-  // With spacing ≈ 29 (boardWidth/numBins), we need larger pegs and balls
-  const pegRadius = 8;
-  const ballRadius = 7;
+  // For proper Galton board: ball must fit through gap between pegs
+  // gap = spacing - pegDiameter MUST BE > ballDiameter
+  // With spacing ≈ 29: pegRadius=6 (diam=12), ballRadius=5 (diam=10)
+  // gap = 29 - 12 = 17 > 10 ✓ balls can pass through
+  const pegRadius = 6;
+  const ballRadius = 5;
   const numBins = rows + 1;
   const binAreaHeight = 120; // Height reserved for ball stacking
   const pegAreaBottom = boardHeight - binAreaHeight;
@@ -95,10 +97,9 @@ export default function GaltonBoard({
   }, []);
 
   // Calculate peg position
-  // CRITICAL: horizontalSpacing must equal bin width so peg grid aligns with bins!
-  // The bottom row of pegs (10 pegs) creates 11 gaps that map to 11 bins.
-  // With pegRadius=8 (diameter=16) and ballRadius=7 (diameter=14):
-  // gap = 29 - 16 = 13 < 14 (ballDiameter) ✓ balls can't slip through
+  // horizontalSpacing = bin width so peg grid aligns with bins
+  // With pegRadius=6 (diameter=12) and ballRadius=5 (diameter=10):
+  // gap = 29 - 12 = 17 > 10 (ballDiameter) ✓ balls CAN pass through gaps
   const horizontalSpacing = boardWidth / numBins; // ≈ 29.09
 
   const getPegPosition = useCallback(
