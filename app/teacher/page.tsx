@@ -231,6 +231,21 @@ export default function TeacherDashboard() {
 
               <div className="space-y-2">
                 <button
+                  onClick={() => router.push('/mini-lessons')}
+                  className="w-full flex items-center gap-3 p-3 rounded-lg border-2 border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 transition-all text-left"
+                >
+                  <span className="text-xl">🔴</span>
+                  <div className="flex-1">
+                    <span className="font-medium text-red-700 dark:text-red-300 block">
+                      Iniciar clase en vivo
+                    </span>
+                    <span className="text-xs text-red-600 dark:text-red-400">
+                      Sincroniza lecciones con estudiantes
+                    </span>
+                  </div>
+                </button>
+
+                <button
                   onClick={() => router.push('/teacher/students')}
                   className="w-full flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 transition-all text-left"
                 >

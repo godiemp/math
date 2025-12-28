@@ -15,3 +15,10 @@ export {
   type UseStudentActionsOptions,
   type UseStudentActionsReturn,
 } from './useStudentActions';
+export {
+  useLessonControl,
+  type UseLessonControlReturn,
+  type ActiveLesson,
+  type ConnectedStudent,
+  type StudentProgress,
+} from './useLessonControl';
