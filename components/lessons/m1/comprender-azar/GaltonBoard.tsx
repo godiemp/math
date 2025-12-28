@@ -136,8 +136,8 @@ export default function GaltonBoard({
         const pos = getPegPosition(row, col);
         const peg = Matter.Bodies.circle(pos.x, pos.y, pegRadius, {
           isStatic: true,
-          restitution: 0.4,
-          friction: 0.1,
+          restitution: 0.55,  // Increased for better bounces
+          friction: 0.15,
           label: 'peg',
         });
         pegs.push(peg);
@@ -347,21 +347,24 @@ export default function GaltonBoard({
     if (!engine) return;
 
     const ball = Matter.Bodies.circle(
-      boardWidth / 2 + (Math.random() - 0.5) * 2, // Small random offset to hit first peg
+      boardWidth / 2 + (Math.random() - 0.5) * 50, // Fix 1: Large random offset (±25px) for path variance
       5,
       ballRadius,
       {
         // Physics tuned for bell curve distribution:
-        // - High frictionAir dampens horizontal velocity between rows (critical for 50-50 bounce)
-        // - Lower restitution = less chaotic bounces
-        // - Higher friction = better energy dissipation at peg contact
-        restitution: 0.3,
-        friction: 0.1,
-        frictionAir: 0.025,
+        restitution: 0.55,     // Fix 4: Higher = more energetic bounces
+        friction: 0.15,
+        frictionAir: 0.08,     // Fix 3: Higher = dampens horizontal momentum between rows
         density: 0.002,
         label: `ball-${runIdRef.current}-${ballsReleasedRef.current++}`,
       }
     );
+
+    // Fix 2: Add initial velocity randomization to break Matter.js determinism
+    Matter.Body.setVelocity(ball, {
+      x: (Math.random() - 0.5) * 3, // ±1.5 units horizontal
+      y: 0,
+    });
 
     Matter.Composite.add(engine.world, ball);
     allBallsRef.current.add(ball);
