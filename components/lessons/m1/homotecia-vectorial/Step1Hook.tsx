@@ -156,10 +156,10 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   C
                 </text>
 
-                {/* Window */}
+                {/* Window at coordinate (4, 3) → SVG (100, 70) */}
                 <rect
-                  x={65}
-                  y={80}
+                  x={95}
+                  y={65}
                   width={10}
                   height={10}
                   className="fill-cyan-200 dark:fill-cyan-700 stroke-cyan-500"
@@ -176,8 +176,8 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   Puerta (2, 1)
                 </text>
                 <text
-                  x={100}
-                  y={85}
+                  x={115}
+                  y={68}
                   className="fill-cyan-600 dark:fill-cyan-400 text-[7px]"
                 >
                   Ventana (4, 3)
@@ -335,24 +335,24 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   (2, 1)
                 </text>
 
-                {/* Original window */}
-                <circle cx={80} cy={110} r={4} className="fill-blue-400 stroke-blue-600" strokeWidth="1" />
-                <text x={90} y={108} className="fill-blue-600 text-[6px]">
+                {/* Original window P(4,3) → SVG (100, 90) */}
+                <circle cx={100} cy={90} r={4} className="fill-blue-400 stroke-blue-600" strokeWidth="1" />
+                <text x={110} y={88} className="fill-blue-600 text-[6px]">
                   (4, 3)
                 </text>
 
-                {/* Scaled window */}
-                <circle cx={120} cy={70} r={5} className="fill-green-500 stroke-green-700" strokeWidth="1" />
-                <text x={130} y={68} className="fill-green-600 text-[6px] font-bold">
+                {/* Scaled window P'(6,5) → SVG (140, 50) */}
+                <circle cx={140} cy={50} r={5} className="fill-green-500 stroke-green-700" strokeWidth="1" />
+                <text x={150} y={48} className="fill-green-600 text-[6px] font-bold">
                   (6, 5)
                 </text>
 
                 {/* Arrow from original to scaled */}
                 <line
-                  x1={83}
-                  y1={107}
-                  x2={117}
-                  y2={73}
+                  x1={103}
+                  y1={87}
+                  x2={137}
+                  y2={53}
                   className="stroke-purple-500"
                   strokeWidth="1.5"
                   strokeDasharray="4"
@@ -372,7 +372,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 </defs>
 
                 {/* Scale factor label */}
-                <text x={105} y={95} className="fill-purple-600 text-[7px] font-bold">
+                <text x={125} y={75} className="fill-purple-600 text-[7px] font-bold">
                   k = 2
                 </text>
               </svg>
