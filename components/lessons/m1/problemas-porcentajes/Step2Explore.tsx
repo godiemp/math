@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, Lightbulb, Check } from 'lucide-react';
+import { ArrowRight, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { useExplorePhases } from '@/hooks/lessons';
+import { ExampleProgressDots, ActionButton } from '@/components/lessons/primitives';
 
 type Phase = 'intro' | 'discover' | 'pattern';
 
@@ -100,28 +102,33 @@ const colorClasses: Record<string, { bg: string; border: string; text: string }>
 };
 
 export default function Step2Explore({ onComplete, isActive }: LessonStepProps) {
-  const [phase, setPhase] = useState<Phase>('intro');
-  const [currentType, setCurrentType] = useState(0);
-  const [discoveredTypes, setDiscoveredTypes] = useState<string[]>([]);
+  const {
+    phase,
+    nextPhase,
+    currentExample: problemType,
+    currentExampleIndex,
+    discoveredIds,
+    isLastExample,
+    discoverCurrent,
+    nextExample,
+  } = useExplorePhases<Phase, ProblemType>({
+    phases: ['intro', 'discover', 'pattern'],
+    examples: PROBLEM_TYPES,
+    getExampleId: (ex) => ex.id,
+  });
+
   const [showSteps, setShowSteps] = useState(false);
 
-  const problemType = PROBLEM_TYPES[currentType];
-  const colors = colorClasses[problemType.color];
+  const colors = problemType ? colorClasses[problemType.color] : colorClasses.blue;
 
   const handleDiscoverType = () => {
-    if (!discoveredTypes.includes(problemType.id)) {
-      setDiscoveredTypes([...discoveredTypes, problemType.id]);
-    }
+    discoverCurrent();
     setShowSteps(true);
   };
 
   const handleNextType = () => {
-    if (currentType < PROBLEM_TYPES.length - 1) {
-      setCurrentType(currentType + 1);
-      setShowSteps(false);
-    } else {
-      setPhase('pattern');
-    }
+    setShowSteps(false);
+    nextExample();
   };
 
   if (!isActive) return null;
@@ -184,37 +191,24 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           </div>
 
           <div className="flex justify-center">
-            <button
-              onClick={() => setPhase('discover')}
-              className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 transition-all shadow-lg"
-            >
-              <span>Explorar los 4 tipos</span>
-              <ArrowRight size={20} />
-            </button>
+            <ActionButton onClick={nextPhase} variant="primary" icon={<ArrowRight size={20} />}>
+              Explorar los 4 tipos
+            </ActionButton>
           </div>
         </div>
       )}
 
-      {phase === 'discover' && (
+      {phase === 'discover' && problemType && (
         <div className="space-y-6 animate-fadeIn">
           {/* Progress */}
-          <div className="flex justify-center gap-2">
-            {PROBLEM_TYPES.map((type, i) => (
-              <div
-                key={type.id}
-                className={cn(
-                  'w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all',
-                  discoveredTypes.includes(type.id)
-                    ? 'bg-green-500 text-white'
-                    : i === currentType
-                    ? 'bg-amber-500 text-white'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-500'
-                )}
-              >
-                {discoveredTypes.includes(type.id) ? <Check size={18} /> : i + 1}
-              </div>
-            ))}
-          </div>
+          <ExampleProgressDots
+            total={PROBLEM_TYPES.length}
+            currentIndex={currentExampleIndex}
+            discoveredIds={discoveredIds}
+            getExampleId={(i) => PROBLEM_TYPES[i].id}
+            size="lg"
+            showCounter={false}
+          />
 
           {/* Problem type card */}
           <div className={cn('rounded-2xl p-6 border', colors.bg, colors.border)}>
@@ -252,12 +246,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
               {!showSteps ? (
                 <div className="flex justify-center">
-                  <button
-                    onClick={handleDiscoverType}
-                    className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
-                  >
+                  <ActionButton onClick={handleDiscoverType} variant="success">
                     Ver solución
-                  </button>
+                  </ActionButton>
                 </div>
               ) : (
                 <div className="space-y-4 animate-fadeIn">
@@ -280,13 +271,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
           {showSteps && (
             <div className="flex justify-center">
-              <button
-                onClick={handleNextType}
-                className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 transition-all shadow-lg"
-              >
-                <span>{currentType < PROBLEM_TYPES.length - 1 ? 'Siguiente tipo' : 'Ver resumen'}</span>
-                <ArrowRight size={20} />
-              </button>
+              <ActionButton onClick={handleNextType} variant="primary" icon={<ArrowRight size={20} />}>
+                {isLastExample ? 'Ver resumen' : 'Siguiente tipo'}
+              </ActionButton>
             </div>
           )}
         </div>
@@ -333,13 +320,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           </div>
 
           <div className="flex justify-center">
-            <button
-              onClick={onComplete}
-              className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg"
-            >
-              <span>Continuar</span>
-              <ArrowRight size={20} />
-            </button>
+            <ActionButton onClick={onComplete} variant="secondary" icon={<ArrowRight size={20} />}>
+              Continuar
+            </ActionButton>
           </div>
         </div>
       )}
