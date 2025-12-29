@@ -1,16 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 import Matter from 'matter-js';
 
-// Generate random path: array of left/right decisions for each row
-// This simulates the coin flip at each peg level
-function generatePath(rows: number): boolean[] {
-  const path: boolean[] = [];
-  for (let i = 0; i < rows; i++) {
-    path.push(Math.random() > 0.5); // true = right, false = left
-  }
-  return path;
-}
-
 interface UseGaltonEngineOptions {
   rows: number;
   boardWidth: number;
@@ -167,23 +157,23 @@ export function useGaltonEngine({
             ? bodyB
             : null;
 
-        // Apply directional impulse on peg collision
+        // Apply directional impulse on peg collision (50/50 decision at collision time)
         if (ball && peg) {
-          const path = (ball as any).path as boolean[] | undefined;
-          const lastPegId = (ball as any).lastPegId as string | undefined;
+          const lastCollisionRow = (ball as any).lastCollisionRow as number | undefined;
           const pegRow = (peg as any).pegRow as number;
 
-          // Only process if this is a NEW peg (debounce multiple collision events)
-          if (lastPegId !== peg.label && path && pegRow < path.length) {
-            const goRight = path[pegRow];
-            const impulseStrength = 1.2;
+          // Only process if this is a NEW row (one decision per row)
+          if (lastCollisionRow !== pegRow) {
+            // 50/50 decision at collision time!
+            const goRight = Math.random() > 0.5;
+            const impulseStrength = 2.5;
 
             Matter.Body.setVelocity(ball, {
               x: goRight ? impulseStrength : -impulseStrength,
               y: ball.velocity.y,
             });
 
-            (ball as any).lastPegId = peg.label;
+            (ball as any).lastCollisionRow = pegRow;
           }
         }
 
@@ -221,8 +211,6 @@ export function useGaltonEngine({
     const engine = engineRef.current;
     if (!engine) return;
 
-    const path = generatePath(rows);
-
     const ball = Matter.Bodies.circle(
       boardWidth / 2 + (Math.random() - 0.5) * 4,
       5,
@@ -230,18 +218,18 @@ export function useGaltonEngine({
       {
         restitution: 0.6,
         friction: 0.1,
-        frictionAir: 0.01,
+        frictionAir: 0.005, // Reduced to preserve horizontal momentum
         density: 0.001,
         label: `ball-${runIdRef.current}-${ballsReleasedRef.current++}`,
       }
     );
 
-    (ball as any).path = path;
-    (ball as any).lastPegId = null;
+    // Initialize row tracker for collision debouncing
+    (ball as any).lastCollisionRow = -1;
 
     Matter.Composite.add(engine.world, ball);
     allBallsRef.current.add(ball);
-  }, [rows, boardWidth, ballRadius]);
+  }, [boardWidth, ballRadius]);
 
   const startPhysics = useCallback(() => {
     const runner = runnerRef.current;
