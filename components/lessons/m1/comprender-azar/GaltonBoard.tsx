@@ -353,9 +353,9 @@ export default function GaltonBoard({
       ballRadius,
       {
         // Physics tuned for bell curve distribution:
-        restitution: 0.55,     // Fix 4: Higher = more energetic bounces
+        restitution: 0.55,     // Higher = more energetic bounces
         friction: 0.15,
-        frictionAir: 0.08,     // Fix 3: Higher = dampens horizontal momentum between rows
+        frictionAir: 0.01,     // Low = allows horizontal spread for wider bell curve
         density: 0.002,
         label: `ball-${runIdRef.current}-${ballsReleasedRef.current++}`,
       }
