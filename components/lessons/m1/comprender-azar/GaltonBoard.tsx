@@ -21,6 +21,16 @@ const SPEED_MAP = {
   fast: 80,
 };
 
+// Generate random bin index following binomial distribution
+// This simulates n coin flips with probability p of success
+function binomialRandom(n: number, p: number = 0.5): number {
+  let successes = 0;
+  for (let i = 0; i < n; i++) {
+    if (Math.random() < p) successes++;
+  }
+  return successes;
+}
+
 // Color schemes for light/dark mode
 const COLORS = {
   light: {
@@ -208,7 +218,30 @@ export default function GaltonBoard({
 
     Matter.Composite.add(engine.world, [...pegs, ...walls, ...binSensors, ...dividers]);
 
-    // Collision detection for peg bounces and bin sensors
+    // Apply guiding force each physics update to steer balls toward target bins
+    Matter.Events.on(engine, 'beforeUpdate', () => {
+      allBallsRef.current.forEach((ball) => {
+        const targetBin = (ball as any).targetBin;
+        if (targetBin === undefined) return;
+
+        // Calculate target X position
+        const binWidth = boardWidth / numBins;
+        const targetX = binWidth / 2 + targetBin * binWidth;
+        const currentX = ball.position.x;
+        const diff = targetX - currentX;
+
+        // Apply subtle horizontal force toward target bin
+        // Force is proportional to distance but capped
+        const maxForce = 0.00003;
+        const forceStrength = Math.min(Math.abs(diff) * 0.000005, maxForce);
+        Matter.Body.applyForce(ball, ball.position, {
+          x: Math.sign(diff) * forceStrength,
+          y: 0,
+        });
+      });
+    });
+
+    // Collision detection for bin sensors (counting balls)
     Matter.Events.on(engine, 'collisionStart', (event) => {
       event.pairs.forEach((pair) => {
         const { bodyA, bodyB } = pair;
@@ -217,22 +250,11 @@ export default function GaltonBoard({
           : bodyB.label.startsWith('ball-')
           ? bodyB
           : null;
-        const peg = bodyA.label === 'peg' ? bodyA : bodyB.label === 'peg' ? bodyB : null;
         const sensor = bodyA.label.startsWith('bin-sensor-')
           ? bodyA
           : bodyB.label.startsWith('bin-sensor-')
           ? bodyB
           : null;
-
-        // Apply random lateral impulse on peg collision (simulates 50/50 left/right)
-        if (ball && peg) {
-          const randomDirection = Math.random() > 0.5 ? 1 : -1;
-          const impulseStrength = 0.00015 + Math.random() * 0.0001; // Small random impulse
-          Matter.Body.applyForce(ball, ball.position, {
-            x: randomDirection * impulseStrength,
-            y: 0,
-          });
-        }
 
         // Count balls entering bins
         if (ball && sensor && !processedBallsRef.current.has(ball.label)) {
@@ -354,30 +376,34 @@ export default function GaltonBoard({
     };
   }, [isDark, numBins, pegAreaBottom, getBinX]);
 
-  // Release a ball
+  // Release a ball with predetermined target bin (binomial distribution)
   const releaseBall = useCallback(() => {
     const engine = engineRef.current;
     if (!engine) return;
 
-    // Ball starts near center with tiny variance - distribution comes from peg collisions
+    // Predetermine target bin using binomial distribution
+    // This ensures a bell curve distribution regardless of physics
+    const targetBin = binomialRandom(rows);
+
     const ball = Matter.Bodies.circle(
-      boardWidth / 2 + (Math.random() - 0.5) * 4, // ±2px - small variance to break symmetry
+      boardWidth / 2 + (Math.random() - 0.5) * 4, // Small variance to break visual symmetry
       5,
       ballRadius,
       {
-        // Physics tuned for bell curve distribution:
-        restitution: 0.5,      // Moderate bounce
+        restitution: 0.5,
         friction: 0.1,
-        frictionAir: 0.01,     // Low air resistance
+        frictionAir: 0.02,
         density: 0.002,
         label: `ball-${runIdRef.current}-${ballsReleasedRef.current++}`,
       }
     );
 
-    // No initial horizontal velocity - let peg collisions determine path
+    // Store target bin on ball body for guiding force
+    (ball as any).targetBin = targetBin;
+
     Matter.Composite.add(engine.world, ball);
     allBallsRef.current.add(ball);
-  }, []);
+  }, [rows]);
 
   // Notify when distribution changes
   useEffect(() => {
