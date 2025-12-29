@@ -21,14 +21,14 @@ const SPEED_MAP = {
   fast: 80,
 };
 
-// Generate random bin index following binomial distribution
-// This simulates n coin flips with probability p of success
-function binomialRandom(n: number, p: number = 0.5): number {
-  let successes = 0;
-  for (let i = 0; i < n; i++) {
-    if (Math.random() < p) successes++;
+// Generate random path: array of left/right decisions for each row
+// This simulates the coin flip at each peg level
+function generatePath(rows: number): boolean[] {
+  const path: boolean[] = [];
+  for (let i = 0; i < rows; i++) {
+    path.push(Math.random() > 0.5); // true = right, false = left
   }
-  return successes;
+  return path;
 }
 
 // Color schemes for light/dark mode
@@ -147,8 +147,8 @@ export default function GaltonBoard({
         const pos = getPegPosition(row, col);
         const peg = Matter.Bodies.circle(pos.x, pos.y, pegRadius, {
           isStatic: true,
-          restitution: 0.7,   // High bounce for realistic collisions
-          friction: 0.05,     // Low friction for smooth movement
+          restitution: 0.6,   // Good bounce for realistic collisions
+          friction: 0.1,      // Normal friction
           label: 'peg',
         });
         pegs.push(peg);
@@ -218,32 +218,7 @@ export default function GaltonBoard({
 
     Matter.Composite.add(engine.world, [...pegs, ...walls, ...binSensors, ...dividers]);
 
-    // Apply guiding force only while ball is in peg area (not in bins)
-    Matter.Events.on(engine, 'beforeUpdate', () => {
-      allBallsRef.current.forEach((ball) => {
-        const targetBin = (ball as any).targetBin;
-        if (targetBin === undefined) return;
-
-        // Only apply force in peg area - let physics handle bins naturally
-        if (ball.position.y > pegAreaBottom - 20) return;
-
-        // Calculate target X position
-        const binWidth = boardWidth / numBins;
-        const targetX = binWidth / 2 + targetBin * binWidth;
-        const currentX = ball.position.x;
-        const diff = targetX - currentX;
-
-        // Apply weaker force - let physics dominate for realistic movement
-        const maxForce = 0.00005;
-        const forceStrength = Math.min(Math.abs(diff) * 0.00001, maxForce);
-        Matter.Body.applyForce(ball, ball.position, {
-          x: Math.sign(diff) * forceStrength,
-          y: 0,
-        });
-      });
-    });
-
-    // Collision detection for bin sensors (counting balls)
+    // Collision detection for peg bounces and bin counting
     Matter.Events.on(engine, 'collisionStart', (event) => {
       event.pairs.forEach((pair) => {
         const { bodyA, bodyB } = pair;
@@ -252,11 +227,31 @@ export default function GaltonBoard({
           : bodyB.label.startsWith('ball-')
           ? bodyB
           : null;
+        const peg = bodyA.label === 'peg' ? bodyA : bodyB.label === 'peg' ? bodyB : null;
         const sensor = bodyA.label.startsWith('bin-sensor-')
           ? bodyA
           : bodyB.label.startsWith('bin-sensor-')
           ? bodyB
           : null;
+
+        // Apply directional impulse on peg collision based on predetermined path
+        if (ball && peg) {
+          const path = (ball as any).path as boolean[] | undefined;
+          const collisionCount = (ball as any).collisionCount || 0;
+
+          if (path && collisionCount < path.length) {
+            const goRight = path[collisionCount];
+            const impulseStrength = 1.5; // Horizontal velocity for left/right bounce
+
+            // Set horizontal velocity based on path decision
+            Matter.Body.setVelocity(ball, {
+              x: goRight ? impulseStrength : -impulseStrength,
+              y: ball.velocity.y,
+            });
+
+            (ball as any).collisionCount = collisionCount + 1;
+          }
+        }
 
         // Count balls entering bins
         if (ball && sensor && !processedBallsRef.current.has(ball.label)) {
@@ -378,30 +373,30 @@ export default function GaltonBoard({
     };
   }, [isDark, numBins, pegAreaBottom, getBinX]);
 
-  // Release a ball with predetermined target bin (binomial distribution)
+  // Release a ball with predetermined path (sequence of left/right decisions)
   const releaseBall = useCallback(() => {
     const engine = engineRef.current;
     if (!engine) return;
 
-    // Predetermine target bin using binomial distribution
-    // This ensures a bell curve distribution regardless of physics
-    const targetBin = binomialRandom(rows);
+    // Generate random path for this ball (coin flip at each row)
+    const path = generatePath(rows);
 
     const ball = Matter.Bodies.circle(
       boardWidth / 2 + (Math.random() - 0.5) * 4, // Small variance to break visual symmetry
       5,
       ballRadius,
       {
-        restitution: 0.7,     // High bounce for realistic collisions
-        friction: 0.05,       // Low friction for smooth movement
-        frictionAir: 0.008,   // Low air drag - less floating
-        density: 0.001,       // Lighter balls - more responsive
+        restitution: 0.6,     // Good bounce for realistic collisions
+        friction: 0.1,        // Normal friction
+        frictionAir: 0.01,    // Low air drag
+        density: 0.001,       // Light balls
         label: `ball-${runIdRef.current}-${ballsReleasedRef.current++}`,
       }
     );
 
-    // Store target bin on ball body for guiding force
-    (ball as any).targetBin = targetBin;
+    // Store path and collision counter on ball
+    (ball as any).path = path;
+    (ball as any).collisionCount = 0;
 
     Matter.Composite.add(engine.world, ball);
     allBallsRef.current.add(ball);
