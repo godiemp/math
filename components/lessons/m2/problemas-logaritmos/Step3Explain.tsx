@@ -28,14 +28,14 @@ const APPLICATIONS: ApplicationTab[] = [
     title: 'Escala Richter (Terremotos)',
     shortTitle: 'Richter',
     emoji: '🌋',
-    formula: 'M = log₁₀(A/A₀)',
-    description: 'Mide la magnitud de terremotos. Cada punto representa 10× más amplitud y ~31.6× más energía.',
+    formula: '1 punto en la escala = 10× más amplitud',
+    description: 'Es una escala logarítmica: un terremoto de magnitud 6 tiene 10 veces más amplitud que uno de magnitud 5.',
     example: {
-      question: '¿Cuántas veces más fuerte es un terremoto de magnitud 7 vs uno de magnitud 5?',
+      question: 'Un terremoto de magnitud 7 vs uno de magnitud 5: ¿cuántas veces más amplitud?',
       steps: [
-        'Diferencia de magnitud: 7 - 5 = 2',
+        'Diferencia: 7 - 5 = 2 puntos',
         'Cada punto = 10× más amplitud',
-        '2 puntos = 10² = 100× más amplitud',
+        '2 puntos = 10 × 10 = 10² = 100×',
       ],
       answer: '100 veces más amplitud',
     },
@@ -46,16 +46,16 @@ const APPLICATIONS: ApplicationTab[] = [
     title: 'Decibeles (Sonido)',
     shortTitle: 'Decibeles',
     emoji: '🔊',
-    formula: 'dB = 10 · log₁₀(I/I₀)',
-    description: 'Mide la intensidad del sonido. Cada 10 dB representa 10× más intensidad.',
+    formula: '10 dB más = 10× más intensidad',
+    description: 'Es una escala logarítmica: un sonido de 70 dB es 10 veces más intenso que uno de 60 dB.',
     example: {
-      question: '¿Cuántas veces más intenso es un sonido de 90 dB vs 60 dB?',
+      question: 'Un concierto (100 dB) vs una conversación (60 dB): ¿cuántas veces más intenso?',
       steps: [
-        'Diferencia: 90 - 60 = 30 dB',
+        'Diferencia: 100 - 60 = 40 dB',
         'Cada 10 dB = 10× más intensidad',
-        '30 dB = 10³ = 1000× más intensidad',
+        '40 dB = 4 saltos de 10 dB = 10⁴ = 10.000×',
       ],
-      answer: '1000 veces más intenso',
+      answer: '10.000 veces más intenso',
     },
     color: 'blue',
   },
@@ -64,16 +64,16 @@ const APPLICATIONS: ApplicationTab[] = [
     title: 'Escala pH (Acidez)',
     shortTitle: 'pH',
     emoji: '🧪',
-    formula: 'pH = -log₁₀[H⁺]',
-    description: 'Mide la acidez o basicidad. Cada punto representa 10× diferencia en concentración de H⁺.',
+    formula: '1 punto menos en pH = 10× más ácido',
+    description: 'Es una escala logarítmica inversa: pH 3 es 10 veces más ácido que pH 4 (número menor = más ácido).',
     example: {
-      question: '¿Cuántas veces más ácido es algo con pH 2 que con pH 5?',
+      question: 'Jugo de limón (pH 2) vs agua pura (pH 7): ¿cuántas veces más ácido?',
       steps: [
-        'Diferencia de pH: 5 - 2 = 3 puntos',
-        'Cada punto = 10× más concentración de H⁺',
-        '3 puntos = 10³ = 1000× más ácido',
+        'Diferencia: 7 - 2 = 5 puntos',
+        'Cada punto = 10× más ácido',
+        '5 puntos = 10⁵ = 100.000×',
       ],
-      answer: '1000 veces más ácido',
+      answer: '100.000 veces más ácido',
     },
     color: 'green',
   },
@@ -190,20 +190,20 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
           {/* Quick reference */}
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 mb-4">
             <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-3">
-              Referencia rápida:
+              Regla clave de cada escala:
             </h4>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2 p-2 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
                 <span>🌋</span>
-                <span className="font-mono flex-1">Richter: 1 punto = 10× amplitud</span>
+                <span className="flex-1"><strong>Richter:</strong> +1 punto → 10× más amplitud</span>
               </div>
               <div className="flex items-center gap-2 p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
                 <span>🔊</span>
-                <span className="font-mono flex-1">Decibeles: 10 dB = 10× intensidad</span>
+                <span className="flex-1"><strong>Decibeles:</strong> +10 dB → 10× más intenso</span>
               </div>
               <div className="flex items-center gap-2 p-2 bg-green-50 dark:bg-green-900/30 rounded-lg">
                 <span>🧪</span>
-                <span className="font-mono flex-1">pH: 1 punto = 10× concentración H⁺</span>
+                <span className="flex-1"><strong>pH:</strong> −1 punto → 10× más ácido</span>
               </div>
             </div>
           </div>
