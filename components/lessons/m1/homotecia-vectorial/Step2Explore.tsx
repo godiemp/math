@@ -54,9 +54,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   const k = getK();
   const transformedPoints = originalPoints.map((p) => applyHomothety(p, k));
 
-  // SVG coordinate helpers (scale: 1 unit = 30px)
-  const toSvgX = (x: number) => 30 + x * 30;
-  const toSvgY = (y: number) => 220 - y * 30;
+  // SVG coordinate helpers (scale: 1 unit = 25px)
+  const toSvgX = (x: number) => 30 + x * 25;
+  const toSvgY = (y: number) => 270 - y * 25;
 
   if (!isActive) return null;
 
@@ -277,21 +277,21 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
       {/* Interactive SVG */}
       <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md">
-        <svg viewBox="-30 0 340 290" className="w-full max-w-lg mx-auto">
+        <svg viewBox="-30 55 280 280" className="w-full max-w-lg mx-auto">
           {/* Grid - vertical lines (x from -2 to 8) */}
           {Array.from({ length: 11 }).map((_, i) => (
             <line
               key={`v-${i}`}
               x1={toSvgX(i - 2)}
-              y1={20}
+              y1={toSvgY(8)}
               x2={toSvgX(i - 2)}
-              y2={280}
+              y2={toSvgY(-2)}
               className="stroke-gray-200 dark:stroke-gray-700"
               strokeWidth="0.5"
             />
           ))}
-          {/* Grid - horizontal lines (y from -2 to 7) */}
-          {Array.from({ length: 10 }).map((_, i) => (
+          {/* Grid - horizontal lines (y from -2 to 8) */}
+          {Array.from({ length: 11 }).map((_, i) => (
             <line
               key={`h-${i}`}
               x1={toSvgX(-2)}
@@ -312,7 +312,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             className="stroke-gray-500"
             strokeWidth="1.5"
           />
-          <line x1={toSvgX(0)} y1={280} x2={toSvgX(0)} y2={20} className="stroke-gray-500" strokeWidth="1.5" />
+          <line x1={toSvgX(0)} y1={toSvgY(-2)} x2={toSvgX(0)} y2={toSvgY(8)} className="stroke-gray-500" strokeWidth="1.5" />
 
           {/* Axis labels - x axis (from -2 to 8) */}
           {Array.from({ length: 11 }).map((_, i) => (
@@ -326,8 +326,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               {i - 2}
             </text>
           ))}
-          {/* Axis labels - y axis (from -2 to 7) */}
-          {Array.from({ length: 10 }).map((_, i) => (
+          {/* Axis labels - y axis (from -2 to 8) */}
+          {Array.from({ length: 11 }).map((_, i) => (
             <text
               key={`y-${i}`}
               x={toSvgX(0) - 5}
