@@ -1,4 +1,9 @@
 import { test, expect, Browser, BrowserContext, Page } from '@playwright/test';
+import {
+  setupSocketMock,
+  createTeacherMockHandler,
+  createStudentMockHandler,
+} from './helpers/socket-mock';
 
 /**
  * E2E tests for teacher-student real-time lesson sync feature.
@@ -6,17 +11,13 @@ import { test, expect, Browser, BrowserContext, Page } from '@playwright/test';
  * These tests verify the WebSocket-based synchronization between
  * a teacher controlling a lesson and students following along.
  *
- * NOTE: These tests require WebSocket infrastructure which may not be
- * available in all CI environments. They are skipped in CI by default.
- * To run locally: npm run test:e2e -- --grep "Teacher-Student"
+ * WebSocket connections are mocked using Playwright's native routeWebSocket()
+ * to enable testing without real WebSocket infrastructure.
  *
  * Test users (created in e2e/helpers/db-setup.ts):
  * - teacher@test.com / TeacherTest123! (test teacher)
  * - sync.student@test.com / SyncStudent123! (student assigned to test teacher)
  */
-
-// Skip these tests in CI - WebSocket E2E requires special infrastructure
-const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
 
 // Test configuration
 const TEACHER_CREDENTIALS = {
@@ -57,23 +58,18 @@ async function loginUser(page: Page, credentials: { email: string; password: str
 }
 
 /**
- * Helper to wait for WebSocket connection
+ * Socket mock return type
  */
-async function waitForSocketConnection(page: Page, timeout = 10000) {
-  // Wait for the socket connection indicator or hook state
-  // The hooks expose connection state that we can check indirectly through UI
-  await page.waitForTimeout(2000); // Give socket time to connect
-}
+type SocketMock = Awaited<ReturnType<typeof setupSocketMock>>;
 
-// Skip WebSocket-dependent tests in CI environments
 test.describe('Teacher-Student Real-Time Sync', () => {
-  // Skip all tests in this describe block when running in CI
-  test.skip(isCI, 'WebSocket E2E tests require local infrastructure');
   let browser: Browser;
   let teacherContext: BrowserContext;
   let studentContext: BrowserContext;
   let teacherPage: Page;
   let studentPage: Page;
+  let teacherMock: SocketMock;
+  let studentMock: SocketMock;
 
   test.beforeAll(async ({ browser: testBrowser }) => {
     browser = testBrowser;
@@ -83,6 +79,14 @@ test.describe('Teacher-Student Real-Time Sync', () => {
     // Create separate browser contexts for teacher and student
     teacherContext = await browser.newContext();
     studentContext = await browser.newContext();
+
+    // Setup WebSocket mocking BEFORE creating pages
+    teacherMock = await setupSocketMock(teacherContext, {
+      onEvent: createTeacherMockHandler(),
+    });
+    studentMock = await setupSocketMock(studentContext, {
+      onEvent: createStudentMockHandler('test-teacher'),
+    });
 
     teacherPage = await teacherContext.newPage();
     studentPage = await studentContext.newPage();
@@ -119,14 +123,20 @@ test.describe('Teacher-Student Real-Time Sync', () => {
 
     // Navigate to live lesson page
     await teacherPage.goto(`/teacher/live/${TEST_LESSON.slug}`);
-    await waitForSocketConnection(teacherPage);
+
+    // Wait for socket mock to be ready
+    await teacherPage.waitForTimeout(500);
 
     // Start the lesson
     const startButton = teacherPage.getByRole('button', { name: /iniciar lección/i });
     await expect(startButton).toBeVisible({ timeout: 10000 });
     await startButton.click();
 
-    // Verify lesson started - should show "LIVE" indicator and step controls
+    // Verify event was emitted
+    const emitted = teacherMock.getEmittedEvents();
+    expect(emitted.some(e => e.event === 'teacher:start_lesson')).toBe(true);
+
+    // Verify lesson started - should show "LIVE" indicator (mock auto-responded)
     await expect(teacherPage.getByText(/en vivo|live/i)).toBeVisible({ timeout: 10000 });
 
     // Verify step navigation is visible
@@ -155,35 +165,33 @@ test.describe('Teacher-Student Real-Time Sync', () => {
       loginUser(studentPage, STUDENT_CREDENTIALS),
     ]);
 
-    // Wait for socket connections
+    // Wait for socket mocks to be ready
     await Promise.all([
-      waitForSocketConnection(teacherPage),
-      waitForSocketConnection(studentPage),
+      teacherPage.waitForTimeout(500),
+      studentPage.waitForTimeout(500),
     ]);
 
     // Student goes to dashboard
     await studentPage.goto('/dashboard');
 
-    // Teacher starts a live lesson
-    await teacherPage.goto(`/teacher/live/${TEST_LESSON.slug}`);
-    await teacherPage.waitForTimeout(1000); // Wait for page load
+    // Wait for student page to be fully loaded
+    await studentPage.waitForTimeout(500);
 
-    const startButton = teacherPage.getByRole('button', { name: /iniciar lección/i });
-    await expect(startButton).toBeVisible({ timeout: 10000 });
-    await startButton.click();
-
-    // Verify lesson started
-    await expect(teacherPage.getByText(/en vivo|live/i)).toBeVisible({ timeout: 10000 });
+    // Simulate teacher starting a lesson by sending event to student
+    studentMock.sendEvent('lesson:available', {
+      teacherId: 'test-teacher',
+      teacherUsername: 'Test Teacher',
+      lessonId: TEST_LESSON.slug,
+      lessonTitle: TEST_LESSON.title,
+      currentStep: 1,
+      totalSteps: TEST_LESSON.totalSteps,
+      roomId: `test-teacher_${TEST_LESSON.slug}`,
+    });
 
     // Student should see the live lesson notification banner
-    // Note: The banner might take a moment to appear after the WebSocket event
     await expect(
       studentPage.getByText(/clase en vivo|clase disponible/i)
-    ).toBeVisible({ timeout: 15000 });
-
-    // Clean up - end the lesson
-    const endButton = teacherPage.getByRole('button', { name: /terminar|finalizar|end/i });
-    await endButton.click();
+    ).toBeVisible({ timeout: 10000 });
   });
 
   test('student can join live lesson and follow teacher steps', async () => {
@@ -193,14 +201,12 @@ test.describe('Teacher-Student Real-Time Sync', () => {
       loginUser(studentPage, STUDENT_CREDENTIALS),
     ]);
 
-    await Promise.all([
-      waitForSocketConnection(teacherPage),
-      waitForSocketConnection(studentPage),
-    ]);
+    // Wait for socket mocks to be ready
+    await teacherPage.waitForTimeout(500);
 
     // Teacher starts a live lesson
     await teacherPage.goto(`/teacher/live/${TEST_LESSON.slug}`);
-    await teacherPage.waitForTimeout(1000);
+    await teacherPage.waitForTimeout(500);
 
     const startButton = teacherPage.getByRole('button', { name: /iniciar lección/i });
     await expect(startButton).toBeVisible({ timeout: 10000 });
@@ -209,27 +215,50 @@ test.describe('Teacher-Student Real-Time Sync', () => {
     // Verify lesson started
     await expect(teacherPage.getByText(/en vivo|live/i)).toBeVisible({ timeout: 10000 });
 
-    // Student navigates to the lesson page directly
+    // Send lesson available event to student
+    studentMock.sendEvent('lesson:available', {
+      teacherId: 'test-teacher',
+      teacherUsername: 'Test Teacher',
+      lessonId: TEST_LESSON.slug,
+      lessonTitle: TEST_LESSON.title,
+      currentStep: 1,
+      totalSteps: TEST_LESSON.totalSteps,
+      roomId: `test-teacher_${TEST_LESSON.slug}`,
+    });
+
+    // Student navigates to the lesson page
     await studentPage.goto(`/lessons/m1/${TEST_LESSON.slug}`);
+
+    // Wait for page and socket to be ready
+    await studentPage.waitForTimeout(500);
+
+    // Send lesson state to student to enable follow mode
+    studentMock.sendEvent('lesson:state', {
+      teacherId: 'test-teacher',
+      teacherUsername: 'Test Teacher',
+      lessonId: TEST_LESSON.slug,
+      lessonTitle: TEST_LESSON.title,
+      currentStep: 1,
+      totalSteps: TEST_LESSON.totalSteps,
+      roomId: `test-teacher_${TEST_LESSON.slug}`,
+    });
 
     // Student should see they're in follow mode (following teacher)
     await expect(
       studentPage.getByText(/siguiendo|follow/i)
-    ).toBeVisible({ timeout: 15000 });
+    ).toBeVisible({ timeout: 10000 });
 
-    // Teacher moves to step 2
-    const nextButton = teacherPage.getByRole('button', { name: /siguiente|next|►/i });
-    if (await nextButton.isVisible()) {
-      await nextButton.click();
+    // Simulate teacher moving to step 2
+    studentMock.sendEvent('lesson:step_changed', {
+      lessonId: TEST_LESSON.slug,
+      step: 2,
+      changedAt: Date.now(),
+    });
 
-      // Give time for WebSocket sync
-      await teacherPage.waitForTimeout(2000);
+    // Give time for UI to update
+    await studentPage.waitForTimeout(500);
 
-      // Student should also be on step 2 (lesson shell content changes)
-      // The exact assertion depends on step content
-    }
-
-    // Clean up - end the lesson
+    // Clean up - end the lesson on teacher side
     const endButton = teacherPage.getByRole('button', { name: /terminar|finalizar|end/i });
     await endButton.click();
   });
@@ -241,14 +270,11 @@ test.describe('Teacher-Student Real-Time Sync', () => {
       loginUser(studentPage, STUDENT_CREDENTIALS),
     ]);
 
-    await Promise.all([
-      waitForSocketConnection(teacherPage),
-      waitForSocketConnection(studentPage),
-    ]);
+    await teacherPage.waitForTimeout(500);
 
     // Teacher starts a live lesson
     await teacherPage.goto(`/teacher/live/${TEST_LESSON.slug}`);
-    await teacherPage.waitForTimeout(1000);
+    await teacherPage.waitForTimeout(500);
 
     const startButton = teacherPage.getByRole('button', { name: /iniciar lección/i });
     await expect(startButton).toBeVisible({ timeout: 10000 });
@@ -256,26 +282,43 @@ test.describe('Teacher-Student Real-Time Sync', () => {
 
     await expect(teacherPage.getByText(/en vivo|live/i)).toBeVisible({ timeout: 10000 });
 
-    // Student joins the lesson
+    // Student goes to lesson page
     await studentPage.goto(`/lessons/m1/${TEST_LESSON.slug}`);
-    await expect(studentPage.getByText(/siguiendo|follow/i)).toBeVisible({ timeout: 15000 });
+    await studentPage.waitForTimeout(500);
+
+    // Send follow mode state to student
+    studentMock.sendEvent('lesson:state', {
+      teacherId: 'test-teacher',
+      teacherUsername: 'Test Teacher',
+      lessonId: TEST_LESSON.slug,
+      lessonTitle: TEST_LESSON.title,
+      currentStep: 1,
+      totalSteps: TEST_LESSON.totalSteps,
+      roomId: `test-teacher_${TEST_LESSON.slug}`,
+    });
+
+    await expect(studentPage.getByText(/siguiendo|follow/i)).toBeVisible({ timeout: 10000 });
 
     // Teacher ends the lesson
     const endButton = teacherPage.getByRole('button', { name: /terminar|finalizar|end/i });
     await endButton.click();
 
+    // Send lesson ended event to student
+    studentMock.sendEvent('lesson:ended', {
+      lessonId: TEST_LESSON.slug,
+      reason: 'teacher_ended',
+      endedAt: Date.now(),
+    });
+
     // Student should no longer see follow mode indicator
-    // and might see a "lesson ended" message
-    await studentPage.waitForTimeout(3000);
+    await studentPage.waitForTimeout(1000);
 
     // The follow mode banner should disappear or show ended state
     const followingText = studentPage.getByText(/siguiendo|follow/i);
-    // Either not visible or the lesson has ended
     const isStillFollowing = await followingText.isVisible().catch(() => false);
 
-    // After lesson ends, student should be able to continue independently
-    // or be notified that the lesson ended
-    expect(true).toBe(true); // Test passes if we reach here without errors
+    // After lesson ends, follow mode should be disabled
+    expect(isStillFollowing).toBe(false);
   });
 
   test('teacher dashboard shows "start live lesson" quick action', async () => {
@@ -307,12 +350,10 @@ test.describe('Teacher-Student Real-Time Sync', () => {
 });
 
 test.describe('Teacher-Student Sync - Edge Cases', () => {
-  // Skip all tests in this describe block when running in CI
-  test.skip(isCI, 'WebSocket E2E tests require local infrastructure');
-
   let browser: Browser;
   let teacherContext: BrowserContext;
   let teacherPage: Page;
+  let teacherMock: SocketMock;
 
   test.beforeAll(async ({ browser: testBrowser }) => {
     browser = testBrowser;
@@ -320,6 +361,12 @@ test.describe('Teacher-Student Sync - Edge Cases', () => {
 
   test.beforeEach(async () => {
     teacherContext = await browser.newContext();
+
+    // Setup WebSocket mocking BEFORE creating page
+    teacherMock = await setupSocketMock(teacherContext, {
+      onEvent: createTeacherMockHandler(),
+    });
+
     teacherPage = await teacherContext.newPage();
   });
 
@@ -348,7 +395,8 @@ test.describe('Teacher-Student Sync - Edge Cases', () => {
     await loginUser(teacherPage, TEACHER_CREDENTIALS);
     await teacherPage.goto(`/teacher/live/${TEST_LESSON.slug}`);
 
-    await waitForSocketConnection(teacherPage, 5000);
+    // Wait for socket mock
+    await teacherPage.waitForTimeout(500);
 
     // Start lesson
     const startButton = teacherPage.getByRole('button', { name: /iniciar lección/i });
@@ -372,4 +420,3 @@ test.describe('Teacher-Student Sync - Edge Cases', () => {
     await endButton.click();
   });
 });
-
