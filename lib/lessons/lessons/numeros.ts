@@ -356,7 +356,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
   {
     id: 'm2-num-004-a',
     slug: 'logaritmos',
-    title: 'Logaritmos: La Operación Inversa',
+    title: 'Relación entre Potencias, Raíces y Logaritmos',
     description: 'Comprende los logaritmos como la operación inversa de las potencias.',
     level: 'M2',
     subject: 'números',

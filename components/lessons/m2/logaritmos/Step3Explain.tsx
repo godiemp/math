@@ -265,36 +265,6 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
         </div>
       )}
 
-      {/* Memory tip */}
-      <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-6 border border-green-200 dark:border-green-700">
-        <h4 className="font-bold text-green-800 dark:text-green-200 mb-3 flex items-center gap-2">
-          <Lightbulb className="w-5 h-5 text-yellow-500" />
-          Truco para recordar:
-        </h4>
-        <p className="text-gray-700 dark:text-gray-300 mb-4">
-          El logaritmo es <strong>&quot;deshacer&quot;</strong> una potencia. Pregúntate: <strong>&quot;¿Qué exponente necesito?&quot;</strong>
-        </p>
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 font-mono text-center">
-          <div className="flex items-center justify-center gap-4 flex-wrap">
-            <div className="text-center">
-              <p className="text-blue-600">log₁₀(1000)</p>
-              <p className="text-xs text-gray-500">10^? = 1000</p>
-              <p className="text-green-600 font-bold">= 3</p>
-            </div>
-            <div className="text-center">
-              <p className="text-purple-600">log₂(16)</p>
-              <p className="text-xs text-gray-500">2^? = 16</p>
-              <p className="text-green-600 font-bold">= 4</p>
-            </div>
-            <div className="text-center">
-              <p className="text-teal-600">log₃(81)</p>
-              <p className="text-xs text-gray-500">3^? = 81</p>
-              <p className="text-green-600 font-bold">= 4</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Summary cards */}
       <div className="grid grid-cols-3 gap-3">
         {FORMULAS.map((formula) => {
