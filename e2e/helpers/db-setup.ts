@@ -28,6 +28,8 @@ export async function clearDatabase() {
         questions,
         refresh_tokens,
         subscriptions,
+        class_enrollments,
+        classes,
         users,
         plans,
         last_quiz_config
@@ -102,14 +104,40 @@ export async function seedTestData() {
       [teacherId, 'testteacher', 'teacher@test.com', teacherPassword, 'Test Teacher', 'teacher', true, now, now]
     );
 
-    // Create test student assigned to teacher (for live lesson sync testing)
+    // Create test student for live lesson sync testing
     const syncStudentPassword = await bcrypt.hash('SyncStudent123!', 10);
     const syncStudentId = 'test-sync-student';
 
     await client.query(
-      `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, assigned_by_teacher_id, created_at, updated_at)
+      `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      [syncStudentId, 'syncstudent', 'sync.student@test.com', syncStudentPassword, 'Sync Student', 'student', true, now, now]
+    );
+
+    // Create a test class for the teacher
+    const testClassId = 'test-class-1';
+    await client.query(
+      `INSERT INTO classes (id, name, description, teacher_id, level, school_name, max_students, is_active, created_at, updated_at)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-      [syncStudentId, 'syncstudent', 'sync.student@test.com', syncStudentPassword, 'Sync Student', 'student', true, teacherId, now, now]
+      [
+        testClassId,
+        'Test Math Class',
+        'Test class for E2E testing',
+        teacherId,
+        'M1',
+        'Test School',
+        45,
+        true,
+        now,
+        now,
+      ]
+    );
+
+    // Enroll the sync student in the test class
+    await client.query(
+      `INSERT INTO class_enrollments (class_id, student_id, enrolled_at, enrolled_by, status)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [testClassId, syncStudentId, now, teacherId, 'active']
     );
 
     // Create test plan (if it doesn't exist)
@@ -301,7 +329,7 @@ export async function seedTestData() {
     );
 
     await client.query('COMMIT');
-    return { adminId, studentId, teacherId, syncStudentId, sessionId };
+    return { adminId, studentId, teacherId, syncStudentId, sessionId, testClassId };
   } catch (error) {
     await client.query('ROLLBACK');
     throw error;

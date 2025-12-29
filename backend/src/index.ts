@@ -39,6 +39,7 @@ import operationsPracticeRoutes from './routes/operationsPracticeRoutes';
 import certificateRoutes from './routes/certificateRoutes';
 import adaptivePracticeRoutes from './routes/adaptivePracticeRoutes';
 import teacherRoutes from './routes/teacherRoutes';
+import classRoutes from './routes/classRoutes';
 import demoAccountRoutes from './routes/demoAccountRoutes';
 import { serveImage } from './controllers/adminController';
 
@@ -223,6 +224,7 @@ app.use('/api/operations-practice', operationsPracticeRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/adaptive', adaptivePracticeRoutes);
 app.use('/api/teacher', teacherRoutes);
+app.use('/api/classes', classRoutes);
 app.use('/api/admin/demo-accounts', demoAccountRoutes);
 
 // Public image serving route
@@ -250,6 +252,7 @@ console.log('✅ Operations Practice routes registered at /api/operations-practi
 console.log('✅ Certificate routes registered at /api/certificates');
 console.log('✅ Adaptive Practice routes registered at /api/adaptive');
 console.log('✅ Teacher routes registered at /api/teacher');
+console.log('✅ Class routes registered at /api/classes');
 console.log('✅ Demo Account routes registered at /api/admin/demo-accounts');
 
 // 404 handler
