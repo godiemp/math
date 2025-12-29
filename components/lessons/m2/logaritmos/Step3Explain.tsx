@@ -265,27 +265,6 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
         </div>
       )}
 
-      {/* Summary cards */}
-      <div className="grid grid-cols-3 gap-3">
-        {FORMULAS.map((formula) => {
-          const cardColors = colorClasses[formula.color];
-          return (
-            <div
-              key={formula.id}
-              className={cn(
-                'p-3 rounded-lg border text-center',
-                cardColors.bg,
-                cardColors.border
-              )}
-            >
-              <p className={cn('font-mono text-sm font-bold', cardColors.text)}>
-                {formula.shortTitle}
-              </p>
-            </div>
-          );
-        })}
-      </div>
-
       <div className="flex justify-center">
         <button
           onClick={onComplete}
