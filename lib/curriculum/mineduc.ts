@@ -300,7 +300,7 @@ const OA_2M: MinEducOA[] = [
     name: 'Potencias, raíces y logaritmos',
     description: 'Demostrar comprensión de las relaciones entre potencias, raíces enésimas y logaritmos.',
     isBasal: true,
-    lessonIds: [], // Needs new lesson on logarithms
+    lessonIds: ['m2-num-004-a'], // Logaritmos: La Operación Inversa
   },
 
   // ÁLGEBRA Y FUNCIONES (4 OA)
