@@ -230,10 +230,10 @@ export default function GaltonBoard({
         const currentX = ball.position.x;
         const diff = targetX - currentX;
 
-        // Apply subtle horizontal force toward target bin
-        // Force is proportional to distance but capped
-        const maxForce = 0.00003;
-        const forceStrength = Math.min(Math.abs(diff) * 0.000005, maxForce);
+        // Apply horizontal force toward target bin
+        // Force is proportional to distance but capped - strong enough to overcome momentum
+        const maxForce = 0.0001;
+        const forceStrength = Math.min(Math.abs(diff) * 0.00002, maxForce);
         Matter.Body.applyForce(ball, ball.position, {
           x: Math.sign(diff) * forceStrength,
           y: 0,
