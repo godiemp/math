@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import Matter from 'matter-js';
 import { cn } from '@/lib/utils';
+import { useGaltonEngine, useGaltonRenderer } from './hooks';
 
 interface GaltonBoardProps {
   rows?: number;
@@ -21,33 +21,12 @@ const SPEED_MAP = {
   fast: 80,
 };
 
-// Generate random path: array of left/right decisions for each row
-// This simulates the coin flip at each peg level
-function generatePath(rows: number): boolean[] {
-  const path: boolean[] = [];
-  for (let i = 0; i < rows; i++) {
-    path.push(Math.random() > 0.5); // true = right, false = left
-  }
-  return path;
-}
-
-// Color schemes for light/dark mode
-const COLORS = {
-  light: {
-    background: '#f3f4f6',
-    peg: '#9ca3af',
-    ball: '#f59e0b',
-    text: '#4b5563',
-    divider: '#d1d5db',
-  },
-  dark: {
-    background: '#1f2937',
-    peg: '#6b7280',
-    ball: '#fbbf24',
-    text: '#9ca3af',
-    divider: '#4b5563',
-  },
-};
+// Board dimensions
+const BOARD_WIDTH = 320;
+const BOARD_HEIGHT = 400;
+const PEG_RADIUS = 6;
+const BALL_RADIUS = 5;
+const BIN_AREA_HEIGHT = 120;
 
 export default function GaltonBoard({
   rows = 10,
@@ -63,31 +42,57 @@ export default function GaltonBoard({
   const [completedCount, setCompletedCount] = useState(0);
   const [isDark, setIsDark] = useState(false);
 
-  // Refs for physics
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const engineRef = useRef<Matter.Engine | null>(null);
-  const runnerRef = useRef<Matter.Runner | null>(null);
-  const allBallsRef = useRef<Set<Matter.Body>>(new Set());
-  const ballsReleasedRef = useRef(0);
-  const releaseIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const renderLoopRef = useRef<number>(0);
   const distributionRef = useRef<number[]>(Array(rows + 1).fill(0));
   const completedCountRef = useRef(0);
-  const processedBallsRef = useRef<Set<string>>(new Set());
-  const runIdRef = useRef(0);
+  const releaseIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const ballsReleasedRef = useRef(0);
 
-  // Board dimensions - taller to show balls stacking
-  const boardWidth = 320;
-  const boardHeight = 400;
-  // For proper Galton board: ball must fit through gap between pegs
-  // gap = spacing - pegDiameter MUST BE > ballDiameter
-  // With spacing ≈ 29: pegRadius=6 (diam=12), ballRadius=5 (diam=10)
-  // gap = 29 - 12 = 17 > 10 ✓ balls can pass through
-  const pegRadius = 6;
-  const ballRadius = 5;
-  const numBins = rows + 1;
-  const binAreaHeight = 120; // Height reserved for ball stacking
-  const pegAreaBottom = boardHeight - binAreaHeight;
+  // Handle ball entering bin
+  const handleBallEnterBin = useCallback((binIndex: number) => {
+    distributionRef.current = [...distributionRef.current];
+    distributionRef.current[binIndex]++;
+    setDistribution([...distributionRef.current]);
+
+    completedCountRef.current++;
+    setCompletedCount(completedCountRef.current);
+  }, []);
+
+  // Physics engine hook
+  const {
+    engineRef,
+    allBallsRef,
+    releaseBall,
+    startPhysics,
+    resetBalls,
+    pegAreaBottom,
+    numBins,
+    getBinX,
+  } = useGaltonEngine({
+    rows,
+    boardWidth: BOARD_WIDTH,
+    boardHeight: BOARD_HEIGHT,
+    pegRadius: PEG_RADIUS,
+    ballRadius: BALL_RADIUS,
+    binAreaHeight: BIN_AREA_HEIGHT,
+    onBallEnterBin: handleBallEnterBin,
+  });
+
+  // Renderer hook
+  useGaltonRenderer({
+    canvasRef,
+    engineRef,
+    allBallsRef,
+    distributionRef,
+    boardWidth: BOARD_WIDTH,
+    boardHeight: BOARD_HEIGHT,
+    pegRadius: PEG_RADIUS,
+    ballRadius: BALL_RADIUS,
+    numBins,
+    pegAreaBottom,
+    getBinX,
+    isDark,
+  });
 
   // Detect dark mode
   useEffect(() => {
@@ -106,302 +111,6 @@ export default function GaltonBoard({
     return () => observer.disconnect();
   }, []);
 
-  // Calculate peg position
-  // horizontalSpacing = bin width so peg grid aligns with bins
-  // With pegRadius=6 (diameter=12) and ballRadius=5 (diameter=10):
-  // gap = 29 - 12 = 17 > 10 (ballDiameter) ✓ balls CAN pass through gaps
-  const horizontalSpacing = boardWidth / numBins; // ≈ 29.09
-
-  const getPegPosition = useCallback(
-    (row: number, col: number) => {
-      const verticalSpacing = (pegAreaBottom - 60) / rows;
-      const rowStartX = boardWidth / 2 - (row * horizontalSpacing) / 2;
-      return {
-        x: rowStartX + col * horizontalSpacing,
-        y: 40 + row * verticalSpacing,
-      };
-    },
-    [rows, pegAreaBottom, horizontalSpacing]
-  );
-
-  // Get bin X position
-  const getBinX = useCallback(
-    (binIndex: number) => {
-      const binWidth = boardWidth / numBins;
-      return binWidth / 2 + binIndex * binWidth;
-    },
-    [numBins]
-  );
-
-  // Initialize physics engine
-  useEffect(() => {
-    const engine = Matter.Engine.create({
-      gravity: { x: 0, y: 0.8, scale: 0.001 },
-    });
-    engineRef.current = engine;
-
-    // Create pegs
-    const pegs: Matter.Body[] = [];
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col <= row; col++) {
-        const pos = getPegPosition(row, col);
-        const peg = Matter.Bodies.circle(pos.x, pos.y, pegRadius, {
-          isStatic: true,
-          restitution: 0.6,   // Good bounce for realistic collisions
-          friction: 0.1,      // Normal friction
-          label: 'peg',
-        });
-        pegs.push(peg);
-      }
-    }
-
-    // Create walls
-    const wallThickness = 20;
-    const walls = [
-      // Left wall
-      Matter.Bodies.rectangle(
-        -wallThickness / 2,
-        boardHeight / 2,
-        wallThickness,
-        boardHeight,
-        { isStatic: true, label: 'wall' }
-      ),
-      // Right wall
-      Matter.Bodies.rectangle(
-        boardWidth + wallThickness / 2,
-        boardHeight / 2,
-        wallThickness,
-        boardHeight,
-        { isStatic: true, label: 'wall' }
-      ),
-      // Bottom
-      Matter.Bodies.rectangle(
-        boardWidth / 2,
-        boardHeight + wallThickness / 2,
-        boardWidth,
-        wallThickness,
-        { isStatic: true, label: 'floor' }
-      ),
-    ];
-
-    // Create bin sensors (invisible, just for counting)
-    const binSensors: Matter.Body[] = [];
-    const binWidth = boardWidth / numBins;
-    for (let i = 0; i < numBins; i++) {
-      const sensor = Matter.Bodies.rectangle(
-        getBinX(i),
-        pegAreaBottom + 10,
-        binWidth - 4,
-        10,
-        {
-          isStatic: true,
-          isSensor: true,
-          label: `bin-sensor-${i}`,
-        }
-      );
-      binSensors.push(sensor);
-    }
-
-    // Create bin dividers (physical walls between bins)
-    const dividers: Matter.Body[] = [];
-    for (let i = 0; i <= numBins; i++) {
-      const x = (i * boardWidth) / numBins;
-      const divider = Matter.Bodies.rectangle(
-        x,
-        pegAreaBottom + binAreaHeight / 2,
-        2,
-        binAreaHeight,
-        { isStatic: true, label: 'divider', restitution: 0.3 }
-      );
-      dividers.push(divider);
-    }
-
-    Matter.Composite.add(engine.world, [...pegs, ...walls, ...binSensors, ...dividers]);
-
-    // Collision detection for peg bounces and bin counting
-    Matter.Events.on(engine, 'collisionStart', (event) => {
-      event.pairs.forEach((pair) => {
-        const { bodyA, bodyB } = pair;
-        const ball = bodyA.label.startsWith('ball-')
-          ? bodyA
-          : bodyB.label.startsWith('ball-')
-          ? bodyB
-          : null;
-        const peg = bodyA.label === 'peg' ? bodyA : bodyB.label === 'peg' ? bodyB : null;
-        const sensor = bodyA.label.startsWith('bin-sensor-')
-          ? bodyA
-          : bodyB.label.startsWith('bin-sensor-')
-          ? bodyB
-          : null;
-
-        // Apply directional impulse on peg collision based on predetermined path
-        if (ball && peg) {
-          const path = (ball as any).path as boolean[] | undefined;
-          const collisionCount = (ball as any).collisionCount || 0;
-
-          if (path && collisionCount < path.length) {
-            const goRight = path[collisionCount];
-            const impulseStrength = 1.5; // Horizontal velocity for left/right bounce
-
-            // Set horizontal velocity based on path decision
-            Matter.Body.setVelocity(ball, {
-              x: goRight ? impulseStrength : -impulseStrength,
-              y: ball.velocity.y,
-            });
-
-            (ball as any).collisionCount = collisionCount + 1;
-          }
-        }
-
-        // Count balls entering bins
-        if (ball && sensor && !processedBallsRef.current.has(ball.label)) {
-          processedBallsRef.current.add(ball.label);
-          const binIndex = parseInt(sensor.label.split('-')[2]);
-
-          // Update distribution (ball stays in world, just counted)
-          distributionRef.current = [...distributionRef.current];
-          distributionRef.current[binIndex]++;
-          setDistribution([...distributionRef.current]);
-
-          // Update completed count
-          completedCountRef.current++;
-          setCompletedCount(completedCountRef.current);
-        }
-      });
-    });
-
-    // Create runner
-    const runner = Matter.Runner.create();
-    runnerRef.current = runner;
-
-    return () => {
-      Matter.Runner.stop(runner);
-      Matter.Engine.clear(engine);
-      cancelAnimationFrame(renderLoopRef.current);
-      if (releaseIntervalRef.current) {
-        clearInterval(releaseIntervalRef.current);
-      }
-    };
-  }, [rows, getPegPosition, getBinX, numBins, pegAreaBottom, binAreaHeight]);
-
-  // Render loop
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const engine = engineRef.current;
-    if (!canvas || !engine) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const colors = isDark ? COLORS.dark : COLORS.light;
-    const binWidth = boardWidth / numBins;
-
-    const render = () => {
-      ctx.clearRect(0, 0, boardWidth, boardHeight);
-
-      // Draw background with rounded corners
-      ctx.fillStyle = colors.background;
-      ctx.beginPath();
-      ctx.roundRect(0, 0, boardWidth, boardHeight, 12);
-      ctx.fill();
-
-      // Draw pegs
-      ctx.fillStyle = colors.peg;
-      engine.world.bodies
-        .filter((b) => b.label === 'peg')
-        .forEach((peg) => {
-          ctx.beginPath();
-          ctx.arc(peg.position.x, peg.position.y, pegRadius, 0, Math.PI * 2);
-          ctx.fill();
-        });
-
-      // Draw entry funnel
-      ctx.strokeStyle = colors.peg;
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(boardWidth / 2 - 15, 0);
-      ctx.lineTo(boardWidth / 2, 20);
-      ctx.lineTo(boardWidth / 2 + 15, 0);
-      ctx.stroke();
-
-      // Draw bin dividers
-      ctx.strokeStyle = colors.divider;
-      ctx.lineWidth = 2;
-      for (let i = 0; i <= numBins; i++) {
-        const x = (i * boardWidth) / numBins;
-        ctx.beginPath();
-        ctx.moveTo(x, pegAreaBottom);
-        ctx.lineTo(x, boardHeight);
-        ctx.stroke();
-      }
-
-      // Draw horizontal line separating pegs from bins
-      ctx.strokeStyle = colors.divider;
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(0, pegAreaBottom);
-      ctx.lineTo(boardWidth, pegAreaBottom);
-      ctx.stroke();
-
-      // Draw all balls (they stay in the world now)
-      ctx.fillStyle = colors.ball;
-      allBallsRef.current.forEach((ball) => {
-        ctx.beginPath();
-        ctx.arc(ball.position.x, ball.position.y, ballRadius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      // Draw bin count labels
-      ctx.fillStyle = colors.text;
-      ctx.font = '12px sans-serif';
-      ctx.textAlign = 'center';
-      for (let i = 0; i < numBins; i++) {
-        const x = getBinX(i);
-        const count = distributionRef.current[i];
-        if (count > 0) {
-          ctx.fillText(count.toString(), x, boardHeight - 8);
-        }
-      }
-
-      renderLoopRef.current = requestAnimationFrame(render);
-    };
-
-    render();
-
-    return () => {
-      cancelAnimationFrame(renderLoopRef.current);
-    };
-  }, [isDark, numBins, pegAreaBottom, getBinX]);
-
-  // Release a ball with predetermined path (sequence of left/right decisions)
-  const releaseBall = useCallback(() => {
-    const engine = engineRef.current;
-    if (!engine) return;
-
-    // Generate random path for this ball (coin flip at each row)
-    const path = generatePath(rows);
-
-    const ball = Matter.Bodies.circle(
-      boardWidth / 2 + (Math.random() - 0.5) * 4, // Small variance to break visual symmetry
-      5,
-      ballRadius,
-      {
-        restitution: 0.6,     // Good bounce for realistic collisions
-        friction: 0.1,        // Normal friction
-        frictionAir: 0.01,    // Low air drag
-        density: 0.001,       // Light balls
-        label: `ball-${runIdRef.current}-${ballsReleasedRef.current++}`,
-      }
-    );
-
-    // Store path and collision counter on ball
-    (ball as any).path = path;
-    (ball as any).collisionCount = 0;
-
-    Matter.Composite.add(engine.world, ball);
-    allBallsRef.current.add(ball);
-  }, [rows]);
-
   // Notify when distribution changes
   useEffect(() => {
     onDistributionChange?.(distribution);
@@ -410,7 +119,6 @@ export default function GaltonBoard({
   // Check if all balls are complete
   useEffect(() => {
     if (completedCount >= ballsToRelease && completedCount > 0) {
-      // Small delay to let balls settle
       const timeout = setTimeout(() => {
         setIsRunning(false);
         if (releaseIntervalRef.current) {
@@ -428,38 +136,31 @@ export default function GaltonBoard({
     if (autoStart && !isRunning && completedCount === 0) {
       handleStart();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoStart]);
 
   const handleStart = () => {
     if (isRunning) return;
 
-    const engine = engineRef.current;
-    const runner = runnerRef.current;
-    if (!engine || !runner) return;
-
-    // Reset state - remove all balls from world
-    allBallsRef.current.forEach((ball) => {
-      Matter.Composite.remove(engine.world, ball);
-    });
-    allBallsRef.current.clear();
+    // Reset state
+    resetBalls();
     distributionRef.current = Array(rows + 1).fill(0);
     setDistribution(Array(rows + 1).fill(0));
     completedCountRef.current = 0;
     setCompletedCount(0);
     ballsReleasedRef.current = 0;
-    processedBallsRef.current.clear();
-    runIdRef.current++;
 
     setIsRunning(true);
-
-    // Start physics
-    Matter.Runner.run(runner, engine);
+    startPhysics();
 
     // Release balls at intervals
     releaseBall();
+    ballsReleasedRef.current++;
+
     releaseIntervalRef.current = setInterval(() => {
       if (ballsReleasedRef.current < ballsToRelease) {
         releaseBall();
+        ballsReleasedRef.current++;
       } else {
         if (releaseIntervalRef.current) {
           clearInterval(releaseIntervalRef.current);
@@ -469,19 +170,26 @@ export default function GaltonBoard({
     }, SPEED_MAP[speed]);
   };
 
+  // Cleanup interval on unmount
+  useEffect(() => {
+    return () => {
+      if (releaseIntervalRef.current) {
+        clearInterval(releaseIntervalRef.current);
+      }
+    };
+  }, []);
+
   return (
     <div className={cn('flex flex-col items-center gap-4', className)}>
-      {/* Physics canvas */}
       <div className="relative">
         <canvas
           ref={canvasRef}
-          width={boardWidth}
-          height={boardHeight}
+          width={BOARD_WIDTH}
+          height={BOARD_HEIGHT}
           className="rounded-xl"
         />
       </div>
 
-      {/* Controls */}
       <div className="flex items-center gap-4">
         <button
           onClick={handleStart}
