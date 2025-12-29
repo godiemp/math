@@ -38,23 +38,29 @@ const TEST_LESSON = {
 };
 
 /**
- * Helper to login a user in a given page
+ * Helper to login a user in a given page.
+ * Uses a robust login flow that handles cookie banners and waits for page readiness.
  */
 async function loginUser(page: Page, credentials: { email: string; password: string }) {
-  await page.goto('/');
-
-  // Dismiss cookie banner
-  await page.evaluate(() => {
+  // Set cookie consent BEFORE navigating to prevent banner from blocking form
+  await page.context().addInitScript(() => {
     localStorage.setItem('cookie-consent', 'accepted');
   });
 
+  // Navigate to login page
+  await page.goto('/', { waitUntil: 'networkidle' });
+
+  // Wait for the login form to be ready
+  const emailInput = page.locator('input[type="email"], input[name="email"], input[name="username"]');
+  await emailInput.waitFor({ state: 'visible', timeout: 10000 });
+
   // Fill credentials and submit
-  await page.fill('input[type="email"], input[name="email"], input[name="username"]', credentials.email);
+  await emailInput.fill(credentials.email);
   await page.fill('input[type="password"]', credentials.password);
   await page.click('button[type="submit"]');
 
-  // Wait for login to complete
-  await page.waitForURL(/\/(teacher|dashboard|$)/, { timeout: 15000 });
+  // Wait for login to complete - should redirect to dashboard or teacher page
+  await page.waitForURL(/\/(teacher|dashboard|$)/, { timeout: 20000 });
 }
 
 /**
@@ -63,6 +69,9 @@ async function loginUser(page: Page, credentials: { email: string; password: str
 type SocketMock = Awaited<ReturnType<typeof setupSocketMock>>;
 
 test.describe('Teacher-Student Real-Time Sync', () => {
+  // These tests need more time due to multiple browser contexts and login flows
+  test.setTimeout(60000);
+
   let browser: Browser;
   let teacherContext: BrowserContext;
   let studentContext: BrowserContext;
@@ -350,6 +359,9 @@ test.describe('Teacher-Student Real-Time Sync', () => {
 });
 
 test.describe('Teacher-Student Sync - Edge Cases', () => {
+  // These tests need more time due to browser context creation and login flows
+  test.setTimeout(60000);
+
   let browser: Browser;
   let teacherContext: BrowserContext;
   let teacherPage: Page;
