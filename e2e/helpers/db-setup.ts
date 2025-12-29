@@ -92,6 +92,26 @@ export async function seedTestData() {
       [medioStudentId, '1medio_student', '1medio@test.cl', medioStudentPassword, 'Estudiante 1° Medio', 'student', '1-medio', now, now]
     );
 
+    // Create test teacher user for live lesson sync testing
+    const teacherPassword = await bcrypt.hash('TeacherTest123!', 10);
+    const teacherId = 'test-teacher';
+
+    await client.query(
+      `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      [teacherId, 'testteacher', 'teacher@test.com', teacherPassword, 'Test Teacher', 'teacher', true, now, now]
+    );
+
+    // Create test student assigned to teacher (for live lesson sync testing)
+    const syncStudentPassword = await bcrypt.hash('SyncStudent123!', 10);
+    const syncStudentId = 'test-sync-student';
+
+    await client.query(
+      `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, assigned_by_teacher_id, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      [syncStudentId, 'syncstudent', 'sync.student@test.com', syncStudentPassword, 'Sync Student', 'student', true, teacherId, now, now]
+    );
+
     // Create test plan (if it doesn't exist)
     const testPlanId = 'test-plan';
     await client.query(
@@ -145,6 +165,38 @@ export async function seedTestData() {
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
       [
         studentId,
+        testPlanId,
+        'active',
+        now,
+        now + (365 * 24 * 60 * 60 * 1000), // 1 year from now
+        true,
+        now,
+        now
+      ]
+    );
+
+    // Create active subscription for teacher
+    await client.query(
+      `INSERT INTO subscriptions (user_id, plan_id, status, started_at, expires_at, auto_renew, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [
+        teacherId,
+        testPlanId,
+        'active',
+        now,
+        now + (365 * 24 * 60 * 60 * 1000), // 1 year from now
+        true,
+        now,
+        now
+      ]
+    );
+
+    // Create active subscription for sync student
+    await client.query(
+      `INSERT INTO subscriptions (user_id, plan_id, status, started_at, expires_at, auto_renew, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [
+        syncStudentId,
         testPlanId,
         'active',
         now,
@@ -249,7 +301,7 @@ export async function seedTestData() {
     );
 
     await client.query('COMMIT');
-    return { adminId, studentId, sessionId };
+    return { adminId, studentId, teacherId, syncStudentId, sessionId };
   } catch (error) {
     await client.query('ROLLBACK');
     throw error;
