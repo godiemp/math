@@ -47,15 +47,15 @@ async function loginUser(page: Page, credentials: { email: string; password: str
     localStorage.setItem('cookie-consent', 'accepted');
   });
 
-  // Navigate to login page
-  await page.goto('/', { waitUntil: 'networkidle' });
+  // Navigate to login page (not landing page)
+  await page.goto('/signin', { waitUntil: 'networkidle' });
 
-  // Wait for the login form to be ready
-  const emailInput = page.locator('input[type="email"], input[name="email"], input[name="username"]');
-  await emailInput.waitFor({ state: 'visible', timeout: 10000 });
+  // Wait for the login form to be ready (username input, not email)
+  const usernameInput = page.locator('input[name="username"]');
+  await usernameInput.waitFor({ state: 'visible', timeout: 10000 });
 
   // Fill credentials and submit
-  await emailInput.fill(credentials.email);
+  await usernameInput.fill(credentials.email);
   await page.fill('input[type="password"]', credentials.password);
   await page.click('button[type="submit"]');
 

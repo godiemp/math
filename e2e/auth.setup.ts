@@ -18,7 +18,7 @@ setup('authenticate as student', async ({ page }) => {
   });
 
   // Fill in credentials
-  await page.fill('input[type="email"], input[name="email"], input[name="username"]', 'student@test.com');
+  await page.fill('input[name="username"]', 'student@test.com');
   await page.fill('input[type="password"]', 'StudentTest123!');
 
   // Submit login

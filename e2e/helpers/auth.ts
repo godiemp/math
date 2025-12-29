@@ -6,8 +6,8 @@ import { Page } from '@playwright/test';
  * at authenticated pages without having to login each time.
  */
 export async function loginAsStudent(page: Page) {
-  // Navigate to login page
-  await page.goto('/');
+  // Navigate to login page (not landing page)
+  await page.goto('/signin');
 
   // Dismiss cookie banner before interacting with the page
   await page.evaluate(() => {
@@ -15,7 +15,7 @@ export async function loginAsStudent(page: Page) {
   });
 
   // Fill in credentials
-  await page.fill('input[type="email"], input[name="email"], input[name="username"]', 'student@test.com');
+  await page.fill('input[name="username"]', 'student@test.com');
   // SECURITY: Updated to use new password that meets security requirements
   await page.fill('input[type="password"]', 'StudentTest123!');
 
@@ -59,7 +59,7 @@ export async function setupAuthenticatedSession(page: Page) {
  * Used for testing teacher-specific features like live lessons.
  */
 export async function loginAsTeacher(page: Page) {
-  await page.goto('/');
+  await page.goto('/signin');
 
   // Dismiss cookie banner
   await page.evaluate(() => {
@@ -67,7 +67,7 @@ export async function loginAsTeacher(page: Page) {
   });
 
   // Fill in teacher credentials
-  await page.fill('input[type="email"], input[name="email"], input[name="username"]', 'teacher@test.com');
+  await page.fill('input[name="username"]', 'teacher@test.com');
   await page.fill('input[type="password"]', 'TeacherTest123!');
 
   // Submit login
@@ -82,7 +82,7 @@ export async function loginAsTeacher(page: Page) {
  * Used for testing real-time lesson sync features.
  */
 export async function loginAsSyncStudent(page: Page) {
-  await page.goto('/');
+  await page.goto('/signin');
 
   // Dismiss cookie banner
   await page.evaluate(() => {
@@ -90,7 +90,7 @@ export async function loginAsSyncStudent(page: Page) {
   });
 
   // Fill in sync student credentials
-  await page.fill('input[type="email"], input[name="email"], input[name="username"]', 'sync.student@test.com');
+  await page.fill('input[name="username"]', 'sync.student@test.com');
   await page.fill('input[type="password"]', 'SyncStudent123!');
 
   // Submit login
