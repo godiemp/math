@@ -126,113 +126,115 @@ function SimilarTrianglesExplanation({ whyPhase, isPlaying, onTogglePlay }: Simi
   const showConclusion = phaseIndex >= 2;
 
   const phaseTexts: Record<WhyPhase, string> = {
-    'overlay': 'El triangulo pequeño esta DENTRO del grande, compartiendo el angulo α',
+    'overlay': 'El triangulo pequeño esta DENTRO del grande',
     'angles': '¡Comparten los 3 angulos: α, 90°, y β!',
     'conclusion': 'Triangulos SEMEJANTES → Lados PROPORCIONALES',
   };
 
+  /*
+   * MATEMÁTICA CORRECTA:
+   * - Edificio: 12m altura, 15m sombra → ratio = 0.8
+   * - Persona: 1.6m altura, 2m sombra → ratio = 0.8
+   * - Escala: 1m = 13.33px (15m = 200px)
+   * - Vértice compartido α en (370, 190)
+   *
+   * GRANDE: base=200px, altura=160px
+   *   points="170,30 170,190 370,190"
+   *
+   * PEQUEÑO: base=27px, altura=21px
+   *   points="343,169 343,190 370,190"
+   *
+   * Ambas hipotenusas tienen pendiente 0.8 y son COLINEALES
+   */
+
   return (
     <div className="space-y-4">
-      {/* SVG with superimposed triangles */}
+      {/* SVG con triángulos matemáticamente correctos */}
       <svg viewBox="0 0 420 220" className="w-full max-w-lg mx-auto">
-        {/* Background */}
-        <rect x="0" y="0" width="420" height="220" className="fill-gray-50 dark:fill-gray-900" rx="8" />
+        {/* Fondo */}
+        <rect x="0" y="0" width="420" height="220" className="fill-slate-50 dark:fill-slate-900" rx="8" />
 
-        {/* Ground line */}
-        <line x1="30" y1="190" x2="390" y2="190" className="stroke-gray-300 dark:stroke-gray-600" strokeWidth="2" />
+        {/* Línea del suelo */}
+        <line x1="40" y1="190" x2="390" y2="190" className="stroke-slate-300 dark:stroke-slate-600" strokeWidth="1" />
 
-        {/* LARGE TRIANGLE (building) - vértice α en (370, 190) */}
+        {/* TRIÁNGULO GRANDE (edificio) - ratio altura/base = 160/200 = 0.8 */}
         {showOverlay && (
           <g className="animate-fadeIn">
             <polygon
-              points="70,50 70,190 370,190"
-              className="fill-purple-200/40 dark:fill-purple-800/30 stroke-purple-600 dark:stroke-purple-400"
+              points="170,30 170,190 370,190"
+              className="fill-purple-100/60 dark:fill-purple-800/30 stroke-purple-500 dark:stroke-purple-400"
               strokeWidth="2"
             />
-            {/* Height dimension line - left side */}
-            <line x1="55" y1="50" x2="55" y2="190" className="stroke-purple-500" strokeWidth="1" />
-            <line x1="50" y1="50" x2="60" y2="50" className="stroke-purple-500" strokeWidth="1" />
-            <line x1="50" y1="190" x2="60" y2="190" className="stroke-purple-500" strokeWidth="1" />
-            <text x="35" y="125" className="fill-purple-600 dark:fill-purple-400 text-xs font-bold">12m</text>
-            {/* Base label */}
-            <text x="220" y="208" textAnchor="middle" className="fill-gray-500 dark:fill-gray-400 text-xs">15m</text>
+            {/* Dimensiones */}
+            <line x1="155" y1="30" x2="155" y2="190" className="stroke-purple-400" strokeWidth="1" />
+            <line x1="150" y1="30" x2="160" y2="30" className="stroke-purple-400" strokeWidth="1" />
+            <line x1="150" y1="190" x2="160" y2="190" className="stroke-purple-400" strokeWidth="1" />
+            <text x="135" y="115" className="fill-purple-600 dark:fill-purple-400 text-xs font-bold">12m</text>
+            <text x="270" y="205" textAnchor="middle" className="fill-slate-500 dark:fill-slate-400 text-xs">15m</text>
           </g>
         )}
 
-        {/* SMALL TRIANGLE (person) - comparte vértice α en (370, 190) */}
+        {/* TRIÁNGULO PEQUEÑO (persona) - ratio altura/base = 21/27 ≈ 0.8 */}
         {showOverlay && (
           <g className="animate-fadeIn" style={{ animationDelay: '0.3s' }}>
             <polygon
-              points="330,150 330,190 370,190"
-              className="fill-blue-300/70 dark:fill-blue-700/50 stroke-blue-600 dark:stroke-blue-400"
-              strokeWidth="3"
+              points="343,169 343,190 370,190"
+              className="fill-blue-200/80 dark:fill-blue-700/50 stroke-blue-600 dark:stroke-blue-400"
+              strokeWidth="2.5"
             />
-            {/* Height dimension line */}
-            <line x1="318" y1="150" x2="318" y2="190" className="stroke-blue-500" strokeWidth="1" />
-            <line x1="313" y1="150" x2="323" y2="150" className="stroke-blue-500" strokeWidth="1" />
-            <line x1="313" y1="190" x2="323" y2="190" className="stroke-blue-500" strokeWidth="1" />
-            <text x="295" y="175" className="fill-blue-600 dark:fill-blue-400 text-xs font-bold">1.6m</text>
-            {/* Base label */}
-            <text x="350" y="208" textAnchor="middle" className="fill-gray-500 dark:fill-gray-400 text-xs">2m</text>
+            {/* Dimensiones */}
+            <line x1="330" y1="169" x2="330" y2="190" className="stroke-blue-400" strokeWidth="1" />
+            <line x1="325" y1="169" x2="335" y2="169" className="stroke-blue-400" strokeWidth="1" />
+            <line x1="325" y1="190" x2="335" y2="190" className="stroke-blue-400" strokeWidth="1" />
+            <text x="305" y="182" className="fill-blue-600 dark:fill-blue-400 text-[10px] font-bold">1.6m</text>
+            <text x="356" y="205" className="fill-slate-500 dark:fill-slate-400 text-[10px]">2m</text>
           </g>
         )}
 
-        {/* ANGLE MARKERS - shown in 'angles' phase */}
+        {/* MARCADORES DE ÁNGULOS */}
         {showAngles && (
           <g className="animate-fadeIn">
-            {/* Ángulo α COMPARTIDO (esquina inferior derecha) */}
+            {/* Ángulo α COMPARTIDO (esquina inferior derecha - punto 370,190) */}
             <path
-              d="M 350,190 A 20,20 0 0,1 366,178"
+              d="M 355,190 A 15,15 0 0,1 367,181"
               className="stroke-orange-500"
-              strokeWidth="3"
+              strokeWidth="2.5"
               fill="none"
             />
-            <text x="378" y="195" className="fill-orange-600 dark:fill-orange-400 text-base font-bold">α</text>
+            <text x="375" y="193" className="fill-orange-600 dark:fill-orange-400 text-sm font-bold">α</text>
 
-            {/* 90° triángulo grande (esquina inferior izquierda) */}
-            <rect x="70" y="178" width="12" height="12" className="fill-none stroke-purple-500" strokeWidth="2" />
-            <text x="88" y="175" className="fill-purple-600 dark:fill-purple-400 text-xs font-bold">90°</text>
+            {/* 90° triángulo grande (esquina inferior izquierda - punto 170,190) */}
+            <rect x="170" y="178" width="10" height="10" className="fill-none stroke-purple-500" strokeWidth="1.5" />
+            <text x="185" y="176" className="fill-purple-600 dark:fill-purple-400 text-[10px] font-bold">90°</text>
 
-            {/* 90° triángulo pequeño */}
-            <rect x="330" y="180" width="10" height="10" className="fill-none stroke-blue-500" strokeWidth="2" />
+            {/* 90° triángulo pequeño (punto 343,190) */}
+            <rect x="343" y="183" width="7" height="7" className="fill-none stroke-blue-500" strokeWidth="1.5" />
 
-            {/* β triángulo grande (vértice superior) */}
+            {/* β triángulo grande (vértice superior - punto 170,30) */}
             <path
-              d="M 70,68 A 18,18 0 0,1 85,55"
+              d="M 170,48 A 18,18 0 0,1 186,34"
               className="stroke-green-500"
               strokeWidth="2"
               fill="none"
             />
-            <text x="92" y="52" className="fill-green-600 dark:fill-green-400 text-sm font-bold">β</text>
+            <text x="190" y="32" className="fill-green-600 dark:fill-green-400 text-sm font-bold">β</text>
 
-            {/* β triángulo pequeño */}
+            {/* β triángulo pequeño (punto 343,169) */}
             <path
-              d="M 330,162 A 12,12 0 0,1 340,153"
+              d="M 343,176 A 7,7 0 0,1 349,170"
               className="stroke-green-500"
-              strokeWidth="2"
+              strokeWidth="1.5"
               fill="none"
             />
-            <text x="343" y="148" className="fill-green-600 dark:fill-green-400 text-sm font-bold">β</text>
+            <text x="352" y="165" className="fill-green-600 dark:fill-green-400 text-[10px] font-bold">β</text>
           </g>
         )}
 
-        {/* CONCLUSION - similarity indicators */}
+        {/* CONCLUSIÓN - símbolo de semejanza */}
         {showConclusion && (
           <g className="animate-fadeIn">
-            {/* Similarity symbol between triangles */}
-            <rect x="175" y="85" width="70" height="35" rx="6" className="fill-green-100 dark:fill-green-900/50 stroke-green-500" strokeWidth="2" />
-            <text x="210" y="108" textAnchor="middle" className="fill-green-700 dark:fill-green-300 text-lg font-bold">∼</text>
-
-            {/* Connecting arrows */}
-            <line x1="140" y1="100" x2="175" y2="100" className="stroke-green-500" strokeWidth="1.5" markerEnd="url(#arrow)" />
-            <line x1="245" y1="100" x2="290" y2="130" className="stroke-green-500" strokeWidth="1.5" markerEnd="url(#arrow)" />
-
-            {/* Arrow marker definition */}
-            <defs>
-              <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-                <polygon points="0,0 8,4 0,8" className="fill-green-500" />
-              </marker>
-            </defs>
+            <text x="100" y="100" className="fill-green-600 dark:fill-green-400 text-2xl font-bold">∼</text>
+            <text x="80" y="120" className="fill-slate-600 dark:fill-slate-400 text-xs">semejantes</text>
           </g>
         )}
       </svg>
