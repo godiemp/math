@@ -147,8 +147,8 @@ export default function GaltonBoard({
         const pos = getPegPosition(row, col);
         const peg = Matter.Bodies.circle(pos.x, pos.y, pegRadius, {
           isStatic: true,
-          restitution: 0.55,  // Increased for better bounces
-          friction: 0.15,
+          restitution: 0.7,   // High bounce for realistic collisions
+          friction: 0.05,     // Low friction for smooth movement
           label: 'peg',
         });
         pegs.push(peg);
@@ -218,11 +218,14 @@ export default function GaltonBoard({
 
     Matter.Composite.add(engine.world, [...pegs, ...walls, ...binSensors, ...dividers]);
 
-    // Apply guiding force each physics update to steer balls toward target bins
+    // Apply guiding force only while ball is in peg area (not in bins)
     Matter.Events.on(engine, 'beforeUpdate', () => {
       allBallsRef.current.forEach((ball) => {
         const targetBin = (ball as any).targetBin;
         if (targetBin === undefined) return;
+
+        // Only apply force in peg area - let physics handle bins naturally
+        if (ball.position.y > pegAreaBottom - 20) return;
 
         // Calculate target X position
         const binWidth = boardWidth / numBins;
@@ -230,10 +233,9 @@ export default function GaltonBoard({
         const currentX = ball.position.x;
         const diff = targetX - currentX;
 
-        // Apply horizontal force toward target bin
-        // Force is proportional to distance but capped - strong enough to overcome momentum
-        const maxForce = 0.0001;
-        const forceStrength = Math.min(Math.abs(diff) * 0.00002, maxForce);
+        // Apply weaker force - let physics dominate for realistic movement
+        const maxForce = 0.00005;
+        const forceStrength = Math.min(Math.abs(diff) * 0.00001, maxForce);
         Matter.Body.applyForce(ball, ball.position, {
           x: Math.sign(diff) * forceStrength,
           y: 0,
@@ -390,10 +392,10 @@ export default function GaltonBoard({
       5,
       ballRadius,
       {
-        restitution: 0.5,
-        friction: 0.1,
-        frictionAir: 0.02,
-        density: 0.002,
+        restitution: 0.7,     // High bounce for realistic collisions
+        friction: 0.05,       // Low friction for smooth movement
+        frictionAir: 0.008,   // Low air drag - less floating
+        density: 0.001,       // Lighter balls - more responsive
         label: `ball-${runIdRef.current}-${ballsReleasedRef.current++}`,
       }
     );
