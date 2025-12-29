@@ -42,20 +42,17 @@ const TEST_LESSON = {
  * Uses a robust login flow that handles cookie banners and waits for page readiness.
  */
 async function loginUser(page: Page, credentials: { email: string; password: string }) {
-  // Set cookie consent BEFORE navigating to prevent banner from blocking form
-  await page.context().addInitScript(() => {
+  // Navigate to login page (not landing page)
+  // Don't use waitUntil: 'networkidle' - it conflicts with WebSocket mocking
+  await page.goto('/signin');
+
+  // Dismiss cookie banner after navigation (like auth.setup.ts does)
+  await page.evaluate(() => {
     localStorage.setItem('cookie-consent', 'accepted');
   });
 
-  // Navigate to login page (not landing page)
-  await page.goto('/signin', { waitUntil: 'networkidle' });
-
-  // Wait for the login form to be ready (username input, not email)
-  const usernameInput = page.locator('input[name="username"]');
-  await usernameInput.waitFor({ state: 'visible', timeout: 10000 });
-
-  // Fill credentials and submit
-  await usernameInput.fill(credentials.email);
+  // Fill credentials and submit (page.fill auto-waits for element)
+  await page.fill('input[name="username"]', credentials.email);
   await page.fill('input[type="password"]', credentials.password);
   await page.click('button[type="submit"]');
 
