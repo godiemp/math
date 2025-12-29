@@ -7,8 +7,8 @@ import { cn } from '@/lib/utils';
 
 type Phase = 'scenario' | 'question' | 'result';
 
-const OPTIONS = ['268.435.456', '536.870.912', '1.073.741.824', '2.147.483.648'];
-const CORRECT_ANSWER = 0; // 8192 × 32768 = 268,435,456
+const OPTIONS = ['1.000.000', '10.000.000', '100.000.000', '1.000.000.000'];
+const CORRECT_ANSWER = 1; // 1000 × 10000 = 10,000,000 = 10^7
 
 export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('scenario');
@@ -58,12 +58,12 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               <p className="text-gray-600 dark:text-gray-400 text-sm">El mago pide dos números:</p>
               <div className="flex items-center gap-4 flex-wrap justify-center">
                 <div className="bg-purple-100 dark:bg-purple-900/30 rounded-xl px-6 py-4 text-center">
-                  <p className="text-2xl font-bold text-purple-600">8.192</p>
+                  <p className="text-2xl font-bold text-purple-600">1.000</p>
                   <p className="text-xs text-gray-500">Primer número</p>
                 </div>
                 <span className="text-3xl text-gray-400">×</span>
                 <div className="bg-indigo-100 dark:bg-indigo-900/30 rounded-xl px-6 py-4 text-center">
-                  <p className="text-2xl font-bold text-indigo-600">32.768</p>
+                  <p className="text-2xl font-bold text-indigo-600">10.000</p>
                   <p className="text-xs text-gray-500">Segundo número</p>
                 </div>
               </div>
@@ -89,19 +89,19 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           </p>
           <div className="flex justify-center items-center gap-2 flex-wrap text-sm">
             <div className="bg-white dark:bg-gray-800 rounded-lg px-3 py-2 font-mono">
-              log₂(8192) = 13
+              log(1000) = 3
             </div>
             <span className="text-blue-600 font-bold">+</span>
             <div className="bg-white dark:bg-gray-800 rounded-lg px-3 py-2 font-mono">
-              log₂(32768) = 15
+              log(10000) = 4
             </div>
             <span className="text-blue-600 font-bold">=</span>
             <div className="bg-white dark:bg-gray-800 rounded-lg px-3 py-2 font-mono">
-              28
+              7
             </div>
           </div>
           <p className="text-blue-700 dark:text-blue-300 text-center text-sm mt-2">
-            ¡Solo suma 13 + 15 = 28, luego calcula 2²⁸!
+            ¡Solo suma 3 + 4 = 7, luego calcula 10⁷!
           </p>
         </div>
 
@@ -139,15 +139,15 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             Si el mago sabe que:
           </p>
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center mb-4 space-y-2">
-            <p className="font-mono text-lg">log₂(8.192) = 13</p>
-            <p className="font-mono text-lg">log₂(32.768) = 15</p>
-            <p className="font-mono text-lg text-purple-600 font-bold">13 + 15 = 28</p>
+            <p className="font-mono text-lg">log(1.000) = 3</p>
+            <p className="font-mono text-lg">log(10.000) = 4</p>
+            <p className="font-mono text-lg text-purple-600 font-bold">3 + 4 = 7</p>
           </div>
           <p className="text-gray-700 dark:text-gray-300 text-center">
-            ¿Cuánto es <span className="font-mono font-bold">8.192 × 32.768</span>?
+            ¿Cuánto es <span className="font-mono font-bold">1.000 × 10.000</span>?
           </p>
           <p className="text-gray-500 dark:text-gray-400 text-center text-sm mt-2">
-            (Pista: 2²⁸ = ?)
+            (Pista: 10⁷ = ?)
           </p>
         </div>
 
@@ -237,13 +237,13 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
               <p className="text-gray-600 dark:text-gray-400 mb-2">En el truco:</p>
               <p className="font-mono">
-                log₂(8192 × 32768) = log₂(8192) + log₂(32768)
+                log(1000 × 10000) = log(1000) + log(10000)
               </p>
               <p className="font-mono text-green-600">
-                = 13 + 15 = 28
+                = 3 + 4 = 7
               </p>
               <p className="font-mono text-lg font-bold mt-2">
-                Por lo tanto: 2²⁸ = 268.435.456 ✓
+                Por lo tanto: 10⁷ = 10.000.000 ✓
               </p>
             </div>
           </div>
