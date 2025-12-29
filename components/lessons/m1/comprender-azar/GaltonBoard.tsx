@@ -208,7 +208,7 @@ export default function GaltonBoard({
 
     Matter.Composite.add(engine.world, [...pegs, ...walls, ...binSensors, ...dividers]);
 
-    // Collision detection for bin sensors - just count, don't remove balls
+    // Collision detection for peg bounces and bin sensors
     Matter.Events.on(engine, 'collisionStart', (event) => {
       event.pairs.forEach((pair) => {
         const { bodyA, bodyB } = pair;
@@ -217,12 +217,24 @@ export default function GaltonBoard({
           : bodyB.label.startsWith('ball-')
           ? bodyB
           : null;
+        const peg = bodyA.label === 'peg' ? bodyA : bodyB.label === 'peg' ? bodyB : null;
         const sensor = bodyA.label.startsWith('bin-sensor-')
           ? bodyA
           : bodyB.label.startsWith('bin-sensor-')
           ? bodyB
           : null;
 
+        // Apply random lateral impulse on peg collision (simulates 50/50 left/right)
+        if (ball && peg) {
+          const randomDirection = Math.random() > 0.5 ? 1 : -1;
+          const impulseStrength = 0.00015 + Math.random() * 0.0001; // Small random impulse
+          Matter.Body.applyForce(ball, ball.position, {
+            x: randomDirection * impulseStrength,
+            y: 0,
+          });
+        }
+
+        // Count balls entering bins
         if (ball && sensor && !processedBallsRef.current.has(ball.label)) {
           processedBallsRef.current.add(ball.label);
           const binIndex = parseInt(sensor.label.split('-')[2]);
@@ -347,26 +359,22 @@ export default function GaltonBoard({
     const engine = engineRef.current;
     if (!engine) return;
 
+    // Ball starts near center with tiny variance - distribution comes from peg collisions
     const ball = Matter.Bodies.circle(
-      boardWidth / 2 + (Math.random() - 0.5) * 50, // Fix 1: Large random offset (±25px) for path variance
+      boardWidth / 2 + (Math.random() - 0.5) * 4, // ±2px - small variance to break symmetry
       5,
       ballRadius,
       {
         // Physics tuned for bell curve distribution:
-        restitution: 0.55,     // Higher = more energetic bounces
-        friction: 0.15,
-        frictionAir: 0.01,     // Low = allows horizontal spread for wider bell curve
+        restitution: 0.5,      // Moderate bounce
+        friction: 0.1,
+        frictionAir: 0.01,     // Low air resistance
         density: 0.002,
         label: `ball-${runIdRef.current}-${ballsReleasedRef.current++}`,
       }
     );
 
-    // Fix 2: Add initial velocity randomization to break Matter.js determinism
-    Matter.Body.setVelocity(ball, {
-      x: (Math.random() - 0.5) * 3, // ±1.5 units horizontal
-      y: 0,
-    });
-
+    // No initial horizontal velocity - let peg collisions determine path
     Matter.Composite.add(engine.world, ball);
     allBallsRef.current.add(ball);
   }, []);
