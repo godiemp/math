@@ -221,7 +221,7 @@ test.describe('User Registration', () => {
     await page.waitForTimeout(1500);
 
     // Verify error is shown (should mention user already exists)
-    const errorCount = await page.getByText(/ya existe|already exists/i).count();
+    const errorCount = await page.getByText(/ya está registrado|ya existe|already exists/i).count();
     expect(errorCount).toBeGreaterThan(0);
 
     // Should still be on login page
