@@ -11,6 +11,7 @@ interface QuizProps {
   quizMode?: 'zen' | 'rapidfire' | 'standard';
   difficulty?: 'easy' | 'medium' | 'hard' | 'extreme';
   replayQuestions?: Question[];
+  questionCount?: number;
 }
 
 /**
@@ -22,7 +23,8 @@ export default function Quiz({
   subject,
   quizMode = 'zen',
   difficulty = 'medium',
-  replayQuestions
+  replayQuestions,
+  questionCount,
 }: QuizProps) {
   // Route to appropriate quiz mode component
   if (quizMode === 'rapidfire') {
@@ -44,6 +46,7 @@ export default function Quiz({
       level={level}
       subject={subject}
       replayQuestions={replayQuestions}
+      questionCount={questionCount}
     />
   );
 }
