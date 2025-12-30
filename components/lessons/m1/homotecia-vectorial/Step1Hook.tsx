@@ -120,18 +120,18 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   y
                 </text>
 
-                {/* Original house outline */}
+                {/* Original house outline - extended to include window at (4,3) */}
                 <rect
                   x={40}
-                  y={70}
-                  width={40}
-                  height={50}
+                  y={50}
+                  width={70}
+                  height={70}
                   className="fill-blue-100 dark:fill-blue-900/50 stroke-blue-500"
                   strokeWidth="2"
                 />
                 {/* Roof */}
                 <polygon
-                  points="40,70 60,50 80,70"
+                  points="40,50 75,25 110,50"
                   className="fill-blue-200 dark:fill-blue-800/50 stroke-blue-500"
                   strokeWidth="2"
                 />
@@ -158,12 +158,12 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
                 {/* Window at coordinate (4, 3) → SVG (100, 70) */}
                 <rect
-                  x={95}
-                  y={65}
-                  width={10}
-                  height={10}
-                  className="fill-cyan-200 dark:fill-cyan-700 stroke-cyan-500"
-                  strokeWidth="1.5"
+                  x={93}
+                  y={63}
+                  width={14}
+                  height={14}
+                  className="fill-cyan-300 dark:fill-cyan-600 stroke-cyan-600"
+                  strokeWidth="2"
                 />
 
                 {/* Coordinate labels */}
