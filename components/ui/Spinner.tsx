@@ -22,7 +22,7 @@ export function Spinner({ size = 'md', variant = 'primary' }: SpinnerProps) {
     <div className="flex items-center justify-center">
       <div className={`relative ${containerSizes[size]}`}>
         {/* Outer rotating ring */}
-        <div className="absolute inset-0 rounded-full border-2 border-dashed border-[#0A84FF]/20 dark:border-[#0A84FF]/30 animate-spin" style={{ animationDuration: '3s' }}></div>
+        <div className="absolute inset-0 rounded-full border-2 border-dashed animate-spin" style={{ animationDuration: '3s', borderColor: 'color-mix(in srgb, var(--color-tint) 25%, transparent)' }}></div>
 
         {/* Math symbols orbiting */}
         <div className="absolute inset-0 animate-spin" style={{ animationDuration: '4s' }}>
@@ -51,7 +51,7 @@ export function Spinner({ size = 'md', variant = 'primary' }: SpinnerProps) {
 
         {/* Center rotating symbol */}
         <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${sizeClasses[size]} animate-spin`} style={{ animationDuration: '2s' }}>
-          <span className={variant === 'primary' ? 'text-[#0A84FF]' : 'text-[#5E5CE6]'}>∞</span>
+          <span style={{ color: variant === 'primary' ? 'var(--color-tint)' : 'var(--color-tint-alt)' }}>∞</span>
         </div>
       </div>
     </div>
@@ -64,9 +64,9 @@ interface LoadingScreenProps {
 
 export function LoadingScreen({ message = 'Cargando...' }: LoadingScreenProps) {
   return (
-    <div className="min-h-screen bg-white dark:bg-[#000000] flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ background: 'var(--color-bg)' }}>
       {/* Subtle gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0A84FF]/[0.02] to-transparent dark:via-[#0A84FF]/[0.04]"></div>
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent, color-mix(in srgb, var(--color-tint) 3%, transparent), transparent)' }}></div>
 
       {/* Main content card */}
       <div className="text-center relative z-10 px-6 max-w-md">
@@ -74,10 +74,10 @@ export function LoadingScreen({ message = 'Cargando...' }: LoadingScreenProps) {
         <div className="mb-8 flex justify-center">
           <div className="relative">
             {/* Subtle outer ring */}
-            <div className="w-20 h-20 rounded-full border-2 border-[#0A84FF]/10 dark:border-[#0A84FF]/20"></div>
+            <div className="w-20 h-20 rounded-full border-2" style={{ borderColor: 'color-mix(in srgb, var(--color-tint) 15%, transparent)' }}></div>
 
             {/* Animated spinner ring */}
-            <div className="absolute inset-0 w-20 h-20 rounded-full border-2 border-transparent border-t-[#0A84FF] animate-spin"></div>
+            <div className="absolute inset-0 w-20 h-20 rounded-full border-2 border-transparent animate-spin" style={{ borderTopColor: 'var(--color-tint)' }}></div>
 
             {/* Center icon */}
             <div className="absolute inset-0 flex items-center justify-center">
@@ -87,15 +87,15 @@ export function LoadingScreen({ message = 'Cargando...' }: LoadingScreenProps) {
         </div>
 
         {/* Message */}
-        <h2 className="text-2xl font-semibold text-black dark:text-white mb-3 tracking-tight">
+        <h2 className="text-2xl font-semibold mb-3 tracking-tight" style={{ color: 'var(--color-label-primary)' }}>
           {message}
         </h2>
 
         {/* Simple progress indicator */}
         <div className="flex justify-center gap-1.5">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#0A84FF]/40 animate-pulse" style={{ animationDelay: '0ms', animationDuration: '1.5s' }}></div>
-          <div className="w-1.5 h-1.5 rounded-full bg-[#0A84FF]/60 animate-pulse" style={{ animationDelay: '200ms', animationDuration: '1.5s' }}></div>
-          <div className="w-1.5 h-1.5 rounded-full bg-[#0A84FF] animate-pulse" style={{ animationDelay: '400ms', animationDuration: '1.5s' }}></div>
+          <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ animationDelay: '0ms', animationDuration: '1.5s', background: 'color-mix(in srgb, var(--color-tint) 40%, transparent)' }}></div>
+          <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ animationDelay: '200ms', animationDuration: '1.5s', background: 'color-mix(in srgb, var(--color-tint) 60%, transparent)' }}></div>
+          <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ animationDelay: '400ms', animationDuration: '1.5s', background: 'var(--color-tint)' }}></div>
         </div>
       </div>
     </div>
