@@ -78,12 +78,10 @@ export function useGaltonEngine({
         const pos = getPegPosition(row, col);
         const peg = Matter.Bodies.circle(pos.x, pos.y, pegRadius, {
           isStatic: true,
-          restitution: 0.6,
-          friction: 0.1,
+          restitution: 0.5,
+          friction: 0.00001, // Very low - consistent with balls
           label: `peg-${pegId++}`,
         });
-        // Store row info for collision tracking
-        (peg as any).pegRow = row;
         pegs.push(peg);
       }
     }
@@ -146,36 +144,11 @@ export function useGaltonEngine({
           : bodyB.label.startsWith('ball-')
             ? bodyB
             : null;
-        const peg = bodyA.label.startsWith('peg-')
-          ? bodyA
-          : bodyB.label.startsWith('peg-')
-            ? bodyB
-            : null;
         const sensor = bodyA.label.startsWith('bin-sensor-')
           ? bodyA
           : bodyB.label.startsWith('bin-sensor-')
             ? bodyB
             : null;
-
-        // Apply directional impulse on peg collision (50/50 decision at collision time)
-        if (ball && peg) {
-          const lastCollisionRow = (ball as any).lastCollisionRow as number | undefined;
-          const pegRow = (peg as any).pegRow as number;
-
-          // Only process if this is a NEW row (one decision per row)
-          if (lastCollisionRow !== pegRow) {
-            // 50/50 decision at collision time!
-            const goRight = Math.random() > 0.5;
-            const nudge = 0.4; // Minimal nudge, adds to existing velocity
-
-            Matter.Body.setVelocity(ball, {
-              x: ball.velocity.x + (goRight ? nudge : -nudge),
-              y: ball.velocity.y,
-            });
-
-            (ball as any).lastCollisionRow = pegRow;
-          }
-        }
 
         // Count balls entering bins
         if (ball && sensor && !processedBallsRef.current.has(ball.label)) {
@@ -216,16 +189,13 @@ export function useGaltonEngine({
       5,
       ballRadius,
       {
-        restitution: 0.6,
-        friction: 0.1,
-        frictionAir: 0.005, // Reduced to preserve horizontal momentum
+        restitution: 0.5,
+        friction: 0.00001, // Very low - balls don't stick to pegs
+        frictionAir: 0.042, // Higher - dampens bouncing for smoother motion
         density: 0.001,
         label: `ball-${runIdRef.current}-${ballsReleasedRef.current++}`,
       }
     );
-
-    // Initialize row tracker for collision debouncing
-    (ball as any).lastCollisionRow = -1;
 
     Matter.Composite.add(engine.world, ball);
     allBallsRef.current.add(ball);
