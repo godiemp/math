@@ -43,7 +43,8 @@ const TEST_LESSON = {
  */
 async function loginUser(page: Page, credentials: { email: string; password: string }) {
   // Navigate to login page (not landing page)
-  await page.goto('/signin');
+  // Use timeout to handle slow CI environments
+  await page.goto('/signin', { timeout: 30000 });
 
   // Wait for the page to be fully loaded
   await page.waitForLoadState('domcontentloaded');
@@ -53,9 +54,9 @@ async function loginUser(page: Page, credentials: { email: string; password: str
     localStorage.setItem('cookie-consent', 'accepted');
   });
 
-  // Wait for the login form to be visible
+  // Wait for the login form to be visible with longer timeout for CI
   const usernameInput = page.locator('input[name="username"]');
-  await usernameInput.waitFor({ state: 'visible', timeout: 15000 });
+  await usernameInput.waitFor({ state: 'visible', timeout: 30000 });
 
   // Fill credentials and submit
   await usernameInput.fill(credentials.email);
@@ -63,7 +64,7 @@ async function loginUser(page: Page, credentials: { email: string; password: str
   await page.click('button[type="submit"]');
 
   // Wait for login to complete - should redirect to dashboard or teacher page
-  await page.waitForURL(/\/(teacher|dashboard)/, { timeout: 20000 });
+  await page.waitForURL(/\/(teacher|dashboard)/, { timeout: 30000 });
 }
 
 /**
@@ -73,7 +74,8 @@ type SocketMock = Awaited<ReturnType<typeof setupSocketMock>>;
 
 test.describe('Teacher-Student Real-Time Sync', () => {
   // These tests need more time due to multiple browser contexts and login flows
-  test.setTimeout(60000);
+  // Increased timeout for CI environments
+  test.setTimeout(120000);
 
   let browser: Browser;
   let teacherContext: BrowserContext;
@@ -363,7 +365,8 @@ test.describe('Teacher-Student Real-Time Sync', () => {
 
 test.describe('Teacher-Student Sync - Edge Cases', () => {
   // These tests need more time due to browser context creation and login flows
-  test.setTimeout(60000);
+  // Increased timeout for CI environments
+  test.setTimeout(120000);
 
   let browser: Browser;
   let teacherContext: BrowserContext;
