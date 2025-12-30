@@ -166,7 +166,7 @@ export function useGaltonEngine({
           if (lastCollisionRow !== pegRow) {
             // 50/50 decision at collision time!
             const goRight = Math.random() > 0.5;
-            const nudge = 0.8; // Gentle nudge, adds to existing velocity
+            const nudge = 0.4; // Minimal nudge, adds to existing velocity
 
             Matter.Body.setVelocity(ball, {
               x: ball.velocity.x + (goRight ? nudge : -nudge),
