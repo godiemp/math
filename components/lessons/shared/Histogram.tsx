@@ -61,7 +61,35 @@ export default function Histogram({
 
   return (
     <div className={cn('w-full', className)}>
-      {/* Chart area */}
+      {/* Frequency labels row */}
+      {showFrequencies && (
+        <div className="flex justify-center px-4 mb-1">
+          {data.map((item, index) => {
+            const isHighlighted = highlightIndex === index;
+            return (
+              <div
+                key={`freq-${item.interval}-${index}`}
+                className="flex-1 max-w-20 text-center"
+              >
+                {item.frequency > 0 && (
+                  <span
+                    className={cn(
+                      'text-xs font-semibold transition-all duration-300',
+                      isHighlighted
+                        ? 'text-amber-600 dark:text-amber-400 scale-110'
+                        : 'text-gray-700 dark:text-gray-300'
+                    )}
+                  >
+                    {item.frequency}
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Chart area - bars only (contiguous for histogram) */}
       <div
         className="flex items-end justify-center px-4"
         style={{ height: chartHeight }}
@@ -74,29 +102,13 @@ export default function Histogram({
           return (
             <div
               key={`${item.interval}-${index}`}
-              className="flex-1 flex flex-col items-center justify-end h-full max-w-20"
+              className="flex-1 max-w-20 h-full flex items-end"
             >
-              {/* Frequency label above bar */}
-              {showFrequencies && item.frequency > 0 && (
-                <span
-                  className={cn(
-                    'text-xs font-semibold mb-1 transition-all duration-300',
-                    isHighlighted
-                      ? 'text-amber-600 dark:text-amber-400 scale-110'
-                      : 'text-gray-700 dark:text-gray-300'
-                  )}
-                >
-                  {item.frequency}
-                </span>
-              )}
-
-              {/* Bar - no gap between bars (contiguous) for histogram */}
+              {/* Bar */}
               <div
                 onClick={() => onBarClick?.(index)}
                 className={cn(
-                  'w-full relative',
-                  // Only round corners at the top
-                  'rounded-t-sm',
+                  'w-full rounded-t-sm',
                   animated && 'transition-all duration-500 ease-out',
                   onBarClick && 'cursor-pointer hover:brightness-110',
                   isHighlighted && 'ring-2 ring-amber-400 ring-offset-2'
