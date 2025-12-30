@@ -82,6 +82,15 @@ export const ZEN_INTRO_TIMINGS = {
 } as const;
 
 /**
+ * Zen mode question count configuration
+ */
+export const ZEN_QUESTION_COUNT = {
+  min: 5,             // Minimum number of questions
+  max: 20,            // Maximum number of questions
+  default: 10,        // Default number of questions
+} as const;
+
+/**
  * Rapidfire mode countdown timings
  */
 export const RAPIDFIRE_COUNTDOWN = {

@@ -23,7 +23,9 @@
       "registerFree": "regístrate gratis",
       "errors": {
         "completeFields": "Por favor completa todos los campos",
-        "invalidCredentials": "Error al iniciar sesión",
+        "invalidCredentials": "Usuario o contraseña incorrectos",
+        "userNotFound": "Usuario o email no encontrado",
+        "wrongPassword": "Contraseña incorrecta",
         "generic": "Ocurrió un error. Intenta de nuevo",
         "registration": "Error al registrarse"
       },
@@ -49,6 +51,7 @@
         "acceptTerms": "Debes aceptar los términos y condiciones",
         "usernameFormat": "El usuario solo puede contener letras, números y guiones bajos (sin espacios ni tildes)",
         "usernameTooLong": "El usuario debe tener máximo 20 caracteres",
+        "userAlreadyExists": "El usuario o email ya está registrado",
         "generic": "Error al crear la cuenta"
       },
       "success": "Cuenta creada exitosamente"

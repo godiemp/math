@@ -17,6 +17,67 @@ Invoke this skill when:
 
 ---
 
+# NOMENCLATURA: Niveles de Competencia vs Niveles Escolares
+
+**IMPORTANTE**: El sistema usa DOS tipos de códigos que se parecen pero significan cosas diferentes:
+
+## M1 y M2: Niveles de Competencia PAES
+
+Los códigos **M1** y **M2** representan los dos niveles de competencia del examen PAES:
+
+| Código | Nombre | Descripción |
+|--------|--------|-------------|
+| **M1** | Competencia Matemática 1 | Nivel básico - contenidos fundamentales |
+| **M2** | Competencia Matemática 2 | Nivel avanzado - contenidos más complejos |
+
+**Se usan en:**
+- IDs de lecciones: `m1-alg-001-a`, `m2-geo-001-a`
+- Campo `level` en registros: `level: 'M1'`
+- Carpetas de componentes: `components/lessons/m1/`, `components/lessons/m2/`
+- Unidades temáticas: `M1-ALG-001`, `M2-NUM-003`
+
+## 1M, 2M, 3M, 4M: Niveles Escolares (Grados)
+
+Los códigos **1M, 2M, 3M, 4M** representan los años de enseñanza media:
+
+| Código | Grado Escolar | Equivalente |
+|--------|---------------|-------------|
+| **1M** | 1° Medio | 9th grade / Freshman |
+| **2M** | 2° Medio | 10th grade / Sophomore |
+| **3M** | 3° Medio | 11th grade / Junior |
+| **4M** | 4° Medio | 12th grade / Senior |
+
+**Se usan en:**
+- Códigos MINEDUC: `MA1M-OA-03` (OA de 1° Medio)
+- Campo `grade` en mapeos: `grade: '1M'`
+
+## Relación entre ambos sistemas
+
+Una lección de **Competencia M1** puede cubrir contenidos de **varios grados escolares**:
+
+```
+Lección: m1-alg-001-a (Competencia M1)
+├── minEducOA: ['MA1M-OA-03']  → Cubre OA de 1° Medio
+└── minEducOA: ['MA2M-OA-01']  → También puede cubrir OA de 2° Medio
+```
+
+## Formato de códigos MINEDUC
+
+```
+MA1M-OA-03
+│││  │  └── Número de Objetivo de Aprendizaje
+│││  └───── OA = Objetivo de Aprendizaje
+│└└──────── 1M = 1° Medio (grado escolar)
+└────────── MA = Matemáticas
+```
+
+Otros formatos:
+- `MA2M-OA-XX` → 2° Medio
+- `FG-MATE-3M-OAC-XX` → 3° Medio (Formación General)
+- `FG-MATE-4M-OAC-XX` → 4° Medio (Formación General)
+
+---
+
 # STEP 0: IDENTIFY THE SUBJECT
 
 **Before anything else, identify which mathematical subject the lesson covers:**
