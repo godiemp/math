@@ -36,6 +36,7 @@ import predictionRoutes from './routes/predictionRoutes';
 import operationsPracticeRoutes from './routes/operationsPracticeRoutes';
 import certificateRoutes from './routes/certificateRoutes';
 import adaptivePracticeRoutes from './routes/adaptivePracticeRoutes';
+import diagnosisRoutes from './routes/diagnosisRoutes';
 import teacherRoutes from './routes/teacherRoutes';
 import demoAccountRoutes from './routes/demoAccountRoutes';
 import { serveImage } from './controllers/adminController';
@@ -219,6 +220,7 @@ app.use('/api/prediction', predictionRoutes);
 app.use('/api/operations-practice', operationsPracticeRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/adaptive', adaptivePracticeRoutes);
+app.use('/api/diagnosis', diagnosisRoutes);
 app.use('/api/teacher', teacherRoutes);
 app.use('/api/admin/demo-accounts', demoAccountRoutes);
 
@@ -246,6 +248,7 @@ console.log('✅ Prediction routes registered at /api/prediction');
 console.log('✅ Operations Practice routes registered at /api/operations-practice');
 console.log('✅ Certificate routes registered at /api/certificates');
 console.log('✅ Adaptive Practice routes registered at /api/adaptive');
+console.log('✅ Diagnosis routes registered at /api/diagnosis');
 console.log('✅ Teacher routes registered at /api/teacher');
 console.log('✅ Demo Account routes registered at /api/admin/demo-accounts');
 
