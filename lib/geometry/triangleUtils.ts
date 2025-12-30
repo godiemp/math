@@ -426,8 +426,11 @@ export function getStrokeDashArray(
  * Build triangle vertices from 3 interior angles + constraints
  * Uses the Sine Rule: a/sin(A) = b/sin(B) = c/sin(C)
  *
+ * The triangle is scaled to fit within a target bounding box, maintaining
+ * the correct angle proportions regardless of how extreme the angles are.
+ *
  * @param angles - 3 interior angles in degrees (must sum to 180)
- * @param baseLength - Length of the first side (A to B) for scaling
+ * @param maxSize - Maximum width or height of the bounding box
  * @param centerX - X coordinate of the triangle center
  * @param centerY - Y coordinate of the triangle center
  * @param rotation - Rotation angle in degrees (0 = base horizontal)
@@ -435,7 +438,7 @@ export function getStrokeDashArray(
  */
 export function buildTriangleFromAngles(
   angles: [number, number, number],
-  baseLength: number = 150,
+  maxSize: number = 150,
   centerX: number = 200,
   centerY: number = 150,
   rotation: number = 0
@@ -453,49 +456,64 @@ export function buildTriangleFromAngles(
   const B = (angleB * Math.PI) / 180;
   const C = (angleC * Math.PI) / 180;
 
-  // Using sine rule to calculate side lengths
+  // Using sine rule to calculate relative side lengths
   // a/sin(A) = b/sin(B) = c/sin(C) = k
-  // We set side c (opposite to angle C, which is A-B) = baseLength
-  const k = baseLength / Math.sin(C);
-  const sideA = k * Math.sin(A); // Opposite to vertex A (side B-C)
-  const sideB = k * Math.sin(B); // Opposite to vertex B (side A-C)
-  // sideC = baseLength (A-B)
+  // Start with unit scale (k=1), then normalize later
+  const sideC = Math.sin(C); // Base side (A to B)
+  const sideB = Math.sin(B); // Side A to C
 
   // Build triangle with vertex A at origin, AB along positive x-axis
-  // Then rotate and translate to center
-
-  // Vertex positions before rotation/translation
+  // Vertex positions (unit scale)
   const ax = 0;
   const ay = 0;
-  const bx = baseLength;
+  const bx = sideC;
   const by = 0;
 
-  // C is at angle (180 - angleA) from AB line
-  // The interior angle at A means the angle between AB and AC is angleA
+  // C is positioned using angle at A
   const cx = sideB * Math.cos(A);
   const cy = -sideB * Math.sin(A); // Negative because SVG y-axis is inverted
 
-  // Calculate current centroid
-  const currentCentroidX = (ax + bx + cx) / 3;
-  const currentCentroidY = (ay + by + cy) / 3;
+  // Calculate bounding box of the unit triangle
+  const minX = Math.min(ax, bx, cx);
+  const maxX = Math.max(ax, bx, cx);
+  const minY = Math.min(ay, by, cy);
+  const maxY = Math.max(ay, by, cy);
 
-  // Apply rotation around centroid
+  const width = maxX - minX;
+  const height = maxY - minY;
+
+  // Scale to fit within maxSize, maintaining aspect ratio
+  const scale = maxSize / Math.max(width, height);
+
+  // Scale and center the vertices
+  const scaledAx = (ax - minX) * scale;
+  const scaledAy = (ay - minY) * scale;
+  const scaledBx = (bx - minX) * scale;
+  const scaledBy = (by - minY) * scale;
+  const scaledCx = (cx - minX) * scale;
+  const scaledCy = (cy - minY) * scale;
+
+  // Calculate centroid of scaled triangle
+  const centroidX = (scaledAx + scaledBx + scaledCx) / 3;
+  const centroidY = (scaledAy + scaledBy + scaledCy) / 3;
+
+  // Apply rotation around centroid and translate to target center
   const rotRad = (rotation * Math.PI) / 180;
   const cosR = Math.cos(rotRad);
   const sinR = Math.sin(rotRad);
 
-  function rotatePoint(x: number, y: number): { x: number; y: number } {
-    const dx = x - currentCentroidX;
-    const dy = y - currentCentroidY;
+  function transformPoint(x: number, y: number): { x: number; y: number } {
+    const dx = x - centroidX;
+    const dy = y - centroidY;
     return {
       x: dx * cosR - dy * sinR + centerX,
       y: dx * sinR + dy * cosR + centerY,
     };
   }
 
-  const vertexA = rotatePoint(ax, ay);
-  const vertexB = rotatePoint(bx, by);
-  const vertexC = rotatePoint(cx, cy);
+  const vertexA = transformPoint(scaledAx, scaledAy);
+  const vertexB = transformPoint(scaledBx, scaledBy);
+  const vertexC = transformPoint(scaledCx, scaledCy);
 
   return [
     { x: Math.round(vertexA.x), y: Math.round(vertexA.y), label: 'A' },

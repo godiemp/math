@@ -242,11 +242,23 @@ function FigureDebugContent() {
   // Generate code snippet
   const generateCode = useCallback(() => {
     const propsLines = [];
-    propsLines.push(`vertices={[`);
-    activeVertices.forEach((v, i) => {
-      propsLines.push(`  { x: ${Math.round(v.x)}, y: ${Math.round(v.y)}, label: '${v.label}' }${i < 2 ? ',' : ''}`);
-    });
-    propsLines.push(`]}`);
+
+    // Use fromAngles when in angles mode, vertices otherwise
+    if (inputMode === 'angles') {
+      // Simple array format when no extra options
+      if (angleInputs.baseLength === 150) {
+        propsLines.push(`fromAngles={[${angleInputs.angle1}, ${angleInputs.angle2}, ${angle3}]}`);
+      } else {
+        // Object format with size option
+        propsLines.push(`fromAngles={{ angles: [${angleInputs.angle1}, ${angleInputs.angle2}, ${angle3}], size: ${angleInputs.baseLength} }}`);
+      }
+    } else {
+      propsLines.push(`vertices={[`);
+      activeVertices.forEach((v, i) => {
+        propsLines.push(`  { x: ${Math.round(v.x)}, y: ${Math.round(v.y)}, label: '${v.label}' }${i < 2 ? ',' : ''}`);
+      });
+      propsLines.push(`]}`);
+    }
 
     if (showSideLabels) {
       propsLines.push(`sides={[`);
@@ -279,7 +291,7 @@ function FigureDebugContent() {
     if (!showVertices) propsLines.push(`showVertices={false}`);
 
     return `<TriangleFigure\n  ${propsLines.join('\n  ')}\n/>`;
-  }, [activeVertices, showSideLabels, showAngleArcs, showAngleDegrees, specialLines, showGrid, showRightAngleMarker, showVertices]);
+  }, [inputMode, angleInputs, angle3, activeVertices, showSideLabels, showAngleArcs, showAngleDegrees, specialLines, showGrid, showRightAngleMarker, showVertices]);
 
   // Copy code to clipboard
   const copyCode = useCallback(() => {

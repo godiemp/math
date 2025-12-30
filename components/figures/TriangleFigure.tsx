@@ -1,12 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import type {
   TriangleFigureProps,
   LabeledPoint,
   SideConfig,
   AngleConfig,
   SpecialLineConfig,
+  FromAnglesConfigObject,
 } from '@/lib/types/triangle';
 import {
   trianglePath,
@@ -20,6 +21,7 @@ import {
   angleAtVertex,
   midpoint,
   getStrokeDashArray,
+  buildTriangleFromAngles,
 } from '@/lib/geometry/triangleUtils';
 
 // Default colors following the design system
@@ -47,7 +49,8 @@ const DEFAULT_COLORS = {
  * - Dark mode support
  */
 export function TriangleFigure({
-  vertices,
+  vertices: verticesProp,
+  fromAngles,
   sides,
   angles,
   specialLines,
@@ -70,6 +73,36 @@ export function TriangleFigure({
   ariaLabel,
   className = '',
 }: TriangleFigureProps) {
+  // Calculate vertices from fromAngles if provided
+  const vertices = useMemo<[LabeledPoint, LabeledPoint, LabeledPoint]>(() => {
+    if (fromAngles) {
+      // Handle array shorthand: fromAngles={[60, 60, 60]}
+      if (Array.isArray(fromAngles) && typeof fromAngles[0] === 'number') {
+        const anglesArray = fromAngles as [number, number, number];
+        return buildTriangleFromAngles(anglesArray, 150, 200, 150, 0);
+      }
+      // Handle object config: fromAngles={{ angles: [60, 60, 60], size: 200 }}
+      const config = fromAngles as FromAnglesConfigObject;
+      return buildTriangleFromAngles(
+        config.angles,
+        config.size ?? 150,
+        200,
+        150,
+        config.rotation ?? 0
+      );
+    }
+    // Use provided vertices
+    if (verticesProp) {
+      return verticesProp;
+    }
+    // Fallback to default equilateral triangle
+    return [
+      { x: 200, y: 50, label: 'A' },
+      { x: 100, y: 223, label: 'B' },
+      { x: 300, y: 223, label: 'C' },
+    ];
+  }, [fromAngles, verticesProp]);
+
   // Calculate viewBox from vertices if not provided
   const calculatedBox = calculateViewBox(vertices, padding);
   const viewBox =

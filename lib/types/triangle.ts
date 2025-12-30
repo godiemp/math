@@ -78,12 +78,35 @@ export interface SpecialLineConfig {
 }
 
 /**
+ * Configuration to build a triangle from angles (object form)
+ */
+export interface FromAnglesConfigObject {
+  /** The three interior angles in degrees (must sum to 180) */
+  angles: [number, number, number];
+  /** Maximum size (width or height) of the triangle bounding box */
+  size?: number;
+  /** Rotation in degrees (0 = base horizontal) */
+  rotation?: number;
+}
+
+/**
+ * Build triangle from angles - accepts array shorthand or config object
+ * @example fromAngles={[60, 60, 60]}
+ * @example fromAngles={{ angles: [30, 60, 90], size: 200 }}
+ */
+export type FromAnglesConfig = [number, number, number] | FromAnglesConfigObject;
+
+/**
  * Main TriangleFigure component props
  */
 export interface TriangleFigureProps {
-  // Required: Three vertices
-  /** The three vertices of the triangle */
-  vertices: [LabeledPoint, LabeledPoint, LabeledPoint];
+  // Option 1: Three vertices directly
+  /** The three vertices of the triangle (use this OR fromAngles) */
+  vertices?: [LabeledPoint, LabeledPoint, LabeledPoint];
+
+  // Option 2: Build from angles
+  /** Build triangle from angles instead of vertices */
+  fromAngles?: FromAnglesConfig;
 
   // Sides configuration (indices: 0=v0-v1, 1=v1-v2, 2=v2-v0)
   /** Configuration for each side */

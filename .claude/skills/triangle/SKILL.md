@@ -18,49 +18,50 @@ Invoke this skill when:
 
 ## Quick Start
 
-### Basic Triangle with Labels
+### Forma más simple: Usando ángulos
 
 ```tsx
 import { TriangleFigure } from '@/components/figures/TriangleFigure';
 
+// Triángulo equilátero (60-60-60)
+<TriangleFigure fromAngles={[60, 60, 60]} />
+
+// Triángulo 30-60-90
+<TriangleFigure fromAngles={[30, 60, 90]} showRightAngleMarker />
+
+// Triángulo isósceles (45-45-90)
+<TriangleFigure fromAngles={[45, 45, 90]} showGrid />
+```
+
+### Con tamaño personalizado
+
+```tsx
+// Triángulo más grande
 <TriangleFigure
-  vertices={[
-    { x: 200, y: 50, label: 'A' },
-    { x: 100, y: 220, label: 'B' },
-    { x: 300, y: 220, label: 'C' },
-  ]}
+  fromAngles={{ angles: [30, 60, 90], size: 200 }}
   showGrid
 />
 ```
 
-### Right Triangle with Marker
+### Triángulo rectángulo con labels
 
 ```tsx
 <TriangleFigure
-  vertices={[
-    { x: 100, y: 50, label: 'A' },
-    { x: 100, y: 200, label: 'B' },
-    { x: 260, y: 200, label: 'C' },
-  ]}
+  fromAngles={[30, 60, 90]}
   showRightAngleMarker
-  rightAngleVertex={1}
   sides={[
     { label: 'c' },  // hipotenusa
-    { label: 'a' },  // cateto
-    { label: 'b' },  // cateto
+    { label: 'a' },  // cateto opuesto
+    { label: 'b' },  // cateto adyacente
   ]}
 />
 ```
 
-### Triangle with Angles
+### Con arcos de ángulos
 
 ```tsx
 <TriangleFigure
-  vertices={[
-    { x: 200, y: 50, label: 'A' },
-    { x: 100, y: 220, label: 'B' },
-    { x: 300, y: 220, label: 'C' },
-  ]}
+  fromAngles={[60, 60, 60]}
   angles={[
     { showArc: true, showDegrees: true },
     { showArc: true, showDegrees: true },
@@ -69,15 +70,11 @@ import { TriangleFigure } from '@/components/figures/TriangleFigure';
 />
 ```
 
-### Triangle with Altura (Height)
+### Con altura (línea especial)
 
 ```tsx
 <TriangleFigure
-  vertices={[
-    { x: 200, y: 50, label: 'A' },
-    { x: 100, y: 220, label: 'B' },
-    { x: 300, y: 220, label: 'C' },
-  ]}
+  fromAngles={[50, 60, 70]}
   specialLines={[
     {
       type: 'altura',
@@ -90,15 +87,45 @@ import { TriangleFigure } from '@/components/figures/TriangleFigure';
 />
 ```
 
+### Usando vértices (control total)
+
+Cuando necesitas control preciso sobre las coordenadas:
+
+```tsx
+<TriangleFigure
+  vertices={[
+    { x: 200, y: 50, label: 'A' },
+    { x: 100, y: 220, label: 'B' },
+    { x: 300, y: 220, label: 'C' },
+  ]}
+  showGrid
+/>
+```
+
 ---
 
 ## Props Reference
 
-### Required Props
+### Construcción del triángulo (usar UNO de estos)
 
 | Prop | Type | Description |
 |------|------|-------------|
-| `vertices` | `[LabeledPoint, LabeledPoint, LabeledPoint]` | Los 3 vértices del triángulo |
+| `fromAngles` | `[number, number, number]` o `{ angles, size?, rotation? }` | **Recomendado.** Construir desde ángulos |
+| `vertices` | `[LabeledPoint, LabeledPoint, LabeledPoint]` | Control total de coordenadas |
+
+### fromAngles
+
+```typescript
+// Forma simple: array de 3 ángulos (deben sumar 180°)
+fromAngles={[60, 60, 60]}
+
+// Forma con opciones
+fromAngles={{
+  angles: [30, 60, 90],  // Los 3 ángulos interiores
+  size: 200,             // Tamaño máximo (default: 150)
+  rotation: 0,           // Rotación en grados (default: 0)
+}}
+```
 
 ### LabeledPoint
 
