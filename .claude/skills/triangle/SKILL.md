@@ -279,11 +279,12 @@ interface SpecialLineConfig {
 
 Para experimentar interactivamente con todas las opciones:
 
-**URL:** `/admin/triangle-debug`
+**URL:** `/admin/figure-debug`
 
 La página de debug permite:
-- Seleccionar presets (equilátero, rectángulo, isósceles, escaleno)
-- Ajustar posición de vértices con sliders
+- **Modo Vértices:** Ajustar posición de vértices con sliders
+- **Modo Ángulos:** Construir triángulo especificando los 3 ángulos interiores
+- Seleccionar presets (equilátero, rectángulo, isósceles, escaleno, 30-60-90, 45-45-90)
 - Activar/desactivar opciones visuales
 - Agregar líneas especiales (altura, mediana, bisectriz)
 - Copiar el código generado
@@ -344,5 +345,26 @@ import {
   angleAtVertex,      // Ángulo en un vértice (grados)
   altitudeFootPoint,  // Pie de la altura
   findRightAngleVertex, // Encuentra vértice con ángulo recto
+  buildTriangleFromAngles,  // Construir triángulo desde ángulos
+  validateTriangleAngles,   // Validar ángulos (suman 180°)
 } from '@/lib/geometry/triangleUtils';
+```
+
+### Build Triangle from Angles
+
+Puedes construir un triángulo especificando los 3 ángulos interiores:
+
+```typescript
+import { buildTriangleFromAngles } from '@/lib/geometry/triangleUtils';
+
+// Triángulo 30-60-90
+const vertices = buildTriangleFromAngles(
+  [30, 60, 90],  // Los 3 ángulos (deben sumar 180°)
+  150,           // Longitud base (escala)
+  200,           // Centro X
+  150,           // Centro Y
+  0              // Rotación (grados)
+);
+
+// Resultado: [LabeledPoint, LabeledPoint, LabeledPoint]
 ```

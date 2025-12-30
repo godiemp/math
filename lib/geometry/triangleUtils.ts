@@ -421,3 +421,109 @@ export function getStrokeDashArray(
       return undefined;
   }
 }
+
+/**
+ * Build triangle vertices from 3 interior angles + constraints
+ * Uses the Sine Rule: a/sin(A) = b/sin(B) = c/sin(C)
+ *
+ * @param angles - 3 interior angles in degrees (must sum to 180)
+ * @param baseLength - Length of the first side (A to B) for scaling
+ * @param centerX - X coordinate of the triangle center
+ * @param centerY - Y coordinate of the triangle center
+ * @param rotation - Rotation angle in degrees (0 = base horizontal)
+ * @returns Tuple of 3 vertices [A, B, C]
+ */
+export function buildTriangleFromAngles(
+  angles: [number, number, number],
+  baseLength: number = 150,
+  centerX: number = 200,
+  centerY: number = 150,
+  rotation: number = 0
+): [LabeledPoint, LabeledPoint, LabeledPoint] {
+  const [angleA, angleB, angleC] = angles;
+
+  // Validate angles sum to 180
+  const sum = angleA + angleB + angleC;
+  if (Math.abs(sum - 180) > 0.01) {
+    console.warn(`Angles must sum to 180°, got ${sum}°. Adjusting angleC.`);
+  }
+
+  // Convert angles to radians
+  const A = (angleA * Math.PI) / 180;
+  const B = (angleB * Math.PI) / 180;
+  const C = (angleC * Math.PI) / 180;
+
+  // Using sine rule to calculate side lengths
+  // a/sin(A) = b/sin(B) = c/sin(C) = k
+  // We set side c (opposite to angle C, which is A-B) = baseLength
+  const k = baseLength / Math.sin(C);
+  const sideA = k * Math.sin(A); // Opposite to vertex A (side B-C)
+  const sideB = k * Math.sin(B); // Opposite to vertex B (side A-C)
+  // sideC = baseLength (A-B)
+
+  // Build triangle with vertex A at origin, AB along positive x-axis
+  // Then rotate and translate to center
+
+  // Vertex positions before rotation/translation
+  const ax = 0;
+  const ay = 0;
+  const bx = baseLength;
+  const by = 0;
+
+  // C is at angle (180 - angleA) from AB line
+  // The interior angle at A means the angle between AB and AC is angleA
+  const cx = sideB * Math.cos(A);
+  const cy = -sideB * Math.sin(A); // Negative because SVG y-axis is inverted
+
+  // Calculate current centroid
+  const currentCentroidX = (ax + bx + cx) / 3;
+  const currentCentroidY = (ay + by + cy) / 3;
+
+  // Apply rotation around centroid
+  const rotRad = (rotation * Math.PI) / 180;
+  const cosR = Math.cos(rotRad);
+  const sinR = Math.sin(rotRad);
+
+  function rotatePoint(x: number, y: number): { x: number; y: number } {
+    const dx = x - currentCentroidX;
+    const dy = y - currentCentroidY;
+    return {
+      x: dx * cosR - dy * sinR + centerX,
+      y: dx * sinR + dy * cosR + centerY,
+    };
+  }
+
+  const vertexA = rotatePoint(ax, ay);
+  const vertexB = rotatePoint(bx, by);
+  const vertexC = rotatePoint(cx, cy);
+
+  return [
+    { x: Math.round(vertexA.x), y: Math.round(vertexA.y), label: 'A' },
+    { x: Math.round(vertexB.x), y: Math.round(vertexB.y), label: 'B' },
+    { x: Math.round(vertexC.x), y: Math.round(vertexC.y), label: 'C' },
+  ];
+}
+
+/**
+ * Validate that angles can form a valid triangle
+ */
+export function validateTriangleAngles(
+  angles: [number, number, number]
+): { valid: boolean; error?: string } {
+  const [a, b, c] = angles;
+
+  if (a <= 0 || b <= 0 || c <= 0) {
+    return { valid: false, error: 'Todos los ángulos deben ser mayores a 0°' };
+  }
+
+  if (a >= 180 || b >= 180 || c >= 180) {
+    return { valid: false, error: 'Ningún ángulo puede ser mayor o igual a 180°' };
+  }
+
+  const sum = a + b + c;
+  if (Math.abs(sum - 180) > 0.01) {
+    return { valid: false, error: `Los ángulos deben sumar 180° (actual: ${sum.toFixed(1)}°)` };
+  }
+
+  return { valid: true };
+}
