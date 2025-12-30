@@ -56,12 +56,12 @@ export function ColegioDashboardView({
   const gradeDisplayName = GRADE_DISPLAY_NAMES[gradeLevel] || gradeLevel;
 
   return (
-    <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">
+    <div className="min-h-screen font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]" style={{ background: 'var(--color-bg)' }}>
       {/* Navbar */}
       <Navbar className="min-h-14">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 py-0 sm:h-10">
           <div className="flex items-center gap-2">
-            <Heading level={1} size="xs" className="text-[#0A84FF] text-sm sm:text-base" data-testid="dashboard-title">
+            <Heading level={1} size="xs" className="text-sm sm:text-base" style={{ color: 'var(--color-tint)' }} data-testid="dashboard-title">
               Mi Clase
             </Heading>
             <Badge variant="info">{gradeDisplayName}</Badge>
@@ -186,12 +186,13 @@ export function ColegioDashboardView({
       <WelcomeMessage isOpen={isWelcomeOpen} onClose={onWelcomeClose} />
 
       {/* Footer */}
-      <footer className="backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-t border-black/[0.12] dark:border-white/[0.16] mt-8 sm:mt-10 md:mt-12" data-testid="dashboard-footer">
+      <footer className="backdrop-blur-[20px] border-t mt-8 sm:mt-10 md:mt-12" style={{ background: 'color-mix(in srgb, var(--color-surface) 80%, transparent)', borderColor: 'var(--color-separator)' }} data-testid="dashboard-footer">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-4 sm:py-5 md:py-6 text-center">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
             <Link
               href="/como-funciona"
-              className="text-xs text-[#0A84FF] hover:underline"
+              className="text-xs hover:underline"
+              style={{ color: 'var(--color-link)' }}
               data-testid="how-it-works-link"
             >
               {tCommon('howItWorks')}
