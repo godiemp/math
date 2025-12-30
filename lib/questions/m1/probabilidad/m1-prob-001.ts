@@ -234,13 +234,27 @@ export const m1Prob001Questions: Question[] = [
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{Un gráfico de barras muestra: Lunes (45), Martes (60), Miércoles (30), Jueves (55). ¿Cuál día tuvo menos ventas?}',
+    questionLatex: '\\text{El gráfico muestra las ventas diarias de una tienda. ¿Cuál día tuvo menos ventas?}',
     options: ['Lunes', 'Martes', 'Miércoles', 'Jueves'],
     correctAnswer: 2,
-    explanation: '\\text{Miércoles tiene 30, el menor valor}',
+    explanation: '\\text{Miércoles tiene 30 ventas, el menor valor del gráfico}',
     difficulty: 'easy',
     difficultyScore: 0.15,
-    skills: ['estadistica-graficos', 'estadistica-interpretacion']
+    skills: ['estadistica-graficos', 'estadistica-interpretacion'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'bar',
+        items: [
+          { category: 'Lunes', value: 45 },
+          { category: 'Martes', value: 60 },
+          { category: 'Miércoles', value: 30 },
+          { category: 'Jueves', value: 55 }
+        ],
+        showValues: true,
+        showLabels: true
+      }
+    }
   },
   {
     id: 'm1-prob-001-005',
