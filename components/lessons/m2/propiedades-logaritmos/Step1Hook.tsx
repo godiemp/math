@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, Sparkles, Wand2 } from 'lucide-react';
+import { ArrowRight, Sparkles, Brain } from 'lucide-react';
 import { LessonStepProps } from '@/lib/lessons/types';
 import { cn } from '@/lib/utils';
 
 type Phase = 'scenario' | 'question' | 'result';
 
-const OPTIONS = ['1.000.000', '10.000.000', '100.000.000', '1.000.000.000'];
-const CORRECT_ANSWER = 1; // 1000 × 10000 = 10,000,000 = 10^7
+const OPTIONS = ['0,5', '1', '2', '3'];
+const CORRECT_ANSWER = 2; // log(4) + log(25) = log(100) = 2
 
 export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('scenario');
@@ -32,76 +32,59 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
       <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mb-4">
-            <Wand2 className="w-5 h-5 text-purple-600" />
+            <Brain className="w-5 h-5 text-purple-600" />
             <span className="text-purple-700 dark:text-purple-300 font-medium">
-              El Show de Matemáticas
+              Desafío Matemático
             </span>
           </div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            El Truco del Mago Matemático
+            El Desafío Mental
           </h2>
           <p className="text-gray-600 dark:text-gray-300">
-            ¿Cómo multiplica números enormes en segundos?
+            ¿Puedes resolver esto sin calculadora?
           </p>
         </div>
 
-        {/* Magician scene */}
+        {/* The challenge */}
         <div className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-2xl p-6 border border-purple-200 dark:border-purple-700">
           <p className="text-gray-700 dark:text-gray-300 mb-4 text-center">
-            En el show escolar, el <strong className="text-purple-600">&quot;Mago Matemático&quot;</strong> sorprende a todos:
+            Un profesor desafía a sus estudiantes:
           </p>
 
-          {/* Magic trick visualization */}
+          {/* Challenge visualization */}
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-4">
             <div className="flex flex-col items-center gap-4">
-              <div className="text-6xl">🎩</div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">El mago pide dos números:</p>
-              <div className="flex items-center gap-4 flex-wrap justify-center">
-                <div className="bg-purple-100 dark:bg-purple-900/30 rounded-xl px-6 py-4 text-center">
-                  <p className="text-2xl font-bold text-purple-600">1.000</p>
-                  <p className="text-xs text-gray-500">Primer número</p>
-                </div>
-                <span className="text-3xl text-gray-400">×</span>
-                <div className="bg-indigo-100 dark:bg-indigo-900/30 rounded-xl px-6 py-4 text-center">
-                  <p className="text-2xl font-bold text-indigo-600">10.000</p>
-                  <p className="text-xs text-gray-500">Segundo número</p>
-                </div>
+              <div className="text-6xl">🧠</div>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">Sin calculadora, resuelve:</p>
+              <div className="bg-purple-100 dark:bg-purple-900/30 rounded-xl px-8 py-4 text-center">
+                <p className="text-2xl font-bold font-mono text-purple-600">
+                  log(4) + log(25) = ?
+                </p>
               </div>
               <p className="text-gray-700 dark:text-gray-300 text-center mt-2">
-                <em>&quot;¡Doy la respuesta en 3 segundos!&quot;</em>
+                <em>&quot;Tienen 10 segundos...&quot;</em>
               </p>
             </div>
           </div>
 
-          {/* The secret */}
-          <div className="bg-amber-50 dark:bg-amber-900/30 rounded-xl p-4 border border-amber-200 dark:border-amber-700">
-            <p className="text-amber-800 dark:text-amber-200 text-center">
-              <Sparkles className="inline w-4 h-4 mr-1" />
-              <strong>El secreto:</strong> El mago usa <strong className="text-purple-600">propiedades de logaritmos</strong> para transformar multiplicaciones en sumas simples.
+          {/* The problem */}
+          <div className="bg-red-50 dark:bg-red-900/30 rounded-xl p-4 border border-red-200 dark:border-red-700">
+            <p className="text-red-800 dark:text-red-200 text-center">
+              <strong>El problema:</strong> ¿Cómo calculas log(4) y log(25) mentalmente?
+              <br />
+              <span className="text-sm">log(4) ≈ 0,602... y log(25) ≈ 1,398... 🤯</span>
             </p>
           </div>
         </div>
 
-        {/* How it works hint */}
-        <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4 border border-blue-200 dark:border-blue-700">
-          <p className="text-blue-800 dark:text-blue-200 text-center mb-3 font-semibold">
-            El truco del mago:
+        {/* The secret hint */}
+        <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-4 border border-green-200 dark:border-green-700">
+          <p className="text-green-800 dark:text-green-200 text-center mb-3 font-semibold">
+            <Sparkles className="inline w-4 h-4 mr-1" />
+            Pero hay un truco...
           </p>
-          <div className="flex justify-center items-center gap-2 flex-wrap text-sm">
-            <div className="bg-white dark:bg-gray-800 rounded-lg px-3 py-2 font-mono">
-              log(1000) = 3
-            </div>
-            <span className="text-blue-600 font-bold">+</span>
-            <div className="bg-white dark:bg-gray-800 rounded-lg px-3 py-2 font-mono">
-              log(10000) = 4
-            </div>
-            <span className="text-blue-600 font-bold">=</span>
-            <div className="bg-white dark:bg-gray-800 rounded-lg px-3 py-2 font-mono">
-              7
-            </div>
-          </div>
-          <p className="text-blue-700 dark:text-blue-300 text-center text-sm mt-2">
-            ¡Solo suma 3 + 4 = 7, luego calcula 10⁷!
+          <p className="text-green-700 dark:text-green-300 text-center text-sm">
+            Con las <strong>propiedades de los logaritmos</strong>, este problema se vuelve trivial.
           </p>
         </div>
 
@@ -110,7 +93,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             onClick={() => setPhase('question')}
             className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-indigo-600 transition-all shadow-lg"
           >
-            <span>Resolver el desafío</span>
+            <span>Intentar el desafío</span>
             <ArrowRight size={20} />
           </button>
         </div>
@@ -124,31 +107,25 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
       <div className="space-y-6 animate-fadeIn pb-24">
         <div className="text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-full mb-4">
-            <span className="text-2xl">🔮</span>
+            <span className="text-2xl">🎯</span>
             <span className="text-indigo-700 dark:text-indigo-300 font-medium">
-              El desafío
+              Tu turno
             </span>
           </div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            ¿Cuál es el resultado?
+            ¿Cuál es la respuesta?
           </h2>
         </div>
 
         <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl p-6 border border-indigo-200 dark:border-indigo-700">
-          <p className="text-gray-700 dark:text-gray-300 text-center mb-4">
-            Si el mago sabe que:
-          </p>
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center mb-4 space-y-2">
-            <p className="font-mono text-lg">log(1.000) = 3</p>
-            <p className="font-mono text-lg">log(10.000) = 4</p>
-            <p className="font-mono text-lg text-purple-600 font-bold">3 + 4 = 7</p>
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-4 text-center">
+            <p className="font-mono text-2xl text-purple-600 font-bold mb-4">
+              log(4) + log(25) = ?
+            </p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
+              Pista: Piensa en qué número da 4 × 25...
+            </p>
           </div>
-          <p className="text-gray-700 dark:text-gray-300 text-center">
-            ¿Cuánto es <span className="font-mono font-bold">1.000 × 10.000</span>?
-          </p>
-          <p className="text-gray-500 dark:text-gray-400 text-center text-sm mt-2">
-            (Pista: 10⁷ = ?)
-          </p>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -158,7 +135,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               onClick={() => !showFeedback && setSelectedAnswer(index)}
               disabled={showFeedback}
               className={cn(
-                'p-4 rounded-xl border-2 font-medium transition-all text-sm',
+                'p-4 rounded-xl border-2 font-medium transition-all text-lg',
                 showFeedback
                   ? index === CORRECT_ANSWER
                     ? 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300'
@@ -183,7 +160,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300'
           )}>
             <p className="font-semibold">
-              {isCorrect ? '¡Exacto! 🎉' : '¡Casi! Veamos la magia...'}
+              {isCorrect ? '¡Exacto! La respuesta es 2' : '¡Veamos cómo se resuelve!'}
             </p>
           </div>
         )}
@@ -215,35 +192,32 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 rounded-full mb-4">
           <Sparkles className="w-5 h-5 text-green-600" />
           <span className="text-green-700 dark:text-green-300 font-medium">
-            ¡El secreto revelado!
+            ¡El truco revelado!
           </span>
         </div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          Propiedades de los Logaritmos
+          Propiedad del Producto
         </h2>
       </div>
 
-      {/* The magic explained */}
+      {/* The solution explained */}
       <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 border border-green-200 dark:border-green-700">
         <p className="text-gray-700 dark:text-gray-300 mb-4 text-center">
-          El mago usó la <strong className="text-green-600">propiedad del producto</strong>:
+          La clave es la <strong className="text-green-600">propiedad del producto</strong>:
         </p>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-4">
           <div className="text-center space-y-4">
             <p className="font-mono text-xl text-purple-600 font-bold">
-              log(a × b) = log(a) + log(b)
+              log(a) + log(b) = log(a × b)
             </p>
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-              <p className="text-gray-600 dark:text-gray-400 mb-2">En el truco:</p>
+              <p className="text-gray-600 dark:text-gray-400 mb-2">Aplicando al desafío:</p>
               <p className="font-mono">
-                log(1000 × 10000) = log(1000) + log(10000)
+                log(4) + log(25) = log(4 × 25)
               </p>
               <p className="font-mono text-green-600">
-                = 3 + 4 = 7
-              </p>
-              <p className="font-mono text-lg font-bold mt-2">
-                Por lo tanto: 10⁷ = 10.000.000 ✓
+                = log(100) = <strong className="text-2xl">2</strong>
               </p>
             </div>
           </div>
@@ -251,7 +225,9 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
         <div className="bg-amber-50 dark:bg-amber-900/30 rounded-xl p-4 border border-amber-200 dark:border-amber-700">
           <p className="text-amber-800 dark:text-amber-200 text-center">
-            <strong>¡Las propiedades de los logaritmos</strong> convierten multiplicaciones en sumas, divisiones en restas, y potencias en multiplicaciones simples!
+            <strong>¡Problema &quot;imposible&quot; resuelto en segundos!</strong>
+            <br />
+            <span className="text-sm">No necesitaste calcular log(4) ni log(25)</span>
           </p>
         </div>
       </div>
@@ -259,24 +235,20 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
       {/* Preview of properties */}
       <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4 border border-blue-200 dark:border-blue-700">
         <p className="text-blue-800 dark:text-blue-200 text-center mb-3 font-semibold">
-          Las 4 propiedades que aprenderás:
+          Las propiedades que aprenderás:
         </p>
-        <div className="grid grid-cols-2 gap-2 text-sm">
+        <div className="grid gap-2 text-sm">
           <div className="bg-white dark:bg-gray-800 p-2 rounded-lg text-center">
             <p className="font-mono text-blue-600">log(a·b) = log(a) + log(b)</p>
-            <p className="text-xs text-gray-500">Producto</p>
+            <p className="text-xs text-gray-500">Producto → Suma</p>
           </div>
           <div className="bg-white dark:bg-gray-800 p-2 rounded-lg text-center">
             <p className="font-mono text-purple-600">log(a/b) = log(a) - log(b)</p>
-            <p className="text-xs text-gray-500">Cociente</p>
+            <p className="text-xs text-gray-500">Cociente → Resta</p>
           </div>
           <div className="bg-white dark:bg-gray-800 p-2 rounded-lg text-center">
             <p className="font-mono text-teal-600">log(aⁿ) = n·log(a)</p>
-            <p className="text-xs text-gray-500">Potencia</p>
-          </div>
-          <div className="bg-white dark:bg-gray-800 p-2 rounded-lg text-center">
-            <p className="font-mono text-amber-600">log(1)=0, log(b)=1</p>
-            <p className="text-xs text-gray-500">Casos especiales</p>
+            <p className="text-xs text-gray-500">Potencia → Multiplicación</p>
           </div>
         </div>
       </div>
