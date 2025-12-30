@@ -19,40 +19,31 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          'group relative rounded-2xl',
-          'transition-transform duration-300 ease-out',
+          'group relative rounded-2xl p-[1px]',
+          'transition-all duration-300 ease-out',
           hover && 'hover:-translate-y-1',
           className
         )}
-        style={style}
+        style={{
+          background: 'linear-gradient(135deg, var(--color-tint) 0%, var(--color-tint-alt) 50%, var(--color-tint) 100%)',
+          ...style,
+        }}
         {...props}
       >
-        {/* Gradient border layer - subtle, intensifies on hover */}
-        <div
-          className={cn(
-            'absolute -inset-[1px] rounded-2xl',
-            'transition-opacity duration-300',
-            hover ? 'opacity-30 group-hover:opacity-70' : 'opacity-30'
-          )}
-          style={{
-            background: 'linear-gradient(135deg, var(--color-tint) 0%, var(--color-tint-alt) 50%, var(--color-tint) 100%)',
-          }}
-        />
-
         {/* Glow layer - only visible on hover */}
         {hover && (
           <div
-            className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"
+            className="absolute -inset-1 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300 -z-10"
             style={{
               background: 'linear-gradient(135deg, var(--color-tint) 0%, var(--color-tint-alt) 100%)',
             }}
           />
         )}
 
-        {/* Main content with solid background */}
+        {/* Main content - covers everything except 1px border */}
         <div
           className={cn(
-            'relative rounded-2xl',
+            'relative rounded-[15px]',
             paddingSizes[padding]
           )}
           style={{
