@@ -71,6 +71,7 @@ export function QuestionRenderer({
           <PieChart
             data={question.visualData.data.items}
             showLegend={question.visualData.data.showLegend ?? true}
+            showValues={question.visualData.data.showValues ?? false}
             showPercentages={question.visualData.data.showPercentages ?? true}
             size={compact ? 'sm' : 'md'}
           />
@@ -499,6 +500,7 @@ export function QuestionDisplay({
           <PieChart
             data={question.visualData.data.items}
             showLegend={question.visualData.data.showLegend ?? true}
+            showValues={question.visualData.data.showValues ?? false}
             showPercentages={question.visualData.data.showPercentages ?? true}
             size={compact ? 'sm' : 'md'}
           />

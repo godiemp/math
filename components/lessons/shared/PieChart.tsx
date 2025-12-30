@@ -13,8 +13,10 @@ export interface PieChartProps {
   data: PieChartData[];
   /** Show legend below chart */
   showLegend?: boolean;
-  /** Show percentage labels on slices */
+  /** Show percentage labels in legend */
   showPercentages?: boolean;
+  /** Show absolute values in legend */
+  showValues?: boolean;
   /** Size variant */
   size?: 'sm' | 'md' | 'lg';
   /** Enable interactive mode (hover effects) */
@@ -39,6 +41,7 @@ export default function PieChart({
   data,
   showLegend = true,
   showPercentages = false,
+  showValues = false,
   size = 'md',
   interactive = false,
   highlightIndex,
@@ -123,18 +126,6 @@ export default function PieChart({
           </div>
         )}
 
-        {/* Percentage labels around the chart */}
-        {showPercentages && !donut && total > 0 && (
-          <div
-            className="absolute inset-0 flex items-center justify-center"
-            style={{ pointerEvents: 'none' }}
-          >
-            <span className="text-sm font-bold text-white drop-shadow-lg">
-              100%
-            </span>
-          </div>
-        )}
-
         {/* Highlight ring */}
         {highlightIndex !== undefined && highlightIndex >= 0 && (
           <div
@@ -174,6 +165,7 @@ export default function PieChart({
                   )}
                 >
                   {item.category}
+                  {showValues && ` (${item.value})`}
                   {showPercentages && ` (${percentage}%)`}
                 </span>
               </div>

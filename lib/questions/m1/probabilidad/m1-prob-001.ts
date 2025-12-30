@@ -154,6 +154,7 @@ export const m1Prob001Questions: Question[] = [
           { category: 'Tenis', value: 15, color: '#3B82F6' }
         ],
         showLegend: true,
+        showValues: true,
         showPercentages: false
       }
     }

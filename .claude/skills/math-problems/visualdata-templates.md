@@ -256,7 +256,8 @@ visualData: {
   chartType: 'pie',
   items: [...],
   showLegend: true,        // Show legend below (default: true)
-  showPercentages: true,   // Show % in legend (default: false)
+  showValues: false,       // Show absolute values in legend, e.g., "Futbol (40)" (default: false)
+  showPercentages: true,   // Show % in legend, e.g., "Futbol (40%)" (default: true)
   // Note: size is controlled by QuestionRenderer (compact ? 'sm' : 'md')
 }
 ```
