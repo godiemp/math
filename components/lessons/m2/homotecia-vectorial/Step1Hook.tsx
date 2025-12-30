@@ -258,25 +258,25 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             </h3>
 
             <div className="bg-white dark:bg-gray-800 rounded-xl p-4 mb-4">
-              <svg viewBox="0 0 220 160" className="w-full max-w-lg mx-auto">
-                {/* Grid */}
-                {Array.from({ length: 11 }).map((_, i) => (
+              <svg viewBox="0 0 220 180" className="w-full max-w-lg mx-auto">
+                {/* Grid - coordinate system with origin at (30, 150), scale 20px/unit */}
+                {Array.from({ length: 10 }).map((_, i) => (
                   <line
                     key={`v-${i}`}
-                    x1={20 + i * 20}
+                    x1={30 + i * 20}
                     y1={10}
-                    x2={20 + i * 20}
-                    y2={150}
+                    x2={30 + i * 20}
+                    y2={170}
                     className="stroke-gray-200 dark:stroke-gray-700"
                     strokeWidth="0.5"
                   />
                 ))}
-                {Array.from({ length: 8 }).map((_, i) => (
+                {Array.from({ length: 9 }).map((_, i) => (
                   <line
                     key={`h-${i}`}
-                    x1={20}
+                    x1={10}
                     y1={10 + i * 20}
-                    x2={220}
+                    x2={210}
                     y2={10 + i * 20}
                     className="stroke-gray-200 dark:stroke-gray-700"
                     strokeWidth="0.5"
@@ -284,78 +284,55 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 ))}
 
                 {/* Axes */}
-                <line
-                  x1={20}
-                  y1={150}
-                  x2={220}
-                  y2={150}
-                  className="stroke-gray-400"
+                <line x1={10} y1={150} x2={210} y2={150} className="stroke-gray-400" strokeWidth="1.5" />
+                <line x1={30} y1={170} x2={30} y2={10} className="stroke-gray-400" strokeWidth="1.5" />
+
+                {/* Original triangle (blue, faded) - vertices at (3,2), (4,2), (3,4) */}
+                <polygon
+                  points="90,110 110,110 90,70"
+                  className="fill-blue-100/60 stroke-blue-400"
                   strokeWidth="1.5"
-                />
-                <line x1={20} y1={150} x2={20} y2={10} className="stroke-gray-400" strokeWidth="1.5" />
-
-                {/* Original house (faded) */}
-                <rect
-                  x={40}
-                  y={110}
-                  width={40}
-                  height={30}
-                  className="fill-blue-100/50 stroke-blue-300"
-                  strokeWidth="1"
-                  strokeDasharray="3"
-                />
-                <polygon
-                  points="40,110 60,90 80,110"
-                  className="fill-blue-100/50 stroke-blue-300"
-                  strokeWidth="1"
-                  strokeDasharray="3"
+                  strokeDasharray="4"
                 />
 
-                {/* Scaled house */}
-                <rect
-                  x={40}
-                  y={50}
-                  width={80}
-                  height={60}
-                  className="fill-green-100 dark:fill-green-900/50 stroke-green-500"
-                  strokeWidth="2"
-                />
+                {/* Scaled triangle (green) - vertices at (4,3), (6,3), (4,7) from center (2,1) with k=2 */}
                 <polygon
-                  points="40,50 80,10 120,50"
-                  className="fill-green-200 dark:fill-green-800/50 stroke-green-500"
+                  points="110,90 150,90 110,10"
+                  className="fill-green-100/80 dark:fill-green-900/50 stroke-green-500"
                   strokeWidth="2"
                 />
 
-                {/* Center (door) - stays fixed */}
-                <circle cx={60} cy={130} r={6} className="fill-red-500" />
-                <text x={60} y={133} textAnchor="middle" className="fill-white text-[6px] font-bold">
+                {/* Center of homothety C(2,1) */}
+                <circle cx={70} cy={130} r={7} className="fill-red-500" />
+                <text x={70} y={133} textAnchor="middle" className="fill-white text-[7px] font-bold">
                   C
                 </text>
-                <text x={72} y={145} className="fill-red-600 text-[7px] font-bold">
+                <text x={70} y={148} textAnchor="middle" className="fill-red-600 text-[8px] font-bold">
                   (2, 1)
                 </text>
 
-                {/* Original window P(4,3) → SVG (100, 90) */}
-                <circle cx={100} cy={90} r={4} className="fill-blue-400 stroke-blue-600" strokeWidth="1" />
-                <text x={110} y={88} className="fill-blue-600 text-[6px]">
-                  (4, 3)
-                </text>
+                {/* Vector from C to original point A(3,2) */}
+                <line x1={70} y1={130} x2={90} y2={110} className="stroke-blue-400" strokeWidth="1" strokeDasharray="3" />
 
-                {/* Scaled window P'(6,5) → SVG (140, 50) */}
-                <circle cx={140} cy={50} r={5} className="fill-green-500 stroke-green-700" strokeWidth="1" />
-                <text x={150} y={48} className="fill-green-600 text-[6px] font-bold">
-                  (6, 5)
-                </text>
+                {/* Vector from C to scaled point A'(4,3) - twice as long */}
+                <line x1={70} y1={130} x2={110} y2={90} className="stroke-green-500" strokeWidth="1.5" />
 
-                {/* Arrow from original to scaled */}
+                {/* Original point A(3,2) */}
+                <circle cx={90} cy={110} r={4} className="fill-blue-400" />
+                <text x={80} y={105} className="fill-blue-600 text-[7px]">A(3,2)</text>
+
+                {/* Scaled point A'(4,3) */}
+                <circle cx={110} cy={90} r={5} className="fill-green-500" />
+                <text x={118} y={88} className="fill-green-600 text-[7px] font-bold">A&apos;(4,3)</text>
+
+                {/* Arrow showing transformation */}
                 <line
-                  x1={103}
-                  y1={87}
-                  x2={137}
-                  y2={53}
+                  x1={93}
+                  y1={107}
+                  x2={107}
+                  y2={93}
                   className="stroke-purple-500"
                   strokeWidth="1.5"
-                  strokeDasharray="4"
                   markerEnd="url(#arrowhead)"
                 />
                 <defs>
@@ -372,9 +349,15 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 </defs>
 
                 {/* Scale factor label */}
-                <text x={125} y={75} className="fill-purple-600 text-[7px] font-bold">
+                <text x={100} y={115} className="fill-purple-600 text-[8px] font-bold">
                   k = 2
                 </text>
+
+                {/* Legend */}
+                <rect x={140} y={120} width={12} height={12} className="fill-blue-100/60 stroke-blue-400" strokeWidth="1" />
+                <text x={156} y={130} className="fill-gray-600 text-[7px]">Original</text>
+                <rect x={140} y={138} width={12} height={12} className="fill-green-100/80 stroke-green-500" strokeWidth="1" />
+                <text x={156} y={148} className="fill-gray-600 text-[7px]">Imagen (k=2)</text>
               </svg>
             </div>
 
@@ -382,15 +365,15 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               <div className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
                 <div className="w-3 h-3 rounded-full bg-red-500 mt-1 flex-shrink-0"></div>
                 <span>
-                  <strong>Centro:</strong> La puerta (2, 1) no se mueve porque es el punto de
-                  referencia
+                  <strong>Centro C(2, 1):</strong> Este punto permanece fijo, es la referencia de la
+                  transformación
                 </span>
               </div>
               <div className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
                 <div className="w-3 h-3 rounded-full bg-green-500 mt-1 flex-shrink-0"></div>
                 <div>
-                  <strong>Ventana:</strong> Estaba a distancia (2, 2) del centro. Al escalar con
-                  k=2, esa distancia se duplica a (4, 4), llegando a (2+4, 1+4) = (6, 5)
+                  <strong>Punto A:</strong> Estaba a distancia (1, 1) del centro. Con k=2, esa
+                  distancia se duplica a (2, 2), llegando a A&apos;(2+2, 1+2) = (4, 3)
                 </div>
               </div>
             </div>
