@@ -168,9 +168,9 @@ function SubscribePageContent() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000]">
+      <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
         <Navbar>
-          <Link href="/dashboard" className="inline-flex items-center gap-2 text-[15px] font-medium text-[#0A84FF]">
+          <Link href="/dashboard" className="inline-flex items-center gap-2 text-[15px] font-medium" style={{ color: 'var(--color-link)' }}>
             <ArrowLeft size={18} />
             Volver
           </Link>
@@ -186,9 +186,9 @@ function SubscribePageContent() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000]">
+      <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
         <Navbar>
-          <Link href="/dashboard" className="inline-flex items-center gap-2 text-[15px] font-medium text-[#0A84FF]">
+          <Link href="/dashboard" className="inline-flex items-center gap-2 text-[15px] font-medium" style={{ color: 'var(--color-link)' }}>
             <ArrowLeft size={18} />
             Volver
           </Link>
@@ -206,9 +206,9 @@ function SubscribePageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000]">
+    <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
       <Navbar>
-        <Link href="/dashboard" className="inline-flex items-center gap-2 text-[15px] font-medium text-[#0A84FF]">
+        <Link href="/dashboard" className="inline-flex items-center gap-2 text-[15px] font-medium" style={{ color: 'var(--color-link)' }}>
           <ArrowLeft size={18} />
           Volver
         </Link>

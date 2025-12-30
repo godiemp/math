@@ -14,12 +14,21 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const buttonVariants: Record<ButtonVariant, string> = {
-  primary: 'bg-[#0A84FF] text-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]',
-  ghost: 'bg-black/[0.04] dark:bg-white/[0.06] text-black dark:text-white hover:bg-black/[0.08] dark:hover:bg-white/[0.12]',
-  danger: 'bg-[#FF453A] text-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]',
-  success: 'bg-[#34C759] dark:bg-[#30D158] text-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]',
-  secondary: 'bg-[#5E5CE6] dark:bg-[#9A99FF] text-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]',
-  link: 'bg-transparent text-[#0A84FF] dark:text-[#66B2FF] hover:text-[#0A84FF]/80 dark:hover:text-[#66B2FF]/80 underline',
+  primary: 'text-white',
+  ghost: 'hover:opacity-80',
+  danger: 'text-white',
+  success: 'text-white',
+  secondary: 'text-white',
+  link: 'bg-transparent underline hover:opacity-80',
+};
+
+const buttonStyles: Record<ButtonVariant, React.CSSProperties> = {
+  primary: { background: 'var(--color-tint)' },
+  ghost: { background: 'var(--color-fill)', color: 'var(--color-label-primary)' },
+  danger: { background: 'var(--color-danger)' },
+  success: { background: 'var(--color-success)' },
+  secondary: { background: 'var(--color-tint-alt)' },
+  link: { color: 'var(--color-link)' },
 };
 
 const buttonSizes: Record<ButtonSize, string> = {
@@ -29,7 +38,7 @@ const buttonSizes: Record<ButtonSize, string> = {
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'primary', size = 'md', className, children, fullWidth, disabled, asChild = false, ...props }, ref) => {
+  ({ variant = 'primary', size = 'md', className, children, fullWidth, disabled, asChild = false, style, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
 
     return (
@@ -51,6 +60,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           // Custom className
           className
         )}
+        style={{ ...buttonStyles[variant], ...style }}
         {...props}
       >
         {children}

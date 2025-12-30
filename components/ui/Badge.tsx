@@ -11,12 +11,21 @@ interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const badgeVariants: Record<BadgeVariant, string> = {
-  info: 'bg-[#0A84FF]/10 text-[#0A84FF] dark:bg-[#0A84FF]/20 dark:text-[#66B2FF]',
-  warning: 'bg-[#FF9F0A]/10 text-[#FF9F0A] dark:bg-[#FF9F0A]/20 dark:text-[#FFB84D]',
-  danger: 'bg-[#FF453A]/10 text-[#FF453A] dark:bg-[#FF453A]/20 dark:text-[#FF7A72]',
-  success: 'bg-[#34C759]/10 text-[#34C759] dark:bg-[#30D158]/20 dark:text-[#5DE38D]',
-  neutral: 'bg-black/[0.04] text-black dark:bg-white/[0.06] dark:text-white',
-  secondary: 'bg-[#5E5CE6]/10 text-[#5E5CE6] dark:bg-[#9A99FF]/20 dark:text-[#B2B1FF]',
+  info: '',
+  warning: '',
+  danger: '',
+  success: '',
+  neutral: '',
+  secondary: '',
+};
+
+const badgeStyles: Record<BadgeVariant, React.CSSProperties> = {
+  info: { background: 'color-mix(in srgb, var(--color-info) 15%, transparent)', color: 'var(--color-info)' },
+  warning: { background: 'color-mix(in srgb, var(--color-warning) 15%, transparent)', color: 'var(--color-warning)' },
+  danger: { background: 'color-mix(in srgb, var(--color-danger) 15%, transparent)', color: 'var(--color-danger)' },
+  success: { background: 'color-mix(in srgb, var(--color-success) 15%, transparent)', color: 'var(--color-success)' },
+  neutral: { background: 'var(--color-fill)', color: 'var(--color-label-primary)' },
+  secondary: { background: 'color-mix(in srgb, var(--color-tint-alt) 15%, transparent)', color: 'var(--color-tint-alt)' },
 };
 
 const badgeSizes: Record<BadgeSize, string> = {
@@ -25,7 +34,7 @@ const badgeSizes: Record<BadgeSize, string> = {
 };
 
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ variant = 'neutral', size = 'md', className, children, ...props }, ref) => {
+  ({ variant = 'neutral', size = 'md', className, children, style, ...props }, ref) => {
     return (
       <span
         ref={ref}
@@ -40,6 +49,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
           // Custom className
           className
         )}
+        style={{ ...badgeStyles[variant], ...style }}
         {...props}
       >
         {children}

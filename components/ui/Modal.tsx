@@ -36,11 +36,9 @@ export const Modal: React.FC<ModalProps> = ({
         className={cn(
           // Liquid glass material
           'backdrop-blur-[20px]',
-          'bg-white/90 dark:bg-[#1C1C1C]/90',
           // Border and shadow
           'rounded-3xl',
-          'border border-black/[0.12] dark:border-white/[0.16]',
-          'shadow-[0_20px_48px_rgba(0,0,0,0.26)]',
+          'border',
           // Layout
           'w-full max-h-[90vh] overflow-y-auto p-8',
           // Max width
@@ -48,19 +46,25 @@ export const Modal: React.FC<ModalProps> = ({
           // Custom className
           className
         )}
+        style={{
+          background: 'color-mix(in srgb, var(--color-elevated-surface) 90%, transparent)',
+          borderColor: 'var(--color-separator)',
+          boxShadow: 'var(--shadow-popover)',
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
           <div className="flex justify-between items-start mb-6">
             <h3
-              className="text-[28px] font-semibold text-black dark:text-white tracking-tight"
-              style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif' }}
+              className="text-[28px] font-semibold tracking-tight"
+              style={{ fontFamily: 'SF Pro Display, system-ui, sans-serif', color: 'var(--color-label-primary)' }}
             >
               {title}
             </h3>
             <button
               onClick={onClose}
-              className="text-black/60 hover:text-black dark:text-white/70 dark:hover:text-white text-3xl leading-none w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-all duration-[180ms]"
+              className="text-3xl leading-none w-8 h-8 flex items-center justify-center rounded-full transition-all duration-[180ms]"
+              style={{ color: 'var(--color-label-secondary)' }}
             >
               ×
             </button>

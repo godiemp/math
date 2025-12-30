@@ -66,11 +66,11 @@ function DashboardView({
   const tCommon = useTranslations('common');
 
   return (
-    <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]">
+    <div className="min-h-screen font-[system-ui,-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Segoe_UI',sans-serif]" style={{ background: 'var(--color-bg)' }}>
       {/* Navbar with variableBlur material */}
       <Navbar className="min-h-14">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 py-0 sm:h-10">
-          <Heading level={1} size="xs" className="text-[#0A84FF] text-sm sm:text-base" data-testid="dashboard-title">
+          <Heading level={1} size="xs" className="text-sm sm:text-base" style={{ color: 'var(--color-tint)' }} data-testid="dashboard-title">
             {t('title')}
           </Heading>
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
@@ -161,7 +161,7 @@ function DashboardView({
         </Card>
 
         {/* Live Practice Featured Card with gradient */}
-        <div className="relative overflow-hidden backdrop-blur-[20px] bg-gradient-to-r from-[#5E5CE6] to-[#0A84FF] dark:from-[#9A99FF] dark:to-[#0A84FF] rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 mb-8 sm:mb-10 md:mb-12 shadow-[0_14px_36px_rgba(0,0,0,0.22)]" data-testid="live-practice-card">
+        <div className="relative overflow-hidden backdrop-blur-[20px] rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 mb-8 sm:mb-10 md:mb-12" style={{ background: 'linear-gradient(to right, var(--color-tint-alt), var(--color-tint))', boxShadow: 'var(--shadow-raised)' }} data-testid="live-practice-card">
           <div className="text-center relative z-10">
             <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">📝</div>
             <Heading level={3} size="sm" className="mb-2 sm:mb-3 text-white text-lg sm:text-xl">
@@ -200,7 +200,7 @@ function DashboardView({
               </Text>
             )}
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-center justify-center px-2 sm:px-0">
-              <Button asChild className="bg-white text-[#5E5CE6] hover:bg-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] w-full sm:w-auto text-sm sm:text-base" data-testid="live-practice-cta">
+              <Button asChild className="bg-white hover:bg-white w-full sm:w-auto text-sm sm:text-base" style={{ color: 'var(--color-tint-alt)' }} data-testid="live-practice-cta">
                 <Link href="/live-practice">
                   {nextSession ? t('liveSession.registerNow') : t('liveSession.viewAvailable')}
                 </Link>
@@ -468,12 +468,13 @@ function DashboardView({
       )}
 
       {/* Footer with hairline border */}
-      <footer className="backdrop-blur-[20px] bg-white/80 dark:bg-[#121212]/80 border-t border-black/[0.12] dark:border-white/[0.16] mt-8 sm:mt-10 md:mt-12" data-testid="dashboard-footer">
+      <footer className="backdrop-blur-[20px] border-t mt-8 sm:mt-10 md:mt-12" style={{ background: 'color-mix(in srgb, var(--color-surface) 80%, transparent)', borderColor: 'var(--color-separator)' }} data-testid="dashboard-footer">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-4 sm:py-5 md:py-6 text-center">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
             <Link
               href="/como-funciona"
-              className="text-xs text-[#0A84FF] hover:underline"
+              className="text-xs hover:underline"
+              style={{ color: 'var(--color-link)' }}
               data-testid="how-it-works-link"
             >
               {tCommon('howItWorks')}
@@ -524,7 +525,7 @@ function DashboardContent() {
   // Show error UI if data loading failed
   if (sessionsError) {
     return (
-      <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#000000] flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'var(--color-bg)' }}>
         <Card className="max-w-md w-full p-6 text-center">
           <div className="text-4xl mb-4">⚠️</div>
           <Heading level={2} size="sm" className="mb-3">{t('errors.title')}</Heading>

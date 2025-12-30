@@ -375,7 +375,7 @@ test.describe('Student Profile Page', () => {
 
     // The badge should have a color (success/warning/danger/neutral)
     // This is verified by the presence of the badge component
-    const badge = accuracySection.locator('[class*="bg-"]');
+    const badge = accuracySection.locator('[class*="rounded-full"]');
     await expect(badge).toBeVisible();
   });
 });
