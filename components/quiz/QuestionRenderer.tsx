@@ -5,6 +5,8 @@ import { MathText, BlockMath, InlineMath, SmartLatexRenderer, UnifiedLatexRender
 import { GeometryCanvas, GeometryFigure } from '@/components/math/GeometryCanvas';
 import BarChart from '@/components/lessons/shared/BarChart';
 import PieChart from '@/components/lessons/shared/PieChart';
+import Histogram from '@/components/lessons/shared/Histogram';
+import LineChart from '@/components/lessons/shared/LineChart';
 import FrequencyTable from '@/components/lessons/shared/FrequencyTable';
 import VennDiagram from '@/components/lessons/shared/VennDiagram';
 
@@ -71,6 +73,30 @@ export function QuestionRenderer({
             showLegend={question.visualData.data.showLegend ?? true}
             showPercentages={question.visualData.data.showPercentages ?? true}
             size={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Histogram */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'histogram' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <Histogram
+            data={question.visualData.data.items}
+            showFrequencies={question.visualData.data.showFrequencies ?? true}
+            showIntervals={question.visualData.data.showIntervals ?? true}
+            height={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Line Chart */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'line' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <LineChart
+            data={question.visualData.data.items}
+            showValues={question.visualData.data.showValues ?? true}
+            showLabels={question.visualData.data.showLabels ?? true}
+            height={compact ? 'sm' : 'md'}
           />
         </div>
       )}
@@ -475,6 +501,30 @@ export function QuestionDisplay({
             showLegend={question.visualData.data.showLegend ?? true}
             showPercentages={question.visualData.data.showPercentages ?? true}
             size={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Histogram */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'histogram' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <Histogram
+            data={question.visualData.data.items}
+            showFrequencies={question.visualData.data.showFrequencies ?? true}
+            showIntervals={question.visualData.data.showIntervals ?? true}
+            height={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Line Chart */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'line' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <LineChart
+            data={question.visualData.data.items}
+            showValues={question.visualData.data.showValues ?? true}
+            showLabels={question.visualData.data.showLabels ?? true}
+            height={compact ? 'sm' : 'md'}
           />
         </div>
       )}

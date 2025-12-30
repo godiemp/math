@@ -111,78 +111,158 @@ export const m1Prob001Questions: Question[] = [
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{Ventas: Lunes (30), Martes (45), Miércoles (35). Total?}',
+    questionLatex: '\\text{El gráfico de barras muestra las ventas diarias de una tienda durante tres días. ¿Cuál es el total de ventas en estos tres días?}',
     options: ['100', '105', '110', '115'],
     correctAnswer: 2,
     explanation: '30 + 45 + 35 = 110',
     difficulty: 'easy',
     difficultyScore: 0.18,
-    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-operaciones-basicas']
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'bar',
+        items: [
+          { category: 'Lunes', value: 30 },
+          { category: 'Martes', value: 45 },
+          { category: 'Miércoles', value: 35 }
+        ],
+        showValues: true,
+        showLabels: true
+      }
+    }
   },
   {
     id: 'm1-94',
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{Deportes: fútbol (40), básquet (25), tenis (15). ¿Porcentaje fútbol?}',
+    questionLatex: '\\text{El gráfico circular muestra la cantidad de estudiantes inscritos en cada deporte. ¿Qué porcentaje de estudiantes está inscrito en fútbol?}',
     options: ['40%', '50%', '60%', '75%'],
     correctAnswer: 1,
     explanation: '\\frac{40}{80} \\times 100\\% = 50\\%',
     difficulty: 'easy',
     difficultyScore: 0.32,
-    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas']
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'pie',
+        items: [
+          { category: 'Fútbol', value: 40, color: '#10B981' },
+          { category: 'Básquet', value: 25, color: '#F59E0B' },
+          { category: 'Tenis', value: 15, color: '#3B82F6' }
+        ],
+        showLegend: true,
+        showPercentages: false
+      }
+    }
   },
   {
     id: 'm1-95',
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{Temperaturas: Enero (25°C), Febrero (28°C), Marzo (23°C). Diferencia máx-mín?}',
+    questionLatex: '\\text{El gráfico de barras muestra las temperaturas promedio de tres meses. ¿Cuál es la diferencia entre la temperatura máxima y mínima?}',
     options: ['3°C', '5°C', '8°C', '10°C'],
     correctAnswer: 1,
     explanation: '28 - 23 = 5°C',
     difficulty: 'easy',
     difficultyScore: 0.18,
-    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-operaciones-basicas']
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'bar',
+        items: [
+          { category: 'Enero', value: 25 },
+          { category: 'Febrero', value: 28 },
+          { category: 'Marzo', value: 23 }
+        ],
+        showValues: true,
+        showLabels: true
+      }
+    }
   },
   {
     id: 'm1-96',
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{Gráfico circular: 50% azul, 30% rojo, 20% verde. De 200, ¿cuántos azules?}',
+    questionLatex: '\\text{El gráfico circular muestra la distribución de colores favoritos de 200 estudiantes. ¿Cuántos estudiantes eligieron azul?}',
     options: ['50', '75', '100', '120'],
     correctAnswer: 2,
     explanation: '0.50 \\times 200 = 100',
     difficulty: 'easy',
     difficultyScore: 0.22,
-    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas']
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'pie',
+        items: [
+          { category: 'Azul', value: 50, color: '#3B82F6' },
+          { category: 'Rojo', value: 30, color: '#EF4444' },
+          { category: 'Verde', value: 20, color: '#10B981' }
+        ],
+        showLegend: true,
+        showPercentages: true
+      }
+    }
   },
   {
     id: 'm1-97',
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{Gráfico circular de 360°, deportes ocupa 90°. ¿Qué porcentaje?}',
+    questionLatex: '\\text{El gráfico circular muestra la distribución de actividades extracurriculares de estudiantes. El sector de deportes ocupa 90° del círculo completo. ¿Qué porcentaje de estudiantes practica deportes?}',
     options: ['20%', '25%', '30%', '35%'],
     correctAnswer: 1,
     explanation: '\\frac{90}{360} \\times 100\\% = 25\\%',
     difficulty: 'easy',
     difficultyScore: 0.32,
-    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'geometria-angulos', 'numeros-operaciones-basicas']
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'geometria-angulos', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'pie',
+        items: [
+          { category: 'Deportes', value: 25, color: '#3B82F6' },
+          { category: 'Música', value: 30, color: '#10B981' },
+          { category: 'Arte', value: 25, color: '#F59E0B' },
+          { category: 'Otros', value: 20, color: '#8B5CF6' }
+        ],
+        showLegend: true,
+        showPercentages: true
+      }
+    }
   },
   {
     id: 'm1-98',
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{Gastos: 40% alimentos, 25% vivienda, 20% transporte, 15% otros. De \\$1000, vivienda?}',
+    questionLatex: '\\text{El gráfico circular muestra la distribución del presupuesto mensual de una familia. Si el presupuesto total es de \\$1000, ¿cuánto se destina a vivienda?}',
     options: ['$200', '$250', '$300', '$400'],
     correctAnswer: 1,
     explanation: '0.25 \\times 1000 = 250',
     difficulty: 'easy',
     difficultyScore: 0.22,
-    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas']
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'pie',
+        items: [
+          { category: 'Alimentos', value: 40, color: '#EF4444' },
+          { category: 'Vivienda', value: 25, color: '#3B82F6' },
+          { category: 'Transporte', value: 20, color: '#10B981' },
+          { category: 'Otros', value: 15, color: '#F59E0B' }
+        ],
+        showLegend: true,
+        showPercentages: true
+      }
+    }
   },
   // ========================================
   // TABLAS DE FRECUENCIA ABSOLUTA Y RELATIVA
@@ -261,13 +341,27 @@ export const m1Prob001Questions: Question[] = [
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{En un gráfico de barras, las alturas son: A=20, B=35, C=45, D=15. ¿Qué porcentaje del total representa C?}',
+    questionLatex: '\\text{El gráfico de barras muestra las cantidades vendidas de cuatro productos diferentes. ¿Qué porcentaje del total de ventas representa el producto C?}',
     options: ['35%', '39.13%', '45%', '50%'],
     correctAnswer: 1,
     explanation: '\\frac{45}{20+35+45+15} = \\frac{45}{115} \\approx 0.3913 = 39.13\\%',
     difficulty: 'medium',
     difficultyScore: 0.38,
-    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas']
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-porcentajes', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'bar',
+        items: [
+          { category: 'A', value: 20 },
+          { category: 'B', value: 35 },
+          { category: 'C', value: 45 },
+          { category: 'D', value: 15 }
+        ],
+        showValues: true,
+        showLabels: true
+      }
+    }
   },
   // ========================================
   // GRÁFICOS CIRCULARES
@@ -277,39 +371,79 @@ export const m1Prob001Questions: Question[] = [
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{En un gráfico circular, un sector representa el 15\\% del total. ¿Cuántos grados mide el ángulo central de ese sector?}',
+    questionLatex: '\\text{El gráfico circular muestra la distribución de respuestas de una encuesta. Un sector representa el 15\\% del total. ¿Cuántos grados mide el ángulo central de ese sector?}',
     options: ['15°', '45°', '54°', '60°'],
     correctAnswer: 2,
     explanation: '0.15 \\times 360° = 54°',
     difficulty: 'easy',
     difficultyScore: 0.32,
-    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-porcentajes', 'geometria-angulos']
+    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-porcentajes', 'geometria-angulos'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'pie',
+        items: [
+          { category: 'Opción A', value: 15, color: '#3B82F6' },
+          { category: 'Opción B', value: 35, color: '#10B981' },
+          { category: 'Opción C', value: 30, color: '#F59E0B' },
+          { category: 'Opción D', value: 20, color: '#8B5CF6' }
+        ],
+        showLegend: true,
+        showPercentages: true
+      }
+    }
   },
   {
     id: 'm1-prob-001-007',
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{Un gráfico circular muestra gastos: alimentación (120°), vivienda (90°), transporte (60°), otros (90°). ¿Qué fracción representa alimentación?}',
+    questionLatex: '\\text{El gráfico circular muestra la distribución de gastos mensuales de una familia. ¿Qué fracción del presupuesto representa alimentación?}',
     options: ['\\frac{1}{4}', '\\frac{1}{3}', '\\frac{1}{2}', '\\frac{2}{3}'],
     correctAnswer: 1,
     explanation: '\\frac{120°}{360°} = \\frac{1}{3}',
     difficulty: 'easy',
     difficultyScore: 0.32,
-    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-fracciones', 'geometria-angulos']
+    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-fracciones', 'geometria-angulos'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'pie',
+        items: [
+          { category: 'Alimentación', value: 33.33, color: '#EF4444' },
+          { category: 'Vivienda', value: 25, color: '#3B82F6' },
+          { category: 'Transporte', value: 16.67, color: '#10B981' },
+          { category: 'Otros', value: 25, color: '#F59E0B' }
+        ],
+        showLegend: true,
+        showPercentages: false
+      }
+    }
   },
   {
     id: 'm1-prob-001-008',
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{Si un gráfico circular representa 400 encuestados y el sector de "Sí" mide 180°, ¿cuántas personas dijeron "Sí"?}',
+    questionLatex: '\\text{El gráfico circular muestra los resultados de una encuesta a 400 personas sobre si apoyan una nueva iniciativa. ¿Cuántas personas dijeron "Sí"?}',
     options: ['100', '150', '180', '200'],
     correctAnswer: 3,
     explanation: '\\frac{180°}{360°} \\times 400 = \\frac{1}{2} \\times 400 = 200',
     difficulty: 'medium',
     difficultyScore: 0.35,
-    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-fracciones', 'numeros-operaciones-basicas']
+    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-fracciones', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'pie',
+        items: [
+          { category: 'Sí', value: 50, color: '#10B981' },
+          { category: 'No', value: 50, color: '#EF4444' }
+        ],
+        showLegend: true,
+        showPercentages: true
+      }
+    }
   },
   // ========================================
   // HISTOGRAMAS
@@ -325,7 +459,20 @@ export const m1Prob001Questions: Question[] = [
     explanation: '5 + 12 + 8 = 25 \\text{ estudiantes}',
     difficulty: 'easy',
     difficultyScore: 0.18,
-    skills: ['estadistica-graficos', 'estadistica-histogramas', 'numeros-operaciones-basicas']
+    skills: ['estadistica-graficos', 'estadistica-histogramas', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'histogram',
+        items: [
+          { interval: '[1-3)', frequency: 5 },
+          { interval: '[3-5)', frequency: 12 },
+          { interval: '[5-7)', frequency: 8 }
+        ],
+        showFrequencies: true,
+        showIntervals: true
+      }
+    }
   },
   {
     id: 'm1-prob-001-010',
@@ -338,7 +485,20 @@ export const m1Prob001Questions: Question[] = [
     explanation: '\\text{Densidad} = \\frac{f}{\\text{ancho}} = \\frac{15}{10} = 1.5',
     difficulty: 'medium',
     difficultyScore: 0.38,
-    skills: ['estadistica-graficos', 'estadistica-histogramas', 'numeros-decimales', 'numeros-operaciones-basicas']
+    skills: ['estadistica-graficos', 'estadistica-histogramas', 'numeros-decimales', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'histogram',
+        items: [
+          { interval: '[10-20)', frequency: 8 },
+          { interval: '[20-30)', frequency: 15 },
+          { interval: '[30-40)', frequency: 10 }
+        ],
+        showFrequencies: true,
+        showIntervals: true
+      }
+    }
   },
   {
     id: 'm1-prob-001-011',
@@ -367,6 +527,28 @@ export const m1Prob001Questions: Question[] = [
     explanation: '\\text{Junio es el punto más alto antes de que empiecen a bajar}',
     difficulty: 'easy',
     difficultyScore: 0.18,
-    skills: ['estadistica-graficos', 'estadistica-interpretacion']
+    skills: ['estadistica-graficos', 'estadistica-interpretacion'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'line',
+        items: [
+          { label: 'Ene', value: 50 },
+          { label: 'Feb', value: 65 },
+          { label: 'Mar', value: 80 },
+          { label: 'Abr', value: 95 },
+          { label: 'May', value: 110 },
+          { label: 'Jun', value: 120 },
+          { label: 'Jul', value: 105 },
+          { label: 'Ago', value: 90 },
+          { label: 'Sep', value: 75 },
+          { label: 'Oct', value: 60 },
+          { label: 'Nov', value: 45 },
+          { label: 'Dic', value: 35 }
+        ],
+        showValues: false,
+        showLabels: true
+      }
+    }
   }
 ];

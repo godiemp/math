@@ -395,6 +395,151 @@ visualData: {
 
 ---
 
+## 6. Histogram (type: 'graph', chartType: 'histogram')
+
+Rendered by `Histogram` component. Used for continuous data grouped in intervals/bins.
+Key difference from bar chart: bars are contiguous (no gaps).
+
+### Basic Histogram
+```typescript
+visualData: {
+  type: 'graph',
+  data: {
+    chartType: 'histogram',
+    items: [
+      { interval: '[1-3)', frequency: 5 },
+      { interval: '[3-5)', frequency: 12 },
+      { interval: '[5-7)', frequency: 8 }
+    ],
+    showFrequencies: true,
+    showIntervals: true
+  }
+}
+```
+
+### Histogram with More Intervals
+```typescript
+visualData: {
+  type: 'graph',
+  data: {
+    chartType: 'histogram',
+    items: [
+      { interval: '[0-10)', frequency: 3 },
+      { interval: '[10-20)', frequency: 7 },
+      { interval: '[20-30)', frequency: 15 },
+      { interval: '[30-40)', frequency: 10 },
+      { interval: '[40-50)', frequency: 5 }
+    ],
+    showFrequencies: true,
+    showIntervals: true
+  }
+}
+```
+
+### Histogram with Colors
+```typescript
+visualData: {
+  type: 'graph',
+  data: {
+    chartType: 'histogram',
+    items: [
+      { interval: '[1-3)', frequency: 5, color: '#3B82F6' },
+      { interval: '[3-5)', frequency: 12, color: '#10B981' },
+      { interval: '[5-7)', frequency: 8, color: '#F59E0B' }
+    ],
+    showFrequencies: true,
+    showIntervals: true
+  }
+}
+```
+
+### Optional Properties
+```typescript
+{
+  chartType: 'histogram',
+  items: [...],
+  showFrequencies: true,   // Show frequency numbers above bars (default: true)
+  showIntervals: true,     // Show interval labels below (default: true)
+  // Note: height is controlled by QuestionRenderer (compact ? 'sm' : 'md')
+}
+```
+
+---
+
+## 7. Line Chart (type: 'graph', chartType: 'line')
+
+Rendered by `LineChart` component. Used for showing trends over time or ordered categories.
+
+### Basic Line Chart
+```typescript
+visualData: {
+  type: 'graph',
+  data: {
+    chartType: 'line',
+    items: [
+      { label: 'Dia 1', value: 20 },
+      { label: 'Dia 2', value: 22 },
+      { label: 'Dia 3', value: 18 },
+      { label: 'Dia 4', value: 25 },
+      { label: 'Dia 5', value: 21 }
+    ],
+    showValues: true,
+    showLabels: true
+  }
+}
+```
+
+### Temperature Over Days
+```typescript
+visualData: {
+  type: 'graph',
+  data: {
+    chartType: 'line',
+    items: [
+      { label: 'Lunes', value: 15 },
+      { label: 'Martes', value: 18 },
+      { label: 'Miercoles', value: 20 },
+      { label: 'Jueves', value: 17 },
+      { label: 'Viernes', value: 22 }
+    ],
+    showValues: true,
+    showLabels: true
+  }
+}
+```
+
+### Monthly Sales
+```typescript
+visualData: {
+  type: 'graph',
+  data: {
+    chartType: 'line',
+    items: [
+      { label: 'Ene', value: 100 },
+      { label: 'Feb', value: 120 },
+      { label: 'Mar', value: 115 },
+      { label: 'Abr', value: 135 },
+      { label: 'May', value: 150 }
+    ],
+    showValues: true,
+    showLabels: true
+  }
+}
+```
+
+### Optional Properties
+```typescript
+{
+  chartType: 'line',
+  items: [...],
+  showValues: true,    // Show value labels at each point (default: true)
+  showLabels: true,    // Show labels on X-axis (default: true)
+  // Note: height is controlled by QuestionRenderer (compact ? 'sm' : 'md')
+}
+```
+
+---
+
 ## When to Use Each Type
 
 | Question Type | Visualization |
@@ -402,6 +547,8 @@ visualData: {
 | Shapes, areas, perimeters | geometry |
 | Comparing quantities | graph (bar) |
 | Proportions, percentages | graph (pie) |
+| Continuous data in intervals | graph (histogram) |
+| Trends over time | graph (line) |
 | Data collection, counting | table |
 | Set theory, logic | diagram (venn) |
 
