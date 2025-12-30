@@ -19,13 +19,19 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          'group relative rounded-2xl p-[1px]',
+          'group relative rounded-2xl',
           'transition-all duration-300 ease-out',
           hover && 'hover:-translate-y-1',
+          paddingSizes[padding],
           className
         )}
         style={{
-          background: 'linear-gradient(135deg, var(--color-tint) 0%, var(--color-tint-alt) 50%, var(--color-tint) 100%)',
+          background: `radial-gradient(ellipse at center,
+            var(--color-surface) 0%,
+            var(--color-surface) 60%,
+            var(--color-tint) 95%,
+            var(--color-tint-alt) 100%
+          )`,
           ...style,
         }}
         {...props}
@@ -39,19 +45,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
             }}
           />
         )}
-
-        {/* Main content - covers everything except 1px border */}
-        <div
-          className={cn(
-            'relative rounded-[15px]',
-            paddingSizes[padding]
-          )}
-          style={{
-            background: 'var(--color-elevated-surface)',
-          }}
-        >
-          {children}
-        </div>
+        {children}
       </div>
     );
   }
