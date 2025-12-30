@@ -62,6 +62,7 @@ export default function GaltonBoard({
   const {
     engineRef,
     allBallsRef,
+    animatedBallsRef,
     releaseBall,
     startPhysics,
     resetBalls,
@@ -83,6 +84,7 @@ export default function GaltonBoard({
     canvasRef,
     engineRef,
     allBallsRef,
+    animatedBallsRef,
     distributionRef,
     boardWidth: BOARD_WIDTH,
     boardHeight: BOARD_HEIGHT,

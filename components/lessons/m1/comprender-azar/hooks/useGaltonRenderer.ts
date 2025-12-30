@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Matter from 'matter-js';
+import type { AnimatedBall } from './useGaltonEngine';
 
 const COLORS = {
   light: {
@@ -22,6 +23,7 @@ interface UseGaltonRendererOptions {
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   engineRef: React.MutableRefObject<Matter.Engine | null>;
   allBallsRef: React.MutableRefObject<Set<Matter.Body>>;
+  animatedBallsRef: React.MutableRefObject<Map<string, AnimatedBall>>;
   distributionRef: React.MutableRefObject<number[]>;
   boardWidth: number;
   boardHeight: number;
@@ -37,6 +39,7 @@ export function useGaltonRenderer({
   canvasRef,
   engineRef,
   allBallsRef,
+  animatedBallsRef,
   distributionRef,
   boardWidth,
   boardHeight,
@@ -106,8 +109,15 @@ export function useGaltonRenderer({
       ctx.lineTo(boardWidth, pegAreaBottom);
       ctx.stroke();
 
-      // Draw all balls
+      // Draw animated balls (descending through pegs)
       ctx.fillStyle = colors.ball;
+      animatedBallsRef.current.forEach((ball) => {
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ballRadius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Draw physics balls (in bins)
       allBallsRef.current.forEach((ball) => {
         ctx.beginPath();
         ctx.arc(ball.position.x, ball.position.y, ballRadius, 0, Math.PI * 2);
@@ -138,6 +148,7 @@ export function useGaltonRenderer({
     canvasRef,
     engineRef,
     allBallsRef,
+    animatedBallsRef,
     distributionRef,
     boardWidth,
     boardHeight,
