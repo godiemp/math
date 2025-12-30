@@ -419,6 +419,110 @@ import { CheckpointQuiz } from '@/components/lessons/shared';
 
 ## Geometry SVG Patterns
 
+### Figure Construction & Label Placement
+
+When creating geometric figures in SVG, follow these rules for proper label placement:
+
+#### Right Triangle Template
+
+```tsx
+<svg viewBox="0 0 400 200" className="w-full max-w-md mx-auto">
+  {/* Triangle: vertical edge on left, base on bottom, hypotenuse connecting them */}
+  <polygon
+    points="80,40 80,180 200,180"
+    className="fill-blue-200/50 dark:fill-blue-800/50 stroke-blue-600 dark:stroke-blue-400"
+    strokeWidth="2"
+  />
+
+  {/* Height label - ALWAYS position to the LEFT of the vertical edge */}
+  <line x1="70" y1="40" x2="70" y2="180" className="stroke-blue-500" strokeWidth="1" />
+  <line x1="65" y1="40" x2="75" y2="40" className="stroke-blue-500" strokeWidth="1" />
+  <line x1="65" y1="180" x2="75" y2="180" className="stroke-blue-500" strokeWidth="1" />
+  <text x="45" y="115" className="fill-blue-600 dark:fill-blue-400 text-xs font-bold">height</text>
+
+  {/* Base label - ALWAYS position BELOW the base */}
+  <text x="140" y="195" textAnchor="middle" className="fill-gray-600 dark:fill-gray-400 text-xs">base</text>
+</svg>
+```
+
+#### Label Placement Rules
+
+| Label Type | Position | Why |
+|------------|----------|-----|
+| **Height** | LEFT of vertical edge | Never inside triangle |
+| **Base** | BELOW the base line | Clear association |
+| **Hypotenuse** | OUTSIDE, along the line | Avoid overlap |
+| **Angle marks** | INSIDE at vertex | Standard convention |
+
+#### Dimension Lines with Tick Marks
+
+Always use tick marks at both ends of dimension lines:
+
+```tsx
+{/* Dimension line with tick marks */}
+<g>
+  <line x1="70" y1="40" x2="70" y2="180" className="stroke-blue-500" strokeWidth="1" />
+  <line x1="65" y1="40" x2="75" y2="40" className="stroke-blue-500" strokeWidth="1" />   {/* Top tick */}
+  <line x1="65" y1="180" x2="75" y2="180" className="stroke-blue-500" strokeWidth="1" /> {/* Bottom tick */}
+  <text x="45" y="115" className="fill-blue-600 dark:fill-blue-400 text-xs font-bold">1.6m</text>
+</g>
+```
+
+#### Common Label Mistakes
+
+1. **Labels inside triangles** - Move labels OUTSIDE, using dimension lines
+2. **Text overlapping shapes** - Leave 10-20px margin between shapes and text
+3. **Missing `textAnchor`** - Use `textAnchor="middle"` for centered labels
+4. **Hard-coded colors** - Always include `dark:` variants for dark mode
+5. **Crowded labels** - If labels overlap, adjust viewBox or reposition elements
+
+#### Similar Triangles Pattern
+
+When showing two similar triangles side by side:
+
+```tsx
+<svg viewBox="0 0 400 200" className="w-full max-w-md mx-auto">
+  {/* Small triangle */}
+  <polygon
+    points="80,140 80,180 120,180"
+    className="fill-blue-200/50 dark:fill-blue-800/50 stroke-blue-600 dark:stroke-blue-400"
+    strokeWidth="2"
+  />
+  {/* Height dimension - LEFT of triangle */}
+  <line x1="70" y1="140" x2="70" y2="180" className="stroke-blue-500" strokeWidth="1" />
+  <line x1="65" y1="140" x2="75" y2="140" className="stroke-blue-500" strokeWidth="1" />
+  <line x1="65" y1="180" x2="75" y2="180" className="stroke-blue-500" strokeWidth="1" />
+  <text x="40" y="165" className="fill-blue-600 dark:fill-blue-400 text-xs font-bold">1.6m</text>
+  {/* Base label - BELOW triangle */}
+  <text x="100" y="195" textAnchor="middle" className="fill-gray-600 dark:fill-gray-400 text-xs">2m</text>
+
+  {/* Large triangle */}
+  <polygon
+    points="200,40 200,180 350,180"
+    className="fill-purple-200/50 dark:fill-purple-800/50 stroke-purple-600 dark:stroke-purple-400"
+    strokeWidth="2"
+  />
+  {/* Height dimension - LEFT of triangle */}
+  <line x1="190" y1="40" x2="190" y2="180" className="stroke-purple-500" strokeWidth="1" />
+  <line x1="185" y1="40" x2="195" y2="40" className="stroke-purple-500" strokeWidth="1" />
+  <line x1="185" y1="180" x2="195" y2="180" className="stroke-purple-500" strokeWidth="1" />
+  <text x="165" y="115" className="fill-purple-600 dark:fill-purple-400 text-xs font-bold">12m</text>
+  {/* Base label - BELOW triangle */}
+  <text x="275" y="195" textAnchor="middle" className="fill-gray-600 dark:fill-gray-400 text-xs">15m</text>
+
+  {/* Similarity indicator - BETWEEN triangles */}
+  <text x="155" y="110" textAnchor="middle" className="fill-green-600 dark:fill-green-400 text-lg font-bold">~</text>
+  <text x="155" y="125" textAnchor="middle" className="fill-gray-500 dark:fill-gray-400 text-xs">semejantes</text>
+</svg>
+```
+
+#### Exemplar Files
+
+- `components/lessons/m2/teorema-tales/Step1Hook.tsx` - Similar triangles with dimension lines
+- `components/lessons/m1/teorema-pitagoras/Step3Proof.tsx` - Triangle with labeled segments
+
+---
+
 ### Standard Grid Pattern
 
 ```typescript
