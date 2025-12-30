@@ -10,7 +10,7 @@ import {
   Step4Classify,
   Step5Practice,
   Step6Verify,
-} from '@/components/lessons/m1/homotecia-vectorial';
+} from '@/components/lessons/m2/homotecia-vectorial';
 
 const LESSON_SLUG = 'homotecia-vectorial';
 
