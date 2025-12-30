@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, Lightbulb, Home, ZoomIn, Target } from 'lucide-react';
+import { ArrowRight, Lightbulb, ZoomIn, Target } from 'lucide-react';
 import { LessonStepProps } from '@/lib/lessons/types';
 import {
   ScenarioCard,
@@ -16,13 +16,20 @@ import {
 type Phase = 'scenario' | 'question' | 'result';
 
 const OPTIONS = [
-  'La puerta queda en (4, 2) y la ventana en (8, 6)',
-  'La puerta queda en (2, 1) y la ventana en (4, 3)',
-  'La puerta queda en (2, 1) y la ventana en (6, 5)',
-  'La puerta queda en (4, 2) y la ventana en (6, 4)',
+  'P′ = (1, 2)',
+  'P′ = (2, 4)',
+  'P′ = (3, 4)',
+  'P′ = (0.5, 1)',
 ];
 
-const CORRECT_ANSWER = 2; // Door stays at (2,1), window goes from (4,3) to (6,5) with k=2 from center (2,1)
+const CORRECT_ANSWER = 1; // k=2 means (1,2) → (2,4)
+
+// SVG coordinate helpers (scale: 1 unit = 25px, origin at (50, 200))
+const SCALE = 25;
+const ORIGIN_X = 50;
+const ORIGIN_Y = 175;
+const toSvgX = (x: number) => ORIGIN_X + x * SCALE;
+const toSvgY = (y: number) => ORIGIN_Y - y * SCALE;
 
 export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('scenario');
@@ -44,15 +51,29 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
   if (!isActive) return null;
 
+  // Triangle vertices (original)
+  const triangleOriginal = [
+    { x: 1, y: 2, label: 'P' },
+    { x: 3, y: 1, label: 'Q' },
+    { x: 2, y: 3, label: 'R' },
+  ];
+
+  // Triangle vertices (scaled by k=2)
+  const triangleScaled = triangleOriginal.map(p => ({
+    x: p.x * 2,
+    y: p.y * 2,
+    label: p.label + '′',
+  }));
+
   return (
     <div className="space-y-8 animate-fadeIn">
       {/* Title */}
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          El Arquitecto Digital
+          El Diseñador Gráfico
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          Escalar planos manteniendo un punto fijo
+          Escalar figuras desde el origen
         </p>
       </div>
 
@@ -60,35 +81,34 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         <div className="space-y-6 animate-fadeIn">
           <ScenarioCard variant="cool">
             <p className="text-gray-700 dark:text-gray-300 text-lg mb-6">
-              Una arquitecta necesita escalar el plano de una casa al{' '}
-              <span className="font-bold text-blue-600">doble de tamaño</span> (k = 2). El cliente
-              pide que la{' '}
-              <span className="font-bold text-red-500">puerta principal</span> quede en la{' '}
-              <strong>misma posición</strong>.
+              Un diseñador gráfico necesita escalar un logo al{' '}
+              <span className="font-bold text-blue-600">doble de tamaño</span> (k = 2).
+              El logo debe escalarse desde el <span className="font-bold text-red-500">origen</span>{' '}
+              del plano.
             </p>
 
-            {/* Visual: House blueprint */}
+            {/* Visual: Triangle at origin */}
             <div className="bg-white dark:bg-gray-800 rounded-xl p-4 mb-6">
-              <svg viewBox="0 0 200 150" className="w-full max-w-md mx-auto">
+              <svg viewBox="0 0 250 220" className="w-full max-w-md mx-auto">
                 {/* Grid */}
                 {Array.from({ length: 9 }).map((_, i) => (
                   <line
                     key={`v-${i}`}
-                    x1={20 + i * 20}
-                    y1={10}
-                    x2={20 + i * 20}
-                    y2={130}
+                    x1={toSvgX(i)}
+                    y1={toSvgY(0)}
+                    x2={toSvgX(i)}
+                    y2={toSvgY(7)}
                     className="stroke-gray-200 dark:stroke-gray-700"
                     strokeWidth="0.5"
                   />
                 ))}
-                {Array.from({ length: 7 }).map((_, i) => (
+                {Array.from({ length: 8 }).map((_, i) => (
                   <line
                     key={`h-${i}`}
-                    x1={20}
-                    y1={10 + i * 20}
-                    x2={180}
-                    y2={10 + i * 20}
+                    x1={toSvgX(0)}
+                    y1={toSvgY(i)}
+                    x2={toSvgX(8)}
+                    y2={toSvgY(i)}
                     className="stroke-gray-200 dark:stroke-gray-700"
                     strokeWidth="0.5"
                   />
@@ -96,91 +116,89 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
                 {/* Axes */}
                 <line
-                  x1={20}
-                  y1={130}
-                  x2={180}
-                  y2={130}
+                  x1={toSvgX(0)}
+                  y1={toSvgY(0)}
+                  x2={toSvgX(8)}
+                  y2={toSvgY(0)}
                   className="stroke-gray-400 dark:stroke-gray-500"
                   strokeWidth="1.5"
                 />
                 <line
-                  x1={20}
-                  y1={130}
-                  x2={20}
-                  y2={10}
+                  x1={toSvgX(0)}
+                  y1={toSvgY(0)}
+                  x2={toSvgX(0)}
+                  y2={toSvgY(7)}
                   className="stroke-gray-400 dark:stroke-gray-500"
                   strokeWidth="1.5"
                 />
 
                 {/* Axis labels */}
-                <text x={185} y={135} className="fill-gray-500 text-[8px]">
+                <text x={toSvgX(8) + 5} y={toSvgY(0) + 4} className="fill-gray-500 text-[10px]">
                   x
                 </text>
-                <text x={15} y={8} className="fill-gray-500 text-[8px]">
+                <text x={toSvgX(0) - 3} y={toSvgY(7) - 5} className="fill-gray-500 text-[10px]">
                   y
                 </text>
 
-                {/* Original house outline - extended to include window at (4,3) */}
-                <rect
-                  x={40}
-                  y={50}
-                  width={70}
-                  height={70}
-                  className="fill-blue-100 dark:fill-blue-900/50 stroke-blue-500"
-                  strokeWidth="2"
-                />
-                {/* Roof */}
+                {/* Number labels on axes */}
+                {[1, 2, 3, 4, 5, 6, 7].map(n => (
+                  <text
+                    key={`x-${n}`}
+                    x={toSvgX(n)}
+                    y={toSvgY(0) + 12}
+                    textAnchor="middle"
+                    className="fill-gray-400 text-[8px]"
+                  >
+                    {n}
+                  </text>
+                ))}
+                {[1, 2, 3, 4, 5, 6].map(n => (
+                  <text
+                    key={`y-${n}`}
+                    x={toSvgX(0) - 8}
+                    y={toSvgY(n) + 3}
+                    textAnchor="middle"
+                    className="fill-gray-400 text-[8px]"
+                  >
+                    {n}
+                  </text>
+                ))}
+
+                {/* Original triangle */}
                 <polygon
-                  points="40,50 75,25 110,50"
-                  className="fill-blue-200 dark:fill-blue-800/50 stroke-blue-500"
+                  points={triangleOriginal.map(p => `${toSvgX(p.x)},${toSvgY(p.y)}`).join(' ')}
+                  className="fill-blue-200/70 dark:fill-blue-800/50 stroke-blue-500"
                   strokeWidth="2"
                 />
 
-                {/* Door (center of homothety) */}
-                <rect
-                  x={55}
-                  y={100}
-                  width={10}
-                  height={20}
-                  className="fill-red-400 dark:fill-red-600 stroke-red-600"
-                  strokeWidth="2"
-                />
-                {/* Door label */}
-                <circle cx={60} cy={110} r={8} className="fill-red-500" />
+                {/* Point labels */}
+                {triangleOriginal.map((p) => (
+                  <g key={p.label}>
+                    <circle
+                      cx={toSvgX(p.x)}
+                      cy={toSvgY(p.y)}
+                      r={5}
+                      className="fill-blue-500"
+                    />
+                    <text
+                      x={toSvgX(p.x) + 8}
+                      y={toSvgY(p.y) - 5}
+                      className="fill-blue-600 dark:fill-blue-400 text-[9px] font-bold"
+                    >
+                      {p.label}({p.x}, {p.y})
+                    </text>
+                  </g>
+                ))}
+
+                {/* Center (origin) */}
+                <circle cx={toSvgX(0)} cy={toSvgY(0)} r={7} className="fill-red-500" />
                 <text
-                  x={60}
-                  y={114}
+                  x={toSvgX(0)}
+                  y={toSvgY(0) + 4}
                   textAnchor="middle"
                   className="fill-white text-[8px] font-bold"
                 >
                   C
-                </text>
-
-                {/* Window at coordinate (4, 3) → SVG (100, 70) */}
-                <rect
-                  x={93}
-                  y={63}
-                  width={14}
-                  height={14}
-                  className="fill-cyan-300 dark:fill-cyan-600 stroke-cyan-600"
-                  strokeWidth="2"
-                />
-
-                {/* Coordinate labels */}
-                <text
-                  x={60}
-                  y={140}
-                  textAnchor="middle"
-                  className="fill-red-600 text-[7px] font-bold"
-                >
-                  Puerta (2, 1)
-                </text>
-                <text
-                  x={115}
-                  y={68}
-                  className="fill-cyan-600 dark:fill-cyan-400 text-[7px]"
-                >
-                  Ventana (4, 3)
                 </text>
               </svg>
             </div>
@@ -193,15 +211,14 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 </span>
               </div>
               <p className="text-gray-600 dark:text-gray-400">
-                La puerta en <span className="font-mono font-bold text-red-500">(2, 1)</span> debe
-                quedar fija
+                El origen <span className="font-mono font-bold text-red-500">C = (0, 0)</span>
               </p>
             </div>
           </ScenarioCard>
 
           <div className="flex justify-center">
             <ActionButton onClick={() => setPhase('question')} icon={<ArrowRight size={20} />}>
-              Ver opciones de escalado
+              Ver el desafío
             </ActionButton>
           </div>
         </div>
@@ -211,13 +228,13 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         <div className="space-y-6 animate-fadeIn">
           <QuestionPrompt>
             <p className="text-lg font-semibold text-gray-800 dark:text-gray-200 text-center">
-              Si escalamos al doble (k = 2) desde la puerta,
+              Si escalamos con <span className="text-purple-600 font-mono">k = 2</span> desde el origen,
               <br />
-              <span className="text-blue-600">¿dónde quedan la puerta y la ventana?</span>
+              <span className="text-blue-600">¿dónde termina el punto P(1, 2)?</span>
             </p>
           </QuestionPrompt>
 
-          <OptionGrid columns={1}>
+          <OptionGrid columns={2}>
             {OPTIONS.map((option, index) => (
               <OptionButton
                 key={index}
@@ -243,7 +260,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             <FeedbackPanel
               isCorrect={isCorrect}
               title={isCorrect ? '¡Exacto!' : '¡Casi!'}
-              explanation="Veamos cómo funciona el escalado..."
+              explanation="Veamos cómo funciona el escalado desde el origen..."
             />
           )}
         </div>
@@ -254,87 +271,130 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           {/* Explanation */}
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-2xl p-6 border border-green-200 dark:border-green-800">
             <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 text-center">
-              El Centro se Mantiene Fijo
+              La Transformación con k = 2
             </h3>
 
             <div className="bg-white dark:bg-gray-800 rounded-xl p-4 mb-4">
-              <svg viewBox="0 0 220 180" className="w-full max-w-lg mx-auto">
-                {/* Grid - coordinate system with origin at (30, 150), scale 20px/unit */}
-                {Array.from({ length: 10 }).map((_, i) => (
+              <svg viewBox="0 0 250 220" className="w-full max-w-lg mx-auto">
+                {/* Grid */}
+                {Array.from({ length: 9 }).map((_, i) => (
                   <line
                     key={`v-${i}`}
-                    x1={30 + i * 20}
-                    y1={10}
-                    x2={30 + i * 20}
-                    y2={170}
+                    x1={toSvgX(i)}
+                    y1={toSvgY(0)}
+                    x2={toSvgX(i)}
+                    y2={toSvgY(7)}
                     className="stroke-gray-200 dark:stroke-gray-700"
                     strokeWidth="0.5"
                   />
                 ))}
-                {Array.from({ length: 9 }).map((_, i) => (
+                {Array.from({ length: 8 }).map((_, i) => (
                   <line
                     key={`h-${i}`}
-                    x1={10}
-                    y1={10 + i * 20}
-                    x2={210}
-                    y2={10 + i * 20}
+                    x1={toSvgX(0)}
+                    y1={toSvgY(i)}
+                    x2={toSvgX(8)}
+                    y2={toSvgY(i)}
                     className="stroke-gray-200 dark:stroke-gray-700"
                     strokeWidth="0.5"
                   />
                 ))}
 
                 {/* Axes */}
-                <line x1={10} y1={150} x2={210} y2={150} className="stroke-gray-400" strokeWidth="1.5" />
-                <line x1={30} y1={170} x2={30} y2={10} className="stroke-gray-400" strokeWidth="1.5" />
+                <line
+                  x1={toSvgX(0)}
+                  y1={toSvgY(0)}
+                  x2={toSvgX(8)}
+                  y2={toSvgY(0)}
+                  className="stroke-gray-400"
+                  strokeWidth="1.5"
+                />
+                <line
+                  x1={toSvgX(0)}
+                  y1={toSvgY(0)}
+                  x2={toSvgX(0)}
+                  y2={toSvgY(7)}
+                  className="stroke-gray-400"
+                  strokeWidth="1.5"
+                />
 
-                {/* Original triangle (blue, faded) - vertices at (3,2), (4,2), (3,4) */}
+                {/* Number labels */}
+                {[1, 2, 3, 4, 5, 6, 7].map(n => (
+                  <text
+                    key={`x-${n}`}
+                    x={toSvgX(n)}
+                    y={toSvgY(0) + 12}
+                    textAnchor="middle"
+                    className="fill-gray-400 text-[8px]"
+                  >
+                    {n}
+                  </text>
+                ))}
+                {[1, 2, 3, 4, 5, 6].map(n => (
+                  <text
+                    key={`y-${n}`}
+                    x={toSvgX(0) - 8}
+                    y={toSvgY(n) + 3}
+                    textAnchor="middle"
+                    className="fill-gray-400 text-[8px]"
+                  >
+                    {n}
+                  </text>
+                ))}
+
+                {/* Original triangle (faded) */}
                 <polygon
-                  points="90,110 110,110 90,70"
-                  className="fill-blue-100/60 stroke-blue-400"
+                  points={triangleOriginal.map(p => `${toSvgX(p.x)},${toSvgY(p.y)}`).join(' ')}
+                  className="fill-blue-100/50 stroke-blue-300"
                   strokeWidth="1.5"
                   strokeDasharray="4"
                 />
 
-                {/* Scaled triangle (green) - vertices at (4,3), (6,3), (4,7) from center (2,1) with k=2 */}
+                {/* Scaled triangle */}
                 <polygon
-                  points="110,90 150,90 110,10"
-                  className="fill-green-100/80 dark:fill-green-900/50 stroke-green-500"
+                  points={triangleScaled.map(p => `${toSvgX(p.x)},${toSvgY(p.y)}`).join(' ')}
+                  className="fill-green-200/70 dark:fill-green-800/50 stroke-green-500"
                   strokeWidth="2"
                 />
 
-                {/* Center of homothety C(2,1) */}
-                <circle cx={70} cy={130} r={7} className="fill-red-500" />
-                <text x={70} y={133} textAnchor="middle" className="fill-white text-[7px] font-bold">
+                {/* Vectors from origin to scaled points */}
+                {triangleScaled.map((p, i) => (
+                  <line
+                    key={`vec-${i}`}
+                    x1={toSvgX(0)}
+                    y1={toSvgY(0)}
+                    x2={toSvgX(p.x)}
+                    y2={toSvgY(p.y)}
+                    className="stroke-green-400"
+                    strokeWidth="1"
+                    strokeDasharray="3"
+                  />
+                ))}
+
+                {/* Center (origin) */}
+                <circle cx={toSvgX(0)} cy={toSvgY(0)} r={7} className="fill-red-500" />
+                <text
+                  x={toSvgX(0)}
+                  y={toSvgY(0) + 4}
+                  textAnchor="middle"
+                  className="fill-white text-[8px] font-bold"
+                >
                   C
                 </text>
-                <text x={70} y={148} textAnchor="middle" className="fill-red-600 text-[8px] font-bold">
-                  (2, 1)
+
+                {/* Original point P */}
+                <circle cx={toSvgX(1)} cy={toSvgY(2)} r={4} className="fill-blue-400" />
+                <text x={toSvgX(1) - 25} y={toSvgY(2) - 3} className="fill-blue-500 text-[8px]">
+                  P(1, 2)
                 </text>
 
-                {/* Vector from C to original point A(3,2) */}
-                <line x1={70} y1={130} x2={90} y2={110} className="stroke-blue-400" strokeWidth="1" strokeDasharray="3" />
+                {/* Scaled point P' - highlight */}
+                <circle cx={toSvgX(2)} cy={toSvgY(4)} r={6} className="fill-green-500" />
+                <text x={toSvgX(2) + 8} y={toSvgY(4) - 3} className="fill-green-600 text-[9px] font-bold">
+                  P′(2, 4)
+                </text>
 
-                {/* Vector from C to scaled point A'(4,3) - twice as long */}
-                <line x1={70} y1={130} x2={110} y2={90} className="stroke-green-500" strokeWidth="1.5" />
-
-                {/* Original point A(3,2) */}
-                <circle cx={90} cy={110} r={4} className="fill-blue-400" />
-                <text x={80} y={105} className="fill-blue-600 text-[7px]">A(3,2)</text>
-
-                {/* Scaled point A'(4,3) */}
-                <circle cx={110} cy={90} r={5} className="fill-green-500" />
-                <text x={118} y={88} className="fill-green-600 text-[7px] font-bold">A&apos;(4,3)</text>
-
-                {/* Arrow showing transformation */}
-                <line
-                  x1={93}
-                  y1={107}
-                  x2={107}
-                  y2={93}
-                  className="stroke-purple-500"
-                  strokeWidth="1.5"
-                  markerEnd="url(#arrowhead)"
-                />
+                {/* Arrow from P to P' */}
                 <defs>
                   <marker
                     id="arrowhead"
@@ -347,34 +407,49 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                     <polygon points="0 0, 6 3, 0 6" className="fill-purple-500" />
                   </marker>
                 </defs>
-
-                {/* Scale factor label */}
-                <text x={100} y={115} className="fill-purple-600 text-[8px] font-bold">
-                  k = 2
+                <line
+                  x1={toSvgX(1) + 4}
+                  y1={toSvgY(2) - 4}
+                  x2={toSvgX(2) - 4}
+                  y2={toSvgY(4) + 4}
+                  className="stroke-purple-500"
+                  strokeWidth="2"
+                  markerEnd="url(#arrowhead)"
+                />
+                <text x={toSvgX(1.5) + 8} y={toSvgY(3)} className="fill-purple-600 text-[9px] font-bold">
+                  ×2
                 </text>
 
                 {/* Legend */}
-                <rect x={140} y={120} width={12} height={12} className="fill-blue-100/60 stroke-blue-400" strokeWidth="1" />
-                <text x={156} y={130} className="fill-gray-600 text-[7px]">Original</text>
-                <rect x={140} y={138} width={12} height={12} className="fill-green-100/80 stroke-green-500" strokeWidth="1" />
-                <text x={156} y={148} className="fill-gray-600 text-[7px]">Imagen (k=2)</text>
+                <g transform="translate(160, 10)">
+                  <rect
+                    x={0}
+                    y={0}
+                    width={75}
+                    height={45}
+                    rx={4}
+                    className="fill-white/90 dark:fill-gray-800/90 stroke-gray-300 dark:stroke-gray-600"
+                  />
+                  <circle cx={12} cy={15} r={4} className="fill-blue-400" />
+                  <text x={22} y={18} className="fill-gray-600 text-[8px]">Original</text>
+                  <circle cx={12} cy={32} r={4} className="fill-green-500" />
+                  <text x={22} y={35} className="fill-gray-600 text-[8px]">Imagen (k=2)</text>
+                </g>
               </svg>
             </div>
 
             <div className="space-y-3 text-sm">
-              <div className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                <div className="w-3 h-3 rounded-full bg-red-500 mt-1 flex-shrink-0"></div>
-                <span>
-                  <strong>Centro C(2, 1):</strong> Este punto permanece fijo, es la referencia de la
-                  transformación
-                </span>
-              </div>
-              <div className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                <div className="w-3 h-3 rounded-full bg-green-500 mt-1 flex-shrink-0"></div>
-                <div>
-                  <strong>Punto A:</strong> Estaba a distancia (1, 1) del centro. Con k=2, esa
-                  distancia se duplica a (2, 2), llegando a A&apos;(2+2, 1+2) = (4, 3)
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+                <p className="font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                  Desde el origen, ¡es simple!
+                </p>
+                <div className="font-mono text-gray-600 dark:text-gray-400 space-y-1">
+                  <p>P = (1, 2)</p>
+                  <p>P′ = <span className="text-purple-600">2</span> × (1, 2) = (<span className="text-green-600 font-bold">2, 4</span>)</p>
                 </div>
+                <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm">
+                  Cada coordenada se multiplica por k
+                </p>
               </div>
             </div>
           </div>
@@ -392,20 +467,14 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               </p>
               <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
                 <p className="font-mono text-lg text-gray-800 dark:text-gray-200 text-center mb-3">
-                  P&apos; = C + k · (P - C)
+                  P′ = C + k · (P - C)
                 </p>
-                <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
-                  <p>
-                    <strong className="text-blue-600">(P - C)</strong> = vector del centro al punto
-                    original
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="mb-2">
+                    Cuando <strong>C = (0, 0)</strong>, la fórmula se simplifica:
                   </p>
-                  <p>
-                    <strong className="text-purple-600">k · (P - C)</strong> = ese vector escalado k
-                    veces
-                  </p>
-                  <p>
-                    <strong className="text-green-600">C + ...</strong> = partir del centro y
-                    avanzar el vector escalado
+                  <p className="font-mono text-center text-purple-600 font-bold text-lg">
+                    P′ = k · P
                   </p>
                 </div>
               </div>
@@ -414,7 +483,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
           <div className="flex justify-center">
             <ActionButton onClick={onComplete} icon={<ArrowRight size={20} />}>
-              Explorar la homotecia
+              Explorar más casos
             </ActionButton>
           </div>
         </div>

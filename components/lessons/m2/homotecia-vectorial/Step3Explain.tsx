@@ -14,15 +14,14 @@ interface FormulaTab {
   description: string;
   condition: string;
   icon: LucideIcon;
-  example: {
-    k: number;
-    center: { x: number; y: number };
-    point: { x: number; y: number };
-    result: { x: number; y: number };
-    steps: string[];
-  };
+  k: number;
   color: string;
 }
+
+// SVG helpers (mini visualization)
+const SCALE = 18;
+const toSvgX = (x: number) => 50 + x * SCALE;
+const toSvgY = (y: number) => 110 - y * SCALE;
 
 const FORMULAS: FormulaTab[] = [
   {
@@ -30,21 +29,10 @@ const FORMULAS: FormulaTab[] = [
     title: 'Amplificación',
     shortTitle: 'k > 1',
     description:
-      'Cuando k > 1, el vector (P - C) se estira. Al multiplicar por un número mayor que 1, el punto imagen queda más lejos del centro.',
+      'Cuando k > 1, cada coordenada se multiplica por un número mayor que 1. El punto imagen queda más lejos del centro.',
     condition: 'k > 1',
     icon: ZoomIn,
-    example: {
-      k: 2,
-      center: { x: 0, y: 0 },
-      point: { x: 3, y: 2 },
-      result: { x: 6, y: 4 },
-      steps: [
-        'Vector del centro al punto: (3, 2) - (0, 0) = (3, 2)',
-        'Escalar ×2: el vector se estira al doble → 2·(3, 2) = (6, 4)',
-        'Partir del centro y avanzar: (0, 0) + (6, 4) = (6, 4)',
-        "Resultado: P' = (6, 4) — más lejos del centro",
-      ],
-    },
+    k: 2,
     color: 'green',
   },
   {
@@ -52,21 +40,10 @@ const FORMULAS: FormulaTab[] = [
     title: 'Reducción',
     shortTitle: '0 < k < 1',
     description:
-      'Cuando 0 < k < 1, el vector (P - C) se comprime. Al multiplicar por una fracción, el punto imagen queda más cerca del centro.',
+      'Cuando 0 < k < 1, cada coordenada se multiplica por una fracción. El punto imagen queda más cerca del centro.',
     condition: '0 < k < 1',
     icon: ZoomOut,
-    example: {
-      k: 0.5,
-      center: { x: 0, y: 0 },
-      point: { x: 4, y: 6 },
-      result: { x: 2, y: 3 },
-      steps: [
-        'Vector del centro al punto: (4, 6) - (0, 0) = (4, 6)',
-        'Escalar ×0.5: el vector se comprime a la mitad → 0.5·(4, 6) = (2, 3)',
-        'Partir del centro y avanzar: (0, 0) + (2, 3) = (2, 3)',
-        "Resultado: P' = (2, 3) — más cerca del centro",
-      ],
-    },
+    k: 0.5,
     color: 'amber',
   },
   {
@@ -74,51 +51,162 @@ const FORMULAS: FormulaTab[] = [
     title: 'Inversión',
     shortTitle: 'k < 0',
     description:
-      'Cuando k < 0, el vector (P - C) cambia de sentido. El signo negativo invierte la dirección: el punto se mueve al lado opuesto del centro.',
+      'Cuando k < 0, las coordenadas cambian de signo. El punto pasa al lado opuesto del centro.',
     condition: 'k < 0',
     icon: RotateCcw,
-    example: {
-      k: -1,
-      center: { x: 2, y: 2 },
-      point: { x: 5, y: 4 },
-      result: { x: -1, y: 0 },
-      steps: [
-        'Vector del centro al punto: (5, 4) - (2, 2) = (3, 2)',
-        'Escalar ×(-1): el vector invierte su dirección → (-1)·(3, 2) = (-3, -2)',
-        'Partir del centro y retroceder: (2, 2) + (-3, -2) = (-1, 0)',
-        "Resultado: P' = (-1, 0) — al lado opuesto del centro",
-      ],
-    },
+    k: -1,
     color: 'red',
   },
 ];
 
-const colorClasses: Record<string, { bg: string; text: string; border: string; tab: string }> = {
+const colorClasses: Record<string, { bg: string; text: string; border: string; tab: string; fill: string; stroke: string }> = {
   green: {
     bg: 'bg-green-50 dark:bg-green-900/30',
     text: 'text-green-700 dark:text-green-300',
     border: 'border-green-200 dark:border-green-700',
     tab: 'bg-green-500 text-white',
+    fill: 'fill-green-500',
+    stroke: 'stroke-green-500',
   },
   amber: {
     bg: 'bg-amber-50 dark:bg-amber-900/30',
     text: 'text-amber-700 dark:text-amber-300',
     border: 'border-amber-200 dark:border-amber-700',
     tab: 'bg-amber-500 text-white',
+    fill: 'fill-amber-500',
+    stroke: 'stroke-amber-500',
   },
   red: {
     bg: 'bg-red-50 dark:bg-red-900/30',
     text: 'text-red-700 dark:text-red-300',
     border: 'border-red-200 dark:border-red-700',
     tab: 'bg-red-500 text-white',
+    fill: 'fill-red-500',
+    stroke: 'stroke-red-500',
   },
   purple: {
     bg: 'bg-purple-50 dark:bg-purple-900/30',
     text: 'text-purple-700 dark:text-purple-300',
     border: 'border-purple-200 dark:border-purple-700',
     tab: 'bg-purple-500 text-white',
+    fill: 'fill-purple-500',
+    stroke: 'stroke-purple-500',
   },
 };
+
+// Mini visualization component for each k type
+function MiniVisualization({ k, color }: { k: number; color: string }) {
+  const colors = colorClasses[color];
+
+  // Original point P(2, 3) - simple example
+  const originalPoint = { x: 2, y: 3 };
+  const transformedPoint = { x: k * originalPoint.x, y: k * originalPoint.y };
+
+  // Grid range
+  const minX = Math.min(0, transformedPoint.x) - 1;
+  const maxX = Math.max(4, transformedPoint.x) + 1;
+  const minY = Math.min(0, transformedPoint.y) - 1;
+  const maxY = Math.max(4, transformedPoint.y) + 1;
+
+  return (
+    <svg viewBox="0 0 180 140" className="w-full max-w-[200px] mx-auto">
+      {/* Grid */}
+      {Array.from({ length: maxX - minX + 1 }).map((_, i) => (
+        <line
+          key={`v-${i}`}
+          x1={toSvgX(minX + i)}
+          y1={toSvgY(minY)}
+          x2={toSvgX(minX + i)}
+          y2={toSvgY(maxY)}
+          className="stroke-gray-200 dark:stroke-gray-700"
+          strokeWidth="0.5"
+        />
+      ))}
+      {Array.from({ length: maxY - minY + 1 }).map((_, i) => (
+        <line
+          key={`h-${i}`}
+          x1={toSvgX(minX)}
+          y1={toSvgY(minY + i)}
+          x2={toSvgX(maxX)}
+          y2={toSvgY(minY + i)}
+          className="stroke-gray-200 dark:stroke-gray-700"
+          strokeWidth="0.5"
+        />
+      ))}
+
+      {/* Axes */}
+      <line
+        x1={toSvgX(minX)}
+        y1={toSvgY(0)}
+        x2={toSvgX(maxX)}
+        y2={toSvgY(0)}
+        className="stroke-gray-400"
+        strokeWidth="1"
+      />
+      <line
+        x1={toSvgX(0)}
+        y1={toSvgY(minY)}
+        x2={toSvgX(0)}
+        y2={toSvgY(maxY)}
+        className="stroke-gray-400"
+        strokeWidth="1"
+      />
+
+      {/* Center (origin) */}
+      <circle cx={toSvgX(0)} cy={toSvgY(0)} r={5} className="fill-purple-500" />
+      <text x={toSvgX(0) - 8} y={toSvgY(0) + 12} className="fill-purple-600 text-[7px] font-bold">
+        C
+      </text>
+
+      {/* Dashed line from center to transformed point */}
+      <line
+        x1={toSvgX(0)}
+        y1={toSvgY(0)}
+        x2={toSvgX(transformedPoint.x)}
+        y2={toSvgY(transformedPoint.y)}
+        className="stroke-gray-400"
+        strokeWidth="1"
+        strokeDasharray="3"
+      />
+
+      {/* Original point */}
+      <circle cx={toSvgX(originalPoint.x)} cy={toSvgY(originalPoint.y)} r={4} className="fill-blue-500" />
+      <text
+        x={toSvgX(originalPoint.x) + 6}
+        y={toSvgY(originalPoint.y) - 4}
+        className="fill-blue-600 text-[7px] font-bold"
+      >
+        P({originalPoint.x},{originalPoint.y})
+      </text>
+
+      {/* Transformed point */}
+      <circle cx={toSvgX(transformedPoint.x)} cy={toSvgY(transformedPoint.y)} r={5} className={colors.fill} />
+      <text
+        x={toSvgX(transformedPoint.x) + 6}
+        y={toSvgY(transformedPoint.y) - 4}
+        className={cn('text-[7px] font-bold', colors.text.replace('text', 'fill'))}
+      >
+        P′({transformedPoint.x},{transformedPoint.y})
+      </text>
+
+      {/* Arrow indicator */}
+      <defs>
+        <marker id={`arrow-${color}`} markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <polygon points="0 0, 6 3, 0 6" className={colors.fill} />
+        </marker>
+      </defs>
+      <line
+        x1={toSvgX(originalPoint.x) + 3}
+        y1={toSvgY(originalPoint.y) - 3}
+        x2={toSvgX(transformedPoint.x) - 3}
+        y2={toSvgY(transformedPoint.y) + 3}
+        className={colors.stroke}
+        strokeWidth="1.5"
+        markerEnd={`url(#arrow-${color})`}
+      />
+    </svg>
+  );
+}
 
 export default function Step3Explain({ onComplete, isActive }: LessonStepProps) {
   const [activeTab, setActiveTab] = useState<TabId>('amplificacion');
@@ -149,12 +237,12 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
 
       {/* Main formula */}
       <div className="bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/40 dark:to-blue-900/40 rounded-xl p-6 text-center border border-purple-200 dark:border-purple-700">
-        <p className="text-gray-600 dark:text-gray-400 mb-2">Fórmula de la homotecia:</p>
+        <p className="text-gray-600 dark:text-gray-400 mb-2">Fórmula (con centro en el origen):</p>
         <p className="font-mono text-2xl text-purple-700 dark:text-purple-300 font-bold">
-          P&apos; = C + k · (P - C)
+          P′ = k · P
         </p>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-          C = centro, P = punto original, P&apos; = punto imagen, k = razón
+          Cada coordenada se multiplica por k
         </p>
       </div>
 
@@ -218,8 +306,8 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
               <h5 className="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Recuerda:</h5>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
-                <li>• El <strong>centro C</strong> siempre queda fijo (C&apos; = C)</li>
-                <li>• Si k = 1, no hay transformación (P&apos; = P)</li>
+                <li>• El <strong>centro C</strong> siempre queda fijo</li>
+                <li>• Si k = 1, no hay transformación (P′ = P)</li>
                 <li>• Las distancias se multiplican por |k|</li>
                 <li>• La forma se conserva (figuras semejantes)</li>
               </ul>
@@ -227,10 +315,10 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
               <h5 className="font-semibold text-red-700 dark:text-red-300 mb-2">✗ Errores comunes:</h5>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
-                <li>• Olvidar restar el centro antes de multiplicar</li>
-                <li>• Confundir k negativo con solo reducción</li>
+                <li>• Confundir k negativo con reducción</li>
                 <li>• Pensar que el centro se mueve</li>
                 <li>• Aplicar k solo a x o solo a y</li>
+                <li>• Olvidar el signo cuando k &lt; 0</li>
               </ul>
             </div>
           </div>
@@ -240,20 +328,15 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <Lightbulb className="w-5 h-5 text-yellow-500" />
               Clave para no equivocarse
             </h4>
-            <p className="text-gray-700 dark:text-gray-300">
-              Siempre calcula <strong>(P - C)</strong> primero. Este vector representa la
-              &quot;distancia direccional&quot; del centro al punto. Luego multiplica por k y suma
-              al centro.
+            <p className="text-gray-700 dark:text-gray-300 mb-3">
+              Con centro en el origen, el cálculo es simple:
             </p>
-            <div className="mt-3 font-mono text-sm bg-white dark:bg-gray-800 p-3 rounded-lg">
+            <div className="font-mono text-sm bg-white dark:bg-gray-800 p-3 rounded-lg">
               <p className="text-gray-600 dark:text-gray-400">
-                1. Vector: (P - C) = (Px - Cx, Py - Cy)
+                Si P = (x, y) y k = valor dado
               </p>
-              <p className="text-gray-600 dark:text-gray-400">
-                2. Escalar: k · (P - C) = (k(Px - Cx), k(Py - Cy))
-              </p>
-              <p className="text-green-600 dark:text-green-400 font-bold">
-                3. Resultado: P&apos; = C + k · (P - C)
+              <p className="text-green-600 dark:text-green-400 font-bold mt-2">
+                P′ = (k·x, k·y)
               </p>
             </div>
           </div>
@@ -276,41 +359,39 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             </p>
           </div>
 
+          {/* Mini visualization */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 mb-6">
+            <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2 text-center">
+              Visualización con k = {currentFormula!.k}
+            </h4>
+            <MiniVisualization k={currentFormula!.k} color={currentFormula!.color} />
+          </div>
+
           {/* Example */}
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
             <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2">
               <Lightbulb className="w-5 h-5 text-yellow-500" />
-              Ejemplo con k = {currentFormula!.example.k}:
+              Ejemplo con k = {currentFormula!.k}:
             </h4>
             <div className="space-y-3">
               <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
-                <span>
-                  Centro: C = ({currentFormula!.example.center.x}, {currentFormula!.example.center.y})
-                </span>
-                <span>
-                  Punto: P = ({currentFormula!.example.point.x}, {currentFormula!.example.point.y})
-                </span>
+                <span>Centro: C = (0, 0)</span>
+                <span>Punto: P = (2, 3)</span>
               </div>
               <div className="pl-4 border-l-2 border-gray-300 dark:border-gray-600 space-y-2">
-                {currentFormula!.example.steps.map((step, i) => (
-                  <p
-                    key={i}
-                    className={cn(
-                      'font-mono text-sm',
-                      i === currentFormula!.example.steps.length - 1
-                        ? cn('font-bold', colors.text)
-                        : 'text-gray-600 dark:text-gray-400'
-                    )}
-                  >
-                    {i === currentFormula!.example.steps.length - 1 ? '→ ' : '• '}
-                    {step}
-                  </p>
-                ))}
+                <p className="font-mono text-sm text-gray-600 dark:text-gray-400">
+                  • P′ = k · P = {currentFormula!.k} · (2, 3)
+                </p>
+                <p className="font-mono text-sm text-gray-600 dark:text-gray-400">
+                  • P′ = ({currentFormula!.k} × 2, {currentFormula!.k} × 3)
+                </p>
+                <p className={cn('font-mono text-sm font-bold', colors.text)}>
+                  → P′ = ({currentFormula!.k * 2}, {currentFormula!.k * 3})
+                </p>
               </div>
               <div className={cn('p-3 rounded-lg mt-4', colors.bg)}>
                 <p className={cn('font-mono font-bold text-lg text-center', colors.text)}>
-                  Imagen: P&apos; = ({currentFormula!.example.result.x},{' '}
-                  {currentFormula!.example.result.y})
+                  Imagen: P′ = ({currentFormula!.k * 2}, {currentFormula!.k * 3})
                 </p>
               </div>
             </div>
