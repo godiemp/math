@@ -953,7 +953,8 @@
       "studyBuddyDebug": "study buddy debug",
       "rapidFireDebug": "rapid fire debug",
       "zenDebug": "zen debug",
-      "liveSessionDebug": "live session debug"
+      "liveSessionDebug": "live session debug",
+      "figureDebug": "figure debugger"
     },
     "button": {
       "backToHome": "back to home",
