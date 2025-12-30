@@ -272,7 +272,7 @@ const OA_1M: MinEducOA[] = [
     name: 'Comprender el azar',
     description: 'Comprender azar experimentando con la tabla de Galton, analizando frecuencias relativas y resolviendo problemas cotidianos.',
     isBasal: false,
-    lessonIds: [], // Pendiente
+    lessonIds: ['m1-prob-006-b'],
   },
 ];
 
