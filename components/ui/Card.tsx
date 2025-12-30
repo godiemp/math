@@ -19,32 +19,19 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          'group relative rounded-2xl',
-          'transition-all duration-300 ease-out',
-          hover && 'hover:-translate-y-1',
+          'rounded-2xl border',
+          'transition-all duration-200 ease-out',
+          hover && 'hover:-translate-y-0.5 hover:shadow-lg',
           paddingSizes[padding],
           className
         )}
         style={{
-          background: `radial-gradient(ellipse at center,
-            var(--color-surface) 0%,
-            var(--color-surface) 60%,
-            var(--color-tint) 95%,
-            var(--color-tint-alt) 100%
-          )`,
+          background: 'var(--color-surface)',
+          borderColor: 'var(--color-separator-strong)',
           ...style,
         }}
         {...props}
       >
-        {/* Glow layer - only visible on hover */}
-        {hover && (
-          <div
-            className="absolute -inset-1 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300 -z-10"
-            style={{
-              background: 'linear-gradient(135deg, var(--color-tint) 0%, var(--color-tint-alt) 100%)',
-            }}
-          />
-        )}
         {children}
       </div>
     );
