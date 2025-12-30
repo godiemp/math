@@ -8,7 +8,7 @@ import { Question } from '@/lib/types';
 import Link from 'next/link';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { ModuleAccessGuard } from '@/components/auth/ModuleAccessGuard';
-import { getLastConfigKey } from '@/lib/constants';
+import { getLastConfigKey, ZEN_QUESTION_COUNT } from '@/lib/constants';
 import { api } from '@/lib/api-client';
 
 type Subject = 'números' | 'álgebra' | 'geometría' | 'probabilidad';
@@ -19,6 +19,7 @@ interface LastConfig {
   subject: Subject | null;
   mode: QuizMode;
   difficulty?: Difficulty;
+  zenQuestionCount?: number;
 }
 
 function M2PracticeContent() {
@@ -26,6 +27,7 @@ function M2PracticeContent() {
   const [selectedSubject, setSelectedSubject] = useState<Subject | null | undefined>(undefined);
   const [quizMode, setQuizMode] = useState<QuizMode | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
+  const [zenQuestionCount, setZenQuestionCount] = useState<number>(ZEN_QUESTION_COUNT.default);
   const [quizStarted, setQuizStarted] = useState(false);
   const [replayQuestions, setReplayQuestions] = useState<Question[] | undefined>(undefined);
   const [lastConfig, setLastConfig] = useState<LastConfig | null>(null);
@@ -40,6 +42,10 @@ function M2PracticeContent() {
 
         if (response.data?.config) {
           setLastConfig(response.data.config);
+          // Restore zenQuestionCount if saved
+          if (response.data.config.zenQuestionCount) {
+            setZenQuestionCount(response.data.config.zenQuestionCount);
+          }
           // Update localStorage for offline access
           localStorage.setItem(getLastConfigKey('M2'), JSON.stringify(response.data.config));
         } else {
@@ -204,6 +210,7 @@ function M2PracticeContent() {
         subject: selectedSubject === undefined ? null : selectedSubject,
         mode: quizMode,
         difficulty: difficulty || undefined,
+        zenQuestionCount: quizMode === 'zen' ? zenQuestionCount : undefined,
       };
 
       try {
@@ -217,6 +224,7 @@ function M2PracticeContent() {
           subject: config.subject,
           mode: config.mode,
           difficulty: config.difficulty,
+          zenQuestionCount: config.zenQuestionCount,
         }).catch(error => {
           console.error('Failed to save last config to backend:', error);
         });
@@ -233,6 +241,9 @@ function M2PracticeContent() {
       setSelectedSubject(lastConfig.subject);
       setQuizMode(lastConfig.mode);
       setDifficulty(lastConfig.difficulty || null);
+      if (lastConfig.zenQuestionCount) {
+        setZenQuestionCount(lastConfig.zenQuestionCount);
+      }
       setQuizStarted(true);
     }
   };
@@ -242,6 +253,7 @@ function M2PracticeContent() {
     setSelectedSubject(undefined);
     setQuizMode(null);
     setDifficulty(null);
+    setZenQuestionCount(ZEN_QUESTION_COUNT.default);
   };
 
   const canStartQuiz = () => {
@@ -262,6 +274,9 @@ function M2PracticeContent() {
 
     if (difficultyLabel) {
       return `${subjectLabel} • ${modeLabel} • ${difficultyLabel}`;
+    }
+    if (config.mode === 'zen' && config.zenQuestionCount) {
+      return `${subjectLabel} • ${modeLabel} • ${config.zenQuestionCount} preguntas`;
     }
     return `${subjectLabel} • ${modeLabel}`;
   };
@@ -380,6 +395,90 @@ function M2PracticeContent() {
         ))}
       </div>
     </div>
+    );
+  };
+
+  // Step 3 for Zen mode: Question count slider
+  const renderQuestionCountSlider = () => {
+    if (quizMode !== 'zen' || selectedSubject === undefined) return null;
+
+    return (
+      <div className="mb-5">
+        <div className="mb-3 text-center">
+          <h2 className="text-xl font-bold text-white mb-1">
+            Paso 3: Cantidad de preguntas
+          </h2>
+          <p className="text-white/70 text-sm">
+            Selecciona cuántas preguntas quieres practicar
+          </p>
+        </div>
+
+        <div className="p-4 rounded-xl bg-black/20 dark:bg-white/10 border border-white/20">
+          {/* Current value display */}
+          <div className="text-center mb-4">
+            <span className="text-4xl font-bold text-white">{zenQuestionCount}</span>
+            <span className="text-lg text-white/80 ml-2">preguntas</span>
+          </div>
+
+          {/* Slider container with proper touch target */}
+          <div className="px-2 py-3">
+            <input
+              type="range"
+              min={ZEN_QUESTION_COUNT.min}
+              max={ZEN_QUESTION_COUNT.max}
+              step={1}
+              value={zenQuestionCount}
+              onChange={(e) => setZenQuestionCount(Number(e.target.value))}
+              className="w-full h-3 rounded-full appearance-none cursor-pointer
+                         bg-gradient-to-r from-teal-400 via-cyan-500 to-blue-500
+                         [&::-webkit-slider-thumb]:appearance-none
+                         [&::-webkit-slider-thumb]:w-8
+                         [&::-webkit-slider-thumb]:h-8
+                         [&::-webkit-slider-thumb]:rounded-full
+                         [&::-webkit-slider-thumb]:bg-white
+                         [&::-webkit-slider-thumb]:shadow-lg
+                         [&::-webkit-slider-thumb]:shadow-teal-500/50
+                         [&::-webkit-slider-thumb]:border-4
+                         [&::-webkit-slider-thumb]:border-teal-500
+                         [&::-webkit-slider-thumb]:cursor-pointer
+                         [&::-moz-range-thumb]:w-8
+                         [&::-moz-range-thumb]:h-8
+                         [&::-moz-range-thumb]:rounded-full
+                         [&::-moz-range-thumb]:bg-white
+                         [&::-moz-range-thumb]:shadow-lg
+                         [&::-moz-range-thumb]:border-4
+                         [&::-moz-range-thumb]:border-teal-500
+                         [&::-moz-range-thumb]:cursor-pointer"
+              data-testid="zen-question-count-slider"
+              aria-label="Cantidad de preguntas"
+            />
+          </div>
+
+          {/* Min/Max labels */}
+          <div className="flex justify-between text-sm text-white/60 px-1">
+            <span>{ZEN_QUESTION_COUNT.min}</span>
+            <span>{ZEN_QUESTION_COUNT.max}</span>
+          </div>
+
+          {/* Quick select buttons */}
+          <div className="flex justify-center gap-2 mt-4">
+            {[5, 10, 15, 20].map((count) => (
+              <button
+                key={count}
+                onClick={() => setZenQuestionCount(count)}
+                className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all
+                  ${zenQuestionCount === count
+                    ? 'bg-white/30 text-white border-2 border-white/60'
+                    : 'bg-white/10 text-white/80 border border-white/20 hover:bg-white/20'
+                  }`}
+                data-testid={`quick-select-${count}`}
+              >
+                {count}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
     );
   };
 
@@ -589,6 +688,7 @@ function M2PracticeContent() {
             quizMode={quizMode || 'zen'}
             difficulty={difficulty || undefined}
             replayQuestions={replayQuestions}
+            questionCount={quizMode === 'zen' ? zenQuestionCount : undefined}
           />
         </div>
       </div>
@@ -627,6 +727,7 @@ function M2PracticeContent() {
         {renderRepeatLastQuiz()}
         {renderModeSelection()}
         {renderSubjectSelection()}
+        {renderQuestionCountSlider()}
         {renderDifficultySelection()}
         {renderStartButton()}
       </div>
