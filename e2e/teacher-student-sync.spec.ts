@@ -43,21 +43,27 @@ const TEST_LESSON = {
  */
 async function loginUser(page: Page, credentials: { email: string; password: string }) {
   // Navigate to login page (not landing page)
-  // Don't use waitUntil: 'networkidle' - it conflicts with WebSocket mocking
   await page.goto('/signin');
+
+  // Wait for the page to be fully loaded
+  await page.waitForLoadState('domcontentloaded');
 
   // Dismiss cookie banner after navigation (like auth.setup.ts does)
   await page.evaluate(() => {
     localStorage.setItem('cookie-consent', 'accepted');
   });
 
-  // Fill credentials and submit (page.fill auto-waits for element)
-  await page.fill('input[name="username"]', credentials.email);
+  // Wait for the login form to be visible
+  const usernameInput = page.locator('input[name="username"]');
+  await usernameInput.waitFor({ state: 'visible', timeout: 15000 });
+
+  // Fill credentials and submit
+  await usernameInput.fill(credentials.email);
   await page.fill('input[type="password"]', credentials.password);
   await page.click('button[type="submit"]');
 
   // Wait for login to complete - should redirect to dashboard or teacher page
-  await page.waitForURL(/\/(teacher|dashboard|$)/, { timeout: 20000 });
+  await page.waitForURL(/\/(teacher|dashboard)/, { timeout: 20000 });
 }
 
 /**
