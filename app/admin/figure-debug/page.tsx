@@ -7,7 +7,9 @@ import AdminLayout from '@/components/layout/AdminLayout';
 import { TriangleFigure } from '@/components/figures/TriangleFigure';
 import {
   buildTriangleFromAngles,
+  buildTriangleFromSides,
   validateTriangleAngles,
+  validateTriangleSides,
 } from '@/lib/geometry/triangleUtils';
 import type {
   LabeledPoint,
@@ -17,7 +19,7 @@ import type {
   TrianglePreset,
 } from '@/lib/types/triangle';
 
-type InputMode = 'vertices' | 'angles';
+type InputMode = 'vertices' | 'angles' | 'sides';
 
 // Presets for vertices mode
 const VERTEX_PRESETS: TrianglePreset[] = [
@@ -68,6 +70,14 @@ const ANGLE_PRESETS = [
   { name: 'Isósceles 70-70-40', description: '2 ángulos iguales', angles: [70, 70, 40] as [number, number, number] },
 ];
 
+// Presets for sides mode
+const SIDES_PRESETS = [
+  { name: '3-4-5', description: 'Triángulo rectángulo', sides: [3, 4, 5] as [number, number, number] },
+  { name: '5-12-13', description: 'Triángulo rectángulo', sides: [5, 12, 13] as [number, number, number] },
+  { name: 'Equilátero', description: '5-5-5', sides: [5, 5, 5] as [number, number, number] },
+  { name: 'Isósceles', description: '5-5-3', sides: [5, 5, 3] as [number, number, number] },
+];
+
 function FigureDebugContent() {
   // Input mode
   const [inputMode, setInputMode] = useState<InputMode>('vertices');
@@ -110,14 +120,49 @@ function FigureDebugContent() {
     );
   }, [angleInputs, angle3, angleValidation.valid, vertices]);
 
+  // Sides state (for sides mode)
+  const [sideInputs, setSideInputs] = useState({
+    side1: 3,
+    side2: 4,
+    side3: 5,
+    size: 150,
+  });
+
+  // Validation for sides
+  const sidesValidation = useMemo(() => {
+    return validateTriangleSides([sideInputs.side1, sideInputs.side2, sideInputs.side3]);
+  }, [sideInputs.side1, sideInputs.side2, sideInputs.side3]);
+
+  // Computed vertices from sides
+  const sidesVertices = useMemo<[LabeledPoint, LabeledPoint, LabeledPoint]>(() => {
+    if (!sidesValidation.valid) {
+      return vertices; // fallback to current vertices if invalid
+    }
+    return buildTriangleFromSides(
+      [sideInputs.side1, sideInputs.side2, sideInputs.side3],
+      sideInputs.size,
+      200,
+      140,
+      0
+    );
+  }, [sideInputs, sidesValidation.valid, vertices]);
+
   // Active vertices (depends on mode)
-  const activeVertices = inputMode === 'angles' ? anglesVertices : vertices;
+  const activeVertices = useMemo(() => {
+    if (inputMode === 'angles') return anglesVertices;
+    if (inputMode === 'sides') return sidesVertices;
+    return vertices;
+  }, [inputMode, anglesVertices, sidesVertices, vertices]);
 
   // Sync vertices when switching modes
   useEffect(() => {
-    if (inputMode === 'vertices' && angleValidation.valid) {
-      // When switching to vertices mode, keep the angle-generated vertices
-      setVertices(anglesVertices);
+    if (inputMode === 'vertices') {
+      // When switching to vertices mode, keep the generated vertices
+      if (angleValidation.valid) {
+        setVertices(anglesVertices);
+      } else if (sidesValidation.valid) {
+        setVertices(sidesVertices);
+      }
     }
   }, [inputMode]);
 
@@ -160,6 +205,16 @@ function FigureDebugContent() {
       baseLength: angleInputs.baseLength,
     });
   }, [angleInputs.baseLength]);
+
+  // Apply sides preset
+  const applySidesPreset = useCallback((preset: { sides: [number, number, number] }) => {
+    setSideInputs({
+      side1: preset.sides[0],
+      side2: preset.sides[1],
+      side3: preset.sides[2],
+      size: sideInputs.size,
+    });
+  }, [sideInputs.size]);
 
   // Toggle special line
   const toggleSpecialLine = useCallback(
@@ -219,6 +274,17 @@ function FigureDebugContent() {
     []
   );
 
+  // Update side input
+  const updateSideInput = useCallback(
+    (field: 'side1' | 'side2' | 'side3' | 'size', value: number) => {
+      setSideInputs((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    },
+    []
+  );
+
   // Toggle angle arc for all vertices
   const toggleAllAngleArcs = useCallback((show: boolean) => {
     setShowAngleArcs(show);
@@ -243,7 +309,7 @@ function FigureDebugContent() {
   const generateCode = useCallback(() => {
     const propsLines = [];
 
-    // Use fromAngles when in angles mode, vertices otherwise
+    // Use fromAngles, fromSides, or vertices depending on mode
     if (inputMode === 'angles') {
       // Simple array format when no extra options
       if (angleInputs.baseLength === 150) {
@@ -251,6 +317,14 @@ function FigureDebugContent() {
       } else {
         // Object format with size option
         propsLines.push(`fromAngles={{ angles: [${angleInputs.angle1}, ${angleInputs.angle2}, ${angle3}], size: ${angleInputs.baseLength} }}`);
+      }
+    } else if (inputMode === 'sides') {
+      // Simple array format when using default size
+      if (sideInputs.size === 150) {
+        propsLines.push(`fromSides={[${sideInputs.side1}, ${sideInputs.side2}, ${sideInputs.side3}]}`);
+      } else {
+        // Object format with size option
+        propsLines.push(`fromSides={{ sides: [${sideInputs.side1}, ${sideInputs.side2}, ${sideInputs.side3}], size: ${sideInputs.size} }}`);
       }
     } else {
       propsLines.push(`vertices={[`);
@@ -291,7 +365,7 @@ function FigureDebugContent() {
     if (!showVertices) propsLines.push(`showVertices={false}`);
 
     return `<TriangleFigure\n  ${propsLines.join('\n  ')}\n/>`;
-  }, [inputMode, angleInputs, angle3, activeVertices, showSideLabels, showAngleArcs, showAngleDegrees, specialLines, showGrid, showRightAngleMarker, showVertices]);
+  }, [inputMode, angleInputs, angle3, sideInputs, activeVertices, showSideLabels, showAngleArcs, showAngleDegrees, specialLines, showGrid, showRightAngleMarker, showVertices]);
 
   // Copy code to clipboard
   const copyCode = useCallback(() => {
@@ -346,6 +420,16 @@ function FigureDebugContent() {
               >
                 Por Ángulos
               </button>
+              <button
+                onClick={() => setInputMode('sides')}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  inputMode === 'sides'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+              >
+                Por Lados
+              </button>
             </div>
           </div>
         </Card>
@@ -356,45 +440,60 @@ function FigureDebugContent() {
             Presets
           </Heading>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {inputMode === 'vertices' ? (
-              VERTEX_PRESETS.map((preset) => (
-                <Card
-                  key={preset.name}
-                  hover
-                  className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
-                  padding="md"
-                  onClick={() => applyVertexPreset(preset)}
-                >
-                  <div className="text-center">
-                    <Heading level={3} size="xs" className="mb-1">
-                      {preset.name}
-                    </Heading>
-                    <Text size="xs" variant="secondary">
-                      {preset.description}
-                    </Text>
-                  </div>
-                </Card>
-              ))
-            ) : (
-              ANGLE_PRESETS.map((preset) => (
-                <Card
-                  key={preset.name}
-                  hover
-                  className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
-                  padding="md"
-                  onClick={() => applyAnglePreset(preset)}
-                >
-                  <div className="text-center">
-                    <Heading level={3} size="xs" className="mb-1">
-                      {preset.name}
-                    </Heading>
-                    <Text size="xs" variant="secondary">
-                      {preset.description}
-                    </Text>
-                  </div>
-                </Card>
-              ))
-            )}
+            {inputMode === 'vertices' && VERTEX_PRESETS.map((preset) => (
+              <Card
+                key={preset.name}
+                hover
+                className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
+                padding="md"
+                onClick={() => applyVertexPreset(preset)}
+              >
+                <div className="text-center">
+                  <Heading level={3} size="xs" className="mb-1">
+                    {preset.name}
+                  </Heading>
+                  <Text size="xs" variant="secondary">
+                    {preset.description}
+                  </Text>
+                </div>
+              </Card>
+            ))}
+            {inputMode === 'angles' && ANGLE_PRESETS.map((preset) => (
+              <Card
+                key={preset.name}
+                hover
+                className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
+                padding="md"
+                onClick={() => applyAnglePreset(preset)}
+              >
+                <div className="text-center">
+                  <Heading level={3} size="xs" className="mb-1">
+                    {preset.name}
+                  </Heading>
+                  <Text size="xs" variant="secondary">
+                    {preset.description}
+                  </Text>
+                </div>
+              </Card>
+            ))}
+            {inputMode === 'sides' && SIDES_PRESETS.map((preset) => (
+              <Card
+                key={preset.name}
+                hover
+                className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
+                padding="md"
+                onClick={() => applySidesPreset(preset)}
+              >
+                <div className="text-center">
+                  <Heading level={3} size="xs" className="mb-1">
+                    {preset.name}
+                  </Heading>
+                  <Text size="xs" variant="secondary">
+                    {preset.description}
+                  </Text>
+                </div>
+              </Card>
+            ))}
           </div>
         </div>
 
@@ -533,6 +632,119 @@ function FigureDebugContent() {
                         className="flex-1"
                       />
                       <span className="text-sm w-12">{angleInputs.baseLength}px</span>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            )}
+
+            {/* Sides Controls (sides mode) */}
+            {inputMode === 'sides' && (
+              <Card padding="lg">
+                <Heading level={3} size="xs" className="mb-4">
+                  Longitud de Lados
+                </Heading>
+                <div className="space-y-4">
+                  {/* Side a (opposite to vertex A) */}
+                  <div className="flex items-center gap-4">
+                    <Badge variant="info" className="w-8">a</Badge>
+                    <div className="flex items-center gap-2 flex-1">
+                      <label className="text-sm text-gray-600 dark:text-gray-400 w-20">Lado a:</label>
+                      <input
+                        type="range"
+                        min="1"
+                        max="20"
+                        step="0.5"
+                        value={sideInputs.side1}
+                        onChange={(e) => updateSideInput('side1', Number(e.target.value))}
+                        className="flex-1"
+                      />
+                      <input
+                        type="number"
+                        min="1"
+                        max="20"
+                        step="0.5"
+                        value={sideInputs.side1}
+                        onChange={(e) => updateSideInput('side1', Number(e.target.value))}
+                        className="w-16 px-2 py-1 text-sm border rounded dark:bg-gray-800 dark:border-gray-600"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Side b */}
+                  <div className="flex items-center gap-4">
+                    <Badge variant="info" className="w-8">b</Badge>
+                    <div className="flex items-center gap-2 flex-1">
+                      <label className="text-sm text-gray-600 dark:text-gray-400 w-20">Lado b:</label>
+                      <input
+                        type="range"
+                        min="1"
+                        max="20"
+                        step="0.5"
+                        value={sideInputs.side2}
+                        onChange={(e) => updateSideInput('side2', Number(e.target.value))}
+                        className="flex-1"
+                      />
+                      <input
+                        type="number"
+                        min="1"
+                        max="20"
+                        step="0.5"
+                        value={sideInputs.side2}
+                        onChange={(e) => updateSideInput('side2', Number(e.target.value))}
+                        className="w-16 px-2 py-1 text-sm border rounded dark:bg-gray-800 dark:border-gray-600"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Side c */}
+                  <div className="flex items-center gap-4">
+                    <Badge variant={sidesValidation.valid ? 'info' : 'danger'} className="w-8">c</Badge>
+                    <div className="flex items-center gap-2 flex-1">
+                      <label className="text-sm text-gray-600 dark:text-gray-400 w-20">Lado c:</label>
+                      <input
+                        type="range"
+                        min="1"
+                        max="20"
+                        step="0.5"
+                        value={sideInputs.side3}
+                        onChange={(e) => updateSideInput('side3', Number(e.target.value))}
+                        className="flex-1"
+                      />
+                      <input
+                        type="number"
+                        min="1"
+                        max="20"
+                        step="0.5"
+                        value={sideInputs.side3}
+                        onChange={(e) => updateSideInput('side3', Number(e.target.value))}
+                        className="w-16 px-2 py-1 text-sm border rounded dark:bg-gray-800 dark:border-gray-600"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Validation message */}
+                  {!sidesValidation.valid && (
+                    <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                      <Text size="sm" className="text-red-600 dark:text-red-400">
+                        {sidesValidation.error}
+                      </Text>
+                    </div>
+                  )}
+
+                  {/* Size */}
+                  <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm font-medium w-28">Tamaño:</Text>
+                      <input
+                        type="range"
+                        min="80"
+                        max="250"
+                        value={sideInputs.size}
+                        onChange={(e) => updateSideInput('size', Number(e.target.value))}
+                        className="flex-1"
+                      />
+                      <span className="text-sm w-12">{sideInputs.size}px</span>
                     </div>
                   </div>
                 </div>
@@ -678,6 +890,21 @@ function FigureDebugContent() {
                   </Text>
                   <Text size="xs" variant="secondary" className="mt-1">
                     Suma: {angleInputs.angle1 + angleInputs.angle2 + angle3}°
+                  </Text>
+                </div>
+              )}
+
+              {/* Current sides info (in sides mode) */}
+              {inputMode === 'sides' && sidesValidation.valid && (
+                <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <Text size="sm" className="font-medium mb-1">
+                    Lados del triángulo:
+                  </Text>
+                  <Text size="sm" variant="secondary">
+                    a = {sideInputs.side1}, b = {sideInputs.side2}, c = {sideInputs.side3}
+                  </Text>
+                  <Text size="xs" variant="secondary" className="mt-1">
+                    Perímetro: {(sideInputs.side1 + sideInputs.side2 + sideInputs.side3).toFixed(1)}
                   </Text>
                 </div>
               )}

@@ -97,16 +97,39 @@ export interface FromAnglesConfigObject {
 export type FromAnglesConfig = [number, number, number] | FromAnglesConfigObject;
 
 /**
+ * Configuration to build a triangle from side lengths (object form)
+ */
+export interface FromSidesConfigObject {
+  /** The three side lengths [a, b, c] where a is opposite to A, etc. */
+  sides: [number, number, number];
+  /** Maximum size (width or height) of the triangle bounding box */
+  size?: number;
+  /** Rotation in degrees (0 = base horizontal) */
+  rotation?: number;
+}
+
+/**
+ * Build triangle from side lengths - accepts array shorthand or config object
+ * @example fromSides={[3, 4, 5]}
+ * @example fromSides={{ sides: [5, 5, 5], size: 200 }}
+ */
+export type FromSidesConfig = [number, number, number] | FromSidesConfigObject;
+
+/**
  * Main TriangleFigure component props
  */
 export interface TriangleFigureProps {
   // Option 1: Three vertices directly
-  /** The three vertices of the triangle (use this OR fromAngles) */
+  /** The three vertices of the triangle (use this OR fromAngles OR fromSides) */
   vertices?: [LabeledPoint, LabeledPoint, LabeledPoint];
 
   // Option 2: Build from angles
-  /** Build triangle from angles instead of vertices */
+  /** Build triangle from angles */
   fromAngles?: FromAnglesConfig;
+
+  // Option 3: Build from side lengths
+  /** Build triangle from side lengths (e.g., [3, 4, 5]) */
+  fromSides?: FromSidesConfig;
 
   // Sides configuration (indices: 0=v0-v1, 1=v1-v2, 2=v2-v0)
   /** Configuration for each side */

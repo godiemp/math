@@ -43,6 +43,22 @@ import { TriangleFigure } from '@/components/figures/TriangleFigure';
 />
 ```
 
+### Usando longitudes de lados
+
+```tsx
+// Triángulo 3-4-5 (rectángulo pitagórico)
+<TriangleFigure fromSides={[3, 4, 5]} showRightAngleMarker />
+
+// Triángulo equilátero (lados iguales)
+<TriangleFigure fromSides={[5, 5, 5]} />
+
+// Con tamaño personalizado
+<TriangleFigure
+  fromSides={{ sides: [5, 12, 13], size: 200 }}
+  showRightAngleMarker
+/>
+```
+
 ### Triángulo rectángulo con labels
 
 ```tsx
@@ -111,6 +127,7 @@ Cuando necesitas control preciso sobre las coordenadas:
 | Prop | Type | Description |
 |------|------|-------------|
 | `fromAngles` | `[number, number, number]` o `{ angles, size?, rotation? }` | **Recomendado.** Construir desde ángulos |
+| `fromSides` | `[number, number, number]` o `{ sides, size?, rotation? }` | Construir desde longitudes de lados |
 | `vertices` | `[LabeledPoint, LabeledPoint, LabeledPoint]` | Control total de coordenadas |
 
 ### fromAngles
@@ -126,6 +143,22 @@ fromAngles={{
   rotation: 0,           // Rotación en grados (default: 0)
 }}
 ```
+
+### fromSides
+
+```typescript
+// Forma simple: array de 3 lados (deben cumplir desigualdad triangular)
+fromSides={[3, 4, 5]}
+
+// Forma con opciones
+fromSides={{
+  sides: [5, 12, 13],    // Las 3 longitudes de lados
+  size: 200,             // Tamaño máximo (default: 150)
+  rotation: 0,           // Rotación en grados (default: 0)
+}}
+```
+
+> **Nota:** Los lados deben cumplir la desigualdad triangular: la suma de dos lados siempre debe ser mayor que el tercero.
 
 ### LabeledPoint
 
@@ -374,6 +407,8 @@ import {
   findRightAngleVertex, // Encuentra vértice con ángulo recto
   buildTriangleFromAngles,  // Construir triángulo desde ángulos
   validateTriangleAngles,   // Validar ángulos (suman 180°)
+  buildTriangleFromSides,   // Construir triángulo desde longitudes de lados
+  validateTriangleSides,    // Validar desigualdad triangular
 } from '@/lib/geometry/triangleUtils';
 ```
 
@@ -395,3 +430,24 @@ const vertices = buildTriangleFromAngles(
 
 // Resultado: [LabeledPoint, LabeledPoint, LabeledPoint]
 ```
+
+### Build Triangle from Sides
+
+Puedes construir un triángulo especificando las 3 longitudes de lados:
+
+```typescript
+import { buildTriangleFromSides } from '@/lib/geometry/triangleUtils';
+
+// Triángulo 3-4-5 (rectángulo pitagórico)
+const vertices = buildTriangleFromSides(
+  [3, 4, 5],     // Las 3 longitudes de lados
+  150,           // Tamaño máximo (escala)
+  200,           // Centro X
+  150,           // Centro Y
+  0              // Rotación (grados)
+);
+
+// Resultado: [LabeledPoint, LabeledPoint, LabeledPoint]
+```
+
+> **Importante:** Los lados deben cumplir la desigualdad triangular (a + b > c para todos los lados).

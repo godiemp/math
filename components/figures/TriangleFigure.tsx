@@ -8,6 +8,7 @@ import type {
   AngleConfig,
   SpecialLineConfig,
   FromAnglesConfigObject,
+  FromSidesConfigObject,
 } from '@/lib/types/triangle';
 import {
   trianglePath,
@@ -22,6 +23,7 @@ import {
   midpoint,
   getStrokeDashArray,
   buildTriangleFromAngles,
+  buildTriangleFromSides,
 } from '@/lib/geometry/triangleUtils';
 
 // Default colors following the design system
@@ -51,6 +53,7 @@ const DEFAULT_COLORS = {
 export function TriangleFigure({
   vertices: verticesProp,
   fromAngles,
+  fromSides,
   sides,
   angles,
   specialLines,
@@ -73,15 +76,14 @@ export function TriangleFigure({
   ariaLabel,
   className = '',
 }: TriangleFigureProps) {
-  // Calculate vertices from fromAngles if provided
+  // Calculate vertices from fromAngles, fromSides, or use provided vertices
   const vertices = useMemo<[LabeledPoint, LabeledPoint, LabeledPoint]>(() => {
+    // Option 1: Build from angles
     if (fromAngles) {
-      // Handle array shorthand: fromAngles={[60, 60, 60]}
       if (Array.isArray(fromAngles) && typeof fromAngles[0] === 'number') {
         const anglesArray = fromAngles as [number, number, number];
         return buildTriangleFromAngles(anglesArray, 150, 200, 150, 0);
       }
-      // Handle object config: fromAngles={{ angles: [60, 60, 60], size: 200 }}
       const config = fromAngles as FromAnglesConfigObject;
       return buildTriangleFromAngles(
         config.angles,
@@ -91,7 +93,22 @@ export function TriangleFigure({
         config.rotation ?? 0
       );
     }
-    // Use provided vertices
+    // Option 2: Build from side lengths
+    if (fromSides) {
+      if (Array.isArray(fromSides) && typeof fromSides[0] === 'number') {
+        const sidesArray = fromSides as [number, number, number];
+        return buildTriangleFromSides(sidesArray, 150, 200, 150, 0);
+      }
+      const config = fromSides as FromSidesConfigObject;
+      return buildTriangleFromSides(
+        config.sides,
+        config.size ?? 150,
+        200,
+        150,
+        config.rotation ?? 0
+      );
+    }
+    // Option 3: Use provided vertices
     if (verticesProp) {
       return verticesProp;
     }
@@ -101,7 +118,7 @@ export function TriangleFigure({
       { x: 100, y: 223, label: 'B' },
       { x: 300, y: 223, label: 'C' },
     ];
-  }, [fromAngles, verticesProp]);
+  }, [fromAngles, fromSides, verticesProp]);
 
   // Calculate viewBox from vertices if not provided
   const calculatedBox = calculateViewBox(vertices, padding);

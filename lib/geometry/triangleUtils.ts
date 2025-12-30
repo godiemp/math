@@ -545,3 +545,109 @@ export function validateTriangleAngles(
 
   return { valid: true };
 }
+
+/**
+ * Validate that side lengths can form a valid triangle (triangle inequality)
+ */
+export function validateTriangleSides(
+  sides: [number, number, number]
+): { valid: boolean; error?: string } {
+  const [a, b, c] = sides;
+
+  if (a <= 0 || b <= 0 || c <= 0) {
+    return { valid: false, error: 'Todos los lados deben ser mayores a 0' };
+  }
+
+  // Triangle inequality: sum of any two sides must be greater than the third
+  if (a + b <= c || b + c <= a || a + c <= b) {
+    return { valid: false, error: 'Los lados no satisfacen la desigualdad triangular (a+b > c)' };
+  }
+
+  return { valid: true };
+}
+
+/**
+ * Build triangle vertices from 3 side lengths using law of cosines
+ *
+ * @param sides - 3 side lengths [a, b, c] where a is opposite to vertex A
+ * @param maxSize - Maximum width or height of the bounding box
+ * @param centerX - X coordinate of the triangle center
+ * @param centerY - Y coordinate of the triangle center
+ * @param rotation - Rotation angle in degrees (0 = base horizontal)
+ * @returns Tuple of 3 vertices [A, B, C]
+ */
+export function buildTriangleFromSides(
+  sides: [number, number, number],
+  maxSize: number = 150,
+  centerX: number = 200,
+  centerY: number = 150,
+  rotation: number = 0
+): [LabeledPoint, LabeledPoint, LabeledPoint] {
+  const [a, b, c] = sides;
+
+  // Use law of cosines to calculate angles
+  // cos(A) = (b² + c² - a²) / (2bc)
+  const cosA = (b * b + c * c - a * a) / (2 * b * c);
+  const A = Math.acos(Math.max(-1, Math.min(1, cosA))); // Clamp to avoid NaN
+
+  // Build triangle with:
+  // - Vertex B at origin
+  // - Vertex C along positive x-axis at distance 'a' (side BC = a)
+  // - Vertex A at angle A from BC
+  const bx = 0;
+  const by = 0;
+  const cx = a; // Side BC = a (opposite to vertex A)
+  const cy = 0;
+
+  // A is at distance 'c' from B (side AB = c) at angle A above the x-axis
+  const ax = c * Math.cos(A);
+  const ay = -c * Math.sin(A); // Negative for SVG coordinate system
+
+  // Calculate bounding box
+  const minX = Math.min(ax, bx, cx);
+  const maxX = Math.max(ax, bx, cx);
+  const minY = Math.min(ay, by, cy);
+  const maxY = Math.max(ay, by, cy);
+
+  const width = maxX - minX;
+  const height = maxY - minY;
+
+  // Scale to fit within maxSize
+  const scale = maxSize / Math.max(width, height);
+
+  // Scale and normalize vertices
+  const scaledAx = (ax - minX) * scale;
+  const scaledAy = (ay - minY) * scale;
+  const scaledBx = (bx - minX) * scale;
+  const scaledBy = (by - minY) * scale;
+  const scaledCx = (cx - minX) * scale;
+  const scaledCy = (cy - minY) * scale;
+
+  // Calculate centroid
+  const centroidX = (scaledAx + scaledBx + scaledCx) / 3;
+  const centroidY = (scaledAy + scaledBy + scaledCy) / 3;
+
+  // Apply rotation and translation
+  const rotRad = (rotation * Math.PI) / 180;
+  const cosR = Math.cos(rotRad);
+  const sinR = Math.sin(rotRad);
+
+  function transformPoint(x: number, y: number): { x: number; y: number } {
+    const dx = x - centroidX;
+    const dy = y - centroidY;
+    return {
+      x: dx * cosR - dy * sinR + centerX,
+      y: dx * sinR + dy * cosR + centerY,
+    };
+  }
+
+  const vertexA = transformPoint(scaledAx, scaledAy);
+  const vertexB = transformPoint(scaledBx, scaledBy);
+  const vertexC = transformPoint(scaledCx, scaledCy);
+
+  return [
+    { x: Math.round(vertexA.x), y: Math.round(vertexA.y), label: 'A' },
+    { x: Math.round(vertexB.x), y: Math.round(vertexB.y), label: 'B' },
+    { x: Math.round(vertexC.x), y: Math.round(vertexC.y), label: 'C' },
+  ];
+}
