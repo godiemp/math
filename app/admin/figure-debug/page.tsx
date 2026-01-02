@@ -7,6 +7,7 @@ import AdminLayout from '@/components/layout/AdminLayout';
 import { TriangleFigure } from '@/components/figures/TriangleFigure';
 import { CircleFigure } from '@/components/figures/CircleFigure';
 import { QuadrilateralFigure } from '@/components/figures/QuadrilateralFigure';
+import { Figure3D } from '@/components/figures/Figure3D';
 import {
   buildTriangleFromAngles,
   buildTriangleFromSides,
@@ -22,6 +23,22 @@ import {
   arcLength,
   angleDifference,
 } from '@/lib/geometry/circleUtils';
+import {
+  volumeCubo,
+  volumePrismaRectangular,
+  volumePrismaTriangular,
+  volumePiramideCuadrada,
+  volumePiramideTriangular,
+  volumeCilindro,
+  volumeCono,
+  volumeEsfera,
+  areaSuperficieCubo,
+  areaSuperficiePrismaRectangular,
+  areaSuperficieCilindro,
+  areaSuperficieCono,
+  areaSuperficieEsfera,
+  getSolidTypeName,
+} from '@/lib/geometry/figure3dUtils';
 import type {
   LabeledPoint,
   SideConfig,
@@ -44,6 +61,12 @@ import type {
   DiagonalConfig,
   QuadAngleConstraint,
 } from '@/lib/types/quadrilateral';
+import type {
+  SolidType,
+  ProjectionType,
+  Figure3DPreset,
+  SolidDimensions,
+} from '@/lib/types/figure3d';
 import {
   buildQuadrilateralFromType,
   buildQuadrilateralFromAngles,
@@ -59,7 +82,7 @@ import {
   validateQuadrilateral,
 } from '@/lib/geometry/quadrilateralUtils';
 
-type FigureType = 'triangle' | 'circle' | 'quadrilateral';
+type FigureType = 'triangle' | 'circle' | 'quadrilateral' | 'figure3d';
 type InputMode = 'vertices' | 'angles' | 'sides';
 
 // Presets for vertices mode
@@ -175,6 +198,58 @@ const QUADRILATERAL_PRESETS: QuadPreset[] = [
   { name: 'Trapecio isósceles', description: 'Piernas iguales', type: 'trapecio-isosceles', size: 120, height: 80, baseRatio: 0.5 },
   { name: 'Trapecio rectángulo', description: '2 ángulos rectos', type: 'trapecio-rectangulo', size: 120, height: 80, baseRatio: 0.6 },
   { name: 'Cometa', description: '2 pares de lados adyacentes iguales', type: 'cometa', size: 100, height: 120 },
+];
+
+// Figure3D presets
+const FIGURE3D_PRESETS: Figure3DPreset[] = [
+  {
+    name: 'Cubo',
+    description: 'Lado 100',
+    fromType: { type: 'cubo', dimensions: { lado: 100 } },
+    projection: 'isometric',
+  },
+  {
+    name: 'Prisma Rectangular',
+    description: '120 × 80 × 100',
+    fromType: { type: 'prisma_rectangular', dimensions: { largo: 120, ancho: 80, altura: 100 } },
+    projection: 'isometric',
+  },
+  {
+    name: 'Pirámide Cuadrada',
+    description: 'Base 100, h=120',
+    fromType: { type: 'piramide_cuadrada', dimensions: { base: 100, altura: 120 } },
+    projection: 'isometric',
+  },
+  {
+    name: 'Cilindro',
+    description: 'r=50, h=100',
+    fromType: { type: 'cilindro', dimensions: { radio: 50, altura: 100 } },
+    projection: 'isometric',
+  },
+  {
+    name: 'Cono',
+    description: 'r=60, h=100',
+    fromType: { type: 'cono', dimensions: { radio: 60, altura: 100 } },
+    projection: 'isometric',
+  },
+  {
+    name: 'Esfera',
+    description: 'r=80',
+    fromType: { type: 'esfera', dimensions: { radio: 80 } },
+    projection: 'isometric',
+  },
+  {
+    name: 'Tetraedro',
+    description: 'Pirámide triangular',
+    fromType: { type: 'piramide_triangular', dimensions: { base: 100, altura: 90 } },
+    projection: 'isometric',
+  },
+  {
+    name: 'Prisma Triangular',
+    description: 'Base triangular',
+    fromType: { type: 'prisma_triangular', dimensions: { baseWidth: 100, baseHeight: 86, profundidad: 120 } },
+    projection: 'isometric',
+  },
 ];
 
 function FigureDebugContent() {
@@ -359,6 +434,141 @@ function FigureDebugContent() {
     []
   );
 
+  // ============================================
+  // FIGURE3D STATE
+  // ============================================
+  const [solidType, setSolidType] = useState<SolidType>('cubo');
+  const [projectionType, setProjectionType] = useState<ProjectionType>('isometric');
+  const [figure3dAzimuth, setFigure3dAzimuth] = useState(45);
+  const [figure3dElevation, setFigure3dElevation] = useState(35);
+  const [figure3dInteractive, setFigure3dInteractive] = useState(false);
+  const [show3dGrid, setShow3dGrid] = useState(true);
+  const [hiddenEdgeStyle, setHiddenEdgeStyle] = useState<'dashed' | 'dotted' | 'none' | 'solid'>('dashed');
+  const [highlight3dBase, setHighlight3dBase] = useState(false);
+  const [show3dHeightLine, setShow3dHeightLine] = useState(false);
+  const [show3dDimensionLabels, setShow3dDimensionLabels] = useState(false);
+
+  // Dimensions for each solid type
+  const [cubeLado, setCubeLado] = useState(100);
+  const [prismaLargo, setPrismaLargo] = useState(120);
+  const [prismaAncho, setPrismaAncho] = useState(80);
+  const [prismaAltura, setPrismaAltura] = useState(100);
+  const [prismaTriBaseWidth, setPrismaTriBaseWidth] = useState(100);
+  const [prismaTriBaseHeight, setPrismaTriBaseHeight] = useState(86);
+  const [prismaTriProfundidad, setPrismaTriProfundidad] = useState(120);
+  const [piramideBase, setPiramideBase] = useState(100);
+  const [piramideAltura, setPiramideAltura] = useState(120);
+  const [cilindroRadio, setCilindroRadio] = useState(50);
+  const [cilindroAltura, setCilindroAltura] = useState(100);
+  const [conoRadio, setConoRadio] = useState(60);
+  const [conoAltura, setConoAltura] = useState(100);
+  const [esferaRadio, setEsferaRadio] = useState(80);
+
+  // Get current solid dimensions based on type
+  const currentSolidDimensions = useMemo((): SolidDimensions => {
+    switch (solidType) {
+      case 'cubo':
+        return { type: 'cubo', dimensions: { lado: cubeLado } };
+      case 'prisma_rectangular':
+        return { type: 'prisma_rectangular', dimensions: { largo: prismaLargo, ancho: prismaAncho, altura: prismaAltura } };
+      case 'prisma_triangular':
+        return { type: 'prisma_triangular', dimensions: { baseWidth: prismaTriBaseWidth, baseHeight: prismaTriBaseHeight, profundidad: prismaTriProfundidad } };
+      case 'piramide_cuadrada':
+        return { type: 'piramide_cuadrada', dimensions: { base: piramideBase, altura: piramideAltura } };
+      case 'piramide_triangular':
+        return { type: 'piramide_triangular', dimensions: { base: piramideBase, altura: piramideAltura } };
+      case 'cilindro':
+        return { type: 'cilindro', dimensions: { radio: cilindroRadio, altura: cilindroAltura } };
+      case 'cono':
+        return { type: 'cono', dimensions: { radio: conoRadio, altura: conoAltura } };
+      case 'esfera':
+        return { type: 'esfera', dimensions: { radio: esferaRadio } };
+      default:
+        return { type: 'cubo', dimensions: { lado: 100 } };
+    }
+  }, [solidType, cubeLado, prismaLargo, prismaAncho, prismaAltura, prismaTriBaseWidth, prismaTriBaseHeight, prismaTriProfundidad, piramideBase, piramideAltura, cilindroRadio, cilindroAltura, conoRadio, conoAltura, esferaRadio]);
+
+  // Calculate volume and surface area
+  const figure3dCalculations = useMemo(() => {
+    let volume = 0;
+    let surfaceArea = 0;
+
+    switch (solidType) {
+      case 'cubo':
+        volume = volumeCubo(cubeLado);
+        surfaceArea = areaSuperficieCubo(cubeLado);
+        break;
+      case 'prisma_rectangular':
+        volume = volumePrismaRectangular(prismaLargo, prismaAncho, prismaAltura);
+        surfaceArea = areaSuperficiePrismaRectangular(prismaLargo, prismaAncho, prismaAltura);
+        break;
+      case 'prisma_triangular':
+        volume = volumePrismaTriangular(prismaTriBaseWidth, prismaTriBaseHeight, prismaTriProfundidad);
+        break;
+      case 'piramide_cuadrada':
+        volume = volumePiramideCuadrada(piramideBase, piramideAltura);
+        break;
+      case 'piramide_triangular':
+        volume = volumePiramideTriangular(piramideBase, piramideAltura);
+        break;
+      case 'cilindro':
+        volume = volumeCilindro(cilindroRadio, cilindroAltura);
+        surfaceArea = areaSuperficieCilindro(cilindroRadio, cilindroAltura);
+        break;
+      case 'cono':
+        volume = volumeCono(conoRadio, conoAltura);
+        surfaceArea = areaSuperficieCono(conoRadio, conoAltura);
+        break;
+      case 'esfera':
+        volume = volumeEsfera(esferaRadio);
+        surfaceArea = areaSuperficieEsfera(esferaRadio);
+        break;
+    }
+
+    return { volume, surfaceArea };
+  }, [solidType, cubeLado, prismaLargo, prismaAncho, prismaAltura, prismaTriBaseWidth, prismaTriBaseHeight, prismaTriProfundidad, piramideBase, piramideAltura, cilindroRadio, cilindroAltura, conoRadio, conoAltura, esferaRadio]);
+
+  // Apply Figure3D preset
+  const applyFigure3DPreset = useCallback((preset: Figure3DPreset) => {
+    const { fromType } = preset;
+    setSolidType(fromType.type);
+    if (preset.projection) setProjectionType(preset.projection);
+    if (preset.azimuth !== undefined) setFigure3dAzimuth(preset.azimuth);
+    if (preset.elevation !== undefined) setFigure3dElevation(preset.elevation);
+
+    // Set dimensions based on type
+    switch (fromType.type) {
+      case 'cubo':
+        setCubeLado(fromType.dimensions.lado);
+        break;
+      case 'prisma_rectangular':
+        setPrismaLargo(fromType.dimensions.largo);
+        setPrismaAncho(fromType.dimensions.ancho);
+        setPrismaAltura(fromType.dimensions.altura);
+        break;
+      case 'prisma_triangular':
+        setPrismaTriBaseWidth(fromType.dimensions.baseWidth);
+        setPrismaTriBaseHeight(fromType.dimensions.baseHeight);
+        setPrismaTriProfundidad(fromType.dimensions.profundidad);
+        break;
+      case 'piramide_cuadrada':
+      case 'piramide_triangular':
+        setPiramideBase(fromType.dimensions.base);
+        setPiramideAltura(fromType.dimensions.altura);
+        break;
+      case 'cilindro':
+        setCilindroRadio(fromType.dimensions.radio);
+        setCilindroAltura(fromType.dimensions.altura);
+        break;
+      case 'cono':
+        setConoRadio(fromType.dimensions.radio);
+        setConoAltura(fromType.dimensions.altura);
+        break;
+      case 'esfera':
+        setEsferaRadio(fromType.dimensions.radio);
+        break;
+    }
+  }, []);
 
   // Apply circle preset
   const applyCirclePreset = useCallback((preset: CirclePreset) => {
@@ -825,12 +1035,76 @@ function FigureDebugContent() {
     return `<QuadrilateralFigure\n  ${propsLines.join('\n  ')}\n/>`;
   }, [quadInputMode, quadType, quadSize, quadHeight, quadAngle, quadBaseRatio, quadAngleInputs, quadAngle4, activeQuadVertices, showQuadDiagonals, autoQuadParallelMarks, autoQuadEqualMarks, autoQuadRightAngles, autoQuadDiagonalBisection, autoQuadDiagonalEqual, autoQuadDiagonalRightAngle, autoQuadAngleArcs, showQuadGrid, showQuadVertices]);
 
+  // Generate code snippet for Figure3D
+  const generateFigure3DCode = useCallback(() => {
+    const propsLines = [];
+
+    // fromType with dimensions
+    const dims = currentSolidDimensions;
+    let dimsStr = '';
+    switch (dims.type) {
+      case 'cubo':
+        dimsStr = `lado: ${dims.dimensions.lado}`;
+        break;
+      case 'prisma_rectangular':
+        dimsStr = `largo: ${dims.dimensions.largo}, ancho: ${dims.dimensions.ancho}, altura: ${dims.dimensions.altura}`;
+        break;
+      case 'prisma_triangular':
+        dimsStr = `baseWidth: ${dims.dimensions.baseWidth}, baseHeight: ${dims.dimensions.baseHeight}, profundidad: ${dims.dimensions.profundidad}`;
+        break;
+      case 'piramide_cuadrada':
+      case 'piramide_triangular':
+        dimsStr = `base: ${dims.dimensions.base}, altura: ${dims.dimensions.altura}`;
+        break;
+      case 'cilindro':
+        dimsStr = `radio: ${dims.dimensions.radio}, altura: ${dims.dimensions.altura}`;
+        break;
+      case 'cono':
+        dimsStr = `radio: ${dims.dimensions.radio}, altura: ${dims.dimensions.altura}`;
+        break;
+      case 'esfera':
+        dimsStr = `radio: ${dims.dimensions.radio}`;
+        break;
+    }
+    propsLines.push(`fromType={{ type: '${dims.type}', dimensions: { ${dimsStr} } }}`);
+
+    // Projection
+    if (projectionType !== 'isometric' || figure3dAzimuth !== 45 || figure3dElevation !== 35) {
+      propsLines.push(`projection={{ type: '${projectionType}', azimuth: ${figure3dAzimuth}, elevation: ${figure3dElevation} }}`);
+    }
+
+    // Interactive
+    if (figure3dInteractive) {
+      propsLines.push(`interactive`);
+    }
+
+    // Visual options
+    if (hiddenEdgeStyle !== 'dashed') {
+      propsLines.push(`edges={{ hiddenEdgeStyle: '${hiddenEdgeStyle}' }}`);
+    }
+    if (highlight3dBase) {
+      propsLines.push(`faceConfig={{ highlightBase: true }}`);
+    }
+    if (show3dHeightLine) {
+      propsLines.push(`heightLine={{ show: true, style: 'dashed', showRightAngleMarker: true }}`);
+    }
+    if (show3dDimensionLabels) {
+      propsLines.push(`dimensionLabels={{ showHeight: true, showBase: true }}`);
+    }
+    if (show3dGrid) {
+      propsLines.push(`showGrid`);
+    }
+
+    return `<Figure3D\n  ${propsLines.join('\n  ')}\n/>`;
+  }, [currentSolidDimensions, projectionType, figure3dAzimuth, figure3dElevation, figure3dInteractive, hiddenEdgeStyle, highlight3dBase, show3dHeightLine, show3dDimensionLabels, show3dGrid]);
+
   // Generate code based on figure type
   const generateCode = useCallback(() => {
     if (figureType === 'triangle') return generateTriangleCode();
     if (figureType === 'circle') return generateCircleCode();
-    return generateQuadrilateralCode();
-  }, [figureType, generateTriangleCode, generateCircleCode, generateQuadrilateralCode]);
+    if (figureType === 'quadrilateral') return generateQuadrilateralCode();
+    return generateFigure3DCode();
+  }, [figureType, generateTriangleCode, generateCircleCode, generateQuadrilateralCode, generateFigure3DCode]);
 
   // Copy code to clipboard
   const copyCode = useCallback(() => {
@@ -885,6 +1159,16 @@ function FigureDebugContent() {
                 }`}
               >
                 Cuadrilátero
+              </button>
+              <button
+                onClick={() => setFigureType('figure3d')}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  figureType === 'figure3d'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+              >
+                Figura 3D
               </button>
             </div>
           </div>
@@ -1091,6 +1375,25 @@ function FigureDebugContent() {
                 className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
                 padding="md"
                 onClick={() => applyQuadPreset(preset)}
+              >
+                <div className="text-center">
+                  <Heading level={3} size="xs" className="mb-1">
+                    {preset.name}
+                  </Heading>
+                  <Text size="xs" variant="secondary">
+                    {preset.description}
+                  </Text>
+                </div>
+              </Card>
+            ))}
+            {/* Figure3D presets */}
+            {figureType === 'figure3d' && FIGURE3D_PRESETS.map((preset) => (
+              <Card
+                key={preset.name}
+                hover
+                className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
+                padding="md"
+                onClick={() => applyFigure3DPreset(preset)}
               >
                 <div className="text-center">
                   <Heading level={3} size="xs" className="mb-1">
@@ -1396,6 +1699,357 @@ function FigureDebugContent() {
                       ))}
                     </div>
                   )}
+                </Card>
+              </>
+            )}
+
+            {/* ============================================ */}
+            {/* FIGURE3D CONTROLS */}
+            {/* ============================================ */}
+            {figureType === 'figure3d' && (
+              <>
+                {/* Solid Type Selector */}
+                <Card padding="lg">
+                  <Heading level={3} size="xs" className="mb-4">
+                    Tipo de Sólido
+                  </Heading>
+                  <select
+                    value={solidType}
+                    onChange={(e) => setSolidType(e.target.value as SolidType)}
+                    className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+                  >
+                    <option value="cubo">Cubo</option>
+                    <option value="prisma_rectangular">Prisma Rectangular</option>
+                    <option value="prisma_triangular">Prisma Triangular</option>
+                    <option value="piramide_cuadrada">Pirámide Cuadrada</option>
+                    <option value="piramide_triangular">Pirámide Triangular</option>
+                    <option value="cilindro">Cilindro</option>
+                    <option value="cono">Cono</option>
+                    <option value="esfera">Esfera</option>
+                  </select>
+                </Card>
+
+                {/* Dimension Controls */}
+                <Card padding="lg">
+                  <Heading level={3} size="xs" className="mb-4">
+                    Dimensiones
+                  </Heading>
+                  <div className="space-y-4">
+                    {/* Cube */}
+                    {solidType === 'cubo' && (
+                      <div className="flex items-center gap-4">
+                        <Text className="text-sm w-20">Lado:</Text>
+                        <input
+                          type="range"
+                          min="20"
+                          max="200"
+                          value={cubeLado}
+                          onChange={(e) => setCubeLado(Number(e.target.value))}
+                          className="flex-1"
+                        />
+                        <span className="text-sm w-12">{cubeLado}</span>
+                      </div>
+                    )}
+
+                    {/* Rectangular Prism */}
+                    {solidType === 'prisma_rectangular' && (
+                      <>
+                        <div className="flex items-center gap-4">
+                          <Text className="text-sm w-20">Largo:</Text>
+                          <input
+                            type="range"
+                            min="20"
+                            max="200"
+                            value={prismaLargo}
+                            onChange={(e) => setPrismaLargo(Number(e.target.value))}
+                            className="flex-1"
+                          />
+                          <span className="text-sm w-12">{prismaLargo}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <Text className="text-sm w-20">Ancho:</Text>
+                          <input
+                            type="range"
+                            min="20"
+                            max="200"
+                            value={prismaAncho}
+                            onChange={(e) => setPrismaAncho(Number(e.target.value))}
+                            className="flex-1"
+                          />
+                          <span className="text-sm w-12">{prismaAncho}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <Text className="text-sm w-20">Altura:</Text>
+                          <input
+                            type="range"
+                            min="20"
+                            max="200"
+                            value={prismaAltura}
+                            onChange={(e) => setPrismaAltura(Number(e.target.value))}
+                            className="flex-1"
+                          />
+                          <span className="text-sm w-12">{prismaAltura}</span>
+                        </div>
+                      </>
+                    )}
+
+                    {/* Triangular Prism */}
+                    {solidType === 'prisma_triangular' && (
+                      <>
+                        <div className="flex items-center gap-4">
+                          <Text className="text-sm w-20">Base:</Text>
+                          <input
+                            type="range"
+                            min="20"
+                            max="200"
+                            value={prismaTriBaseWidth}
+                            onChange={(e) => setPrismaTriBaseWidth(Number(e.target.value))}
+                            className="flex-1"
+                          />
+                          <span className="text-sm w-12">{prismaTriBaseWidth}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <Text className="text-sm w-20">Altura base:</Text>
+                          <input
+                            type="range"
+                            min="20"
+                            max="200"
+                            value={prismaTriBaseHeight}
+                            onChange={(e) => setPrismaTriBaseHeight(Number(e.target.value))}
+                            className="flex-1"
+                          />
+                          <span className="text-sm w-12">{prismaTriBaseHeight}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <Text className="text-sm w-20">Profundidad:</Text>
+                          <input
+                            type="range"
+                            min="20"
+                            max="200"
+                            value={prismaTriProfundidad}
+                            onChange={(e) => setPrismaTriProfundidad(Number(e.target.value))}
+                            className="flex-1"
+                          />
+                          <span className="text-sm w-12">{prismaTriProfundidad}</span>
+                        </div>
+                      </>
+                    )}
+
+                    {/* Square/Triangular Pyramid */}
+                    {(solidType === 'piramide_cuadrada' || solidType === 'piramide_triangular') && (
+                      <>
+                        <div className="flex items-center gap-4">
+                          <Text className="text-sm w-20">Base:</Text>
+                          <input
+                            type="range"
+                            min="20"
+                            max="200"
+                            value={piramideBase}
+                            onChange={(e) => setPiramideBase(Number(e.target.value))}
+                            className="flex-1"
+                          />
+                          <span className="text-sm w-12">{piramideBase}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <Text className="text-sm w-20">Altura:</Text>
+                          <input
+                            type="range"
+                            min="20"
+                            max="200"
+                            value={piramideAltura}
+                            onChange={(e) => setPiramideAltura(Number(e.target.value))}
+                            className="flex-1"
+                          />
+                          <span className="text-sm w-12">{piramideAltura}</span>
+                        </div>
+                      </>
+                    )}
+
+                    {/* Cylinder */}
+                    {solidType === 'cilindro' && (
+                      <>
+                        <div className="flex items-center gap-4">
+                          <Text className="text-sm w-20">Radio:</Text>
+                          <input
+                            type="range"
+                            min="10"
+                            max="100"
+                            value={cilindroRadio}
+                            onChange={(e) => setCilindroRadio(Number(e.target.value))}
+                            className="flex-1"
+                          />
+                          <span className="text-sm w-12">{cilindroRadio}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <Text className="text-sm w-20">Altura:</Text>
+                          <input
+                            type="range"
+                            min="20"
+                            max="200"
+                            value={cilindroAltura}
+                            onChange={(e) => setCilindroAltura(Number(e.target.value))}
+                            className="flex-1"
+                          />
+                          <span className="text-sm w-12">{cilindroAltura}</span>
+                        </div>
+                      </>
+                    )}
+
+                    {/* Cone */}
+                    {solidType === 'cono' && (
+                      <>
+                        <div className="flex items-center gap-4">
+                          <Text className="text-sm w-20">Radio:</Text>
+                          <input
+                            type="range"
+                            min="10"
+                            max="100"
+                            value={conoRadio}
+                            onChange={(e) => setConoRadio(Number(e.target.value))}
+                            className="flex-1"
+                          />
+                          <span className="text-sm w-12">{conoRadio}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <Text className="text-sm w-20">Altura:</Text>
+                          <input
+                            type="range"
+                            min="20"
+                            max="200"
+                            value={conoAltura}
+                            onChange={(e) => setConoAltura(Number(e.target.value))}
+                            className="flex-1"
+                          />
+                          <span className="text-sm w-12">{conoAltura}</span>
+                        </div>
+                      </>
+                    )}
+
+                    {/* Sphere */}
+                    {solidType === 'esfera' && (
+                      <div className="flex items-center gap-4">
+                        <Text className="text-sm w-20">Radio:</Text>
+                        <input
+                          type="range"
+                          min="20"
+                          max="120"
+                          value={esferaRadio}
+                          onChange={(e) => setEsferaRadio(Number(e.target.value))}
+                          className="flex-1"
+                        />
+                        <span className="text-sm w-12">{esferaRadio}</span>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+
+                {/* Projection Controls */}
+                <Card padding="lg">
+                  <Heading level={3} size="xs" className="mb-4">
+                    Proyección
+                  </Heading>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm w-20">Tipo:</Text>
+                      <select
+                        value={projectionType}
+                        onChange={(e) => setProjectionType(e.target.value as ProjectionType)}
+                        className="flex-1 px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+                      >
+                        <option value="isometric">Isométrica</option>
+                        <option value="cavalier">Cavalier</option>
+                        <option value="cabinet">Cabinet</option>
+                        <option value="dimetric">Dimétrica</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm w-20">Azimut:</Text>
+                      <input
+                        type="range"
+                        min="0"
+                        max="360"
+                        value={figure3dAzimuth}
+                        onChange={(e) => setFigure3dAzimuth(Number(e.target.value))}
+                        className="flex-1"
+                      />
+                      <span className="text-sm w-12">{figure3dAzimuth}°</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm w-20">Elevación:</Text>
+                      <input
+                        type="range"
+                        min="-89"
+                        max="89"
+                        value={figure3dElevation}
+                        onChange={(e) => setFigure3dElevation(Number(e.target.value))}
+                        className="flex-1"
+                      />
+                      <span className="text-sm w-12">{figure3dElevation}°</span>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Visual Options */}
+                <Card padding="lg">
+                  <Heading level={3} size="xs" className="mb-4">
+                    Opciones Visuales
+                  </Heading>
+                  <div className="grid grid-cols-2 gap-3">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={show3dGrid}
+                        onChange={(e) => setShow3dGrid(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Mostrar grid</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={show3dHiddenEdges}
+                        onChange={(e) => setShow3dHiddenEdges(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Aristas ocultas</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={highlight3dBase}
+                        onChange={(e) => setHighlight3dBase(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Resaltar base</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={show3dHeightLine}
+                        onChange={(e) => setShow3dHeightLine(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Línea de altura</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={show3dDimensionLabels}
+                        onChange={(e) => setShow3dDimensionLabels(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Etiquetas</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={figure3dInteractive}
+                        onChange={(e) => setFigure3dInteractive(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Rotación interactiva</span>
+                    </label>
+                  </div>
                 </Card>
               </>
             )}
@@ -2259,6 +2913,37 @@ function FigureDebugContent() {
                     height={300}
                   />
                 )}
+                {figureType === 'figure3d' && (
+                  <Figure3D
+                    fromType={currentSolidDimensions}
+                    projection={projectionType}
+                    azimuth={figure3dAzimuth}
+                    elevation={figure3dElevation}
+                    interactive={figure3dInteractive}
+                    showGrid={show3dGrid}
+                    edges={{
+                      hiddenEdgeStyle: hiddenEdgeStyle,
+                    }}
+                    faceConfig={{
+                      highlightBase: highlight3dBase,
+                    }}
+                    heightLine={{
+                      show: show3dHeightLine,
+                      showRightAngleMarker: true,
+                    }}
+                    dimensionLabels={{
+                      showHeight: show3dDimensionLabels,
+                      showBase: show3dDimensionLabels,
+                      showRadius: show3dDimensionLabels,
+                    }}
+                    width={400}
+                    height={350}
+                    onRotationChange={(azimuth, elevation) => {
+                      setFigure3dAzimuth(azimuth);
+                      setFigure3dElevation(elevation);
+                    }}
+                  />
+                )}
               </div>
 
               {/* Current angles info (in angles mode - triangle) */}
@@ -2355,6 +3040,33 @@ function FigureDebugContent() {
                 </div>
               )}
 
+              {/* Figure3D info display */}
+              {figureType === 'figure3d' && (
+                <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <Text size="sm" className="font-medium mb-1">
+                    Propiedades del {getSolidTypeName(solidType)}:
+                  </Text>
+                  <div className="space-y-1">
+                    <Text size="sm" variant="secondary">
+                      Proyección: {projectionType.charAt(0).toUpperCase() + projectionType.slice(1)}
+                    </Text>
+                    <Text size="sm" variant="secondary">
+                      Azimut: {figure3dAzimuth.toFixed(0)}° | Elevación: {figure3dElevation.toFixed(0)}°
+                    </Text>
+                    {figure3dCalculations.volume > 0 && (
+                      <Text size="sm" variant="secondary">
+                        Volumen: {figure3dCalculations.volume.toFixed(2)} u³
+                      </Text>
+                    )}
+                    {figure3dCalculations.surfaceArea > 0 && (
+                      <Text size="sm" variant="secondary">
+                        Área superficial: {figure3dCalculations.surfaceArea.toFixed(2)} u²
+                      </Text>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {/* Legend */}
               <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <Text size="sm" className="font-medium mb-2">
@@ -2425,6 +3137,30 @@ function FigureDebugContent() {
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-1 bg-red-500 rounded"></div>
                       <span>Ángulo recto</span>
+                    </div>
+                  </div>
+                )}
+                {figureType === 'figure3d' && (
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-blue-500 rounded"></div>
+                      <span>Aristas visibles</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-gray-400 rounded border-dashed border border-gray-400"></div>
+                      <span>Aristas ocultas</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-blue-500/15 border border-blue-500 rounded"></div>
+                      <span>Caras laterales</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-purple-500/30 border border-purple-500 rounded"></div>
+                      <span>Base (resaltada)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-red-500 rounded"></div>
+                      <span>Línea de altura</span>
                     </div>
                   </div>
                 )}
