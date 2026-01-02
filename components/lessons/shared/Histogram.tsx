@@ -2,58 +2,49 @@
 
 import { cn } from '@/lib/utils';
 
-export interface BarChartData {
-  category: string;
-  value: number;
+export interface HistogramData {
+  /** Interval label, e.g., "[1-3)", "[3-5)" */
+  interval: string;
+  /** Frequency count for this interval */
+  frequency: number;
+  /** Optional custom color */
   color?: string;
 }
 
-export interface BarChartProps {
-  /** Data for each bar */
-  data: BarChartData[];
-  /** Show value labels on bars */
-  showValues?: boolean;
-  /** Show category labels below bars */
-  showLabels?: boolean;
+export interface HistogramProps {
+  /** Data for each bar/bin */
+  data: HistogramData[];
+  /** Show frequency labels on bars */
+  showFrequencies?: boolean;
+  /** Show interval labels below bars */
+  showIntervals?: boolean;
   /** Animate bars on mount/change */
   animated?: boolean;
   /** Height variant */
   height?: 'sm' | 'md' | 'lg';
-  /** Display absolute values or percentages */
-  valueType?: 'absolute' | 'percentage';
-  /** Callback when a bar is clicked */
-  onBarClick?: (index: number) => void;
   /** Index of bar to highlight */
   highlightIndex?: number;
+  /** Callback when a bar is clicked */
+  onBarClick?: (index: number) => void;
   /** Custom max value (defaults to max in data) */
-  maxValue?: number;
+  maxFrequency?: number;
   /** Custom class name */
   className?: string;
 }
 
-const DEFAULT_COLORS = [
-  '#3B82F6', // blue
-  '#10B981', // green
-  '#F59E0B', // amber
-  '#EF4444', // red
-  '#8B5CF6', // purple
-  '#EC4899', // pink
-  '#14B8A6', // teal
-  '#F97316', // orange
-];
+const DEFAULT_COLOR = '#3B82F6'; // blue
 
-export default function BarChart({
+export default function Histogram({
   data,
-  showValues = true,
-  showLabels = true,
+  showFrequencies = true,
+  showIntervals = true,
   animated = true,
   height = 'md',
-  valueType = 'absolute',
-  onBarClick,
   highlightIndex,
-  maxValue,
+  onBarClick,
+  maxFrequency,
   className,
-}: BarChartProps) {
+}: HistogramProps) {
   const heightConfig = {
     sm: 120,
     md: 180,
@@ -61,34 +52,26 @@ export default function BarChart({
   };
 
   const chartHeight = heightConfig[height];
-  const total = data.reduce((sum, item) => sum + item.value, 0);
-  const computedMax = maxValue ?? Math.max(...data.map((d) => d.value));
+  const computedMax = maxFrequency ?? Math.max(...data.map((d) => d.frequency));
 
-  const getBarHeight = (value: number) => {
+  const getBarHeight = (frequency: number) => {
     if (computedMax === 0) return 0;
-    return (value / computedMax) * 100;
-  };
-
-  const getDisplayValue = (value: number) => {
-    if (valueType === 'percentage') {
-      return total > 0 ? `${Math.round((value / total) * 100)}%` : '0%';
-    }
-    return value.toString();
+    return (frequency / computedMax) * 100;
   };
 
   return (
     <div className={cn('w-full', className)}>
-      {/* Value labels row */}
-      {showValues && (
-        <div className="flex justify-center gap-2 px-4 mb-1">
+      {/* Frequency labels row */}
+      {showFrequencies && (
+        <div className="flex justify-center px-4 mb-1">
           {data.map((item, index) => {
             const isHighlighted = highlightIndex === index;
             return (
               <div
-                key={`value-${item.category}-${index}`}
-                className="flex-1 max-w-16 text-center"
+                key={`freq-${item.interval}-${index}`}
+                className="flex-1 max-w-20 text-center"
               >
-                {item.value > 0 && (
+                {item.frequency > 0 && (
                   <span
                     className={cn(
                       'text-xs font-semibold transition-all duration-300',
@@ -97,7 +80,7 @@ export default function BarChart({
                         : 'text-gray-700 dark:text-gray-300'
                     )}
                   >
-                    {getDisplayValue(item.value)}
+                    {item.frequency}
                   </span>
                 )}
               </div>
@@ -106,33 +89,33 @@ export default function BarChart({
         </div>
       )}
 
-      {/* Chart area - bars only */}
+      {/* Chart area - bars only (contiguous for histogram) */}
       <div
-        className="flex items-end justify-center gap-2 px-4"
+        className="flex items-end justify-center px-4"
         style={{ height: chartHeight }}
       >
         {data.map((item, index) => {
-          const barHeight = getBarHeight(item.value);
-          const color = item.color || DEFAULT_COLORS[index % DEFAULT_COLORS.length];
+          const barHeight = getBarHeight(item.frequency);
+          const color = item.color || DEFAULT_COLOR;
           const isHighlighted = highlightIndex === index;
 
           return (
             <div
-              key={`${item.category}-${index}`}
-              className="flex-1 max-w-16 h-full flex items-end"
+              key={`${item.interval}-${index}`}
+              className="flex-1 max-w-20 h-full flex items-end"
             >
               {/* Bar */}
               <div
                 onClick={() => onBarClick?.(index)}
                 className={cn(
-                  'w-full rounded-t-md',
+                  'w-full rounded-t-sm',
                   animated && 'transition-all duration-500 ease-out',
                   onBarClick && 'cursor-pointer hover:brightness-110',
                   isHighlighted && 'ring-2 ring-amber-400 ring-offset-2'
                 )}
                 style={{
                   height: `${barHeight}%`,
-                  minHeight: item.value > 0 ? '4px' : '0',
+                  minHeight: item.frequency > 0 ? '4px' : '0',
                   backgroundColor: color,
                 }}
               />
@@ -144,15 +127,15 @@ export default function BarChart({
       {/* X-axis line */}
       <div className="h-0.5 bg-gray-300 dark:bg-gray-600 mx-4" />
 
-      {/* Category labels */}
-      {showLabels && (
-        <div className="flex justify-center gap-2 px-4 mt-2">
+      {/* Interval labels */}
+      {showIntervals && (
+        <div className="flex justify-center px-4 mt-2">
           {data.map((item, index) => {
             const isHighlighted = highlightIndex === index;
             return (
               <div
-                key={`label-${item.category}-${index}`}
-                className="flex-1 max-w-16 text-center"
+                key={`label-${item.interval}-${index}`}
+                className="flex-1 max-w-20 text-center"
               >
                 <span
                   className={cn(
@@ -162,7 +145,7 @@ export default function BarChart({
                       : 'text-gray-600 dark:text-gray-400'
                   )}
                 >
-                  {item.category}
+                  {item.interval}
                 </span>
               </div>
             );
