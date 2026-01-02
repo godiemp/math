@@ -467,7 +467,128 @@ visualData: {
 
 ---
 
-## 7. Line Chart (type: 'graph', chartType: 'line')
+## 7. Scatter Plot (type: 'graph', chartType: 'scatter')
+
+Rendered by `ScatterPlot` component. Used for showing relationships between two variables.
+
+### Basic Scatter Plot (Positive Correlation)
+```typescript
+visualData: {
+  type: 'graph',
+  data: {
+    chartType: 'scatter',
+    points: [
+      { x: 2, y: 45 },
+      { x: 4, y: 52 },
+      { x: 3, y: 48 },
+      { x: 6, y: 65 },
+      { x: 5, y: 58 }
+    ],
+    xLabel: 'Horas de estudio',
+    yLabel: 'Nota',
+    showTrendLine: true,
+    correlationType: 'positive'
+  }
+}
+```
+
+### Scatter Plot (Negative Correlation)
+```typescript
+visualData: {
+  type: 'graph',
+  data: {
+    chartType: 'scatter',
+    points: [
+      { x: 20, y: 8 },
+      { x: 35, y: 6 },
+      { x: 45, y: 4 },
+      { x: 55, y: 3 },
+      { x: 70, y: 2 }
+    ],
+    xLabel: 'Edad',
+    yLabel: 'Horas de uso celular',
+    showTrendLine: true,
+    correlationType: 'negative'
+  }
+}
+```
+
+### Scatter Plot (No Correlation)
+```typescript
+visualData: {
+  type: 'graph',
+  data: {
+    chartType: 'scatter',
+    points: [
+      { x: 38, y: 95 },
+      { x: 42, y: 110 },
+      { x: 40, y: 85 },
+      { x: 44, y: 100 },
+      { x: 39, y: 120 }
+    ],
+    xLabel: 'Número de zapato',
+    yLabel: 'Coeficiente intelectual',
+    correlationType: 'none'
+  }
+}
+```
+
+### Multi-Series Scatter Plot (Comparing Populations)
+```typescript
+visualData: {
+  type: 'graph',
+  data: {
+    chartType: 'scatter',
+    series: [
+      {
+        name: 'Escuela A',
+        color: '#3B82F6',
+        points: [
+          { x: 150, y: 48 },
+          { x: 160, y: 55 },
+          { x: 155, y: 52 }
+        ]
+      },
+      {
+        name: 'Escuela B',
+        color: '#EF4444',
+        points: [
+          { x: 152, y: 45 },
+          { x: 158, y: 50 },
+          { x: 163, y: 54 }
+        ]
+      }
+    ],
+    xLabel: 'Altura (cm)',
+    yLabel: 'Peso (kg)',
+    showLegend: true
+  }
+}
+```
+
+### Optional Properties
+```typescript
+{
+  chartType: 'scatter',
+  points: [...],           // Single series data
+  // OR
+  series: [...],           // Multi-series data (for comparing populations)
+  xLabel: 'X Variable',    // Label for X axis
+  yLabel: 'Y Variable',    // Label for Y axis
+  showGrid: true,          // Show grid lines (default: true)
+  showTrendLine: false,    // Show linear regression line (default: false, single series only)
+  correlationType: 'positive' | 'negative' | 'none',  // Visual indicator badge
+  showLegend: true,        // Show legend for multi-series (default: true)
+  minX: 0,                 // Custom min X bound
+  maxX: 100,               // Custom max X bound
+  minY: 0,                 // Custom min Y bound
+  maxY: 100,               // Custom max Y bound
+}
+```
+
+---
+
+## 8. Line Chart (type: 'graph', chartType: 'line')
 
 Rendered by `LineChart` component. Used for showing trends over time or ordered categories.
 
@@ -551,6 +672,8 @@ visualData: {
 | Proportions, percentages | graph (pie) |
 | Continuous data in intervals | graph (histogram) |
 | Trends over time | graph (line) |
+| Relationship between two variables | graph (scatter) |
+| Comparing populations (two groups) | graph (scatter with series) |
 | Data collection, counting | table |
 | Set theory, logic | diagram (venn) |
 

@@ -3,6 +3,8 @@ import { Question } from '../../../types';
 /**
  * M2-PROB-004: Problemas que involucren el modelo binomial y otros modelos probabilísticos
  *
+ * Total questions: 40 (23 original + 17 new)
+ *
  * Subsections:
  * A. Distribución binomial
  *    Habilidades: probabilidad-distribucion-binomial
@@ -326,5 +328,248 @@ export const m2Prob004Questions: Question[] = [
     difficulty: 'easy',
     difficultyScore: 0.18,
     skills: ['probabilidad-distribucion-binomial', 'probabilidad-esperanza', 'probabilidad-modelos-aplicaciones', 'numeros-porcentaje']
+  },
+  // ==================== NEW QUESTIONS (17) ====================
+  // Subsection A: Distribución binomial (+4)
+  {
+    id: 'm2-prob-004-001',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P(X=k) = C(n,k) \\cdot p^k \\cdot (1-p)^{n-k}',
+    questionLatex: '\\text{Una bolsa contiene 60\\% de caramelos rojos. Si se extraen 5 caramelos con reposición, ¿cuál es la probabilidad de obtener exactamente 3 rojos?}',
+    options: ['0.2304', '0.3456', '0.3110', '0.2592'],
+    correctAnswer: 1,
+    explanation: 'P(3) = C(5,3) \\times (0.6)^3 \\times (0.4)^2 = 10 \\times 0.216 \\times 0.16 = 0.3456',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
+    skills: ['probabilidad-distribucion-binomial', 'probabilidad-calculo-binomial', 'numeros-decimales']
+  },
+  {
+    id: 'm2-prob-004-002',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P(X=n) = p^n',
+    questionLatex: '\\text{Un tirador tiene 80\\% de efectividad. ¿Cuál es la probabilidad de acertar 4 tiros consecutivos?}',
+    options: ['0.32', '0.4096', '0.512', '0.64'],
+    correctAnswer: 1,
+    explanation: 'P(4) = (0.8)^4 = 0.4096',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
+    skills: ['probabilidad-distribucion-binomial', 'numeros-potencias', 'numeros-decimales']
+  },
+  {
+    id: 'm2-prob-004-003',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P(X=2) = C(6,2) \\cdot p^2 \\cdot (1-p)^4',
+    questionLatex: '\\text{En una encuesta, el 30\\% de las personas prefiere el producto A. Si se entrevistan 6 personas al azar, ¿cuál es la probabilidad de que exactamente 2 prefieran el producto A?}',
+    options: ['0.1852', '0.3241', '0.2646', '0.3087'],
+    correctAnswer: 1,
+    explanation: 'P(2) = C(6,2) \\times (0.3)^2 \\times (0.7)^4 = 15 \\times 0.09 \\times 0.2401 \\approx 0.3241',
+    difficulty: 'medium',
+    difficultyScore: 0.45,
+    skills: ['probabilidad-distribucion-binomial', 'probabilidad-calculo-binomial', 'numeros-decimales']
+  },
+  {
+    id: 'm2-prob-004-004',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'C(n,k)',
+    questionLatex: '\\text{En la fórmula binomial } P(X=k) = C(n,k) \\cdot p^k \\cdot (1-p)^{n-k}\\text{, ¿qué representa } C(n,k)\\text{?}',
+    options: ['\\text{Número de formas de elegir k éxitos de n ensayos}', '\\text{La probabilidad de éxito}', '\\text{El número total de ensayos}', '\\text{La probabilidad de fracaso}'],
+    correctAnswer: 0,
+    explanation: 'C(n,k) = \\frac{n!}{k!(n-k)!} \\text{ representa las combinaciones de n en k}',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
+    skills: ['probabilidad-distribucion-binomial', 'probabilidad-conceptos', 'conteo-combinaciones']
+  },
+  // Subsection B: Cálculo de probabilidades binomiales (+4)
+  {
+    id: 'm2-prob-004-005',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P(X \\leq 2) = P(0) + P(1) + P(2)',
+    questionLatex: '\\text{Una moneda se lanza 5 veces. ¿Cuál es la probabilidad de obtener a lo más 2 caras?}',
+    options: ['\\frac{8}{32}', '\\frac{16}{32}', '\\frac{26}{32}', '\\frac{10}{32}'],
+    correctAnswer: 1,
+    explanation: 'P(X \\leq 2) = \\frac{C(5,0)+C(5,1)+C(5,2)}{32} = \\frac{1+5+10}{32} = \\frac{16}{32}',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
+    skills: ['probabilidad-calculo-binomial', 'probabilidad-combinaciones', 'numeros-fracciones']
+  },
+  {
+    id: 'm2-prob-004-006',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P(2 \\leq X \\leq 4)',
+    questionLatex: '\\text{Se lanza una moneda 6 veces. ¿Cuál es la probabilidad de obtener entre 2 y 4 caras (inclusive)?}',
+    options: ['\\frac{35}{64}', '\\frac{50}{64}', '\\frac{45}{64}', '\\frac{57}{64}'],
+    correctAnswer: 1,
+    explanation: 'P(2 \\leq X \\leq 4) = \\frac{C(6,2)+C(6,3)+C(6,4)}{64} = \\frac{15+20+15}{64} = \\frac{50}{64}',
+    difficulty: 'hard',
+    difficultyScore: 0.55,
+    skills: ['probabilidad-calculo-binomial', 'probabilidad-combinaciones', 'numeros-fracciones']
+  },
+  {
+    id: 'm2-prob-004-007',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P(X > 3) = 1 - P(X \\leq 3)',
+    questionLatex: '\\text{Un dado se lanza 5 veces. ¿Cuál es la probabilidad de obtener más de 3 veces el número 6?}',
+    options: ['\\frac{5}{7776}', '\\frac{6}{7776}', '\\frac{11}{7776}', '\\frac{26}{7776}'],
+    correctAnswer: 1,
+    explanation: 'P(X > 3) = P(4) + P(5) = C(5,4)(\\frac{1}{6})^4(\\frac{5}{6}) + (\\frac{1}{6})^5 = \\frac{5+1}{7776} = \\frac{6}{7776}',
+    difficulty: 'hard',
+    difficultyScore: 0.62,
+    skills: ['probabilidad-calculo-binomial', 'probabilidad-combinaciones', 'numeros-fracciones']
+  },
+  {
+    id: 'm2-prob-004-008',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P(X=0) + P(X=n) = (1-p)^n + p^n',
+    questionLatex: '\\text{Una moneda equilibrada se lanza 4 veces. ¿Cuál es la probabilidad de obtener todos los resultados iguales (todas caras o todas sellos)?}',
+    options: ['\\frac{1}{16}', '\\frac{2}{16}', '\\frac{4}{16}', '\\frac{8}{16}'],
+    correctAnswer: 1,
+    explanation: 'P(\\text{iguales}) = P(0) + P(4) = \\frac{1}{16} + \\frac{1}{16} = \\frac{2}{16}',
+    difficulty: 'medium',
+    difficultyScore: 0.38,
+    skills: ['probabilidad-calculo-binomial', 'probabilidad-clasica', 'numeros-fracciones']
+  },
+  // Subsection C: Otros modelos probabilísticos (+4)
+  {
+    id: 'm2-prob-004-009',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P(X=k) = (1-p)^{k-1} \\cdot p',
+    questionLatex: '\\text{Un vendedor tiene éxito en 20\\% de sus llamadas. ¿Cuál es la probabilidad de que su primera venta ocurra en la tercera llamada?}',
+    options: ['0.064', '0.128', '0.160', '0.200'],
+    correctAnswer: 1,
+    explanation: 'P(X=3) = (0.8)^2 \\times 0.2 = 0.128',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
+    skills: ['probabilidad-otros-modelos', 'probabilidad-geometrica', 'numeros-decimales']
+  },
+  {
+    id: 'm2-prob-004-010',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'E[X] = \\frac{1}{p}',
+    questionLatex: '\\text{En una distribución geométrica con } p = 0.25\\text{, ¿cuántos intentos se esperan en promedio para obtener el primer éxito?}',
+    options: ['2', '3', '4', '5'],
+    correctAnswer: 2,
+    explanation: 'E[X] = \\frac{1}{p} = \\frac{1}{0.25} = 4',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
+    skills: ['probabilidad-otros-modelos', 'probabilidad-geometrica', 'probabilidad-esperanza']
+  },
+  {
+    id: 'm2-prob-004-011',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P(a \\leq X \\leq b) = \\frac{b-a}{\\text{rango}}',
+    questionLatex: '\\text{Un autobús llega a una parada cada 15 minutos. Si una persona llega en un momento aleatorio, ¿cuál es la probabilidad de esperar entre 5 y 10 minutos?}',
+    options: ['\\frac{1}{5}', '\\frac{1}{3}', '\\frac{2}{5}', '\\frac{1}{2}'],
+    correctAnswer: 1,
+    explanation: 'P = \\frac{10-5}{15} = \\frac{5}{15} = \\frac{1}{3}',
+    difficulty: 'medium',
+    difficultyScore: 0.38,
+    skills: ['probabilidad-otros-modelos', 'probabilidad-uniforme', 'numeros-fracciones']
+  },
+  {
+    id: 'm2-prob-004-012',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: '\\text{Poisson: eventos en intervalo de tiempo}',
+    questionLatex: '\\text{¿Cuál de las siguientes situaciones se modela mejor con una distribución de Poisson?}',
+    options: ['\\text{Lanzar una moneda 10 veces}', '\\text{Llamadas a un call center por hora}', '\\text{Elegir 5 cartas de un mazo}', '\\text{Tiempo hasta el primer éxito}'],
+    correctAnswer: 1,
+    explanation: '\\text{Poisson modela eventos raros en un intervalo de tiempo o espacio}',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
+    skills: ['probabilidad-otros-modelos', 'probabilidad-poisson', 'probabilidad-conceptos']
+  },
+  // Subsection D: Aplicaciones de modelos probabilísticos (+5)
+  {
+    id: 'm2-prob-004-013',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'E[X] = n \\cdot p; \\quad Var(X) = n \\cdot p \\cdot (1-p)',
+    questionLatex: '\\text{En 200 lanzamientos de una moneda equilibrada, ¿cuáles son la esperanza y la varianza del número de caras?}',
+    options: ['E=100, Var=25', 'E=100, Var=50', 'E=50, Var=100', 'E=100, Var=100'],
+    correctAnswer: 1,
+    explanation: 'E = 200 \\times 0.5 = 100; \\quad Var = 200 \\times 0.5 \\times 0.5 = 50',
+    difficulty: 'medium',
+    difficultyScore: 0.38,
+    skills: ['probabilidad-modelos-aplicaciones', 'probabilidad-esperanza', 'probabilidad-varianza']
+  },
+  {
+    id: 'm2-prob-004-014',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P(X \\geq 1) = 1 - P(X=0)',
+    questionLatex: '\\text{Un medicamento tiene 90\\% de efectividad. Si se administra a 3 pacientes, ¿cuál es la probabilidad de que al menos uno no responda al tratamiento?}',
+    options: ['0.001', '0.271', '0.729', '0.999'],
+    correctAnswer: 1,
+    explanation: 'P(\\text{al menos 1 no responde}) = 1 - (0.9)^3 = 1 - 0.729 = 0.271',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
+    skills: ['probabilidad-modelos-aplicaciones', 'probabilidad-complemento', 'numeros-decimales']
+  },
+  {
+    id: 'm2-prob-004-015',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P(X=k) \\text{ máximo cuando } k \\approx np',
+    questionLatex: '\\text{En 10 lanzamientos de una moneda, ¿cuál es el número de caras más probable de obtener?}',
+    options: ['4', '5', '6', '10'],
+    correctAnswer: 1,
+    explanation: '\\text{El valor más probable es } k = np = 10 \\times 0.5 = 5',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
+    skills: ['probabilidad-modelos-aplicaciones', 'probabilidad-distribucion-binomial', 'probabilidad-esperanza']
+  },
+  {
+    id: 'm2-prob-004-016',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P(X \\geq 2) = 1 - P(0) - P(1)',
+    questionLatex: '\\text{Un examen tiene 10 preguntas de V/F. Si un estudiante responde al azar, ¿cuál es la probabilidad de aprobar con al menos 7 respuestas correctas?}',
+    options: ['\\frac{56}{512}', '\\frac{120}{1024}', '\\frac{176}{1024}', '\\frac{386}{1024}'],
+    correctAnswer: 2,
+    explanation: 'P(X \\geq 7) = \\frac{C(10,7)+C(10,8)+C(10,9)+C(10,10)}{1024} = \\frac{120+45+10+1}{1024} = \\frac{176}{1024}',
+    difficulty: 'hard',
+    difficultyScore: 0.58,
+    skills: ['probabilidad-modelos-aplicaciones', 'probabilidad-calculo-binomial', 'numeros-fracciones']
+  },
+  {
+    id: 'm2-prob-004-017',
+    level: 'M2',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: '\\sigma = \\sqrt{npq}',
+    questionLatex: '\\text{En una encuesta, el 40\\% está a favor de una medida. Si se encuestan 225 personas, ¿cuál es la desviación estándar del número de personas a favor?}',
+    options: ['6', '7.35', '9', '54'],
+    correctAnswer: 1,
+    explanation: '\\sigma = \\sqrt{225 \\times 0.4 \\times 0.6} = \\sqrt{54} \\approx 7.35',
+    difficulty: 'medium',
+    difficultyScore: 0.45,
+    skills: ['probabilidad-modelos-aplicaciones', 'probabilidad-desviacion-estandar', 'numeros-raices']
   }
 ];

@@ -10,7 +10,7 @@ import { Question } from '../../../types';
  * - C: Probabilidad clásica
  * - D: Probabilidad experimental
  *
- * Total: 28 questions
+ * Total: 40 questions
  */
 
 export const m1Prob004Questions: Question[] = [
@@ -264,6 +264,45 @@ export const m1Prob004Questions: Question[] = [
     difficultyScore: 0.15,
     skills: ['probabilidad-basica', 'probabilidad-conceptos']
   },
+  {
+    id: 'm1-prob-004-013',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Un estudiante dice que la probabilidad de aprobar un examen es 1.2 porque estudió mucho. ¿Por qué esta afirmación es incorrecta?}',
+    options: ['Porque 1.2 es muy alto', 'Porque la probabilidad máxima es 1', 'Porque debería expresarse como porcentaje', 'La afirmación es correcta'],
+    correctAnswer: 1,
+    explanation: '\\text{La probabilidad siempre está entre 0 y 1, nunca puede ser mayor que 1}',
+    difficulty: 'easy',
+    difficultyScore: 0.20,
+    skills: ['probabilidad-basica', 'probabilidad-conceptos']
+  },
+  {
+    id: 'm1-prob-004-014',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Si la probabilidad de que llueva mañana es 0.7, ¿qué tipo de evento es "que llueva mañana"?}',
+    options: ['Evento imposible', 'Evento poco probable', 'Evento probable', 'Evento seguro'],
+    correctAnswer: 2,
+    explanation: 'P = 0.7 > 0.5 \\Rightarrow \\text{es un evento probable (más chance de ocurrir que no)}',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
+    skills: ['probabilidad-basica', 'probabilidad-conceptos']
+  },
+  {
+    id: 'm1-prob-004-015',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{¿Cuál de las siguientes NO puede ser una probabilidad válida?}',
+    options: ['0.001', '\\frac{99}{100}', '-0.1', '0'],
+    correctAnswer: 2,
+    explanation: '-0.1 < 0 \\text{, pero las probabilidades deben ser } \\geq 0',
+    difficulty: 'easy',
+    difficultyScore: 0.18,
+    skills: ['probabilidad-basica', 'probabilidad-conceptos']
+  },
   // ========================================
   // ESPACIO MUESTRAL Y EVENTOS
   // ========================================
@@ -289,6 +328,45 @@ export const m1Prob004Questions: Question[] = [
     options: ['Imposible', 'Poco probable', 'Muy probable', 'Seguro'],
     correctAnswer: 3,
     explanation: '\\text{Todos los resultados (1,2,3,4,5,6) son menores que 7} \\Rightarrow P = 1',
+    difficulty: 'easy',
+    difficultyScore: 0.15,
+    skills: ['probabilidad-eventos', 'probabilidad-conceptos']
+  },
+  {
+    id: 'm1-prob-004-016',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Al lanzar tres monedas simultáneamente, ¿cuántos elementos tiene el espacio muestral?}',
+    options: ['3', '6', '8', '9'],
+    correctAnswer: 2,
+    explanation: '|S| = 2^3 = 8 \\text{ resultados posibles (CCC, CCS, CSC, CSS, SCC, SCS, SSC, SSS)}',
+    difficulty: 'medium',
+    difficultyScore: 0.35,
+    skills: ['probabilidad-espacio-muestral', 'probabilidad-conteo']
+  },
+  {
+    id: 'm1-prob-004-017',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Al lanzar dos dados, ¿cuántos elementos tiene el espacio muestral?}',
+    options: ['12', '24', '36', '42'],
+    correctAnswer: 2,
+    explanation: '|S| = 6 \\times 6 = 36 \\text{ resultados posibles}',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
+    skills: ['probabilidad-espacio-muestral', 'probabilidad-conteo', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-004-018',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Al lanzar un dado, el evento "obtener un número mayor que 6" es un evento:}',
+    options: ['Imposible', 'Poco probable', 'Muy probable', 'Seguro'],
+    correctAnswer: 0,
+    explanation: '\\text{Ningún resultado del dado es mayor que 6} \\Rightarrow P = 0 \\text{ (evento imposible)}',
     difficulty: 'easy',
     difficultyScore: 0.15,
     skills: ['probabilidad-eventos', 'probabilidad-conceptos']
@@ -361,6 +439,45 @@ export const m1Prob004Questions: Question[] = [
     difficultyScore: 0.22,
     skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
   },
+  {
+    id: 'm1-prob-004-019',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Al lanzar dos dados, ¿cuál es la probabilidad de que la suma sea 7?}',
+    options: ['\\frac{1}{12}', '\\frac{1}{6}', '\\frac{5}{36}', '\\frac{7}{36}'],
+    correctAnswer: 1,
+    explanation: 'P(\\text{suma 7}) = \\frac{6}{36} = \\frac{1}{6} \\quad (\\text{combinaciones: 1-6, 2-5, 3-4, 4-3, 5-2, 6-1})',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
+    skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones', 'probabilidad-conteo']
+  },
+  {
+    id: 'm1-prob-004-020',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En un grupo de 30 estudiantes, 18 son mujeres. Si se elige un estudiante al azar, ¿cuál es la probabilidad de que sea hombre?}',
+    options: ['\\frac{2}{5}', '\\frac{3}{5}', '\\frac{1}{2}', '\\frac{12}{18}'],
+    correctAnswer: 0,
+    explanation: 'P(\\text{hombre}) = \\frac{30-18}{30} = \\frac{12}{30} = \\frac{2}{5}',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
+    skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-004-021',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Se extrae una carta de una baraja de 52 cartas. ¿Cuál es la probabilidad de que sea una figura (J, Q, K)?}',
+    options: ['\\frac{3}{52}', '\\frac{4}{13}', '\\frac{3}{13}', '\\frac{1}{4}'],
+    correctAnswer: 2,
+    explanation: 'P(\\text{figura}) = \\frac{12}{52} = \\frac{3}{13} \\quad (\\text{hay 4 de cada: J, Q, K})',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
+    skills: ['probabilidad-basica', 'probabilidad-casos-favorables', 'numeros-fracciones']
+  },
   // ========================================
   // PROBABILIDAD EXPERIMENTAL
   // ========================================
@@ -389,5 +506,44 @@ export const m1Prob004Questions: Question[] = [
     difficulty: 'easy',
     difficultyScore: 0.28,
     skills: ['probabilidad-experimental', 'numeros-fracciones']
+  },
+  {
+    id: 'm1-prob-004-022',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En 500 lanzamientos de una moneda, salió cara 235 veces. ¿Cuál es la frecuencia relativa de obtener cara?}',
+    options: ['0.43', '0.47', '0.50', '0.53'],
+    correctAnswer: 1,
+    explanation: 'f_r = \\frac{235}{500} = 0.47',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
+    skills: ['probabilidad-experimental', 'estadistica-frecuencia', 'numeros-decimales']
+  },
+  {
+    id: 'm1-prob-004-023',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Al lanzar un dado 120 veces, ¿cuántas veces esperarías obtener un 6 según la probabilidad teórica?}',
+    options: ['6 veces', '12 veces', '20 veces', '24 veces'],
+    correctAnswer: 2,
+    explanation: 'E = n \\times P = 120 \\times \\frac{1}{6} = 20',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
+    skills: ['probabilidad-experimental', 'probabilidad-basica', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-004-024',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Un jugador de basketball encesta 72 de 90 tiros libres. ¿Cuál es su probabilidad experimental de encestar un tiro libre?}',
+    options: ['0.72', '0.75', '0.80', '0.85'],
+    correctAnswer: 2,
+    explanation: 'P_{exp} = \\frac{72}{90} = 0.80',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
+    skills: ['probabilidad-experimental', 'numeros-decimales', 'numeros-fracciones']
   }
 ];

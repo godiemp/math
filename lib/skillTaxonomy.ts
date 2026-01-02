@@ -922,6 +922,616 @@ export const SKILLS: Record<string, Skill> = {
     topic: 'probabilidad',
     parentSkill: 'probabilidad-combinatoria'
   },
+
+  // ============================================================================
+  // M1-PROB-006: GRÁFICOS DE DISPERSIÓN Y COMPRENSIÓN DEL AZAR
+  // ============================================================================
+  'estadistica-graficos-dispersion': {
+    id: 'estadistica-graficos-dispersion',
+    name: 'Gráficos de dispersión',
+    description: 'Construir e interpretar gráficos de dispersión (nubes de puntos)',
+    topic: 'probabilidad'
+  },
+  'estadistica-comparar-poblaciones': {
+    id: 'estadistica-comparar-poblaciones',
+    name: 'Comparar poblaciones',
+    description: 'Comparar dos o más poblaciones usando gráficos estadísticos',
+    topic: 'probabilidad',
+    parentSkill: 'estadistica-graficos-dispersion'
+  },
+  'estadistica-frecuencia-relativa': {
+    id: 'estadistica-frecuencia-relativa',
+    name: 'Frecuencia relativa',
+    description: 'Calcular e interpretar frecuencias relativas',
+    topic: 'probabilidad'
+  },
+  'probabilidad-azar': {
+    id: 'probabilidad-azar',
+    name: 'Comprensión del azar',
+    description: 'Comprender la naturaleza aleatoria de eventos y experimentos',
+    topic: 'probabilidad'
+  },
+  'probabilidad-ley-grandes-numeros': {
+    id: 'probabilidad-ley-grandes-numeros',
+    name: 'Ley de los grandes números',
+    description: 'Comprender cómo la frecuencia relativa se estabiliza con muchas repeticiones',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-azar'
+  },
+
+  // ============================================================================
+  // ESTADÍSTICA - SKILLS ADICIONALES
+  // ============================================================================
+  'estadistica-frecuencia': {
+    id: 'estadistica-frecuencia',
+    name: 'Frecuencia absoluta',
+    description: 'Contar y calcular frecuencias absolutas de datos',
+    topic: 'probabilidad'
+  },
+  'estadistica-frecuencia-acumulada': {
+    id: 'estadistica-frecuencia-acumulada',
+    name: 'Frecuencia acumulada',
+    description: 'Calcular frecuencias acumuladas',
+    topic: 'probabilidad',
+    parentSkill: 'estadistica-frecuencia'
+  },
+  'estadistica-tablas': {
+    id: 'estadistica-tablas',
+    name: 'Tablas de frecuencia',
+    description: 'Construir e interpretar tablas de frecuencia',
+    topic: 'probabilidad'
+  },
+  'estadistica-graficos': {
+    id: 'estadistica-graficos',
+    name: 'Gráficos estadísticos',
+    description: 'Construir e interpretar gráficos estadísticos',
+    topic: 'probabilidad'
+  },
+  'estadistica-graficos-circulares': {
+    id: 'estadistica-graficos-circulares',
+    name: 'Gráficos circulares',
+    description: 'Construir e interpretar gráficos circulares (de torta)',
+    topic: 'probabilidad',
+    parentSkill: 'estadistica-graficos'
+  },
+  'estadistica-histogramas': {
+    id: 'estadistica-histogramas',
+    name: 'Histogramas',
+    description: 'Construir e interpretar histogramas',
+    topic: 'probabilidad',
+    parentSkill: 'estadistica-graficos'
+  },
+  'estadistica-interpretacion': {
+    id: 'estadistica-interpretacion',
+    name: 'Interpretación de datos',
+    description: 'Interpretar información de gráficos y tablas estadísticas',
+    topic: 'probabilidad'
+  },
+  'estadistica-interpretacion-graficos': {
+    id: 'estadistica-interpretacion-graficos',
+    name: 'Interpretación de gráficos',
+    description: 'Interpretar información de gráficos estadísticos',
+    topic: 'probabilidad',
+    parentSkill: 'estadistica-interpretacion'
+  },
+  'estadistica-conceptos': {
+    id: 'estadistica-conceptos',
+    name: 'Conceptos estadísticos',
+    description: 'Comprender conceptos fundamentales de estadística',
+    topic: 'probabilidad'
+  },
+  'estadistica-varianza': {
+    id: 'estadistica-varianza',
+    name: 'Varianza',
+    description: 'Calcular la varianza de un conjunto de datos',
+    topic: 'probabilidad'
+  },
+  'estadistica-varianza-desviacion': {
+    id: 'estadistica-varianza-desviacion',
+    name: 'Varianza y desviación estándar',
+    description: 'Calcular varianza y desviación estándar',
+    topic: 'probabilidad',
+    parentSkill: 'estadistica-varianza'
+  },
+  'estadistica-desviacion-estandar': {
+    id: 'estadistica-desviacion-estandar',
+    name: 'Desviación estándar',
+    description: 'Calcular e interpretar la desviación estándar',
+    topic: 'probabilidad',
+    parentSkill: 'estadistica-varianza'
+  },
+  'estadistica-desviacion-media': {
+    id: 'estadistica-desviacion-media',
+    name: 'Desviación media absoluta',
+    description: 'Calcular la desviación media absoluta',
+    topic: 'probabilidad'
+  },
+  'estadistica-coeficiente-variacion': {
+    id: 'estadistica-coeficiente-variacion',
+    name: 'Coeficiente de variación',
+    description: 'Calcular e interpretar el coeficiente de variación',
+    topic: 'probabilidad'
+  },
+  'estadistica-comparacion-dispersion': {
+    id: 'estadistica-comparacion-dispersion',
+    name: 'Comparación de dispersión',
+    description: 'Comparar la dispersión entre diferentes grupos de datos',
+    topic: 'probabilidad'
+  },
+  'estadistica-comparacion-grupos': {
+    id: 'estadistica-comparacion-grupos',
+    name: 'Comparación de grupos',
+    description: 'Comparar estadísticas entre diferentes grupos',
+    topic: 'probabilidad'
+  },
+  'estadistica-interpretacion-dispersion': {
+    id: 'estadistica-interpretacion-dispersion',
+    name: 'Interpretación de dispersión',
+    description: 'Interpretar medidas de dispersión en contexto',
+    topic: 'probabilidad'
+  },
+  'estadistica-medidas-dispersion': {
+    id: 'estadistica-medidas-dispersion',
+    name: 'Medidas de dispersión',
+    description: 'Conocer y aplicar medidas de dispersión',
+    topic: 'probabilidad'
+  },
+  'estadistica-medidas-posicion': {
+    id: 'estadistica-medidas-posicion',
+    name: 'Medidas de posición',
+    description: 'Calcular e interpretar medidas de posición',
+    topic: 'probabilidad'
+  },
+  'estadistica-percentiles': {
+    id: 'estadistica-percentiles',
+    name: 'Percentiles',
+    description: 'Calcular e interpretar percentiles',
+    topic: 'probabilidad',
+    parentSkill: 'estadistica-cuartiles'
+  },
+  'estadistica-diagramas-caja': {
+    id: 'estadistica-diagramas-caja',
+    name: 'Diagramas de caja',
+    description: 'Construir e interpretar diagramas de caja (box plots)',
+    topic: 'probabilidad',
+    parentSkill: 'estadistica-cuartiles'
+  },
+  'estadistica-propiedades-varianza': {
+    id: 'estadistica-propiedades-varianza',
+    name: 'Propiedades de la varianza',
+    description: 'Aplicar propiedades de la varianza bajo transformaciones',
+    topic: 'probabilidad',
+    parentSkill: 'estadistica-varianza'
+  },
+  'estadistica-propiedades': {
+    id: 'estadistica-propiedades',
+    name: 'Propiedades estadísticas',
+    description: 'Aplicar propiedades de medidas estadísticas',
+    topic: 'probabilidad'
+  },
+  'estadistica-dispersion': {
+    id: 'estadistica-dispersion',
+    name: 'Dispersión de datos',
+    description: 'Comprender el concepto de dispersión',
+    topic: 'probabilidad'
+  },
+  'estadistica-simetria': {
+    id: 'estadistica-simetria',
+    name: 'Simetría de distribuciones',
+    description: 'Identificar simetría en distribuciones de datos',
+    topic: 'probabilidad'
+  },
+  'estadistica-asimetria': {
+    id: 'estadistica-asimetria',
+    name: 'Asimetría de distribuciones',
+    description: 'Identificar y analizar asimetría en distribuciones',
+    topic: 'probabilidad'
+  },
+  'estadistica-outliers': {
+    id: 'estadistica-outliers',
+    name: 'Valores atípicos',
+    description: 'Identificar y analizar valores atípicos (outliers)',
+    topic: 'probabilidad'
+  },
+  'estadistica-distribucion-normal': {
+    id: 'estadistica-distribucion-normal',
+    name: 'Distribución normal',
+    description: 'Comprender propiedades de la distribución normal',
+    topic: 'probabilidad'
+  },
+  'estadistica-analisis-datos': {
+    id: 'estadistica-analisis-datos',
+    name: 'Análisis de datos',
+    description: 'Analizar conjuntos de datos estadísticos',
+    topic: 'probabilidad'
+  },
+  'estadistica-analisis-critico': {
+    id: 'estadistica-analisis-critico',
+    name: 'Análisis crítico',
+    description: 'Analizar críticamente información estadística',
+    topic: 'probabilidad'
+  },
+  'estadistica-aplicaciones-contexto': {
+    id: 'estadistica-aplicaciones-contexto',
+    name: 'Aplicaciones en contexto',
+    description: 'Aplicar estadística en situaciones reales',
+    topic: 'probabilidad'
+  },
+
+  // ============================================================================
+  // PROBABILIDAD - SKILLS ADICIONALES
+  // ============================================================================
+  'probabilidad-conceptos': {
+    id: 'probabilidad-conceptos',
+    name: 'Conceptos de probabilidad',
+    description: 'Comprender conceptos fundamentales de probabilidad',
+    topic: 'probabilidad'
+  },
+  'probabilidad-clasica': {
+    id: 'probabilidad-clasica',
+    name: 'Probabilidad clásica',
+    description: 'Calcular probabilidades usando la definición clásica',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-basica'
+  },
+  'probabilidad-experimental': {
+    id: 'probabilidad-experimental',
+    name: 'Probabilidad experimental',
+    description: 'Calcular probabilidades basadas en experimentos',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-basica'
+  },
+  'probabilidad-espacio-muestral': {
+    id: 'probabilidad-espacio-muestral',
+    name: 'Espacio muestral',
+    description: 'Identificar y construir espacios muestrales',
+    topic: 'probabilidad'
+  },
+  'probabilidad-eventos': {
+    id: 'probabilidad-eventos',
+    name: 'Eventos',
+    description: 'Identificar y describir eventos probabilísticos',
+    topic: 'probabilidad'
+  },
+  'probabilidad-eventos-excluyentes': {
+    id: 'probabilidad-eventos-excluyentes',
+    name: 'Eventos mutuamente excluyentes',
+    description: 'Identificar y trabajar con eventos mutuamente excluyentes',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-eventos'
+  },
+  'probabilidad-eventos-independientes': {
+    id: 'probabilidad-eventos-independientes',
+    name: 'Eventos independientes',
+    description: 'Identificar y trabajar con eventos independientes',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-eventos'
+  },
+  'probabilidad-eventos-dependientes': {
+    id: 'probabilidad-eventos-dependientes',
+    name: 'Eventos dependientes',
+    description: 'Identificar y trabajar con eventos dependientes',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-eventos'
+  },
+  'probabilidad-union': {
+    id: 'probabilidad-union',
+    name: 'Unión de eventos',
+    description: 'Calcular probabilidad de la unión de eventos',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-eventos-compuestos'
+  },
+  'probabilidad-complemento': {
+    id: 'probabilidad-complemento',
+    name: 'Evento complementario',
+    description: 'Calcular probabilidad del evento complementario',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-eventos-compuestos'
+  },
+  'probabilidad-regla-aditiva': {
+    id: 'probabilidad-regla-aditiva',
+    name: 'Regla aditiva',
+    description: 'Aplicar la regla aditiva de probabilidad',
+    topic: 'probabilidad'
+  },
+  'probabilidad-regla-multiplicativa': {
+    id: 'probabilidad-regla-multiplicativa',
+    name: 'Regla multiplicativa',
+    description: 'Aplicar la regla multiplicativa de probabilidad',
+    topic: 'probabilidad'
+  },
+  'probabilidad-reglas-multiplicacion': {
+    id: 'probabilidad-reglas-multiplicacion',
+    name: 'Reglas de multiplicación',
+    description: 'Aplicar reglas de multiplicación en probabilidad',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-regla-multiplicativa'
+  },
+  'probabilidad-condicional': {
+    id: 'probabilidad-condicional',
+    name: 'Probabilidad condicional',
+    description: 'Calcular probabilidades condicionales',
+    topic: 'probabilidad'
+  },
+  'probabilidad-condicional-concepto': {
+    id: 'probabilidad-condicional-concepto',
+    name: 'Concepto de probabilidad condicional',
+    description: 'Comprender el concepto de probabilidad condicional',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-condicional'
+  },
+  'probabilidad-condicional-aplicaciones': {
+    id: 'probabilidad-condicional-aplicaciones',
+    name: 'Aplicaciones de probabilidad condicional',
+    description: 'Aplicar probabilidad condicional en problemas',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-condicional'
+  },
+  'probabilidad-bayes': {
+    id: 'probabilidad-bayes',
+    name: 'Teorema de Bayes',
+    description: 'Aplicar el teorema de Bayes',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-condicional'
+  },
+  'probabilidad-teorema-bayes': {
+    id: 'probabilidad-teorema-bayes',
+    name: 'Aplicación del teorema de Bayes',
+    description: 'Resolver problemas usando el teorema de Bayes',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-bayes'
+  },
+  'probabilidad-sin-reposicion': {
+    id: 'probabilidad-sin-reposicion',
+    name: 'Probabilidad sin reposición',
+    description: 'Calcular probabilidades en extracciones sin reposición',
+    topic: 'probabilidad'
+  },
+  'probabilidad-tablas': {
+    id: 'probabilidad-tablas',
+    name: 'Tablas de probabilidad',
+    description: 'Usar tablas para calcular probabilidades',
+    topic: 'probabilidad'
+  },
+  'probabilidad-formulas': {
+    id: 'probabilidad-formulas',
+    name: 'Fórmulas de probabilidad',
+    description: 'Conocer y aplicar fórmulas de probabilidad',
+    topic: 'probabilidad'
+  },
+  'probabilidad-casos-excluyentes': {
+    id: 'probabilidad-casos-excluyentes',
+    name: 'Casos excluyentes',
+    description: 'Identificar y trabajar con casos mutuamente excluyentes',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-eventos-excluyentes'
+  },
+  'probabilidad-conteo': {
+    id: 'probabilidad-conteo',
+    name: 'Técnicas de conteo en probabilidad',
+    description: 'Aplicar técnicas de conteo para calcular probabilidades',
+    topic: 'probabilidad'
+  },
+  'probabilidad-principio-multiplicativo': {
+    id: 'probabilidad-principio-multiplicativo',
+    name: 'Principio multiplicativo',
+    description: 'Aplicar el principio multiplicativo de conteo',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-combinatoria'
+  },
+  'probabilidad-permutaciones': {
+    id: 'probabilidad-permutaciones',
+    name: 'Permutaciones',
+    description: 'Calcular permutaciones',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-combinatoria'
+  },
+  'probabilidad-permutaciones-repeticion': {
+    id: 'probabilidad-permutaciones-repeticion',
+    name: 'Permutaciones con repetición',
+    description: 'Calcular permutaciones cuando hay elementos repetidos',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-permutaciones'
+  },
+  'probabilidad-variaciones': {
+    id: 'probabilidad-variaciones',
+    name: 'Variaciones',
+    description: 'Calcular variaciones',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-combinatoria'
+  },
+  'probabilidad-distribucion-binomial': {
+    id: 'probabilidad-distribucion-binomial',
+    name: 'Distribución binomial',
+    description: 'Comprender y aplicar la distribución binomial',
+    topic: 'probabilidad'
+  },
+  'probabilidad-calculo-binomial': {
+    id: 'probabilidad-calculo-binomial',
+    name: 'Cálculo binomial',
+    description: 'Calcular probabilidades usando la fórmula binomial',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-distribucion-binomial'
+  },
+  'probabilidad-esperanza': {
+    id: 'probabilidad-esperanza',
+    name: 'Esperanza matemática',
+    description: 'Calcular e interpretar el valor esperado',
+    topic: 'probabilidad'
+  },
+  'probabilidad-varianza': {
+    id: 'probabilidad-varianza',
+    name: 'Varianza probabilística',
+    description: 'Calcular la varianza de una variable aleatoria',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-esperanza'
+  },
+  'probabilidad-desviacion-estandar': {
+    id: 'probabilidad-desviacion-estandar',
+    name: 'Desviación estándar probabilística',
+    description: 'Calcular la desviación estándar de una variable aleatoria',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-varianza'
+  },
+  'probabilidad-otros-modelos': {
+    id: 'probabilidad-otros-modelos',
+    name: 'Otros modelos probabilísticos',
+    description: 'Conocer otros modelos de distribución de probabilidad',
+    topic: 'probabilidad'
+  },
+  'probabilidad-geometrica': {
+    id: 'probabilidad-geometrica',
+    name: 'Distribución geométrica',
+    description: 'Comprender y aplicar la distribución geométrica',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-otros-modelos'
+  },
+  'probabilidad-uniforme': {
+    id: 'probabilidad-uniforme',
+    name: 'Distribución uniforme',
+    description: 'Comprender y aplicar la distribución uniforme',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-otros-modelos'
+  },
+  'probabilidad-poisson': {
+    id: 'probabilidad-poisson',
+    name: 'Distribución de Poisson',
+    description: 'Comprender y aplicar la distribución de Poisson',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-otros-modelos'
+  },
+  'probabilidad-modelos-aplicaciones': {
+    id: 'probabilidad-modelos-aplicaciones',
+    name: 'Aplicaciones de modelos',
+    description: 'Aplicar modelos probabilísticos en problemas reales',
+    topic: 'probabilidad'
+  },
+
+  // ============================================================================
+  // CONTEO Y COMBINATORIA - SKILLS ADICIONALES
+  // ============================================================================
+  'conteo-combinaciones': {
+    id: 'conteo-combinaciones',
+    name: 'Combinaciones (conteo)',
+    description: 'Calcular combinaciones para problemas de conteo',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-combinaciones'
+  },
+  'conteo-permutaciones': {
+    id: 'conteo-permutaciones',
+    name: 'Permutaciones (conteo)',
+    description: 'Calcular permutaciones para problemas de conteo',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-permutaciones'
+  },
+  'combinatoria-principio-multiplicativo': {
+    id: 'combinatoria-principio-multiplicativo',
+    name: 'Principio multiplicativo (combinatoria)',
+    description: 'Aplicar el principio multiplicativo en problemas de conteo',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-combinatoria'
+  },
+  'combinatoria-combinaciones': {
+    id: 'combinatoria-combinaciones',
+    name: 'Combinaciones (combinatoria)',
+    description: 'Calcular combinaciones en problemas de combinatoria',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-combinaciones'
+  },
+  'combinatoria-permutaciones': {
+    id: 'combinatoria-permutaciones',
+    name: 'Permutaciones (combinatoria)',
+    description: 'Calcular permutaciones en problemas de combinatoria',
+    topic: 'probabilidad',
+    parentSkill: 'probabilidad-permutaciones'
+  },
+  'combinatoria-problemas-probabilidad': {
+    id: 'combinatoria-problemas-probabilidad',
+    name: 'Problemas de probabilidad con conteo',
+    description: 'Resolver problemas de probabilidad usando técnicas de conteo',
+    topic: 'probabilidad'
+  },
+
+  // ============================================================================
+  // NÚMEROS - SKILLS GENÉRICOS ADICIONALES
+  // ============================================================================
+  'numeros-fracciones': {
+    id: 'numeros-fracciones',
+    name: 'Operaciones con fracciones',
+    description: 'Realizar operaciones con fracciones',
+    topic: 'números'
+  },
+  'numeros-decimales': {
+    id: 'numeros-decimales',
+    name: 'Operaciones con decimales',
+    description: 'Realizar operaciones con números decimales',
+    topic: 'números'
+  },
+  'numeros-operaciones-basicas': {
+    id: 'numeros-operaciones-basicas',
+    name: 'Operaciones básicas',
+    description: 'Realizar operaciones aritméticas básicas',
+    topic: 'números'
+  },
+  'numeros-division': {
+    id: 'numeros-division',
+    name: 'División',
+    description: 'Realizar divisiones',
+    topic: 'números',
+    parentSkill: 'numeros-operaciones-basicas'
+  },
+  'numeros-multiplicacion': {
+    id: 'numeros-multiplicacion',
+    name: 'Multiplicación',
+    description: 'Realizar multiplicaciones',
+    topic: 'números',
+    parentSkill: 'numeros-operaciones-basicas'
+  },
+  'numeros-orden': {
+    id: 'numeros-orden',
+    name: 'Ordenar números',
+    description: 'Ordenar números de menor a mayor o viceversa',
+    topic: 'números'
+  },
+  'numeros-comparacion': {
+    id: 'numeros-comparacion',
+    name: 'Comparar números',
+    description: 'Comparar magnitudes numéricas',
+    topic: 'números'
+  },
+  'numeros-porcentaje': {
+    id: 'numeros-porcentaje',
+    name: 'Cálculo de porcentajes',
+    description: 'Calcular porcentajes',
+    topic: 'números',
+    parentSkill: 'numeros-porcentajes'
+  },
+  'numeros-factorial': {
+    id: 'numeros-factorial',
+    name: 'Factorial',
+    description: 'Calcular factoriales',
+    topic: 'números'
+  },
+  'numeros-primos': {
+    id: 'numeros-primos',
+    name: 'Números primos',
+    description: 'Identificar y trabajar con números primos',
+    topic: 'números'
+  },
+  'numeros-divisores': {
+    id: 'numeros-divisores',
+    name: 'Divisores',
+    description: 'Encontrar divisores de un número',
+    topic: 'números',
+    parentSkill: 'numeros-mcd-mcm'
+  },
+  'numeros-multiplos': {
+    id: 'numeros-multiplos',
+    name: 'Múltiplos',
+    description: 'Encontrar múltiplos de un número',
+    topic: 'números',
+    parentSkill: 'numeros-mcd-mcm'
+  },
 };
 
 // Helper function to get all skills for a topic

@@ -78,7 +78,7 @@ export const m2Alg003Questions: Question[] = [
     subject: 'álgebra',
     operacionBase: 'E(v) = \\frac{1}{2}mv^2',
     questionLatex: '\\text{Un ingeniero automotriz analiza la energía cinética de un vehículo usando la fórmula } E(v) = \\frac{1}{2}mv^2\\text{, donde } m \\text{ es la masa y } v \\text{ es la velocidad. Durante una prueba de frenado, el vehículo reduce su velocidad a la mitad } \\left(v \\to \\frac{v}{2}\\right)\\text{. El ingeniero quiere determinar qué porcentaje de la energía cinética se ha disipado en el frenado. ¿Qué porcentaje de energía se pierde cuando la velocidad se reduce a la mitad?}',
-    options: ['25\\%', '50\\%', '75\\%', '90\\%'],
+    options: ['25%', '50%', '75%', '90%'],
     correctAnswer: 2,
     explanation: 'E\\left(\\frac{v}{2}\\right) = \\frac{1}{2}m\\left(\\frac{v}{2}\\right)^2 = \\frac{1}{4}E(v) \\rightarrow \\text{pierde } 75\\%',
     difficulty: 'medium',
