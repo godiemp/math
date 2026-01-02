@@ -15,7 +15,7 @@ interface UpdateProfileRequest {
   displayName?: string;
   email?: string;
   targetLevel?: 'M1_ONLY' | 'M1_AND_M2';
-  paesExamTarget?: PaesExamTarget;
+  paesExamTarget?: PaesExamTarget | null;
 }
 
 interface MarkWelcomeSeenRequest {
@@ -94,11 +94,13 @@ export async function updateUserProfile(req: Request, res: Response): Promise<vo
     }
 
     if (paesExamTarget !== undefined) {
-      // Validate paesExamTarget value
-      const validTargets: PaesExamTarget[] = ['invierno_2026', 'verano_2026', 'verano_e_invierno_2026'];
-      if (!validTargets.includes(paesExamTarget)) {
-        res.status(400).json({ error: 'Invalid PAES exam target. Must be invierno_2026, verano_2026, or verano_e_invierno_2026' });
-        return;
+      // Validate paesExamTarget value (null is allowed to clear the selection)
+      if (paesExamTarget !== null) {
+        const validTargets: PaesExamTarget[] = ['invierno_2026', 'verano_2026', 'verano_e_invierno_2026'];
+        if (!validTargets.includes(paesExamTarget)) {
+          res.status(400).json({ error: 'Invalid PAES exam target. Must be invierno_2026, verano_2026, or verano_e_invierno_2026' });
+          return;
+        }
       }
       updates.push(`paes_exam_target = $${paramIndex++}`);
       values.push(paesExamTarget);

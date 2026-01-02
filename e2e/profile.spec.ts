@@ -234,8 +234,8 @@ test.describe('Student Profile Page', () => {
     // Open edit modal
     await page.getByRole('button', { name: /Editar Perfil/i }).click();
 
-    // Get the target level select
-    const targetLevelSelect = page.getByLabel(/qué estás preparando/i);
+    // Get the target level select by ID (more specific than label matcher)
+    const targetLevelSelect = page.locator('#targetLevel');
     const originalValue = await targetLevelSelect.inputValue();
 
     // Change to different value

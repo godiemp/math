@@ -229,40 +229,47 @@ test.describe('Dashboard Page', () => {
       await page.goto('/dashboard?welcome=true', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
 
-      // Welcome modal should be visible - check for year selection text
+      // Welcome modal should be visible - check for exam selection text
       await expect(page.getByText(/¿para qué paes te estás preparando/i)).toBeVisible({ timeout: 5000 });
 
-      // Year selection buttons should be visible
-      await expect(page.getByRole('button', { name: /PAES 2025/i })).toBeVisible();
-      await expect(page.getByRole('button', { name: /PAES 2026/i })).toBeVisible();
+      // Exam selection buttons should be visible (invierno 2026 and verano 2026)
+      await expect(page.getByRole('button', { name: /PAES invierno 2026/i })).toBeVisible();
+      await expect(page.getByRole('button', { name: /PAES verano 2026/i })).toBeVisible();
     });
 
-    test('should complete welcome flow for PAES 2025', async ({ page }) => {
+    test('should complete welcome flow for PAES invierno 2026', async ({ page }) => {
       await page.goto('/dashboard?welcome=true', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
 
-      // Click PAES 2025 option
-      await page.getByRole('button', { name: /PAES 2025/i }).click();
+      // Click PAES invierno 2026 option
+      await page.getByRole('button', { name: /PAES invierno 2026/i }).click();
 
       // Wait for typing animation to complete (may take several seconds)
       await page.waitForTimeout(5000);
 
-      // Should show the completion button - check for live practice button
-      const livePracticeButton = page.getByRole('button', { name: /ir a práctica en vivo/i });
-      const isVisible = await livePracticeButton.isVisible({ timeout: 10000 }).catch(() => false);
+      // Should show the completion button
+      const comenzarButton = page.getByRole('button', { name: /comenzar/i });
+      await expect(comenzarButton).toBeVisible({ timeout: 10000 });
 
-      if (isVisible) {
-        await livePracticeButton.click();
-        await page.waitForURL('/live-practice', { timeout: 5000 });
-      }
+      // Click completion button (stays on dashboard)
+      await comenzarButton.click();
+
+      // Should stay on dashboard with ?welcome param removed
+      await page.waitForURL('/dashboard', { timeout: 5000 });
     });
 
-    test('should complete welcome flow for PAES 2026', async ({ page }) => {
+    test('should complete welcome flow for PAES verano 2026', async ({ page }) => {
       await page.goto('/dashboard?welcome=true', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
 
-      // Click PAES 2026 option
-      await page.getByRole('button', { name: /PAES 2026/i }).click();
+      // Click PAES verano 2026 option - this triggers a follow-up question
+      await page.getByRole('button', { name: /PAES verano 2026/i }).click();
+
+      // Wait for follow-up question about invierno
+      await expect(page.getByText(/también darás la PAES de invierno/i)).toBeVisible({ timeout: 5000 });
+
+      // Click "no, solo verano" option
+      await page.getByRole('button', { name: /no, solo verano/i }).click();
 
       // Wait for typing animation
       await page.waitForTimeout(5000);
