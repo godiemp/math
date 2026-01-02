@@ -2,6 +2,8 @@ import { test as setup, expect } from '@playwright/test';
 import path from 'path';
 
 const authFile = path.join(__dirname, '../.auth/student.json');
+const teacherAuthFile = path.join(__dirname, '../.auth/teacher.json');
+const syncStudentAuthFile = path.join(__dirname, '../.auth/sync-student.json');
 
 /**
  * Global authentication setup for student user.
@@ -33,4 +35,46 @@ setup('authenticate as student', async ({ page }) => {
 
   // Save signed-in state - this captures all cookies, localStorage, sessionStorage
   await page.context().storageState({ path: authFile });
+});
+
+/**
+ * Authentication setup for teacher user.
+ * Used by teacher-student-sync tests that need teacher auth state.
+ */
+setup('authenticate as teacher', async ({ page }) => {
+  await page.goto('/signin');
+
+  await page.evaluate(() => {
+    localStorage.setItem('cookie-consent', 'accepted');
+  });
+
+  await page.fill('input[name="username"]', 'teacher@test.com');
+  await page.fill('input[type="password"]', 'TeacherTest123!');
+  await page.click('button[type="submit"]');
+
+  await page.waitForURL(/\/(teacher|dashboard)/, { timeout: 10000 });
+  await page.waitForLoadState('networkidle', { timeout: 10000 });
+
+  await page.context().storageState({ path: teacherAuthFile });
+});
+
+/**
+ * Authentication setup for sync student (assigned to test teacher).
+ * Used by teacher-student-sync tests that need student auth state.
+ */
+setup('authenticate as sync student', async ({ page }) => {
+  await page.goto('/signin');
+
+  await page.evaluate(() => {
+    localStorage.setItem('cookie-consent', 'accepted');
+  });
+
+  await page.fill('input[name="username"]', 'sync.student@test.com');
+  await page.fill('input[type="password"]', 'SyncStudent123!');
+  await page.click('button[type="submit"]');
+
+  await page.waitForURL(/\/dashboard/, { timeout: 10000 });
+  await page.waitForLoadState('networkidle', { timeout: 10000 });
+
+  await page.context().storageState({ path: syncStudentAuthFile });
 });

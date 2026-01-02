@@ -1,9 +1,14 @@
 import { test, expect, Browser, BrowserContext, Page } from '@playwright/test';
+import path from 'path';
 import {
   setupSocketMock,
   createTeacherMockHandler,
   createStudentMockHandler,
 } from './helpers/socket-mock';
+
+// Auth state files created by auth.setup.ts
+const TEACHER_AUTH = path.join(__dirname, '../.auth/teacher.json');
+const SYNC_STUDENT_AUTH = path.join(__dirname, '../.auth/sync-student.json');
 
 /**
  * E2E tests for teacher-student real-time lesson sync feature.
@@ -19,53 +24,12 @@ import {
  * - sync.student@test.com / SyncStudent123! (student assigned to test teacher)
  */
 
-// Test configuration
-const TEACHER_CREDENTIALS = {
-  email: 'teacher@test.com',
-  password: 'TeacherTest123!',
-};
-
-const STUDENT_CREDENTIALS = {
-  email: 'sync.student@test.com',
-  password: 'SyncStudent123!',
-};
-
 // Test lesson - using relaciones-lineales which has follow mode support
 const TEST_LESSON = {
   slug: 'relaciones-lineales',
   title: 'Relaciones Lineales',
   totalSteps: 6,
 };
-
-/**
- * Helper to login a user in a given page.
- * Uses a robust login flow that handles cookie banners and waits for page readiness.
- */
-async function loginUser(page: Page, credentials: { email: string; password: string }) {
-  // Navigate to login page (not landing page)
-  // Use timeout to handle slow CI environments
-  await page.goto('/signin', { timeout: 30000 });
-
-  // Wait for the page to be fully loaded
-  await page.waitForLoadState('domcontentloaded');
-
-  // Dismiss cookie banner after navigation (like auth.setup.ts does)
-  await page.evaluate(() => {
-    localStorage.setItem('cookie-consent', 'accepted');
-  });
-
-  // Wait for the login form to be visible with longer timeout for CI
-  const usernameInput = page.locator('input[name="username"]');
-  await usernameInput.waitFor({ state: 'visible', timeout: 30000 });
-
-  // Fill credentials and submit
-  await usernameInput.fill(credentials.email);
-  await page.fill('input[type="password"]', credentials.password);
-  await page.click('button[type="submit"]');
-
-  // Wait for login to complete - should redirect to dashboard or teacher page
-  await page.waitForURL(/\/(teacher|dashboard)/, { timeout: 30000 });
-}
 
 /**
  * Socket mock return type
@@ -90,9 +54,13 @@ test.describe('Teacher-Student Real-Time Sync', () => {
   });
 
   test.beforeEach(async () => {
-    // Create separate browser contexts for teacher and student
-    teacherContext = await browser.newContext();
-    studentContext = await browser.newContext();
+    // Create browser contexts with pre-loaded auth state (instant, no HTTP login)
+    teacherContext = await browser.newContext({
+      storageState: TEACHER_AUTH,
+    });
+    studentContext = await browser.newContext({
+      storageState: SYNC_STUDENT_AUTH,
+    });
 
     // Setup WebSocket mocking BEFORE creating pages
     teacherMock = await setupSocketMock(teacherContext, {
@@ -114,10 +82,7 @@ test.describe('Teacher-Student Real-Time Sync', () => {
   });
 
   test('teacher can access live lesson control page', async () => {
-    // Login as teacher
-    await loginUser(teacherPage, TEACHER_CREDENTIALS);
-
-    // Navigate to teacher dashboard
+    // Already authenticated via storageState - navigate directly
     await teacherPage.goto('/teacher');
     await expect(teacherPage.getByText('Bienvenido, Profesor')).toBeVisible({ timeout: 10000 });
 
@@ -132,10 +97,7 @@ test.describe('Teacher-Student Real-Time Sync', () => {
   });
 
   test('teacher can start and control a live lesson', async () => {
-    // Login as teacher
-    await loginUser(teacherPage, TEACHER_CREDENTIALS);
-
-    // Navigate to live lesson page - lesson auto-starts when page loads
+    // Already authenticated via storageState - navigate directly
     await teacherPage.goto(`/teacher/live/${TEST_LESSON.slug}`);
 
     // Wait for lesson to auto-start - should show "EN VIVO" indicator
@@ -167,19 +129,7 @@ test.describe('Teacher-Student Real-Time Sync', () => {
   test.skip('student assigned to teacher sees live lesson notification', async () => {
     // TODO: This feature is not yet implemented in the student dashboard
     // The student dashboard needs a live lesson notification component
-    // Login both users
-    await Promise.all([
-      loginUser(teacherPage, TEACHER_CREDENTIALS),
-      loginUser(studentPage, STUDENT_CREDENTIALS),
-    ]);
-
-    // Wait for socket mocks to be ready
-    await Promise.all([
-      teacherPage.waitForTimeout(500),
-      studentPage.waitForTimeout(500),
-    ]);
-
-    // Student goes to dashboard
+    // Already authenticated via storageState - navigate directly
     await studentPage.goto('/dashboard');
 
     // Wait for student page to be fully loaded
@@ -205,16 +155,7 @@ test.describe('Teacher-Student Real-Time Sync', () => {
   test.skip('student can join live lesson and follow teacher steps', async () => {
     // TODO: This test requires complex socket event flow that the current mock doesn't fully support
     // The useStudentLessonSync hook needs proper socket initialization and event sequences
-    // Login both users
-    await Promise.all([
-      loginUser(teacherPage, TEACHER_CREDENTIALS),
-      loginUser(studentPage, STUDENT_CREDENTIALS),
-    ]);
-
-    // Wait for socket mocks to be ready
-    await teacherPage.waitForTimeout(500);
-
-    // Teacher navigates to live lesson page - lesson auto-starts
+    // Already authenticated via storageState - navigate directly
     await teacherPage.goto(`/teacher/live/${TEST_LESSON.slug}`);
 
     // Verify lesson auto-started - should show "EN VIVO" indicator
@@ -271,15 +212,7 @@ test.describe('Teacher-Student Real-Time Sync', () => {
   test.skip('student receives lesson ended notification when teacher ends lesson', async () => {
     // TODO: This test requires complex socket event flow that the current mock doesn't fully support
     // The useStudentLessonSync hook needs proper socket initialization and event sequences
-    // Login both users
-    await Promise.all([
-      loginUser(teacherPage, TEACHER_CREDENTIALS),
-      loginUser(studentPage, STUDENT_CREDENTIALS),
-    ]);
-
-    await teacherPage.waitForTimeout(500);
-
-    // Teacher navigates to live lesson page - lesson auto-starts
+    // Already authenticated via storageState - navigate directly
     await teacherPage.goto(`/teacher/live/${TEST_LESSON.slug}`);
 
     // Verify lesson auto-started - should show "EN VIVO" indicator
@@ -325,9 +258,7 @@ test.describe('Teacher-Student Real-Time Sync', () => {
   });
 
   test('teacher dashboard shows "start live lesson" quick action', async () => {
-    await loginUser(teacherPage, TEACHER_CREDENTIALS);
-
-    // Go to teacher dashboard
+    // Already authenticated via storageState - navigate directly
     await teacherPage.goto('/teacher');
     await expect(teacherPage.getByText('Bienvenido, Profesor')).toBeVisible({ timeout: 10000 });
 
@@ -341,9 +272,7 @@ test.describe('Teacher-Student Real-Time Sync', () => {
   });
 
   test('mini-lessons page shows "En Vivo" button for teachers', async () => {
-    await loginUser(teacherPage, TEACHER_CREDENTIALS);
-
-    // Navigate to mini-lessons with a lesson available
+    // Already authenticated via storageState - navigate directly
     await teacherPage.goto('/mini-lessons/m1/algebra');
 
     // Should see at least one lesson with "En Vivo" button
@@ -367,7 +296,10 @@ test.describe('Teacher-Student Sync - Edge Cases', () => {
   });
 
   test.beforeEach(async () => {
-    teacherContext = await browser.newContext();
+    // Create browser context with pre-loaded auth state (instant, no HTTP login)
+    teacherContext = await browser.newContext({
+      storageState: TEACHER_AUTH,
+    });
 
     // Setup WebSocket mocking BEFORE creating page
     teacherMock = await setupSocketMock(teacherContext, {
@@ -383,13 +315,10 @@ test.describe('Teacher-Student Sync - Edge Cases', () => {
   });
 
   test.skip('non-teacher user on live lesson page does not start lesson', async () => {
-    // TODO: This test cannot work with current socket mock because the mock
-    // doesn't distinguish between teacher and student connections.
-    // The actual backend validates user roles, but the mock auto-responds to all events.
-    // This test would need a more sophisticated mock or integration testing.
-    // Login as regular student
-    await loginUser(teacherPage, STUDENT_CREDENTIALS);
-
+    // TODO: This test cannot work with current setup because:
+    // 1. The socket mock doesn't distinguish between teacher and student connections
+    // 2. The teacherContext has teacher auth pre-loaded via storageState
+    // This test would need a separate studentContext with student auth to work properly.
     // Try to navigate to teacher live lesson page
     await teacherPage.goto(`/teacher/live/${TEST_LESSON.slug}`);
 
@@ -407,9 +336,7 @@ test.describe('Teacher-Student Sync - Edge Cases', () => {
   });
 
   test('teacher can restart lesson after ending it', async () => {
-    await loginUser(teacherPage, TEACHER_CREDENTIALS);
-
-    // Navigate to live lesson page - lesson auto-starts
+    // Already authenticated via storageState - navigate directly
     await teacherPage.goto(`/teacher/live/${TEST_LESSON.slug}`);
 
     // Verify lesson auto-started - should show "EN VIVO" indicator
