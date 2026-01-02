@@ -38,6 +38,8 @@ export interface RefreshTokenRequest {
 /**
  * User data from database
  */
+export type PaesExamTarget = 'invierno_2026' | 'verano_2026' | 'verano_e_invierno_2026';
+
 export interface UserRecord {
   id: string;
   username: string;
@@ -61,6 +63,7 @@ export interface UserRecord {
   cookie_consent: 'accepted' | 'declined' | null;
   grade_level: '1-medio' | '2-medio' | '3-medio' | '4-medio' | null;
   assigned_by_teacher_id: string | null;
+  paes_exam_target: PaesExamTarget | null;
 }
 
 /**
@@ -83,6 +86,7 @@ export interface UserResponse {
   cookieConsent?: 'accepted' | 'declined' | null;
   gradeLevel?: '1-medio' | '2-medio' | '3-medio' | '4-medio' | null;
   assignedByTeacherId?: string | null;
+  paesExamTarget?: PaesExamTarget | null;
 }
 
 /**

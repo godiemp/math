@@ -49,6 +49,7 @@ function formatUserResponse(user: UserRecord): UserResponse {
     cookieConsent: user.cookie_consent,
     gradeLevel: user.grade_level,
     assignedByTeacherId: user.assigned_by_teacher_id,
+    paesExamTarget: user.paes_exam_target,
   };
 }
 
