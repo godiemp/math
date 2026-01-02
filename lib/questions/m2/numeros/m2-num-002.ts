@@ -147,7 +147,7 @@ export const m2Num002Questions: Question[] = [
     subject: 'números',
     operacionBase: '\\text{Error relativo} = \\frac{|\\text{exacto} - \\text{aprox}|}{|\\text{exacto}|} \\times 100\\%',
     questionLatex: '\\text{Un ingeniero utiliza } \\sqrt{2} \\approx 1.41 \\text{ en sus cálculos en lugar del valor más preciso } 1.41421\\text{. Para verificar la calidad de su aproximación, necesita calcular el error relativo porcentual. ¿Cuál es aproximadamente este error?}',
-    options: ['\\approx 0.03\\%', '\\approx 0.3\\%', '\\approx 3\\%', '\\approx 0.003\\%'],
+    options: ['≈ 0.03%', '≈ 0.3%', '≈ 3%', '≈ 0.003%'],
     correctAnswer: 1,
     explanation: '\\frac{|1.41421 - 1.41|}{1.41421} \\approx 0.003 \\approx 0.3\\%',
     difficulty: 'hard',
