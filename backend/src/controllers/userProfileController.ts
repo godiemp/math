@@ -9,14 +9,18 @@
 import { Request, Response } from 'express';
 import { pool } from '../config/database';
 
+type PaesExamTarget = 'invierno_2026' | 'verano_2026' | 'verano_e_invierno_2026';
+
 interface UpdateProfileRequest {
   displayName?: string;
   email?: string;
   targetLevel?: 'M1_ONLY' | 'M1_AND_M2';
+  paesExamTarget?: PaesExamTarget;
 }
 
 interface MarkWelcomeSeenRequest {
   hasSeenWelcome: boolean;
+  paesExamTarget?: PaesExamTarget;
 }
 
 interface UpdateCookieConsentRequest {
@@ -34,11 +38,11 @@ export async function updateUserProfile(req: Request, res: Response): Promise<vo
     }
 
     const userId = req.user.userId;
-    const { displayName, email, targetLevel } = req.body as UpdateProfileRequest;
+    const { displayName, email, targetLevel, paesExamTarget } = req.body as UpdateProfileRequest;
 
     // Validate input
-    if (!displayName && !email && !targetLevel) {
-      res.status(400).json({ error: 'At least one field (displayName, email, or targetLevel) must be provided' });
+    if (!displayName && !email && !targetLevel && !paesExamTarget) {
+      res.status(400).json({ error: 'At least one field (displayName, email, targetLevel, or paesExamTarget) must be provided' });
       return;
     }
 
@@ -87,6 +91,17 @@ export async function updateUserProfile(req: Request, res: Response): Promise<vo
       }
       updates.push(`target_level = $${paramIndex++}`);
       values.push(targetLevel);
+    }
+
+    if (paesExamTarget !== undefined) {
+      // Validate paesExamTarget value
+      const validTargets: PaesExamTarget[] = ['invierno_2026', 'verano_2026', 'verano_e_invierno_2026'];
+      if (!validTargets.includes(paesExamTarget)) {
+        res.status(400).json({ error: 'Invalid PAES exam target. Must be invierno_2026, verano_2026, or verano_e_invierno_2026' });
+        return;
+      }
+      updates.push(`paes_exam_target = $${paramIndex++}`);
+      values.push(paesExamTarget);
     }
 
     // Check if there are any updates to make
@@ -138,7 +153,7 @@ export async function updateUserProfile(req: Request, res: Response): Promise<vo
 }
 
 /**
- * Mark welcome message as seen for current user
+ * Mark welcome message as seen for current user and save PAES exam target
  */
 export async function markWelcomeSeen(req: Request, res: Response): Promise<void> {
   try {
@@ -148,16 +163,37 @@ export async function markWelcomeSeen(req: Request, res: Response): Promise<void
     }
 
     const userId = req.user.userId;
+    const { paesExamTarget } = req.body as MarkWelcomeSeenRequest;
 
-    // Update has_seen_welcome flag
-    const query = `
-      UPDATE users
-      SET has_seen_welcome = TRUE, updated_at = $1
-      WHERE id = $2
-      RETURNING has_seen_welcome
-    `;
+    // Validate paesExamTarget if provided
+    if (paesExamTarget !== undefined) {
+      const validTargets: PaesExamTarget[] = ['invierno_2026', 'verano_2026', 'verano_e_invierno_2026'];
+      if (!validTargets.includes(paesExamTarget)) {
+        res.status(400).json({ error: 'Invalid PAES exam target. Must be invierno_2026, verano_2026, or verano_e_invierno_2026' });
+        return;
+      }
+    }
 
-    const result = await pool.query(query, [Date.now(), userId]);
+    // Update has_seen_welcome flag and optionally paes_exam_target
+    const query = paesExamTarget
+      ? `
+        UPDATE users
+        SET has_seen_welcome = TRUE, paes_exam_target = $1, updated_at = $2
+        WHERE id = $3
+        RETURNING has_seen_welcome, paes_exam_target
+      `
+      : `
+        UPDATE users
+        SET has_seen_welcome = TRUE, updated_at = $1
+        WHERE id = $2
+        RETURNING has_seen_welcome, paes_exam_target
+      `;
+
+    const params = paesExamTarget
+      ? [paesExamTarget, Date.now(), userId]
+      : [Date.now(), userId];
+
+    const result = await pool.query(query, params);
 
     if (result.rows.length === 0) {
       res.status(404).json({ error: 'User not found' });
@@ -168,6 +204,7 @@ export async function markWelcomeSeen(req: Request, res: Response): Promise<void
       success: true,
       message: 'Welcome message marked as seen',
       hasSeenWelcome: result.rows[0].has_seen_welcome,
+      paesExamTarget: result.rows[0].paes_exam_target,
     });
   } catch (error) {
     console.error('Mark welcome seen error:', error);
