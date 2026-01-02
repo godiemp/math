@@ -790,6 +790,26 @@ export default function Auth({ onSuccess }: AuthProps) {
                 >
                   Teacher
                 </button>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleQuickSignIn('admin', 'admin123')}
+                  className="spring-motion"
+                  style={{
+                    flex: 1,
+                    height: '40px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    color: 'var(--color-label-primary)',
+                    background: 'var(--color-fill)',
+                    border: '1px solid var(--color-separator)',
+                    borderRadius: 'var(--radius-sm)',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    opacity: isLoading ? 0.5 : 1,
+                  }}
+                >
+                  Admin
+                </button>
               </div>
             </div>
           )}
