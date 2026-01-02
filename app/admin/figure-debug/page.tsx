@@ -42,9 +42,12 @@ import type {
   QuadSideConfig,
   QuadAngleConfig,
   DiagonalConfig,
+  QuadAngleConstraint,
 } from '@/lib/types/quadrilateral';
 import {
   buildQuadrilateralFromType,
+  buildQuadrilateralFromAngles,
+  validateQuadrilateralAngles,
   detectQuadrilateralType,
   perimeter as quadPerimeter,
   area as quadArea,
@@ -224,7 +227,7 @@ function FigureDebugContent() {
   // ============================================
   // QUADRILATERAL STATE
   // ============================================
-  type QuadInputMode = 'fromType' | 'vertices';
+  type QuadInputMode = 'fromType' | 'fromAngles' | 'vertices';
   const [quadInputMode, setQuadInputMode] = useState<QuadInputMode>('fromType');
   const [quadType, setQuadType] = useState<QuadrilateralType>('cuadrado');
   const [quadSize, setQuadSize] = useState(100);
@@ -237,6 +240,25 @@ function FigureDebugContent() {
     { x: 300, y: 200, label: 'C' },
     { x: 100, y: 200, label: 'D' },
   ]);
+  // Angles mode state
+  const [quadAngleInputs, setQuadAngleInputs] = useState({
+    angle1: 90,
+    angle2: 90,
+    angle3: 90,
+    constraint: 'generic' as QuadAngleConstraint,
+    size: 150,
+  });
+  const quadAngle4 = useMemo(() => {
+    return 360 - quadAngleInputs.angle1 - quadAngleInputs.angle2 - quadAngleInputs.angle3;
+  }, [quadAngleInputs.angle1, quadAngleInputs.angle2, quadAngleInputs.angle3]);
+  const quadAnglesValidation = useMemo(() => {
+    return validateQuadrilateralAngles([
+      quadAngleInputs.angle1,
+      quadAngleInputs.angle2,
+      quadAngleInputs.angle3,
+      quadAngle4,
+    ]);
+  }, [quadAngleInputs, quadAngle4]);
   const [showQuadDiagonals, setShowQuadDiagonals] = useState(false);
   const [autoQuadParallelMarks, setAutoQuadParallelMarks] = useState(true);
   const [autoQuadEqualMarks, setAutoQuadEqualMarks] = useState(true);
@@ -267,10 +289,34 @@ function FigureDebugContent() {
     ];
   }, [quadType, quadSize, quadHeight, quadAngle, quadBaseRatio]);
 
+  // Computed quadrilateral vertices from angles
+  const quadFromAnglesVertices = useMemo<[QuadLabeledPoint, QuadLabeledPoint, QuadLabeledPoint, QuadLabeledPoint]>(() => {
+    if (!quadAnglesValidation.valid) {
+      // Fallback to square if angles are invalid
+      return quadFromTypeVertices;
+    }
+    const built = buildQuadrilateralFromAngles(
+      [quadAngleInputs.angle1, quadAngleInputs.angle2, quadAngleInputs.angle3, quadAngle4],
+      quadAngleInputs.constraint,
+      quadAngleInputs.size,
+      200,
+      140,
+      0
+    );
+    return [
+      { ...built[0], label: 'A' },
+      { ...built[1], label: 'B' },
+      { ...built[2], label: 'C' },
+      { ...built[3], label: 'D' },
+    ];
+  }, [quadAngleInputs, quadAngle4, quadAnglesValidation.valid, quadFromTypeVertices]);
+
   // Active quadrilateral vertices
   const activeQuadVertices = useMemo(() => {
-    return quadInputMode === 'fromType' ? quadFromTypeVertices : quadVertices;
-  }, [quadInputMode, quadFromTypeVertices, quadVertices]);
+    if (quadInputMode === 'fromType') return quadFromTypeVertices;
+    if (quadInputMode === 'fromAngles') return quadFromAnglesVertices;
+    return quadVertices;
+  }, [quadInputMode, quadFromTypeVertices, quadFromAnglesVertices, quadVertices]);
 
   // Quadrilateral validation and analysis
   const quadAnalysis = useMemo(() => {
@@ -745,6 +791,16 @@ function FigureDebugContent() {
         typeProps.push(`baseRatio: ${quadBaseRatio}`);
       }
       propsLines.push(`fromType={{ ${typeProps.join(', ')} }}`);
+    } else if (quadInputMode === 'fromAngles') {
+      // Use fromAngles
+      const anglesProps = [`angles: [${quadAngleInputs.angle1}, ${quadAngleInputs.angle2}, ${quadAngleInputs.angle3}, ${quadAngle4}]`];
+      if (quadAngleInputs.constraint !== 'generic') {
+        anglesProps.push(`constraint: '${quadAngleInputs.constraint}'`);
+      }
+      if (quadAngleInputs.size !== 150) {
+        anglesProps.push(`size: ${quadAngleInputs.size}`);
+      }
+      propsLines.push(`fromAngles={{ ${anglesProps.join(', ')} }}`);
     } else {
       // Use vertices
       propsLines.push(`vertices={[`);
@@ -767,7 +823,7 @@ function FigureDebugContent() {
     if (!showQuadVertices) propsLines.push(`showVertices={false}`);
 
     return `<QuadrilateralFigure\n  ${propsLines.join('\n  ')}\n/>`;
-  }, [quadInputMode, quadType, quadSize, quadHeight, quadAngle, quadBaseRatio, activeQuadVertices, showQuadDiagonals, autoQuadParallelMarks, autoQuadEqualMarks, autoQuadRightAngles, autoQuadDiagonalBisection, autoQuadDiagonalEqual, autoQuadDiagonalRightAngle, autoQuadAngleArcs, showQuadGrid, showQuadVertices]);
+  }, [quadInputMode, quadType, quadSize, quadHeight, quadAngle, quadBaseRatio, quadAngleInputs, quadAngle4, activeQuadVertices, showQuadDiagonals, autoQuadParallelMarks, autoQuadEqualMarks, autoQuadRightAngles, autoQuadDiagonalBisection, autoQuadDiagonalEqual, autoQuadDiagonalRightAngle, autoQuadAngleArcs, showQuadGrid, showQuadVertices]);
 
   // Generate code based on figure type
   const generateCode = useCallback(() => {
@@ -921,6 +977,16 @@ function FigureDebugContent() {
                   }`}
                 >
                   Por Tipo
+                </button>
+                <button
+                  onClick={() => setQuadInputMode('fromAngles')}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    quadInputMode === 'fromAngles'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  Por Ángulos
                 </button>
                 <button
                   onClick={() => setQuadInputMode('vertices')}
@@ -1775,6 +1841,200 @@ function FigureDebugContent() {
                       <span className="text-sm w-12">{quadBaseRatio.toFixed(2)}</span>
                     </div>
                   )}
+                </div>
+              </Card>
+            )}
+
+            {/* Quadrilateral Angles Controls (fromAngles mode) */}
+            {figureType === 'quadrilateral' && quadInputMode === 'fromAngles' && (
+              <Card padding="lg">
+                <Heading level={3} size="xs" className="mb-4">
+                  Ángulos Interiores
+                </Heading>
+                <div className="space-y-4">
+                  {/* Angle 1 slider */}
+                  <div className="flex items-center gap-4">
+                    <Text className="text-sm w-20">Ángulo A:</Text>
+                    <input
+                      type="range"
+                      min="10"
+                      max="170"
+                      value={quadAngleInputs.angle1}
+                      onChange={(e) =>
+                        setQuadAngleInputs((prev) => ({
+                          ...prev,
+                          angle1: Number(e.target.value),
+                        }))
+                      }
+                      className="flex-1"
+                    />
+                    <span className="text-sm w-12">{quadAngleInputs.angle1}°</span>
+                  </div>
+
+                  {/* Angle 2 slider */}
+                  <div className="flex items-center gap-4">
+                    <Text className="text-sm w-20">Ángulo B:</Text>
+                    <input
+                      type="range"
+                      min="10"
+                      max="170"
+                      value={quadAngleInputs.angle2}
+                      onChange={(e) =>
+                        setQuadAngleInputs((prev) => ({
+                          ...prev,
+                          angle2: Number(e.target.value),
+                        }))
+                      }
+                      className="flex-1"
+                    />
+                    <span className="text-sm w-12">{quadAngleInputs.angle2}°</span>
+                  </div>
+
+                  {/* Angle 3 slider */}
+                  <div className="flex items-center gap-4">
+                    <Text className="text-sm w-20">Ángulo C:</Text>
+                    <input
+                      type="range"
+                      min="10"
+                      max="170"
+                      value={quadAngleInputs.angle3}
+                      onChange={(e) =>
+                        setQuadAngleInputs((prev) => ({
+                          ...prev,
+                          angle3: Number(e.target.value),
+                        }))
+                      }
+                      className="flex-1"
+                    />
+                    <span className="text-sm w-12">{quadAngleInputs.angle3}°</span>
+                  </div>
+
+                  {/* Angle 4 (computed) */}
+                  <div className="flex items-center gap-4">
+                    <Text className="text-sm w-20">Ángulo D:</Text>
+                    <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    <span
+                      className={`text-sm w-12 ${
+                        quadAngle4 <= 0 || quadAngle4 >= 180
+                          ? 'text-red-500'
+                          : 'text-gray-900 dark:text-gray-100'
+                      }`}
+                    >
+                      {quadAngle4}°
+                    </span>
+                  </div>
+
+                  {/* Validation message */}
+                  {!quadAnglesValidation.valid && (
+                    <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded text-red-700 dark:text-red-300 text-sm">
+                      {quadAnglesValidation.error}
+                    </div>
+                  )}
+
+                  {/* Sum indicator */}
+                  <div className="flex items-center gap-4 pt-2 border-t dark:border-gray-700">
+                    <Text className="text-sm text-gray-600 dark:text-gray-400">
+                      Suma: {quadAngleInputs.angle1 + quadAngleInputs.angle2 + quadAngleInputs.angle3 + quadAngle4}° (debe ser 360°)
+                    </Text>
+                  </div>
+
+                  {/* Constraint selector */}
+                  <div className="flex items-center gap-4 pt-4 border-t dark:border-gray-700">
+                    <Text className="text-sm w-20">Restricción:</Text>
+                    <select
+                      value={quadAngleInputs.constraint}
+                      onChange={(e) =>
+                        setQuadAngleInputs((prev) => ({
+                          ...prev,
+                          constraint: e.target.value as QuadAngleConstraint,
+                        }))
+                      }
+                      className="flex-1 px-3 py-2 text-sm border rounded dark:bg-gray-800 dark:border-gray-600"
+                    >
+                      <option value="generic">Genérico (lados iguales)</option>
+                      <option value="equalSides">Lados Iguales (rombo)</option>
+                      <option value="equalOppositeSides">Lados Opuestos Iguales</option>
+                      <option value="cyclic">Cíclico (inscrito)</option>
+                    </select>
+                  </div>
+
+                  {/* Size slider */}
+                  <div className="flex items-center gap-4">
+                    <Text className="text-sm w-20">Tamaño:</Text>
+                    <input
+                      type="range"
+                      min="80"
+                      max="200"
+                      value={quadAngleInputs.size}
+                      onChange={(e) =>
+                        setQuadAngleInputs((prev) => ({
+                          ...prev,
+                          size: Number(e.target.value),
+                        }))
+                      }
+                      className="flex-1"
+                    />
+                    <span className="text-sm w-12">{quadAngleInputs.size}px</span>
+                  </div>
+
+                  {/* Angle presets */}
+                  <div className="pt-4 border-t dark:border-gray-700">
+                    <Text className="text-sm text-gray-600 dark:text-gray-400 mb-2">Presets:</Text>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() =>
+                          setQuadAngleInputs((prev) => ({
+                            ...prev,
+                            angle1: 90,
+                            angle2: 90,
+                            angle3: 90,
+                          }))
+                        }
+                        className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                      >
+                        Rectángulo (90-90-90-90)
+                      </button>
+                      <button
+                        onClick={() =>
+                          setQuadAngleInputs((prev) => ({
+                            ...prev,
+                            angle1: 60,
+                            angle2: 120,
+                            angle3: 60,
+                          }))
+                        }
+                        className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                      >
+                        Rombo (60-120-60-120)
+                      </button>
+                      <button
+                        onClick={() =>
+                          setQuadAngleInputs((prev) => ({
+                            ...prev,
+                            angle1: 70,
+                            angle2: 110,
+                            angle3: 70,
+                          }))
+                        }
+                        className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                      >
+                        Paralelogramo (70-110-70-110)
+                      </button>
+                      <button
+                        onClick={() =>
+                          setQuadAngleInputs((prev) => ({
+                            ...prev,
+                            angle1: 80,
+                            angle2: 100,
+                            angle3: 80,
+                          }))
+                        }
+                        className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                      >
+                        Cíclico (80-100-80-100)
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </Card>
             )}

@@ -10,6 +10,8 @@ import type {
   QuadrilateralValidation,
   FromTypeConfig,
   QuadSpecialLineConfig,
+  QuadAngleConstraint,
+  FromAnglesConfig,
 } from '@/lib/types/quadrilateral';
 
 // ============================================
@@ -915,6 +917,306 @@ export function buildQuadrilateralFromType(
         { x: Math.round(centerX - size / 4), y: Math.round(centerY + size / 3), label: 'D' },
       ];
   }
+}
+
+// ============================================
+// ANGLE-BASED CONSTRUCTION
+// ============================================
+
+/**
+ * Validate that angles form a valid quadrilateral
+ */
+export function validateQuadrilateralAngles(
+  angles: [number, number, number, number]
+): { valid: boolean; error?: string } {
+  const sum = angles.reduce((a, b) => a + b, 0);
+
+  if (Math.abs(sum - 360) > 0.1) {
+    return {
+      valid: false,
+      error: `Los ángulos deben sumar 360°, se obtuvo ${sum.toFixed(1)}°`,
+    };
+  }
+
+  for (let i = 0; i < 4; i++) {
+    if (angles[i] <= 0) {
+      return {
+        valid: false,
+        error: `Ángulo ${i + 1} debe ser mayor que 0°`,
+      };
+    }
+    if (angles[i] >= 180) {
+      return {
+        valid: false,
+        error: `Ángulo ${i + 1} debe ser menor que 180° para un cuadrilátero convexo`,
+      };
+    }
+  }
+
+  return { valid: true };
+}
+
+/**
+ * Build quadrilateral from 4 interior angles with equal side lengths
+ * This creates a quadrilateral where all sides have the same length,
+ * producing a rhombus-like shape that satisfies the given angles.
+ */
+function buildFromAnglesEqualSides(
+  angles: [number, number, number, number],
+  maxSize: number,
+  centerX: number,
+  centerY: number,
+  rotation: number
+): [LabeledPoint, LabeledPoint, LabeledPoint, LabeledPoint] {
+  // With equal sides, we walk around the polygon turning by exterior angles
+  // Exterior angle = 180° - interior angle
+  const exteriors = angles.map((a) => 180 - a);
+
+  // Use a unit side length, then scale later
+  const sideLength = 1;
+  let x = 0;
+  let y = 0;
+  let dir = 0; // Current direction in radians (0 = right)
+
+  const rawPoints: { x: number; y: number }[] = [{ x: 0, y: 0 }];
+
+  // Walk around placing 3 more vertices (the 4th closes back to start)
+  for (let i = 0; i < 3; i++) {
+    // Move forward in current direction
+    x += sideLength * Math.cos(dir);
+    y += sideLength * Math.sin(dir);
+    rawPoints.push({ x, y });
+
+    // Turn by exterior angle (counterclockwise for convex)
+    dir += (exteriors[i] * Math.PI) / 180;
+  }
+
+  // Calculate bounding box and scale
+  const xs = rawPoints.map((p) => p.x);
+  const ys = rawPoints.map((p) => p.y);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+  const width = maxX - minX;
+  const height = maxY - minY;
+
+  const scale = maxSize / Math.max(width, height);
+  const rawCenterX = (minX + maxX) / 2;
+  const rawCenterY = (minY + maxY) / 2;
+
+  // Scale and center the points
+  const scaledPoints = rawPoints.map((p) => ({
+    x: (p.x - rawCenterX) * scale,
+    y: (p.y - rawCenterY) * scale,
+  }));
+
+  // Apply rotation
+  const center = { x: 0, y: 0 };
+  const rotatedPoints = scaledPoints.map((p) => rotatePoint(p, center, rotation));
+
+  return [
+    { x: Math.round(rotatedPoints[0].x + centerX), y: Math.round(rotatedPoints[0].y + centerY), label: 'A' },
+    { x: Math.round(rotatedPoints[1].x + centerX), y: Math.round(rotatedPoints[1].y + centerY), label: 'B' },
+    { x: Math.round(rotatedPoints[2].x + centerX), y: Math.round(rotatedPoints[2].y + centerY), label: 'C' },
+    { x: Math.round(rotatedPoints[3].x + centerX), y: Math.round(rotatedPoints[3].y + centerY), label: 'D' },
+  ];
+}
+
+/**
+ * Build quadrilateral from angles with opposite sides equal (parallelogram family)
+ * Uses a construction where opposite sides are equal, creating parallelograms,
+ * rectangles, or other shapes depending on the angles.
+ */
+function buildFromAnglesEqualOppositeSides(
+  angles: [number, number, number, number],
+  maxSize: number,
+  centerX: number,
+  centerY: number,
+  rotation: number
+): [LabeledPoint, LabeledPoint, LabeledPoint, LabeledPoint] {
+  // For parallelogram family, opposite angles should be equal
+  // We'll use angles[0] and angles[1] to construct
+  const angle1Rad = (angles[0] * Math.PI) / 180;
+  const angle2Rad = (angles[1] * Math.PI) / 180;
+
+  // Build with two different side lengths
+  const side1 = 1;
+  const side2 = 0.7; // Slightly different ratio for visual interest
+
+  // Vertex 0 at origin
+  const p0 = { x: 0, y: 0 };
+
+  // Vertex 1: Move along first side
+  const p1 = { x: side1, y: 0 };
+
+  // Vertex 2: From p1, turn by exterior angle and move side2
+  const dir1 = Math.PI - angle2Rad; // Turn based on angle at vertex 1
+  const p2 = {
+    x: p1.x + side2 * Math.cos(dir1),
+    y: p1.y + side2 * Math.sin(dir1),
+  };
+
+  // Vertex 3: For parallelogram, it's p0 + (p2 - p1) offset by side directions
+  // Or we can calculate from p0 going the other way
+  const dir3 = Math.PI - angle1Rad;
+  const p3 = {
+    x: p0.x + side2 * Math.cos(Math.PI + dir3),
+    y: p0.y + side2 * Math.sin(Math.PI + dir3),
+  };
+
+  const rawPoints = [p0, p1, p2, p3];
+
+  // Scale and center
+  const xs = rawPoints.map((p) => p.x);
+  const ys = rawPoints.map((p) => p.y);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+  const width = maxX - minX;
+  const height = maxY - minY;
+
+  const scale = maxSize / Math.max(width, height);
+  const rawCenterX = (minX + maxX) / 2;
+  const rawCenterY = (minY + maxY) / 2;
+
+  const scaledPoints = rawPoints.map((p) => ({
+    x: (p.x - rawCenterX) * scale,
+    y: (p.y - rawCenterY) * scale,
+  }));
+
+  const center = { x: 0, y: 0 };
+  const rotatedPoints = scaledPoints.map((p) => rotatePoint(p, center, rotation));
+
+  return [
+    { x: Math.round(rotatedPoints[0].x + centerX), y: Math.round(rotatedPoints[0].y + centerY), label: 'A' },
+    { x: Math.round(rotatedPoints[1].x + centerX), y: Math.round(rotatedPoints[1].y + centerY), label: 'B' },
+    { x: Math.round(rotatedPoints[2].x + centerX), y: Math.round(rotatedPoints[2].y + centerY), label: 'C' },
+    { x: Math.round(rotatedPoints[3].x + centerX), y: Math.round(rotatedPoints[3].y + centerY), label: 'D' },
+  ];
+}
+
+/**
+ * Build a cyclic quadrilateral from angles
+ * A cyclic quadrilateral has all vertices on a circle.
+ * For this to work, opposite angles must sum to 180°.
+ */
+function buildFromAnglesCyclic(
+  angles: [number, number, number, number],
+  maxSize: number,
+  centerX: number,
+  centerY: number,
+  rotation: number
+): [LabeledPoint, LabeledPoint, LabeledPoint, LabeledPoint] {
+  // Check if angles satisfy cyclic condition (opposite angles sum to 180°)
+  const sum02 = angles[0] + angles[2];
+  const sum13 = angles[1] + angles[3];
+
+  if (Math.abs(sum02 - 180) > 1 || Math.abs(sum13 - 180) > 1) {
+    // Angles don't satisfy cyclic condition, fall back to generic
+    console.warn('Ángulos no satisfacen condición cíclica (opuestos deben sumar 180°). Usando construcción genérica.');
+    return buildFromAnglesEqualSides(angles, maxSize, centerX, centerY, rotation);
+  }
+
+  // For cyclic quadrilateral, place vertices on a circle
+  // The central angles are related to the inscribed angles
+  const radius = maxSize / 2;
+
+  // Use inscribed angle theorem: central angle = 2 * inscribed angle
+  // Place vertices such that the arcs create the right inscribed angles
+  let currentAngle = 0;
+  const rawPoints: { x: number; y: number }[] = [];
+
+  for (let i = 0; i < 4; i++) {
+    rawPoints.push({
+      x: radius * Math.cos((currentAngle * Math.PI) / 180),
+      y: radius * Math.sin((currentAngle * Math.PI) / 180),
+    });
+
+    // The arc between vertex i and i+1 is related to the opposite angle
+    // Central angle for arc = 2 * (180° - opposite inscribed angle)
+    const oppositeAngle = angles[(i + 2) % 4];
+    const arcAngle = 2 * (180 - oppositeAngle);
+    currentAngle += arcAngle;
+  }
+
+  // Apply rotation and center
+  const center = { x: 0, y: 0 };
+  const rotatedPoints = rawPoints.map((p) => rotatePoint(p, center, rotation));
+
+  return [
+    { x: Math.round(rotatedPoints[0].x + centerX), y: Math.round(rotatedPoints[0].y + centerY), label: 'A' },
+    { x: Math.round(rotatedPoints[1].x + centerX), y: Math.round(rotatedPoints[1].y + centerY), label: 'B' },
+    { x: Math.round(rotatedPoints[2].x + centerX), y: Math.round(rotatedPoints[2].y + centerY), label: 'C' },
+    { x: Math.round(rotatedPoints[3].x + centerX), y: Math.round(rotatedPoints[3].y + centerY), label: 'D' },
+  ];
+}
+
+/**
+ * Build quadrilateral from 4 interior angles
+ * Since 4 angles alone don't uniquely determine a quadrilateral,
+ * a constraint parameter determines the construction method.
+ *
+ * @param angles - The 4 interior angles in degrees (must sum to 360°)
+ * @param constraint - The constraint for shape determination
+ * @param maxSize - Maximum size (default: 150)
+ * @param centerX - Center X position (default: 200)
+ * @param centerY - Center Y position (default: 150)
+ * @param rotation - Rotation in degrees (default: 0)
+ */
+export function buildQuadrilateralFromAngles(
+  angles: [number, number, number, number],
+  constraint: QuadAngleConstraint = 'generic',
+  maxSize: number = 150,
+  centerX: number = 200,
+  centerY: number = 150,
+  rotation: number = 0
+): [LabeledPoint, LabeledPoint, LabeledPoint, LabeledPoint] {
+  // Validate angles
+  const validation = validateQuadrilateralAngles(angles);
+  if (!validation.valid) {
+    console.warn(`Ángulos inválidos: ${validation.error}. Usando ángulos por defecto.`);
+    angles = [90, 90, 90, 90];
+  }
+
+  switch (constraint) {
+    case 'equalSides':
+      return buildFromAnglesEqualSides(angles, maxSize, centerX, centerY, rotation);
+
+    case 'equalOppositeSides':
+      return buildFromAnglesEqualOppositeSides(angles, maxSize, centerX, centerY, rotation);
+
+    case 'cyclic':
+      return buildFromAnglesCyclic(angles, maxSize, centerX, centerY, rotation);
+
+    case 'generic':
+    default:
+      // Generic uses equal sides as the default behavior
+      return buildFromAnglesEqualSides(angles, maxSize, centerX, centerY, rotation);
+  }
+}
+
+/**
+ * Build quadrilateral from angles configuration object or simple array
+ */
+export function buildQuadrilateralFromAnglesConfig(
+  config: [number, number, number, number] | FromAnglesConfig
+): [LabeledPoint, LabeledPoint, LabeledPoint, LabeledPoint] {
+  if (Array.isArray(config)) {
+    return buildQuadrilateralFromAngles(config);
+  }
+
+  const {
+    angles,
+    constraint = 'generic',
+    size = 150,
+    rotation = 0,
+    centerX = 200,
+    centerY = 150,
+  } = config;
+
+  return buildQuadrilateralFromAngles(angles, constraint, size, centerX, centerY, rotation);
 }
 
 // ============================================

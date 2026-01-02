@@ -197,6 +197,35 @@ export interface FromRectangleConfig {
 }
 
 /**
+ * Constraint for building quadrilateral from angles
+ * Since 4 angles alone don't uniquely determine a quadrilateral shape,
+ * we need additional constraints.
+ */
+export type QuadAngleConstraint =
+  | 'generic' // Default - equal sides, reasonable proportions
+  | 'equalSides' // All 4 sides equal (rhombus family)
+  | 'equalOppositeSides' // Opposite sides equal (parallelogram family)
+  | 'cyclic'; // Inscribed in circle (opposite angles must sum to 180°)
+
+/**
+ * Configuration to build a quadrilateral from angles
+ */
+export interface FromAnglesConfig {
+  /** The 4 interior angles in degrees (must sum to 360°) */
+  angles: [number, number, number, number];
+  /** Constraint for shape determination (default: 'generic') */
+  constraint?: QuadAngleConstraint;
+  /** Maximum size (default: 150) */
+  size?: number;
+  /** Rotation in degrees */
+  rotation?: number;
+  /** Center X position */
+  centerX?: number;
+  /** Center Y position */
+  centerY?: number;
+}
+
+/**
  * Detected properties of a quadrilateral for analysis
  */
 export interface QuadrilateralProperties {
@@ -261,6 +290,9 @@ export interface QuadrilateralFigureProps {
 
   /** Shorthand for rectangle */
   fromRectangle?: FromRectangleConfig | { width: number; height: number };
+
+  /** Build from angles with constraint (angles must sum to 360°) */
+  fromAngles?: [number, number, number, number] | FromAnglesConfig;
 
   // ============================================
   // Element configuration

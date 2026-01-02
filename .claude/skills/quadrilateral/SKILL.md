@@ -78,6 +78,38 @@ import { QuadrilateralFigure } from '@/components/figures/QuadrilateralFigure';
 />
 ```
 
+### Usando ángulos (fromAngles)
+
+Construir un cuadrilátero especificando los 4 ángulos interiores:
+
+```tsx
+// Ángulos simples (constraint genérico)
+<QuadrilateralFigure fromAngles={[90, 90, 90, 90]} />
+
+// Rombo con ángulos específicos (4 lados iguales)
+<QuadrilateralFigure
+  fromAngles={{
+    angles: [60, 120, 60, 120],
+    constraint: 'equalSides'
+  }}
+/>
+
+// Paralelogramo (lados opuestos iguales)
+<QuadrilateralFigure
+  fromAngles={{
+    angles: [70, 110, 70, 110],
+    constraint: 'equalOppositeSides'
+  }}
+/>
+```
+
+**Nota importante:** A diferencia de los triángulos, 4 ángulos no determinan una única forma de cuadrilátero. Por ejemplo, 90-90-90-90 puede ser cualquier rectángulo. El parámetro `constraint` especifica qué tipo de cuadrilátero crear:
+
+- `'generic'` (default): Forma razonable con proporciones equilibradas
+- `'equalSides'`: 4 lados iguales (familia de rombos)
+- `'equalOppositeSides'`: Lados opuestos iguales (familia de paralelogramos)
+- `'cyclic'`: Inscrito en un círculo (ángulos opuestos deben sumar 180°)
+
 ### Usando vértices (control total)
 
 Cuando necesitas control preciso sobre las coordenadas:
@@ -103,6 +135,7 @@ Cuando necesitas control preciso sobre las coordenadas:
 | Prop | Type | Description |
 |------|------|-------------|
 | `fromType` | `FromTypeConfig` | **Recomendado.** Construir desde tipo predefinido |
+| `fromAngles` | `[n,n,n,n] \| FromAnglesConfig` | Construir desde 4 ángulos interiores |
 | `fromSquare` | `FromSquareConfig` | Construir cuadrado desde centro y lado |
 | `fromRectangle` | `FromRectangleConfig` | Construir rectángulo desde centro y dimensiones |
 | `vertices` | `[LabeledPoint, LabeledPoint, LabeledPoint, LabeledPoint]` | Control total de coordenadas |
@@ -121,6 +154,37 @@ interface FromTypeConfig {
   rotation?: number;        // Rotación en grados (default: 0)
 }
 ```
+
+### fromAngles
+
+Construye un cuadrilátero especificando los 4 ángulos interiores (deben sumar 360°).
+
+```typescript
+// Forma simple: array de 4 ángulos
+fromAngles={[90, 90, 90, 90]}
+
+// Forma completa con configuración
+interface FromAnglesConfig {
+  angles: [number, number, number, number];  // 4 ángulos en grados (suma = 360°)
+  constraint?: QuadAngleConstraint;          // Tipo de restricción (default: 'generic')
+  size?: number;                             // Tamaño máximo (default: 150)
+  rotation?: number;                         // Rotación en grados
+  centerX?: number;                          // Centro X (default: 200)
+  centerY?: number;                          // Centro Y (default: 150)
+}
+
+type QuadAngleConstraint =
+  | 'generic'           // Forma genérica con proporciones equilibradas
+  | 'equalSides'        // 4 lados iguales (familia de rombos)
+  | 'equalOppositeSides'// Lados opuestos iguales (familia de paralelogramos)
+  | 'cyclic';           // Inscrito en círculo (ángulos opuestos suman 180°)
+```
+
+**Restricciones por constraint:**
+- `generic`: No hay restricciones adicionales
+- `equalSides`: Los ángulos opuestos deben ser iguales (α₁=α₃, α₂=α₄)
+- `equalOppositeSides`: Los ángulos opuestos deben ser iguales
+- `cyclic`: Los ángulos opuestos deben sumar 180° (α₁+α₃=180°, α₂+α₄=180°)
 
 ### fromSquare
 
@@ -364,6 +428,7 @@ Seleccionar **Cuadrilátero** como tipo de figura.
 
 La página de debug permite:
 - **Modo Por Tipo:** Seleccionar tipo de cuadrilátero y ajustar dimensiones
+- **Modo Por Ángulos:** Especificar 4 ángulos interiores con selector de constraint
 - **Modo Por Vértices:** Control manual de cada vértice
 - Seleccionar presets (cuadrado, rectángulo, rombo, paralelogramo, trapecios, cometa)
 - Activar/desactivar opciones visuales (diagonales, marcas paralelas, igualdad, ángulos rectos)
@@ -453,6 +518,10 @@ import {
   buildRightTrapezoid,    // Construir trapecio rectángulo
   buildKite,              // Construir cometa
   buildQuadrilateralFromType, // Construir desde tipo
+  buildQuadrilateralFromAngles, // Construir desde ángulos
+
+  // Validación de ángulos
+  validateQuadrilateralAngles, // Validar que 4 ángulos formen cuadrilátero válido
 } from '@/lib/geometry/quadrilateralUtils';
 ```
 
@@ -502,6 +571,31 @@ const vertices = buildQuadrilateralFromType({
 });
 
 // Returns: [Point, Point, Point, Point]
+```
+
+### Build Quadrilateral from Angles
+
+```typescript
+import {
+  validateQuadrilateralAngles,
+  buildQuadrilateralFromAngles
+} from '@/lib/geometry/quadrilateralUtils';
+
+// Validar ángulos antes de construir
+const angles: [number, number, number, number] = [60, 120, 60, 120];
+const validation = validateQuadrilateralAngles(angles);
+
+if (validation.valid) {
+  // Construir rombo con esos ángulos
+  const vertices = buildQuadrilateralFromAngles(
+    angles,
+    'equalSides',  // constraint
+    150,           // maxSize
+    200,           // centerX
+    150            // centerY
+  );
+  // Returns: [Point, Point, Point, Point]
+}
 ```
 
 ---

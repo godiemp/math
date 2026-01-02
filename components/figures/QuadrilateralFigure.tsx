@@ -11,6 +11,7 @@ import type {
   QuadSpecialLineConfig,
   FromSquareConfig,
   FromRectangleConfig,
+  FromAnglesConfig,
 } from '@/lib/types/quadrilateral';
 import {
   quadrilateralPath,
@@ -34,6 +35,7 @@ import {
   buildSquare,
   buildRectangle,
   buildQuadrilateralFromType,
+  buildQuadrilateralFromAnglesConfig,
   diagonalPath,
   isSelfIntersecting,
   diagonalIntersection,
@@ -81,6 +83,7 @@ export function QuadrilateralFigure({
   fromType,
   fromSquare,
   fromRectangle,
+  fromAngles,
   sides,
   angles,
   diagonals,
@@ -139,19 +142,24 @@ export function QuadrilateralFigure({
       );
     }
 
-    // Option 3: Build from type
+    // Option 3: Build from angles
+    if (fromAngles) {
+      return buildQuadrilateralFromAnglesConfig(fromAngles);
+    }
+
+    // Option 4: Build from type
     if (fromType) {
       return buildQuadrilateralFromType(fromType);
     }
 
-    // Option 4: Use provided vertices
+    // Option 5: Use provided vertices
     if (verticesProp) {
       return verticesProp;
     }
 
     // Fallback to default square
     return buildSquare(100, 200, 150, 0);
-  }, [fromSquare, fromRectangle, fromType, verticesProp]);
+  }, [fromSquare, fromRectangle, fromAngles, fromType, verticesProp]);
 
   // Analyze quadrilateral properties
   const properties = useMemo(() => analyzeQuadrilateral(vertices), [vertices]);
