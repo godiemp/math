@@ -1,9 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { ArrowLeft, ArrowRight, Clock, Lock, CheckCircle } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+import { ArrowLeft, ArrowRight, Clock, Lock, CheckCircle, Radio } from 'lucide-react';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
+import { useAuth } from '@/contexts/AuthContext';
 import { M1_LESSONS, type Lesson } from '@/lib/lessons/types';
 import {
   getUnitsByLevelAndSubject,
@@ -17,47 +18,64 @@ import {
 interface LessonCardProps {
   lesson: Lesson;
   index: number;
+  isTeacher?: boolean;
+  onStartLive?: (lesson: Lesson) => void;
 }
 
-function LessonCard({ lesson, index }: LessonCardProps) {
+function LessonCard({ lesson, index, isTeacher, onStartLive }: LessonCardProps) {
   return (
-    <Link
-      href={`/lessons/${lesson.level.toLowerCase()}/${lesson.slug}`}
-      className="block group"
-    >
-      <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-0.5 rounded-2xl">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 sm:p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-          <div className="flex items-center justify-between">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
-                {index + 1}
+    <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-0.5 rounded-2xl">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 sm:p-6">
+        <div className="flex items-center justify-between">
+          <Link
+            href={`/lessons/${lesson.level.toLowerCase()}/${lesson.slug}`}
+            className="flex items-start gap-4 flex-1 group"
+          >
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+              {index + 1}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                  {lesson.title}
+                </h3>
+                <CheckCircle className="text-green-500" size={18} />
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                    {lesson.title}
-                  </h3>
-                  <CheckCircle className="text-green-500" size={18} />
-                </div>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
-                  {lesson.description}
-                </p>
-                <div className="flex items-center gap-4 mt-2">
-                  <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                    <Clock size={14} />
-                    {lesson.estimatedMinutes} min
-                  </span>
-                  <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">
-                    {lesson.thematicUnit}
-                  </span>
-                </div>
+              <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
+                {lesson.description}
+              </p>
+              <div className="flex items-center gap-4 mt-2">
+                <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                  <Clock size={14} />
+                  {lesson.estimatedMinutes} min
+                </span>
+                <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">
+                  {lesson.thematicUnit}
+                </span>
               </div>
             </div>
-            <ArrowRight className="text-purple-500 group-hover:translate-x-1 transition-transform flex-shrink-0" size={24} />
+          </Link>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {isTeacher && onStartLive && (
+              <button
+                onClick={() => onStartLive(lesson)}
+                className="flex items-center gap-2 px-3 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-colors"
+                title="Iniciar clase en vivo"
+              >
+                <Radio size={16} className="animate-pulse" />
+                <span className="hidden sm:inline">En Vivo</span>
+              </button>
+            )}
+            <Link
+              href={`/lessons/${lesson.level.toLowerCase()}/${lesson.slug}`}
+              className="text-purple-500 hover:text-purple-600 transition-colors"
+            >
+              <ArrowRight size={24} />
+            </Link>
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
@@ -99,9 +117,17 @@ function UpcomingUnitCard({ unit, index }: UpcomingUnitCardProps) {
 
 function UnitListContent() {
   const params = useParams();
+  const router = useRouter();
+  const { user } = useAuth();
   const levelParam = (params.level as string)?.toUpperCase() as Level;
   const subjectSlug = params.subject as string;
   const subject = subjectFromSlug(subjectSlug);
+
+  const isTeacher = user?.role === 'teacher';
+
+  const handleStartLive = (lesson: Lesson) => {
+    router.push(`/teacher/live/${lesson.slug}`);
+  };
 
   if (!subject || !levelParam || !['M1', 'M2'].includes(levelParam)) {
     return (
@@ -195,7 +221,13 @@ function UnitListContent() {
             </div>
             <div className="space-y-4">
               {availableLessons.map((lesson, index) => (
-                <LessonCard key={lesson.id} lesson={lesson} index={index} />
+                <LessonCard
+                  key={lesson.id}
+                  lesson={lesson}
+                  index={index}
+                  isTeacher={isTeacher}
+                  onStartLive={handleStartLive}
+                />
               ))}
             </div>
           </div>

@@ -1,79 +1,117 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import TeacherLayout from '@/components/layout/TeacherLayout';
-import { Card, Heading, Text, Button, Badge } from '@/components/ui';
-import { MOCK_CLASSES } from '@/lib/types/teacher';
-import { ArrowLeft, RefreshCw, Trash2, Archive, Copy, Check, AlertTriangle } from 'lucide-react';
+import { Card, Heading, Text, Button, Badge, Spinner } from '@/components/ui';
+import { useClass, useClassMutations, type ClassLevel } from '@/lib/hooks/useClasses';
+import { CLASS_LEVEL_OPTIONS } from '@/lib/types/teacher';
+import { ArrowLeft, Trash2, AlertTriangle } from 'lucide-react';
+import { toast } from 'sonner';
 
-type ConfirmAction = 'regenerate' | 'archive' | 'delete' | null;
+type ConfirmAction = 'delete' | null;
 
 export default function EditClassPage() {
   const router = useRouter();
   const params = useParams();
   const classId = params.classId as string;
 
-  // Find the class (mock)
-  const classData = MOCK_CLASSES.find((c) => c.id === classId) || MOCK_CLASSES[0];
+  const { classData, isLoading, error } = useClass(classId);
+  const { updateClass, deleteClass } = useClassMutations();
 
   const [formData, setFormData] = useState({
-    name: classData.name,
-    description: classData.description || '',
-    level: classData.level,
-    schoolName: classData.schoolName || '',
-    maxStudents: classData.maxStudents,
-    inviteCodeActive: classData.inviteCodeActive,
+    name: '',
+    description: '',
+    level: '2-medio' as ClassLevel,
+    schoolName: '',
+    maxStudents: 45,
   });
-  const [inviteCode, setInviteCode] = useState(classData.inviteCode);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
-  const [copied, setCopied] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
-  const handleChange = (field: string, value: string | number | boolean) => {
+  // Populate form when class data loads
+  useEffect(() => {
+    if (classData) {
+      setFormData({
+        name: classData.name,
+        description: classData.description || '',
+        level: classData.level as ClassLevel,
+        schoolName: classData.schoolName || '',
+        maxStudents: classData.maxStudents,
+      });
+    }
+  }, [classData]);
+
+  const handleChange = (field: string, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setHasChanges(true);
   };
 
   const handleSave = async () => {
     setIsSaving(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const result = await updateClass(classId, {
+      name: formData.name.trim(),
+      description: formData.description.trim() || undefined,
+      level: formData.level,
+      schoolName: formData.schoolName.trim() || undefined,
+      maxStudents: formData.maxStudents,
+    });
     setIsSaving(false);
-    setHasChanges(false);
-    // In real app, would save and redirect
-    router.push(`/teacher/classes/${classId}`);
-  };
 
-  const handleRegenerateCode = async () => {
-    // Generate new code
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let newCode = '';
-    for (let i = 0; i < 8; i++) {
-      newCode += chars.charAt(Math.floor(Math.random() * chars.length));
+    if (result.success) {
+      toast.success('Clase actualizada');
+      setHasChanges(false);
+      router.push(`/teacher/classes/${classId}`);
+    } else {
+      toast.error(result.error || 'Error al actualizar la clase');
     }
-    setInviteCode(newCode);
-    setConfirmAction(null);
-    setHasChanges(true);
-  };
-
-  const handleArchive = async () => {
-    // In real app, would archive class
-    setConfirmAction(null);
-    router.push('/teacher/classes');
   };
 
   const handleDelete = async () => {
-    // In real app, would delete class
+    setIsDeleting(true);
+    const result = await deleteClass(classId);
+    setIsDeleting(false);
+
+    if (result.success) {
+      toast.success('Clase eliminada');
+      router.push('/teacher/classes');
+    } else {
+      toast.error(result.error || 'Error al eliminar la clase');
+    }
     setConfirmAction(null);
-    router.push('/teacher/classes');
   };
 
-  const copyInviteCode = () => {
-    navigator.clipboard.writeText(inviteCode);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  // Loading state
+  if (isLoading) {
+    return (
+      <TeacherLayout>
+        <div className="flex justify-center py-12">
+          <Spinner size="lg" />
+        </div>
+      </TeacherLayout>
+    );
+  }
+
+  // Error state
+  if (error || !classData) {
+    return (
+      <TeacherLayout>
+        <Card padding="lg" className="text-center py-12">
+          <Text className="text-red-600 dark:text-red-400">
+            Clase no encontrada
+          </Text>
+          <Button
+            onClick={() => router.push('/teacher/classes')}
+            className="mt-4"
+          >
+            Volver a clases
+          </Button>
+        </Card>
+      </TeacherLayout>
+    );
+  }
 
   return (
     <TeacherLayout>
@@ -136,30 +174,24 @@ export default function EditClassPage() {
             {/* Level */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Nivel PAES
+                Nivel
               </label>
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { value: 'M1', label: 'M1', desc: 'Básico' },
-                  { value: 'M2', label: 'M2', desc: 'Avanzado' },
-                  { value: 'both', label: 'Ambos', desc: 'M1 + M2' },
-                ].map((option) => (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {CLASS_LEVEL_OPTIONS.map((option) => (
                   <button
                     key={option.value}
                     type="button"
                     onClick={() => handleChange('level', option.value)}
-                    className={`p-4 rounded-xl border-2 transition-all ${
+                    className={`p-3 rounded-xl border-2 transition-all text-left ${
                       formData.level === option.value
                         ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
                         : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                     }`}
                   >
-                    <div className="font-bold text-lg text-gray-900 dark:text-white">
+                    <div className="font-bold text-sm text-gray-900 dark:text-white">
                       {option.label}
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                      {option.desc}
-                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">{option.desc}</div>
                   </button>
                 ))}
               </div>
@@ -217,110 +249,26 @@ export default function EditClassPage() {
           </form>
         </Card>
 
-        {/* Invite Code Management */}
-        <Card padding="lg">
-          <Heading level={3} size="sm" className="mb-4">
-            Código de Invitación
-          </Heading>
-
-          <div className="flex items-center justify-between p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-200 dark:border-emerald-800 mb-4">
-            <div>
-              <Text size="sm" variant="secondary" className="mb-1">
-                Código actual
-              </Text>
-              <code className="text-2xl font-mono font-bold text-emerald-700 dark:text-emerald-400">
-                {inviteCode}
-              </code>
-            </div>
-            <button
-              onClick={copyInviteCode}
-              className="p-2 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors"
-              title="Copiar código"
-            >
-              {copied ? (
-                <Check className="w-5 h-5 text-emerald-600" />
-              ) : (
-                <Copy className="w-5 h-5 text-emerald-600" />
-              )}
-            </button>
-          </div>
-
-          {/* Toggle code active */}
-          <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl mb-4">
-            <div>
-              <Text className="font-medium">Código activo</Text>
-              <Text size="sm" variant="secondary">
-                Si desactivas el código, nuevos estudiantes no podrán unirse
-              </Text>
-            </div>
-            <button
-              onClick={() => handleChange('inviteCodeActive', !formData.inviteCodeActive)}
-              className={`relative w-14 h-8 rounded-full transition-colors ${
-                formData.inviteCodeActive
-                  ? 'bg-emerald-500'
-                  : 'bg-gray-300 dark:bg-gray-600'
-              }`}
-            >
-              <div
-                className={`absolute top-1 w-6 h-6 bg-white rounded-full shadow transition-transform ${
-                  formData.inviteCodeActive ? 'left-7' : 'left-1'
-                }`}
-              />
-            </button>
-          </div>
-
-          {/* Regenerate Code */}
-          <Button
-            variant="ghost"
-            onClick={() => setConfirmAction('regenerate')}
-            className="w-full flex items-center justify-center gap-2"
-          >
-            <RefreshCw className="w-4 h-4" />
-            Generar nuevo código
-          </Button>
-
-          <Text size="xs" variant="secondary" className="mt-2 text-center">
-            Al generar un nuevo código, el código anterior dejará de funcionar
-          </Text>
-        </Card>
-
         {/* Danger Zone */}
         <Card padding="lg" className="border-red-200 dark:border-red-800">
           <Heading level={3} size="sm" className="text-red-600 dark:text-red-400 mb-4">
             Zona de Peligro
           </Heading>
 
-          <div className="space-y-3">
-            <button
-              onClick={() => setConfirmAction('archive')}
-              className="w-full flex items-center gap-3 p-4 rounded-xl border border-orange-200 dark:border-orange-800 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors text-left"
-            >
-              <Archive className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-              <div>
-                <Text className="font-medium text-orange-900 dark:text-orange-100">
-                  Archivar clase
-                </Text>
-                <Text size="xs" variant="secondary">
-                  La clase se ocultará pero los datos se conservarán
-                </Text>
-              </div>
-            </button>
-
-            <button
-              onClick={() => setConfirmAction('delete')}
-              className="w-full flex items-center gap-3 p-4 rounded-xl border border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-left"
-            >
-              <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
-              <div>
-                <Text className="font-medium text-red-900 dark:text-red-100">
-                  Eliminar clase
-                </Text>
-                <Text size="xs" variant="secondary">
-                  Se eliminarán todos los datos de la clase permanentemente
-                </Text>
-              </div>
-            </button>
-          </div>
+          <button
+            onClick={() => setConfirmAction('delete')}
+            className="w-full flex items-center gap-3 p-4 rounded-xl border border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-left"
+          >
+            <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
+            <div>
+              <Text className="font-medium text-red-900 dark:text-red-100">
+                Eliminar clase
+              </Text>
+              <Text size="xs" variant="secondary">
+                Se eliminarán todos los datos de la clase permanentemente
+              </Text>
+            </div>
+          </button>
         </Card>
       </div>
 
@@ -330,41 +278,19 @@ export default function EditClassPage() {
           <div className="absolute inset-0" onClick={() => setConfirmAction(null)} />
           <Card padding="lg" className="max-w-md w-full relative z-10">
             <div className="flex items-center gap-3 mb-4">
-              <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                  confirmAction === 'delete'
-                    ? 'bg-red-100 dark:bg-red-900/30'
-                    : confirmAction === 'archive'
-                    ? 'bg-orange-100 dark:bg-orange-900/30'
-                    : 'bg-blue-100 dark:bg-blue-900/30'
-                }`}
-              >
-                <AlertTriangle
-                  className={`w-6 h-6 ${
-                    confirmAction === 'delete'
-                      ? 'text-red-600 dark:text-red-400'
-                      : confirmAction === 'archive'
-                      ? 'text-orange-600 dark:text-orange-400'
-                      : 'text-blue-600 dark:text-blue-400'
-                  }`}
-                />
+              <div className="w-12 h-12 rounded-full flex items-center justify-center bg-red-100 dark:bg-red-900/30">
+                <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
               </div>
               <div>
                 <Heading level={3} size="sm">
-                  {confirmAction === 'regenerate' && '¿Generar nuevo código?'}
-                  {confirmAction === 'archive' && '¿Archivar esta clase?'}
-                  {confirmAction === 'delete' && '¿Eliminar esta clase?'}
+                  ¿Eliminar esta clase?
                 </Heading>
               </div>
             </div>
 
             <Text variant="secondary" className="mb-6">
-              {confirmAction === 'regenerate' &&
-                'El código actual dejará de funcionar. Los estudiantes que ya están en la clase no serán afectados.'}
-              {confirmAction === 'archive' &&
-                'La clase se ocultará de tu lista pero podrás restaurarla más tarde. Los datos de los estudiantes se conservarán.'}
-              {confirmAction === 'delete' &&
-                'Esta acción no se puede deshacer. Se eliminarán todos los datos de la clase y los registros de estudiantes.'}
+              Esta acción no se puede deshacer. Se eliminarán todos los datos de la clase
+              y los registros de estudiantes asociados.
             </Text>
 
             <div className="flex gap-3">
@@ -376,22 +302,11 @@ export default function EditClassPage() {
                 Cancelar
               </Button>
               <Button
-                onClick={() => {
-                  if (confirmAction === 'regenerate') handleRegenerateCode();
-                  if (confirmAction === 'archive') handleArchive();
-                  if (confirmAction === 'delete') handleDelete();
-                }}
-                className={`flex-1 ${
-                  confirmAction === 'delete'
-                    ? 'bg-red-600 hover:bg-red-700'
-                    : confirmAction === 'archive'
-                    ? 'bg-orange-600 hover:bg-orange-700'
-                    : 'bg-blue-600 hover:bg-blue-700'
-                }`}
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="flex-1 bg-red-600 hover:bg-red-700"
               >
-                {confirmAction === 'regenerate' && 'Generar nuevo código'}
-                {confirmAction === 'archive' && 'Archivar clase'}
-                {confirmAction === 'delete' && 'Eliminar clase'}
+                {isDeleting ? 'Eliminando...' : 'Eliminar clase'}
               </Button>
             </div>
           </Card>

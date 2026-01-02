@@ -8,6 +8,7 @@ import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar, Callout } fr
 import { ShareModal } from "@/components/shared/ShareModal";
 import { WelcomeMessage } from "@/components/shared/WelcomeMessage";
 import { ColegioDashboardView } from "@/components/dashboard/ColegioDashboardView";
+import { LiveLessonNotification } from "@/components/lessons/LiveLessonBanner";
 import { Share2 } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { useDashboard } from "@/hooks/useDashboard";
@@ -122,6 +123,11 @@ function DashboardView({
             </div>
           </Callout>
         )}
+
+        {/* Live Lesson Notification for students with assigned teachers */}
+        <div className="mb-6">
+          <LiveLessonNotification />
+        </div>
 
         {/* Mini Lessons Banner */}
         <Link href="/mini-lessons" className="block mb-8 sm:mb-10 md:mb-12" data-testid="mini-lessons-banner">

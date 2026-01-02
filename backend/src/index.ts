@@ -8,7 +8,9 @@ import './instrument';
 // All other imports below
 import * as Sentry from '@sentry/node';
 import express, { Request, Response, NextFunction } from 'express';
+import { createServer } from 'http';
 import cors from 'cors';
+import { initializeWebSocket, closeWebSocket } from './websocket';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
@@ -37,10 +39,12 @@ import operationsPracticeRoutes from './routes/operationsPracticeRoutes';
 import certificateRoutes from './routes/certificateRoutes';
 import adaptivePracticeRoutes from './routes/adaptivePracticeRoutes';
 import teacherRoutes from './routes/teacherRoutes';
+import classRoutes from './routes/classRoutes';
 import demoAccountRoutes from './routes/demoAccountRoutes';
 import { serveImage } from './controllers/adminController';
 
 const app = express();
+const httpServer = createServer(app);
 const PORT = process.env.PORT || 3001;
 
 // Trust proxy - Railway uses 1 proxy hop to forward the real client IP
@@ -220,6 +224,7 @@ app.use('/api/operations-practice', operationsPracticeRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/adaptive', adaptivePracticeRoutes);
 app.use('/api/teacher', teacherRoutes);
+app.use('/api/classes', classRoutes);
 app.use('/api/admin/demo-accounts', demoAccountRoutes);
 
 // Public image serving route
@@ -247,6 +252,7 @@ console.log('✅ Operations Practice routes registered at /api/operations-practi
 console.log('✅ Certificate routes registered at /api/certificates');
 console.log('✅ Adaptive Practice routes registered at /api/adaptive');
 console.log('✅ Teacher routes registered at /api/teacher');
+console.log('✅ Class routes registered at /api/classes');
 console.log('✅ Demo Account routes registered at /api/admin/demo-accounts');
 
 // 404 handler
@@ -383,8 +389,15 @@ const startServer = async () => {
     // Start session status auto-updater
     startSessionStatusUpdater();
 
+    // Initialize WebSocket server with same CORS config
+    initializeWebSocket(httpServer, {
+      origin: corsOptions.origin,
+      credentials: corsOptions.credentials,
+      methods: corsOptions.methods,
+    });
+
     // Start listening
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
       console.log(`
 ╔════════════════════════════════════════════════════════════╗
 ║                                                            ║
@@ -435,6 +448,7 @@ const startServer = async () => {
 process.on('SIGINT', async () => {
   console.log('\n🛑 Shutting down gracefully...');
   stopSessionStatusUpdater();
+  await closeWebSocket();
   await closeDatabase();
   process.exit(0);
 });
@@ -442,6 +456,7 @@ process.on('SIGINT', async () => {
 process.on('SIGTERM', async () => {
   console.log('\n🛑 Shutting down gracefully...');
   stopSessionStatusUpdater();
+  await closeWebSocket();
   await closeDatabase();
   process.exit(0);
 });

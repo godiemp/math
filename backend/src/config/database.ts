@@ -569,11 +569,58 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
+    // ========================================
+    // TEACHER CLASS MANAGEMENT TABLES
+    // ========================================
+
+    // Create classes table - teacher-managed classes/courses
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS classes (
+        id VARCHAR(100) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        teacher_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        level VARCHAR(20) NOT NULL,
+        school_name VARCHAR(255),
+        max_students INTEGER DEFAULT 45,
+        is_active BOOLEAN DEFAULT TRUE,
+        created_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL
+      )
+    `);
+
+    // Create class_enrollments table - students enrolled in classes
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS class_enrollments (
+        id SERIAL PRIMARY KEY,
+        class_id VARCHAR(100) NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
+        student_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        enrolled_at BIGINT NOT NULL,
+        enrolled_by VARCHAR(50) REFERENCES users(id),
+        status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'removed')),
+        UNIQUE(class_id, student_id)
+      )
+    `);
+
+    // Migration: Remove assigned_by_teacher_id column (classes are now the only teacher-student link)
+    await client.query(`
+      DO $$
+      BEGIN
+        -- Drop the index first if it exists
+        DROP INDEX IF EXISTS idx_users_assigned_by_teacher;
+
+        -- Drop the column if it exists
+        IF EXISTS (SELECT 1 FROM information_schema.columns
+                  WHERE table_name='users' AND column_name='assigned_by_teacher_id') THEN
+          ALTER TABLE users DROP COLUMN assigned_by_teacher_id;
+        END IF;
+      END $$;
+    `);
+
     // Create indexes
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_grade_level ON users(grade_level)');
-    await client.query('CREATE INDEX IF NOT EXISTS idx_users_assigned_by_teacher ON users(assigned_by_teacher_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_is_demo_account ON users(is_demo_account)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_demo_school_rbd ON users(demo_school_rbd)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_verification_token ON users(verification_token)');
@@ -638,6 +685,14 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_progressive_questions_situation_id ON progressive_questions(situation_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_progressive_questions_template_id ON progressive_questions(template_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_progressive_questions_builds_on ON progressive_questions(builds_on)');
+
+    // Classes system indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_classes_teacher_id ON classes(teacher_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_classes_level ON classes(level)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_classes_is_active ON classes(is_active)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_class_enrollments_class_id ON class_enrollments(class_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_class_enrollments_student_id ON class_enrollments(student_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_class_enrollments_status ON class_enrollments(status)');
 
     // ========================================
     // ABSTRACT PROBLEMS SYSTEM TABLES

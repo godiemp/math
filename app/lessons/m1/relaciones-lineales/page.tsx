@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { LessonShell } from '@/components/lessons/shared';
 import { getLessonBySlug } from '@/lib/lessons/types';
+import { useLessonFollowMode } from '@/hooks/useLessonFollowMode';
 import {
   Step1Hook,
   Step2Explore,
@@ -17,6 +18,7 @@ const LESSON_SLUG = 'relaciones-lineales';
 export default function LessonPage() {
   const router = useRouter();
   const lesson = getLessonBySlug(LESSON_SLUG);
+  const { followMode } = useLessonFollowMode({ lessonSlug: LESSON_SLUG });
 
   if (!lesson) {
     return (
@@ -30,7 +32,7 @@ export default function LessonPage() {
   const handleExit = () => router.push('/mini-lessons');
 
   return (
-    <LessonShell lesson={lesson} onComplete={handleComplete} onExit={handleExit}>
+    <LessonShell lesson={lesson} onComplete={handleComplete} onExit={handleExit} followMode={followMode}>
       {({ currentStep, completeStep }) => {
         const stepComponents = [
           <Step1Hook key="step1" onComplete={completeStep} isActive={currentStep === 0} />,

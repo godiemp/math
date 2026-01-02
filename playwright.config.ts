@@ -62,17 +62,27 @@ export default defineConfig({
       },
       dependencies: ['setup'],
       // Exclude tests that need their own login flow
-      testIgnore: ['**/auth.spec.ts', '**/registration.spec.ts', '**/colegio-dashboard.spec.ts'],
+      testIgnore: [
+        '**/auth.spec.ts',
+        '**/registration.spec.ts',
+        '**/colegio-dashboard.spec.ts',
+        '**/teacher-student-sync.spec.ts', // Creates own contexts with socket mocking
+      ],
     },
-    // Unauthenticated tests - for login/registration flows
+    // Unauthenticated tests - for login/registration flows and multi-context tests
     {
       name: 'chromium-unauthenticated',
       use: {
         ...devices['Desktop Chrome'],
         // No storage state - start fresh
       },
-      // Run auth, registration, and colegio-dashboard tests (which need their own login)
-      testMatch: ['**/auth.spec.ts', '**/registration.spec.ts', '**/colegio-dashboard.spec.ts'],
+      // Run tests that handle their own authentication
+      testMatch: [
+        '**/auth.spec.ts',
+        '**/registration.spec.ts',
+        '**/colegio-dashboard.spec.ts',
+        '**/teacher-student-sync.spec.ts', // Creates own contexts with socket mocking
+      ],
     },
 
     // Uncomment to test on more browsers
