@@ -294,9 +294,10 @@ export function UnifiedLatexRenderer({
     return <MathText content={content} className={className} />;
   }
 
-  // Check if content looks like pure LaTeX (has LaTeX commands or math symbols)
-  // Common patterns: backslash commands, ^, _, {}, etc.
-  const looksLikeLaTeX = /[\\^_{}]|[a-zA-Z]+\s*\(|[a-zA-Z]\s*[+\-*/=<>]/.test(content);
+  // Check if content looks like pure LaTeX - only detect explicit markers
+  // We intentionally avoid guessing (e.g., "x + 1" could be text or math)
+  // If you want math rendering, use explicit markers: \frac{}, x^2, $...$
+  const looksLikeLaTeX = /[\\^_{}]/.test(content);
 
   if (looksLikeLaTeX) {
     // Render as pure LaTeX
