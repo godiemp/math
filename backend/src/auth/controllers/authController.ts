@@ -213,6 +213,33 @@ export async function logout(req: Request, res: Response): Promise<void> {
 }
 
 /**
+ * Get socket authentication token
+ * Returns the access token for WebSocket connections
+ *
+ * This is needed because:
+ * 1. REST API uses a proxy (/api/backend) - cookies are first-party to Vercel domain
+ * 2. Socket.io connects directly to Railway - different domain, no access to Vercel cookies
+ * 3. This endpoint provides the token so socket.io can use handshake auth
+ */
+export async function getSocketToken(req: Request, res: Response): Promise<void> {
+  try {
+    // Token is already validated by authenticate middleware
+    // Return it for socket.io authentication
+    const accessToken = req.cookies.accessToken;
+
+    if (!accessToken) {
+      res.status(401).json({ error: 'No authentication token found' });
+      return;
+    }
+
+    res.json({ token: accessToken });
+  } catch (error) {
+    console.error('Get socket token error:', error);
+    res.status(500).json({ error: 'Error al obtener token de socket' });
+  }
+}
+
+/**
  * Get current user info (with subscription status)
  */
 export async function getCurrentUser(req: Request, res: Response): Promise<void> {

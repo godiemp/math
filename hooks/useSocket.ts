@@ -11,9 +11,37 @@ interface UseSocketReturn {
 }
 
 /**
- * Hook for managing Socket.io connection with cookie-based authentication
+ * Fetch socket authentication token from the backend
+ * This token is needed because:
+ * 1. REST API uses a proxy (/api/backend) - cookies are first-party to Vercel domain
+ * 2. Socket.io connects directly to Railway - different domain, can't access Vercel cookies
+ * 3. This endpoint provides the token so socket.io can use handshake auth
+ */
+async function fetchSocketToken(): Promise<string | null> {
+  try {
+    // Use the proxy endpoint to get the token (keeps cookies first-party)
+    const response = await fetch('/api/backend/api/auth/socket-token', {
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      console.error('🔌 Socket: Failed to get token, status:', response.status);
+      return null;
+    }
+
+    const data = await response.json();
+    return data.token || null;
+  } catch (error) {
+    console.error('🔌 Socket: Error fetching token:', error);
+    return null;
+  }
+}
+
+/**
+ * Hook for managing Socket.io connection with token-based authentication
  *
- * Uses HttpOnly cookies (same as REST API) for authentication.
+ * Fetches an auth token via the proxy and passes it in the socket handshake.
+ * This works around the cross-origin cookie issue with Vercel + Railway.
  * Auto-connects when user is authenticated, disconnects on logout.
  */
 export function useSocket(): UseSocketReturn {
@@ -21,8 +49,9 @@ export function useSocket(): UseSocketReturn {
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const socketRef = useRef<Socket | null>(null);
+  const connectingRef = useRef(false);
 
-  // Get the backend URL (same logic as api-client)
+  // Get the backend URL for socket.io (direct connection, not through proxy)
   const getSocketUrl = useCallback(() => {
     // In production, use the API URL
     if (process.env.NEXT_PUBLIC_API_URL) {
@@ -53,50 +82,77 @@ export function useSocket(): UseSocketReturn {
       return;
     }
 
-    // Already connected
-    if (socketRef.current?.connected) return;
+    // Already connected or connecting
+    if (socketRef.current?.connected || connectingRef.current) return;
 
-    const socketUrl = getSocketUrl();
-    console.log('🔌 Socket: Connecting to', socketUrl);
+    // Mark as connecting to prevent duplicate connections
+    connectingRef.current = true;
 
-    const socket = io(socketUrl, {
-      withCredentials: true, // Send cookies for authentication
-      transports: ['websocket', 'polling'],
-      autoConnect: true,
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-    });
+    const connectSocket = async () => {
+      try {
+        // Fetch authentication token
+        const token = await fetchSocketToken();
 
-    socket.on('connect', () => {
-      console.log('🔌 Socket: Connected');
-      setIsConnected(true);
-      setError(null);
-    });
+        if (!token) {
+          console.error('🔌 Socket: No token available, cannot connect');
+          setError('Authentication token not available');
+          connectingRef.current = false;
+          return;
+        }
 
-    socket.on('disconnect', (reason) => {
-      console.log('🔌 Socket: Disconnected -', reason);
-      setIsConnected(false);
-    });
+        const socketUrl = getSocketUrl();
+        console.log('🔌 Socket: Connecting to', socketUrl, 'with token auth');
 
-    socket.on('connect_error', (err) => {
-      console.error('🔌 Socket: Connection error -', err.message);
-      setError(err.message);
-      setIsConnected(false);
-    });
+        const socket = io(socketUrl, {
+          auth: { token }, // Pass token in handshake auth
+          transports: ['websocket', 'polling'],
+          autoConnect: true,
+          reconnection: true,
+          reconnectionAttempts: 5,
+          reconnectionDelay: 1000,
+        });
 
-    socket.on('error', (err) => {
-      console.error('🔌 Socket: Error -', err);
-      setError(typeof err === 'string' ? err : err.message || 'Socket error');
-    });
+        socket.on('connect', () => {
+          console.log('🔌 Socket: Connected');
+          setIsConnected(true);
+          setError(null);
+        });
 
-    socketRef.current = socket;
+        socket.on('disconnect', (reason) => {
+          console.log('🔌 Socket: Disconnected -', reason);
+          setIsConnected(false);
+        });
+
+        socket.on('connect_error', (err) => {
+          console.error('🔌 Socket: Connection error -', err.message);
+          setError(err.message);
+          setIsConnected(false);
+        });
+
+        socket.on('error', (err) => {
+          console.error('🔌 Socket: Error -', err);
+          setError(typeof err === 'string' ? err : err.message || 'Socket error');
+        });
+
+        socketRef.current = socket;
+      } catch (err) {
+        console.error('🔌 Socket: Connection setup failed:', err);
+        setError('Failed to set up socket connection');
+      } finally {
+        connectingRef.current = false;
+      }
+    };
+
+    connectSocket();
 
     // Cleanup on unmount
     return () => {
       console.log('🔌 Socket: Cleaning up');
-      socket.disconnect();
-      socketRef.current = null;
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+      connectingRef.current = false;
     };
   }, [isAuthenticated, isLoading, getSocketUrl]);
 
