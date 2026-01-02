@@ -2,6 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { UnifiedLatexRenderer } from '@/components/math/MathDisplay';
 import { usePracticeSession } from '@/hooks/usePracticeSession';
@@ -50,6 +54,23 @@ const DEFAULT_TOPICS: Topic[] = [
   { id: 'probabilidad', name: 'Probabilidades y Estadística', type: 'subject' },
   { id: 'surprise', name: 'Sorpréndeme', type: 'subject' },
 ];
+
+// ============================================================================
+// Chat Markdown Renderer - for AI responses with LaTeX support
+// ============================================================================
+
+function ChatMarkdownRenderer({ content }: { content: string }) {
+  return (
+    <div className="prose prose-sm prose-invert max-w-none [&>p]:my-1 [&>p]:leading-relaxed">
+      <ReactMarkdown
+        remarkPlugins={[remarkMath]}
+        rehypePlugins={[rehypeKatex]}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
+  );
+}
 
 // ============================================================================
 // Topic Card Component
@@ -135,7 +156,11 @@ function ChatPanel({
             }`}
           >
             <div className="text-white">
-              <UnifiedLatexRenderer content={msg.content} />
+              {msg.role === 'user' ? (
+                <span className="whitespace-pre-wrap">{msg.content}</span>
+              ) : (
+                <ChatMarkdownRenderer content={msg.content} />
+              )}
             </div>
           </div>
         ))}
