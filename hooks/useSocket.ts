@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -8,6 +8,25 @@ interface UseSocketReturn {
   socket: Socket | null;
   isConnected: boolean;
   error: string | null;
+}
+
+/**
+ * Fetch the backend URL from server config
+ * This ensures we get the correct PR-aware Railway URL
+ */
+async function fetchBackendUrl(): Promise<string> {
+  try {
+    const response = await fetch('/api/config');
+    if (response.ok) {
+      const data = await response.json();
+      console.log('🔌 Socket: Backend URL from config:', data.backendUrl);
+      return data.backendUrl;
+    }
+  } catch (error) {
+    console.error('🔌 Socket: Error fetching backend URL:', error);
+  }
+  // Fallback to production
+  return 'https://paes-math-backend-production.up.railway.app';
 }
 
 /**
@@ -51,22 +70,6 @@ export function useSocket(): UseSocketReturn {
   const socketRef = useRef<Socket | null>(null);
   const connectingRef = useRef(false);
 
-  // Get the backend URL for socket.io (direct connection, not through proxy)
-  const getSocketUrl = useCallback(() => {
-    // In production, use the API URL
-    if (process.env.NEXT_PUBLIC_API_URL) {
-      return process.env.NEXT_PUBLIC_API_URL;
-    }
-
-    // Development: connect directly to backend
-    if (process.env.NODE_ENV === 'development') {
-      return 'http://localhost:3001';
-    }
-
-    // Default production URL
-    return 'https://paes-math-backend-production.up.railway.app';
-  }, []);
-
   useEffect(() => {
     // Don't connect until auth state is determined
     if (isLoading) return;
@@ -90,8 +93,11 @@ export function useSocket(): UseSocketReturn {
 
     const connectSocket = async () => {
       try {
-        // Fetch authentication token
-        const token = await fetchSocketToken();
+        // Fetch backend URL (PR-aware) and authentication token in parallel
+        const [socketUrl, token] = await Promise.all([
+          fetchBackendUrl(),
+          fetchSocketToken(),
+        ]);
 
         if (!token) {
           console.error('🔌 Socket: No token available, cannot connect');
@@ -100,7 +106,6 @@ export function useSocket(): UseSocketReturn {
           return;
         }
 
-        const socketUrl = getSocketUrl();
         console.log('🔌 Socket: Connecting to', socketUrl, 'with token auth');
 
         const socket = io(socketUrl, {
@@ -154,7 +159,7 @@ export function useSocket(): UseSocketReturn {
       }
       connectingRef.current = false;
     };
-  }, [isAuthenticated, isLoading, getSocketUrl]);
+  }, [isAuthenticated, isLoading]);
 
   return {
     socket: socketRef.current,
