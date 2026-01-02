@@ -6,6 +6,7 @@ import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { TriangleFigure } from '@/components/figures/TriangleFigure';
 import { CircleFigure } from '@/components/figures/CircleFigure';
+import { CartesianPlane, CartesianPoint, CartesianSegment } from '@/components/figures/CartesianPlane';
 import {
   buildTriangleFromAngles,
   buildTriangleFromSides,
@@ -35,8 +36,16 @@ import type {
   CirclePreset,
   UnifiedArcConfig,
 } from '@/lib/types/circle';
+import type {
+  CartesianPointConfig,
+  CartesianSegmentConfig,
+  CartesianTriangleConfig,
+  CartesianElements,
+  CartesianDebuggerPreset,
+} from '@/lib/types/cartesian';
 
-type FigureType = 'triangle' | 'circle';
+// Top-level tab for the debugger (triangle, circle, or cartesian plane)
+type DebuggerTab = 'triangulo' | 'circulo' | 'cartesian';
 type InputMode = 'vertices' | 'angles' | 'sides';
 
 // Presets for vertices mode
@@ -132,9 +141,122 @@ const CIRCLE_PRESETS: CirclePreset[] = [
   },
 ];
 
+// Presets for Cartesian debugger (with elements support)
+const CARTESIAN_DEBUGGER_PRESETS: CartesianDebuggerPreset[] = [
+  {
+    name: 'Plano vacío',
+    description: 'Solo ejes y cuadrícula',
+    config: { xMin: -5, xMax: 5, yMin: -5, yMax: 5 },
+    elements: { points: [], segments: [], triangles: [] },
+  },
+  {
+    name: 'Puntos en cuadrantes',
+    description: '4 puntos, uno por cuadrante',
+    config: { xMin: -5, xMax: 5, yMin: -5, yMax: 5 },
+    elements: {
+      points: [
+        { id: 'P1', x: 2, y: 2, label: 'Q1' },
+        { id: 'P2', x: -2, y: 2, label: 'Q2' },
+        { id: 'P3', x: -2, y: -2, label: 'Q3' },
+        { id: 'P4', x: 2, y: -2, label: 'Q4' },
+      ],
+      segments: [],
+      triangles: [],
+    },
+  },
+  {
+    name: 'Segmento diagonal',
+    description: 'Línea de (-3,-2) a (3,2)',
+    config: { xMin: -5, xMax: 5, yMin: -4, yMax: 4 },
+    elements: {
+      points: [
+        { id: 'P1', x: -3, y: -2, label: 'A' },
+        { id: 'P2', x: 3, y: 2, label: 'B' },
+      ],
+      segments: [
+        { id: 'S1', p1: { x: -3, y: -2 }, p2: { x: 3, y: 2 }, label: 'AB' },
+      ],
+      triangles: [],
+    },
+  },
+  {
+    name: 'Triángulo 3-4-5',
+    description: 'Rectángulo en origen',
+    config: { xMin: -1, xMax: 6, yMin: -1, yMax: 5 },
+    elements: {
+      points: [],
+      segments: [],
+      triangles: [{
+        id: 'T1',
+        vertices: [
+          { x: 0, y: 0, label: 'B' },
+          { x: 4, y: 0, label: 'C' },
+          { x: 0, y: 3, label: 'A' },
+        ],
+        showRightAngleMarker: true,
+      }],
+    },
+  },
+  {
+    name: 'Homotecia',
+    description: 'Rayos con flechas',
+    config: { xMin: -1, xMax: 7, yMin: -1, yMax: 5 },
+    elements: {
+      points: [
+        { id: 'O', x: 0, y: 0, label: 'O', color: 'rgb(239, 68, 68)' },
+      ],
+      segments: [
+        { id: 'r1', p1: { x: 0, y: 0 }, p2: { x: 6, y: 3 }, strokeStyle: 'dashed', arrow: 'end', color: 'rgb(156, 163, 175)' },
+        { id: 'r2', p1: { x: 0, y: 0 }, p2: { x: 6, y: 0 }, strokeStyle: 'dashed', arrow: 'end', color: 'rgb(156, 163, 175)' },
+        { id: 'r3', p1: { x: 0, y: 0 }, p2: { x: 3, y: 4 }, strokeStyle: 'dashed', arrow: 'end', color: 'rgb(156, 163, 175)' },
+      ],
+      triangles: [
+        {
+          id: 'T1',
+          vertices: [
+            { x: 2, y: 1, label: 'A' },
+            { x: 2, y: 0, label: 'B' },
+            { x: 1, y: 4/3, label: 'C' },
+          ],
+        },
+        {
+          id: 'T2',
+          vertices: [
+            { x: 4, y: 2, label: "A'" },
+            { x: 4, y: 0, label: "B'" },
+            { x: 2, y: 8/3, label: "C'" },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    name: 'Equilátero movible',
+    description: '60-60-60 posicionable',
+    config: { xMin: -4, xMax: 6, yMin: -2, yMax: 6 },
+    elements: {
+      points: [],
+      segments: [],
+      triangles: [{
+        id: 'T1',
+        constructionMode: 'angles',
+        angles: [60, 60, 60],
+        scale: 2,
+        position: { x: 1, y: 2 },
+        rotation: 0,
+        vertices: [
+          { x: 0, y: 0, label: 'A' },
+          { x: 0, y: 0, label: 'B' },
+          { x: 0, y: 0, label: 'C' },
+        ],
+      }],
+    },
+  },
+];
+
 function FigureDebugContent() {
-  // Figure type (triangle or circle)
-  const [figureType, setFigureType] = useState<FigureType>('triangle');
+  // Top-level debugger tab (triangle, circle, or cartesian plane)
+  const [debuggerTab, setDebuggerTab] = useState<DebuggerTab>('triangulo');
 
   // Input mode (for triangle)
   const [inputMode, setInputMode] = useState<InputMode>('vertices');
@@ -303,6 +425,248 @@ function FigureDebugContent() {
       0
     );
   }, [sideInputs, sidesValidation.valid, vertices]);
+
+  // Cartesian plane state
+  const [cartesianConfig, setCartesianConfig] = useState({
+    xMin: -5,
+    xMax: 5,
+    yMin: -5,
+    yMax: 5,
+    scale: 40,
+    showAxes: true,
+    showGrid: true,
+    showLabels: true,
+    showOrigin: true,
+  });
+
+  // Cartesian elements state
+  const [cartesianElements, setCartesianElements] = useState<CartesianElements>({
+    points: [],
+    segments: [],
+    triangles: [],
+  });
+
+  // State for new triangle mode (when adding triangles in Cartesian debugger)
+  const [newTriangleMode, setNewTriangleMode] = useState<'vertices' | 'angles'>('vertices');
+  const [newTriangleAngles, setNewTriangleAngles] = useState<[number, number, number]>([60, 60, 60]);
+
+  // Helper function to compute triangle vertices from angles mode
+  const computeTriangleVertices = useCallback((triangle: CartesianTriangleConfig) => {
+    if (triangle.constructionMode !== 'angles' || !triangle.angles) {
+      return triangle.vertices;
+    }
+
+    // Build base triangle from angles
+    const baseVertices = buildTriangleFromAngles(
+      triangle.angles,
+      (triangle.scale || 2) * 50, // Convert scale to pixels for computation
+      0, 0, 0
+    );
+
+    // Calculate centroid of base triangle
+    const centroid = {
+      x: (baseVertices[0].x + baseVertices[1].x + baseVertices[2].x) / 3,
+      y: (baseVertices[0].y + baseVertices[1].y + baseVertices[2].y) / 3,
+    };
+
+    // Apply rotation and translation
+    const rad = ((triangle.rotation || 0) * Math.PI) / 180;
+    const pos = triangle.position || { x: 0, y: 0 };
+
+    return baseVertices.map((v, i) => {
+      // Translate to centroid
+      const dx = (v.x - centroid.x) / 50; // Convert back to math units
+      const dy = (v.y - centroid.y) / 50;
+      // Rotate
+      const rx = dx * Math.cos(rad) - dy * Math.sin(rad);
+      const ry = dx * Math.sin(rad) + dy * Math.cos(rad);
+      // Translate to position
+      return {
+        x: rx + pos.x,
+        y: ry + pos.y,
+        label: triangle.vertices[i]?.label || ['A', 'B', 'C'][i],
+      };
+    }) as [{ x: number; y: number; label?: string }, { x: number; y: number; label?: string }, { x: number; y: number; label?: string }];
+  }, []);
+
+  // Update Cartesian config
+  const updateCartesianConfig = useCallback(
+    (field: keyof typeof cartesianConfig, value: number | boolean) => {
+      setCartesianConfig((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    },
+    []
+  );
+
+  // Add a point
+  const addPoint = useCallback(() => {
+    const newId = `P${cartesianElements.points.length + 1}`;
+    setCartesianElements((prev) => ({
+      ...prev,
+      points: [
+        ...prev.points,
+        { id: newId, x: 0, y: 0, label: newId, color: 'rgb(59, 130, 246)' },
+      ],
+    }));
+  }, [cartesianElements.points.length]);
+
+  // Add a segment
+  const addSegment = useCallback(() => {
+    const newId = `S${cartesianElements.segments.length + 1}`;
+    setCartesianElements((prev) => ({
+      ...prev,
+      segments: [
+        ...prev.segments,
+        { id: newId, p1: { x: 0, y: 0 }, p2: { x: 1, y: 1 }, color: 'rgb(34, 197, 94)' },
+      ],
+    }));
+  }, [cartesianElements.segments.length]);
+
+  // Add a triangle (supports both vertices and angles modes)
+  const addTriangle = useCallback(() => {
+    const newId = `T${cartesianElements.triangles.length + 1}`;
+
+    if (newTriangleMode === 'angles') {
+      // Validate angles sum to 180
+      const sum = newTriangleAngles[0] + newTriangleAngles[1] + newTriangleAngles[2];
+      if (Math.abs(sum - 180) > 0.1) {
+        alert(`Los ángulos deben sumar 180° (actualmente suman ${sum}°)`);
+        return;
+      }
+
+      setCartesianElements((prev) => ({
+        ...prev,
+        triangles: [
+          ...prev.triangles,
+          {
+            id: newId,
+            constructionMode: 'angles',
+            angles: [...newTriangleAngles] as [number, number, number],
+            scale: 2,
+            position: { x: 0, y: 0 },
+            rotation: 0,
+            vertices: [
+              { x: 0, y: 0, label: 'A' },
+              { x: 0, y: 0, label: 'B' },
+              { x: 0, y: 0, label: 'C' },
+            ],
+          },
+        ],
+      }));
+    } else {
+      setCartesianElements((prev) => ({
+        ...prev,
+        triangles: [
+          ...prev.triangles,
+          {
+            id: newId,
+            vertices: [
+              { x: 0, y: 0, label: 'A' },
+              { x: 2, y: 0, label: 'B' },
+              { x: 1, y: 2, label: 'C' },
+            ],
+          },
+        ],
+      }));
+    }
+  }, [cartesianElements.triangles.length, newTriangleMode, newTriangleAngles]);
+
+  // Remove an element
+  const removeElement = useCallback(
+    (type: 'points' | 'segments' | 'triangles', id: string) => {
+      setCartesianElements((prev) => ({
+        ...prev,
+        [type]: prev[type].filter((el) => el.id !== id),
+      }));
+    },
+    []
+  );
+
+  // Update a point
+  const updatePoint = useCallback(
+    (id: string, field: 'x' | 'y' | 'label', value: number | string) => {
+      setCartesianElements((prev) => ({
+        ...prev,
+        points: prev.points.map((p) =>
+          p.id === id ? { ...p, [field]: value } : p
+        ),
+      }));
+    },
+    []
+  );
+
+  // Update a segment
+  const updateSegment = useCallback(
+    (id: string, endpoint: 'p1' | 'p2', field: 'x' | 'y', value: number) => {
+      setCartesianElements((prev) => ({
+        ...prev,
+        segments: prev.segments.map((s) =>
+          s.id === id ? { ...s, [endpoint]: { ...s[endpoint], [field]: value } } : s
+        ),
+      }));
+    },
+    []
+  );
+
+  // Update segment style properties (strokeStyle, arrow)
+  const updateSegmentStyle = useCallback(
+    (id: string, field: 'strokeStyle' | 'arrow', value: string) => {
+      setCartesianElements((prev) => ({
+        ...prev,
+        segments: prev.segments.map((s) =>
+          s.id === id ? { ...s, [field]: value } : s
+        ),
+      }));
+    },
+    []
+  );
+
+  // Update a triangle vertex
+  const updateTriangleVertex = useCallback(
+    (triangleId: string, vertexIndex: number, field: 'x' | 'y' | 'label', value: number | string) => {
+      setCartesianElements((prev) => ({
+        ...prev,
+        triangles: prev.triangles.map((t) => {
+          if (t.id !== triangleId) return t;
+          const newVertices = [...t.vertices] as typeof t.vertices;
+          newVertices[vertexIndex] = { ...newVertices[vertexIndex], [field]: value };
+          return { ...t, vertices: newVertices };
+        }),
+      }));
+    },
+    []
+  );
+
+  // Update triangle field (for angles mode: position, rotation, scale)
+  const updateTriangleField = useCallback(
+    (triangleId: string, field: 'position' | 'rotation' | 'scale', value: { x: number; y: number } | number) => {
+      setCartesianElements((prev) => ({
+        ...prev,
+        triangles: prev.triangles.map((t) =>
+          t.id === triangleId ? { ...t, [field]: value } : t
+        ),
+      }));
+    },
+    []
+  );
+
+  // Apply Cartesian preset
+  const applyCartesianPreset = useCallback((preset: CartesianDebuggerPreset) => {
+    setCartesianConfig({
+      xMin: preset.config.xMin,
+      xMax: preset.config.xMax,
+      yMin: preset.config.yMin,
+      yMax: preset.config.yMax,
+      scale: preset.config.scale ?? 40,
+      showAxes: preset.config.showAxes ?? true,
+      showGrid: preset.config.showGrid ?? true,
+      showLabels: preset.config.showLabels ?? true,
+      showOrigin: preset.config.showOrigin ?? true,
+    });
+    setCartesianElements(preset.elements);
+  }, []);
 
   // Active vertices (depends on mode)
   const activeVertices = useMemo(() => {
@@ -593,16 +957,63 @@ function FigureDebugContent() {
     return `<CircleFigure\n  ${propsLines.join('\n  ')}\n/>`;
   }, [circleCenter, circleRadius, circleMode, showCircleCenter, showCircleRadius, circleRadiusAngle, showCircleDiameter, circleDiameterAngle, circleArcs, showSector, sectorStartAngle, sectorEndAngle, showArc, arcStartAngle, arcEndAngle, showCentralAngle, centralAngleStart, centralAngleEnd, showCentralAngleDegrees, circleChords, showCircleGrid]);
 
+  // Generate code for Cartesian debugger
+  const generateCartesianCode = useCallback(() => {
+    const lines: string[] = [];
+    lines.push('<CartesianPlane');
+    lines.push(`  xRange={[${cartesianConfig.xMin}, ${cartesianConfig.xMax}]}`);
+    lines.push(`  yRange={[${cartesianConfig.yMin}, ${cartesianConfig.yMax}]}`);
+    if (cartesianConfig.scale !== 40) lines.push(`  scale={${cartesianConfig.scale}}`);
+    if (!cartesianConfig.showAxes) lines.push('  showAxes={false}');
+    if (!cartesianConfig.showGrid) lines.push('  showGrid={false}');
+    if (!cartesianConfig.showLabels) lines.push('  showLabels={false}');
+    if (!cartesianConfig.showOrigin) lines.push('  showOrigin={false}');
+    lines.push('>');
+
+    // Points
+    cartesianElements.points.forEach((p) => {
+      lines.push(`  <CartesianPoint x={${p.x}} y={${p.y}}${p.label ? ` label="${p.label}"` : ''} />`);
+    });
+
+    // Segments (with style and arrow)
+    cartesianElements.segments.forEach((s) => {
+      const props: string[] = [
+        `p1={{x: ${s.p1.x}, y: ${s.p1.y}}}`,
+        `p2={{x: ${s.p2.x}, y: ${s.p2.y}}}`,
+      ];
+      if (s.label) props.push(`label="${s.label}"`);
+      if (s.strokeStyle && s.strokeStyle !== 'solid') props.push(`strokeStyle="${s.strokeStyle}"`);
+      if (s.arrow && s.arrow !== 'none') props.push(`arrow="${s.arrow}"`);
+      lines.push(`  <CartesianSegment ${props.join(' ')} />`);
+    });
+
+    // Triangles (compute vertices for angles mode)
+    cartesianElements.triangles.forEach((t) => {
+      const vertices = computeTriangleVertices(t);
+      lines.push('  <TriangleFigure');
+      lines.push('    vertices={[');
+      vertices.forEach((v, i) => {
+        lines.push(`      { x: ${v.x.toFixed(2)}, y: ${v.y.toFixed(2)}, label: '${v.label || ''}' }${i < 2 ? ',' : ''}`);
+      });
+      lines.push('    ]}');
+      if (t.showRightAngleMarker) lines.push('    showRightAngleMarker');
+      lines.push('  />');
+    });
+
+    lines.push('</CartesianPlane>');
+    return lines.join('\n');
+  }, [cartesianConfig, cartesianElements, computeTriangleVertices]);
+
   // Generate code based on figure type
   const generateCode = useCallback(() => {
-    return figureType === 'triangle' ? generateTriangleCode() : generateCircleCode();
-  }, [figureType, generateTriangleCode, generateCircleCode]);
+    return debuggerTab === 'triangulo' ? generateTriangleCode() : generateCircleCode();
+  }, [debuggerTab, generateTriangleCode, generateCircleCode]);
 
   // Copy code to clipboard
   const copyCode = useCallback(() => {
-    const code = generateCode();
+    const code = debuggerTab === 'cartesian' ? generateCartesianCode() : generateCode();
     navigator.clipboard.writeText(code);
-  }, [generateCode]);
+  }, [debuggerTab, generateCode, generateCartesianCode]);
 
   return (
     <AdminLayout>
@@ -623,9 +1034,9 @@ function FigureDebugContent() {
             <Text className="font-medium">Tipo de figura:</Text>
             <div className="flex rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
               <button
-                onClick={() => setFigureType('triangle')}
+                onClick={() => setDebuggerTab('triangulo')}
                 className={`px-4 py-2 text-sm font-medium transition-colors ${
-                  figureType === 'triangle'
+                  debuggerTab === 'triangulo'
                     ? 'bg-blue-500 text-white'
                     : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
@@ -633,21 +1044,31 @@ function FigureDebugContent() {
                 Triángulo
               </button>
               <button
-                onClick={() => setFigureType('circle')}
+                onClick={() => setDebuggerTab('circulo')}
                 className={`px-4 py-2 text-sm font-medium transition-colors ${
-                  figureType === 'circle'
+                  debuggerTab === 'circulo'
                     ? 'bg-blue-500 text-white'
                     : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
               >
                 Circunferencia
               </button>
+              <button
+                onClick={() => setDebuggerTab('cartesian')}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  debuggerTab === 'cartesian'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+              >
+                Plano Cartesiano
+              </button>
             </div>
           </div>
         </Card>
 
         {/* Triangle Input Mode Toggle */}
-        {figureType === 'triangle' && (
+        {debuggerTab === 'triangulo' && (
           <Card padding="md">
             <div className="flex items-center gap-4">
               <Text className="font-medium">Modo de construcción:</Text>
@@ -688,7 +1109,7 @@ function FigureDebugContent() {
         )}
 
         {/* Circle Mode Toggle */}
-        {figureType === 'circle' && (
+        {debuggerTab === 'circulo' && (
           <Card padding="md">
             <div className="flex items-center gap-4">
               <Text className="font-medium">Modo:</Text>
@@ -725,7 +1146,7 @@ function FigureDebugContent() {
           </Heading>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {/* Triangle presets */}
-            {figureType === 'triangle' && inputMode === 'vertices' && VERTEX_PRESETS.map((preset) => (
+            {debuggerTab === 'triangulo' && inputMode === 'vertices' && VERTEX_PRESETS.map((preset) => (
               <Card
                 key={preset.name}
                 hover
@@ -743,7 +1164,7 @@ function FigureDebugContent() {
                 </div>
               </Card>
             ))}
-            {figureType === 'triangle' && inputMode === 'angles' && ANGLE_PRESETS.map((preset) => (
+            {debuggerTab === 'triangulo' && inputMode === 'angles' && ANGLE_PRESETS.map((preset) => (
               <Card
                 key={preset.name}
                 hover
@@ -761,7 +1182,7 @@ function FigureDebugContent() {
                 </div>
               </Card>
             ))}
-            {figureType === 'triangle' && inputMode === 'sides' && SIDES_PRESETS.map((preset) => (
+            {debuggerTab === 'triangulo' && inputMode === 'sides' && SIDES_PRESETS.map((preset) => (
               <Card
                 key={preset.name}
                 hover
@@ -780,7 +1201,7 @@ function FigureDebugContent() {
               </Card>
             ))}
             {/* Circle presets */}
-            {figureType === 'circle' && CIRCLE_PRESETS.map((preset) => (
+            {debuggerTab === 'circulo' && CIRCLE_PRESETS.map((preset) => (
               <Card
                 key={preset.name}
                 hover
@@ -807,7 +1228,7 @@ function FigureDebugContent() {
             {/* ============================================ */}
             {/* CIRCLE CONTROLS */}
             {/* ============================================ */}
-            {figureType === 'circle' && (
+            {debuggerTab === 'circulo' && (
               <>
                 {/* Circle Basic Controls */}
                 <Card padding="lg">
@@ -1100,7 +1521,7 @@ function FigureDebugContent() {
             {/* TRIANGLE CONTROLS */}
             {/* ============================================ */}
             {/* Vertex Controls (vertices mode) */}
-            {figureType === 'triangle' && inputMode === 'vertices' && (
+            {debuggerTab === 'triangulo' && inputMode === 'vertices' && (
               <Card padding="lg">
                 <Heading level={3} size="xs" className="mb-4">
                   Vértices
@@ -1142,7 +1563,7 @@ function FigureDebugContent() {
             )}
 
             {/* Angle Controls (angles mode) */}
-            {figureType === 'triangle' && inputMode === 'angles' && (
+            {debuggerTab === 'triangulo' && inputMode === 'angles' && (
               <Card padding="lg">
                 <Heading level={3} size="xs" className="mb-4">
                   Ángulos Interiores
@@ -1238,7 +1659,7 @@ function FigureDebugContent() {
             )}
 
             {/* Sides Controls (sides mode) */}
-            {figureType === 'triangle' && inputMode === 'sides' && (
+            {debuggerTab === 'triangulo' && inputMode === 'sides' && (
               <Card padding="lg">
                 <Heading level={3} size="xs" className="mb-4">
                   Longitud de Lados
@@ -1351,7 +1772,7 @@ function FigureDebugContent() {
             )}
 
             {/* Visual Options (Triangle) */}
-            {figureType === 'triangle' && (
+            {debuggerTab === 'triangulo' && (
               <Card padding="lg">
                 <Heading level={3} size="xs" className="mb-4">
                   Opciones Visuales
@@ -1416,7 +1837,7 @@ function FigureDebugContent() {
             )}
 
             {/* Special Lines (Triangle) */}
-            {figureType === 'triangle' && (
+            {debuggerTab === 'triangulo' && (
               <Card padding="lg">
                 <Heading level={3} size="xs" className="mb-4">
                   Líneas Especiales
@@ -1469,7 +1890,7 @@ function FigureDebugContent() {
                 Vista Previa
               </Heading>
               <div className="flex justify-center bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-                {figureType === 'triangle' ? (
+                {debuggerTab === 'triangulo' ? (
                   <TriangleFigure
                     vertices={activeVertices}
                     sides={showSideLabels ? sides : undefined}
@@ -1499,7 +1920,7 @@ function FigureDebugContent() {
               </div>
 
               {/* Current angles info (in angles mode - triangle) */}
-              {figureType === 'triangle' && inputMode === 'angles' && angleValidation.valid && (
+              {debuggerTab === 'triangulo' && inputMode === 'angles' && angleValidation.valid && (
                 <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                   <Text size="sm" className="font-medium mb-1">
                     Ángulos del triángulo:
@@ -1514,7 +1935,7 @@ function FigureDebugContent() {
               )}
 
               {/* Current sides info (in sides mode - triangle) */}
-              {figureType === 'triangle' && inputMode === 'sides' && sidesValidation.valid && (
+              {debuggerTab === 'triangulo' && inputMode === 'sides' && sidesValidation.valid && (
                 <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                   <Text size="sm" className="font-medium mb-1">
                     Lados del triángulo:
@@ -1529,7 +1950,7 @@ function FigureDebugContent() {
               )}
 
               {/* Circle info display */}
-              {figureType === 'circle' && circleValidation.valid && (
+              {debuggerTab === 'circulo' && circleValidation.valid && (
                 <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                   <Text size="sm" className="font-medium mb-1">
                     Propiedades del círculo:
@@ -1565,7 +1986,7 @@ function FigureDebugContent() {
                 <Text size="sm" className="font-medium mb-2">
                   Leyenda de colores:
                 </Text>
-                {figureType === 'triangle' ? (
+                {debuggerTab === 'triangulo' ? (
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-1 bg-blue-500 rounded"></div>
@@ -1612,6 +2033,610 @@ function FigureDebugContent() {
             </Card>
           </div>
         </div>
+
+        {/* Cartesian Plane Debugger */}
+        {debuggerTab === 'cartesian' && (
+          <>
+            {/* Presets */}
+            <div>
+              <Heading level={2} size="sm" className="mb-4">
+                Presets
+              </Heading>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                {CARTESIAN_DEBUGGER_PRESETS.map((preset) => (
+                  <Card
+                    key={preset.name}
+                    hover
+                    className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
+                    padding="md"
+                    onClick={() => applyCartesianPreset(preset)}
+                  >
+                    <div className="text-center">
+                      <Heading level={3} size="xs" className="mb-1">
+                        {preset.name}
+                      </Heading>
+                      <Text size="xs" variant="secondary">
+                        {preset.description}
+                      </Text>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-6">
+              {/* Controls Panel */}
+              <div className="space-y-4">
+                {/* Plane Configuration */}
+                <Card padding="lg">
+                  <Heading level={3} size="xs" className="mb-4">
+                    Configuración del Plano
+                  </Heading>
+                  <div className="space-y-4">
+                    {/* X Range */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm text-gray-600 dark:text-gray-400 block mb-1">X mínimo:</label>
+                        <input
+                          type="number"
+                          value={cartesianConfig.xMin}
+                          onChange={(e) => updateCartesianConfig('xMin', Number(e.target.value))}
+                          className="w-full px-3 py-2 text-sm border rounded dark:bg-gray-800 dark:border-gray-600"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm text-gray-600 dark:text-gray-400 block mb-1">X máximo:</label>
+                        <input
+                          type="number"
+                          value={cartesianConfig.xMax}
+                          onChange={(e) => updateCartesianConfig('xMax', Number(e.target.value))}
+                          className="w-full px-3 py-2 text-sm border rounded dark:bg-gray-800 dark:border-gray-600"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Y Range */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm text-gray-600 dark:text-gray-400 block mb-1">Y mínimo:</label>
+                        <input
+                          type="number"
+                          value={cartesianConfig.yMin}
+                          onChange={(e) => updateCartesianConfig('yMin', Number(e.target.value))}
+                          className="w-full px-3 py-2 text-sm border rounded dark:bg-gray-800 dark:border-gray-600"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm text-gray-600 dark:text-gray-400 block mb-1">Y máximo:</label>
+                        <input
+                          type="number"
+                          value={cartesianConfig.yMax}
+                          onChange={(e) => updateCartesianConfig('yMax', Number(e.target.value))}
+                          className="w-full px-3 py-2 text-sm border rounded dark:bg-gray-800 dark:border-gray-600"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Scale slider */}
+                    <div>
+                      <label className="text-sm text-gray-600 dark:text-gray-400 block mb-1">
+                        Escala (px/unidad): {cartesianConfig.scale}
+                      </label>
+                      <input
+                        type="range"
+                        min="20"
+                        max="60"
+                        value={cartesianConfig.scale}
+                        onChange={(e) => updateCartesianConfig('scale', Number(e.target.value))}
+                        className="w-full"
+                      />
+                    </div>
+
+                    {/* Toggle checkboxes */}
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={cartesianConfig.showAxes}
+                          onChange={(e) => updateCartesianConfig('showAxes', e.target.checked)}
+                          className="rounded"
+                        />
+                        <span className="text-sm">Ejes</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={cartesianConfig.showGrid}
+                          onChange={(e) => updateCartesianConfig('showGrid', e.target.checked)}
+                          className="rounded"
+                        />
+                        <span className="text-sm">Cuadrícula</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={cartesianConfig.showLabels}
+                          onChange={(e) => updateCartesianConfig('showLabels', e.target.checked)}
+                          className="rounded"
+                        />
+                        <span className="text-sm">Etiquetas</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={cartesianConfig.showOrigin}
+                          onChange={(e) => updateCartesianConfig('showOrigin', e.target.checked)}
+                          className="rounded"
+                        />
+                        <span className="text-sm">Origen</span>
+                      </label>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Elements Management */}
+                <Card padding="lg">
+                  <div className="flex items-center justify-between mb-4">
+                    <Heading level={3} size="xs">
+                      Elementos
+                    </Heading>
+                    <div className="flex gap-2">
+                      <Button variant="secondary" size="sm" onClick={addPoint}>
+                        + Punto
+                      </Button>
+                      <Button variant="secondary" size="sm" onClick={addSegment}>
+                        + Segmento
+                      </Button>
+                      <div className="relative group">
+                        <Button variant="secondary" size="sm" onClick={addTriangle}>
+                          + Triángulo
+                        </Button>
+                        {/* Triangle mode dropdown */}
+                        <div className="absolute right-0 top-full mt-1 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 p-3">
+                          <Text size="xs" className="font-medium mb-2">Modo de construcción:</Text>
+                          <div className="space-y-2 mb-3">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="radio"
+                                name="triangleMode"
+                                value="vertices"
+                                checked={newTriangleMode === 'vertices'}
+                                onChange={() => setNewTriangleMode('vertices')}
+                                className="rounded"
+                              />
+                              <span className="text-xs">Por vértices</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="radio"
+                                name="triangleMode"
+                                value="angles"
+                                checked={newTriangleMode === 'angles'}
+                                onChange={() => setNewTriangleMode('angles')}
+                                className="rounded"
+                              />
+                              <span className="text-xs">Por ángulos</span>
+                            </label>
+                          </div>
+
+                          {newTriangleMode === 'angles' && (
+                            <div className="space-y-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                              <Text size="xs" className="text-gray-500">Ángulos (deben sumar 180°):</Text>
+                              <div className="grid grid-cols-3 gap-1">
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max="178"
+                                  value={newTriangleAngles[0]}
+                                  onChange={(e) => setNewTriangleAngles([Number(e.target.value), newTriangleAngles[1], newTriangleAngles[2]])}
+                                  className="w-full px-2 py-1 text-xs border rounded dark:bg-gray-700 dark:border-gray-600"
+                                  placeholder="α"
+                                />
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max="178"
+                                  value={newTriangleAngles[1]}
+                                  onChange={(e) => setNewTriangleAngles([newTriangleAngles[0], Number(e.target.value), newTriangleAngles[2]])}
+                                  className="w-full px-2 py-1 text-xs border rounded dark:bg-gray-700 dark:border-gray-600"
+                                  placeholder="β"
+                                />
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max="178"
+                                  value={newTriangleAngles[2]}
+                                  onChange={(e) => setNewTriangleAngles([newTriangleAngles[0], newTriangleAngles[1], Number(e.target.value)])}
+                                  className="w-full px-2 py-1 text-xs border rounded dark:bg-gray-700 dark:border-gray-600"
+                                  placeholder="γ"
+                                />
+                              </div>
+                              <Text size="xs" className={`${newTriangleAngles[0] + newTriangleAngles[1] + newTriangleAngles[2] === 180 ? 'text-green-600' : 'text-red-500'}`}>
+                                Suma: {newTriangleAngles[0] + newTriangleAngles[1] + newTriangleAngles[2]}°
+                              </Text>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Points List */}
+                  {cartesianElements.points.length > 0 && (
+                    <div className="mb-4">
+                      <Text size="sm" className="font-medium mb-2 text-blue-600 dark:text-blue-400">
+                        Puntos
+                      </Text>
+                      <div className="space-y-2">
+                        {cartesianElements.points.map((point) => (
+                          <div key={point.id} className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                            <Badge variant="info" size="sm">{point.id}</Badge>
+                            <input
+                              type="text"
+                              maxLength={3}
+                              value={point.label || ''}
+                              onChange={(e) => updatePoint(point.id, 'label', e.target.value)}
+                              className="w-12 px-2 py-1 text-xs border rounded dark:bg-gray-700 dark:border-gray-600 text-center"
+                              placeholder="label"
+                            />
+                            <span className="text-xs text-gray-500">x:</span>
+                            <input
+                              type="number"
+                              step="0.5"
+                              value={point.x}
+                              onChange={(e) => updatePoint(point.id, 'x', Number(e.target.value))}
+                              className="w-16 px-2 py-1 text-xs border rounded dark:bg-gray-700 dark:border-gray-600"
+                            />
+                            <span className="text-xs text-gray-500">y:</span>
+                            <input
+                              type="number"
+                              step="0.5"
+                              value={point.y}
+                              onChange={(e) => updatePoint(point.id, 'y', Number(e.target.value))}
+                              className="w-16 px-2 py-1 text-xs border rounded dark:bg-gray-700 dark:border-gray-600"
+                            />
+                            <button
+                              onClick={() => removeElement('points', point.id)}
+                              className="ml-auto text-red-500 hover:text-red-700 text-sm px-2"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Segments List */}
+                  {cartesianElements.segments.length > 0 && (
+                    <div className="mb-4">
+                      <Text size="sm" className="font-medium mb-2 text-green-600 dark:text-green-400">
+                        Segmentos
+                      </Text>
+                      <div className="space-y-2">
+                        {cartesianElements.segments.map((segment) => (
+                          <div key={segment.id} className="p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Badge variant="success" size="sm">{segment.id}</Badge>
+                              <button
+                                onClick={() => removeElement('segments', segment.id)}
+                                className="ml-auto text-red-500 hover:text-red-700 text-sm px-2"
+                              >
+                                ×
+                              </button>
+                            </div>
+                            <div className="flex items-center gap-2 text-xs mb-2">
+                              <span className="text-gray-500">P1:</span>
+                              <input
+                                type="number"
+                                step="0.5"
+                                value={segment.p1.x}
+                                onChange={(e) => updateSegment(segment.id, 'p1', 'x', Number(e.target.value))}
+                                className="w-14 px-1 py-0.5 border rounded dark:bg-gray-700 dark:border-gray-600"
+                              />
+                              <input
+                                type="number"
+                                step="0.5"
+                                value={segment.p1.y}
+                                onChange={(e) => updateSegment(segment.id, 'p1', 'y', Number(e.target.value))}
+                                className="w-14 px-1 py-0.5 border rounded dark:bg-gray-700 dark:border-gray-600"
+                              />
+                              <span className="text-gray-500 ml-2">P2:</span>
+                              <input
+                                type="number"
+                                step="0.5"
+                                value={segment.p2.x}
+                                onChange={(e) => updateSegment(segment.id, 'p2', 'x', Number(e.target.value))}
+                                className="w-14 px-1 py-0.5 border rounded dark:bg-gray-700 dark:border-gray-600"
+                              />
+                              <input
+                                type="number"
+                                step="0.5"
+                                value={segment.p2.y}
+                                onChange={(e) => updateSegment(segment.id, 'p2', 'y', Number(e.target.value))}
+                                className="w-14 px-1 py-0.5 border rounded dark:bg-gray-700 dark:border-gray-600"
+                              />
+                            </div>
+                            {/* Style and Arrow controls */}
+                            <div className="flex items-center gap-3 text-xs pt-2 border-t border-gray-200 dark:border-gray-700">
+                              <div className="flex items-center gap-1">
+                                <span className="text-gray-500">Estilo:</span>
+                                <select
+                                  value={segment.strokeStyle || 'solid'}
+                                  onChange={(e) => updateSegmentStyle(segment.id, 'strokeStyle', e.target.value)}
+                                  className="px-1 py-0.5 border rounded text-xs dark:bg-gray-700 dark:border-gray-600"
+                                >
+                                  <option value="solid">───</option>
+                                  <option value="dashed">- - -</option>
+                                  <option value="dotted">···</option>
+                                </select>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <span className="text-gray-500">Flecha:</span>
+                                <select
+                                  value={segment.arrow || 'none'}
+                                  onChange={(e) => updateSegmentStyle(segment.id, 'arrow', e.target.value)}
+                                  className="px-1 py-0.5 border rounded text-xs dark:bg-gray-700 dark:border-gray-600"
+                                >
+                                  <option value="none">Sin</option>
+                                  <option value="end">→</option>
+                                  <option value="start">←</option>
+                                  <option value="both">↔</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Triangles List */}
+                  {cartesianElements.triangles.length > 0 && (
+                    <div>
+                      <Text size="sm" className="font-medium mb-2 text-purple-600 dark:text-purple-400">
+                        Triángulos
+                      </Text>
+                      <div className="space-y-2">
+                        {cartesianElements.triangles.map((triangle) => (
+                          <div key={triangle.id} className="p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Badge variant="warning" size="sm">{triangle.id}</Badge>
+                              {triangle.constructionMode === 'angles' && (
+                                <span className="text-xs text-gray-500">
+                                  ({triangle.angles?.join('° - ')}°)
+                                </span>
+                              )}
+                              <button
+                                onClick={() => removeElement('triangles', triangle.id)}
+                                className="ml-auto text-red-500 hover:text-red-700 text-sm px-2"
+                              >
+                                ×
+                              </button>
+                            </div>
+
+                            {/* Vertices mode: direct vertex editing */}
+                            {triangle.constructionMode !== 'angles' && (
+                              <div className="space-y-1">
+                                {triangle.vertices.map((v, i) => (
+                                  <div key={i} className="flex items-center gap-2 text-xs">
+                                    <input
+                                      type="text"
+                                      maxLength={2}
+                                      value={v.label || ''}
+                                      onChange={(e) => updateTriangleVertex(triangle.id, i, 'label', e.target.value)}
+                                      className="w-8 px-1 py-0.5 border rounded dark:bg-gray-700 dark:border-gray-600 text-center"
+                                    />
+                                    <span className="text-gray-500">x:</span>
+                                    <input
+                                      type="number"
+                                      step="0.5"
+                                      value={v.x}
+                                      onChange={(e) => updateTriangleVertex(triangle.id, i, 'x', Number(e.target.value))}
+                                      className="w-14 px-1 py-0.5 border rounded dark:bg-gray-700 dark:border-gray-600"
+                                    />
+                                    <span className="text-gray-500">y:</span>
+                                    <input
+                                      type="number"
+                                      step="0.5"
+                                      value={v.y}
+                                      onChange={(e) => updateTriangleVertex(triangle.id, i, 'y', Number(e.target.value))}
+                                      className="w-14 px-1 py-0.5 border rounded dark:bg-gray-700 dark:border-gray-600"
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Angles mode: position, rotation, scale controls */}
+                            {triangle.constructionMode === 'angles' && (
+                              <div className="space-y-2">
+                                {/* Position */}
+                                <div className="flex items-center gap-2 text-xs">
+                                  <span className="text-gray-500 w-12">Posición:</span>
+                                  <span className="text-gray-500">x:</span>
+                                  <input
+                                    type="number"
+                                    step="0.5"
+                                    value={triangle.position?.x ?? 0}
+                                    onChange={(e) => updateTriangleField(triangle.id, 'position', {
+                                      x: Number(e.target.value),
+                                      y: triangle.position?.y ?? 0,
+                                    })}
+                                    className="w-14 px-1 py-0.5 border rounded dark:bg-gray-700 dark:border-gray-600"
+                                  />
+                                  <span className="text-gray-500">y:</span>
+                                  <input
+                                    type="number"
+                                    step="0.5"
+                                    value={triangle.position?.y ?? 0}
+                                    onChange={(e) => updateTriangleField(triangle.id, 'position', {
+                                      x: triangle.position?.x ?? 0,
+                                      y: Number(e.target.value),
+                                    })}
+                                    className="w-14 px-1 py-0.5 border rounded dark:bg-gray-700 dark:border-gray-600"
+                                  />
+                                </div>
+
+                                {/* Rotation */}
+                                <div className="flex items-center gap-2 text-xs">
+                                  <span className="text-gray-500 w-12">Rotación:</span>
+                                  <input
+                                    type="range"
+                                    min="0"
+                                    max="360"
+                                    step="5"
+                                    value={triangle.rotation ?? 0}
+                                    onChange={(e) => updateTriangleField(triangle.id, 'rotation', Number(e.target.value))}
+                                    className="flex-1"
+                                  />
+                                  <span className="w-10 text-right">{triangle.rotation ?? 0}°</span>
+                                </div>
+
+                                {/* Scale */}
+                                <div className="flex items-center gap-2 text-xs">
+                                  <span className="text-gray-500 w-12">Escala:</span>
+                                  <input
+                                    type="number"
+                                    step="0.5"
+                                    min="0.5"
+                                    max="10"
+                                    value={triangle.scale ?? 2}
+                                    onChange={(e) => updateTriangleField(triangle.id, 'scale', Number(e.target.value))}
+                                    className="w-16 px-1 py-0.5 border rounded dark:bg-gray-700 dark:border-gray-600"
+                                  />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Empty state */}
+                  {cartesianElements.points.length === 0 &&
+                    cartesianElements.segments.length === 0 &&
+                    cartesianElements.triangles.length === 0 && (
+                      <div className="text-center py-8 text-gray-500">
+                        <Text size="sm">
+                          No hay elementos. Usa los botones de arriba para agregar puntos, segmentos o triángulos.
+                        </Text>
+                      </div>
+                    )}
+                </Card>
+
+                {/* Code Export */}
+                <Card padding="lg">
+                  <div className="flex items-center justify-between mb-3">
+                    <Heading level={3} size="xs">
+                      Código Generado
+                    </Heading>
+                    <Button variant="secondary" size="sm" onClick={copyCode}>
+                      Copiar
+                    </Button>
+                  </div>
+                  <pre className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 text-xs overflow-x-auto">
+                    {generateCartesianCode()}
+                  </pre>
+                </Card>
+              </div>
+
+              {/* Preview */}
+              <div>
+                <Card padding="lg" className="sticky top-4">
+                  <Heading level={3} size="xs" className="mb-4">
+                    Vista Previa
+                  </Heading>
+                  <div className="flex justify-center bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700 overflow-auto">
+                    <CartesianPlane
+                      xRange={[cartesianConfig.xMin, cartesianConfig.xMax]}
+                      yRange={[cartesianConfig.yMin, cartesianConfig.yMax]}
+                      scale={cartesianConfig.scale}
+                      showAxes={cartesianConfig.showAxes}
+                      showGrid={cartesianConfig.showGrid}
+                      showLabels={cartesianConfig.showLabels}
+                      showOrigin={cartesianConfig.showOrigin}
+                    >
+                      {/* Render Points */}
+                      {cartesianElements.points.map((point) => (
+                        <CartesianPoint
+                          key={point.id}
+                          x={point.x}
+                          y={point.y}
+                          label={point.label}
+                          color={point.color}
+                        />
+                      ))}
+                      {/* Render Segments */}
+                      {cartesianElements.segments.map((segment) => (
+                        <CartesianSegment
+                          key={segment.id}
+                          p1={segment.p1}
+                          p2={segment.p2}
+                          label={segment.label}
+                          color={segment.color}
+                          strokeStyle={segment.strokeStyle}
+                          arrow={segment.arrow}
+                        />
+                      ))}
+                      {/* Render Triangles */}
+                      {cartesianElements.triangles.map((triangle) => {
+                        const vertices = computeTriangleVertices(triangle);
+                        return (
+                          <TriangleFigure
+                            key={triangle.id}
+                            vertices={vertices as [LabeledPoint, LabeledPoint, LabeledPoint]}
+                            showRightAngleMarker={triangle.showRightAngleMarker}
+                            showVertices
+                          />
+                        );
+                      })}
+                    </CartesianPlane>
+                  </div>
+
+                  {/* Info */}
+                  <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <Text size="sm" className="font-medium mb-1">
+                      Elementos en el plano:
+                    </Text>
+                    <Text size="sm" variant="secondary">
+                      {cartesianElements.points.length} punto(s), {cartesianElements.segments.length} segmento(s), {cartesianElements.triangles.length} triángulo(s)
+                    </Text>
+                    <Text size="xs" variant="secondary" className="mt-1">
+                      Plano: x ∈ [{cartesianConfig.xMin}, {cartesianConfig.xMax}], y ∈ [{cartesianConfig.yMin}, {cartesianConfig.yMax}]
+                    </Text>
+                  </div>
+
+                  {/* Legend */}
+                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <Text size="sm" className="font-medium mb-2">
+                      Leyenda de colores:
+                    </Text>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        <span>Puntos</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-1 bg-green-500 rounded"></div>
+                        <span>Segmentos</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-1 bg-blue-500 rounded"></div>
+                        <span>Triángulos</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <span>Origen</span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </AdminLayout>
   );
