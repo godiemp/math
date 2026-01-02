@@ -135,7 +135,15 @@ function ProfilePageContent() {
     setEditError('');
 
     try {
-      const response = await api.put<UpdateProfileResponse>('/api/user/profile', editForm);
+      // Only include paesExamTarget if it has a value (not null)
+      // This prevents errors if the database column doesn't exist yet
+      const payload = {
+        displayName: editForm.displayName,
+        email: editForm.email,
+        targetLevel: editForm.targetLevel,
+        ...(editForm.paesExamTarget && { paesExamTarget: editForm.paesExamTarget }),
+      };
+      const response = await api.put<UpdateProfileResponse>('/api/user/profile', payload);
 
       if (response.error) {
         // API returned an error response
