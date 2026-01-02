@@ -5,12 +5,22 @@ import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { TriangleFigure } from '@/components/figures/TriangleFigure';
+import { CircleFigure } from '@/components/figures/CircleFigure';
 import {
   buildTriangleFromAngles,
   buildTriangleFromSides,
   validateTriangleAngles,
   validateTriangleSides,
 } from '@/lib/geometry/triangleUtils';
+import {
+  validateCircle,
+  validateSector,
+  circumference,
+  area,
+  sectorArea,
+  arcLength,
+  angleDifference,
+} from '@/lib/geometry/circleUtils';
 import type {
   LabeledPoint,
   SideConfig,
@@ -18,7 +28,15 @@ import type {
   SpecialLineConfig,
   TrianglePreset,
 } from '@/lib/types/triangle';
+import type {
+  LabeledPoint as CircleLabeledPoint,
+  CircleMode,
+  ChordConfig,
+  CirclePreset,
+  UnifiedArcConfig,
+} from '@/lib/types/circle';
 
+type FigureType = 'triangle' | 'circle';
 type InputMode = 'vertices' | 'angles' | 'sides';
 
 // Presets for vertices mode
@@ -78,9 +96,148 @@ const SIDES_PRESETS = [
   { name: 'Isósceles', description: '5-5-3', sides: [5, 5, 3] as [number, number, number] },
 ];
 
+// Circle presets
+const CIRCLE_PRESETS: CirclePreset[] = [
+  {
+    name: 'Círculo básico',
+    description: 'Centro y radio visible',
+    center: { x: 200, y: 150, label: 'O' },
+    radius: 80,
+    showCenter: true,
+    showRadius: true,
+  },
+  {
+    name: 'Circunferencia',
+    description: 'Solo el borde',
+    center: { x: 200, y: 150, label: 'O' },
+    radius: 80,
+    mode: 'circunferencia',
+    showCenter: true,
+  },
+  {
+    name: 'Sector 90°',
+    description: 'Cuarto de círculo',
+    center: { x: 200, y: 150, label: 'O' },
+    radius: 80,
+    showCenter: true,
+    sector: { startAngle: 0, endAngle: 90 },
+  },
+  {
+    name: 'Semicírculo',
+    description: '180°',
+    center: { x: 200, y: 150, label: 'O' },
+    radius: 80,
+    showCenter: true,
+    sector: { startAngle: 0, endAngle: 180 },
+  },
+];
+
 function FigureDebugContent() {
-  // Input mode
+  // Figure type (triangle or circle)
+  const [figureType, setFigureType] = useState<FigureType>('triangle');
+
+  // Input mode (for triangle)
   const [inputMode, setInputMode] = useState<InputMode>('vertices');
+
+  // ============================================
+  // CIRCLE STATE
+  // ============================================
+  const [circleCenter, setCircleCenter] = useState<CircleLabeledPoint>({ x: 200, y: 150, label: 'O' });
+  const [circleRadius, setCircleRadius] = useState(80);
+  const [circleMode, setCircleMode] = useState<CircleMode>('circulo');
+  const [showCircleCenter, setShowCircleCenter] = useState(true);
+  const [showCircleRadius, setShowCircleRadius] = useState(false);
+  const [circleRadiusAngle, setCircleRadiusAngle] = useState(45);
+  const [showCircleDiameter, setShowCircleDiameter] = useState(false);
+  const [circleDiameterAngle, setCircleDiameterAngle] = useState(0);
+  const [showCircleGrid, setShowCircleGrid] = useState(true);
+
+  // Unified arcs state (preferred API)
+  const [circleArcs, setCircleArcs] = useState<UnifiedArcConfig[]>([]);
+
+  // Sector state (legacy - kept for presets)
+  const [showSector, setShowSector] = useState(false);
+  const [sectorStartAngle, setSectorStartAngle] = useState(0);
+  const [sectorEndAngle, setSectorEndAngle] = useState(90);
+
+  // Arc state (legacy)
+  const [showArc, setShowArc] = useState(false);
+  const [arcStartAngle, setArcStartAngle] = useState(0);
+  const [arcEndAngle, setArcEndAngle] = useState(90);
+
+  // Central angle state (legacy)
+  const [showCentralAngle, setShowCentralAngle] = useState(false);
+  const [centralAngleStart, setCentralAngleStart] = useState(0);
+  const [centralAngleEnd, setCentralAngleEnd] = useState(60);
+  const [showCentralAngleDegrees, setShowCentralAngleDegrees] = useState(true);
+
+  // Chords state
+  const [circleChords, setCircleChords] = useState<ChordConfig[]>([]);
+
+  // Circle validation
+  const circleValidation = useMemo(() => {
+    return validateCircle(circleCenter, circleRadius);
+  }, [circleCenter, circleRadius]);
+
+
+  // Apply circle preset
+  const applyCirclePreset = useCallback((preset: CirclePreset) => {
+    setCircleCenter(preset.center);
+    setCircleRadius(preset.radius);
+    setCircleMode(preset.mode || 'circulo');
+    setShowCircleCenter(preset.showCenter ?? false);
+    setShowCircleRadius(!!preset.showRadius);
+    if (preset.sector) {
+      setShowSector(true);
+      setSectorStartAngle(preset.sector.startAngle);
+      setSectorEndAngle(preset.sector.endAngle);
+    } else {
+      setShowSector(false);
+    }
+  }, []);
+
+  // Add chord
+  const addChord = useCallback(() => {
+    setCircleChords(prev => [...prev, { fromAngle: 30, toAngle: 150, showEndpoints: true }]);
+  }, []);
+
+  // Remove chord
+  const removeChord = useCallback((index: number) => {
+    setCircleChords(prev => prev.filter((_, i) => i !== index));
+  }, []);
+
+  // Update chord
+  const updateChord = useCallback((index: number, field: 'fromAngle' | 'toAngle', value: number) => {
+    setCircleChords(prev => prev.map((chord, i) =>
+      i === index ? { ...chord, [field]: value } : chord
+    ));
+  }, []);
+
+  // Add unified arc
+  const addArc = useCallback(() => {
+    setCircleArcs(prev => [...prev, {
+      startAngle: 0,
+      endAngle: 90,
+      showAngle: true,
+      showDegrees: true,
+    }]);
+  }, []);
+
+  // Remove unified arc
+  const removeArc = useCallback((index: number) => {
+    setCircleArcs(prev => prev.filter((_, i) => i !== index));
+  }, []);
+
+  // Update unified arc
+  const updateArc = useCallback((index: number, updates: Partial<UnifiedArcConfig>) => {
+    setCircleArcs(prev => prev.map((arc, i) =>
+      i === index ? { ...arc, ...updates } : arc
+    ));
+  }, []);
+
+  // ============================================
+  // TRIANGLE STATE
+  // ============================================
 
   // Vertex state (for vertices mode)
   const [vertices, setVertices] = useState<[LabeledPoint, LabeledPoint, LabeledPoint]>([
@@ -305,8 +462,8 @@ function FigureDebugContent() {
     ]);
   }, [showAngleArcs]);
 
-  // Generate code snippet
-  const generateCode = useCallback(() => {
+  // Generate code snippet for triangle
+  const generateTriangleCode = useCallback(() => {
     const propsLines = [];
 
     // Use fromAngles, fromSides, or vertices depending on mode
@@ -367,6 +524,80 @@ function FigureDebugContent() {
     return `<TriangleFigure\n  ${propsLines.join('\n  ')}\n/>`;
   }, [inputMode, angleInputs, angle3, sideInputs, activeVertices, showSideLabels, showAngleArcs, showAngleDegrees, specialLines, showGrid, showRightAngleMarker, showVertices]);
 
+  // Generate code snippet for circle
+  const generateCircleCode = useCallback(() => {
+    const propsLines = [];
+
+    // Center
+    propsLines.push(`center={{ x: ${circleCenter.x}, y: ${circleCenter.y}, label: '${circleCenter.label || 'O'}' }}`);
+    propsLines.push(`radius={${circleRadius}}`);
+
+    // Mode (only if circunferencia)
+    if (circleMode === 'circunferencia') {
+      propsLines.push(`mode="circunferencia"`);
+    }
+
+    // Visual options
+    if (showCircleCenter) propsLines.push(`showCenter`);
+    if (showCircleRadius) {
+      propsLines.push(`showRadius={{ toAngle: ${circleRadiusAngle}, label: 'r' }}`);
+    }
+    if (showCircleDiameter) {
+      propsLines.push(`showDiameter={{ angle: ${circleDiameterAngle}, label: 'd' }}`);
+    }
+
+    // Unified arcs (preferred API)
+    if (circleArcs.length > 0) {
+      propsLines.push(`arcs={[`);
+      circleArcs.forEach((arc, i) => {
+        const arcProps = [`startAngle: ${arc.startAngle}`, `endAngle: ${arc.endAngle}`];
+        if (arc.showAngle) arcProps.push(`showAngle: true`);
+        if (arc.showDegrees) arcProps.push(`showDegrees: true`);
+        if (arc.angleLabel) arcProps.push(`angleLabel: '${arc.angleLabel}'`);
+        if (arc.showSector) arcProps.push(`showSector: true`);
+        if (arc.showRadii) arcProps.push(`showRadii: true`);
+        if (arc.sectorOpacity !== undefined && arc.sectorOpacity !== 0.3) {
+          arcProps.push(`sectorOpacity: ${arc.sectorOpacity}`);
+        }
+        propsLines.push(`  { ${arcProps.join(', ')} }${i < circleArcs.length - 1 ? ',' : ''}`);
+      });
+      propsLines.push(`]}`);
+    }
+
+    // Legacy: Sector (only if no unified arcs)
+    if (circleArcs.length === 0 && showSector) {
+      propsLines.push(`sector={{ startAngle: ${sectorStartAngle}, endAngle: ${sectorEndAngle}, showRadii: true }}`);
+    }
+
+    // Legacy: Arc (only if no unified arcs)
+    if (circleArcs.length === 0 && showArc) {
+      propsLines.push(`arc={{ startAngle: ${arcStartAngle}, endAngle: ${arcEndAngle}, strokeWidth: 4 }}`);
+    }
+
+    // Legacy: Central angle (only if no unified arcs)
+    if (circleArcs.length === 0 && showCentralAngle) {
+      propsLines.push(`centralAngle={{ startAngle: ${centralAngleStart}, endAngle: ${centralAngleEnd}, showDegrees: ${showCentralAngleDegrees} }}`);
+    }
+
+    // Chords
+    if (circleChords.length > 0) {
+      propsLines.push(`chords={[`);
+      circleChords.forEach((chord, i) => {
+        propsLines.push(`  { fromAngle: ${chord.fromAngle}, toAngle: ${chord.toAngle}, showEndpoints: true }${i < circleChords.length - 1 ? ',' : ''}`);
+      });
+      propsLines.push(`]}`);
+    }
+
+    if (showCircleGrid) propsLines.push(`showGrid`);
+
+    return `<CircleFigure\n  ${propsLines.join('\n  ')}\n/>`;
+  }, [circleCenter, circleRadius, circleMode, showCircleCenter, showCircleRadius, circleRadiusAngle, showCircleDiameter, circleDiameterAngle, circleArcs, showSector, sectorStartAngle, sectorEndAngle, showArc, arcStartAngle, arcEndAngle, showCentralAngle, centralAngleStart, centralAngleEnd, showCentralAngleDegrees, circleChords, showCircleGrid]);
+
+  // Generate code based on figure type
+  const generateCode = useCallback(() => {
+    return figureType === 'triangle' ? generateTriangleCode() : generateCircleCode();
+  }, [figureType, generateTriangleCode, generateCircleCode]);
+
   // Copy code to clipboard
   const copyCode = useCallback(() => {
     const code = generateCode();
@@ -390,49 +621,102 @@ function FigureDebugContent() {
         <Card padding="md">
           <div className="flex items-center gap-4">
             <Text className="font-medium">Tipo de figura:</Text>
-            <Badge variant="info" size="md">Triángulo</Badge>
-            <Text variant="secondary" size="sm">(más figuras próximamente)</Text>
-          </div>
-        </Card>
-
-        {/* Input Mode Toggle */}
-        <Card padding="md">
-          <div className="flex items-center gap-4">
-            <Text className="font-medium">Modo de construcción:</Text>
             <div className="flex rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
               <button
-                onClick={() => setInputMode('vertices')}
+                onClick={() => setFigureType('triangle')}
                 className={`px-4 py-2 text-sm font-medium transition-colors ${
-                  inputMode === 'vertices'
+                  figureType === 'triangle'
                     ? 'bg-blue-500 text-white'
                     : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
               >
-                Por Vértices
+                Triángulo
               </button>
               <button
-                onClick={() => setInputMode('angles')}
+                onClick={() => setFigureType('circle')}
                 className={`px-4 py-2 text-sm font-medium transition-colors ${
-                  inputMode === 'angles'
+                  figureType === 'circle'
                     ? 'bg-blue-500 text-white'
                     : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
               >
-                Por Ángulos
-              </button>
-              <button
-                onClick={() => setInputMode('sides')}
-                className={`px-4 py-2 text-sm font-medium transition-colors ${
-                  inputMode === 'sides'
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-              >
-                Por Lados
+                Circunferencia
               </button>
             </div>
           </div>
         </Card>
+
+        {/* Triangle Input Mode Toggle */}
+        {figureType === 'triangle' && (
+          <Card padding="md">
+            <div className="flex items-center gap-4">
+              <Text className="font-medium">Modo de construcción:</Text>
+              <div className="flex rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
+                <button
+                  onClick={() => setInputMode('vertices')}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    inputMode === 'vertices'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  Por Vértices
+                </button>
+                <button
+                  onClick={() => setInputMode('angles')}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    inputMode === 'angles'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  Por Ángulos
+                </button>
+                <button
+                  onClick={() => setInputMode('sides')}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    inputMode === 'sides'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  Por Lados
+                </button>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Circle Mode Toggle */}
+        {figureType === 'circle' && (
+          <Card padding="md">
+            <div className="flex items-center gap-4">
+              <Text className="font-medium">Modo:</Text>
+              <div className="flex rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
+                <button
+                  onClick={() => setCircleMode('circulo')}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    circleMode === 'circulo'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  Círculo (relleno)
+                </button>
+                <button
+                  onClick={() => setCircleMode('circunferencia')}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    circleMode === 'circunferencia'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  Circunferencia (borde)
+                </button>
+              </div>
+            </div>
+          </Card>
+        )}
 
         {/* Presets */}
         <div>
@@ -440,7 +724,8 @@ function FigureDebugContent() {
             Presets
           </Heading>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {inputMode === 'vertices' && VERTEX_PRESETS.map((preset) => (
+            {/* Triangle presets */}
+            {figureType === 'triangle' && inputMode === 'vertices' && VERTEX_PRESETS.map((preset) => (
               <Card
                 key={preset.name}
                 hover
@@ -458,7 +743,7 @@ function FigureDebugContent() {
                 </div>
               </Card>
             ))}
-            {inputMode === 'angles' && ANGLE_PRESETS.map((preset) => (
+            {figureType === 'triangle' && inputMode === 'angles' && ANGLE_PRESETS.map((preset) => (
               <Card
                 key={preset.name}
                 hover
@@ -476,7 +761,7 @@ function FigureDebugContent() {
                 </div>
               </Card>
             ))}
-            {inputMode === 'sides' && SIDES_PRESETS.map((preset) => (
+            {figureType === 'triangle' && inputMode === 'sides' && SIDES_PRESETS.map((preset) => (
               <Card
                 key={preset.name}
                 hover
@@ -494,14 +779,328 @@ function FigureDebugContent() {
                 </div>
               </Card>
             ))}
+            {/* Circle presets */}
+            {figureType === 'circle' && CIRCLE_PRESETS.map((preset) => (
+              <Card
+                key={preset.name}
+                hover
+                className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
+                padding="md"
+                onClick={() => applyCirclePreset(preset)}
+              >
+                <div className="text-center">
+                  <Heading level={3} size="xs" className="mb-1">
+                    {preset.name}
+                  </Heading>
+                  <Text size="xs" variant="secondary">
+                    {preset.description}
+                  </Text>
+                </div>
+              </Card>
+            ))}
           </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Controls Panel */}
           <div className="space-y-4">
+            {/* ============================================ */}
+            {/* CIRCLE CONTROLS */}
+            {/* ============================================ */}
+            {figureType === 'circle' && (
+              <>
+                {/* Circle Basic Controls */}
+                <Card padding="lg">
+                  <Heading level={3} size="xs" className="mb-4">
+                    Centro y Radio
+                  </Heading>
+                  <div className="space-y-4">
+                    {/* Center X */}
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm w-20">Centro X:</Text>
+                      <input
+                        type="range"
+                        min="50"
+                        max="350"
+                        value={circleCenter.x}
+                        onChange={(e) => setCircleCenter(prev => ({ ...prev, x: Number(e.target.value) }))}
+                        className="flex-1"
+                      />
+                      <span className="text-sm w-12">{circleCenter.x}</span>
+                    </div>
+                    {/* Center Y */}
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm w-20">Centro Y:</Text>
+                      <input
+                        type="range"
+                        min="50"
+                        max="250"
+                        value={circleCenter.y}
+                        onChange={(e) => setCircleCenter(prev => ({ ...prev, y: Number(e.target.value) }))}
+                        className="flex-1"
+                      />
+                      <span className="text-sm w-12">{circleCenter.y}</span>
+                    </div>
+                    {/* Radius */}
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm w-20">Radio:</Text>
+                      <input
+                        type="range"
+                        min="20"
+                        max="120"
+                        value={circleRadius}
+                        onChange={(e) => setCircleRadius(Number(e.target.value))}
+                        className="flex-1"
+                      />
+                      <span className="text-sm w-12">{circleRadius}px</span>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Circle Visual Options */}
+                <Card padding="lg">
+                  <Heading level={3} size="xs" className="mb-4">
+                    Opciones Visuales
+                  </Heading>
+                  <div className="grid grid-cols-2 gap-3">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showCircleGrid}
+                        onChange={(e) => setShowCircleGrid(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Mostrar grid</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showCircleCenter}
+                        onChange={(e) => setShowCircleCenter(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Mostrar centro</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showCircleRadius}
+                        onChange={(e) => setShowCircleRadius(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Mostrar radio</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showCircleDiameter}
+                        onChange={(e) => setShowCircleDiameter(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Mostrar diámetro</span>
+                    </label>
+                  </div>
+                  {/* Radius angle */}
+                  {showCircleRadius && (
+                    <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center gap-4">
+                        <Text className="text-sm w-28">Ángulo radio:</Text>
+                        <input
+                          type="range"
+                          min="0"
+                          max="360"
+                          value={circleRadiusAngle}
+                          onChange={(e) => setCircleRadiusAngle(Number(e.target.value))}
+                          className="flex-1"
+                        />
+                        <span className="text-sm w-12">{circleRadiusAngle}°</span>
+                      </div>
+                    </div>
+                  )}
+                  {/* Diameter angle */}
+                  {showCircleDiameter && (
+                    <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center gap-4">
+                        <Text className="text-sm w-28">Ángulo diámetro:</Text>
+                        <input
+                          type="range"
+                          min="0"
+                          max="180"
+                          value={circleDiameterAngle}
+                          onChange={(e) => setCircleDiameterAngle(Number(e.target.value))}
+                          className="flex-1"
+                        />
+                        <span className="text-sm w-12">{circleDiameterAngle}°</span>
+                      </div>
+                    </div>
+                  )}
+                </Card>
+
+                {/* Unified Arcs Controls (Preferred API) */}
+                <Card padding="lg">
+                  <div className="flex items-center justify-between mb-4">
+                    <Heading level={3} size="xs">
+                      Arcos
+                    </Heading>
+                    <Button variant="secondary" size="sm" onClick={addArc}>
+                      + Agregar arco
+                    </Button>
+                  </div>
+                  {circleArcs.length === 0 ? (
+                    <Text size="sm" variant="secondary">
+                      No hay arcos. Usa el botón para agregar un arco con ángulo y sector.
+                    </Text>
+                  ) : (
+                    <div className="space-y-4">
+                      {circleArcs.map((arc, i) => (
+                        <div key={i} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <div className="flex items-center justify-between mb-3">
+                            <Badge variant="info">Arco {i + 1}</Badge>
+                            <button
+                              onClick={() => removeArc(i)}
+                              className="text-red-500 hover:text-red-700 text-sm"
+                            >
+                              Eliminar
+                            </button>
+                          </div>
+                          <div className="space-y-3">
+                            {/* Angle sliders */}
+                            <div className="flex items-center gap-2">
+                              <Text size="xs" className="w-16">Inicio:</Text>
+                              <input
+                                type="range"
+                                min="0"
+                                max="360"
+                                value={arc.startAngle}
+                                onChange={(e) => updateArc(i, { startAngle: Number(e.target.value) })}
+                                className="flex-1"
+                              />
+                              <span className="text-xs w-10">{arc.startAngle}°</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Text size="xs" className="w-16">Fin:</Text>
+                              <input
+                                type="range"
+                                min="0"
+                                max="360"
+                                value={arc.endAngle}
+                                onChange={(e) => updateArc(i, { endAngle: Number(e.target.value) })}
+                                className="flex-1"
+                              />
+                              <span className="text-xs w-10">{arc.endAngle}°</span>
+                            </div>
+                            {/* Options grid */}
+                            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={arc.showAngle ?? false}
+                                  onChange={(e) => updateArc(i, { showAngle: e.target.checked })}
+                                  className="rounded"
+                                />
+                                <span className="text-xs">Mostrar ángulo</span>
+                              </label>
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={arc.showDegrees ?? false}
+                                  onChange={(e) => updateArc(i, { showDegrees: e.target.checked })}
+                                  className="rounded"
+                                />
+                                <span className="text-xs">Mostrar grados</span>
+                              </label>
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={arc.showSector ?? false}
+                                  onChange={(e) => updateArc(i, { showSector: e.target.checked })}
+                                  className="rounded"
+                                />
+                                <span className="text-xs">Mostrar sector</span>
+                              </label>
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={arc.showRadii ?? false}
+                                  onChange={(e) => updateArc(i, { showRadii: e.target.checked })}
+                                  className="rounded"
+                                />
+                                <span className="text-xs">Mostrar radios</span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </Card>
+
+                {/* Chords */}
+                <Card padding="lg">
+                  <div className="flex items-center justify-between mb-4">
+                    <Heading level={3} size="xs">
+                      Cuerdas
+                    </Heading>
+                    <Button variant="secondary" size="sm" onClick={addChord}>
+                      + Agregar
+                    </Button>
+                  </div>
+                  {circleChords.length === 0 ? (
+                    <Text size="sm" variant="secondary">
+                      No hay cuerdas. Usa el botón para agregar.
+                    </Text>
+                  ) : (
+                    <div className="space-y-3">
+                      {circleChords.map((chord, i) => (
+                        <div key={i} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <Badge variant="info">Cuerda {i + 1}</Badge>
+                            <button
+                              onClick={() => removeChord(i)}
+                              className="text-red-500 hover:text-red-700 text-sm"
+                            >
+                              Eliminar
+                            </button>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <Text size="xs" className="w-16">Desde:</Text>
+                              <input
+                                type="range"
+                                min="0"
+                                max="360"
+                                value={chord.fromAngle}
+                                onChange={(e) => updateChord(i, 'fromAngle', Number(e.target.value))}
+                                className="flex-1"
+                              />
+                              <span className="text-xs w-10">{chord.fromAngle}°</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Text size="xs" className="w-16">Hasta:</Text>
+                              <input
+                                type="range"
+                                min="0"
+                                max="360"
+                                value={chord.toAngle}
+                                onChange={(e) => updateChord(i, 'toAngle', Number(e.target.value))}
+                                className="flex-1"
+                              />
+                              <span className="text-xs w-10">{chord.toAngle}°</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </Card>
+              </>
+            )}
+
+            {/* ============================================ */}
+            {/* TRIANGLE CONTROLS */}
+            {/* ============================================ */}
             {/* Vertex Controls (vertices mode) */}
-            {inputMode === 'vertices' && (
+            {figureType === 'triangle' && inputMode === 'vertices' && (
               <Card padding="lg">
                 <Heading level={3} size="xs" className="mb-4">
                   Vértices
@@ -543,7 +1142,7 @@ function FigureDebugContent() {
             )}
 
             {/* Angle Controls (angles mode) */}
-            {inputMode === 'angles' && (
+            {figureType === 'triangle' && inputMode === 'angles' && (
               <Card padding="lg">
                 <Heading level={3} size="xs" className="mb-4">
                   Ángulos Interiores
@@ -639,7 +1238,7 @@ function FigureDebugContent() {
             )}
 
             {/* Sides Controls (sides mode) */}
-            {inputMode === 'sides' && (
+            {figureType === 'triangle' && inputMode === 'sides' && (
               <Card padding="lg">
                 <Heading level={3} size="xs" className="mb-4">
                   Longitud de Lados
@@ -751,97 +1350,101 @@ function FigureDebugContent() {
               </Card>
             )}
 
-            {/* Visual Options */}
-            <Card padding="lg">
-              <Heading level={3} size="xs" className="mb-4">
-                Opciones Visuales
-              </Heading>
-              <div className="grid grid-cols-2 gap-3">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={showGrid}
-                    onChange={(e) => setShowGrid(e.target.checked)}
-                    className="rounded"
-                  />
-                  <span className="text-sm">Mostrar grid</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={showVertices}
-                    onChange={(e) => setShowVertices(e.target.checked)}
-                    className="rounded"
-                  />
-                  <span className="text-sm">Mostrar vértices</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={showSideLabels}
-                    onChange={(e) => setShowSideLabels(e.target.checked)}
-                    className="rounded"
-                  />
-                  <span className="text-sm">Labels de lados</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={showRightAngleMarker}
-                    onChange={(e) => setShowRightAngleMarker(e.target.checked)}
-                    className="rounded"
-                  />
-                  <span className="text-sm">Marcador ángulo recto</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={showAngleArcs}
-                    onChange={(e) => toggleAllAngleArcs(e.target.checked)}
-                    className="rounded"
-                  />
-                  <span className="text-sm">Arcos de ángulos</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={showAngleDegrees}
-                    onChange={(e) => toggleAllAngleDegrees(e.target.checked)}
-                    className="rounded"
-                  />
-                  <span className="text-sm">Mostrar grados</span>
-                </label>
-              </div>
-            </Card>
+            {/* Visual Options (Triangle) */}
+            {figureType === 'triangle' && (
+              <Card padding="lg">
+                <Heading level={3} size="xs" className="mb-4">
+                  Opciones Visuales
+                </Heading>
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showGrid}
+                      onChange={(e) => setShowGrid(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Mostrar grid</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showVertices}
+                      onChange={(e) => setShowVertices(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Mostrar vértices</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showSideLabels}
+                      onChange={(e) => setShowSideLabels(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Labels de lados</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showRightAngleMarker}
+                      onChange={(e) => setShowRightAngleMarker(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Marcador ángulo recto</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showAngleArcs}
+                      onChange={(e) => toggleAllAngleArcs(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Arcos de ángulos</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showAngleDegrees}
+                      onChange={(e) => toggleAllAngleDegrees(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Mostrar grados</span>
+                  </label>
+                </div>
+              </Card>
+            )}
 
-            {/* Special Lines */}
-            <Card padding="lg">
-              <Heading level={3} size="xs" className="mb-4">
-                Líneas Especiales
-              </Heading>
-              <div className="space-y-3">
-                {(['altura', 'mediana', 'bisectriz'] as const).map((type) => (
-                  <div key={type} className="flex items-center gap-4">
-                    <span className="text-sm font-medium w-20 capitalize">{type}:</span>
-                    <div className="flex gap-2">
-                      {([0, 1, 2] as const).map((v) => (
-                        <button
-                          key={v}
-                          onClick={() => toggleSpecialLine(type, v)}
-                          className={`px-3 py-1 text-sm rounded transition-colors ${
-                            isSpecialLineActive(type, v)
-                              ? 'bg-purple-500 text-white'
-                              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                          }`}
-                        >
-                          {activeVertices[v].label}
-                        </button>
-                      ))}
+            {/* Special Lines (Triangle) */}
+            {figureType === 'triangle' && (
+              <Card padding="lg">
+                <Heading level={3} size="xs" className="mb-4">
+                  Líneas Especiales
+                </Heading>
+                <div className="space-y-3">
+                  {(['altura', 'mediana', 'bisectriz'] as const).map((type) => (
+                    <div key={type} className="flex items-center gap-4">
+                      <span className="text-sm font-medium w-20 capitalize">{type}:</span>
+                      <div className="flex gap-2">
+                        {([0, 1, 2] as const).map((v) => (
+                          <button
+                            key={v}
+                            onClick={() => toggleSpecialLine(type, v)}
+                            className={`px-3 py-1 text-sm rounded transition-colors ${
+                              isSpecialLineActive(type, v)
+                                ? 'bg-purple-500 text-white'
+                                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                            }`}
+                          >
+                            {activeVertices[v].label}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
+                  ))}
+                </div>
+              </Card>
+            )}
 
             {/* Code Export */}
             <Card padding="lg">
@@ -866,21 +1469,37 @@ function FigureDebugContent() {
                 Vista Previa
               </Heading>
               <div className="flex justify-center bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-                <TriangleFigure
-                  vertices={activeVertices}
-                  sides={showSideLabels ? sides : undefined}
-                  angles={showAngleArcs || showAngleDegrees ? angles : undefined}
-                  specialLines={specialLines.length > 0 ? specialLines : undefined}
-                  showGrid={showGrid}
-                  showRightAngleMarker={showRightAngleMarker}
-                  showVertices={showVertices}
-                  width={400}
-                  height={300}
-                />
+                {figureType === 'triangle' ? (
+                  <TriangleFigure
+                    vertices={activeVertices}
+                    sides={showSideLabels ? sides : undefined}
+                    angles={showAngleArcs || showAngleDegrees ? angles : undefined}
+                    specialLines={specialLines.length > 0 ? specialLines : undefined}
+                    showGrid={showGrid}
+                    showRightAngleMarker={showRightAngleMarker}
+                    showVertices={showVertices}
+                    width={400}
+                    height={300}
+                  />
+                ) : (
+                  <CircleFigure
+                    center={circleCenter}
+                    radius={circleRadius}
+                    mode={circleMode}
+                    showCenter={showCircleCenter}
+                    showRadius={showCircleRadius ? { toAngle: circleRadiusAngle, label: 'r' } : false}
+                    showDiameter={showCircleDiameter ? { angle: circleDiameterAngle, label: 'd' } : false}
+                    arcs={circleArcs.length > 0 ? circleArcs : undefined}
+                    chords={circleChords.length > 0 ? circleChords : undefined}
+                    showGrid={showCircleGrid}
+                    width={400}
+                    height={300}
+                  />
+                )}
               </div>
 
-              {/* Current angles info (in angles mode) */}
-              {inputMode === 'angles' && angleValidation.valid && (
+              {/* Current angles info (in angles mode - triangle) */}
+              {figureType === 'triangle' && inputMode === 'angles' && angleValidation.valid && (
                 <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                   <Text size="sm" className="font-medium mb-1">
                     Ángulos del triángulo:
@@ -894,8 +1513,8 @@ function FigureDebugContent() {
                 </div>
               )}
 
-              {/* Current sides info (in sides mode) */}
-              {inputMode === 'sides' && sidesValidation.valid && (
+              {/* Current sides info (in sides mode - triangle) */}
+              {figureType === 'triangle' && inputMode === 'sides' && sidesValidation.valid && (
                 <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                   <Text size="sm" className="font-medium mb-1">
                     Lados del triángulo:
@@ -909,29 +1528,86 @@ function FigureDebugContent() {
                 </div>
               )}
 
+              {/* Circle info display */}
+              {figureType === 'circle' && circleValidation.valid && (
+                <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <Text size="sm" className="font-medium mb-1">
+                    Propiedades del círculo:
+                  </Text>
+                  <div className="space-y-1">
+                    <Text size="sm" variant="secondary">
+                      Radio: {circleRadius}px | Diámetro: {circleRadius * 2}px
+                    </Text>
+                    <Text size="sm" variant="secondary">
+                      Circunferencia: {circumference(circleRadius).toFixed(2)}px
+                    </Text>
+                    <Text size="sm" variant="secondary">
+                      Área: {area(circleRadius).toFixed(2)}px²
+                    </Text>
+                    {circleArcs.length > 0 && (
+                      <div className="mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
+                        <Text size="xs" className="font-medium mb-1">Arcos:</Text>
+                        {circleArcs.map((arc, i) => (
+                          <Text key={i} size="xs" variant="secondary">
+                            Arco {i + 1}: {angleDifference(arc.startAngle, arc.endAngle).toFixed(0)}° |
+                            Longitud: {arcLength(circleRadius, angleDifference(arc.startAngle, arc.endAngle)).toFixed(2)}px
+                            {arc.showSector && ` | Área: ${sectorArea(circleRadius, angleDifference(arc.startAngle, arc.endAngle)).toFixed(2)}px²`}
+                          </Text>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {/* Legend */}
               <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <Text size="sm" className="font-medium mb-2">
                   Leyenda de colores:
                 </Text>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-1 bg-blue-500 rounded"></div>
-                    <span>Triángulo</span>
+                {figureType === 'triangle' ? (
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-blue-500 rounded"></div>
+                      <span>Triángulo</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-amber-500 rounded"></div>
+                      <span>Arcos de ángulo</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-purple-500 rounded"></div>
+                      <span>Líneas especiales</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-red-500 rounded"></div>
+                      <span>Ángulo recto</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-1 bg-amber-500 rounded"></div>
-                    <span>Arcos de ángulo</span>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-blue-500 rounded"></div>
+                      <span>Círculo/Circunferencia</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-purple-500 rounded"></div>
+                      <span>Sector/Radio/Diámetro</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-amber-500 rounded"></div>
+                      <span>Arco/Ángulo central</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-emerald-500 rounded"></div>
+                      <span>Cuerdas</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                      <span>Centro</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-1 bg-purple-500 rounded"></div>
-                    <span>Líneas especiales</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-1 bg-red-500 rounded"></div>
-                    <span>Ángulo recto</span>
-                  </div>
-                </div>
+                )}
               </div>
             </Card>
           </div>
