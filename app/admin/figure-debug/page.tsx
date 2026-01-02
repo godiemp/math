@@ -31,11 +31,9 @@ import type {
 import type {
   LabeledPoint as CircleLabeledPoint,
   CircleMode,
-  SectorConfig,
-  ArcConfig,
   ChordConfig,
-  CentralAngleConfig,
   CirclePreset,
+  UnifiedArcConfig,
 } from '@/lib/types/circle';
 
 type FigureType = 'triangle' | 'circle';
@@ -154,17 +152,20 @@ function FigureDebugContent() {
   const [circleDiameterAngle, setCircleDiameterAngle] = useState(0);
   const [showCircleGrid, setShowCircleGrid] = useState(true);
 
-  // Sector state
+  // Unified arcs state (preferred API)
+  const [circleArcs, setCircleArcs] = useState<UnifiedArcConfig[]>([]);
+
+  // Sector state (legacy - kept for presets)
   const [showSector, setShowSector] = useState(false);
   const [sectorStartAngle, setSectorStartAngle] = useState(0);
   const [sectorEndAngle, setSectorEndAngle] = useState(90);
 
-  // Arc state
+  // Arc state (legacy)
   const [showArc, setShowArc] = useState(false);
   const [arcStartAngle, setArcStartAngle] = useState(0);
   const [arcEndAngle, setArcEndAngle] = useState(90);
 
-  // Central angle state
+  // Central angle state (legacy)
   const [showCentralAngle, setShowCentralAngle] = useState(false);
   const [centralAngleStart, setCentralAngleStart] = useState(0);
   const [centralAngleEnd, setCentralAngleEnd] = useState(60);
@@ -178,35 +179,6 @@ function FigureDebugContent() {
     return validateCircle(circleCenter, circleRadius);
   }, [circleCenter, circleRadius]);
 
-  // Sector config
-  const sectorConfig = useMemo<SectorConfig | undefined>(() => {
-    if (!showSector) return undefined;
-    return {
-      startAngle: sectorStartAngle,
-      endAngle: sectorEndAngle,
-      showRadii: true,
-    };
-  }, [showSector, sectorStartAngle, sectorEndAngle]);
-
-  // Arc config
-  const arcConfig = useMemo<ArcConfig | undefined>(() => {
-    if (!showArc) return undefined;
-    return {
-      startAngle: arcStartAngle,
-      endAngle: arcEndAngle,
-      strokeWidth: 4,
-    };
-  }, [showArc, arcStartAngle, arcEndAngle]);
-
-  // Central angle config
-  const centralAngleConfig = useMemo<CentralAngleConfig | undefined>(() => {
-    if (!showCentralAngle) return undefined;
-    return {
-      startAngle: centralAngleStart,
-      endAngle: centralAngleEnd,
-      showDegrees: showCentralAngleDegrees,
-    };
-  }, [showCentralAngle, centralAngleStart, centralAngleEnd, showCentralAngleDegrees]);
 
   // Apply circle preset
   const applyCirclePreset = useCallback((preset: CirclePreset) => {
@@ -238,6 +210,28 @@ function FigureDebugContent() {
   const updateChord = useCallback((index: number, field: 'fromAngle' | 'toAngle', value: number) => {
     setCircleChords(prev => prev.map((chord, i) =>
       i === index ? { ...chord, [field]: value } : chord
+    ));
+  }, []);
+
+  // Add unified arc
+  const addArc = useCallback(() => {
+    setCircleArcs(prev => [...prev, {
+      startAngle: 0,
+      endAngle: 90,
+      showAngle: true,
+      showDegrees: true,
+    }]);
+  }, []);
+
+  // Remove unified arc
+  const removeArc = useCallback((index: number) => {
+    setCircleArcs(prev => prev.filter((_, i) => i !== index));
+  }, []);
+
+  // Update unified arc
+  const updateArc = useCallback((index: number, updates: Partial<UnifiedArcConfig>) => {
+    setCircleArcs(prev => prev.map((arc, i) =>
+      i === index ? { ...arc, ...updates } : arc
     ));
   }, []);
 
@@ -552,18 +546,36 @@ function FigureDebugContent() {
       propsLines.push(`showDiameter={{ angle: ${circleDiameterAngle}, label: 'd' }}`);
     }
 
-    // Sector
-    if (showSector) {
+    // Unified arcs (preferred API)
+    if (circleArcs.length > 0) {
+      propsLines.push(`arcs={[`);
+      circleArcs.forEach((arc, i) => {
+        const arcProps = [`startAngle: ${arc.startAngle}`, `endAngle: ${arc.endAngle}`];
+        if (arc.showAngle) arcProps.push(`showAngle: true`);
+        if (arc.showDegrees) arcProps.push(`showDegrees: true`);
+        if (arc.angleLabel) arcProps.push(`angleLabel: '${arc.angleLabel}'`);
+        if (arc.showSector) arcProps.push(`showSector: true`);
+        if (arc.showRadii) arcProps.push(`showRadii: true`);
+        if (arc.sectorOpacity !== undefined && arc.sectorOpacity !== 0.3) {
+          arcProps.push(`sectorOpacity: ${arc.sectorOpacity}`);
+        }
+        propsLines.push(`  { ${arcProps.join(', ')} }${i < circleArcs.length - 1 ? ',' : ''}`);
+      });
+      propsLines.push(`]}`);
+    }
+
+    // Legacy: Sector (only if no unified arcs)
+    if (circleArcs.length === 0 && showSector) {
       propsLines.push(`sector={{ startAngle: ${sectorStartAngle}, endAngle: ${sectorEndAngle}, showRadii: true }}`);
     }
 
-    // Arc
-    if (showArc) {
+    // Legacy: Arc (only if no unified arcs)
+    if (circleArcs.length === 0 && showArc) {
       propsLines.push(`arc={{ startAngle: ${arcStartAngle}, endAngle: ${arcEndAngle}, strokeWidth: 4 }}`);
     }
 
-    // Central angle
-    if (showCentralAngle) {
+    // Legacy: Central angle (only if no unified arcs)
+    if (circleArcs.length === 0 && showCentralAngle) {
       propsLines.push(`centralAngle={{ startAngle: ${centralAngleStart}, endAngle: ${centralAngleEnd}, showDegrees: ${showCentralAngleDegrees} }}`);
     }
 
@@ -579,7 +591,7 @@ function FigureDebugContent() {
     if (showCircleGrid) propsLines.push(`showGrid`);
 
     return `<CircleFigure\n  ${propsLines.join('\n  ')}\n/>`;
-  }, [circleCenter, circleRadius, circleMode, showCircleCenter, showCircleRadius, circleRadiusAngle, showCircleDiameter, circleDiameterAngle, showSector, sectorStartAngle, sectorEndAngle, showArc, arcStartAngle, arcEndAngle, showCentralAngle, centralAngleStart, centralAngleEnd, showCentralAngleDegrees, circleChords, showCircleGrid]);
+  }, [circleCenter, circleRadius, circleMode, showCircleCenter, showCircleRadius, circleRadiusAngle, showCircleDiameter, circleDiameterAngle, circleArcs, showSector, sectorStartAngle, sectorEndAngle, showArc, arcStartAngle, arcEndAngle, showCentralAngle, centralAngleStart, centralAngleEnd, showCentralAngleDegrees, circleChords, showCircleGrid]);
 
   // Generate code based on figure type
   const generateCode = useCallback(() => {
@@ -924,149 +936,101 @@ function FigureDebugContent() {
                   )}
                 </Card>
 
-                {/* Sector Controls */}
+                {/* Unified Arcs Controls (Preferred API) */}
                 <Card padding="lg">
                   <div className="flex items-center justify-between mb-4">
                     <Heading level={3} size="xs">
-                      Sector Circular
+                      Arcos
                     </Heading>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={showSector}
-                        onChange={(e) => setShowSector(e.target.checked)}
-                        className="rounded"
-                      />
-                      <span className="text-sm">Activar</span>
-                    </label>
+                    <Button variant="secondary" size="sm" onClick={addArc}>
+                      + Agregar arco
+                    </Button>
                   </div>
-                  {showSector && (
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-4">
-                        <Text className="text-sm w-28">Ángulo inicio:</Text>
-                        <input
-                          type="range"
-                          min="0"
-                          max="360"
-                          value={sectorStartAngle}
-                          onChange={(e) => setSectorStartAngle(Number(e.target.value))}
-                          className="flex-1"
-                        />
-                        <span className="text-sm w-12">{sectorStartAngle}°</span>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <Text className="text-sm w-28">Ángulo fin:</Text>
-                        <input
-                          type="range"
-                          min="0"
-                          max="360"
-                          value={sectorEndAngle}
-                          onChange={(e) => setSectorEndAngle(Number(e.target.value))}
-                          className="flex-1"
-                        />
-                        <span className="text-sm w-12">{sectorEndAngle}°</span>
-                      </div>
-                    </div>
-                  )}
-                </Card>
-
-                {/* Arc Controls */}
-                <Card padding="lg">
-                  <div className="flex items-center justify-between mb-4">
-                    <Heading level={3} size="xs">
-                      Arco Resaltado
-                    </Heading>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={showArc}
-                        onChange={(e) => setShowArc(e.target.checked)}
-                        className="rounded"
-                      />
-                      <span className="text-sm">Activar</span>
-                    </label>
-                  </div>
-                  {showArc && (
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-4">
-                        <Text className="text-sm w-28">Ángulo inicio:</Text>
-                        <input
-                          type="range"
-                          min="0"
-                          max="360"
-                          value={arcStartAngle}
-                          onChange={(e) => setArcStartAngle(Number(e.target.value))}
-                          className="flex-1"
-                        />
-                        <span className="text-sm w-12">{arcStartAngle}°</span>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <Text className="text-sm w-28">Ángulo fin:</Text>
-                        <input
-                          type="range"
-                          min="0"
-                          max="360"
-                          value={arcEndAngle}
-                          onChange={(e) => setArcEndAngle(Number(e.target.value))}
-                          className="flex-1"
-                        />
-                        <span className="text-sm w-12">{arcEndAngle}°</span>
-                      </div>
-                    </div>
-                  )}
-                </Card>
-
-                {/* Central Angle Controls */}
-                <Card padding="lg">
-                  <div className="flex items-center justify-between mb-4">
-                    <Heading level={3} size="xs">
-                      Ángulo Central
-                    </Heading>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={showCentralAngle}
-                        onChange={(e) => setShowCentralAngle(e.target.checked)}
-                        className="rounded"
-                      />
-                      <span className="text-sm">Activar</span>
-                    </label>
-                  </div>
-                  {showCentralAngle && (
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-4">
-                        <Text className="text-sm w-28">Ángulo inicio:</Text>
-                        <input
-                          type="range"
-                          min="0"
-                          max="360"
-                          value={centralAngleStart}
-                          onChange={(e) => setCentralAngleStart(Number(e.target.value))}
-                          className="flex-1"
-                        />
-                        <span className="text-sm w-12">{centralAngleStart}°</span>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <Text className="text-sm w-28">Ángulo fin:</Text>
-                        <input
-                          type="range"
-                          min="0"
-                          max="360"
-                          value={centralAngleEnd}
-                          onChange={(e) => setCentralAngleEnd(Number(e.target.value))}
-                          className="flex-1"
-                        />
-                        <span className="text-sm w-12">{centralAngleEnd}°</span>
-                      </div>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={showCentralAngleDegrees}
-                          onChange={(e) => setShowCentralAngleDegrees(e.target.checked)}
-                          className="rounded"
-                        />
-                        <span className="text-sm">Mostrar grados</span>
-                      </label>
+                  {circleArcs.length === 0 ? (
+                    <Text size="sm" variant="secondary">
+                      No hay arcos. Usa el botón para agregar un arco con ángulo y sector.
+                    </Text>
+                  ) : (
+                    <div className="space-y-4">
+                      {circleArcs.map((arc, i) => (
+                        <div key={i} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <div className="flex items-center justify-between mb-3">
+                            <Badge variant="info">Arco {i + 1}</Badge>
+                            <button
+                              onClick={() => removeArc(i)}
+                              className="text-red-500 hover:text-red-700 text-sm"
+                            >
+                              Eliminar
+                            </button>
+                          </div>
+                          <div className="space-y-3">
+                            {/* Angle sliders */}
+                            <div className="flex items-center gap-2">
+                              <Text size="xs" className="w-16">Inicio:</Text>
+                              <input
+                                type="range"
+                                min="0"
+                                max="360"
+                                value={arc.startAngle}
+                                onChange={(e) => updateArc(i, { startAngle: Number(e.target.value) })}
+                                className="flex-1"
+                              />
+                              <span className="text-xs w-10">{arc.startAngle}°</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Text size="xs" className="w-16">Fin:</Text>
+                              <input
+                                type="range"
+                                min="0"
+                                max="360"
+                                value={arc.endAngle}
+                                onChange={(e) => updateArc(i, { endAngle: Number(e.target.value) })}
+                                className="flex-1"
+                              />
+                              <span className="text-xs w-10">{arc.endAngle}°</span>
+                            </div>
+                            {/* Options grid */}
+                            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={arc.showAngle ?? false}
+                                  onChange={(e) => updateArc(i, { showAngle: e.target.checked })}
+                                  className="rounded"
+                                />
+                                <span className="text-xs">Mostrar ángulo</span>
+                              </label>
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={arc.showDegrees ?? false}
+                                  onChange={(e) => updateArc(i, { showDegrees: e.target.checked })}
+                                  className="rounded"
+                                />
+                                <span className="text-xs">Mostrar grados</span>
+                              </label>
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={arc.showSector ?? false}
+                                  onChange={(e) => updateArc(i, { showSector: e.target.checked })}
+                                  className="rounded"
+                                />
+                                <span className="text-xs">Mostrar sector</span>
+                              </label>
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={arc.showRadii ?? false}
+                                  onChange={(e) => updateArc(i, { showRadii: e.target.checked })}
+                                  className="rounded"
+                                />
+                                <span className="text-xs">Mostrar radios</span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </Card>
@@ -1525,9 +1489,7 @@ function FigureDebugContent() {
                     showCenter={showCircleCenter}
                     showRadius={showCircleRadius ? { toAngle: circleRadiusAngle, label: 'r' } : false}
                     showDiameter={showCircleDiameter ? { angle: circleDiameterAngle, label: 'd' } : false}
-                    sector={sectorConfig}
-                    arc={arcConfig}
-                    centralAngle={centralAngleConfig}
+                    arcs={circleArcs.length > 0 ? circleArcs : undefined}
                     chords={circleChords.length > 0 ? circleChords : undefined}
                     showGrid={showCircleGrid}
                     width={400}
@@ -1582,22 +1544,17 @@ function FigureDebugContent() {
                     <Text size="sm" variant="secondary">
                       Área: {area(circleRadius).toFixed(2)}px²
                     </Text>
-                    {showSector && (
-                      <Text size="xs" variant="secondary" className="mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
-                        Sector: {angleDifference(sectorStartAngle, sectorEndAngle).toFixed(0)}° |
-                        Área sector: {sectorArea(circleRadius, angleDifference(sectorStartAngle, sectorEndAngle)).toFixed(2)}px²
-                      </Text>
-                    )}
-                    {showArc && (
-                      <Text size="xs" variant="secondary">
-                        Arco: {angleDifference(arcStartAngle, arcEndAngle).toFixed(0)}° |
-                        Longitud: {arcLength(circleRadius, angleDifference(arcStartAngle, arcEndAngle)).toFixed(2)}px
-                      </Text>
-                    )}
-                    {showCentralAngle && (
-                      <Text size="xs" variant="secondary">
-                        Ángulo central: {angleDifference(centralAngleStart, centralAngleEnd).toFixed(0)}°
-                      </Text>
+                    {circleArcs.length > 0 && (
+                      <div className="mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
+                        <Text size="xs" className="font-medium mb-1">Arcos:</Text>
+                        {circleArcs.map((arc, i) => (
+                          <Text key={i} size="xs" variant="secondary">
+                            Arco {i + 1}: {angleDifference(arc.startAngle, arc.endAngle).toFixed(0)}° |
+                            Longitud: {arcLength(circleRadius, angleDifference(arc.startAngle, arc.endAngle)).toFixed(2)}px
+                            {arc.showSector && ` | Área: ${sectorArea(circleRadius, angleDifference(arc.startAngle, arc.endAngle)).toFixed(2)}px²`}
+                          </Text>
+                        ))}
+                      </div>
                     )}
                   </div>
                 </div>

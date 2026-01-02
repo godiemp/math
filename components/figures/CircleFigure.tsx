@@ -12,6 +12,7 @@ import type {
   InscribedAngleConfig,
   ChordConfig,
   PointOnCircleConfig,
+  UnifiedArcConfig,
 } from '@/lib/types/circle';
 import {
   calculateViewBox,
@@ -381,6 +382,138 @@ function CentralAngleArc({ center, config }: CentralAngleArcProps) {
   );
 }
 
+interface UnifiedArcProps {
+  center: LabeledPoint;
+  radius: number;
+  config: UnifiedArcConfig;
+}
+
+/**
+ * UnifiedArc - Renders an arc with optional sector, central angle, and radii
+ * This is the preferred API that combines sector, arc, and centralAngle in one config
+ */
+function UnifiedArc({ center, radius, config }: UnifiedArcProps) {
+  const {
+    startAngle,
+    endAngle,
+    strokeWidth = 4,
+    color = DEFAULT_COLORS.arc,
+    showAngle = false,
+    showDegrees = false,
+    angleLabel,
+    angleArcRadius = 25,
+    showSector = false,
+    sectorFill,
+    sectorOpacity = 0.3,
+    showRadii = false,
+  } = config;
+
+  // Calculate points on the circumference for radii
+  const startPoint = pointOnCircle(center, radius, startAngle);
+  const endPoint = pointOnCircle(center, radius, endAngle);
+
+  // Arc path on circumference
+  const arcPath = describeArc(center.x, center.y, radius, startAngle, endAngle);
+
+  // Sector path (pie slice)
+  const sectorPath = showSector
+    ? describeSector(center.x, center.y, radius, startAngle, endAngle)
+    : null;
+
+  // Central angle arc at center
+  const angleArcPath = showAngle
+    ? describeAngleArc(center.x, center.y, angleArcRadius, startAngle, endAngle)
+    : null;
+
+  // Calculate angle label position
+  const labelPos = showAngle
+    ? calculateAngleLabelPosition(center, angleArcRadius, startAngle, endAngle)
+    : null;
+
+  const angleDiff = angleDifference(startAngle, endAngle);
+  const labelText = angleLabel || (showDegrees ? `${Math.round(angleDiff)}°` : '');
+
+  // Determine sector fill color
+  const actualSectorFill = sectorFill || color;
+
+  return (
+    <g className="unified-arc">
+      {/* Sector (behind everything else in this group) */}
+      {showSector && sectorPath && (
+        <path
+          d={sectorPath}
+          fill={actualSectorFill}
+          fillOpacity={sectorOpacity}
+          stroke="none"
+          className="dark:opacity-40"
+        />
+      )}
+
+      {/* Radii lines */}
+      {showRadii && (
+        <>
+          <line
+            x1={center.x}
+            y1={center.y}
+            x2={startPoint.x}
+            y2={startPoint.y}
+            stroke={color}
+            strokeWidth="1.5"
+            className="dark:stroke-amber-400"
+          />
+          <line
+            x1={center.x}
+            y1={center.y}
+            x2={endPoint.x}
+            y2={endPoint.y}
+            stroke={color}
+            strokeWidth="1.5"
+            className="dark:stroke-amber-400"
+          />
+        </>
+      )}
+
+      {/* Arc on circumference */}
+      <path
+        d={arcPath}
+        fill="none"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        className="dark:stroke-amber-400"
+      />
+
+      {/* Central angle arc */}
+      {showAngle && angleArcPath && (
+        <path
+          d={angleArcPath}
+          fill="none"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          className="dark:stroke-amber-400"
+        />
+      )}
+
+      {/* Angle label */}
+      {showAngle && labelPos && labelText && (
+        <text
+          x={labelPos.x}
+          y={labelPos.y}
+          fontSize="12"
+          fontFamily="sans-serif"
+          fill={DEFAULT_COLORS.label}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          className="dark:fill-white"
+        >
+          {labelText}
+        </text>
+      )}
+    </g>
+  );
+}
+
 interface InscribedAngleMarkerProps {
   center: LabeledPoint;
   radius: number;
@@ -597,6 +730,8 @@ function PointMarker({ center, radius, config }: PointMarkerProps) {
  * - Circunferencia (outline) and círculo (filled) modes
  * - Center point with label
  * - Radius and diameter lines with labels
+ * - Unified arcs API: combine arc, sector, and angle in one config (preferred)
+ * - Multiple arcs support via `arcs` array
  * - Sectors (pie slices)
  * - Arcs with highlighting
  * - Central and inscribed angles
@@ -613,6 +748,7 @@ export function CircleFigure({
   showCenter = false,
   showRadius = false,
   showDiameter = false,
+  arcs,
   sector,
   arc,
   centralAngle,
@@ -673,7 +809,7 @@ export function CircleFigure({
         />
       )}
 
-      {/* Layer 2: Sector (behind main circle) */}
+      {/* Layer 2: Sector (behind main circle) - legacy API */}
       {sector && <SectorShape center={center} radius={radius} config={sector} />}
 
       {/* Layer 3: Main circle/circumference */}
@@ -703,7 +839,12 @@ export function CircleFigure({
         <RadiusLine center={center} radius={radius} config={radiusConfig} />
       )}
 
-      {/* Layer 7: Arc overlay */}
+      {/* Layer 6.5: Unified arcs (preferred API) */}
+      {arcs?.map((arcConfig, i) => (
+        <UnifiedArc key={i} center={center} radius={radius} config={arcConfig} />
+      ))}
+
+      {/* Layer 7: Arc overlay - legacy API */}
       {arc && <ArcPath center={center} radius={radius} config={arc} />}
 
       {/* Layer 8: Central angle arc */}

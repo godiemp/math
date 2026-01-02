@@ -102,6 +102,41 @@ export interface CentralAngleConfig {
 }
 
 /**
+ * Unified arc configuration - combines arc, sector, and central angle in one config
+ * Preferred API over separate arc/sector/centralAngle props
+ */
+export interface UnifiedArcConfig {
+  /** Start angle in degrees (0 = right/3 o'clock, increases clockwise in SVG) */
+  startAngle: number;
+  /** End angle in degrees */
+  endAngle: number;
+
+  // Arc appearance
+  /** Stroke width for the arc on circumference */
+  strokeWidth?: number;
+  /** Color for the arc and related elements */
+  color?: string;
+
+  // Unified options - combine what was previously 3 separate configs
+  /** Show central angle arc at center */
+  showAngle?: boolean;
+  /** Show degree value on the angle */
+  showDegrees?: boolean;
+  /** Custom label for angle (e.g., 'θ', 'α') - overrides degree display */
+  angleLabel?: string;
+  /** Arc radius for angle visualization */
+  angleArcRadius?: number;
+  /** Show filled pie slice (sector) */
+  showSector?: boolean;
+  /** Sector fill color (defaults to color with opacity) */
+  sectorFill?: string;
+  /** Sector opacity (0-1) */
+  sectorOpacity?: number;
+  /** Show radius lines at arc boundaries */
+  showRadii?: boolean;
+}
+
+/**
  * Inscribed angle configuration
  */
 export interface InscribedAngleConfig {
@@ -177,7 +212,11 @@ export interface CircleFigureProps {
   /** Show diameter line - boolean or config object */
   showDiameter?: boolean | DiameterConfig;
 
-  // Sectors and arcs
+  // Sectors and arcs (unified API - preferred)
+  /** Array of unified arc configurations - preferred API */
+  arcs?: UnifiedArcConfig[];
+
+  // Sectors and arcs (legacy API - kept for backward compatibility)
   /** Sector (pie slice) configuration */
   sector?: SectorConfig;
   /** Arc configuration (highlighted portion of circumference) */

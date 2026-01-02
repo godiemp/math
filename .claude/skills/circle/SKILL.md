@@ -44,7 +44,41 @@ import { CircleFigure } from '@/components/figures/CircleFigure';
 />
 ```
 
-### Sector circular
+### Arco con angulo (API unificada - recomendada)
+
+```tsx
+// Arco con angulo central y sector - todo en una configuracion
+<CircleFigure
+  center={{ x: 200, y: 150, label: 'O' }}
+  radius={80}
+  showCenter
+  arcs={[{
+    startAngle: 0,
+    endAngle: 90,
+    showAngle: true,      // Muestra arco del angulo central
+    showDegrees: true,    // Muestra valor en grados
+    showSector: true,     // Muestra sector relleno
+    showRadii: true,      // Muestra lineas de radio
+  }]}
+/>
+```
+
+### Multiples arcos
+
+```tsx
+// Varios arcos con diferentes colores
+<CircleFigure
+  center={{ x: 200, y: 150, label: 'O' }}
+  radius={80}
+  showCenter
+  arcs={[
+    { startAngle: 0, endAngle: 90, showAngle: true, showDegrees: true },
+    { startAngle: 120, endAngle: 180, showSector: true, showRadii: true },
+  ]}
+/>
+```
+
+### Sector circular (API legacy)
 
 ```tsx
 // Sector de 90 grados (cuarto de circulo)
@@ -56,7 +90,7 @@ import { CircleFigure } from '@/components/figures/CircleFigure';
 />
 ```
 
-### Arco resaltado
+### Arco resaltado (API legacy)
 
 ```tsx
 // Arco de 120 grados
@@ -67,7 +101,7 @@ import { CircleFigure } from '@/components/figures/CircleFigure';
 />
 ```
 
-### Angulo central
+### Angulo central (API legacy)
 
 ```tsx
 // Angulo central con medida en grados
@@ -168,12 +202,46 @@ interface DiameterConfig {
 }
 ```
 
-### Sector and Arc
+### Unified Arcs (API Recomendada)
 
 | Prop | Type | Description |
 |------|------|-------------|
-| `sector` | `SectorConfig` | Configuracion del sector circular |
-| `arc` | `ArcConfig` | Configuracion del arco resaltado |
+| `arcs` | `UnifiedArcConfig[]` | Array de arcos con configuracion unificada (preferido sobre sector/arc/centralAngle separados) |
+
+### UnifiedArcConfig
+
+```typescript
+interface UnifiedArcConfig {
+  startAngle: number;        // Angulo de inicio (grados)
+  endAngle: number;          // Angulo de fin (grados)
+
+  // Apariencia del arco
+  strokeWidth?: number;      // Ancho del trazo (default: 4)
+  color?: string;            // Color del arco y elementos relacionados
+
+  // Opciones unificadas - combina lo que antes eran 3 configs separadas
+  showAngle?: boolean;       // Mostrar arco del angulo central en el centro
+  showDegrees?: boolean;     // Mostrar valor en grados
+  angleLabel?: string;       // Etiqueta personalizada (ej: 'theta', 'alpha')
+  angleArcRadius?: number;   // Radio del arco del angulo (default: 25)
+  showSector?: boolean;      // Mostrar sector relleno (pie slice)
+  sectorFill?: string;       // Color del relleno del sector
+  sectorOpacity?: number;    // Opacidad del sector (0-1, default: 0.3)
+  showRadii?: boolean;       // Mostrar lineas de radio en los bordes
+}
+```
+
+**Ventajas de la API unificada:**
+- Una sola configuracion en lugar de tres props separadas
+- Soporte para multiples arcos con un array
+- Menos codigo repetitivo (no hay que especificar los mismos angulos 3 veces)
+
+### Sector and Arc (API Legacy)
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `sector` | `SectorConfig` | Configuracion del sector circular (legacy) |
+| `arc` | `ArcConfig` | Configuracion del arco resaltado (legacy) |
 
 ### SectorConfig
 
@@ -329,44 +397,40 @@ interface PointOnCircleConfig {
 // Circunferencia = 2 * pi * r
 ```
 
-### Area del Sector
+### Area del Sector (API unificada)
 
 ```tsx
+// Con la API unificada, todo en un solo arco
 <CircleFigure
   center={{ x: 200, y: 150, label: 'O' }}
   radius={80}
   showCenter
-  sector={{
+  arcs={[{
     startAngle: 0,
     endAngle: 90,
+    showSector: true,
     showRadii: true,
-  }}
-  centralAngle={{
-    startAngle: 0,
-    endAngle: 90,
+    showAngle: true,
     showDegrees: true,
-  }}
+  }]}
 />
 // Area sector = (angulo/360) * pi * r^2
 ```
 
-### Longitud del Arco
+### Longitud del Arco (API unificada)
 
 ```tsx
+// Arco con angulo central - todo en una configuracion
 <CircleFigure
   center={{ x: 200, y: 150, label: 'O' }}
   radius={80}
   showCenter
-  arc={{
+  arcs={[{
     startAngle: 30,
     endAngle: 150,
-    strokeWidth: 4,
-  }}
-  centralAngle={{
-    startAngle: 30,
-    endAngle: 150,
+    showAngle: true,
     showDegrees: true,
-  }}
+  }]}
 />
 // Longitud arco = (angulo/360) * 2 * pi * r
 ```
@@ -466,13 +530,12 @@ La pagina de debug permite:
 - Seleccionar modo (circulo vs circunferencia)
 - Ajustar posicion del centro y radio con sliders
 - Activar/desactivar opciones visuales (centro, radio, diametro, grid)
-- Configurar sector circular (angulos de inicio y fin)
-- Configurar arco resaltado
-- Configurar angulo central con visualizacion de grados
+- **Agregar/eliminar arcos con la API unificada** (sector + angulo + arco en uno)
+- Configurar cada arco con: angulos, mostrar angulo, mostrar grados, mostrar sector, mostrar radios
 - Agregar/eliminar cuerdas con angulos personalizados
 - Seleccionar presets (circulo basico, circunferencia, sector 90, semicirculo)
-- Ver propiedades calculadas (circunferencia, area, area del sector, longitud del arco)
-- Copiar el codigo generado
+- Ver propiedades calculadas (circunferencia, area, longitud de arcos)
+- Copiar el codigo generado con la API unificada
 
 ---
 
