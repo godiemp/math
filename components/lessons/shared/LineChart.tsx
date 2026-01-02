@@ -241,30 +241,26 @@ export default function LineChart({
         </svg>
       </div>
 
-      {/* X-axis Labels */}
+      {/* X-axis Labels - positioned to match data points */}
       {showLabels && (
-        <div className="flex justify-between mt-1 px-1" style={{ marginLeft: showYAxis ? '45px' : '20px', marginRight: '20px' }}>
+        <div className="relative" style={{ height: 20 }}>
           {data.map((point, index) => {
             const isHighlighted = highlightIndex === index;
+            // Calculate position as percentage matching SVG coordinates
+            const xPercent = ((padding.left + (index / (data.length - 1 || 1)) * chartAreaWidth) / svgWidth) * 100;
             return (
-              <div
+              <span
                 key={`label-${index}`}
-                className="text-center"
-                style={{
-                  width: `${100 / data.length}%`,
-                }}
+                className={cn(
+                  'absolute text-xs transition-all duration-200 transform -translate-x-1/2',
+                  isHighlighted
+                    ? 'text-amber-600 dark:text-amber-400 font-bold'
+                    : 'text-gray-600 dark:text-gray-400'
+                )}
+                style={{ left: `${xPercent}%` }}
               >
-                <span
-                  className={cn(
-                    'text-xs transition-all duration-200',
-                    isHighlighted
-                      ? 'text-amber-600 dark:text-amber-400 font-bold'
-                      : 'text-gray-600 dark:text-gray-400'
-                  )}
-                >
-                  {point.label}
-                </span>
-              </div>
+                {point.label}
+              </span>
             );
           })}
         </div>
