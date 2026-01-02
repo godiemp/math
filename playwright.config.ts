@@ -76,12 +76,14 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         // No storage state - start fresh
       },
+      // Depends on setup to create auth state files for teacher-student-sync tests
+      dependencies: ['setup'],
       // Run tests that handle their own authentication
       testMatch: [
         '**/auth.spec.ts',
         '**/registration.spec.ts',
         '**/colegio-dashboard.spec.ts',
-        '**/teacher-student-sync.spec.ts', // Creates own contexts with socket mocking
+        '**/teacher-student-sync.spec.ts', // Uses storageState from setup
       ],
     },
 
