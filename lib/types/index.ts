@@ -185,3 +185,30 @@ export type {
 } from './demo-accounts';
 
 export { GRADE_LEVEL_LABELS, GRADE_LEVELS } from './demo-accounts';
+
+// ============================================================================
+// FIGURE COMPONENT TYPES
+// ============================================================================
+export type {
+  LabeledPoint,
+  SideConfig,
+  AngleConfig,
+  SpecialLineConfig,
+  SpecialLineType,
+  TriangleFigureProps,
+  TrianglePreset,
+  FromAnglesConfig,
+  FromSidesConfig,
+} from './triangle';
+
+export type {
+  PolygonEdgeConfig,
+  PolygonAngleConfig,
+  DiagonalConfig,
+  ApothemConfig,
+  FromRegularConfig,
+  PolygonFigureProps,
+  PolygonPreset,
+} from './polygon';
+
+export { POLYGON_NAMES } from './polygon';
