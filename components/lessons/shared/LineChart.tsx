@@ -18,8 +18,8 @@ export interface LineChartProps {
   showLabels?: boolean;
   /** Show grid lines */
   showGrid?: boolean;
-  /** Animate line drawing */
-  animated?: boolean;
+  /** Show Y-axis scale */
+  showYAxis?: boolean;
   /** Height variant */
   height?: 'sm' | 'md' | 'lg';
   /** Color of the line */
@@ -39,14 +39,14 @@ export interface LineChartProps {
 }
 
 const DEFAULT_LINE_COLOR = '#3B82F6'; // blue
-const DEFAULT_POINT_COLOR = '#1D4ED8'; // darker blue
+const DEFAULT_POINT_COLOR = '#3B82F6'; // same blue for cohesion
 
 export default function LineChart({
   data,
-  showValues = true,
+  showValues = false,
   showLabels = true,
   showGrid = true,
-  animated = true,
+  showYAxis = true,
   height = 'md',
   lineColor = DEFAULT_LINE_COLOR,
   pointColor = DEFAULT_POINT_COLOR,
@@ -57,31 +57,39 @@ export default function LineChart({
   className,
 }: LineChartProps) {
   const heightConfig = {
-    sm: 120,
-    md: 180,
-    lg: 240,
+    sm: 160,
+    md: 220,
+    lg: 280,
   };
 
   const chartHeight = heightConfig[height];
-  const padding = { top: 30, right: 20, bottom: 40, left: 20 };
-  const chartWidth = 100; // percentage-based
 
-  // Calculate value range
+  // Chart area dimensions (in SVG units)
+  const svgWidth = 400;
+  const svgHeight = 200;
+  const padding = { top: 20, right: 20, bottom: 10, left: showYAxis ? 45 : 20 };
+  const chartAreaWidth = svgWidth - padding.left - padding.right;
+  const chartAreaHeight = svgHeight - padding.top - padding.bottom;
+
+  // Calculate value range with some padding
   const values = data.map((d) => d.value);
   const dataMin = Math.min(...values);
   const dataMax = Math.max(...values);
-  const computedMin = minValue ?? (dataMin < 0 ? dataMin : 0);
-  const computedMax = maxValue ?? dataMax;
-  const valueRange = computedMax - computedMin || 1;
 
-  // Calculate point positions as percentages
+  // Add 10% padding to the range for better visualization
+  const range = dataMax - (minValue ?? (dataMin < 0 ? dataMin : 0));
+  const paddedMin = minValue ?? (dataMin < 0 ? dataMin - range * 0.1 : 0);
+  const paddedMax = maxValue ?? dataMax + range * 0.1;
+  const valueRange = paddedMax - paddedMin || 1;
+
+  // Calculate point positions
   const getX = (index: number) => {
-    if (data.length === 1) return 50;
-    return (index / (data.length - 1)) * 100;
+    if (data.length === 1) return padding.left + chartAreaWidth / 2;
+    return padding.left + (index / (data.length - 1)) * chartAreaWidth;
   };
 
   const getY = (value: number) => {
-    return 100 - ((value - computedMin) / valueRange) * 100;
+    return padding.top + chartAreaHeight - ((value - paddedMin) / valueRange) * chartAreaHeight;
   };
 
   // Generate SVG path
@@ -93,45 +101,93 @@ export default function LineChart({
     })
     .join(' ');
 
+  // Generate Y-axis ticks (5 ticks)
+  const yTicks = [];
+  const tickCount = 5;
+  for (let i = 0; i <= tickCount; i++) {
+    const value = paddedMin + (valueRange * i) / tickCount;
+    yTicks.push({
+      value: Math.round(value),
+      y: getY(value),
+    });
+  }
+
   return (
     <div className={cn('w-full', className)}>
       {/* Chart container */}
-      <div className="relative px-4" style={{ height: chartHeight }}>
-        {/* SVG Chart */}
+      <div style={{ height: chartHeight }}>
         <svg
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
+          viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+          preserveAspectRatio="xMidYMid meet"
           className="w-full h-full"
-          style={{ overflow: 'visible' }}
         >
-          {/* Grid lines */}
-          {showGrid && (
-            <g className="text-gray-200 dark:text-gray-700">
-              {[0, 25, 50, 75, 100].map((y) => (
-                <line
-                  key={y}
-                  x1="0"
-                  y1={y}
-                  x2="100"
-                  y2={y}
-                  stroke="currentColor"
-                  strokeWidth="0.3"
-                  strokeDasharray="2,2"
-                />
-              ))}
-            </g>
+          {/* Y-axis line */}
+          {showYAxis && (
+            <line
+              x1={padding.left}
+              y1={padding.top}
+              x2={padding.left}
+              y2={padding.top + chartAreaHeight}
+              stroke="currentColor"
+              className="text-gray-300 dark:text-gray-600"
+              strokeWidth="1"
+            />
           )}
+
+          {/* Grid lines and Y-axis labels */}
+          {showGrid && yTicks.map((tick, i) => (
+            <g key={`tick-${i}`}>
+              <line
+                x1={padding.left}
+                y1={tick.y}
+                x2={padding.left + chartAreaWidth}
+                y2={tick.y}
+                stroke="currentColor"
+                className="text-gray-200 dark:text-gray-700"
+                strokeWidth="1"
+                strokeDasharray={i === 0 ? "0" : "4,4"}
+              />
+              {showYAxis && (
+                <text
+                  x={padding.left - 8}
+                  y={tick.y}
+                  textAnchor="end"
+                  dominantBaseline="middle"
+                  className="fill-gray-500 dark:fill-gray-400"
+                  fontSize="11"
+                >
+                  {tick.value}
+                </text>
+              )}
+            </g>
+          ))}
+
+          {/* X-axis line */}
+          <line
+            x1={padding.left}
+            y1={padding.top + chartAreaHeight}
+            x2={padding.left + chartAreaWidth}
+            y2={padding.top + chartAreaHeight}
+            stroke="currentColor"
+            className="text-gray-300 dark:text-gray-600"
+            strokeWidth="1"
+          />
+
+          {/* Area fill under line (subtle) */}
+          <path
+            d={`${pathData} L ${getX(data.length - 1)} ${padding.top + chartAreaHeight} L ${getX(0)} ${padding.top + chartAreaHeight} Z`}
+            fill={lineColor}
+            fillOpacity="0.1"
+          />
 
           {/* Line path */}
           <path
             d={pathData}
             fill="none"
             stroke={lineColor}
-            strokeWidth="2"
+            strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
-            vectorEffect="non-scaling-stroke"
-            className={cn(animated && 'animate-draw-line')}
           />
 
           {/* Data points */}
@@ -142,74 +198,65 @@ export default function LineChart({
 
             return (
               <g key={`point-${index}`}>
+                {/* Outer circle (white background) */}
                 <circle
                   cx={x}
                   cy={y}
-                  r={isHighlighted ? 3 : 2}
+                  r={isHighlighted ? 7 : 5}
+                  fill="white"
+                  className="dark:fill-gray-800"
+                />
+                {/* Inner circle (colored) */}
+                <circle
+                  cx={x}
+                  cy={y}
+                  r={isHighlighted ? 5 : 3.5}
                   fill={isHighlighted ? '#F59E0B' : pointColor}
-                  stroke="white"
-                  strokeWidth="1"
-                  vectorEffect="non-scaling-stroke"
                   className={cn(
-                    onPointClick && 'cursor-pointer hover:r-3',
-                    animated && 'transition-all duration-300'
+                    onPointClick && 'cursor-pointer',
+                    'transition-all duration-200'
                   )}
                   onClick={() => onPointClick?.(index)}
                 />
+                {/* Value label */}
+                {showValues && (
+                  <text
+                    x={x}
+                    y={y - 12}
+                    textAnchor="middle"
+                    className={cn(
+                      'font-semibold',
+                      isHighlighted
+                        ? 'fill-amber-600 dark:fill-amber-400'
+                        : 'fill-gray-700 dark:fill-gray-300'
+                    )}
+                    fontSize="11"
+                  >
+                    {point.value}
+                  </text>
+                )}
               </g>
             );
           })}
         </svg>
-
-        {/* Value labels (positioned absolutely) */}
-        {showValues && (
-          <div className="absolute inset-0 pointer-events-none">
-            {data.map((point, index) => {
-              const xPercent = getX(index);
-              const yPercent = getY(point.value);
-              const isHighlighted = highlightIndex === index;
-
-              return (
-                <div
-                  key={`value-${index}`}
-                  className={cn(
-                    'absolute text-xs font-semibold transform -translate-x-1/2 -translate-y-full pb-1',
-                    isHighlighted
-                      ? 'text-amber-600 dark:text-amber-400'
-                      : 'text-gray-700 dark:text-gray-300'
-                  )}
-                  style={{
-                    left: `${xPercent}%`,
-                    top: `${yPercent}%`,
-                  }}
-                >
-                  {point.value}
-                </div>
-              );
-            })}
-          </div>
-        )}
       </div>
 
-      {/* X-axis line */}
-      <div className="h-0.5 bg-gray-300 dark:bg-gray-600 mx-4" />
-
-      {/* Labels */}
+      {/* X-axis Labels */}
       {showLabels && (
-        <div className="flex justify-between px-4 mt-2">
+        <div className="flex justify-between mt-1 px-1" style={{ marginLeft: showYAxis ? '45px' : '20px', marginRight: '20px' }}>
           {data.map((point, index) => {
             const isHighlighted = highlightIndex === index;
             return (
               <div
                 key={`label-${index}`}
-                className="text-center flex-1"
+                className="text-center"
                 style={{
-                  maxWidth: `${100 / data.length}%`,
+                  width: `${100 / data.length}%`,
                 }}
               >
                 <span
                   className={cn(
-                    'text-xs transition-all duration-300',
+                    'text-xs transition-all duration-200',
                     isHighlighted
                       ? 'text-amber-600 dark:text-amber-400 font-bold'
                       : 'text-gray-600 dark:text-gray-400'

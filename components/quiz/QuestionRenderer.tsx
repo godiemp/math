@@ -95,8 +95,9 @@ export function QuestionRenderer({
         <div className={compact ? 'my-2' : 'my-4'}>
           <LineChart
             data={question.visualData.data.items}
-            showValues={question.visualData.data.showValues ?? true}
+            showValues={question.visualData.data.showValues ?? false}
             showLabels={question.visualData.data.showLabels ?? true}
+            showYAxis={question.visualData.data.showYAxis ?? true}
             height={compact ? 'sm' : 'md'}
           />
         </div>
@@ -524,8 +525,9 @@ export function QuestionDisplay({
         <div className={compact ? 'my-2' : 'my-4'}>
           <LineChart
             data={question.visualData.data.items}
-            showValues={question.visualData.data.showValues ?? true}
+            showValues={question.visualData.data.showValues ?? false}
             showLabels={question.visualData.data.showLabels ?? true}
+            showYAxis={question.visualData.data.showYAxis ?? true}
             height={compact ? 'sm' : 'md'}
           />
         </div>

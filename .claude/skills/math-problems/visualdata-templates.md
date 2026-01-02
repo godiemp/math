@@ -533,8 +533,9 @@ visualData: {
 {
   chartType: 'line',
   items: [...],
-  showValues: true,    // Show value labels at each point (default: true)
+  showValues: false,   // Show value labels at each point (default: false)
   showLabels: true,    // Show labels on X-axis (default: true)
+  showYAxis: true,     // Show Y-axis with value scale (default: true)
   // Note: height is controlled by QuestionRenderer (compact ? 'sm' : 'md')
 }
 ```
