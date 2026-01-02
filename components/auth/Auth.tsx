@@ -770,6 +770,26 @@ export default function Auth({ onSuccess }: AuthProps) {
                 >
                   1° Medio Student
                 </button>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleQuickSignIn('teacher', 'test123')}
+                  className="spring-motion"
+                  style={{
+                    flex: 1,
+                    height: '40px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    color: 'var(--color-label-primary)',
+                    background: 'var(--color-fill)',
+                    border: '1px solid var(--color-separator)',
+                    borderRadius: 'var(--radius-sm)',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    opacity: isLoading ? 0.5 : 1,
+                  }}
+                >
+                  Teacher
+                </button>
               </div>
             </div>
           )}

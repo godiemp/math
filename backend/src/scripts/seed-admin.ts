@@ -418,6 +418,30 @@ async function seedAdmin() {
       console.log(`✅ 1-Medio student created: ${medioStudentUsername} (password: ${medioStudentPassword})`);
     }
 
+    // Test Teacher account
+    const teacherId = 'test-teacher';
+    const teacherUsername = 'teacher';
+    const teacherEmail = 'teacher@test.cl';
+    const teacherPassword = 'test123';
+    const teacherDisplayName = 'Profesor Demo';
+
+    const existingTeacher = await pool.query(
+      'SELECT id FROM users WHERE id = $1 OR username = $2',
+      [teacherId, teacherUsername]
+    );
+
+    if (existingTeacher.rows.length > 0) {
+      console.log('ℹ️  Teacher already exists, skipping...');
+    } else {
+      const teacherPasswordHash = await bcrypt.hash(teacherPassword, 10);
+      await pool.query(
+        `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        [teacherId, teacherUsername, teacherEmail, teacherPasswordHash, teacherDisplayName, 'teacher', now, now]
+      );
+      console.log(`✅ Teacher created: ${teacherUsername} (password: ${teacherPassword})`);
+    }
+
     console.log('\n✅ Seed script completed successfully!');
     console.log(`
 📋 Summary:
@@ -425,6 +449,7 @@ async function seedAdmin() {
 - Test accounts:
   * PAES student: ${paesStudentUsername} (password: ${paesStudentPassword}) - Full PAES access
   * 1-Medio student: ${medioStudentUsername} (password: ${medioStudentPassword}) - School content only
+  * Teacher: ${teacherUsername} (password: ${teacherPassword}) - Teacher role
 - 3 completed sessions created with realistic PAES templates:
   1. ${m1Template.name} - ${m1Template.questionCount} preguntas, ${m1Template.durationMinutes} min
   2. ${m2Template.name} - ${m2Template.questionCount} preguntas, ${m2Template.durationMinutes} min
