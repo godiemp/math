@@ -6,6 +6,7 @@ import { Card, Button, Heading, Text, Badge } from '@/components/ui';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { TriangleFigure } from '@/components/figures/TriangleFigure';
 import { CircleFigure } from '@/components/figures/CircleFigure';
+import { QuadrilateralFigure } from '@/components/figures/QuadrilateralFigure';
 import {
   buildTriangleFromAngles,
   buildTriangleFromSides,
@@ -35,8 +36,30 @@ import type {
   CirclePreset,
   UnifiedArcConfig,
 } from '@/lib/types/circle';
+import type {
+  LabeledPoint as QuadLabeledPoint,
+  QuadrilateralType,
+  QuadSideConfig,
+  QuadAngleConfig,
+  DiagonalConfig,
+  QuadAngleConstraint,
+} from '@/lib/types/quadrilateral';
+import {
+  buildQuadrilateralFromType,
+  buildQuadrilateralFromAngles,
+  validateQuadrilateralAngles,
+  detectQuadrilateralType,
+  perimeter as quadPerimeter,
+  area as quadArea,
+  detectParallelSides,
+  detectEqualSides,
+  detectRightAngles,
+  isConvex,
+  isSelfIntersecting,
+  validateQuadrilateral,
+} from '@/lib/geometry/quadrilateralUtils';
 
-type FigureType = 'triangle' | 'circle';
+type FigureType = 'triangle' | 'circle' | 'quadrilateral';
 type InputMode = 'vertices' | 'angles' | 'sides';
 
 // Presets for vertices mode
@@ -132,6 +155,28 @@ const CIRCLE_PRESETS: CirclePreset[] = [
   },
 ];
 
+// Quadrilateral presets
+type QuadPreset = {
+  name: string;
+  description: string;
+  type: QuadrilateralType;
+  size?: number;
+  height?: number;
+  angle?: number;
+  baseRatio?: number;
+};
+
+const QUADRILATERAL_PRESETS: QuadPreset[] = [
+  { name: 'Cuadrado', description: '4 lados iguales, 4 ángulos rectos', type: 'cuadrado', size: 100 },
+  { name: 'Rectángulo áureo', description: 'Proporción 1:1.618', type: 'rectangulo', size: 100, height: 62 },
+  { name: 'Rectángulo', description: 'Opuestos iguales, ángulos rectos', type: 'rectangulo', size: 120, height: 80 },
+  { name: 'Rombo 60°', description: '4 lados iguales, ángulos 60°-120°', type: 'rombo', size: 80, angle: 60 },
+  { name: 'Paralelogramo', description: 'Opuestos paralelos', type: 'paralelogramo', size: 100, height: 70, angle: 70 },
+  { name: 'Trapecio isósceles', description: 'Piernas iguales', type: 'trapecio-isosceles', size: 120, height: 80, baseRatio: 0.5 },
+  { name: 'Trapecio rectángulo', description: '2 ángulos rectos', type: 'trapecio-rectangulo', size: 120, height: 80, baseRatio: 0.6 },
+  { name: 'Cometa', description: '2 pares de lados adyacentes iguales', type: 'cometa', size: 100, height: 120 },
+];
+
 function FigureDebugContent() {
   // Figure type (triangle or circle)
   const [figureType, setFigureType] = useState<FigureType>('triangle');
@@ -178,6 +223,141 @@ function FigureDebugContent() {
   const circleValidation = useMemo(() => {
     return validateCircle(circleCenter, circleRadius);
   }, [circleCenter, circleRadius]);
+
+  // ============================================
+  // QUADRILATERAL STATE
+  // ============================================
+  type QuadInputMode = 'fromType' | 'fromAngles' | 'vertices';
+  const [quadInputMode, setQuadInputMode] = useState<QuadInputMode>('fromType');
+  const [quadType, setQuadType] = useState<QuadrilateralType>('cuadrado');
+  const [quadSize, setQuadSize] = useState(100);
+  const [quadHeight, setQuadHeight] = useState(80);
+  const [quadAngle, setQuadAngle] = useState(60);
+  const [quadBaseRatio, setQuadBaseRatio] = useState(0.5);
+  const [quadVertices, setQuadVertices] = useState<[QuadLabeledPoint, QuadLabeledPoint, QuadLabeledPoint, QuadLabeledPoint]>([
+    { x: 100, y: 50, label: 'A' },
+    { x: 300, y: 50, label: 'B' },
+    { x: 300, y: 200, label: 'C' },
+    { x: 100, y: 200, label: 'D' },
+  ]);
+  // Angles mode state
+  const [quadAngleInputs, setQuadAngleInputs] = useState({
+    angle1: 90,
+    angle2: 90,
+    angle3: 90,
+    constraint: 'generic' as QuadAngleConstraint,
+    size: 150,
+  });
+  const quadAngle4 = useMemo(() => {
+    return 360 - quadAngleInputs.angle1 - quadAngleInputs.angle2 - quadAngleInputs.angle3;
+  }, [quadAngleInputs.angle1, quadAngleInputs.angle2, quadAngleInputs.angle3]);
+  const quadAnglesValidation = useMemo(() => {
+    return validateQuadrilateralAngles([
+      quadAngleInputs.angle1,
+      quadAngleInputs.angle2,
+      quadAngleInputs.angle3,
+      quadAngle4,
+    ]);
+  }, [quadAngleInputs, quadAngle4]);
+  const [showQuadDiagonals, setShowQuadDiagonals] = useState(false);
+  const [autoQuadParallelMarks, setAutoQuadParallelMarks] = useState(true);
+  const [autoQuadEqualMarks, setAutoQuadEqualMarks] = useState(true);
+  const [autoQuadRightAngles, setAutoQuadRightAngles] = useState(true);
+  const [autoQuadDiagonalBisection, setAutoQuadDiagonalBisection] = useState(false);
+  const [autoQuadDiagonalEqual, setAutoQuadDiagonalEqual] = useState(false);
+  const [autoQuadDiagonalRightAngle, setAutoQuadDiagonalRightAngle] = useState(false);
+  const [autoQuadAngleArcs, setAutoQuadAngleArcs] = useState(false);
+  const [showQuadGrid, setShowQuadGrid] = useState(true);
+  const [showQuadVertices, setShowQuadVertices] = useState(true);
+
+  // Computed quadrilateral vertices from type
+  const quadFromTypeVertices = useMemo<[QuadLabeledPoint, QuadLabeledPoint, QuadLabeledPoint, QuadLabeledPoint]>(() => {
+    const built = buildQuadrilateralFromType({
+      type: quadType,
+      size: quadSize,
+      height: quadHeight,
+      angle: quadAngle,
+      baseRatio: quadBaseRatio,
+      centerX: 200,
+      centerY: 140,
+    });
+    return [
+      { ...built[0], label: 'A' },
+      { ...built[1], label: 'B' },
+      { ...built[2], label: 'C' },
+      { ...built[3], label: 'D' },
+    ];
+  }, [quadType, quadSize, quadHeight, quadAngle, quadBaseRatio]);
+
+  // Computed quadrilateral vertices from angles
+  const quadFromAnglesVertices = useMemo<[QuadLabeledPoint, QuadLabeledPoint, QuadLabeledPoint, QuadLabeledPoint]>(() => {
+    if (!quadAnglesValidation.valid) {
+      // Fallback to square if angles are invalid
+      return quadFromTypeVertices;
+    }
+    const built = buildQuadrilateralFromAngles(
+      [quadAngleInputs.angle1, quadAngleInputs.angle2, quadAngleInputs.angle3, quadAngle4],
+      quadAngleInputs.constraint,
+      quadAngleInputs.size,
+      200,
+      140,
+      0
+    );
+    return [
+      { ...built[0], label: 'A' },
+      { ...built[1], label: 'B' },
+      { ...built[2], label: 'C' },
+      { ...built[3], label: 'D' },
+    ];
+  }, [quadAngleInputs, quadAngle4, quadAnglesValidation.valid, quadFromTypeVertices]);
+
+  // Active quadrilateral vertices
+  const activeQuadVertices = useMemo(() => {
+    if (quadInputMode === 'fromType') return quadFromTypeVertices;
+    if (quadInputMode === 'fromAngles') return quadFromAnglesVertices;
+    return quadVertices;
+  }, [quadInputMode, quadFromTypeVertices, quadFromAnglesVertices, quadVertices]);
+
+  // Quadrilateral validation and analysis
+  const quadAnalysis = useMemo(() => {
+    const validation = validateQuadrilateral(activeQuadVertices);
+    if (!validation.valid) {
+      return { valid: false, error: validation.error };
+    }
+    return {
+      valid: true,
+      detectedType: detectQuadrilateralType(activeQuadVertices),
+      perimeter: quadPerimeter(activeQuadVertices),
+      area: quadArea(activeQuadVertices),
+      parallelPairs: detectParallelSides(activeQuadVertices),
+      equalGroups: detectEqualSides(activeQuadVertices),
+      rightAngleVertices: detectRightAngles(activeQuadVertices),
+      isConvex: isConvex(activeQuadVertices),
+      isSelfIntersecting: isSelfIntersecting(activeQuadVertices),
+    };
+  }, [activeQuadVertices]);
+
+  // Apply quadrilateral preset
+  const applyQuadPreset = useCallback((preset: QuadPreset) => {
+    setQuadInputMode('fromType');
+    setQuadType(preset.type);
+    if (preset.size) setQuadSize(preset.size);
+    if (preset.height) setQuadHeight(preset.height);
+    if (preset.angle) setQuadAngle(preset.angle);
+    if (preset.baseRatio) setQuadBaseRatio(preset.baseRatio);
+  }, []);
+
+  // Update quadrilateral vertex
+  const updateQuadVertex = useCallback(
+    (index: number, field: 'x' | 'y' | 'label', value: number | string) => {
+      setQuadVertices((prev) => {
+        const newVertices = [...prev] as [QuadLabeledPoint, QuadLabeledPoint, QuadLabeledPoint, QuadLabeledPoint];
+        newVertices[index] = { ...newVertices[index], [field]: value };
+        return newVertices;
+      });
+    },
+    []
+  );
 
 
   // Apply circle preset
@@ -593,10 +773,64 @@ function FigureDebugContent() {
     return `<CircleFigure\n  ${propsLines.join('\n  ')}\n/>`;
   }, [circleCenter, circleRadius, circleMode, showCircleCenter, showCircleRadius, circleRadiusAngle, showCircleDiameter, circleDiameterAngle, circleArcs, showSector, sectorStartAngle, sectorEndAngle, showArc, arcStartAngle, arcEndAngle, showCentralAngle, centralAngleStart, centralAngleEnd, showCentralAngleDegrees, circleChords, showCircleGrid]);
 
+  // Generate code snippet for quadrilateral
+  const generateQuadrilateralCode = useCallback(() => {
+    const propsLines = [];
+
+    if (quadInputMode === 'fromType') {
+      // Use fromType
+      const typeProps = [`type: '${quadType}'`];
+      typeProps.push(`size: ${quadSize}`);
+      if (['rectangulo', 'paralelogramo', 'trapecio', 'trapecio-isosceles', 'trapecio-rectangulo', 'cometa'].includes(quadType)) {
+        typeProps.push(`height: ${quadHeight}`);
+      }
+      if (['rombo', 'paralelogramo'].includes(quadType)) {
+        typeProps.push(`angle: ${quadAngle}`);
+      }
+      if (['trapecio', 'trapecio-isosceles', 'trapecio-rectangulo'].includes(quadType)) {
+        typeProps.push(`baseRatio: ${quadBaseRatio}`);
+      }
+      propsLines.push(`fromType={{ ${typeProps.join(', ')} }}`);
+    } else if (quadInputMode === 'fromAngles') {
+      // Use fromAngles
+      const anglesProps = [`angles: [${quadAngleInputs.angle1}, ${quadAngleInputs.angle2}, ${quadAngleInputs.angle3}, ${quadAngle4}]`];
+      if (quadAngleInputs.constraint !== 'generic') {
+        anglesProps.push(`constraint: '${quadAngleInputs.constraint}'`);
+      }
+      if (quadAngleInputs.size !== 150) {
+        anglesProps.push(`size: ${quadAngleInputs.size}`);
+      }
+      propsLines.push(`fromAngles={{ ${anglesProps.join(', ')} }}`);
+    } else {
+      // Use vertices
+      propsLines.push(`vertices={[`);
+      activeQuadVertices.forEach((v, i) => {
+        propsLines.push(`  { x: ${Math.round(v.x)}, y: ${Math.round(v.y)}, label: '${v.label}' }${i < 3 ? ',' : ''}`);
+      });
+      propsLines.push(`]}`);
+    }
+
+    // Options
+    if (showQuadDiagonals) propsLines.push(`showDiagonals`);
+    if (autoQuadParallelMarks) propsLines.push(`autoParallelMarks`);
+    if (autoQuadEqualMarks) propsLines.push(`autoEqualMarks`);
+    if (autoQuadRightAngles) propsLines.push(`autoRightAngleMarkers`);
+    if (autoQuadDiagonalBisection) propsLines.push(`autoDiagonalBisectionMarks`);
+    if (autoQuadDiagonalEqual) propsLines.push(`autoDiagonalEqualMarks`);
+    if (autoQuadDiagonalRightAngle) propsLines.push(`autoDiagonalRightAngle`);
+    if (autoQuadAngleArcs) propsLines.push(`autoAngleArcs`);
+    if (showQuadGrid) propsLines.push(`showGrid`);
+    if (!showQuadVertices) propsLines.push(`showVertices={false}`);
+
+    return `<QuadrilateralFigure\n  ${propsLines.join('\n  ')}\n/>`;
+  }, [quadInputMode, quadType, quadSize, quadHeight, quadAngle, quadBaseRatio, quadAngleInputs, quadAngle4, activeQuadVertices, showQuadDiagonals, autoQuadParallelMarks, autoQuadEqualMarks, autoQuadRightAngles, autoQuadDiagonalBisection, autoQuadDiagonalEqual, autoQuadDiagonalRightAngle, autoQuadAngleArcs, showQuadGrid, showQuadVertices]);
+
   // Generate code based on figure type
   const generateCode = useCallback(() => {
-    return figureType === 'triangle' ? generateTriangleCode() : generateCircleCode();
-  }, [figureType, generateTriangleCode, generateCircleCode]);
+    if (figureType === 'triangle') return generateTriangleCode();
+    if (figureType === 'circle') return generateCircleCode();
+    return generateQuadrilateralCode();
+  }, [figureType, generateTriangleCode, generateCircleCode, generateQuadrilateralCode]);
 
   // Copy code to clipboard
   const copyCode = useCallback(() => {
@@ -641,6 +875,16 @@ function FigureDebugContent() {
                 }`}
               >
                 Circunferencia
+              </button>
+              <button
+                onClick={() => setFigureType('quadrilateral')}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  figureType === 'quadrilateral'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+              >
+                Cuadrilátero
               </button>
             </div>
           </div>
@@ -718,6 +962,47 @@ function FigureDebugContent() {
           </Card>
         )}
 
+        {/* Quadrilateral Input Mode Toggle */}
+        {figureType === 'quadrilateral' && (
+          <Card padding="md">
+            <div className="flex items-center gap-4">
+              <Text className="font-medium">Modo de construcción:</Text>
+              <div className="flex rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
+                <button
+                  onClick={() => setQuadInputMode('fromType')}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    quadInputMode === 'fromType'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  Por Tipo
+                </button>
+                <button
+                  onClick={() => setQuadInputMode('fromAngles')}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    quadInputMode === 'fromAngles'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  Por Ángulos
+                </button>
+                <button
+                  onClick={() => setQuadInputMode('vertices')}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    quadInputMode === 'vertices'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  Por Vértices
+                </button>
+              </div>
+            </div>
+          </Card>
+        )}
+
         {/* Presets */}
         <div>
           <Heading level={2} size="sm" className="mb-4">
@@ -787,6 +1072,25 @@ function FigureDebugContent() {
                 className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
                 padding="md"
                 onClick={() => applyCirclePreset(preset)}
+              >
+                <div className="text-center">
+                  <Heading level={3} size="xs" className="mb-1">
+                    {preset.name}
+                  </Heading>
+                  <Text size="xs" variant="secondary">
+                    {preset.description}
+                  </Text>
+                </div>
+              </Card>
+            ))}
+            {/* Quadrilateral presets */}
+            {figureType === 'quadrilateral' && QUADRILATERAL_PRESETS.map((preset) => (
+              <Card
+                key={preset.name}
+                hover
+                className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
+                padding="md"
+                onClick={() => applyQuadPreset(preset)}
               >
                 <div className="text-center">
                   <Heading level={3} size="xs" className="mb-1">
@@ -1446,6 +1750,447 @@ function FigureDebugContent() {
               </Card>
             )}
 
+            {/* ============================================ */}
+            {/* QUADRILATERAL CONTROLS */}
+            {/* ============================================ */}
+            {/* Quadrilateral Type Controls (fromType mode) */}
+            {figureType === 'quadrilateral' && quadInputMode === 'fromType' && (
+              <Card padding="lg">
+                <Heading level={3} size="xs" className="mb-4">
+                  Tipo y Dimensiones
+                </Heading>
+                <div className="space-y-4">
+                  {/* Type selector */}
+                  <div className="flex items-center gap-4">
+                    <Text className="text-sm w-24">Tipo:</Text>
+                    <select
+                      value={quadType}
+                      onChange={(e) => setQuadType(e.target.value as QuadrilateralType)}
+                      className="flex-1 px-3 py-2 text-sm border rounded dark:bg-gray-800 dark:border-gray-600"
+                    >
+                      <option value="cuadrado">Cuadrado</option>
+                      <option value="rectangulo">Rectángulo</option>
+                      <option value="rombo">Rombo</option>
+                      <option value="paralelogramo">Paralelogramo</option>
+                      <option value="trapecio">Trapecio</option>
+                      <option value="trapecio-isosceles">Trapecio Isósceles</option>
+                      <option value="trapecio-rectangulo">Trapecio Rectángulo</option>
+                      <option value="cometa">Cometa</option>
+                    </select>
+                  </div>
+
+                  {/* Size slider */}
+                  <div className="flex items-center gap-4">
+                    <Text className="text-sm w-24">Tamaño:</Text>
+                    <input
+                      type="range"
+                      min="40"
+                      max="180"
+                      value={quadSize}
+                      onChange={(e) => setQuadSize(Number(e.target.value))}
+                      className="flex-1"
+                    />
+                    <span className="text-sm w-12">{quadSize}px</span>
+                  </div>
+
+                  {/* Height slider (for types that need it) */}
+                  {['rectangulo', 'paralelogramo', 'trapecio', 'trapecio-isosceles', 'trapecio-rectangulo', 'cometa'].includes(quadType) && (
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm w-24">Alto:</Text>
+                      <input
+                        type="range"
+                        min="30"
+                        max="160"
+                        value={quadHeight}
+                        onChange={(e) => setQuadHeight(Number(e.target.value))}
+                        className="flex-1"
+                      />
+                      <span className="text-sm w-12">{quadHeight}px</span>
+                    </div>
+                  )}
+
+                  {/* Angle slider (for rhombus and parallelogram) */}
+                  {['rombo', 'paralelogramo'].includes(quadType) && (
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm w-24">Ángulo:</Text>
+                      <input
+                        type="range"
+                        min="20"
+                        max="80"
+                        value={quadAngle}
+                        onChange={(e) => setQuadAngle(Number(e.target.value))}
+                        className="flex-1"
+                      />
+                      <span className="text-sm w-12">{quadAngle}°</span>
+                    </div>
+                  )}
+
+                  {/* Base ratio slider (for trapezoids) */}
+                  {['trapecio', 'trapecio-isosceles', 'trapecio-rectangulo'].includes(quadType) && (
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm w-24">Ratio bases:</Text>
+                      <input
+                        type="range"
+                        min="0.2"
+                        max="0.9"
+                        step="0.05"
+                        value={quadBaseRatio}
+                        onChange={(e) => setQuadBaseRatio(Number(e.target.value))}
+                        className="flex-1"
+                      />
+                      <span className="text-sm w-12">{quadBaseRatio.toFixed(2)}</span>
+                    </div>
+                  )}
+                </div>
+              </Card>
+            )}
+
+            {/* Quadrilateral Angles Controls (fromAngles mode) */}
+            {figureType === 'quadrilateral' && quadInputMode === 'fromAngles' && (
+              <Card padding="lg">
+                <Heading level={3} size="xs" className="mb-4">
+                  Ángulos Interiores
+                </Heading>
+                <div className="space-y-4">
+                  {/* Angle 1 slider */}
+                  <div className="flex items-center gap-4">
+                    <Text className="text-sm w-20">Ángulo A:</Text>
+                    <input
+                      type="range"
+                      min="10"
+                      max="170"
+                      value={quadAngleInputs.angle1}
+                      onChange={(e) =>
+                        setQuadAngleInputs((prev) => ({
+                          ...prev,
+                          angle1: Number(e.target.value),
+                        }))
+                      }
+                      className="flex-1"
+                    />
+                    <span className="text-sm w-12">{quadAngleInputs.angle1}°</span>
+                  </div>
+
+                  {/* Angle 2 slider */}
+                  <div className="flex items-center gap-4">
+                    <Text className="text-sm w-20">Ángulo B:</Text>
+                    <input
+                      type="range"
+                      min="10"
+                      max="170"
+                      value={quadAngleInputs.angle2}
+                      onChange={(e) =>
+                        setQuadAngleInputs((prev) => ({
+                          ...prev,
+                          angle2: Number(e.target.value),
+                        }))
+                      }
+                      className="flex-1"
+                    />
+                    <span className="text-sm w-12">{quadAngleInputs.angle2}°</span>
+                  </div>
+
+                  {/* Angle 3 slider */}
+                  <div className="flex items-center gap-4">
+                    <Text className="text-sm w-20">Ángulo C:</Text>
+                    <input
+                      type="range"
+                      min="10"
+                      max="170"
+                      value={quadAngleInputs.angle3}
+                      onChange={(e) =>
+                        setQuadAngleInputs((prev) => ({
+                          ...prev,
+                          angle3: Number(e.target.value),
+                        }))
+                      }
+                      className="flex-1"
+                    />
+                    <span className="text-sm w-12">{quadAngleInputs.angle3}°</span>
+                  </div>
+
+                  {/* Angle 4 (computed) */}
+                  <div className="flex items-center gap-4">
+                    <Text className="text-sm w-20">Ángulo D:</Text>
+                    <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    <span
+                      className={`text-sm w-12 ${
+                        quadAngle4 <= 0 || quadAngle4 >= 180
+                          ? 'text-red-500'
+                          : 'text-gray-900 dark:text-gray-100'
+                      }`}
+                    >
+                      {quadAngle4}°
+                    </span>
+                  </div>
+
+                  {/* Validation message */}
+                  {!quadAnglesValidation.valid && (
+                    <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded text-red-700 dark:text-red-300 text-sm">
+                      {quadAnglesValidation.error}
+                    </div>
+                  )}
+
+                  {/* Sum indicator */}
+                  <div className="flex items-center gap-4 pt-2 border-t dark:border-gray-700">
+                    <Text className="text-sm text-gray-600 dark:text-gray-400">
+                      Suma: {quadAngleInputs.angle1 + quadAngleInputs.angle2 + quadAngleInputs.angle3 + quadAngle4}° (debe ser 360°)
+                    </Text>
+                  </div>
+
+                  {/* Constraint selector */}
+                  <div className="flex items-center gap-4 pt-4 border-t dark:border-gray-700">
+                    <Text className="text-sm w-20">Restricción:</Text>
+                    <select
+                      value={quadAngleInputs.constraint}
+                      onChange={(e) =>
+                        setQuadAngleInputs((prev) => ({
+                          ...prev,
+                          constraint: e.target.value as QuadAngleConstraint,
+                        }))
+                      }
+                      className="flex-1 px-3 py-2 text-sm border rounded dark:bg-gray-800 dark:border-gray-600"
+                    >
+                      <option value="generic">Genérico (lados iguales)</option>
+                      <option value="equalSides">Lados Iguales (rombo)</option>
+                      <option value="equalOppositeSides">Lados Opuestos Iguales</option>
+                      <option value="cyclic">Cíclico (inscrito)</option>
+                    </select>
+                  </div>
+
+                  {/* Size slider */}
+                  <div className="flex items-center gap-4">
+                    <Text className="text-sm w-20">Tamaño:</Text>
+                    <input
+                      type="range"
+                      min="80"
+                      max="200"
+                      value={quadAngleInputs.size}
+                      onChange={(e) =>
+                        setQuadAngleInputs((prev) => ({
+                          ...prev,
+                          size: Number(e.target.value),
+                        }))
+                      }
+                      className="flex-1"
+                    />
+                    <span className="text-sm w-12">{quadAngleInputs.size}px</span>
+                  </div>
+
+                  {/* Angle presets */}
+                  <div className="pt-4 border-t dark:border-gray-700">
+                    <Text className="text-sm text-gray-600 dark:text-gray-400 mb-2">Presets:</Text>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() =>
+                          setQuadAngleInputs((prev) => ({
+                            ...prev,
+                            angle1: 90,
+                            angle2: 90,
+                            angle3: 90,
+                          }))
+                        }
+                        className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                      >
+                        Rectángulo (90-90-90-90)
+                      </button>
+                      <button
+                        onClick={() =>
+                          setQuadAngleInputs((prev) => ({
+                            ...prev,
+                            angle1: 60,
+                            angle2: 120,
+                            angle3: 60,
+                          }))
+                        }
+                        className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                      >
+                        Rombo (60-120-60-120)
+                      </button>
+                      <button
+                        onClick={() =>
+                          setQuadAngleInputs((prev) => ({
+                            ...prev,
+                            angle1: 70,
+                            angle2: 110,
+                            angle3: 70,
+                          }))
+                        }
+                        className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                      >
+                        Paralelogramo (70-110-70-110)
+                      </button>
+                      <button
+                        onClick={() =>
+                          setQuadAngleInputs((prev) => ({
+                            ...prev,
+                            angle1: 80,
+                            angle2: 100,
+                            angle3: 80,
+                          }))
+                        }
+                        className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                      >
+                        Cíclico (80-100-80-100)
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            )}
+
+            {/* Quadrilateral Vertex Controls (vertices mode) */}
+            {figureType === 'quadrilateral' && quadInputMode === 'vertices' && (
+              <Card padding="lg">
+                <Heading level={3} size="xs" className="mb-4">
+                  Vértices
+                </Heading>
+                <div className="space-y-4">
+                  {quadVertices.map((vertex, i) => (
+                    <div key={i} className="flex items-center gap-4">
+                      <Badge variant="info" className="w-8">
+                        {vertex.label}
+                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <label className="text-sm text-gray-600 dark:text-gray-400">X:</label>
+                        <input
+                          type="range"
+                          min="50"
+                          max="350"
+                          value={vertex.x}
+                          onChange={(e) => updateQuadVertex(i, 'x', Number(e.target.value))}
+                          className="w-24"
+                        />
+                        <span className="text-sm w-8">{Math.round(vertex.x)}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <label className="text-sm text-gray-600 dark:text-gray-400">Y:</label>
+                        <input
+                          type="range"
+                          min="30"
+                          max="250"
+                          value={vertex.y}
+                          onChange={(e) => updateQuadVertex(i, 'y', Number(e.target.value))}
+                          className="w-24"
+                        />
+                        <span className="text-sm w-8">{Math.round(vertex.y)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            {/* Quadrilateral Visual Options */}
+            {figureType === 'quadrilateral' && (
+              <Card padding="lg">
+                <Heading level={3} size="xs" className="mb-4">
+                  Opciones Visuales
+                </Heading>
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showQuadGrid}
+                      onChange={(e) => setShowQuadGrid(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Mostrar grid</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showQuadVertices}
+                      onChange={(e) => setShowQuadVertices(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Mostrar vértices</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showQuadDiagonals}
+                      onChange={(e) => setShowQuadDiagonals(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Mostrar diagonales</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoQuadParallelMarks}
+                      onChange={(e) => setAutoQuadParallelMarks(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Marcas paralelas</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoQuadEqualMarks}
+                      onChange={(e) => setAutoQuadEqualMarks(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Marcas de igualdad</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoQuadRightAngles}
+                      onChange={(e) => setAutoQuadRightAngles(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Ángulos rectos</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoQuadDiagonalBisection}
+                      onChange={(e) => setAutoQuadDiagonalBisection(e.target.checked)}
+                      className="rounded"
+                      disabled={!showQuadDiagonals}
+                    />
+                    <span className={`text-sm ${!showQuadDiagonals ? 'text-gray-400' : ''}`}>
+                      Diagonales bisectadas
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoQuadDiagonalEqual}
+                      onChange={(e) => setAutoQuadDiagonalEqual(e.target.checked)}
+                      className="rounded"
+                      disabled={!showQuadDiagonals}
+                    />
+                    <span className={`text-sm ${!showQuadDiagonals ? 'text-gray-400' : ''}`}>
+                      Diagonales iguales
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoQuadDiagonalRightAngle}
+                      onChange={(e) => setAutoQuadDiagonalRightAngle(e.target.checked)}
+                      className="rounded"
+                      disabled={!showQuadDiagonals}
+                    />
+                    <span className={`text-sm ${!showQuadDiagonals ? 'text-gray-400' : ''}`}>
+                      Diagonales perpendiculares
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoQuadAngleArcs}
+                      onChange={(e) => setAutoQuadAngleArcs(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Mostrar ángulos</span>
+                  </label>
+                </div>
+              </Card>
+            )}
+
             {/* Code Export */}
             <Card padding="lg">
               <div className="flex items-center justify-between mb-3">
@@ -1469,7 +2214,7 @@ function FigureDebugContent() {
                 Vista Previa
               </Heading>
               <div className="flex justify-center bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-                {figureType === 'triangle' ? (
+                {figureType === 'triangle' && (
                   <TriangleFigure
                     vertices={activeVertices}
                     sides={showSideLabels ? sides : undefined}
@@ -1481,7 +2226,8 @@ function FigureDebugContent() {
                     width={400}
                     height={300}
                   />
-                ) : (
+                )}
+                {figureType === 'circle' && (
                   <CircleFigure
                     center={circleCenter}
                     radius={circleRadius}
@@ -1492,6 +2238,23 @@ function FigureDebugContent() {
                     arcs={circleArcs.length > 0 ? circleArcs : undefined}
                     chords={circleChords.length > 0 ? circleChords : undefined}
                     showGrid={showCircleGrid}
+                    width={400}
+                    height={300}
+                  />
+                )}
+                {figureType === 'quadrilateral' && (
+                  <QuadrilateralFigure
+                    vertices={activeQuadVertices}
+                    showDiagonals={showQuadDiagonals}
+                    autoParallelMarks={autoQuadParallelMarks}
+                    autoEqualMarks={autoQuadEqualMarks}
+                    autoRightAngleMarkers={autoQuadRightAngles}
+                    autoDiagonalBisectionMarks={autoQuadDiagonalBisection}
+                    autoDiagonalEqualMarks={autoQuadDiagonalEqual}
+                    autoDiagonalRightAngle={autoQuadDiagonalRightAngle}
+                    autoAngleArcs={autoQuadAngleArcs}
+                    showGrid={showQuadGrid}
+                    showVertices={showQuadVertices}
                     width={400}
                     height={300}
                   />
@@ -1560,12 +2323,44 @@ function FigureDebugContent() {
                 </div>
               )}
 
+              {/* Quadrilateral info display */}
+              {figureType === 'quadrilateral' && quadAnalysis.valid && (
+                <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <Text size="sm" className="font-medium mb-1">
+                    Propiedades del cuadrilátero:
+                  </Text>
+                  <div className="space-y-1">
+                    <Text size="sm" variant="secondary">
+                      Tipo detectado: <span className="font-medium capitalize">{quadAnalysis.detectedType}</span>
+                    </Text>
+                    <Text size="sm" variant="secondary">
+                      Perímetro: {quadAnalysis.perimeter?.toFixed(2)}px | Área: {quadAnalysis.area?.toFixed(2)}px²
+                    </Text>
+                    <Text size="sm" variant="secondary">
+                      {quadAnalysis.isConvex ? 'Convexo' : 'Cóncavo'} | {quadAnalysis.parallelPairs?.length || 0} pares paralelos
+                    </Text>
+                    {quadAnalysis.rightAngleVertices && quadAnalysis.rightAngleVertices.length > 0 && (
+                      <Text size="sm" variant="secondary">
+                        Ángulos rectos en: {quadAnalysis.rightAngleVertices.map(i => activeQuadVertices[i].label).join(', ')}
+                      </Text>
+                    )}
+                  </div>
+                </div>
+              )}
+              {figureType === 'quadrilateral' && !quadAnalysis.valid && (
+                <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                  <Text size="sm" className="text-red-600 dark:text-red-400">
+                    {quadAnalysis.error}
+                  </Text>
+                </div>
+              )}
+
               {/* Legend */}
               <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <Text size="sm" className="font-medium mb-2">
                   Leyenda de colores:
                 </Text>
-                {figureType === 'triangle' ? (
+                {figureType === 'triangle' && (
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-1 bg-blue-500 rounded"></div>
@@ -1584,7 +2379,8 @@ function FigureDebugContent() {
                       <span>Ángulo recto</span>
                     </div>
                   </div>
-                ) : (
+                )}
+                {figureType === 'circle' && (
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-1 bg-blue-500 rounded"></div>
@@ -1605,6 +2401,30 @@ function FigureDebugContent() {
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 bg-red-500 rounded-full"></div>
                       <span>Centro</span>
+                    </div>
+                  </div>
+                )}
+                {figureType === 'quadrilateral' && (
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-blue-500 rounded"></div>
+                      <span>Cuadrilátero</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-purple-500 rounded"></div>
+                      <span>Diagonales</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-emerald-500 rounded"></div>
+                      <span>Marcas paralelas</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-amber-500 rounded"></div>
+                      <span>Marcas igualdad</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-red-500 rounded"></div>
+                      <span>Ángulo recto</span>
                     </div>
                   </div>
                 )}
