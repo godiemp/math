@@ -216,6 +216,8 @@ interface DiagonalConfig {
 | `autoRightAngleMarkers` | `boolean` | `false` | Detectar y marcar ángulos rectos |
 | `autoDiagonalBisectionMarks` | `boolean` | `false` | Mostrar marcas de bisección en diagonales |
 | `autoDiagonalEqualMarks` | `boolean` | `false` | Mostrar marcas de igualdad en diagonales |
+| `autoDiagonalRightAngle` | `boolean` | `false` | Mostrar ángulo recto cuando diagonales son perpendiculares |
+| `autoAngleArcs` | `boolean` | `false` | Mostrar arcos de ángulo con grados en todos los vértices |
 
 ### SVG Options
 
@@ -286,7 +288,8 @@ interface DiagonalConfig {
   showDiagonals
   autoEqualMarks
   autoParallelMarks
-  autoDiagonalBisectionMarks  // Muestra marcas de bisección en diagonales
+  autoDiagonalBisectionMarks   // Diagonales se bisectan
+  autoDiagonalRightAngle       // Diagonales son perpendiculares
 />
 // Diagonales del rombo se bisectan perpendicularmente
 ```
@@ -296,12 +299,7 @@ interface DiagonalConfig {
 ```tsx
 <QuadrilateralFigure
   fromType={{ type: 'paralelogramo', size: 120, height: 80, angle: 70 }}
-  angles={[
-    { showArc: true, showDegrees: true },
-    { showArc: true, showDegrees: true },
-    { showArc: true, showDegrees: true },
-    { showArc: true, showDegrees: true },
-  ]}
+  autoAngleArcs               // Muestra ángulos con grados automáticamente
   autoParallelMarks
   autoEqualMarks
 />

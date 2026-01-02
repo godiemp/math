@@ -243,6 +243,8 @@ function FigureDebugContent() {
   const [autoQuadRightAngles, setAutoQuadRightAngles] = useState(true);
   const [autoQuadDiagonalBisection, setAutoQuadDiagonalBisection] = useState(false);
   const [autoQuadDiagonalEqual, setAutoQuadDiagonalEqual] = useState(false);
+  const [autoQuadDiagonalRightAngle, setAutoQuadDiagonalRightAngle] = useState(false);
+  const [autoQuadAngleArcs, setAutoQuadAngleArcs] = useState(false);
   const [showQuadGrid, setShowQuadGrid] = useState(true);
   const [showQuadVertices, setShowQuadVertices] = useState(true);
 
@@ -759,11 +761,13 @@ function FigureDebugContent() {
     if (autoQuadRightAngles) propsLines.push(`autoRightAngleMarkers`);
     if (autoQuadDiagonalBisection) propsLines.push(`autoDiagonalBisectionMarks`);
     if (autoQuadDiagonalEqual) propsLines.push(`autoDiagonalEqualMarks`);
+    if (autoQuadDiagonalRightAngle) propsLines.push(`autoDiagonalRightAngle`);
+    if (autoQuadAngleArcs) propsLines.push(`autoAngleArcs`);
     if (showQuadGrid) propsLines.push(`showGrid`);
     if (!showQuadVertices) propsLines.push(`showVertices={false}`);
 
     return `<QuadrilateralFigure\n  ${propsLines.join('\n  ')}\n/>`;
-  }, [quadInputMode, quadType, quadSize, quadHeight, quadAngle, quadBaseRatio, activeQuadVertices, showQuadDiagonals, autoQuadParallelMarks, autoQuadEqualMarks, autoQuadRightAngles, autoQuadDiagonalBisection, autoQuadDiagonalEqual, showQuadGrid, showQuadVertices]);
+  }, [quadInputMode, quadType, quadSize, quadHeight, quadAngle, quadBaseRatio, activeQuadVertices, showQuadDiagonals, autoQuadParallelMarks, autoQuadEqualMarks, autoQuadRightAngles, autoQuadDiagonalBisection, autoQuadDiagonalEqual, autoQuadDiagonalRightAngle, autoQuadAngleArcs, showQuadGrid, showQuadVertices]);
 
   // Generate code based on figure type
   const generateCode = useCallback(() => {
@@ -1902,6 +1906,27 @@ function FigureDebugContent() {
                       Diagonales iguales
                     </span>
                   </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoQuadDiagonalRightAngle}
+                      onChange={(e) => setAutoQuadDiagonalRightAngle(e.target.checked)}
+                      className="rounded"
+                      disabled={!showQuadDiagonals}
+                    />
+                    <span className={`text-sm ${!showQuadDiagonals ? 'text-gray-400' : ''}`}>
+                      Diagonales perpendiculares
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoQuadAngleArcs}
+                      onChange={(e) => setAutoQuadAngleArcs(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Mostrar ángulos</span>
+                  </label>
                 </div>
               </Card>
             )}
@@ -1966,6 +1991,8 @@ function FigureDebugContent() {
                     autoRightAngleMarkers={autoQuadRightAngles}
                     autoDiagonalBisectionMarks={autoQuadDiagonalBisection}
                     autoDiagonalEqualMarks={autoQuadDiagonalEqual}
+                    autoDiagonalRightAngle={autoQuadDiagonalRightAngle}
+                    autoAngleArcs={autoQuadAngleArcs}
                     showGrid={showQuadGrid}
                     showVertices={showQuadVertices}
                     width={400}

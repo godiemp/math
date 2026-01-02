@@ -39,6 +39,7 @@ import {
   diagonalIntersection,
   diagonalsBisectEachOther,
   diagonalsAreEqual,
+  diagonalsArePerpendicular,
 } from '@/lib/geometry/quadrilateralUtils';
 
 // Default colors following the design system
@@ -91,6 +92,8 @@ export function QuadrilateralFigure({
   autoRightAngleMarkers = false,
   autoDiagonalBisectionMarks = false,
   autoDiagonalEqualMarks = false,
+  autoDiagonalRightAngle = false,
+  autoAngleArcs = false,
   fill = DEFAULT_COLORS.fill,
   fillOpacity,
   stroke = DEFAULT_COLORS.stroke,
@@ -171,10 +174,30 @@ export function QuadrilateralFigure({
   const diagonalIntersect = useMemo(() => diagonalIntersection(vertices), [vertices]);
   const diagonalsBisect = useMemo(() => diagonalsBisectEachOther(vertices), [vertices]);
   const diagonalsEqual = useMemo(() => diagonalsAreEqual(vertices), [vertices]);
+  const diagonalsPerpendicular = useMemo(
+    () => diagonalsArePerpendicular(vertices),
+    [vertices]
+  );
 
   // Determine if we should show diagonal marks
   const showBisectionMarks = autoDiagonalBisectionMarks && diagonalsBisect;
   const showDiagonalEqualMarks = autoDiagonalEqualMarks && diagonalsEqual;
+  const showDiagonalRightAngle = autoDiagonalRightAngle && diagonalsPerpendicular;
+
+  // Effective angles (auto-generate when autoAngleArcs is enabled)
+  const effectiveAngles = useMemo<
+    [QuadAngleConfig?, QuadAngleConfig?, QuadAngleConfig?, QuadAngleConfig?] | undefined
+  >(() => {
+    if (autoAngleArcs) {
+      return [
+        { showArc: true, showDegrees: true },
+        { showArc: true, showDegrees: true },
+        { showArc: true, showDegrees: true },
+        { showArc: true, showDegrees: true },
+      ];
+    }
+    return angles;
+  }, [autoAngleArcs, angles]);
 
   // Check for self-intersecting quadrilateral
   const isSelfIntersect = isSelfIntersecting(vertices);
@@ -266,13 +289,19 @@ export function QuadrilateralFigure({
         diagonalConfigs.length >= 2 &&
         (diagonalOptions?.showIntersection ||
           showBisectionMarks ||
-          showDiagonalEqualMarks) && (
+          showDiagonalEqualMarks ||
+          showDiagonalRightAngle) && (
           <DiagonalIntersectionPoint
             intersection={diagonalIntersect}
             label={diagonalOptions?.intersectionLabel}
             color={diagonalOptions?.equalLengthMarkColor}
           />
         )}
+
+      {/* Right angle marker at diagonal intersection (when diagonals are perpendicular) */}
+      {diagonalIntersect && showDiagonalRightAngle && diagonalConfigs.length >= 2 && (
+        <DiagonalRightAngleMarker intersection={diagonalIntersect} vertices={vertices} />
+      )}
 
       {/* Diagonal bisection marks (when diagonals bisect each other) */}
       {diagonalIntersect && showBisectionMarks && (
@@ -380,7 +409,7 @@ export function QuadrilateralFigure({
       })}
 
       {/* Angle arcs */}
-      {angles?.map((angleConfig, i) => {
+      {effectiveAngles?.map((angleConfig, i) => {
         if (!angleConfig?.showArc) return null;
         return (
           <AngleArc
@@ -403,7 +432,7 @@ export function QuadrilateralFigure({
       ))}
 
       {/* Manual right angle markers from angles config */}
-      {angles?.map((angleConfig, i) => {
+      {effectiveAngles?.map((angleConfig, i) => {
         if (!angleConfig?.isRightAngle) return null;
         if (rightAngles.includes(i)) return null; // Already rendered by auto-detection
         return (
@@ -447,7 +476,7 @@ export function QuadrilateralFigure({
       ))}
 
       {/* Angle labels */}
-      {angles?.map((angleConfig, i) => {
+      {effectiveAngles?.map((angleConfig, i) => {
         if (!angleConfig?.label && !angleConfig?.showDegrees) return null;
         return (
           <AngleLabel
@@ -859,6 +888,70 @@ function DiagonalIntersectionPoint({
         </text>
       )}
     </g>
+  );
+}
+
+interface DiagonalRightAngleMarkerProps {
+  intersection: LabeledPoint;
+  vertices: QuadVertices;
+  size?: number;
+  color?: string;
+}
+
+/**
+ * Renders a right angle marker (small square) at the diagonal intersection
+ * when diagonals are perpendicular (rhombus, square, kite).
+ */
+function DiagonalRightAngleMarker({
+  intersection,
+  vertices,
+  size = 10,
+  color,
+}: DiagonalRightAngleMarkerProps) {
+  // Get diagonal direction vectors
+  const d1 = {
+    x: vertices[2].x - vertices[0].x,
+    y: vertices[2].y - vertices[0].y,
+  };
+  const d2 = {
+    x: vertices[3].x - vertices[1].x,
+    y: vertices[3].y - vertices[1].y,
+  };
+
+  // Normalize vectors
+  const len1 = Math.sqrt(d1.x * d1.x + d1.y * d1.y);
+  const len2 = Math.sqrt(d2.x * d2.x + d2.y * d2.y);
+
+  if (len1 === 0 || len2 === 0) return null;
+
+  const u1 = { x: d1.x / len1, y: d1.y / len1 };
+  const u2 = { x: d2.x / len2, y: d2.y / len2 };
+
+  // Create right angle marker path (small square)
+  const corner1 = {
+    x: intersection.x + u1.x * size,
+    y: intersection.y + u1.y * size,
+  };
+  const corner2 = {
+    x: intersection.x + u1.x * size + u2.x * size,
+    y: intersection.y + u1.y * size + u2.y * size,
+  };
+  const corner3 = {
+    x: intersection.x + u2.x * size,
+    y: intersection.y + u2.y * size,
+  };
+
+  const path = `M ${corner1.x} ${corner1.y} L ${corner2.x} ${corner2.y} L ${corner3.x} ${corner3.y}`;
+
+  return (
+    <path
+      d={path}
+      fill="none"
+      stroke={color || DEFAULT_COLORS.rightAngle}
+      strokeWidth="2"
+      strokeLinejoin="miter"
+      className="dark:stroke-red-400"
+    />
   );
 }
 

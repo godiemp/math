@@ -308,6 +308,12 @@ export interface QuadrilateralFigureProps {
   /** Auto-detect and show marks when diagonals are equal length */
   autoDiagonalEqualMarks?: boolean;
 
+  /** Auto-detect and show right angle marker when diagonals are perpendicular */
+  autoDiagonalRightAngle?: boolean;
+
+  /** Auto-show angle arcs at all vertices with degrees */
+  autoAngleArcs?: boolean;
+
   // ============================================
   // Visual styling
   // ============================================
