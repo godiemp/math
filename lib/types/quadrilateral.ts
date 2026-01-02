@@ -91,6 +91,26 @@ export interface DiagonalConfig {
   midpointLabel?: string;
   /** Show the length of the diagonal */
   showLength?: boolean;
+  /** Show bisection marks (tick marks on each half from intersection) */
+  showBisectionMarks?: boolean;
+  /** Number of bisection tick marks (1, 2, or 3) */
+  bisectionMarkCount?: 1 | 2 | 3;
+}
+
+/**
+ * Global diagonal options for the quadrilateral
+ */
+export interface DiagonalOptions {
+  /** Show diagonal intersection point */
+  showIntersection?: boolean;
+  /** Label for intersection point */
+  intersectionLabel?: string;
+  /** Show marks indicating diagonals are equal length */
+  showEqualLengthMarks?: boolean;
+  /** Number of equal length marks (1, 2, or 3) */
+  equalLengthMarkCount?: 1 | 2 | 3;
+  /** Color for equal length marks */
+  equalLengthMarkColor?: string;
 }
 
 /**
@@ -263,6 +283,9 @@ export interface QuadrilateralFigureProps {
   /** Show both diagonals with default styling (shorthand) */
   showDiagonals?: boolean;
 
+  /** Global diagonal options (intersection, equal length marks) */
+  diagonalOptions?: DiagonalOptions;
+
   /** Special lines to draw (altura, mediatriz, mediana) */
   specialLines?: QuadSpecialLineConfig[];
 
@@ -278,6 +301,12 @@ export interface QuadrilateralFigureProps {
 
   /** Auto-detect and show right angle markers */
   autoRightAngleMarkers?: boolean;
+
+  /** Auto-detect and show bisection marks when diagonals bisect each other */
+  autoDiagonalBisectionMarks?: boolean;
+
+  /** Auto-detect and show marks when diagonals are equal length */
+  autoDiagonalEqualMarks?: boolean;
 
   // ============================================
   // Visual styling

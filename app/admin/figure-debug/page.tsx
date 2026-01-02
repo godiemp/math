@@ -241,6 +241,8 @@ function FigureDebugContent() {
   const [autoQuadParallelMarks, setAutoQuadParallelMarks] = useState(true);
   const [autoQuadEqualMarks, setAutoQuadEqualMarks] = useState(true);
   const [autoQuadRightAngles, setAutoQuadRightAngles] = useState(true);
+  const [autoQuadDiagonalBisection, setAutoQuadDiagonalBisection] = useState(false);
+  const [autoQuadDiagonalEqual, setAutoQuadDiagonalEqual] = useState(false);
   const [showQuadGrid, setShowQuadGrid] = useState(true);
   const [showQuadVertices, setShowQuadVertices] = useState(true);
 
@@ -755,11 +757,13 @@ function FigureDebugContent() {
     if (autoQuadParallelMarks) propsLines.push(`autoParallelMarks`);
     if (autoQuadEqualMarks) propsLines.push(`autoEqualMarks`);
     if (autoQuadRightAngles) propsLines.push(`autoRightAngleMarkers`);
+    if (autoQuadDiagonalBisection) propsLines.push(`autoDiagonalBisectionMarks`);
+    if (autoQuadDiagonalEqual) propsLines.push(`autoDiagonalEqualMarks`);
     if (showQuadGrid) propsLines.push(`showGrid`);
     if (!showQuadVertices) propsLines.push(`showVertices={false}`);
 
     return `<QuadrilateralFigure\n  ${propsLines.join('\n  ')}\n/>`;
-  }, [quadInputMode, quadType, quadSize, quadHeight, quadAngle, quadBaseRatio, activeQuadVertices, showQuadDiagonals, autoQuadParallelMarks, autoQuadEqualMarks, autoQuadRightAngles, showQuadGrid, showQuadVertices]);
+  }, [quadInputMode, quadType, quadSize, quadHeight, quadAngle, quadBaseRatio, activeQuadVertices, showQuadDiagonals, autoQuadParallelMarks, autoQuadEqualMarks, autoQuadRightAngles, autoQuadDiagonalBisection, autoQuadDiagonalEqual, showQuadGrid, showQuadVertices]);
 
   // Generate code based on figure type
   const generateCode = useCallback(() => {
@@ -1874,6 +1878,30 @@ function FigureDebugContent() {
                     />
                     <span className="text-sm">Ángulos rectos</span>
                   </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoQuadDiagonalBisection}
+                      onChange={(e) => setAutoQuadDiagonalBisection(e.target.checked)}
+                      className="rounded"
+                      disabled={!showQuadDiagonals}
+                    />
+                    <span className={`text-sm ${!showQuadDiagonals ? 'text-gray-400' : ''}`}>
+                      Diagonales bisectadas
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoQuadDiagonalEqual}
+                      onChange={(e) => setAutoQuadDiagonalEqual(e.target.checked)}
+                      className="rounded"
+                      disabled={!showQuadDiagonals}
+                    />
+                    <span className={`text-sm ${!showQuadDiagonals ? 'text-gray-400' : ''}`}>
+                      Diagonales iguales
+                    </span>
+                  </label>
                 </div>
               </Card>
             )}
@@ -1936,6 +1964,8 @@ function FigureDebugContent() {
                     autoParallelMarks={autoQuadParallelMarks}
                     autoEqualMarks={autoQuadEqualMarks}
                     autoRightAngleMarkers={autoQuadRightAngles}
+                    autoDiagonalBisectionMarks={autoQuadDiagonalBisection}
+                    autoDiagonalEqualMarks={autoQuadDiagonalEqual}
                     showGrid={showQuadGrid}
                     showVertices={showQuadVertices}
                     width={400}

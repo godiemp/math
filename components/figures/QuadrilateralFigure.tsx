@@ -7,6 +7,7 @@ import type {
   QuadSideConfig,
   QuadAngleConfig,
   DiagonalConfig,
+  DiagonalOptions,
   QuadSpecialLineConfig,
   FromSquareConfig,
   FromRectangleConfig,
@@ -28,12 +29,16 @@ import {
   analyzeQuadrilateral,
   angleAtVertex,
   midpoint,
+  distance,
   getStrokeDashArray,
   buildSquare,
   buildRectangle,
   buildQuadrilateralFromType,
   diagonalPath,
   isSelfIntersecting,
+  diagonalIntersection,
+  diagonalsBisectEachOther,
+  diagonalsAreEqual,
 } from '@/lib/geometry/quadrilateralUtils';
 
 // Default colors following the design system
@@ -79,10 +84,13 @@ export function QuadrilateralFigure({
   angles,
   diagonals,
   showDiagonals,
+  diagonalOptions,
   specialLines,
   autoParallelMarks = false,
   autoEqualMarks = false,
   autoRightAngleMarkers = false,
+  autoDiagonalBisectionMarks = false,
+  autoDiagonalEqualMarks = false,
   fill = DEFAULT_COLORS.fill,
   fillOpacity,
   stroke = DEFAULT_COLORS.stroke,
@@ -158,6 +166,15 @@ export function QuadrilateralFigure({
   const parallelPairs = autoParallelMarks ? detectParallelSides(vertices) : [];
   const equalGroups = autoEqualMarks ? detectEqualSides(vertices) : [];
   const rightAngles = autoRightAngleMarkers ? detectRightAngles(vertices) : [];
+
+  // Diagonal detection
+  const diagonalIntersect = useMemo(() => diagonalIntersection(vertices), [vertices]);
+  const diagonalsBisect = useMemo(() => diagonalsBisectEachOther(vertices), [vertices]);
+  const diagonalsEqual = useMemo(() => diagonalsAreEqual(vertices), [vertices]);
+
+  // Determine if we should show diagonal marks
+  const showBisectionMarks = autoDiagonalBisectionMarks && diagonalsBisect;
+  const showDiagonalEqualMarks = autoDiagonalEqualMarks && diagonalsEqual;
 
   // Check for self-intersecting quadrilateral
   const isSelfIntersect = isSelfIntersecting(vertices);
@@ -243,6 +260,68 @@ export function QuadrilateralFigure({
       {diagonalConfigs.map((config, i) => (
         <DiagonalLine key={`diagonal-${i}`} vertices={vertices} config={config} />
       ))}
+
+      {/* Diagonal intersection point */}
+      {diagonalIntersect &&
+        diagonalConfigs.length >= 2 &&
+        (diagonalOptions?.showIntersection ||
+          showBisectionMarks ||
+          showDiagonalEqualMarks) && (
+          <DiagonalIntersectionPoint
+            intersection={diagonalIntersect}
+            label={diagonalOptions?.intersectionLabel}
+            color={diagonalOptions?.equalLengthMarkColor}
+          />
+        )}
+
+      {/* Diagonal bisection marks (when diagonals bisect each other) */}
+      {diagonalIntersect && showBisectionMarks && (
+        <>
+          <DiagonalBisectionMarks
+            vertices={vertices}
+            intersection={diagonalIntersect}
+            diagonalIndex={0}
+            count={1}
+          />
+          <DiagonalBisectionMarks
+            vertices={vertices}
+            intersection={diagonalIntersect}
+            diagonalIndex={1}
+            count={2}
+          />
+        </>
+      )}
+
+      {/* Diagonal equal length marks */}
+      {showDiagonalEqualMarks && diagonalConfigs.length >= 2 && (
+        <DiagonalEqualLengthMarks
+          vertices={vertices}
+          count={diagonalOptions?.equalLengthMarkCount || 1}
+          color={diagonalOptions?.equalLengthMarkColor}
+        />
+      )}
+
+      {/* Manual diagonal bisection marks from individual diagonal configs */}
+      {diagonalIntersect &&
+        diagonalConfigs.map((config, i) => {
+          if (!config.showBisectionMarks) return null;
+          return (
+            <DiagonalBisectionMarks
+              key={`bisection-${i}`}
+              vertices={vertices}
+              intersection={diagonalIntersect}
+              diagonalIndex={
+                config.from === 0 && config.to === 2
+                  ? 0
+                  : config.from === 1 && config.to === 3
+                    ? 1
+                    : (i as 0 | 1)
+              }
+              count={config.bisectionMarkCount || 1}
+              color={config.color}
+            />
+          );
+        })}
 
       {/* Auto-detected parallel marks */}
       {parallelPairs.map(([side1, side2], pairIndex) => (
@@ -740,6 +819,181 @@ function RightAngleMarkerAtPoint({
       fill="none"
       stroke={DEFAULT_COLORS.specialLine}
       strokeWidth="1.5"
+      className="dark:stroke-purple-400"
+    />
+  );
+}
+
+interface DiagonalIntersectionPointProps {
+  intersection: LabeledPoint;
+  label?: string;
+  color?: string;
+}
+
+function DiagonalIntersectionPoint({
+  intersection,
+  label,
+  color,
+}: DiagonalIntersectionPointProps) {
+  return (
+    <g>
+      <circle
+        cx={intersection.x}
+        cy={intersection.y}
+        r={4}
+        fill={color || DEFAULT_COLORS.diagonal}
+        className="dark:fill-purple-400"
+      />
+      {label && (
+        <text
+          x={intersection.x + 10}
+          y={intersection.y - 10}
+          fill={color || DEFAULT_COLORS.diagonal}
+          fontSize="12"
+          fontWeight="600"
+          textAnchor="start"
+          dominantBaseline="middle"
+          className="dark:fill-purple-400"
+        >
+          {label}
+        </text>
+      )}
+    </g>
+  );
+}
+
+interface DiagonalBisectionMarksProps {
+  vertices: QuadVertices;
+  intersection: LabeledPoint;
+  diagonalIndex: 0 | 1;
+  count: 1 | 2 | 3;
+  color?: string;
+}
+
+/**
+ * Renders tick marks on a diagonal showing it's bisected at the intersection point.
+ * Marks are placed on both halves of the diagonal.
+ */
+function DiagonalBisectionMarks({
+  vertices,
+  intersection,
+  diagonalIndex,
+  count,
+  color,
+}: DiagonalBisectionMarksProps) {
+  // Diagonal 0: v0 to v2, Diagonal 1: v1 to v3
+  const [fromIdx, toIdx] = diagonalIndex === 0 ? [0, 2] : [1, 3];
+  const p1 = vertices[fromIdx];
+  const p2 = vertices[toIdx];
+
+  // Calculate midpoints of each half
+  const mid1 = midpoint(p1, intersection);
+  const mid2 = midpoint(intersection, p2);
+
+  // Generate tick marks perpendicular to the diagonal
+  const dx = p2.x - p1.x;
+  const dy = p2.y - p1.y;
+  const len = Math.sqrt(dx * dx + dy * dy);
+
+  if (len === 0) return null;
+
+  // Perpendicular direction
+  const perpX = -dy / len;
+  const perpY = dx / len;
+
+  const tickSize = 6;
+  const spacing = 4;
+
+  // Generate path for tick marks at both midpoints
+  const paths: string[] = [];
+
+  [mid1, mid2].forEach((midPt) => {
+    for (let i = 0; i < count; i++) {
+      const offset = (i - (count - 1) / 2) * spacing;
+      const cx = midPt.x + (dx / len) * offset;
+      const cy = midPt.y + (dy / len) * offset;
+
+      const x1 = cx + perpX * tickSize;
+      const y1 = cy + perpY * tickSize;
+      const x2 = cx - perpX * tickSize;
+      const y2 = cy - perpY * tickSize;
+
+      paths.push(`M ${x1} ${y1} L ${x2} ${y2}`);
+    }
+  });
+
+  return (
+    <path
+      d={paths.join(' ')}
+      fill="none"
+      stroke={color || DEFAULT_COLORS.equalMark}
+      strokeWidth="2"
+      strokeLinecap="round"
+      className="dark:stroke-purple-400"
+    />
+  );
+}
+
+interface DiagonalEqualLengthMarksProps {
+  vertices: QuadVertices;
+  count: 1 | 2 | 3;
+  color?: string;
+}
+
+/**
+ * Renders marks on both diagonals indicating they are equal in length.
+ * Places tick marks near the middle of each diagonal.
+ */
+function DiagonalEqualLengthMarks({
+  vertices,
+  count,
+  color,
+}: DiagonalEqualLengthMarksProps) {
+  const diagonals: Array<{ from: number; to: number }> = [
+    { from: 0, to: 2 },
+    { from: 1, to: 3 },
+  ];
+
+  const paths: string[] = [];
+  const tickSize = 6;
+  const spacing = 4;
+
+  diagonals.forEach(({ from, to }) => {
+    const p1 = vertices[from];
+    const p2 = vertices[to];
+    const mid = midpoint(p1, p2);
+
+    const dx = p2.x - p1.x;
+    const dy = p2.y - p1.y;
+    const len = Math.sqrt(dx * dx + dy * dy);
+
+    if (len === 0) return;
+
+    // Perpendicular direction
+    const perpX = -dy / len;
+    const perpY = dx / len;
+
+    for (let i = 0; i < count; i++) {
+      const offset = (i - (count - 1) / 2) * spacing;
+      const cx = mid.x + (dx / len) * offset;
+      const cy = mid.y + (dy / len) * offset;
+
+      const x1 = cx + perpX * tickSize;
+      const y1 = cy + perpY * tickSize;
+      const x2 = cx - perpX * tickSize;
+      const y2 = cy - perpY * tickSize;
+
+      paths.push(`M ${x1} ${y1} L ${x2} ${y2}`);
+    }
+  });
+
+  return (
+    <path
+      d={paths.join(' ')}
+      fill="none"
+      stroke={color || DEFAULT_COLORS.equalMark}
+      strokeWidth="2"
+      strokeLinecap="round"
       className="dark:stroke-purple-400"
     />
   );

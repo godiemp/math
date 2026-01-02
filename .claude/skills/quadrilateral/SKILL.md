@@ -214,6 +214,8 @@ interface DiagonalConfig {
 | `autoParallelMarks` | `boolean` | `false` | Detectar y marcar lados paralelos |
 | `autoEqualMarks` | `boolean` | `false` | Detectar y marcar lados iguales |
 | `autoRightAngleMarkers` | `boolean` | `false` | Detectar y marcar ángulos rectos |
+| `autoDiagonalBisectionMarks` | `boolean` | `false` | Mostrar marcas de bisección en diagonales |
+| `autoDiagonalEqualMarks` | `boolean` | `false` | Mostrar marcas de igualdad en diagonales |
 
 ### SVG Options
 
@@ -263,20 +265,28 @@ interface DiagonalConfig {
 />
 ```
 
+### Rectángulo con Diagonales Iguales
+
+```tsx
+<QuadrilateralFigure
+  fromType={{ type: 'rectangulo', size: 120, height: 80 }}
+  showDiagonals
+  autoRightAngleMarkers
+  autoDiagonalBisectionMarks   // Diagonales se bisectan
+  autoDiagonalEqualMarks       // Diagonales son iguales
+/>
+// Los rectángulos tienen diagonales iguales que se bisectan
+```
+
 ### Propiedades del Rombo
 
 ```tsx
 <QuadrilateralFigure
   fromType={{ type: 'rombo', size: 80, angle: 60 }}
   showDiagonals
-  diagonals={{
-    showIntersection: true,
-    d1Label: 'd₁',
-    d2Label: 'd₂',
-    strokeStyle: 'dashed',
-  }}
   autoEqualMarks
   autoParallelMarks
+  autoDiagonalBisectionMarks  // Muestra marcas de bisección en diagonales
 />
 // Diagonales del rombo se bisectan perpendicularmente
 ```
