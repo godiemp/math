@@ -66,8 +66,13 @@ export default function LineChart({
 
   // Chart area dimensions (in SVG units)
   const svgWidth = 400;
-  const svgHeight = 200;
-  const padding = { top: 20, right: 20, bottom: 10, left: showYAxis ? 45 : 20 };
+  const svgHeight = showLabels ? 220 : 200;
+  const padding = {
+    top: 20,
+    right: 20,
+    bottom: showLabels ? 30 : 10,
+    left: showYAxis ? 45 : 20
+  };
   const chartAreaWidth = svgWidth - padding.left - padding.right;
   const chartAreaHeight = svgHeight - padding.top - padding.bottom;
 
@@ -238,33 +243,30 @@ export default function LineChart({
               </g>
             );
           })}
-        </svg>
-      </div>
 
-      {/* X-axis Labels - positioned to match data points */}
-      {showLabels && (
-        <div className="relative" style={{ height: 20 }}>
-          {data.map((point, index) => {
+          {/* X-axis Labels - inside SVG for perfect alignment */}
+          {showLabels && data.map((point, index) => {
+            const x = getX(index);
             const isHighlighted = highlightIndex === index;
-            // Calculate position as percentage matching SVG coordinates
-            const xPercent = ((padding.left + (index / (data.length - 1 || 1)) * chartAreaWidth) / svgWidth) * 100;
             return (
-              <span
+              <text
                 key={`label-${index}`}
+                x={x}
+                y={padding.top + chartAreaHeight + 18}
+                textAnchor="middle"
                 className={cn(
-                  'absolute text-xs transition-all duration-200 transform -translate-x-1/2',
                   isHighlighted
-                    ? 'text-amber-600 dark:text-amber-400 font-bold'
-                    : 'text-gray-600 dark:text-gray-400'
+                    ? 'fill-amber-600 dark:fill-amber-400 font-bold'
+                    : 'fill-gray-600 dark:fill-gray-400'
                 )}
-                style={{ left: `${xPercent}%` }}
+                fontSize="11"
               >
                 {point.label}
-              </span>
+              </text>
             );
           })}
-        </div>
-      )}
+        </svg>
+      </div>
     </div>
   );
 }
