@@ -74,7 +74,7 @@ export default function Step4Explain({ onComplete, isActive }: LessonStepProps) 
               {/* Triangle diagram */}
               <div className="flex-shrink-0">
                 <TriangleFigure
-                  fromSides={{ sides: [3, 4, 5], size: 100 }}
+                  fromSides={{ sides: [4, 5, 3], size: 100 }}
                   sides={[
                     { label: 'a', color: '#3b82f6' },
                     { label: 'b', color: '#22c55e' },
@@ -119,7 +119,7 @@ export default function Step4Explain({ onComplete, isActive }: LessonStepProps) 
           {/* Triangle diagram with labels */}
           <div className="flex justify-center">
             <TriangleFigure
-              fromSides={{ sides: [3, 4, 5], size: 140 }}
+              fromSides={{ sides: [4, 5, 3], size: 140 }}
               sides={[
                 { label: 'a', color: '#3b82f6', strokeWidth: 5 },
                 { label: 'b', color: '#10B981', strokeWidth: 5 },

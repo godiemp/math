@@ -207,7 +207,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
         {/* Triangle visualization */}
         <div className="flex justify-center mb-4">
           <TriangleFigure
-            fromSides={{ sides: [3, 4, 5], size: 120 }}
+            fromSides={{ sides: [4, 5, 3], size: 120 }}
             sides={[
               { label: `${problem.a ?? '?'}`, color: '#3b82f6' },
               { label: `${problem.b ?? '?'}`, color: '#22c55e' },

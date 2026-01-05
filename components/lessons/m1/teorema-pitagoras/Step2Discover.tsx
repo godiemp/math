@@ -108,7 +108,7 @@ export default function Step2Discover({ onComplete, isActive }: LessonStepProps)
               Triángulo Rectángulo
             </h3>
             <TriangleFigure
-              fromSides={{ sides: [triangle.a, triangle.b, triangle.c], size: 100 }}
+              fromSides={{ sides: [triangle.b, triangle.c, triangle.a], size: 100 }}
               sides={[
                 { label: 'a', color: '#3b82f6', strokeWidth: 4 },
                 { label: 'b', color: '#10B981', strokeWidth: 4 },
