@@ -5,6 +5,7 @@ import { ArrowRight, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 import MathDisplay from '@/components/math/MathDisplay';
+import TriangleFigure from '@/components/figures/TriangleFigure';
 
 type Phase = 'formula' | 'terminology' | 'applications' | 'shortcuts';
 
@@ -72,26 +73,19 @@ export default function Step4Explain({ onComplete, isActive }: LessonStepProps) 
             <div className="flex flex-col md:flex-row items-center gap-6">
               {/* Triangle diagram */}
               <div className="flex-shrink-0">
-                <svg viewBox="0 0 150 135" className="w-40 h-36">
-                  {/* Triangle */}
-                  <polygon
-                    points="10,110 140,110 10,20"
-                    fill="#D1FAE5"
-                    stroke="#059669"
-                    strokeWidth="3"
-                  />
-                  {/* Right angle marker */}
-                  <path
-                    d="M 10,95 L 25,95 L 25,110"
-                    fill="none"
-                    stroke="#6B7280"
-                    strokeWidth="2"
-                  />
-                  {/* Labels */}
-                  <text x="0" y="70" className="text-sm font-bold fill-blue-600">a</text>
-                  <text x="75" y="128" textAnchor="middle" className="text-sm font-bold fill-green-600">b</text>
-                  <text x="85" y="55" className="text-sm font-bold fill-amber-600">c</text>
-                </svg>
+                <TriangleFigure
+                  fromSides={{ sides: [3, 4, 5], size: 100 }}
+                  sides={[
+                    { label: 'a', color: '#3b82f6' },
+                    { label: 'b', color: '#22c55e' },
+                    { label: 'c', color: '#f59e0b' },
+                  ]}
+                  showRightAngleMarker
+                  fill="#D1FAE5"
+                  stroke="#059669"
+                  width={160}
+                  height={144}
+                />
               </div>
 
               {/* Formula */}
@@ -124,36 +118,24 @@ export default function Step4Explain({ onComplete, isActive }: LessonStepProps) 
 
           {/* Triangle diagram with labels */}
           <div className="flex justify-center">
-            <svg viewBox="0 0 200 160" className="w-64 h-48">
-              {/* Triangle */}
-              <polygon
-                points="20,140 180,140 20,30"
-                fill="#F0FDF4"
-                stroke="#059669"
-                strokeWidth="3"
-              />
-              {/* Right angle marker */}
-              <path
-                d="M 20,120 L 40,120 L 40,140"
-                fill="none"
-                stroke="#6B7280"
-                strokeWidth="2"
-              />
-              {/* Side a (vertical) - cateto */}
-              <line x1="20" y1="30" x2="20" y2="140" stroke="#3B82F6" strokeWidth="5" />
-              <text x="0" y="90" className="text-lg font-bold fill-blue-600">a</text>
-
-              {/* Side b (horizontal) - cateto */}
-              <line x1="20" y1="140" x2="180" y2="140" stroke="#10B981" strokeWidth="5" />
-              <text x="100" y="158" textAnchor="middle" className="text-lg font-bold fill-green-600">b</text>
-
-              {/* Side c (hypotenuse) */}
-              <line x1="20" y1="30" x2="180" y2="140" stroke="#F59E0B" strokeWidth="5" />
-              <text x="115" y="70" className="text-lg font-bold fill-amber-600">c</text>
-
-              {/* 90° label */}
-              <text x="50" y="130" className="text-xs fill-gray-500">90°</text>
-            </svg>
+            <TriangleFigure
+              fromSides={{ sides: [3, 4, 5], size: 140 }}
+              sides={[
+                { label: 'a', color: '#3b82f6', strokeWidth: 5 },
+                { label: 'b', color: '#10B981', strokeWidth: 5 },
+                { label: 'c', color: '#F59E0B', strokeWidth: 5 },
+              ]}
+              angles={[
+                undefined,
+                { label: '90°', showArc: false },
+                undefined,
+              ]}
+              showRightAngleMarker
+              fill="#F0FDF4"
+              stroke="#059669"
+              width={256}
+              height={192}
+            />
           </div>
 
           {/* Terminology cards */}
