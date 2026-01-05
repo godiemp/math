@@ -99,3 +99,26 @@ export async function loginAsSyncStudent(page: Page) {
   // Wait for navigation to dashboard
   await page.waitForURL(/\/(dashboard|$)/, { timeout: 10000 });
 }
+
+/**
+ * Authenticates as a test admin and navigates to the admin dashboard.
+ * Used for testing admin-specific features like session management.
+ */
+export async function loginAsAdmin(page: Page) {
+  await page.goto('/signin');
+
+  // Dismiss cookie banner
+  await page.evaluate(() => {
+    localStorage.setItem('cookie-consent', 'accepted');
+  });
+
+  // Fill in admin credentials
+  await page.fill('input[name="username"]', 'admin@test.com');
+  await page.fill('input[type="password"]', 'AdminTest123!');
+
+  // Submit login
+  await page.click('button[type="submit"]');
+
+  // Wait for navigation to admin dashboard or regular dashboard
+  await page.waitForURL(/\/(admin|dashboard)/, { timeout: 10000 });
+}

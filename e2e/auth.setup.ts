@@ -4,6 +4,7 @@ import path from 'path';
 const authFile = path.join(__dirname, '../.auth/student.json');
 const teacherAuthFile = path.join(__dirname, '../.auth/teacher.json');
 const syncStudentAuthFile = path.join(__dirname, '../.auth/sync-student.json');
+const adminAuthFile = path.join(__dirname, '../.auth/admin.json');
 
 /**
  * Global authentication setup for student user.
@@ -77,4 +78,25 @@ setup('authenticate as sync student', async ({ page }) => {
   await page.waitForLoadState('networkidle', { timeout: 10000 });
 
   await page.context().storageState({ path: syncStudentAuthFile });
+});
+
+/**
+ * Authentication setup for admin user.
+ * Used by admin tests that need admin auth state (e.g., session creation).
+ */
+setup('authenticate as admin', async ({ page }) => {
+  await page.goto('/signin');
+
+  await page.evaluate(() => {
+    localStorage.setItem('cookie-consent', 'accepted');
+  });
+
+  await page.fill('input[name="username"]', 'admin@test.com');
+  await page.fill('input[type="password"]', 'AdminTest123!');
+  await page.click('button[type="submit"]');
+
+  await page.waitForURL(/\/(admin|dashboard)/, { timeout: 10000 });
+  await page.waitForLoadState('networkidle', { timeout: 10000 });
+
+  await page.context().storageState({ path: adminAuthFile });
 });
