@@ -5,6 +5,7 @@ import { ArrowRight, Lightbulb, RotateCcw, Check, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 import MathDisplay from '@/components/math/MathDisplay';
+import TriangleFigure from '@/components/figures/TriangleFigure';
 
 interface Triangle {
   a: number;
@@ -106,58 +107,19 @@ export default function Step2Discover({ onComplete, isActive }: LessonStepProps)
             <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-4">
               Triángulo Rectángulo
             </h3>
-            {(() => {
-              // Calculate proportional triangle dimensions
-              // Use the larger of a or b as the reference for scaling
-              const maxCateto = Math.max(triangle.a, triangle.b);
-              const triScale = 100 / maxCateto; // Scale to fit in ~100px
-              const scaledA = triangle.a * triScale; // Vertical side
-              const scaledB = triangle.b * triScale; // Horizontal side
-
-              // SVG coordinates: origin at bottom-left corner of triangle
-              const padding = 25;
-              const bottomY = padding + scaledA;
-              const rightX = padding + scaledB;
-
-              // Triangle points: bottom-left, bottom-right, top-left
-              const p1 = `${padding},${bottomY}`; // Bottom-left (right angle)
-              const p2 = `${rightX},${bottomY}`; // Bottom-right
-              const p3 = `${padding},${padding}`; // Top-left
-
-              return (
-                <svg
-                  viewBox={`0 0 ${rightX + padding} ${bottomY + 20}`}
-                  className="w-full max-w-[200px] h-auto"
-                  style={{ minHeight: '120px' }}
-                >
-                  {/* Triangle */}
-                  <polygon
-                    points={`${p1} ${p2} ${p3}`}
-                    fill="#F0FDF4"
-                    stroke="#059669"
-                    strokeWidth="3"
-                  />
-                  {/* Right angle marker */}
-                  <path
-                    d={`M ${padding},${bottomY - 15} L ${padding + 15},${bottomY - 15} L ${padding + 15},${bottomY}`}
-                    fill="none"
-                    stroke="#6B7280"
-                    strokeWidth="2"
-                  />
-                  {/* Side a (vertical) */}
-                  <line x1={padding} y1={padding} x2={padding} y2={bottomY} stroke="#3B82F6" strokeWidth="4" />
-                  <text x={padding - 12} y={(padding + bottomY) / 2} className="text-sm font-bold fill-blue-600">a</text>
-
-                  {/* Side b (horizontal) */}
-                  <line x1={padding} y1={bottomY} x2={rightX} y2={bottomY} stroke="#10B981" strokeWidth="4" />
-                  <text x={(padding + rightX) / 2} y={bottomY + 15} textAnchor="middle" className="text-sm font-bold fill-green-600">b</text>
-
-                  {/* Side c (hypotenuse) */}
-                  <line x1={padding} y1={padding} x2={rightX} y2={bottomY} stroke="#F59E0B" strokeWidth="4" />
-                  <text x={(padding + rightX) / 2 + 10} y={(padding + bottomY) / 2 - 5} className="text-sm font-bold fill-amber-600">c</text>
-                </svg>
-              );
-            })()}
+            <TriangleFigure
+              fromSides={{ sides: [triangle.b, triangle.c, triangle.a], size: 100 }}
+              sides={[
+                { label: 'a', color: '#3b82f6', strokeWidth: 4 },
+                { label: 'b', color: '#10B981', strokeWidth: 4 },
+                { label: 'c', color: '#F59E0B', strokeWidth: 4 },
+              ]}
+              showRightAngleMarker
+              fill="#F0FDF4"
+              stroke="#059669"
+              width={200}
+              height={150}
+            />
 
             {/* Side values */}
             <div className="flex gap-4 mt-4 text-sm">

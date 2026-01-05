@@ -239,8 +239,8 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               </p>
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 rounded-lg p-4">
                 <div className="space-y-2">
-                  <MathDisplay latex={`${distanceFromWall}^2 + ${wallHeight}^2 = ${distanceFromWall * distanceFromWall} + ${wallHeight * wallHeight} = ${distanceFromWall * distanceFromWall + wallHeight * wallHeight}`} />
-                  <MathDisplay latex={`${ladderLength}^2 = ${ladderLength * ladderLength}`} />
+                  <MathDisplay latex={`${distanceFromWall}^2 + ${wallHeight}^2 = ${distanceFromWall * distanceFromWall} + ${wallHeight * wallHeight} = ${distanceFromWall * distanceFromWall + wallHeight * wallHeight}`} displayMode />
+                  <MathDisplay latex={`${ladderLength}^2 = ${ladderLength * ladderLength}`} displayMode />
                 </div>
                 <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
                   <p className="text-green-700 dark:text-green-300 font-bold">
