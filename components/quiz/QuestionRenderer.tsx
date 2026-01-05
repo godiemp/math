@@ -7,6 +7,7 @@ import BarChart from '@/components/lessons/shared/BarChart';
 import PieChart from '@/components/lessons/shared/PieChart';
 import Histogram from '@/components/lessons/shared/Histogram';
 import LineChart from '@/components/lessons/shared/LineChart';
+import ScatterPlot from '@/components/lessons/shared/ScatterPlot';
 import FrequencyTable from '@/components/lessons/shared/FrequencyTable';
 import VennDiagram from '@/components/lessons/shared/VennDiagram';
 
@@ -98,6 +99,21 @@ export function QuestionRenderer({
             showValues={question.visualData.data.showValues ?? false}
             showLabels={question.visualData.data.showLabels ?? true}
             showYAxis={question.visualData.data.showYAxis ?? true}
+            height={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Scatter Plot */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'scatter' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <ScatterPlot
+            data={question.visualData.data.series ?? question.visualData.data.points}
+            xLabel={question.visualData.data.xLabel}
+            yLabel={question.visualData.data.yLabel}
+            showGrid={question.visualData.data.showGrid ?? true}
+            showTrendLine={question.visualData.data.showTrendLine ?? false}
+            correlationType={question.visualData.data.correlationType}
             height={compact ? 'sm' : 'md'}
           />
         </div>
@@ -528,6 +544,21 @@ export function QuestionDisplay({
             showValues={question.visualData.data.showValues ?? false}
             showLabels={question.visualData.data.showLabels ?? true}
             showYAxis={question.visualData.data.showYAxis ?? true}
+            height={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Scatter Plot */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'scatter' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <ScatterPlot
+            data={question.visualData.data.series ?? question.visualData.data.points}
+            xLabel={question.visualData.data.xLabel}
+            yLabel={question.visualData.data.yLabel}
+            showGrid={question.visualData.data.showGrid ?? true}
+            showTrendLine={question.visualData.data.showTrendLine ?? false}
+            correlationType={question.visualData.data.correlationType}
             height={compact ? 'sm' : 'md'}
           />
         </div>

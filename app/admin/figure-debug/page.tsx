@@ -8,6 +8,7 @@ import { TriangleFigure } from '@/components/figures/TriangleFigure';
 import { CircleFigure } from '@/components/figures/CircleFigure';
 import { QuadrilateralFigure } from '@/components/figures/QuadrilateralFigure';
 import { Figure3D } from '@/components/figures/Figure3D';
+import { PolygonFigure } from '@/components/figures/PolygonFigure';
 import {
   buildTriangleFromAngles,
   buildTriangleFromSides,
@@ -39,6 +40,14 @@ import {
   areaSuperficieEsfera,
   getSolidTypeName,
 } from '@/lib/geometry/figure3d';
+import {
+  validatePolygon,
+  getPolygonName,
+  diagonalCount,
+  regularInteriorAngle,
+  calculateApothem,
+  calculateSideLength,
+} from '@/lib/geometry/polygonUtils';
 import type {
   LabeledPoint,
   SideConfig,
@@ -81,8 +90,9 @@ import {
   isSelfIntersecting,
   validateQuadrilateral,
 } from '@/lib/geometry/quadrilateralUtils';
+import type { PolygonPreset } from '@/lib/types/polygon';
 
-type FigureType = 'triangle' | 'circle' | 'quadrilateral' | 'figure3d';
+type FigureType = 'triangle' | 'circle' | 'quadrilateral' | 'figure3d' | 'polygon';
 type InputMode = 'vertices' | 'angles' | 'sides';
 
 // Presets for vertices mode
@@ -249,6 +259,50 @@ const FIGURE3D_PRESETS: Figure3DPreset[] = [
     description: 'Base triangular',
     fromType: { type: 'prisma_triangular', dimensions: { baseWidth: 100, baseHeight: 86, profundidad: 120 } },
     projection: 'isometric',
+  },
+];
+
+// Polygon presets
+const POLYGON_PRESETS: PolygonPreset[] = [
+  {
+    name: 'Pentágono',
+    description: '5 lados iguales',
+    sides: 5,
+    radius: 80,
+    showApothem: false,
+    showCenter: true,
+  },
+  {
+    name: 'Hexágono',
+    description: '6 lados iguales',
+    sides: 6,
+    radius: 80,
+    showApothem: true,
+    showCenter: true,
+  },
+  {
+    name: 'Octágono',
+    description: '8 lados iguales',
+    sides: 8,
+    radius: 80,
+    showApothem: false,
+    showCenter: true,
+  },
+  {
+    name: 'Decágono',
+    description: '10 lados iguales',
+    sides: 10,
+    radius: 80,
+    showApothem: false,
+    showCenter: true,
+  },
+  {
+    name: 'Dodecágono',
+    description: '12 lados iguales',
+    sides: 12,
+    radius: 80,
+    showApothem: false,
+    showCenter: true,
   },
 ];
 
@@ -568,6 +622,49 @@ function FigureDebugContent() {
         setEsferaRadio(fromType.dimensions.radio);
         break;
     }
+  }, []);
+
+  // ============================================
+  // POLYGON STATE
+  // ============================================
+  const [polygonSides, setPolygonSides] = useState(6);
+  const [polygonRadius, setPolygonRadius] = useState(80);
+  const [polygonRotation, setPolygonRotation] = useState(-90);
+  const [showPolygonCenter, setShowPolygonCenter] = useState(true);
+  const [showPolygonApothem, setShowPolygonApothem] = useState(false);
+  const [polygonApothemEdge, setPolygonApothemEdge] = useState(0);
+  const [showPolygonDiagonals, setShowPolygonDiagonals] = useState(false);
+  const [showPolygonAngles, setShowPolygonAngles] = useState(false);
+  const [showPolygonAngleDegrees, setShowPolygonAngleDegrees] = useState(false);
+  const [showPolygonEdgeLabels, setShowPolygonEdgeLabels] = useState(false);
+  const [showPolygonGrid, setShowPolygonGrid] = useState(true);
+
+  // Polygon validation
+  const polygonValidation = useMemo(() => {
+    return validatePolygon(polygonSides, polygonRadius);
+  }, [polygonSides, polygonRadius]);
+
+  // Polygon name
+  const polygonName = useMemo(() => {
+    return getPolygonName(polygonSides);
+  }, [polygonSides]);
+
+  // Reset apothem edge when sides change (to prevent invalid edge index)
+  useEffect(() => {
+    if (polygonApothemEdge >= polygonSides) {
+      setPolygonApothemEdge(0);
+    }
+  }, [polygonSides, polygonApothemEdge]);
+
+  // Apply polygon preset
+  const applyPolygonPreset = useCallback((preset: PolygonPreset) => {
+    setPolygonSides(preset.sides);
+    setPolygonRadius(preset.radius);
+    setPolygonRotation(preset.rotation ?? -90);
+    setShowPolygonCenter(preset.showCenter ?? true);
+    setShowPolygonApothem(preset.showApothem ?? false);
+    setPolygonApothemEdge(0);
+    setShowPolygonDiagonals(preset.showDiagonals ?? false);
   }, []);
 
   // Apply circle preset
@@ -1098,13 +1195,71 @@ function FigureDebugContent() {
     return `<Figure3D\n  ${propsLines.join('\n  ')}\n/>`;
   }, [currentSolidDimensions, projectionType, figure3dAzimuth, figure3dElevation, figure3dInteractive, hiddenEdgeStyle, highlight3dBase, show3dHeightLine, show3dDimensionLabels, show3dGrid]);
 
+  // Generate code snippet for polygon
+  const generatePolygonCode = useCallback(() => {
+    const propsLines = [];
+
+    // fromRegular construction
+    propsLines.push(`fromRegular={{`);
+    propsLines.push(`  sides: ${polygonSides},`);
+    propsLines.push(`  radius: ${polygonRadius},`);
+    if (polygonRotation !== -90) {
+      propsLines.push(`  rotation: ${polygonRotation},`);
+    }
+    propsLines.push(`}}`);
+
+    // Show center
+    if (showPolygonCenter) {
+      propsLines.push(`showCenter`);
+      propsLines.push(`centerLabel="O"`);
+    }
+
+    // Show apothem
+    if (showPolygonApothem) {
+      const apothemProps = [`label: 'a'`];
+      if (polygonApothemEdge !== 0) {
+        apothemProps.push(`toEdge: ${polygonApothemEdge}`);
+      }
+      propsLines.push(`showApothem={{ ${apothemProps.join(', ')} }}`);
+    }
+
+    // Show diagonals
+    if (showPolygonDiagonals) {
+      propsLines.push(`diagonals="all"`);
+    }
+
+    // Angles configuration
+    if (showPolygonAngles || showPolygonAngleDegrees) {
+      propsLines.push(`angles={[`);
+      for (let i = 0; i < polygonSides; i++) {
+        propsLines.push(`  { showArc: ${showPolygonAngles}, showDegrees: ${showPolygonAngleDegrees} },`);
+      }
+      propsLines.push(`]}`);
+    }
+
+    // Edge labels
+    if (showPolygonEdgeLabels) {
+      propsLines.push(`edges={[`);
+      for (let i = 0; i < polygonSides; i++) {
+        const label = String.fromCharCode(97 + i); // a, b, c, ...
+        propsLines.push(`  { label: '${label}' },`);
+      }
+      propsLines.push(`]}`);
+    }
+
+    if (showPolygonGrid) propsLines.push(`showGrid`);
+
+    return `<PolygonFigure\n  ${propsLines.join('\n  ')}\n/>`;
+  }, [polygonSides, polygonRadius, polygonRotation, showPolygonCenter, showPolygonApothem, polygonApothemEdge, showPolygonDiagonals, showPolygonAngles, showPolygonAngleDegrees, showPolygonEdgeLabels, showPolygonGrid]);
+
   // Generate code based on figure type
   const generateCode = useCallback(() => {
     if (figureType === 'triangle') return generateTriangleCode();
     if (figureType === 'circle') return generateCircleCode();
     if (figureType === 'quadrilateral') return generateQuadrilateralCode();
-    return generateFigure3DCode();
-  }, [figureType, generateTriangleCode, generateCircleCode, generateQuadrilateralCode, generateFigure3DCode]);
+    if (figureType === 'figure3d') return generateFigure3DCode();
+    return generatePolygonCode();
+  }, [figureType, generateTriangleCode, generateCircleCode, generateQuadrilateralCode, generateFigure3DCode, generatePolygonCode]);
 
   // Copy code to clipboard
   const copyCode = useCallback(() => {
@@ -1169,6 +1324,16 @@ function FigureDebugContent() {
                 }`}
               >
                 Figura 3D
+              </button>
+              <button
+                onClick={() => setFigureType('polygon')}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  figureType === 'polygon'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+              >
+                Polígono
               </button>
             </div>
           </div>
@@ -1394,6 +1559,25 @@ function FigureDebugContent() {
                 className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
                 padding="md"
                 onClick={() => applyFigure3DPreset(preset)}
+              >
+                <div className="text-center">
+                  <Heading level={3} size="xs" className="mb-1">
+                    {preset.name}
+                  </Heading>
+                  <Text size="xs" variant="secondary">
+                    {preset.description}
+                  </Text>
+                </div>
+              </Card>
+            ))}
+            {/* Polygon presets */}
+            {figureType === 'polygon' && POLYGON_PRESETS.map((preset) => (
+              <Card
+                key={preset.name}
+                hover
+                className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
+                padding="md"
+                onClick={() => applyPolygonPreset(preset)}
               >
                 <div className="text-center">
                   <Heading level={3} size="xs" className="mb-1">
@@ -2053,6 +2237,186 @@ function FigureDebugContent() {
                       />
                       <span className="text-sm">Rotación interactiva</span>
                     </label>
+                  </div>
+                </Card>
+              </>
+            )}
+
+            {/* ============================================ */}
+            {/* POLYGON CONTROLS */}
+            {/* ============================================ */}
+            {figureType === 'polygon' && (
+              <>
+                {/* Polygon Basic Controls */}
+                <Card padding="lg">
+                  <Heading level={3} size="xs" className="mb-4">
+                    Configuración del Polígono
+                  </Heading>
+                  <div className="space-y-4">
+                    {/* Number of sides */}
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm w-20">Lados:</Text>
+                      <input
+                        type="range"
+                        min="5"
+                        max="12"
+                        value={polygonSides}
+                        onChange={(e) => setPolygonSides(Number(e.target.value))}
+                        className="flex-1"
+                      />
+                      <span className="text-sm w-12">{polygonSides}</span>
+                    </div>
+                    {/* Radius */}
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm w-20">Radio:</Text>
+                      <input
+                        type="range"
+                        min="40"
+                        max="120"
+                        value={polygonRadius}
+                        onChange={(e) => setPolygonRadius(Number(e.target.value))}
+                        className="flex-1"
+                      />
+                      <span className="text-sm w-12">{polygonRadius}px</span>
+                    </div>
+                    {/* Rotation */}
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm w-20">Rotación:</Text>
+                      <input
+                        type="range"
+                        min="-180"
+                        max="180"
+                        value={polygonRotation}
+                        onChange={(e) => setPolygonRotation(Number(e.target.value))}
+                        className="flex-1"
+                      />
+                      <span className="text-sm w-12">{polygonRotation}°</span>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Polygon Visual Options */}
+                <Card padding="lg">
+                  <Heading level={3} size="xs" className="mb-4">
+                    Opciones Visuales
+                  </Heading>
+                  <div className="grid grid-cols-2 gap-3">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showPolygonGrid}
+                        onChange={(e) => setShowPolygonGrid(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Mostrar grid</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showPolygonCenter}
+                        onChange={(e) => setShowPolygonCenter(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Mostrar centro</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showPolygonApothem}
+                        onChange={(e) => setShowPolygonApothem(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Mostrar apotema</span>
+                    </label>
+                    {showPolygonApothem && (
+                      <div className="ml-6 flex items-center gap-2">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Lado:</span>
+                        <select
+                          value={polygonApothemEdge}
+                          onChange={(e) => setPolygonApothemEdge(Number(e.target.value))}
+                          className="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
+                        >
+                          {Array.from({ length: polygonSides }, (_, i) => (
+                            <option key={i} value={i}>
+                              {String.fromCharCode(65 + i)}-{String.fromCharCode(65 + ((i + 1) % polygonSides))}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showPolygonDiagonals}
+                        onChange={(e) => setShowPolygonDiagonals(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Mostrar diagonales</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showPolygonEdgeLabels}
+                        onChange={(e) => setShowPolygonEdgeLabels(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Labels de lados</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showPolygonAngles}
+                        onChange={(e) => setShowPolygonAngles(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Arcos de ángulos</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showPolygonAngleDegrees}
+                        onChange={(e) => setShowPolygonAngleDegrees(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Mostrar grados</span>
+                    </label>
+                  </div>
+                </Card>
+
+                {/* Polygon Info */}
+                <Card padding="lg">
+                  <Heading level={3} size="xs" className="mb-4">
+                    Información del Polígono
+                  </Heading>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Nombre:</span>
+                      <span className="font-medium capitalize">{polygonName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Número de lados:</span>
+                      <span className="font-medium">{polygonSides}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Ángulo interior:</span>
+                      <span className="font-medium">{regularInteriorAngle(polygonSides).toFixed(1)}°</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Suma ángulos interiores:</span>
+                      <span className="font-medium">{(polygonSides - 2) * 180}°</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Número de diagonales:</span>
+                      <span className="font-medium">{diagonalCount(polygonSides)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Apotema:</span>
+                      <span className="font-medium">{calculateApothem(polygonSides, polygonRadius).toFixed(1)}px</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Lado:</span>
+                      <span className="font-medium">{calculateSideLength(polygonSides, polygonRadius).toFixed(1)}px</span>
+                    </div>
                   </div>
                 </Card>
               </>
@@ -2948,6 +3312,35 @@ function FigureDebugContent() {
                     }}
                   />
                 )}
+                {figureType === 'polygon' && (
+                  <PolygonFigure
+                    fromRegular={{
+                      sides: polygonSides,
+                      radius: polygonRadius,
+                      rotation: polygonRotation,
+                    }}
+                    showCenter={showPolygonCenter}
+                    centerLabel="O"
+                    showApothem={showPolygonApothem ? { label: 'a', toEdge: polygonApothemEdge } : false}
+                    diagonals={showPolygonDiagonals ? 'all' : undefined}
+                    angles={showPolygonAngles || showPolygonAngleDegrees
+                      ? Array.from({ length: polygonSides }, () => ({
+                          showArc: showPolygonAngles,
+                          showDegrees: showPolygonAngleDegrees,
+                        }))
+                      : undefined
+                    }
+                    edges={showPolygonEdgeLabels
+                      ? Array.from({ length: polygonSides }, (_, i) => ({
+                          label: String.fromCharCode(97 + i),
+                        }))
+                      : undefined
+                    }
+                    showGrid={showPolygonGrid}
+                    width={400}
+                    height={300}
+                  />
+                )}
               </div>
 
               {/* Current angles info (in angles mode - triangle) */}
@@ -3165,6 +3558,30 @@ function FigureDebugContent() {
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-1 bg-red-500 rounded"></div>
                       <span>Línea de altura</span>
+                    </div>
+                  </div>
+                )}
+                {figureType === 'polygon' && (
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-blue-500 rounded"></div>
+                      <span>Polígono</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-amber-500 rounded"></div>
+                      <span>Arcos de ángulo</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-purple-500 rounded"></div>
+                      <span>Diagonales</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-emerald-500 rounded"></div>
+                      <span>Apotema</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                      <span>Centro</span>
                     </div>
                   </div>
                 )}
