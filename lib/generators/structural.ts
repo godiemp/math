@@ -126,6 +126,24 @@ export function generateSets(context: GeneratorContext): ProblemData {
     expression = `¿${elem} ∈ {${arrB.join(',')}}?`;
     expressionLatex = `${elem} \\in \\{${arrB.join(',')}\\}`;
     problemKey = `set:∈:${elem},${arrB.join(',')}`;
+  } else if (op === '⊆') {
+    // Check if A is a subset of B
+    const isSubset = arrA.every(x => arrB.includes(x));
+    correctAnswer = isSubset ? 'Verdadero' : 'Falso';
+    expression = `¿{${arrA.join(',')}} ⊆ {${arrB.join(',')}}?`;
+    expressionLatex = `\\{${arrA.join(',')}\\} \\subseteq \\{${arrB.join(',')}\\}`;
+    problemKey = `set:⊆:${arrA.join(',')},${arrB.join(',')}`;
+  } else if (op === '\'') {
+    // Complement: elements in universal set (min to max) but not in A
+    const universal = [];
+    for (let i = min; i <= max; i++) {
+      universal.push(i);
+    }
+    const complement = universal.filter(x => !arrA.includes(x));
+    correctAnswer = complement.length > 0 ? complement.sort((a, b) => a - b).join(',') : '∅';
+    expression = `U={${universal.join(',')}}, A'={${arrA.join(',')}}' = ?`;
+    expressionLatex = `U=\\{${universal.join(',')}\\}, \\; A'=\\{${arrA.join(',')}\\}' = ?`;
+    problemKey = `set:':${arrA.join(',')}`;
   } else { // '|'
     correctAnswer = arrA.length;
     expression = `|{${arrA.join(',')}}|`;

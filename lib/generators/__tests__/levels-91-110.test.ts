@@ -74,7 +74,7 @@ describe('Set Operations', () => {
 
     for (let i = 0; i < 10; i++) {
       const problem = generateProblem(config!);
-      expect(problem.expression).toMatch(/⊆/);
+      expect(problem.expression).toContain('⊆');
       expect(['Verdadero', 'Falso']).toContain(problem.correctAnswer as string);
     }
   });
@@ -93,8 +93,8 @@ describe('Set Operations', () => {
     expect(config).toBeDefined();
 
     const problem = generateProblem(config!);
-    // Should involve complement notation
-    expect(problem.expression).toMatch(/'/);
+    // Should involve complement notation (A')
+    expect(problem.expression).toContain("'");
   });
 
   it('Operaciones Mixtas de Conjuntos', () => {
