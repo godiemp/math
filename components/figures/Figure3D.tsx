@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState, useCallback, useRef, useEffect, useId } from 'react';
+import React, { useMemo, useId } from 'react';
 import type {
   Figure3DProps,
   Point3D,
@@ -22,8 +22,6 @@ import {
   isSphereGeometry,
   sortFacesByDepth,
   getAllEdgeVisibilities,
-  getViewDirection,
-  isFaceFrontFacing,
   calculateViewBox3D,
   calculateSphereViewBox,
   describeFacePath,
@@ -33,8 +31,8 @@ import {
   calculateBaseLabelPosition,
   calculateEdgeLabelPosition,
   isBaseFace,
-  rotatePoint,
-} from '@/lib/geometry/figure3dUtils';
+} from '@/lib/geometry/figure3d';
+import { useFigure3DRotation } from '@/hooks/useFigure3DRotation';
 
 // ============================================
 // DEFAULT COLORS (matching existing components)
@@ -561,34 +559,14 @@ export function Figure3D({
   const uniqueId = useId();
 
   // ============================================
-  // ROTATION STATE (for interactive mode)
+  // ROTATION STATE (using extracted hook)
   // ============================================
-
-  const [internalRotation, setInternalRotation] = useState({
-    azimuth: controlledAzimuth ?? 45,
-    elevation: controlledElevation ?? 35,
+  const { rotation, isDragging, handlers: rotationHandlers } = useFigure3DRotation({
+    controlledAzimuth,
+    controlledElevation,
+    onRotationChange,
+    interactive,
   });
-
-  // Use controlled or internal rotation
-  const rotation = {
-    azimuth: controlledAzimuth ?? internalRotation.azimuth,
-    elevation: controlledElevation ?? internalRotation.elevation,
-  };
-
-  // Drag state (ref for logic, state for cursor)
-  const isDraggingRef = useRef(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const lastPosition = useRef({ x: 0, y: 0 });
-
-  // Update internal state when controlled props change
-  useEffect(() => {
-    if (controlledAzimuth !== undefined) {
-      setInternalRotation((prev) => ({ ...prev, azimuth: controlledAzimuth }));
-    }
-    if (controlledElevation !== undefined) {
-      setInternalRotation((prev) => ({ ...prev, elevation: controlledElevation }));
-    }
-  }, [controlledAzimuth, controlledElevation]);
 
   // ============================================
   // GEOMETRY GENERATION
@@ -721,76 +699,6 @@ export function Figure3D({
     const [minX, minY, w, h] = calculatedViewBox.split(' ').map(Number);
     return { minX, minY, width: w, height: h };
   }, [calculatedViewBox]);
-
-  // ============================================
-  // INTERACTIVE ROTATION HANDLERS
-  // ============================================
-
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      if (!interactive) return;
-      isDraggingRef.current = true;
-      setIsDragging(true);
-      lastPosition.current = { x: e.clientX, y: e.clientY };
-    },
-    [interactive]
-  );
-
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (!isDraggingRef.current || !interactive) return;
-
-      const dx = e.clientX - lastPosition.current.x;
-      const dy = e.clientY - lastPosition.current.y;
-
-      const newAzimuth = (rotation.azimuth + dx * 0.5 + 360) % 360;
-      const newElevation = Math.max(-89, Math.min(89, rotation.elevation - dy * 0.5));
-
-      setInternalRotation({ azimuth: newAzimuth, elevation: newElevation });
-      onRotationChange?.(newAzimuth, newElevation);
-
-      lastPosition.current = { x: e.clientX, y: e.clientY };
-    },
-    [interactive, rotation.azimuth, rotation.elevation, onRotationChange]
-  );
-
-  const handleMouseUp = useCallback(() => {
-    isDraggingRef.current = false;
-    setIsDragging(false);
-  }, []);
-
-  const handleTouchStart = useCallback(
-    (e: React.TouchEvent) => {
-      if (!interactive || e.touches.length !== 1) return;
-      isDraggingRef.current = true;
-      setIsDragging(true);
-      lastPosition.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    },
-    [interactive]
-  );
-
-  const handleTouchMove = useCallback(
-    (e: React.TouchEvent) => {
-      if (!isDraggingRef.current || !interactive || e.touches.length !== 1) return;
-
-      const dx = e.touches[0].clientX - lastPosition.current.x;
-      const dy = e.touches[0].clientY - lastPosition.current.y;
-
-      const newAzimuth = (rotation.azimuth + dx * 0.5 + 360) % 360;
-      const newElevation = Math.max(-89, Math.min(89, rotation.elevation - dy * 0.5));
-
-      setInternalRotation({ azimuth: newAzimuth, elevation: newElevation });
-      onRotationChange?.(newAzimuth, newElevation);
-
-      lastPosition.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    },
-    [interactive, rotation.azimuth, rotation.elevation, onRotationChange]
-  );
-
-  const handleTouchEnd = useCallback(() => {
-    isDraggingRef.current = false;
-    setIsDragging(false);
-  }, []);
 
   // ============================================
   // RENDER CONTENT
@@ -932,13 +840,13 @@ export function Figure3D({
       className={className}
       role="img"
       aria-label={ariaLabel || 'Figura 3D'}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
+      onMouseDown={rotationHandlers.onMouseDown}
+      onMouseMove={rotationHandlers.onMouseMove}
+      onMouseUp={rotationHandlers.onMouseUp}
+      onMouseLeave={rotationHandlers.onMouseLeave}
+      onTouchStart={rotationHandlers.onTouchStart}
+      onTouchMove={rotationHandlers.onTouchMove}
+      onTouchEnd={rotationHandlers.onTouchEnd}
       style={{ cursor: interactive ? (isDragging ? 'grabbing' : 'grab') : 'default' }}
     >
       <title>{ariaLabel || 'Figura 3D'}</title>

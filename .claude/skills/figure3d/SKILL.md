@@ -520,7 +520,7 @@ import { motion } from 'framer-motion';
 
 ## Utility Functions
 
-Las funciones matematicas estan disponibles en `@/lib/geometry/figure3dUtils`:
+Las funciones matematicas estan disponibles en `@/lib/geometry/figure3d`:
 
 ```typescript
 import {
@@ -589,7 +589,7 @@ import {
 
   // Names
   getSolidTypeName,  // Returns Spanish name for solid type
-} from '@/lib/geometry/figure3dUtils';
+} from '@/lib/geometry/figure3d';
 ```
 
 ### Example Usage
@@ -600,7 +600,7 @@ import {
   volumeCilindro,
   areaSuperficieCubo,
   areaSuperficieCilindro,
-} from '@/lib/geometry/figure3dUtils';
+} from '@/lib/geometry/figure3d';
 
 // Cube with side 5
 const cubeVol = volumeCubo(5);                // 125

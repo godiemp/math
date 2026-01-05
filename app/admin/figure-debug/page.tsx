@@ -38,7 +38,7 @@ import {
   areaSuperficieCono,
   areaSuperficieEsfera,
   getSolidTypeName,
-} from '@/lib/geometry/figure3dUtils';
+} from '@/lib/geometry/figure3d';
 import type {
   LabeledPoint,
   SideConfig,
