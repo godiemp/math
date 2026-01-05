@@ -831,26 +831,12 @@ export function Figure3D({
             />
           ))}
 
-          {/* Layer 3: Hidden edges (render first, under visible) */}
-          {solidGeometry.edges.map((edge, i) =>
-            edgeVisibilities[i] === 'hidden' ? (
+          {/* Layer 3 & 4: Edges */}
+          {edgeConfig?.hiddenEdgeStyle === 'solid' ? (
+            // Show ALL edges as visible (no visibility calculation)
+            solidGeometry.edges.map((edge, i) => (
               <EdgeLine
-                key={`edge-hidden-${i}`}
-                p1={projectedVertices[edge[0]]}
-                p2={projectedVertices[edge[1]]}
-                visible={false}
-                config={edgeConfig}
-                defaultStroke={stroke}
-                defaultWidth={strokeWidth}
-              />
-            ) : null
-          )}
-
-          {/* Layer 4: Visible edges */}
-          {solidGeometry.edges.map((edge, i) =>
-            edgeVisibilities[i] === 'visible' ? (
-              <EdgeLine
-                key={`edge-visible-${i}`}
+                key={`edge-all-${i}`}
                 p1={projectedVertices[edge[0]]}
                 p2={projectedVertices[edge[1]]}
                 visible={true}
@@ -858,7 +844,39 @@ export function Figure3D({
                 defaultStroke={stroke}
                 defaultWidth={strokeWidth}
               />
-            ) : null
+            ))
+          ) : (
+            <>
+              {/* Hidden edges (render first, under visible) */}
+              {solidGeometry.edges.map((edge, i) =>
+                edgeVisibilities[i] === 'hidden' ? (
+                  <EdgeLine
+                    key={`edge-hidden-${i}`}
+                    p1={projectedVertices[edge[0]]}
+                    p2={projectedVertices[edge[1]]}
+                    visible={false}
+                    config={edgeConfig}
+                    defaultStroke={stroke}
+                    defaultWidth={strokeWidth}
+                  />
+                ) : null
+              )}
+
+              {/* Visible edges */}
+              {solidGeometry.edges.map((edge, i) =>
+                edgeVisibilities[i] === 'visible' ? (
+                  <EdgeLine
+                    key={`edge-visible-${i}`}
+                    p1={projectedVertices[edge[0]]}
+                    p2={projectedVertices[edge[1]]}
+                    visible={true}
+                    config={edgeConfig}
+                    defaultStroke={stroke}
+                    defaultWidth={strokeWidth}
+                  />
+                ) : null
+              )}
+            </>
           )}
 
           {/* Layer 5: Height line */}

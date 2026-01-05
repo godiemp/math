@@ -2004,15 +2004,19 @@ function FigureDebugContent() {
                       />
                       <span className="text-sm">Mostrar grid</span>
                     </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={show3dHiddenEdges}
-                        onChange={(e) => setShow3dHiddenEdges(e.target.checked)}
-                        className="rounded"
-                      />
-                      <span className="text-sm">Aristas ocultas</span>
-                    </label>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">Aristas ocultas:</span>
+                      <select
+                        value={hiddenEdgeStyle}
+                        onChange={(e) => setHiddenEdgeStyle(e.target.value as 'dashed' | 'dotted' | 'none' | 'solid')}
+                        className="text-sm border rounded px-2 py-1"
+                      >
+                        <option value="dashed">Segmentadas</option>
+                        <option value="dotted">Punteadas</option>
+                        <option value="none">Ocultar</option>
+                        <option value="solid">Mostrar todas</option>
+                      </select>
+                    </div>
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
                         type="checkbox"

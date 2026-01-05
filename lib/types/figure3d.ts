@@ -178,7 +178,7 @@ export type SolidDimensions =
  * Edge rendering configuration
  */
 export interface EdgeConfig {
-  hiddenEdgeStyle?: 'dashed' | 'dotted' | 'none'; // How to render back-facing edges
+  hiddenEdgeStyle?: 'dashed' | 'dotted' | 'none' | 'solid'; // How to render back-facing edges ('solid' = show all edges)
   edgeColor?: string;
   edgeWidth?: number;
   hiddenEdgeColor?: string;
