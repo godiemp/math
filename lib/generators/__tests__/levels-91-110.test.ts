@@ -1,14 +1,20 @@
 /**
- * Integration tests for levels 91-110 (Structural Operations: Sets, Sequences, and Functions)
+ * Integration tests for Structural Operations: Sets, Sequences, and Functions
+ * Note: Level numbers are dynamically assigned based on array position
  */
 
 import { describe, it, expect } from 'vitest';
-import { getLevelConfig } from '../../operationsPath';
+import { OPERATIONS_PATH } from '../../operationsPath';
 import { generateProblem } from '../../operationsProblemGenerator';
 
-describe('Levels 91-100: Set Operations', () => {
-  it('Level 91: Unión de Conjuntos (∪)', () => {
-    const config = getLevelConfig(91);
+// Helper to get level config by title
+function getLevelByTitle(title: string) {
+  return OPERATIONS_PATH.find(l => l.title === title);
+}
+
+describe('Set Operations', () => {
+  it('Unión de Conjuntos (∪)', () => {
+    const config = getLevelByTitle('Unión de Conjuntos');
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -18,8 +24,8 @@ describe('Levels 91-100: Set Operations', () => {
     }
   });
 
-  it('Level 92: Intersección de Conjuntos (∩)', () => {
-    const config = getLevelConfig(92);
+  it('Intersección de Conjuntos (∩)', () => {
+    const config = getLevelByTitle('Intersección de Conjuntos');
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -29,8 +35,8 @@ describe('Levels 91-100: Set Operations', () => {
     }
   });
 
-  it('Level 93: Diferencia de Conjuntos (-)', () => {
-    const config = getLevelConfig(93);
+  it('Diferencia de Conjuntos (-)', () => {
+    const config = getLevelByTitle('Diferencia de Conjuntos');
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -40,8 +46,8 @@ describe('Levels 91-100: Set Operations', () => {
     }
   });
 
-  it('Level 94: Pertenencia (∈)', () => {
-    const config = getLevelConfig(94);
+  it('Pertenencia (∈)', () => {
+    const config = getLevelByTitle('Pertenencia a Conjunto');
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -51,8 +57,8 @@ describe('Levels 91-100: Set Operations', () => {
     }
   });
 
-  it('Level 95: Cardinalidad (|A|)', () => {
-    const config = getLevelConfig(95);
+  it('Cardinalidad (|A|)', () => {
+    const config = getLevelByTitle('Cardinalidad');
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -62,21 +68,48 @@ describe('Levels 91-100: Set Operations', () => {
     }
   });
 
-  it('Level 96-100: Advanced Set Operations', () => {
-    for (let level = 96; level <= 100; level++) {
-      const config = getLevelConfig(level);
-      expect(config).toBeDefined();
+  it('Subconjuntos (⊆)', () => {
+    const config = getLevelByTitle('Subconjuntos');
+    expect(config).toBeDefined();
 
+    for (let i = 0; i < 10; i++) {
       const problem = generateProblem(config!);
-      // Should involve sets
-      expect(problem.expression).toMatch(/\{|∪|∩|∈|⊆/);
+      expect(problem.expression).toMatch(/⊆/);
+      expect(['Verdadero', 'Falso']).toContain(problem.correctAnswer as string);
     }
+  });
+
+  it('Unión e Intersección combined', () => {
+    const config = getLevelByTitle('Unión e Intersección');
+    expect(config).toBeDefined();
+
+    const problem = generateProblem(config!);
+    // Should involve sets with union or intersection
+    expect(problem.expression).toMatch(/\{|∪|∩/);
+  });
+
+  it('Complemento', () => {
+    const config = getLevelByTitle('Complemento');
+    expect(config).toBeDefined();
+
+    const problem = generateProblem(config!);
+    // Should involve complement notation
+    expect(problem.expression).toMatch(/'/);
+  });
+
+  it('Operaciones Mixtas de Conjuntos', () => {
+    const config = getLevelByTitle('Operaciones Mixtas de Conjuntos');
+    expect(config).toBeDefined();
+
+    const problem = generateProblem(config!);
+    // Should involve sets
+    expect(problem.expression).toMatch(/\{|∪|∩|-/);
   });
 });
 
-describe('Levels 101-110: Sequences and Functions', () => {
-  it('Level 101: Secuencia Aritmética (+n)', () => {
-    const config = getLevelConfig(101);
+describe('Sequences', () => {
+  it('Secuencia Aritmética (+n)', () => {
+    const config = getLevelByTitle('Secuencia Aritmética (+n)');
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -95,8 +128,8 @@ describe('Levels 101-110: Sequences and Functions', () => {
     }
   });
 
-  it('Level 102: Secuencia Decreciente (-n)', () => {
-    const config = getLevelConfig(102);
+  it('Secuencia Decreciente (-n)', () => {
+    const config = getLevelByTitle('Secuencia Decreciente (-n)');
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -115,8 +148,8 @@ describe('Levels 101-110: Sequences and Functions', () => {
     }
   });
 
-  it('Level 103: Secuencia Geométrica (*n)', () => {
-    const config = getLevelConfig(103);
+  it('Secuencia Geométrica (*n)', () => {
+    const config = getLevelByTitle('Secuencia Geométrica (*n)');
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -134,8 +167,8 @@ describe('Levels 101-110: Sequences and Functions', () => {
     }
   });
 
-  it('Level 104: Secuencia de Cuadrados', () => {
-    const config = getLevelConfig(104);
+  it('Secuencia de Cuadrados', () => {
+    const config = getLevelByTitle('Secuencia de Cuadrados');
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -145,17 +178,19 @@ describe('Levels 101-110: Sequences and Functions', () => {
     }
   });
 
-  it('Level 105: Fibonacci', () => {
-    const config = getLevelConfig(105);
+  it('Fibonacci', () => {
+    const config = getLevelByTitle('Fibonacci');
     expect(config).toBeDefined();
 
     const problem = generateProblem(config!);
     expect(problem.expression).toMatch(/Continúa: 1, 1, 2, 3, 5, 8, __/);
     expect(problem.correctAnswer).toBe(13); // Next Fibonacci number
   });
+});
 
-  it('Level 106: Función f(x)=x+a', () => {
-    const config = getLevelConfig(106);
+describe('Functions', () => {
+  it('Función f(x)=x+a', () => {
+    const config = getLevelByTitle('Función f(x)=x+a');
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -165,8 +200,8 @@ describe('Levels 101-110: Sequences and Functions', () => {
     }
   });
 
-  it('Level 107: Función f(x)=ax', () => {
-    const config = getLevelConfig(107);
+  it('Función f(x)=ax', () => {
+    const config = getLevelByTitle('Función f(x)=ax');
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -176,8 +211,8 @@ describe('Levels 101-110: Sequences and Functions', () => {
     }
   });
 
-  it('Level 108: Composición de Funciones', () => {
-    const config = getLevelConfig(108);
+  it('Composición de Funciones', () => {
+    const config = getLevelByTitle('Composición de Funciones');
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -187,8 +222,8 @@ describe('Levels 101-110: Sequences and Functions', () => {
     }
   });
 
-  it('Level 109: Función Inversa', () => {
-    const config = getLevelConfig(109);
+  it('Función Inversa (x²)', () => {
+    const config = getLevelByTitle('Función Inversa');
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
@@ -205,8 +240,8 @@ describe('Levels 101-110: Sequences and Functions', () => {
     }
   });
 
-  it('Level 110: Funciones Complejas', () => {
-    const config = getLevelConfig(110);
+  it('Funciones Complejas', () => {
+    const config = getLevelByTitle('Funciones Complejas');
     expect(config).toBeDefined();
 
     for (let i = 0; i < 10; i++) {
