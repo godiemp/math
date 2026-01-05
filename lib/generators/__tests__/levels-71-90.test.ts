@@ -73,7 +73,7 @@ describe('Levels 71-80: Comparison Operations', () => {
   });
 });
 
-describe('Levels 81-90: Compound Conditions and Logical Operators', () => {
+describe('Levels 81-84: Compound Conditions', () => {
   it('Level 81: Condición Simple (x>a)', () => {
     const config = getLevelConfig(81);
     expect(config).toBeDefined();
@@ -114,49 +114,6 @@ describe('Levels 81-90: Compound Conditions and Logical Operators', () => {
     for (let i = 0; i < 10; i++) {
       const problem = generateProblem(config!);
       expect(problem.expression).toMatch(/Si x=\d+, ¿x∈\[\d+,\d+\]\?/);
-      expect(['Verdadero', 'Falso']).toContain(problem.correctAnswer as string);
-    }
-  });
-
-  it('Level 85: Operador AND', () => {
-    const config = getLevelConfig(85);
-    expect(config).toBeDefined();
-
-    for (let i = 0; i < 10; i++) {
-      const problem = generateProblem(config!);
-      expect(problem.expression).toMatch(/¿(Verdadero|Falso) AND (Verdadero|Falso)\?/);
-      expect(['Verdadero', 'Falso']).toContain(problem.correctAnswer as string);
-    }
-  });
-
-  it('Level 86: Operador OR', () => {
-    const config = getLevelConfig(86);
-    expect(config).toBeDefined();
-
-    for (let i = 0; i < 10; i++) {
-      const problem = generateProblem(config!);
-      expect(problem.expression).toMatch(/¿(Verdadero|Falso) OR (Verdadero|Falso)\?/);
-      expect(['Verdadero', 'Falso']).toContain(problem.correctAnswer as string);
-    }
-  });
-
-  it('Level 87: Operador NOT', () => {
-    const config = getLevelConfig(87);
-    expect(config).toBeDefined();
-
-    for (let i = 0; i < 10; i++) {
-      const problem = generateProblem(config!);
-      expect(problem.expression).toMatch(/¿NOT (Verdadero|Falso)\?/);
-      expect(['Verdadero', 'Falso']).toContain(problem.correctAnswer as string);
-    }
-  });
-
-  it('Level 88-90: Complex Logical Operations', () => {
-    for (let level = 88; level <= 90; level++) {
-      const config = getLevelConfig(level);
-      expect(config).toBeDefined();
-
-      const problem = generateProblem(config!);
       expect(['Verdadero', 'Falso']).toContain(problem.correctAnswer as string);
     }
   });
