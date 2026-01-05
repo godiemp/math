@@ -16,6 +16,14 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-GEO-001',
     skills: ['teorema-pitagoras-aplicar', 'teorema-pitagoras-identificar'],
     estimatedMinutes: 12,
+    thumbnail: {
+      type: 'triangle',
+      config: {
+        fromSides: [3, 4, 5],
+        showRightAngleMarker: true,
+        sides: [{ label: '3' }, { label: '4' }, { label: '5' }],
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Problema de la Escalera' },
       { id: 'discover', type: 'explore', title: 'Descubre el Patrón' },
@@ -35,6 +43,15 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-GEO-001',
     skills: ['area-rectangulo', 'area-triangulo'],
     estimatedMinutes: 12,
+    thumbnail: {
+      type: 'quadrilateral',
+      config: {
+        type: 'rectangle',
+        width: 60,
+        height: 40,
+        showDimensions: true,
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Proyecto de Pintura' },
       { id: 'explore', type: 'explore', title: 'Descubriendo Fórmulas' },
@@ -53,6 +70,15 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-GEO-001',
     skills: ['area-paralelogramo', 'area-trapecio', 'descomponer-figuras'],
     estimatedMinutes: 12,
+    thumbnail: {
+      type: 'quadrilateral',
+      config: {
+        type: 'parallelogram',
+        width: 60,
+        height: 35,
+        skew: 15,
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Jardín Irregular' },
       { id: 'explore', type: 'explore', title: 'Transformando Figuras' },
@@ -72,6 +98,14 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     skills: ['circunferencia-circulo', 'area-circulo', 'pi-concepto'],
     estimatedMinutes: 12,
     minEducOA: ['MA1M-OA-06', 'FG-MATE-3M-OAC-04'],
+    thumbnail: {
+      type: 'circle',
+      config: {
+        radius: 30,
+        showRadius: true,
+        radiusLabel: 'r',
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Rueda de la Fortuna' },
       { id: 'explore', type: 'explore', title: 'Descubriendo Pi (π)' },
@@ -91,6 +125,13 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     skills: ['sector-circular-area', 'longitud-arco', 'proporciones-circulares'],
     estimatedMinutes: 14,
     minEducOA: ['MA1M-OA-06'],
+    thumbnail: {
+      type: 'circle',
+      config: {
+        radius: 30,
+        sectors: [{ startAngle: 0, endAngle: 90, fill: 'rgba(59, 130, 246, 0.4)' }],
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Porcion de Pizza' },
       { id: 'explore', type: 'explore', title: 'Descubre la Fraccion' },
@@ -110,6 +151,10 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     skills: ['area-figuras-compuestas', 'descomponer-figuras', 'suma-areas', 'resta-areas'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-06'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><path d="M10 10 L50 10 L50 35 L70 35 L70 70 L10 70 Z" fill="rgba(59, 130, 246, 0.3)" stroke="rgb(59, 130, 246)" stroke-width="2"/></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Habitación en Forma de L' },
       { id: 'explore', type: 'explore', title: 'Dos Estrategias Poderosas' },
@@ -130,6 +175,10 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     skills: ['geometria-volumen', 'geometria-volumen-cono'],
     estimatedMinutes: 16,
     minEducOA: ['MA1M-OA-07'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><ellipse cx="40" cy="65" rx="25" ry="8" fill="rgba(59, 130, 246, 0.3)" stroke="rgb(59, 130, 246)" stroke-width="1.5"/><path d="M15 65 L40 15 L65 65" fill="rgba(59, 130, 246, 0.2)" stroke="rgb(59, 130, 246)" stroke-width="2"/><line x1="40" y1="15" x2="40" y2="65" stroke="rgb(168, 85, 247)" stroke-width="1.5" stroke-dasharray="3,2"/></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Cono de Helado Perfecto' },
       { id: 'explore', type: 'explore', title: 'El Experimento de los 3 Conos' },
@@ -151,6 +200,12 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     skills: ['geometria-coordenadas', 'geometria-cuadrantes', 'geometria-plano-cartesiano'],
     estimatedMinutes: 14,
     minEducOA: ['MA1M-OA-06'],
+    thumbnail: {
+      type: 'coordinate-plane',
+      config: {
+        points: [{ x: 3, y: 2 }],
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Tesoro Escondido' },
       { id: 'explore', type: 'explore', title: 'Descubre el Plano' },
@@ -171,6 +226,10 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     skills: ['homotecia-concepto', 'homotecia-razon', 'homotecia-construccion'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-08'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><polygon points="20,55 35,25 50,55" fill="rgba(59, 130, 246, 0.3)" stroke="rgb(59, 130, 246)" stroke-width="1.5"/><polygon points="25,50 32,35 40,50" fill="rgba(168, 85, 247, 0.4)" stroke="rgb(168, 85, 247)" stroke-width="1.5"/><circle cx="60" cy="40" r="3" fill="rgb(239, 68, 68)"/><line x1="60" y1="40" x2="20" y2="55" stroke="rgb(156, 163, 175)" stroke-width="0.5" stroke-dasharray="2,2"/><line x1="60" y1="40" x2="50" y2="55" stroke="rgb(156, 163, 175)" stroke-width="0.5" stroke-dasharray="2,2"/></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Mural del Metro' },
       { id: 'explore', type: 'explore', title: 'Descubre la Homotecia' },

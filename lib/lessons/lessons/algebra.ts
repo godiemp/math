@@ -17,6 +17,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-terminos-semejantes', 'algebra-expresiones', 'algebra-simplificacion'],
     estimatedMinutes: 12,
     minEducOA: ['MA1M-OA-03'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="30" text-anchor="middle" font-size="11" fill="#3B82F6">3x + 2x</text><line x1="20" y1="38" x2="60" y2="38" stroke="#9CA3AF" stroke-width="1"/><text x="40" y="55" text-anchor="middle" font-size="14" fill="#10B981" font-weight="bold">= 5x</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Frutería Matemática' },
       { id: 'anatomy', type: 'explore', title: 'Anatomía de un Término' },
@@ -37,6 +41,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-propiedad-distributiva', 'algebra-terminos-semejantes', 'algebra-expresiones'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-03'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><rect x="15" y="20" width="25" height="20" fill="rgba(59, 130, 246, 0.3)" stroke="#3B82F6" stroke-width="1.5"/><rect x="40" y="20" width="25" height="20" fill="rgba(168, 85, 247, 0.3)" stroke="#A855F7" stroke-width="1.5"/><text x="27.5" y="34" text-anchor="middle" font-size="9" fill="#3B82F6">2·3</text><text x="52.5" y="34" text-anchor="middle" font-size="9" fill="#A855F7">2·x</text><text x="40" y="58" text-anchor="middle" font-size="10" fill="#6B7280">2(3+x)</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Tienda de Juguetes' },
       { id: 'explore', type: 'explore', title: 'El Constructor de Áreas' },
@@ -57,6 +65,9 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-productos-notables', 'algebra-propiedad-distributiva', 'algebra-terminos-semejantes'],
     estimatedMinutes: 17,
     minEducOA: ['MA1M-OA-03'],
+    thumbnail: {
+      type: 'area-model',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Arquitecto de Jardines' },
       { id: 'explore', type: 'explore', title: 'Descubre los Patrones' },
@@ -77,6 +88,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-productos-notables', 'algebra-cubos', 'algebra-factorizacion'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-03'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><path d="M25 50 L25 25 L50 25 L50 50 Z" fill="rgba(59, 130, 246, 0.2)" stroke="#3B82F6" stroke-width="1.5"/><path d="M25 25 L40 15 L65 15 L50 25" fill="rgba(59, 130, 246, 0.3)" stroke="#3B82F6" stroke-width="1.5"/><path d="M50 25 L65 15 L65 40 L50 50" fill="rgba(59, 130, 246, 0.15)" stroke="#3B82F6" stroke-width="1.5"/><text x="40" y="70" text-anchor="middle" font-size="10" fill="#6B7280">(a+b)³</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Cubo Mágico' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -97,6 +112,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-factorizacion', 'algebra-factorizacion-factor-comun', 'algebra-expresiones'],
     estimatedMinutes: 14,
     minEducOA: ['MA1M-OA-03'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="28" text-anchor="middle" font-size="10" fill="#6B7280">6x + 9</text><line x1="20" y1="35" x2="60" y2="35" stroke="#9CA3AF" stroke-width="1"/><text x="40" y="52" text-anchor="middle" font-size="11" fill="#3B82F6" font-weight="bold">3</text><text x="40" y="52" text-anchor="middle" font-size="11" fill="#3B82F6">(2x + 3)</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Organizador de Cajas' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -117,6 +136,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-factorizacion', 'algebra-factorizacion-trinomios', 'algebra-expresiones'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-03'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="25" text-anchor="middle" font-size="9" fill="#6B7280">x² + 5x + 6</text><line x1="20" y1="32" x2="60" y2="32" stroke="#9CA3AF" stroke-width="1"/><text x="40" y="48" text-anchor="middle" font-size="10" fill="#3B82F6">(x+2)(x+3)</text><text x="40" y="65" text-anchor="middle" font-size="8" fill="#A855F7">2+3=5, 2·3=6</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Jardín Rectangular' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -137,6 +160,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-factorizacion', 'algebra-diferencia-cuadrados', 'algebra-expresiones'],
     estimatedMinutes: 14,
     minEducOA: ['MA1M-OA-03'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="28" text-anchor="middle" font-size="11" fill="#3B82F6">a² − b²</text><line x1="20" y1="38" x2="60" y2="38" stroke="#9CA3AF" stroke-width="1"/><text x="40" y="55" text-anchor="middle" font-size="10" fill="#10B981">(a+b)(a−b)</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Truco del Calculista' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -157,6 +184,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-factorizacion', 'algebra-trinomios-cuadraticos-perfectos', 'algebra-expresiones'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-03'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="25" text-anchor="middle" font-size="9" fill="#6B7280">a² + 2ab + b²</text><line x1="20" y1="32" x2="60" y2="32" stroke="#9CA3AF" stroke-width="1"/><text x="40" y="50" text-anchor="middle" font-size="12" fill="#3B82F6">(a + b)²</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Inverso de los Productos Notables' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -177,6 +208,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-factorizacion', 'algebra-factorizacion-trinomios-ax2', 'algebra-metodo-ac'],
     estimatedMinutes: 16,
     minEducOA: ['MA1M-OA-03'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="22" text-anchor="middle" font-size="9" fill="#6B7280">2x² + 7x + 3</text><rect x="25" y="30" width="30" height="20" rx="3" fill="rgba(168, 85, 247, 0.2)" stroke="#A855F7" stroke-width="1.5"/><text x="40" y="44" text-anchor="middle" font-size="10" fill="#A855F7" font-weight="bold">AC</text><text x="40" y="65" text-anchor="middle" font-size="9" fill="#3B82F6">(2x+1)(x+3)</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Bodega de Muebles' },
       { id: 'explore', type: 'explore', title: 'Descubre el Método AC' },
@@ -197,6 +232,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-factorizacion', 'algebra-factorizacion-agrupacion', 'algebra-expresiones'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-03'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><rect x="10" y="20" width="28" height="15" rx="2" fill="rgba(59, 130, 246, 0.2)" stroke="#3B82F6" stroke-width="1"/><rect x="42" y="20" width="28" height="15" rx="2" fill="rgba(16, 185, 129, 0.2)" stroke="#10B981" stroke-width="1"/><text x="24" y="31" text-anchor="middle" font-size="8" fill="#3B82F6">ax+ay</text><text x="56" y="31" text-anchor="middle" font-size="8" fill="#10B981">bx+by</text><text x="40" y="55" text-anchor="middle" font-size="9" fill="#A855F7">(a+b)(x+y)</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Terreno del Arquitecto' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -216,6 +255,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-ALG-002',
     skills: ['algebra-polinomios', 'algebra-terminos-semejantes', 'algebra-operaciones-basicas'],
     estimatedMinutes: 15,
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="22" text-anchor="middle" font-size="8" fill="#3B82F6">(2x² + 3x)</text><text x="40" y="35" text-anchor="middle" font-size="8" fill="#10B981">+ (x² − 2x)</text><line x1="20" y1="42" x2="60" y2="42" stroke="#9CA3AF" stroke-width="1"/><text x="40" y="58" text-anchor="middle" font-size="9" fill="#A855F7" font-weight="bold">3x² + x</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Gerente de la Empresa' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -235,6 +278,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-ALG-003',
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'algebra-traduccion-problemas'],
     estimatedMinutes: 15,
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><rect x="15" y="20" width="50" height="25" rx="4" fill="rgba(59, 130, 246, 0.1)" stroke="#3B82F6" stroke-width="1.5"/><text x="40" y="36" text-anchor="middle" font-size="10" fill="#3B82F6">2x + 5 = 15</text><text x="40" y="58" text-anchor="middle" font-size="12" fill="#10B981" font-weight="bold">x = 5</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Misterio del Precio' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -255,6 +302,17 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-proporcion-directa', 'algebra-proporcion-inversa', 'algebra-constante-proporcionalidad'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-10'],
+    thumbnail: {
+      type: 'line-chart',
+      config: {
+        data: [
+          { label: '1', value: 2 },
+          { label: '2', value: 4 },
+          { label: '3', value: 6 },
+          { label: '4', value: 8 },
+        ],
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Viaje en Auto' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -275,6 +333,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['proporcionalidad-directa', 'proporcionalidad-inversa', 'regla-de-tres'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-10'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="20" y="28" font-size="10" fill="#3B82F6">3</text><text x="55" y="28" font-size="10" fill="#3B82F6">6</text><line x1="30" y1="25" x2="48" y2="25" stroke="#9CA3AF" stroke-width="1"/><text x="20" y="50" font-size="10" fill="#10B981">5</text><text x="55" y="50" font-size="10" fill="#10B981">x</text><line x1="30" y1="47" x2="48" y2="47" stroke="#9CA3AF" stroke-width="1"/><line x1="15" y1="35" x2="15" y2="55" stroke="#A855F7" stroke-width="1.5"/><line x1="65" y1="35" x2="65" y2="55" stroke="#A855F7" stroke-width="1.5"/></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Proyecto de Construcción' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -295,6 +357,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['proporcionalidad-compuesta', 'regla-de-tres-compuesta', 'analisis-magnitudes'],
     estimatedMinutes: 18,
     minEducOA: ['MA1M-OA-10'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><circle cx="25" cy="30" r="10" fill="rgba(59, 130, 246, 0.2)" stroke="#3B82F6" stroke-width="1.5"/><circle cx="55" cy="30" r="10" fill="rgba(16, 185, 129, 0.2)" stroke="#10B981" stroke-width="1.5"/><text x="25" y="34" text-anchor="middle" font-size="8" fill="#3B82F6">A</text><text x="55" y="34" text-anchor="middle" font-size="8" fill="#10B981">B</text><path d="M25 42 L40 55 L55 42" stroke="#A855F7" stroke-width="1.5" fill="none"/><circle cx="40" cy="60" r="8" fill="rgba(168, 85, 247, 0.2)" stroke="#A855F7" stroke-width="1.5"/><text x="40" y="64" text-anchor="middle" font-size="8" fill="#A855F7">x</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Fábrica de Muebles' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -314,6 +380,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-ALG-006',
     skills: ['algebra-ecuaciones-lineales', 'algebra-despeje', 'algebra-operaciones-inversas'],
     estimatedMinutes: 15,
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><rect x="10" y="25" width="28" height="30" rx="3" fill="rgba(59, 130, 246, 0.2)" stroke="#3B82F6" stroke-width="1.5"/><rect x="42" y="25" width="28" height="30" rx="3" fill="rgba(16, 185, 129, 0.2)" stroke="#10B981" stroke-width="1.5"/><text x="24" y="44" text-anchor="middle" font-size="10" fill="#3B82F6">3x−2</text><text x="56" y="44" text-anchor="middle" font-size="10" fill="#10B981">10</text><line x1="38" y1="35" x2="42" y2="45" stroke="#9CA3AF" stroke-width="2"/><line x1="38" y1="45" x2="42" y2="35" stroke="#9CA3AF" stroke-width="2"/></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Cuenta del Restaurante' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -334,6 +404,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-completar-cuadrado', 'algebra-ecuaciones-cuadraticas', 'algebra-vertice-parabola'],
     estimatedMinutes: 15,
     minEducOA: ['MA2M-OA-03', 'MA2M-OA-04'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><rect x="15" y="15" width="30" height="30" fill="rgba(59, 130, 246, 0.3)" stroke="#3B82F6" stroke-width="1.5"/><rect x="45" y="15" width="15" height="30" fill="rgba(59, 130, 246, 0.2)" stroke="#3B82F6" stroke-width="1" stroke-dasharray="3,2"/><rect x="15" y="45" width="30" height="15" fill="rgba(59, 130, 246, 0.2)" stroke="#3B82F6" stroke-width="1" stroke-dasharray="3,2"/><rect x="45" y="45" width="15" height="15" fill="rgba(168, 85, 247, 0.3)" stroke="#A855F7" stroke-width="1.5"/><text x="40" y="75" text-anchor="middle" font-size="9" fill="#6B7280">(x+a)²</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Arquitecto y el Jardín' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -354,6 +428,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-sistemas-ecuaciones', 'algebra-representacion-grafica', 'algebra-graficar-rectas'],
     estimatedMinutes: 14,
     minEducOA: ['MA1M-OA-04'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><line x1="10" y1="40" x2="70" y2="40" stroke="#9CA3AF" stroke-width="1"/><line x1="40" y1="10" x2="40" y2="70" stroke="#9CA3AF" stroke-width="1"/><line x1="15" y1="60" x2="65" y2="20" stroke="#3B82F6" stroke-width="2"/><line x1="15" y1="25" x2="65" y2="55" stroke="#10B981" stroke-width="2"/><circle cx="40" cy="40" r="4" fill="#EF4444"/></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Mapa del Tesoro' },
       { id: 'explore', type: 'explore', title: 'Representación Gráfica' },
@@ -374,6 +452,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-sistemas-ecuaciones', 'algebra-sustitucion', 'algebra-despeje'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-04'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="22" text-anchor="middle" font-size="9" fill="#3B82F6">y = 2x + 1</text><text x="40" y="38" text-anchor="middle" font-size="9" fill="#10B981">3x + y = 11</text><path d="M55 18 C65 18, 68 28, 60 35" stroke="#A855F7" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/><text x="40" y="58" text-anchor="middle" font-size="9" fill="#A855F7">3x + (2x+1) = 11</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Detective de Variables' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -394,6 +476,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-sistemas-ecuaciones', 'algebra-igualacion', 'algebra-despeje'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-04'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="22" text-anchor="middle" font-size="9" fill="#3B82F6">y = 2x + 1</text><text x="40" y="38" text-anchor="middle" font-size="9" fill="#10B981">y = 5 − x</text><line x1="20" y1="45" x2="60" y2="45" stroke="#9CA3AF" stroke-width="1"/><text x="40" y="60" text-anchor="middle" font-size="9" fill="#A855F7">2x + 1 = 5 − x</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'Las Balanzas Gemelas' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -414,6 +500,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     skills: ['algebra-sistemas-ecuaciones', 'algebra-reduccion', 'algebra-eliminacion'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-04'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="20" text-anchor="middle" font-size="9" fill="#3B82F6">2x + 3y = 8</text><text x="40" y="35" text-anchor="middle" font-size="9" fill="#10B981">2x − y = 4</text><text x="10" y="28" font-size="12" fill="#EF4444">−</text><line x1="15" y1="42" x2="65" y2="42" stroke="#9CA3AF" stroke-width="1.5"/><text x="40" y="58" text-anchor="middle" font-size="10" fill="#A855F7" font-weight="bold">4y = 4</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Truco del Mago' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -440,6 +530,10 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     ],
     estimatedMinutes: 18,
     minEducOA: ['MA1M-OA-05'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><line x1="10" y1="40" x2="70" y2="40" stroke="#9CA3AF" stroke-width="1"/><line x1="40" y1="10" x2="40" y2="70" stroke="#9CA3AF" stroke-width="1"/><line x1="15" y1="55" x2="65" y2="25" stroke="#3B82F6" stroke-width="2"/><circle cx="40" cy="40" r="3" fill="#3B82F6"/><text x="50" y="18" font-size="9" fill="#3B82F6">y = mx + b</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Plan de Datos' },
       { id: 'explore', type: 'explore', title: 'Descubriendo el Patrón' },
@@ -466,6 +560,15 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     ],
     estimatedMinutes: 16,
     minEducOA: ['MA1M-OA-05'],
+    thumbnail: {
+      type: 'coordinate-plane',
+      config: {
+        points: [
+          { x: 0, y: 3 },
+          { x: 2, y: 0 },
+        ],
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Panadería Matemática' },
       { id: 'explore', type: 'explore', title: 'Descubre la Relación' },
