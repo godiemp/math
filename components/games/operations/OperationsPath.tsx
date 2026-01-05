@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Lock, Check, PlayCircle, Trophy, ChevronLeft, ChevronRight, Unlock, BookOpen, Filter, X, Search, Home } from 'lucide-react';
+import { Lock, Check, PlayCircle, Trophy, ChevronLeft, ChevronRight, Unlock, BookOpen, X, Search, Home } from 'lucide-react';
 import Link from 'next/link';
 import { getUnitByCode } from '@/lib/thematicUnitsClient';
 import { useOperationsFilter, useOperationsPagination } from './hooks';
@@ -193,7 +193,7 @@ export default function OperationsPath({
       onPageChange(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterState.searchQuery, filterState.phaseFilter, filterState.operationFilter, filterState.difficultyFilter]);
+  }, [filterState.searchQuery, filterState.phaseFilter, filterState.operationFilter]);
 
   // Auto-navigate to current level on mount
   useEffect(() => {
@@ -219,99 +219,69 @@ export default function OperationsPath({
         </h1>
       </div>
 
-      {/* Search and Filters */}
-      <div className="bg-white rounded-xl p-4 shadow-md space-y-4">
-        {/* Search Bar */}
-        <div className="flex flex-col sm:flex-row gap-3">
+      {/* Search and Filters - Inline */}
+      <div className="bg-white rounded-xl p-3 shadow-md">
+        <div className="flex flex-col lg:flex-row gap-3">
+          {/* Search Bar */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input
               type="text"
               value={filterState.searchQuery}
               onChange={(e) => filterActions.setSearchQuery(e.target.value)}
-              placeholder="Buscar niveles (ej: tablas de multiplicar, ecuaciones, decimales...)"
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              placeholder="Buscar (tablas, ecuaciones, decimales...)"
+              className="w-full pl-9 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
             />
             {filterState.searchQuery && (
               <button
                 onClick={() => filterActions.setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
             )}
           </div>
-          <button
-            onClick={filterActions.toggleFilters}
-            className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg transition-colors text-sm font-medium ${
-              filterState.showFilters || hasActiveFilters
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            <Filter size={18} />
-            <span>Filtros</span>
-            {activeFilterCount > 0 && (
-              <span className="ml-1 px-1.5 py-0.5 text-xs bg-white text-blue-600 rounded-full">
-                {activeFilterCount}
-              </span>
+
+          {/* Inline Filters */}
+          <div className="flex gap-2">
+            <select
+              value={filterState.phaseFilter}
+              onChange={(e) => filterActions.setPhaseFilter(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white min-w-[140px]"
+            >
+              <option value="">Todas las fases</option>
+              {availableFilters.phases.map(phase => (
+                <option key={phase} value={phase}>{phaseNames[phase] || phase}</option>
+              ))}
+            </select>
+
+            <select
+              value={filterState.operationFilter}
+              onChange={(e) => filterActions.setOperationFilter(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white min-w-[160px]"
+            >
+              <option value="">Todas las operaciones</option>
+              {availableFilters.operations.map(op => (
+                <option key={op} value={op}>
+                  {operationTypeIcons[op]} {operationTypeNames[op] || op}
+                </option>
+              ))}
+            </select>
+
+            {hasActiveFilters && (
+              <button
+                onClick={handleClearAllFilters}
+                className="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors whitespace-nowrap"
+              >
+                Limpiar
+              </button>
             )}
-          </button>
+          </div>
         </div>
 
-        {/* Filter Dropdowns */}
-        {filterState.showFilters && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-gray-100">
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Fase</label>
-              <select
-                value={filterState.phaseFilter}
-                onChange={(e) => filterActions.setPhaseFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-              >
-                <option value="">Todas las fases</option>
-                {availableFilters.phases.map(phase => (
-                  <option key={phase} value={phase}>{phaseNames[phase] || phase}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Tipo de operación</label>
-              <select
-                value={filterState.operationFilter}
-                onChange={(e) => filterActions.setOperationFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-              >
-                <option value="">Todas las operaciones</option>
-                {availableFilters.operations.map(op => (
-                  <option key={op} value={op}>
-                    {operationTypeIcons[op]} {operationTypeNames[op] || op}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Dificultad</label>
-              <select
-                value={filterState.difficultyFilter}
-                onChange={(e) => filterActions.setDifficultyFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-              >
-                <option value="">Todas las dificultades</option>
-                {availableFilters.difficulties.map(diff => (
-                  <option key={diff} value={diff}>
-                    {difficultyEmojis[diff]} {difficultyNames[diff] || diff}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        )}
-
-        {/* Active Filters Chips */}
+        {/* Active Filters Chips - Only show when filters are active */}
         {hasActiveFilters && (
-          <div className="flex flex-wrap items-center gap-2 pt-2">
-            <span className="text-xs text-gray-500">Filtros activos:</span>
+          <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-gray-100">
             {filterState.searchQuery && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
                 &quot;{filterState.searchQuery}&quot;
@@ -336,20 +306,6 @@ export default function OperationsPath({
                 </button>
               </span>
             )}
-            {filterState.difficultyFilter && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">
-                {difficultyNames[filterState.difficultyFilter]}
-                <button onClick={() => filterActions.setDifficultyFilter('')} className="hover:text-orange-600">
-                  <X size={14} />
-                </button>
-              </span>
-            )}
-            <button
-              onClick={handleClearAllFilters}
-              className="text-xs text-gray-500 hover:text-gray-700 underline"
-            >
-              Limpiar todo
-            </button>
           </div>
         )}
       </div>

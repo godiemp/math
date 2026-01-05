@@ -37,24 +37,18 @@ export interface FilterableLevel {
 export interface AvailableFilters {
   phases: string[];
   operations: string[];
-  difficulties: string[];
 }
 
 export interface OperationsFilterState {
   searchQuery: string;
   phaseFilter: string;
   operationFilter: string;
-  difficultyFilter: string;
-  showFilters: boolean;
 }
 
 export interface OperationsFilterActions {
   setSearchQuery: (query: string) => void;
   setPhaseFilter: (phase: string) => void;
   setOperationFilter: (operation: string) => void;
-  setDifficultyFilter: (difficulty: string) => void;
-  setShowFilters: (show: boolean) => void;
-  toggleFilters: () => void;
   clearAllFilters: () => void;
 }
 
@@ -99,11 +93,13 @@ const phaseNames: Record<string, string> = {
   algorithmic: 'Algorítmico',
 };
 
-const difficultyNames: Record<string, string> = {
-  basic: 'Básico',
-  intermediate: 'Intermedio',
-  advanced: 'Avanzado',
-  expert: 'Experto',
+// Phase to operations mapping - each operation type belongs exclusively to one phase
+const phaseOperations: Record<string, string[]> = {
+  arithmetic: ['addition', 'subtraction', 'multiplication', 'division', 'mixed-arithmetic'],
+  algebraic: ['simple-equation', 'expression-evaluation', 'simplification'],
+  logical: ['comparison', 'logical-operators', 'compound-conditions'],
+  structural: ['sets', 'sequences', 'functions'],
+  algorithmic: ['sorting', 'counting', 'composition'],
 };
 
 /**
@@ -117,7 +113,6 @@ function getLevelKeywords(level: FilterableLevel): string[] {
   if (level.description) keywords.push(level.description.toLowerCase());
   keywords.push(operationTypeNames[level.operationType]?.toLowerCase() || level.operationType);
   keywords.push(phaseNames[level.phase]?.toLowerCase() || level.phase);
-  keywords.push(difficultyNames[level.difficulty]?.toLowerCase() || level.difficulty);
 
   // Add config-based keywords
   if (level.config) {
@@ -179,27 +174,45 @@ export function useOperationsFilter(levels: FilterableLevel[]): UseOperationsFil
   const [searchQuery, setSearchQuery] = useState('');
   const [phaseFilter, setPhaseFilter] = useState('');
   const [operationFilter, setOperationFilter] = useState('');
-  const [difficultyFilter, setDifficultyFilter] = useState('');
-  const [showFilters, setShowFilters] = useState(false);
 
-  // Get unique phases, operations, and difficulties from levels
-  const availableFilters = useMemo<AvailableFilters>(() => {
+  // Get unique phases from levels
+  const availablePhases = useMemo(() => {
     const phases = new Set<string>();
-    const operations = new Set<string>();
-    const difficulties = new Set<string>();
-
     levels.forEach(level => {
       if (level.phase) phases.add(level.phase);
-      if (level.operationType) operations.add(level.operationType);
-      if (level.difficulty) difficulties.add(level.difficulty);
     });
-
-    return {
-      phases: Array.from(phases),
-      operations: Array.from(operations),
-      difficulties: Array.from(difficulties),
-    };
+    return Array.from(phases);
   }, [levels]);
+
+  // Get operations based on selected phase (or all if no phase selected)
+  const availableOperations = useMemo(() => {
+    if (phaseFilter) {
+      return phaseOperations[phaseFilter] || [];
+    }
+    // Return all operations
+    const operations = new Set<string>();
+    levels.forEach(level => {
+      if (level.operationType) operations.add(level.operationType);
+    });
+    return Array.from(operations);
+  }, [levels, phaseFilter]);
+
+  const availableFilters = useMemo<AvailableFilters>(() => ({
+    phases: availablePhases,
+    operations: availableOperations,
+  }), [availablePhases, availableOperations]);
+
+  // Clear operation filter if it's not valid for the new phase
+  const handleSetPhaseFilter = useCallback((phase: string) => {
+    setPhaseFilter(phase);
+    // If operation is not in new phase, clear it
+    if (phase && operationFilter) {
+      const phaseOps = phaseOperations[phase] || [];
+      if (!phaseOps.includes(operationFilter)) {
+        setOperationFilter('');
+      }
+    }
+  }, [operationFilter]);
 
   // Filter levels based on search and filters
   const filteredLevels = useMemo(() => {
@@ -209,9 +222,6 @@ export function useOperationsFilter(levels: FilterableLevel[]): UseOperationsFil
 
       // Operation type filter
       if (operationFilter && level.operationType !== operationFilter) return false;
-
-      // Difficulty filter
-      if (difficultyFilter && level.difficulty !== difficultyFilter) return false;
 
       // Search query
       if (searchQuery.trim()) {
@@ -224,21 +234,16 @@ export function useOperationsFilter(levels: FilterableLevel[]): UseOperationsFil
 
       return true;
     });
-  }, [levels, searchQuery, phaseFilter, operationFilter, difficultyFilter]);
+  }, [levels, searchQuery, phaseFilter, operationFilter]);
 
-  const hasActiveFilters = Boolean(searchQuery || phaseFilter || operationFilter || difficultyFilter);
+  const hasActiveFilters = Boolean(searchQuery || phaseFilter || operationFilter);
 
-  const activeFilterCount = [phaseFilter, operationFilter, difficultyFilter].filter(Boolean).length;
+  const activeFilterCount = [phaseFilter, operationFilter].filter(Boolean).length;
 
   const clearAllFilters = useCallback(() => {
     setSearchQuery('');
     setPhaseFilter('');
     setOperationFilter('');
-    setDifficultyFilter('');
-  }, []);
-
-  const toggleFilters = useCallback(() => {
-    setShowFilters(prev => !prev);
   }, []);
 
   return {
@@ -246,8 +251,6 @@ export function useOperationsFilter(levels: FilterableLevel[]): UseOperationsFil
       searchQuery,
       phaseFilter,
       operationFilter,
-      difficultyFilter,
-      showFilters,
     },
     filteredLevels,
     hasActiveFilters,
@@ -255,11 +258,8 @@ export function useOperationsFilter(levels: FilterableLevel[]): UseOperationsFil
     activeFilterCount,
     actions: {
       setSearchQuery,
-      setPhaseFilter,
+      setPhaseFilter: handleSetPhaseFilter,
       setOperationFilter,
-      setDifficultyFilter,
-      setShowFilters,
-      toggleFilters,
       clearAllFilters,
     },
   };
