@@ -363,35 +363,19 @@ interface AngleLabelProps {
 }
 
 function AngleLabel({ vertices, vertexIndex, config }: AngleLabelProps) {
-  const n = vertices.length;
   const vertex = vertices[vertexIndex];
-  const p1 = vertices[(vertexIndex - 1 + n) % n];
-  const p2 = vertices[(vertexIndex + 1) % n];
+  const center = polygonCentroid(vertices);
 
-  // Calculate the angle bisector direction (midpoint of unit vectors to adjacent vertices)
-  const dx1 = p1.x - vertex.x;
-  const dy1 = p1.y - vertex.y;
-  const len1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
-  const dx2 = p2.x - vertex.x;
-  const dy2 = p2.y - vertex.y;
-  const len2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+  // Direction from vertex toward centroid (always points into polygon interior)
+  const dx = center.x - vertex.x;
+  const dy = center.y - vertex.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
 
-  // Unit vectors toward each adjacent vertex
-  const ux1 = len1 > 0 ? dx1 / len1 : 0;
-  const uy1 = len1 > 0 ? dy1 / len1 : 0;
-  const ux2 = len2 > 0 ? dx2 / len2 : 0;
-  const uy2 = len2 > 0 ? dy2 / len2 : 0;
-
-  // Bisector direction (sum of unit vectors, then normalize)
-  const bx = ux1 + ux2;
-  const by = uy1 + uy2;
-  const bLen = Math.sqrt(bx * bx + by * by);
-
-  // Position label along the bisector, inside the angle
+  // Position label toward the center, slightly beyond the arc
   const arcRadius = config.arcRadius || 25;
-  const labelRadius = arcRadius + 10;
-  const labelX = bLen > 0 ? vertex.x + (bx / bLen) * labelRadius : vertex.x;
-  const labelY = bLen > 0 ? vertex.y + (by / bLen) * labelRadius : vertex.y;
+  const labelRadius = arcRadius + 12;
+  const labelX = dist > 0 ? vertex.x + (dx / dist) * labelRadius : vertex.x;
+  const labelY = dist > 0 ? vertex.y + (dy / dist) * labelRadius : vertex.y;
 
   // Determine label text
   let labelText = config.label;

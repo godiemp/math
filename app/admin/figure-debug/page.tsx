@@ -421,6 +421,7 @@ function FigureDebugContent() {
   const [polygonRotation, setPolygonRotation] = useState(-90);
   const [showPolygonCenter, setShowPolygonCenter] = useState(true);
   const [showPolygonApothem, setShowPolygonApothem] = useState(false);
+  const [polygonApothemEdge, setPolygonApothemEdge] = useState(0);
   const [showPolygonDiagonals, setShowPolygonDiagonals] = useState(false);
   const [showPolygonAngles, setShowPolygonAngles] = useState(false);
   const [showPolygonAngleDegrees, setShowPolygonAngleDegrees] = useState(false);
@@ -437,6 +438,13 @@ function FigureDebugContent() {
     return getPolygonName(polygonSides);
   }, [polygonSides]);
 
+  // Reset apothem edge when sides change (to prevent invalid edge index)
+  useEffect(() => {
+    if (polygonApothemEdge >= polygonSides) {
+      setPolygonApothemEdge(0);
+    }
+  }, [polygonSides, polygonApothemEdge]);
+
   // Apply polygon preset
   const applyPolygonPreset = useCallback((preset: PolygonPreset) => {
     setPolygonSides(preset.sides);
@@ -444,6 +452,7 @@ function FigureDebugContent() {
     setPolygonRotation(preset.rotation ?? -90);
     setShowPolygonCenter(preset.showCenter ?? true);
     setShowPolygonApothem(preset.showApothem ?? false);
+    setPolygonApothemEdge(0);
     setShowPolygonDiagonals(preset.showDiagonals ?? false);
   }, []);
 
@@ -933,7 +942,11 @@ function FigureDebugContent() {
 
     // Show apothem
     if (showPolygonApothem) {
-      propsLines.push(`showApothem={{ label: 'a' }}`);
+      const apothemProps = [`label: 'a'`];
+      if (polygonApothemEdge !== 0) {
+        apothemProps.push(`toEdge: ${polygonApothemEdge}`);
+      }
+      propsLines.push(`showApothem={{ ${apothemProps.join(', ')} }}`);
     }
 
     // Show diagonals
@@ -963,7 +976,7 @@ function FigureDebugContent() {
     if (showPolygonGrid) propsLines.push(`showGrid`);
 
     return `<PolygonFigure\n  ${propsLines.join('\n  ')}\n/>`;
-  }, [polygonSides, polygonRadius, polygonRotation, showPolygonCenter, showPolygonApothem, showPolygonDiagonals, showPolygonAngles, showPolygonAngleDegrees, showPolygonEdgeLabels, showPolygonGrid]);
+  }, [polygonSides, polygonRadius, polygonRotation, showPolygonCenter, showPolygonApothem, polygonApothemEdge, showPolygonDiagonals, showPolygonAngles, showPolygonAngleDegrees, showPolygonEdgeLabels, showPolygonGrid]);
 
   // Generate code based on figure type
   const generateCode = useCallback(() => {
@@ -1656,6 +1669,22 @@ function FigureDebugContent() {
                       />
                       <span className="text-sm">Mostrar apotema</span>
                     </label>
+                    {showPolygonApothem && (
+                      <div className="ml-6 flex items-center gap-2">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Lado:</span>
+                        <select
+                          value={polygonApothemEdge}
+                          onChange={(e) => setPolygonApothemEdge(Number(e.target.value))}
+                          className="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
+                        >
+                          {Array.from({ length: polygonSides }, (_, i) => (
+                            <option key={i} value={i}>
+                              {String.fromCharCode(65 + i)}-{String.fromCharCode(65 + ((i + 1) % polygonSides))}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
                         type="checkbox"
@@ -2602,7 +2631,7 @@ function FigureDebugContent() {
                     }}
                     showCenter={showPolygonCenter}
                     centerLabel="O"
-                    showApothem={showPolygonApothem ? { label: 'a' } : false}
+                    showApothem={showPolygonApothem ? { label: 'a', toEdge: polygonApothemEdge } : false}
                     diagonals={showPolygonDiagonals ? 'all' : undefined}
                     angles={showPolygonAngles || showPolygonAngleDegrees
                       ? Array.from({ length: polygonSides }, () => ({
