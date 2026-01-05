@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Clock, CheckCircle, Radio } from 'lucide-react';
 import { type Lesson } from '@/lib/lessons/types';
+import { getUnitShortName } from '@/lib/lessons/thematicUnits';
 import { LessonThumbnail } from './LessonThumbnail';
 import { cn } from '@/lib/utils';
 
@@ -59,7 +60,7 @@ export function CompactLessonCard({
               {lesson.estimatedMinutes}m
             </span>
             <span className="text-purple-600 dark:text-purple-400 font-medium truncate max-w-[60px]">
-              {lesson.thematicUnit.split('-').slice(-1)[0]}
+              {getUnitShortName(lesson.thematicUnit)}
             </span>
           </div>
 
