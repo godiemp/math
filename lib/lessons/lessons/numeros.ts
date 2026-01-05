@@ -16,6 +16,14 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-001',
     skills: ['numeros-enteros-orden', 'numeros-enteros-valor-absoluto'],
     estimatedMinutes: 10,
+    thumbnail: {
+      type: 'number-line',
+      config: {
+        min: -5,
+        max: 5,
+        markers: [-3, 0, 3],
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Termómetro Loco' },
       { id: 'number-line', type: 'explore', title: 'La Recta Numérica' },
@@ -35,6 +43,10 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-001',
     skills: ['numeros-enteros-sumar-restar', 'numeros-enteros-opuesto'],
     estimatedMinutes: 10,
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><line x1="10" y1="40" x2="70" y2="40" stroke="#9CA3AF" stroke-width="2"/><circle cx="25" cy="40" r="4" fill="#EF4444"/><circle cx="55" cy="40" r="4" fill="#10B981"/><path d="M35 35 L45 35 M40 30 L40 35" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/><text x="25" y="58" text-anchor="middle" font-size="10" fill="#EF4444">-3</text><text x="55" y="58" text-anchor="middle" font-size="10" fill="#10B981">+5</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Alcancía' },
       { id: 'number-line-addition', type: 'explore', title: 'Suma en la Recta' },
@@ -54,6 +66,10 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-001',
     skills: ['multiplicacion-enteros', 'division-enteros', 'reglas-signos'],
     estimatedMinutes: 15,
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="25" text-anchor="middle" font-size="11" fill="#10B981">(+)(+) = +</text><text x="40" y="42" text-anchor="middle" font-size="11" fill="#10B981">(-)(−) = +</text><text x="40" y="59" text-anchor="middle" font-size="11" fill="#EF4444">(+)(−) = −</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Ascensor Mágico' },
       { id: 'sign-rules', type: 'explore', title: 'Descubre las Reglas' },
@@ -74,6 +90,13 @@ export const NUMEROS_LESSONS: Lesson[] = [
     skills: ['fracciones-concepto', 'fracciones-comparacion', 'fracciones-equivalentes'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-01'],
+    thumbnail: {
+      type: 'fraction-bar',
+      config: {
+        numerator: 3,
+        denominator: 4,
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Chocolate Perfecto' },
       { id: 'fraction-bars', type: 'explore', title: 'La Barra de Fracciones' },
@@ -94,6 +117,10 @@ export const NUMEROS_LESSONS: Lesson[] = [
     skills: ['fracciones-impropias', 'numeros-mixtos', 'conversion-fracciones'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-01'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><rect x="8" y="30" width="20" height="20" rx="2" fill="#3B82F6"/><rect x="30" y="30" width="20" height="20" rx="2" fill="#3B82F6"/><rect x="52" y="30" width="10" height="20" rx="2" fill="#3B82F6"/><rect x="62" y="30" width="10" height="20" rx="2" fill="rgba(59, 130, 246, 0.3)" stroke="#3B82F6" stroke-width="1"/><text x="40" y="68" text-anchor="middle" font-size="12" fill="#6B7280">2½</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Fiesta de Pizza' },
       { id: 'improper-fractions', type: 'explore', title: 'Fracciones Impropias' },
@@ -114,6 +141,12 @@ export const NUMEROS_LESSONS: Lesson[] = [
     skills: ['mcd-concepto', 'factores-comunes', 'simplificacion-fracciones'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-01'],
+    thumbnail: {
+      type: 'factor-grid',
+      config: {
+        number: 12,
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Problema del Reparto' },
       { id: 'explore-factors', type: 'explore', title: 'El Detective de Divisores' },
@@ -134,6 +167,10 @@ export const NUMEROS_LESSONS: Lesson[] = [
     skills: ['fracciones-suma-igual-denominador', 'fracciones-resta-igual-denominador', 'simplificacion-fracciones'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-01'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><rect x="10" y="25" width="15" height="20" rx="2" fill="#3B82F6"/><rect x="25" y="25" width="15" height="20" rx="2" fill="rgba(59, 130, 246, 0.3)" stroke="#3B82F6" stroke-width="1"/><text x="47" y="38" font-size="16" fill="#3B82F6">+</text><rect x="55" y="25" width="7.5" height="20" rx="2" fill="#10B981"/><rect x="62.5" y="25" width="7.5" height="20" rx="2" fill="rgba(16, 185, 129, 0.3)" stroke="#10B981" stroke-width="1"/><text x="40" y="62" text-anchor="middle" font-size="10" fill="#6B7280">½ + ¼</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'Combinando Rebanadas' },
       { id: 'explore-addition', type: 'explore', title: 'Sumando Pedazos' },
@@ -154,6 +191,10 @@ export const NUMEROS_LESSONS: Lesson[] = [
     skills: ['mcm-concepto', 'multiplos-comunes', 'fracciones-denominador-comun'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-01'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="20" y="22" font-size="9" fill="#3B82F6">3: 3,6,9,12...</text><text x="20" y="38" font-size="9" fill="#10B981">4: 4,8,12...</text><circle cx="40" cy="55" r="12" fill="rgba(168, 85, 247, 0.2)" stroke="#A855F7" stroke-width="2"/><text x="40" y="59" text-anchor="middle" font-size="11" fill="#A855F7" font-weight="bold">12</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Problema de los Encuentros' },
       { id: 'explore-multiples', type: 'explore', title: 'El Cazador de Múltiplos' },
@@ -179,6 +220,10 @@ export const NUMEROS_LESSONS: Lesson[] = [
     ],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-01'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><rect x="8" y="20" width="28" height="16" rx="2" fill="rgba(59, 130, 246, 0.3)" stroke="#3B82F6" stroke-width="1"/><rect x="8" y="20" width="14" height="16" rx="2" fill="#3B82F6"/><rect x="44" y="20" width="28" height="16" rx="2" fill="rgba(16, 185, 129, 0.3)" stroke="#10B981" stroke-width="1"/><rect x="44" y="20" width="9.33" height="16" rx="2" fill="#10B981"/><text x="40" y="55" text-anchor="middle" font-size="11" fill="#6B7280">½ + ⅓ = ?</text><line x1="20" y1="65" x2="60" y2="65" stroke="#A855F7" stroke-width="1.5"/><text x="40" y="75" text-anchor="middle" font-size="9" fill="#A855F7">→ ⁵⁄₆</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'Pizzas Diferentes' },
       { id: 'explore-lcd', type: 'explore', title: 'Buscando el Denominador Común' },
@@ -204,6 +249,9 @@ export const NUMEROS_LESSONS: Lesson[] = [
     ],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-01'],
+    thumbnail: {
+      type: 'area-model',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Chocolate Compartido' },
       { id: 'explore-multiply', type: 'explore', title: 'Descubre la Multiplicación' },
@@ -224,6 +272,12 @@ export const NUMEROS_LESSONS: Lesson[] = [
     skills: ['potencias-concepto', 'potencias-calcular', 'potencias-casos-especiales'],
     estimatedMinutes: 14,
     minEducOA: ['MA1M-OA-02'],
+    thumbnail: {
+      type: 'equation',
+      config: {
+        equation: '2³ = 8',
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Leyenda del Tablero de Ajedrez' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -244,6 +298,10 @@ export const NUMEROS_LESSONS: Lesson[] = [
     skills: ['potencias-exponente-cero', 'potencias-exponente-negativo', 'potencias-calcular'],
     estimatedMinutes: 14,
     minEducOA: ['MA1M-OA-02'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="30" text-anchor="middle" font-size="12" fill="#3B82F6">a⁰ = 1</text><text x="40" y="50" text-anchor="middle" font-size="12" fill="#A855F7">a⁻ⁿ = ¹⁄ₐⁿ</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Misterio del Exponente Cero' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -264,6 +322,10 @@ export const NUMEROS_LESSONS: Lesson[] = [
     skills: ['potencias-producto', 'potencias-cociente', 'potencias-potencia-de-potencia'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-02'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="28" text-anchor="middle" font-size="10" fill="#3B82F6">aᵐ · aⁿ = aᵐ⁺ⁿ</text><text x="40" y="48" text-anchor="middle" font-size="10" fill="#10B981">aᵐ ÷ aⁿ = aᵐ⁻ⁿ</text><text x="40" y="68" text-anchor="middle" font-size="10" fill="#A855F7">(aᵐ)ⁿ = aᵐⁿ</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Secreto del Científico' },
       { id: 'explore', type: 'explore', title: 'Descubre las Propiedades' },
@@ -284,6 +346,10 @@ export const NUMEROS_LESSONS: Lesson[] = [
     skills: ['notacion-cientifica-convertir', 'notacion-cientifica-identificar', 'potencias-base-10'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-02'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="35" text-anchor="middle" font-size="11" fill="#3B82F6">3.5 × 10⁸</text><line x1="15" y1="45" x2="65" y2="45" stroke="#9CA3AF" stroke-width="1"/><text x="40" y="60" text-anchor="middle" font-size="9" fill="#6B7280">350,000,000</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Problema de los Científicos' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -304,6 +370,10 @@ export const NUMEROS_LESSONS: Lesson[] = [
     skills: ['porcentaje-concepto', 'porcentaje-calcular', 'porcentaje-conversiones'],
     estimatedMinutes: 15,
     minEducOA: ['FG-MATE-4M-OAC-01'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><rect x="15" y="25" width="50" height="12" rx="2" fill="rgba(59, 130, 246, 0.2)" stroke="#3B82F6" stroke-width="1"/><rect x="15" y="25" width="37.5" height="12" rx="2" fill="#3B82F6"/><text x="40" y="55" text-anchor="middle" font-size="16" fill="#3B82F6" font-weight="bold">75%</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'Las Ofertas del Centro Comercial' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -324,6 +394,10 @@ export const NUMEROS_LESSONS: Lesson[] = [
     skills: ['porcentaje-problemas', 'porcentaje-sucesivos', 'porcentaje-inverso', 'porcentaje-comparacion'],
     estimatedMinutes: 16,
     minEducOA: ['MA2M-OA-06', 'FG-MATE-4M-OAC-01'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="25" text-anchor="middle" font-size="12" fill="#6B7280">$100</text><path d="M30 32 L25 45" stroke="#EF4444" stroke-width="2" marker-end="url(#arrowRed)"/><path d="M50 32 L55 45" stroke="#10B981" stroke-width="2" marker-end="url(#arrowGreen)"/><text x="20" y="58" text-anchor="middle" font-size="10" fill="#EF4444">-20%</text><text x="60" y="58" text-anchor="middle" font-size="10" fill="#10B981">+15%</text><text x="20" y="72" text-anchor="middle" font-size="11" fill="#EF4444">$80</text><text x="60" y="72" text-anchor="middle" font-size="11" fill="#10B981">$115</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Tienda de Electrónica' },
       { id: 'explore', type: 'explore', title: 'Tipos de Problemas' },
@@ -344,6 +418,10 @@ export const NUMEROS_LESSONS: Lesson[] = [
     skills: ['raices-concepto', 'raices-calcular', 'raices-exponente-fraccionario'],
     estimatedMinutes: 15,
     minEducOA: ['MA2M-OA-01'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="35" text-anchor="middle" font-size="18" fill="#3B82F6">√</text><text x="52" y="35" text-anchor="middle" font-size="14" fill="#3B82F6">16</text><line x1="44" y1="22" x2="60" y2="22" stroke="#3B82F6" stroke-width="1.5"/><text x="22" y="32" font-size="10" fill="#A855F7">n</text><text x="40" y="55" text-anchor="middle" font-size="12" fill="#6B7280">= 4</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Jardín Cuadrado' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -364,6 +442,10 @@ export const NUMEROS_LESSONS: Lesson[] = [
     skills: ['logaritmos-concepto', 'logaritmos-convertir', 'logaritmos-calcular'],
     estimatedMinutes: 15,
     minEducOA: ['MA2M-OA-02'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><text x="40" y="32" text-anchor="middle" font-size="12" fill="#3B82F6">log₂ 8 = 3</text><line x1="20" y1="42" x2="60" y2="42" stroke="#9CA3AF" stroke-width="1"/><text x="40" y="58" text-anchor="middle" font-size="11" fill="#A855F7">2³ = 8</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Terremoto de Chile' },
       { id: 'explore', type: 'explore', title: 'Descubre el Exponente' },

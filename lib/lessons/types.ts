@@ -10,6 +10,36 @@
 import { Level, Subject } from '@/lib/types/core';
 
 /**
+ * Thumbnail types for lesson cards
+ */
+export type ThumbnailType =
+  | 'triangle'
+  | 'circle'
+  | 'quadrilateral'
+  | 'bar-chart'
+  | 'pie-chart'
+  | 'line-chart'
+  | 'scatter-plot'
+  | 'histogram'
+  | 'number-line'
+  | 'venn'
+  | 'factor-grid'
+  | 'equation'
+  | 'fraction-bar'
+  | 'area-model'
+  | 'coordinate-plane'
+  | 'custom';
+
+/**
+ * Thumbnail configuration for lesson cards
+ */
+export interface LessonThumbnail {
+  type: ThumbnailType;
+  config?: Record<string, unknown>;
+  customSvg?: string;
+}
+
+/**
  * Step types in a lesson
  * - hook: Opening engagement (puzzle, question, real-world scenario)
  * - explore: Interactive discovery
@@ -45,6 +75,8 @@ export interface Lesson {
   steps: LessonStep[];
   /** MINEDUC Learning Objectives this lesson covers (e.g., ['MA1M-OA-01']) */
   minEducOA?: string[];
+  /** Thumbnail for lesson card display */
+  thumbnail?: LessonThumbnail;
 }
 
 /**

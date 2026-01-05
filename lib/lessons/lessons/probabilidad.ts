@@ -17,6 +17,16 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     skills: ['tablas-frecuencia', 'frecuencia-relativa', 'grafico-barras', 'grafico-circular'],
     estimatedMinutes: 12,
     minEducOA: ['MA1M-OA-12'],
+    thumbnail: {
+      type: 'bar-chart',
+      config: {
+        data: [
+          { category: 'A', value: 4 },
+          { category: 'B', value: 7 },
+          { category: 'C', value: 3 },
+        ],
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Encuesta Misteriosa' },
       { id: 'explore-build', type: 'explore', title: 'Construye tu Gráfico' },
@@ -37,6 +47,16 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     skills: ['histograma', 'datos-agrupados', 'intervalos', 'marca-clase'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-12'],
+    thumbnail: {
+      type: 'histogram',
+      config: {
+        data: [
+          { interval: '[0-5)', frequency: 2 },
+          { interval: '[5-10)', frequency: 5 },
+          { interval: '[10-15)', frequency: 3 },
+        ],
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Entrenador Confundido' },
       { id: 'explore', type: 'explore', title: 'Agrupa los Datos' },
@@ -56,6 +76,10 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M1-PROB-002',
     skills: ['estadistica-media', 'estadistica-mediana', 'estadistica-moda', 'estadistica-rango'],
     estimatedMinutes: 15,
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><circle cx="15" cy="50" r="4" fill="#3B82F6"/><circle cx="25" cy="50" r="4" fill="#3B82F6"/><circle cx="35" cy="50" r="4" fill="#3B82F6"/><circle cx="45" cy="50" r="4" fill="#10B981"/><circle cx="55" cy="50" r="4" fill="#3B82F6"/><circle cx="65" cy="50" r="4" fill="#3B82F6"/><line x1="45" y1="35" x2="45" y2="65" stroke="#10B981" stroke-width="2" stroke-dasharray="3,2"/><text x="45" y="28" text-anchor="middle" font-size="10" fill="#10B981">x̄</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Batalla del Top 10' },
       { id: 'explore', type: 'explore', title: 'El Laboratorio de Datos' },
@@ -76,6 +100,10 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     skills: ['estadistica-rango', 'estadistica-varianza', 'estadistica-desviacion-estandar'],
     estimatedMinutes: 15,
     minEducOA: ['FG-MATE-3M-OAC-02'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><path d="M10 60 Q25 20, 40 40 Q55 60, 70 20" stroke="#3B82F6" stroke-width="2" fill="none"/><line x1="40" y1="25" x2="40" y2="55" stroke="#EF4444" stroke-width="1.5" stroke-dasharray="3,2"/><text x="40" y="68" text-anchor="middle" font-size="9" fill="#6B7280">σ</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Torneo de Tiro con Arco' },
       { id: 'explore', type: 'explore', title: 'El Laboratorio de Dispersión' },
@@ -96,6 +124,10 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     skills: ['estadistica-cuartiles', 'estadistica-percentiles', 'estadistica-boxplot', 'interpretar-posicion'],
     estimatedMinutes: 15,
     minEducOA: ['FG-MATE-3M-OAC-02'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><line x1="10" y1="40" x2="20" y2="40" stroke="#3B82F6" stroke-width="2"/><rect x="20" y="30" width="25" height="20" fill="rgba(59, 130, 246, 0.3)" stroke="#3B82F6" stroke-width="2"/><line x1="35" y1="30" x2="35" y2="50" stroke="#3B82F6" stroke-width="2"/><line x1="45" y1="40" x2="70" y2="40" stroke="#3B82F6" stroke-width="2"/><line x1="10" y1="35" x2="10" y2="45" stroke="#3B82F6" stroke-width="2"/><line x1="70" y1="35" x2="70" y2="45" stroke="#3B82F6" stroke-width="2"/></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Ranking de la Clase' },
       { id: 'explore', type: 'explore', title: 'El Divisor de Datos' },
@@ -116,6 +148,10 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     skills: ['probabilidad-basica', 'espacio-muestral', 'eventos-favorables'],
     estimatedMinutes: 12,
     minEducOA: ['MA1M-OA-14'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><rect x="20" y="20" width="40" height="40" rx="6" fill="white" stroke="#3B82F6" stroke-width="2"/><circle cx="30" cy="30" r="3" fill="#3B82F6"/><circle cx="50" cy="30" r="3" fill="#3B82F6"/><circle cx="30" cy="50" r="3" fill="#3B82F6"/><circle cx="50" cy="50" r="3" fill="#3B82F6"/><circle cx="40" cy="40" r="3" fill="#3B82F6"/><circle cx="40" cy="60" r="3" fill="#3B82F6"/></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Juego de Dados' },
       { id: 'explore-dice', type: 'explore', title: 'Explorando Posibilidades' },
@@ -136,6 +172,14 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     skills: ['probabilidad-complemento', 'regla-aditiva', 'eventos-mutuamente-excluyentes'],
     estimatedMinutes: 12,
     minEducOA: ['MA1M-OA-14'],
+    thumbnail: {
+      type: 'venn',
+      config: {
+        countA: 5,
+        countB: 4,
+        countBoth: 2,
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'Regalos para Sofía' },
       { id: 'explore-venn', type: 'explore', title: 'El Diagrama de Venn' },
@@ -156,6 +200,10 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     skills: ['probabilidad-condicional', 'eventos-independientes', 'regla-multiplicacion'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-14', 'FG-MATE-3M-OAC-02'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><circle cx="25" cy="20" r="8" fill="rgba(59, 130, 246, 0.3)" stroke="#3B82F6" stroke-width="1.5"/><line x1="25" y1="28" x2="15" y2="45" stroke="#3B82F6" stroke-width="1.5"/><line x1="25" y1="28" x2="35" y2="45" stroke="#3B82F6" stroke-width="1.5"/><circle cx="15" cy="50" r="6" fill="rgba(16, 185, 129, 0.3)" stroke="#10B981" stroke-width="1.5"/><circle cx="35" cy="50" r="6" fill="rgba(239, 68, 68, 0.3)" stroke="#EF4444" stroke-width="1.5"/><line x1="15" y1="56" x2="10" y2="68" stroke="#10B981" stroke-width="1"/><line x1="15" y1="56" x2="20" y2="68" stroke="#10B981" stroke-width="1"/><text x="55" y="40" font-size="12" fill="#6B7280">P(B|A)</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Pronóstico del Tiempo' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -176,6 +224,10 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     skills: ['probabilidad-conteo', 'probabilidad-principio-multiplicativo', 'probabilidad-permutaciones'],
     estimatedMinutes: 14,
     minEducOA: ['MA1M-OA-14', 'MA2M-OA-11'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><rect x="10" y="15" width="18" height="18" rx="3" fill="rgba(59, 130, 246, 0.3)" stroke="#3B82F6" stroke-width="1.5"/><rect x="31" y="15" width="18" height="18" rx="3" fill="rgba(59, 130, 246, 0.3)" stroke="#3B82F6" stroke-width="1.5"/><rect x="52" y="15" width="18" height="18" rx="3" fill="rgba(59, 130, 246, 0.3)" stroke="#3B82F6" stroke-width="1.5"/><text x="40" y="50" text-anchor="middle" font-size="14" fill="#3B82F6" font-weight="bold">3 × 3 × 3</text><text x="40" y="68" text-anchor="middle" font-size="12" fill="#10B981">= 27</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'El Dilema del Armario' },
       { id: 'explore', type: 'explore', title: 'Descubriendo el Patrón' },
@@ -196,6 +248,18 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     skills: ['graficos-dispersion', 'comparar-poblaciones', 'correlacion', 'analisis-datos'],
     estimatedMinutes: 15,
     minEducOA: ['MA1M-OA-13'],
+    thumbnail: {
+      type: 'scatter-plot',
+      config: {
+        data: [
+          { x: 1, y: 2 },
+          { x: 2, y: 3 },
+          { x: 3, y: 4 },
+          { x: 4, y: 3.5 },
+          { x: 5, y: 5 },
+        ],
+      },
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'Dos Escuelas, Una Pregunta' },
       { id: 'explore-scatter', type: 'explore', title: 'Construye tu Gráfico' },
@@ -216,6 +280,10 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     skills: ['azar', 'frecuencia-relativa', 'ley-grandes-numeros', 'distribucion-normal'],
     estimatedMinutes: 16,
     minEducOA: ['MA1M-OA-15'],
+    thumbnail: {
+      type: 'custom',
+      customSvg: '<svg viewBox="0 0 80 80"><path d="M10 65 Q25 65, 30 50 Q35 30, 40 25 Q45 30, 50 50 Q55 65, 70 65" stroke="#3B82F6" stroke-width="2" fill="rgba(59, 130, 246, 0.2)"/><line x1="40" y1="20" x2="40" y2="70" stroke="#9CA3AF" stroke-width="1" stroke-dasharray="2,2"/><text x="40" y="78" text-anchor="middle" font-size="8" fill="#6B7280">μ</text></svg>',
+    },
     steps: [
       { id: 'hook', type: 'hook', title: 'La Racha del Jugador' },
       { id: 'explore-galton', type: 'explore', title: 'La Tabla de Galton' },
