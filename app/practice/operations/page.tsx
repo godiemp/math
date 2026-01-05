@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import OperationsPath from '@/components/games/operations/OperationsPath';
 import OperationsPractice from '@/components/games/operations/OperationsPractice';
 import { OPERATIONS_PATH } from '@/lib/operationsPath';
-import { getOperationsProgress, unlockAllOperationsLevels } from '@/lib/operationsProgress';
+import { getOperationsProgress, unlockAllOperationsLevels, getPreferredProblemCount, setPreferredProblemCount } from '@/lib/operationsProgress';
 
 interface OperationLevel {
   level: number;
@@ -39,6 +39,7 @@ function OperationsPracticeContent() {
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [problemCount, setProblemCount] = useState<number>(3);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -51,6 +52,11 @@ function OperationsPracticeContent() {
       loadProgress();
     }
   }, [user]);
+
+  // Load preferred problem count from localStorage
+  useEffect(() => {
+    setProblemCount(getPreferredProblemCount());
+  }, []);
 
   // Initialize page from URL params
   useEffect(() => {
@@ -115,6 +121,11 @@ function OperationsPracticeContent() {
     loadProgress(); // Refresh progress to show all unlocked levels
   };
 
+  const handleProblemCountChange = (count: number) => {
+    setProblemCount(count);
+    setPreferredProblemCount(count);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
@@ -136,6 +147,7 @@ function OperationsPracticeContent() {
         <div className="min-h-screen flex items-center px-3 sm:px-4 py-6 sm:py-8">
           <OperationsPractice
             level={selectedLevel}
+            problemsToComplete={problemCount}
             onBack={handleBackToPath}
             onLevelComplete={handleLevelComplete}
             onNextLevel={handleNextLevel}
@@ -151,6 +163,8 @@ function OperationsPracticeContent() {
             currentPage={currentPage}
             onPageChange={handlePageChange}
             autoNavigateOnMount={isInitialLoad}
+            problemCount={problemCount}
+            onProblemCountChange={handleProblemCountChange}
           />
         </div>
       )}
