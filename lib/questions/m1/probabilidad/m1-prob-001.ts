@@ -11,7 +11,7 @@ import { Question } from '../../../types';
  * - D: Histogramas
  * - E: Interpretación de gráficos estadísticos
  *
- * Total: 25 questions
+ * Total: 50 questions (10 per subsection)
  */
 
 export const m1Prob001Questions: Question[] = [
@@ -551,5 +551,492 @@ export const m1Prob001Questions: Question[] = [
         showLabels: true
       }
     }
+  },
+
+  // ========================================
+  // ADDITIONAL QUESTIONS - SUBSECTION A: FRECUENCIAS
+  // ========================================
+  {
+    id: 'm1-prob-001-a-013',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Una tienda registró las ventas de zapatos por talla: 38 (8 pares), 39 (15 pares), 40 (12 pares), 41 (5 pares). ¿Cuál es la frecuencia relativa de la talla 39?}',
+    options: ['0.25', '0.30', '0.375', '0.40'],
+    correctAnswer: 2,
+    explanation: 'f_r = \\frac{15}{8+15+12+5} = \\frac{15}{40} = 0.375',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
+    skills: ['estadistica-frecuencia', 'estadistica-tablas', 'numeros-fracciones', 'numeros-decimales']
+  },
+  {
+    id: 'm1-prob-001-a-014',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En una tabla de frecuencias, la frecuencia absoluta de un valor es 18 y la frecuencia relativa es 0.36. ¿Cuál es el total de datos?}',
+    options: ['40', '50', '60', '72'],
+    correctAnswer: 1,
+    explanation: 'n = \\frac{f}{f_r} = \\frac{18}{0.36} = 50',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
+    skills: ['estadistica-frecuencia', 'estadistica-tablas', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-001-a-015',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Los colores favoritos de 50 estudiantes son: Azul (18), Rojo (12), Verde (x), Amarillo (8). Si el total es 50, ¿cuántos prefieren verde?}',
+    options: ['10', '12', '14', '16'],
+    correctAnswer: 1,
+    explanation: 'x = 50 - 18 - 12 - 8 = 12',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
+    skills: ['estadistica-frecuencia', 'estadistica-tablas', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-001-a-016',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{La tabla muestra las notas de 40 alumnos. Si la frecuencia acumulada hasta la nota 5 es 28, ¿qué porcentaje de alumnos tiene nota 5 o menos?}',
+    options: ['28%', '40%', '70%', '80%'],
+    correctAnswer: 2,
+    explanation: '\\frac{28}{40} \\times 100\\% = 70\\%',
+    difficulty: 'medium',
+    difficultyScore: 0.38,
+    skills: ['estadistica-frecuencia', 'estadistica-frecuencia-acumulada', 'numeros-porcentajes']
+  },
+  {
+    id: 'm1-prob-001-a-017',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Si tres valores tienen frecuencias relativas 0.25, 0.35 y x, ¿cuál es el valor de x?}',
+    options: ['0.30', '0.35', '0.40', '0.45'],
+    correctAnswer: 2,
+    explanation: 'x = 1 - 0.25 - 0.35 = 0.40',
+    difficulty: 'medium',
+    difficultyScore: 0.35,
+    skills: ['estadistica-frecuencia', 'numeros-decimales', 'numeros-operaciones-basicas']
+  },
+
+  // ========================================
+  // ADDITIONAL QUESTIONS - SUBSECTION B: GRÁFICOS DE BARRAS
+  // ========================================
+  {
+    id: 'm1-prob-001-b-013',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{El gráfico de barras muestra las visitas a un museo por día. ¿Cuántas visitas más hubo el sábado que el lunes?}',
+    options: ['30', '50', '70', '100'],
+    correctAnswer: 2,
+    explanation: '120 - 50 = 70 \\text{ visitas más}',
+    difficulty: 'easy',
+    difficultyScore: 0.20,
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'bar',
+        items: [
+          { category: 'Lunes', value: 50 },
+          { category: 'Martes', value: 65 },
+          { category: 'Miércoles', value: 55 },
+          { category: 'Sábado', value: 120 },
+          { category: 'Domingo', value: 110 }
+        ],
+        showValues: true,
+        showLabels: true
+      }
+    }
+  },
+  {
+    id: 'm1-prob-001-b-014',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{El gráfico muestra la cantidad de libros leídos por cuatro estudiantes. ¿Cuál es el promedio de libros leídos?}',
+    options: ['4', '5', '6', '7'],
+    correctAnswer: 1,
+    explanation: '\\bar{x} = \\frac{3+7+4+6}{4} = \\frac{20}{4} = 5',
+    difficulty: 'medium',
+    difficultyScore: 0.35,
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'estadistica-media', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'bar',
+        items: [
+          { category: 'Ana', value: 3 },
+          { category: 'Bruno', value: 7 },
+          { category: 'Carla', value: 4 },
+          { category: 'Diego', value: 6 }
+        ],
+        showValues: true,
+        showLabels: true
+      }
+    }
+  },
+  {
+    id: 'm1-prob-001-b-015',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{El gráfico de barras muestra las ventas mensuales. Si la meta mensual es 80 unidades, ¿cuántos meses superaron la meta?}',
+    options: ['1', '2', '3', '4'],
+    correctAnswer: 1,
+    explanation: '\\text{Solo febrero (85) y abril (90) superan 80}',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
+    skills: ['estadistica-graficos', 'estadistica-interpretacion'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'bar',
+        items: [
+          { category: 'Enero', value: 75 },
+          { category: 'Febrero', value: 85 },
+          { category: 'Marzo', value: 70 },
+          { category: 'Abril', value: 90 }
+        ],
+        showValues: true,
+        showLabels: true
+      }
+    }
+  },
+  {
+    id: 'm1-prob-001-b-016',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{El gráfico muestra preferencias de comida. ¿Qué fracción del total prefiere pizza?}',
+    options: ['\\frac{1}{4}', '\\frac{1}{3}', '\\frac{2}{5}', '\\frac{1}{2}'],
+    correctAnswer: 2,
+    explanation: '\\frac{40}{20+40+25+15} = \\frac{40}{100} = \\frac{2}{5}',
+    difficulty: 'medium',
+    difficultyScore: 0.38,
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-fracciones'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'bar',
+        items: [
+          { category: 'Hamburguesa', value: 20 },
+          { category: 'Pizza', value: 40 },
+          { category: 'Tacos', value: 25 },
+          { category: 'Sushi', value: 15 }
+        ],
+        showValues: true,
+        showLabels: true
+      }
+    }
+  },
+  {
+    id: 'm1-prob-001-b-017',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Un gráfico de barras horizontales muestra la cantidad de empleados por departamento. Si Ventas tiene el doble de empleados que Marketing, y Marketing tiene 15 empleados, ¿cuántos tiene Ventas?}',
+    options: ['15', '25', '30', '45'],
+    correctAnswer: 2,
+    explanation: '2 \\times 15 = 30 \\text{ empleados}',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-operaciones-basicas']
+  },
+
+  // ========================================
+  // ADDITIONAL QUESTIONS - SUBSECTION C: GRÁFICOS CIRCULARES
+  // ========================================
+  {
+    id: 'm1-prob-001-c-013',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{El gráfico circular muestra la distribución de tipos de transporte usado por 200 personas. ¿Cuántas personas usan metro?}',
+    options: ['40', '50', '60', '70'],
+    correctAnswer: 2,
+    explanation: '0.30 \\times 200 = 60 \\text{ personas}',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
+    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-porcentajes', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'pie',
+        items: [
+          { category: 'Bus', value: 40, color: '#3B82F6' },
+          { category: 'Metro', value: 30, color: '#10B981' },
+          { category: 'Auto', value: 20, color: '#F59E0B' },
+          { category: 'Bicicleta', value: 10, color: '#8B5CF6' }
+        ],
+        showLegend: true,
+        showPercentages: true
+      }
+    }
+  },
+  {
+    id: 'm1-prob-001-c-014',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En un gráfico circular, un sector tiene ángulo central de 72°. ¿Qué porcentaje del total representa?}',
+    options: ['18%', '20%', '25%', '30%'],
+    correctAnswer: 1,
+    explanation: '\\frac{72°}{360°} \\times 100\\% = 20\\%',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
+    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-porcentajes', 'geometria-angulos']
+  },
+  {
+    id: 'm1-prob-001-c-015',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{El gráfico circular muestra las ventas por producto. Si las ventas totales fueron \\$10,000, ¿cuánto vendió el producto que representa el 45\\%?}',
+    options: ['$3,500', '$4,000', '$4,500', '$5,000'],
+    correctAnswer: 2,
+    explanation: '0.45 \\times 10000 = 4500',
+    difficulty: 'medium',
+    difficultyScore: 0.35,
+    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'numeros-porcentajes', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'pie',
+        items: [
+          { category: 'Producto A', value: 45, color: '#3B82F6' },
+          { category: 'Producto B', value: 30, color: '#10B981' },
+          { category: 'Producto C', value: 25, color: '#F59E0B' }
+        ],
+        showLegend: true,
+        showPercentages: true
+      }
+    }
+  },
+  {
+    id: 'm1-prob-001-c-016',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Dos sectores de un gráfico circular tienen ángulos de 90° y 180°. ¿Cuál es el ángulo del tercer sector?}',
+    options: ['45°', '60°', '90°', '120°'],
+    correctAnswer: 2,
+    explanation: '360° - 90° - 180° = 90°',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
+    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'geometria-angulos', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-001-c-017',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En una encuesta a 360 personas, el sector "De acuerdo" tiene 144°. ¿Cuántas personas están de acuerdo?}',
+    options: ['100', '120', '144', '180'],
+    correctAnswer: 2,
+    explanation: '\\frac{144°}{360°} \\times 360 = 144 \\text{ personas}',
+    difficulty: 'medium',
+    difficultyScore: 0.40,
+    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'geometria-angulos', 'numeros-operaciones-basicas']
+  },
+
+  // ========================================
+  // ADDITIONAL QUESTIONS - SUBSECTION D: HISTOGRAMAS
+  // ========================================
+  {
+    id: 'm1-prob-001-d-013',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En un histograma de tiempos, el intervalo [30-40) tiene frecuencia 15 y [40-50) tiene frecuencia 25. ¿Cuál es la frecuencia acumulada hasta 50?}',
+    options: ['15', '25', '40', '55'],
+    correctAnswer: 2,
+    explanation: 'F_{50} = 15 + 25 = 40',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
+    skills: ['estadistica-graficos', 'estadistica-histogramas', 'estadistica-frecuencia-acumulada', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'histogram',
+        items: [
+          { interval: '[20-30)', frequency: 10 },
+          { interval: '[30-40)', frequency: 15 },
+          { interval: '[40-50)', frequency: 25 },
+          { interval: '[50-60)', frequency: 12 }
+        ],
+        showFrequencies: true,
+        showIntervals: true
+      }
+    }
+  },
+  {
+    id: 'm1-prob-001-d-014',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{El histograma muestra las edades de empleados. ¿Cuál es la marca de clase del intervalo [40-50)?}',
+    options: ['40', '45', '50', '90'],
+    correctAnswer: 1,
+    explanation: '\\text{Marca de clase} = \\frac{40 + 50}{2} = 45',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
+    skills: ['estadistica-graficos', 'estadistica-histogramas', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'histogram',
+        items: [
+          { interval: '[20-30)', frequency: 8 },
+          { interval: '[30-40)', frequency: 15 },
+          { interval: '[40-50)', frequency: 12 },
+          { interval: '[50-60)', frequency: 5 }
+        ],
+        showFrequencies: true,
+        showIntervals: true
+      }
+    }
+  },
+  {
+    id: 'm1-prob-001-d-015',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Un histograma tiene 5 intervalos de igual ancho. Si el rango de datos es 50, ¿cuál es el ancho de cada intervalo?}',
+    options: ['5', '10', '15', '25'],
+    correctAnswer: 1,
+    explanation: '\\text{Ancho} = \\frac{50}{5} = 10',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
+    skills: ['estadistica-graficos', 'estadistica-histogramas', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-001-d-016',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En un histograma, ¿por qué las barras están juntas sin espacios entre ellas?}',
+    options: ['Por estética visual', 'Porque los intervalos son continuos', 'Para ahorrar espacio', 'Por error del software'],
+    correctAnswer: 1,
+    explanation: '\\text{Las barras están juntas porque representan datos continuos donde un intervalo termina donde empieza el siguiente.}',
+    difficulty: 'medium',
+    difficultyScore: 0.35,
+    skills: ['estadistica-graficos', 'estadistica-histogramas', 'estadistica-conceptos']
+  },
+  {
+    id: 'm1-prob-001-d-017',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{El histograma muestra los pesos (kg) de 60 personas. ¿Qué porcentaje pesa entre 70 y 80 kg?}',
+    options: ['25%', '30%', '35%', '40%'],
+    correctAnswer: 1,
+    explanation: '\\frac{18}{60} \\times 100\\% = 30\\%',
+    difficulty: 'medium',
+    difficultyScore: 0.38,
+    skills: ['estadistica-graficos', 'estadistica-histogramas', 'numeros-porcentajes'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'histogram',
+        items: [
+          { interval: '[50-60)', frequency: 8 },
+          { interval: '[60-70)', frequency: 14 },
+          { interval: '[70-80)', frequency: 18 },
+          { interval: '[80-90)', frequency: 12 },
+          { interval: '[90-100)', frequency: 8 }
+        ],
+        showFrequencies: true,
+        showIntervals: true
+      }
+    }
+  },
+
+  // ========================================
+  // ADDITIONAL QUESTIONS - SUBSECTION E: INTERPRETACIÓN
+  // ========================================
+  {
+    id: 'm1-prob-001-e-013',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{El gráfico de líneas muestra la temperatura durante 5 días. ¿En qué día hubo el mayor aumento respecto al día anterior?}',
+    options: ['Día 2', 'Día 3', 'Día 4', 'Día 5'],
+    correctAnswer: 0,
+    explanation: '\\text{Día 2: de 18 a 25 (+7). Día 3: 25 a 22 (-3). Día 4: 22 a 24 (+2). Día 5: 24 a 20 (-4)}',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'numeros-operaciones-basicas'],
+    visualData: {
+      type: 'graph',
+      data: {
+        chartType: 'line',
+        items: [
+          { label: 'Día 1', value: 18 },
+          { label: 'Día 2', value: 25 },
+          { label: 'Día 3', value: 22 },
+          { label: 'Día 4', value: 24 },
+          { label: 'Día 5', value: 20 }
+        ],
+        showValues: true,
+        showLabels: true
+      }
+    }
+  },
+  {
+    id: 'm1-prob-001-e-014',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{¿Qué tipo de gráfico es más apropiado para mostrar la evolución del precio de un producto durante un año?}',
+    options: ['Gráfico circular', 'Gráfico de barras', 'Gráfico de líneas', 'Histograma'],
+    correctAnswer: 2,
+    explanation: '\\text{El gráfico de líneas es ideal para mostrar tendencias y evolución en el tiempo.}',
+    difficulty: 'easy',
+    difficultyScore: 0.20,
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'estadistica-conceptos']
+  },
+  {
+    id: 'm1-prob-001-e-015',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Un gráfico de barras doble compara las ventas de dos productos. El producto A tiene barras más altas en todos los meses. ¿Qué conclusión es correcta?}',
+    options: ['El producto B se vende mejor', 'El producto A se vende mejor cada mes', 'Ambos productos venden igual', 'No se puede concluir nada'],
+    correctAnswer: 1,
+    explanation: '\\text{Barras más altas indican mayores ventas del producto A en cada mes.}',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
+    skills: ['estadistica-graficos', 'estadistica-interpretacion']
+  },
+  {
+    id: 'm1-prob-001-e-016',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Al analizar un gráfico, se observa que el eje Y no empieza en cero. ¿Qué efecto puede tener esto en la interpretación?}',
+    options: ['Ningún efecto', 'Puede exagerar las diferencias entre valores', 'Hace el gráfico más preciso', 'Reduce las diferencias entre valores'],
+    correctAnswer: 1,
+    explanation: '\\text{Un eje Y que no empieza en cero puede hacer que pequeñas diferencias parezcan muy grandes.}',
+    difficulty: 'hard',
+    difficultyScore: 0.55,
+    skills: ['estadistica-graficos', 'estadistica-interpretacion', 'estadistica-conceptos']
+  },
+  {
+    id: 'm1-prob-001-e-017',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{¿Qué tipo de gráfico usarías para mostrar cómo se distribuye el presupuesto familiar en diferentes categorías?}',
+    options: ['Histograma', 'Gráfico de líneas', 'Gráfico circular', 'Diagrama de dispersión'],
+    correctAnswer: 2,
+    explanation: '\\text{El gráfico circular es ideal para mostrar partes de un todo, como la distribución de un presupuesto.}',
+    difficulty: 'easy',
+    difficultyScore: 0.18,
+    skills: ['estadistica-graficos', 'estadistica-graficos-circulares', 'estadistica-conceptos']
   }
 ];

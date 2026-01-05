@@ -263,11 +263,53 @@ export function SmartLatexRenderer({ latex, displayMode = false, className = '' 
 }
 
 /**
+ * Check if content is just plain text with LaTeX-escaped special characters
+ * (like \%, \$, \&, etc.) but no actual LaTeX math constructs
+ */
+function isEscapedPlainText(content: string): boolean {
+  // Remove all escaped special characters temporarily
+  const withoutEscapes = content
+    .replace(/\\%/g, '')
+    .replace(/\\\$/g, '')
+    .replace(/\\&/g, '')
+    .replace(/\\#/g, '')
+    .replace(/\\_/g, '')
+    .replace(/\\\{/g, '')
+    .replace(/\\\}/g, '')
+    .replace(/\\~/g, '')
+    .replace(/\\\^/g, '')
+    .replace(/\\\s/g, ''); // escaped space
+
+  // If what remains has no LaTeX constructs, it's escaped plain text
+  // LaTeX constructs: backslash commands, ^, _, unescaped braces
+  return !/[\\^_{}]/.test(withoutEscapes);
+}
+
+/**
+ * Convert LaTeX-escaped plain text to regular text
+ */
+function unescapeToPlainText(content: string): string {
+  return content
+    .replace(/\\%/g, '%')
+    .replace(/\\\$/g, '$')
+    .replace(/\\&/g, '&')
+    .replace(/\\#/g, '#')
+    .replace(/\\_/g, '_')
+    .replace(/\\\{/g, '{')
+    .replace(/\\\}/g, '}')
+    .replace(/\\~/g, '~')
+    .replace(/\\\^/g, '^')
+    .replace(/\\\s/g, ' ')
+    .replace(/\\,/g, ' '); // thin space
+}
+
+/**
  * Unified LaTeX renderer that handles multiple formats:
  * 1. Raw LaTeX with \text{} blocks (e.g., "\\text{Question} x^2")
  * 2. Text with $...$ or $$...$$ delimiters (e.g., "Answer is $6x$")
  * 3. Pure LaTeX expressions (e.g., "6x", "x^2 + 3")
- * 4. Plain text (e.g., "15", "Option A")
+ * 4. Plain text with escaped characters (e.g., "Aproximadamente 51\\%")
+ * 5. Plain text (e.g., "15", "Option A")
  *
  * This provides a single abstraction for rendering math content across the app.
  */
@@ -292,6 +334,12 @@ export function UnifiedLatexRenderer({
   // Check if content has $...$ or $$...$$ delimiters - use MathText logic
   if (content.includes('$')) {
     return <MathText content={content} className={className} />;
+  }
+
+  // Check if content is plain text with LaTeX-escaped characters (like \%)
+  // This should be rendered as plain text, not as LaTeX math
+  if (isEscapedPlainText(content)) {
+    return <span className={className}>{unescapeToPlainText(content)}</span>;
   }
 
   // Check if content looks like pure LaTeX - only detect explicit markers

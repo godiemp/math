@@ -10,7 +10,7 @@ import { Question } from '../../../types';
  * - C: Construcción de diagramas de caja
  * - D: Interpretación de diagramas de caja
  *
- * Total: 24 questions
+ * Total: 40 questions
  */
 
 export const m1Prob003Questions: Question[] = [
@@ -37,8 +37,8 @@ export const m1Prob003Questions: Question[] = [
     operacionBase: 'Q_1 = \\text{mediana de mitad inferior}',
     questionLatex: '\\text{Una investigadora de mercado analiza las edades de 9 participantes en una encuesta. Los datos ordenados son: 3, 5, 7, 9, 11, 13, 15, 17, 19 años. Necesita calcular el primer cuartil (Q1) para identificar el rango de edades del 25\\% más joven. ¿Cuál es el primer cuartil?}',
     options: ['5 años', '6 años', '7 años', '8 años'],
-    correctAnswer: 0,
-    explanation: 'Q_1 = \\text{mediana de } \\{3, 5, 7, 9\\} = \\frac{5 + 7}{2} = 6, \\text{ pero usando método exclusivo: mediana de } \\{3, 5, 7\\} = 5',
+    correctAnswer: 1,
+    explanation: '\\text{Con 9 datos, la mediana es 11. Excluyendo la mediana, Q}_1 = \\text{mediana de } \\{3, 5, 7, 9\\} = \\frac{5 + 7}{2} = 6',
     difficulty: 'medium',
     difficultyScore: 0.35,
     skills: ['estadistica-cuartiles', 'estadistica-medidas-posicion', 'numeros-operaciones-basicas']
@@ -97,6 +97,62 @@ export const m1Prob003Questions: Question[] = [
     explanation: 'Q_1 = \\text{mediana de } \\{2, 4\\} = \\frac{2 + 4}{2} = 3',
     difficulty: 'easy',
     difficultyScore: 0.28,
+    skills: ['estadistica-cuartiles', 'estadistica-mediana', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-003-025',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'Q_3 = \\text{mediana de mitad superior}',
+    questionLatex: '\\text{Un veterinario registra los pesos en kilogramos de 12 perros atendidos en una jornada: 3, 5, 7, 8, 10, 12, 14, 16, 18, 20, 22, 25. Necesita calcular el tercer cuartil (Q3) para identificar el peso que supera el 75\\% de los perros. ¿Cuál es el tercer cuartil?}',
+    options: ['16 kg', '17 kg', '18 kg', '19 kg'],
+    correctAnswer: 1,
+    explanation: 'Q_3 = \\text{mediana de } \\{14, 16, 18, 20, 22, 25\\} = \\frac{18 + 16}{2} = 17',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
+    skills: ['estadistica-cuartiles', 'estadistica-medidas-posicion', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-003-026',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'IQR = Q_3 - Q_1',
+    questionLatex: '\\text{Una empresa de envíos analiza los tiempos de entrega en horas de sus últimos 11 pedidos ordenados: 2, 4, 5, 7, 9, 10, 12, 14, 16, 18, 20. El analista calculó Q1=5 y Q3=16. ¿Cuál es el rango intercuartílico (IQR)?}',
+    options: ['9 horas', '10 horas', '11 horas', '12 horas'],
+    correctAnswer: 2,
+    explanation: 'IQR = Q_3 - Q_1 = 16 - 5 = 11',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
+    skills: ['estadistica-cuartiles', 'estadistica-rango-intercuartilico', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-003-027',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'Q_1, Q_2, Q_3 \\text{ dividen datos en 4 partes}',
+    questionLatex: '\\text{Un estadístico explica a sus alumnos que los cuartiles dividen un conjunto de datos ordenados en cuatro partes iguales. Si un conjunto tiene 100 datos, ¿cuántos datos aproximadamente hay entre el primer cuartil (Q1) y el tercer cuartil (Q3)?}',
+    options: ['25 datos', '50 datos', '75 datos', '100 datos'],
+    correctAnswer: 1,
+    explanation: '\\text{Entre } Q_1 \\text{ y } Q_3 \\text{ hay } 50\\% \\text{ de los datos} = 50 \\text{ datos}',
+    difficulty: 'easy',
+    difficultyScore: 0.20,
+    skills: ['estadistica-cuartiles', 'estadistica-conceptos', 'estadistica-medidas-posicion']
+  },
+  {
+    id: 'm1-prob-003-028',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'Q_1 \\text{ con datos pares}',
+    questionLatex: '\\text{Una bióloga mide la longitud en centímetros de 8 hojas de una planta: 4, 6, 8, 10, 12, 14, 16, 18. Para su análisis necesita calcular el primer cuartil (Q1). ¿Cuál es el valor del primer cuartil?}',
+    options: ['6 cm', '7 cm', '8 cm', '9 cm'],
+    correctAnswer: 1,
+    explanation: 'Q_1 = \\text{mediana de } \\{4, 6, 8, 10\\} = \\frac{6 + 8}{2} = 7',
+    difficulty: 'medium',
+    difficultyScore: 0.38,
     skills: ['estadistica-cuartiles', 'estadistica-mediana', 'numeros-operaciones-basicas']
   },
 
@@ -185,6 +241,62 @@ export const m1Prob003Questions: Question[] = [
     difficultyScore: 0.18,
     skills: ['estadistica-percentiles', 'estadistica-interpretacion', 'estadistica-conceptos']
   },
+  {
+    id: 'm1-prob-003-029',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P_{80} = \\text{posición } \\frac{80n}{100}',
+    questionLatex: '\\text{Un profesor de educación física registra los tiempos en segundos de 20 estudiantes corriendo 100 metros. Los datos ordenados van desde 12 hasta 22 segundos. El percentil 80 (P80) es 19 segundos. ¿Cuántos estudiantes corrieron en 19 segundos o menos?}',
+    options: ['4 estudiantes', '8 estudiantes', '16 estudiantes', '20 estudiantes'],
+    correctAnswer: 2,
+    explanation: 'P_{80} \\rightarrow 80\\% \\text{ de } 20 = 16 \\text{ estudiantes corrieron en 19s o menos}',
+    difficulty: 'medium',
+    difficultyScore: 0.40,
+    skills: ['estadistica-percentiles', 'estadistica-interpretacion', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-003-030',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'Q_3 = P_{75}',
+    questionLatex: '\\text{Una estudiante de estadística necesita calcular el percentil 75 de un conjunto de datos para un informe. Su compañero le dice que ya calculó Q3 (tercer cuartil) y obtuvo 48. ¿Por qué este valor le es útil para calcular P75?}',
+    options: ['No le sirve, son medidas diferentes', 'Porque Q3 = P75 (son equivalentes)', 'Porque P75 = Q3 + 25', 'Porque P75 = Q3 × 0.75'],
+    correctAnswer: 1,
+    explanation: 'Q_3 = P_{75} \\text{ ambos representan el valor que deja 75\\% de datos por debajo}',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
+    skills: ['estadistica-percentiles', 'estadistica-cuartiles', 'estadistica-conceptos']
+  },
+  {
+    id: 'm1-prob-003-031',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P_{60} \\text{ interpolación}',
+    questionLatex: '\\text{Un investigador médico analiza los niveles de colesterol de 10 pacientes ordenados: 140, 150, 160, 170, 180, 190, 200, 210, 220, 230. Necesita calcular el percentil 60 (P60). ¿Cuál es el valor del percentil 60?}',
+    options: ['180', '184', '188', '190'],
+    correctAnswer: 1,
+    explanation: 'P_{60} = \\text{posición } 6.0 = 180 + 0.6(190-180) = 184',
+    difficulty: 'hard',
+    difficultyScore: 0.58,
+    skills: ['estadistica-percentiles', 'estadistica-medidas-posicion', 'numeros-decimales']
+  },
+  {
+    id: 'm1-prob-003-032',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: 'P_k \\rightarrow k\\% \\text{ por debajo}',
+    questionLatex: '\\text{En un examen nacional, María obtuvo un puntaje que la ubicó en el percentil 95 (P95). Su hermano obtuvo un puntaje en el percentil 60 (P60). ¿Cuál de las siguientes afirmaciones es correcta sobre sus resultados?}',
+    options: ['María superó al 95% de los estudiantes', 'María superó al 5% de los estudiantes', 'El hermano superó al 60% de los estudiantes', 'El hermano fue superado por el 40% de los estudiantes'],
+    correctAnswer: 0,
+    explanation: 'P_{95} \\rightarrow \\text{María superó al } 95\\% \\text{ de los estudiantes}',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
+    skills: ['estadistica-percentiles', 'estadistica-interpretacion', 'estadistica-conceptos']
+  },
 
   // C. Construcción de diagramas de caja
   {
@@ -271,6 +383,62 @@ export const m1Prob003Questions: Question[] = [
     difficultyScore: 0.15,
     skills: ['estadistica-diagramas-caja', 'estadistica-conceptos']
   },
+  {
+    id: 'm1-prob-003-033',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: '\\text{Límite inferior} = Q_1 - 1.5 \\times IQR',
+    questionLatex: '\\text{Un control de calidad analiza los pesos de productos y obtiene Q1=45g y Q3=55g. Para identificar productos defectuosos por peso anormalmente bajo, necesita calcular el límite inferior para outliers usando la regla de Tukey. ¿Cuál es el límite inferior?}',
+    options: ['25g', '30g', '35g', '40g'],
+    correctAnswer: 1,
+    explanation: 'IQR = 55 - 45 = 10; \\quad \\text{Límite inferior} = 45 - 1.5(10) = 30',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
+    skills: ['estadistica-diagramas-caja', 'estadistica-outliers', 'estadistica-rango-intercuartilico', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-003-034',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: '\\text{Min}, Q_1, Q_2, Q_3, \\text{Max}',
+    questionLatex: '\\text{Una pediatra registra las estaturas en centímetros de 9 niños: 100, 105, 110, 115, 120, 125, 130, 135, 140. Necesita crear un diagrama de caja. ¿Cuál es el resumen de cinco números correcto?}',
+    options: ['Min=100, Q1=107.5, Q2=120, Q3=132.5, Max=140', 'Min=100, Q1=110, Q2=120, Q3=130, Max=140', 'Min=100, Q1=105, Q2=120, Q3=135, Max=140', 'Min=100, Q1=115, Q2=120, Q3=125, Max=140'],
+    correctAnswer: 0,
+    explanation: '\\text{Min}=100, Q_1=\\frac{105+110}{2}=107.5, Q_2=120, Q_3=\\frac{130+135}{2}=132.5, \\text{Max}=140',
+    difficulty: 'medium',
+    difficultyScore: 0.45,
+    skills: ['estadistica-diagramas-caja', 'estadistica-cuartiles', 'estadistica-mediana', 'numeros-decimales']
+  },
+  {
+    id: 'm1-prob-003-035',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: '\\text{Bigote termina en dato real}',
+    questionLatex: '\\text{Un estadístico construye un diagrama de caja para datos con Q1=30, Q3=50 y varios valores: 5, 10, 15, 20, 25, 30...50, 55, 60, 65, 100. Usando la regla de 1.5×IQR, ¿hasta dónde llega el bigote superior?}',
+    options: ['Hasta 65', 'Hasta 70', 'Hasta 80', 'Hasta 100'],
+    correctAnswer: 0,
+    explanation: 'IQR=20; \\quad \\text{Límite}=50+30=80; \\quad \\text{Bigote llega a 65 (último dato } \\leq 80\\text{)}',
+    difficulty: 'hard',
+    difficultyScore: 0.62,
+    skills: ['estadistica-diagramas-caja', 'estadistica-outliers', 'estadistica-rango-intercuartilico']
+  },
+  {
+    id: 'm1-prob-003-036',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: '\\text{Outliers como puntos aislados}',
+    questionLatex: '\\text{Al construir un diagrama de caja, un analista encuentra que hay 2 valores que están más allá del límite superior de 1.5×IQR. ¿Cómo debe representar estos valores en el diagrama de caja?}',
+    options: ['Extender el bigote hasta incluirlos', 'Ignorarlos y no representarlos', 'Representarlos como puntos individuales separados del bigote', 'Incluirlos dentro de la caja'],
+    correctAnswer: 2,
+    explanation: '\\text{Outliers se representan como puntos individuales más allá de los bigotes}',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
+    skills: ['estadistica-diagramas-caja', 'estadistica-outliers', 'estadistica-conceptos']
+  },
 
   // D. Interpretación de diagramas de caja
   {
@@ -355,6 +523,62 @@ export const m1Prob003Questions: Question[] = [
     explanation: '\\text{Caja angosta} \\rightarrow IQR \\text{ pequeño} \\rightarrow \\text{menor dispersión central}',
     difficulty: 'easy',
     difficultyScore: 0.28,
+    skills: ['estadistica-diagramas-caja', 'estadistica-interpretacion', 'estadistica-dispersion', 'estadistica-rango-intercuartilico']
+  },
+  {
+    id: 'm1-prob-003-037',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: '\\text{Comparar medianas de dos box plots}',
+    questionLatex: '\\text{Un economista compara los ingresos mensuales de dos ciudades mediante diagramas de caja. La Ciudad A muestra Q2=\\$800,000 mientras que la Ciudad B tiene Q2=\\$650,000. ¿Qué se puede concluir sobre los ingresos típicos?}',
+    options: ['La Ciudad A tiene mayor variabilidad de ingresos', 'La Ciudad B tiene ingresos más altos en promedio', 'La Ciudad A tiene un ingreso típico (mediana) más alto', 'Ambas ciudades tienen la misma distribución'],
+    correctAnswer: 2,
+    explanation: 'Q_2 \\text{ de A} = 800{,}000 > Q_2 \\text{ de B} = 650{,}000 \\rightarrow \\text{mediana A más alta}',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
+    skills: ['estadistica-diagramas-caja', 'estadistica-interpretacion', 'estadistica-mediana']
+  },
+  {
+    id: 'm1-prob-003-038',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: '\\text{Bigote largo} \\rightarrow \\text{datos dispersos}',
+    questionLatex: '\\text{Al analizar un diagrama de caja de tiempos de espera en un banco, un gerente nota que el bigote derecho (desde Q3 hacia el máximo) es mucho más largo que el bigote izquierdo (desde Q1 hacia el mínimo). ¿Qué indica esta asimetría?}',
+    options: ['Hay más clientes con tiempos bajos que altos', 'Los tiempos altos están más dispersos que los bajos', 'La mediana está cerca del máximo', 'Los datos son simétricos'],
+    correctAnswer: 1,
+    explanation: '\\text{Bigote derecho largo} \\rightarrow \\text{mayor dispersión en valores altos}',
+    difficulty: 'medium',
+    difficultyScore: 0.38,
+    skills: ['estadistica-diagramas-caja', 'estadistica-interpretacion', 'estadistica-asimetria']
+  },
+  {
+    id: 'm1-prob-003-039',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: '\\text{Rango total} = \\text{Max} - \\text{Min}',
+    questionLatex: '\\text{Un diagrama de caja muestra: Mínimo=15, Q1=25, Q2=35, Q3=45, Máximo=75. Un estudiante necesita calcular el rango total de los datos. ¿Cuál es el rango?}',
+    options: ['20', '30', '50', '60'],
+    correctAnswer: 3,
+    explanation: '\\text{Rango} = \\text{Máximo} - \\text{Mínimo} = 75 - 15 = 60',
+    difficulty: 'easy',
+    difficultyScore: 0.20,
+    skills: ['estadistica-diagramas-caja', 'estadistica-rango', 'numeros-operaciones-basicas']
+  },
+  {
+    id: 'm1-prob-003-040',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    operacionBase: '\\text{Box plots paralelos para comparar}',
+    questionLatex: '\\text{Un profesor muestra dos diagramas de caja paralelos de las calificaciones del mismo examen en dos secciones. La sección A tiene: IQR=15, Q2=70. La sección B tiene: IQR=5, Q2=75. ¿Cuál sección tuvo mejor rendimiento general y más homogéneo?}',
+    options: ['Sección A: mejor rendimiento y más homogéneo', 'Sección B: mejor rendimiento y más homogéneo', 'Sección A: mejor rendimiento pero menos homogéneo', 'Sección B: peor rendimiento pero más homogéneo'],
+    correctAnswer: 1,
+    explanation: '\\text{B tiene } Q_2=75 > 70 \\text{ (mejor)} \\text{ y } IQR=5 < 15 \\text{ (más homogéneo)}',
+    difficulty: 'medium',
+    difficultyScore: 0.45,
     skills: ['estadistica-diagramas-caja', 'estadistica-interpretacion', 'estadistica-dispersion', 'estadistica-rango-intercuartilico']
   }
 ];
