@@ -87,16 +87,6 @@ export const structuralLevels: OperationLevelDefinition[] = [
     config: { setSize: 5, operators: ['\''], minValue: 1, maxValue: 10 }
   },
   {
-    title: 'Producto Cartesiano',
-    operationType: 'sets',
-    phase: 'structural',
-    difficulty: 'expert',
-    problemsToComplete: 3,
-    thematicUnits: ["M1-PROB-004"],
-
-    config: { setSize: 2, operators: ['×'], minValue: 1, maxValue: 3 }
-  },
-  {
     title: 'Operaciones Mixtas de Conjuntos',
     operationType: 'sets',
     phase: 'structural',
