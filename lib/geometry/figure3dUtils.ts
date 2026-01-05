@@ -750,16 +750,17 @@ export function calculateFaceNormal(vertices: Point3D[], face: number[]): Point3
 
 /**
  * Determine if a face is front-facing based on view direction
+ * NOTE: Vertices should already be rotated to match the projection view
  */
 export function isFaceFrontFacing(
   vertices: Point3D[],
   face: number[],
-  viewDirection: Point3D
+  _viewDirection: Point3D // Kept for API compatibility but not used
 ): boolean {
   const normal = calculateFaceNormal(vertices, face);
-  // Face is front-facing if normal points toward viewer (dot product > 0)
-  // View direction points INTO the screen, so we want normal pointing OUT
-  return vec3Dot(normal, viewDirection) < 0;
+  // After rotation, camera looks from +Z toward -Z (orthographic)
+  // Face is front-facing if normal points toward +Z (toward camera)
+  return normal.z > 0;
 }
 
 /**
@@ -830,6 +831,11 @@ export function getEdgeVisibility(
   faces: number[][],
   config: ProjectionConfig
 ): 'visible' | 'hidden' {
+  const azimuth = config.azimuth ?? 45;
+  const elevation = config.elevation ?? 35;
+
+  // Rotate vertices to match projection view
+  const rotatedVertices = vertices.map((v) => rotatePoint(v, azimuth, elevation));
   const viewDirection = getViewDirection(config);
 
   // Find faces that contain this edge
@@ -841,7 +847,7 @@ export function getEdgeVisibility(
 
   // If any adjacent face is front-facing, edge is visible
   for (const face of adjacentFaces) {
-    if (isFaceFrontFacing(vertices, face, viewDirection)) {
+    if (isFaceFrontFacing(rotatedVertices, face, viewDirection)) {
       return 'visible';
     }
   }
@@ -858,7 +864,30 @@ export function getAllEdgeVisibilities(
   faces: number[][],
   config: ProjectionConfig
 ): ('visible' | 'hidden')[] {
-  return edges.map((edge) => getEdgeVisibility(vertices, edge, faces, config));
+  const azimuth = config.azimuth ?? 45;
+  const elevation = config.elevation ?? 35;
+
+  // Rotate vertices once for all edge checks
+  const rotatedVertices = vertices.map((v) => rotatePoint(v, azimuth, elevation));
+  const viewDirection = getViewDirection(config);
+
+  return edges.map((edge) => {
+    // Find faces that contain this edge
+    const adjacentFaces = faces.filter((face) => {
+      const hasV0 = face.includes(edge[0]);
+      const hasV1 = face.includes(edge[1]);
+      return hasV0 && hasV1;
+    });
+
+    // If any adjacent face is front-facing, edge is visible
+    for (const face of adjacentFaces) {
+      if (isFaceFrontFacing(rotatedVertices, face, viewDirection)) {
+        return 'visible';
+      }
+    }
+
+    return 'hidden';
+  });
 }
 
 // ============================================
