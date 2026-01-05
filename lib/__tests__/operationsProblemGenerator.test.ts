@@ -9,15 +9,15 @@ import { OPERATIONS_PATH } from '../operationsPath';
 describe('Operation Problem Generator (Integration)', () => {
   beforeEach(() => {
     // Clear history before each test
-    for (let i = 1; i <= 120; i++) {
+    for (let i = 1; i <= OPERATIONS_PATH.length; i++) {
       clearProblemHistory(i);
     }
   });
 
   describe('generateProblem', () => {
     it('should generate problem for each level', () => {
-      // Test a sample of levels
-      const testLevels = [1, 5, 15, 31, 51, 71, 91, 111];
+      // Test a sample of levels (only existing ones)
+      const testLevels = [1, 5, 15, 31, 51, 71, 85, 94, 100].filter(l => l <= OPERATIONS_PATH.length);
 
       for (const levelNum of testLevels) {
         const levelConfig = OPERATIONS_PATH.find(l => l.level === levelNum);
@@ -162,26 +162,19 @@ describe('Operation Problem Generator (Integration)', () => {
     });
   });
 
-  describe('All 120 levels', () => {
-    it('should be able to generate problems for all 120 levels', () => {
-      const failedLevels = [];
+  describe('All levels', () => {
+    it('should be able to generate problems for all levels', () => {
+      const failedLevels: number[] = [];
 
-      for (let i = 1; i <= 120; i++) {
-        const levelConfig = OPERATIONS_PATH.find(l => l.level === i);
-
-        if (!levelConfig) {
-          failedLevels.push(i);
-          continue;
-        }
-
+      OPERATIONS_PATH.forEach((levelConfig) => {
         try {
           const problem = generateProblem(levelConfig);
           expect(problem.expression).toBeTruthy();
           expect(problem.correctAnswer).toBeDefined();
-        } catch (error) {
-          failedLevels.push(i);
+        } catch {
+          failedLevels.push(levelConfig.level);
         }
-      }
+      });
 
       expect(failedLevels).toEqual([]); // All levels should work
     });

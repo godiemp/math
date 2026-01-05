@@ -1,13 +1,13 @@
 /**
  * Integration Tests for Operations Practice Service
- * Tests all 130 levels end-to-end: generation + validation
+ * Tests all levels end-to-end: generation + validation
  */
 
 import { describe, it, expect } from 'vitest';
 import { generateProblem, validateAnswer } from '../services/operationsPracticeService';
 import { OPERATIONS_PATH } from '../config/operationsPath';
 
-describe('Operations Practice Service - All 130 Levels Integration', () => {
+describe('Operations Practice Service - All Levels Integration', () => {
   // Test each level individually
   OPERATIONS_PATH.forEach((levelConfig) => {
     describe(`Level ${levelConfig.level}: ${levelConfig.title}`, () => {
@@ -28,8 +28,13 @@ describe('Operations Practice Service - All 130 Levels Integration', () => {
         }
 
         // Verify problems are diverse (not all the same)
+        // Exception: Some levels have only 1 possible expression (e.g., "x+x", Fibonacci)
+        const singleExpressionTitles = ['Simplificar x+x', 'Fibonacci'];
         const uniqueExpressions = new Set(problems.map(p => p.expression));
-        expect(uniqueExpressions.size).toBeGreaterThan(1);
+
+        if (!singleExpressionTitles.includes(levelConfig.title)) {
+          expect(uniqueExpressions.size).toBeGreaterThan(1);
+        }
       });
 
       it('should validate correct answers', () => {
@@ -271,38 +276,8 @@ describe('Operations Practice Service - All 130 Levels Integration', () => {
     });
   });
 
-  // Test algorithmic operations
-  describe('Algorithmic Operations (Phase 5)', () => {
-    const algorithmicLevels = OPERATIONS_PATH.filter(l => l.phase === 'algorithmic');
-
-    algorithmicLevels.forEach(levelConfig => {
-      it(`Level ${levelConfig.level}: should generate valid algorithmic problems`, () => {
-        const problem = generateProblem(levelConfig);
-
-        expect(problem).toBeDefined();
-        expect(problem.operands.length).toBeGreaterThan(0);
-
-        // Validate the answer
-        const isValid = validateAnswer(problem, problem.answer.toString());
-        expect(isValid).toBe(true);
-      });
-
-      if (levelConfig.operationType === 'sorting') {
-        it(`Level ${levelConfig.level}: should validate sorted arrays correctly`, () => {
-          const problem = generateProblem(levelConfig);
-
-          // Answer should be a comma-separated list
-          if (typeof problem.answer === 'string') {
-            expect(problem.answer).toContain(',');
-
-            // Test with and without spaces
-            const withSpaces = problem.answer.replace(/,/g, ', ');
-            expect(validateAnswer(problem, withSpaces)).toBe(true);
-          }
-        });
-      }
-    });
-  });
+  // Note: Algorithmic Operations (Phase 5) has been removed as it contained
+  // content not directly applicable to PAES M1/M2 students
 
   // Performance test
   describe('Performance', () => {
@@ -315,7 +290,7 @@ describe('Operations Practice Service - All 130 Levels Integration', () => {
 
       const duration = Date.now() - startTime;
 
-      // All 150 levels should generate in under 1 second
+      // All levels should generate in under 1 second
       expect(duration).toBeLessThan(1000);
     });
   });
