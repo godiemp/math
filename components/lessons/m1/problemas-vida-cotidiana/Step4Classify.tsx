@@ -15,39 +15,33 @@ interface Problem {
 const PROBLEMS: Problem[] = [
   {
     id: 'p1',
-    text: '¿Cuánto pagó EN TOTAL por las 5 entradas?',
-    keyword: 'EN TOTAL',
-    correctOp: 'mul',
-  },
-  {
-    id: 'p2',
-    text: '¿Cuánto VUELTO recibió?',
+    text: '¿Cuánto VUELTO recibió después de pagar?',
     keyword: 'VUELTO',
     correctOp: 'sub',
   },
   {
+    id: 'p2',
+    text: 'Si compra 5 entradas de $2.000 CADA UNA, ¿cuánto paga?',
+    keyword: 'CADA UNA',
+    correctOp: 'mul',
+  },
+  {
     id: 'p3',
-    text: '¿Cuántos kilómetros recorrió ENTRE los dos?',
+    text: '¿Cuántos kilómetros recorrieron ENTRE los dos hermanos?',
     keyword: 'ENTRE',
     correctOp: 'sum',
   },
   {
     id: 'p4',
-    text: '¿A cuánto le toca A CADA UNO si se REPARTE en partes iguales?',
+    text: '¿A cuánto le toca si se REPARTE en partes iguales?',
     keyword: 'REPARTE',
     correctOp: 'div',
   },
   {
     id: 'p5',
-    text: '¿Cuál es la DIFERENCIA de temperatura?',
+    text: '¿Cuál es la DIFERENCIA de temperatura entre ambos días?',
     keyword: 'DIFERENCIA',
     correctOp: 'sub',
-  },
-  {
-    id: 'p6',
-    text: 'Si compra el DOBLE de productos, ¿cuánto pagará?',
-    keyword: 'DOBLE',
-    correctOp: 'mul',
   },
 ];
 
@@ -87,6 +81,11 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
       setCurrentProblem(currentProblem + 1);
       setSelectedOp(null);
       setShowFeedback(false);
+    } else {
+      // Last problem - mark as completed if correct
+      if (isCorrect && !completedProblems.includes(problem.id)) {
+        setCompletedProblems([...completedProblems, problem.id]);
+      }
     }
   };
 

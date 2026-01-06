@@ -303,9 +303,13 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
                   <p className="font-semibold text-gray-800 dark:text-gray-200 mb-1">🚗 Problemas de distancia/tiempo</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Fórmula clave: tiempo = distancia ÷ velocidad
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    Fórmula clave: <span className="font-mono font-semibold">tiempo = distancia ÷ velocidad</span>
                   </p>
+                  <div className="bg-gray-50 dark:bg-gray-900 rounded p-3 mt-2 text-sm">
+                    <p className="text-gray-700 dark:text-gray-300 mb-1 italic">&quot;Un auto viaja a 60 km/h. ¿Cuánto tarda en recorrer 150 km?&quot;</p>
+                    <p className="font-mono text-blue-600 dark:text-blue-400">tiempo = 150 ÷ 60 = 2,5 horas</p>
+                  </div>
                 </div>
               </div>
             </div>

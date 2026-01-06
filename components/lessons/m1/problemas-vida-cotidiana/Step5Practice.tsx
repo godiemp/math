@@ -10,6 +10,7 @@ interface Problem {
   context: string;
   question: string;
   emoji: string;
+  unit: string;
   options: number[];
   correctAnswer: number;
   hint: string;
@@ -22,6 +23,7 @@ const PROBLEMS: Problem[] = [
     context: 'En la mañana la temperatura era de 12°C. Durante la noche bajó 17 grados.',
     question: '¿Cuál es la temperatura ahora?',
     emoji: '🌡️',
+    unit: '°C',
     options: [-5, 5, 29, -29],
     correctAnswer: -5,
     hint: 'Recuerda: bajar temperatura = restar. El resultado puede ser negativo.',
@@ -29,23 +31,36 @@ const PROBLEMS: Problem[] = [
   },
   {
     id: 'p2',
-    context: 'Una receta para 6 personas lleva 3/4 de kilo de carne.',
-    question: '¿Cuánta carne necesitas para 4 personas?',
-    emoji: '🍖',
-    options: [0.5, 1, 0.75, 0.25],
-    correctAnswer: 0.5,
-    hint: 'Usa regla de tres: si 6 personas → 3/4 kg, entonces 4 personas → X',
-    solution: '(3/4 × 4) ÷ 6 = 3/6 = 1/2 = 0.5 kg',
+    context: 'Pedro tiene $25.000 y compra 3 pizzas de $6.500 cada una.',
+    question: '¿Cuánto vuelto recibe?',
+    emoji: '🍕',
+    unit: '',
+    options: [5500, 6000, 5000, 6500],
+    correctAnswer: 5500,
+    hint: 'Primero calcula el total (3 × $6.500), luego resta del dinero inicial.',
+    solution: 'Total: 3 × $6.500 = $19.500. Vuelto: $25.000 - $19.500 = $5.500',
   },
   {
     id: 'p3',
-    context: 'Un ciclista recorre 45 km en 3 horas a velocidad constante.',
-    question: '¿Cuántos kilómetros recorre en 5 horas?',
-    emoji: '🚴',
-    options: [75, 60, 90, 135],
-    correctAnswer: 75,
-    hint: 'Primero calcula la velocidad (km/h), luego multiplica por 5 horas.',
-    solution: 'Velocidad = 45 ÷ 3 = 15 km/h. En 5h: 15 × 5 = 75 km',
+    context: 'Ana y Luis juntan sus ahorros. Ana tiene $12.000 y Luis tiene $8.500.',
+    question: '¿Cuánto tienen entre los dos?',
+    emoji: '💰',
+    unit: '',
+    options: [20500, 21500, 19500, 3500],
+    correctAnswer: 20500,
+    hint: 'Cuando juntan dinero, debes sumar ambas cantidades.',
+    solution: '$12.000 + $8.500 = $20.500',
+  },
+  {
+    id: 'p4',
+    context: 'Un bus viaja a 80 km/h y debe recorrer 200 km.',
+    question: '¿Cuántas horas tardará en llegar?',
+    emoji: '🚌',
+    unit: ' horas',
+    options: [2.5, 3, 2, 1.5],
+    correctAnswer: 2.5,
+    hint: 'Recuerda: tiempo = distancia ÷ velocidad.',
+    solution: 'tiempo = 200 ÷ 80 = 2,5 horas',
   },
 ];
 
@@ -80,6 +95,11 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
       setSelectedAnswer(null);
       setShowFeedback(false);
       setShowHint(false);
+    } else {
+      // Last problem - mark as completed if correct
+      if (isCorrect && !completedProblems.includes(problem.id)) {
+        setCompletedProblems([...completedProblems, problem.id]);
+      }
     }
   };
 
@@ -168,7 +188,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                     : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                 )}
               >
-                {formatNumber(option)}{problem.emoji === '🌡️' ? '°C' : problem.emoji === '🍖' ? ' kg' : ' km'}
+                {problem.unit === '' ? '$' : ''}{formatNumber(option)}{problem.unit}
               </button>
             ))}
           </div>
@@ -232,7 +252,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
               ¡Excelente práctica!
             </h3>
             <p className="text-green-700 dark:text-green-300">
-              Has resuelto problemas de temperatura, recetas y distancia.
+              Has resuelto problemas de temperatura, dinero y distancia/tiempo.
             </p>
           </div>
 
