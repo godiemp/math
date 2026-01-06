@@ -53,8 +53,8 @@ export function useSkillTree() {
     setError(null);
     try {
       const response = await apiRequest<SkillTreeResponse>('/api/skill-tree');
-      if (!response.success) {
-        throw new Error(response.error?.message || 'Failed to fetch skill tree');
+      if (response.error || !response.data) {
+        throw new Error(response.error?.error || 'Failed to fetch skill tree');
       }
       setSkills(response.data.skills);
     } catch (err) {
@@ -83,14 +83,15 @@ export function useSkillTree() {
           }
         );
 
-        if (!response.success) {
-          throw new Error(response.error?.message || 'Failed to start verification');
+        if (response.error || !response.data) {
+          throw new Error(response.error?.error || 'Failed to start verification');
         }
 
+        const data = response.data;
         setVerification({
-          sessionId: response.data.sessionId,
+          sessionId: data.sessionId,
           skillId,
-          messages: [{ role: 'assistant', content: response.data.initialMessage }],
+          messages: [{ role: 'assistant', content: data.initialMessage }],
           isLoading: false,
           isVerified: false,
         });
@@ -127,22 +128,23 @@ export function useSkillTree() {
           }
         );
 
-        if (!response.success) {
-          throw new Error(response.error?.message || 'Failed to continue verification');
+        if (response.error || !response.data) {
+          throw new Error(response.error?.error || 'Failed to continue verification');
         }
 
+        const data = response.data;
         setVerification((prev) => ({
           ...prev,
           messages: [
             ...prev.messages,
-            { role: 'assistant', content: response.data.message },
+            { role: 'assistant', content: data.message },
           ],
           isLoading: false,
-          isVerified: response.data.isVerified,
+          isVerified: data.isVerified,
         }));
 
         // If verified, refresh the skill tree
-        if (response.data.isVerified) {
+        if (data.isVerified) {
           await fetchSkillTree();
         }
       } catch (err) {
