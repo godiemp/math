@@ -393,59 +393,61 @@ export const getPMFMetrics = async (req: Request, res: Response) => {
     const adminFilter = includeAdmins ? '' : "AND u.role != 'admin'";
 
     // Get active users this week with detailed engagement
+    // Using separate CTEs to avoid Cartesian product from double JOINs
     const activeUsersResult = await pool.query(`
-      WITH user_activity AS (
+      WITH activity_7d AS (
         SELECT
-          u.id,
-          u.username,
-          u.email,
-          u.display_name,
-          u.role,
-          u.created_at,
-          u.current_streak,
-          u.longest_streak,
-          COUNT(DISTINCT DATE(to_timestamp(qa.attempted_at / 1000))) as days_active_last_7d,
-          COUNT(DISTINCT DATE(to_timestamp(qa2.attempted_at / 1000))) as days_active_last_30d,
-          COUNT(qa.id) as questions_last_7d,
-          COUNT(qa2.id) as questions_last_30d,
-          SUM(COALESCE(qa.time_spent_seconds, 0)) as time_spent_last_7d_seconds,
-          SUM(COALESCE(qa2.time_spent_seconds, 0)) as time_spent_last_30d_seconds,
-          MAX(qa2.attempted_at) as last_active_at,
-          SUM(CASE WHEN qa.is_correct THEN 1 ELSE 0 END) as correct_last_7d,
-          SUM(CASE WHEN qa2.is_correct THEN 1 ELSE 0 END) as correct_last_30d
-        FROM users u
-        LEFT JOIN question_attempts qa ON u.id = qa.user_id AND qa.attempted_at >= $1
-        LEFT JOIN question_attempts qa2 ON u.id = qa2.user_id AND qa2.attempted_at >= $2
-        WHERE 1=1 ${adminFilter}
-        GROUP BY u.id, u.username, u.email, u.display_name, u.role, u.created_at, u.current_streak, u.longest_streak
+          user_id,
+          COUNT(DISTINCT DATE(to_timestamp(attempted_at / 1000))) as days_active_7d,
+          COUNT(id) as questions_7d,
+          SUM(COALESCE(time_spent_seconds, 0)) as time_spent_7d,
+          SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) as correct_7d
+        FROM question_attempts
+        WHERE attempted_at >= $1
+        GROUP BY user_id
+      ),
+      activity_30d AS (
+        SELECT
+          user_id,
+          COUNT(DISTINCT DATE(to_timestamp(attempted_at / 1000))) as days_active_30d,
+          COUNT(id) as questions_30d,
+          SUM(COALESCE(time_spent_seconds, 0)) as time_spent_30d,
+          SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) as correct_30d,
+          MAX(attempted_at) as last_active_at
+        FROM question_attempts
+        WHERE attempted_at >= $2
+        GROUP BY user_id
       )
       SELECT
-        id,
-        username,
-        email,
-        display_name,
-        role,
-        created_at,
-        current_streak,
-        longest_streak,
-        days_active_last_7d,
-        days_active_last_30d,
-        questions_last_7d,
-        questions_last_30d,
-        time_spent_last_7d_seconds,
-        time_spent_last_30d_seconds,
-        last_active_at,
-        correct_last_7d,
-        correct_last_30d,
+        u.id,
+        u.username,
+        u.email,
+        u.display_name,
+        u.role,
+        u.created_at,
+        u.current_streak,
+        u.longest_streak,
+        COALESCE(a7.days_active_7d, 0) as days_active_last_7d,
+        COALESCE(a30.days_active_30d, 0) as days_active_last_30d,
+        COALESCE(a7.questions_7d, 0) as questions_last_7d,
+        COALESCE(a30.questions_30d, 0) as questions_last_30d,
+        COALESCE(a7.time_spent_7d, 0) as time_spent_last_7d_seconds,
+        COALESCE(a30.time_spent_30d, 0) as time_spent_last_30d_seconds,
+        a30.last_active_at,
+        COALESCE(a7.correct_7d, 0) as correct_last_7d,
+        COALESCE(a30.correct_30d, 0) as correct_last_30d,
         CASE
-          WHEN days_active_last_7d >= 5 THEN 'power'
-          WHEN days_active_last_7d >= 3 THEN 'regular'
-          WHEN days_active_last_7d >= 1 THEN 'casual'
-          WHEN last_active_at IS NOT NULL AND last_active_at < $3 THEN 'dormant'
+          WHEN COALESCE(a7.days_active_7d, 0) >= 5 THEN 'power'
+          WHEN COALESCE(a7.days_active_7d, 0) >= 3 THEN 'regular'
+          WHEN COALESCE(a7.days_active_7d, 0) >= 1 THEN 'casual'
+          WHEN a30.last_active_at IS NOT NULL AND a30.last_active_at < $3 THEN 'dormant'
           ELSE 'new'
         END as user_segment,
-        (days_active_last_7d * 10 + questions_last_7d + current_streak * 5) as engagement_score
-      FROM user_activity
+        (COALESCE(a7.days_active_7d, 0) * 10 + COALESCE(a7.questions_7d, 0) + u.current_streak * 5) as engagement_score
+      FROM users u
+      LEFT JOIN activity_7d a7 ON u.id = a7.user_id
+      LEFT JOIN activity_30d a30 ON u.id = a30.user_id
+      WHERE 1=1 ${adminFilter}
       ORDER BY engagement_score DESC
     `, [sevenDaysAgo, thirtyDaysAgo, fourteenDaysAgo]);
 
