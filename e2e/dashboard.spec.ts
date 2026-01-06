@@ -241,8 +241,14 @@ test.describe('Dashboard Page', () => {
       await page.goto('/dashboard?welcome=true', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
 
-      // Click PAES invierno 2026 option
+      // Click PAES invierno 2026 option - this triggers a follow-up question
       await page.getByRole('button', { name: /PAES invierno 2026/i }).click();
+
+      // Wait for follow-up question about verano
+      await expect(page.getByText(/también darás la PAES de verano/i)).toBeVisible({ timeout: 5000 });
+
+      // Click "no, solo invierno" option
+      await page.getByRole('button', { name: /no, solo invierno/i }).click();
 
       // Wait for typing animation to complete (may take several seconds)
       await page.waitForTimeout(5000);

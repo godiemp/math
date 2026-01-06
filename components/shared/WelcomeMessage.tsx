@@ -11,7 +11,7 @@ interface WelcomeMessageProps {
   onClose: () => void;
 }
 
-type WelcomeStep = 'exam-selection' | 'winter-followup' | 'message';
+type WelcomeStep = 'exam-selection' | 'winter-followup' | 'summer-followup' | 'message';
 
 export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState<WelcomeStep>('exam-selection');
@@ -86,13 +86,11 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
 
   const handleExamSelection = (exam: 'invierno_2026' | 'verano_2026') => {
     if (exam === 'verano_2026') {
-      // Ask follow-up question for verano
+      // Ask follow-up question: also taking winter?
       setStep('winter-followup');
     } else {
-      // Go directly to message for invierno
-      setSelectedExam(exam);
-      setStep('message');
-      setIsComplete(false);
+      // Ask follow-up question: also taking summer?
+      setStep('summer-followup');
     }
   };
 
@@ -101,6 +99,16 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
       setSelectedExam('verano_e_invierno_2026');
     } else {
       setSelectedExam('verano_2026');
+    }
+    setStep('message');
+    setIsComplete(false);
+  };
+
+  const handleSummerFollowup = (alsoSummer: boolean) => {
+    if (alsoSummer) {
+      setSelectedExam('verano_e_invierno_2026');
+    } else {
+      setSelectedExam('invierno_2026');
     }
     setStep('message');
     setIsComplete(false);
@@ -215,7 +223,7 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
               </div>
             </div>
           ) : step === 'winter-followup' ? (
-            // Winter Follow-up Question (only shown if they selected verano)
+            // Winter Follow-up Question (shown if they selected verano)
             <div className="text-center">
               <div className="mb-6 sm:mb-8">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">
@@ -273,6 +281,70 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ isOpen, onClose 
                     <div className="font-bold text-lg sm:text-xl">no, solo verano</div>
                     <div className="text-xs sm:text-sm text-white/90 font-normal">
                       diciembre 2026
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          ) : step === 'summer-followup' ? (
+            // Summer Follow-up Question (shown if they selected invierno)
+            <div className="text-center">
+              <div className="mb-6 sm:mb-8">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">
+                  una pregunta más
+                </h2>
+                <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300">
+                  ¿también darás la PAES de verano 2026?
+                </p>
+              </div>
+
+              <div className="grid gap-4 sm:gap-6 max-w-md mx-auto">
+                {/* Yes, both */}
+                <button
+                  onClick={() => handleSummerFollowup(true)}
+                  className={cn(
+                    'group relative overflow-hidden',
+                    'p-4 sm:p-6 rounded-2xl',
+                    'bg-gradient-to-br from-purple-500 to-pink-500',
+                    'hover:from-purple-600 hover:to-pink-600',
+                    'text-white font-semibold text-lg',
+                    'shadow-[0_8px_24px_rgba(168,85,247,0.4)]',
+                    'hover:shadow-[0_12px_32px_rgba(168,85,247,0.5)]',
+                    'transition-all duration-300',
+                    'active:scale-[0.98]',
+                    'border border-purple-400/30'
+                  )}
+                >
+                  <div className="relative z-10">
+                    <div className="text-xl sm:text-2xl mb-1">❄️ + ☀️</div>
+                    <div className="font-bold text-lg sm:text-xl">sí, ambas</div>
+                    <div className="text-xs sm:text-sm text-white/90 font-normal">
+                      invierno y verano 2026
+                    </div>
+                  </div>
+                </button>
+
+                {/* No, just invierno */}
+                <button
+                  onClick={() => handleSummerFollowup(false)}
+                  className={cn(
+                    'group relative overflow-hidden',
+                    'p-4 sm:p-6 rounded-2xl',
+                    'bg-gradient-to-br from-gray-500 to-gray-600',
+                    'hover:from-gray-600 hover:to-gray-700',
+                    'text-white font-semibold text-lg',
+                    'shadow-[0_8px_24px_rgba(107,114,128,0.4)]',
+                    'hover:shadow-[0_12px_32px_rgba(107,114,128,0.5)]',
+                    'transition-all duration-300',
+                    'active:scale-[0.98]',
+                    'border border-gray-400/30'
+                  )}
+                >
+                  <div className="relative z-10">
+                    <div className="text-xl sm:text-2xl mb-1">❄️</div>
+                    <div className="font-bold text-lg sm:text-xl">no, solo invierno</div>
+                    <div className="text-xs sm:text-sm text-white/90 font-normal">
+                      junio 2026
                     </div>
                   </div>
                 </button>
