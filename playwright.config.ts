@@ -67,6 +67,7 @@ export default defineConfig({
         '**/registration.spec.ts',
         '**/colegio-dashboard.spec.ts',
         '**/teacher-student-sync.spec.ts', // Creates own contexts with socket mocking
+        '**/admin-*.spec.ts', // Admin tests use admin auth
       ],
     },
     // Unauthenticated tests - for login/registration flows and multi-context tests
@@ -85,6 +86,18 @@ export default defineConfig({
         '**/colegio-dashboard.spec.ts',
         '**/teacher-student-sync.spec.ts', // Uses storageState from setup
       ],
+    },
+    // Admin authenticated tests - for admin panel features
+    {
+      name: 'chromium-admin',
+      use: {
+        ...devices['Desktop Chrome'],
+        // Use saved admin authentication state from setup
+        storageState: '.auth/admin.json',
+      },
+      dependencies: ['setup'],
+      // Only run admin tests
+      testMatch: ['**/admin-*.spec.ts'],
     },
 
     // Uncomment to test on more browsers
