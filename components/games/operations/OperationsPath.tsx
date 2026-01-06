@@ -32,6 +32,8 @@ interface OperationsPathProps {
   currentPage: number;
   onPageChange: (page: number) => void;
   autoNavigateOnMount?: boolean;
+  problemCount?: number;
+  onProblemCountChange?: (count: number) => void;
 }
 
 const operationTypeColors: Record<string, string> = {
@@ -131,6 +133,8 @@ export default function OperationsPath({
   currentPage,
   onPageChange,
   autoNavigateOnMount = false,
+  problemCount = 3,
+  onProblemCountChange,
 }: OperationsPathProps) {
   const highestLevel = userProgress?.highestLevelReached || 1;
   const currentLevel = userProgress?.currentLevel || 1;
@@ -267,6 +271,19 @@ export default function OperationsPath({
                 </option>
               ))}
             </select>
+
+            {onProblemCountChange && (
+              <select
+                value={problemCount}
+                onChange={(e) => onProblemCountChange(parseInt(e.target.value, 10))}
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white min-w-[130px]"
+              >
+                <option value={3}>3 problemas</option>
+                <option value={5}>5 problemas</option>
+                <option value={10}>10 problemas</option>
+                <option value={15}>15 problemas</option>
+              </select>
+            )}
 
             {hasActiveFilters && (
               <button
@@ -431,7 +448,7 @@ export default function OperationsPath({
 
                 <div className="flex items-center justify-between text-xs text-gray-500">
                   <span>{operationTypeIcons[level.operationType]} {operationTypeNames[level.operationType] || level.operationType}</span>
-                  <span>{level.problemsToComplete} problemas</span>
+                  <span>{problemCount} problemas</span>
                 </div>
               </div>
             );

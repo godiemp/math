@@ -22,6 +22,7 @@ interface Problem {
 
 interface OperationsPracticeProps {
   level: number;
+  problemsToComplete?: number;
   onBack: () => void;
   onLevelComplete: () => void;
   onNextLevel: () => void;
@@ -29,10 +30,13 @@ interface OperationsPracticeProps {
 
 export default function OperationsPractice({
   level,
+  problemsToComplete: problemsToCompleteProp,
   onBack,
   onLevelComplete,
   onNextLevel,
 }: OperationsPracticeProps) {
+  // Use prop override or fall back to problem's default
+  const effectiveProblemsToComplete = problemsToCompleteProp ?? 3;
   const [problem, setProblem] = useState<Problem | null>(null);
   const [userAnswer, setUserAnswer] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -141,7 +145,7 @@ export default function OperationsPractice({
         recordCorrectAnswer(level);
 
         // Check if level is completed
-        if (newCorrectCount >= problem.problemsToComplete) {
+        if (newCorrectCount >= effectiveProblemsToComplete) {
           completeLevel(level);
           setShowLevelComplete(true);
           onLevelComplete();
@@ -216,7 +220,7 @@ export default function OperationsPractice({
         </button>
         <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-between sm:justify-end">
           <div className="text-xs sm:text-sm text-gray-600">
-            Progreso: {correctCount} / {problem.problemsToComplete}
+            Progreso: {correctCount} / {effectiveProblemsToComplete}
           </div>
           {canSkip && (
             <button
@@ -246,7 +250,7 @@ export default function OperationsPractice({
         <div
           className="bg-gradient-to-r from-blue-600 to-purple-600 h-3 rounded-full transition-all duration-500"
           style={{
-            width: `${(correctCount / problem.problemsToComplete) * 100}%`,
+            width: `${(correctCount / effectiveProblemsToComplete) * 100}%`,
           }}
         />
       </div>

@@ -168,3 +168,39 @@ export function getLevelStats(level: number) {
     totalAttempts: 0
   };
 }
+
+// Problem count preference
+const PROBLEM_COUNT_KEY = 'operations-problem-count';
+const DEFAULT_PROBLEM_COUNT = 3;
+const VALID_PROBLEM_COUNTS = [3, 5, 10, 15];
+
+/**
+ * Get user's preferred number of problems per level
+ */
+export function getPreferredProblemCount(): number {
+  if (typeof window === 'undefined') return DEFAULT_PROBLEM_COUNT;
+  try {
+    const stored = localStorage.getItem(PROBLEM_COUNT_KEY);
+    if (stored) {
+      const count = parseInt(stored, 10);
+      if (VALID_PROBLEM_COUNTS.includes(count)) {
+        return count;
+      }
+    }
+  } catch (error) {
+    console.error('Error loading problem count preference:', error);
+  }
+  return DEFAULT_PROBLEM_COUNT;
+}
+
+/**
+ * Save user's preferred number of problems per level
+ */
+export function setPreferredProblemCount(count: number): void {
+  if (!VALID_PROBLEM_COUNTS.includes(count)) return;
+  try {
+    localStorage.setItem(PROBLEM_COUNT_KEY, count.toString());
+  } catch (error) {
+    console.error('Error saving problem count preference:', error);
+  }
+}
