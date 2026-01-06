@@ -229,16 +229,15 @@ function ProfilePageContent() {
                     {user.targetLevel === 'M1_ONLY' ? t('onlyM1') : t('m1AndM2')}
                   </Badge>
                 </div>
-                {user.paesExamTarget && (
-                  <div className="flex items-center gap-2">
-                    <Text size="sm" variant="secondary">{t('info.paesExamTarget')}</Text>
-                    <Badge variant="info">
-                      {user.paesExamTarget === 'invierno_2026' && t('paesExam.invierno2026')}
-                      {user.paesExamTarget === 'verano_2026' && t('paesExam.verano2026')}
-                      {user.paesExamTarget === 'verano_e_invierno_2026' && t('paesExam.ambas2026')}
-                    </Badge>
-                  </div>
-                )}
+                <div className="flex items-center gap-2">
+                  <Text size="sm" variant="secondary">{t('info.paesExamTarget')}</Text>
+                  <Badge variant={user.paesExamTarget ? 'info' : 'neutral'}>
+                    {user.paesExamTarget === 'invierno_2026' && t('paesExam.invierno2026')}
+                    {user.paesExamTarget === 'verano_2026' && t('paesExam.verano2026')}
+                    {user.paesExamTarget === 'verano_e_invierno_2026' && t('paesExam.ambas2026')}
+                    {!user.paesExamTarget && t('edit.modal.paesExamNotSelected')}
+                  </Badge>
+                </div>
               </div>
             </div>
           </div>
