@@ -175,6 +175,8 @@ Tu hijo necesita sentir que:
 
 Cuando logras ese equilibrio, las conversaciones sobre la PAES dejan de ser un campo de batalla. Se vuelven lo que deberían ser: un padre apoyando a su hijo en un desafío importante.
 
+Del lado del colegio, los directivos también enfrentan el desafío de [comunicar a los apoderados sobre brechas matemáticas](/blog/comunicar-apoderados-paes-brechas-matematicas) de manera efectiva. Si el colegio lo hace bien, te facilita tu rol como padre.
+
 ## Lo que él necesita escuchar (una vez, no todos los días)
 
 **"Sé que la PAES es estresante. Estoy aquí si necesitas algo, pero no te voy a estar encima. Confío en ti."**

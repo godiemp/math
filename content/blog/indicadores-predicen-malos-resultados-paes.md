@@ -142,7 +142,7 @@ Detectar el problema es el primer paso. El segundo es actuar—y actuar correcta
 
 **No hagas:** Más de lo mismo (repetir la materia actual más lento).
 
-**Haz:** Diagnóstico específico de qué prerrequisitos faltan. Si el problema es de fracciones, trabaja fracciones—aunque estés en 2° medio enseñando funciones.
+**Haz:** Diagnóstico específico de qué prerrequisitos faltan. Si el problema es de fracciones, trabaja fracciones—aunque estés en 2° medio enseñando funciones. [Aprende a interpretar los datos de diagnóstico y actuar](/blog/interpretar-datos-diagnostico-matematicas).
 
 ### Para cursos completos en riesgo
 
