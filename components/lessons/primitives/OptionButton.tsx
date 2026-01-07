@@ -3,6 +3,7 @@
 import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { colors } from '@/lib/lessons/styles';
+import { MathText } from '@/components/math/MathDisplay';
 
 export interface OptionButtonProps {
   label: string;
@@ -90,7 +91,7 @@ export function OptionButton({
             isMono && 'font-mono'
           )}
         >
-          {label}
+          {label.includes('$') ? <MathText content={label} /> : label}
         </span>
       </div>
     </button>
