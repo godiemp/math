@@ -487,7 +487,7 @@ export async function startDiagnostic(options: StartDiagnosticOptions): Promise<
   };
 
   const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-5-20250929',
+    model: 'claude-3-5-sonnet-20241022',
     max_tokens: 500,
     system: systemPrompt,
     messages: [
@@ -592,7 +592,7 @@ export async function continueDiagnostic(options: ContinueDiagnosticOptions): Pr
   }));
 
   let response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-5-20250929',
+    model: 'claude-3-5-sonnet-20241022',
     max_tokens: 1000,
     system: systemPrompt,
     messages: claudeMessages,
@@ -625,7 +625,7 @@ export async function continueDiagnostic(options: ContinueDiagnosticOptions): Pr
 
     // Continue conversation with tool result
     response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5-20250929',
+      model: 'claude-3-5-sonnet-20241022',
       max_tokens: 1000,
       system: systemPrompt,
       messages: [
