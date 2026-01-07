@@ -1080,6 +1080,31 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_certificates_session_id ON certificates(session_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_certificates_issued_at ON certificates(issued_at)');
 
+    // ========================================
+    // SKILL TREE SYSTEM TABLES
+    // ========================================
+
+    // Create skill_tree_progress table - tracks which skills a user has verified through AI conversation
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS skill_tree_progress (
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        skill_id VARCHAR(50) NOT NULL,
+        verified_at BIGINT,
+        conversation_history JSONB DEFAULT '[]',
+        created_at BIGINT NOT NULL DEFAULT (EXTRACT(EPOCH FROM NOW()) * 1000)::BIGINT,
+        updated_at BIGINT NOT NULL DEFAULT (EXTRACT(EPOCH FROM NOW()) * 1000)::BIGINT,
+        PRIMARY KEY (user_id, skill_id)
+      )
+    `);
+
+    // Skill tree progress indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_skill_tree_progress_user_id ON skill_tree_progress(user_id)');
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_skill_tree_progress_verified
+      ON skill_tree_progress(user_id, verified_at)
+      WHERE verified_at IS NOT NULL
+    `);
+
     // Create views - Drop first to allow structure changes (e.g., adding subsection to GROUP BY)
     await client.query('DROP VIEW IF EXISTS active_problems_view CASCADE');
     await client.query('DROP VIEW IF EXISTS problem_stats_by_unit CASCADE');
