@@ -152,6 +152,8 @@ La herramienta correcta reduce trabajo desde el día 1:
 - Reportes que se leen en minutos, no en horas
 - Retroalimentación automática que no requiere intervención docente
 
+[La clave está en cómo introduces el cambio](/blog/introducir-iniciativas-matematicas-sin-resistencia)—una mala implementación puede generar resistencia incluso con la mejor herramienta.
+
 ### Paso 3: Reasigna el tiempo liberado
 
 El tiempo que se libera debe ir a tareas de alto impacto:

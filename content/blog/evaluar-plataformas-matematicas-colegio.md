@@ -213,6 +213,10 @@ Antes de empezar, define qué sería un piloto exitoso:
 
 Sin criterios predefinidos, vas a racionalizar cualquier resultado.
 
+### Implementación gradual
+
+Un piloto exitoso es solo el primer paso. [Aprende cómo introducir la herramienta al resto del equipo sin generar resistencia](/blog/introducir-iniciativas-matematicas-sin-resistencia).
+
 ## Banderas rojas que indican problemas
 
 | Señal | Lo que probablemente significa |

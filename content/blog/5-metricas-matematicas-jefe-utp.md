@@ -172,7 +172,7 @@ El jefe de UTP no dedica horas a compilar datos. Abre un dashboard y ve las 5 m�
 2. ¿Estás tomando decisiones basadas en ellas?
 3. ¿Puedes ver tendencias en el tiempo?
 
-Los datos solo sirven si los usas para cambiar algo.
+Los datos solo sirven si los usas para cambiar algo. [Aprende a interpretar los patrones en tus datos y qué hacer con cada uno](/blog/interpretar-datos-diagnostico-matematicas).
 
 ## El cambio de mentalidad
 
