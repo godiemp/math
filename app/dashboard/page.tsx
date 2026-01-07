@@ -9,6 +9,7 @@ import { ShareModal } from "@/components/shared/ShareModal";
 import { WelcomeMessage } from "@/components/shared/WelcomeMessage";
 import { ColegioDashboardView } from "@/components/dashboard/ColegioDashboardView";
 import { LiveLessonNotification } from "@/components/lessons/LiveLessonBanner";
+import { DiagnosticCard } from "@/components/diagnostic";
 import { Share2 } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { useDashboard } from "@/hooks/useDashboard";
@@ -150,21 +151,10 @@ function DashboardView({
           </div>
         </Link>
 
-        {/* Study Buddy - Coming Soon Placeholder */}
-        <Card hover className="p-6 mb-8 sm:mb-10 md:mb-12" data-testid="adaptive-learning-card">
-          <div className="text-center">
-            <div className="text-4xl mb-4">📚</div>
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <Heading level={3} size="sm">
-                Aprendizaje adaptativo
-              </Heading>
-              <Badge variant="info">Próximamente</Badge>
-            </div>
-            <Text size="sm" variant="secondary">
-              Contenido personalizado según tu progreso y objetivos
-            </Text>
-          </div>
-        </Card>
+        {/* Knowledge Diagnostic */}
+        <div className="mb-8 sm:mb-10 md:mb-12">
+          <DiagnosticCard />
+        </div>
 
         {/* Live Practice Featured Card with gradient */}
         <div className="relative overflow-hidden backdrop-blur-[20px] bg-gradient-to-r from-[#5E5CE6] to-[#0A84FF] dark:from-[#9A99FF] dark:to-[#0A84FF] rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 mb-8 sm:mb-10 md:mb-12 shadow-[0_14px_36px_rgba(0,0,0,0.22)]" data-testid="live-practice-card">
