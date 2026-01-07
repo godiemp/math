@@ -41,6 +41,7 @@ import adaptivePracticeRoutes from './routes/adaptivePracticeRoutes';
 import teacherRoutes from './routes/teacherRoutes';
 import classRoutes from './routes/classRoutes';
 import demoAccountRoutes from './routes/demoAccountRoutes';
+import skillTreeRoutes from './routes/skillTreeRoutes';
 import { serveImage } from './controllers/adminController';
 
 const app = express();
@@ -226,6 +227,7 @@ app.use('/api/adaptive', adaptivePracticeRoutes);
 app.use('/api/teacher', teacherRoutes);
 app.use('/api/classes', classRoutes);
 app.use('/api/admin/demo-accounts', demoAccountRoutes);
+app.use('/api/skill-tree', skillTreeRoutes);
 
 // Public image serving route
 app.get('/api/images/:filename', serveImage);
