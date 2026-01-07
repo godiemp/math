@@ -791,7 +791,13 @@
       "email": "Email:",
       "role": "Rol:",
       "memberSince": "Miembro desde:",
-      "targetLevel": "Nivel Objetivo:"
+      "targetLevel": "Nivel Objetivo:",
+      "paesExamTarget": "PAES Objetivo:"
+    },
+    "paesExam": {
+      "invierno2026": "Invierno 2026 (junio)",
+      "verano2026": "Verano 2026 (diciembre)",
+      "ambas2026": "Ambas 2026"
     },
     "role": {
       "admin": "Administrador",
@@ -873,6 +879,11 @@
         "m1AndM2Option": "M1 y M2 (carreras científicas/ingeniería)",
         "m1OnlyOption": "Solo M1 (otras carreras)",
         "m1Description": "Si solo necesitas M1, ocultaremos las opciones de práctica de M2",
+        "paesExamTargetQuestion": "¿Para qué PAES te estás preparando?",
+        "paesExamNotSelected": "Sin seleccionar",
+        "paesInvierno2026": "PAES Invierno 2026 (junio)",
+        "paesVerano2026": "PAES Verano 2026 (diciembre)",
+        "paesAmbas2026": "Ambas: Invierno y Verano 2026",
         "cancel": "Cancelar",
         "saving": "Guardando...",
         "saveChanges": "Guardar Cambios"

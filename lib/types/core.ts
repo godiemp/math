@@ -58,6 +58,12 @@ export type UserRole = 'student' | 'admin' | 'teacher';
 export type StudentGradeLevel = '1-medio' | '2-medio' | '3-medio' | '4-medio';
 
 /**
+ * PAES exam target
+ * Which PAES exam(s) the user is preparing for
+ */
+export type PaesExamTarget = 'invierno_2026' | 'verano_2026' | 'verano_e_invierno_2026';
+
+/**
  * Live session status lifecycle
  * - scheduled: Session is scheduled for future, lobby not open yet
  * - lobby: Lobby is open, users can join before session starts
@@ -162,6 +168,8 @@ export interface User {
   hasSeenWelcome?: boolean;
   emailVerified?: boolean;
   cookieConsent?: 'accepted' | 'declined' | null;
+  /** Target PAES exam(s) the user is preparing for */
+  paesExamTarget?: PaesExamTarget | null;
   subscription?: {
     id: number;
     userId: string;
