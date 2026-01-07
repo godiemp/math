@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, Check, Lightbulb, RotateCcw } from 'lucide-react';
+import { ArrowRight, Check, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { TriangleFigure } from '@/components/figures/TriangleFigure';
 
 type Phase = 'intro' | 'experiment' | 'discovery' | 'summary';
 
@@ -95,38 +96,46 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             </p>
 
             {/* Three triangles preview */}
-            <div className="flex justify-center py-4">
-              <svg viewBox="0 0 360 140" className="w-full max-w-md">
-                {/* Small triangle */}
-                <g>
-                  <polygon points="20,120 80,120 80,80" fill="#bfdbfe" fillOpacity="0.7" stroke="#1d4ed8" strokeWidth="2" />
-                  <text x="50" y="135" textAnchor="middle" fontSize="10" fill="#1f2937" className="dark:fill-gray-300">
-                    Pequeño
-                  </text>
-                  <path d="M 35 120 A 15 15 0 0 1 32 108" fill="none" stroke="#dc2626" strokeWidth="1.5" />
-                  <text x="42" y="113" fontSize="8" fill="#dc2626">30°</text>
-                </g>
-
-                {/* Medium triangle */}
-                <g>
-                  <polygon points="110,120 200,120 200,50" fill="#bbf7d0" fillOpacity="0.7" stroke="#16a34a" strokeWidth="2" />
-                  <text x="155" y="135" textAnchor="middle" fontSize="10" fill="#1f2937" className="dark:fill-gray-300">
-                    Mediano
-                  </text>
-                  <path d="M 130 120 A 20 20 0 0 1 126 103" fill="none" stroke="#dc2626" strokeWidth="1.5" />
-                  <text x="140" y="108" fontSize="8" fill="#dc2626">30°</text>
-                </g>
-
-                {/* Large triangle */}
-                <g>
-                  <polygon points="220,120 340,120 340,20" fill="#fde68a" fillOpacity="0.7" stroke="#d97706" strokeWidth="2" />
-                  <text x="280" y="135" textAnchor="middle" fontSize="10" fill="#1f2937" className="dark:fill-gray-300">
-                    Grande
-                  </text>
-                  <path d="M 245 120 A 25 25 0 0 1 240 100" fill="none" stroke="#dc2626" strokeWidth="1.5" />
-                  <text x="257" y="103" fontSize="8" fill="#dc2626">30°</text>
-                </g>
-              </svg>
+            <div className="flex justify-center items-end gap-4 py-4">
+              <div className="flex flex-col items-center">
+                <TriangleFigure
+                  fromAngles={{ angles: [30, 60, 90], size: 60 }}
+                  showRightAngleMarker
+                  fill="rgba(191, 219, 254, 0.7)"
+                  stroke="#1d4ed8"
+                  angles={[{ showArc: true, label: '30°', color: '#dc2626', arcRadius: 15 }, {}, {}]}
+                  showVertices={false}
+                  padding={10}
+                  className="w-20"
+                />
+                <span className="text-xs text-gray-700 dark:text-gray-300 mt-1">Pequeño</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <TriangleFigure
+                  fromAngles={{ angles: [30, 60, 90], size: 100 }}
+                  showRightAngleMarker
+                  fill="rgba(187, 247, 208, 0.7)"
+                  stroke="#16a34a"
+                  angles={[{ showArc: true, label: '30°', color: '#dc2626', arcRadius: 18 }, {}, {}]}
+                  showVertices={false}
+                  padding={10}
+                  className="w-28"
+                />
+                <span className="text-xs text-gray-700 dark:text-gray-300 mt-1">Mediano</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <TriangleFigure
+                  fromAngles={{ angles: [30, 60, 90], size: 140 }}
+                  showRightAngleMarker
+                  fill="rgba(253, 230, 138, 0.7)"
+                  stroke="#d97706"
+                  angles={[{ showArc: true, label: '30°', color: '#dc2626', arcRadius: 22 }, {}, {}]}
+                  showVertices={false}
+                  padding={10}
+                  className="w-36"
+                />
+                <span className="text-xs text-gray-700 dark:text-gray-300 mt-1">Grande</span>
+              </div>
             </div>
 
             <div className="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-4 border border-amber-200 dark:border-amber-700">
@@ -155,16 +164,14 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   // ============ PHASE 2: EXPERIMENT ============
   if (phase === 'experiment') {
     const colors = [
-      { fill: '#bfdbfe', stroke: '#1d4ed8', name: 'blue' },
-      { fill: '#bbf7d0', stroke: '#16a34a', name: 'green' },
-      { fill: '#fde68a', stroke: '#d97706', name: 'amber' },
+      { fill: 'rgba(191, 219, 254, 0.7)', stroke: '#1d4ed8' },
+      { fill: 'rgba(187, 247, 208, 0.7)', stroke: '#16a34a' },
+      { fill: 'rgba(253, 230, 138, 0.7)', stroke: '#d97706' },
     ];
     const color = colors[currentTriangle];
 
-    // Scale factor for SVG visualization
-    const scaleFactor = 8;
-    const adjScaled = triangle.adjacent * scaleFactor;
-    const oppScaled = triangle.opposite * scaleFactor;
+    // Triangle sizes for visualization
+    const triangleSizes = [100, 140, 180];
 
     return (
       <div className="space-y-6 animate-fadeIn pb-32">
@@ -199,64 +206,21 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
           {/* Triangle visualization */}
           <div className="flex justify-center mb-6">
-            <svg viewBox="0 0 200 160" className="w-64">
-              {/* Triangle */}
-              <polygon
-                points={`20,140 ${20 + adjScaled},140 ${20 + adjScaled},${140 - oppScaled}`}
-                fill={color.fill}
-                fillOpacity="0.7"
-                stroke={color.stroke}
-                strokeWidth="3"
-              />
-
-              {/* Right angle marker */}
-              <rect
-                x={20 + adjScaled - 12}
-                y={140 - 12}
-                width="12"
-                height="12"
-                fill="none"
-                stroke={color.stroke}
-                strokeWidth="1.5"
-              />
-
-              {/* Angle arc at 30° */}
-              <path d="M 45 140 A 25 25 0 0 1 40 120" fill="none" stroke="#dc2626" strokeWidth="2" />
-              <text x="55" y="130" fontSize="14" fontWeight="bold" fill="#dc2626">
-                30°
-              </text>
-
-              {/* Side labels */}
-              <text
-                x={20 + adjScaled / 2}
-                y="155"
-                textAnchor="middle"
-                fontSize="12"
-                fontWeight="bold"
-                fill="#059669"
-              >
-                Ady: {triangle.adjacent}
-              </text>
-              <text
-                x={25 + adjScaled + 5}
-                y={140 - oppScaled / 2}
-                fontSize="12"
-                fontWeight="bold"
-                fill="#dc2626"
-              >
-                Op: {triangle.opposite}
-              </text>
-              <text
-                x={20 + adjScaled / 2 - 10}
-                y={140 - oppScaled / 2 - 10}
-                fontSize="12"
-                fontWeight="bold"
-                fill="#7c3aed"
-                transform={`rotate(-25, ${20 + adjScaled / 2 - 10}, ${140 - oppScaled / 2 - 10})`}
-              >
-                Hip: {triangle.hypotenuse}
-              </text>
-            </svg>
+            <TriangleFigure
+              fromAngles={{ angles: [30, 60, 90], size: triangleSizes[currentTriangle] }}
+              showRightAngleMarker
+              fill={color.fill}
+              stroke={color.stroke}
+              strokeWidth={3}
+              angles={[{ showArc: true, label: '30°', color: '#dc2626' }, {}, {}]}
+              sides={[
+                { labelPrefix: 'Hip:', measurement: String(triangle.hypotenuse), labelColor: '#7c3aed' },
+                { labelPrefix: 'Op:', measurement: String(triangle.opposite), labelColor: '#dc2626' },
+                { labelPrefix: 'Ady:', measurement: String(triangle.adjacent), labelColor: '#059669' },
+              ]}
+              showVertices={false}
+              className="w-64"
+            />
           </div>
 
           {/* Ratio calculation buttons */}

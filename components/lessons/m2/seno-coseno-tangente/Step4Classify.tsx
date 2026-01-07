@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, Check, X, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { TriangleFigure } from '@/components/figures/TriangleFigure';
 
 type RatioType = 'sin' | 'cos' | 'tan';
 
@@ -175,62 +176,43 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
               </p>
 
               {/* Visual representation */}
-              <div className="flex justify-center mb-4">
-                <svg viewBox="0 0 200 140" className="w-56">
-                  {/* Triangle */}
-                  <polygon
-                    points="30,120 170,120 170,30"
-                    fill="#e0e7ff"
-                    fillOpacity="0.5"
-                    stroke="#4f46e5"
-                    strokeWidth="2"
-                  />
-
-                  {/* Right angle marker */}
-                  <rect x="158" y="108" width="12" height="12" fill="none" stroke="#4f46e5" strokeWidth="1.5" />
-
-                  {/* Angle θ */}
-                  <path d="M 55 120 A 25 25 0 0 1 48 100" fill="none" stroke="#dc2626" strokeWidth="2" />
-                  <text x="65" y="110" fontSize="14" fontWeight="bold" fill="#dc2626">
-                    θ
-                  </text>
-
-                  {/* Side labels based on what's known/unknown */}
-                  <text
-                    x="100"
-                    y="135"
-                    textAnchor="middle"
-                    fontSize="11"
-                    fontWeight="bold"
-                    fill={currentProblem.knownSides.includes('Adyacente') ? '#059669' : '#9ca3af'}
-                  >
-                    Adyacente
-                  </text>
-                  <text
-                    x="183"
-                    y="80"
-                    fontSize="11"
-                    fontWeight="bold"
-                    fill={currentProblem.knownSides.includes('Opuesto') ? '#dc2626' : '#9ca3af'}
-                  >
-                    Op
-                  </text>
-                  <text
-                    x="85"
-                    y="65"
-                    fontSize="11"
-                    fontWeight="bold"
-                    fill={currentProblem.knownSides.includes('Hipotenusa') ? '#7c3aed' : '#9ca3af'}
-                    transform="rotate(-32, 85, 65)"
-                  >
-                    Hip
-                  </text>
-
-                  {/* Unknown indicator */}
-                  <text x="100" y="20" textAnchor="middle" fontSize="12" fill="#f59e0b" fontWeight="bold">
-                    ¿{currentProblem.unknownSide}?
-                  </text>
-                </svg>
+              <div className="flex flex-col items-center mb-4">
+                <div className="text-sm font-bold text-amber-500 mb-2">
+                  ¿{currentProblem.unknownSide}?
+                </div>
+                <TriangleFigure
+                  fromAngles={{ angles: [30, 60, 90], size: 140 }}
+                  showRightAngleMarker
+                  fill="rgba(224, 231, 255, 0.5)"
+                  stroke="#4f46e5"
+                  angles={[
+                    { showArc: true, label: 'θ', color: '#dc2626' },
+                    {},
+                    {},
+                  ]}
+                  sides={[
+                    {
+                      label: 'Hip',
+                      labelColor: currentProblem.knownSides.includes('Hipotenusa')
+                        ? '#7c3aed'
+                        : '#9ca3af',
+                    },
+                    {
+                      label: 'Op',
+                      labelColor: currentProblem.knownSides.includes('Opuesto')
+                        ? '#dc2626'
+                        : '#9ca3af',
+                    },
+                    {
+                      label: 'Ady',
+                      labelColor: currentProblem.knownSides.includes('Adyacente')
+                        ? '#059669'
+                        : '#9ca3af',
+                    },
+                  ]}
+                  showVertices={false}
+                  className="w-56"
+                />
               </div>
 
               <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-3 inline-block">

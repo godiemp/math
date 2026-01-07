@@ -308,15 +308,28 @@ function SideLabel({ vertices, sideIndex, config }: SideLabelProps) {
   const p1 = vertices[sideIndex];
   const p2 = vertices[(sideIndex + 1) % 3];
   const pos = calculateSideLabelPosition(p1, p2, vertices, 15);
-  const labelText = config.showMeasurement ? config.measurement : config.label;
+
+  // Build label text: prefix + value, or just label/measurement
+  let labelText: string | undefined;
+  if (config.labelPrefix && config.measurement) {
+    // Trigonometry format: "Op: 3" or "Ady: 5.2"
+    labelText = `${config.labelPrefix} ${config.measurement}`;
+  } else if (config.showMeasurement && config.measurement) {
+    labelText = config.measurement;
+  } else {
+    labelText = config.label;
+  }
 
   if (!labelText) return null;
+
+  // Use labelColor if specified, otherwise fall back to color or default
+  const textColor = config.labelColor || config.color || DEFAULT_COLORS.stroke;
 
   return (
     <text
       x={pos.x}
       y={pos.y}
-      fill={config.color || DEFAULT_COLORS.stroke}
+      fill={textColor}
       fontSize="13"
       fontWeight="600"
       textAnchor="middle"

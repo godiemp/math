@@ -18,10 +18,14 @@ export interface LabeledPoint {
 export interface SideConfig {
   /** Label for the side (e.g., 'a', 'b', 'c') */
   label?: string;
-  /** Measurement with units (e.g., '5 cm', '3 m') */
+  /** Prefix shown before the value (e.g., 'Op:', 'Ady:', 'Hip:') for trigonometry */
+  labelPrefix?: string;
+  /** Measurement with units (e.g., '5 cm', '3 m') or numeric value */
   measurement?: string;
-  /** Custom stroke color */
+  /** Custom stroke color for the side line */
   color?: string;
+  /** Custom label/text color (defaults to stroke color if not set) */
+  labelColor?: string;
   /** Stroke style */
   strokeStyle?: 'solid' | 'dashed' | 'dotted';
   /** Stroke width override */

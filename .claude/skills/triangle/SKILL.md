@@ -176,12 +176,16 @@ interface LabeledPoint {
 ```typescript
 interface SideConfig {
   label?: string;           // Etiqueta del lado (ej: 'a', 'b', 'c')
-  measurement?: string;     // Medida con unidades (ej: '5 cm')
-  color?: string;           // Color personalizado
+  labelPrefix?: string;     // Prefijo para trigonometría (ej: 'Op:', 'Ady:', 'Hip:')
+  measurement?: string;     // Medida con unidades (ej: '5 cm') o valor numérico
+  color?: string;           // Color del lado (stroke)
+  labelColor?: string;      // Color del texto/etiqueta (por defecto usa color)
   strokeStyle?: 'solid' | 'dashed' | 'dotted';
   showMeasurement?: boolean;
 }
 ```
+
+> **Nota para trigonometría:** Usa `labelPrefix` + `measurement` para mostrar etiquetas como "Op: 3", "Ady: 5.2", "Hip: 6". Usa `labelColor` para diferenciar cada lado visualmente.
 
 ### Angle Configuration
 
@@ -316,6 +320,55 @@ interface SpecialLineConfig {
     { type: 'mediana', fromVertex: 0, strokeStyle: 'dashed' },
     { type: 'mediana', fromVertex: 1, strokeStyle: 'dashed' },
     { type: 'mediana', fromVertex: 2, strokeStyle: 'dashed' },
+  ]}
+/>
+```
+
+### Trigonometría: Seno, Coseno y Tangente
+
+Para lecciones de trigonometría, usa `labelPrefix` y `labelColor` para mostrar los lados con sus nombres (Opuesto, Adyacente, Hipotenusa) y colores diferenciados:
+
+```tsx
+<TriangleFigure
+  fromAngles={{ angles: [30, 60, 90], size: 180 }}
+  showRightAngleMarker
+  angles={[
+    { showArc: true, label: '30°', color: '#dc2626' },  // Ángulo de referencia
+    {},
+    {},
+  ]}
+  sides={[
+    { labelPrefix: 'Hip:', measurement: '10', labelColor: '#7c3aed' },   // Hipotenusa (púrpura)
+    { labelPrefix: 'Op:', measurement: '5', labelColor: '#dc2626' },    // Opuesto (rojo)
+    { labelPrefix: 'Ady:', measurement: '8.66', labelColor: '#059669' }, // Adyacente (verde)
+  ]}
+/>
+```
+
+**Colores estándar para trigonometría:**
+- **Opuesto:** `#dc2626` (rojo)
+- **Adyacente:** `#059669` (verde)
+- **Hipotenusa:** `#7c3aed` (púrpura)
+- **Ángulo θ:** `#dc2626` (rojo)
+
+**Ejemplo con triángulo dinámico:**
+
+```tsx
+// En Step2Explore.tsx - triángulo con valores dinámicos
+const triangle = { opposite: 3, adjacent: 5.2, hypotenuse: 6, angle: 30 };
+
+<TriangleFigure
+  fromAngles={{ angles: [triangle.angle, 90 - triangle.angle, 90], size: 150 }}
+  showRightAngleMarker
+  angles={[
+    { showArc: true, label: `${triangle.angle}°`, color: '#dc2626' },
+    {},
+    {},
+  ]}
+  sides={[
+    { labelPrefix: 'Hip:', measurement: String(triangle.hypotenuse), labelColor: '#7c3aed' },
+    { labelPrefix: 'Op:', measurement: String(triangle.opposite), labelColor: '#dc2626' },
+    { labelPrefix: 'Ady:', measurement: String(triangle.adjacent), labelColor: '#059669' },
   ]}
 />
 ```

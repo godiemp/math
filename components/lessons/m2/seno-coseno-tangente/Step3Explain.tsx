@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, BookOpen, Lightbulb, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { TriangleFigure } from '@/components/figures/TriangleFigure';
 
 type TabId = 'sin' | 'cos' | 'tan' | 'tips';
 
@@ -229,38 +230,20 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               ¿Cómo identificar los lados?
             </h4>
             <div className="flex justify-center">
-              <svg viewBox="0 0 250 180" className="w-64">
-                {/* Triangle */}
-                <polygon
-                  points="30,150 220,150 220,30"
-                  fill="#e0e7ff"
-                  fillOpacity="0.5"
-                  stroke="#4f46e5"
-                  strokeWidth="2"
-                />
-
-                {/* Right angle marker */}
-                <rect x="205" y="135" width="15" height="15" fill="none" stroke="#4f46e5" strokeWidth="1.5" />
-
-                {/* Angle θ */}
-                <path d="M 60 150 A 30 30 0 0 1 52 125" fill="none" stroke="#dc2626" strokeWidth="2" />
-                <text x="70" y="135" fontSize="14" fontWeight="bold" fill="#dc2626">θ</text>
-
-                {/* Side labels with arrows */}
-                <text x="125" y="170" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#059669">
-                  ADYACENTE (junto a θ)
-                </text>
-                <text x="235" y="95" fontSize="12" fontWeight="bold" fill="#dc2626" transform="rotate(90, 235, 95)">
-                  OPUESTO
-                </text>
-                <text x="110" y="75" fontSize="12" fontWeight="bold" fill="#7c3aed" transform="rotate(-32, 110, 75)">
-                  HIPOTENUSA
-                </text>
-
-                {/* Annotation arrows */}
-                <line x1="30" y1="145" x2="30" y2="100" stroke="#dc2626" strokeWidth="1" strokeDasharray="3,3" />
-                <text x="15" y="125" fontSize="9" fill="#dc2626">frente a θ</text>
-              </svg>
+              <TriangleFigure
+                fromAngles={{ angles: [30, 60, 90], size: 160 }}
+                showRightAngleMarker
+                fill="rgba(224, 231, 255, 0.5)"
+                stroke="#4f46e5"
+                angles={[{ showArc: true, label: 'θ', color: '#dc2626' }, {}, {}]}
+                sides={[
+                  { label: 'HIPOTENUSA', labelColor: '#7c3aed' },
+                  { label: 'OPUESTO (frente a θ)', labelColor: '#dc2626' },
+                  { label: 'ADYACENTE (junto a θ)', labelColor: '#059669' },
+                ]}
+                showVertices={false}
+                className="w-64"
+              />
             </div>
           </div>
         </div>

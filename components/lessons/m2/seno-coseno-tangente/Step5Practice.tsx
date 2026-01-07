@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Check, X, RotateCcw, ArrowRight, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { TriangleFigure } from '@/components/figures/TriangleFigure';
 
 interface Problem {
   id: string;
