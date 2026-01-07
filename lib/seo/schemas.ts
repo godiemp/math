@@ -54,7 +54,7 @@ export const courseSchema = {
   "@id": `${SITE_URL}/#course`,
   name: "Matemáticas Enseñanza Media + PAES",
   description:
-    "Curso de matemáticas para enseñanza media (1° a 4° medio) con mini-lecciones, Tutor AI 24/7, y +900 ejercicios. Preparación PAES incluida.",
+    "Curso de matemáticas para enseñanza media (7° Básico a 4° Medio) con mini-lecciones, Tutor AI 24/7, y +900 ejercicios. Preparación PAES incluida.",
   provider: { "@id": `${SITE_URL}/#organization` },
   educationalLevel: "Educación Media / Preparación Universitaria",
   inLanguage: "es-CL",
@@ -82,7 +82,7 @@ export const faqSchema = {
       name: "¿Qué es SimplePAES?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "SimplePAES es una plataforma de matemáticas para enseñanza media en Chile (1° a 4° medio). Ofrece más de 900 ejercicios, mini-lecciones interactivas que te explican el por qué, un Tutor AI Socrático, y preparación completa para la PAES.",
+        text: "SimplePAES es una plataforma de matemáticas para enseñanza media en Chile (7° Básico a 4° Medio). Ofrece más de 900 ejercicios, mini-lecciones interactivas que te explican el por qué, un Tutor AI Socrático, y preparación completa para la PAES.",
       },
     },
     {
@@ -134,7 +134,7 @@ export const howToSchema = {
   "@type": "HowTo",
   name: "Cómo dominar matemáticas de enseñanza media con SimplePAES",
   description:
-    "Guía paso a paso para usar SimplePAES y dominar matemáticas de 1° a 4° medio, con preparación PAES",
+    "Guía paso a paso para usar SimplePAES y dominar matemáticas de 7° Básico a 4° Medio, con preparación PAES",
   totalTime: "P1M",
   tool: [{ "@type": "HowToTool", name: "Computador o celular con internet" }],
   step: [

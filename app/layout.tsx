@@ -20,9 +20,11 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Domina matemáticas de enseñanza media con +900 ejercicios, mini-lecciones y Tutor AI 24/7. De 1° a 4° medio. Prepárate para la PAES con feedback personalizado.",
+    "Domina matemáticas de enseñanza media con +900 ejercicios, mini-lecciones y Tutor AI 24/7. De 7° Básico a 4° Medio. Prepárate para la PAES con feedback personalizado.",
   keywords: [
     "matemáticas enseñanza media",
+    "matemáticas 7 basico",
+    "matemáticas 8 basico",
     "matemáticas 1 medio",
     "matemáticas 2 medio",
     "matemáticas 3 medio",
@@ -72,7 +74,7 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: `${SITE_NAME} - Matemáticas Enseñanza Media y PAES Chile`,
     description:
-      "Domina matemáticas de 1° a 4° medio con +900 ejercicios y Tutor AI 24/7. Preparación PAES incluida.",
+      "Domina matemáticas de 7° Básico a 4° Medio con +900 ejercicios y Tutor AI 24/7. Preparación PAES incluida.",
   },
   twitter: {
     card: "summary_large_image",
@@ -80,7 +82,7 @@ export const metadata: Metadata = {
     creator: "@simplepaes",
     title: `${SITE_NAME} - Matemáticas Enseñanza Media y PAES Chile`,
     description:
-      "Domina matemáticas de 1° a 4° medio con +900 ejercicios y Tutor AI 24/7. Preparación PAES incluida.",
+      "Domina matemáticas de 7° Básico a 4° Medio con +900 ejercicios y Tutor AI 24/7. Preparación PAES incluida.",
   },
   verification: {
     google: "qUpZQBRnFZsJlAUvhjXsEIqyvGOpKlJUq-nQNONxrXc",

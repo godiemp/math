@@ -3,7 +3,7 @@
 const stats = [
   { value: '40+', label: 'lecciones interactivas' },
   { value: '900+', label: 'ejercicios de práctica' },
-  { value: '4 niveles', label: '1° a 4° medio cubiertos' },
+  { value: '6 niveles', label: '7° Básico a 4° Medio' },
   { value: 'Tutor AI', label: 'disponible 24/7' },
 ];
 

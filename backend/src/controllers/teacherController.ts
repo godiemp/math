@@ -10,9 +10,9 @@ import { Request, Response } from 'express';
 import { pool } from '../config/database';
 import { StudentAccountService, type GradeLevel } from '../services/studentAccountService';
 
-type StudentGradeLevel = '1-medio' | '2-medio' | '3-medio' | '4-medio';
+type StudentGradeLevel = '7-basico' | '8-basico' | '1-medio' | '2-medio' | '3-medio' | '4-medio';
 
-const VALID_GRADE_LEVELS: StudentGradeLevel[] = ['1-medio', '2-medio', '3-medio', '4-medio'];
+const VALID_GRADE_LEVELS: StudentGradeLevel[] = ['7-basico', '8-basico', '1-medio', '2-medio', '3-medio', '4-medio'];
 
 interface StudentForTeacher {
   id: string;

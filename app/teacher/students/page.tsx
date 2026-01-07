@@ -13,6 +13,8 @@ import {
 } from '@/hooks/teacher';
 
 const GRADE_LEVELS: { value: StudentGradeLevel; label: string }[] = [
+  { value: '7-basico', label: '7° Básico' },
+  { value: '8-basico', label: '8° Básico' },
   { value: '1-medio', label: '1° Medio' },
   { value: '2-medio', label: '2° Medio' },
   { value: '3-medio', label: '3° Medio' },
