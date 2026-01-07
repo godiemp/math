@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, Check, ChevronRight } from 'lucide-react';
 import { LessonStepProps } from '@/lib/lessons/types';
 import { ActionButton } from '@/components/lessons/primitives';
+import { BlockMath, InlineMath } from '@/components/math/MathDisplay';
 
 type Phase = 'derivation' | 'anatomy' | 'discriminant';
 
@@ -44,26 +45,26 @@ const FORMULA_PARTS: FormulaPart[] = [
 const DISCRIMINANT_CASES = [
   {
     id: 'positive',
-    condition: 'b² - 4ac > 0',
+    conditionLatex: 'b^2 - 4ac > 0',
     solutions: 'Dos soluciones reales diferentes',
-    example: 'x² - 5x + 6 = 0 → Δ = 25 - 24 = 1 > 0',
-    result: 'x = 2 y x = 3',
+    exampleLatex: 'x^2 - 5x + 6 = 0 \\rightarrow \\Delta = 25 - 24 = 1 > 0',
+    resultLatex: 'x = 2 \\text{ y } x = 3',
     color: 'green',
   },
   {
     id: 'zero',
-    condition: 'b² - 4ac = 0',
+    conditionLatex: 'b^2 - 4ac = 0',
     solutions: 'Una solución real (repetida)',
-    example: 'x² - 6x + 9 = 0 → Δ = 36 - 36 = 0',
-    result: 'x = 3 (doble)',
+    exampleLatex: 'x^2 - 6x + 9 = 0 \\rightarrow \\Delta = 36 - 36 = 0',
+    resultLatex: 'x = 3 \\text{ (doble)}',
     color: 'amber',
   },
   {
     id: 'negative',
-    condition: 'b² - 4ac < 0',
+    conditionLatex: 'b^2 - 4ac < 0',
     solutions: 'No hay soluciones reales',
-    example: 'x² + 1 = 0 → Δ = 0 - 4 = -4 < 0',
-    result: 'Sin solución real',
+    exampleLatex: 'x^2 + 1 = 0 \\rightarrow \\Delta = 0 - 4 = -4 < 0',
+    resultLatex: '\\text{Sin solución real}',
     color: 'red',
   },
 ];
@@ -117,7 +118,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 <div className="bg-blue-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">1</div>
                 <div className="flex-1">
                   <p className="text-gray-500 dark:text-gray-400 text-sm">Ecuación general:</p>
-                  <p className="font-mono text-lg text-gray-800 dark:text-gray-200">ax² + bx + c = 0</p>
+                  <div className="text-lg text-gray-800 dark:text-gray-200">
+                    <InlineMath latex="ax^2 + bx + c = 0" />
+                  </div>
                 </div>
               </div>
 
@@ -125,7 +128,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 <div className="bg-purple-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
                 <div className="flex-1">
                   <p className="text-gray-500 dark:text-gray-400 text-sm">Dividimos por a:</p>
-                  <p className="font-mono text-lg text-gray-800 dark:text-gray-200">x² + (b/a)x + (c/a) = 0</p>
+                  <div className="text-lg text-gray-800 dark:text-gray-200">
+                    <InlineMath latex="x^2 + \frac{b}{a}x + \frac{c}{a} = 0" />
+                  </div>
                 </div>
               </div>
 
@@ -133,7 +138,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 <div className="bg-teal-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">3</div>
                 <div className="flex-1">
                   <p className="text-gray-500 dark:text-gray-400 text-sm">Completamos el cuadrado:</p>
-                  <p className="font-mono text-lg text-gray-800 dark:text-gray-200">(x + b/2a)² = (b² - 4ac) / 4a²</p>
+                  <div className="text-lg text-gray-800 dark:text-gray-200">
+                    <InlineMath latex="\left(x + \frac{b}{2a}\right)^2 = \frac{b^2 - 4ac}{4a^2}" />
+                  </div>
                 </div>
               </div>
 
@@ -141,7 +148,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 <div className="bg-pink-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">4</div>
                 <div className="flex-1">
                   <p className="text-gray-500 dark:text-gray-400 text-sm">Despejamos x:</p>
-                  <p className="font-mono text-lg text-gray-800 dark:text-gray-200">x + b/2a = ±√(b² - 4ac) / 2a</p>
+                  <div className="text-lg text-gray-800 dark:text-gray-200">
+                    <InlineMath latex="x + \frac{b}{2a} = \pm\frac{\sqrt{b^2 - 4ac}}{2a}" />
+                  </div>
                 </div>
               </div>
 
@@ -149,7 +158,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 <div className="bg-green-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">5</div>
                 <div className="flex-1">
                   <p className="text-gray-500 dark:text-gray-400 text-sm">Resultado final:</p>
-                  <p className="font-mono text-2xl font-bold text-green-600 dark:text-green-400">x = (-b ± √(b² - 4ac)) / 2a</p>
+                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                    <BlockMath latex="x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -319,7 +330,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
         <div className="space-y-6 animate-fadeIn">
           <div className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 rounded-2xl p-6 border border-teal-200 dark:border-teal-800">
             <h3 className="text-lg font-bold text-center text-gray-800 dark:text-gray-200 mb-2">
-              El Discriminante: b² - 4ac
+              El Discriminante: <InlineMath latex="b^2 - 4ac" />
             </h3>
             <p className="text-center text-gray-600 dark:text-gray-400 mb-6">
               El valor dentro de la raíz determina cuántas soluciones tiene la ecuación
@@ -362,31 +373,33 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                       )}
                     </div>
                     <div className="flex-1">
-                      <p className={`font-mono font-bold mb-1 ${
+                      <div className={`font-bold mb-1 ${
                         caseItem.color === 'green'
                           ? 'text-green-700 dark:text-green-300'
                           : caseItem.color === 'amber'
                             ? 'text-amber-700 dark:text-amber-300'
                             : 'text-red-700 dark:text-red-300'
                       }`}>
-                        {caseItem.condition}
-                      </p>
+                        <InlineMath latex={caseItem.conditionLatex} />
+                      </div>
                       <p className="text-gray-700 dark:text-gray-300 font-medium">
                         {caseItem.solutions}
                       </p>
                       {discoveredCases.has(caseItem.id) && (
                         <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600 animate-fadeIn">
                           <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Ejemplo:</p>
-                          <p className="font-mono text-sm text-gray-600 dark:text-gray-400">{caseItem.example}</p>
-                          <p className={`font-mono font-bold mt-1 ${
+                          <div className="text-sm text-gray-600 dark:text-gray-400">
+                            <InlineMath latex={caseItem.exampleLatex} />
+                          </div>
+                          <div className={`font-bold mt-1 ${
                             caseItem.color === 'green'
                               ? 'text-green-600 dark:text-green-400'
                               : caseItem.color === 'amber'
                                 ? 'text-amber-600 dark:text-amber-400'
                                 : 'text-red-600 dark:text-red-400'
                           }`}>
-                            → {caseItem.result}
-                          </p>
+                            → <InlineMath latex={caseItem.resultLatex} />
+                          </div>
                         </div>
                       )}
                     </div>

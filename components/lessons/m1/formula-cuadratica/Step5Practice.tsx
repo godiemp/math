@@ -11,6 +11,7 @@ import {
   ActionButton,
   ResultsSummary,
 } from '@/components/lessons/primitives';
+import { BlockMath, InlineMath, MathText } from '@/components/math/MathDisplay';
 
 interface Problem {
   id: string;
@@ -27,52 +28,52 @@ const PROBLEMS: Problem[] = [
   {
     id: 'p1',
     question: 'Resuelve usando la fórmula cuadrática:',
-    equation: 'x² + 2x - 8 = 0',
-    coefficients: 'a = 1, b = 2, c = -8',
-    hint: 'Δ = 4 - 4(1)(-8) = 4 + 32 = 36. Como √36 = 6, las soluciones serán enteros.',
-    options: ['x = 2 y x = -4', 'x = -2 y x = 4', 'x = 4 y x = 2', 'x = -4 y x = -2'],
+    equation: 'x^2 + 2x - 8 = 0',
+    coefficients: '$a = 1$, $b = 2$, $c = -8$',
+    hint: '$\\Delta = 4 - 4(1)(-8) = 4 + 32 = 36$. Como $\\sqrt{36} = 6$, las soluciones serán enteros.',
+    options: ['$x = 2$ y $x = -4$', '$x = -2$ y $x = 4$', '$x = 4$ y $x = 2$', '$x = -4$ y $x = -2$'],
     correctAnswer: 0,
-    explanation: 'x = (-2 ± √36) / 2 = (-2 ± 6) / 2. Entonces x = 4/2 = 2 y x = -8/2 = -4.',
+    explanation: '$x = (-2 \\pm \\sqrt{36}) / 2 = (-2 \\pm 6) / 2$. Entonces $x = 4/2 = 2$ y $x = -8/2 = -4$.',
   },
   {
     id: 'p2',
     question: 'Resuelve usando la fórmula cuadrática:',
-    equation: 'x² - 6x + 9 = 0',
-    coefficients: 'a = 1, b = -6, c = 9',
-    hint: 'Δ = 36 - 36 = 0. Cuando el discriminante es cero, hay una sola solución (repetida).',
-    options: ['x = -3 (doble)', 'x = 6 (doble)', 'x = 3 (doble)', 'x = 9 (doble)'],
+    equation: 'x^2 - 6x + 9 = 0',
+    coefficients: '$a = 1$, $b = -6$, $c = 9$',
+    hint: '$\\Delta = 36 - 36 = 0$. Cuando el discriminante es cero, hay una sola solución (repetida).',
+    options: ['$x = -3$ (doble)', '$x = 6$ (doble)', '$x = 3$ (doble)', '$x = 9$ (doble)'],
     correctAnswer: 2,
-    explanation: 'x = (6 ± √0) / 2 = 6/2 = 3. Es una solución doble porque Δ = 0.',
+    explanation: '$x = (6 \\pm \\sqrt{0}) / 2 = 6/2 = 3$. Es una solución doble porque $\\Delta = 0$.',
   },
   {
     id: 'p3',
     question: 'Resuelve usando la fórmula cuadrática:',
-    equation: '2x² + 5x - 3 = 0',
-    coefficients: 'a = 2, b = 5, c = -3',
-    hint: 'Δ = 25 - 4(2)(-3) = 25 + 24 = 49. √49 = 7. No olvides dividir por 2a = 4.',
-    options: ['x = 3 y x = -1/2', 'x = 1/2 y x = -3', 'x = -1/2 y x = 3', 'x = 3/2 y x = -1'],
+    equation: '2x^2 + 5x - 3 = 0',
+    coefficients: '$a = 2$, $b = 5$, $c = -3$',
+    hint: '$\\Delta = 25 - 4(2)(-3) = 25 + 24 = 49$. $\\sqrt{49} = 7$. No olvides dividir por $2a = 4$.',
+    options: ['$x = 3$ y $x = -1/2$', '$x = 1/2$ y $x = -3$', '$x = -1/2$ y $x = 3$', '$x = 3/2$ y $x = -1$'],
     correctAnswer: 1,
-    explanation: 'x = (-5 ± 7) / 4. Entonces x = 2/4 = 1/2 y x = -12/4 = -3.',
+    explanation: '$x = (-5 \\pm 7) / 4$. Entonces $x = 2/4 = 1/2$ y $x = -12/4 = -3$.',
   },
   {
     id: 'p4',
     question: '¿Cuántas soluciones reales tiene?',
-    equation: 'x² + 4x + 5 = 0',
-    coefficients: 'a = 1, b = 4, c = 5',
-    hint: 'Calcula el discriminante: Δ = 16 - 20 = -4. ¿Qué significa un discriminante negativo?',
+    equation: 'x^2 + 4x + 5 = 0',
+    coefficients: '$a = 1$, $b = 4$, $c = 5$',
+    hint: 'Calcula el discriminante: $\\Delta = 16 - 20 = -4$. ¿Qué significa un discriminante negativo?',
     options: ['No tiene soluciones reales', 'Una solución real', 'Dos soluciones reales', 'Infinitas soluciones'],
     correctAnswer: 0,
-    explanation: 'Δ = 16 - 20 = -4 < 0. Como el discriminante es negativo, no hay soluciones reales.',
+    explanation: '$\\Delta = 16 - 20 = -4 < 0$. Como el discriminante es negativo, no hay soluciones reales.',
   },
   {
     id: 'p5',
     question: 'Resuelve usando la fórmula cuadrática:',
-    equation: '3x² - 12x + 9 = 0',
-    coefficients: 'a = 3, b = -12, c = 9',
-    hint: 'Puedes simplificar dividiendo por 3: x² - 4x + 3 = 0. O aplicar la fórmula directamente.',
-    options: ['x = 1 y x = 3', 'x = -1 y x = -3', 'x = 2 (doble)', 'x = 3 y x = 4'],
+    equation: '3x^2 - 12x + 9 = 0',
+    coefficients: '$a = 3$, $b = -12$, $c = 9$',
+    hint: 'Puedes simplificar dividiendo por 3: $x^2 - 4x + 3 = 0$. O aplicar la fórmula directamente.',
+    options: ['$x = 1$ y $x = 3$', '$x = -1$ y $x = -3$', '$x = 2$ (doble)', '$x = 3$ y $x = 4$'],
     correctAnswer: 0,
-    explanation: 'Δ = 144 - 108 = 36. x = (12 ± 6) / 6. Entonces x = 18/6 = 3 y x = 6/6 = 1.',
+    explanation: '$\\Delta = 144 - 108 = 36$. $x = (12 \\pm 6) / 6$. Entonces $x = 18/6 = 3$ y $x = 6/6 = 1$.',
   },
 ];
 
@@ -143,19 +144,19 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
               {mc.currentItem.question}
             </h3>
             <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-xl p-4 mb-4">
-              <p className="font-mono text-2xl text-purple-600 dark:text-purple-400 font-bold text-center">
-                {mc.currentItem.equation}
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2">
-                {mc.currentItem.coefficients}
-              </p>
+              <div className="text-2xl text-purple-600 dark:text-purple-400 font-bold text-center">
+                <InlineMath latex={mc.currentItem.equation} />
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2">
+                <MathText content={mc.currentItem.coefficients} />
+              </div>
             </div>
 
             {/* Formula reminder */}
             <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 mb-4">
-              <p className="font-mono text-sm text-center text-gray-600 dark:text-gray-400">
-                x = (-b ± √(b² - 4ac)) / 2a
-              </p>
+              <div className="text-sm text-center text-gray-600 dark:text-gray-400">
+                <InlineMath latex="x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}" />
+              </div>
             </div>
 
             {/* Hint */}
@@ -163,7 +164,9 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
               <div className={`rounded-lg p-4 mb-6 animate-fadeIn ${colors.hint.container}`}>
                 <div className="flex items-start gap-2">
                   <Lightbulb className={`w-5 h-5 flex-shrink-0 mt-0.5 ${colors.hint.icon}`} />
-                  <p className={`text-sm ${colors.hint.text}`}>{mc.currentItem.hint}</p>
+                  <div className={`text-sm ${colors.hint.text}`}>
+                    <MathText content={mc.currentItem.hint} />
+                  </div>
                 </div>
               </div>
             )}
@@ -226,11 +229,11 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
               ) : (
                 <X className="w-5 h-5 text-red-600 flex-shrink-0" />
               )}
-              <span className="text-sm font-mono text-gray-700 dark:text-gray-300">
-                {problem.equation}
+              <span className="text-sm text-gray-700 dark:text-gray-300">
+                <InlineMath latex={problem.equation} />
               </span>
-              <span className="text-sm font-mono text-purple-600 dark:text-purple-400 ml-auto">
-                {problem.options[problem.correctAnswer]}
+              <span className="text-sm text-purple-600 dark:text-purple-400 ml-auto">
+                <MathText content={problem.options[problem.correctAnswer]} />
               </span>
             </>
           )}

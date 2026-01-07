@@ -11,6 +11,7 @@ import {
   ResultsSummary,
   QuestionPrompt,
 } from '@/components/lessons/primitives';
+import { InlineMath, MathText } from '@/components/math/MathDisplay';
 
 interface Question {
   id: string;
@@ -27,50 +28,50 @@ const QUESTIONS: Question[] = [
   {
     id: 'q1',
     type: 'identify',
-    question: 'En la ecuación 3x² - 5x + 2 = 0, ¿cuáles son los valores de a, b y c?',
-    equation: '3x² - 5x + 2 = 0',
+    question: 'En la ecuación $3x^2 - 5x + 2 = 0$, ¿cuáles son los valores de $a$, $b$ y $c$?',
+    equation: '3x^2 - 5x + 2 = 0',
     correctAnswer: 1,
-    options: ['a = 3, b = 5, c = 2', 'a = 3, b = -5, c = 2', 'a = 3, b = -5, c = -2', 'a = -3, b = 5, c = 2'],
-    explanation: 'En ax² + bx + c = 0: a = 3 (coef. de x²), b = -5 (coef. de x, ¡incluyendo el signo!), c = 2 (término independiente).',
+    options: ['$a = 3$, $b = 5$, $c = 2$', '$a = 3$, $b = -5$, $c = 2$', '$a = 3$, $b = -5$, $c = -2$', '$a = -3$, $b = 5$, $c = 2$'],
+    explanation: 'En $ax^2 + bx + c = 0$: $a = 3$ (coef. de $x^2$), $b = -5$ (coef. de $x$, ¡incluyendo el signo!), $c = 2$ (término independiente).',
   },
   {
     id: 'q2',
     type: 'discriminant',
-    question: '¿Cuál es el valor del discriminante (Δ = b² - 4ac)?',
-    equation: 'x² + 6x + 9 = 0',
-    context: 'a = 1, b = 6, c = 9',
+    question: '¿Cuál es el valor del discriminante ($\\Delta = b^2 - 4ac$)?',
+    equation: 'x^2 + 6x + 9 = 0',
+    context: '$a = 1$, $b = 6$, $c = 9$',
     correctAnswer: 2,
-    options: ['Δ = 72', 'Δ = -72', 'Δ = 0', 'Δ = 36'],
-    explanation: 'Δ = b² - 4ac = (6)² - 4(1)(9) = 36 - 36 = 0. Cuando Δ = 0, hay una solución repetida.',
+    options: ['$\\Delta = 72$', '$\\Delta = -72$', '$\\Delta = 0$', '$\\Delta = 36$'],
+    explanation: '$\\Delta = b^2 - 4ac = (6)^2 - 4(1)(9) = 36 - 36 = 0$. Cuando $\\Delta = 0$, hay una solución repetida.',
   },
   {
     id: 'q3',
     type: 'solutions',
     question: '¿Cuántas soluciones reales tiene esta ecuación?',
-    equation: 'x² + 2x + 5 = 0',
-    context: 'Δ = 4 - 20 = -16',
+    equation: 'x^2 + 2x + 5 = 0',
+    context: '$\\Delta = 4 - 20 = -16$',
     correctAnswer: 0,
     options: ['Ninguna solución real', 'Una solución (repetida)', 'Dos soluciones diferentes', 'Infinitas soluciones'],
-    explanation: 'Como Δ = -16 < 0, no hay soluciones reales. La raíz de un número negativo no es real.',
+    explanation: 'Como $\\Delta = -16 < 0$, no hay soluciones reales. La raíz de un número negativo no es real.',
   },
   {
     id: 'q4',
     type: 'solutions',
-    question: '¿Cuáles son las soluciones de x² - 5x + 6 = 0?',
-    equation: 'x² - 5x + 6 = 0',
-    context: 'Δ = 25 - 24 = 1',
+    question: '¿Cuáles son las soluciones de $x^2 - 5x + 6 = 0$?',
+    equation: 'x^2 - 5x + 6 = 0',
+    context: '$\\Delta = 25 - 24 = 1$',
     correctAnswer: 3,
-    options: ['x = 1 y x = 6', 'x = -2 y x = -3', 'x = 5 y x = 6', 'x = 2 y x = 3'],
-    explanation: 'x = (5 ± √1) / 2 = (5 ± 1) / 2. Entonces x = 6/2 = 3 y x = 4/2 = 2.',
+    options: ['$x = 1$ y $x = 6$', '$x = -2$ y $x = -3$', '$x = 5$ y $x = 6$', '$x = 2$ y $x = 3$'],
+    explanation: '$x = (5 \\pm \\sqrt{1}) / 2 = (5 \\pm 1) / 2$. Entonces $x = 6/2 = 3$ y $x = 4/2 = 2$.',
   },
   {
     id: 'q5',
     type: 'method',
     question: '¿Qué método es más eficiente para resolver esta ecuación?',
-    equation: 'x² - 7x + 10 = 0',
+    equation: 'x^2 - 7x + 10 = 0',
     correctAnswer: 1,
-    options: ['Solo la fórmula cuadrática', 'Factorizar (buscar dos números que sumen -7 y multipliquen 10)', 'Completar el cuadrado', 'No tiene solución'],
-    explanation: 'Esta ecuación se factoriza fácilmente: x² - 7x + 10 = (x - 2)(x - 5) = 0, porque -2 + (-5) = -7 y (-2)(-5) = 10.',
+    options: ['Solo la fórmula cuadrática', 'Factorizar (buscar dos números que sumen $-7$ y multipliquen $10$)', 'Completar el cuadrado', 'No tiene solución'],
+    explanation: 'Esta ecuación se factoriza fácilmente: $x^2 - 7x + 10 = (x - 2)(x - 5) = 0$, porque $-2 + (-5) = -7$ y $(-2)(-5) = 10$.',
   },
 ];
 
@@ -134,19 +135,19 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
             </div>
 
             <QuestionPrompt variant="math">
-              <p className="text-lg text-gray-800 dark:text-gray-200 mb-4">
-                {mc.currentItem.question}
-              </p>
+              <div className="text-lg text-gray-800 dark:text-gray-200 mb-4">
+                <MathText content={mc.currentItem.question} />
+              </div>
 
               {mc.currentItem.equation && (
                 <div className="bg-white dark:bg-gray-800 rounded-xl p-4 mb-4">
-                  <p className="font-mono text-xl text-center text-purple-600 dark:text-purple-400 font-bold">
-                    {mc.currentItem.equation}
-                  </p>
+                  <div className="text-xl text-center text-purple-600 dark:text-purple-400 font-bold">
+                    <InlineMath latex={mc.currentItem.equation} />
+                  </div>
                   {mc.currentItem.context && (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2">
-                      {mc.currentItem.context}
-                    </p>
+                    <div className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2">
+                      <MathText content={mc.currentItem.context} />
+                    </div>
                   )}
                 </div>
               )}

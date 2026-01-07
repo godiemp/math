@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, BookOpen, Lightbulb, AlertTriangle, Calculator, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { BlockMath, InlineMath } from '@/components/math/MathDisplay';
 
 type TabId = 'standard' | 'general' | 'discriminant' | 'special' | 'tips';
 
@@ -158,10 +159,12 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
       {/* Main Formula Display */}
       <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-xl p-6 border border-purple-200 dark:border-purple-700">
         <div className="text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Para resolver ax² + bx + c = 0:</p>
-          <p className="font-mono text-2xl md:text-3xl font-bold text-purple-700 dark:text-purple-300">
-            x = (-b ± √(b² - 4ac)) / 2a
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+            Para resolver <InlineMath latex="ax^2 + bx + c = 0" />:
           </p>
+          <div className="text-2xl md:text-3xl font-bold text-purple-700 dark:text-purple-300">
+            <BlockMath latex="x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}" />
+          </div>
         </div>
       </div>
 
@@ -285,11 +288,11 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             {activeTab === 'standard' && (
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6">
                 <p className="text-center text-gray-700 dark:text-gray-300 mb-4">
-                  Cuando a = 1, el denominador es simplemente 2:
+                  Cuando <InlineMath latex="a = 1" />, el denominador es simplemente 2:
                 </p>
-                <p className="text-center font-mono text-lg text-blue-600 dark:text-blue-400 font-bold">
-                  x = (-b ± √(b² - 4c)) / 2
-                </p>
+                <div className="text-center text-lg text-blue-600 dark:text-blue-400 font-bold">
+                  <BlockMath latex="x = \frac{-b \pm \sqrt{b^2 - 4c}}{2}" />
+                </div>
               </div>
             )}
 
@@ -319,21 +322,27 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             {activeTab === 'discriminant' && (
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6">
                 <div className="text-center mb-4">
-                  <p className="font-mono text-lg text-teal-600 dark:text-teal-400 font-bold mb-4">
-                    Δ = b² - 4ac
-                  </p>
+                  <div className="text-lg text-teal-600 dark:text-teal-400 font-bold mb-4">
+                    <BlockMath latex="\Delta = b^2 - 4ac" />
+                  </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
                   <div className="bg-green-50 dark:bg-green-900/30 rounded-lg p-3 text-center">
-                    <p className="font-semibold text-green-700 dark:text-green-300 mb-1">Δ &gt; 0</p>
+                    <div className="font-semibold text-green-700 dark:text-green-300 mb-1">
+                      <InlineMath latex="\Delta > 0" />
+                    </div>
                     <p className="text-gray-600 dark:text-gray-400">2 soluciones reales</p>
                   </div>
                   <div className="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-3 text-center">
-                    <p className="font-semibold text-amber-700 dark:text-amber-300 mb-1">Δ = 0</p>
+                    <div className="font-semibold text-amber-700 dark:text-amber-300 mb-1">
+                      <InlineMath latex="\Delta = 0" />
+                    </div>
                     <p className="text-gray-600 dark:text-gray-400">1 solución (doble)</p>
                   </div>
                   <div className="bg-red-50 dark:bg-red-900/30 rounded-lg p-3 text-center">
-                    <p className="font-semibold text-red-700 dark:text-red-300 mb-1">Δ &lt; 0</p>
+                    <div className="font-semibold text-red-700 dark:text-red-300 mb-1">
+                      <InlineMath latex="\Delta < 0" />
+                    </div>
                     <p className="text-gray-600 dark:text-gray-400">Sin solución real</p>
                   </div>
                 </div>
@@ -344,14 +353,26 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div className="bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
-                    <p className="font-semibold text-green-700 dark:text-green-300 mb-2">Cuando b = 0:</p>
-                    <p className="font-mono text-gray-600 dark:text-gray-400 mb-1">ax² + c = 0</p>
-                    <p className="text-gray-600 dark:text-gray-400">La fórmula se simplifica a x = ±√(-c/a)</p>
+                    <p className="font-semibold text-green-700 dark:text-green-300 mb-2">
+                      Cuando <InlineMath latex="b = 0" />:
+                    </p>
+                    <div className="text-gray-600 dark:text-gray-400 mb-1">
+                      <InlineMath latex="ax^2 + c = 0" />
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      La fórmula se simplifica a <InlineMath latex="x = \pm\sqrt{-c/a}" />
+                    </p>
                   </div>
                   <div className="bg-teal-50 dark:bg-teal-900/30 rounded-lg p-4">
-                    <p className="font-semibold text-teal-700 dark:text-teal-300 mb-2">Cuando c = 0:</p>
-                    <p className="font-mono text-gray-600 dark:text-gray-400 mb-1">ax² + bx = 0</p>
-                    <p className="text-gray-600 dark:text-gray-400">Mejor factorizar: x(ax + b) = 0</p>
+                    <p className="font-semibold text-teal-700 dark:text-teal-300 mb-2">
+                      Cuando <InlineMath latex="c = 0" />:
+                    </p>
+                    <div className="text-gray-600 dark:text-gray-400 mb-1">
+                      <InlineMath latex="ax^2 + bx = 0" />
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      Mejor factorizar: <InlineMath latex="x(ax + b) = 0" />
+                    </p>
                   </div>
                 </div>
               </div>
