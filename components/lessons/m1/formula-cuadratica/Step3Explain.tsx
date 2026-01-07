@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, BookOpen, Lightbulb, AlertTriangle, Calculator, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
-import { BlockMath, InlineMath } from '@/components/math/MathDisplay';
+import { BlockMath, InlineMath, MathText } from '@/components/math/MathDisplay';
 
 type TabId = 'standard' | 'general' | 'discriminant' | 'special' | 'tips';
 
@@ -27,17 +27,17 @@ const FORMULAS: FormulaTab[] = [
     id: 'standard',
     title: 'Fórmula Estándar (a = 1)',
     shortTitle: 'Estándar',
-    description: 'Cuando el coeficiente de x² es 1, la fórmula se simplifica',
+    description: 'Cuando el coeficiente de $x^2$ es 1, la fórmula se simplifica',
     example: {
-      input: 'x² + 5x + 6 = 0',
-      coefficients: 'a = 1, b = 5, c = 6',
+      input: '$x^2 + 5x + 6 = 0$',
+      coefficients: '$a = 1$, $b = 5$, $c = 6$',
       steps: [
-        'x = (-5 ± √(25 - 24)) / 2',
-        'x = (-5 ± √1) / 2',
-        'x = (-5 ± 1) / 2',
-        'x = -4/2 = -2  o  x = -6/2 = -3',
+        '$x = \\frac{-5 \\pm \\sqrt{25 - 24}}{2}$',
+        '$x = \\frac{-5 \\pm \\sqrt{1}}{2}$',
+        '$x = \\frac{-5 \\pm 1}{2}$',
+        '$x = \\frac{-4}{2} = -2$ o $x = \\frac{-6}{2} = -3$',
       ],
-      result: 'x = -2  o  x = -3',
+      result: '$x = -2$ o $x = -3$',
     },
     color: 'blue',
   },
@@ -45,17 +45,17 @@ const FORMULAS: FormulaTab[] = [
     id: 'general',
     title: 'Caso General (a ≠ 1)',
     shortTitle: 'General',
-    description: 'Cuando a ≠ 1, debemos incluir el 2a en el denominador',
+    description: 'Cuando $a \\neq 1$, debemos incluir el $2a$ en el denominador',
     example: {
-      input: '2x² - 7x + 3 = 0',
-      coefficients: 'a = 2, b = -7, c = 3',
+      input: '$2x^2 - 7x + 3 = 0$',
+      coefficients: '$a = 2$, $b = -7$, $c = 3$',
       steps: [
-        'x = (7 ± √(49 - 24)) / 4',
-        'x = (7 ± √25) / 4',
-        'x = (7 ± 5) / 4',
-        'x = 12/4 = 3  o  x = 2/4 = 1/2',
+        '$x = \\frac{7 \\pm \\sqrt{49 - 24}}{4}$',
+        '$x = \\frac{7 \\pm \\sqrt{25}}{4}$',
+        '$x = \\frac{7 \\pm 5}{4}$',
+        '$x = \\frac{12}{4} = 3$ o $x = \\frac{2}{4} = \\frac{1}{2}$',
       ],
-      result: 'x = 3  o  x = 1/2',
+      result: '$x = 3$ o $x = \\frac{1}{2}$',
     },
     color: 'purple',
   },
@@ -63,16 +63,16 @@ const FORMULAS: FormulaTab[] = [
     id: 'discriminant',
     title: 'El Discriminante',
     shortTitle: 'Δ',
-    description: 'El discriminante Δ = b² - 4ac determina el tipo de soluciones',
+    description: 'El discriminante $\\Delta = b^2 - 4ac$ determina el tipo de soluciones',
     example: {
-      input: 'x² - 6x + 9 = 0',
-      coefficients: 'a = 1, b = -6, c = 9',
+      input: '$x^2 - 6x + 9 = 0$',
+      coefficients: '$a = 1$, $b = -6$, $c = 9$',
       steps: [
-        'Δ = (-6)² - 4(1)(9) = 36 - 36 = 0',
-        'Como Δ = 0, hay una solución repetida',
-        'x = 6 / 2 = 3',
+        '$\\Delta = (-6)^2 - 4(1)(9) = 36 - 36 = 0$',
+        'Como $\\Delta = 0$, hay una solución repetida',
+        '$x = \\frac{6}{2} = 3$',
       ],
-      result: 'x = 3 (solución doble)',
+      result: '$x = 3$ (solución doble)',
     },
     color: 'teal',
   },
@@ -80,16 +80,16 @@ const FORMULAS: FormulaTab[] = [
     id: 'special',
     title: 'Casos Especiales',
     shortTitle: 'Especiales',
-    description: 'Cuando b = 0 o c = 0, la ecuación se simplifica',
+    description: 'Cuando $b = 0$ o $c = 0$, la ecuación se simplifica',
     example: {
-      input: 'x² - 9 = 0  (b = 0)',
-      coefficients: 'a = 1, b = 0, c = -9',
+      input: '$x^2 - 9 = 0$ ($b = 0$)',
+      coefficients: '$a = 1$, $b = 0$, $c = -9$',
       steps: [
-        'x = (0 ± √(0 - 4(1)(-9))) / 2',
-        'x = ±√36 / 2',
-        'x = ±6 / 2',
+        '$x = \\frac{0 \\pm \\sqrt{0 - 4(1)(-9)}}{2}$',
+        '$x = \\frac{\\pm\\sqrt{36}}{2}$',
+        '$x = \\frac{\\pm 6}{2}$',
       ],
-      result: 'x = 3  o  x = -3',
+      result: '$x = 3$ o $x = -3$',
     },
     color: 'green',
   },
@@ -221,19 +221,19 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
               <h5 className="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Correcto:</h5>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <li>• Identifica a, b, c antes de sustituir</li>
-                <li>• Recuerda: -b significa el opuesto de b</li>
+                <li><MathText content="• Identifica $a$, $b$, $c$ antes de sustituir" /></li>
+                <li><MathText content="• Recuerda: $-b$ significa el opuesto de $b$" /></li>
                 <li>• Calcula el discriminante primero</li>
-                <li>• Usa ± para obtener ambas soluciones</li>
+                <li><MathText content="• Usa $\\pm$ para obtener ambas soluciones" /></li>
               </ul>
             </div>
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
               <h5 className="font-semibold text-red-700 dark:text-red-300 mb-2">✗ Errores comunes:</h5>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <li>• Olvidar el signo negativo de -b</li>
-                <li>• Calcular mal b² (especialmente si b es negativo)</li>
-                <li>• Olvidar dividir TODO por 2a</li>
-                <li>• Confundir 2a con solo a</li>
+                <li><MathText content="• Olvidar el signo negativo de $-b$" /></li>
+                <li><MathText content="• Calcular mal $b^2$ (especialmente si $b$ es negativo)" /></li>
+                <li><MathText content="• Olvidar dividir TODO por $2a$" /></li>
+                <li><MathText content="• Confundir $2a$ con solo $a$" /></li>
               </ul>
             </div>
           </div>
@@ -247,16 +247,22 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             <p className="text-gray-700 dark:text-gray-300 mb-3">
               Sustituye tus soluciones en la ecuación original. Si obtienes 0, ¡son correctas!
             </p>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 font-mono text-sm">
-              <p className="text-gray-600 dark:text-gray-400 mb-2">Ejemplo: x² + 5x + 6 = 0, soluciones x = -2 y x = -3</p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-sm">
+              <div className="text-gray-600 dark:text-gray-400 mb-2">
+                <MathText content="Ejemplo: $x^2 + 5x + 6 = 0$, soluciones $x = -2$ y $x = -3$" />
+              </div>
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
-                  <p className="text-blue-600 dark:text-blue-400">x = -2:</p>
-                  <p className="text-gray-600 dark:text-gray-400">(-2)² + 5(-2) + 6 = 4 - 10 + 6 = <span className="text-green-600 font-bold">0 ✓</span></p>
+                  <div className="text-blue-600 dark:text-blue-400"><InlineMath latex="x = -2" />:</div>
+                  <div className="text-gray-600 dark:text-gray-400">
+                    <InlineMath latex="(-2)^2 + 5(-2) + 6 = 4 - 10 + 6 = " /><span className="text-green-600 font-bold">0 ✓</span>
+                  </div>
                 </div>
                 <div className="flex-1">
-                  <p className="text-purple-600 dark:text-purple-400">x = -3:</p>
-                  <p className="text-gray-600 dark:text-gray-400">(-3)² + 5(-3) + 6 = 9 - 15 + 6 = <span className="text-green-600 font-bold">0 ✓</span></p>
+                  <div className="text-purple-600 dark:text-purple-400"><InlineMath latex="x = -3" />:</div>
+                  <div className="text-gray-600 dark:text-gray-400">
+                    <InlineMath latex="(-3)^2 + 5(-3) + 6 = 9 - 15 + 6 = " /><span className="text-green-600 font-bold">0 ✓</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -282,7 +288,9 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <h3 className={cn('text-xl font-bold', colors.text)}>{currentFormula!.title}</h3>
             </div>
 
-            <p className="text-gray-600 dark:text-gray-400 mb-4">{currentFormula!.description}</p>
+            <div className="text-gray-600 dark:text-gray-400 mb-4">
+              <MathText content={currentFormula!.description} />
+            </div>
 
             {/* Tab-specific content */}
             {activeTab === 'standard' && (
@@ -301,19 +309,27 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 <div className="space-y-3 text-sm">
                   <div className="flex items-center gap-2">
                     <span className="bg-purple-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                    <p className="text-gray-600 dark:text-gray-400">Identifica a, b, c (¡cuidado con los signos!)</p>
+                    <div className="text-gray-600 dark:text-gray-400">
+                      <MathText content="Identifica $a$, $b$, $c$ (¡cuidado con los signos!)" />
+                    </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="bg-purple-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                    <p className="text-gray-600 dark:text-gray-400">Calcula -b (el opuesto de b)</p>
+                    <div className="text-gray-600 dark:text-gray-400">
+                      <MathText content="Calcula $-b$ (el opuesto de $b$)" />
+                    </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="bg-purple-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">3</span>
-                    <p className="text-gray-600 dark:text-gray-400">Calcula el discriminante: b² - 4ac</p>
+                    <div className="text-gray-600 dark:text-gray-400">
+                      <MathText content="Calcula el discriminante: $b^2 - 4ac$" />
+                    </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="bg-purple-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">4</span>
-                    <p className="text-gray-600 dark:text-gray-400">Divide todo por 2a (no solo por a)</p>
+                    <div className="text-gray-600 dark:text-gray-400">
+                      <MathText content="Divide todo por $2a$ (no solo por $a$)" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -386,25 +402,25 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               </h4>
               <div className="space-y-3">
                 <div className="flex flex-col md:flex-row md:items-center gap-2">
-                  <p className="font-mono text-lg text-gray-800 dark:text-gray-200">
-                    {currentFormula!.example.input}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    ({currentFormula!.example.coefficients})
-                  </p>
+                  <div className="text-lg text-gray-800 dark:text-gray-200">
+                    <MathText content={currentFormula!.example.input} />
+                  </div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    (<MathText content={currentFormula!.example.coefficients} />)
+                  </div>
                 </div>
                 <div className="pl-4 border-l-2 border-gray-300 dark:border-gray-600 space-y-2">
                   {currentFormula!.example.steps.map((step, i) => (
-                    <p key={i} className="text-gray-600 dark:text-gray-400 font-mono text-sm">
+                    <div key={i} className="text-gray-600 dark:text-gray-400 text-sm">
                       {i === currentFormula!.example.steps.length - 1 ? '→ ' : '• '}
-                      {step}
-                    </p>
+                      <MathText content={step} />
+                    </div>
                   ))}
                 </div>
                 <div className={cn('p-3 rounded-lg mt-4', colors.bg)}>
-                  <p className={cn('font-mono font-bold text-lg text-center', colors.text)}>
-                    {currentFormula!.example.result}
-                  </p>
+                  <div className={cn('font-bold text-lg text-center', colors.text)}>
+                    <MathText content={currentFormula!.example.result} />
+                  </div>
                 </div>
               </div>
             </div>

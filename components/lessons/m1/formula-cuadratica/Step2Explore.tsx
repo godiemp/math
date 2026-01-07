@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, Check, ChevronRight } from 'lucide-react';
 import { LessonStepProps } from '@/lib/lessons/types';
 import { ActionButton } from '@/components/lessons/primitives';
-import { BlockMath, InlineMath } from '@/components/math/MathDisplay';
+import { BlockMath, InlineMath, MathText } from '@/components/math/MathDisplay';
 
 type Phase = 'derivation' | 'anatomy' | 'discriminant';
 
@@ -19,13 +19,13 @@ const FORMULA_PARTS: FormulaPart[] = [
   {
     id: 'neg-b',
     label: '-b',
-    description: 'El opuesto del coeficiente lineal. Si b = 5, usamos -5. Si b = -3, usamos 3.',
+    description: 'El opuesto del coeficiente lineal. Si $b = 5$, usamos $-5$. Si $b = -3$, usamos $3$.',
     color: 'blue',
   },
   {
     id: 'plus-minus',
     label: '±',
-    description: 'Significa "más o menos". Nos da DOS soluciones: una con + y otra con -.',
+    description: 'Significa "más o menos". Nos da DOS soluciones: una con $+$ y otra con $-$.',
     color: 'purple',
   },
   {
@@ -281,9 +281,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                     }`}>
                       {FORMULA_PARTS.find((p) => p.id === selectedPart)?.label}
                     </p>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      {FORMULA_PARTS.find((p) => p.id === selectedPart)?.description}
-                    </p>
+                    <div className="text-gray-600 dark:text-gray-400">
+                      <MathText content={FORMULA_PARTS.find((p) => p.id === selectedPart)?.description || ''} />
+                    </div>
                   </div>
                 </div>
               </div>
