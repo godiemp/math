@@ -51,9 +51,9 @@ const EXAMPLES: PropertyExample[] = [
   {
     id: 'product2',
     type: 'product',
-    expression: '\\sqrt[3]{8 \\times 27}',
-    step1: '\\sqrt[3]{8} \\times \\sqrt[3]{27}',
-    step2: '2 \\times 3',
+    expression: '\\sqrt[3]{8 \\cdot 27}',
+    step1: '\\sqrt[3]{8} \\cdot \\sqrt[3]{27}',
+    step2: '2 \\cdot 3',
     result: '6',
     hint: 'La propiedad funciona igual con raíces cúbicas',
   },
@@ -220,19 +220,19 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 <div className={`rounded-xl p-6 border ${PROPERTY_COLORS[currentExample.type].bg} ${PROPERTY_COLORS[currentExample.type].border}`}>
                   <div className="text-center space-y-3">
                     <div className="text-lg text-gray-700 dark:text-gray-300">
-                      <InlineMath latex={currentExample.expression} />
+                      <BlockMath latex={currentExample.expression} />
                     </div>
                     <p className="text-gray-400 text-sm">↓ aplicamos la propiedad</p>
                     <div className="text-lg text-gray-700 dark:text-gray-300">
-                      <InlineMath latex={`= ${currentExample.step1}`} />
+                      <BlockMath latex={`= ${currentExample.step1}`} />
                     </div>
                     <p className="text-gray-400 text-sm">↓ calculamos cada raíz</p>
                     <div className="text-lg text-gray-700 dark:text-gray-300">
-                      <InlineMath latex={`= ${currentExample.step2}`} />
+                      <BlockMath latex={`= ${currentExample.step2}`} />
                     </div>
                     <p className="text-gray-400 text-sm">↓ resultado</p>
                     <div className={`text-2xl font-bold ${PROPERTY_COLORS[currentExample.type].text}`}>
-                      <InlineMath latex={`= ${currentExample.result}`} />
+                      <BlockMath latex={`= ${currentExample.result}`} />
                     </div>
                   </div>
                 </div>
