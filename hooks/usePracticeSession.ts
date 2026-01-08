@@ -139,7 +139,7 @@ export function usePracticeSession() {
         scaffoldingLevel: level,
       });
 
-      if (response.data.question) {
+      if (response.data?.question) {
         // Convert generated question to our Question format
         const generated = response.data.question;
         return {
@@ -189,7 +189,7 @@ export function usePracticeSession() {
         },
       });
 
-      if (response.data.question) {
+      if (response.data?.question) {
         const generated = response.data.question;
         return {
           id: generated.id,
