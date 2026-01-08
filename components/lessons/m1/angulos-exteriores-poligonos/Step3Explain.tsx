@@ -195,6 +195,17 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             {/* Visual: One vertex showing both angles */}
             <div className="flex justify-center">
               <svg viewBox="0 0 240 140" className="w-full max-w-sm">
+                {/*
+                  Geometry setup:
+                  - Vertex at (120, 100)
+                  - Incoming edge from left (30, 100) → (120, 100)
+                  - Outgoing edge to up-right (120, 100) → (185, 50)
+                  - Extension continues right (120, 100) → (210, 100)
+
+                  Outgoing direction: (65, -50), normalized ≈ (0.793, -0.610)
+                  At radius 35: (120 + 27.7, 100 - 21.3) = (147.7, 78.7)
+                */}
+
                 {/* Previous side coming IN to vertex */}
                 <line
                   x1="30"
@@ -205,21 +216,21 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                   strokeWidth="3"
                   className="dark:stroke-gray-300"
                 />
-                {/* Next side going OUT from vertex (up-right at ~50 degrees) */}
+                {/* Next side going OUT from vertex (up-right at ~38 degrees above horizontal) */}
                 <line
                   x1="120"
                   y1="100"
-                  x2="190"
-                  y2="45"
+                  x2="185"
+                  y2="50"
                   stroke="#374151"
                   strokeWidth="3"
                   className="dark:stroke-gray-300"
                 />
-                {/* Extended line (dashed) - extension of incoming side */}
+                {/* Extended line (dashed) - extension of incoming side going RIGHT */}
                 <line
                   x1="120"
                   y1="100"
-                  x2="220"
+                  x2="210"
                   y2="100"
                   stroke="#9ca3af"
                   strokeWidth="2"
@@ -227,37 +238,37 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                   className="dark:stroke-gray-500"
                 />
 
-                {/* Interior angle fill (amber) - between incoming side and outgoing side */}
+                {/* Interior angle fill (amber) - from LEFT horizontal to outgoing edge (counterclockwise) */}
                 <path
-                  d="M 120 100 L 85 100 A 35 35 0 0 0 142.5 66 Z"
+                  d="M 120 100 L 85 100 A 35 35 0 0 1 148 79 Z"
                   fill="rgba(245, 158, 11, 0.25)"
                 />
-                {/* Interior angle arc */}
+                {/* Interior angle arc - sweeps counterclockwise from left to outgoing */}
                 <path
-                  d="M 85 100 A 35 35 0 0 0 142.5 66"
+                  d="M 85 100 A 35 35 0 0 1 148 79"
                   fill="none"
                   stroke="#f59e0b"
                   strokeWidth="3"
                 />
 
-                {/* Exterior angle fill (red) - between extension and outgoing side */}
+                {/* Exterior angle fill (red) - from outgoing edge to RIGHT extension (counterclockwise) */}
                 <path
-                  d="M 120 100 L 155 100 A 35 35 0 0 1 142.5 66 Z"
+                  d="M 120 100 L 148 79 A 35 35 0 0 1 155 100 Z"
                   fill="rgba(239, 68, 68, 0.25)"
                 />
-                {/* Exterior angle arc */}
+                {/* Exterior angle arc - sweeps counterclockwise from outgoing to extension */}
                 <path
-                  d="M 155 100 A 35 35 0 0 1 142.5 66"
+                  d="M 148 79 A 35 35 0 0 1 155 100"
                   fill="none"
                   stroke="#ef4444"
                   strokeWidth="3"
                 />
 
-                {/* Labels */}
+                {/* Labels - positioned inside their respective arcs */}
                 <text
-                  x="95"
-                  y="80"
-                  fontSize="14"
+                  x="100"
+                  y="85"
+                  fontSize="13"
                   fill="#d97706"
                   fontWeight="bold"
                   className="dark:fill-amber-400"
@@ -265,9 +276,9 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                   Int
                 </text>
                 <text
-                  x="158"
-                  y="80"
-                  fontSize="14"
+                  x="155"
+                  y="85"
+                  fontSize="13"
                   fill="#dc2626"
                   fontWeight="bold"
                   className="dark:fill-red-400"
