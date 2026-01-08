@@ -215,7 +215,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
               <h5 className="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Correcto:</h5>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <li>• <MathText content="$2^3 = 2 \times 2 \times 2 = 8$" /></li>
+                <li>• <MathText content="$2^3 = 2 \\times 2 \\times 2 = 8$" /></li>
                 <li>• El exponente indica veces que se multiplica</li>
                 <li>• <MathText content="$5^0 = 1$" /> (no es 0 ni 5)</li>
                 <li>• <MathText content="$3^2 = 9$" /> (no es 6)</li>
@@ -224,11 +224,29 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
               <h5 className="font-semibold text-red-700 dark:text-red-300 mb-2">✗ Errores comunes:</h5>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <li>• Confundir <MathText content="$2^3 = 8$" /> con <MathText content="$2 \times 3 = 6$" /></li>
+                <li>• Confundir <MathText content="$2^3 = 8$" /> con <MathText content="$2 \\times 3 = 6$" /></li>
                 <li>• Pensar que <MathText content="$5^0 = 0$" /></li>
                 <li>• Confundir base con exponente</li>
                 <li>• Sumar en vez de multiplicar</li>
               </ul>
+            </div>
+          </div>
+          {/* Memory tip */}
+          <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-4 mt-4 border border-green-200 dark:border-green-700">
+            <h5 className="font-bold text-green-800 dark:text-green-200 mb-2 flex items-center gap-2">
+              <Lightbulb className="w-4 h-4 text-yellow-500" />
+              Truco para recordar:
+            </h5>
+            <p className="text-gray-700 dark:text-gray-300 text-sm mb-3">
+              El exponente te dice <strong>&quot;cuántas veces escribir la base&quot;</strong> antes de multiplicar:
+            </p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
+              <div className="text-lg">
+                <MathText content="$\\textcolor{blue}{4}^{\\textcolor{purple}{3}} = \\textcolor{blue}{4} \\times \\textcolor{blue}{4} \\times \\textcolor{blue}{4} = \\textcolor{green}{\\textbf{64}}$" />
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Exponente 3 → escribimos el 4 tres veces → multiplicamos
+              </p>
             </div>
           </div>
         </div>
@@ -279,25 +297,6 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
           </div>
         </div>
       )}
-
-      {/* Memory tip */}
-      <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-6 border border-green-200 dark:border-green-700">
-        <h4 className="font-bold text-green-800 dark:text-green-200 mb-3 flex items-center gap-2">
-          <Lightbulb className="w-5 h-5 text-yellow-500" />
-          Truco para recordar:
-        </h4>
-        <p className="text-gray-700 dark:text-gray-300 mb-4">
-          El exponente te dice <strong>&quot;cuántas veces escribir la base&quot;</strong> antes de multiplicar:
-        </p>
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center">
-          <div className="text-xl">
-            <MathText content="$\textcolor{blue}{4}^{\textcolor{purple}{3}} = \textcolor{blue}{4} \times \textcolor{blue}{4} \times \textcolor{blue}{4} = \textcolor{green}{\textbf{64}}$" />
-          </div>
-          <p className="text-xs text-gray-500 mt-2">
-            Exponente 3 → escribimos el 4 tres veces → multiplicamos
-          </p>
-        </div>
-      </div>
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

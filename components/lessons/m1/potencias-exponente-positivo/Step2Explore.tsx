@@ -111,7 +111,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
               <div className="text-center space-y-6">
                 <div className="flex justify-center items-baseline text-6xl font-bold">
-                  <MathText content="$\textcolor{blue}{a}^{\textcolor{purple}{n}}$" />
+                  <MathText content="$\\textcolor{blue}{a}^{\\textcolor{purple}{n}}$" />
                 </div>
                 <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
                   <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
@@ -129,7 +129,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 </div>
                 <div className="bg-green-50 dark:bg-green-900/30 rounded-lg p-4 max-w-md mx-auto">
                   <div className="text-lg text-center">
-                    <MathText content="$\textcolor{blue}{3}^{\textcolor{purple}{4}} = \textcolor{blue}{3} \times \textcolor{blue}{3} \times \textcolor{blue}{3} \times \textcolor{blue}{3} = \textcolor{green}{\textbf{81}}$" />
+                    <MathText content="$\\textcolor{blue}{3}^{\\textcolor{purple}{4}} = \\textcolor{blue}{3} \\times \\textcolor{blue}{3} \\times \\textcolor{blue}{3} \\times \\textcolor{blue}{3} = \\textcolor{green}{\\textbf{81}}$" />
                   </div>
                   <p className="text-xs text-gray-500 mt-2">
                     Base 3, exponente 4: multiplicamos 3 cuatro veces
