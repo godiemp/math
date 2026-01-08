@@ -6,12 +6,14 @@ import TeacherLayout from '@/components/layout/TeacherLayout';
 import { Card, Heading, Text, Button, Badge, Spinner } from '@/components/ui';
 import {
   useClass,
+  useClasses,
   useClassStudents,
   useClassAnalytics,
   useStudentEnrollmentMutations,
   type ClassStudent,
 } from '@/lib/hooks/useClasses';
-import { ArrowLeft, Users, TrendingUp, BookOpen, AlertTriangle, UserPlus, X, Search, Trash2 } from 'lucide-react';
+import { createStudentInClass, moveStudentToClass } from '@/lib/classApi';
+import { ArrowLeft, Users, TrendingUp, BookOpen, AlertTriangle, UserPlus, X, Search, Trash2, ArrowRightLeft, Copy, Check } from 'lucide-react';
 import { toast } from 'sonner';
 
 function formatTimeAgo(timestamp: number): string {
@@ -41,7 +43,7 @@ function getAccuracyBg(accuracy: number): string {
 type SortField = 'name' | 'accuracy' | 'questions' | 'lastActive' | 'streak';
 type SortOrder = 'asc' | 'desc';
 
-// Add Student Modal Component
+// Add Student Modal Component with tabs for Search and Create New
 function AddStudentModal({
   classId,
   onClose,
@@ -51,12 +53,20 @@ function AddStudentModal({
   onClose: () => void;
   onStudentsAdded: () => void;
 }) {
+  const [activeTab, setActiveTab] = useState<'search' | 'create'>('search');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<{ id: string; displayName: string; email: string }[]>([]);
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const { searchStudents, addStudents } = useStudentEnrollmentMutations(classId);
+
+  // Create new student state
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
+  const [createdCredentials, setCreatedCredentials] = useState<{ username: string; password: string } | null>(null);
+  const [copiedField, setCopiedField] = useState<'username' | 'password' | null>(null);
 
   const handleSearch = async () => {
     if (searchQuery.length < 2) return;
@@ -87,6 +97,96 @@ function AddStudentModal({
     }
   };
 
+  const handleCreateStudent = async () => {
+    if (!firstName.trim() || !lastName.trim()) {
+      toast.error('Por favor ingresa nombre y apellido');
+      return;
+    }
+
+    setIsCreating(true);
+    const result = await createStudentInClass(classId, firstName.trim(), lastName.trim());
+    setIsCreating(false);
+
+    if (result.success && result.credentials) {
+      setCreatedCredentials(result.credentials);
+      onStudentsAdded();
+    } else {
+      toast.error(result.error || 'Error al crear estudiante');
+    }
+  };
+
+  const handleCopy = async (field: 'username' | 'password') => {
+    if (!createdCredentials) return;
+    await navigator.clipboard.writeText(createdCredentials[field]);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
+
+  // Show credentials modal if student was created
+  if (createdCredentials) {
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <Card padding="lg" className="w-full max-w-md">
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Check className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <Heading level={3} size="sm">
+              Estudiante Creado
+            </Heading>
+            <Text variant="secondary" className="mt-2">
+              Guarda estas credenciales para compartirlas con el estudiante
+            </Text>
+          </div>
+
+          <div className="space-y-4 mb-6">
+            <div>
+              <Text size="sm" variant="secondary" className="mb-1">Usuario</Text>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg font-mono text-sm">
+                  {createdCredentials.username}
+                </div>
+                <button
+                  onClick={() => handleCopy('username')}
+                  className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                >
+                  {copiedField === 'username' ? (
+                    <Check className="w-4 h-4 text-emerald-600" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <Text size="sm" variant="secondary" className="mb-1">Contraseña</Text>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg font-mono text-sm">
+                  {createdCredentials.password}
+                </div>
+                <button
+                  onClick={() => handleCopy('password')}
+                  className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                >
+                  {copiedField === 'password' ? (
+                    <Check className="w-4 h-4 text-emerald-600" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <Button onClick={onClose} className="w-full bg-emerald-600 hover:bg-emerald-700">
+            Entendido
+          </Button>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <Card padding="lg" className="w-full max-w-lg max-h-[80vh] overflow-hidden flex flex-col">
@@ -102,65 +202,245 @@ function AddStudentModal({
           </button>
         </div>
 
-        {/* Search */}
-        <div className="flex gap-2 mb-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              placeholder="Buscar por nombre o email..."
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
-            />
-          </div>
-          <Button onClick={handleSearch} disabled={searchQuery.length < 2 || isSearching}>
-            {isSearching ? '...' : 'Buscar'}
-          </Button>
-        </div>
-
-        {/* Results */}
-        <div className="flex-1 overflow-y-auto mb-4">
-          {searchResults.length === 0 ? (
-            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-              {searchQuery.length >= 2
-                ? 'No se encontraron estudiantes'
-                : 'Busca estudiantes por nombre o email'}
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {searchResults.map((student) => (
-                <div
-                  key={student.id}
-                  onClick={() => toggleStudent(student.id)}
-                  className={`p-3 rounded-lg border cursor-pointer transition-colors ${
-                    selectedStudents.includes(student.id)
-                      ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
-                      : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
-                  }`}
-                >
-                  <div className="font-medium">{student.displayName}</div>
-                  <div className="text-sm text-gray-500">{student.email}</div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Actions */}
-        <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <Button variant="ghost" onClick={onClose} className="flex-1">
-            Cancelar
-          </Button>
-          <Button
-            onClick={handleAddStudents}
-            disabled={selectedStudents.length === 0 || isAdding}
-            className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+        {/* Tabs */}
+        <div className="flex gap-2 mb-4 border-b border-gray-200 dark:border-gray-700">
+          <button
+            onClick={() => setActiveTab('search')}
+            className={`px-4 py-2 font-medium transition-colors border-b-2 -mb-px ${
+              activeTab === 'search'
+                ? 'border-emerald-600 text-emerald-600 dark:border-emerald-400 dark:text-emerald-400'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
           >
-            {isAdding ? 'Agregando...' : `Agregar (${selectedStudents.length})`}
-          </Button>
+            Buscar Existente
+          </button>
+          <button
+            onClick={() => setActiveTab('create')}
+            className={`px-4 py-2 font-medium transition-colors border-b-2 -mb-px ${
+              activeTab === 'create'
+                ? 'border-emerald-600 text-emerald-600 dark:border-emerald-400 dark:text-emerald-400'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            Crear Nuevo
+          </button>
         </div>
+
+        {/* Search Tab Content */}
+        {activeTab === 'search' && (
+          <>
+            <div className="flex gap-2 mb-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  placeholder="Buscar por nombre o email..."
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+                />
+              </div>
+              <Button onClick={handleSearch} disabled={searchQuery.length < 2 || isSearching}>
+                {isSearching ? '...' : 'Buscar'}
+              </Button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto mb-4">
+              {searchResults.length === 0 ? (
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                  {searchQuery.length >= 2
+                    ? 'No se encontraron estudiantes'
+                    : 'Busca estudiantes por nombre o email'}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {searchResults.map((student) => (
+                    <div
+                      key={student.id}
+                      onClick={() => toggleStudent(student.id)}
+                      className={`p-3 rounded-lg border cursor-pointer transition-colors ${
+                        selectedStudents.includes(student.id)
+                          ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
+                          : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
+                      }`}
+                    >
+                      <div className="font-medium">{student.displayName}</div>
+                      <div className="text-sm text-gray-500">{student.email}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <Button variant="ghost" onClick={onClose} className="flex-1">
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleAddStudents}
+                disabled={selectedStudents.length === 0 || isAdding}
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+              >
+                {isAdding ? 'Agregando...' : `Agregar (${selectedStudents.length})`}
+              </Button>
+            </div>
+          </>
+        )}
+
+        {/* Create New Tab Content */}
+        {activeTab === 'create' && (
+          <>
+            <div className="flex-1 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="Ej: María"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Apellido
+                </label>
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Ej: González"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+                />
+              </div>
+
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                <Text size="sm" className="text-blue-800 dark:text-blue-200">
+                  El nivel del estudiante se asignará automáticamente según el nivel de esta clase.
+                  Se generará un usuario y contraseña que deberás compartir con el estudiante.
+                </Text>
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <Button variant="ghost" onClick={onClose} className="flex-1">
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleCreateStudent}
+                disabled={!firstName.trim() || !lastName.trim() || isCreating}
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+              >
+                {isCreating ? 'Creando...' : 'Crear Estudiante'}
+              </Button>
+            </div>
+          </>
+        )}
+      </Card>
+    </div>
+  );
+}
+
+// Move Student Modal Component
+function MoveStudentModal({
+  student,
+  currentClassId,
+  onClose,
+  onStudentMoved,
+}: {
+  student: { id: string; displayName: string };
+  currentClassId: string;
+  onClose: () => void;
+  onStudentMoved: () => void;
+}) {
+  const [targetClassId, setTargetClassId] = useState('');
+  const [isMoving, setIsMoving] = useState(false);
+  const { classes, isLoading } = useClasses();
+
+  // Filter out current class
+  const availableClasses = classes.filter((c) => c.id !== currentClassId);
+
+  const handleMove = async () => {
+    if (!targetClassId) return;
+
+    setIsMoving(true);
+    const result = await moveStudentToClass(currentClassId, student.id, targetClassId);
+    setIsMoving(false);
+
+    if (result.success) {
+      toast.success(result.message || 'Estudiante movido exitosamente');
+      onStudentMoved();
+      onClose();
+    } else {
+      toast.error(result.error || 'Error al mover estudiante');
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <Card padding="lg" className="w-full max-w-md">
+        <div className="flex items-center justify-between mb-4">
+          <Heading level={3} size="sm">
+            Mover Estudiante
+          </Heading>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <Text variant="secondary" className="mb-4">
+          Mover a <span className="font-medium text-gray-900 dark:text-white">{student.displayName}</span> a otra clase
+        </Text>
+
+        {isLoading ? (
+          <div className="flex justify-center py-4">
+            <Spinner />
+          </div>
+        ) : availableClasses.length === 0 ? (
+          <div className="text-center py-4 text-gray-500 dark:text-gray-400">
+            No tienes otras clases disponibles
+          </div>
+        ) : (
+          <>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Seleccionar clase destino
+              </label>
+              <select
+                value={targetClassId}
+                onChange={(e) => setTargetClassId(e.target.value)}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+              >
+                <option value="">Selecciona una clase...</option>
+                {availableClasses.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name} ({c.studentCount} estudiantes)
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <Button variant="ghost" onClick={onClose} className="flex-1">
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleMove}
+                disabled={!targetClassId || isMoving}
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+              >
+                {isMoving ? 'Moviendo...' : 'Mover'}
+              </Button>
+            </div>
+          </>
+        )}
       </Card>
     </div>
   );
@@ -176,6 +456,7 @@ export default function ClassDetailPage() {
   const [activeTab, setActiveTab] = useState<'roster' | 'analytics'>('roster');
   const [showAddModal, setShowAddModal] = useState(false);
   const [removingStudentId, setRemovingStudentId] = useState<string | null>(null);
+  const [movingStudent, setMovingStudent] = useState<{ id: string; displayName: string } | null>(null);
 
   const { classData, isLoading: classLoading, error: classError, refresh: refreshClass } = useClass(classId);
   const { students, isLoading: studentsLoading, refresh: refreshStudents } = useClassStudents(classId);
@@ -475,6 +756,23 @@ export default function ClassDetailPage() {
                           <div className="text-xs text-gray-500 dark:text-gray-400">racha</div>
                         </div>
                       </div>
+                      <div className="flex gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
+                        <button
+                          onClick={() => setMovingStudent({ id: student.id, displayName: student.displayName })}
+                          className="flex-1 flex items-center justify-center gap-2 py-2 text-sm text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                        >
+                          <ArrowRightLeft className="w-4 h-4" />
+                          Mover
+                        </button>
+                        <button
+                          onClick={() => handleRemoveStudent(student.id, student.displayName)}
+                          disabled={removingStudentId === student.id}
+                          className="flex-1 flex items-center justify-center gap-2 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Remover
+                        </button>
+                      </div>
                     </Card>
                   ))}
                 </div>
@@ -557,14 +855,23 @@ export default function ClassDetailPage() {
                               {student.lastActive ? formatTimeAgo(student.lastActive) : 'Nunca'}
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap text-center">
-                              <button
-                                onClick={() => handleRemoveStudent(student.id, student.displayName)}
-                                disabled={removingStudentId === student.id}
-                                className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50"
-                                title="Remover estudiante"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
+                              <div className="flex items-center justify-center gap-1">
+                                <button
+                                  onClick={() => setMovingStudent({ id: student.id, displayName: student.displayName })}
+                                  className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                                  title="Mover a otra clase"
+                                >
+                                  <ArrowRightLeft className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleRemoveStudent(student.id, student.displayName)}
+                                  disabled={removingStudentId === student.id}
+                                  className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50"
+                                  title="Remover estudiante"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         ))}
@@ -681,6 +988,19 @@ export default function ClassDetailPage() {
           classId={classId}
           onClose={() => setShowAddModal(false)}
           onStudentsAdded={() => {
+            refreshStudents();
+            refreshClass();
+          }}
+        />
+      )}
+
+      {/* Move Student Modal */}
+      {movingStudent && (
+        <MoveStudentModal
+          student={movingStudent}
+          currentClassId={classId}
+          onClose={() => setMovingStudent(null)}
+          onStudentMoved={() => {
             refreshStudents();
             refreshClass();
           }}

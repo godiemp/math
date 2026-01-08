@@ -21,6 +21,8 @@ import {
   addStudentsToClass,
   removeStudentFromClass,
   searchAvailableStudents,
+  createStudentAndEnroll,
+  moveStudent,
 } from '../controllers/classStudentsController';
 
 const router = Router();
@@ -114,5 +116,21 @@ router.delete('/:classId/students/:studentId', removeStudentFromClass);
  * @access  Private (Teacher)
  */
 router.get('/:classId/students/search', searchAvailableStudents);
+
+/**
+ * @route   POST /api/classes/:classId/students/create
+ * @desc    Create a new student and enroll them in the class
+ * @body    { firstName: string, lastName: string }
+ * @access  Private (Teacher)
+ */
+router.post('/:classId/students/create', createStudentAndEnroll);
+
+/**
+ * @route   POST /api/classes/:classId/students/:studentId/move
+ * @desc    Move a student to another class
+ * @body    { targetClassId: string }
+ * @access  Private (Teacher)
+ */
+router.post('/:classId/students/:studentId/move', moveStudent);
 
 export default router;
