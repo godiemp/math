@@ -1,11 +1,203 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ArrowRight, RotateCw, Calculator, ArrowLeftRight, Lightbulb, AlertTriangle, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
 type TabId = 'regla360' | 'formula' | 'suplementarios' | 'tips';
+
+/**
+ * Interactive diagram showing Interior + Exterior = 180°
+ * User can drag a slider to change the angle and see both values update
+ */
+function InteractiveSupplementaryAngles() {
+  // Interior angle in degrees (constrained between 30° and 150° for good visualization)
+  const [interiorAngle, setInteriorAngle] = useState(140);
+  const exteriorAngle = 180 - interiorAngle;
+
+  // SVG geometry calculations
+  const geometry = useMemo(() => {
+    const cx = 120; // vertex x
+    const cy = 100; // vertex y
+    const radius = 35; // arc radius
+    const lineLength = 90; // length of outgoing edge line
+
+    // Convert interior angle to radians (measured from the left horizontal, going counterclockwise)
+    // Interior angle of 180° means the line points left (same as incoming)
+    // Interior angle of 0° means the line points right (same as extension)
+    const angleRad = (interiorAngle * Math.PI) / 180;
+
+    // Outgoing edge endpoint (from horizontal left, rotating counterclockwise by interior angle)
+    // At 180°, it points left. At 90°, it points up. At 0°, it points right.
+    const outX = cx + lineLength * Math.cos(Math.PI - angleRad);
+    const outY = cy - lineLength * Math.sin(Math.PI - angleRad);
+
+    // Arc endpoints at radius distance from vertex
+    // Interior arc: from left horizontal (180°) to outgoing edge direction
+    const intArcStartX = cx - radius; // left point on horizontal
+    const intArcStartY = cy;
+    const intArcEndX = cx + radius * Math.cos(Math.PI - angleRad);
+    const intArcEndY = cy - radius * Math.sin(Math.PI - angleRad);
+
+    // Exterior arc: from outgoing edge direction to right horizontal (0°)
+    const extArcStartX = intArcEndX;
+    const extArcStartY = intArcEndY;
+    const extArcEndX = cx + radius; // right point on horizontal
+    const extArcEndY = cy;
+
+    // Determine large arc flags
+    const intLargeArc = interiorAngle > 180 ? 1 : 0;
+    const extLargeArc = exteriorAngle > 180 ? 1 : 0;
+
+    // Interior angle fill and arc paths
+    const intFillPath = `M ${cx} ${cy} L ${intArcStartX} ${intArcStartY} A ${radius} ${radius} 0 ${intLargeArc} 1 ${intArcEndX} ${intArcEndY} Z`;
+    const intArcPath = `M ${intArcStartX} ${intArcStartY} A ${radius} ${radius} 0 ${intLargeArc} 1 ${intArcEndX} ${intArcEndY}`;
+
+    // Exterior angle fill and arc paths
+    const extFillPath = `M ${cx} ${cy} L ${extArcStartX} ${extArcStartY} A ${radius} ${radius} 0 ${extLargeArc} 1 ${extArcEndX} ${extArcEndY} Z`;
+    const extArcPath = `M ${extArcStartX} ${extArcStartY} A ${radius} ${radius} 0 ${extLargeArc} 1 ${extArcEndX} ${extArcEndY}`;
+
+    // Label positions (midpoint of each arc, pushed outward)
+    const intMidAngle = Math.PI - angleRad / 2; // midpoint of interior arc
+    const extMidAngle = (Math.PI - angleRad) / 2; // midpoint of exterior arc (between outgoing and right)
+
+    const labelRadius = radius + 15;
+    const intLabelX = cx + labelRadius * Math.cos(intMidAngle);
+    const intLabelY = cy - labelRadius * Math.sin(intMidAngle);
+    const extLabelX = cx + labelRadius * Math.cos(extMidAngle);
+    const extLabelY = cy - labelRadius * Math.sin(extMidAngle);
+
+    return {
+      cx,
+      cy,
+      outX,
+      outY,
+      intFillPath,
+      intArcPath,
+      extFillPath,
+      extArcPath,
+      intLabelX,
+      intLabelY,
+      extLabelX,
+      extLabelY,
+    };
+  }, [interiorAngle, exteriorAngle]);
+
+  return (
+    <div className="space-y-4">
+      {/* Interactive SVG */}
+      <div className="flex justify-center">
+        <svg viewBox="0 0 240 140" className="w-full max-w-sm">
+          {/* Previous side coming IN to vertex (horizontal from left) */}
+          <line
+            x1="30"
+            y1={geometry.cy}
+            x2={geometry.cx}
+            y2={geometry.cy}
+            stroke="#374151"
+            strokeWidth="3"
+            className="dark:stroke-gray-300"
+          />
+
+          {/* Next side going OUT from vertex (controlled by slider) */}
+          <line
+            x1={geometry.cx}
+            y1={geometry.cy}
+            x2={geometry.outX}
+            y2={geometry.outY}
+            stroke="#374151"
+            strokeWidth="3"
+            className="dark:stroke-gray-300"
+          />
+
+          {/* Extended line (dashed) - extension of incoming side going RIGHT */}
+          <line
+            x1={geometry.cx}
+            y1={geometry.cy}
+            x2="210"
+            y2={geometry.cy}
+            stroke="#9ca3af"
+            strokeWidth="2"
+            strokeDasharray="6,4"
+            className="dark:stroke-gray-500"
+          />
+
+          {/* Interior angle fill (amber) */}
+          <path d={geometry.intFillPath} fill="rgba(245, 158, 11, 0.25)" />
+          {/* Interior angle arc */}
+          <path
+            d={geometry.intArcPath}
+            fill="none"
+            stroke="#f59e0b"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+
+          {/* Exterior angle fill (red) */}
+          <path d={geometry.extFillPath} fill="rgba(239, 68, 68, 0.25)" />
+          {/* Exterior angle arc */}
+          <path
+            d={geometry.extArcPath}
+            fill="none"
+            stroke="#ef4444"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+
+          {/* Vertex point */}
+          <circle cx={geometry.cx} cy={geometry.cy} r="5" fill="#7c3aed" className="dark:fill-purple-400" />
+
+          {/* 180° indicator */}
+          <text
+            x={geometry.cx}
+            y="125"
+            fontSize="10"
+            textAnchor="middle"
+            fill="#6b7280"
+            className="dark:fill-gray-400"
+          >
+            ← 180° →
+          </text>
+        </svg>
+      </div>
+
+      {/* Angle values display */}
+      <div className="flex justify-center gap-4 text-lg font-bold">
+        <div className="bg-amber-100 dark:bg-amber-900/30 px-4 py-2 rounded-lg">
+          <span className="text-amber-700 dark:text-amber-400">Int: {interiorAngle}°</span>
+        </div>
+        <div className="text-gray-500 dark:text-gray-400 py-2">+</div>
+        <div className="bg-red-100 dark:bg-red-900/30 px-4 py-2 rounded-lg">
+          <span className="text-red-700 dark:text-red-400">Ext: {exteriorAngle}°</span>
+        </div>
+        <div className="text-gray-500 dark:text-gray-400 py-2">=</div>
+        <div className="bg-purple-100 dark:bg-purple-900/30 px-4 py-2 rounded-lg">
+          <span className="text-purple-700 dark:text-purple-400">180°</span>
+        </div>
+      </div>
+
+      {/* Slider control */}
+      <div className="px-4">
+        <label className="block text-sm text-center text-gray-600 dark:text-gray-400 mb-2">
+          Mueve el ángulo interior
+        </label>
+        <input
+          type="range"
+          min="30"
+          max="150"
+          value={interiorAngle}
+          onChange={(e) => setInteriorAngle(Number(e.target.value))}
+          className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-500"
+        />
+        <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+          <span>30°</span>
+          <span>150°</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 interface Tab {
   id: TabId;
@@ -180,127 +372,9 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <h4 className="text-center font-bold text-purple-800 dark:text-purple-200 mb-3">
                 Ángulos Suplementarios
               </h4>
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center">
-                <p className="text-xl">
-                  <span className="text-amber-600 dark:text-amber-400 font-semibold">
-                    Interior
-                  </span>{' '}
-                  +{' '}
-                  <span className="text-red-600 dark:text-red-400 font-semibold">Exterior</span> ={' '}
-                  <span className="text-purple-600 dark:text-purple-400 font-bold">180°</span>
-                </p>
-              </div>
-            </div>
 
-            {/* Visual: One vertex showing both angles */}
-            <div className="flex justify-center">
-              <svg viewBox="0 0 240 140" className="w-full max-w-sm">
-                {/*
-                  Geometry setup:
-                  - Vertex at (120, 100)
-                  - Incoming edge from left (30, 100) → (120, 100)
-                  - Outgoing edge to up-right (120, 100) → (185, 50)
-                  - Extension continues right (120, 100) → (210, 100)
-
-                  Outgoing direction: (65, -50), normalized ≈ (0.793, -0.610)
-                  At radius 35: (120 + 27.7, 100 - 21.3) = (147.7, 78.7)
-                */}
-
-                {/* Previous side coming IN to vertex */}
-                <line
-                  x1="30"
-                  y1="100"
-                  x2="120"
-                  y2="100"
-                  stroke="#374151"
-                  strokeWidth="3"
-                  className="dark:stroke-gray-300"
-                />
-                {/* Next side going OUT from vertex (up-right at ~38 degrees above horizontal) */}
-                <line
-                  x1="120"
-                  y1="100"
-                  x2="185"
-                  y2="50"
-                  stroke="#374151"
-                  strokeWidth="3"
-                  className="dark:stroke-gray-300"
-                />
-                {/* Extended line (dashed) - extension of incoming side going RIGHT */}
-                <line
-                  x1="120"
-                  y1="100"
-                  x2="210"
-                  y2="100"
-                  stroke="#9ca3af"
-                  strokeWidth="2"
-                  strokeDasharray="6,4"
-                  className="dark:stroke-gray-500"
-                />
-
-                {/* Interior angle fill (amber) - from LEFT horizontal to outgoing edge (counterclockwise) */}
-                <path
-                  d="M 120 100 L 85 100 A 35 35 0 0 1 148 79 Z"
-                  fill="rgba(245, 158, 11, 0.25)"
-                />
-                {/* Interior angle arc - sweeps counterclockwise from left to outgoing */}
-                <path
-                  d="M 85 100 A 35 35 0 0 1 148 79"
-                  fill="none"
-                  stroke="#f59e0b"
-                  strokeWidth="3"
-                />
-
-                {/* Exterior angle fill (red) - from outgoing edge to RIGHT extension (counterclockwise) */}
-                <path
-                  d="M 120 100 L 148 79 A 35 35 0 0 1 155 100 Z"
-                  fill="rgba(239, 68, 68, 0.25)"
-                />
-                {/* Exterior angle arc - sweeps counterclockwise from outgoing to extension */}
-                <path
-                  d="M 148 79 A 35 35 0 0 1 155 100"
-                  fill="none"
-                  stroke="#ef4444"
-                  strokeWidth="3"
-                />
-
-                {/* Labels - positioned inside their respective arcs */}
-                <text
-                  x="100"
-                  y="85"
-                  fontSize="13"
-                  fill="#d97706"
-                  fontWeight="bold"
-                  className="dark:fill-amber-400"
-                >
-                  Int
-                </text>
-                <text
-                  x="155"
-                  y="85"
-                  fontSize="13"
-                  fill="#dc2626"
-                  fontWeight="bold"
-                  className="dark:fill-red-400"
-                >
-                  Ext
-                </text>
-
-                {/* Vertex point */}
-                <circle cx="120" cy="100" r="5" fill="#7c3aed" className="dark:fill-purple-400" />
-
-                {/* Small indicator showing the straight line (180°) */}
-                <text
-                  x="120"
-                  y="125"
-                  fontSize="10"
-                  textAnchor="middle"
-                  fill="#6b7280"
-                  className="dark:fill-gray-400"
-                >
-                  ← 180° →
-                </text>
-              </svg>
+              {/* Interactive diagram */}
+              <InteractiveSupplementaryAngles />
             </div>
 
             {/* Formula derivation */}
