@@ -138,7 +138,7 @@ const OA_7B: MinEducOA[] = [
     name: 'Lenguaje algebraico',
     description: 'Utilizar el lenguaje algebraico para generalizar relaciones entre números, para establecer y formular reglas y propiedades y construir ecuaciones.',
     isBasal: true,
-    lessonIds: ['m1-alg-002-a'],
+    lessonIds: [], // Próximamente - m1-alg-002-a is a better fit for OA-07 (términos semejantes)
   },
   {
     code: 'MA07-OA-07',
@@ -180,7 +180,7 @@ const OA_7B: MinEducOA[] = [
     name: 'Ángulos en polígonos',
     description: 'Descubrir relaciones que involucran ángulos exteriores o interiores de diferentes polígonos.',
     isBasal: false,
-    lessonIds: ['m1-geo-001-b', 'm1-geo-001-c'],
+    lessonIds: [], // Próximamente - needs lessons about angles, not area
   },
   {
     code: 'MA07-OA-11',
@@ -210,7 +210,7 @@ const OA_7B: MinEducOA[] = [
     name: 'Área de triángulos, paralelogramos y trapecios',
     description: 'Desarrollar y aplicar la fórmula del área de triángulos, paralelogramos y trapecios.',
     isBasal: false,
-    lessonIds: ['m1-geo-001-c'],
+    lessonIds: ['m1-geo-001-b', 'm1-geo-001-c'],
   },
   {
     code: 'MA07-OA-14',
@@ -807,3 +807,75 @@ export const EJE_LABELS: Record<Eje, string> = {
  * Eje order for sorting
  */
 export const EJE_ORDER: Eje[] = ['números', 'álgebra', 'geometría', 'probabilidad'];
+
+// ============================================================================
+// VALIDATION
+// ============================================================================
+
+export interface LessonDuplicateError {
+  grade: GradeLevel;
+  lessonId: string;
+  oaCodes: string[];
+}
+
+/**
+ * Validate that no lesson appears in multiple OA within the same grade level.
+ * Each lesson should only be assigned to ONE OA per grade.
+ *
+ * @returns Array of duplicate errors, empty if valid
+ */
+export function validateNoLessonDuplicates(): LessonDuplicateError[] {
+  const errors: LessonDuplicateError[] = [];
+
+  for (const grade of Object.keys(MINEDUC_OA) as GradeLevel[]) {
+    const oaList = MINEDUC_OA[grade];
+    if (!oaList) continue;
+
+    // Track which OA each lesson appears in
+    const lessonToOA = new Map<string, string[]>();
+
+    for (const oa of oaList) {
+      for (const lessonId of oa.lessonIds) {
+        const existing = lessonToOA.get(lessonId) || [];
+        existing.push(oa.code);
+        lessonToOA.set(lessonId, existing);
+      }
+    }
+
+    // Find duplicates
+    for (const [lessonId, oaCodes] of lessonToOA) {
+      if (oaCodes.length > 1) {
+        errors.push({ grade, lessonId, oaCodes });
+      }
+    }
+  }
+
+  return errors;
+}
+
+/**
+ * Assert no lesson duplicates exist. Throws if duplicates found.
+ * Call this at app startup or in tests to catch mapping errors early.
+ */
+export function assertNoLessonDuplicates(): void {
+  const errors = validateNoLessonDuplicates();
+  if (errors.length > 0) {
+    const details = errors
+      .map(e => `  - ${e.lessonId} appears in ${e.oaCodes.join(', ')} (grade ${e.grade})`)
+      .join('\n');
+    throw new Error(
+      `Lesson duplicate validation failed. Each lesson should only appear in ONE OA per grade:\n${details}`
+    );
+  }
+}
+
+// Run validation at module load in development
+if (process.env.NODE_ENV !== 'production') {
+  const errors = validateNoLessonDuplicates();
+  if (errors.length > 0) {
+    console.warn(
+      '⚠️ Lesson duplicates detected in MINEDUC_OA:',
+      errors.map(e => `${e.lessonId} in ${e.oaCodes.join(', ')}`)
+    );
+  }
+}

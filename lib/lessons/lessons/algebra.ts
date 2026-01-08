@@ -216,7 +216,7 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-ALG-002',
     skills: ['algebra-polinomios', 'algebra-terminos-semejantes', 'algebra-operaciones-basicas'],
     estimatedMinutes: 15,
-    minEducOA: ['MA07-OA-06', 'MA07-OA-07'],
+    minEducOA: ['MA07-OA-07'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Gerente de la Empresa' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
