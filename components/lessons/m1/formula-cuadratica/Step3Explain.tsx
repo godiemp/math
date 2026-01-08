@@ -156,18 +156,6 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
         </p>
       </div>
 
-      {/* Main Formula Display */}
-      <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-xl p-6 border border-purple-200 dark:border-purple-700">
-        <div className="text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            <MathText content="Para resolver $ax^2 + bx + c = 0$:" />
-          </p>
-          <div className="text-2xl md:text-3xl font-bold text-purple-700 dark:text-purple-300">
-            <BlockMath latex="x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}" />
-          </div>
-        </div>
-      </div>
-
       {/* Tabs */}
       <div className="flex flex-wrap justify-center gap-2">
         {FORMULAS.map((formula) => {
