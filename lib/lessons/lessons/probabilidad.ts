@@ -16,7 +16,7 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M1-PROB-001',
     skills: ['tablas-frecuencia', 'frecuencia-relativa', 'grafico-barras', 'grafico-circular'],
     estimatedMinutes: 12,
-    minEducOA: ['MA1M-OA-12'],
+    minEducOA: ['MA1M-OA-12', 'MA07-OA-16'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Encuesta Misteriosa' },
       { id: 'explore-build', type: 'explore', title: 'Construye tu Gráfico' },
@@ -56,6 +56,7 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M1-PROB-002',
     skills: ['estadistica-media', 'estadistica-mediana', 'estadistica-moda', 'estadistica-rango'],
     estimatedMinutes: 15,
+    minEducOA: ['MA07-OA-17'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Batalla del Top 10' },
       { id: 'explore', type: 'explore', title: 'El Laboratorio de Datos' },
@@ -115,7 +116,7 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M1-PROB-004',
     skills: ['probabilidad-basica', 'espacio-muestral', 'eventos-favorables'],
     estimatedMinutes: 12,
-    minEducOA: ['MA1M-OA-14'],
+    minEducOA: ['MA1M-OA-14', 'MA07-OA-18'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Juego de Dados' },
       { id: 'explore-dice', type: 'explore', title: 'Explorando Posibilidades' },
@@ -195,7 +196,7 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M1-PROB-006',
     skills: ['graficos-dispersion', 'comparar-poblaciones', 'correlacion', 'analisis-datos'],
     estimatedMinutes: 15,
-    minEducOA: ['MA1M-OA-13'],
+    minEducOA: ['MA1M-OA-13', 'MA07-OA-18'],
     steps: [
       { id: 'hook', type: 'hook', title: 'Dos Escuelas, Una Pregunta' },
       { id: 'explore-scatter', type: 'explore', title: 'Construye tu Gráfico' },
