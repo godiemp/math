@@ -212,14 +212,14 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               fill={color.fill}
               stroke={color.stroke}
               strokeWidth={3}
-              angles={[{ showArc: true, label: '30°', color: '#dc2626' }, {}, {}]}
+              padding={50}
+              angles={[{ showArc: true, label: '30°', color: '#dc2626', arcRadius: 30 }, {}, {}]}
               sides={[
-                { labelPrefix: 'Hip:', measurement: String(triangle.hypotenuse), labelColor: '#7c3aed' },
-                { labelPrefix: 'Op:', measurement: String(triangle.opposite), labelColor: '#dc2626' },
-                { labelPrefix: 'Ady:', measurement: String(triangle.adjacent), labelColor: '#059669' },
+                { label: `Hip: ${triangle.hypotenuse}`, labelColor: '#7c3aed' },
+                { label: `Op: ${triangle.opposite}`, labelColor: '#dc2626' },
+                { label: `Ady: ${triangle.adjacent}`, labelColor: '#059669' },
               ]}
-              showVertices={false}
-              className="w-64"
+              className="w-72"
             />
           </div>
 

@@ -325,7 +325,7 @@ interface SideLabelProps {
 function SideLabel({ vertices, sideIndex, config }: SideLabelProps) {
   const p1 = vertices[sideIndex];
   const p2 = vertices[(sideIndex + 1) % 3];
-  const pos = calculateSideLabelPosition(p1, p2, vertices, 15);
+  const pos = calculateSideLabelPosition(p1, p2, vertices, config.labelOffset ?? 18);
 
   // Build label text: prefix + value, or just label/measurement
   let labelText: string | undefined;

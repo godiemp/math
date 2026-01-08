@@ -32,6 +32,8 @@ export interface SideConfig {
   strokeWidth?: number;
   /** Whether to show the measurement label */
   showMeasurement?: boolean;
+  /** Distance offset from side for label positioning (default: 18) */
+  labelOffset?: number;
 }
 
 /**

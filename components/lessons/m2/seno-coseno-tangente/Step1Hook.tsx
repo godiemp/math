@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ArrowRight, Check, X, Mountain, Ruler } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
@@ -17,13 +17,6 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   // Options: A) 17m, B) 30m, C) 52m (correct), D) 90m
   const correctAnswer = 2;
 
-  // Auto-advance from reveal to result
-  useEffect(() => {
-    if (phase === 'reveal') {
-      const timer = setTimeout(() => setPhase('result'), 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [phase]);
 
   if (!isActive) return null;
 
@@ -254,6 +247,14 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               altura = 30 × 1,73 ≈ <strong>52 m</strong>
             </p>
           </div>
+
+          <button
+            onClick={() => setPhase('result')}
+            className="mt-6 w-full flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <span>¿Cómo lo calculamos?</span>
+            <ArrowRight size={20} />
+          </button>
         </div>
       </div>
     );
