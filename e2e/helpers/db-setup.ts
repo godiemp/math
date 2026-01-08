@@ -114,6 +114,16 @@ export async function seedTestData() {
       [syncStudentId, 'syncstudent', 'sync.student@test.com', syncStudentPassword, 'Sync Student', 'student', true, now, now]
     );
 
+    // Create test student managed by teacher (for teacher students page testing)
+    const managedStudentPassword = await bcrypt.hash('ManagedStudent123!', 10);
+    const managedStudentId = 'test-managed-student';
+
+    await client.query(
+      `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, grade_level, assigned_by_teacher_id, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+      [managedStudentId, 'maria.gonzalez', 'maria.gonzalez@student.simplepaes.cl', managedStudentPassword, 'María González', 'student', true, '1-medio', teacherId, now, now]
+    );
+
     // Create a test class for the teacher
     const testClassId = 'test-class-1';
     await client.query(
@@ -235,6 +245,22 @@ export async function seedTestData() {
       ]
     );
 
+    // Create active subscription for managed student
+    await client.query(
+      `INSERT INTO subscriptions (user_id, plan_id, status, started_at, expires_at, auto_renew, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [
+        managedStudentId,
+        testPlanId,
+        'active',
+        now,
+        now + (365 * 24 * 60 * 60 * 1000), // 1 year from now
+        true,
+        now,
+        now
+      ]
+    );
+
     // Create sample questions
     const questions = [
       {
@@ -329,7 +355,7 @@ export async function seedTestData() {
     );
 
     await client.query('COMMIT');
-    return { adminId, studentId, teacherId, syncStudentId, sessionId, testClassId };
+    return { adminId, studentId, teacherId, syncStudentId, managedStudentId, sessionId, testClassId };
   } catch (error) {
     await client.query('ROLLBACK');
     throw error;

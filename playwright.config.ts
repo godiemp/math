@@ -111,8 +111,8 @@ export default defineConfig({
         storageState: '.auth/teacher.json',
       },
       dependencies: ['setup'],
-      // Only run teacher dashboard tests
-      testMatch: ['**/teacher-dashboard.spec.ts'],
+      // Only run teacher tests
+      testMatch: ['**/teacher-dashboard.spec.ts', '**/teacher-students.spec.ts'],
     },
 
     // Uncomment to test on more browsers
