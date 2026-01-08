@@ -2,17 +2,17 @@
 
 Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
-**Última actualización:** 2025-01-08
+**Última actualización:** 2026-01-08
 
 ## Resumen
 
 | Métrica | Valor |
 |---------|-------|
 | Total OA | 19 |
-| OA con cobertura | 14 |
-| OA sin cobertura | 5 |
-| % Cobertura | 74% |
-| Total lecciones mapeadas | 20 |
+| OA con cobertura | 15 |
+| OA sin cobertura | 4 |
+| % Cobertura | 79% |
+| Total lecciones mapeadas | 21 |
 
 ---
 
@@ -228,14 +228,15 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 ## Probabilidad y Estadística (5 OA)
 
-### MA07-OA-15: Muestreo y estimación ❌
+### MA07-OA-15: Muestreo y estimación ✅
 > Estimar el porcentaje de algunas características de una población desconocida por medio del muestreo.
 
-**Estado:** ❌ Sin cobertura
+**Estado:** ✅ Cobertura completa
 **Tipo:** No basal
 
-**Pendiente:**
-- 7b-prob-001: Muestreo y Estimación de Poblaciones
+| Lección | Nivel | Título |
+|---------|-------|--------|
+| m1-prob-001-a | M1 | Muestreo y Estimación de Poblaciones |
 
 ---
 
@@ -247,7 +248,7 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 | Lección | Nivel | Título |
 |---------|-------|--------|
-| m1-prob-001-a | M1 | Tablas de Frecuencia y Gráficos |
+| m1-prob-001-b | M1 | Tablas de Frecuencia y Gráficos |
 
 ---
 
@@ -298,8 +299,8 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 | Números | 5 | 5 | 100% |
 | Álgebra | 4 | 3 | 75% |
 | Geometría | 5 | 3 | 60% |
-| Prob/Estadística | 5 | 3 | 60% |
-| **Total** | **19** | **14** | **74%** |
+| Prob/Estadística | 5 | 4 | 80% |
+| **Total** | **19** | **15** | **79%** |
 
 ### OA Basales sin cobertura
 
@@ -316,7 +317,6 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 | Alta | MA07-OA-14 | Vectores | 2 lecciones |
 | Media | MA07-OA-10 | Ángulos en polígonos | 2 lecciones |
 | Media | MA07-OA-12 | Construcciones | 2 lecciones |
-| Media | MA07-OA-15 | Muestreo | 1 lección |
 | Baja | MA07-OA-19 | Prob. experimental vs teórica | 1 lección |
 
 ---
@@ -364,7 +364,6 @@ La mayoría de OA de 7° básico ya están cubiertos por lecciones M1. Un estudi
 Solo si el proyecto decide expandirse a 7° básico específicamente:
 1. 7b-geo-001: Construcciones Geométricas
 2. 7b-geo-002: Puntos Notables del Triángulo
-3. 7b-prob-001: Muestreo
 
 ### Fase 3: Completar Brechas M1 (beneficia 7° y PAES)
 1. m1-alg-006-b: Inecuaciones Lineales
