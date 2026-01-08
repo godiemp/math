@@ -442,20 +442,32 @@ export async function startDiagnostic(options: StartDiagnosticOptions): Promise<
 
   // Check for existing active session
   const existingSession = await pool.query(
-    `SELECT id FROM diagnostic_sessions
+    `SELECT id, messages, inferences, started_at FROM diagnostic_sessions
      WHERE user_id = $1 AND subject = $2 AND status = 'active'`,
     [userId, subject]
   );
 
   if (existingSession.rows.length > 0) {
-    // Return existing session
-    return {
-      sessionId: existingSession.rows[0].id,
-      message: 'Ya tienes una sesión de diagnóstico activa para este tema. ¿Continuamos donde lo dejamos?',
-      inferences: [],
-      isComplete: false,
-      success: true,
-    };
+    const row = existingSession.rows[0];
+    const messages: ChatMessage[] = row.messages || [];
+    const inferences: KnowledgeInference[] = row.inferences || [];
+
+    // If session has messages, return the last AI message to continue
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      return {
+        sessionId: row.id,
+        message: lastMessage.role === 'assistant'
+          ? lastMessage.content
+          : '¿En qué estábamos? Cuéntame más sobre lo que sabes de este tema.',
+        inferences,
+        isComplete: false,
+        success: true,
+      };
+    }
+
+    // Session exists but has no messages (corrupted/interrupted) - delete and create new
+    await pool.query('DELETE FROM diagnostic_sessions WHERE id = $1', [row.id]);
   }
 
   // Get units for this subject and level
