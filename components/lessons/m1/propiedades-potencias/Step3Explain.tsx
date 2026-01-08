@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, BookOpen, Lightbulb, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { MathText } from '@/components/math/MathDisplay';
 
 type TabId = 'multiply' | 'divide' | 'power-of-power' | 'combined' | 'tips';
 
@@ -27,16 +28,16 @@ const FORMULAS: FormulaTab[] = [
     title: 'Producto de Potencias',
     shortTitle: 'Producto',
     description: 'Cuando multiplicas potencias con la misma base, sumas los exponentes',
-    formula: 'aᵐ × aⁿ = aᵐ⁺ⁿ',
+    formula: '$a^m \\times a^n = a^{m+n}$',
     example: {
-      input: '4³ × 4²',
+      input: '$4^3 \\times 4^2$',
       steps: [
         'Misma base: 4',
         'Exponentes: 3 y 2',
-        'Suma exponentes: 3 + 2 = 5',
-        '= 4⁵ = 1024',
+        'Suma exponentes: $3 + 2 = 5$',
+        '$= 4^5 = 1024$',
       ],
-      result: '4⁵ = 1024',
+      result: '$4^5 = 1024$',
     },
     color: 'blue',
   },
@@ -45,16 +46,16 @@ const FORMULAS: FormulaTab[] = [
     title: 'Cociente de Potencias',
     shortTitle: 'Cociente',
     description: 'Cuando divides potencias con la misma base, restas los exponentes',
-    formula: 'aᵐ ÷ aⁿ = aᵐ⁻ⁿ',
+    formula: '$a^m \\div a^n = a^{m-n}$',
     example: {
-      input: '7⁵ ÷ 7³',
+      input: '$7^5 \\div 7^3$',
       steps: [
         'Misma base: 7',
         'Exponentes: 5 y 3',
-        'Resta exponentes: 5 - 3 = 2',
-        '= 7² = 49',
+        'Resta exponentes: $5 - 3 = 2$',
+        '$= 7^2 = 49$',
       ],
-      result: '7² = 49',
+      result: '$7^2 = 49$',
     },
     color: 'purple',
   },
@@ -63,16 +64,16 @@ const FORMULAS: FormulaTab[] = [
     title: 'Potencia de Potencia',
     shortTitle: 'Potencia²',
     description: 'Cuando elevas una potencia a otro exponente, multiplicas los exponentes',
-    formula: '(aᵐ)ⁿ = aᵐˣⁿ',
+    formula: '$(a^m)^n = a^{m \\cdot n}$',
     example: {
-      input: '(3²)⁴',
+      input: '$(3^2)^4$',
       steps: [
         'Base: 3',
         'Exponentes: 2 y 4',
-        'Multiplica exponentes: 2 × 4 = 8',
-        '= 3⁸ = 6561',
+        'Multiplica exponentes: $2 \\times 4 = 8$',
+        '$= 3^8 = 6561$',
       ],
-      result: '3⁸ = 6561',
+      result: '$3^8 = 6561$',
     },
     color: 'teal',
   },
@@ -81,16 +82,16 @@ const FORMULAS: FormulaTab[] = [
     title: 'Propiedades Combinadas',
     shortTitle: 'Combinadas',
     description: 'Puedes aplicar varias propiedades en una misma expresión',
-    formula: 'aᵐ × aⁿ ÷ aᵖ = aᵐ⁺ⁿ⁻ᵖ',
+    formula: '$a^m \\times a^n \\div a^p = a^{m+n-p}$',
     example: {
-      input: '2⁴ × 2³ ÷ 2⁵',
+      input: '$2^4 \\times 2^3 \\div 2^5$',
       steps: [
         'Misma base: 2',
         'Exponentes: 4, 3, 5',
-        'Opera: 4 + 3 - 5 = 2',
-        '= 2² = 4',
+        'Opera: $4 + 3 - 5 = 2$',
+        '$= 2^2 = 4$',
       ],
-      result: '2² = 4',
+      result: '$2^2 = 4$',
     },
     color: 'pink',
   },
@@ -213,19 +214,19 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
               <h5 className="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Correcto:</h5>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <li>• 2³ × 2⁴ = 2⁷ (suma: 3 + 4 = 7)</li>
-                <li>• 5⁶ ÷ 5² = 5⁴ (resta: 6 - 2 = 4)</li>
-                <li>• (3²)³ = 3⁶ (multiplica: 2 × 3 = 6)</li>
+                <li>• <MathText content="$2^3 \times 2^4 = 2^7$" /> (suma: 3 + 4 = 7)</li>
+                <li>• <MathText content="$5^6 \div 5^2 = 5^4$" /> (resta: 6 - 2 = 4)</li>
+                <li>• <MathText content="$(3^2)^3 = 3^6$" /> (multiplica: 2 × 3 = 6)</li>
                 <li>• La base debe ser la misma</li>
               </ul>
             </div>
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
               <h5 className="font-semibold text-red-700 dark:text-red-300 mb-2">✗ Errores comunes:</h5>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <li>• 2³ × 2⁴ = 2¹² (multiplicar en vez de sumar)</li>
-                <li>• 2³ × 3² = 6⁵ (bases diferentes, no se puede)</li>
-                <li>• (3²)³ = 3⁵ (sumar en vez de multiplicar)</li>
-                <li>• 5⁴ ÷ 5⁶ = 5² (el orden importa en la resta)</li>
+                <li>• <MathText content="$2^3 \times 2^4 = 2^{12}$" /> (multiplicar en vez de sumar)</li>
+                <li>• <MathText content="$2^3 \times 3^2 = 6^5$" /> (bases diferentes, no se puede)</li>
+                <li>• <MathText content="$(3^2)^3 = 3^5$" /> (sumar en vez de multiplicar)</li>
+                <li>• <MathText content="$5^4 \div 5^6 = 5^2$" /> (el orden importa en la resta)</li>
               </ul>
             </div>
           </div>
@@ -245,9 +246,10 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
 
           {/* Main formula */}
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6">
-            <p className="text-center font-mono text-2xl text-gray-800 dark:text-gray-200">
-              {currentFormula!.formula}
-            </p>
+            <MathText
+              content={currentFormula!.formula}
+              className="text-center text-2xl text-gray-800 dark:text-gray-200 block"
+            />
           </div>
 
           {/* Example */}
@@ -257,21 +259,23 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               Ejemplo:
             </h4>
             <div className="space-y-3">
-              <p className="font-mono text-lg text-gray-800 dark:text-gray-200">
-                {currentFormula!.example.input}
-              </p>
+              <MathText
+                content={currentFormula!.example.input}
+                className="text-lg text-gray-800 dark:text-gray-200"
+              />
               <div className="pl-4 border-l-2 border-gray-300 dark:border-gray-600 space-y-2">
                 {currentFormula!.example.steps.map((step, i) => (
-                  <p key={i} className="text-gray-600 dark:text-gray-400 font-mono text-sm">
-                    {i === currentFormula!.example.steps.length - 1 ? '→ ' : '• '}
-                    {step}
-                  </p>
+                  <div key={i} className="text-gray-600 dark:text-gray-400 text-sm flex items-start gap-1">
+                    <span>{i === currentFormula!.example.steps.length - 1 ? '→ ' : '• '}</span>
+                    <MathText content={step} />
+                  </div>
                 ))}
               </div>
               <div className={cn('p-3 rounded-lg mt-4', colors.bg)}>
-                <p className={cn('font-mono font-bold text-lg text-center', colors.text)}>
-                  = {currentFormula!.example.result}
-                </p>
+                <MathText
+                  content={`= ${currentFormula!.example.result}`}
+                  className={cn('font-bold text-lg text-center block', colors.text)}
+                />
               </div>
             </div>
           </div>
@@ -287,17 +291,17 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
             <div>
-              <p className="font-mono text-blue-600 text-lg">×</p>
+              <MathText content="$\times$" className="text-blue-600 text-lg" />
               <p className="text-sm text-gray-600 dark:text-gray-400">Multiplicar potencias</p>
               <p className="font-bold text-blue-600">→ Sumar exponentes</p>
             </div>
             <div>
-              <p className="font-mono text-purple-600 text-lg">÷</p>
+              <MathText content="$\div$" className="text-purple-600 text-lg" />
               <p className="text-sm text-gray-600 dark:text-gray-400">Dividir potencias</p>
               <p className="font-bold text-purple-600">→ Restar exponentes</p>
             </div>
             <div>
-              <p className="font-mono text-green-600 text-lg">( )ⁿ</p>
+              <MathText content="$( )^n$" className="text-green-600 text-lg" />
               <p className="text-sm text-gray-600 dark:text-gray-400">Potencia de potencia</p>
               <p className="font-bold text-green-600">→ Multiplicar exponentes</p>
             </div>

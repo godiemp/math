@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { MathText } from '@/components/math/MathDisplay';
 
 interface ScaleItem {
   id: string;
@@ -165,7 +166,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               </p>
               <p className="text-gray-700 dark:text-gray-300">
                 El número <span className="font-mono">150,000,000,000</span> se puede escribir simplemente como{' '}
-                <span className="font-mono font-bold text-purple-700 dark:text-purple-300">1.5 × 10¹¹</span>
+                <span className="font-bold text-purple-700 dark:text-purple-300"><MathText content="$1.5 \times 10^{11}$" /></span>
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                 ¡Vamos a descubrir cómo funciona esta magia matemática!

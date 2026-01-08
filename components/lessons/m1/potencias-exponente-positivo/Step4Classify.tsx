@@ -11,6 +11,7 @@ import {
   ActionButton,
   ResultsSummary,
 } from '@/components/lessons/primitives';
+import { MathText } from '@/components/math/MathDisplay';
 
 interface Expression {
   id: string;
@@ -23,38 +24,38 @@ interface Expression {
 const EXPRESSIONS: Expression[] = [
   {
     id: 'e1',
-    expression: '2⁴',
+    expression: '$2^4$',
     correctValue: 16,
     options: [8, 16, 6, 32],
-    explanation: '2⁴ = 2 × 2 × 2 × 2 = 4 × 4 = 16',
+    explanation: '$2^4 = 2 \\times 2 \\times 2 \\times 2 = 4 \\times 4 = 16$',
   },
   {
     id: 'e2',
-    expression: '3²',
+    expression: '$3^2$',
     correctValue: 9,
     options: [6, 9, 27, 5],
-    explanation: '3² = 3 × 3 = 9 (tres al cuadrado)',
+    explanation: '$3^2 = 3 \\times 3 = 9$ (tres al cuadrado)',
   },
   {
     id: 'e3',
-    expression: '5⁰',
+    expression: '$5^0$',
     correctValue: 1,
     options: [0, 5, 1, 25],
     explanation: 'Cualquier número (excepto 0) elevado a 0 es igual a 1',
   },
   {
     id: 'e4',
-    expression: '10²',
+    expression: '$10^2$',
     correctValue: 100,
     options: [20, 100, 1000, 10],
-    explanation: '10² = 10 × 10 = 100 (diez al cuadrado)',
+    explanation: '$10^2 = 10 \\times 10 = 100$ (diez al cuadrado)',
   },
   {
     id: 'e5',
-    expression: '4³',
+    expression: '$4^3$',
     correctValue: 64,
     options: [12, 16, 64, 81],
-    explanation: '4³ = 4 × 4 × 4 = 16 × 4 = 64 (cuatro al cubo)',
+    explanation: '$4^3 = 4 \\times 4 \\times 4 = 16 \\times 4 = 64$ (cuatro al cubo)',
   },
 ];
 
@@ -110,9 +111,9 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-900/50 rounded-2xl p-8 border border-gray-200 dark:border-gray-700">
             <div className="text-center mb-8">
               <p className="text-gray-500 dark:text-gray-400 mb-2">¿Cuánto es?</p>
-              <p className="font-mono text-5xl font-bold text-gray-800 dark:text-gray-200">
-                {mc.currentItem.expression}
-              </p>
+              <div className="text-5xl font-bold text-gray-800 dark:text-gray-200">
+                <MathText content={mc.currentItem.expression} />
+              </div>
             </div>
 
             {/* Options */}
@@ -155,7 +156,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           </div>
 
           {mc.showFeedback && (
-            <FeedbackPanel isCorrect={mc.isCorrect} explanation={mc.currentItem.explanation} />
+            <FeedbackPanel isCorrect={mc.isCorrect} explanation={<MathText content={mc.currentItem.explanation} />} />
           )}
 
           <div className="flex justify-center">
@@ -189,8 +190,8 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
               ) : (
                 <X className="w-5 h-5 text-red-600 flex-shrink-0" />
               )}
-              <span className="font-mono text-gray-700 dark:text-gray-300">{expr.expression}</span>
-              <span className="font-mono text-sm text-purple-600 font-bold ml-auto">
+              <span className="text-gray-700 dark:text-gray-300"><MathText content={expr.expression} /></span>
+              <span className="text-sm text-purple-600 font-bold ml-auto">
                 = {expr.correctValue}
               </span>
             </>

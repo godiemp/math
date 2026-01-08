@@ -10,6 +10,7 @@ import {
   ActionButton,
   ResultsSummary,
 } from '@/components/lessons/primitives';
+import { MathText } from '@/components/math/MathDisplay';
 
 type ResultType = '1' | 'positive-fraction' | 'negative-fraction' | 'whole-number';
 
@@ -23,33 +24,33 @@ interface Expression {
 const EXPRESSIONS: Expression[] = [
   {
     id: 'e1',
-    expression: '8⁰',
+    expression: '$8^0$',
     correctType: '1',
     explanation: 'Cualquier número distinto de cero elevado a 0 es igual a 1.',
   },
   {
     id: 'e2',
-    expression: '3⁻²',
+    expression: '$3^{-2}$',
     correctType: 'positive-fraction',
-    explanation: '3⁻² = 1/3² = 1/9, que es una fracción positiva.',
+    explanation: '$3^{-2} = \\frac{1}{3^2} = \\frac{1}{9}$, que es una fracción positiva.',
   },
   {
     id: 'e3',
-    expression: '(-4)⁰',
+    expression: '$(-4)^0$',
     correctType: '1',
-    explanation: 'Incluso con base negativa, cualquier número ≠ 0 elevado a 0 es 1.',
+    explanation: 'Incluso con base negativa, cualquier número $\\neq 0$ elevado a 0 es 1.',
   },
   {
     id: 'e4',
-    expression: '5⁻¹',
+    expression: '$5^{-1}$',
     correctType: 'positive-fraction',
-    explanation: '5⁻¹ = 1/5, que es una fracción positiva.',
+    explanation: '$5^{-1} = \\frac{1}{5}$, que es una fracción positiva.',
   },
   {
     id: 'e5',
-    expression: '(1/2)⁻¹',
+    expression: '$\\left(\\frac{1}{2}\\right)^{-1}$',
     correctType: 'whole-number',
-    explanation: '(1/2)⁻¹ = 2/1 = 2. El exponente negativo invierte la fracción.',
+    explanation: '$\\left(\\frac{1}{2}\\right)^{-1} = \\frac{2}{1} = 2$. El exponente negativo invierte la fracción.',
   },
 ];
 
@@ -130,8 +131,8 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-900/50 rounded-2xl p-8 border border-gray-200 dark:border-gray-700">
             <div className="text-center mb-8">
               <p className="text-gray-500 dark:text-gray-400 mb-2">¿Qué tipo de resultado da?</p>
-              <p className="font-mono text-4xl font-bold text-gray-800 dark:text-gray-200">
-                {mc.currentItem.expression}
+              <p className="text-4xl font-bold text-gray-800 dark:text-gray-200">
+                <MathText content={mc.currentItem.expression} />
               </p>
             </div>
 
@@ -185,7 +186,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           </div>
 
           {mc.showFeedback && (
-            <FeedbackPanel isCorrect={mc.isCorrect} explanation={mc.currentItem.explanation} />
+            <FeedbackPanel isCorrect={mc.isCorrect} explanation={<MathText content={mc.currentItem.explanation} />} />
           )}
 
           <div className="flex justify-center">
@@ -219,7 +220,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
               ) : (
                 <X className="w-5 h-5 text-red-600 flex-shrink-0" />
               )}
-              <span className="font-mono text-gray-700 dark:text-gray-300">{expr.expression}</span>
+              <span className="text-gray-700 dark:text-gray-300"><MathText content={expr.expression} /></span>
               <span className="text-sm text-purple-600 ml-auto">
                 {TYPE_OPTIONS.find((t) => t.id === expr.correctType)?.label}
               </span>

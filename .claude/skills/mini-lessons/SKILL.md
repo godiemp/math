@@ -426,6 +426,88 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
 
 ---
 
+## RULE 6: LaTeX for Math Content (MANDATORY)
+
+All mathematical expressions MUST use LaTeX rendering via the `MathText` component. **DO NOT use Unicode superscripts or symbols.**
+
+### Import
+```typescript
+import { MathText } from '@/components/math/MathDisplay';
+```
+
+### Usage
+```typescript
+// Inline math with $...$
+<MathText content="La fórmula es $a^n$ donde $n$ es el exponente." />
+
+// Display math with $$...$$ (centered, larger)
+<MathText content="$$\frac{a}{b} \times \frac{c}{d} = \frac{a \times c}{b \times d}$$" />
+
+// In data structures (double-escape backslashes)
+const formula = '$a^m \\times a^n = a^{m+n}$';
+```
+
+### Conversion Reference
+
+| DO NOT USE (Unicode) | USE (LaTeX) |
+|---------------------|-------------|
+| `aⁿ`, `a²`, `a³` | `$a^n$`, `$a^2$`, `$a^3$` |
+| `aᵐ⁺ⁿ`, `aᵐ⁻ⁿ` | `$a^{m+n}$`, `$a^{m-n}$` |
+| `ⁿ√a`, `√a` | `$\sqrt[n]{a}$`, `$\sqrt{a}$` |
+| `×` | `$\times$` or `\times` in LaTeX |
+| `÷` | `$\div$` or `\div` in LaTeX |
+| `a/b` (textual) | `$\frac{a}{b}$` |
+| `≠`, `≤`, `≥` | `$\neq$`, `$\leq$`, `$\geq$` |
+
+### Common LaTeX Patterns
+
+```latex
+% Fractions
+$\frac{3}{4}$                    → 3/4 rendered as fraction
+$\frac{a+b}{c}$                  → (a+b)/c
+
+% Powers and Exponents
+$a^n$, $a^{-n}$, $a^{m+n}$       → Powers
+$10^{23}$, $10^{-6}$             → Scientific notation
+
+% Roots
+$\sqrt{16}$                      → Square root
+$\sqrt[3]{8}$                    → Cube root
+$\sqrt[n]{a}$                    → Nth root
+
+% Operations
+$a \times b$                     → Multiplication
+$a \div b$                       → Division
+$a \cdot b$                      → Dot multiplication
+
+% Comparison
+$a \neq b$                       → Not equal
+$a \leq b$, $a \geq b$           → Less/greater or equal
+```
+
+### Example: Converting Step3Explain Data
+
+```typescript
+// ❌ WRONG - Unicode
+const FORMULAS = [
+  { formula: 'aᵐ × aⁿ = aᵐ⁺ⁿ' },
+];
+
+// ✅ CORRECT - LaTeX
+const FORMULAS = [
+  { formula: '$a^m \\times a^n = a^{m+n}$' },
+];
+
+// In JSX:
+// ❌ WRONG
+<p className="font-mono">{formula}</p>
+
+// ✅ CORRECT
+<MathText content={formula} className="text-xl" />
+```
+
+---
+
 ## Anti-Pattern Detection
 
 Before completing, verify NO anti-patterns exist.

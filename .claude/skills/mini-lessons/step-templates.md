@@ -421,6 +421,7 @@ import { useState } from 'react';
 import { ArrowRight, BookOpen, Lightbulb, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { MathText } from '@/components/math/MathDisplay';  // LaTeX rendering
 
 // NOTE: Always include 'tips' in TabId for the Tips tab
 type TabId = 'tab1' | 'tab2' | 'tab3' | 'tab4' | 'tips';
@@ -439,17 +440,24 @@ interface FormulaTab {
   color: string;
 }
 
+// IMPORTANT: Use LaTeX with $...$ delimiters for math content
+// Double-escape backslashes in strings: '\\times' not '\times'
 const FORMULAS: FormulaTab[] = [
   {
     id: 'tab1',
     title: '{TAB_1_TITLE}',
     shortTitle: '{TAB_1_SHORT}',
     description: '{TAB_1_DESCRIPTION}',
-    formula: '{TAB_1_FORMULA}',
+    formula: '$a^m \\times a^n = a^{m+n}$',  // LaTeX with $...$
     example: {
-      input: '{TAB_1_EXAMPLE_INPUT}',
-      steps: ['{STEP_1}', '{STEP_2}', '{STEP_3}'],
-      result: '{TAB_1_EXAMPLE_RESULT}',
+      input: '$4^3 \\times 4^2$',             // LaTeX
+      steps: [
+        'Misma base: 4',
+        'Exponentes: 3 y 2',
+        'Suma exponentes: $3 + 2 = 5$',       // Mix text and LaTeX
+        '$= 4^5 = 1024$',
+      ],
+      result: '$4^5 = 1024$',                 // LaTeX
     },
     color: 'blue',
   },
@@ -613,11 +621,12 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             {currentFormula!.description}
           </p>
 
-          {/* Main formula */}
+          {/* Main formula - USE MathText for LaTeX rendering */}
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6">
-            <p className="text-center font-mono text-2xl text-gray-800 dark:text-gray-200">
-              {currentFormula!.formula}
-            </p>
+            <MathText
+              content={currentFormula!.formula}
+              className="text-center text-2xl text-gray-800 dark:text-gray-200"
+            />
           </div>
 
           {/* Example */}
@@ -627,21 +636,26 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               Ejemplo:
             </h4>
             <div className="space-y-3">
-              <p className="font-mono text-lg text-gray-800 dark:text-gray-200">
-                {currentFormula!.example.input}
-              </p>
+              {/* MathText for LaTeX input */}
+              <MathText
+                content={currentFormula!.example.input}
+                className="text-lg text-gray-800 dark:text-gray-200"
+              />
               <div className="pl-4 border-l-2 border-gray-300 dark:border-gray-600 space-y-2">
                 {currentFormula!.example.steps.map((step, i) => (
-                  <p key={i} className="text-gray-600 dark:text-gray-400 font-mono text-sm">
-                    {i === currentFormula!.example.steps.length - 1 ? '→ ' : '• '}
-                    {step}
-                  </p>
+                  <div key={i} className="text-gray-600 dark:text-gray-400 text-sm flex items-start gap-1">
+                    <span>{i === currentFormula!.example.steps.length - 1 ? '→ ' : '• '}</span>
+                    {/* MathText for steps that may contain LaTeX */}
+                    <MathText content={step} />
+                  </div>
                 ))}
               </div>
               <div className={cn('p-3 rounded-lg mt-4', colors.bg)}>
-                <p className={cn('font-mono font-bold text-lg text-center', colors.text)}>
-                  = {currentFormula!.example.result}
-                </p>
+                {/* MathText for result */}
+                <MathText
+                  content={`= ${currentFormula!.example.result}`}
+                  className={cn('font-bold text-lg text-center', colors.text)}
+                />
               </div>
             </div>
           </div>

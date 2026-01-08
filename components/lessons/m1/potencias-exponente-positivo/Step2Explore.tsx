@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import { LessonStepProps } from '@/lib/lessons/types';
 import { useExplorePhases } from '@/hooks/lessons';
 import { ExampleProgressDots, HintPanel, ActionButton } from '@/components/lessons/primitives';
+import { MathText } from '@/components/math/MathDisplay';
 
 type Phase = 'intro' | 'discover' | 'pattern';
 
@@ -109,9 +110,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             {/* Visual explanation */}
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
               <div className="text-center space-y-6">
-                <div className="flex justify-center items-baseline">
-                  <span className="text-6xl font-bold text-blue-600">a</span>
-                  <sup className="text-3xl font-bold text-purple-600">n</sup>
+                <div className="flex justify-center items-baseline text-6xl font-bold">
+                  <MathText content="$\textcolor{blue}{a}^{\textcolor{purple}{n}}$" />
                 </div>
                 <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
                   <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
@@ -128,9 +128,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   </div>
                 </div>
                 <div className="bg-green-50 dark:bg-green-900/30 rounded-lg p-4 max-w-md mx-auto">
-                  <p className="font-mono text-lg">
-                    <span className="text-blue-600">3</span><sup className="text-purple-600">4</sup> = <span className="text-blue-600">3</span> × <span className="text-blue-600">3</span> × <span className="text-blue-600">3</span> × <span className="text-blue-600">3</span> = <span className="text-green-600 font-bold">81</span>
-                  </p>
+                  <div className="text-lg text-center">
+                    <MathText content="$\textcolor{blue}{3}^{\textcolor{purple}{4}} = \textcolor{blue}{3} \times \textcolor{blue}{3} \times \textcolor{blue}{3} \times \textcolor{blue}{3} = \textcolor{green}{\textbf{81}}$" />
+                  </div>
                   <p className="text-xs text-gray-500 mt-2">
                     Base 3, exponente 4: multiplicamos 3 cuatro veces
                   </p>
@@ -163,9 +163,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="text-center mb-6">
               <p className="text-gray-500 dark:text-gray-400 mb-2">Calcula:</p>
-              <div className="flex justify-center items-baseline">
-                <span className="text-5xl font-bold text-blue-600">{currentExample.base}</span>
-                <sup className="text-2xl font-bold text-purple-600">{currentExample.exponent}</sup>
+              <div className="text-5xl font-bold">
+                <MathText content={`$\\textcolor{blue}{${currentExample.base}}^{\\textcolor{purple}{${currentExample.exponent}}}$`} />
               </div>
             </div>
 
@@ -217,8 +216,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                     <p className="text-gray-600 dark:text-gray-400">
                       {currentExample.expanded}
                     </p>
-                    <div className="flex items-center justify-center gap-4">
-                      <span className="font-mono text-2xl text-blue-600">{currentExample.base}<sup className="text-lg text-purple-600">{currentExample.exponent}</sup></span>
+                    <div className="flex items-center justify-center gap-4 text-2xl">
+                      <MathText content={`$\\textcolor{blue}{${currentExample.base}}^{\\textcolor{purple}{${currentExample.exponent}}}$`} />
                       <span className="text-gray-400">=</span>
                       <span className="font-mono text-3xl font-bold text-green-600">{currentExample.result}</span>
                     </div>
@@ -264,8 +263,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 <div>
                   <p className="font-semibold text-gray-800 dark:text-gray-200">Casos Especiales</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    a¹ = a (cualquier número a la 1 es él mismo)<br />
-                    a⁰ = 1 (cualquier número a la 0 es 1, excepto 0⁰)
+                    <MathText content="$a^1 = a$" /> (cualquier número a la 1 es él mismo)<br />
+                    <MathText content="$a^0 = 1$" /> (cualquier número a la 0 es 1, excepto <MathText content="$0^0$" />)
                   </p>
                 </div>
               </div>
@@ -280,7 +279,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                     key={ex.id}
                     className="flex items-center justify-between p-2 rounded-lg bg-gray-50 dark:bg-gray-700/50"
                   >
-                    <span className="font-mono text-lg text-blue-600">{ex.base}<sup className="text-sm text-purple-600">{ex.exponent}</sup></span>
+                    <span className="text-lg"><MathText content={`$\\textcolor{blue}{${ex.base}}^{\\textcolor{purple}{${ex.exponent}}}$`} /></span>
                     <span className="text-gray-400">=</span>
                     <span className="font-mono text-sm text-gray-600 dark:text-gray-400">{ex.expanded}</span>
                     <span className="text-gray-400">=</span>
@@ -299,21 +298,21 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             <div className="grid grid-cols-3 gap-3">
               <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
                 <p className="text-sm text-gray-500">Cuadrados</p>
-                <p className="font-mono text-sm">2² = 4</p>
-                <p className="font-mono text-sm">3² = 9</p>
-                <p className="font-mono text-sm">4² = 16</p>
+                <p className="text-sm"><MathText content="$2^2 = 4$" /></p>
+                <p className="text-sm"><MathText content="$3^2 = 9$" /></p>
+                <p className="text-sm"><MathText content="$4^2 = 16$" /></p>
               </div>
               <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
                 <p className="text-sm text-gray-500">Cubos</p>
-                <p className="font-mono text-sm">2³ = 8</p>
-                <p className="font-mono text-sm">3³ = 27</p>
-                <p className="font-mono text-sm">4³ = 64</p>
+                <p className="text-sm"><MathText content="$2^3 = 8$" /></p>
+                <p className="text-sm"><MathText content="$3^3 = 27$" /></p>
+                <p className="text-sm"><MathText content="$4^3 = 64$" /></p>
               </div>
               <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
                 <p className="text-sm text-gray-500">Potencias de 10</p>
-                <p className="font-mono text-sm">10¹ = 10</p>
-                <p className="font-mono text-sm">10² = 100</p>
-                <p className="font-mono text-sm">10³ = 1000</p>
+                <p className="text-sm"><MathText content="$10^1 = 10$" /></p>
+                <p className="text-sm"><MathText content="$10^2 = 100$" /></p>
+                <p className="text-sm"><MathText content="$10^3 = 1000$" /></p>
               </div>
             </div>
           </div>

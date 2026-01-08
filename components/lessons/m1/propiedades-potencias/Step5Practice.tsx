@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, Check, X, Lightbulb, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { MathText } from '@/components/math/MathDisplay';
 
 interface Problem {
   id: string;
@@ -17,43 +18,43 @@ interface Problem {
 const PROBLEMS: Problem[] = [
   {
     id: 'p1',
-    question: 'Simplifica: 2⁴ × 2³',
+    question: 'Simplifica: $2^4 \\times 2^3$',
     hint: 'Producto de potencias con la misma base: suma los exponentes.',
-    options: ['2⁷ = 128', '2¹² = 4096', '4⁷ = 16384', '2¹ = 2'],
+    options: ['$2^7 = 128$', '$2^{12} = 4096$', '$4^7 = 16384$', '$2^1 = 2$'],
     correctAnswer: 0,
-    explanation: '2⁴ × 2³ = 2⁴⁺³ = 2⁷ = 128. Al multiplicar potencias con la misma base, sumamos los exponentes.',
+    explanation: '$2^4 \\times 2^3 = 2^{4+3} = 2^7 = 128$. Al multiplicar potencias con la misma base, sumamos los exponentes.',
   },
   {
     id: 'p2',
-    question: 'Simplifica: 6⁸ ÷ 6⁵',
+    question: 'Simplifica: $6^8 \\div 6^5$',
     hint: 'Cociente de potencias con la misma base: resta los exponentes.',
-    options: ['6³ = 216', '6¹³ = muy grande', '6⁴⁰ = muy grande', '1³ = 1'],
+    options: ['$6^3 = 216$', '$6^{13}$ = muy grande', '$6^{40}$ = muy grande', '$1^3 = 1$'],
     correctAnswer: 0,
-    explanation: '6⁸ ÷ 6⁵ = 6⁸⁻⁵ = 6³ = 216. Al dividir potencias con la misma base, restamos los exponentes.',
+    explanation: '$6^8 \\div 6^5 = 6^{8-5} = 6^3 = 216$. Al dividir potencias con la misma base, restamos los exponentes.',
   },
   {
     id: 'p3',
-    question: 'Simplifica: (3²)⁴',
+    question: 'Simplifica: $(3^2)^4$',
     hint: 'Potencia de una potencia: multiplica los exponentes.',
-    options: ['3⁶ = 729', '3⁸ = 6561', '3²⁴ = muy grande', '3² = 9'],
+    options: ['$3^6 = 729$', '$3^8 = 6561$', '$3^{24}$ = muy grande', '$3^2 = 9$'],
     correctAnswer: 1,
-    explanation: '(3²)⁴ = 3²ˣ⁴ = 3⁸ = 6561. Al elevar una potencia a otro exponente, multiplicamos los exponentes.',
+    explanation: '$(3^2)^4 = 3^{2 \\times 4} = 3^8 = 6561$. Al elevar una potencia a otro exponente, multiplicamos los exponentes.',
   },
   {
     id: 'p4',
-    question: 'Simplifica: 10⁵ × 10² ÷ 10⁴',
+    question: 'Simplifica: $10^5 \\times 10^2 \\div 10^4$',
     hint: 'Aplica las propiedades en orden: primero suma (multiplicación), luego resta (división).',
-    options: ['10³ = 1000', '10⁷ = 10 millones', '10¹¹ = muy grande', '10⁴⁰ = muy grande'],
+    options: ['$10^3 = 1000$', '$10^7$ = 10 millones', '$10^{11}$ = muy grande', '$10^{40}$ = muy grande'],
     correctAnswer: 0,
-    explanation: '10⁵ × 10² ÷ 10⁴ = 10⁵⁺²⁻⁴ = 10³ = 1000. Sumamos y restamos exponentes en orden.',
+    explanation: '$10^5 \\times 10^2 \\div 10^4 = 10^{5+2-4} = 10^3 = 1000$. Sumamos y restamos exponentes en orden.',
   },
   {
     id: 'p5',
     question: '¿Cuál expresión NO se puede simplificar usando las propiedades de potencias?',
     hint: 'Las propiedades solo funcionan cuando las bases son iguales.',
-    options: ['5³ × 5⁴', '(2³)²', '3² × 4³', '7⁶ ÷ 7²'],
+    options: ['$5^3 \\times 5^4$', '$(2^3)^2$', '$3^2 \\times 4^3$', '$7^6 \\div 7^2$'],
     correctAnswer: 2,
-    explanation: '3² × 4³ no se puede simplificar porque las bases (3 y 4) son diferentes. Las propiedades requieren la misma base.',
+    explanation: '$3^2 \\times 4^3$ no se puede simplificar porque las bases (3 y 4) son diferentes. Las propiedades requieren la misma base.',
   },
 ];
 
@@ -169,7 +170,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
 
             {/* Question */}
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              {currentProblem.question}
+              <MathText content={currentProblem.question} />
             </h3>
 
             {/* Hint */}
@@ -225,7 +226,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                         String.fromCharCode(65 + index)
                       )}
                     </span>
-                    <span className="text-gray-800 dark:text-gray-200 font-mono">{option}</span>
+                    <span className="text-gray-800 dark:text-gray-200"><MathText content={option} /></span>
                   </div>
                 </button>
               ))}
@@ -256,7 +257,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                     >
                       {isCorrect ? '¡Correcto!' : 'Incorrecto'}
                     </h4>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{currentProblem.explanation}</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300"><MathText content={currentProblem.explanation} /></p>
                   </div>
                 </div>
               </div>
@@ -339,7 +340,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                   ) : (
                     <X className="w-5 h-5 text-red-600 flex-shrink-0" />
                   )}
-                  <span className="text-sm text-gray-700 dark:text-gray-300">{problem.question}</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300"><MathText content={problem.question} /></span>
                 </div>
               ))}
             </div>

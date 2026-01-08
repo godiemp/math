@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import { LessonStepProps } from '@/lib/lessons/types';
 import { useExplorePhases } from '@/hooks/lessons';
 import { ExampleProgressDots, HintPanel, ActionButton } from '@/components/lessons/primitives';
+import { MathText } from '@/components/math/MathDisplay';
 
 type Phase = 'intro' | 'discover' | 'pattern';
 
@@ -19,31 +20,31 @@ interface Example {
 const EXAMPLES: Example[] = [
   {
     id: 'e1',
-    expression: '5⁰',
+    expression: '$5^0$',
     steps: ['Cualquier número elevado a 0 es 1'],
     result: '1',
-    hint: 'Recuerda: el patrón dice que a⁰ = 1 siempre',
+    hint: 'Recuerda: el patrón dice que $a^0 = 1$ siempre',
   },
   {
     id: 'e2',
-    expression: '3⁻¹',
-    steps: ['3⁻¹ = 1/3¹', '= 1/3'],
-    result: '1/3',
+    expression: '$3^{-1}$',
+    steps: ['$3^{-1} = \\frac{1}{3^1}$', '$= \\frac{1}{3}$'],
+    result: '$\\frac{1}{3}$',
     hint: 'Un exponente negativo significa "uno dividido por"',
   },
   {
     id: 'e3',
-    expression: '2⁻²',
-    steps: ['2⁻² = 1/2²', '= 1/4'],
-    result: '1/4',
+    expression: '$2^{-2}$',
+    steps: ['$2^{-2} = \\frac{1}{2^2}$', '$= \\frac{1}{4}$'],
+    result: '$\\frac{1}{4}$',
     hint: 'Primero convierte a fracción, luego calcula la potencia',
   },
   {
     id: 'e4',
-    expression: '10⁻³',
-    steps: ['10⁻³ = 1/10³', '= 1/1000'],
-    result: '1/1000',
-    hint: '10³ = 1000, entonces 10⁻³ = 1/1000',
+    expression: '$10^{-3}$',
+    steps: ['$10^{-3} = \\frac{1}{10^3}$', '$= \\frac{1}{1000}$'],
+    result: '$\\frac{1}{1000}$',
+    hint: '$10^3 = 1000$, entonces $10^{-3} = \\frac{1}{1000}$',
   },
 ];
 
@@ -104,13 +105,13 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <div className="bg-white dark:bg-gray-800 rounded-xl p-5 text-center border-2 border-green-200 dark:border-green-700">
                 <div className="text-4xl mb-2">🎯</div>
                 <h3 className="font-bold text-green-700 dark:text-green-300 mb-2">Exponente Cero</h3>
-                <p className="font-mono text-2xl text-gray-800 dark:text-gray-200">a⁰ = 1</p>
+                <p className="text-2xl text-gray-800 dark:text-gray-200"><MathText content="$a^0 = 1$" /></p>
                 <p className="text-sm text-gray-500 mt-2">Cualquier número (excepto 0) elevado a 0 es 1</p>
               </div>
               <div className="bg-white dark:bg-gray-800 rounded-xl p-5 text-center border-2 border-purple-200 dark:border-purple-700">
                 <div className="text-4xl mb-2">🔄</div>
                 <h3 className="font-bold text-purple-700 dark:text-purple-300 mb-2">Exponente Negativo</h3>
-                <p className="font-mono text-2xl text-gray-800 dark:text-gray-200">a⁻ⁿ = 1/aⁿ</p>
+                <p className="text-2xl text-gray-800 dark:text-gray-200"><MathText content="$a^{-n} = \\frac{1}{a^n}$" /></p>
                 <p className="text-sm text-gray-500 mt-2">Un exponente negativo invierte la fracción</p>
               </div>
             </div>
@@ -140,8 +141,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="text-center mb-6">
               <p className="text-gray-500 dark:text-gray-400 mb-2">Calcula:</p>
-              <p className="font-mono text-4xl font-bold text-gray-800 dark:text-gray-200">
-                {currentExample.expression}
+              <p className="text-4xl font-bold text-gray-800 dark:text-gray-200">
+                <MathText content={currentExample.expression} />
               </p>
             </div>
 
@@ -169,18 +170,18 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   <div className="text-center space-y-3">
                     <div className="space-y-2">
                       {currentExample.steps.map((step, i) => (
-                        <p key={i} className="font-mono text-gray-700 dark:text-gray-300">
-                          {step}
+                        <p key={i} className="text-gray-700 dark:text-gray-300">
+                          <MathText content={step} />
                         </p>
                       ))}
                     </div>
                     <div className="flex items-center justify-center gap-4 pt-2">
-                      <span className="font-mono text-xl text-gray-700 dark:text-gray-300">
-                        {currentExample.expression}
+                      <span className="text-xl text-gray-700 dark:text-gray-300">
+                        <MathText content={currentExample.expression} />
                       </span>
                       <span className="text-gray-400">=</span>
-                      <span className="font-mono text-3xl font-bold text-green-600">
-                        {currentExample.result}
+                      <span className="text-3xl font-bold text-green-600">
+                        <MathText content={currentExample.result} />
                       </span>
                     </div>
                   </div>
@@ -212,10 +213,10 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 </div>
                 <div className="flex-1">
                   <p className="font-semibold text-gray-800 dark:text-gray-200">Exponente Cero</p>
-                  <p className="font-mono text-purple-600">a⁰ = 1</p>
+                  <p className="text-purple-600"><MathText content="$a^0 = 1$" /></p>
                 </div>
                 <div className="text-sm text-gray-500">
-                  Ej: 5⁰ = 1
+                  Ej: <MathText content="$5^0 = 1$" />
                 </div>
               </div>
               <div className="bg-white dark:bg-gray-800 rounded-xl p-4 flex items-center gap-4">
@@ -224,10 +225,10 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 </div>
                 <div className="flex-1">
                   <p className="font-semibold text-gray-800 dark:text-gray-200">Exponente Negativo</p>
-                  <p className="font-mono text-purple-600">a⁻ⁿ = 1/aⁿ</p>
+                  <p className="text-purple-600"><MathText content="$a^{-n} = \\frac{1}{a^n}$" /></p>
                 </div>
                 <div className="text-sm text-gray-500">
-                  Ej: 2⁻³ = 1/8
+                  Ej: <MathText content="$2^{-3} = \\frac{1}{8}$" />
                 </div>
               </div>
             </div>
@@ -243,11 +244,11 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                     key={ex.id}
                     className="flex items-center justify-between p-2 rounded-lg bg-gray-50 dark:bg-gray-700/50"
                   >
-                    <span className="font-mono text-gray-700 dark:text-gray-300">
-                      {ex.expression}
+                    <span className="text-gray-700 dark:text-gray-300">
+                      <MathText content={ex.expression} />
                     </span>
                     <span className="text-gray-400">=</span>
-                    <span className="font-mono font-bold text-green-600">{ex.result}</span>
+                    <span className="font-bold text-green-600"><MathText content={ex.result} /></span>
                   </div>
                 ))}
               </div>

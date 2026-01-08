@@ -4,6 +4,7 @@ import { ArrowRight, Sparkles, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 import { useExampleReveal } from '@/hooks/lessons';
+import { MathText } from '@/components/math/MathDisplay';
 
 interface ConversionExample {
   id: string;
@@ -20,7 +21,7 @@ const EXAMPLES: ConversionExample[] = [
   {
     id: 'large1',
     standard: '3,000',
-    scientific: '3 × 10³',
+    scientific: '$3 \\times 10^3$',
     coefficient: '3',
     exponent: 3,
     direction: 'left',
@@ -30,7 +31,7 @@ const EXAMPLES: ConversionExample[] = [
   {
     id: 'large2',
     standard: '45,000,000',
-    scientific: '4.5 × 10⁷',
+    scientific: '$4.5 \\times 10^7$',
     coefficient: '4.5',
     exponent: 7,
     direction: 'left',
@@ -40,7 +41,7 @@ const EXAMPLES: ConversionExample[] = [
   {
     id: 'small1',
     standard: '0.006',
-    scientific: '6 × 10⁻³',
+    scientific: '$6 \\times 10^{-3}$',
     coefficient: '6',
     exponent: -3,
     direction: 'right',
@@ -50,7 +51,7 @@ const EXAMPLES: ConversionExample[] = [
   {
     id: 'small2',
     standard: '0.0000072',
-    scientific: '7.2 × 10⁻⁶',
+    scientific: '$7.2 \\times 10^{-6}$',
     coefficient: '7.2',
     exponent: -6,
     direction: 'right',
@@ -191,8 +192,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <p className="text-sm text-green-600 dark:text-green-400 mb-2 text-center">
                 Notación científica:
               </p>
-              <p className="text-3xl font-mono font-bold text-center text-green-800 dark:text-green-200">
-                {example.scientific}
+              <p className="text-3xl font-bold text-center text-green-800 dark:text-green-200">
+                <MathText content={example.scientific} />
               </p>
             </div>
 

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, Check, X, RotateCcw, Lightbulb, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { MathText } from '@/components/math/MathDisplay';
 
 interface Problem {
   id: string;
@@ -17,43 +18,43 @@ interface Problem {
 const PROBLEMS: Problem[] = [
   {
     id: 'p1',
-    question: '¿Cuánto vale 4⁻²?',
-    hint: 'Recuerda: a⁻ⁿ = 1/aⁿ. Primero calcula 4² y luego invierte.',
-    options: ['1/8', '1/16', '-16', '16'],
+    question: '¿Cuánto vale $4^{-2}$?',
+    hint: 'Recuerda: $a^{-n} = \\frac{1}{a^n}$. Primero calcula $4^2$ y luego invierte.',
+    options: ['$\\frac{1}{8}$', '$\\frac{1}{16}$', '-16', '16'],
     correctAnswer: 1,
-    explanation: '4⁻² = 1/4² = 1/16. El exponente negativo invierte, no hace negativo.',
+    explanation: '$4^{-2} = \\frac{1}{4^2} = \\frac{1}{16}$. El exponente negativo invierte, no hace negativo.',
   },
   {
     id: 'p2',
-    question: '¿Cuánto vale (-3)⁰?',
+    question: '¿Cuánto vale $(-3)^0$?',
     hint: 'Cualquier número (excepto 0) elevado a 0 tiene el mismo resultado.',
     options: ['-3', '0', '1', '-1'],
     correctAnswer: 2,
-    explanation: '(-3)⁰ = 1. Cualquier número distinto de cero elevado a 0 es 1.',
+    explanation: '$(-3)^0 = 1$. Cualquier número distinto de cero elevado a 0 es 1.',
   },
   {
     id: 'p3',
-    question: '¿Cuánto vale (2/5)⁻¹?',
+    question: '¿Cuánto vale $\\left(\\frac{2}{5}\\right)^{-1}$?',
     hint: 'Un exponente -1 simplemente invierte la fracción.',
-    options: ['2/5', '-2/5', '5/2', '-5/2'],
+    options: ['$\\frac{2}{5}$', '$-\\frac{2}{5}$', '$\\frac{5}{2}$', '$-\\frac{5}{2}$'],
     correctAnswer: 2,
-    explanation: '(2/5)⁻¹ = 5/2. El exponente -1 invierte la fracción.',
+    explanation: '$\\left(\\frac{2}{5}\\right)^{-1} = \\frac{5}{2}$. El exponente -1 invierte la fracción.',
   },
   {
     id: 'p4',
-    question: '¿Cuánto vale 10⁻²?',
-    hint: '10² = 100. Ahora aplica la regla del exponente negativo.',
+    question: '¿Cuánto vale $10^{-2}$?',
+    hint: '$10^2 = 100$. Ahora aplica la regla del exponente negativo.',
     options: ['0.01', '0.1', '-100', '100'],
     correctAnswer: 0,
-    explanation: '10⁻² = 1/10² = 1/100 = 0.01',
+    explanation: '$10^{-2} = \\frac{1}{10^2} = \\frac{1}{100} = 0.01$',
   },
   {
     id: 'p5',
-    question: '¿Cuánto vale 2⁻³ × 2³?',
+    question: '¿Cuánto vale $2^{-3} \\times 2^3$?',
     hint: 'Puedes multiplicar primero y luego simplificar, o usar las propiedades de exponentes.',
-    options: ['0', '1', '8', '1/8'],
+    options: ['0', '1', '8', '$\\frac{1}{8}$'],
     correctAnswer: 1,
-    explanation: '2⁻³ × 2³ = 2⁻³⁺³ = 2⁰ = 1. También: (1/8) × 8 = 1.',
+    explanation: '$2^{-3} \\times 2^3 = 2^{-3+3} = 2^0 = 1$. También: $\\frac{1}{8} \\times 8 = 1$.',
   },
 ];
 
@@ -152,7 +153,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-900/50 rounded-2xl p-8 border border-gray-200 dark:border-gray-700">
             <div className="text-center mb-6">
               <p className="font-semibold text-xl text-gray-800 dark:text-gray-200">
-                {currentProblem.question}
+                <MathText content={currentProblem.question} />
               </p>
             </div>
 
@@ -172,7 +173,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
             {showHint && !showFeedback && (
               <div className="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-4 mb-6 animate-fadeIn border border-amber-200 dark:border-amber-700">
                 <p className="text-sm text-amber-800 dark:text-amber-200 text-center">
-                  {currentProblem.hint}
+                  <MathText content={currentProblem.hint} />
                 </p>
               </div>
             )}
@@ -222,8 +223,8 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                           String.fromCharCode(65 + index)
                         )}
                       </span>
-                      <span className="font-mono text-lg text-gray-800 dark:text-gray-200">
-                        {option}
+                      <span className="text-lg text-gray-800 dark:text-gray-200">
+                        <MathText content={option} />
                       </span>
                     </div>
                   </button>
@@ -260,7 +261,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                     {isCorrect ? '¡Correcto!' : 'Incorrecto'}
                   </h4>
                   <p className="text-sm text-gray-700 dark:text-gray-300">
-                    {currentProblem.explanation}
+                    <MathText content={currentProblem.explanation} />
                   </p>
                 </div>
               </div>
@@ -346,10 +347,10 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                     )}
                   >
                     <span className="text-sm text-gray-700 dark:text-gray-300 flex-1">
-                      {problem.question}
+                      <MathText content={problem.question} />
                     </span>
-                    <span className="font-mono text-sm text-gray-600 dark:text-gray-400 mx-2">
-                      {problem.options[problem.correctAnswer]}
+                    <span className="text-sm text-gray-600 dark:text-gray-400 mx-2">
+                      <MathText content={problem.options[problem.correctAnswer]} />
                     </span>
                     {wasCorrect ? (
                       <Check className="w-5 h-5 text-green-600" />

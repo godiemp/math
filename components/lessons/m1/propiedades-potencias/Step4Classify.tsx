@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, Check, X, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { MathText } from '@/components/math/MathDisplay';
 
 type PropertyType = 'product' | 'quotient' | 'power-of-power' | 'none';
 
@@ -17,31 +18,31 @@ interface Expression {
 const EXPRESSIONS: Expression[] = [
   {
     id: 'e1',
-    expression: '5³ × 5²',
+    expression: '$5^3 \\times 5^2$',
     correctType: 'product',
     explanation: 'Misma base (5) multiplicándose → Producto de potencias: suma los exponentes (3 + 2 = 5)',
   },
   {
     id: 'e2',
-    expression: '(4²)³',
+    expression: '$(4^2)^3$',
     correctType: 'power-of-power',
     explanation: 'Una potencia elevada a otra potencia → Potencia de potencia: multiplica los exponentes (2 × 3 = 6)',
   },
   {
     id: 'e3',
-    expression: '8⁵ ÷ 8²',
+    expression: '$8^5 \\div 8^2$',
     correctType: 'quotient',
     explanation: 'Misma base (8) dividiéndose → Cociente de potencias: resta los exponentes (5 - 2 = 3)',
   },
   {
     id: 'e4',
-    expression: '2³ × 3²',
+    expression: '$2^3 \\times 3^2$',
     correctType: 'none',
     explanation: 'Las bases son diferentes (2 y 3) → No se puede simplificar con estas propiedades',
   },
   {
     id: 'e5',
-    expression: '(7³)²',
+    expression: '$(7^3)^2$',
     correctType: 'power-of-power',
     explanation: 'Una potencia elevada a otra potencia → Potencia de potencia: multiplica los exponentes (3 × 2 = 6)',
   },
@@ -145,9 +146,9 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-900/50 rounded-2xl p-8 border border-gray-200 dark:border-gray-700">
             <div className="text-center mb-8">
               <p className="text-gray-500 dark:text-gray-400 mb-2">¿Qué propiedad usarías?</p>
-              <p className="font-mono text-3xl font-bold text-gray-800 dark:text-gray-200">
-                {currentExpression.expression}
-              </p>
+              <div className="text-3xl font-bold text-gray-800 dark:text-gray-200">
+                <MathText content={currentExpression.expression} />
+              </div>
             </div>
 
             {/* Type options */}
@@ -289,7 +290,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
                       ) : (
                         <X className="w-5 h-5 text-red-600 flex-shrink-0" />
                       )}
-                      <span className="font-mono text-gray-700 dark:text-gray-300">{expr.expression}</span>
+                      <span className="text-gray-700 dark:text-gray-300"><MathText content={expr.expression} /></span>
                     </div>
                     <span className={cn('text-sm font-medium px-2 py-1 rounded', colors.bg, colors.text)}>
                       {correctOption.label}
