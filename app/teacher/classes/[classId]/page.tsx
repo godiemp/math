@@ -126,7 +126,7 @@ function AddStudentModal({
   if (createdCredentials) {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <Card padding="lg" className="w-full max-w-md">
+        <Card padding="lg" className="w-full max-w-md" data-testid="class-student-credentials-modal">
           <div className="text-center mb-6">
             <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
               <Check className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
@@ -189,7 +189,7 @@ function AddStudentModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card padding="lg" className="w-full max-w-lg max-h-[80vh] overflow-hidden flex flex-col">
+      <Card padding="lg" className="w-full max-w-lg max-h-[80vh] overflow-hidden flex flex-col" data-testid="class-add-student-modal">
         <div className="flex items-center justify-between mb-4">
           <Heading level={3} size="sm">
             Agregar Estudiantes
@@ -239,16 +239,17 @@ function AddStudentModal({
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   placeholder="Buscar por nombre o email..."
                   className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+                  data-testid="class-student-search-input"
                 />
               </div>
-              <Button onClick={handleSearch} disabled={searchQuery.length < 2 || isSearching}>
+              <Button onClick={handleSearch} disabled={searchQuery.length < 2 || isSearching} data-testid="class-student-search-button">
                 {isSearching ? '...' : 'Buscar'}
               </Button>
             </div>
 
-            <div className="flex-1 overflow-y-auto mb-4">
+            <div className="flex-1 overflow-y-auto mb-4" data-testid="class-student-search-results">
               {searchResults.length === 0 ? (
-                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400" data-testid="class-student-search-empty">
                   {searchQuery.length >= 2
                     ? 'No se encontraron estudiantes'
                     : 'Busca estudiantes por nombre o email'}
@@ -259,6 +260,7 @@ function AddStudentModal({
                     <div
                       key={student.id}
                       onClick={() => toggleStudent(student.id)}
+                      data-testid={`class-student-result-${student.id}`}
                       className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                         selectedStudents.includes(student.id)
                           ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
@@ -281,6 +283,7 @@ function AddStudentModal({
                 onClick={handleAddStudents}
                 disabled={selectedStudents.length === 0 || isAdding}
                 className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                data-testid="class-student-add-button"
               >
                 {isAdding ? 'Agregando...' : `Agregar (${selectedStudents.length})`}
               </Button>
@@ -302,6 +305,7 @@ function AddStudentModal({
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="Ej: María"
                   className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+                  data-testid="class-create-student-firstname"
                 />
               </div>
 
@@ -315,6 +319,7 @@ function AddStudentModal({
                   onChange={(e) => setLastName(e.target.value)}
                   placeholder="Ej: González"
                   className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+                  data-testid="class-create-student-lastname"
                 />
               </div>
 
@@ -334,6 +339,7 @@ function AddStudentModal({
                 onClick={handleCreateStudent}
                 disabled={!firstName.trim() || !lastName.trim() || isCreating}
                 className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                data-testid="class-create-student-button"
               >
                 {isCreating ? 'Creando...' : 'Crear Estudiante'}
               </Button>
@@ -556,7 +562,7 @@ export default function ClassDetailPage() {
     <TeacherLayout>
       <div className="space-y-6">
         {/* Back Button & Header */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4" data-testid="class-detail-header">
           <button
             onClick={() => router.push('/teacher/classes')}
             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -574,6 +580,7 @@ export default function ClassDetailPage() {
           <Button
             onClick={() => setShowAddModal(true)}
             className="bg-emerald-600 hover:bg-emerald-700"
+            data-testid="class-add-students-button"
           >
             <UserPlus className="w-4 h-4 mr-2" />
             Agregar Estudiantes
@@ -671,7 +678,7 @@ export default function ClassDetailPage() {
                 <Spinner />
               </div>
             ) : students.length === 0 ? (
-              <Card padding="lg" className="text-center py-12">
+              <Card padding="lg" className="text-center py-12" data-testid="class-students-empty">
                 <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Users className="w-8 h-8 text-gray-400" />
                 </div>
@@ -778,7 +785,7 @@ export default function ClassDetailPage() {
                 </div>
 
                 {/* Desktop Table View */}
-                <Card padding="sm" className="overflow-hidden hidden md:block">
+                <Card padding="sm" className="overflow-hidden hidden md:block" data-testid="class-students-table">
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead className="bg-gray-50 dark:bg-gray-800">
@@ -811,6 +818,7 @@ export default function ClassDetailPage() {
                           <tr
                             key={student.id}
                             className="hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 transition-colors"
+                            data-testid={`class-student-row-${student.id}`}
                           >
                             <td className="px-4 py-4 whitespace-nowrap">
                               <div className="flex items-center gap-3">
@@ -868,6 +876,7 @@ export default function ClassDetailPage() {
                                   disabled={removingStudentId === student.id}
                                   className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50"
                                   title="Remover estudiante"
+                                  data-testid={`class-remove-student-${student.id}`}
                                 >
                                   <Trash2 className="w-4 h-4" />
                                 </button>
