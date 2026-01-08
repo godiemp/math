@@ -5,6 +5,7 @@ import { ArrowRight, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 import { useExplorePhases } from '@/hooks/lessons';
+import { InlineMath } from '@/components/math/MathDisplay';
 import { ExampleProgressDots, HintPanel, ActionButton } from '@/components/lessons/primitives';
 
 type Phase = 'intro' | 'discover' | 'pattern';
@@ -12,8 +13,10 @@ type Phase = 'intro' | 'discover' | 'pattern';
 interface InequalityExample {
   id: string;
   inequality: string;
-  steps: { description: string; result: string }[];
+  inequalityLatex: string;
+  steps: { description: string; result: string; resultLatex: string }[];
   solution: string;
+  solutionLatex: string;
   hint: string;
   isNegative: boolean;
   numberLineDirection: 'left' | 'right';
@@ -25,11 +28,13 @@ const EXAMPLES: InequalityExample[] = [
   {
     id: 'simple',
     inequality: '2x < 10',
+    inequalityLatex: '2x < 10',
     steps: [
-      { description: 'Dividimos ambos lados entre 2', result: '2x / 2 < 10 / 2' },
-      { description: 'Simplificamos', result: 'x < 5' },
+      { description: 'Dividimos ambos lados entre 2', result: '2x / 2 < 10 / 2', resultLatex: '\\frac{2x}{2} < \\frac{10}{2}' },
+      { description: 'Simplificamos', result: 'x < 5', resultLatex: 'x < 5' },
     ],
     solution: 'x < 5',
+    solutionLatex: 'x < 5',
     hint: 'Dividir entre un número positivo NO cambia el signo',
     isNegative: false,
     numberLineDirection: 'left',
@@ -39,11 +44,13 @@ const EXAMPLES: InequalityExample[] = [
   {
     id: 'addition',
     inequality: 'x + 4 > 7',
+    inequalityLatex: 'x + 4 > 7',
     steps: [
-      { description: 'Restamos 4 de ambos lados', result: 'x + 4 - 4 > 7 - 4' },
-      { description: 'Simplificamos', result: 'x > 3' },
+      { description: 'Restamos 4 de ambos lados', result: 'x + 4 - 4 > 7 - 4', resultLatex: 'x + 4 - 4 > 7 - 4' },
+      { description: 'Simplificamos', result: 'x > 3', resultLatex: 'x > 3' },
     ],
     solution: 'x > 3',
+    solutionLatex: 'x > 3',
     hint: 'Lo que sumas, lo restas - igual que en ecuaciones',
     isNegative: false,
     numberLineDirection: 'right',
@@ -53,12 +60,14 @@ const EXAMPLES: InequalityExample[] = [
   {
     id: 'negative',
     inequality: '-3x < 12',
+    inequalityLatex: '-3x < 12',
     steps: [
-      { description: 'Dividimos ambos lados entre -3', result: '-3x / (-3) ? 12 / (-3)' },
-      { description: 'CUIDADO: Al dividir por negativo...', result: '¡El signo SE INVIERTE!' },
-      { description: 'Resultado final', result: 'x > -4' },
+      { description: 'Dividimos ambos lados entre -3', result: '-3x / (-3) ? 12 / (-3)', resultLatex: '\\frac{-3x}{-3} \\; ? \\; \\frac{12}{-3}' },
+      { description: 'CUIDADO: Al dividir por negativo...', result: '¡El signo SE INVIERTE!', resultLatex: '\\text{¡El signo SE INVIERTE!}' },
+      { description: 'Resultado final', result: 'x > -4', resultLatex: 'x > -4' },
     ],
     solution: 'x > -4',
+    solutionLatex: 'x > -4',
     hint: 'Cuando divides por un número NEGATIVO, el signo de desigualdad CAMBIA',
     isNegative: true,
     numberLineDirection: 'right',
@@ -68,12 +77,14 @@ const EXAMPLES: InequalityExample[] = [
   {
     id: 'combined',
     inequality: '5 - 2x >= 11',
+    inequalityLatex: '5 - 2x \\geq 11',
     steps: [
-      { description: 'Restamos 5 de ambos lados', result: '5 - 2x - 5 >= 11 - 5' },
-      { description: 'Simplificamos', result: '-2x >= 6' },
-      { description: 'Dividimos entre -2 (SE INVIERTE)', result: 'x <= -3' },
+      { description: 'Restamos 5 de ambos lados', result: '5 - 2x - 5 >= 11 - 5', resultLatex: '5 - 2x - 5 \\geq 11 - 5' },
+      { description: 'Simplificamos', result: '-2x >= 6', resultLatex: '-2x \\geq 6' },
+      { description: 'Dividimos entre -2 (SE INVIERTE)', result: 'x <= -3', resultLatex: 'x \\leq -3' },
     ],
     solution: 'x <= -3',
+    solutionLatex: 'x \\leq -3',
     hint: 'Primero aísla el término con x, luego aplica la regla del negativo',
     isNegative: true,
     numberLineDirection: 'left',
@@ -212,14 +223,22 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 <p className="text-gray-500 dark:text-gray-400">Las operaciones inversas funcionan igual:</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
-                    <div className="text-3xl mb-2">+ ↔ -</div>
+                    <div className="text-3xl mb-2">
+                      <InlineMath latex="+ \leftrightarrow -" />
+                    </div>
                     <p className="font-semibold text-blue-700 dark:text-blue-300">Suma ↔ Resta</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 font-mono">x + 5 {'<'} 10 → x {'<'} 10 - 5</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <InlineMath latex="x + 5 < 10 \rightarrow x < 10 - 5" />
+                    </p>
                   </div>
                   <div className="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
-                    <div className="text-3xl mb-2">× ↔ ÷</div>
+                    <div className="text-3xl mb-2">
+                      <InlineMath latex="\times \leftrightarrow \div" />
+                    </div>
                     <p className="font-semibold text-purple-700 dark:text-purple-300">Multiplicación ↔ División</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 font-mono">3x {'>'} 12 → x {'>'} 12 ÷ 3</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <InlineMath latex="3x > 12 \rightarrow x > 12 \div 3" />
+                    </p>
                   </div>
                 </div>
                 <div className="bg-red-50 dark:bg-red-900/30 rounded-lg p-4 mt-4 border-2 border-red-300 dark:border-red-700">
@@ -273,8 +292,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="text-center mb-6">
               <p className="text-gray-500 dark:text-gray-400 mb-2">Resuelve:</p>
-              <p className="font-mono text-3xl font-bold text-gray-800 dark:text-gray-200">
-                {currentExample.inequality}
+              <p className="text-3xl font-bold text-gray-800 dark:text-gray-200">
+                <InlineMath latex={currentExample.inequalityLatex} />
               </p>
             </div>
 
@@ -304,13 +323,13 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   </p>
                   <p
                     className={cn(
-                      'font-mono text-lg text-center',
+                      'text-lg text-center',
                       step.description.includes('SE INVIERTE')
                         ? 'text-red-600 dark:text-red-400 font-bold'
                         : 'text-gray-800 dark:text-gray-200'
                     )}
                   >
-                    {step.result}
+                    <InlineMath latex={step.resultLatex} />
                   </p>
                 </div>
               ))}
@@ -342,11 +361,11 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                     <p className="text-gray-600 dark:text-gray-400">Solución:</p>
                     <p
                       className={cn(
-                        'font-mono text-3xl font-bold',
+                        'text-3xl font-bold',
                         currentExample.isNegative ? 'text-purple-600' : 'text-green-600'
                       )}
                     >
-                      {currentExample.solution}
+                      <InlineMath latex={currentExample.solutionLatex} />
                     </p>
 
                     {/* Number line visualization */}

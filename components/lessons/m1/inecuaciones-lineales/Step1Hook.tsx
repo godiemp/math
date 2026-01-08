@@ -3,6 +3,7 @@
 import { ArrowRight } from 'lucide-react';
 import { LessonStepProps } from '@/lib/lessons/types';
 import { useStep1Phase } from '@/hooks/lessons';
+import { InlineMath } from '@/components/math/MathDisplay';
 import {
   ScenarioCard,
   QuestionPrompt,
@@ -99,10 +100,10 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         <div className="space-y-6 animate-fadeIn">
           <QuestionPrompt variant="math">
             <p className="text-lg font-semibold text-gray-800 dark:text-gray-200 text-center">
-              Si <span className="font-mono text-blue-600">x</span> es el número de canciones:
+              Si <InlineMath latex="x" /> es el número de canciones:
             </p>
-            <p className="text-gray-600 dark:text-gray-400 mt-2 font-mono text-xl text-center">
-              3.990 + 500x <span className="text-red-500 font-bold">{'<='}</span> 10.000
+            <p className="text-gray-600 dark:text-gray-400 mt-2 text-xl text-center">
+              <InlineMath latex="3990 + 500x \leq 10000" />
             </p>
             <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm text-center">
               ¿Cuál es la respuesta correcta?
@@ -157,21 +158,23 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             <div className="flex justify-center mb-6">
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-inner">
                 <div className="text-center space-y-4">
-                  <p className="font-mono text-lg text-gray-700 dark:text-gray-300">
-                    <span className="text-purple-600">3.990</span> + <span className="text-blue-600">500x</span>{' '}
-                    <span className="text-red-500 font-bold">{'<='}</span> <span className="text-green-600">10.000</span>
+                  <p className="text-lg text-gray-700 dark:text-gray-300">
+                    <InlineMath latex="3990 + 500x \leq 10000" />
                   </p>
-                  <p className="text-gray-400 text-sm">{'↓'} restamos 3.990 de ambos lados</p>
-                  <p className="font-mono text-lg text-gray-600 dark:text-gray-400">
-                    <span className="text-blue-600">500x</span> {'<='} <span className="text-green-600">10.000</span> -{' '}
-                    <span className="text-purple-600">3.990</span>
+                  <p className="text-gray-400 text-sm">↓ restamos 3990 de ambos lados</p>
+                  <p className="text-lg text-gray-600 dark:text-gray-400">
+                    <InlineMath latex="500x \leq 10000 - 3990" />
                   </p>
-                  <p className="font-mono text-lg text-gray-600 dark:text-gray-400">
-                    <span className="text-blue-600">500x</span> {'<='} <span className="text-green-600">6.010</span>
+                  <p className="text-lg text-gray-600 dark:text-gray-400">
+                    <InlineMath latex="500x \leq 6010" />
                   </p>
-                  <p className="text-gray-400 text-sm">{'↓'} dividimos ambos lados entre 500</p>
-                  <p className="font-mono text-2xl text-green-600 font-bold">x {'<='} 12,02</p>
-                  <p className="text-gray-500 text-sm">Como x debe ser entero: <strong>x {'<='} 12</strong></p>
+                  <p className="text-gray-400 text-sm">↓ dividimos ambos lados entre 500</p>
+                  <p className="text-2xl text-green-600 font-bold">
+                    <InlineMath latex="x \leq 12{,}02" />
+                  </p>
+                  <p className="text-gray-500 text-sm">
+                    Como x debe ser entero: <InlineMath latex="x \leq 12" />
+                  </p>
                 </div>
               </div>
             </div>
@@ -204,23 +207,26 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
                     <p className="text-sm text-gray-500 mb-1">Ecuación</p>
-                    <p className="font-mono text-lg">3x + 5 <strong>=</strong> 20</p>
-                    <p className="text-xs text-gray-500 mt-1">Una sola solución: x = 5</p>
+                    <p className="text-lg">
+                      <InlineMath latex="3x + 5 = 20" />
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Una sola solución: <InlineMath latex="x = 5" />
+                    </p>
                   </div>
                   <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/30 rounded-lg border-2 border-purple-300 dark:border-purple-600">
                     <p className="text-sm text-gray-500 mb-1">Inecuación</p>
-                    <p className="font-mono text-lg">3x + 5 <strong className="text-red-500">{'<='}</strong> 20</p>
+                    <p className="text-lg">
+                      <InlineMath latex="3x + 5 \leq 20" />
+                    </p>
                     <p className="text-xs text-purple-600 dark:text-purple-400 mt-1 font-bold">¡Muchas soluciones!</p>
                   </div>
                 </div>
               </div>
               <div className="bg-amber-50 dark:bg-amber-900/30 p-3 rounded-lg border border-amber-200 dark:border-amber-700">
                 <p className="text-amber-800 dark:text-amber-200 text-sm text-center">
-                  Los símbolos <span className="font-mono font-bold">{'<'}</span>,{' '}
-                  <span className="font-mono font-bold">{'>'}</span>,{' '}
-                  <span className="font-mono font-bold">{'<='}</span>,{' '}
-                  <span className="font-mono font-bold">{'>='}</span> crean <strong>inecuaciones</strong> con múltiples
-                  soluciones.
+                  Los símbolos <InlineMath latex="<" />, <InlineMath latex=">" />, <InlineMath latex="\leq" />,{' '}
+                  <InlineMath latex="\geq" /> crean <strong>inecuaciones</strong> con múltiples soluciones.
                 </p>
               </div>
             </div>
