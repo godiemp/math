@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, Users, Calculator, BarChart3, Lightbulb, AlertTriangle, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { InlineMath } from '@/components/math/MathDisplay';
 import { POPULATION_SIZE, DEFAULT_SAMPLE_SIZE } from './data';
 
 type TabId = 'muestra' | 'estimacion' | 'variacion' | 'tips';
@@ -138,13 +139,11 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 Proporción Muestral
               </h4>
               <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center">
-                <p className="text-2xl font-mono">
-                  <span className="text-purple-600 relative inline-block">
-                    p
-                    <span className="absolute -top-1 left-1/2 -translate-x-1/2 text-xs">^</span>
-                  </span>{' '}
-                  ={' '}
-                  <span className="text-green-600">favorable</span> ÷{' '}
+                <p className="text-2xl font-mono flex items-center justify-center gap-2">
+                  <InlineMath latex="{\color{purple}\hat{p}}" className="text-purple-600" />
+                  <span>=</span>
+                  <span className="text-green-600">favorable</span>
+                  <span>÷</span>
                   <span className="text-blue-600">total muestra</span>
                 </p>
               </div>
@@ -157,13 +156,13 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 <p className="text-gray-600 dark:text-gray-400">
                   Si 24 de 40 estudiantes prefieren Galletas:
                 </p>
-                <p className="font-mono text-lg text-center py-2">
-                  <span className="relative inline-block">
-                    p
-                    <span className="absolute -top-0.5 left-1/2 -translate-x-1/2 text-[10px]">^</span>
-                  </span>{' '}
-                  = <span className="text-green-600">24</span> ÷{' '}
-                  <span className="text-blue-600">40</span> ={' '}
+                <p className="font-mono text-lg text-center py-2 flex items-center justify-center gap-1">
+                  <InlineMath latex="\hat{p}" />
+                  <span>=</span>
+                  <span className="text-green-600">24</span>
+                  <span>÷</span>
+                  <span className="text-blue-600">40</span>
+                  <span>=</span>
                   <span className="text-purple-600 font-bold">0.60 = 60%</span>
                 </p>
                 <p className="text-gray-600 dark:text-gray-400">
@@ -176,12 +175,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             {/* Key insight */}
             <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-3 border border-amber-200 dark:border-amber-700">
               <p className="text-amber-800 dark:text-amber-200 text-sm">
-                <strong>Importante:</strong> La proporción muestral (
-                <span className="relative inline-block font-mono">
-                  p
-                  <span className="absolute -top-0.5 left-1/2 -translate-x-1/2 text-[8px]">^</span>
-                </span>
-                ) es nuestra{' '}
+                <strong>Importante:</strong> La proporción muestral (<InlineMath latex="\hat{p}" />) es nuestra{' '}
                 <em>mejor estimación</em> de la proporción real de la población.
               </p>
             </div>
