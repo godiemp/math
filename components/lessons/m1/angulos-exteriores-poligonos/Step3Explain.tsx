@@ -194,67 +194,101 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
 
             {/* Visual: One vertex showing both angles */}
             <div className="flex justify-center">
-              <svg viewBox="0 0 200 120" className="w-full max-w-xs">
-                {/* Two adjacent sides */}
+              <svg viewBox="0 0 240 140" className="w-full max-w-sm">
+                {/* Previous side coming IN to vertex */}
                 <line
                   x1="30"
-                  y1="90"
-                  x2="100"
-                  y2="90"
+                  y1="100"
+                  x2="120"
+                  y2="100"
                   stroke="#374151"
                   strokeWidth="3"
                   className="dark:stroke-gray-300"
                 />
+                {/* Next side going OUT from vertex (up-right at ~50 degrees) */}
                 <line
-                  x1="100"
-                  y1="90"
-                  x2="160"
-                  y2="40"
+                  x1="120"
+                  y1="100"
+                  x2="190"
+                  y2="45"
                   stroke="#374151"
                   strokeWidth="3"
                   className="dark:stroke-gray-300"
                 />
-                {/* Extended line (dashed) */}
+                {/* Extended line (dashed) - extension of incoming side */}
                 <line
-                  x1="100"
-                  y1="90"
-                  x2="180"
-                  y2="90"
+                  x1="120"
+                  y1="100"
+                  x2="220"
+                  y2="100"
                   stroke="#9ca3af"
                   strokeWidth="2"
-                  strokeDasharray="5,3"
+                  strokeDasharray="6,4"
                   className="dark:stroke-gray-500"
                 />
 
-                {/* Interior angle arc (amber) */}
+                {/* Interior angle fill (amber) - between incoming side and outgoing side */}
                 <path
-                  d="M 75 90 A 25 25 0 0 0 117 72"
+                  d="M 120 100 L 85 100 A 35 35 0 0 0 142.5 66 Z"
+                  fill="rgba(245, 158, 11, 0.25)"
+                />
+                {/* Interior angle arc */}
+                <path
+                  d="M 85 100 A 35 35 0 0 0 142.5 66"
                   fill="none"
                   stroke="#f59e0b"
-                  strokeWidth="2.5"
+                  strokeWidth="3"
                 />
-                <path d="M 100 90 L 75 90 A 25 25 0 0 0 117 72 Z" fill="rgba(245, 158, 11, 0.2)" />
-                <text x="85" y="75" fontSize="11" fill="#f59e0b" fontWeight="bold">
-                  Int
-                </text>
 
-                {/* Exterior angle arc (red) */}
+                {/* Exterior angle fill (red) - between extension and outgoing side */}
                 <path
-                  d="M 125 90 A 25 25 0 0 1 117 72"
+                  d="M 120 100 L 155 100 A 35 35 0 0 1 142.5 66 Z"
+                  fill="rgba(239, 68, 68, 0.25)"
+                />
+                {/* Exterior angle arc */}
+                <path
+                  d="M 155 100 A 35 35 0 0 1 142.5 66"
                   fill="none"
                   stroke="#ef4444"
-                  strokeWidth="2.5"
+                  strokeWidth="3"
                 />
-                <path
-                  d="M 100 90 L 125 90 A 25 25 0 0 1 117 72 Z"
-                  fill="rgba(239, 68, 68, 0.2)"
-                />
-                <text x="130" y="80" fontSize="11" fill="#ef4444" fontWeight="bold">
+
+                {/* Labels */}
+                <text
+                  x="95"
+                  y="80"
+                  fontSize="14"
+                  fill="#d97706"
+                  fontWeight="bold"
+                  className="dark:fill-amber-400"
+                >
+                  Int
+                </text>
+                <text
+                  x="158"
+                  y="80"
+                  fontSize="14"
+                  fill="#dc2626"
+                  fontWeight="bold"
+                  className="dark:fill-red-400"
+                >
                   Ext
                 </text>
 
                 {/* Vertex point */}
-                <circle cx="100" cy="90" r="4" fill="#6b21a8" />
+                <circle cx="120" cy="100" r="5" fill="#7c3aed" className="dark:fill-purple-400" />
+
+                {/* Small indicator showing the straight line (180°) */}
+                <text
+                  x="120"
+                  y="125"
+                  fontSize="10"
+                  textAnchor="middle"
+                  fill="#6b7280"
+                  className="dark:fill-gray-400"
+                >
+                  ← 180° →
+                </text>
               </svg>
             </div>
 
