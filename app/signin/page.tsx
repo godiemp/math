@@ -22,7 +22,7 @@ function SearchParamsReader({ onWelcomeParam }: { onWelcomeParam: (hasWelcome: b
 // Inner component that handles the main UI
 function SignInContent() {
   const t = useTranslations('landing');
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const router = useRouter();
   const [redirectPath, setRedirectPath] = useState<string | null>(null);
   const [hasWelcomeParam, setHasWelcomeParam] = useState(false);
@@ -33,12 +33,23 @@ function SignInContent() {
   }, []);
 
   useEffect(() => {
-    // Redirect when authenticated
+    // Redirect when authenticated based on role
     if (!isLoading && isAuthenticated) {
-      const targetPath = redirectPath || (hasWelcomeParam ? '/dashboard?welcome=true' : '/dashboard');
+      let targetPath: string;
+
+      if (redirectPath) {
+        targetPath = redirectPath;
+      } else if (user?.role === 'teacher') {
+        targetPath = '/teacher';
+      } else if (user?.role === 'admin') {
+        targetPath = '/admin';
+      } else {
+        targetPath = hasWelcomeParam ? '/dashboard?welcome=true' : '/dashboard';
+      }
+
       router.push(targetPath);
     }
-  }, [isAuthenticated, isLoading, redirectPath, hasWelcomeParam, router]);
+  }, [isAuthenticated, isLoading, redirectPath, hasWelcomeParam, router, user?.role]);
 
   // If authenticated, don't show login (useEffect will redirect to dashboard)
   if (isAuthenticated) {
