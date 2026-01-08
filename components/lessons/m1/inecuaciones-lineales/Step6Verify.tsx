@@ -25,7 +25,7 @@ const QUESTIONS: CheckpointQuestion[] = [
   },
   {
     id: 'v3',
-    question: 'Si tienes \\$8.000 y cada helado cuesta \\$1.500, ¿cuántos helados puedes comprar como máximo?',
+    question: 'Si tienes 8.000 pesos y cada helado cuesta 1.500 pesos, ¿cuántos helados puedes comprar como máximo?',
     options: ['$x \\leq 5$', '$x < 5$', '$x \\leq 6$', '$x < 6$'],
     correctAnswer: 0, // x <= 5
     explanation: '$1500x \\leq 8000 \\rightarrow x \\leq 5{,}33 \\rightarrow$ máximo 5 helados',
