@@ -16,6 +16,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-001',
     skills: ['numeros-enteros-orden', 'numeros-enteros-valor-absoluto'],
     estimatedMinutes: 10,
+    minEducOA: ['MA07-OA-01'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Termómetro Loco' },
       { id: 'number-line', type: 'explore', title: 'La Recta Numérica' },
@@ -35,6 +36,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-001',
     skills: ['numeros-enteros-sumar-restar', 'numeros-enteros-opuesto'],
     estimatedMinutes: 10,
+    minEducOA: ['MA07-OA-01'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Alcancía' },
       { id: 'number-line-addition', type: 'explore', title: 'Suma en la Recta' },
@@ -73,7 +75,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-002',
     skills: ['fracciones-concepto', 'fracciones-comparacion', 'fracciones-equivalentes'],
     estimatedMinutes: 15,
-    minEducOA: ['MA1M-OA-01'],
+    minEducOA: ['MA1M-OA-01', 'MA07-OA-03'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Chocolate Perfecto' },
       { id: 'fraction-bars', type: 'explore', title: 'La Barra de Fracciones' },
@@ -93,7 +95,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-002',
     skills: ['fracciones-impropias', 'numeros-mixtos', 'conversion-fracciones'],
     estimatedMinutes: 15,
-    minEducOA: ['MA1M-OA-01'],
+    minEducOA: ['MA1M-OA-01', 'MA07-OA-03'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Fiesta de Pizza' },
       { id: 'improper-fractions', type: 'explore', title: 'Fracciones Impropias' },
@@ -153,7 +155,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-002',
     skills: ['mcm-concepto', 'multiplos-comunes', 'fracciones-denominador-comun'],
     estimatedMinutes: 15,
-    minEducOA: ['MA1M-OA-01'],
+    minEducOA: ['MA1M-OA-01', 'MA07-OA-03'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Problema de los Encuentros' },
       { id: 'explore-multiples', type: 'explore', title: 'El Cazador de Múltiplos' },
@@ -178,7 +180,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
       'simplificacion-fracciones',
     ],
     estimatedMinutes: 15,
-    minEducOA: ['MA1M-OA-01'],
+    minEducOA: ['MA1M-OA-01', 'MA07-OA-02'],
     steps: [
       { id: 'hook', type: 'hook', title: 'Pizzas Diferentes' },
       { id: 'explore-lcd', type: 'explore', title: 'Buscando el Denominador Común' },
@@ -203,7 +205,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
       'simplificacion-fracciones',
     ],
     estimatedMinutes: 15,
-    minEducOA: ['MA1M-OA-01'],
+    minEducOA: ['MA1M-OA-01', 'MA07-OA-02'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Chocolate Compartido' },
       { id: 'explore-multiply', type: 'explore', title: 'Descubre la Multiplicación' },
@@ -223,7 +225,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-003',
     skills: ['potencias-concepto', 'potencias-calcular', 'potencias-casos-especiales'],
     estimatedMinutes: 14,
-    minEducOA: ['MA1M-OA-02'],
+    minEducOA: ['MA1M-OA-02', 'MA07-OA-05'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Leyenda del Tablero de Ajedrez' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -243,7 +245,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-003',
     skills: ['potencias-exponente-cero', 'potencias-exponente-negativo', 'potencias-calcular'],
     estimatedMinutes: 14,
-    minEducOA: ['MA1M-OA-02'],
+    minEducOA: ['MA1M-OA-02', 'MA07-OA-05'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Misterio del Exponente Cero' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -263,7 +265,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-003',
     skills: ['potencias-producto', 'potencias-cociente', 'potencias-potencia-de-potencia'],
     estimatedMinutes: 15,
-    minEducOA: ['MA1M-OA-02'],
+    minEducOA: ['MA1M-OA-02', 'MA07-OA-05'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Secreto del Científico' },
       { id: 'explore', type: 'explore', title: 'Descubre las Propiedades' },
@@ -303,7 +305,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-004',
     skills: ['porcentaje-concepto', 'porcentaje-calcular', 'porcentaje-conversiones'],
     estimatedMinutes: 15,
-    minEducOA: ['FG-MATE-4M-OAC-01'],
+    minEducOA: ['FG-MATE-4M-OAC-01', 'MA07-OA-04'],
     steps: [
       { id: 'hook', type: 'hook', title: 'Las Ofertas del Centro Comercial' },
       { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
@@ -323,7 +325,7 @@ export const NUMEROS_LESSONS: Lesson[] = [
     thematicUnit: 'M1-NUM-005',
     skills: ['porcentaje-problemas', 'porcentaje-sucesivos', 'porcentaje-inverso', 'porcentaje-comparacion'],
     estimatedMinutes: 16,
-    minEducOA: ['MA2M-OA-06', 'FG-MATE-4M-OAC-01'],
+    minEducOA: ['MA2M-OA-06', 'FG-MATE-4M-OAC-01', 'MA07-OA-04'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Tienda de Electrónica' },
       { id: 'explore', type: 'explore', title: 'Tipos de Problemas' },

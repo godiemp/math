@@ -2,17 +2,17 @@
 
 Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
-**Última actualización:** 2025-01-07
+**Última actualización:** 2025-01-08
 
 ## Resumen
 
 | Métrica | Valor |
 |---------|-------|
 | Total OA | 19 |
-| OA con cobertura | 11 |
-| OA sin cobertura | 8 |
-| % Cobertura | 58% |
-| Total lecciones mapeadas | 19 |
+| OA con cobertura | 14 |
+| OA sin cobertura | 5 |
+| % Cobertura | 74% |
+| Total lecciones mapeadas | 20 |
 
 ---
 
@@ -97,15 +97,16 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 ## Álgebra y Funciones (4 OA)
 
-### MA07-OA-06: Lenguaje algebraico ✅
+### MA07-OA-06: Lenguaje algebraico ❌
 > Utilizar el lenguaje algebraico para generalizar relaciones entre números, para establecer y formular reglas y propiedades y construir ecuaciones.
 
-**Estado:** ✅ Cobertura completa
+**Estado:** ❌ Sin cobertura directa
 **Tipo:** Basal
 
-| Lección | Nivel | Título |
-|---------|-------|--------|
-| m1-alg-002-a | M1 | Expresiones Algebraicas |
+**Nota:** La lección m1-alg-002-a cubre mejor OA-07 (términos semejantes). Se necesita una lección específica para lenguaje algebraico.
+
+**Pendiente:**
+- m1-alg-002-b: Lenguaje Algebraico (traducir expresiones verbales a algebraicas)
 
 ---
 
@@ -118,8 +119,6 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 | Lección | Nivel | Título |
 |---------|-------|--------|
 | m1-alg-002-a | M1 | Expresiones Algebraicas |
-
-**Nota:** Este OA se cubre junto con MA07-OA-06 en la misma lección.
 
 ---
 
@@ -155,19 +154,17 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 ## Geometría (5 OA)
 
-### MA07-OA-10: Ángulos en polígonos ✅
+### MA07-OA-10: Ángulos en polígonos ❌
 > Descubrir relaciones que involucran ángulos exteriores o interiores de diferentes polígonos.
 
-**Estado:** ✅ Cobertura parcial
+**Estado:** ❌ Sin cobertura
 **Tipo:** No basal
 
-| Lección | Nivel | Título |
-|---------|-------|--------|
-| m1-geo-001-b | M1 | Propiedades de Triángulos |
-| m1-geo-001-c | M1 | Perímetros y Áreas de Polígonos |
+**Nota:** Las lecciones m1-geo-001-b y m1-geo-001-c tratan sobre área, no ángulos. Se necesitan lecciones específicas.
 
 **Pendiente:**
-- Lección específica de ángulos interiores/exteriores de polígonos regulares
+- m1-geo-001-d: Ángulos Interiores de Polígonos
+- m1-geo-001-e: Ángulos Exteriores de Polígonos
 
 ---
 
@@ -180,8 +177,9 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 | Lección | Nivel | Título |
 |---------|-------|--------|
 | m1-geo-002-a | M1 | Circunferencia y Área del Círculo |
-| m1-geo-002-b | M1 | Relación entre Radio, Diámetro y Pi |
 | m1-geo-002-c | M1 | Sectores Circulares y Longitud de Arco |
+
+**Nota:** m1-geo-002-b trata sobre figuras compuestas, no específicamente sobre el círculo.
 
 ---
 
@@ -202,12 +200,13 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 ### MA07-OA-13: Área de triángulos, paralelogramos y trapecios ✅
 > Desarrollar y aplicar la fórmula del área de triángulos, paralelogramos y trapecios.
 
-**Estado:** ✅ Cobertura parcial
+**Estado:** ✅ Cobertura completa
 **Tipo:** No basal
 
 | Lección | Nivel | Título |
 |---------|-------|--------|
-| m1-geo-001-c | M1 | Perímetros y Áreas de Polígonos |
+| m1-geo-001-b | M1 | Área de Rectángulos y Triángulos |
+| m1-geo-001-c | M1 | Área de Paralelogramos y Trapecios |
 
 ---
 
@@ -304,15 +303,18 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 ### OA Basales sin cobertura
 
-1. **MA07-OA-12** (Construcciones geométricas) - Sin cobertura
-2. **MA07-OA-14** (Vectores) - Parcial, falta vectores
+1. **MA07-OA-06** (Lenguaje algebraico) - Sin cobertura directa
+2. **MA07-OA-12** (Construcciones geométricas) - Sin cobertura
+3. **MA07-OA-14** (Vectores) - Parcial, falta vectores
 
 ### Brechas Identificadas
 
 | Prioridad | OA | Tema | Lecciones Necesarias |
 |-----------|-----|------|---------------------|
+| Alta | MA07-OA-06 | Lenguaje algebraico | 1 lección |
 | Alta | MA07-OA-09 | Inecuaciones | 2 lecciones |
 | Alta | MA07-OA-14 | Vectores | 2 lecciones |
+| Media | MA07-OA-10 | Ángulos en polígonos | 2 lecciones |
 | Media | MA07-OA-12 | Construcciones | 2 lecciones |
 | Media | MA07-OA-15 | Muestreo | 1 lección |
 | Baja | MA07-OA-19 | Prob. experimental vs teórica | 1 lección |
