@@ -10,7 +10,7 @@ import {
   ActionButton,
   ResultsSummary,
 } from '@/components/lessons/primitives';
-import { InlineMath, MathText } from '@/components/math/MathDisplay';
+import { InlineMath, BlockMath, MathText } from '@/components/math/MathDisplay';
 
 type PropertyType = 'product' | 'quotient' | 'rootOfRoot' | 'invalid';
 
@@ -114,8 +114,8 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-900/50 rounded-2xl p-8 border border-gray-200 dark:border-gray-700">
             <div className="text-center mb-8">
               <p className="text-gray-500 dark:text-gray-400 mb-2">¿Qué propiedad aplica?</p>
-              <div className="text-3xl font-bold text-gray-800 dark:text-gray-200">
-                <InlineMath latex={mc.currentItem.expression} />
+              <div className="flex justify-center text-3xl font-bold text-gray-800 dark:text-gray-200">
+                <BlockMath latex={mc.currentItem.expression} />
               </div>
             </div>
 
@@ -195,7 +195,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
                 ) : (
                   <X className="w-5 h-5 text-red-600 flex-shrink-0" />
                 )}
-                <span className="text-gray-700 dark:text-gray-300"><InlineMath latex={expr.expression} /></span>
+                <span className="text-gray-700 dark:text-gray-300 flex items-center"><BlockMath latex={expr.expression} /></span>
                 <span className={cn('text-sm font-medium px-2 py-1 rounded ml-auto', colors.bg, colors.text)}>
                   {correctOption.label}
                 </span>
