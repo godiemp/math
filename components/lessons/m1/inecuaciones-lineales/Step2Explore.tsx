@@ -137,14 +137,10 @@ function NumberLine({ value, direction, open }: { value: number; direction: 'lef
 
       {/* Solution ray */}
       <div
-        className={cn(
-          'absolute top-1/2 h-1 -translate-y-1/2 bg-green-500/50',
-          direction === 'left' ? 'left-0' : 'right-0'
-        )}
+        className="absolute top-1/2 h-1 -translate-y-1/2 bg-green-500/50"
         style={{
-          ...(direction === 'left'
-            ? { right: `${100 - valuePosition}%` }
-            : { left: `${valuePosition}%` }),
+          left: direction === 'left' ? '0%' : `${valuePosition}%`,
+          width: direction === 'left' ? `${valuePosition}%` : `${100 - valuePosition}%`,
         }}
       />
     </div>
