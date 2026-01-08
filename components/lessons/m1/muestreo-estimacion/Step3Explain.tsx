@@ -139,8 +139,9 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               </h4>
               <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center">
                 <p className="text-2xl font-mono">
-                  <span className="text-purple-600 inline-block">
-                    p<sup className="text-xs -ml-0.5">^</sup>
+                  <span className="text-purple-600 relative inline-block">
+                    p
+                    <span className="absolute -top-1 left-1/2 -translate-x-1/2 text-xs">^</span>
                   </span>{' '}
                   ={' '}
                   <span className="text-green-600">favorable</span> ÷{' '}
@@ -157,8 +158,9 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                   Si 24 de 40 estudiantes prefieren Galletas:
                 </p>
                 <p className="font-mono text-lg text-center py-2">
-                  <span className="inline-block">
-                    p<sup className="text-xs -ml-0.5">^</sup>
+                  <span className="relative inline-block">
+                    p
+                    <span className="absolute -top-0.5 left-1/2 -translate-x-1/2 text-[10px]">^</span>
                   </span>{' '}
                   = <span className="text-green-600">24</span> ÷{' '}
                   <span className="text-blue-600">40</span> ={' '}
@@ -175,8 +177,9 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-3 border border-amber-200 dark:border-amber-700">
               <p className="text-amber-800 dark:text-amber-200 text-sm">
                 <strong>Importante:</strong> La proporción muestral (
-                <span className="inline-block font-mono">
-                  p<sup className="text-xs -ml-0.5">^</sup>
+                <span className="relative inline-block font-mono">
+                  p
+                  <span className="absolute -top-0.5 left-1/2 -translate-x-1/2 text-[8px]">^</span>
                 </span>
                 ) es nuestra{' '}
                 <em>mejor estimación</em> de la proporción real de la población.
