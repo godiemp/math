@@ -100,7 +100,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                     Paso 1: Divide ambos lados entre <InlineMath latex="a" />
                   </p>
                   <p className="text-center text-lg">
-                    <InlineMath latex="ax < b \\rightarrow x < \\frac{b}{a}" />
+                    <InlineMath latex="ax < b \rightarrow x < \frac{b}{a}" />
                   </p>
                 </div>
                 <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
