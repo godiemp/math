@@ -256,7 +256,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               </div>
 
               <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-4 border border-green-200 dark:border-green-800">
-                <h4 className="font-bold text-green-700 dark:text-green-300 mb-2">�� Tip 2: Lee de izquierda a derecha</h4>
+                <h4 className="font-bold text-green-700 dark:text-green-300 mb-2">Tip 2: Lee de izquierda a derecha</h4>
                 <p className="text-gray-600 dark:text-gray-400 text-sm">
                   En la mayoría de los casos, puedes traducir en el orden que lees: &quot;un número más 5&quot; → <InlineMath latex="x + 5" />
                 </p>

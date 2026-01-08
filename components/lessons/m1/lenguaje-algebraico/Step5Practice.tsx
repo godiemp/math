@@ -142,22 +142,21 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
       </div>
 
       {/* Progress */}
-      <div className="flex justify-center">
-        <ProgressDots
-          items={QUESTIONS}
-          currentIndex={currentIndex}
-          getStatus={(_, i) =>
-            answers[i] !== null
-              ? answers[i] === QUESTIONS[i].correctIndex
-                ? 'correct'
-                : 'incorrect'
-              : i === currentIndex
-                ? 'current'
-                : 'pending'
-          }
-          size="sm"
-        />
-      </div>
+      <ProgressDots
+        items={QUESTIONS}
+        currentIndex={currentIndex}
+        getStatus={(_, i) =>
+          answers[i] !== null
+            ? answers[i] === QUESTIONS[i].correctIndex
+              ? 'correct'
+              : 'incorrect'
+            : i === currentIndex
+              ? 'current'
+              : 'pending'
+        }
+        size="sm"
+        className="gap-4"
+      />
 
       {/* Question Card */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
