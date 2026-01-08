@@ -157,12 +157,12 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           {/* Visual reminder */}
           <div className="flex justify-center mb-6">
             <TriangleFigure
-              fromAngles={{ angles: [60, 30, 90], size: 100 }}
+              fromAngles={{ angles: [60, 30, 90], size: 160 }}
               showRightAngleMarker
               fill="rgba(224, 231, 255, 0.3)"
               stroke="#475569"
               angles={[
-                { showArc: true, label: '60°', color: '#dc2626' },
+                { showArc: true, label: '60°', color: '#dc2626', arcRadius: 30 },
                 {},
                 {},
               ]}
@@ -172,7 +172,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 { label: '30 m', labelColor: '#1f2937' },
               ]}
               showVertices={false}
-              className="w-56"
+              className="w-72"
             />
           </div>
 

@@ -224,12 +224,12 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
             {/* Triangle visualization */}
             <div className="flex justify-center mb-6">
               <TriangleFigure
-                fromAngles={{ angles: [problem.visualization.angle, 90 - problem.visualization.angle, 90], size: 120 }}
+                fromAngles={{ angles: [problem.visualization.angle, 90 - problem.visualization.angle, 90], size: 150 }}
                 showRightAngleMarker
                 fill="rgba(224, 231, 255, 0.5)"
                 stroke="#4f46e5"
                 angles={[
-                  { showArc: true, label: `${problem.visualization.angle}°`, color: '#dc2626' },
+                  { showArc: true, label: `${problem.visualization.angle}°`, color: '#dc2626', arcRadius: 28 },
                   {},
                   {},
                 ]}
@@ -272,7 +272,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                   },
                 ]}
                 showVertices={false}
-                className="w-48"
+                className="w-64"
               />
             </div>
 
