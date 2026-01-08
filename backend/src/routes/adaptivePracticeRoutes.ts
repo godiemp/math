@@ -11,6 +11,10 @@ import {
   submitAnswer,
   saveAttempt,
 } from '../services/adaptivePracticeService';
+import {
+  generateScaffoldingQuestion,
+  generateSimilarQuestion,
+} from '../services/scaffoldingGeneratorService';
 
 const router = Router();
 
@@ -200,6 +204,83 @@ router.post('/attempt', authenticate, async (req, res) => {
     console.error('Save attempt error:', error);
     res.status(500).json({
       error: error instanceof Error ? error.message : 'Error al guardar intento',
+    });
+  }
+});
+
+/**
+ * POST /api/adaptive/generate-scaffolding
+ * Generate an easier scaffolding question using AI
+ * Body: { failedQuestion: Question, scaffoldingLevel: number }
+ */
+router.post('/generate-scaffolding', authenticate, async (req, res) => {
+  try {
+    const { failedQuestion, scaffoldingLevel } = req.body;
+
+    if (!failedQuestion || !scaffoldingLevel) {
+      return res.status(400).json({
+        error: 'failedQuestion y scaffoldingLevel son requeridos',
+      });
+    }
+
+    if (scaffoldingLevel < 1 || scaffoldingLevel > 3) {
+      return res.status(400).json({
+        error: 'scaffoldingLevel debe ser 1, 2, o 3',
+      });
+    }
+
+    const result = await generateScaffoldingQuestion({
+      failedQuestion,
+      scaffoldingLevel,
+    });
+
+    res.json(result);
+  } catch (error) {
+    console.error('Generate scaffolding error:', error);
+
+    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+
+    let statusCode = 500;
+    let userMessage = 'Error al generar pregunta de refuerzo.';
+
+    if (errorMessage.includes('OPENAI_API_KEY')) {
+      statusCode = 503;
+      userMessage = 'El servicio de generación no está configurado.';
+    } else if (errorMessage.includes('rate limit') || errorMessage.includes('429')) {
+      statusCode = 429;
+      userMessage = 'Demasiadas solicitudes. Espera un momento.';
+    } else if (errorMessage.includes('Invalid')) {
+      statusCode = 500;
+      userMessage = 'Error al procesar la respuesta. Intenta de nuevo.';
+    }
+
+    res.status(statusCode).json({ error: userMessage });
+  }
+});
+
+/**
+ * POST /api/adaptive/generate-similar
+ * Generate a similar question (same difficulty, different context)
+ * Body: { originalQuestion: Question }
+ */
+router.post('/generate-similar', authenticate, async (req, res) => {
+  try {
+    const { originalQuestion } = req.body;
+
+    if (!originalQuestion) {
+      return res.status(400).json({
+        error: 'originalQuestion es requerido',
+      });
+    }
+
+    const result = await generateSimilarQuestion(originalQuestion);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Generate similar error:', error);
+
+    res.status(500).json({
+      error: 'Error al generar pregunta similar.',
     });
   }
 });
