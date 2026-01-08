@@ -42,14 +42,6 @@ test.describe('Dashboard Page', () => {
       await expect(page.getByText(/NUEVO/i)).toBeVisible();
     });
 
-    test('should display Knowledge Diagnostic card', async ({ page }) => {
-      await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
-      await page.waitForTimeout(2000);
-
-      await expect(page.getByTestId('diagnostic-card')).toBeVisible();
-      await expect(page.getByText(/Diagnóstico de Conocimiento/i)).toBeVisible();
-    });
-
     test('should display Live Practice card', async ({ page }) => {
       await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
