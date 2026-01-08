@@ -4,15 +4,19 @@ import { useState } from 'react';
 import { Check, X, ArrowRight, RotateCcw, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { InlineMath } from '@/components/math/MathDisplay';
 
 interface PracticeQuestion {
   id: string;
   context: string;
   inequality: string;
+  inequalityLatex: string;
   options: string[];
+  optionsLatex: string[];
   correctAnswer: number;
   hint: string;
   explanation: string;
+  explanationLatex: string;
   isNegative: boolean;
 }
 
@@ -20,56 +24,71 @@ const QUESTIONS: PracticeQuestion[] = [
   {
     id: 'p1',
     context:
-      'La tarjeta Bip tiene $15.000 de saldo. Cada viaje en Metro cuesta $800. Cuntos viajes puede hacer sin que el saldo sea negativo?',
+      'La tarjeta Bip tiene $15.000 de saldo. Cada viaje en Metro cuesta $800. ¿Cuántos viajes puede hacer sin que el saldo sea negativo?',
     inequality: '15.000 - 800x >= 0',
+    inequalityLatex: '15000 - 800x \\geq 0',
     options: ['x <= 18', 'x <= 19', 'x >= 18', 'x >= 19'],
-    correctAnswer: 0, // x <= 18
-    hint: 'Reorganiza: -800x >= -15.000, recuerda la regla del negativo',
+    optionsLatex: ['x \\leq 18', 'x \\leq 19', 'x \\geq 18', 'x \\geq 19'],
+    correctAnswer: 0,
+    hint: 'Reorganiza: -800x ≥ -15.000, recuerda la regla del negativo',
     explanation: '15.000 - 800x >= 0 → -800x >= -15.000 → x <= 18,75 → x <= 18 viajes',
+    explanationLatex: '15000 - 800x \\geq 0 \\rightarrow -800x \\geq -15000 \\rightarrow x \\leq 18{,}75 \\rightarrow x \\leq 18 \\text{ viajes}',
     isNegative: true,
   },
   {
     id: 'p2',
     context:
-      'Para aprobar el ramo, necesitas promedio de al menos 4,0. Tienes notas de 3,5 y 4,2. Qu nota mnima necesitas en la tercera prueba?',
+      'Para aprobar el ramo, necesitas promedio de al menos 4,0. Tienes notas de 3,5 y 4,2. ¿Qué nota mínima necesitas en la tercera prueba?',
     inequality: '(3,5 + 4,2 + x) / 3 >= 4,0',
+    inequalityLatex: '\\frac{3{,}5 + 4{,}2 + x}{3} \\geq 4{,}0',
     options: ['x >= 4,0', 'x >= 4,3', 'x >= 4,5', 'x >= 5,0'],
-    correctAnswer: 1, // x >= 4.3
+    optionsLatex: ['x \\geq 4{,}0', 'x \\geq 4{,}3', 'x \\geq 4{,}5', 'x \\geq 5{,}0'],
+    correctAnswer: 1,
     hint: 'Multiplica ambos lados por 3, luego despeja x',
     explanation: '7,7 + x >= 12 → x >= 4,3',
+    explanationLatex: '7{,}7 + x \\geq 12 \\rightarrow x \\geq 4{,}3',
     isNegative: false,
   },
   {
     id: 'p3',
     context:
-      'Para la fiesta del curso tienes un presupuesto mximo de $50.000. El arriendo del saln cuesta $20.000. Cunto mximo puedes gastar por persona si van 15 personas?',
+      'Para la fiesta del curso tienes un presupuesto máximo de $50.000. El arriendo del salón cuesta $20.000. ¿Cuánto máximo puedes gastar por persona si van 15 personas?',
     inequality: '20.000 + 15x <= 50.000',
+    inequalityLatex: '20000 + 15x \\leq 50000',
     options: ['x <= 1.500', 'x <= 2.000', 'x <= 2.500', 'x <= 3.000'],
-    correctAnswer: 1, // x <= 2000
-    hint: 'Asla 15x primero',
+    optionsLatex: ['x \\leq 1500', 'x \\leq 2000', 'x \\leq 2500', 'x \\leq 3000'],
+    correctAnswer: 1,
+    hint: 'Aísla 15x primero',
     explanation: '15x <= 30.000 → x <= 2.000',
+    explanationLatex: '15x \\leq 30000 \\rightarrow x \\leq 2000',
     isNegative: false,
   },
   {
     id: 'p4',
     context:
-      'Un refrigerador debe mantener la temperatura bajo 5C. La temperatura actual es 8C y baja 0,5C cada minuto. Cuntos minutos deben pasar como mnimo?',
+      'Un refrigerador debe mantener la temperatura bajo 5°C. La temperatura actual es 8°C y baja 0,5°C cada minuto. ¿Cuántos minutos deben pasar como mínimo?',
     inequality: '8 - 0,5x < 5',
+    inequalityLatex: '8 - 0{,}5x < 5',
     options: ['x > 5', 'x > 6', 'x < 6', 'x < 5'],
-    correctAnswer: 1, // x > 6
+    optionsLatex: ['x > 5', 'x > 6', 'x < 6', 'x < 5'],
+    correctAnswer: 1,
     hint: '-0,5x < -3, recuerda invertir',
     explanation: '-0,5x < -3 → x > 6 minutos',
+    explanationLatex: '-0{,}5x < -3 \\rightarrow x > 6 \\text{ minutos}',
     isNegative: true,
   },
   {
     id: 'p5',
     context:
-      'Para entrar a un juego de un parque de diversiones, debes tener al menos 12 aos o tu edad ms la de un acompaante mayor debe sumar ms de 25. Si tienes 9 aos, qu edad mnima debe tener tu acompaante?',
+      'Para entrar a un juego de un parque de diversiones, debes tener al menos 12 años o tu edad más la de un acompañante mayor debe sumar más de 25. Si tienes 9 años, ¿qué edad mínima debe tener tu acompañante?',
     inequality: '9 + x > 25',
+    inequalityLatex: '9 + x > 25',
     options: ['x > 14', 'x > 15', 'x > 16', 'x >= 17'],
-    correctAnswer: 2, // x > 16
+    optionsLatex: ['x > 14', 'x > 15', 'x > 16', 'x \\geq 17'],
+    correctAnswer: 2,
     hint: 'Despeja x directamente',
     explanation: '9 + x > 25 → x > 16',
+    explanationLatex: '9 + x > 25 \\rightarrow x > 16',
     isNegative: false,
   },
 ];
@@ -125,7 +144,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
     <div className="space-y-8 animate-fadeIn">
       {/* Title */}
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Prctica Guiada</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Práctica Guiada</h2>
         <p className="text-gray-600 dark:text-gray-300">Resuelve problemas del mundo real con inecuaciones</p>
       </div>
 
@@ -166,15 +185,17 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
             {question.isNegative && !showFeedback && (
               <div className="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-3 mb-4 border border-amber-200 dark:border-amber-700">
                 <p className="text-amber-700 dark:text-amber-300 text-sm text-center">
-                  Tip: Esta inecuacin tiene un coeficiente negativo
+                  ⚠️ Tip: Esta inecuación tiene un coeficiente negativo
                 </p>
               </div>
             )}
 
             {/* Inequality display */}
             <div className="text-center mb-6">
-              <p className="text-gray-500 dark:text-gray-400 mb-2 text-sm">Resuelve la inecuacin:</p>
-              <p className="font-mono text-2xl font-bold text-purple-600 dark:text-purple-400">{question.inequality}</p>
+              <p className="text-gray-500 dark:text-gray-400 mb-2 text-sm">Resuelve la inecuación:</p>
+              <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                <InlineMath latex={question.inequalityLatex} />
+              </p>
             </div>
 
             {/* Hint button */}
@@ -198,7 +219,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
 
             {/* Options */}
             <div className="grid grid-cols-2 gap-4">
-              {question.options.map((option, index) => (
+              {question.optionsLatex.map((optionLatex, index) => (
                 <button
                   key={index}
                   onClick={() => handleSelect(index)}
@@ -237,7 +258,9 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                         String.fromCharCode(65 + index)
                       )}
                     </span>
-                    <span className="font-mono text-lg text-gray-800 dark:text-gray-200">{option}</span>
+                    <span className="text-lg text-gray-800 dark:text-gray-200">
+                      <InlineMath latex={optionLatex} />
+                    </span>
                   </div>
                 </button>
               ))}
@@ -266,9 +289,11 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                         isCorrect ? 'text-green-800 dark:text-green-300' : 'text-amber-800 dark:text-amber-300'
                       )}
                     >
-                      {isCorrect ? 'Correcto!' : 'Casi!'}
+                      {isCorrect ? '¡Correcto!' : '¡Casi!'}
                     </h4>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 font-mono">{question.explanation}</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                      <InlineMath latex={question.explanationLatex} />
+                    </p>
                   </div>
                 </div>
               </div>
@@ -319,7 +344,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                 passed ? 'text-green-800 dark:text-green-300' : 'text-amber-800 dark:text-amber-300'
               )}
             >
-              {passed ? 'Muy bien!' : 'Sigue practicando!'}
+              {passed ? '¡Muy bien!' : '¡Sigue practicando!'}
             </h3>
 
             <div className="text-5xl font-bold text-gray-900 dark:text-white mb-2">
@@ -327,7 +352,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
             </div>
 
             <p className={cn(passed ? 'text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300')}>
-              {passed ? 'Ests listo para el checkpoint final.' : `Necesitas al menos 3 correctas para continuar.`}
+              {passed ? 'Estás listo para el checkpoint final.' : `Necesitas al menos 3 correctas para continuar.`}
             </p>
           </div>
 
