@@ -96,14 +96,16 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <h4 className="font-semibold text-gray-800 dark:text-gray-200">Método de solución:</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Paso 1: Divide entre a</p>
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                    Paso 1: Divide ambos lados entre <InlineMath latex="a" />
+                  </p>
                   <p className="text-center text-lg">
-                    <InlineMath latex="x < \frac{b}{a}" />
+                    <InlineMath latex="ax < b \\rightarrow x < \\frac{b}{a}" />
                   </p>
                 </div>
                 <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                    Paso 2: Si a es negativo
+                    Paso 2: Si <InlineMath latex="a < 0" /> (negativo)
                   </p>
                   <p className="text-center text-lg text-red-600">¡Invierte el signo!</p>
                 </div>
