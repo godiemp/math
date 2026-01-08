@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, BookOpen, Lightbulb, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
-import { InlineMath, BlockMath } from '@/components/math/MathDisplay';
+import { InlineMath, BlockMath, MathText } from '@/components/math/MathDisplay';
 
 type TabId = 'product' | 'quotient' | 'rootOfRoot' | 'tips';
 
@@ -34,8 +34,8 @@ const FORMULAS: FormulaTab[] = [
     example: {
       input: '\\sqrt{4 \\times 25}',
       steps: [
-        'Separamos: \\sqrt{4} \\times \\sqrt{25}',
-        'Calculamos cada raíz: 2 \\times 5',
+        'Separamos: $\\sqrt{4} \\times \\sqrt{25}$',
+        'Calculamos cada raíz: $2 \\times 5$',
       ],
       result: '10',
     },
@@ -51,8 +51,8 @@ const FORMULAS: FormulaTab[] = [
     example: {
       input: '\\sqrt{\\dfrac{81}{9}}',
       steps: [
-        'Separamos: \\dfrac{\\sqrt{81}}{\\sqrt{9}}',
-        'Calculamos cada raíz: \\dfrac{9}{3}',
+        'Separamos: $\\dfrac{\\sqrt{81}}{\\sqrt{9}}$',
+        'Calculamos cada raíz: $\\dfrac{9}{3}$',
       ],
       result: '3',
     },
@@ -68,9 +68,9 @@ const FORMULAS: FormulaTab[] = [
     example: {
       input: '\\sqrt[3]{\\sqrt{64}}',
       steps: [
-        'Multiplicamos índices: 3 \\times 2 = 6',
-        'Queda: \\sqrt[6]{64}',
-        'Como 2^6 = 64, entonces \\sqrt[6]{64} = 2',
+        'Multiplicamos índices: $3 \\times 2 = 6$',
+        'Queda: $\\sqrt[6]{64}$',
+        'Como $2^6 = 64$, entonces $\\sqrt[6]{64} = 2$',
       ],
       result: '2',
     },
@@ -273,7 +273,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 {currentFormula!.example.steps.map((step, i) => (
                   <p key={i} className="text-gray-600 dark:text-gray-400 text-sm">
                     {i === currentFormula!.example.steps.length - 1 ? '→ ' : '• '}
-                    <InlineMath latex={step} />
+                    <MathText content={step} />
                   </p>
                 ))}
               </div>
