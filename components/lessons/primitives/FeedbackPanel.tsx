@@ -1,5 +1,6 @@
 'use client';
 
+import { ReactNode } from 'react';
 import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { colors } from '@/lib/lessons/styles';
@@ -7,7 +8,7 @@ import { colors } from '@/lib/lessons/styles';
 export interface FeedbackPanelProps {
   isCorrect: boolean;
   title?: string;
-  explanation: string;
+  explanation: ReactNode;
   className?: string;
 }
 
