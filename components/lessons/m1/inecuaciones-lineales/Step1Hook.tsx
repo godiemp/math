@@ -29,7 +29,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
       {/* Title */}
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">El Presupuesto del Celular</h2>
-        <p className="text-gray-600 dark:text-gray-300">Una decisin financiera real...</p>
+        <p className="text-gray-600 dark:text-gray-300">Una decisión financiera real...</p>
       </div>
 
       {phase === 'scenario' && (
@@ -79,9 +79,9 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               {/* Question */}
               <div className="bg-amber-100 dark:bg-amber-900/50 rounded-xl p-4 max-w-md">
                 <p className="text-amber-800 dark:text-amber-200 text-center text-lg">
-                  Despus de pagar Spotify, quiere comprar canciones a <strong>$500 cada una</strong>.
+                  Después de pagar Spotify, quiere comprar canciones a <strong>$500 cada una</strong>.
                   <br />
-                  <span className="font-bold">Cuantas canciones puede comprar sin exceder su presupuesto?</span>
+                  <span className="font-bold">¿Cuántas canciones puede comprar sin exceder su presupuesto?</span>
                 </p>
               </div>
             </div>
@@ -99,13 +99,13 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         <div className="space-y-6 animate-fadeIn">
           <QuestionPrompt variant="math">
             <p className="text-lg font-semibold text-gray-800 dark:text-gray-200 text-center">
-              Si <span className="font-mono text-blue-600">x</span> es el nmero de canciones:
+              Si <span className="font-mono text-blue-600">x</span> es el número de canciones:
             </p>
             <p className="text-gray-600 dark:text-gray-400 mt-2 font-mono text-xl text-center">
               3.990 + 500x <span className="text-red-500 font-bold">{'<='}</span> 10.000
             </p>
             <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm text-center">
-              Cul es la respuesta correcta?
+              ¿Cuál es la respuesta correcta?
             </p>
           </QuestionPrompt>
 
@@ -139,7 +139,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           {showFeedback && (
             <FeedbackPanel
               isCorrect={isCorrect}
-              explanation={isCorrect ? 'Exacto! La respuesta NO es un nmero nico...' : 'Casi! Veamos por qu la respuesta es diferente...'}
+              explanation={isCorrect ? '¡Exacto! La respuesta NO es un número único...' : '¡Casi! Veamos por qué la respuesta es diferente...'}
             />
           )}
         </div>
@@ -150,7 +150,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           {/* Explanation with visual breakdown */}
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-2xl p-6 border border-green-200 dark:border-green-800">
             <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 text-center">
-              Resolvemos la inecuacin paso a paso!
+              ¡Resolvemos la inecuación paso a paso!
             </h3>
 
             {/* Visual breakdown */}
@@ -193,33 +193,33 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 <span className="text-gray-400 self-center">canciones</span>
               </div>
               <p className="text-center text-gray-600 dark:text-gray-400 text-sm">
-                Cualquier valor desde 0 hasta 12 es vlido!
+                ¡Cualquier valor desde 0 hasta 12 es válido!
               </p>
             </div>
           </div>
 
-          <InsightCard title="Esto es una INECUACIN!" variant="purple">
+          <InsightCard title="¡Esto es una INECUACIÓN!" variant="purple">
             <div className="space-y-4">
               <div className="bg-white dark:bg-gray-800 p-4 rounded-xl">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-                    <p className="text-sm text-gray-500 mb-1">Ecuacin</p>
+                    <p className="text-sm text-gray-500 mb-1">Ecuación</p>
                     <p className="font-mono text-lg">3x + 5 <strong>=</strong> 20</p>
-                    <p className="text-xs text-gray-500 mt-1">Una sola solucin: x = 5</p>
+                    <p className="text-xs text-gray-500 mt-1">Una sola solución: x = 5</p>
                   </div>
                   <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/30 rounded-lg border-2 border-purple-300 dark:border-purple-600">
-                    <p className="text-sm text-gray-500 mb-1">Inecuacin</p>
+                    <p className="text-sm text-gray-500 mb-1">Inecuación</p>
                     <p className="font-mono text-lg">3x + 5 <strong className="text-red-500">{'<='}</strong> 20</p>
-                    <p className="text-xs text-purple-600 dark:text-purple-400 mt-1 font-bold">Muchas soluciones!</p>
+                    <p className="text-xs text-purple-600 dark:text-purple-400 mt-1 font-bold">¡Muchas soluciones!</p>
                   </div>
                 </div>
               </div>
               <div className="bg-amber-50 dark:bg-amber-900/30 p-3 rounded-lg border border-amber-200 dark:border-amber-700">
                 <p className="text-amber-800 dark:text-amber-200 text-sm text-center">
-                  Los smbolos <span className="font-mono font-bold">{'<'}</span>,{' '}
+                  Los símbolos <span className="font-mono font-bold">{'<'}</span>,{' '}
                   <span className="font-mono font-bold">{'>'}</span>,{' '}
                   <span className="font-mono font-bold">{'<='}</span>,{' '}
-                  <span className="font-mono font-bold">{'>='}</span> crean <strong>inecuaciones</strong> con mltiples
+                  <span className="font-mono font-bold">{'>='}</span> crean <strong>inecuaciones</strong> con múltiples
                   soluciones.
                 </p>
               </div>
@@ -228,7 +228,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
           <div className="flex justify-center">
             <ActionButton onClick={onComplete} variant="secondary" icon={<ArrowRight size={20} />}>
-              Descubrir el patrn
+              Descubrir el patrón
             </ActionButton>
           </div>
         </div>

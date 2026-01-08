@@ -6,15 +6,15 @@ import { CheckpointQuiz, CheckpointQuestion } from '@/components/lessons/shared'
 const QUESTIONS: CheckpointQuestion[] = [
   {
     id: 'v1',
-    question: 'Cundo se invierte el signo de una inecuacin?',
+    question: '¿Cuándo se invierte el signo de una inecuación?',
     options: [
       'Siempre que despejamos x',
-      'Cuando multiplicamos o dividimos por un nmero NEGATIVO',
+      'Cuando multiplicamos o dividimos por un número NEGATIVO',
       'Cuando restamos de ambos lados',
-      'Cuando la solucin es negativa',
+      'Cuando la solución es negativa',
     ],
     correctAnswer: 1,
-    explanation: 'La regla crtica: solo al multiplicar o dividir por un nmero negativo se invierte el signo.',
+    explanation: 'La regla crítica: solo al multiplicar o dividir por un número negativo se invierte el signo.',
   },
   {
     id: 'v2',
@@ -25,14 +25,14 @@ const QUESTIONS: CheckpointQuestion[] = [
   },
   {
     id: 'v3',
-    question: 'Si tienes $8.000 y cada helado cuesta $1.500, cuntos helados puedes comprar como mximo?',
+    question: 'Si tienes $8.000 y cada helado cuesta $1.500, ¿cuántos helados puedes comprar como máximo?',
     options: ['x <= 5', 'x < 5', 'x <= 6', 'x < 6'],
     correctAnswer: 0, // x <= 5
-    explanation: '1500x <= 8000 → x <= 5,33 → mximo 5 helados',
+    explanation: '1500x <= 8000 → x <= 5,33 → máximo 5 helados',
   },
   {
     id: 'v4',
-    question: 'Cul es el intervalo solucin de 3 - 2x < 9?',
+    question: '¿Cuál es el intervalo solución de 3 - 2x < 9?',
     options: ['x > -3', 'x < -3', 'x > 3', 'x < 3'],
     correctAnswer: 0, // x > -3
     explanation: '-2x < 6 → x > -3 (signo invertido)',
@@ -46,7 +46,7 @@ export default function Step6Verify({ onComplete, isActive }: LessonStepProps) {
       isActive={isActive}
       questions={QUESTIONS}
       requiredCorrect={3}
-      successMessage="Has dominado las inecuaciones lineales! Ahora puedes resolver restricciones y lmites en cualquier contexto."
+      successMessage="¡Has dominado las inecuaciones lineales! Ahora puedes resolver restricciones y límites en cualquier contexto."
     />
   );
 }

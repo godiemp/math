@@ -30,7 +30,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
       {/* Title */}
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Tipos de Inecuaciones</h2>
-        <p className="text-gray-600 dark:text-gray-300">Explora los diferentes casos y sus mtodos de solucin</p>
+        <p className="text-gray-600 dark:text-gray-300">Explora los diferentes casos y sus métodos de solución</p>
       </div>
 
       {/* Tabs */}
@@ -80,7 +80,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                     <p className="font-mono text-lg text-purple-800 dark:text-purple-200">
                       ax {'<'} b → x {'>'} b/a
                     </p>
-                    <p className="text-xs text-red-600 mt-2 font-bold">Signo CAMBIA!</p>
+                    <p className="text-xs text-red-600 mt-2 font-bold">¡Signo CAMBIA!</p>
                   </div>
                 </div>
               </div>
@@ -88,7 +88,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
 
             {/* Method */}
             <div className="space-y-4">
-              <h4 className="font-semibold text-gray-800 dark:text-gray-200">Mtodo de solucin:</h4>
+              <h4 className="font-semibold text-gray-800 dark:text-gray-200">Método de solución:</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Paso 1: Divide entre a</p>
@@ -98,7 +98,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
                     Paso 2: Si a es negativo
                   </p>
-                  <p className="font-mono text-center text-lg text-red-600">Invierte el signo!</p>
+                  <p className="font-mono text-center text-lg text-red-600">¡Invierte el signo!</p>
                 </div>
               </div>
             </div>
@@ -134,7 +134,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 Inecuaciones de la forma <span className="font-mono text-purple-600">x/a {'<'} b</span> o{' '}
                 <span className="font-mono text-purple-600">x/a {'>'} b</span>
               </h3>
-              <p className="text-gray-600 dark:text-gray-400">La variable est siendo dividida</p>
+              <p className="text-gray-600 dark:text-gray-400">La variable está siendo dividida</p>
             </div>
 
             {/* Formula box */}
@@ -153,7 +153,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                     <p className="font-mono text-lg text-purple-800 dark:text-purple-200">
                       x/a {'<'} b → x {'>'} ab
                     </p>
-                    <p className="text-xs text-red-600 mt-2 font-bold">Signo CAMBIA!</p>
+                    <p className="text-xs text-red-600 mt-2 font-bold">¡Signo CAMBIA!</p>
                   </div>
                 </div>
               </div>
@@ -189,7 +189,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
                 Inecuaciones combinadas <span className="font-mono text-purple-600">ax + b {'<'} c</span>
               </h3>
-              <p className="text-gray-600 dark:text-gray-400">Hay suma/resta Y multiplicacin/divisin</p>
+              <p className="text-gray-600 dark:text-gray-400">Hay suma/resta Y multiplicación/división</p>
             </div>
 
             {/* Formula box */}
@@ -203,18 +203,18 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                   <p className="font-mono">
                     2. x {'<'} (c-b)/a <span className="text-gray-500">(divide entre a)</span>
                   </p>
-                  <p className="text-red-600 font-bold">Si a {'<'} 0, invierte el signo!</p>
+                  <p className="text-red-600 font-bold">Si a {'<'} 0, ¡invierte el signo!</p>
                 </div>
               </div>
             </div>
 
             {/* Method */}
             <div className="space-y-4">
-              <h4 className="font-semibold text-gray-800 dark:text-gray-200">Mtodo de solucin:</h4>
+              <h4 className="font-semibold text-gray-800 dark:text-gray-200">Método de solución:</h4>
               <div className="space-y-3">
                 <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                    Paso 1: Asla el trmino con x
+                    Paso 1: Aísla el término con x
                   </p>
                   <p className="font-mono text-center text-lg">ax {'<'} c - b</p>
                 </div>
@@ -224,7 +224,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 </div>
                 <div className="bg-red-50 dark:bg-red-900/30 rounded-xl p-4 border border-red-200 dark:border-red-700">
                   <p className="text-sm font-medium text-red-500 dark:text-red-400 mb-2">Paso 3: Verifica el signo de a</p>
-                  <p className="font-mono text-center text-lg text-red-600">Si a {'<'} 0, INVIERTE el signo!</p>
+                  <p className="font-mono text-center text-lg text-red-600">Si a {'<'} 0, ¡INVIERTE el signo!</p>
                 </div>
               </div>
             </div>
@@ -272,7 +272,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                       Verifica sustituyendo un valor
                     </h4>
                     <p className="text-sm text-gray-700 dark:text-gray-300">
-                      Toma un valor de tu solucin y sustityelo en la inecuacin original. Debe cumplirse!
+                      Toma un valor de tu solución y sustitúyelo en la inecuación original. ¡Debe cumplirse!
                     </p>
                   </div>
                 </div>
@@ -282,11 +282,11 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 <div className="flex items-start gap-3">
                   <Lightbulb className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h4 className="font-semibold text-green-800 dark:text-green-200 mb-1">Crculos en la recta</h4>
+                    <h4 className="font-semibold text-green-800 dark:text-green-200 mb-1">Círculos en la recta</h4>
                     <p className="text-sm text-gray-700 dark:text-gray-300">
-                      <strong>Abierto ()</strong> para {'<'} y {'>'} (NO incluye el valor)
+                      <strong>Abierto (○)</strong> para {'<'} y {'>'} (NO incluye el valor)
                       <br />
-                      <strong>Cerrado ()</strong> para {'<='} y {'>='} (S incluye el valor)
+                      <strong>Cerrado (●)</strong> para {'<='} y {'>='} (SÍ incluye el valor)
                     </p>
                   </div>
                 </div>
@@ -298,7 +298,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                   <div>
                     <h4 className="font-semibold text-green-800 dark:text-green-200 mb-1">Truco para recordar</h4>
                     <p className="text-sm text-gray-700 dark:text-gray-300">
-                      Imagina que el nmero negativo voltea todo, incluyendo el signo de desigualdad.
+                      Imagina que el número negativo voltea todo, incluyendo el signo de desigualdad.
                     </p>
                   </div>
                 </div>
@@ -318,7 +318,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                     <span className="text-red-600 font-bold text-lg">X</span>
                     <div>
                       <p className="font-mono text-sm line-through text-gray-500">-2x {'<'} 4 → x {'<'} -2</p>
-                      <p className="text-xs text-red-600">Error: Olvid invertir el signo al dividir por negativo</p>
+                      <p className="text-xs text-red-600">Error: Olvidó invertir el signo al dividir por negativo</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
@@ -334,14 +334,14 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                     <span className="text-red-600 font-bold text-lg">X</span>
                     <div>
                       <p className="font-mono text-sm line-through text-gray-500">
-                        x {'<='} 5 con crculo abierto en la recta
+                        x {'<='} 5 con círculo abierto en la recta
                       </p>
-                      <p className="text-xs text-red-600">Error: {'<='} incluye el 5, debe ser crculo cerrado</p>
+                      <p className="text-xs text-red-600">Error: {'<='} incluye el 5, debe ser círculo cerrado</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="text-green-600 font-bold text-lg">O</span>
-                    <p className="font-mono text-sm text-green-700">x {'<='} 5 con crculo cerrado ()</p>
+                    <p className="font-mono text-sm text-green-700">x {'<='} 5 con círculo cerrado (●)</p>
                   </div>
                 </div>
               </div>
@@ -351,8 +351,8 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                   <div className="flex items-center gap-4">
                     <span className="text-red-600 font-bold text-lg">X</span>
                     <div>
-                      <p className="font-mono text-sm line-through text-gray-500">x {'<'} 5 tiene solucin x = 5</p>
-                      <p className="text-xs text-red-600">Error: {'<'} NO incluye el 5, tiene infinitas soluciones</p>
+                      <p className="font-mono text-sm line-through text-gray-500">x {'<'} 5 tiene solución x = 5</p>
+                      <p className="text-xs text-red-600">Error: {'<'} NO incluye el 5, ¡tiene infinitas soluciones!</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
@@ -372,7 +372,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
           onClick={onComplete}
           className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg"
         >
-          <span>Practicar resolucin</span>
+          <span>Practicar resolución</span>
           <ArrowRight size={20} />
         </button>
       </div>

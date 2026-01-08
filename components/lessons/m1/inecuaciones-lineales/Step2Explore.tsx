@@ -30,7 +30,7 @@ const EXAMPLES: InequalityExample[] = [
       { description: 'Simplificamos', result: 'x < 5' },
     ],
     solution: 'x < 5',
-    hint: 'Dividir entre un nmero positivo NO cambia el signo',
+    hint: 'Dividir entre un número positivo NO cambia el signo',
     isNegative: false,
     numberLineDirection: 'left',
     numberLineValue: 5,
@@ -55,11 +55,11 @@ const EXAMPLES: InequalityExample[] = [
     inequality: '-3x < 12',
     steps: [
       { description: 'Dividimos ambos lados entre -3', result: '-3x / (-3) ? 12 / (-3)' },
-      { description: 'CUIDADO: Al dividir por negativo...', result: 'El signo SE INVIERTE!' },
+      { description: 'CUIDADO: Al dividir por negativo...', result: '¡El signo SE INVIERTE!' },
       { description: 'Resultado final', result: 'x > -4' },
     ],
     solution: 'x > -4',
-    hint: 'Cuando divides por un nmero NEGATIVO, el signo de desigualdad CAMBIA',
+    hint: 'Cuando divides por un número NEGATIVO, el signo de desigualdad CAMBIA',
     isNegative: true,
     numberLineDirection: 'right',
     numberLineValue: -4,
@@ -74,7 +74,7 @@ const EXAMPLES: InequalityExample[] = [
       { description: 'Dividimos entre -2 (SE INVIERTE)', result: 'x <= -3' },
     ],
     solution: 'x <= -3',
-    hint: 'Primero asla el trmino con x, luego aplica la regla del negativo',
+    hint: 'Primero aísla el término con x, luego aplica la regla del negativo',
     isNegative: true,
     numberLineDirection: 'left',
     numberLineValue: -3,
@@ -195,7 +195,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
     <div className="space-y-8 animate-fadeIn">
       {/* Title */}
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Descubre el Patrn</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Descubre el Patrón</h2>
         <p className="text-gray-600 dark:text-gray-300">Aprende a resolver inecuaciones paso a paso</p>
       </div>
 
@@ -203,7 +203,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
         <div className="space-y-6 animate-fadeIn">
           <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 rounded-2xl p-6 border border-blue-200 dark:border-blue-800">
             <p className="text-gray-700 dark:text-gray-300 text-lg text-center mb-6">
-              Resolver una inecuacin es <strong>MUY parecido</strong> a resolver una ecuacin...
+              Resolver una inecuación es <strong>MUY parecido</strong> a resolver una ecuación...
               <br />
               pero hay <strong className="text-red-500">UNA REGLA ESPECIAL</strong> que debes conocer.
             </p>
@@ -220,8 +220,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   </div>
                   <div className="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
                     <div className="text-3xl mb-2"> ↔ </div>
-                    <p className="font-semibold text-purple-700 dark:text-purple-300">Multiplicacin ↔ Divisin</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 font-mono">3x {'>'} 12 → x {'>'} 12  3</p>
+                    <p className="font-semibold text-purple-700 dark:text-purple-300">Multiplicación ↔ División</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 font-mono">3x {'>'} 12 → x {'>'} 12 ÷ 3</p>
                   </div>
                 </div>
                 <div className="bg-red-50 dark:bg-red-900/30 rounded-lg p-4 mt-4 border-2 border-red-300 dark:border-red-700">
@@ -230,9 +230,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                     <p className="text-red-800 dark:text-red-200 font-bold">REGLA ESPECIAL:</p>
                   </div>
                   <p className="text-red-700 dark:text-red-300">
-                    Al multiplicar o dividir por un nmero <strong>NEGATIVO</strong>,
+                    Al multiplicar o dividir por un número <strong>NEGATIVO</strong>,
                     <br />
-                    el signo de desigualdad <strong>SE INVIERTE</strong>!
+                    ¡el signo de desigualdad <strong>SE INVIERTE</strong>!
                   </p>
                 </div>
               </div>
@@ -265,7 +265,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <div className="flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-red-500" />
                 <p className="text-red-700 dark:text-red-300 font-medium">
-                  Atencin: Esta inecuacin tiene un coeficiente NEGATIVO!
+                  ¡Atención: Esta inecuación tiene un coeficiente NEGATIVO!
                 </p>
               </div>
             </div>
@@ -327,7 +327,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             {!showSolution ? (
               <div className="flex justify-center">
                 <ActionButton onClick={handleShowNextStep} variant="secondary">
-                  {currentStep < currentExample.steps.length - 1 ? 'Siguiente paso' : 'Ver solucin'}
+                  {currentStep < currentExample.steps.length - 1 ? 'Siguiente paso' : 'Ver solución'}
                 </ActionButton>
               </div>
             ) : (
@@ -341,7 +341,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   )}
                 >
                   <div className="text-center space-y-3">
-                    <p className="text-gray-600 dark:text-gray-400">Solucin:</p>
+                    <p className="text-gray-600 dark:text-gray-400">Solución:</p>
                     <p
                       className={cn(
                         'font-mono text-3xl font-bold',
@@ -353,15 +353,15 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
                     {/* Number line visualization */}
                     <div className="mt-4">
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Representacin en recta numrica:</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Representación en recta numérica:</p>
                       <NumberLine
                         value={currentExample.numberLineValue}
                         direction={currentExample.numberLineDirection}
                         open={currentExample.numberLineOpen}
                       />
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-6">
-                        {currentExample.numberLineOpen ? 'Crculo abierto' : 'Crculo cerrado'} = el valor{' '}
-                        {currentExample.numberLineOpen ? 'NO' : 'S'} est incluido
+                        {currentExample.numberLineOpen ? 'Círculo abierto' : 'Círculo cerrado'} = el valor{' '}
+                        {currentExample.numberLineOpen ? 'NO' : 'SÍ'} está incluido
                       </p>
                     </div>
                   </div>
@@ -392,7 +392,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   1
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-800 dark:text-gray-200">Asla el trmino con x</p>
+                  <p className="font-semibold text-gray-800 dark:text-gray-200">Aísla el término con x</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Usa operaciones inversas (igual que ecuaciones)</p>
                 </div>
               </div>
@@ -410,7 +410,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   3
                 </div>
                 <div>
-                  <p className="font-semibold text-red-700 dark:text-red-300">REGLA CRTICA</p>
+                  <p className="font-semibold text-red-700 dark:text-red-300">REGLA CRÍTICA</p>
                   <p className="text-sm text-red-600 dark:text-red-400">
                     Si multiplicas o divides por NEGATIVO, <strong>INVIERTE EL SIGNO</strong>
                   </p>
@@ -421,8 +421,8 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   4
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-800 dark:text-gray-200">Representa la solucin</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Usa la recta numrica con crculo abierto o cerrado</p>
+                  <p className="font-semibold text-gray-800 dark:text-gray-200">Representa la solución</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Usa la recta numérica con círculo abierto o cerrado</p>
                 </div>
               </div>
             </div>
@@ -443,7 +443,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   <p className="font-mono text-sm">-2x {'<'} 10</p>
                   <p className="text-gray-400">↓</p>
                   <p className="font-mono text-sm">x {'>'} -5</p>
-                  <p className="text-xs text-red-500 mt-2 font-bold">Signo CAMBIA!</p>
+                  <p className="text-xs text-red-500 mt-2 font-bold">¡Signo CAMBIA!</p>
                 </div>
               </div>
             </div>
