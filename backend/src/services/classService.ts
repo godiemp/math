@@ -625,4 +625,248 @@ export class ClassService {
       email: row.email,
     }));
   }
+
+  /**
+   * Create a new student and enroll them in a class in one transaction
+   * Grade level is derived from the class level
+   */
+  static async createStudentAndEnroll(
+    classId: string,
+    teacherId: string,
+    data: { firstName: string; lastName: string }
+  ): Promise<{
+    success: boolean;
+    student?: {
+      id: string;
+      username: string;
+      email: string;
+      displayName: string;
+      gradeLevel: string;
+    };
+    credentials?: {
+      username: string;
+      password: string;
+    };
+    error?: string;
+  }> {
+    const client = await pool.connect();
+
+    try {
+      await client.query('BEGIN');
+
+      // Verify class belongs to teacher and get level
+      const classResult = await client.query(
+        'SELECT id, level FROM classes WHERE id = $1 AND teacher_id = $2 AND is_active = true',
+        [classId, teacherId]
+      );
+
+      if (classResult.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return { success: false, error: 'Class not found or not owned by teacher' };
+      }
+
+      const classLevel = classResult.rows[0].level;
+
+      // Map class level to grade level
+      const levelToGrade: Record<string, string> = {
+        '1-medio': '1-medio',
+        '2-medio': '2-medio',
+        '3-medio': '3-medio',
+        '4-medio': '4-medio',
+        'M1': '1-medio',
+        'M2': '2-medio',
+        'both': '1-medio', // Default to 1-medio for mixed classes
+      };
+      const gradeLevel = levelToGrade[classLevel] || '1-medio';
+
+      // Generate username
+      const normalize = (str: string) =>
+        str
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase()
+          .trim()
+          .replace(/\s+/g, '.')
+          .replace(/[^a-z0-9.]/g, '');
+
+      const normalizedFirst = normalize(data.firstName);
+      const normalizedLast = normalize(data.lastName);
+      let baseUsername = `${normalizedFirst}.${normalizedLast}`.replace(/\.+/g, '.').substring(0, 30);
+
+      // Ensure unique username
+      let username = baseUsername;
+      let counter = 1;
+      while (true) {
+        const existing = await client.query('SELECT id FROM users WHERE username = $1', [username]);
+        if (existing.rows.length === 0) break;
+        username = `${baseUsername}-${counter}`;
+        counter++;
+        if (counter > 100) {
+          await client.query('ROLLBACK');
+          return { success: false, error: 'Unable to generate unique username' };
+        }
+      }
+
+      // Generate password
+      const words = [
+        'Sol', 'Luna', 'Mar', 'Rio', 'Roca', 'Nube', 'Flor', 'Arbol',
+        'Cielo', 'Tierra', 'Viento', 'Agua', 'Fuego', 'Luz', 'Estrella',
+        'Monte', 'Valle', 'Lago', 'Isla', 'Bosque', 'Playa', 'Campo',
+      ];
+      const word1 = words[Math.floor(Math.random() * words.length)];
+      const word2 = words[Math.floor(Math.random() * words.length)];
+      const number = Math.floor(Math.random() * 90) + 10;
+      const password = `${word1}-${word2}-${number}`;
+
+      const bcrypt = require('bcryptjs');
+      const passwordHash = await bcrypt.hash(password, 10);
+
+      // Generate email and display name
+      const email = `${username}@student.simplepaes.cl`;
+      const capitalize = (str: string) =>
+        str.split(' ').map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+      const displayName = `${capitalize(data.firstName)} ${capitalize(data.lastName)}`;
+
+      const now = Date.now();
+      const userId = randomUUID();
+
+      // Create the student
+      await client.query(
+        `INSERT INTO users (
+          id, username, email, password_hash, display_name, role,
+          grade_level, assigned_by_teacher_id,
+          email_verified, created_at, updated_at
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+        [
+          userId,
+          username,
+          email,
+          passwordHash,
+          displayName,
+          'student',
+          gradeLevel,
+          teacherId,
+          true, // Auto-verify teacher-created students
+          now,
+          now,
+        ]
+      );
+
+      // Enroll the student in the class
+      await client.query(
+        `INSERT INTO class_enrollments (class_id, student_id, enrolled_at, enrolled_by, status)
+         VALUES ($1, $2, $3, $4, 'active')`,
+        [classId, userId, now, teacherId]
+      );
+
+      await client.query('COMMIT');
+
+      return {
+        success: true,
+        student: {
+          id: userId,
+          username,
+          email,
+          displayName,
+          gradeLevel,
+        },
+        credentials: {
+          username,
+          password,
+        },
+      };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  /**
+   * Move a student from one class to another
+   */
+  static async moveStudentToClass(
+    sourceClassId: string,
+    targetClassId: string,
+    studentId: string,
+    teacherId: string
+  ): Promise<{
+    success: boolean;
+    message?: string;
+    error?: string;
+  }> {
+    const client = await pool.connect();
+
+    try {
+      await client.query('BEGIN');
+
+      // Verify source class belongs to teacher
+      const sourceClassResult = await client.query(
+        'SELECT id, name FROM classes WHERE id = $1 AND teacher_id = $2',
+        [sourceClassId, teacherId]
+      );
+
+      if (sourceClassResult.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return { success: false, error: 'Source class not found or not owned by teacher' };
+      }
+
+      // Verify target class belongs to teacher
+      const targetClassResult = await client.query(
+        'SELECT id, name FROM classes WHERE id = $1 AND teacher_id = $2 AND is_active = true',
+        [targetClassId, teacherId]
+      );
+
+      if (targetClassResult.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return { success: false, error: 'Target class not found or not owned by teacher' };
+      }
+
+      // Verify student is enrolled in source class
+      const enrollmentResult = await client.query(
+        `SELECT student_id FROM class_enrollments
+         WHERE class_id = $1 AND student_id = $2 AND status = 'active'`,
+        [sourceClassId, studentId]
+      );
+
+      if (enrollmentResult.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return { success: false, error: 'Student not enrolled in source class' };
+      }
+
+      const now = Date.now();
+
+      // Remove from source class (soft delete)
+      await client.query(
+        `UPDATE class_enrollments SET status = 'removed'
+         WHERE class_id = $1 AND student_id = $2`,
+        [sourceClassId, studentId]
+      );
+
+      // Add to target class (upsert in case of previous enrollment)
+      await client.query(
+        `INSERT INTO class_enrollments (class_id, student_id, enrolled_at, enrolled_by, status)
+         VALUES ($1, $2, $3, $4, 'active')
+         ON CONFLICT (class_id, student_id)
+         DO UPDATE SET status = 'active', enrolled_at = $3, enrolled_by = $4`,
+        [targetClassId, studentId, now, teacherId]
+      );
+
+      await client.query('COMMIT');
+
+      const sourceClassName = sourceClassResult.rows[0].name;
+      const targetClassName = targetClassResult.rows[0].name;
+
+      return {
+        success: true,
+        message: `Student moved from "${sourceClassName}" to "${targetClassName}"`,
+      };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 }

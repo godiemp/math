@@ -69,6 +69,7 @@ export default defineConfig({
         '**/teacher-student-sync.spec.ts', // Creates own contexts with socket mocking
         '**/admin-*.spec.ts', // Admin tests use admin auth
         '**/teacher-dashboard.spec.ts', // Teacher tests use teacher auth
+        '**/teacher-students.spec.ts', // Teacher tests use teacher auth
         '**/teacher-login-redirect.spec.ts', // Login redirect tests - no auth state
       ],
     },
@@ -111,8 +112,8 @@ export default defineConfig({
         storageState: '.auth/teacher.json',
       },
       dependencies: ['setup'],
-      // Only run teacher dashboard tests
-      testMatch: ['**/teacher-dashboard.spec.ts'],
+      // Only run teacher tests
+      testMatch: ['**/teacher-dashboard.spec.ts', '**/teacher-students.spec.ts'],
     },
 
     // Uncomment to test on more browsers

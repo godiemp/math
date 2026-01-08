@@ -302,3 +302,75 @@ export async function searchAvailableStudents(
 
   return response.data?.students || [];
 }
+
+// Response type for create student
+interface CreateStudentResponse {
+  success: boolean;
+  student?: {
+    id: string;
+    username: string;
+    email: string;
+    displayName: string;
+    gradeLevel: string;
+  };
+  credentials?: {
+    username: string;
+    password: string;
+  };
+  error?: string;
+  message?: string;
+}
+
+/**
+ * Create a new student and enroll them in the class
+ */
+export async function createStudentInClass(
+  classId: string,
+  firstName: string,
+  lastName: string
+): Promise<CreateStudentResponse> {
+  const response = await api.post<CreateStudentResponse>(
+    `/api/classes/${classId}/students/create`,
+    { firstName, lastName }
+  );
+
+  if (response.error) {
+    return {
+      success: false,
+      error: response.error.error || 'Failed to create student',
+    };
+  }
+
+  return {
+    success: response.data?.success || false,
+    student: response.data?.student,
+    credentials: response.data?.credentials,
+    message: response.data?.message,
+  };
+}
+
+/**
+ * Move a student from one class to another
+ */
+export async function moveStudentToClass(
+  sourceClassId: string,
+  studentId: string,
+  targetClassId: string
+): Promise<{ success: boolean; message?: string; error?: string }> {
+  const response = await api.post<MessageResponse>(
+    `/api/classes/${sourceClassId}/students/${studentId}/move`,
+    { targetClassId }
+  );
+
+  if (response.error) {
+    return {
+      success: false,
+      error: response.error.error || 'Failed to move student',
+    };
+  }
+
+  return {
+    success: response.data?.success || false,
+    message: response.data?.message,
+  };
+}
