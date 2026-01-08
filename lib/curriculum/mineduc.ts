@@ -63,8 +63,8 @@ export const GRADE_LEVELS: GradeLevelInfo[] = [
   { code: '4B', name: '4° Básico', slug: '4-basico', order: 4, isAvailable: false },
   { code: '5B', name: '5° Básico', slug: '5-basico', order: 5, isAvailable: false },
   { code: '6B', name: '6° Básico', slug: '6-basico', order: 6, isAvailable: false },
-  { code: '7B', name: '7° Básico', slug: '7-basico', order: 7, isAvailable: false },
-  { code: '8B', name: '8° Básico', slug: '8-basico', order: 8, isAvailable: false },
+  { code: '7B', name: '7° Básico', slug: '7-basico', order: 7, isAvailable: true },
+  { code: '8B', name: '8° Básico', slug: '8-basico', order: 8, isAvailable: true },
   // Media
   { code: '1M', name: '1° Medio', slug: '1-medio', order: 9, isAvailable: true },
   { code: '2M', name: '2° Medio', slug: '2-medio', order: 10, isAvailable: true },

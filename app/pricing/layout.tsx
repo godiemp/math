@@ -6,7 +6,7 @@ import { SITE_URL } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Precios SimplePAES - Matemáticas Enseñanza Media + PAES",
   description:
-    "Matemáticas de 1° a 4° medio desde $8.000 CLP/mes. +900 ejercicios, tutor AI ilimitado, y preparación PAES. 7 días gratis.",
+    "Matemáticas de 7° Básico a 4° Medio desde $8.000 CLP/mes. +900 ejercicios, tutor AI ilimitado, y preparación PAES. 7 días gratis.",
   alternates: {
     canonical: `${SITE_URL}/pricing`,
   },

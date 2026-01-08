@@ -10,6 +10,8 @@ import { Subject } from './core';
  * Class levels - supports both grade levels and PAES prep
  */
 export type ClassLevel =
+  | '7-basico' // 7° Básico
+  | '8-basico' // 8° Básico
   | '1-medio' // 1° Medio
   | '2-medio' // 2° Medio
   | '3-medio' // 3° Medio
@@ -19,6 +21,8 @@ export type ClassLevel =
   | 'both'; // M1 + M2
 
 export const CLASS_LEVEL_LABELS: Record<ClassLevel, string> = {
+  '7-basico': '7° Básico',
+  '8-basico': '8° Básico',
   '1-medio': '1° Medio',
   '2-medio': '2° Medio',
   '3-medio': '3° Medio',
@@ -29,6 +33,8 @@ export const CLASS_LEVEL_LABELS: Record<ClassLevel, string> = {
 };
 
 export const CLASS_LEVEL_OPTIONS = [
+  { value: '7-basico' as ClassLevel, label: '7° Básico', desc: 'Séptimo básico' },
+  { value: '8-basico' as ClassLevel, label: '8° Básico', desc: 'Octavo básico' },
   { value: '1-medio' as ClassLevel, label: '1° Medio', desc: 'Primer año' },
   { value: '2-medio' as ClassLevel, label: '2° Medio', desc: 'Segundo año' },
   { value: '3-medio' as ClassLevel, label: '3° Medio', desc: 'Tercer año' },

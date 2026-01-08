@@ -2,7 +2,7 @@
  * Types for Demo Account Management (School Free Trials)
  */
 
-export type GradeLevel = '1-medio' | '2-medio' | '3-medio' | '4-medio';
+export type GradeLevel = '7-basico' | '8-basico' | '1-medio' | '2-medio' | '3-medio' | '4-medio';
 
 export interface CreateDemoAccountRequest {
   schoolRbd: number;
@@ -61,10 +61,12 @@ export interface GetDemoAccountsResponse {
 }
 
 export const GRADE_LEVEL_LABELS: Record<GradeLevel, string> = {
+  '7-basico': '7° Básico',
+  '8-basico': '8° Básico',
   '1-medio': '1° Medio',
   '2-medio': '2° Medio',
   '3-medio': '3° Medio',
   '4-medio': '4° Medio',
 };
 
-export const GRADE_LEVELS: GradeLevel[] = ['1-medio', '2-medio', '3-medio', '4-medio'];
+export const GRADE_LEVELS: GradeLevel[] = ['7-basico', '8-basico', '1-medio', '2-medio', '3-medio', '4-medio'];

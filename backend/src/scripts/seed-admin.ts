@@ -1,7 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { pool } from '../config/database';
 import { PAES_SESSION_TEMPLATES, PRACTICE_SESSION_TEMPLATE } from '../config/sessionTemplates';
-import { getRandomQuestions, getOfficialPAESQuestions } from '../../../lib/questions';
 
 /**
  * Retry helper for database connection with exponential backoff
@@ -25,17 +24,17 @@ async function retryWithBackoff<T>(fn: () => Promise<T>, maxRetries = 5, initial
 }
 
 /**
- * Get questions from the actual question library
- * Uses the same question pool as live sessions for realistic seed data
+ * Generate empty placeholder questions for demo sessions
+ * Real questions are not needed for seed data - sessions are just for dashboard display
  */
-function getQuestionsForSeed(level: 'M1' | 'M2', count: number) {
-  // For official PAES format (60 for M1, 50 for M2), use official distribution
-  if ((level === 'M1' && count === 60) || (level === 'M2' && count === 50)) {
-    return getOfficialPAESQuestions(level);
-  }
-
-  // For custom counts, use random selection
-  return getRandomQuestions(level, count);
+function getQuestionsForSeed(_level: 'M1' | 'M2', count: number): object[] {
+  // Return empty array - sessions don't need real questions for seeding
+  return Array.from({ length: count }, (_, i) => ({
+    id: `seed-question-${i + 1}`,
+    questionLatex: 'Pregunta de ejemplo',
+    options: ['A', 'B', 'C', 'D'],
+    correctAnswer: 0,
+  }));
 }
 
 /**
@@ -418,6 +417,34 @@ async function seedAdmin() {
       console.log(`✅ 1-Medio student created: ${medioStudentUsername} (password: ${medioStudentPassword})`);
     }
 
+    // Additional grade-level test students for preview environments
+    const gradeStudents = [
+      { id: 'test-7basico-student', username: '7basico_student', email: '7basico@test.cl', displayName: 'Estudiante 7° Básico', gradeLevel: '7-basico' },
+      { id: 'test-8basico-student', username: '8basico_student', email: '8basico@test.cl', displayName: 'Estudiante 8° Básico', gradeLevel: '8-basico' },
+      { id: 'test-2medio-student', username: '2medio_student', email: '2medio@test.cl', displayName: 'Estudiante 2° Medio', gradeLevel: '2-medio' },
+      { id: 'test-3medio-student', username: '3medio_student', email: '3medio@test.cl', displayName: 'Estudiante 3° Medio', gradeLevel: '3-medio' },
+      { id: 'test-4medio-student', username: '4medio_student', email: '4medio@test.cl', displayName: 'Estudiante 4° Medio', gradeLevel: '4-medio' },
+    ];
+
+    for (const student of gradeStudents) {
+      const existingStudent = await pool.query(
+        'SELECT id FROM users WHERE id = $1 OR username = $2',
+        [student.id, student.username]
+      );
+
+      if (existingStudent.rows.length > 0) {
+        console.log(`ℹ️  ${student.gradeLevel} student already exists, skipping...`);
+      } else {
+        const passwordHash = await bcrypt.hash('test123', 10);
+        await pool.query(
+          `INSERT INTO users (id, username, email, password_hash, display_name, role, grade_level, created_at, updated_at)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+          [student.id, student.username, student.email, passwordHash, student.displayName, 'student', student.gradeLevel, now, now]
+        );
+        console.log(`✅ ${student.gradeLevel} student created: ${student.username} (password: test123)`);
+      }
+    }
+
     // Test Teacher account
     const teacherId = 'test-teacher';
     const teacherUsername = 'teacher';
@@ -449,6 +476,11 @@ async function seedAdmin() {
 - Test accounts:
   * PAES student: ${paesStudentUsername} (password: ${paesStudentPassword}) - Full PAES access
   * 1-Medio student: ${medioStudentUsername} (password: ${medioStudentPassword}) - School content only
+  * 7° Básico student: 7basico_student (password: test123)
+  * 8° Básico student: 8basico_student (password: test123)
+  * 2° Medio student: 2medio_student (password: test123)
+  * 3° Medio student: 3medio_student (password: test123)
+  * 4° Medio student: 4medio_student (password: test123)
   * Teacher: ${teacherUsername} (password: ${teacherPassword}) - Teacher role
 - 3 completed sessions created with realistic PAES templates:
   1. ${m1Template.name} - ${m1Template.questionCount} preguntas, ${m1Template.durationMinutes} min
