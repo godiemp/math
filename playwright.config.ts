@@ -69,6 +69,7 @@ export default defineConfig({
         '**/teacher-student-sync.spec.ts', // Creates own contexts with socket mocking
         '**/admin-*.spec.ts', // Admin tests use admin auth
         '**/teacher-dashboard.spec.ts', // Teacher tests use teacher auth
+        '**/teacher-students.spec.ts', // Teacher tests use teacher auth
         '**/teacher-login-redirect.spec.ts', // Login redirect tests - no auth state
       ],
     },

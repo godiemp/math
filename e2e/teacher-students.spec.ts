@@ -66,15 +66,16 @@ test.describe('Teacher Students Page', () => {
     await expect(page.getByText('María González')).toBeVisible();
     await expect(page.getByText('maria.gonzalez@student.simplepaes.cl')).toBeVisible();
 
-    // Verify grade badge shows 1° Medio
-    await expect(page.getByText('1° Medio')).toBeVisible();
+    // Verify grade badge shows 1° Medio (use locator within table to avoid matching dropdown options)
+    const gradeBadge = table.locator('span', { hasText: '1° Medio' });
+    await expect(gradeBadge.first()).toBeVisible();
 
     // Verify table headers
-    await expect(page.getByText('Estudiante')).toBeVisible();
-    await expect(page.getByText('Nivel Actual')).toBeVisible();
-    await expect(page.getByText('Asignar Nivel')).toBeVisible();
-    await expect(page.getByText('Última Práctica')).toBeVisible();
-    await expect(page.getByText('Acciones')).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Estudiante' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Nivel Actual' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Asignar Nivel' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Última Práctica' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Acciones' })).toBeVisible();
   });
 
   test('should filter students by search query', async ({ page }) => {
@@ -192,8 +193,8 @@ test.describe('Teacher Students Page', () => {
 
     // Verify credentials modal content
     await expect(credentialsModal.getByText('Estudiante Creado')).toBeVisible();
-    await expect(credentialsModal.getByText('Usuario')).toBeVisible();
-    await expect(credentialsModal.getByText('Contraseña')).toBeVisible();
+    await expect(credentialsModal.getByText('Usuario', { exact: true })).toBeVisible();
+    await expect(credentialsModal.getByText('Contraseña', { exact: true })).toBeVisible();
 
     // Close credentials modal
     await credentialsModal.getByText('Entendido').click();
