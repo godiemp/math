@@ -61,13 +61,15 @@ export default defineConfig({
         storageState: '.auth/student.json',
       },
       dependencies: ['setup'],
-      // Exclude tests that need their own login flow
+      // Exclude tests that need their own login flow or different auth state
       testIgnore: [
         '**/auth.spec.ts',
         '**/registration.spec.ts',
         '**/colegio-dashboard.spec.ts',
         '**/teacher-student-sync.spec.ts', // Creates own contexts with socket mocking
         '**/admin-*.spec.ts', // Admin tests use admin auth
+        '**/teacher-dashboard.spec.ts', // Teacher tests use teacher auth
+        '**/teacher-login-redirect.spec.ts', // Login redirect tests - no auth state
       ],
     },
     // Unauthenticated tests - for login/registration flows and multi-context tests
