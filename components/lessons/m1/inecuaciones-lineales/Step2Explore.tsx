@@ -473,16 +473,20 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   <div
                     key={ex.id}
                     className={cn(
-                      'flex items-center justify-between p-2 rounded-lg',
+                      'grid grid-cols-[1fr_auto_1fr_auto] items-center gap-3 p-2 rounded-lg',
                       ex.isNegative ? 'bg-red-50 dark:bg-red-900/30' : 'bg-gray-50 dark:bg-gray-700/50'
                     )}
                   >
-                    <span className="font-mono text-gray-700 dark:text-gray-300">{ex.inequality}</span>
-                    <span className="text-gray-400">→</span>
-                    <span className={cn('font-mono font-bold', ex.isNegative ? 'text-purple-600' : 'text-green-600')}>
-                      {ex.solution}
+                    <span className="font-mono text-gray-700 dark:text-gray-300 text-left">
+                      <InlineMath latex={ex.inequalityLatex} />
                     </span>
-                    {ex.isNegative && <span className="text-xs text-red-500 ml-2">(signo invertido)</span>}
+                    <span className="text-gray-400 text-center">→</span>
+                    <span className={cn('font-mono font-bold text-center', ex.isNegative ? 'text-purple-600' : 'text-green-600')}>
+                      <InlineMath latex={ex.solutionLatex} />
+                    </span>
+                    <span className="text-xs text-red-500 text-right w-24">
+                      {ex.isNegative ? '(signo invertido)' : ''}
+                    </span>
                   </div>
                 ))}
               </div>
