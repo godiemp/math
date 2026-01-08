@@ -156,16 +156,16 @@ export default function Step4Practice({ onComplete, isActive }: LessonStepProps)
           <PolygonFigure
             fromRegular={{
               sides: question.polygonSides,
-              radius: 45,
-              centerX: 60,
-              centerY: 60,
+              radius: 40,
+              centerX: 70,
+              centerY: 75,
               rotation: -90,
             }}
             exteriorAngles={getExteriorAnglesConfig()}
             showVertices={false}
             padding={25}
-            viewBox="0 0 120 120"
-            className="w-28 h-28"
+            viewBox="0 0 140 150"
+            className="w-32 h-36"
           />
         </div>
 
