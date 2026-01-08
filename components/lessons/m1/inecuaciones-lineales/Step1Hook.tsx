@@ -14,10 +14,10 @@ import {
 } from '@/components/lessons/primitives';
 
 const OPTIONS = [
-  { text: '10 canciones', latex: 'x = 10' },
-  { text: '12 canciones', latex: 'x = 12' },
-  { text: '12 canciones', latex: 'x \\leq 12' },
-  { text: '12 canciones', latex: 'x < 12' },
+  { text: 'canciones', latex: 'x = 10' },
+  { text: 'canciones', latex: 'x = 12' },
+  { text: 'canciones', latex: 'x \\leq 12' },
+  { text: 'canciones', latex: 'x < 12' },
 ];
 const CORRECT_ANSWER = 2;
 
