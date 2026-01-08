@@ -11,6 +11,7 @@ import {
   ActionButton,
   FeedbackPanel,
 } from '@/components/lessons/primitives';
+import { InlineMath, BlockMath } from '@/components/math/MathDisplay';
 
 const OPTIONS = ['3', '5', '6', '12'];
 const CORRECT_ANSWER = 2;
@@ -60,9 +61,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   ))}
                 </div>
                 <div className="mt-4 text-center">
-                  <span className="font-mono text-lg text-gray-600 dark:text-gray-400">
-                    √36 = 6 (lado de la caja)
-                  </span>
+                  <InlineMath latex="\sqrt{36} = 6" /> <span className="text-gray-600 dark:text-gray-400">(lado de la caja)</span>
                 </div>
               </div>
 
@@ -70,7 +69,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 <p className="text-amber-800 dark:text-amber-200 text-center">
                   <strong>Pregunta:</strong> Si sabemos que 36 = 4 × 9,
                   <br />
-                  ¿será que √36 = √4 × √9?
+                  ¿será que <InlineMath latex="\sqrt{36} = \sqrt{4} \times \sqrt{9}" />?
                 </p>
               </div>
             </div>
@@ -88,10 +87,10 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         <div className="space-y-6 animate-fadeIn">
           <QuestionPrompt variant="math">
             <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-              Si √36 = √(4 × 9), entonces √4 × √9 = <span className="text-blue-600">?</span>
+              Si <InlineMath latex="\sqrt{36} = \sqrt{4 \times 9}" />, entonces <InlineMath latex="\sqrt{4} \times \sqrt{9} = " /> <span className="text-blue-600">?</span>
             </p>
             <p className="text-gray-600 dark:text-gray-400 mt-2">
-              Calcula √4 y √9 por separado, luego multiplica.
+              Calcula <InlineMath latex="\sqrt{4}" /> y <InlineMath latex="\sqrt{9}" /> por separado, luego multiplica.
             </p>
           </QuestionPrompt>
 
@@ -99,19 +98,19 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 max-w-md mx-auto">
             <div className="grid grid-cols-2 gap-4 text-center">
               <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-3">
-                <p className="text-sm text-gray-500 dark:text-gray-400">√4 =</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400"><InlineMath latex="\sqrt{4} =" /></p>
                 <p className="font-mono text-2xl text-blue-600">2</p>
                 <p className="text-xs text-gray-400">porque 2² = 4</p>
               </div>
               <div className="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-3">
-                <p className="text-sm text-gray-500 dark:text-gray-400">√9 =</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400"><InlineMath latex="\sqrt{9} =" /></p>
                 <p className="font-mono text-2xl text-purple-600">3</p>
                 <p className="text-xs text-gray-400">porque 3² = 9</p>
               </div>
             </div>
             <div className="mt-4 text-center">
               <p className="text-gray-600 dark:text-gray-400">
-                √4 × √9 = 2 × 3 = <span className="text-green-600 font-bold">?</span>
+                <InlineMath latex="\sqrt{4} \times \sqrt{9} = 2 \times 3 = " /> <span className="text-green-600 font-bold">?</span>
               </p>
             </div>
           </div>
@@ -164,16 +163,16 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             <div className="flex justify-center mb-6">
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-inner">
                 <div className="text-center space-y-4">
-                  <p className="font-mono text-lg text-gray-700 dark:text-gray-300">
-                    √<span className="text-green-600">36</span> = √(<span className="text-blue-600">4</span> × <span className="text-purple-600">9</span>)
+                  <p className="text-lg text-gray-700 dark:text-gray-300">
+                    <InlineMath latex="\sqrt{\textcolor{green}{36}} = \sqrt{\textcolor{blue}{4} \times \textcolor{purple}{9}}" />
                   </p>
                   <p className="text-gray-400 text-sm">↓ separamos la raíz</p>
-                  <p className="font-mono text-lg text-gray-700 dark:text-gray-300">
-                    = √<span className="text-blue-600">4</span> × √<span className="text-purple-600">9</span>
+                  <p className="text-lg text-gray-700 dark:text-gray-300">
+                    <InlineMath latex="= \sqrt{\textcolor{blue}{4}} \times \sqrt{\textcolor{purple}{9}}" />
                   </p>
                   <p className="text-gray-400 text-sm">↓ calculamos cada raíz</p>
-                  <p className="font-mono text-lg text-gray-700 dark:text-gray-300">
-                    = <span className="text-blue-600">2</span> × <span className="text-purple-600">3</span> = <span className="text-green-600 font-bold">6</span>
+                  <p className="text-lg text-gray-700 dark:text-gray-300">
+                    <InlineMath latex="= \textcolor{blue}{2} \times \textcolor{purple}{3} = \textcolor{green}{6}" />
                   </p>
                 </div>
               </div>
@@ -185,9 +184,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 <strong>¡La Propiedad del Producto!</strong>
               </p>
               <div className="bg-green-50 dark:bg-green-900/30 rounded-lg p-4 text-center">
-                <p className="font-mono text-2xl font-bold text-green-600">
-                  ⁿ√(a × b) = ⁿ√a × ⁿ√b
-                </p>
+                <BlockMath latex="\sqrt[n]{a \cdot b} = \sqrt[n]{a} \cdot \sqrt[n]{b}" />
                 <p className="text-sm text-gray-500 mt-2">
                   La raíz de un producto es el producto de las raíces
                 </p>
@@ -211,15 +208,15 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                     Además del producto, las raíces tienen propiedades para:
                   </p>
                   <div className="bg-white dark:bg-gray-800 p-4 rounded-xl">
-                    <div className="grid grid-cols-1 gap-2 text-center">
-                      <p className="font-mono text-sm">
-                        <span className="text-blue-600">Producto:</span> ⁿ√(a·b) = ⁿ√a · ⁿ√b
+                    <div className="grid grid-cols-1 gap-3 text-center">
+                      <p className="text-sm">
+                        <span className="text-blue-600 font-semibold">Producto:</span> <InlineMath latex="\sqrt[n]{a \cdot b} = \sqrt[n]{a} \cdot \sqrt[n]{b}" />
                       </p>
-                      <p className="font-mono text-sm">
-                        <span className="text-purple-600">Cociente:</span> ⁿ√(a/b) = ⁿ√a / ⁿ√b
+                      <p className="text-sm">
+                        <span className="text-purple-600 font-semibold">Cociente:</span> <InlineMath latex="\sqrt[n]{\frac{a}{b}} = \frac{\sqrt[n]{a}}{\sqrt[n]{b}}" />
                       </p>
-                      <p className="font-mono text-sm">
-                        <span className="text-green-600">Raíz de raíz:</span> ᵐ√(ⁿ√a) = ᵐˣⁿ√a
+                      <p className="text-sm">
+                        <span className="text-green-600 font-semibold">Raíz de raíz:</span> <InlineMath latex="\sqrt[m]{\sqrt[n]{a}} = \sqrt[m \cdot n]{a}" />
                       </p>
                     </div>
                   </div>

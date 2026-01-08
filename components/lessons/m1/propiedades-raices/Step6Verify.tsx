@@ -6,31 +6,31 @@ import { CheckpointQuiz, CheckpointQuestion } from '@/components/lessons/shared'
 const QUESTIONS: CheckpointQuestion[] = [
   {
     id: 'q1',
-    question: 'Simplifica: √(25 × 16)',
+    question: 'Simplifica: $\\sqrt{25 \\times 16}$',
     options: ['20', '41', '400', '9'],
     correctAnswer: 0,
-    explanation: '√(25×16) = √25 × √16 = 5 × 4 = 20. Aplicamos la propiedad del producto.',
+    explanation: '$\\sqrt{25 \\times 16} = \\sqrt{25} \\times \\sqrt{16} = 5 \\times 4 = 20$. Aplicamos la propiedad del producto.',
   },
   {
     id: 'q2',
-    question: 'Simplifica: √(144/36)',
+    question: 'Simplifica: $\\sqrt{\\frac{144}{36}}$',
     options: ['4', '2', '108', '180'],
     correctAnswer: 1,
-    explanation: '√(144/36) = √144 / √36 = 12 / 6 = 2. Aplicamos la propiedad del cociente.',
+    explanation: '$\\sqrt{\\frac{144}{36}} = \\frac{\\sqrt{144}}{\\sqrt{36}} = \\frac{12}{6} = 2$. Aplicamos la propiedad del cociente.',
   },
   {
     id: 'q3',
-    question: '¿Cuál es el valor de √(∛64)?',
+    question: '¿Cuál es el valor de $\\sqrt{\\sqrt[3]{64}}$?',
     options: ['2', '4', '8', '16'],
     correctAnswer: 0,
-    explanation: '√(∛64) = ⁶√64 porque los índices se multiplican (2×3=6). Como 2⁶ = 64, entonces ⁶√64 = 2.',
+    explanation: '$\\sqrt{\\sqrt[3]{64}} = \\sqrt[6]{64}$ porque los índices se multiplican ($2 \\times 3 = 6$). Como $2^6 = 64$, entonces $\\sqrt[6]{64} = 2$.',
   },
   {
     id: 'q4',
     question: '¿Cuál expresión es INCORRECTA?',
-    options: ['√(4×9) = √4×√9', '√(16/4) = √16/√4', '√(9+16) = √9+√16', '√(√81) = ⁴√81'],
+    options: ['$\\sqrt{4 \\times 9} = \\sqrt{4} \\times \\sqrt{9}$', '$\\sqrt{\\frac{16}{4}} = \\frac{\\sqrt{16}}{\\sqrt{4}}$', '$\\sqrt{9+16} = \\sqrt{9}+\\sqrt{16}$', '$\\sqrt{\\sqrt{81}} = \\sqrt[4]{81}$'],
     correctAnswer: 2,
-    explanation: '√(9+16) = √25 = 5, pero √9+√16 = 3+4 = 7. Las raíces NO se distribuyen sobre la suma ni la resta.',
+    explanation: '$\\sqrt{9+16} = \\sqrt{25} = 5$, pero $\\sqrt{9}+\\sqrt{16} = 3+4 = 7$. Las raíces NO se distribuyen sobre la suma ni la resta.',
   },
 ];
 

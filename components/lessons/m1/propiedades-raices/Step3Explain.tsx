@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, BookOpen, Lightbulb, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { InlineMath, BlockMath } from '@/components/math/MathDisplay';
 
 type TabId = 'product' | 'quotient' | 'rootOfRoot' | 'tips';
 
@@ -13,6 +14,7 @@ interface FormulaTab {
   shortTitle: string;
   description: string;
   formula: string;
+  formulaLatex: string;
   example: {
     input: string;
     steps: string[];
@@ -28,11 +30,12 @@ const FORMULAS: FormulaTab[] = [
     shortTitle: 'Producto',
     description: 'La raíz de un producto es igual al producto de las raíces',
     formula: 'ⁿ√(a · b) = ⁿ√a · ⁿ√b',
+    formulaLatex: '\\sqrt[n]{a \\cdot b} = \\sqrt[n]{a} \\cdot \\sqrt[n]{b}',
     example: {
-      input: '√(4 × 25)',
+      input: '\\sqrt{4 \\times 25}',
       steps: [
-        'Separamos: √4 × √25',
-        'Calculamos cada raíz: 2 × 5',
+        'Separamos: \\sqrt{4} \\times \\sqrt{25}',
+        'Calculamos cada raíz: 2 \\times 5',
       ],
       result: '10',
     },
@@ -44,11 +47,12 @@ const FORMULAS: FormulaTab[] = [
     shortTitle: 'Cociente',
     description: 'La raíz de un cociente es igual al cociente de las raíces',
     formula: 'ⁿ√(a / b) = ⁿ√a / ⁿ√b',
+    formulaLatex: '\\sqrt[n]{\\frac{a}{b}} = \\frac{\\sqrt[n]{a}}{\\sqrt[n]{b}}',
     example: {
-      input: '√(81/9)',
+      input: '\\sqrt{\\frac{81}{9}}',
       steps: [
-        'Separamos: √81 / √9',
-        'Calculamos cada raíz: 9 / 3',
+        'Separamos: \\frac{\\sqrt{81}}{\\sqrt{9}}',
+        'Calculamos cada raíz: \\frac{9}{3}',
       ],
       result: '3',
     },
@@ -60,12 +64,13 @@ const FORMULAS: FormulaTab[] = [
     shortTitle: 'Raíz²',
     description: 'Al tener una raíz de otra raíz, los índices se multiplican',
     formula: 'ᵐ√(ⁿ√a) = ᵐˣⁿ√a',
+    formulaLatex: '\\sqrt[m]{\\sqrt[n]{a}} = \\sqrt[m \\cdot n]{a}',
     example: {
-      input: '∛(√64)',
+      input: '\\sqrt[3]{\\sqrt{64}}',
       steps: [
-        'Multiplicamos índices: 3 × 2 = 6',
-        'Queda: ⁶√64',
-        'Como 2⁶ = 64, entonces ⁶√64 = 2',
+        'Multiplicamos índices: 3 \\times 2 = 6',
+        'Queda: \\sqrt[6]{64}',
+        'Como 2^6 = 64, entonces \\sqrt[6]{64} = 2',
       ],
       result: '2',
     },
@@ -182,19 +187,19 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
           <div className="grid md:grid-cols-2 gap-4 mb-6">
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
               <h5 className="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Correcto:</h5>
-              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <li>• √(4×9) = √4 × √9 = 2×3 = 6</li>
-                <li>• √(16/4) = √16/√4 = 4/2 = 2</li>
-                <li>• √(√81) = ⁴√81 = 3</li>
+              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
+                <li>• <InlineMath latex="\sqrt{4 \times 9} = \sqrt{4} \times \sqrt{9} = 2 \times 3 = 6" /></li>
+                <li>• <InlineMath latex="\sqrt{\frac{16}{4}} = \frac{\sqrt{16}}{\sqrt{4}} = \frac{4}{2} = 2" /></li>
+                <li>• <InlineMath latex="\sqrt{\sqrt{81}} = \sqrt[4]{81} = 3" /></li>
                 <li>• Los índices deben ser iguales para usar producto/cociente</li>
               </ul>
             </div>
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
               <h5 className="font-semibold text-red-700 dark:text-red-300 mb-2">✗ Errores comunes:</h5>
-              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <li>• <span className="line-through">√(9+16) = √9 + √16</span> ❌</li>
-                <li>• <span className="line-through">√(25-9) = √25 - √9</span> ❌</li>
-                <li>• Confundir √(√a) con (√a)²</li>
+              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
+                <li>• <span className="line-through"><InlineMath latex="\sqrt{9+16} = \sqrt{9} + \sqrt{16}" /></span> ❌</li>
+                <li>• <span className="line-through"><InlineMath latex="\sqrt{25-9} = \sqrt{25} - \sqrt{9}" /></span> ❌</li>
+                <li>• Confundir <InlineMath latex="\sqrt{\sqrt{a}}" /> con <InlineMath latex="(\sqrt{a})^2" /></li>
                 <li>• Olvidar simplificar el resultado final</li>
               </ul>
             </div>
@@ -211,13 +216,13 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             </p>
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
               <div className="grid grid-cols-2 gap-4 text-center">
-                <div>
-                  <p className="text-green-600 font-mono">√(a × b) = √a × √b ✓</p>
-                  <p className="text-green-600 font-mono">√(a / b) = √a / √b ✓</p>
+                <div className="space-y-2">
+                  <div className="text-green-600"><InlineMath latex="\sqrt{a \times b} = \sqrt{a} \times \sqrt{b}" /> ✓</div>
+                  <div className="text-green-600"><InlineMath latex="\sqrt{\frac{a}{b}} = \frac{\sqrt{a}}{\sqrt{b}}" /> ✓</div>
                 </div>
-                <div>
-                  <p className="text-red-600 font-mono">√(a + b) ≠ √a + √b ✗</p>
-                  <p className="text-red-600 font-mono">√(a - b) ≠ √a - √b ✗</p>
+                <div className="space-y-2">
+                  <div className="text-red-600"><InlineMath latex="\sqrt{a + b} \neq \sqrt{a} + \sqrt{b}" /> ✗</div>
+                  <div className="text-red-600"><InlineMath latex="\sqrt{a - b} \neq \sqrt{a} - \sqrt{b}" /> ✗</div>
                 </div>
               </div>
             </div>
@@ -249,9 +254,9 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
 
           {/* Main formula */}
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6">
-            <p className="text-center font-mono text-2xl text-gray-800 dark:text-gray-200">
-              {currentFormula!.formula}
-            </p>
+            <div className="text-center text-2xl text-gray-800 dark:text-gray-200">
+              <BlockMath latex={currentFormula!.formulaLatex} />
+            </div>
           </div>
 
           {/* Example */}
@@ -261,19 +266,19 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               Ejemplo:
             </h4>
             <div className="space-y-3">
-              <p className="font-mono text-lg text-gray-800 dark:text-gray-200">
-                {currentFormula!.example.input}
-              </p>
+              <div className="text-lg text-gray-800 dark:text-gray-200">
+                <InlineMath latex={currentFormula!.example.input} />
+              </div>
               <div className="pl-4 border-l-2 border-gray-300 dark:border-gray-600 space-y-2">
                 {currentFormula!.example.steps.map((step, i) => (
-                  <p key={i} className="text-gray-600 dark:text-gray-400 font-mono text-sm">
+                  <p key={i} className="text-gray-600 dark:text-gray-400 text-sm">
                     {i === currentFormula!.example.steps.length - 1 ? '→ ' : '• '}
-                    {step}
+                    <InlineMath latex={step} />
                   </p>
                 ))}
               </div>
               <div className={cn('p-3 rounded-lg mt-4', colors.bg)}>
-                <p className={cn('font-mono font-bold text-lg text-center', colors.text)}>
+                <p className={cn('font-bold text-lg text-center', colors.text)}>
                   = {currentFormula!.example.result}
                 </p>
               </div>
@@ -295,12 +300,12 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 cardColors.border
               )}
             >
-              <p className={cn('font-mono text-xs font-bold', cardColors.text)}>
+              <p className={cn('text-xs font-bold', cardColors.text)}>
                 {formula.shortTitle}
               </p>
-              <p className="font-mono text-xs text-gray-600 dark:text-gray-400 mt-1">
-                {formula.formula.split('=')[0].trim()}
-              </p>
+              <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                <InlineMath latex={formula.formulaLatex.split('=')[0].trim()} />
+              </div>
             </div>
           );
         })}

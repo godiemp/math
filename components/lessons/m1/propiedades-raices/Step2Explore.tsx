@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import { LessonStepProps } from '@/lib/lessons/types';
 import { useExplorePhases } from '@/hooks/lessons';
 import { ExampleProgressDots, HintPanel, ActionButton } from '@/components/lessons/primitives';
+import { InlineMath, BlockMath } from '@/components/math/MathDisplay';
 
 type Phase = 'intro' | 'discover' | 'pattern';
 type PropertyType = 'product' | 'quotient' | 'rootOfRoot';
@@ -23,36 +24,36 @@ const EXAMPLES: PropertyExample[] = [
   {
     id: 'product1',
     type: 'product',
-    expression: '√(9 × 16)',
-    step1: '√9 × √16',
-    step2: '3 × 4',
+    expression: '\\sqrt{9 \\times 16}',
+    step1: '\\sqrt{9} \\times \\sqrt{16}',
+    step2: '3 \\times 4',
     result: '12',
     hint: 'Separa la raíz del producto en producto de raíces',
   },
   {
     id: 'quotient1',
     type: 'quotient',
-    expression: '√(100/25)',
-    step1: '√100 / √25',
-    step2: '10 / 5',
+    expression: '\\sqrt{\\frac{100}{25}}',
+    step1: '\\frac{\\sqrt{100}}{\\sqrt{25}}',
+    step2: '\\frac{10}{5}',
     result: '2',
     hint: 'Separa la raíz del cociente en cociente de raíces',
   },
   {
     id: 'rootOfRoot1',
     type: 'rootOfRoot',
-    expression: '√(√16)',
-    step1: '⁴√16',
-    step2: '⁴√(2⁴)',
+    expression: '\\sqrt{\\sqrt{16}}',
+    step1: '\\sqrt[4]{16}',
+    step2: '\\sqrt[4]{2^4}',
     result: '2',
     hint: 'Multiplica los índices: 2 × 2 = 4',
   },
   {
     id: 'product2',
     type: 'product',
-    expression: '∛(8 × 27)',
-    step1: '∛8 × ∛27',
-    step2: '2 × 3',
+    expression: '\\sqrt[3]{8 \\times 27}',
+    step1: '\\sqrt[3]{8} \\times \\sqrt[3]{27}',
+    step2: '2 \\times 3',
     result: '6',
     hint: 'La propiedad funciona igual con raíces cúbicas',
   },
@@ -139,21 +140,21 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4 border border-blue-200 dark:border-blue-700">
                 <h4 className="font-bold text-blue-700 dark:text-blue-300 mb-2 text-center">Producto</h4>
-                <p className="font-mono text-sm text-center text-gray-700 dark:text-gray-300">
-                  ⁿ√(a·b) = ⁿ√a · ⁿ√b
-                </p>
+                <div className="text-center text-gray-700 dark:text-gray-300">
+                  <InlineMath latex="\sqrt[n]{a \cdot b} = \sqrt[n]{a} \cdot \sqrt[n]{b}" />
+                </div>
               </div>
               <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
                 <h4 className="font-bold text-purple-700 dark:text-purple-300 mb-2 text-center">Cociente</h4>
-                <p className="font-mono text-sm text-center text-gray-700 dark:text-gray-300">
-                  ⁿ√(a/b) = ⁿ√a / ⁿ√b
-                </p>
+                <div className="text-center text-gray-700 dark:text-gray-300">
+                  <InlineMath latex="\sqrt[n]{\frac{a}{b}} = \frac{\sqrt[n]{a}}{\sqrt[n]{b}}" />
+                </div>
               </div>
               <div className="bg-teal-50 dark:bg-teal-900/30 rounded-xl p-4 border border-teal-200 dark:border-teal-700">
                 <h4 className="font-bold text-teal-700 dark:text-teal-300 mb-2 text-center">Raíz de Raíz</h4>
-                <p className="font-mono text-sm text-center text-gray-700 dark:text-gray-300">
-                  ᵐ√(ⁿ√a) = ᵐˣⁿ√a
-                </p>
+                <div className="text-center text-gray-700 dark:text-gray-300">
+                  <InlineMath latex="\sqrt[m]{\sqrt[n]{a}} = \sqrt[m \cdot n]{a}" />
+                </div>
               </div>
             </div>
           </div>
@@ -189,9 +190,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="text-center mb-6">
               <p className="text-gray-500 dark:text-gray-400 mb-2">Simplifica:</p>
-              <p className="font-mono text-3xl font-bold text-gray-800 dark:text-gray-200">
-                {currentExample.expression}
-              </p>
+              <div className="text-3xl font-bold text-gray-800 dark:text-gray-200">
+                <BlockMath latex={currentExample.expression} />
+              </div>
             </div>
 
             {/* Hint */}
@@ -218,21 +219,21 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <div className="space-y-4 animate-fadeIn">
                 <div className={`rounded-xl p-6 border ${PROPERTY_COLORS[currentExample.type].bg} ${PROPERTY_COLORS[currentExample.type].border}`}>
                   <div className="text-center space-y-3">
-                    <p className="font-mono text-lg text-gray-700 dark:text-gray-300">
-                      {currentExample.expression}
-                    </p>
+                    <div className="text-lg text-gray-700 dark:text-gray-300">
+                      <InlineMath latex={currentExample.expression} />
+                    </div>
                     <p className="text-gray-400 text-sm">↓ aplicamos la propiedad</p>
-                    <p className="font-mono text-lg text-gray-700 dark:text-gray-300">
-                      = {currentExample.step1}
-                    </p>
+                    <div className="text-lg text-gray-700 dark:text-gray-300">
+                      <InlineMath latex={`= ${currentExample.step1}`} />
+                    </div>
                     <p className="text-gray-400 text-sm">↓ calculamos cada raíz</p>
-                    <p className="font-mono text-lg text-gray-700 dark:text-gray-300">
-                      = {currentExample.step2}
-                    </p>
+                    <div className="text-lg text-gray-700 dark:text-gray-300">
+                      <InlineMath latex={`= ${currentExample.step2}`} />
+                    </div>
                     <p className="text-gray-400 text-sm">↓ resultado</p>
-                    <p className={`font-mono text-2xl font-bold ${PROPERTY_COLORS[currentExample.type].text}`}>
-                      = {currentExample.result}
-                    </p>
+                    <div className={`text-2xl font-bold ${PROPERTY_COLORS[currentExample.type].text}`}>
+                      <InlineMath latex={`= ${currentExample.result}`} />
+                    </div>
                   </div>
                 </div>
 
@@ -260,7 +261,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 <div className="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
                 <div className="flex-1">
                   <p className="font-semibold text-gray-800 dark:text-gray-200">Propiedad del Producto</p>
-                  <p className="font-mono text-blue-600 dark:text-blue-400">ⁿ√(a · b) = ⁿ√a · ⁿ√b</p>
+                  <div className="text-blue-600 dark:text-blue-400">
+                    <InlineMath latex="\sqrt[n]{a \cdot b} = \sqrt[n]{a} \cdot \sqrt[n]{b}" />
+                  </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     La raíz de un producto es el producto de las raíces
                   </p>
@@ -270,7 +273,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 <div className="bg-purple-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
                 <div className="flex-1">
                   <p className="font-semibold text-gray-800 dark:text-gray-200">Propiedad del Cociente</p>
-                  <p className="font-mono text-purple-600 dark:text-purple-400">ⁿ√(a / b) = ⁿ√a / ⁿ√b</p>
+                  <div className="text-purple-600 dark:text-purple-400">
+                    <InlineMath latex="\sqrt[n]{\frac{a}{b}} = \frac{\sqrt[n]{a}}{\sqrt[n]{b}}" />
+                  </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     La raíz de un cociente es el cociente de las raíces
                   </p>
@@ -280,7 +285,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 <div className="bg-teal-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0">3</div>
                 <div className="flex-1">
                   <p className="font-semibold text-gray-800 dark:text-gray-200">Raíz de una Raíz</p>
-                  <p className="font-mono text-teal-600 dark:text-teal-400">ᵐ√(ⁿ√a) = ᵐˣⁿ√a</p>
+                  <div className="text-teal-600 dark:text-teal-400">
+                    <InlineMath latex="\sqrt[m]{\sqrt[n]{a}} = \sqrt[m \cdot n]{a}" />
+                  </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     Los índices se multiplican al tener raíz de raíz
                   </p>
@@ -300,9 +307,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                     <span className={`text-xs font-medium px-2 py-1 rounded ${PROPERTY_COLORS[ex.type].text}`}>
                       {PROPERTY_LABELS[ex.type]}
                     </span>
-                    <span className="font-mono text-gray-700 dark:text-gray-300">{ex.expression}</span>
+                    <span className="text-gray-700 dark:text-gray-300"><InlineMath latex={ex.expression} /></span>
                     <span className="text-gray-400">=</span>
-                    <span className="font-mono font-bold text-green-600">{ex.result}</span>
+                    <span className="font-bold text-green-600">{ex.result}</span>
                   </div>
                 ))}
               </div>
@@ -317,9 +324,11 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
               Las raíces <strong>NO</strong> se distribuyen sobre la suma o resta:
             </p>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 font-mono text-center">
-              <p className="text-red-600">√(a + b) ≠ √a + √b</p>
-              <p className="text-xs text-gray-500 mt-1">Ejemplo: √(9 + 16) = √25 = 5, pero √9 + √16 = 3 + 4 = 7</p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
+              <div className="text-red-600"><InlineMath latex="\sqrt{a + b} \neq \sqrt{a} + \sqrt{b}" /></div>
+              <p className="text-xs text-gray-500 mt-1">
+                Ejemplo: <InlineMath latex="\sqrt{9 + 16} = \sqrt{25} = 5" />, pero <InlineMath latex="\sqrt{9} + \sqrt{16} = 3 + 4 = 7" />
+              </p>
             </div>
           </div>
 

@@ -10,6 +10,7 @@ import {
   ActionButton,
   ResultsSummary,
 } from '@/components/lessons/primitives';
+import { InlineMath } from '@/components/math/MathDisplay';
 
 type PropertyType = 'product' | 'quotient' | 'rootOfRoot' | 'invalid';
 
@@ -23,33 +24,33 @@ interface Expression {
 const EXPRESSIONS: Expression[] = [
   {
     id: 'e1',
-    expression: '√(36 × 4)',
+    expression: '\\sqrt{36 \\times 4}',
     correctType: 'product',
-    explanation: 'Es un producto dentro de la raíz → Propiedad del Producto: √(36×4) = √36 × √4 = 6 × 2 = 12',
+    explanation: 'Es un producto dentro de la raíz → Propiedad del Producto: \\sqrt{36 \\times 4} = \\sqrt{36} \\times \\sqrt{4} = 6 \\times 2 = 12',
   },
   {
     id: 'e2',
-    expression: '∛(125/8)',
+    expression: '\\sqrt[3]{\\frac{125}{8}}',
     correctType: 'quotient',
-    explanation: 'Es un cociente dentro de la raíz → Propiedad del Cociente: ∛(125/8) = ∛125 / ∛8 = 5 / 2',
+    explanation: 'Es un cociente dentro de la raíz → Propiedad del Cociente: \\sqrt[3]{\\frac{125}{8}} = \\frac{\\sqrt[3]{125}}{\\sqrt[3]{8}} = \\frac{5}{2}',
   },
   {
     id: 'e3',
-    expression: '√(∛8)',
+    expression: '\\sqrt{\\sqrt[3]{8}}',
     correctType: 'rootOfRoot',
-    explanation: 'Es una raíz dentro de otra raíz → Los índices se multiplican: √(∛8) = ⁶√8 = ⁶√(2³) = 2^(3/6) = 2^(1/2) = √2',
+    explanation: 'Es una raíz dentro de otra raíz → Los índices se multiplican: \\sqrt{\\sqrt[3]{8}} = \\sqrt[6]{8} = \\sqrt[6]{2^3} = 2^{3/6} = 2^{1/2} = \\sqrt{2}',
   },
   {
     id: 'e4',
-    expression: '√(25 + 144)',
+    expression: '\\sqrt{25 + 144}',
     correctType: 'invalid',
-    explanation: '¡Cuidado! Es una SUMA dentro de la raíz. Las propiedades NO aplican a sumas. Hay que calcular: √(25+144) = √169 = 13',
+    explanation: '¡Cuidado! Es una SUMA dentro de la raíz. Las propiedades NO aplican a sumas. Hay que calcular: \\sqrt{25+144} = \\sqrt{169} = 13',
   },
   {
     id: 'e5',
-    expression: '⁴√(16 × 81)',
+    expression: '\\sqrt[4]{16 \\times 81}',
     correctType: 'product',
-    explanation: 'Es un producto dentro de la raíz cuarta → Propiedad del Producto: ⁴√(16×81) = ⁴√16 × ⁴√81 = 2 × 3 = 6',
+    explanation: 'Es un producto dentro de la raíz cuarta → Propiedad del Producto: \\sqrt[4]{16 \\times 81} = \\sqrt[4]{16} \\times \\sqrt[4]{81} = 2 \\times 3 = 6',
   },
 ];
 
@@ -113,9 +114,9 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-900/50 rounded-2xl p-8 border border-gray-200 dark:border-gray-700">
             <div className="text-center mb-8">
               <p className="text-gray-500 dark:text-gray-400 mb-2">¿Qué propiedad aplica?</p>
-              <p className="font-mono text-3xl font-bold text-gray-800 dark:text-gray-200">
-                {mc.currentItem.expression}
-              </p>
+              <div className="text-3xl font-bold text-gray-800 dark:text-gray-200">
+                <InlineMath latex={mc.currentItem.expression} />
+              </div>
             </div>
 
             {/* Type options */}
@@ -157,7 +158,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           </div>
 
           {mc.showFeedback && (
-            <FeedbackPanel isCorrect={mc.isCorrect} explanation={mc.currentItem.explanation} />
+            <FeedbackPanel isCorrect={mc.isCorrect} explanation={<InlineMath latex={mc.currentItem.explanation} />} />
           )}
 
           <div className="flex justify-center">
@@ -194,7 +195,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
                 ) : (
                   <X className="w-5 h-5 text-red-600 flex-shrink-0" />
                 )}
-                <span className="font-mono text-gray-700 dark:text-gray-300">{expr.expression}</span>
+                <span className="text-gray-700 dark:text-gray-300"><InlineMath latex={expr.expression} /></span>
                 <span className={cn('text-sm font-medium px-2 py-1 rounded ml-auto', colors.bg, colors.text)}>
                   {correctOption.label}
                 </span>

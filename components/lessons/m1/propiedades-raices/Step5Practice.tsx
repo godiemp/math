@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Check, X, Lightbulb, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { InlineMath } from '@/components/math/MathDisplay';
 
 type PropertyType = 'product' | 'quotient' | 'rootOfRoot';
 
@@ -11,6 +12,7 @@ interface Problem {
   id: string;
   type: PropertyType;
   question: string;
+  questionLatex: string;
   hint: string;
   options: string[];
   correctAnswer: number;
@@ -21,74 +23,82 @@ const PROBLEMS: Problem[] = [
   {
     id: 'p1',
     type: 'product',
-    question: 'Simplifica: √(4 × 49)',
-    hint: 'Separa en √4 × √49, luego calcula cada raíz.',
+    question: 'Simplifica:',
+    questionLatex: '\\sqrt{4 \\times 49}',
+    hint: 'Separa en \\sqrt{4} \\times \\sqrt{49}, luego calcula cada raíz.',
     options: ['14', '21', '53', '196'],
     correctAnswer: 0,
-    explanation: '√(4 × 49) = √4 × √49 = 2 × 7 = 14',
+    explanation: '\\sqrt{4 \\times 49} = \\sqrt{4} \\times \\sqrt{49} = 2 \\times 7 = 14',
   },
   {
     id: 'p2',
     type: 'quotient',
-    question: 'Simplifica: √(64/16)',
-    hint: 'Separa en √64 / √16, luego calcula cada raíz.',
+    question: 'Simplifica:',
+    questionLatex: '\\sqrt{\\frac{64}{16}}',
+    hint: 'Separa en \\frac{\\sqrt{64}}{\\sqrt{16}}, luego calcula cada raíz.',
     options: ['4', '2', '8', '48'],
     correctAnswer: 1,
-    explanation: '√(64/16) = √64 / √16 = 8 / 4 = 2',
+    explanation: '\\sqrt{\\frac{64}{16}} = \\frac{\\sqrt{64}}{\\sqrt{16}} = \\frac{8}{4} = 2',
   },
   {
     id: 'p3',
     type: 'rootOfRoot',
-    question: 'Simplifica: √(√256)',
-    hint: 'Multiplica los índices: 2 × 2 = 4. Luego calcula ⁴√256.',
+    question: 'Simplifica:',
+    questionLatex: '\\sqrt{\\sqrt{256}}',
+    hint: 'Multiplica los índices: 2 \\times 2 = 4. Luego calcula \\sqrt[4]{256}.',
     options: ['4', '8', '16', '2'],
     correctAnswer: 0,
-    explanation: '√(√256) = ⁴√256 = ⁴√(4⁴) = 4',
+    explanation: '\\sqrt{\\sqrt{256}} = \\sqrt[4]{256} = \\sqrt[4]{4^4} = 4',
   },
   {
     id: 'p4',
     type: 'product',
-    question: 'Simplifica: ∛(8 × 64)',
-    hint: 'Separa en ∛8 × ∛64, luego calcula cada raíz cúbica.',
+    question: 'Simplifica:',
+    questionLatex: '\\sqrt[3]{8 \\times 64}',
+    hint: 'Separa en \\sqrt[3]{8} \\times \\sqrt[3]{64}, luego calcula cada raíz cúbica.',
     options: ['8', '12', '72', '6'],
     correctAnswer: 0,
-    explanation: '∛(8 × 64) = ∛8 × ∛64 = 2 × 4 = 8',
+    explanation: '\\sqrt[3]{8 \\times 64} = \\sqrt[3]{8} \\times \\sqrt[3]{64} = 2 \\times 4 = 8',
   },
   {
     id: 'p5',
     type: 'quotient',
-    question: 'Simplifica: ∛(216/27)',
-    hint: 'Separa en ∛216 / ∛27, luego calcula cada raíz cúbica.',
+    question: 'Simplifica:',
+    questionLatex: '\\sqrt[3]{\\frac{216}{27}}',
+    hint: 'Separa en \\frac{\\sqrt[3]{216}}{\\sqrt[3]{27}}, luego calcula cada raíz cúbica.',
     options: ['3', '2', '8', '6'],
     correctAnswer: 1,
-    explanation: '∛(216/27) = ∛216 / ∛27 = 6 / 3 = 2',
+    explanation: '\\sqrt[3]{\\frac{216}{27}} = \\frac{\\sqrt[3]{216}}{\\sqrt[3]{27}} = \\frac{6}{3} = 2',
   },
   {
     id: 'p6',
     type: 'rootOfRoot',
-    question: 'Simplifica: ∛(√64)',
-    hint: 'Multiplica los índices: 3 × 2 = 6. Luego calcula ⁶√64.',
-    options: ['√2', '2', '4', '8'],
+    question: 'Simplifica:',
+    questionLatex: '\\sqrt[3]{\\sqrt{64}}',
+    hint: 'Multiplica los índices: 3 \\times 2 = 6. Luego calcula \\sqrt[6]{64}.',
+    options: ['\\sqrt{2}', '2', '4', '8'],
     correctAnswer: 1,
-    explanation: '∛(√64) = ⁶√64 = ⁶√(2⁶) = 2',
+    explanation: '\\sqrt[3]{\\sqrt{64}} = \\sqrt[6]{64} = \\sqrt[6]{2^6} = 2',
   },
   {
     id: 'p7',
     type: 'product',
-    question: 'Simplifica: √(9 × 25 × 4)',
-    hint: 'Separa en √9 × √25 × √4, luego multiplica los resultados.',
+    question: 'Simplifica:',
+    questionLatex: '\\sqrt{9 \\times 25 \\times 4}',
+    hint: 'Separa en \\sqrt{9} \\times \\sqrt{25} \\times \\sqrt{4}, luego multiplica los resultados.',
     options: ['30', '38', '900', '15'],
     correctAnswer: 0,
-    explanation: '√(9 × 25 × 4) = √9 × √25 × √4 = 3 × 5 × 2 = 30',
+    explanation: '\\sqrt{9 \\times 25 \\times 4} = \\sqrt{9} \\times \\sqrt{25} \\times \\sqrt{4} = 3 \\times 5 \\times 2 = 30',
   },
   {
     id: 'p8',
     type: 'quotient',
-    question: 'Simplifica: ⁴√(81/16)',
-    hint: 'Separa en ⁴√81 / ⁴√16, luego calcula cada raíz cuarta.',
-    options: ['3/2', '9/4', '27/8', '5'],
+    question: 'Simplifica:',
+    questionLatex: '\\sqrt[4]{\\frac{81}{16}}',
+    hint: 'Separa en \\frac{\\sqrt[4]{81}}{\\sqrt[4]{16}}, luego calcula cada raíz cuarta.',
+    options: ['\\frac{3}{2}', '\\frac{9}{4}', '\\frac{27}{8}', '5'],
     correctAnswer: 0,
-    explanation: '⁴√(81/16) = ⁴√81 / ⁴√16 = 3 / 2',
+    explanation: '\\sqrt[4]{\\frac{81}{16}} = \\frac{\\sqrt[4]{81}}{\\sqrt[4]{16}} = \\frac{3}{2}',
   },
 ];
 
@@ -233,7 +243,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
 
             {/* Question */}
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              {currentProblem.question}
+              {currentProblem.question} <InlineMath latex={currentProblem.questionLatex} />
             </h3>
 
             {/* Hint */}
@@ -241,7 +251,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
               <div className="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-4 mb-6 animate-fadeIn border border-amber-200 dark:border-amber-700">
                 <div className="flex items-start gap-2">
                   <Lightbulb className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-amber-800 dark:text-amber-200">{currentProblem.hint}</p>
+                  <p className="text-sm text-amber-800 dark:text-amber-200"><InlineMath latex={currentProblem.hint} /></p>
                 </div>
               </div>
             )}
@@ -289,7 +299,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                         String.fromCharCode(65 + index)
                       )}
                     </span>
-                    <span className="text-gray-800 dark:text-gray-200 font-mono">{option}</span>
+                    <span className="text-gray-800 dark:text-gray-200"><InlineMath latex={option} /></span>
                   </div>
                 </button>
               ))}
@@ -323,7 +333,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                       {isCorrect ? '¡Correcto!' : 'Incorrecto'}
                     </h4>
                     <p className="text-sm text-gray-700 dark:text-gray-300">
-                      {currentProblem.explanation}
+                      <InlineMath latex={currentProblem.explanation} />
                     </p>
                   </div>
                 </div>
@@ -424,7 +434,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                     {PROPERTY_LABELS[problem.type]}
                   </span>
                   <span className="text-sm text-gray-700 dark:text-gray-300 flex-1">
-                    {problem.question}
+                    {problem.question} <InlineMath latex={problem.questionLatex} />
                   </span>
                 </div>
               ))}
