@@ -190,7 +190,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="text-center mb-6">
               <p className="text-gray-500 dark:text-gray-400 mb-2">Simplifica:</p>
-              <div className="text-3xl font-bold text-gray-800 dark:text-gray-200">
+              <div className="flex justify-center text-3xl font-bold text-gray-800 dark:text-gray-200">
                 <BlockMath latex={currentExample.expression} />
               </div>
             </div>
@@ -219,19 +219,19 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <div className="space-y-4 animate-fadeIn">
                 <div className={`rounded-xl p-6 border ${PROPERTY_COLORS[currentExample.type].bg} ${PROPERTY_COLORS[currentExample.type].border}`}>
                   <div className="text-center space-y-3">
-                    <div className="text-lg text-gray-700 dark:text-gray-300">
+                    <div className="flex justify-center text-lg text-gray-700 dark:text-gray-300">
                       <BlockMath latex={currentExample.expression} />
                     </div>
                     <p className="text-gray-400 text-sm">↓ aplicamos la propiedad</p>
-                    <div className="text-lg text-gray-700 dark:text-gray-300">
+                    <div className="flex justify-center text-lg text-gray-700 dark:text-gray-300">
                       <BlockMath latex={`= ${currentExample.step1}`} />
                     </div>
                     <p className="text-gray-400 text-sm">↓ calculamos cada raíz</p>
-                    <div className="text-lg text-gray-700 dark:text-gray-300">
+                    <div className="flex justify-center text-lg text-gray-700 dark:text-gray-300">
                       <BlockMath latex={`= ${currentExample.step2}`} />
                     </div>
                     <p className="text-gray-400 text-sm">↓ resultado</p>
-                    <div className={`text-2xl font-bold ${PROPERTY_COLORS[currentExample.type].text}`}>
+                    <div className={`flex justify-center text-2xl font-bold ${PROPERTY_COLORS[currentExample.type].text}`}>
                       <BlockMath latex={`= ${currentExample.result}`} />
                     </div>
                   </div>
