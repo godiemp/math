@@ -25,6 +25,7 @@ export function midpoint(p1: LabeledPoint, p2: LabeledPoint): LabeledPoint {
 
 /**
  * Calculate the centroid (center of mass) of a triangle
+ * Intersection of the three medians
  */
 export function centroid(
   vertices: [LabeledPoint, LabeledPoint, LabeledPoint]
@@ -32,6 +33,113 @@ export function centroid(
   return {
     x: (vertices[0].x + vertices[1].x + vertices[2].x) / 3,
     y: (vertices[0].y + vertices[1].y + vertices[2].y) / 3,
+  };
+}
+
+/**
+ * Calculate the incenter (intersection of angle bisectors)
+ * Equidistant from all three sides
+ * Formula: weighted average by opposite side lengths
+ */
+export function incenter(
+  vertices: [LabeledPoint, LabeledPoint, LabeledPoint]
+): LabeledPoint {
+  const [A, B, C] = vertices;
+  const a = distance(B, C); // side opposite to A
+  const b = distance(A, C); // side opposite to B
+  const c = distance(A, B); // side opposite to C
+  const perimeter = a + b + c;
+
+  return {
+    x: (a * A.x + b * B.x + c * C.x) / perimeter,
+    y: (a * A.y + b * B.y + c * C.y) / perimeter,
+  };
+}
+
+/**
+ * Calculate the area of a triangle using the cross product formula
+ */
+export function triangleArea(
+  vertices: [LabeledPoint, LabeledPoint, LabeledPoint]
+): number {
+  const [A, B, C] = vertices;
+  // Area = |((Bx - Ax)(Cy - Ay) - (Cx - Ax)(By - Ay))| / 2
+  return Math.abs((B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y)) / 2;
+}
+
+/**
+ * Calculate the inradius (radius of inscribed circle)
+ * Formula: Area / semiperimeter
+ */
+export function inradius(
+  vertices: [LabeledPoint, LabeledPoint, LabeledPoint]
+): number {
+  const area = triangleArea(vertices);
+  const [A, B, C] = vertices;
+  const a = distance(B, C);
+  const b = distance(A, C);
+  const c = distance(A, B);
+  const semiperimeter = (a + b + c) / 2;
+
+  return area / semiperimeter;
+}
+
+/**
+ * Calculate the circumcenter (intersection of perpendicular bisectors)
+ * Equidistant from all three vertices
+ */
+export function circumcenter(
+  vertices: [LabeledPoint, LabeledPoint, LabeledPoint]
+): LabeledPoint {
+  const [A, B, C] = vertices;
+
+  // Using the formula based on determinants
+  // The circumcenter is the solution to the system of perpendicular bisector equations
+  const D = 2 * (A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y));
+
+  if (Math.abs(D) < 0.0001) {
+    // Degenerate case (collinear points)
+    return centroid(vertices);
+  }
+
+  const Ax2 = A.x * A.x + A.y * A.y;
+  const Bx2 = B.x * B.x + B.y * B.y;
+  const Cx2 = C.x * C.x + C.y * C.y;
+
+  const ux = (Ax2 * (B.y - C.y) + Bx2 * (C.y - A.y) + Cx2 * (A.y - B.y)) / D;
+  const uy = (Ax2 * (C.x - B.x) + Bx2 * (A.x - C.x) + Cx2 * (B.x - A.x)) / D;
+
+  return { x: ux, y: uy };
+}
+
+/**
+ * Calculate the circumradius (radius of circumscribed circle)
+ * Distance from circumcenter to any vertex
+ */
+export function circumradius(
+  vertices: [LabeledPoint, LabeledPoint, LabeledPoint]
+): number {
+  const cc = circumcenter(vertices);
+  return distance(cc, vertices[0]);
+}
+
+/**
+ * Calculate the orthocenter (intersection of altitudes)
+ * Uses the relationship: O = A + B + C - 2 * circumcenter (in position vectors from origin)
+ * Or equivalently: O = A + B + C - 2G where G would be... no, use direct formula
+ */
+export function orthocenter(
+  vertices: [LabeledPoint, LabeledPoint, LabeledPoint]
+): LabeledPoint {
+  const [A, B, C] = vertices;
+
+  // Using the formula: H = A + B + C - 2*O where O is circumcenter
+  // This is based on the Euler line relationship
+  const cc = circumcenter(vertices);
+
+  return {
+    x: A.x + B.x + C.x - 2 * cc.x,
+    y: A.y + B.y + C.y - 2 * cc.y,
   };
 }
 

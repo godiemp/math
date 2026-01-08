@@ -202,6 +202,27 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     ],
   },
   {
+    id: '7b-geo-002-a',
+    slug: 'puntos-notables-triangulo',
+    title: 'Puntos Notables del Triángulo',
+    description:
+      'Descubre los 4 puntos notables: circuncentro, incentro, baricentro y ortocentro.',
+    level: 'M1',
+    subject: 'geometría',
+    thematicUnit: 'M1-GEO-001',
+    skills: ['geometria-construcciones', 'triangulos-puntos-notables'],
+    estimatedMinutes: 17,
+    minEducOA: ['MA07-OA-12'],
+    steps: [
+      { id: 'hook', type: 'hook', title: 'La Plaza del Pueblo' },
+      { id: 'explore', type: 'explore', title: 'Descubre los Puntos' },
+      { id: 'explain', type: 'explain', title: 'Los 4 Puntos Notables' },
+      { id: 'classify', type: 'explore', title: 'Identifica el Punto' },
+      { id: 'practice', type: 'practice', title: 'Práctica con Triángulos' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
+  {
     id: 'm2-geo-001-a',
     slug: 'homotecia',
     title: 'Homotecia: Ampliaciones y Reducciones',
