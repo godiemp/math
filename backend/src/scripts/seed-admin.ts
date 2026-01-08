@@ -418,6 +418,34 @@ async function seedAdmin() {
       console.log(`✅ 1-Medio student created: ${medioStudentUsername} (password: ${medioStudentPassword})`);
     }
 
+    // Additional grade-level test students for preview environments
+    const gradeStudents = [
+      { id: 'test-7basico-student', username: '7basico_student', email: '7basico@test.cl', displayName: 'Estudiante 7° Básico', gradeLevel: '7-basico' },
+      { id: 'test-8basico-student', username: '8basico_student', email: '8basico@test.cl', displayName: 'Estudiante 8° Básico', gradeLevel: '8-basico' },
+      { id: 'test-2medio-student', username: '2medio_student', email: '2medio@test.cl', displayName: 'Estudiante 2° Medio', gradeLevel: '2-medio' },
+      { id: 'test-3medio-student', username: '3medio_student', email: '3medio@test.cl', displayName: 'Estudiante 3° Medio', gradeLevel: '3-medio' },
+      { id: 'test-4medio-student', username: '4medio_student', email: '4medio@test.cl', displayName: 'Estudiante 4° Medio', gradeLevel: '4-medio' },
+    ];
+
+    for (const student of gradeStudents) {
+      const existingStudent = await pool.query(
+        'SELECT id FROM users WHERE id = $1 OR username = $2',
+        [student.id, student.username]
+      );
+
+      if (existingStudent.rows.length > 0) {
+        console.log(`ℹ️  ${student.gradeLevel} student already exists, skipping...`);
+      } else {
+        const passwordHash = await bcrypt.hash('test123', 10);
+        await pool.query(
+          `INSERT INTO users (id, username, email, password_hash, display_name, role, grade_level, created_at, updated_at)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+          [student.id, student.username, student.email, passwordHash, student.displayName, 'student', student.gradeLevel, now, now]
+        );
+        console.log(`✅ ${student.gradeLevel} student created: ${student.username} (password: test123)`);
+      }
+    }
+
     // Test Teacher account
     const teacherId = 'test-teacher';
     const teacherUsername = 'teacher';
@@ -449,6 +477,11 @@ async function seedAdmin() {
 - Test accounts:
   * PAES student: ${paesStudentUsername} (password: ${paesStudentPassword}) - Full PAES access
   * 1-Medio student: ${medioStudentUsername} (password: ${medioStudentPassword}) - School content only
+  * 7° Básico student: 7basico_student (password: test123)
+  * 8° Básico student: 8basico_student (password: test123)
+  * 2° Medio student: 2medio_student (password: test123)
+  * 3° Medio student: 3medio_student (password: test123)
+  * 4° Medio student: 4medio_student (password: test123)
   * Teacher: ${teacherUsername} (password: ${teacherPassword}) - Teacher role
 - 3 completed sessions created with realistic PAES templates:
   1. ${m1Template.name} - ${m1Template.questionCount} preguntas, ${m1Template.durationMinutes} min
