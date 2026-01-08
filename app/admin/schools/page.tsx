@@ -1,183 +1,79 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
-import { Card, Heading, Text } from '@/components/ui';
+import { Card, Heading, Text, SlidePanel } from '@/components/ui';
 import AdminLayout from '@/components/layout/AdminLayout';
 import {
-  schools,
-  School,
   SortField,
-  SortDirection,
   DEPENDENCY_LABELS,
   DEPENDENCY_COLORS,
   STATUS_LABELS,
   STATUS_COLORS,
+  CONTACT_STATUS_LABELS,
+  CONTACT_STATUS_COLORS,
 } from '@/lib/schools';
+import { useSchoolsSales } from '@/hooks/useSchoolsSales';
 
 function SchoolsSalesContent() {
-  // Filters
-  const [selectedRegion, setSelectedRegion] = useState<number | 'all'>('all');
-  const [selectedCommune, setSelectedCommune] = useState<number | 'all'>('all');
-  const [selectedDependency, setSelectedDependency] = useState<number | 'all'>('all');
-  const [selectedStatus, setSelectedStatus] = useState<number | 'all'>('all');
-  const [hasHighSchool, setHasHighSchool] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const {
+    // Filters
+    filters,
+    setSelectedRegion,
+    setSelectedCommune,
+    setSelectedDependency,
+    setSelectedStatus,
+    setSelectedContactStatus,
+    setHasHighSchool,
+    setSearchQuery,
+    clearFilters,
+    hasActiveFilters,
 
-  // Sorting
-  const [sortField, setSortField] = useState<SortField>('highSchoolEnrollment');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+    // Region/Commune options
+    regions,
+    communes,
 
-  // Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(50);
+    // Sorting
+    sortField,
+    sortDirection,
+    handleSort,
 
-  // Get unique regions and communes for dropdowns
-  const regions = useMemo(() => {
-    const uniqueRegions = new Map<number, string>();
-    schools.forEach((s) => {
-      if (!uniqueRegions.has(s.regionCode)) {
-        uniqueRegions.set(s.regionCode, s.regionName);
-      }
-    });
-    return Array.from(uniqueRegions.entries())
-      .map(([code, name]) => ({ code, name }))
-      .sort((a, b) => a.code - b.code);
-  }, []);
+    // Pagination
+    currentPage,
+    setCurrentPage,
+    itemsPerPage,
+    setItemsPerPage,
+    totalPages,
+    startIndex,
+    endIndex,
+    getPageNumbers,
 
-  const communes = useMemo(() => {
-    const filtered =
-      selectedRegion === 'all'
-        ? schools
-        : schools.filter((s) => s.regionCode === selectedRegion);
+    // Data
+    sortedSchools,
+    paginatedSchools,
+    stats,
+    pipelineStats,
 
-    const uniqueCommunes = new Map<number, string>();
-    filtered.forEach((s) => {
-      if (!uniqueCommunes.has(s.communeCode)) {
-        uniqueCommunes.set(s.communeCode, s.communeName);
-      }
-    });
-    return Array.from(uniqueCommunes.entries())
-      .map(([code, name]) => ({ code, name }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, [selectedRegion]);
+    // Contact status tracking
+    getContactStatus,
+    handleContactStatusChange,
 
-  // Reset commune when region changes
-  useEffect(() => {
-    setSelectedCommune('all');
-  }, [selectedRegion]);
+    // School detail panel
+    selectedSchool,
+    setSelectedSchool,
+    getSchoolContactInfo,
 
-  // Filter schools
-  const filteredSchools = useMemo(() => {
-    return schools.filter((s) => {
-      if (selectedRegion !== 'all' && s.regionCode !== selectedRegion) return false;
-      if (selectedCommune !== 'all' && s.communeCode !== selectedCommune) return false;
-      if (selectedDependency !== 'all' && s.dependencyCode !== selectedDependency)
-        return false;
-      if (selectedStatus !== 'all' && s.status !== selectedStatus) return false;
-      if (hasHighSchool && s.highSchoolEnrollment === 0) return false;
-      if (
-        searchQuery &&
-        !s.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !s.rbd.toString().includes(searchQuery)
-      )
-        return false;
-      return true;
-    });
-  }, [
-    selectedRegion,
-    selectedCommune,
-    selectedDependency,
-    selectedStatus,
-    hasHighSchool,
-    searchQuery,
-  ]);
+    // Contact form
+    contactForm,
+    setContactFormField,
+    handleAddContact,
+    handleRemoveContact,
 
-  // Sort schools
-  const sortedSchools = useMemo(() => {
-    const sorted = [...filteredSchools].sort((a, b) => {
-      let aVal: string | number = a[sortField];
-      let bVal: string | number = b[sortField];
-
-      if (typeof aVal === 'string') {
-        aVal = aVal.toLowerCase();
-        bVal = (bVal as string).toLowerCase();
-      }
-
-      if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
-      if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
-      return 0;
-    });
-    return sorted;
-  }, [filteredSchools, sortField, sortDirection]);
-
-  // Reset page when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [
-    selectedRegion,
-    selectedCommune,
-    selectedDependency,
-    selectedStatus,
-    hasHighSchool,
-    searchQuery,
-  ]);
-
-  // Pagination
-  const totalPages = Math.ceil(sortedSchools.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedSchools = sortedSchools.slice(startIndex, endIndex);
-
-  // Page numbers
-  const getPageNumbers = () => {
-    const pages: (number | string)[] = [];
-    const maxVisible = 5;
-
-    if (totalPages <= maxVisible) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (currentPage <= 3) {
-        for (let i = 1; i <= 4; i++) pages.push(i);
-        pages.push('...');
-        pages.push(totalPages);
-      } else if (currentPage >= totalPages - 2) {
-        pages.push(1);
-        pages.push('...');
-        for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
-      } else {
-        pages.push(1);
-        pages.push('...');
-        pages.push(currentPage - 1);
-        pages.push(currentPage);
-        pages.push(currentPage + 1);
-        pages.push('...');
-        pages.push(totalPages);
-      }
-    }
-
-    return pages;
-  };
-
-  // Stats
-  const stats = {
-    total: schools.length,
-    filtered: filteredSchools.length,
-    withHighSchool: schools.filter((s) => s.highSchoolEnrollment > 0).length,
-    functioning: schools.filter((s) => s.status === 1).length,
-  };
-
-  // Handle sort
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortDirection('desc');
-    }
-  };
+    // Notes
+    newNote,
+    setNewNote,
+    handleAddNote,
+    handleRemoveNote,
+  } = useSchoolsSales();
 
   const SortHeader = ({
     field,
@@ -210,12 +106,12 @@ function SchoolsSalesContent() {
             Ventas Colegios
           </Heading>
           <Text variant="secondary">
-            Base de datos MINEDUC 2025 - {schools.length.toLocaleString()} establecimientos
+            Base de datos MINEDUC 2025 - {stats.total.toLocaleString()} establecimientos
           </Text>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           <Card padding="md">
             <Heading level={2} size="sm" className="mb-1">
               {stats.total.toLocaleString()}
@@ -241,6 +137,14 @@ function SchoolsSalesContent() {
             </Text>
           </Card>
           <Card padding="md">
+            <Heading level={2} size="sm" className="text-blue-600 mb-1">
+              {pipelineStats.contacted.toLocaleString()}
+            </Heading>
+            <Text size="xs" variant="secondary">
+              En pipeline
+            </Text>
+          </Card>
+          <Card padding="md">
             <Heading level={2} size="sm" className="text-indigo-600 mb-1">
               {stats.filtered.toLocaleString()}
             </Heading>
@@ -261,20 +165,20 @@ function SchoolsSalesContent() {
             <input
               type="text"
               placeholder="Buscar por nombre o RBD..."
-              value={searchQuery}
+              value={filters.searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {/* Region Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Región
               </label>
               <select
-                value={selectedRegion}
+                value={filters.selectedRegion}
                 onChange={(e) =>
                   setSelectedRegion(
                     e.target.value === 'all' ? 'all' : parseInt(e.target.value, 10)
@@ -297,7 +201,7 @@ function SchoolsSalesContent() {
                 Comuna
               </label>
               <select
-                value={selectedCommune}
+                value={filters.selectedCommune}
                 onChange={(e) =>
                   setSelectedCommune(
                     e.target.value === 'all' ? 'all' : parseInt(e.target.value, 10)
@@ -320,7 +224,7 @@ function SchoolsSalesContent() {
                 Dependencia
               </label>
               <select
-                value={selectedDependency}
+                value={filters.selectedDependency}
                 onChange={(e) =>
                   setSelectedDependency(
                     e.target.value === 'all' ? 'all' : parseInt(e.target.value, 10)
@@ -343,7 +247,7 @@ function SchoolsSalesContent() {
                 Estado
               </label>
               <select
-                value={selectedStatus}
+                value={filters.selectedStatus}
                 onChange={(e) =>
                   setSelectedStatus(
                     e.target.value === 'all' ? 'all' : parseInt(e.target.value, 10)
@@ -359,6 +263,29 @@ function SchoolsSalesContent() {
                 ))}
               </select>
             </div>
+
+            {/* Contact Status Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Pipeline
+              </label>
+              <select
+                value={filters.selectedContactStatus}
+                onChange={(e) =>
+                  setSelectedContactStatus(
+                    e.target.value === 'all' ? 'all' : (parseInt(e.target.value, 10) as 1 | 2 | 3 | 4 | 5 | 6 | 7)
+                  )
+                }
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+              >
+                <option value="all">Todos</option>
+                {Object.entries(CONTACT_STATUS_LABELS).map(([code, label]) => (
+                  <option key={code} value={code}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* High School Filter Checkbox */}
@@ -366,7 +293,7 @@ function SchoolsSalesContent() {
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
-                checked={hasHighSchool}
+                checked={filters.hasHighSchool}
                 onChange={(e) => setHasHighSchool(e.target.checked)}
                 className="rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500"
               />
@@ -378,21 +305,9 @@ function SchoolsSalesContent() {
           </div>
 
           {/* Clear Filters */}
-          {(selectedRegion !== 'all' ||
-            selectedCommune !== 'all' ||
-            selectedDependency !== 'all' ||
-            selectedStatus !== 'all' ||
-            hasHighSchool ||
-            searchQuery) && (
+          {hasActiveFilters && (
             <button
-              onClick={() => {
-                setSelectedRegion('all');
-                setSelectedCommune('all');
-                setSelectedDependency('all');
-                setSelectedStatus('all');
-                setHasHighSchool(false);
-                setSearchQuery('');
-              }}
+              onClick={clearFilters}
               className="mt-4 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
             >
               Limpiar filtros
@@ -438,13 +353,14 @@ function SchoolsSalesContent() {
                   <SortHeader field="highSchoolEnrollment">Mat. Media</SortHeader>
                   <SortHeader field="totalEnrollment">Mat. Total</SortHeader>
                   <SortHeader field="status">Estado</SortHeader>
+                  <SortHeader field="contactStatus">Pipeline</SortHeader>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {sortedSchools.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={8}
+                      colSpan={9}
                       className="px-6 py-8 text-center text-gray-500 dark:text-gray-400"
                     >
                       No se encontraron colegios con los filtros seleccionados
@@ -454,7 +370,8 @@ function SchoolsSalesContent() {
                   paginatedSchools.map((school) => (
                     <tr
                       key={school.rbd}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-700"
+                      onClick={() => setSelectedSchool(school)}
+                      className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
                     >
                       <td className="px-4 py-3 whitespace-nowrap text-sm font-mono text-gray-900 dark:text-white">
                         {school.rbd}
@@ -497,6 +414,27 @@ function SchoolsSalesContent() {
                         >
                           {STATUS_LABELS[school.status] || 'Desconocido'}
                         </span>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <select
+                          value={getContactStatus(school.rbd)}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) =>
+                            handleContactStatusChange(
+                              school.rbd,
+                              parseInt(e.target.value, 10) as 1 | 2 | 3 | 4 | 5 | 6 | 7
+                            )
+                          }
+                          className={`px-2 py-1 text-xs font-semibold rounded-full border-0 cursor-pointer ${
+                            CONTACT_STATUS_COLORS[getContactStatus(school.rbd)]
+                          }`}
+                        >
+                          {Object.entries(CONTACT_STATUS_LABELS).map(([code, label]) => (
+                            <option key={code} value={code}>
+                              {label}
+                            </option>
+                          ))}
+                        </select>
                       </td>
                     </tr>
                   ))
@@ -565,6 +503,331 @@ function SchoolsSalesContent() {
           )}
         </Card>
       </div>
+
+      {/* School Detail Panel */}
+      <SlidePanel
+        isOpen={selectedSchool !== null}
+        onClose={() => setSelectedSchool(null)}
+        title={selectedSchool?.name || ''}
+        width="xl"
+      >
+        {selectedSchool && (
+          <div className="space-y-6">
+            {/* Header with RBD and Pipeline Status */}
+            <div className="flex items-center justify-between">
+              <div>
+                <Text size="sm" variant="secondary">
+                  RBD: {selectedSchool.rbd}
+                </Text>
+              </div>
+              <select
+                value={getContactStatus(selectedSchool.rbd)}
+                onChange={(e) =>
+                  handleContactStatusChange(
+                    selectedSchool.rbd,
+                    parseInt(e.target.value, 10) as 1 | 2 | 3 | 4 | 5 | 6 | 7
+                  )
+                }
+                className={`px-3 py-1.5 text-sm font-semibold rounded-full border-0 cursor-pointer ${
+                  CONTACT_STATUS_COLORS[getContactStatus(selectedSchool.rbd)]
+                }`}
+              >
+                {Object.entries(CONTACT_STATUS_LABELS).map(([code, label]) => (
+                  <option key={code} value={code}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* School Info */}
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-2">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <Text size="xs" variant="secondary">
+                    Región
+                  </Text>
+                  <Text size="sm">{selectedSchool.regionName}</Text>
+                </div>
+                <div>
+                  <Text size="xs" variant="secondary">
+                    Comuna
+                  </Text>
+                  <Text size="sm">{selectedSchool.communeName}</Text>
+                </div>
+                <div>
+                  <Text size="xs" variant="secondary">
+                    Dependencia
+                  </Text>
+                  <span
+                    className={`inline-block px-2 py-0.5 text-xs font-semibold rounded-full ${
+                      DEPENDENCY_COLORS[selectedSchool.dependencyCode] ||
+                      'bg-gray-100 text-gray-800'
+                    }`}
+                  >
+                    {DEPENDENCY_LABELS[selectedSchool.dependencyCode] || 'Desconocido'}
+                  </span>
+                </div>
+                <div>
+                  <Text size="xs" variant="secondary">
+                    Estado
+                  </Text>
+                  <span
+                    className={`inline-block px-2 py-0.5 text-xs font-semibold rounded-full ${
+                      STATUS_COLORS[selectedSchool.status] || 'bg-gray-100 text-gray-800'
+                    }`}
+                  >
+                    {STATUS_LABELS[selectedSchool.status] || 'Desconocido'}
+                  </span>
+                </div>
+                <div>
+                  <Text size="xs" variant="secondary">
+                    Matrícula Media
+                  </Text>
+                  <Text size="sm" className="text-purple-600 dark:text-purple-400 font-medium">
+                    {selectedSchool.highSchoolEnrollment.toLocaleString()}
+                  </Text>
+                </div>
+                <div>
+                  <Text size="xs" variant="secondary">
+                    Matrícula Total
+                  </Text>
+                  <Text size="sm" className="font-medium">
+                    {selectedSchool.totalEnrollment.toLocaleString()}
+                  </Text>
+                </div>
+              </div>
+            </div>
+
+            {/* Search Links Section */}
+            <div>
+              <Heading level={3} size="xs" className="mb-3">
+                Buscar información
+              </Heading>
+              <div className="flex flex-wrap gap-2">
+                <a
+                  href={`https://www.google.com/search?q=${encodeURIComponent(
+                    `"${selectedSchool.name}" ${selectedSchool.communeName} colegio sitio web`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                  </svg>
+                  Buscar sitio web
+                </a>
+                <a
+                  href={`https://www.google.com/search?q=${encodeURIComponent(
+                    `"${selectedSchool.name}" ${selectedSchool.communeName} contacto email teléfono`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                  </svg>
+                  Buscar contacto
+                </a>
+                <a
+                  href={`https://www.mime.mineduc.cl/mvc/mime/ficha?rbd=${selectedSchool.rbd}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  Ficha MINEDUC
+                </a>
+              </div>
+              <Text size="xs" variant="secondary" className="mt-2">
+                Abre una búsqueda en Google para encontrar información de contacto del colegio
+              </Text>
+            </div>
+
+            {/* Contacts Section */}
+            <div>
+              <Heading level={3} size="xs" className="mb-3">
+                Contactos
+              </Heading>
+
+              {/* Existing Contacts */}
+              {getSchoolContactInfo(selectedSchool.rbd).contacts.length > 0 ? (
+                <div className="space-y-2 mb-4">
+                  {getSchoolContactInfo(selectedSchool.rbd).contacts.map((contact) => (
+                    <div
+                      key={contact.id}
+                      className="flex items-start justify-between bg-gray-50 dark:bg-gray-800 rounded-lg p-3"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <Text size="sm" className="font-medium">
+                            {contact.name}
+                          </Text>
+                          {contact.role && (
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                              ({contact.role})
+                            </span>
+                          )}
+                        </div>
+                        {contact.email && (
+                          <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
+                            <span>✉</span>
+                            <a
+                              href={`mailto:${contact.email}`}
+                              className="hover:text-indigo-600 dark:hover:text-indigo-400"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {contact.email}
+                            </a>
+                          </div>
+                        )}
+                        {contact.phone && (
+                          <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
+                            <span>☎</span>
+                            <a
+                              href={`tel:${contact.phone}`}
+                              className="hover:text-indigo-600 dark:hover:text-indigo-400"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {contact.phone}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => handleRemoveContact(selectedSchool.rbd, contact.id)}
+                        className="text-gray-400 hover:text-red-500 text-sm"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <Text size="sm" variant="secondary" className="mb-4">
+                  No hay contactos registrados
+                </Text>
+              )}
+
+              {/* Add Contact Form */}
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 space-y-2">
+                <Text size="xs" variant="secondary" className="font-medium">
+                  Agregar contacto
+                </Text>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    placeholder="Nombre *"
+                    value={contactForm.name}
+                    onChange={(e) => setContactFormField('name', e.target.value)}
+                    className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Rol (ej: Director)"
+                    value={contactForm.role}
+                    onChange={(e) => setContactFormField('role', e.target.value)}
+                    className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={contactForm.email}
+                    onChange={(e) => setContactFormField('email', e.target.value)}
+                    className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                  />
+                  <input
+                    type="tel"
+                    placeholder="Teléfono"
+                    value={contactForm.phone}
+                    onChange={(e) => setContactFormField('phone', e.target.value)}
+                    className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                  />
+                </div>
+                <button
+                  onClick={() => handleAddContact(selectedSchool.rbd)}
+                  disabled={!contactForm.name.trim()}
+                  className="w-full px-3 py-1.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed rounded-lg transition-colors"
+                >
+                  + Agregar contacto
+                </button>
+              </div>
+            </div>
+
+            {/* Notes Section */}
+            <div>
+              <Heading level={3} size="xs" className="mb-3">
+                Notas
+              </Heading>
+
+              {/* Add Note Form */}
+              <div className="mb-4 space-y-2">
+                <textarea
+                  placeholder="Agregar una nota..."
+                  value={newNote}
+                  onChange={(e) => setNewNote(e.target.value)}
+                  rows={2}
+                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white resize-none"
+                />
+                <button
+                  onClick={() => handleAddNote(selectedSchool.rbd)}
+                  disabled={!newNote.trim()}
+                  className="px-3 py-1.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed rounded-lg transition-colors"
+                >
+                  + Agregar nota
+                </button>
+              </div>
+
+              {/* Existing Notes */}
+              {getSchoolContactInfo(selectedSchool.rbd).notes.length > 0 ? (
+                <div className="space-y-2">
+                  {getSchoolContactInfo(selectedSchool.rbd).notes.map((note) => (
+                    <div
+                      key={note.id}
+                      className="flex items-start justify-between bg-gray-50 dark:bg-gray-800 rounded-lg p-3"
+                    >
+                      <div className="flex-1">
+                        <Text size="sm" className="whitespace-pre-wrap">
+                          {note.text}
+                        </Text>
+                        <Text size="xs" variant="secondary" className="mt-1">
+                          {new Date(note.createdAt).toLocaleDateString('es-CL', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </Text>
+                      </div>
+                      <button
+                        onClick={() => handleRemoveNote(selectedSchool.rbd, note.id)}
+                        className="text-gray-400 hover:text-red-500 text-sm ml-2"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <Text size="sm" variant="secondary">
+                  No hay notas registradas
+                </Text>
+              )}
+            </div>
+          </div>
+        )}
+      </SlidePanel>
     </AdminLayout>
   );
 }
