@@ -29,9 +29,9 @@ const QUESTIONS: CheckpointQuestion[] = [
   },
   {
     id: 'q4',
-    question: '¿Por qué los ángulos exteriores de cualquier polígono suman 360°?',
+    question: '¿Cuál es la razón geométrica por la que los ángulos exteriores siempre suman 360°?',
     options: [
-      'Porque cada ángulo mide 360°/n',
+      'Porque hay más ángulos en polígonos grandes',
       'Porque al caminar alrededor, giras una vuelta completa',
       'Porque depende del número de lados',
       'Porque interior + exterior = 360°',
