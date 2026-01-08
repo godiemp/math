@@ -104,15 +104,15 @@ function NumberLine({ value, direction, open }: { value: number; direction: 'lef
       {/* Line */}
       <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-300 dark:bg-gray-600" />
 
-      {/* Arrow ends */}
+      {/* Arrow ends - pointing outward toward infinity */}
       <div className="absolute top-1/2 left-0 -translate-y-1/2">
         <svg width="12" height="12" viewBox="0 0 12 12" className="text-gray-400">
-          <path d="M10 6L2 2v8l8-4z" fill="currentColor" />
+          <path d="M2 6l8-4v8l-8-4z" fill="currentColor" />
         </svg>
       </div>
       <div className="absolute top-1/2 right-0 -translate-y-1/2">
         <svg width="12" height="12" viewBox="0 0 12 12" className="text-gray-400">
-          <path d="M2 6l8-4v8l-8-4z" fill="currentColor" />
+          <path d="M10 6L2 2v8l8-4z" fill="currentColor" />
         </svg>
       </div>
 
