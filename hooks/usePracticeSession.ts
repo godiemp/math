@@ -24,6 +24,22 @@ interface ScaffoldingStackEntry {
   depth: number;
 }
 
+// API response types
+interface GeneratedQuestionResponse {
+  question?: {
+    id: string;
+    questionLatex: string;
+    options: string[];
+    correctAnswer: number;
+    explanation: string;
+    difficulty: string;
+    difficultyScore: number;
+    subject: string;
+    topic: string;
+    targetSkills?: string[];
+  };
+}
+
 const MAX_SCAFFOLDING_DEPTH = 3;
 
 function getRandomQuestion(focus: string, excludeIds: Set<string> = new Set()): Question | null {
@@ -107,7 +123,7 @@ export function usePracticeSession() {
   ): Promise<ScaffoldingQuestion | null> => {
     try {
       setIsGeneratingScaffolding(true);
-      const response = await api.post('/api/adaptive/generate-scaffolding', {
+      const response = await api.post<GeneratedQuestionResponse>('/api/adaptive/generate-scaffolding', {
         failedQuestion: {
           id: failedQuestion.id,
           questionLatex: failedQuestion.questionLatex,
@@ -123,7 +139,7 @@ export function usePracticeSession() {
         scaffoldingLevel: level,
       });
 
-      if (response.data?.question) {
+      if (response.data.question) {
         // Convert generated question to our Question format
         const generated = response.data.question;
         return {
@@ -158,7 +174,7 @@ export function usePracticeSession() {
   ): Promise<ScaffoldingQuestion | null> => {
     try {
       setIsGeneratingScaffolding(true);
-      const response = await api.post('/api/adaptive/generate-similar', {
+      const response = await api.post<GeneratedQuestionResponse>('/api/adaptive/generate-similar', {
         originalQuestion: {
           id: originalQuestion.id,
           questionLatex: originalQuestion.questionLatex,
@@ -173,7 +189,7 @@ export function usePracticeSession() {
         },
       });
 
-      if (response.data?.question) {
+      if (response.data.question) {
         const generated = response.data.question;
         return {
           id: generated.id,
