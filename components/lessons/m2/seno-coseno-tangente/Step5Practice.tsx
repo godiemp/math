@@ -169,17 +169,6 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
 
   if (!isActive) return null;
 
-  const getSideLabel = (side: 'opposite' | 'adjacent' | 'hypotenuse') => {
-    switch (side) {
-      case 'opposite':
-        return 'Op';
-      case 'adjacent':
-        return 'Ady';
-      case 'hypotenuse':
-        return 'Hip';
-    }
-  };
-
   return (
     <div className="space-y-8 animate-fadeIn pb-32">
       <div className="text-center">
@@ -234,86 +223,57 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
 
             {/* Triangle visualization */}
             <div className="flex justify-center mb-6">
-              <svg viewBox="0 0 200 140" className="w-48">
-                {/* Triangle */}
-                <polygon
-                  points="30,120 170,120 170,30"
-                  fill="#e0e7ff"
-                  fillOpacity="0.5"
-                  stroke="#4f46e5"
-                  strokeWidth="2"
-                />
-
-                {/* Right angle marker */}
-                <rect x="158" y="108" width="12" height="12" fill="none" stroke="#4f46e5" strokeWidth="1.5" />
-
-                {/* Angle arc */}
-                <path d="M 55 120 A 25 25 0 0 1 48 100" fill="none" stroke="#dc2626" strokeWidth="2" />
-                <text x="65" y="110" fontSize="12" fontWeight="bold" fill="#dc2626">
-                  {problem.visualization.angle}°
-                </text>
-
-                {/* Side labels */}
-                <text
-                  x="100"
-                  y="135"
-                  textAnchor="middle"
-                  fontSize="11"
-                  fontWeight="bold"
-                  fill={
-                    problem.visualization.known.side === 'adjacent'
-                      ? '#059669'
-                      : problem.visualization.unknown === 'adjacent'
-                      ? '#f59e0b'
-                      : '#9ca3af'
-                  }
-                >
-                  {problem.visualization.known.side === 'adjacent'
-                    ? problem.visualization.known.value
-                    : problem.visualization.unknown === 'adjacent'
-                    ? '?'
-                    : 'Ady'}
-                </text>
-                <text
-                  x="183"
-                  y="80"
-                  fontSize="11"
-                  fontWeight="bold"
-                  fill={
-                    problem.visualization.known.side === 'opposite'
-                      ? '#dc2626'
-                      : problem.visualization.unknown === 'opposite'
-                      ? '#f59e0b'
-                      : '#9ca3af'
-                  }
-                >
-                  {problem.visualization.known.side === 'opposite'
-                    ? problem.visualization.known.value
-                    : problem.visualization.unknown === 'opposite'
-                    ? '?'
-                    : 'Op'}
-                </text>
-                <text
-                  x="85"
-                  y="65"
-                  fontSize="11"
-                  fontWeight="bold"
-                  fill={
-                    problem.visualization.known.side === 'hypotenuse'
+              <TriangleFigure
+                fromAngles={{ angles: [problem.visualization.angle, 90 - problem.visualization.angle, 90], size: 120 }}
+                showRightAngleMarker
+                fill="rgba(224, 231, 255, 0.5)"
+                stroke="#4f46e5"
+                angles={[
+                  { showArc: true, label: `${problem.visualization.angle}°`, color: '#dc2626' },
+                  {},
+                  {},
+                ]}
+                sides={[
+                  {
+                    label: problem.visualization.known.side === 'hypotenuse'
+                      ? String(problem.visualization.known.value)
+                      : problem.visualization.unknown === 'hypotenuse'
+                      ? '?'
+                      : 'Hip',
+                    labelColor: problem.visualization.known.side === 'hypotenuse'
                       ? '#7c3aed'
                       : problem.visualization.unknown === 'hypotenuse'
                       ? '#f59e0b'
-                      : '#9ca3af'
-                  }
-                  transform="rotate(-32, 85, 65)"
-                >
-                  {problem.visualization.known.side === 'hypotenuse'
-                    ? problem.visualization.known.value
-                    : problem.visualization.unknown === 'hypotenuse'
-                    ? '?'
-                    : 'Hip'}
-                </text>
-              </svg>
+                      : '#9ca3af',
+                  },
+                  {
+                    label: problem.visualization.known.side === 'opposite'
+                      ? String(problem.visualization.known.value)
+                      : problem.visualization.unknown === 'opposite'
+                      ? '?'
+                      : 'Op',
+                    labelColor: problem.visualization.known.side === 'opposite'
+                      ? '#dc2626'
+                      : problem.visualization.unknown === 'opposite'
+                      ? '#f59e0b'
+                      : '#9ca3af',
+                  },
+                  {
+                    label: problem.visualization.known.side === 'adjacent'
+                      ? String(problem.visualization.known.value)
+                      : problem.visualization.unknown === 'adjacent'
+                      ? '?'
+                      : 'Ady',
+                    labelColor: problem.visualization.known.side === 'adjacent'
+                      ? '#059669'
+                      : problem.visualization.unknown === 'adjacent'
+                      ? '#f59e0b'
+                      : '#9ca3af',
+                  },
+                ]}
+                showVertices={false}
+                className="w-48"
+              />
             </div>
 
             {/* SOH-CAH-TOA reminder */}

@@ -75,6 +75,8 @@ export function TriangleFigure({
   vertexRadius = 4,
   ariaLabel,
   className = '',
+  asSvgGroup = false,
+  transform,
 }: TriangleFigureProps) {
   // Calculate vertices from fromAngles, fromSides, or use provided vertices
   const vertices = useMemo<[LabeledPoint, LabeledPoint, LabeledPoint]>(() => {
@@ -135,19 +137,11 @@ export function TriangleFigure({
   // Parse viewBox for grid calculations
   const [vbMinX, vbMinY, vbWidth, vbHeight] = viewBox.split(' ').map(Number);
 
-  return (
-    <svg
-      width={width}
-      height={height}
-      viewBox={viewBox}
-      className={`${className}`}
-      role="img"
-      aria-label={ariaLabel || 'Triangle figure'}
-    >
-      <title>{ariaLabel || 'Triangle figure'}</title>
-
-      {/* Grid background */}
-      {showGrid && (
+  // Inner content shared between svg and g modes
+  const triangleContent = (
+    <>
+      {/* Grid background (only when not asSvgGroup) */}
+      {showGrid && !asSvgGroup && (
         <g className="grid">
           {/* Vertical lines */}
           {Array.from({
@@ -268,6 +262,30 @@ export function TriangleFigure({
           />
         );
       })}
+    </>
+  );
+
+  // Render as SVG group for embedding in larger SVGs
+  if (asSvgGroup) {
+    return (
+      <g transform={transform} className={className}>
+        {triangleContent}
+      </g>
+    );
+  }
+
+  // Render as standalone SVG
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox={viewBox}
+      className={`${className}`}
+      role="img"
+      aria-label={ariaLabel || 'Triangle figure'}
+    >
+      <title>{ariaLabel || 'Triangle figure'}</title>
+      {triangleContent}
     </svg>
   );
 }

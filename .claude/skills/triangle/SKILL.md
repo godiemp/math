@@ -238,6 +238,8 @@ interface SpecialLineConfig {
 | `viewBox` | `string` | auto | ViewBox personalizado |
 | `padding` | `number` | `40` | Padding alrededor del triángulo |
 | `className` | `string` | - | Clases CSS adicionales |
+| `asSvgGroup` | `boolean` | `false` | Renderizar como `<g>` en vez de `<svg>` (para escenas complejas) |
+| `transform` | `string` | - | Transformación SVG cuando se usa asSvgGroup |
 
 ---
 
@@ -372,6 +374,54 @@ const triangle = { opposite: 3, adjacent: 5.2, hypotenuse: 6, angle: 30 };
   ]}
 />
 ```
+
+### Escenas Complejas (asSvgGroup)
+
+Cuando necesitas combinar el triángulo con otros elementos en una escena más grande, usa `asSvgGroup` para renderizar el triángulo como un grupo `<g>` dentro de tu propio SVG:
+
+```tsx
+<svg viewBox="0 0 400 300" className="w-full">
+  {/* Fondo y elementos de la escena */}
+  <rect x="0" y="0" width="400" height="300" fill="#e0f2fe" />
+  <rect x="0" y="250" width="400" height="50" fill="#86efac" />
+
+  {/* Torre */}
+  <rect x="300" y="100" width="20" height="150" fill="#94a3b8" />
+
+  {/* Triángulo implícito usando TriangleFigure como grupo */}
+  <TriangleFigure
+    asSvgGroup
+    vertices={[
+      { x: 50, y: 250 },    // Observador
+      { x: 310, y: 250 },   // Base torre
+      { x: 310, y: 100 },   // Top torre
+    ]}
+    fill="transparent"
+    stroke="transparent"
+    showRightAngleMarker
+    rightAngleVertex={1}
+    angles={[
+      { showArc: true, label: '60°', color: '#dc2626' },
+      {},
+      {},
+    ]}
+    showVertices={false}
+  />
+
+  {/* Línea de visión (hipotenusa) */}
+  <line x1="50" y1="250" x2="310" y2="100" stroke="#f59e0b" strokeDasharray="4,4" />
+
+  {/* Etiquetas adicionales */}
+  <text x="180" y="270">Sombra: 30 m</text>
+</svg>
+```
+
+**Características de `asSvgGroup`:**
+- Renderiza `<g>` en vez de `<svg>`
+- No genera viewBox ni dimensiones propias
+- Usa las coordenadas absolutas del SVG padre
+- Ideal para triángulos implícitos en ilustraciones
+- Puedes hacer el triángulo invisible (`fill="transparent" stroke="transparent"`) y solo mostrar ángulos/marcadores
 
 ---
 

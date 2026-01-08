@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { ArrowRight, Check, X, Mountain, Ruler } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { TriangleFigure } from '@/components/figures/TriangleFigure';
 
 type Phase = 'intro' | 'question' | 'reveal' | 'result';
 
@@ -67,6 +68,27 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 {/* Ground */}
                 <rect x="0" y="160" width="360" height="40" fill="#86efac" className="dark:fill-green-800" />
 
+                {/* Implicit triangle using TriangleFigure as group */}
+                <TriangleFigure
+                  asSvgGroup
+                  vertices={[
+                    { x: 60, y: 160 },
+                    { x: 290, y: 160 },
+                    { x: 290, y: 40 },
+                  ]}
+                  fill="transparent"
+                  stroke="transparent"
+                  showRightAngleMarker
+                  rightAngleVertex={1}
+                  rightAngleSize={10}
+                  angles={[
+                    { showArc: true, label: '60°', color: '#dc2626', arcRadius: 20 },
+                    {},
+                    {},
+                  ]}
+                  showVertices={false}
+                />
+
                 {/* Tower */}
                 <rect x="280" y="40" width="20" height="120" fill="#94a3b8" stroke="#475569" strokeWidth="2" />
                 <polygon points="290,40 275,55 305,55" fill="#dc2626" />
@@ -79,18 +101,14 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 <circle cx="60" cy="145" r="8" fill="#fcd34d" stroke="#92400e" strokeWidth="1" />
                 <rect x="55" y="152" width="10" height="8" fill="#3b82f6" />
 
-                {/* Sun rays (angle indicator) */}
-                <line x1="60" y1="145" x2="290" y2="40" stroke="#f59e0b" strokeWidth="2" strokeDasharray="4,4" />
+                {/* Sun rays (angle indicator) - the hypotenuse */}
+                <line x1="60" y1="160" x2="290" y2="40" stroke="#f59e0b" strokeWidth="2" strokeDasharray="4,4" />
 
                 {/* Shadow on ground */}
                 <line x1="290" y1="160" x2="60" y2="160" stroke="#1f2937" strokeWidth="3" />
                 <text x="175" y="178" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f2937" className="dark:fill-gray-300">
                   Sombra: 30 m
                 </text>
-
-                {/* Angle arc */}
-                <path d="M 80 160 A 20 20 0 0 1 74 145" fill="none" stroke="#dc2626" strokeWidth="2" />
-                <text x="95" y="148" fontSize="12" fontWeight="bold" fill="#dc2626">60°</text>
 
                 {/* Height question mark */}
                 <text x="320" y="100" fontSize="24" fontWeight="bold" fill="#6366f1">?</text>
@@ -138,30 +156,24 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
           {/* Visual reminder */}
           <div className="flex justify-center mb-6">
-            <svg viewBox="0 0 200 120" className="w-56">
-              {/* Ground */}
-              <line x1="20" y1="100" x2="180" y2="100" stroke="#6b7280" strokeWidth="2" />
-
-              {/* Tower (vertical) */}
-              <line x1="160" y1="100" x2="160" y2="20" stroke="#475569" strokeWidth="3" />
-
-              {/* Shadow (horizontal) */}
-              <line x1="40" y1="100" x2="160" y2="100" stroke="#1f2937" strokeWidth="3" />
-
-              {/* Hypotenuse (line of sight) */}
-              <line x1="40" y1="100" x2="160" y2="20" stroke="#f59e0b" strokeWidth="2" strokeDasharray="4,4" />
-
-              {/* Angle arc */}
-              <path d="M 60 100 A 20 20 0 0 1 55 85" fill="none" stroke="#dc2626" strokeWidth="2" />
-              <text x="72" y="92" fontSize="11" fontWeight="bold" fill="#dc2626">60°</text>
-
-              {/* Labels */}
-              <text x="100" y="115" textAnchor="middle" fontSize="10" fill="#1f2937" className="dark:fill-gray-300">30 m</text>
-              <text x="175" y="65" fontSize="14" fontWeight="bold" fill="#6366f1">?</text>
-
-              {/* Right angle marker */}
-              <rect x="150" y="90" width="10" height="10" fill="none" stroke="#6b7280" strokeWidth="1" />
-            </svg>
+            <TriangleFigure
+              fromAngles={{ angles: [60, 30, 90], size: 100 }}
+              showRightAngleMarker
+              fill="rgba(224, 231, 255, 0.3)"
+              stroke="#475569"
+              angles={[
+                { showArc: true, label: '60°', color: '#dc2626' },
+                {},
+                {},
+              ]}
+              sides={[
+                { label: '?', labelColor: '#6366f1' },
+                {},
+                { label: '30 m', labelColor: '#1f2937' },
+              ]}
+              showVertices={false}
+              className="w-56"
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -259,33 +271,29 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
       <div className="bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/30 dark:to-teal-900/30 rounded-xl p-6">
         <div className="space-y-4">
           <div className="flex justify-center">
-            <svg viewBox="0 0 300 180" className="w-full max-w-sm">
-              {/* Right triangle */}
-              <polygon points="40,150 260,150 260,30" fill="#bfdbfe" fillOpacity="0.5" stroke="#1d4ed8" strokeWidth="3" />
-
-              {/* Right angle marker */}
-              <rect x="245" y="135" width="15" height="15" fill="none" stroke="#1d4ed8" strokeWidth="2" />
-
-              {/* Angle at A */}
-              <path d="M 70 150 A 30 30 0 0 1 60 130" fill="none" stroke="#dc2626" strokeWidth="2" />
-              <text x="80" y="138" fontSize="14" fontWeight="bold" fill="#dc2626">θ</text>
-
-              {/* Labels for vertices */}
-              <text x="30" y="165" fontSize="14" fontWeight="bold" fill="#1f2937" className="dark:fill-gray-300">A</text>
-              <text x="265" y="165" fontSize="14" fontWeight="bold" fill="#1f2937" className="dark:fill-gray-300">B</text>
-              <text x="265" y="25" fontSize="14" fontWeight="bold" fill="#1f2937" className="dark:fill-gray-300">C</text>
-
-              {/* Side labels */}
-              <text x="150" y="170" textAnchor="middle" fontSize="12" fill="#059669" fontWeight="bold">
-                Adyacente (junto al ángulo)
-              </text>
-              <text x="275" y="95" fontSize="12" fill="#dc2626" fontWeight="bold" transform="rotate(90, 275, 95)">
-                Opuesto
-              </text>
-              <text x="140" y="80" fontSize="12" fill="#7c3aed" fontWeight="bold" transform="rotate(-30, 140, 80)">
-                Hipotenusa
-              </text>
-            </svg>
+            <TriangleFigure
+              vertices={[
+                { x: 40, y: 150, label: 'A' },
+                { x: 260, y: 150, label: 'B' },
+                { x: 260, y: 30, label: 'C' },
+              ]}
+              showRightAngleMarker
+              rightAngleVertex={1}
+              fill="rgba(191, 219, 254, 0.5)"
+              stroke="#1d4ed8"
+              strokeWidth={3}
+              angles={[
+                { showArc: true, label: 'θ', color: '#dc2626' },
+                {},
+                {},
+              ]}
+              sides={[
+                { label: 'Adyacente (junto a θ)', labelColor: '#059669' },
+                { label: 'Opuesto', labelColor: '#dc2626' },
+                { label: 'Hipotenusa', labelColor: '#7c3aed' },
+              ]}
+              className="w-full max-w-sm"
+            />
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 space-y-3">

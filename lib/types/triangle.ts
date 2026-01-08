@@ -196,6 +196,12 @@ export interface TriangleFigureProps {
   // Custom className
   /** Additional CSS classes */
   className?: string;
+
+  // Composability for complex scenes
+  /** Render as SVG <g> group instead of full <svg> element (for embedding in larger SVGs) */
+  asSvgGroup?: boolean;
+  /** SVG transform attribute when rendering as group (e.g., "translate(100, 50)") */
+  transform?: string;
 }
 
 /**
