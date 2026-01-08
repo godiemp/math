@@ -62,7 +62,7 @@ const QUESTIONS: Question[] = [
     context: '$\\Delta = 25 - 24 = 1$',
     correctAnswer: 3,
     options: ['$x = 1$ y $x = 6$', '$x = -2$ y $x = -3$', '$x = 5$ y $x = 6$', '$x = 2$ y $x = 3$'],
-    explanation: '$x = (5 \\pm \\sqrt{1}) / 2 = (5 \\pm 1) / 2$. Entonces $x = 6/2 = 3$ y $x = 4/2 = 2$.',
+    explanation: '$x = \\frac{5 \\pm \\sqrt{1}}{2} = \\frac{5 \\pm 1}{2}$. Entonces $x = \\frac{6}{2} = 3$ y $x = \\frac{4}{2} = 2$.',
   },
   {
     id: 'q5',

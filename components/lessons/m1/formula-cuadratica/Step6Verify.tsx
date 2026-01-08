@@ -21,7 +21,7 @@ const QUESTIONS: CheckpointQuestion[] = [
     question: 'Resuelve: $x^2 + 6x + 5 = 0$',
     options: ['$x = -1$ y $x = -5$', '$x = 1$ y $x = 5$', '$x = -1$ y $x = 5$', '$x = 1$ y $x = -5$'],
     correctAnswer: 0,
-    explanation: '$a = 1$, $b = 6$, $c = 5$. $\\Delta = 36 - 20 = 16$. $x = (-6 \\pm 4) / 2$. Entonces $x = -2/2 = -1$ y $x = -10/2 = -5$.',
+    explanation: '$a = 1$, $b = 6$, $c = 5$. $\\Delta = 36 - 20 = 16$. $x = \\frac{-6 \\pm 4}{2}$. Entonces $x = \\frac{-2}{2} = -1$ y $x = \\frac{-10}{2} = -5$.',
   },
   {
     id: 'q3',

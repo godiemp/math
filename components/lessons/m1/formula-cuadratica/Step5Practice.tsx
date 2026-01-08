@@ -33,7 +33,7 @@ const PROBLEMS: Problem[] = [
     hint: '$\\Delta = 4 - 4(1)(-8) = 4 + 32 = 36$. Como $\\sqrt{36} = 6$, las soluciones serán enteros.',
     options: ['$x = 2$ y $x = -4$', '$x = -2$ y $x = 4$', '$x = 4$ y $x = 2$', '$x = -4$ y $x = -2$'],
     correctAnswer: 0,
-    explanation: '$x = (-2 \\pm \\sqrt{36}) / 2 = (-2 \\pm 6) / 2$. Entonces $x = 4/2 = 2$ y $x = -8/2 = -4$.',
+    explanation: '$x = \\frac{-2 \\pm \\sqrt{36}}{2} = \\frac{-2 \\pm 6}{2}$. Entonces $x = \\frac{4}{2} = 2$ y $x = \\frac{-8}{2} = -4$.',
   },
   {
     id: 'p2',
@@ -43,7 +43,7 @@ const PROBLEMS: Problem[] = [
     hint: '$\\Delta = 36 - 36 = 0$. Cuando el discriminante es cero, hay una sola solución (repetida).',
     options: ['$x = -3$ (doble)', '$x = 6$ (doble)', '$x = 3$ (doble)', '$x = 9$ (doble)'],
     correctAnswer: 2,
-    explanation: '$x = (6 \\pm \\sqrt{0}) / 2 = 6/2 = 3$. Es una solución doble porque $\\Delta = 0$.',
+    explanation: '$x = \\frac{6 \\pm \\sqrt{0}}{2} = \\frac{6}{2} = 3$. Es una solución doble porque $\\Delta = 0$.',
   },
   {
     id: 'p3',
@@ -53,7 +53,7 @@ const PROBLEMS: Problem[] = [
     hint: '$\\Delta = 25 - 4(2)(-3) = 25 + 24 = 49$. $\\sqrt{49} = 7$. No olvides dividir por $2a = 4$.',
     options: ['$x = 3$ y $x = -1/2$', '$x = 1/2$ y $x = -3$', '$x = -1/2$ y $x = 3$', '$x = 3/2$ y $x = -1$'],
     correctAnswer: 1,
-    explanation: '$x = (-5 \\pm 7) / 4$. Entonces $x = 2/4 = 1/2$ y $x = -12/4 = -3$.',
+    explanation: '$x = \\frac{-5 \\pm 7}{4}$. Entonces $x = \\frac{2}{4} = \\frac{1}{2}$ y $x = \\frac{-12}{4} = -3$.',
   },
   {
     id: 'p4',
@@ -73,7 +73,7 @@ const PROBLEMS: Problem[] = [
     hint: 'Puedes simplificar dividiendo por 3: $x^2 - 4x + 3 = 0$. O aplicar la fórmula directamente.',
     options: ['$x = 1$ y $x = 3$', '$x = -1$ y $x = -3$', '$x = 2$ (doble)', '$x = 3$ y $x = 4$'],
     correctAnswer: 0,
-    explanation: '$\\Delta = 144 - 108 = 36$. $x = (12 \\pm 6) / 6$. Entonces $x = 18/6 = 3$ y $x = 6/6 = 1$.',
+    explanation: '$\\Delta = 144 - 108 = 36$. $x = \\frac{12 \\pm 6}{6}$. Entonces $x = \\frac{18}{6} = 3$ y $x = \\frac{6}{6} = 1$.',
   },
 ];
 
