@@ -1,7 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { pool } from '../config/database';
 import { PAES_SESSION_TEMPLATES, PRACTICE_SESSION_TEMPLATE } from '../config/sessionTemplates';
-import { getRandomQuestions, getOfficialPAESQuestions } from '../../../lib/questions';
 
 /**
  * Retry helper for database connection with exponential backoff
@@ -25,17 +24,17 @@ async function retryWithBackoff<T>(fn: () => Promise<T>, maxRetries = 5, initial
 }
 
 /**
- * Get questions from the actual question library
- * Uses the same question pool as live sessions for realistic seed data
+ * Generate empty placeholder questions for demo sessions
+ * Real questions are not needed for seed data - sessions are just for dashboard display
  */
-function getQuestionsForSeed(level: 'M1' | 'M2', count: number) {
-  // For official PAES format (60 for M1, 50 for M2), use official distribution
-  if ((level === 'M1' && count === 60) || (level === 'M2' && count === 50)) {
-    return getOfficialPAESQuestions(level);
-  }
-
-  // For custom counts, use random selection
-  return getRandomQuestions(level, count);
+function getQuestionsForSeed(_level: 'M1' | 'M2', count: number): object[] {
+  // Return empty array - sessions don't need real questions for seeding
+  return Array.from({ length: count }, (_, i) => ({
+    id: `seed-question-${i + 1}`,
+    questionLatex: 'Pregunta de ejemplo',
+    options: ['A', 'B', 'C', 'D'],
+    correctAnswer: 0,
+  }));
 }
 
 /**
