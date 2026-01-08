@@ -1,4 +1,4 @@
-import { test, expect, Browser, BrowserContext, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 /**
  * E2E tests for the Teacher Dashboard (/teacher)
@@ -8,57 +8,15 @@ import { test, expect, Browser, BrowserContext, Page } from '@playwright/test';
  * - Statistics cards display
  * - Classes section with test data
  * - Quick actions navigation
- * - Login redirect to /teacher
  *
  * Test user: teacher@test.com (created in e2e/helpers/db-setup.ts)
  * Test class: "Test Math Class" (seeded with teacher user)
  *
  * Uses storageState from .auth/teacher.json for authentication.
+ *
+ * Note: Login redirect test is in teacher-login-redirect.spec.ts
+ * (runs in chromium-unauthenticated project)
  */
-
-test.describe('Teacher Login Redirect', () => {
-  let browser: Browser;
-  let context: BrowserContext;
-  let page: Page;
-
-  test.beforeAll(async ({ browser: testBrowser }) => {
-    browser = testBrowser;
-  });
-
-  test.beforeEach(async () => {
-    // Create a fresh context without auth state for login tests
-    context = await browser.newContext();
-    page = await context.newPage();
-  });
-
-  test.afterEach(async () => {
-    await page.close();
-    await context.close();
-  });
-
-  test('should redirect teacher to /teacher after login', async () => {
-    await page.goto('/signin');
-
-    // Dismiss cookie banner
-    await page.evaluate(() => {
-      localStorage.setItem('cookie-consent', 'accepted');
-    });
-
-    // Fill login form with teacher credentials
-    await page.fill('input[type="email"], input[name="email"], input[name="username"]', 'teacher@test.com');
-    await page.fill('input[type="password"]', 'TeacherTest123!');
-
-    // Click login button
-    await page.click('button[type="submit"]');
-
-    // Verify redirect to /teacher (not /dashboard)
-    await page.waitForURL(/\/teacher/, { timeout: 10000 });
-    expect(page.url()).toContain('/teacher');
-
-    // Verify we're on the teacher dashboard
-    await expect(page.getByText('Bienvenido, Profesor')).toBeVisible({ timeout: 10000 });
-  });
-});
 
 test.describe('Teacher Dashboard', () => {
   test.beforeEach(async ({ page }) => {
@@ -97,7 +55,7 @@ test.describe('Teacher Dashboard', () => {
     await expect(page.getByRole('heading', { name: 'Mis Clases' })).toBeVisible();
 
     // Verify test class from seed is displayed
-    await expect(page.getByText('Test Math Class')).toBeVisible();
+    await expect(page.getByText('Test Math Class')).toBeVisible({ timeout: 10000 });
 
     // Verify "Ver todas" link is present
     await expect(page.getByText('Ver todas →')).toBeVisible();

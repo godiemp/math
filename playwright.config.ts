@@ -85,6 +85,7 @@ export default defineConfig({
         '**/registration.spec.ts',
         '**/colegio-dashboard.spec.ts',
         '**/teacher-student-sync.spec.ts', // Uses storageState from setup
+        '**/teacher-login-redirect.spec.ts', // Tests login redirect for teachers
       ],
     },
     // Admin authenticated tests - for admin panel features
