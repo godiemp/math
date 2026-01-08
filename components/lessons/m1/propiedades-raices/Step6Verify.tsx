@@ -13,10 +13,10 @@ const QUESTIONS: CheckpointQuestion[] = [
   },
   {
     id: 'q2',
-    question: 'Simplifica: $\\sqrt{\\frac{144}{36}}$',
+    question: 'Simplifica: $\\sqrt{\\dfrac{144}{36}}$',
     options: ['4', '2', '108', '180'],
     correctAnswer: 1,
-    explanation: '$\\sqrt{\\frac{144}{36}} = \\frac{\\sqrt{144}}{\\sqrt{36}} = \\frac{12}{6} = 2$. Aplicamos la propiedad del cociente.',
+    explanation: '$\\sqrt{\\dfrac{144}{36}} = \\dfrac{\\sqrt{144}}{\\sqrt{36}} = \\dfrac{12}{6} = 2$. Aplicamos la propiedad del cociente.',
   },
   {
     id: 'q3',
@@ -28,7 +28,7 @@ const QUESTIONS: CheckpointQuestion[] = [
   {
     id: 'q4',
     question: '¿Cuál expresión es INCORRECTA?',
-    options: ['$\\sqrt{4 \\times 9} = \\sqrt{4} \\times \\sqrt{9}$', '$\\sqrt{\\frac{16}{4}} = \\frac{\\sqrt{16}}{\\sqrt{4}}$', '$\\sqrt{9+16} = \\sqrt{9}+\\sqrt{16}$', '$\\sqrt{\\sqrt{81}} = \\sqrt[4]{81}$'],
+    options: ['$\\sqrt{4 \\times 9} = \\sqrt{4} \\times \\sqrt{9}$', '$\\sqrt{\\dfrac{16}{4}} = \\dfrac{\\sqrt{16}}{\\sqrt{4}}$', '$\\sqrt{9+16} = \\sqrt{9}+\\sqrt{16}$', '$\\sqrt{\\sqrt{81}} = \\sqrt[4]{81}$'],
     correctAnswer: 2,
     explanation: '$\\sqrt{9+16} = \\sqrt{25} = 5$, pero $\\sqrt{9}+\\sqrt{16} = 3+4 = 7$. Las raíces NO se distribuyen sobre la suma ni la resta.',
   },

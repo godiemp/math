@@ -30,9 +30,9 @@ const EXPRESSIONS: Expression[] = [
   },
   {
     id: 'e2',
-    expression: '\\sqrt[3]{\\frac{125}{8}}',
+    expression: '\\sqrt[3]{\\dfrac{125}{8}}',
     correctType: 'quotient',
-    explanation: 'Es un cociente dentro de la raíz → Propiedad del Cociente: \\sqrt[3]{\\frac{125}{8}} = \\frac{\\sqrt[3]{125}}{\\sqrt[3]{8}} = \\frac{5}{2}',
+    explanation: 'Es un cociente dentro de la raíz → Propiedad del Cociente: \\sqrt[3]{\\dfrac{125}{8}} = \\dfrac{\\sqrt[3]{125}}{\\sqrt[3]{8}} = \\dfrac{5}{2}',
   },
   {
     id: 'e3',

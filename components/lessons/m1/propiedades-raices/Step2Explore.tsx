@@ -33,9 +33,9 @@ const EXAMPLES: PropertyExample[] = [
   {
     id: 'quotient1',
     type: 'quotient',
-    expression: '\\sqrt{\\frac{100}{25}}',
-    step1: '\\frac{\\sqrt{100}}{\\sqrt{25}}',
-    step2: '\\frac{10}{5}',
+    expression: '\\sqrt{\\dfrac{100}{25}}',
+    step1: '\\dfrac{\\sqrt{100}}{\\sqrt{25}}',
+    step2: '\\dfrac{10}{5}',
     result: '2',
     hint: 'Separa la raíz del cociente en cociente de raíces',
   },

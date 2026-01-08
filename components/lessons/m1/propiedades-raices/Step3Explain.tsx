@@ -47,12 +47,12 @@ const FORMULAS: FormulaTab[] = [
     shortTitle: 'Cociente',
     description: 'La raíz de un cociente es igual al cociente de las raíces',
     formula: 'ⁿ√(a / b) = ⁿ√a / ⁿ√b',
-    formulaLatex: '\\sqrt[n]{\\frac{a}{b}} = \\frac{\\sqrt[n]{a}}{\\sqrt[n]{b}}',
+    formulaLatex: '\\sqrt[n]{\\dfrac{a}{b}} = \\dfrac{\\sqrt[n]{a}}{\\sqrt[n]{b}}',
     example: {
-      input: '\\sqrt{\\frac{81}{9}}',
+      input: '\\sqrt{\\dfrac{81}{9}}',
       steps: [
-        'Separamos: \\frac{\\sqrt{81}}{\\sqrt{9}}',
-        'Calculamos cada raíz: \\frac{9}{3}',
+        'Separamos: \\dfrac{\\sqrt{81}}{\\sqrt{9}}',
+        'Calculamos cada raíz: \\dfrac{9}{3}',
       ],
       result: '3',
     },
