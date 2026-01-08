@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { colors } from '@/lib/lessons/styles';
+import { MathText } from '@/components/math/MathDisplay';
 
 export interface FeedbackPanelProps {
   isCorrect: boolean;
@@ -46,7 +47,9 @@ export function FeedbackPanel({
           >
             {displayTitle}
           </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300">{explanation}</p>
+          <div className="text-sm text-gray-700 dark:text-gray-300">
+            <MathText content={explanation} />
+          </div>
         </div>
       </div>
     </div>

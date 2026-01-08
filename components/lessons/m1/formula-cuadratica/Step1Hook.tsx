@@ -11,7 +11,7 @@ import {
   ActionButton,
   FeedbackPanel,
 } from '@/components/lessons/primitives';
-import { BlockMath, InlineMath } from '@/components/math/MathDisplay';
+import { BlockMath, InlineMath, MathText } from '@/components/math/MathDisplay';
 
 const OPTIONS = [
   '$t = 4$ segundos',
@@ -231,7 +231,9 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 </h4>
                 <div className="space-y-4 text-gray-700 dark:text-gray-300">
                   <div className="bg-white dark:bg-gray-800 p-4 rounded-xl text-center">
-                    <p className="text-sm mb-2">Para cualquier ecuación <InlineMath latex="ax^2 + bx + c = 0" />:</p>
+                    <p className="text-sm mb-2">
+                      <MathText content="Para cualquier ecuación $ax^2 + bx + c = 0$:" />
+                    </p>
                     <div className="text-xl text-purple-600 dark:text-purple-400">
                       <BlockMath latex="x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}" />
                     </div>

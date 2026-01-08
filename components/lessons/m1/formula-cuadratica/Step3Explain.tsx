@@ -160,7 +160,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
       <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-xl p-6 border border-purple-200 dark:border-purple-700">
         <div className="text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            Para resolver <InlineMath latex="ax^2 + bx + c = 0" />:
+            <MathText content="Para resolver $ax^2 + bx + c = 0$:" />
           </p>
           <div className="text-2xl md:text-3xl font-bold text-purple-700 dark:text-purple-300">
             <BlockMath latex="x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}" />
@@ -255,13 +255,13 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 <div className="flex-1">
                   <div className="text-blue-600 dark:text-blue-400"><InlineMath latex="x = -2" />:</div>
                   <div className="text-gray-600 dark:text-gray-400">
-                    <InlineMath latex="(-2)^2 + 5(-2) + 6 = 4 - 10 + 6 = " /><span className="text-green-600 font-bold">0 ✓</span>
+                    <InlineMath latex="(-2)^2 + 5(-2) + 6 = 4 - 10 + 6 = 0" /> <span className="text-green-600 font-bold">✓</span>
                   </div>
                 </div>
                 <div className="flex-1">
                   <div className="text-purple-600 dark:text-purple-400"><InlineMath latex="x = -3" />:</div>
                   <div className="text-gray-600 dark:text-gray-400">
-                    <InlineMath latex="(-3)^2 + 5(-3) + 6 = 9 - 15 + 6 = " /><span className="text-green-600 font-bold">0 ✓</span>
+                    <InlineMath latex="(-3)^2 + 5(-3) + 6 = 9 - 15 + 6 = 0" /> <span className="text-green-600 font-bold">✓</span>
                   </div>
                 </div>
               </div>
