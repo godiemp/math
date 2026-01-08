@@ -147,7 +147,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
                 <h4 className="font-bold text-purple-700 dark:text-purple-300 mb-2 text-center">Cociente</h4>
                 <div className="text-center text-gray-700 dark:text-gray-300">
-                  <InlineMath latex="\sqrt[n]{\frac{a}{b}} = \frac{\sqrt[n]{a}}{\sqrt[n]{b}}" />
+                  <InlineMath latex="\sqrt[n]{\dfrac{a}{b}} = \dfrac{\sqrt[n]{a}}{\sqrt[n]{b}}" />
                 </div>
               </div>
               <div className="bg-teal-50 dark:bg-teal-900/30 rounded-xl p-4 border border-teal-200 dark:border-teal-700">
@@ -274,7 +274,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 <div className="flex-1">
                   <p className="font-semibold text-gray-800 dark:text-gray-200">Propiedad del Cociente</p>
                   <div className="text-purple-600 dark:text-purple-400">
-                    <InlineMath latex="\sqrt[n]{\frac{a}{b}} = \frac{\sqrt[n]{a}}{\sqrt[n]{b}}" />
+                    <InlineMath latex="\sqrt[n]{\dfrac{a}{b}} = \dfrac{\sqrt[n]{a}}{\sqrt[n]{b}}" />
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     La raíz de un cociente es el cociente de las raíces

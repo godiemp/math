@@ -213,7 +213,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                         <span className="text-blue-600 font-semibold">Producto:</span> <InlineMath latex="\sqrt[n]{a \cdot b} = \sqrt[n]{a} \cdot \sqrt[n]{b}" />
                       </p>
                       <p className="text-sm">
-                        <span className="text-purple-600 font-semibold">Cociente:</span> <InlineMath latex="\sqrt[n]{\frac{a}{b}} = \frac{\sqrt[n]{a}}{\sqrt[n]{b}}" />
+                        <span className="text-purple-600 font-semibold">Cociente:</span> <InlineMath latex="\sqrt[n]{\dfrac{a}{b}} = \dfrac{\sqrt[n]{a}}{\sqrt[n]{b}}" />
                       </p>
                       <p className="text-sm">
                         <span className="text-green-600 font-semibold">Raíz de raíz:</span> <InlineMath latex="\sqrt[m]{\sqrt[n]{a}} = \sqrt[m \cdot n]{a}" />

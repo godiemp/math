@@ -189,7 +189,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <h5 className="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Correcto:</h5>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
                 <li>• <InlineMath latex="\sqrt{4 \times 9} = \sqrt{4} \times \sqrt{9} = 2 \times 3 = 6" /></li>
-                <li>• <InlineMath latex="\sqrt{\frac{16}{4}} = \frac{\sqrt{16}}{\sqrt{4}} = \frac{4}{2} = 2" /></li>
+                <li>• <InlineMath latex="\sqrt{\dfrac{16}{4}} = \dfrac{\sqrt{16}}{\sqrt{4}} = \dfrac{4}{2} = 2" /></li>
                 <li>• <InlineMath latex="\sqrt{\sqrt{81}} = \sqrt[4]{81} = 3" /></li>
                 <li>• Los índices deben ser iguales para usar producto/cociente</li>
               </ul>
@@ -218,7 +218,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <div className="grid grid-cols-2 gap-4 text-center">
                 <div className="space-y-2">
                   <div className="text-green-600"><InlineMath latex="\sqrt{a \times b} = \sqrt{a} \times \sqrt{b}" /> ✓</div>
-                  <div className="text-green-600"><InlineMath latex="\sqrt{\frac{a}{b}} = \frac{\sqrt{a}}{\sqrt{b}}" /> ✓</div>
+                  <div className="text-green-600"><InlineMath latex="\sqrt{\dfrac{a}{b}} = \dfrac{\sqrt{a}}{\sqrt{b}}" /> ✓</div>
                 </div>
                 <div className="space-y-2">
                   <div className="text-red-600"><InlineMath latex="\sqrt{a + b} \neq \sqrt{a} + \sqrt{b}" /> ✗</div>
