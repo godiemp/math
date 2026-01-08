@@ -7,8 +7,6 @@ import { useMultipleChoice } from '@/hooks/lessons';
 import { InlineMath } from '@/components/math/MathDisplay';
 import {
   ProgressDots,
-  FeedbackPanel,
-  OptionButton,
   ActionButton,
   ResultsSummary,
 } from '@/components/lessons/primitives';
@@ -161,10 +159,35 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           </div>
 
           {mc.showFeedback && (
-            <FeedbackPanel
-              isCorrect={mc.isCorrect}
-              explanation={mc.currentItem.explanation}
-            />
+            <div
+              className={cn(
+                'p-4 rounded-xl animate-fadeIn',
+                mc.isCorrect
+                  ? 'bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800'
+                  : 'bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800'
+              )}
+            >
+              <div className="flex items-start gap-3">
+                {mc.isCorrect ? (
+                  <Check className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
+                ) : (
+                  <X className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                )}
+                <div>
+                  <h4
+                    className={cn(
+                      'font-bold mb-1',
+                      mc.isCorrect ? 'text-green-800 dark:text-green-300' : 'text-amber-800 dark:text-amber-300'
+                    )}
+                  >
+                    {mc.isCorrect ? '¡Correcto!' : 'Incorrecto'}
+                  </h4>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    <InlineMath latex={mc.currentItem.explanationLatex} />
+                  </p>
+                </div>
+              </div>
+            </div>
           )}
 
           <div className="flex justify-center">
