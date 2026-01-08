@@ -10,7 +10,7 @@ import {
   ActionButton,
   ResultsSummary,
 } from '@/components/lessons/primitives';
-import { InlineMath } from '@/components/math/MathDisplay';
+import { InlineMath, MathText } from '@/components/math/MathDisplay';
 
 type PropertyType = 'product' | 'quotient' | 'rootOfRoot' | 'invalid';
 
@@ -26,31 +26,31 @@ const EXPRESSIONS: Expression[] = [
     id: 'e1',
     expression: '\\sqrt{36 \\times 4}',
     correctType: 'product',
-    explanation: 'Es un producto dentro de la raíz → Propiedad del Producto: \\sqrt{36 \\times 4} = \\sqrt{36} \\times \\sqrt{4} = 6 \\times 2 = 12',
+    explanation: 'Es un producto dentro de la raíz → Propiedad del Producto: $\\sqrt{36 \\times 4} = \\sqrt{36} \\times \\sqrt{4} = 6 \\times 2 = 12$',
   },
   {
     id: 'e2',
     expression: '\\sqrt[3]{\\dfrac{125}{8}}',
     correctType: 'quotient',
-    explanation: 'Es un cociente dentro de la raíz → Propiedad del Cociente: \\sqrt[3]{\\dfrac{125}{8}} = \\dfrac{\\sqrt[3]{125}}{\\sqrt[3]{8}} = \\dfrac{5}{2}',
+    explanation: 'Es un cociente dentro de la raíz → Propiedad del Cociente: $\\sqrt[3]{\\dfrac{125}{8}} = \\dfrac{\\sqrt[3]{125}}{\\sqrt[3]{8}} = \\dfrac{5}{2}$',
   },
   {
     id: 'e3',
     expression: '\\sqrt{\\sqrt[3]{8}}',
     correctType: 'rootOfRoot',
-    explanation: 'Es una raíz dentro de otra raíz → Los índices se multiplican: \\sqrt{\\sqrt[3]{8}} = \\sqrt[6]{8} = \\sqrt[6]{2^3} = 2^{3/6} = 2^{1/2} = \\sqrt{2}',
+    explanation: 'Es una raíz dentro de otra raíz → Los índices se multiplican: $\\sqrt{\\sqrt[3]{8}} = \\sqrt[6]{8} = \\sqrt[6]{2^3} = 2^{3/6} = 2^{1/2} = \\sqrt{2}$',
   },
   {
     id: 'e4',
     expression: '\\sqrt{25 + 144}',
     correctType: 'invalid',
-    explanation: '¡Cuidado! Es una SUMA dentro de la raíz. Las propiedades NO aplican a sumas. Hay que calcular: \\sqrt{25+144} = \\sqrt{169} = 13',
+    explanation: '¡Cuidado! Es una SUMA dentro de la raíz. Las propiedades NO aplican a sumas. Hay que calcular: $\\sqrt{25+144} = \\sqrt{169} = 13$',
   },
   {
     id: 'e5',
     expression: '\\sqrt[4]{16 \\times 81}',
     correctType: 'product',
-    explanation: 'Es un producto dentro de la raíz cuarta → Propiedad del Producto: \\sqrt[4]{16 \\times 81} = \\sqrt[4]{16} \\times \\sqrt[4]{81} = 2 \\times 3 = 6',
+    explanation: 'Es un producto dentro de la raíz cuarta → Propiedad del Producto: $\\sqrt[4]{16 \\times 81} = \\sqrt[4]{16} \\times \\sqrt[4]{81} = 2 \\times 3 = 6$',
   },
 ];
 
@@ -158,7 +158,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           </div>
 
           {mc.showFeedback && (
-            <FeedbackPanel isCorrect={mc.isCorrect} explanation={<InlineMath latex={mc.currentItem.explanation} />} />
+            <FeedbackPanel isCorrect={mc.isCorrect} explanation={<MathText content={mc.currentItem.explanation} />} />
           )}
 
           <div className="flex justify-center">

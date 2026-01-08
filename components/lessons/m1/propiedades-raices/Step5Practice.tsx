@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Check, X, Lightbulb, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
-import { InlineMath } from '@/components/math/MathDisplay';
+import { InlineMath, MathText } from '@/components/math/MathDisplay';
 
 type PropertyType = 'product' | 'quotient' | 'rootOfRoot';
 
@@ -25,80 +25,80 @@ const PROBLEMS: Problem[] = [
     type: 'product',
     question: 'Simplifica:',
     questionLatex: '\\sqrt{4 \\times 49}',
-    hint: 'Separa en \\sqrt{4} \\times \\sqrt{49}, luego calcula cada raíz.',
+    hint: 'Separa en $\\sqrt{4} \\times \\sqrt{49}$, luego calcula cada raíz.',
     options: ['14', '21', '53', '196'],
     correctAnswer: 0,
-    explanation: '\\sqrt{4 \\times 49} = \\sqrt{4} \\times \\sqrt{49} = 2 \\times 7 = 14',
+    explanation: '$\\sqrt{4 \\times 49} = \\sqrt{4} \\times \\sqrt{49} = 2 \\times 7 = 14$',
   },
   {
     id: 'p2',
     type: 'quotient',
     question: 'Simplifica:',
     questionLatex: '\\sqrt{\\dfrac{64}{16}}',
-    hint: 'Separa en \\dfrac{\\sqrt{64}}{\\sqrt{16}}, luego calcula cada raíz.',
+    hint: 'Separa en $\\dfrac{\\sqrt{64}}{\\sqrt{16}}$, luego calcula cada raíz.',
     options: ['4', '2', '8', '48'],
     correctAnswer: 1,
-    explanation: '\\sqrt{\\dfrac{64}{16}} = \\dfrac{\\sqrt{64}}{\\sqrt{16}} = \\dfrac{8}{4} = 2',
+    explanation: '$\\sqrt{\\dfrac{64}{16}} = \\dfrac{\\sqrt{64}}{\\sqrt{16}} = \\dfrac{8}{4} = 2$',
   },
   {
     id: 'p3',
     type: 'rootOfRoot',
     question: 'Simplifica:',
     questionLatex: '\\sqrt{\\sqrt{256}}',
-    hint: 'Multiplica los índices: 2 \\times 2 = 4. Luego calcula \\sqrt[4]{256}.',
+    hint: 'Multiplica los índices: $2 \\times 2 = 4$. Luego calcula $\\sqrt[4]{256}$.',
     options: ['4', '8', '16', '2'],
     correctAnswer: 0,
-    explanation: '\\sqrt{\\sqrt{256}} = \\sqrt[4]{256} = \\sqrt[4]{4^4} = 4',
+    explanation: '$\\sqrt{\\sqrt{256}} = \\sqrt[4]{256} = \\sqrt[4]{4^4} = 4$',
   },
   {
     id: 'p4',
     type: 'product',
     question: 'Simplifica:',
     questionLatex: '\\sqrt[3]{8 \\times 64}',
-    hint: 'Separa en \\sqrt[3]{8} \\times \\sqrt[3]{64}, luego calcula cada raíz cúbica.',
+    hint: 'Separa en $\\sqrt[3]{8} \\times \\sqrt[3]{64}$, luego calcula cada raíz cúbica.',
     options: ['8', '12', '72', '6'],
     correctAnswer: 0,
-    explanation: '\\sqrt[3]{8 \\times 64} = \\sqrt[3]{8} \\times \\sqrt[3]{64} = 2 \\times 4 = 8',
+    explanation: '$\\sqrt[3]{8 \\times 64} = \\sqrt[3]{8} \\times \\sqrt[3]{64} = 2 \\times 4 = 8$',
   },
   {
     id: 'p5',
     type: 'quotient',
     question: 'Simplifica:',
     questionLatex: '\\sqrt[3]{\\dfrac{216}{27}}',
-    hint: 'Separa en \\dfrac{\\sqrt[3]{216}}{\\sqrt[3]{27}}, luego calcula cada raíz cúbica.',
+    hint: 'Separa en $\\dfrac{\\sqrt[3]{216}}{\\sqrt[3]{27}}$, luego calcula cada raíz cúbica.',
     options: ['3', '2', '8', '6'],
     correctAnswer: 1,
-    explanation: '\\sqrt[3]{\\dfrac{216}{27}} = \\dfrac{\\sqrt[3]{216}}{\\sqrt[3]{27}} = \\dfrac{6}{3} = 2',
+    explanation: '$\\sqrt[3]{\\dfrac{216}{27}} = \\dfrac{\\sqrt[3]{216}}{\\sqrt[3]{27}} = \\dfrac{6}{3} = 2$',
   },
   {
     id: 'p6',
     type: 'rootOfRoot',
     question: 'Simplifica:',
     questionLatex: '\\sqrt[3]{\\sqrt{64}}',
-    hint: 'Multiplica los índices: 3 \\times 2 = 6. Luego calcula \\sqrt[6]{64}.',
+    hint: 'Multiplica los índices: $3 \\times 2 = 6$. Luego calcula $\\sqrt[6]{64}$.',
     options: ['\\sqrt{2}', '2', '4', '8'],
     correctAnswer: 1,
-    explanation: '\\sqrt[3]{\\sqrt{64}} = \\sqrt[6]{64} = \\sqrt[6]{2^6} = 2',
+    explanation: '$\\sqrt[3]{\\sqrt{64}} = \\sqrt[6]{64} = \\sqrt[6]{2^6} = 2$',
   },
   {
     id: 'p7',
     type: 'product',
     question: 'Simplifica:',
     questionLatex: '\\sqrt{9 \\times 25 \\times 4}',
-    hint: 'Separa en \\sqrt{9} \\times \\sqrt{25} \\times \\sqrt{4}, luego multiplica los resultados.',
+    hint: 'Separa en $\\sqrt{9} \\times \\sqrt{25} \\times \\sqrt{4}$, luego multiplica los resultados.',
     options: ['30', '38', '900', '15'],
     correctAnswer: 0,
-    explanation: '\\sqrt{9 \\times 25 \\times 4} = \\sqrt{9} \\times \\sqrt{25} \\times \\sqrt{4} = 3 \\times 5 \\times 2 = 30',
+    explanation: '$\\sqrt{9 \\times 25 \\times 4} = \\sqrt{9} \\times \\sqrt{25} \\times \\sqrt{4} = 3 \\times 5 \\times 2 = 30$',
   },
   {
     id: 'p8',
     type: 'quotient',
     question: 'Simplifica:',
     questionLatex: '\\sqrt[4]{\\dfrac{81}{16}}',
-    hint: 'Separa en \\dfrac{\\sqrt[4]{81}}{\\sqrt[4]{16}}, luego calcula cada raíz cuarta.',
+    hint: 'Separa en $\\dfrac{\\sqrt[4]{81}}{\\sqrt[4]{16}}$, luego calcula cada raíz cuarta.',
     options: ['\\dfrac{3}{2}', '\\dfrac{9}{4}', '\\dfrac{27}{8}', '5'],
     correctAnswer: 0,
-    explanation: '\\sqrt[4]{\\dfrac{81}{16}} = \\dfrac{\\sqrt[4]{81}}{\\sqrt[4]{16}} = \\dfrac{3}{2}',
+    explanation: '$\\sqrt[4]{\\dfrac{81}{16}} = \\dfrac{\\sqrt[4]{81}}{\\sqrt[4]{16}} = \\dfrac{3}{2}$',
   },
 ];
 
@@ -251,7 +251,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
               <div className="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-4 mb-6 animate-fadeIn border border-amber-200 dark:border-amber-700">
                 <div className="flex items-start gap-2">
                   <Lightbulb className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-amber-800 dark:text-amber-200"><InlineMath latex={currentProblem.hint} /></p>
+                  <p className="text-sm text-amber-800 dark:text-amber-200"><MathText content={currentProblem.hint} /></p>
                 </div>
               </div>
             )}
@@ -333,7 +333,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                       {isCorrect ? '¡Correcto!' : 'Incorrecto'}
                     </h4>
                     <p className="text-sm text-gray-700 dark:text-gray-300">
-                      <InlineMath latex={currentProblem.explanation} />
+                      <MathText content={currentProblem.explanation} />
                     </p>
                   </div>
                 </div>

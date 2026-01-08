@@ -199,7 +199,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
                 <li>• <span className="line-through"><InlineMath latex="\sqrt{9+16} = \sqrt{9} + \sqrt{16}" /></span> ❌</li>
                 <li>• <span className="line-through"><InlineMath latex="\sqrt{25-9} = \sqrt{25} - \sqrt{9}" /></span> ❌</li>
-                <li>• Confundir <InlineMath latex="\sqrt{\sqrt{a}}" /> con <InlineMath latex="(\sqrt{a})^2" /></li>
+                <li>• <MathText content="Confundir $\sqrt{\sqrt{a}}$ con $(\sqrt{a})^2$" /></li>
                 <li>• Olvidar simplificar el resultado final</li>
               </ul>
             </div>
