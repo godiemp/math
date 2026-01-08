@@ -186,7 +186,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           </div>
 
           {mc.showFeedback && (
-            <FeedbackPanel isCorrect={mc.isCorrect} explanation={<MathText content={mc.currentItem.explanation} />} />
+            <FeedbackPanel isCorrect={mc.isCorrect} explanation={mc.currentItem.explanation} />
           )}
 
           <div className="flex justify-center">

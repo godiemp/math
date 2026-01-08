@@ -112,7 +112,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             {OPTIONS.map((option, index) => (
               <OptionButton
                 key={index}
-                label={<MathText content={option} />}
+                label={option}
                 index={index}
                 isSelected={selectedAnswer === index}
                 isCorrect={index === CORRECT_ANSWER}
