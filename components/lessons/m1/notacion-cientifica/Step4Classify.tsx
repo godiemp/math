@@ -194,7 +194,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
               )}
               <span className="text-gray-700 dark:text-gray-300"><MathText content={item.number} /></span>
               <span className="text-sm text-purple-600 ml-auto">
-                {item.correctAnswer === 'valid' ? '✓ Válida' : '✗ Inválida'}
+                {item.correctAnswer === 'valid' ? 'Válida' : 'Inválida'}
               </span>
             </>
           )}
