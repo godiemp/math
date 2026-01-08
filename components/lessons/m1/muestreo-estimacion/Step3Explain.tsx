@@ -139,7 +139,10 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               </h4>
               <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center">
                 <p className="text-2xl font-mono">
-                  <span className="text-purple-600">p̂</span> ={' '}
+                  <span className="text-purple-600 inline-block">
+                    p<sup className="text-xs -ml-0.5">^</sup>
+                  </span>{' '}
+                  ={' '}
                   <span className="text-green-600">favorable</span> ÷{' '}
                   <span className="text-blue-600">total muestra</span>
                 </p>
@@ -154,7 +157,10 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                   Si 24 de 40 estudiantes prefieren Galletas:
                 </p>
                 <p className="font-mono text-lg text-center py-2">
-                  p̂ = <span className="text-green-600">24</span> ÷{' '}
+                  <span className="inline-block">
+                    p<sup className="text-xs -ml-0.5">^</sup>
+                  </span>{' '}
+                  = <span className="text-green-600">24</span> ÷{' '}
                   <span className="text-blue-600">40</span> ={' '}
                   <span className="text-purple-600 font-bold">0.60 = 60%</span>
                 </p>
@@ -168,7 +174,11 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             {/* Key insight */}
             <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-3 border border-amber-200 dark:border-amber-700">
               <p className="text-amber-800 dark:text-amber-200 text-sm">
-                <strong>Importante:</strong> La proporción muestral (p̂) es nuestra{' '}
+                <strong>Importante:</strong> La proporción muestral (
+                <span className="inline-block font-mono">
+                  p<sup className="text-xs -ml-0.5">^</sup>
+                </span>
+                ) es nuestra{' '}
                 <em>mejor estimación</em> de la proporción real de la población.
               </p>
             </div>

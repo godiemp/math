@@ -236,7 +236,7 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 | Lección | Nivel | Título |
 |---------|-------|--------|
-| m1-prob-007-a | M1 | Muestreo y Estimación de Poblaciones |
+| m1-prob-001-a | M1 | Muestreo y Estimación de Poblaciones |
 
 ---
 
@@ -248,7 +248,7 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 | Lección | Nivel | Título |
 |---------|-------|--------|
-| m1-prob-001-a | M1 | Tablas de Frecuencia y Gráficos |
+| m1-prob-001-b | M1 | Tablas de Frecuencia y Gráficos |
 
 ---
 
