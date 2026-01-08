@@ -134,7 +134,7 @@ Lecciones del nivel fundamental de la prueba PAES.
 | Estado | ID | Slug | Título | OA |
 |--------|----|----|--------|-----|
 | ✅ | m1-alg-006-a | ecuaciones-lineales | Resolución de Ecuaciones Lineales | - |
-| ❌ | m1-alg-006-b | inecuaciones-lineales | Inecuaciones Lineales | - |
+| ✅ | m1-alg-006-b | inecuaciones-lineales | Inecuaciones Lineales | MA07-OA-09 |
 | ❌ | m1-alg-006-c | sistemas-inecuaciones | Sistemas de Inecuaciones | - |
 
 ### M1-ALG-007: Problemas con ecuaciones e inecuaciones
@@ -318,7 +318,6 @@ Lecciones del nivel fundamental de la prueba PAES.
 | m1-alg-013-a | Vértice de la Parábola | Core PAES |
 | m1-alg-013-b | Ceros e Intersecciones | Core PAES |
 | m1-alg-014-a | Problemas de Optimización | Core PAES |
-| m1-alg-006-b | Inecuaciones Lineales | Core PAES |
 | m1-prob-005-b | Permutaciones | Core PAES |
 | m1-prob-005-c | Combinaciones | Core PAES |
 
