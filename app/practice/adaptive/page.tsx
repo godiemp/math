@@ -228,19 +228,6 @@ function ScaffoldingBanner({
 }
 
 // ============================================================================
-// Scaffolding Generation Loading Component
-// ============================================================================
-
-function ScaffoldingGeneratingIndicator() {
-  return (
-    <div className="flex items-center gap-2 text-amber-200 text-sm mt-3">
-      <div className="w-4 h-4 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
-      <span>Generando pregunta de refuerzo...</span>
-    </div>
-  );
-}
-
-// ============================================================================
 // Problem Display Component
 // ============================================================================
 
@@ -256,7 +243,6 @@ function ProblemDisplay({
   isScaffolding,
   scaffoldingDepth,
   maxScaffoldingDepth,
-  scaffoldingQuestion,
   isGeneratingScaffolding,
 }: {
   problem: Question;
@@ -270,7 +256,6 @@ function ProblemDisplay({
   isScaffolding: boolean;
   scaffoldingDepth: number;
   maxScaffoldingDepth: number;
-  scaffoldingQuestion: Question | null;
   isGeneratingScaffolding: boolean;
 }) {
   const questionContent = problem.questionLatex;
@@ -352,20 +337,26 @@ function ProblemDisplay({
               </div>
             )}
 
-            {/* Scaffolding generation indicator */}
-            {!feedback.correct && isGeneratingScaffolding && (
-              <ScaffoldingGeneratingIndicator />
-            )}
           </div>
 
-          {/* Scaffolding button - only show if available and not at max depth */}
-          {!feedback.correct && scaffoldingQuestion && !isGeneratingScaffolding && (
+          {/* Scaffolding button - show when incorrect and not at max depth */}
+          {!feedback.correct && scaffoldingDepth < maxScaffoldingDepth && (
             <button
               onClick={onProceedToScaffolding}
-              className="w-full py-3 rounded-xl bg-amber-500/20 text-amber-200 font-bold hover:bg-amber-500/30 transition-all flex items-center justify-center gap-2 mb-3"
+              disabled={isGeneratingScaffolding}
+              className="w-full py-3 rounded-xl bg-amber-500/20 text-amber-200 font-bold hover:bg-amber-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 mb-3"
             >
-              <span>💡</span>
-              <span>Practicar concepto base primero</span>
+              {isGeneratingScaffolding ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
+                  <span>Generando pregunta de refuerzo...</span>
+                </>
+              ) : (
+                <>
+                  <span>💡</span>
+                  <span>Practicar concepto base primero</span>
+                </>
+              )}
             </button>
           )}
 
@@ -486,7 +477,6 @@ function AdaptivePracticeContent() {
                 isScaffolding={practice.scaffoldingMode === 'active'}
                 scaffoldingDepth={practice.scaffoldingDepth}
                 maxScaffoldingDepth={practice.maxScaffoldingDepth}
-                scaffoldingQuestion={practice.scaffoldingQuestion}
                 isGeneratingScaffolding={practice.isGeneratingScaffolding}
               />
             )}

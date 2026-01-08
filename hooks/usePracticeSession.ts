@@ -248,44 +248,47 @@ export function usePracticeSession() {
     }
 
     // Handle scaffolding logic for incorrect answers
+    // Only store the failed question - don't generate scaffolding yet (saves tokens)
+    // Scaffolding will be generated on-demand when user clicks the button
     if (!correct) {
       if (scaffoldingDepth === 0) {
-        // First failure - store original and prepare scaffolding level 1
+        // First failure - store original question for potential scaffolding
         setOriginalFailedQuestion(currentProblem);
-        const scaffolding = await requestScaffoldingQuestion(currentProblem, 1);
-        setScaffoldingQuestion(scaffolding);
-      } else if (scaffoldingDepth < MAX_SCAFFOLDING_DEPTH) {
-        // Failed during scaffolding - prepare deeper level
-        const nextLevel = scaffoldingDepth + 1;
-        const scaffolding = await requestScaffoldingQuestion(currentProblem, nextLevel);
-        setScaffoldingQuestion(scaffolding);
-      } else {
-        // Max depth reached - no more scaffolding available
-        setScaffoldingQuestion(null);
       }
+      // Don't auto-generate scaffolding - wait for user to request it
     }
-  }, [currentProblem, selectedAnswer, scaffoldingDepth, requestScaffoldingQuestion]);
+  }, [currentProblem, selectedAnswer, scaffoldingDepth]);
 
   /**
-   * Proceed to the scaffolding question
+   * Proceed to the scaffolding question - generates on-demand to save tokens
    */
-  const proceedToScaffolding = useCallback(() => {
-    if (!scaffoldingQuestion || !currentProblem) return;
+  const proceedToScaffolding = useCallback(async () => {
+    if (!currentProblem || isGeneratingScaffolding) return;
+    if (scaffoldingDepth >= MAX_SCAFFOLDING_DEPTH) return;
+
+    // Generate scaffolding question on-demand
+    const nextLevel = scaffoldingDepth + 1;
+    const scaffolding = await requestScaffoldingQuestion(currentProblem, nextLevel);
+
+    if (!scaffolding) {
+      // Generation failed - just move to next problem
+      console.error('Failed to generate scaffolding question');
+      return;
+    }
 
     // Push current problem to stack
     setScaffoldingStack(prev => [...prev, { question: currentProblem, depth: scaffoldingDepth }]);
 
     // Increment depth
-    const newDepth = scaffoldingDepth + 1;
-    setScaffoldingDepth(newDepth);
+    setScaffoldingDepth(nextLevel);
 
     // Set scaffolding as current problem
-    setCurrentProblem(scaffoldingQuestion);
+    setCurrentProblem(scaffolding);
     setScaffoldingMode('active');
     setScaffoldingQuestion(null);
     setSelectedAnswer(null);
     setFeedback(null);
-  }, [scaffoldingQuestion, currentProblem, scaffoldingDepth]);
+  }, [currentProblem, scaffoldingDepth, isGeneratingScaffolding, requestScaffoldingQuestion]);
 
   const nextProblem = useCallback(async () => {
     // Prevent multiple clicks while generating
