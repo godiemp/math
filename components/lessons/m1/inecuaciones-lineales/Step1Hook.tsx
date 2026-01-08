@@ -1,20 +1,24 @@
 'use client';
 
 import { ArrowRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 import { useStep1Phase } from '@/hooks/lessons';
 import { InlineMath } from '@/components/math/MathDisplay';
 import {
   ScenarioCard,
   QuestionPrompt,
-  OptionGrid,
-  OptionButton,
   ActionButton,
   FeedbackPanel,
   InsightCard,
 } from '@/components/lessons/primitives';
 
-const OPTIONS = ['x = 10 canciones', 'x = 12 canciones', 'x <= 12 canciones', 'x < 12 canciones'];
+const OPTIONS = [
+  { text: '10 canciones', latex: 'x = 10' },
+  { text: '12 canciones', latex: 'x = 12' },
+  { text: '12 canciones', latex: 'x \\leq 12' },
+  { text: '12 canciones', latex: 'x < 12' },
+];
 const CORRECT_ANSWER = 2;
 
 export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
@@ -110,20 +114,29 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             </p>
           </QuestionPrompt>
 
-          <OptionGrid>
+          <div className="grid grid-cols-2 gap-4">
             {OPTIONS.map((option, index) => (
-              <OptionButton
+              <button
                 key={index}
-                label={option}
-                index={index}
-                isSelected={selectedAnswer === index}
-                isCorrect={index === CORRECT_ANSWER}
-                showFeedback={showFeedback}
                 onClick={() => select(index)}
-                isMono
-              />
+                disabled={showFeedback}
+                className={cn(
+                  'p-4 rounded-xl font-medium transition-all border-2 text-lg',
+                  showFeedback
+                    ? index === CORRECT_ANSWER
+                      ? 'bg-green-100 dark:bg-green-900/50 border-green-500 text-green-800 dark:text-green-200'
+                      : selectedAnswer === index
+                      ? 'bg-red-100 dark:bg-red-900/50 border-red-500 text-red-800 dark:text-red-200'
+                      : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 text-gray-400'
+                    : selectedAnswer === index
+                    ? 'bg-amber-100 dark:bg-amber-900/50 border-amber-500 text-amber-800 dark:text-amber-200'
+                    : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-900/30'
+                )}
+              >
+                <InlineMath latex={option.latex} /> <span className="text-sm text-gray-500">{option.text}</span>
+              </button>
             ))}
-          </OptionGrid>
+          </div>
 
           {!showFeedback && (
             <div className="flex justify-center">
