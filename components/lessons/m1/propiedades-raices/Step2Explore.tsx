@@ -307,9 +307,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                     <span className={`text-xs font-medium px-2 py-1 rounded ${PROPERTY_COLORS[ex.type].text}`}>
                       {PROPERTY_LABELS[ex.type]}
                     </span>
-                    <span className="text-gray-700 dark:text-gray-300"><InlineMath latex={ex.expression} /></span>
+                    <span className="text-gray-700 dark:text-gray-300 flex-1 flex justify-center"><BlockMath latex={ex.expression} /></span>
                     <span className="text-gray-400">=</span>
-                    <span className="font-bold text-green-600">{ex.result}</span>
+                    <span className="font-bold text-green-600 w-8 text-right">{ex.result}</span>
                   </div>
                 ))}
               </div>
