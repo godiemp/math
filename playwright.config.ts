@@ -99,6 +99,18 @@ export default defineConfig({
       // Only run admin tests
       testMatch: ['**/admin-*.spec.ts'],
     },
+    // Teacher authenticated tests - for teacher dashboard features
+    {
+      name: 'chromium-teacher',
+      use: {
+        ...devices['Desktop Chrome'],
+        // Use saved teacher authentication state from setup
+        storageState: '.auth/teacher.json',
+      },
+      dependencies: ['setup'],
+      // Only run teacher dashboard tests
+      testMatch: ['**/teacher-dashboard.spec.ts'],
+    },
 
     // Uncomment to test on more browsers
     // {
