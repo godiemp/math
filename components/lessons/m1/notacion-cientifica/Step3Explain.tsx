@@ -49,10 +49,10 @@ const FORMULAS: FormulaTab[] = [
         <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
           <p className="font-semibold text-green-700 dark:text-green-300 mb-2">Ejemplos válidos:</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-            <span className="bg-white dark:bg-gray-800 p-2 rounded text-center"><MathText content="$3.5 \times 10^4$" /></span>
+            <span className="bg-white dark:bg-gray-800 p-2 rounded text-center"><MathText content="$3,5 \times 10^4$" /></span>
             <span className="bg-white dark:bg-gray-800 p-2 rounded text-center"><MathText content="$1 \times 10^0$" /></span>
-            <span className="bg-white dark:bg-gray-800 p-2 rounded text-center"><MathText content="$9.99 \times 10^{-2}$" /></span>
-            <span className="bg-white dark:bg-gray-800 p-2 rounded text-center"><MathText content="$6.02 \times 10^{23}$" /></span>
+            <span className="bg-white dark:bg-gray-800 p-2 rounded text-center"><MathText content="$9,99 \times 10^{-2}$" /></span>
+            <span className="bg-white dark:bg-gray-800 p-2 rounded text-center"><MathText content="$6,02 \times 10^{23}$" /></span>
           </div>
         </div>
       </div>
@@ -98,17 +98,17 @@ const FORMULAS: FormulaTab[] = [
           </ol>
         </div>
         <div className="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg">
-          <p className="font-semibold text-purple-700 dark:text-purple-300 mb-3">Ejemplo: 47,500,000</p>
+          <p className="font-semibold text-purple-700 dark:text-purple-300 mb-3">Ejemplo: 47.500.000</p>
           <div className="font-mono text-sm space-y-2 pl-4 border-l-2 border-purple-300">
-            <p>47,500,000 → 4.75 (movimos 7 lugares a la izquierda)</p>
-            <p className="text-purple-600">= <MathText content="$4.75 \times 10^7$" /></p>
+            <p>47.500.000 → 4,75 (movimos 7 lugares a la izquierda)</p>
+            <p className="text-purple-600">= <MathText content="$4,75 \times 10^7$" /></p>
           </div>
         </div>
         <div className="bg-teal-50 dark:bg-teal-900/30 p-4 rounded-lg">
-          <p className="font-semibold text-teal-700 dark:text-teal-300 mb-3">Ejemplo: 0.000089</p>
+          <p className="font-semibold text-teal-700 dark:text-teal-300 mb-3">Ejemplo: 0,000089</p>
           <div className="font-mono text-sm space-y-2 pl-4 border-l-2 border-teal-300">
-            <p>0.000089 → 8.9 (movimos 5 lugares a la derecha)</p>
-            <p className="text-teal-600">= <MathText content="$8.9 \times 10^{-5}$" /></p>
+            <p>0,000089 → 8,9 (movimos 5 lugares a la derecha)</p>
+            <p className="text-teal-600">= <MathText content="$8,9 \times 10^{-5}$" /></p>
           </div>
         </div>
       </div>
@@ -154,19 +154,19 @@ const FORMULAS: FormulaTab[] = [
           </ol>
         </div>
         <div className="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg">
-          <p className="font-semibold text-purple-700 dark:text-purple-300 mb-3">Ejemplo: <MathText content="$6.3 \times 10^5$" /></p>
+          <p className="font-semibold text-purple-700 dark:text-purple-300 mb-3">Ejemplo: <MathText content="$6,3 \times 10^5$" /></p>
           <div className="font-mono text-sm space-y-2 pl-4 border-l-2 border-purple-300">
             <p>Exponente +5 → mover 5 a la derecha</p>
-            <p>6.3 → 6.30000 → 630000</p>
-            <p className="text-purple-600">= 630,000</p>
+            <p>6,3 → 6,30000 → 630000</p>
+            <p className="text-purple-600">= 630.000</p>
           </div>
         </div>
         <div className="bg-teal-50 dark:bg-teal-900/30 p-4 rounded-lg">
-          <p className="font-semibold text-teal-700 dark:text-teal-300 mb-3">Ejemplo: <MathText content="$2.5 \times 10^{-4}$" /></p>
+          <p className="font-semibold text-teal-700 dark:text-teal-300 mb-3">Ejemplo: <MathText content="$2,5 \times 10^{-4}$" /></p>
           <div className="font-mono text-sm space-y-2 pl-4 border-l-2 border-teal-300">
             <p>Exponente -4 → mover 4 a la izquierda</p>
-            <p>2.5 → 0.00025</p>
-            <p className="text-teal-600">= 0.00025</p>
+            <p>2,5 → 0,00025</p>
+            <p className="text-teal-600">= 0,00025</p>
           </div>
         </div>
       </div>
@@ -185,26 +185,26 @@ const FORMULAS: FormulaTab[] = [
             <p className="font-semibold text-purple-700 dark:text-purple-300 mb-2">🌍 Astronomía</p>
             <div className="space-y-2 text-sm">
               <p className="text-gray-600 dark:text-gray-400">Distancia a la Luna:</p>
-              <p>384,400 km = <MathText content="$3.844 \times 10^5$" /> km</p>
+              <p>384.400 km = <MathText content="$3,844 \times 10^5$" /> km</p>
               <p className="text-gray-600 dark:text-gray-400">Distancia al Sol:</p>
-              <p>150,000,000 km = <MathText content="$1.5 \times 10^8$" /> km</p>
+              <p>150.000.000 km = <MathText content="$1,5 \times 10^8$" /> km</p>
             </div>
           </div>
           <div className="bg-teal-50 dark:bg-teal-900/30 p-4 rounded-lg">
             <p className="font-semibold text-teal-700 dark:text-teal-300 mb-2">🔬 Biología</p>
             <div className="space-y-2 text-sm">
               <p className="text-gray-600 dark:text-gray-400">Tamaño de una bacteria:</p>
-              <p>0.000002 m = <MathText content="$2 \times 10^{-6}$" /> m</p>
+              <p>0,000002 m = <MathText content="$2 \times 10^{-6}$" /> m</p>
               <p className="text-gray-600 dark:text-gray-400">Diámetro del ADN:</p>
-              <p>0.000000002 m = <MathText content="$2 \times 10^{-9}$" /> m</p>
+              <p>0,000000002 m = <MathText content="$2 \times 10^{-9}$" /> m</p>
             </div>
           </div>
           <div className="bg-amber-50 dark:bg-amber-900/30 p-4 rounded-lg">
             <p className="font-semibold text-amber-700 dark:text-amber-300 mb-2">⚗️ Química</p>
             <div className="space-y-2 text-sm">
               <p className="text-gray-600 dark:text-gray-400">Número de Avogadro:</p>
-              <p className="font-mono">602,214,076,000,000,000,000,000</p>
-              <p className="text-amber-600">= <MathText content="$6.02214076 \times 10^{23}$" /></p>
+              <p className="font-mono">602.214.076.000.000.000.000.000</p>
+              <p className="text-amber-600">= <MathText content="$6,02214076 \times 10^{23}$" /></p>
             </div>
           </div>
         </div>
@@ -325,9 +325,9 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
               <h5 className="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Correcto:</h5>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <li>• <MathText content="$5.2 \times 10^4$" /> (coeficiente entre 1 y 10)</li>
+                <li>• <MathText content="$5,2 \times 10^4$" /> (coeficiente entre 1 y 10)</li>
                 <li>• <MathText content="$1 \times 10^0 = 1$" /> (forma válida)</li>
-                <li>• <MathText content="$9.99 \times 10^{-3}$" /> (exponente negativo)</li>
+                <li>• <MathText content="$9,99 \times 10^{-3}$" /> (exponente negativo)</li>
                 <li>• Número grande → exponente positivo</li>
               </ul>
             </div>
@@ -335,7 +335,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <h5 className="font-semibold text-red-700 dark:text-red-300 mb-2">✗ Errores comunes:</h5>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
                 <li>• <MathText content="$52 \times 10^3$" /> (52 no está entre 1 y 10)</li>
-                <li>• <MathText content="$0.5 \times 10^4$" /> (0.5 es menor que 1)</li>
+                <li>• <MathText content="$0,5 \times 10^4$" /> (0,5 es menor que 1)</li>
                 <li>• Confundir signo del exponente</li>
                 <li>• Contar mal las posiciones</li>
               </ul>

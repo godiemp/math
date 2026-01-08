@@ -22,33 +22,33 @@ interface ClassifyItem {
 const ITEMS: ClassifyItem[] = [
   {
     id: '1',
-    number: '$3.5 \\times 10^4$',
+    number: '$3,5 \\times 10^4$',
     correctAnswer: 'valid',
-    explanation: '¡Correcto! El coeficiente 3.5 está entre 1 y 10, y el exponente es un entero.',
+    explanation: '¡Correcto! El coeficiente 3,5 está entre 1 y 10, y el exponente es un entero.',
   },
   {
     id: '2',
     number: '$15 \\times 10^3$',
     correctAnswer: 'invalid-coefficient',
-    explanation: 'El coeficiente 15 es mayor que 10. Debería ser $1.5 \\times 10^4$.',
+    explanation: 'El coeficiente 15 es mayor que 10. Debería ser $1,5 \\times 10^4$.',
   },
   {
     id: '3',
-    number: '$7.02 \\times 10^{-5}$',
+    number: '$7,02 \\times 10^{-5}$',
     correctAnswer: 'valid',
-    explanation: '¡Correcto! 7.02 está entre 1 y 10, y el exponente negativo es válido.',
+    explanation: '¡Correcto! 7,02 está entre 1 y 10, y el exponente negativo es válido.',
   },
   {
     id: '4',
-    number: '$0.8 \\times 10^6$',
+    number: '$0,8 \\times 10^6$',
     correctAnswer: 'invalid-coefficient',
-    explanation: 'El coeficiente 0.8 es menor que 1. Debería ser $8 \\times 10^5$.',
+    explanation: 'El coeficiente 0,8 es menor que 1. Debería ser $8 \\times 10^5$.',
   },
   {
     id: '5',
-    number: '$9.99 \\times 10^{-2}$',
+    number: '$9,99 \\times 10^{-2}$',
     correctAnswer: 'valid',
-    explanation: '¡Correcto! 9.99 está entre 1 y 10 (justo en el límite pero válido).',
+    explanation: '¡Correcto! 9,99 está entre 1 y 10 (justo en el límite pero válido).',
   },
 ];
 
