@@ -371,13 +371,21 @@ function ProblemDisplay({
 
           <button
             onClick={onNext}
-            className="w-full py-3 rounded-xl bg-white/20 text-white font-bold hover:bg-white/30 transition-all"
+            disabled={isGeneratingScaffolding}
+            className="w-full py-3 rounded-xl bg-white/20 text-white font-bold hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
-            {isScaffolding && feedback.correct
-              ? scaffoldingDepth === 1
+            {isGeneratingScaffolding ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>Generando...</span>
+              </span>
+            ) : isScaffolding && feedback.correct ? (
+              scaffoldingDepth === 1
                 ? 'Volver a pregunta similar →'
                 : 'Subir de nivel →'
-              : 'Siguiente Problema →'}
+            ) : (
+              'Siguiente Problema →'
+            )}
           </button>
         </div>
       )}

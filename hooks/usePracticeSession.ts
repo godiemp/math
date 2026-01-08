@@ -288,6 +288,9 @@ export function usePracticeSession() {
   }, [scaffoldingQuestion, currentProblem, scaffoldingDepth]);
 
   const nextProblem = useCallback(async () => {
+    // Prevent multiple clicks while generating
+    if (isGeneratingScaffolding) return;
+
     // If in scaffolding mode and last answer was correct
     if (scaffoldingMode === 'active' && lastAnswerWasCorrect) {
       if (scaffoldingDepth === 1 && originalFailedQuestion) {
@@ -338,6 +341,7 @@ export function usePracticeSession() {
     setScaffoldingQuestion(null);
     setLastAnswerWasCorrect(false);
   }, [
+    isGeneratingScaffolding,
     scaffoldingMode,
     lastAnswerWasCorrect,
     scaffoldingDepth,
