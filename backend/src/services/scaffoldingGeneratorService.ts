@@ -186,8 +186,23 @@ REGLAS IMPORTANTES:
 3. El contexto debe ser directo y claro
 4. Las 4 opciones deben ser plausibles pero solo una correcta
 5. Los distractores deben basarse en errores comunes de estudiantes
-6. Usa LaTeX para matemáticas: $x^2$, $\\frac{1}{2}$, etc.
-7. El texto normal va sin formato especial
+
+FORMATO DE MATEMÁTICAS - MUY IMPORTANTE:
+- TODO símbolo matemático DEBE ir entre signos de dólar: $x^2$, $\\frac{1}{2}$, $\\pi$, $50\\pi$
+- El símbolo π SIEMPRE es $\\pi$, NUNCA uses el caracter π directamente
+- Potencias y subíndices SIEMPRE en LaTeX: $m^2$, $x_1$
+- Fracciones: $\\frac{a}{b}$
+- Raíces: $\\sqrt{x}$
+- El texto normal va sin formato especial, solo las matemáticas van entre $...$
+
+EJEMPLOS CORRECTOS:
+- "El área del círculo es $50\\pi$ metros cuadrados" ✓
+- "Calcula $x^2 + 3x$" ✓
+- "El radio mide $\\sqrt{50}$ m" ✓
+
+EJEMPLOS INCORRECTOS:
+- "El área es 50π m²" ✗ (falta $...$)
+- "Calcula x² + 3x" ✗ (falta $...$)
 
 FORMATO DE RESPUESTA - JSON válido únicamente:
 {
@@ -325,7 +340,22 @@ REGLAS:
 2. La dificultad debe ser IGUAL a la original
 3. Cambia los números y/o el contexto
 4. Las 4 opciones deben ser plausibles
-5. Usa LaTeX para matemáticas
+
+FORMATO DE MATEMÁTICAS - MUY IMPORTANTE:
+- TODO símbolo matemático DEBE ir entre signos de dólar: $x^2$, $\\frac{1}{2}$, $\\pi$, $50\\pi$
+- El símbolo π SIEMPRE es $\\pi$, NUNCA uses el caracter π directamente
+- Potencias y subíndices SIEMPRE en LaTeX: $m^2$, $x_1$
+- Fracciones: $\\frac{a}{b}$
+- Raíces: $\\sqrt{x}$
+- El texto normal va sin formato especial, solo las matemáticas van entre $...$
+
+EJEMPLOS CORRECTOS:
+- "El área del círculo es $50\\pi$ metros cuadrados" ✓
+- "Calcula $x^2 + 3x$" ✓
+
+EJEMPLOS INCORRECTOS:
+- "El área es 50π m²" ✗ (falta $...$)
+- "Calcula x² + 3x" ✗ (falta $...$)
 
 FORMATO DE RESPUESTA - JSON válido únicamente:
 {
