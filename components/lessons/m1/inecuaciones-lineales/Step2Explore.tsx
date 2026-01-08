@@ -142,7 +142,9 @@ function NumberLine({ value, direction, open }: { value: number; direction: 'lef
           direction === 'left' ? 'left-0' : 'right-0'
         )}
         style={{
-          [direction === 'left' ? 'right' : 'left']: `${100 - valuePosition}%`,
+          ...(direction === 'left'
+            ? { right: `${100 - valuePosition}%` }
+            : { left: `${valuePosition}%` }),
         }}
       />
     </div>
@@ -219,7 +221,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                     <p className="text-sm text-gray-600 dark:text-gray-400 font-mono">x + 5 {'<'} 10 → x {'<'} 10 - 5</p>
                   </div>
                   <div className="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
-                    <div className="text-3xl mb-2"> ↔ </div>
+                    <div className="text-3xl mb-2">× ↔ ÷</div>
                     <p className="font-semibold text-purple-700 dark:text-purple-300">Multiplicación ↔ División</p>
                     <p className="text-sm text-gray-600 dark:text-gray-400 font-mono">3x {'>'} 12 → x {'>'} 12 ÷ 3</p>
                   </div>
