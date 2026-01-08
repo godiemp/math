@@ -27,7 +27,7 @@ export interface PolygonEdgeConfig {
 }
 
 /**
- * Angle configuration for polygon vertices
+ * Angle configuration for polygon vertices (interior angles)
  */
 export interface PolygonAngleConfig {
   /** Label for the angle (degrees or Greek letter like 'α', 'β') */
@@ -40,6 +40,32 @@ export interface PolygonAngleConfig {
   color?: string;
   /** Whether to show degree value (e.g., '108°') */
   showDegrees?: boolean;
+}
+
+/**
+ * Exterior angle configuration for polygon vertices
+ */
+export interface ExteriorAngleConfig {
+  /** Label for the exterior angle */
+  label?: string;
+  /** Whether to show the exterior angle arc */
+  showArc?: boolean;
+  /** Radius of the angle arc in pixels */
+  arcRadius?: number;
+  /** Custom color for the exterior angle arc (default: red) */
+  color?: string;
+  /** Whether to show degree value (e.g., '72°') */
+  showDegrees?: boolean;
+  /** Whether to show the extended edge line (dashed) */
+  showExtension?: boolean;
+  /** Length of the extension line in pixels */
+  extensionLength?: number;
+  /** Color for the extension line */
+  extensionColor?: string;
+  /** Whether to show the angle fill */
+  showFill?: boolean;
+  /** Fill opacity (0-1) */
+  fillOpacity?: number;
 }
 
 /**
@@ -103,8 +129,10 @@ export interface PolygonFigureProps {
   // Element configuration
   /** Configuration for each edge (indexed to vertices) */
   edges?: PolygonEdgeConfig[];
-  /** Configuration for angle at each vertex */
+  /** Configuration for interior angle at each vertex */
   angles?: PolygonAngleConfig[];
+  /** Configuration for exterior angles - array indexed by vertex, or 'all' to show all */
+  exteriorAngles?: ExteriorAngleConfig[] | 'all';
   /** Diagonal lines - array of specific diagonals or 'all' for all diagonals */
   diagonals?: DiagonalConfig[] | 'all';
 

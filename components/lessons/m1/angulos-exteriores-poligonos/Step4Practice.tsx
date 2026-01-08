@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { ArrowRight, Check, X, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { PolygonFigure } from '@/components/figures/PolygonFigure';
+import type { ExteriorAngleConfig } from '@/lib/types/polygon';
 
 interface PracticeQuestion {
   id: string;
@@ -14,6 +16,7 @@ interface PracticeQuestion {
   options: string[];
   correctAnswer: number;
   explanation: string;
+  showAllExterior?: boolean; // For q4 to show all exterior angles
 }
 
 const QUESTIONS: PracticeQuestion[] = [
@@ -56,6 +59,7 @@ const QUESTIONS: PracticeQuestion[] = [
     options: ['180°', '360°', '1440°', '3600°'],
     correctAnswer: 1,
     explanation: 'La suma de ángulos exteriores es SIEMPRE 360°, sin importar el número de lados.',
+    showAllExterior: true,
   },
 ];
 
@@ -91,16 +95,25 @@ export default function Step4Practice({ onComplete, isActive }: LessonStepProps)
     }
   };
 
-  // Generate polygon points for visualization
-  const generatePolygonPoints = (sides: number, radius: number, cx: number, cy: number): string => {
-    const points: string[] = [];
-    for (let i = 0; i < sides; i++) {
-      const angle = (i * 2 * Math.PI) / sides - Math.PI / 2;
-      const x = cx + radius * Math.cos(angle);
-      const y = cy + radius * Math.sin(angle);
-      points.push(`${x},${y}`);
+  // Configure exterior angles for the polygon
+  const getExteriorAnglesConfig = (): ExteriorAngleConfig[] | 'all' | undefined => {
+    if (question.showAllExterior) {
+      // Show all exterior angles for q4
+      return 'all';
     }
-    return points.join(' ');
+    // Show just the first exterior angle for other questions
+    return Array.from({ length: question.polygonSides }, (_, i) =>
+      i === 0
+        ? {
+            showArc: true,
+            showExtension: true,
+            showFill: true,
+            fillOpacity: 0.2,
+            arcRadius: 15,
+            extensionLength: 25,
+          }
+        : { showArc: false, showExtension: false }
+    ) as ExteriorAngleConfig[];
   };
 
   return (
@@ -138,50 +151,22 @@ export default function Step4Practice({ onComplete, isActive }: LessonStepProps)
           </p>
         </div>
 
-        {/* Polygon visualization */}
+        {/* Polygon visualization using PolygonFigure */}
         <div className="flex justify-center mb-4">
-          <svg viewBox="0 0 120 120" className="w-28 h-28">
-            <polygon
-              points={generatePolygonPoints(question.polygonSides, 45, 60, 60)}
-              fill="rgba(59, 130, 246, 0.15)"
-              stroke="#3b82f6"
-              strokeWidth="2"
-              className="dark:stroke-blue-400"
-            />
-            {/* Highlight one exterior angle for visual */}
-            {question.id !== 'q4' && (
-              <g>
-                <line
-                  x1="60"
-                  y1="15"
-                  x2="60"
-                  y2="-5"
-                  stroke="#9ca3af"
-                  strokeWidth="1.5"
-                  strokeDasharray="3,2"
-                />
-                <path
-                  d="M 60 25 A 10 10 0 0 1 68 18"
-                  fill="none"
-                  stroke="#ef4444"
-                  strokeWidth="2"
-                />
-              </g>
-            )}
-            {/* For q4, show multiple arcs to indicate "all" */}
-            {question.id === 'q4' && (
-              <text
-                x="60"
-                y="65"
-                textAnchor="middle"
-                fontSize="10"
-                fill="#ef4444"
-                fontWeight="bold"
-              >
-                Σ = ?
-              </text>
-            )}
-          </svg>
+          <PolygonFigure
+            fromRegular={{
+              sides: question.polygonSides,
+              radius: 45,
+              centerX: 60,
+              centerY: 60,
+              rotation: -90,
+            }}
+            exteriorAngles={getExteriorAnglesConfig()}
+            showVertices={false}
+            padding={25}
+            viewBox="0 0 120 120"
+            className="w-28 h-28"
+          />
         </div>
 
         {/* Question */}
