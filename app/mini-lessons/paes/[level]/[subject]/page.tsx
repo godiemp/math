@@ -7,6 +7,7 @@ import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { M1_LESSONS, type Lesson } from '@/lib/lessons/types';
 import {
   getUnitsByLevelAndSubject,
+  getUnitByCode,
   subjectFromSlug,
   SUBJECT_LABELS,
   type Level,
@@ -23,38 +24,20 @@ function LessonCard({ lesson, index }: LessonCardProps) {
   return (
     <Link
       href={`/lessons/${lesson.level.toLowerCase()}/${lesson.slug}`}
-      className="block group"
+      className="block group h-full"
     >
-      <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-0.5 rounded-2xl">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 sm:p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-          <div className="flex items-center justify-between">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
-                {index + 1}
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                    {lesson.title}
-                  </h3>
-                  <CheckCircle className="text-green-500" size={18} />
-                </div>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
-                  {lesson.description}
-                </p>
-                <div className="flex items-center gap-4 mt-2">
-                  <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                    <Clock size={14} />
-                    {lesson.estimatedMinutes} min
-                  </span>
-                  <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">
-                    {lesson.thematicUnit}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <ArrowRight className="text-purple-500 group-hover:translate-x-1 transition-transform flex-shrink-0" size={24} />
+      <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-0.5 rounded-xl h-full">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 h-full flex flex-col items-center text-center hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold text-lg mb-2">
+            {index + 1}
           </div>
+          <h3 className="font-semibold text-sm text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-2 mb-1">
+            {lesson.title}
+          </h3>
+          <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+            <Clock size={12} />
+            {lesson.estimatedMinutes} min
+          </span>
         </div>
       </div>
     </Link>
@@ -64,6 +47,50 @@ function LessonCard({ lesson, index }: LessonCardProps) {
 interface UpcomingUnitCardProps {
   unit: ThematicUnitSummary;
   index: number;
+}
+
+interface UnitSectionProps {
+  unitCode: string;
+  lessons: Lesson[];
+}
+
+function UnitSection({ unitCode, lessons }: UnitSectionProps) {
+  const unit = getUnitByCode(unitCode);
+  const unitName = unit?.name || unitCode;
+
+  return (
+    <div className="mb-8">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="h-px flex-1 bg-gradient-to-r from-purple-300 to-transparent dark:from-purple-700" />
+        <h3 className="text-sm font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">
+          {unitName}
+        </h3>
+        <div className="h-px flex-1 bg-gradient-to-l from-purple-300 to-transparent dark:from-purple-700" />
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {lessons.map((lesson, index) => (
+          <LessonCard key={lesson.id} lesson={lesson} index={index} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Group lessons by their thematic unit code, maintaining order
+ */
+function groupLessonsByUnit(lessons: Lesson[]): Map<string, Lesson[]> {
+  const groups = new Map<string, Lesson[]>();
+
+  for (const lesson of lessons) {
+    const unitCode = lesson.thematicUnit;
+    if (!groups.has(unitCode)) {
+      groups.set(unitCode, []);
+    }
+    groups.get(unitCode)!.push(lesson);
+  }
+
+  return groups;
 }
 
 function UpcomingUnitCard({ unit, index }: UpcomingUnitCardProps) {
@@ -184,20 +211,18 @@ function UnitListContent() {
           </p>
         </div>
 
-        {/* Available Lessons */}
+        {/* Available Lessons grouped by unit */}
         {availableLessons.length > 0 && (
           <div className="mb-8">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-6">
               <CheckCircle className="text-green-500" size={20} />
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Disponibles
               </h2>
             </div>
-            <div className="space-y-4">
-              {availableLessons.map((lesson, index) => (
-                <LessonCard key={lesson.id} lesson={lesson} index={index} />
-              ))}
-            </div>
+            {Array.from(groupLessonsByUnit(availableLessons)).map(([unitCode, lessons]) => (
+              <UnitSection key={unitCode} unitCode={unitCode} lessons={lessons} />
+            ))}
           </div>
         )}
 
