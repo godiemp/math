@@ -8,7 +8,7 @@ Una aplicación web completa diseñada para ayudar a estudiantes chilenos a prep
 
 SimplePAES es una plataforma de práctica completa que incluye:
 
-- **Mini-Lecciones Interactivas (50+)** - Lecciones estructuradas con metodología pedagógica de 6 pasos alineada al currículum MINEDUC
+- **Mini-Lecciones Interactivas (60+)** - Lecciones estructuradas con metodología pedagógica de 6 pasos alineada al currículum MINEDUC
 - **Quizzes de Práctica Interactivos** - Estudia a tu ritmo o desafíate con pruebas cronometradas
 - **Sesiones de Práctica en Vivo (Ensayos)** - Únete a simulaciones PAES programadas con otros estudiantes
 - **Tutor con IA** - Asistente personalizado con metodología Socrática que te ayuda a entender cada problema
@@ -26,7 +26,7 @@ SimplePAES es una plataforma de práctica completa que incluye:
 
 ## Características Principales
 
-### 📚 Mini-Lecciones Interactivas (50+ Lecciones)
+### 📚 Mini-Lecciones Interactivas (60+ Lecciones)
 
 **Sistema de Aprendizaje Estructurado** - Lecciones con metodología pedagógica de 6 pasos
 
@@ -41,11 +41,11 @@ Cada mini-lección sigue un pipeline pedagógico probado:
 | 5 | **Practice** | Resolución guiada con hints |
 | 6 | **Verify** | Quiz checkpoint (3/4 correctas para aprobar) |
 
-**Cobertura por Materia (M1):**
-- **Números**: 17 lecciones (enteros, fracciones, porcentajes, potencias)
-- **Álgebra**: 21 lecciones (términos semejantes, factorización, productos notables, ecuaciones)
-- **Geometría**: 7 lecciones (áreas, perímetros, volúmenes, coordenadas)
-- **Probabilidad**: 8 lecciones (frecuencia, histogramas, estadística)
+**Cobertura por Materia:**
+- **Números**: 18 lecciones (enteros, fracciones, porcentajes, potencias)
+- **Álgebra**: 24 lecciones (términos semejantes, factorización, productos notables, ecuaciones)
+- **Geometría**: 9 lecciones (áreas, perímetros, volúmenes, coordenadas)
+- **Probabilidad**: 12 lecciones (frecuencia, histogramas, estadística, muestreo)
 
 **Características Técnicas:**
 - **Alineación MINEDUC**: Cada lección vinculada a Objetivos de Aprendizaje oficiales (OA)
@@ -112,8 +112,8 @@ La plataforma cubre las cuatro áreas de matemáticas PAES:
 
 ### 🎓 Dos Niveles de Competencia
 
-- **M1 (Competencia Matemática 1)** - 406 problemas cubriendo conceptos matemáticos básicos para todos los programas universitarios
-- **M2 (Competencia Matemática 2)** - 210 problemas avanzados para carreras de ciencia e ingeniería (expandido masivamente)
+- **M1 (Competencia Matemática 1)** - 810 problemas cubriendo conceptos matemáticos básicos para todos los programas universitarios
+- **M2 (Competencia Matemática 2)** - 345 problemas avanzados para carreras de ciencia e ingeniería
 
 ### 📚 Sistema de Documentación Completo
 
