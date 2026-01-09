@@ -20,7 +20,7 @@ import {
   getClassStudents,
   addStudentsToClass,
   removeStudentFromClass,
-  searchAvailableStudents,
+  getAvailableStudents,
   createStudentAndEnroll,
   moveStudent,
 } from '../controllers/classStudentsController';
@@ -110,12 +110,11 @@ router.post('/:classId/students', addStudentsToClass);
 router.delete('/:classId/students/:studentId', removeStudentFromClass);
 
 /**
- * @route   GET /api/classes/:classId/students/search
- * @desc    Search for students available to add to a class
- * @query   query - Search term (min 2 characters)
+ * @route   GET /api/classes/:classId/students/available
+ * @desc    Get all students available to add to a class
  * @access  Private (Teacher)
  */
-router.get('/:classId/students/search', searchAvailableStudents);
+router.get('/:classId/students/available', getAvailableStudents);
 
 /**
  * @route   POST /api/classes/:classId/students/create

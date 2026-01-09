@@ -127,9 +127,9 @@ export async function removeStudentFromClass(req: Request, res: Response): Promi
 }
 
 /**
- * Search for students available to add to a class
+ * Get all students available to add to a class
  */
-export async function searchAvailableStudents(req: Request, res: Response): Promise<void> {
+export async function getAvailableStudents(req: Request, res: Response): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Not authenticated' });
@@ -137,28 +137,18 @@ export async function searchAvailableStudents(req: Request, res: Response): Prom
     }
 
     const { classId } = req.params;
-    const { query } = req.query;
 
     if (!classId) {
       res.status(400).json({ error: 'Class ID is required' });
       return;
     }
 
-    if (!query || typeof query !== 'string' || query.trim().length < 2) {
-      res.status(400).json({ error: 'Search query must be at least 2 characters' });
-      return;
-    }
-
-    const students = await ClassService.searchAvailableStudents(
-      classId,
-      req.user.userId,
-      query.trim()
-    );
+    const students = await ClassService.getAvailableStudents(classId, req.user.userId);
 
     res.json({ students });
   } catch (error) {
-    console.error('Search available students error:', error);
-    res.status(500).json({ error: 'Failed to search students' });
+    console.error('Get available students error:', error);
+    res.status(500).json({ error: 'Failed to get available students' });
   }
 }
 

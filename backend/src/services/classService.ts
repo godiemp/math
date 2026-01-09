@@ -580,13 +580,12 @@ export class ClassService {
   }
 
   /**
-   * Search students available to add to a class
+   * Get all students available to add to a class
    * Returns students who are not already in the class
    */
-  static async searchAvailableStudents(
+  static async getAvailableStudents(
     classId: string,
-    teacherId: string,
-    query: string
+    teacherId: string
   ): Promise<{ id: string; displayName: string; email: string }[]> {
     // Verify class belongs to teacher
     const classCheck = await pool.query(
@@ -598,25 +597,18 @@ export class ClassService {
       return [];
     }
 
-    const searchTerm = `%${query}%`;
-
     const result = await pool.query(
       `SELECT u.id, u.display_name, u.email
        FROM users u
        WHERE u.role = 'student'
          AND u.email_verified = true
-         AND (
-           u.display_name ILIKE $1
-           OR u.email ILIKE $1
-           OR u.username ILIKE $1
-         )
          AND u.id NOT IN (
            SELECT student_id FROM class_enrollments
-           WHERE class_id = $2 AND status = 'active'
+           WHERE class_id = $1 AND status = 'active'
          )
        ORDER BY u.display_name ASC
-       LIMIT 20`,
-      [searchTerm, classId]
+       LIMIT 100`,
+      [classId]
     );
 
     return result.rows.map((row) => ({
