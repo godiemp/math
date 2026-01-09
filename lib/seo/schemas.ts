@@ -125,6 +125,14 @@ export const faqSchema = {
         text: "Sí, de acuerdo con la Ley del Consumidor de Chile, tienes derecho a retracto dentro de los 10 días corridos siguientes a la contratación con reembolso del 100% del monto pagado.",
       },
     },
+    {
+      "@type": "Question",
+      name: "¿Tienen licencias para colegios o profesores?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Sí, ofrecemos licencias institucionales para colegios y profesores con precios especiales y panel de seguimiento de estudiantes. Contáctanos directamente en contacto@simplepaes.cl para más información.",
+      },
+    },
   ],
 };
 
