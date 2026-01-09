@@ -12,8 +12,8 @@ type TabId = 'regla360' | 'formula' | 'suplementarios' | 'tips';
  * User can drag a slider to change the angle and see both values update
  */
 function InteractiveSupplementaryAngles() {
-  // Interior angle in degrees (constrained between 30° and 150° for good visualization)
-  const [interiorAngle, setInteriorAngle] = useState(140);
+  // Interior angle in degrees (full range from 1° to 179°)
+  const [interiorAngle, setInteriorAngle] = useState(120);
   const exteriorAngle = 180 - interiorAngle;
 
   // SVG geometry calculations
@@ -184,15 +184,15 @@ function InteractiveSupplementaryAngles() {
         </label>
         <input
           type="range"
-          min="30"
-          max="150"
+          min="1"
+          max="179"
           value={interiorAngle}
           onChange={(e) => setInteriorAngle(Number(e.target.value))}
           className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-500"
         />
         <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-          <span>30°</span>
-          <span>150°</span>
+          <span>1°</span>
+          <span>179°</span>
         </div>
       </div>
     </div>
