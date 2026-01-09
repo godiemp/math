@@ -10,6 +10,7 @@ import {
   useClassStudents,
   useClassAnalytics,
   useStudentEnrollmentMutations,
+  useAvailableStudents,
   type ClassStudent,
 } from '@/lib/hooks/useClasses';
 import { createStudentInClass, moveStudentToClass } from '@/lib/classApi';
@@ -54,12 +55,11 @@ function AddStudentModal({
   onStudentsAdded: () => void;
 }) {
   const [activeTab, setActiveTab] = useState<'search' | 'create'>('search');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<{ id: string; displayName: string; email: string }[]>([]);
+  const [filterQuery, setFilterQuery] = useState('');
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
-  const { searchStudents, addStudents } = useStudentEnrollmentMutations(classId);
+  const { addStudents } = useStudentEnrollmentMutations(classId);
+  const { students: availableStudents, isLoading: isLoadingStudents } = useAvailableStudents(classId);
 
   // Create new student state
   const [firstName, setFirstName] = useState('');
@@ -68,13 +68,15 @@ function AddStudentModal({
   const [createdCredentials, setCreatedCredentials] = useState<{ username: string; password: string } | null>(null);
   const [copiedField, setCopiedField] = useState<'username' | 'password' | null>(null);
 
-  const handleSearch = async () => {
-    if (searchQuery.length < 2) return;
-    setIsSearching(true);
-    const results = await searchStudents(searchQuery);
-    setSearchResults(results);
-    setIsSearching(false);
-  };
+  // Filter students client-side based on search query
+  const filteredStudents = availableStudents.filter((student) => {
+    if (!filterQuery.trim()) return true;
+    const query = filterQuery.toLowerCase();
+    return (
+      student.displayName.toLowerCase().includes(query) ||
+      student.email.toLowerCase().includes(query)
+    );
+  });
 
   const toggleStudent = (studentId: string) => {
     setSelectedStudents((prev) =>
@@ -229,34 +231,34 @@ function AddStudentModal({
         {/* Search Tab Content */}
         {activeTab === 'search' && (
           <>
-            <div className="flex gap-2 mb-4">
-              <div className="relative flex-1">
+            <div className="mb-4">
+              <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
                   type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  placeholder="Buscar por nombre o email..."
+                  value={filterQuery}
+                  onChange={(e) => setFilterQuery(e.target.value)}
+                  placeholder="Filtrar por nombre o email..."
                   className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
                   data-testid="class-student-search-input"
                 />
               </div>
-              <Button onClick={handleSearch} disabled={searchQuery.length < 2 || isSearching} data-testid="class-student-search-button">
-                {isSearching ? '...' : 'Buscar'}
-              </Button>
             </div>
 
             <div className="flex-1 overflow-y-auto mb-4" data-testid="class-student-search-results">
-              {searchResults.length === 0 ? (
+              {isLoadingStudents ? (
+                <div className="flex justify-center py-8">
+                  <Spinner />
+                </div>
+              ) : filteredStudents.length === 0 ? (
                 <div className="text-center py-8 text-gray-500 dark:text-gray-400" data-testid="class-student-search-empty">
-                  {searchQuery.length >= 2
-                    ? 'No se encontraron estudiantes'
-                    : 'Busca estudiantes por nombre o email'}
+                  {availableStudents.length === 0
+                    ? 'No hay estudiantes disponibles para agregar'
+                    : 'No se encontraron estudiantes'}
                 </div>
               ) : (
                 <div className="space-y-2">
-                  {searchResults.map((student) => (
+                  {filteredStudents.map((student) => (
                     <div
                       key={student.id}
                       onClick={() => toggleStudent(student.id)}

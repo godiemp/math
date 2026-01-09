@@ -285,18 +285,17 @@ export async function removeStudentFromClass(
 }
 
 /**
- * Search for students available to add to a class
+ * Get all students available to add to a class
  */
-export async function searchAvailableStudents(
-  classId: string,
-  query: string
+export async function getAvailableStudents(
+  classId: string
 ): Promise<{ id: string; displayName: string; email: string }[]> {
   const response = await api.get<SearchStudentsResponse>(
-    `/api/classes/${classId}/students/search?query=${encodeURIComponent(query)}`
+    `/api/classes/${classId}/students/available`
   );
 
   if (response.error) {
-    console.error('Failed to search students:', response.error);
+    console.error('Failed to get available students:', response.error);
     return [];
   }
 

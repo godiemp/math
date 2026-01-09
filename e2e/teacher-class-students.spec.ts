@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
  * - Page loading and header display
  * - Students table with enrolled students
  * - Add student modal (search and create tabs)
- * - Search for available students
+ * - Filter available students (client-side instant filtering)
  * - Add students to class
  * - Create new student in class
  * - Remove student from class
@@ -55,7 +55,7 @@ test.describe('Teacher Class Detail Page', () => {
     await expect(table.getByText('Sync Student')).toBeVisible();
   });
 
-  test('should open add student modal with search tab active', async ({ page }) => {
+  test('should open add student modal and load available students automatically', async ({ page }) => {
     // Wait for page to load
     await expect(page.getByTestId('class-detail-header')).toBeVisible({ timeout: 15000 });
 
@@ -73,14 +73,17 @@ test.describe('Teacher Class Detail Page', () => {
     await expect(modal.getByText('Buscar Existente')).toBeVisible();
     await expect(modal.getByText('Crear Nuevo')).toBeVisible();
 
-    // Verify search input is visible (search tab is default)
-    const searchInput = page.getByTestId('class-student-search-input');
-    await expect(searchInput).toBeVisible();
-    await expect(searchInput).toHaveAttribute('placeholder', 'Buscar por nombre o email...');
+    // Verify filter input is visible (search tab is default)
+    const filterInput = page.getByTestId('class-student-search-input');
+    await expect(filterInput).toBeVisible();
+    await expect(filterInput).toHaveAttribute('placeholder', 'Filtrar por nombre o email...');
 
-    // Verify search button
-    const searchButton = page.getByTestId('class-student-search-button');
-    await expect(searchButton).toBeVisible();
+    // Verify search results container is visible (students load automatically)
+    const searchResults = page.getByTestId('class-student-search-results');
+    await expect(searchResults).toBeVisible({ timeout: 10000 });
+
+    // Available students should be loaded automatically (María González)
+    await expect(searchResults.getByText('María González')).toBeVisible({ timeout: 10000 });
   });
 
   test('should close add student modal on X button click', async ({ page }) => {
@@ -99,7 +102,7 @@ test.describe('Teacher Class Detail Page', () => {
     await expect(modal).not.toBeVisible();
   });
 
-  test('should search for available students and find María González', async ({ page }) => {
+  test('should filter available students by typing', async ({ page }) => {
     // Wait for page to load
     await expect(page.getByTestId('class-detail-header')).toBeVisible({ timeout: 15000 });
 
@@ -108,23 +111,20 @@ test.describe('Teacher Class Detail Page', () => {
     const modal = page.getByTestId('class-add-student-modal');
     await expect(modal).toBeVisible({ timeout: 5000 });
 
-    // Search for María (seeded student not enrolled in class)
-    const searchInput = page.getByTestId('class-student-search-input');
-    await searchInput.fill('María');
-
-    const searchButton = page.getByTestId('class-student-search-button');
-    await searchButton.click();
-
-    // Wait for search results
+    // Wait for students to load
     const searchResults = page.getByTestId('class-student-search-results');
-    await expect(searchResults).toBeVisible({ timeout: 10000 });
-
-    // Verify María González appears in results (scoped to search results)
     await expect(searchResults.getByText('María González')).toBeVisible({ timeout: 10000 });
+
+    // Type in filter input - instant filtering
+    const filterInput = page.getByTestId('class-student-search-input');
+    await filterInput.fill('María');
+
+    // Verify María González still appears in filtered results
+    await expect(searchResults.getByText('María González')).toBeVisible();
     await expect(searchResults.getByText('maria.gonzalez@student.simplepaes.cl')).toBeVisible();
   });
 
-  test('should show empty results when searching for non-existent student', async ({ page }) => {
+  test('should show empty results when filtering for non-existent student', async ({ page }) => {
     // Wait for page to load
     await expect(page.getByTestId('class-detail-header')).toBeVisible({ timeout: 15000 });
 
@@ -133,20 +133,21 @@ test.describe('Teacher Class Detail Page', () => {
     const modal = page.getByTestId('class-add-student-modal');
     await expect(modal).toBeVisible({ timeout: 5000 });
 
-    // Search for non-existent student
-    const searchInput = page.getByTestId('class-student-search-input');
-    await searchInput.fill('nonexistent12345');
+    // Wait for students to load first
+    const searchResults = page.getByTestId('class-student-search-results');
+    await expect(searchResults).toBeVisible({ timeout: 10000 });
 
-    const searchButton = page.getByTestId('class-student-search-button');
-    await searchButton.click();
+    // Filter for non-existent student (instant client-side filtering)
+    const filterInput = page.getByTestId('class-student-search-input');
+    await filterInput.fill('nonexistent12345');
 
     // Verify empty state message
     const emptyState = page.getByTestId('class-student-search-empty');
-    await expect(emptyState).toBeVisible({ timeout: 10000 });
+    await expect(emptyState).toBeVisible({ timeout: 5000 });
     await expect(page.getByText('No se encontraron estudiantes')).toBeVisible();
   });
 
-  test('should NOT show already enrolled students in search results', async ({ page }) => {
+  test('should NOT show already enrolled students in available list', async ({ page }) => {
     // Wait for page to load
     await expect(page.getByTestId('class-detail-header')).toBeVisible({ timeout: 15000 });
 
@@ -155,21 +156,16 @@ test.describe('Teacher Class Detail Page', () => {
     const modal = page.getByTestId('class-add-student-modal');
     await expect(modal).toBeVisible({ timeout: 5000 });
 
-    // Search for Sync (which is already enrolled)
-    const searchInput = page.getByTestId('class-student-search-input');
-    await searchInput.fill('Sync');
-
-    const searchButton = page.getByTestId('class-student-search-button');
-    await searchButton.click();
-
-    // Wait for results and verify Sync Student is NOT in results
-    // (they are already enrolled in the class)
-    await page.waitForTimeout(1000); // Wait for search to complete
-
+    // Wait for students to load
     const searchResults = page.getByTestId('class-student-search-results');
-    await expect(searchResults).toBeVisible();
+    await expect(searchResults).toBeVisible({ timeout: 10000 });
 
-    // The empty state should appear since Sync Student is already enrolled
+    // Filter for "Sync" (which is already enrolled in the class)
+    const filterInput = page.getByTestId('class-student-search-input');
+    await filterInput.fill('Sync');
+
+    // Sync Student should NOT appear in results (they are already enrolled)
+    // The empty state should appear since no available students match "Sync"
     const emptyOrResults = page.getByTestId('class-student-search-empty');
     await expect(emptyOrResults).toBeVisible({ timeout: 5000 });
   });
@@ -200,7 +196,7 @@ test.describe('Teacher Class Detail Page', () => {
     await expect(page.getByText(/El nivel del estudiante se asignará automáticamente/)).toBeVisible();
   });
 
-  test('should add searched student to class', async ({ page }) => {
+  test('should add available student to class', async ({ page }) => {
     // Wait for page to load
     await expect(page.getByTestId('class-detail-header')).toBeVisible({ timeout: 15000 });
 
@@ -209,14 +205,7 @@ test.describe('Teacher Class Detail Page', () => {
     const modal = page.getByTestId('class-add-student-modal');
     await expect(modal).toBeVisible({ timeout: 5000 });
 
-    // Search for María González
-    const searchInput = page.getByTestId('class-student-search-input');
-    await searchInput.fill('María');
-
-    const searchButton = page.getByTestId('class-student-search-button');
-    await searchButton.click();
-
-    // Wait for search results (scoped to search results container)
+    // Wait for students to load (scoped to search results container)
     const searchResults = page.getByTestId('class-student-search-results');
     await expect(searchResults.getByText('María González')).toBeVisible({ timeout: 10000 });
 
