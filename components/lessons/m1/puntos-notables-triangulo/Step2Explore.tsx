@@ -4,17 +4,25 @@ import { useState } from 'react';
 import { ArrowRight, ArrowLeft, Hand } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
-import InteractiveNotablePoints from './InteractiveNotablePoints';
+import { TriangleFigure } from '@/components/figures/TriangleFigure';
+import type {
+  SpecialLineConfig,
+  NotablePointConfig,
+  TriangleCircleConfig,
+  NotablePointType,
+} from '@/lib/types/triangle';
 
 type Phase = 'intro' | 'circuncentro' | 'incentro' | 'baricentro' | 'ortocentro' | 'compare';
+
+type LineType = 'mediatrices' | 'bisectrices' | 'medianas' | 'alturas';
 
 interface PhaseConfig {
   id: Phase;
   title: string;
   subtitle: string;
   description: string;
-  lines: 'mediatrices' | 'bisectrices' | 'medianas' | 'alturas' | null;
-  point: 'circuncentro' | 'incentro' | 'centroide' | 'ortocentro' | null;
+  lines: LineType | null;
+  point: NotablePointType | null;
   showCircumscribed?: boolean;
   showInscribed?: boolean;
   color: string;
@@ -60,7 +68,7 @@ const PHASES: PhaseConfig[] = [
     subtitle: 'Punto 3 de 4',
     description: 'El baricentro es el centro de gravedad del triángulo. Si recortas el triángulo en cartulina, se equilibraría en este punto.',
     lines: 'medianas',
-    point: 'centroide',
+    point: 'baricentro',
     color: 'emerald',
     lineDescription: 'Se construye con las 3 medianas (líneas desde cada vértice al punto medio del lado opuesto)',
   },
@@ -86,6 +94,43 @@ const PHASES: PhaseConfig[] = [
   },
 ];
 
+// Map line types to SpecialLineConfig arrays
+function getSpecialLines(lineType: LineType | null): SpecialLineConfig[] {
+  if (!lineType) return [];
+
+  const lineTypeMap: Record<LineType, SpecialLineConfig['type']> = {
+    mediatrices: 'mediatriz',
+    bisectrices: 'bisectriz',
+    medianas: 'mediana',
+    alturas: 'altura',
+  };
+
+  const type = lineTypeMap[lineType];
+  return [
+    { type, fromVertex: 0 },
+    { type, fromVertex: 1 },
+    { type, fromVertex: 2 },
+  ];
+}
+
+// Get notable points config for display
+function getNotablePoints(point: NotablePointType | null, animate: boolean = true): NotablePointConfig[] {
+  if (!point) return [];
+  return [{ type: point, animate }];
+}
+
+// Get circles config
+function getCircles(showCircumscribed?: boolean, showInscribed?: boolean): TriangleCircleConfig[] {
+  const circles: TriangleCircleConfig[] = [];
+  if (showCircumscribed) {
+    circles.push({ type: 'circumscribed', showCenter: false });
+  }
+  if (showInscribed) {
+    circles.push({ type: 'inscribed', showCenter: false });
+  }
+  return circles;
+}
+
 export default function Step2Explore({ onComplete, isActive }: LessonStepProps) {
   const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
 
@@ -94,6 +139,12 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   const phase = PHASES[currentPhaseIndex];
   const isFirst = currentPhaseIndex === 0;
   const isLast = currentPhaseIndex === PHASES.length - 1;
+
+  // Build props for TriangleFigure
+  const specialLines = getSpecialLines(phase.lines);
+  const notablePoints = getNotablePoints(phase.point);
+  const circles = getCircles(phase.showCircumscribed, phase.showInscribed);
+  const isDraggable = phase.id === 'compare' || phase.point !== null;
 
   const handleNext = () => {
     if (isLast) {
@@ -149,21 +200,23 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
 
       {/* Interactive Triangle */}
       <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-        <InteractiveNotablePoints
-          showMediatrices={phase.lines === 'mediatrices'}
-          showBisectrices={phase.lines === 'bisectrices'}
-          showMedianas={phase.lines === 'medianas'}
-          showAlturas={phase.lines === 'alturas'}
-          highlightPoint={phase.point}
-          showCircumscribedCircle={phase.showCircumscribed}
-          showInscribedCircle={phase.showInscribed}
-          draggable={phase.id === 'compare' || phase.point !== null}
+        <TriangleFigure
+          vertices={[
+            { x: 200, y: 60, label: 'A' },
+            { x: 80, y: 280, label: 'B' },
+            { x: 320, y: 280, label: 'C' },
+          ]}
+          specialLines={specialLines}
+          notablePoints={notablePoints}
+          circles={circles}
+          draggable={isDraggable}
           showGrid
-          className="mx-auto"
+          className="mx-auto max-w-sm"
+          ariaLabel="Triángulo interactivo con puntos notables"
         />
 
         {/* Drag instruction */}
-        {(phase.id === 'compare' || phase.point !== null) && (
+        {isDraggable && (
           <div className="flex items-center justify-center gap-2 mt-3 text-sm text-gray-500 dark:text-gray-400">
             <Hand size={16} />
             <span>Arrastra los vértices para explorar</span>

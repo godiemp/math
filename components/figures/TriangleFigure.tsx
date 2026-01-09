@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import type {
   TriangleFigureProps,
   LabeledPoint,
   SideConfig,
   AngleConfig,
   SpecialLineConfig,
+  NotablePointConfig,
+  TriangleCircleConfig,
   FromAnglesConfigObject,
   FromSidesConfigObject,
 } from '@/lib/types/triangle';
@@ -24,7 +26,14 @@ import {
   getStrokeDashArray,
   buildTriangleFromAngles,
   buildTriangleFromSides,
+  centroid,
+  incenter,
+  circumcenter,
+  orthocenter,
+  inradius,
+  circumradius,
 } from '@/lib/geometry/triangleUtils';
+import { cn } from '@/lib/utils';
 
 // Default colors following the design system
 const DEFAULT_COLORS = {
@@ -35,7 +44,18 @@ const DEFAULT_COLORS = {
   rightAngle: 'rgb(239, 68, 68)', // red-500
   grid: 'rgb(229, 231, 235)', // gray-200
   vertex: 'rgb(17, 24, 39)', // gray-900
+  vertexDragging: 'rgb(99, 102, 241)', // indigo-500
   label: 'rgb(17, 24, 39)', // gray-900
+  notablePoints: {
+    circuncentro: 'rgb(168, 85, 247)', // purple-500
+    incentro: 'rgb(245, 158, 11)', // amber-500
+    baricentro: 'rgb(16, 185, 129)', // emerald-500
+    ortocentro: 'rgb(239, 68, 68)', // red-500
+  },
+  circles: {
+    circumscribed: 'rgb(168, 85, 247)', // purple-500
+    inscribed: 'rgb(245, 158, 11)', // amber-500
+  },
 };
 
 /**
@@ -46,17 +66,26 @@ const DEFAULT_COLORS = {
  * - Side labels and measurements
  * - Interior/exterior angle arcs with labels
  * - Special lines: altura, mediana, bisectriz, mediatriz
+ * - Notable points: circuncentro, incentro, baricentro, ortocentro
+ * - Circumscribed and inscribed circles
+ * - Draggable vertices for interactive exploration
  * - Right angle markers
  * - Optional grid background
  * - Dark mode support
+ * - Standalone or embedded mode (like CircleFigure)
  */
 export function TriangleFigure({
+  standalone = true,
   vertices: verticesProp,
   fromAngles,
   fromSides,
+  draggable = false,
+  onVerticesChange,
   sides,
   angles,
   specialLines,
+  notablePoints,
+  circles,
   showRightAngleMarker,
   rightAngleVertex,
   rightAngleSize = 12,
@@ -76,8 +105,13 @@ export function TriangleFigure({
   ariaLabel,
   className = '',
 }: TriangleFigureProps) {
-  // Calculate vertices from fromAngles, fromSides, or use provided vertices
-  const vertices = useMemo<[LabeledPoint, LabeledPoint, LabeledPoint]>(() => {
+  // Internal state for draggable vertices
+  const [internalVertices, setInternalVertices] = useState<[LabeledPoint, LabeledPoint, LabeledPoint] | null>(null);
+  const [draggingVertex, setDraggingVertex] = useState<number | null>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  // Calculate initial vertices from fromAngles, fromSides, or use provided vertices
+  const initialVertices = useMemo<[LabeledPoint, LabeledPoint, LabeledPoint]>(() => {
     // Option 1: Build from angles
     if (fromAngles) {
       if (Array.isArray(fromAngles) && typeof fromAngles[0] === 'number') {
@@ -120,10 +154,65 @@ export function TriangleFigure({
     ];
   }, [fromAngles, fromSides, verticesProp]);
 
-  // Calculate viewBox from vertices if not provided
-  const calculatedBox = calculateViewBox(vertices, padding);
-  const viewBox =
-    customViewBox ||
+  // Use internal state for draggable, otherwise use computed vertices
+  const vertices = draggable
+    ? (internalVertices || initialVertices)
+    : initialVertices;
+
+  // Initialize internal vertices when draggable is enabled
+  useEffect(() => {
+    if (draggable && !internalVertices) {
+      setInternalVertices(initialVertices);
+    }
+  }, [draggable, initialVertices, internalVertices]);
+
+  // Notify parent of vertex changes
+  useEffect(() => {
+    if (draggable && internalVertices && onVerticesChange) {
+      onVerticesChange(internalVertices);
+    }
+  }, [draggable, internalVertices, onVerticesChange]);
+
+  // Calculate notable points positions
+  const notablePointsPositions = useMemo(() => ({
+    circuncentro: circumcenter(vertices),
+    incentro: incenter(vertices),
+    baricentro: centroid(vertices),
+    ortocentro: orthocenter(vertices),
+  }), [vertices]);
+
+  // Calculate circle radii
+  const circleRadii = useMemo(() => ({
+    circumscribed: circumradius(vertices),
+    inscribed: inradius(vertices),
+  }), [vertices]);
+
+  // Calculate viewBox from vertices (and circles if present)
+  const calculatedBox = useMemo(() => {
+    let box = calculateViewBox(vertices, padding);
+
+    // Extend viewBox for circumscribed circle if present
+    const hasCircumscribed = circles?.some(c => c.type === 'circumscribed');
+    if (hasCircumscribed) {
+      const cc = notablePointsPositions.circuncentro;
+      const cr = circleRadii.circumscribed;
+      const circleMinX = cc.x - cr - padding;
+      const circleMaxX = cc.x + cr + padding;
+      const circleMinY = cc.y - cr - padding;
+      const circleMaxY = cc.y + cr + padding;
+
+      box = {
+        minX: Math.min(box.minX, circleMinX),
+        minY: Math.min(box.minY, circleMinY),
+        width: Math.max(box.minX + box.width, circleMaxX) - Math.min(box.minX, circleMinX),
+        height: Math.max(box.minY + box.height, circleMaxY) - Math.min(box.minY, circleMinY),
+      };
+    }
+
+    return box;
+  }, [vertices, circles, notablePointsPositions, circleRadii, padding]);
+
+  const viewBox = customViewBox ||
     `${calculatedBox.minX} ${calculatedBox.minY} ${calculatedBox.width} ${calculatedBox.height}`;
 
   // Auto-detect right angle vertex if not specified
@@ -135,17 +224,52 @@ export function TriangleFigure({
   // Parse viewBox for grid calculations
   const [vbMinX, vbMinY, vbWidth, vbHeight] = viewBox.split(' ').map(Number);
 
-  return (
-    <svg
-      width={width}
-      height={height}
-      viewBox={viewBox}
-      className={`${className}`}
-      role="img"
-      aria-label={ariaLabel || 'Triangle figure'}
-    >
-      <title>{ariaLabel || 'Triangle figure'}</title>
+  // Get SVG point from mouse/touch event
+  const getSVGPoint = useCallback((clientX: number, clientY: number) => {
+    if (!svgRef.current) return null;
+    const svg = svgRef.current;
+    const pt = svg.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    const svgP = pt.matrixTransform(svg.getScreenCTM()?.inverse());
+    return { x: svgP.x, y: svgP.y };
+  }, []);
 
+  // Handle pointer down on vertex
+  const handlePointerDown = useCallback((index: number, e: React.PointerEvent) => {
+    if (!draggable) return;
+    e.preventDefault();
+    e.stopPropagation();
+    setDraggingVertex(index);
+    (e.target as Element).setPointerCapture(e.pointerId);
+  }, [draggable]);
+
+  // Handle pointer move
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (draggingVertex === null || !draggable) return;
+    const point = getSVGPoint(e.clientX, e.clientY);
+    if (!point) return;
+
+    setInternalVertices(prev => {
+      if (!prev) return prev;
+      const newVertices = [...prev] as [LabeledPoint, LabeledPoint, LabeledPoint];
+      newVertices[draggingVertex] = {
+        ...newVertices[draggingVertex],
+        x: point.x,
+        y: point.y,
+      };
+      return newVertices;
+    });
+  }, [draggable, draggingVertex, getSVGPoint]);
+
+  // Handle pointer up
+  const handlePointerUp = useCallback(() => {
+    setDraggingVertex(null);
+  }, []);
+
+  // Content to render (can be in <svg> or <g>)
+  const content = (
+    <>
       {/* Grid background */}
       {showGrid && (
         <g className="grid">
@@ -187,6 +311,16 @@ export function TriangleFigure({
           })}
         </g>
       )}
+
+      {/* Circles (rendered behind everything) */}
+      {circles?.map((circleConfig, i) => (
+        <TriangleCircle
+          key={`circle-${i}`}
+          config={circleConfig}
+          notablePointsPositions={notablePointsPositions}
+          circleRadii={circleRadii}
+        />
+      ))}
 
       {/* Special lines (rendered before triangle so they appear behind) */}
       {specialLines?.map((config, i) => (
@@ -238,6 +372,15 @@ export function TriangleFigure({
         );
       })}
 
+      {/* Notable points */}
+      {notablePoints?.map((pointConfig, i) => (
+        <NotablePoint
+          key={`notable-${i}`}
+          config={pointConfig}
+          position={notablePointsPositions[pointConfig.type]}
+        />
+      ))}
+
       {/* Vertex points and labels */}
       {vertices.map((vertex, i) => (
         <g key={`vertex-${i}`}>
@@ -245,13 +388,20 @@ export function TriangleFigure({
             <circle
               cx={vertex.x}
               cy={vertex.y}
-              r={vertexRadius}
-              fill={DEFAULT_COLORS.vertex}
-              className="dark:fill-white"
+              r={draggable ? Math.max(vertexRadius, 10) : vertexRadius}
+              fill={draggingVertex === i ? DEFAULT_COLORS.vertexDragging : DEFAULT_COLORS.vertex}
+              stroke="white"
+              strokeWidth={draggable ? 2 : 0}
+              style={{ cursor: draggable ? 'grab' : 'default' }}
+              onPointerDown={(e) => handlePointerDown(i, e)}
+              className={cn(
+                'dark:fill-white',
+                draggable && 'hover:fill-indigo-500 transition-colors'
+              )}
             />
           )}
           {vertex.label && (
-            <VertexLabel vertex={vertex} vertices={vertices} />
+            <VertexLabel vertex={vertex} vertices={vertices} draggable={draggable} />
           )}
         </g>
       ))}
@@ -268,8 +418,32 @@ export function TriangleFigure({
           />
         );
       })}
-    </svg>
+    </>
   );
+
+  // Standalone mode: wrap in SVG
+  if (standalone) {
+    return (
+      <svg
+        ref={svgRef}
+        width={width}
+        height={height}
+        viewBox={viewBox}
+        className={cn('max-w-full', className)}
+        onPointerMove={draggable ? handlePointerMove : undefined}
+        onPointerUp={draggable ? handlePointerUp : undefined}
+        onPointerLeave={draggable ? handlePointerUp : undefined}
+        role="img"
+        aria-label={ariaLabel || 'Triangle figure'}
+      >
+        <title>{ariaLabel || 'Triangle figure'}</title>
+        {content}
+      </svg>
+    );
+  }
+
+  // Embedded mode: return <g> element for use in another SVG
+  return <g className={className}>{content}</g>;
 }
 
 // Sub-components
@@ -277,10 +451,11 @@ export function TriangleFigure({
 interface VertexLabelProps {
   vertex: LabeledPoint;
   vertices: [LabeledPoint, LabeledPoint, LabeledPoint];
+  draggable?: boolean;
 }
 
-function VertexLabel({ vertex, vertices }: VertexLabelProps) {
-  const pos = calculateVertexLabelPosition(vertex, vertices, 18);
+function VertexLabel({ vertex, vertices, draggable }: VertexLabelProps) {
+  const pos = calculateVertexLabelPosition(vertex, vertices, draggable ? 22 : 18);
 
   return (
     <text
@@ -493,6 +668,106 @@ function RightAngleMarkerAtPoint({
       strokeWidth="1.5"
       className="dark:stroke-purple-400"
     />
+  );
+}
+
+interface NotablePointProps {
+  config: NotablePointConfig;
+  position: LabeledPoint;
+}
+
+function NotablePoint({ config, position }: NotablePointProps) {
+  const color = config.color || DEFAULT_COLORS.notablePoints[config.type];
+  const radius = config.radius || 8;
+
+  return (
+    <g>
+      {/* Main point */}
+      <circle
+        cx={position.x}
+        cy={position.y}
+        r={radius}
+        fill={color}
+        stroke="white"
+        strokeWidth={2}
+        className="dark:stroke-gray-800"
+      />
+      {/* Animation ring */}
+      {config.animate && (
+        <circle
+          cx={position.x}
+          cy={position.y}
+          r={radius + 4}
+          fill="none"
+          stroke={color}
+          strokeWidth={2}
+          strokeOpacity={0.4}
+          className="animate-ping"
+        />
+      )}
+      {/* Label */}
+      {config.showLabel && (
+        <text
+          x={position.x + radius + 8}
+          y={position.y + 4}
+          fill={color}
+          fontSize="12"
+          fontWeight="bold"
+          className="dark:fill-current"
+        >
+          {config.label || config.type.charAt(0).toUpperCase() + config.type.slice(1)}
+        </text>
+      )}
+    </g>
+  );
+}
+
+interface TriangleCircleProps {
+  config: TriangleCircleConfig;
+  notablePointsPositions: {
+    circuncentro: LabeledPoint;
+    incentro: LabeledPoint;
+    baricentro: LabeledPoint;
+    ortocentro: LabeledPoint;
+  };
+  circleRadii: {
+    circumscribed: number;
+    inscribed: number;
+  };
+}
+
+function TriangleCircle({ config, notablePointsPositions, circleRadii }: TriangleCircleProps) {
+  const isCircumscribed = config.type === 'circumscribed';
+  const center = isCircumscribed
+    ? notablePointsPositions.circuncentro
+    : notablePointsPositions.incentro;
+  const radius = isCircumscribed
+    ? circleRadii.circumscribed
+    : circleRadii.inscribed;
+  const strokeColor = config.stroke || DEFAULT_COLORS.circles[config.type];
+
+  return (
+    <g>
+      <circle
+        cx={center.x}
+        cy={center.y}
+        r={radius}
+        fill="none"
+        stroke={strokeColor}
+        strokeWidth={config.strokeWidth || 2}
+        strokeDasharray="6,4"
+        className={isCircumscribed ? 'dark:stroke-purple-400' : 'dark:stroke-amber-400'}
+      />
+      {config.showCenter && (
+        <circle
+          cx={center.x}
+          cy={center.y}
+          r={4}
+          fill={strokeColor}
+          className={isCircumscribed ? 'dark:fill-purple-400' : 'dark:fill-amber-400'}
+        />
+      )}
+    </g>
   );
 }
 

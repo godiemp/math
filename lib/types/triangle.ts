@@ -13,6 +13,47 @@ export interface LabeledPoint {
 }
 
 /**
+ * Notable point types (using Spanish terms for Chilean curriculum)
+ */
+export type NotablePointType =
+  | 'circuncentro' // Circumcenter - intersection of perpendicular bisectors
+  | 'incentro' // Incenter - intersection of angle bisectors
+  | 'baricentro' // Centroid - intersection of medians (center of mass)
+  | 'ortocentro'; // Orthocenter - intersection of altitudes
+
+/**
+ * Configuration for a notable point
+ */
+export interface NotablePointConfig {
+  /** Which notable point to show */
+  type: NotablePointType;
+  /** Custom color for the point */
+  color?: string;
+  /** Whether to show a label */
+  showLabel?: boolean;
+  /** Custom label text (defaults to type name) */
+  label?: string;
+  /** Point radius */
+  radius?: number;
+  /** Whether to show a pulsing animation */
+  animate?: boolean;
+}
+
+/**
+ * Configuration for circles (circumscribed/inscribed)
+ */
+export interface TriangleCircleConfig {
+  /** Type of circle */
+  type: 'circumscribed' | 'inscribed';
+  /** Custom stroke color */
+  stroke?: string;
+  /** Stroke width */
+  strokeWidth?: number;
+  /** Whether to show the center point */
+  showCenter?: boolean;
+}
+
+/**
  * Side configuration for triangle edges
  */
 export interface SideConfig {
@@ -119,6 +160,10 @@ export type FromSidesConfig = [number, number, number] | FromSidesConfigObject;
  * Main TriangleFigure component props
  */
 export interface TriangleFigureProps {
+  // Standalone mode (like CircleFigure)
+  /** If true (default), renders as <svg>. If false, renders as <g> for embedding. */
+  standalone?: boolean;
+
   // Option 1: Three vertices directly
   /** The three vertices of the triangle (use this OR fromAngles OR fromSides) */
   vertices?: [LabeledPoint, LabeledPoint, LabeledPoint];
@@ -131,6 +176,12 @@ export interface TriangleFigureProps {
   /** Build triangle from side lengths (e.g., [3, 4, 5]) */
   fromSides?: FromSidesConfig;
 
+  // Interactive dragging
+  /** Whether vertices can be dragged */
+  draggable?: boolean;
+  /** Callback when vertices change (for controlled component) */
+  onVerticesChange?: (vertices: [LabeledPoint, LabeledPoint, LabeledPoint]) => void;
+
   // Sides configuration (indices: 0=v0-v1, 1=v1-v2, 2=v2-v0)
   /** Configuration for each side */
   sides?: [SideConfig?, SideConfig?, SideConfig?];
@@ -142,6 +193,14 @@ export interface TriangleFigureProps {
   // Special lines
   /** Special lines to draw (altura, mediana, bisectriz, mediatriz) */
   specialLines?: SpecialLineConfig[];
+
+  // Notable points (puntos notables)
+  /** Notable points to display */
+  notablePoints?: NotablePointConfig[];
+
+  // Circles (circumscribed/inscribed)
+  /** Circles to draw around/inside the triangle */
+  circles?: TriangleCircleConfig[];
 
   // Right angle marker
   /** Whether to show right angle marker (auto-detected for ~90 degree angles) */

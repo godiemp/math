@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { ArrowRight, Lightbulb, AlertTriangle, Circle, Target, Scale, Crosshair } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
-import InteractiveNotablePoints from './InteractiveNotablePoints';
+import { TriangleFigure } from '@/components/figures/TriangleFigure';
+import type { SpecialLineConfig, NotablePointConfig, TriangleCircleConfig } from '@/lib/types/triangle';
 
 type TabId = 'circuncentro' | 'incentro' | 'baricentro' | 'ortocentro' | 'tips';
 
@@ -22,6 +23,22 @@ const TABS: TabConfig[] = [
   { id: 'ortocentro', label: 'Ortocentro', icon: Crosshair, color: 'red' },
   { id: 'tips', label: 'Tips', icon: Lightbulb, color: 'blue' },
 ];
+
+// Default triangle vertices for explanations
+const DEFAULT_VERTICES: [{ x: number; y: number; label: string }, { x: number; y: number; label: string }, { x: number; y: number; label: string }] = [
+  { x: 200, y: 60, label: 'A' },
+  { x: 80, y: 280, label: 'B' },
+  { x: 320, y: 280, label: 'C' },
+];
+
+// Helper to generate special lines for all 3 vertices
+function allLinesOfType(type: SpecialLineConfig['type']): SpecialLineConfig[] {
+  return [
+    { type, fromVertex: 0 },
+    { type, fromVertex: 1 },
+    { type, fromVertex: 2 },
+  ];
+}
 
 export default function Step3Explain({ onComplete, isActive }: LessonStepProps) {
   const [activeTab, setActiveTab] = useState<TabId>('circuncentro');
@@ -83,10 +100,11 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             </div>
 
             <div className="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
-              <InteractiveNotablePoints
-                showMediatrices
-                highlightPoint="circuncentro"
-                showCircumscribedCircle
+              <TriangleFigure
+                vertices={DEFAULT_VERTICES}
+                specialLines={allLinesOfType('mediatriz')}
+                notablePoints={[{ type: 'circuncentro', animate: true }]}
+                circles={[{ type: 'circumscribed' }]}
                 className="mx-auto max-w-xs"
               />
             </div>
@@ -130,10 +148,11 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             </div>
 
             <div className="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-4">
-              <InteractiveNotablePoints
-                showBisectrices
-                highlightPoint="incentro"
-                showInscribedCircle
+              <TriangleFigure
+                vertices={DEFAULT_VERTICES}
+                specialLines={allLinesOfType('bisectriz')}
+                notablePoints={[{ type: 'incentro', animate: true }]}
+                circles={[{ type: 'inscribed' }]}
                 className="mx-auto max-w-xs"
               />
             </div>
@@ -177,9 +196,10 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             </div>
 
             <div className="bg-emerald-50 dark:bg-emerald-900/30 rounded-lg p-4">
-              <InteractiveNotablePoints
-                showMedianas
-                highlightPoint="centroide"
+              <TriangleFigure
+                vertices={DEFAULT_VERTICES}
+                specialLines={allLinesOfType('mediana')}
+                notablePoints={[{ type: 'baricentro', animate: true }]}
                 className="mx-auto max-w-xs"
               />
             </div>
@@ -223,9 +243,10 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             </div>
 
             <div className="bg-red-50 dark:bg-red-900/30 rounded-lg p-4">
-              <InteractiveNotablePoints
-                showAlturas
-                highlightPoint="ortocentro"
+              <TriangleFigure
+                vertices={DEFAULT_VERTICES}
+                specialLines={allLinesOfType('altura')}
+                notablePoints={[{ type: 'ortocentro', animate: true }]}
                 className="mx-auto max-w-xs"
               />
             </div>
