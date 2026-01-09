@@ -48,7 +48,11 @@ export function FeedbackPanel({
             {displayTitle}
           </h4>
           <div className="text-sm text-gray-700 dark:text-gray-300">
-            <MathText content={explanation} />
+            {typeof explanation === 'string' ? (
+              <MathText content={explanation} />
+            ) : (
+              explanation
+            )}
           </div>
         </div>
       </div>
