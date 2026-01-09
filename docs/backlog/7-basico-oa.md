@@ -9,10 +9,10 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 | Métrica | Valor |
 |---------|-------|
 | Total OA | 19 |
-| OA con cobertura | 15 |
-| OA sin cobertura | 4 |
-| % Cobertura | 79% |
-| Total lecciones mapeadas | 21 |
+| OA con cobertura | 17 |
+| OA sin cobertura | 2 |
+| % Cobertura | 89% |
+| Total lecciones mapeadas | 23 |
 
 ---
 
@@ -97,16 +97,17 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 ## Álgebra y Funciones (4 OA)
 
-### MA07-OA-06: Lenguaje algebraico ❌
+### MA07-OA-06: Lenguaje algebraico ✅
 > Utilizar el lenguaje algebraico para generalizar relaciones entre números, para establecer y formular reglas y propiedades y construir ecuaciones.
 
-**Estado:** ❌ Sin cobertura directa
+**Estado:** ✅ Cobertura completa
 **Tipo:** Basal
 
-**Nota:** La lección m1-alg-002-a cubre mejor OA-07 (términos semejantes). Se necesita una lección específica para lenguaje algebraico.
+| Lección | Nivel | Título |
+|---------|-------|--------|
+| m1-alg-002-b | M1 | Lenguaje Algebraico |
 
-**Pendiente:**
-- m1-alg-002-b: Lenguaje Algebraico (traducir expresiones verbales a algebraicas)
+**Nota:** Traducción de expresiones verbales a algebraicas y viceversa.
 
 ---
 
@@ -135,20 +136,20 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 ---
 
-### MA07-OA-09: Ecuaciones e inecuaciones lineales ⚠️
+### MA07-OA-09: Ecuaciones e inecuaciones lineales ✅
 > Modelar y resolver problemas variados con ecuaciones e inecuaciones lineales de formas ax = b; x/a = b; ax < b; ax > b; x/a < b; x/a > b.
 
-**Estado:** ⚠️ Cobertura parcial (ecuaciones sí, inecuaciones no)
+**Estado:** ✅ Cobertura completa
 **Tipo:** No basal
 
 | Lección | Nivel | Título |
 |---------|-------|--------|
 | m1-alg-003-a | M1 | Problemas con Ecuaciones Lineales |
 | m1-alg-006-a | M1 | Ecuación Lineal |
+| m1-alg-006-b | M1 | Inecuaciones Lineales |
 
 **Pendiente:**
-- m1-alg-006-b: Inecuaciones Lineales
-- m1-alg-007-a: Problemas con Inecuaciones
+- m1-alg-007-a: Problemas con Inecuaciones (opcional, para refuerzo)
 
 ---
 
@@ -297,27 +298,23 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 | Eje | Total OA | OA Cubiertos | % |
 |-----|----------|--------------|---|
 | Números | 5 | 5 | 100% |
-| Álgebra | 4 | 3 | 75% |
+| Álgebra | 4 | 4 | 100% |
 | Geometría | 5 | 3 | 60% |
-| Prob/Estadística | 5 | 4 | 80% |
-| **Total** | **19** | **15** | **79%** |
+| Prob/Estadística | 5 | 5 | 100% |
+| **Total** | **19** | **17** | **89%** |
 
 ### OA Basales sin cobertura
 
-1. **MA07-OA-06** (Lenguaje algebraico) - Sin cobertura directa
-2. **MA07-OA-12** (Construcciones geométricas) - Sin cobertura
-3. **MA07-OA-14** (Vectores) - Parcial, falta vectores
+1. **MA07-OA-12** (Construcciones geométricas) - Sin cobertura
+2. **MA07-OA-14** (Vectores) - Parcial, falta vectores
 
 ### Brechas Identificadas
 
 | Prioridad | OA | Tema | Lecciones Necesarias |
 |-----------|-----|------|---------------------|
-| Alta | MA07-OA-06 | Lenguaje algebraico | 1 lección |
-| Alta | MA07-OA-09 | Inecuaciones | 2 lecciones |
 | Alta | MA07-OA-14 | Vectores | 2 lecciones |
 | Media | MA07-OA-10 | Ángulos en polígonos | 2 lecciones |
 | Media | MA07-OA-12 | Construcciones | 2 lecciones |
-| Baja | MA07-OA-19 | Prob. experimental vs teórica | 1 lección |
 
 ---
 
@@ -366,7 +363,7 @@ Solo si el proyecto decide expandirse a 7° básico específicamente:
 2. 7b-geo-002: Puntos Notables del Triángulo
 
 ### Fase 3: Completar Brechas M1 (beneficia 7° y PAES)
-1. m1-alg-006-b: Inecuaciones Lineales
+1. ~~m1-alg-006-b: Inecuaciones Lineales~~ ✅ Implementada
 2. m1-geo-004-b/c: Vectores
 
 ---

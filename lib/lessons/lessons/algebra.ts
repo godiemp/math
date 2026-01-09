@@ -347,6 +347,32 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     ],
   },
   {
+    id: 'm1-alg-006-b',
+    slug: 'inecuaciones-lineales',
+    title: 'Inecuaciones Lineales',
+    description:
+      'Aprende a resolver inecuaciones de primer grado y representa sus soluciones en la recta numérica.',
+    level: 'M1',
+    subject: 'álgebra',
+    thematicUnit: 'M1-ALG-006',
+    skills: [
+      'algebra-inecuaciones-lineales',
+      'algebra-despeje',
+      'algebra-operaciones-inversas',
+      'algebra-intervalos',
+    ],
+    estimatedMinutes: 17,
+    minEducOA: ['MA07-OA-09'],
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Presupuesto del Celular' },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
+      { id: 'explain', type: 'explain', title: 'Tipos de Inecuaciones' },
+      { id: 'classify', type: 'explore', title: 'Resuelve las Inecuaciones' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
+  {
     id: 'm1-alg-011-a',
     slug: 'completar-cuadrado',
     title: 'Completar el Cuadrado',
