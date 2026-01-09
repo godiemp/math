@@ -6,6 +6,7 @@ import type {
   LabeledPoint,
   PolygonEdgeConfig,
   PolygonAngleConfig,
+  ExteriorAngleConfig,
   DiagonalConfig,
   ApothemConfig,
 } from '@/lib/types/polygon';
@@ -30,6 +31,8 @@ const DEFAULT_COLORS = {
   fill: 'rgba(59, 130, 246, 0.15)', // blue-500 with opacity
   stroke: 'rgb(59, 130, 246)', // blue-500
   angleArc: 'rgb(245, 158, 11)', // amber-500
+  exteriorAngle: 'rgb(239, 68, 68)', // red-500
+  extension: 'rgb(156, 163, 175)', // gray-400
   diagonal: 'rgb(168, 85, 247)', // purple-500
   apothem: 'rgb(16, 185, 129)', // emerald-500
   grid: 'rgb(229, 231, 235)', // gray-200
@@ -46,6 +49,7 @@ const DEFAULT_COLORS = {
  * - Configurable vertices with labels
  * - Edge labels and measurements
  * - Interior angle arcs with labels
+ * - Exterior angle arcs with extension lines
  * - Diagonals (all or specific)
  * - Apothem line for regular polygons
  * - Center point display
@@ -57,6 +61,7 @@ export function PolygonFigure({
   fromRegular,
   edges,
   angles,
+  exteriorAngles,
   diagonals,
   showApothem,
   showCenter = false,
@@ -131,6 +136,23 @@ export function PolygonFigure({
     if (showApothem === true) return { toEdge: 0 };
     return showApothem;
   }, [showApothem]);
+
+  // Normalize exterior angles config
+  const exteriorAnglesToRender = useMemo<ExteriorAngleConfig[]>(() => {
+    if (!exteriorAngles) return [];
+
+    if (exteriorAngles === 'all') {
+      // Show all exterior angles with default config
+      return Array.from({ length: n }, () => ({
+        showArc: true,
+        showExtension: true,
+        showFill: true,
+        fillOpacity: 0.15,
+      }));
+    }
+
+    return exteriorAngles;
+  }, [exteriorAngles, n]);
 
   return (
     <svg
@@ -209,7 +231,7 @@ export function PolygonFigure({
         className="dark:stroke-blue-400"
       />
 
-      {/* Angle arcs */}
+      {/* Interior angle arcs */}
       {angles?.map((angleConfig, i) => {
         if (!angleConfig?.showArc) return null;
         return (
@@ -218,6 +240,19 @@ export function PolygonFigure({
             vertices={vertices}
             vertexIndex={i}
             config={angleConfig}
+          />
+        );
+      })}
+
+      {/* Exterior angle arcs */}
+      {exteriorAnglesToRender.map((config, i) => {
+        if (!config) return null;
+        return (
+          <ExteriorAngleArc
+            key={`ext-angle-${i}`}
+            vertices={vertices}
+            vertexIndex={i}
+            config={config}
           />
         );
       })}
@@ -399,6 +434,154 @@ function AngleLabel({ vertices, vertexIndex, config }: AngleLabelProps) {
     >
       {labelText}
     </text>
+  );
+}
+
+interface ExteriorAngleArcProps {
+  vertices: LabeledPoint[];
+  vertexIndex: number;
+  config: ExteriorAngleConfig;
+}
+
+function ExteriorAngleArc({ vertices, vertexIndex, config }: ExteriorAngleArcProps) {
+  const n = vertices.length;
+  const vertex = vertices[vertexIndex];
+  const prev = vertices[(vertexIndex - 1 + n) % n];
+  const next = vertices[(vertexIndex + 1) % n];
+
+  // Direction from prev to current vertex (this is the incoming edge direction)
+  const dx1 = vertex.x - prev.x;
+  const dy1 = vertex.y - prev.y;
+  const len1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
+
+  // Normalized direction
+  const normX1 = dx1 / len1;
+  const normY1 = dy1 / len1;
+
+  // Extension point (beyond the vertex in the same direction)
+  const extLength = config.extensionLength ?? 30;
+  const extX = vertex.x + normX1 * extLength;
+  const extY = vertex.y + normY1 * extLength;
+
+  // Direction to next vertex
+  const dx2 = next.x - vertex.x;
+  const dy2 = next.y - vertex.y;
+  const len2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+  const normX2 = dx2 / len2;
+  const normY2 = dy2 / len2;
+
+  // Arc configuration
+  const arcRadius = config.arcRadius ?? 20;
+  const showExtension = config.showExtension !== false;
+  const showArc = config.showArc !== false;
+  const showFill = config.showFill ?? false;
+
+  // Calculate arc endpoints
+  // Arc start: on the extension line
+  const arcStartX = vertex.x + normX1 * arcRadius;
+  const arcStartY = vertex.y + normY1 * arcRadius;
+  // Arc end: on the next edge line
+  const arcEndX = vertex.x + normX2 * arcRadius;
+  const arcEndY = vertex.y + normY2 * arcRadius;
+
+  // Calculate angle for arc sweep direction
+  const angle1 = Math.atan2(normY1, normX1);
+  const angle2 = Math.atan2(normY2, normX2);
+
+  // Determine sweep direction (exterior angle is the smaller one between extension and next edge)
+  let angleDiff = angle2 - angle1;
+  if (angleDiff < 0) angleDiff += 2 * Math.PI;
+
+  // For exterior angles, we want the arc on the outside (smaller angle)
+  const largeArcFlag = angleDiff > Math.PI ? 1 : 0;
+  const sweepFlag = 1;
+
+  // Arc path
+  const arcPath = `M ${arcStartX} ${arcStartY} A ${arcRadius} ${arcRadius} 0 ${largeArcFlag} ${sweepFlag} ${arcEndX} ${arcEndY}`;
+
+  // Fill path (pie slice)
+  const fillPath = `M ${vertex.x} ${vertex.y} L ${arcStartX} ${arcStartY} A ${arcRadius} ${arcRadius} 0 ${largeArcFlag} ${sweepFlag} ${arcEndX} ${arcEndY} Z`;
+
+  // Calculate exterior angle in degrees for label
+  const interiorAngle = angleAtVertex(vertices, vertexIndex);
+  const exteriorAngle = 180 - interiorAngle;
+
+  // Label position (midpoint of arc, slightly outward)
+  const midAngle = (angle1 + angle2) / 2;
+  // Adjust for the exterior side
+  let labelAngle = midAngle;
+  if (angleDiff <= Math.PI) {
+    labelAngle = midAngle;
+  } else {
+    labelAngle = midAngle + Math.PI;
+  }
+  const labelRadius = arcRadius + 12;
+  const labelX = vertex.x + Math.cos(labelAngle) * labelRadius;
+  const labelY = vertex.y + Math.sin(labelAngle) * labelRadius;
+
+  const color = config.color || DEFAULT_COLORS.exteriorAngle;
+  const extensionColor = config.extensionColor || DEFAULT_COLORS.extension;
+
+  // Determine label text
+  let labelText = config.label;
+  if (config.showDegrees && !labelText) {
+    labelText = `${Math.round(exteriorAngle)}°`;
+  }
+
+  return (
+    <g>
+      {/* Extension line (dashed) */}
+      {showExtension && (
+        <line
+          x1={vertex.x}
+          y1={vertex.y}
+          x2={extX}
+          y2={extY}
+          stroke={extensionColor}
+          strokeWidth="1.5"
+          strokeDasharray="4,3"
+          className="dark:stroke-gray-500"
+        />
+      )}
+
+      {/* Angle fill */}
+      {showFill && (
+        <path
+          d={fillPath}
+          fill={color}
+          fillOpacity={config.fillOpacity ?? 0.15}
+          className="dark:fill-red-500/20"
+        />
+      )}
+
+      {/* Angle arc */}
+      {showArc && (
+        <path
+          d={arcPath}
+          fill="none"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          className="dark:stroke-red-400"
+        />
+      )}
+
+      {/* Label */}
+      {labelText && (
+        <text
+          x={labelX}
+          y={labelY}
+          fill={color}
+          fontSize="11"
+          fontWeight="bold"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          className="dark:fill-red-400"
+        >
+          {labelText}
+        </text>
+      )}
+    </g>
   );
 }
 
