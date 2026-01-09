@@ -198,19 +198,15 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           failureSubtext="Repasa la fórmula y los casos del discriminante"
           items={QUESTIONS}
           getIsCorrect={(_, i) => mc.answers[i] === QUESTIONS[i].correctAnswer}
-          renderItem={(q, i, isCorrect) => (
+          renderItem={(q, _, isCorrect) => (
             <>
               {isCorrect ? (
                 <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
               ) : (
                 <X className="w-5 h-5 text-red-600 flex-shrink-0" />
               )}
-              <span className="text-gray-700 dark:text-gray-300 text-sm truncate flex-1">
-                {q.equation || q.question.slice(0, 30) + '...'}
-              </span>
-              <span className="text-sm text-purple-600 dark:text-purple-400 ml-auto">
-                {q.options[q.correctAnswer].slice(0, 20)}
-                {q.options[q.correctAnswer].length > 20 ? '...' : ''}
+              <span className="text-gray-700 dark:text-gray-300 text-sm flex-1">
+                {q.equation ? <InlineMath latex={q.equation} /> : q.question.slice(0, 40) + '...'}
               </span>
             </>
           )}
