@@ -79,9 +79,9 @@ export async function seedTestData() {
     const paesStudentId = 'test-paes-student';
 
     await client.query(
-      `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-      [paesStudentId, 'paes_student', 'paes@test.cl', paesStudentPassword, 'Estudiante PAES', 'student', now, now]
+      `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      [paesStudentId, 'paes_student', 'paes@test.cl', paesStudentPassword, 'Estudiante PAES', 'student', true, now, now]
     );
 
     // Create 1-Medio test student (grade level assigned - school content only)
@@ -89,9 +89,9 @@ export async function seedTestData() {
     const medioStudentId = 'test-1medio-student';
 
     await client.query(
-      `INSERT INTO users (id, username, email, password_hash, display_name, role, grade_level, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-      [medioStudentId, '1medio_student', '1medio@test.cl', medioStudentPassword, 'Estudiante 1° Medio', 'student', '1-medio', now, now]
+      `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, grade_level, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      [medioStudentId, '1medio_student', '1medio@test.cl', medioStudentPassword, 'Estudiante 1° Medio', 'student', true, '1-medio', now, now]
     );
 
     // Create test teacher user for live lesson sync testing
