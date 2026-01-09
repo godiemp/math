@@ -206,3 +206,52 @@ export function createBreadcrumbSchema(
     })),
   };
 }
+
+// Product Schema for Pricing page
+export const pricingProductSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "@id": `${SITE_URL}/pricing#product`,
+  name: "SimplePAES Premium",
+  description:
+    "Suscripción premium de matemáticas para enseñanza media con +900 ejercicios, Tutor AI 24/7, y preparación PAES completa.",
+  brand: { "@id": `${SITE_URL}/#organization` },
+  offers: {
+    "@type": "Offer",
+    price: "8000",
+    priceCurrency: "CLP",
+    availability: "https://schema.org/InStock",
+    url: `${SITE_URL}/pricing`,
+    priceValidUntil: new Date(
+      new Date().setFullYear(new Date().getFullYear() + 1)
+    )
+      .toISOString()
+      .split("T")[0],
+    seller: { "@id": `${SITE_URL}/#organization` },
+  },
+  category: "Educational Software",
+  audience: {
+    "@type": "EducationalAudience",
+    educationalRole: "student",
+    audienceType: "Estudiantes de enseñanza media Chile",
+  },
+};
+
+// WebPage Schema generator for legal and static pages
+export function createWebPageSchema(options: {
+  name: string;
+  description: string;
+  url: string;
+  breadcrumbItems: Array<{ name: string; url: string }>;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${options.url}#webpage`,
+    name: options.name,
+    description: options.description,
+    url: options.url,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    breadcrumb: createBreadcrumbSchema(options.breadcrumbItems),
+  };
+}
