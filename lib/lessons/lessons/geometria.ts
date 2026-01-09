@@ -64,6 +64,27 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     ],
   },
   {
+    id: 'm1-geo-001-d',
+    slug: 'angulos-interiores-poligonos',
+    title: 'Ángulos Interiores de Polígonos',
+    description:
+      'Descubre la fórmula (n-2)×180° para calcular la suma de ángulos interiores de cualquier polígono.',
+    level: 'M1',
+    subject: 'geometría',
+    thematicUnit: 'M1-GEO-001',
+    skills: ['angulos-interiores', 'triangulacion-poligonos', 'poligonos-regulares'],
+    estimatedMinutes: 14,
+    minEducOA: ['MA07-OA-10'],
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Kultrun del Artesano' },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
+      { id: 'explain', type: 'explain', title: 'Las Fórmulas' },
+      { id: 'classify', type: 'explore', title: 'Identifica los Ángulos' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
+  {
     id: 'm1-geo-002-a',
     slug: 'circulo-perimetro-area',
     title: 'Circunferencia y Área del Círculo',
