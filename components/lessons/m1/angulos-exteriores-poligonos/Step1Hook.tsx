@@ -7,12 +7,13 @@ import { LessonStepProps } from '@/lib/lessons/types';
 import { buildRegularPolygon, regularExteriorAngle, polygonPath } from '@/lib/geometry/polygonUtils';
 
 type Phase = 'intro' | 'walking' | 'question' | 'result';
+type AnimationStep = 'idle' | 'rotating' | 'walking';
 
-// Pentagon configuration
+// Pentagon configuration - larger and better centered
 const SIDES = 5;
-const RADIUS = 70;
-const CENTER_X = 120;
-const CENTER_Y = 110;
+const RADIUS = 85;
+const CENTER_X = 140;
+const CENTER_Y = 120;
 const VERTICES = buildRegularPolygon(SIDES, RADIUS, CENTER_X, CENTER_Y, -90);
 const EXTERIOR_ANGLE = regularExteriorAngle(SIDES); // 72°
 
@@ -24,6 +25,16 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const [showExteriorAngles, setShowExteriorAngles] = useState<number[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
+  // New state for two-phase animation
+  const [animationStep, setAnimationStep] = useState<AnimationStep>('idle');
+  const [robotPosition, setRobotPosition] = useState({ x: VERTICES[0].x, y: VERTICES[0].y });
+  const [robotRotation, setRobotRotation] = useState(() => {
+    // Initial rotation pointing toward vertex 1
+    const v = VERTICES[0];
+    const nextV = VERTICES[1];
+    return Math.atan2(nextV.y - v.y, nextV.x - v.x) * (180 / Math.PI);
+  });
+
   const correctAnswer = 1; // 360°
 
   // Reset animation
@@ -32,46 +43,73 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
     setTotalRotation(0);
     setShowExteriorAngles([]);
     setIsPlaying(false);
+    setAnimationStep('idle');
+    setRobotPosition({ x: VERTICES[0].x, y: VERTICES[0].y });
+    // Reset rotation to point toward vertex 1
+    const v = VERTICES[0];
+    const nextV = VERTICES[1];
+    setRobotRotation(Math.atan2(nextV.y - v.y, nextV.x - v.x) * (180 / Math.PI));
   }, []);
 
-  // Animation effect
+  // Two-phase animation: first rotate, then walk
   useEffect(() => {
     if (!isPlaying || phase !== 'walking' || currentVertex >= SIDES) return;
 
-    const timer = setTimeout(() => {
-      const nextVertex = currentVertex + 1;
+    if (animationStep === 'idle') {
+      // Start rotating phase
+      setAnimationStep('rotating');
+
+      // Show the exterior angle arc
       setShowExteriorAngles((prev) => [...prev, currentVertex]);
-      setTotalRotation(nextVertex * EXTERIOR_ANGLE);
-      setCurrentVertex(nextVertex);
 
-      // Stop playing when animation completes
-      if (nextVertex >= SIDES) {
-        setIsPlaying(false);
-      }
-    }, 1200);
+      // Calculate new rotation (turn by exterior angle)
+      const newTotalRotation = (currentVertex + 1) * EXTERIOR_ANGLE;
+      setTotalRotation(newTotalRotation);
 
-    return () => clearTimeout(timer);
-  }, [isPlaying, currentVertex, phase]);
+      // Calculate the direction to the NEXT vertex after walking
+      const nextVertexIdx = (currentVertex + 1) % SIDES;
+      const nextNextVertexIdx = (currentVertex + 2) % SIDES;
+      const nextV = VERTICES[nextVertexIdx];
+      const nextNextV = VERTICES[nextNextVertexIdx];
+      const newRotation = Math.atan2(nextNextV.y - nextV.y, nextNextV.x - nextV.x) * (180 / Math.PI);
+      setRobotRotation(newRotation);
+
+    } else if (animationStep === 'rotating') {
+      // After rotation completes, start walking
+      const timer = setTimeout(() => {
+        setAnimationStep('walking');
+
+        // Move to next vertex
+        const nextVertexIdx = (currentVertex + 1) % SIDES;
+        const nextV = VERTICES[nextVertexIdx];
+        setRobotPosition({ x: nextV.x, y: nextV.y });
+      }, 800); // Time for rotation animation
+
+      return () => clearTimeout(timer);
+
+    } else if (animationStep === 'walking') {
+      // After walking completes, advance to next vertex
+      const timer = setTimeout(() => {
+        const nextVertex = currentVertex + 1;
+        setCurrentVertex(nextVertex);
+
+        if (nextVertex >= SIDES) {
+          // Animation complete
+          setIsPlaying(false);
+          setAnimationStep('idle');
+        } else {
+          // Ready for next rotation
+          setAnimationStep('idle');
+        }
+      }, 600); // Time for walking animation
+
+      return () => clearTimeout(timer);
+    }
+  }, [isPlaying, currentVertex, phase, animationStep]);
 
   if (!isActive) return null;
 
-  // Calculate robot position and direction
-  const getRobotTransform = () => {
-    if (currentVertex >= SIDES) {
-      // Completed - back at start
-      const v = VERTICES[0];
-      const nextV = VERTICES[1];
-      const angle = Math.atan2(nextV.y - v.y, nextV.x - v.x) * (180 / Math.PI);
-      return { x: v.x, y: v.y, rotation: angle };
-    }
-
-    const v = VERTICES[currentVertex];
-    const nextV = VERTICES[(currentVertex + 1) % SIDES];
-    const angle = Math.atan2(nextV.y - v.y, nextV.x - v.x) * (180 / Math.PI);
-    return { x: v.x, y: v.y, rotation: angle };
-  };
-
-  // Draw exterior angle arc at vertex
+  // Draw exterior angle arc at vertex - larger and clearer
   const renderExteriorAngle = (vertexIndex: number) => {
     const n = SIDES;
     const v = VERTICES[vertexIndex];
@@ -83,8 +121,8 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
     const dy1 = v.y - prev.y;
     const len1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
 
-    // Extended point
-    const extLen = 30;
+    // Extended point - longer extension line
+    const extLen = 40;
     const extX = v.x + (dx1 / len1) * extLen;
     const extY = v.y + (dy1 / len1) * extLen;
 
@@ -94,11 +132,11 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
     const len2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
 
     // Point along next edge
-    const nextX = v.x + (dx2 / len2) * 25;
-    const nextY = v.y + (dy2 / len2) * 25;
+    const nextX = v.x + (dx2 / len2) * 35;
+    const nextY = v.y + (dy2 / len2) * 35;
 
-    // Calculate arc
-    const arcRadius = 18;
+    // Calculate arc - larger radius for visibility
+    const arcRadius = 24;
     const angle1 = Math.atan2(extY - v.y, extX - v.x);
     const angle2 = Math.atan2(nextY - v.y, nextX - v.x);
 
@@ -116,29 +154,42 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
     return (
       <g key={`ext-${vertexIndex}`} className="animate-fadeIn">
-        {/* Extended line (dashed) */}
+        {/* Extended line (dashed) - more visible */}
         <line
           x1={v.x}
           y1={v.y}
           x2={extX}
           y2={extY}
-          stroke="#9ca3af"
-          strokeWidth="1.5"
-          strokeDasharray="4,3"
+          stroke="#6b7280"
+          strokeWidth="2"
+          strokeDasharray="6,4"
         />
-        {/* Exterior angle arc */}
+        {/* Exterior angle fill - more visible */}
+        <path
+          d={`M ${v.x} ${v.y} L ${startX} ${startY} A ${arcRadius} ${arcRadius} 0 ${largeArc} ${sweep} ${endX} ${endY} Z`}
+          fill="rgba(239, 68, 68, 0.25)"
+        />
+        {/* Exterior angle arc - thicker */}
         <path
           d={`M ${startX} ${startY} A ${arcRadius} ${arcRadius} 0 ${largeArc} ${sweep} ${endX} ${endY}`}
           fill="none"
           stroke="#ef4444"
-          strokeWidth="2.5"
+          strokeWidth="3"
           strokeLinecap="round"
         />
-        {/* Small angle indicator fill */}
-        <path
-          d={`M ${v.x} ${v.y} L ${startX} ${startY} A ${arcRadius} ${arcRadius} 0 ${largeArc} ${sweep} ${endX} ${endY} Z`}
-          fill="rgba(239, 68, 68, 0.2)"
-        />
+        {/* Angle value label */}
+        <text
+          x={v.x + (arcRadius + 12) * Math.cos((angle1 + angle2) / 2)}
+          y={v.y + (arcRadius + 12) * Math.sin((angle1 + angle2) / 2)}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fontSize="11"
+          fontWeight="bold"
+          fill="#dc2626"
+          className="dark:fill-red-400"
+        >
+          72°
+        </text>
       </g>
     );
   };
@@ -161,15 +212,15 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               vértice, gira para seguir el borde.
             </p>
 
-            {/* Static pentagon with robot */}
+            {/* Static pentagon with robot - larger and clearer */}
             <div className="flex justify-center py-4">
-              <svg viewBox="0 0 240 220" className="w-64 h-56">
+              <svg viewBox="0 0 280 250" className="w-72 h-64">
                 {/* Pentagon */}
                 <path
                   d={polygonPath(VERTICES)}
                   fill="rgba(59, 130, 246, 0.15)"
                   stroke="#3b82f6"
-                  strokeWidth="2.5"
+                  strokeWidth="3"
                   className="dark:stroke-blue-400"
                 />
 
@@ -180,8 +231,8 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   const dx = v.x - cx;
                   const dy = v.y - cy;
                   const len = Math.sqrt(dx * dx + dy * dy);
-                  const labelX = v.x + (dx / len) * 18;
-                  const labelY = v.y + (dy / len) * 18;
+                  const labelX = v.x + (dx / len) * 22;
+                  const labelY = v.y + (dy / len) * 22;
                   return (
                     <text
                       key={i}
@@ -189,7 +240,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                       y={labelY}
                       textAnchor="middle"
                       dominantBaseline="middle"
-                      fontSize="12"
+                      fontSize="14"
                       fontWeight="bold"
                       fill="#374151"
                       className="dark:fill-gray-300"
@@ -200,12 +251,15 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 })}
 
                 {/* Robot at vertex A */}
-                <g transform={`translate(${VERTICES[0].x}, ${VERTICES[0].y})`}>
-                  <circle r="10" fill="#8b5cf6" stroke="#5b21b6" strokeWidth="2" />
-                  <circle r="3" cx="3" cy="-2" fill="white" />
-                  <circle r="3" cx="-3" cy="-2" fill="white" />
-                  {/* Direction indicator */}
-                  <polygon points="12,0 8,-4 8,4" fill="#5b21b6" />
+                <g
+                  transform={`translate(${VERTICES[0].x}, ${VERTICES[0].y}) rotate(${Math.atan2(VERTICES[1].y - VERTICES[0].y, VERTICES[1].x - VERTICES[0].x) * (180 / Math.PI)})`}
+                >
+                  <circle r="12" fill="#8b5cf6" stroke="#5b21b6" strokeWidth="2.5" />
+                  <circle r="3" cx="3" cy="-3" fill="white" />
+                  <circle r="3" cx="-3" cy="-3" fill="white" />
+                  <circle r="1.5" cx="4" cy="-3" fill="#1f2937" />
+                  <circle r="1.5" cx="-2" cy="-3" fill="#1f2937" />
+                  <polygon points="14,0 9,-4 9,4" fill="#5b21b6" />
                 </g>
 
                 {/* "Interior" label */}
@@ -213,7 +267,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   x={CENTER_X}
                   y={CENTER_Y}
                   textAnchor="middle"
-                  fontSize="11"
+                  fontSize="12"
                   fill="#6b7280"
                   className="dark:fill-gray-400"
                 >
@@ -252,7 +306,6 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
   // ============ PHASE 2: WALKING ============
   if (phase === 'walking') {
-    const robot = getRobotTransform();
     const isComplete = currentVertex >= SIDES;
 
     return (
@@ -261,18 +314,24 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             El Robot Caminante
           </h2>
-          <p className="text-gray-600 dark:text-gray-300">Observa cómo gira en cada vértice</p>
+          <p className="text-gray-600 dark:text-gray-300">
+            {animationStep === 'rotating' && !isComplete
+              ? '🔄 Girando...'
+              : animationStep === 'walking'
+                ? '🚶 Caminando...'
+                : 'Observa cómo gira en cada vértice'}
+          </p>
         </div>
 
-        {/* Animation visualization */}
+        {/* Animation visualization - larger SVG */}
         <div className="flex justify-center py-2">
-          <svg viewBox="0 0 240 220" className="w-72 h-60">
-            {/* Pentagon */}
+          <svg viewBox="0 0 280 250" className="w-80 h-72">
+            {/* Pentagon - larger and clearer */}
             <path
               d={polygonPath(VERTICES)}
               fill="rgba(59, 130, 246, 0.1)"
               stroke="#3b82f6"
-              strokeWidth="2"
+              strokeWidth="3"
               className="dark:stroke-blue-400"
             />
 
@@ -286,8 +345,8 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               const dx = v.x - cx;
               const dy = v.y - cy;
               const len = Math.sqrt(dx * dx + dy * dy);
-              const labelX = v.x + (dx / len) * 18;
-              const labelY = v.y + (dy / len) * 18;
+              const labelX = v.x + (dx / len) * 22;
+              const labelY = v.y + (dy / len) * 22;
               return (
                 <text
                   key={i}
@@ -295,7 +354,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   y={labelY}
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fontSize="11"
+                  fontSize="14"
                   fontWeight="bold"
                   fill="#374151"
                   className="dark:fill-gray-300"
@@ -305,15 +364,28 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               );
             })}
 
-            {/* Robot */}
+            {/* Robot with smooth transitions */}
             <g
-              transform={`translate(${robot.x}, ${robot.y}) rotate(${robot.rotation})`}
-              className="transition-all duration-300"
+              style={{
+                transform: `translate(${robotPosition.x}px, ${robotPosition.y}px) rotate(${robotRotation}deg)`,
+                transition:
+                  animationStep === 'rotating'
+                    ? 'transform 0.7s ease-in-out'
+                    : animationStep === 'walking'
+                      ? 'transform 0.5s ease-in-out'
+                      : 'none',
+                transformOrigin: '0 0',
+              }}
             >
-              <circle r="9" fill="#8b5cf6" stroke="#5b21b6" strokeWidth="2" />
-              <circle r="2.5" cx="2" cy="-2" fill="white" />
-              <circle r="2.5" cx="-2" cy="-2" fill="white" />
-              <polygon points="11,0 7,-3 7,3" fill="#5b21b6" />
+              {/* Robot body */}
+              <circle r="12" fill="#8b5cf6" stroke="#5b21b6" strokeWidth="2.5" />
+              {/* Eyes */}
+              <circle r="3" cx="3" cy="-3" fill="white" />
+              <circle r="3" cx="-3" cy="-3" fill="white" />
+              <circle r="1.5" cx="4" cy="-3" fill="#1f2937" />
+              <circle r="1.5" cx="-2" cy="-3" fill="#1f2937" />
+              {/* Direction indicator (nose) */}
+              <polygon points="14,0 9,-4 9,4" fill="#5b21b6" />
             </g>
           </svg>
         </div>
