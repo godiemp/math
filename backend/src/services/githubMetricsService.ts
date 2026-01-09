@@ -95,8 +95,9 @@ class GitHubMetricsService {
 
   /**
    * Group PRs by day (YYYY-MM-DD format)
+   * Returns a map of date to count for all days with PRs
    */
-  private static calculateDailyMetrics(prs: GitHubPR[]): DailyMetric[] {
+  private static buildDailyMap(prs: GitHubPR[]): Map<string, number> {
     const dailyMap = new Map<string, number>();
 
     for (const pr of prs) {
@@ -106,10 +107,38 @@ class GitHubMetricsService {
       }
     }
 
-    // Sort by date descending
+    return dailyMap;
+  }
+
+  /**
+   * Get daily metrics for all days with PRs (for streak calculation)
+   */
+  private static getAllDailyMetrics(dailyMap: Map<string, number>): DailyMetric[] {
     return Array.from(dailyMap.entries())
       .map(([date, count]) => ({ date, count }))
       .sort((a, b) => b.date.localeCompare(a.date));
+  }
+
+  /**
+   * Get daily metrics for last 30 days including days with 0 PRs (for chart)
+   */
+  private static getLast30DaysMetrics(dailyMap: Map<string, number>): DailyMetric[] {
+    const result: DailyMetric[] = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    for (let i = 0; i < 30; i++) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+      result.push({
+        date: dateStr,
+        count: dailyMap.get(dateStr) || 0,
+      });
+    }
+
+    // Already sorted by date descending (most recent first)
+    return result;
   }
 
   /**
@@ -229,27 +258,30 @@ class GitHubMetricsService {
     }
 
     const prs = await this.fetchMergedPRs();
-    const daily = this.calculateDailyMetrics(prs);
+    const dailyMap = this.buildDailyMap(prs);
+    const allDailyMetrics = this.getAllDailyMetrics(dailyMap);
+    const last30Days = this.getLast30DaysMetrics(dailyMap);
     const weekly = this.calculateWeeklyMetrics(prs);
 
-    // Find the maximum PRs in a single day to determine streak levels
-    const maxPRsInDay = daily.length > 0 ? Math.max(...daily.map((d) => d.count)) : 0;
+    // Find the maximum PRs in a single day to determine streak levels (max 15)
+    const maxPRsInDay = allDailyMetrics.length > 0 ? Math.max(...allDailyMetrics.map((d) => d.count)) : 0;
+    const maxStreakLevel = Math.min(Math.max(maxPRsInDay, 3), 15);
 
-    // Calculate streaks for 1 through maxPRsInDay
+    // Calculate streaks for 1 through maxStreakLevel (capped at 15)
     const streaks: Record<number, StreakInfo> = {};
-    for (let n = 1; n <= Math.max(maxPRsInDay, 3); n++) {
-      streaks[n] = this.calculateStreak(daily, n);
+    for (let n = 1; n <= maxStreakLevel; n++) {
+      streaks[n] = this.calculateStreak(allDailyMetrics, n);
     }
 
     // Calculate today's and this week's count
     const today = new Date().toISOString().split('T')[0];
     const thisWeek = this.getISOWeek(new Date());
 
-    const todayMetric = daily.find((d) => d.date === today);
+    const todayMetric = last30Days.find((d) => d.date === today);
     const thisWeekMetric = weekly.find((w) => w.week === thisWeek);
 
     const metrics: ProductivityMetrics = {
-      daily: daily.slice(0, 30), // Last 30 days with data
+      daily: last30Days, // Last 30 days including days with 0 PRs
       weekly: weekly.slice(0, 12), // Last 12 weeks with data
       streaks,
       totalMerged: prs.length,
