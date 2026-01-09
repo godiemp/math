@@ -51,8 +51,8 @@ test.describe('Teacher Class Detail Page', () => {
     const table = page.getByTestId('class-students-table');
     await expect(table).toBeVisible({ timeout: 15000 });
 
-    // Verify enrolled student is displayed
-    await expect(page.getByText('Sync Student')).toBeVisible();
+    // Verify enrolled student is displayed in the table (scoped to avoid mobile view duplicate)
+    await expect(table.getByText('Sync Student')).toBeVisible();
   });
 
   test('should open add student modal with search tab active', async ({ page }) => {
@@ -119,9 +119,9 @@ test.describe('Teacher Class Detail Page', () => {
     const searchResults = page.getByTestId('class-student-search-results');
     await expect(searchResults).toBeVisible({ timeout: 10000 });
 
-    // Verify María González appears in results
-    await expect(page.getByText('María González')).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText('maria.gonzalez@student.simplepaes.cl')).toBeVisible();
+    // Verify María González appears in results (scoped to search results)
+    await expect(searchResults.getByText('María González')).toBeVisible({ timeout: 10000 });
+    await expect(searchResults.getByText('maria.gonzalez@student.simplepaes.cl')).toBeVisible();
   });
 
   test('should show empty results when searching for non-existent student', async ({ page }) => {
@@ -216,8 +216,9 @@ test.describe('Teacher Class Detail Page', () => {
     const searchButton = page.getByTestId('class-student-search-button');
     await searchButton.click();
 
-    // Wait for search results
-    await expect(page.getByText('María González')).toBeVisible({ timeout: 10000 });
+    // Wait for search results (scoped to search results container)
+    const searchResults = page.getByTestId('class-student-search-results');
+    await expect(searchResults.getByText('María González')).toBeVisible({ timeout: 10000 });
 
     // Click on María González to select her
     const studentResult = page.getByTestId('class-student-result-test-managed-student');
@@ -234,10 +235,10 @@ test.describe('Teacher Class Detail Page', () => {
     // Modal should close
     await expect(modal).not.toBeVisible({ timeout: 10000 });
 
-    // Verify María González now appears in the class students table
+    // Verify María González now appears in the class students table (scoped to table)
     const table = page.getByTestId('class-students-table');
     await expect(table).toBeVisible({ timeout: 15000 });
-    await expect(page.getByText('María González')).toBeVisible();
+    await expect(table.getByText('María González')).toBeVisible();
   });
 
   test('should create new student in class and show credentials', async ({ page }) => {
@@ -273,10 +274,10 @@ test.describe('Teacher Class Detail Page', () => {
     await credentialsModal.getByText('Entendido').click();
     await expect(credentialsModal).not.toBeVisible();
 
-    // Verify new student appears in table
+    // Verify new student appears in table (scoped to table to avoid mobile view duplicate)
     const table = page.getByTestId('class-students-table');
     await expect(table).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText(`Test${timestamp} Student${timestamp}`)).toBeVisible();
+    await expect(table.getByText(`Test${timestamp} Student${timestamp}`)).toBeVisible();
   });
 });
 
@@ -295,8 +296,8 @@ test.describe('Teacher Class Detail Page - Remove Student', () => {
     const table = page.getByTestId('class-students-table');
     await expect(table).toBeVisible({ timeout: 15000 });
 
-    // Verify Sync Student is present
-    await expect(page.getByText('Sync Student')).toBeVisible();
+    // Verify Sync Student is present in the table (scoped to avoid mobile view duplicate)
+    await expect(table.getByText('Sync Student')).toBeVisible();
 
     // Set up dialog handler to accept confirmation
     page.on('dialog', async (dialog) => {
@@ -307,7 +308,7 @@ test.describe('Teacher Class Detail Page - Remove Student', () => {
     const removeButton = page.getByTestId('class-remove-student-test-sync-student');
     await removeButton.click();
 
-    // Wait for removal and verify student is no longer in table
-    await expect(page.getByText('Sync Student')).not.toBeVisible({ timeout: 10000 });
+    // Wait for removal and verify student is no longer in table (scoped to table)
+    await expect(table.getByText('Sync Student')).not.toBeVisible({ timeout: 10000 });
   });
 });
