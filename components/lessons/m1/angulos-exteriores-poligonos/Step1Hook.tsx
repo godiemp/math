@@ -28,12 +28,15 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   // New state for two-phase animation
   const [animationStep, setAnimationStep] = useState<AnimationStep>('idle');
   const [robotPosition, setRobotPosition] = useState({ x: VERTICES[0].x, y: VERTICES[0].y });
+  // Track cumulative rotation to avoid CSS transition issues when crossing -180°/180°
   const [robotRotation, setRobotRotation] = useState(() => {
     // Initial rotation pointing toward vertex 1
     const v = VERTICES[0];
     const nextV = VERTICES[1];
     return Math.atan2(nextV.y - v.y, nextV.x - v.x) * (180 / Math.PI);
   });
+  // Keep track of the base rotation to add exterior angles cumulatively
+  const [cumulativeExteriorRotation, setCumulativeExteriorRotation] = useState(0);
 
   const correctAnswer = 1; // 360°
 
@@ -45,6 +48,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
     setIsPlaying(false);
     setAnimationStep('idle');
     setRobotPosition({ x: VERTICES[0].x, y: VERTICES[0].y });
+    setCumulativeExteriorRotation(0);
     // Reset rotation to point toward vertex 1
     const v = VERTICES[0];
     const nextV = VERTICES[1];
@@ -66,13 +70,17 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
       const newTotalRotation = (currentVertex + 1) * EXTERIOR_ANGLE;
       setTotalRotation(newTotalRotation);
 
-      // Calculate the direction to the NEXT vertex after walking
-      const nextVertexIdx = (currentVertex + 1) % SIDES;
-      const nextNextVertexIdx = (currentVertex + 2) % SIDES;
-      const nextV = VERTICES[nextVertexIdx];
-      const nextNextV = VERTICES[nextNextVertexIdx];
-      const newRotation = Math.atan2(nextNextV.y - nextV.y, nextNextV.x - nextV.x) * (180 / Math.PI);
-      setRobotRotation(newRotation);
+      // Add the exterior angle to cumulative rotation (always turn right/clockwise)
+      // For a convex polygon traversed counterclockwise, exterior angles turn us clockwise
+      const newCumulativeRotation = cumulativeExteriorRotation + EXTERIOR_ANGLE;
+      setCumulativeExteriorRotation(newCumulativeRotation);
+
+      // Calculate the base direction (initial heading) and add cumulative exterior rotation
+      const v0 = VERTICES[0];
+      const v1 = VERTICES[1];
+      const initialHeading = Math.atan2(v1.y - v0.y, v1.x - v0.x) * (180 / Math.PI);
+      // The robot's new rotation is initial heading + all exterior angles turned so far
+      setRobotRotation(initialHeading + newCumulativeRotation);
 
     } else if (animationStep === 'rotating') {
       // After rotation completes, start walking
@@ -105,7 +113,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
       return () => clearTimeout(timer);
     }
-  }, [isPlaying, currentVertex, phase, animationStep]);
+  }, [isPlaying, currentVertex, phase, animationStep, cumulativeExteriorRotation]);
 
   if (!isActive) return null;
 
