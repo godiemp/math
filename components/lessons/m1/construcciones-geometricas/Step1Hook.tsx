@@ -179,56 +179,63 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
           {/* Visual showing the perpendicular bisector */}
           <div className="flex justify-center">
-            <svg viewBox="0 0 300 140" className="w-full max-w-md">
-              {/* Plank */}
-              <rect x="20" y="50" width="260" height="40" rx="4" fill="#D2691E" stroke="#8B4513" strokeWidth="2" />
-
-              {/* Arc from left */}
+            <svg viewBox="0 0 300 180" className="w-full max-w-md">
+              {/* Arc from left - upper */}
               <path
-                d="M 20 70 A 130 130 0 0 1 150 10"
+                d="M 40 90 A 110 110 0 0 1 150 30"
                 fill="none"
                 stroke="#3B82F6"
                 strokeWidth="2"
-                strokeDasharray="4 4"
+                strokeDasharray="5 3"
               />
+              {/* Arc from left - lower */}
               <path
-                d="M 20 70 A 130 130 0 0 0 150 130"
+                d="M 40 90 A 110 110 0 0 0 150 150"
                 fill="none"
                 stroke="#3B82F6"
                 strokeWidth="2"
-                strokeDasharray="4 4"
+                strokeDasharray="5 3"
               />
 
-              {/* Arc from right */}
+              {/* Arc from right - upper */}
               <path
-                d="M 280 70 A 130 130 0 0 0 150 10"
+                d="M 260 90 A 110 110 0 0 0 150 30"
                 fill="none"
                 stroke="#3B82F6"
                 strokeWidth="2"
-                strokeDasharray="4 4"
+                strokeDasharray="5 3"
               />
+              {/* Arc from right - lower */}
               <path
-                d="M 280 70 A 130 130 0 0 1 150 130"
+                d="M 260 90 A 110 110 0 0 1 150 150"
                 fill="none"
                 stroke="#3B82F6"
                 strokeWidth="2"
-                strokeDasharray="4 4"
+                strokeDasharray="5 3"
               />
+
+              {/* Plank - drawn after arcs so it's on top */}
+              <rect x="30" y="75" width="240" height="30" rx="3" fill="#D2691E" stroke="#8B4513" strokeWidth="2" />
+              {/* Wood grain */}
+              <line x1="60" y1="80" x2="60" y2="100" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
+              <line x1="100" y1="78" x2="100" y2="102" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
+              <line x1="140" y1="80" x2="140" y2="100" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
+              <line x1="180" y1="78" x2="180" y2="102" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
+              <line x1="220" y1="80" x2="220" y2="100" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
 
               {/* Intersection points */}
-              <circle cx="150" cy="10" r="5" fill="#EF4444" />
-              <circle cx="150" cy="130" r="5" fill="#EF4444" />
+              <circle cx="150" cy="30" r="6" fill="#EF4444" stroke="white" strokeWidth="2" />
+              <circle cx="150" cy="150" r="6" fill="#EF4444" stroke="white" strokeWidth="2" />
 
-              {/* Perpendicular bisector */}
-              <line x1="150" y1="10" x2="150" y2="130" stroke="#10B981" strokeWidth="3" />
+              {/* Perpendicular bisector (mediatriz) */}
+              <line x1="150" y1="30" x2="150" y2="150" stroke="#10B981" strokeWidth="3" strokeDasharray="8 4" />
 
               {/* Center point on plank */}
-              <circle cx="150" cy="70" r="6" fill="#10B981" stroke="white" strokeWidth="2" />
+              <circle cx="150" cy="90" r="7" fill="#10B981" stroke="white" strokeWidth="2" />
 
               {/* Labels */}
-              <text x="30" y="75" className="text-xs font-bold fill-gray-600 dark:fill-gray-400">A</text>
-              <text x="268" y="75" className="text-xs font-bold fill-gray-600 dark:fill-gray-400">B</text>
-              <text x="160" y="75" className="text-xs font-bold fill-green-600">Centro</text>
+              <text x="40" y="68" textAnchor="middle" className="text-sm font-bold fill-gray-600 dark:fill-gray-300">A</text>
+              <text x="260" y="68" textAnchor="middle" className="text-sm font-bold fill-gray-600 dark:fill-gray-300">B</text>
             </svg>
           </div>
 
