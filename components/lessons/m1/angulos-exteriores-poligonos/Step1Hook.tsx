@@ -4,10 +4,23 @@ import { useState, useEffect, useCallback } from 'react';
 import { ArrowRight, Play, Pause, RotateCcw, Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
-import { buildRegularPolygon, regularExteriorAngle, polygonPath } from '@/lib/geometry/polygonUtils';
+import {
+  buildRegularPolygon,
+  regularExteriorAngle,
+  polygonPath,
+  getPolygonName,
+} from '@/lib/geometry/polygonUtils';
 
-type Phase = 'intro' | 'walking' | 'question' | 'result';
+type Phase = 'intro' | 'walking' | 'question' | 'reveal' | 'result';
 type AnimationStep = 'idle' | 'rotating' | 'walking';
+
+// Polygons to show in the reveal phase
+const REVEAL_POLYGONS = [
+  { sides: 3, color: '#f59e0b' }, // amber - triangle
+  { sides: 4, color: '#10b981' }, // emerald - square
+  { sides: 5, color: '#8b5cf6' }, // purple - pentagon (highlighted)
+  { sides: 6, color: '#3b82f6' }, // blue - hexagon
+];
 
 // Pentagon configuration - larger and better centered
 const SIDES = 5;
@@ -39,6 +52,9 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const [cumulativeExteriorRotation, setCumulativeExteriorRotation] = useState(0);
 
   const correctAnswer = 1; // 360°
+
+  // State for reveal phase - staggered polygon animation
+  const [revealedPolygons, setRevealedPolygons] = useState<number[]>([]);
 
   // Reset animation
   const resetAnimation = useCallback(() => {
@@ -115,7 +131,133 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
     }
   }, [isPlaying, currentVertex, phase, animationStep, cumulativeExteriorRotation]);
 
+  // Staggered reveal animation for multiple polygons
+  useEffect(() => {
+    if (phase !== 'reveal') return;
+
+    // Reset revealed polygons when entering reveal phase
+    setRevealedPolygons([]);
+
+    const timers: NodeJS.Timeout[] = [];
+    REVEAL_POLYGONS.forEach((_, index) => {
+      const timer = setTimeout(() => {
+        setRevealedPolygons((prev) => [...prev, index]);
+      }, 400 * (index + 1)); // Stagger by 400ms each
+      timers.push(timer);
+    });
+
+    return () => timers.forEach((t) => clearTimeout(t));
+  }, [phase]);
+
   if (!isActive) return null;
+
+  // Mini polygon for reveal grid
+  const renderMiniPolygon = (sides: number, color: string, isRevealed: boolean, index: number) => {
+    const radius = 32;
+    const cx = 45;
+    const cy = 45;
+    const vertices = buildRegularPolygon(sides, radius, cx, cy, -90);
+    const exteriorAngle = Math.round(regularExteriorAngle(sides));
+    const isPentagon = sides === 5;
+
+    return (
+      <div
+        key={sides}
+        className={cn(
+          'flex flex-col items-center p-3 rounded-xl transition-all duration-500',
+          isRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4',
+          isPentagon && 'ring-2 ring-purple-500 bg-purple-50/50 dark:bg-purple-900/20'
+        )}
+        style={{ transitionDelay: `${index * 100}ms` }}
+      >
+        <svg viewBox="0 0 90 90" className="w-20 h-20">
+          {/* Polygon */}
+          <path
+            d={polygonPath(vertices)}
+            fill={`${color}20`}
+            stroke={color}
+            strokeWidth="2.5"
+          />
+          {/* Exterior angle arcs at each vertex */}
+          {vertices.map((v, i) => {
+            const prev = vertices[(i - 1 + sides) % sides];
+            const next = vertices[(i + 1) % sides];
+
+            // Extended direction
+            const dx1 = v.x - prev.x;
+            const dy1 = v.y - prev.y;
+            const len1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
+            const extX = v.x + (dx1 / len1) * 15;
+            const extY = v.y + (dy1 / len1) * 15;
+
+            // Direction to next
+            const dx2 = next.x - v.x;
+            const dy2 = next.y - v.y;
+            const len2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+            const nextX = v.x + (dx2 / len2) * 12;
+            const nextY = v.y + (dy2 / len2) * 12;
+
+            // Arc
+            const arcR = 10;
+            const a1 = Math.atan2(extY - v.y, extX - v.x);
+            const a2 = Math.atan2(nextY - v.y, nextX - v.x);
+            const sx = v.x + arcR * Math.cos(a1);
+            const sy = v.y + arcR * Math.sin(a1);
+            const ex = v.x + arcR * Math.cos(a2);
+            const ey = v.y + arcR * Math.sin(a2);
+
+            let diff = a2 - a1;
+            if (diff < 0) diff += 2 * Math.PI;
+            const large = diff > Math.PI ? 1 : 0;
+
+            return (
+              <g key={i}>
+                <line
+                  x1={v.x}
+                  y1={v.y}
+                  x2={extX}
+                  y2={extY}
+                  stroke="#9ca3af"
+                  strokeWidth="1"
+                  strokeDasharray="3,2"
+                />
+                <path
+                  d={`M ${sx} ${sy} A ${arcR} ${arcR} 0 ${large} 1 ${ex} ${ey}`}
+                  fill="none"
+                  stroke="#ef4444"
+                  strokeWidth="2"
+                />
+              </g>
+            );
+          })}
+        </svg>
+
+        {/* Polygon name */}
+        <span className="text-xs font-medium text-gray-600 dark:text-gray-400 mt-1">
+          {getPolygonName(sides)}
+        </span>
+
+        {/* Calculation */}
+        <div className="text-center mt-1">
+          <span className="text-red-500 font-bold text-sm">{exteriorAngle}°</span>
+          <span className="text-gray-400 text-xs"> × </span>
+          <span className="font-bold text-sm" style={{ color }}>
+            {sides}
+          </span>
+        </div>
+
+        {/* Result */}
+        <div
+          className={cn(
+            'mt-1 px-2 py-0.5 rounded-full text-sm font-bold transition-all',
+            isRevealed ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300' : ''
+          )}
+        >
+          = 360°
+        </div>
+      </div>
+    );
+  };
 
   // Draw exterior angle arc at vertex - larger and clearer
   const renderExteriorAngle = (vertexIndex: number) => {
@@ -467,7 +609,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   if (phase === 'question') {
     const handleSubmit = () => {
       if (selectedAnswer === null) return;
-      setPhase('result');
+      setPhase('reveal'); // Go to reveal phase instead of result
     };
 
     return (
@@ -529,48 +671,104 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
     );
   }
 
-  // ============ PHASE 4: RESULT ============
-  const isCorrect = selectedAnswer === correctAnswer;
+  // ============ PHASE 4: REVEAL ============
+  if (phase === 'reveal') {
+    const isCorrect = selectedAnswer === correctAnswer;
+    const allRevealed = revealedPolygons.length === REVEAL_POLYGONS.length;
 
+    return (
+      <div className="space-y-6 animate-fadeIn pb-32">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            {isCorrect ? '¡Correcto!' : '¡Casi!'}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300">
+            El robot giró exactamente <strong className="text-green-600">360°</strong>
+          </p>
+        </div>
+
+        {/* Answer feedback */}
+        <div
+          className={cn(
+            'p-4 rounded-xl border-2 text-center',
+            isCorrect
+              ? 'bg-green-50 dark:bg-green-900/30 border-green-400'
+              : 'bg-amber-50 dark:bg-amber-900/30 border-amber-400'
+          )}
+        >
+          <div className="flex items-center justify-center gap-2">
+            {isCorrect ? (
+              <Check className="w-5 h-5 text-green-600" />
+            ) : (
+              <X className="w-5 h-5 text-amber-600" />
+            )}
+            <span
+              className={cn(
+                'font-medium',
+                isCorrect
+                  ? 'text-green-800 dark:text-green-300'
+                  : 'text-amber-800 dark:text-amber-300'
+              )}
+            >
+              {isCorrect ? '¡Excelente razonamiento!' : 'La respuesta correcta es 360°'}
+            </span>
+          </div>
+        </div>
+
+        {/* Big question */}
+        <div className="bg-purple-100 dark:bg-purple-900/40 rounded-xl p-4 border-2 border-purple-300 dark:border-purple-600 text-center">
+          <p className="text-purple-800 dark:text-purple-200 font-semibold text-lg">
+            Pero espera... ¿funciona esto para <em>TODOS</em> los polígonos?
+          </p>
+        </div>
+
+        {/* Multi-polygon grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 justify-items-center">
+          {REVEAL_POLYGONS.map((poly, index) =>
+            renderMiniPolygon(poly.sides, poly.color, revealedPolygons.includes(index), index)
+          )}
+        </div>
+
+        {/* Revelation message */}
+        <div
+          className={cn(
+            'text-center transition-all duration-700',
+            allRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          )}
+        >
+          <div className="bg-green-100 dark:bg-green-900/40 rounded-xl p-4 border-2 border-green-400 dark:border-green-600">
+            <p className="text-green-800 dark:text-green-200 font-bold text-lg">
+              ¡SIEMPRE suman 360°! 🎉
+            </p>
+            <p className="text-green-700 dark:text-green-300 text-sm mt-1">
+              Sin importar cuántos lados tenga el polígono
+            </p>
+          </div>
+        </div>
+
+        {/* Continue button - only show when all revealed */}
+        {allRevealed && (
+          <div className="flex justify-center animate-fadeIn">
+            <button
+              onClick={() => setPhase('result')}
+              className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
+            >
+              <span>Continuar</span>
+              <ArrowRight size={20} />
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ============ PHASE 5: RESULT ============
   return (
     <div className="space-y-6 animate-fadeIn pb-32">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           ¡Descubrimiento Importante!
         </h2>
-      </div>
-
-      {/* Answer feedback */}
-      <div
-        className={cn(
-          'p-5 rounded-xl border-2',
-          isCorrect
-            ? 'bg-green-50 dark:bg-green-900/30 border-green-400'
-            : 'bg-amber-50 dark:bg-amber-900/30 border-amber-400'
-        )}
-      >
-        <div className="flex items-start gap-4">
-          {isCorrect ? (
-            <Check className="w-7 h-7 text-green-600 flex-shrink-0" />
-          ) : (
-            <X className="w-7 h-7 text-amber-600 flex-shrink-0" />
-          )}
-          <div>
-            <h3
-              className={cn(
-                'font-bold text-lg mb-1',
-                isCorrect
-                  ? 'text-green-800 dark:text-green-300'
-                  : 'text-amber-800 dark:text-amber-300'
-              )}
-            >
-              {isCorrect ? '¡Correcto!' : '¡Casi!'}
-            </h3>
-            <p className="text-gray-700 dark:text-gray-300">
-              El robot giró exactamente <strong>360°</strong> — una vuelta completa.
-            </p>
-          </div>
-        </div>
       </div>
 
       {/* Key insight */}
@@ -589,11 +787,19 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         </div>
       </div>
 
-      {/* Teaser */}
+      {/* Why it works */}
       <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4 border border-blue-200 dark:border-blue-700">
-        <p className="text-blue-800 dark:text-blue-200 text-center text-sm">
-          Pero espera... ¿esto funciona para <em>todos</em> los polígonos? ¿Triángulos?
-          ¿Hexágonos? ¿Decágonos? ¡Vamos a explorar!
+        <p className="text-blue-800 dark:text-blue-200 text-center">
+          <strong>¿Por qué funciona?</strong> Al rodear completamente un polígono, siempre giras{' '}
+          <strong>una vuelta completa</strong> (360°), sin importar la forma.
+        </p>
+      </div>
+
+      {/* Teaser for next step */}
+      <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+        <p className="text-gray-700 dark:text-gray-300 text-center text-sm">
+          En el siguiente paso, podrás experimentar con polígonos de <strong>3 a 12 lados</strong>{' '}
+          y comprobar que la suma siempre es 360°.
         </p>
       </div>
 
