@@ -602,17 +602,12 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
-    // Migration: Remove assigned_by_teacher_id column (classes are now the only teacher-student link)
+    // Create index for assigned_by_teacher_id if it doesn't exist
     await client.query(`
       DO $$
       BEGIN
-        -- Drop the index first if it exists
-        DROP INDEX IF EXISTS idx_users_assigned_by_teacher;
-
-        -- Drop the column if it exists
-        IF EXISTS (SELECT 1 FROM information_schema.columns
-                  WHERE table_name='users' AND column_name='assigned_by_teacher_id') THEN
-          ALTER TABLE users DROP COLUMN assigned_by_teacher_id;
+        IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_users_assigned_by_teacher') THEN
+          CREATE INDEX idx_users_assigned_by_teacher ON users(assigned_by_teacher_id);
         END IF;
       END $$;
     `);
@@ -1017,6 +1012,33 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_knowledge_decl_user_id ON user_knowledge_declarations(user_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_knowledge_decl_level ON user_knowledge_declarations(level)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_knowledge_decl_type ON user_knowledge_declarations(declaration_type)');
+
+    // ========================================
+    // AI DIAGNOSTIC SESSIONS TABLE
+    // ========================================
+
+    // Create diagnostic_sessions table for AI-powered knowledge diagnosis conversations
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS diagnostic_sessions (
+        id VARCHAR(100) PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        subject VARCHAR(50) NOT NULL CHECK (subject IN ('números', 'álgebra', 'geometría', 'probabilidad')),
+        status VARCHAR(20) NOT NULL CHECK (status IN ('active', 'completed', 'abandoned')),
+        target_level VARCHAR(20) NOT NULL,
+        messages JSONB DEFAULT '[]',
+        inferences JSONB DEFAULT '[]',
+        units_covered VARCHAR(100)[] DEFAULT '{}',
+        started_at BIGINT NOT NULL,
+        completed_at BIGINT,
+        updated_at BIGINT NOT NULL
+      )
+    `);
+
+    // Diagnostic sessions indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_diagnostic_sessions_user_id ON diagnostic_sessions(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_diagnostic_sessions_subject ON diagnostic_sessions(subject)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_diagnostic_sessions_status ON diagnostic_sessions(status)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_diagnostic_sessions_started_at ON diagnostic_sessions(started_at)');
 
     // Create certificates table
     await client.query(`

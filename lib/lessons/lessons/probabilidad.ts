@@ -8,15 +8,37 @@ import type { Lesson } from '../types';
 export const PROBABILIDAD_LESSONS: Lesson[] = [
   {
     id: 'm1-prob-001-a',
+    slug: 'muestreo-estimacion',
+    title: 'Muestreo y Estimación de Poblaciones',
+    description:
+      'Aprende a estimar características de una población usando muestras aleatorias.',
+    level: 'M1',
+    subject: 'probabilidad',
+    thematicUnit: 'M1-PROB-001',
+    skills: ['muestreo', 'estimacion-poblacional', 'proporcion-muestral'],
+    estimatedMinutes: 14,
+    minEducOA: ['MA07-OA-15'],
+    steps: [
+      { id: 'hook', type: 'hook', title: 'La Encuesta del Kiosko' },
+      { id: 'explore', type: 'explore', title: 'Tomando Muestras' },
+      { id: 'explain', type: 'explain', title: 'El Arte de Estimar' },
+      { id: 'classify', type: 'explore', title: 'Muestras Buenas vs Malas' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
+  {
+    id: 'm1-prob-001-b',
     slug: 'tablas-frecuencia-graficos',
     title: 'Tablas de Frecuencia y Gráficos',
-    description: 'Construye tablas de frecuencia y descubre cómo se transforman en gráficos de barras y circulares.',
+    description:
+      'Construye tablas de frecuencia y descubre cómo se transforman en gráficos de barras y circulares.',
     level: 'M1',
     subject: 'probabilidad',
     thematicUnit: 'M1-PROB-001',
     skills: ['tablas-frecuencia', 'frecuencia-relativa', 'grafico-barras', 'grafico-circular'],
     estimatedMinutes: 12,
-    minEducOA: ['MA1M-OA-12'],
+    minEducOA: ['MA1M-OA-12', 'MA07-OA-16'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Encuesta Misteriosa' },
       { id: 'explore-build', type: 'explore', title: 'Construye tu Gráfico' },
@@ -27,10 +49,11 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     ],
   },
   {
-    id: 'm1-prob-001-b',
+    id: 'm1-prob-001-c',
     slug: 'histogramas-datos-agrupados',
     title: 'Histogramas y Datos Agrupados',
-    description: 'Aprende a organizar datos numéricos en intervalos y representarlos con histogramas.',
+    description:
+      'Aprende a organizar datos numéricos en intervalos y representarlos con histogramas.',
     level: 'M1',
     subject: 'probabilidad',
     thematicUnit: 'M1-PROB-001',
@@ -56,6 +79,7 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M1-PROB-002',
     skills: ['estadistica-media', 'estadistica-mediana', 'estadistica-moda', 'estadistica-rango'],
     estimatedMinutes: 15,
+    minEducOA: ['MA07-OA-17'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Batalla del Top 10' },
       { id: 'explore', type: 'explore', title: 'El Laboratorio de Datos' },
@@ -115,7 +139,7 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M1-PROB-004',
     skills: ['probabilidad-basica', 'espacio-muestral', 'eventos-favorables'],
     estimatedMinutes: 12,
-    minEducOA: ['MA1M-OA-14'],
+    minEducOA: ['MA1M-OA-14', 'MA07-OA-18'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Juego de Dados' },
       { id: 'explore-dice', type: 'explore', title: 'Explorando Posibilidades' },
@@ -195,7 +219,7 @@ export const PROBABILIDAD_LESSONS: Lesson[] = [
     thematicUnit: 'M1-PROB-006',
     skills: ['graficos-dispersion', 'comparar-poblaciones', 'correlacion', 'analisis-datos'],
     estimatedMinutes: 15,
-    minEducOA: ['MA1M-OA-13'],
+    minEducOA: ['MA1M-OA-13', 'MA07-OA-18'],
     steps: [
       { id: 'hook', type: 'hook', title: 'Dos Escuelas, Una Pregunta' },
       { id: 'explore-scatter', type: 'explore', title: 'Construye tu Gráfico' },

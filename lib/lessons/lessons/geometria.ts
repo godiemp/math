@@ -35,6 +35,7 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-GEO-001',
     skills: ['area-rectangulo', 'area-triangulo'],
     estimatedMinutes: 12,
+    minEducOA: ['MA07-OA-13'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Proyecto de Pintura' },
       { id: 'explore', type: 'explore', title: 'Descubriendo Fórmulas' },
@@ -53,10 +54,32 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-GEO-001',
     skills: ['area-paralelogramo', 'area-trapecio', 'descomponer-figuras'],
     estimatedMinutes: 12,
+    minEducOA: ['MA07-OA-13'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Jardín Irregular' },
       { id: 'explore', type: 'explore', title: 'Transformando Figuras' },
       { id: 'explain', type: 'explain', title: 'Las Fórmulas' },
+      { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
+  {
+    id: 'm1-geo-001-d',
+    slug: 'angulos-interiores-poligonos',
+    title: 'Ángulos Interiores de Polígonos',
+    description:
+      'Descubre la fórmula (n-2)×180° para calcular la suma de ángulos interiores de cualquier polígono.',
+    level: 'M1',
+    subject: 'geometría',
+    thematicUnit: 'M1-GEO-001',
+    skills: ['angulos-interiores', 'triangulacion-poligonos', 'poligonos-regulares'],
+    estimatedMinutes: 14,
+    minEducOA: ['MA07-OA-10'],
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Kultrun del Artesano' },
+      { id: 'explore', type: 'explore', title: 'Descubre el Patrón' },
+      { id: 'explain', type: 'explain', title: 'Las Fórmulas' },
+      { id: 'classify', type: 'explore', title: 'Identifica los Ángulos' },
       { id: 'practice', type: 'practice', title: 'Práctica Guiada' },
       { id: 'verify', type: 'verify', title: 'Checkpoint' },
     ],
@@ -71,7 +94,7 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-GEO-002',
     skills: ['circunferencia-circulo', 'area-circulo', 'pi-concepto'],
     estimatedMinutes: 12,
-    minEducOA: ['MA1M-OA-06', 'FG-MATE-3M-OAC-04'],
+    minEducOA: ['MA1M-OA-06', 'FG-MATE-3M-OAC-04', 'MA07-OA-11'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Rueda de la Fortuna' },
       { id: 'explore', type: 'explore', title: 'Descubriendo Pi (π)' },
@@ -90,7 +113,7 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-GEO-002',
     skills: ['sector-circular-area', 'longitud-arco', 'proporciones-circulares'],
     estimatedMinutes: 14,
-    minEducOA: ['MA1M-OA-06'],
+    minEducOA: ['MA1M-OA-06', 'MA07-OA-11'],
     steps: [
       { id: 'hook', type: 'hook', title: 'La Porcion de Pizza' },
       { id: 'explore', type: 'explore', title: 'Descubre la Fraccion' },
@@ -150,7 +173,7 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-GEO-004',
     skills: ['geometria-coordenadas', 'geometria-cuadrantes', 'geometria-plano-cartesiano'],
     estimatedMinutes: 14,
-    minEducOA: ['MA1M-OA-06'],
+    minEducOA: ['MA1M-OA-06', 'MA07-OA-14'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Tesoro Escondido' },
       { id: 'explore', type: 'explore', title: 'Descubre el Plano' },

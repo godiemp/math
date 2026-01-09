@@ -63,13 +63,217 @@ export const GRADE_LEVELS: GradeLevelInfo[] = [
   { code: '4B', name: '4° Básico', slug: '4-basico', order: 4, isAvailable: false },
   { code: '5B', name: '5° Básico', slug: '5-basico', order: 5, isAvailable: false },
   { code: '6B', name: '6° Básico', slug: '6-basico', order: 6, isAvailable: false },
-  { code: '7B', name: '7° Básico', slug: '7-basico', order: 7, isAvailable: false },
-  { code: '8B', name: '8° Básico', slug: '8-basico', order: 8, isAvailable: false },
+  { code: '7B', name: '7° Básico', slug: '7-basico', order: 7, isAvailable: true },
+  { code: '8B', name: '8° Básico', slug: '8-basico', order: 8, isAvailable: true },
   // Media
   { code: '1M', name: '1° Medio', slug: '1-medio', order: 9, isAvailable: true },
   { code: '2M', name: '2° Medio', slug: '2-medio', order: 10, isAvailable: true },
   { code: '3M', name: '3° Medio', slug: '3-medio', order: 11, isAvailable: true },
   { code: '4M', name: '4° Medio', slug: '4-medio', order: 12, isAvailable: true },
+];
+
+// ============================================================================
+// 7° BÁSICO - OBJETIVOS DE APRENDIZAJE (19 OA)
+// ============================================================================
+
+const OA_7B: MinEducOA[] = [
+  // NÚMEROS (5 OA)
+  {
+    code: 'MA07-OA-01',
+    number: 1,
+    grade: '7B',
+    eje: 'números',
+    name: 'Adición y sustracción de enteros',
+    description: 'Mostrar que comprenden la adición y la sustracción de números enteros mediante representación en recta numérica, formas concretas/pictóricas/simbólicas, significado contextual de símbolos y resolución de problemas cotidianos.',
+    isBasal: true,
+    lessonIds: ['m1-num-001-a', 'm1-num-001-b'],
+  },
+  {
+    code: 'MA07-OA-02',
+    number: 2,
+    grade: '7B',
+    eje: 'números',
+    name: 'Multiplicación y división de fracciones',
+    description: 'Explicar la multiplicación y la división de fracciones positivas usando representaciones múltiples y conexiones con decimales.',
+    isBasal: false,
+    lessonIds: ['m1-num-002-f', 'm1-num-002-g'],
+  },
+  {
+    code: 'MA07-OA-03',
+    number: 3,
+    grade: '7B',
+    eje: 'números',
+    name: 'Problemas con fracciones y decimales',
+    description: 'Resolver problemas con multiplicación y división de fracciones y decimales positivos mediante formas concretas, pictóricas, simbólicas y software.',
+    isBasal: true,
+    lessonIds: ['m1-num-002-a', 'm1-num-002-b', 'm1-num-002-e'],
+  },
+  {
+    code: 'MA07-OA-04',
+    number: 4,
+    grade: '7B',
+    eje: 'números',
+    name: 'Concepto de porcentaje',
+    description: 'Mostrar que comprenden el concepto de porcentaje mediante representación pictórica, cálculo variado y aplicación a situaciones sencillas.',
+    isBasal: true,
+    lessonIds: ['m1-num-004-a', 'm1-num-005-a'],
+  },
+  {
+    code: 'MA07-OA-05',
+    number: 5,
+    grade: '7B',
+    eje: 'números',
+    name: 'Potencias de base 10',
+    description: 'Utilizar potencias de base 10 con exponente natural incluyendo terminología, exponente cero, notación científica y resolución de problemas.',
+    isBasal: false,
+    lessonIds: ['m1-num-003-a', 'm1-num-003-b', 'm1-num-003-c'],
+  },
+
+  // ÁLGEBRA Y FUNCIONES (4 OA)
+  {
+    code: 'MA07-OA-06',
+    number: 6,
+    grade: '7B',
+    eje: 'álgebra',
+    name: 'Lenguaje algebraico',
+    description: 'Utilizar el lenguaje algebraico para generalizar relaciones entre números, para establecer y formular reglas y propiedades y construir ecuaciones.',
+    isBasal: true,
+    lessonIds: [], // Próximamente - m1-alg-002-a is a better fit for OA-07 (términos semejantes)
+  },
+  {
+    code: 'MA07-OA-07',
+    number: 7,
+    grade: '7B',
+    eje: 'álgebra',
+    name: 'Reducción de expresiones algebraicas',
+    description: 'Reducir expresiones algebraicas, reuniendo términos semejantes para obtener expresiones de la forma ax + by + cz.',
+    isBasal: false,
+    lessonIds: ['m1-alg-002-a'],
+  },
+  {
+    code: 'MA07-OA-08',
+    number: 8,
+    grade: '7B',
+    eje: 'álgebra',
+    name: 'Proporciones directas e inversas',
+    description: 'Mostrar que comprenden las proporciones directas e inversas mediante tablas, gráficas, análisis de características y resolución de problemas contextuales.',
+    isBasal: true,
+    lessonIds: ['m1-alg-004-a', 'm1-alg-005-a'],
+  },
+  {
+    code: 'MA07-OA-09',
+    number: 9,
+    grade: '7B',
+    eje: 'álgebra',
+    name: 'Ecuaciones e inecuaciones lineales',
+    description: 'Modelar y resolver problemas variados con ecuaciones e inecuaciones lineales de formas ax = b; x/a = b; ax < b; ax > b; x/a < b; x/a > b.',
+    isBasal: false,
+    lessonIds: ['m1-alg-003-a', 'm1-alg-006-a'],
+  },
+
+  // GEOMETRÍA (5 OA)
+  {
+    code: 'MA07-OA-10',
+    number: 10,
+    grade: '7B',
+    eje: 'geometría',
+    name: 'Ángulos en polígonos',
+    description: 'Descubrir relaciones que involucran ángulos exteriores o interiores de diferentes polígonos.',
+    isBasal: false,
+    lessonIds: [], // Próximamente - needs lessons about angles, not area
+  },
+  {
+    code: 'MA07-OA-11',
+    number: 11,
+    grade: '7B',
+    eje: 'geometría',
+    name: 'El círculo',
+    description: 'Mostrar que comprenden el círculo describiendo relaciones radio-diámetro-perímetro, estimando medidas, aplicando en problemas y identificándolo como lugar geométrico.',
+    isBasal: true,
+    lessonIds: ['m1-geo-002-a', 'm1-geo-002-c'],
+  },
+  {
+    code: 'MA07-OA-12',
+    number: 12,
+    grade: '7B',
+    eje: 'geometría',
+    name: 'Construcciones geométricas',
+    description: 'Construir objetos geométricos de manera manual y/o con software educativo incluyendo líneas, puntos especiales y triángulos/cuadriláteros congruentes.',
+    isBasal: true,
+    lessonIds: [], // Próximamente
+  },
+  {
+    code: 'MA07-OA-13',
+    number: 13,
+    grade: '7B',
+    eje: 'geometría',
+    name: 'Área de triángulos, paralelogramos y trapecios',
+    description: 'Desarrollar y aplicar la fórmula del área de triángulos, paralelogramos y trapecios.',
+    isBasal: false,
+    lessonIds: ['m1-geo-001-b', 'm1-geo-001-c'],
+  },
+  {
+    code: 'MA07-OA-14',
+    number: 14,
+    grade: '7B',
+    eje: 'geometría',
+    name: 'Plano cartesiano y vectores',
+    description: 'Identificar puntos en el plano cartesiano, usando pares ordenados y vectores de forma concreta y pictórica.',
+    isBasal: true,
+    lessonIds: ['m1-geo-004-a'],
+  },
+
+  // PROBABILIDAD Y ESTADÍSTICA (5 OA)
+  {
+    code: 'MA07-OA-15',
+    number: 15,
+    grade: '7B',
+    eje: 'probabilidad',
+    name: 'Muestreo y estimación',
+    description: 'Estimar el porcentaje de algunas características de una población desconocida por medio del muestreo.',
+    isBasal: false,
+    lessonIds: [], // Próximamente
+  },
+  {
+    code: 'MA07-OA-16',
+    number: 16,
+    grade: '7B',
+    eje: 'probabilidad',
+    name: 'Tablas de frecuencia y gráficos',
+    description: 'Representar datos obtenidos en una muestra mediante tablas de frecuencias absolutas y relativas, utilizando gráficos apropiados.',
+    isBasal: true,
+    lessonIds: ['m1-prob-001-a'],
+  },
+  {
+    code: 'MA07-OA-17',
+    number: 17,
+    grade: '7B',
+    eje: 'probabilidad',
+    name: 'Medidas de tendencia central',
+    description: 'Mostrar que comprenden las medidas de tendencia central y el rango determinándolas para inferencias, seleccionando medidas apropiadas, comparando poblaciones y evaluando datos atípicos.',
+    isBasal: false,
+    lessonIds: ['m1-prob-002-a'],
+  },
+  {
+    code: 'MA07-OA-18',
+    number: 18,
+    grade: '7B',
+    eje: 'probabilidad',
+    name: 'Probabilidades experimentales',
+    description: 'Explicar las probabilidades de eventos obtenidos por medio de experimentos estimándolas intuitivamente, usando frecuencias relativas y conectando con razones/fracciones/porcentajes.',
+    isBasal: true,
+    lessonIds: ['m1-prob-004-a', 'm1-prob-006-a'],
+  },
+  {
+    code: 'MA07-OA-19',
+    number: 19,
+    grade: '7B',
+    eje: 'probabilidad',
+    name: 'Comparación de frecuencias y probabilidades',
+    description: 'Comparar las frecuencias relativas de un evento repetido experimentalmente con probabilidades teóricas usando diagramas, tablas o gráficos.',
+    isBasal: false,
+    lessonIds: [], // Próximamente
+  },
 ];
 
 // ============================================================================
@@ -516,6 +720,7 @@ const OA_4M: MinEducOA[] = [
 // ============================================================================
 
 export const MINEDUC_OA: Partial<Record<GradeLevel, MinEducOA[]>> = {
+  '7B': OA_7B,
   '1M': OA_1M,
   '2M': OA_2M,
   '3M': OA_3M,
@@ -602,3 +807,75 @@ export const EJE_LABELS: Record<Eje, string> = {
  * Eje order for sorting
  */
 export const EJE_ORDER: Eje[] = ['números', 'álgebra', 'geometría', 'probabilidad'];
+
+// ============================================================================
+// VALIDATION
+// ============================================================================
+
+export interface LessonDuplicateError {
+  grade: GradeLevel;
+  lessonId: string;
+  oaCodes: string[];
+}
+
+/**
+ * Validate that no lesson appears in multiple OA within the same grade level.
+ * Each lesson should only be assigned to ONE OA per grade.
+ *
+ * @returns Array of duplicate errors, empty if valid
+ */
+export function validateNoLessonDuplicates(): LessonDuplicateError[] {
+  const errors: LessonDuplicateError[] = [];
+
+  for (const grade of Object.keys(MINEDUC_OA) as GradeLevel[]) {
+    const oaList = MINEDUC_OA[grade];
+    if (!oaList) continue;
+
+    // Track which OA each lesson appears in
+    const lessonToOA = new Map<string, string[]>();
+
+    for (const oa of oaList) {
+      for (const lessonId of oa.lessonIds) {
+        const existing = lessonToOA.get(lessonId) || [];
+        existing.push(oa.code);
+        lessonToOA.set(lessonId, existing);
+      }
+    }
+
+    // Find duplicates
+    for (const [lessonId, oaCodes] of lessonToOA) {
+      if (oaCodes.length > 1) {
+        errors.push({ grade, lessonId, oaCodes });
+      }
+    }
+  }
+
+  return errors;
+}
+
+/**
+ * Assert no lesson duplicates exist. Throws if duplicates found.
+ * Call this at app startup or in tests to catch mapping errors early.
+ */
+export function assertNoLessonDuplicates(): void {
+  const errors = validateNoLessonDuplicates();
+  if (errors.length > 0) {
+    const details = errors
+      .map(e => `  - ${e.lessonId} appears in ${e.oaCodes.join(', ')} (grade ${e.grade})`)
+      .join('\n');
+    throw new Error(
+      `Lesson duplicate validation failed. Each lesson should only appear in ONE OA per grade:\n${details}`
+    );
+  }
+}
+
+// Run validation at module load in development
+if (process.env.NODE_ENV !== 'production') {
+  const errors = validateNoLessonDuplicates();
+  if (errors.length > 0) {
+    console.warn(
+      '⚠️ Lesson duplicates detected in MINEDUC_OA:',
+      errors.map(e => `${e.lessonId} in ${e.oaCodes.join(', ')}`)
+    );
+  }
+}

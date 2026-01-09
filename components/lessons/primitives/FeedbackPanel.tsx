@@ -9,7 +9,7 @@ import { MathText } from '@/components/math/MathDisplay';
 export interface FeedbackPanelProps {
   isCorrect: boolean;
   title?: string;
-  explanation: string | ReactNode;
+  explanation: ReactNode;
   className?: string;
 }
 

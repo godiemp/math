@@ -61,13 +61,16 @@ export default defineConfig({
         storageState: '.auth/student.json',
       },
       dependencies: ['setup'],
-      // Exclude tests that need their own login flow
+      // Exclude tests that need their own login flow or different auth state
       testIgnore: [
         '**/auth.spec.ts',
         '**/registration.spec.ts',
         '**/colegio-dashboard.spec.ts',
         '**/teacher-student-sync.spec.ts', // Creates own contexts with socket mocking
         '**/admin-*.spec.ts', // Admin tests use admin auth
+        '**/teacher-dashboard.spec.ts', // Teacher tests use teacher auth
+        '**/teacher-students.spec.ts', // Teacher tests use teacher auth
+        '**/teacher-login-redirect.spec.ts', // Login redirect tests - no auth state
       ],
     },
     // Unauthenticated tests - for login/registration flows and multi-context tests
@@ -85,6 +88,7 @@ export default defineConfig({
         '**/registration.spec.ts',
         '**/colegio-dashboard.spec.ts',
         '**/teacher-student-sync.spec.ts', // Uses storageState from setup
+        '**/teacher-login-redirect.spec.ts', // Tests login redirect for teachers
       ],
     },
     // Admin authenticated tests - for admin panel features
@@ -98,6 +102,18 @@ export default defineConfig({
       dependencies: ['setup'],
       // Only run admin tests
       testMatch: ['**/admin-*.spec.ts'],
+    },
+    // Teacher authenticated tests - for teacher dashboard features
+    {
+      name: 'chromium-teacher',
+      use: {
+        ...devices['Desktop Chrome'],
+        // Use saved teacher authentication state from setup
+        storageState: '.auth/teacher.json',
+      },
+      dependencies: ['setup'],
+      // Only run teacher tests
+      testMatch: ['**/teacher-dashboard.spec.ts', '**/teacher-students.spec.ts'],
     },
 
     // Uncomment to test on more browsers

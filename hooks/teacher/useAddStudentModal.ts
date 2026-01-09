@@ -53,12 +53,12 @@ export function useAddStudentModal(
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [gradeLevel, setGradeLevel] = useState<StudentGradeLevel>('1-medio');
+  const [gradeLevel, setGradeLevel] = useState<StudentGradeLevel>('7-basico');
 
   const reset = useCallback(() => {
     setFirstName('');
     setLastName('');
-    setGradeLevel('1-medio');
+    setGradeLevel('7-basico');
   }, []);
 
   const open = useCallback(() => {

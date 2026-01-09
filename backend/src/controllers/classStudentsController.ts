@@ -161,3 +161,108 @@ export async function searchAvailableStudents(req: Request, res: Response): Prom
     res.status(500).json({ error: 'Failed to search students' });
   }
 }
+
+/**
+ * Create a new student and enroll them in the class in one step
+ */
+export async function createStudentAndEnroll(req: Request, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
+
+    const { classId } = req.params;
+    const { firstName, lastName } = req.body;
+
+    if (!classId) {
+      res.status(400).json({ error: 'Class ID is required' });
+      return;
+    }
+
+    if (!firstName || typeof firstName !== 'string' || !firstName.trim()) {
+      res.status(400).json({ error: 'First name is required' });
+      return;
+    }
+
+    if (!lastName || typeof lastName !== 'string' || !lastName.trim()) {
+      res.status(400).json({ error: 'Last name is required' });
+      return;
+    }
+
+    const result = await ClassService.createStudentAndEnroll(classId, req.user.userId, {
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+    });
+
+    if (!result.success) {
+      res.status(400).json({ error: result.error });
+      return;
+    }
+
+    res.status(201).json({
+      success: true,
+      student: result.student,
+      credentials: result.credentials,
+      message: 'Student created and enrolled successfully',
+    });
+  } catch (error) {
+    console.error('Create student and enroll error:', error);
+    res.status(500).json({ error: 'Failed to create student' });
+  }
+}
+
+/**
+ * Move a student from current class to another class
+ */
+export async function moveStudent(req: Request, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
+
+    const { classId, studentId } = req.params;
+    const { targetClassId } = req.body;
+
+    if (!classId) {
+      res.status(400).json({ error: 'Source class ID is required' });
+      return;
+    }
+
+    if (!studentId) {
+      res.status(400).json({ error: 'Student ID is required' });
+      return;
+    }
+
+    if (!targetClassId || typeof targetClassId !== 'string') {
+      res.status(400).json({ error: 'Target class ID is required' });
+      return;
+    }
+
+    if (classId === targetClassId) {
+      res.status(400).json({ error: 'Target class must be different from source class' });
+      return;
+    }
+
+    const result = await ClassService.moveStudentToClass(
+      classId,
+      targetClassId,
+      studentId,
+      req.user.userId
+    );
+
+    if (!result.success) {
+      res.status(400).json({ error: result.error });
+      return;
+    }
+
+    res.json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error) {
+    console.error('Move student error:', error);
+    res.status(500).json({ error: 'Failed to move student' });
+  }
+}

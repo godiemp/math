@@ -13,6 +13,8 @@ import {
 } from '@/hooks/teacher';
 
 const GRADE_LEVELS: { value: StudentGradeLevel; label: string }[] = [
+  { value: '7-basico', label: '7° Básico' },
+  { value: '8-basico', label: '8° Básico' },
   { value: '1-medio', label: '1° Medio' },
   { value: '2-medio', label: '2° Medio' },
   { value: '3-medio', label: '3° Medio' },
@@ -144,7 +146,7 @@ export default function TeacherStudentsPage() {
     <TeacherLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div data-testid="teacher-students-header" className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <Heading level={1} size="lg">
               Gestionar Estudiantes
@@ -154,6 +156,7 @@ export default function TeacherStudentsPage() {
             </Text>
           </div>
           <button
+            data-testid="teacher-students-add-button"
             onClick={addStudentModal.open}
             className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors"
           >
@@ -181,6 +184,7 @@ export default function TeacherStudentsPage() {
           <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <input
+                data-testid="teacher-students-search-input"
                 type="text"
                 placeholder="Buscar por nombre o email..."
                 value={studentsList.searchQuery}
@@ -190,6 +194,7 @@ export default function TeacherStudentsPage() {
             </div>
             <div>
               <select
+                data-testid="teacher-students-filter-select"
                 value={studentsList.filterGrade}
                 onChange={(e) => studentsList.setFilterGrade(e.target.value)}
                 className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -204,6 +209,7 @@ export default function TeacherStudentsPage() {
               </select>
             </div>
             <button
+              data-testid="teacher-students-search-button"
               type="submit"
               className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors"
             >
@@ -215,11 +221,11 @@ export default function TeacherStudentsPage() {
         {/* Students Table */}
         <Card className="!p-0">
           {studentsList.loading ? (
-            <div className="flex items-center justify-center py-12">
+            <div data-testid="teacher-students-loading" className="flex items-center justify-center py-12">
               <div className="text-gray-500 dark:text-gray-400">Cargando...</div>
             </div>
           ) : studentsList.students.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12">
+            <div data-testid="teacher-students-empty-state" className="flex flex-col items-center justify-center py-12">
               <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
                 <span className="text-3xl">👥</span>
               </div>
@@ -235,7 +241,7 @@ export default function TeacherStudentsPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table data-testid="teacher-students-table" className="w-full">
                 <thead className="bg-gray-50 dark:bg-gray-800/50">
                   <tr className="border-b border-gray-200 dark:border-gray-700">
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -294,7 +300,7 @@ export default function TeacherStudentsPage() {
       {/* Add Student Modal */}
       {addStudentModal.isOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full p-6 shadow-xl">
+          <div data-testid="teacher-add-student-modal" className="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full p-6 shadow-xl">
             <div className="flex items-center justify-between mb-6">
               <Heading level={2} size="md">
                 Agregar Estudiante
@@ -377,7 +383,7 @@ export default function TeacherStudentsPage() {
       {/* Credentials Modal */}
       {credentialsModal.isOpen && credentialsModal.credentials && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full p-6 shadow-xl">
+          <div data-testid="teacher-credentials-modal" className="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full p-6 shadow-xl">
             <div className="text-center mb-6">
               <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-3xl">✓</span>

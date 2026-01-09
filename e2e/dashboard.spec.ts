@@ -42,15 +42,6 @@ test.describe('Dashboard Page', () => {
       await expect(page.getByText(/NUEVO/i)).toBeVisible();
     });
 
-    test('should display Adaptive Learning card with Coming Soon badge', async ({ page }) => {
-      await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
-      await page.waitForTimeout(2000);
-
-      await expect(page.getByTestId('adaptive-learning-card')).toBeVisible();
-      await expect(page.getByText(/Aprendizaje adaptativo/i)).toBeVisible();
-      await expect(page.getByText(/Próximamente/i)).toBeVisible();
-    });
-
     test('should display Live Practice card', async ({ page }) => {
       await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -86,6 +77,15 @@ test.describe('Dashboard Page', () => {
       await page.waitForTimeout(2000);
 
       await expect(page.getByTestId('progress-card')).toBeVisible();
+    });
+
+    test('should display Adaptive Learning card with Coming Soon badge', async ({ page }) => {
+      await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+
+      await expect(page.getByTestId('adaptive-learning-card')).toBeVisible();
+      await expect(page.getByText(/Aprendizaje adaptativo/i)).toBeVisible();
+      await expect(page.getByText(/Próximamente/i)).toBeVisible();
     });
 
     test('should display footer with links', async ({ page }) => {
