@@ -106,15 +106,27 @@ function getSpecialLines(lineType: LineType | null): SpecialLineConfig[] {
   };
 
   const type = lineTypeMap[lineType];
+  // Add right angle markers for alturas
+  const showRightAngle = lineType === 'alturas';
+
   return [
-    { type, fromVertex: 0 },
-    { type, fromVertex: 1 },
-    { type, fromVertex: 2 },
+    { type, fromVertex: 0, showRightAngleMarker: showRightAngle },
+    { type, fromVertex: 1, showRightAngleMarker: showRightAngle },
+    { type, fromVertex: 2, showRightAngleMarker: showRightAngle },
   ];
 }
 
 // Get notable points config for display
-function getNotablePoints(point: NotablePointType | null, animate: boolean = true): NotablePointConfig[] {
+function getNotablePoints(point: NotablePointType | null, isComparePhase: boolean = false, animate: boolean = true): NotablePointConfig[] {
+  // In compare phase, show all 4 notable points
+  if (isComparePhase) {
+    return [
+      { type: 'circuncentro', animate: false },
+      { type: 'incentro', animate: false },
+      { type: 'baricentro', animate: false },
+      { type: 'ortocentro', animate: false },
+    ];
+  }
   if (!point) return [];
   return [{ type: point, animate }];
 }
@@ -141,10 +153,11 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
   const isLast = currentPhaseIndex === PHASES.length - 1;
 
   // Build props for TriangleFigure
+  const isComparePhase = phase.id === 'compare';
   const specialLines = getSpecialLines(phase.lines);
-  const notablePoints = getNotablePoints(phase.point);
+  const notablePoints = getNotablePoints(phase.point, isComparePhase);
   const circles = getCircles(phase.showCircumscribed, phase.showInscribed);
-  const isDraggable = phase.id === 'compare' || phase.point !== null;
+  const isDraggable = isComparePhase || phase.point !== null;
 
   const handleNext = () => {
     if (isLast) {

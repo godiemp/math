@@ -456,9 +456,11 @@ export function calculateSpecialLineEndpoints(
 
     case 'mediatriz': {
       // Perpendicular bisector of a side
+      // fromVertex determines which side: 0 = side BC (opposite to A), 1 = side AC (opposite to B), 2 = side AB (opposite to C)
       const sideIndex = config.toSide ?? fromVertex;
-      const sideP1 = vertices[sideIndex];
-      const sideP2 = vertices[(sideIndex + 1) % 3];
+      // Get the two vertices that form this side (opposite to the fromVertex)
+      const sideP1 = vertices[(sideIndex + 1) % 3];
+      const sideP2 = vertices[(sideIndex + 2) % 3];
 
       const mid = midpoint(sideP1, sideP2);
 
@@ -467,8 +469,9 @@ export function calculateSpecialLineEndpoints(
       const dy = sideP2.y - sideP1.y;
       const perp = normalize({ x: -dy, y: dx });
 
-      // Extend in both directions
-      const length = distance(sideP1, sideP2) * 0.3;
+      // Extend in both directions - use longer length for visibility
+      const sideLength = distance(sideP1, sideP2);
+      const length = Math.max(sideLength * 0.6, 50);
 
       return {
         start: { x: mid.x - perp.x * length, y: mid.y - perp.y * length },

@@ -244,7 +244,7 @@ export function TriangleFigure({
     (e.target as Element).setPointerCapture(e.pointerId);
   }, [draggable]);
 
-  // Handle pointer move
+  // Handle pointer move with damping to prevent oversensitivity
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     if (draggingVertex === null || !draggable) return;
     const point = getSVGPoint(e.clientX, e.clientY);
@@ -252,11 +252,24 @@ export function TriangleFigure({
 
     setInternalVertices(prev => {
       if (!prev) return prev;
+      const currentVertex = prev[draggingVertex];
+
+      // Apply damping factor to smooth movement (0.3 = 30% of the distance per frame)
+      const dampingFactor = 0.3;
+      const newX = currentVertex.x + (point.x - currentVertex.x) * dampingFactor;
+      const newY = currentVertex.y + (point.y - currentVertex.y) * dampingFactor;
+
+      // Clamp to reasonable bounds to prevent extreme triangles
+      const minCoord = -200;
+      const maxCoord = 600;
+      const clampedX = Math.max(minCoord, Math.min(maxCoord, newX));
+      const clampedY = Math.max(minCoord, Math.min(maxCoord, newY));
+
       const newVertices = [...prev] as [LabeledPoint, LabeledPoint, LabeledPoint];
       newVertices[draggingVertex] = {
         ...newVertices[draggingVertex],
-        x: point.x,
-        y: point.y,
+        x: clampedX,
+        y: clampedY,
       };
       return newVertices;
     });

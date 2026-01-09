@@ -32,11 +32,11 @@ const DEFAULT_VERTICES: [{ x: number; y: number; label: string }, { x: number; y
 ];
 
 // Helper to generate special lines for all 3 vertices
-function allLinesOfType(type: SpecialLineConfig['type']): SpecialLineConfig[] {
+function allLinesOfType(type: SpecialLineConfig['type'], showRightAngleMarker = false): SpecialLineConfig[] {
   return [
-    { type, fromVertex: 0 },
-    { type, fromVertex: 1 },
-    { type, fromVertex: 2 },
+    { type, fromVertex: 0, showRightAngleMarker },
+    { type, fromVertex: 1, showRightAngleMarker },
+    { type, fromVertex: 2, showRightAngleMarker },
   ];
 }
 
@@ -245,7 +245,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             <div className="bg-red-50 dark:bg-red-900/30 rounded-lg p-4">
               <TriangleFigure
                 vertices={DEFAULT_VERTICES}
-                specialLines={allLinesOfType('altura')}
+                specialLines={allLinesOfType('altura', true)}
                 notablePoints={[{ type: 'ortocentro', animate: true }]}
                 className="mx-auto max-w-xs"
               />
