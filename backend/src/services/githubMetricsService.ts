@@ -41,7 +41,7 @@ let metricsCache: { data: ProductivityMetrics; timestamp: number } | null = null
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 class GitHubMetricsService {
-  private static readonly OWNER = 'godiemps';
+  private static readonly OWNER = 'godiemp';
   private static readonly REPO = 'math';
   private static readonly token = process.env.GITHUB_TOKEN;
 
