@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Check, X, Lightbulb, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
-import { InlineMath, MathText } from '@/components/math/MathDisplay';
+import { InlineMath, BlockMath, MathText } from '@/components/math/MathDisplay';
 
 type PropertyType = 'product' | 'quotient' | 'rootOfRoot';
 
@@ -243,8 +243,11 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
 
             {/* Question */}
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              {currentProblem.question} <InlineMath latex={currentProblem.questionLatex} />
+              {currentProblem.question}
             </h3>
+            <div className="math-centered flex justify-center text-2xl mb-4">
+              <BlockMath latex={currentProblem.questionLatex} />
+            </div>
 
             {/* Hint */}
             {showHint && !showFeedback && (
@@ -433,8 +436,8 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                   >
                     {PROPERTY_LABELS[problem.type]}
                   </span>
-                  <span className="text-sm text-gray-700 dark:text-gray-300 flex-1">
-                    {problem.question} <InlineMath latex={problem.questionLatex} />
+                  <span className="text-sm text-gray-700 dark:text-gray-300 flex-1 math-centered">
+                    {problem.question} <BlockMath latex={problem.questionLatex} />
                   </span>
                 </div>
               ))}
