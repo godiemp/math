@@ -182,4 +182,25 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint' },
     ],
   },
+  {
+    id: '7b-geo-001-a',
+    slug: 'construcciones-geometricas',
+    title: 'Construcciones Geométricas Básicas',
+    description:
+      'Aprende a construir figuras con compás y regla: mediatriz, bisectriz y perpendiculares.',
+    level: 'M1',
+    subject: 'geometría',
+    thematicUnit: 'M1-GEO-005',
+    skills: ['construccion-mediatriz', 'construccion-bisectriz', 'construccion-perpendicular'],
+    estimatedMinutes: 14,
+    minEducOA: ['MA07-OA-12'],
+    steps: [
+      { id: 'hook', type: 'hook', title: 'El Maestro Carpintero' },
+      { id: 'explore', type: 'explore', title: 'Construye con Compás' },
+      { id: 'explain', type: 'explain', title: 'Las Tres Construcciones' },
+      { id: 'classify', type: 'explore', title: '¿Qué Construcción?' },
+      { id: 'practice', type: 'practice', title: 'Practica Paso a Paso' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
 ];
