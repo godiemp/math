@@ -254,7 +254,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
 
           {/* Main formula */}
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6">
-            <div className="text-center text-2xl text-gray-800 dark:text-gray-200">
+            <div className="text-center text-2xl text-gray-800 dark:text-gray-200 math-centered">
               <BlockMath latex={currentFormula!.formulaLatex} />
             </div>
           </div>

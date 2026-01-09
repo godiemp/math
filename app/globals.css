@@ -166,6 +166,12 @@ body {
   display: inline !important;
 }
 
+/* Centered math display - use .math-centered class on parent to center formulas */
+.math-centered .math-display .katex-display,
+.math-centered .math-display .katex {
+  text-align: center !important;
+}
+
 .math-display .katex-html {
   white-space: normal !important;
   overflow-wrap: break-word;

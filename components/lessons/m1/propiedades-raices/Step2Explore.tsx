@@ -190,7 +190,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="text-center mb-6">
               <p className="text-gray-500 dark:text-gray-400 mb-2">Simplifica:</p>
-              <div className="flex justify-center text-3xl font-bold text-gray-800 dark:text-gray-200">
+              <div className="math-centered flex justify-center text-3xl font-bold text-gray-800 dark:text-gray-200">
                 <BlockMath latex={currentExample.expression} />
               </div>
             </div>
@@ -218,7 +218,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             {showResult && (
               <div className="space-y-4 animate-fadeIn">
                 <div className={`rounded-xl p-6 border ${PROPERTY_COLORS[currentExample.type].bg} ${PROPERTY_COLORS[currentExample.type].border}`}>
-                  <div className="text-center space-y-3">
+                  <div className="text-center space-y-3 math-centered">
                     <div className="flex justify-center text-lg text-gray-700 dark:text-gray-300">
                       <BlockMath latex={currentExample.expression} />
                     </div>

@@ -183,7 +183,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               <p className="text-center text-gray-700 dark:text-gray-300 mb-4">
                 <strong>¡La Propiedad del Producto!</strong>
               </p>
-              <div className="bg-green-50 dark:bg-green-900/30 rounded-lg p-4 text-center">
+              <div className="bg-green-50 dark:bg-green-900/30 rounded-lg p-4 text-center math-centered">
                 <BlockMath latex="\sqrt[n]{a \cdot b} = \sqrt[n]{a} \cdot \sqrt[n]{b}" />
                 <p className="text-sm text-gray-500 mt-2">
                   La raíz de un producto es el producto de las raíces
