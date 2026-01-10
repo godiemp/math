@@ -1,9 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { ArrowRight, Droplets, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+
+const PLAZA_IMAGE_URL = 'https://math-chile.s3.us-east-1.amazonaws.com/plaza-triangular.png';
 
 type Phase = 'scenario' | 'question' | 'reveal' | 'result';
 
@@ -33,6 +36,7 @@ const OPTIONS = [
 export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('scenario');
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   // Auto-advance after reveal
   useEffect(() => {
@@ -64,12 +68,30 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
         <div className="space-y-6 animate-fadeIn">
           {/* Plaza illustration */}
           <div className="flex justify-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://math-chile.s3.us-east-1.amazonaws.com/plaza-triangular.png"
-              alt="Plaza triangular con caminos y fuente central"
-              className="w-full max-w-md rounded-xl shadow-lg"
-            />
+            <div className="relative w-full max-w-md aspect-[4/3]">
+              {/* Skeleton placeholder while loading */}
+              {!imageLoaded && (
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-900 dark:to-emerald-800 rounded-xl animate-pulse flex items-center justify-center">
+                  <div className="text-emerald-400 dark:text-emerald-600">
+                    <svg className="w-16 h-16 animate-spin-slow" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                  </div>
+                </div>
+              )}
+              <Image
+                src={PLAZA_IMAGE_URL}
+                alt="Plaza triangular con caminos y fuente central"
+                fill
+                className={cn(
+                  "object-contain rounded-xl shadow-lg transition-opacity duration-300",
+                  imageLoaded ? "opacity-100" : "opacity-0"
+                )}
+                onLoad={() => setImageLoaded(true)}
+                priority
+              />
+            </div>
           </div>
 
           {/* Story text */}
