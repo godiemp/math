@@ -106,6 +106,7 @@ function DevProductivityContent() {
       minute: '2-digit',
       day: 'numeric',
       month: 'short',
+      timeZone: 'America/Santiago',
     });
   };
 
