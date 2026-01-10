@@ -118,6 +118,8 @@ export interface SpecialLineConfig {
   showLabel?: boolean;
   /** Whether to show right angle marker at intersection */
   showRightAngleMarker?: boolean;
+  /** Whether to show equal division marks (tick marks indicating equal segments) */
+  showEqualMarks?: boolean;
 }
 
 /**

@@ -244,7 +244,7 @@ export function TriangleFigure({
     (e.target as Element).setPointerCapture(e.pointerId);
   }, [draggable]);
 
-  // Handle pointer move with damping to prevent oversensitivity
+  // Handle pointer move - direct movement without damping
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     if (draggingVertex === null || !draggable) return;
     const point = getSVGPoint(e.clientX, e.clientY);
@@ -252,18 +252,12 @@ export function TriangleFigure({
 
     setInternalVertices(prev => {
       if (!prev) return prev;
-      const currentVertex = prev[draggingVertex];
-
-      // Apply damping factor to smooth movement (0.3 = 30% of the distance per frame)
-      const dampingFactor = 0.3;
-      const newX = currentVertex.x + (point.x - currentVertex.x) * dampingFactor;
-      const newY = currentVertex.y + (point.y - currentVertex.y) * dampingFactor;
 
       // Clamp to reasonable bounds to prevent extreme triangles
       const minCoord = -200;
       const maxCoord = 600;
-      const clampedX = Math.max(minCoord, Math.min(maxCoord, newX));
-      const clampedY = Math.max(minCoord, Math.min(maxCoord, newY));
+      const clampedX = Math.max(minCoord, Math.min(maxCoord, point.x));
+      const clampedY = Math.max(minCoord, Math.min(maxCoord, point.y));
 
       const newVertices = [...prev] as [LabeledPoint, LabeledPoint, LabeledPoint];
       newVertices[draggingVertex] = {
@@ -616,9 +610,93 @@ interface SpecialLineProps {
   config: SpecialLineConfig;
 }
 
+/**
+ * Generate tick marks to indicate equal segments (division marks)
+ * Places two small perpendicular lines on either side of the midpoint
+ */
+function EqualDivisionMarks({
+  point1,
+  point2,
+  midPoint,
+  color,
+  tickSize = 6,
+}: {
+  point1: LabeledPoint;
+  point2: LabeledPoint;
+  midPoint: LabeledPoint;
+  color: string;
+  tickSize?: number;
+}) {
+  // Calculate perpendicular direction to the segment
+  const dx = point2.x - point1.x;
+  const dy = point2.y - point1.y;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  if (len === 0) return null;
+
+  // Perpendicular unit vector
+  const perpX = -dy / len;
+  const perpY = dx / len;
+
+  // Direction along the segment
+  const dirX = dx / len;
+  const dirY = dy / len;
+
+  // Position tick marks at 1/4 and 3/4 of each half segment
+  // This places them between midpoint and each endpoint
+  const offset = len * 0.25; // Distance from midpoint to tick
+
+  // Tick mark 1 (between midpoint and point1)
+  const tick1Center = {
+    x: midPoint.x - dirX * offset,
+    y: midPoint.y - dirY * offset,
+  };
+
+  // Tick mark 2 (between midpoint and point2)
+  const tick2Center = {
+    x: midPoint.x + dirX * offset,
+    y: midPoint.y + dirY * offset,
+  };
+
+  return (
+    <g className="dark:stroke-purple-400">
+      {/* First tick mark */}
+      <line
+        x1={tick1Center.x - perpX * tickSize}
+        y1={tick1Center.y - perpY * tickSize}
+        x2={tick1Center.x + perpX * tickSize}
+        y2={tick1Center.y + perpY * tickSize}
+        stroke={color}
+        strokeWidth="2"
+      />
+      {/* Second tick mark */}
+      <line
+        x1={tick2Center.x - perpX * tickSize}
+        y1={tick2Center.y - perpY * tickSize}
+        x2={tick2Center.x + perpX * tickSize}
+        y2={tick2Center.y + perpY * tickSize}
+        stroke={color}
+        strokeWidth="2"
+      />
+    </g>
+  );
+}
+
 function SpecialLine({ vertices, config }: SpecialLineProps) {
   const { start, end } = calculateSpecialLineEndpoints(vertices, config);
   const dashArray = getStrokeDashArray(config.strokeStyle || 'dashed');
+
+  // For simetral/mediatriz: calculate the midpoint where it intersects the side
+  const isSimetral = config.type === 'simetral' || config.type === 'mediatriz';
+  const isTransversal = config.type === 'transversal' || config.type === 'mediana';
+
+  // Get the side vertices for simetral/transversal
+  const sideIndex = config.toSide ?? config.fromVertex;
+  const sideP1 = vertices[(sideIndex + 1) % 3];
+  const sideP2 = vertices[(sideIndex + 2) % 3];
+  const sideMidPoint = midpoint(sideP1, sideP2);
+
+  // For transversal: endpoint is the midpoint of the opposite side
+  const transversalMidPoint = isTransversal ? end : null;
 
   return (
     <g>
@@ -639,6 +717,33 @@ function SpecialLine({ vertices, config }: SpecialLineProps) {
           direction1={start}
           direction2={vertices[(config.fromVertex + 2) % 3]}
           size={8}
+        />
+      )}
+      {/* Right angle marker for simetral (perpendicular to side at midpoint) */}
+      {config.showRightAngleMarker && isSimetral && (
+        <RightAngleMarkerAtPoint
+          point={sideMidPoint}
+          direction1={sideP1}
+          direction2={{ x: sideMidPoint.x + (end.x - start.x), y: sideMidPoint.y + (end.y - start.y) }}
+          size={8}
+        />
+      )}
+      {/* Equal division marks for simetral (at the side midpoint) */}
+      {config.showEqualMarks && isSimetral && (
+        <EqualDivisionMarks
+          point1={sideP1}
+          point2={sideP2}
+          midPoint={sideMidPoint}
+          color={config.color || DEFAULT_COLORS.specialLine}
+        />
+      )}
+      {/* Equal division marks for transversal (at the opposite side midpoint) */}
+      {config.showEqualMarks && isTransversal && transversalMidPoint && (
+        <EqualDivisionMarks
+          point1={vertices[(config.fromVertex + 1) % 3]}
+          point2={vertices[(config.fromVertex + 2) % 3]}
+          midPoint={transversalMidPoint}
+          color={config.color || DEFAULT_COLORS.specialLine}
         />
       )}
       {/* Label for the special line */}

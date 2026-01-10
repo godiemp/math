@@ -106,13 +106,15 @@ function getSpecialLines(lineType: LineType | null): SpecialLineConfig[] {
   };
 
   const type = lineTypeMap[lineType];
-  // Add right angle markers for alturas
-  const showRightAngle = lineType === 'alturas';
+  // Add right angle markers for alturas and simetrales
+  const showRightAngle = lineType === 'alturas' || lineType === 'simetrales';
+  // Add equal division marks for simetrales and transversales
+  const showEqualMarks = lineType === 'simetrales' || lineType === 'transversales';
 
   return [
-    { type, fromVertex: 0, showRightAngleMarker: showRightAngle },
-    { type, fromVertex: 1, showRightAngleMarker: showRightAngle },
-    { type, fromVertex: 2, showRightAngleMarker: showRightAngle },
+    { type, fromVertex: 0, showRightAngleMarker: showRightAngle, showEqualMarks },
+    { type, fromVertex: 1, showRightAngleMarker: showRightAngle, showEqualMarks },
+    { type, fromVertex: 2, showRightAngleMarker: showRightAngle, showEqualMarks },
   ];
 }
 
