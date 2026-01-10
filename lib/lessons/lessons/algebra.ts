@@ -402,7 +402,7 @@ export const ALGEBRA_LESSONS: Lesson[] = [
     thematicUnit: 'M1-ALG-011',
     skills: ['algebra-formula-cuadratica', 'algebra-discriminante', 'algebra-ecuaciones-cuadraticas'],
     estimatedMinutes: 15,
-    minEducOA: ['MA2M-OA-03', 'MA2M-OA-04'],
+    minEducOA: ['MA2M-OA-04'],
     steps: [
       { id: 'hook', type: 'hook', title: 'El Lanzamiento del Cohete' },
       { id: 'explore', type: 'explore', title: 'Anatomía de la Fórmula' },
