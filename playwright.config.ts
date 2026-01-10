@@ -86,6 +86,7 @@ export default defineConfig({
       // Run tests that handle their own authentication
       testMatch: [
         '**/auth.spec.ts',
+        '**/auth-redirect-loop.spec.ts', // Tests for auth redirect loop detection
         '**/registration.spec.ts',
         '**/colegio-dashboard.spec.ts',
         '**/teacher-student-sync.spec.ts', // Uses storageState from setup
