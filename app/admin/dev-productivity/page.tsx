@@ -90,7 +90,9 @@ function DevProductivityContent() {
   };
 
   const formatDateShort = (dateStr: string) => {
-    const date = new Date(dateStr);
+    // Parse YYYY-MM-DD without timezone conversion issues
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
     return date.toLocaleDateString('es-CL', { month: 'short', day: 'numeric' });
   };
 
