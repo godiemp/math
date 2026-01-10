@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState, useCallback } from "react";
+import { Suspense, useEffect, useState, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
@@ -27,6 +27,9 @@ function SignInContent() {
   const [redirectPath, setRedirectPath] = useState<string | null>(null);
   const [hasWelcomeParam, setHasWelcomeParam] = useState(false);
 
+  // Guard against multiple redirects during hydration
+  const hasRedirected = useRef(false);
+
   // Callback to receive welcome param from SearchParamsReader
   const handleWelcomeParam = useCallback((hasWelcome: boolean) => {
     setHasWelcomeParam(hasWelcome);
@@ -34,7 +37,10 @@ function SignInContent() {
 
   useEffect(() => {
     // Redirect when authenticated based on role
-    if (!isLoading && isAuthenticated) {
+    // Use ref to prevent multiple redirects during state transitions
+    if (!isLoading && isAuthenticated && !hasRedirected.current) {
+      hasRedirected.current = true;
+
       let targetPath: string;
 
       if (redirectPath) {
@@ -47,7 +53,8 @@ function SignInContent() {
         targetPath = hasWelcomeParam ? '/dashboard?welcome=true' : '/dashboard';
       }
 
-      router.push(targetPath);
+      // Use replace to avoid creating browser history entry for redirect
+      router.replace(targetPath);
     }
   }, [isAuthenticated, isLoading, redirectPath, hasWelcomeParam, router, user?.role]);
 

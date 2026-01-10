@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { LandingNav, HeroSection, StatsSection, CTASection } from '@/components/landing';
@@ -32,6 +32,9 @@ function LandingPageContent() {
   const { isAuthenticated, isLoading, user } = useAuth();
   const router = useRouter();
 
+  // Guard against multiple redirects during hydration
+  const hasRedirected = useRef(false);
+
   // Sync state with URL param changes
   useEffect(() => {
     const newAudience: Audience = tabParam === 'colegios' ? 'b2b' : 'b2c';
@@ -46,14 +49,17 @@ function LandingPageContent() {
   };
 
   // Redirect authenticated users based on role
+  // Use ref to prevent multiple redirects during state transitions
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
+    if (!isLoading && isAuthenticated && !hasRedirected.current) {
+      hasRedirected.current = true;
+
       if (user?.role === 'teacher') {
-        router.push('/teacher');
+        router.replace('/teacher');
       } else if (user?.role === 'admin') {
-        router.push('/admin');
+        router.replace('/admin');
       } else {
-        router.push('/dashboard');
+        router.replace('/dashboard');
       }
     }
   }, [isAuthenticated, isLoading, router, user?.role]);
