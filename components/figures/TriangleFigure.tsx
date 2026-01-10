@@ -19,6 +19,7 @@ import {
   orthocenter,
   inradius,
   circumradius,
+  calculateSpecialLineEndpoints,
 } from '@/lib/geometry/triangleUtils';
 import { cn } from '@/lib/utils';
 import {
@@ -162,7 +163,7 @@ export function TriangleFigure({
     inscribed: inradius(vertices),
   }), [vertices]);
 
-  // Calculate viewBox from vertices (and circles if present)
+  // Calculate viewBox from vertices (and circles/special lines if present)
   const calculatedBox = useMemo(() => {
     let box = calculateViewBox(vertices, padding);
 
@@ -184,8 +185,31 @@ export function TriangleFigure({
       };
     }
 
+    // Extend viewBox for special lines (especially alturas which extend beyond the triangle)
+    if (specialLines && specialLines.length > 0) {
+      let minX = box.minX;
+      let minY = box.minY;
+      let maxX = box.minX + box.width;
+      let maxY = box.minY + box.height;
+
+      for (const config of specialLines) {
+        const { start, end } = calculateSpecialLineEndpoints(vertices, config);
+        minX = Math.min(minX, start.x - padding, end.x - padding);
+        minY = Math.min(minY, start.y - padding, end.y - padding);
+        maxX = Math.max(maxX, start.x + padding, end.x + padding);
+        maxY = Math.max(maxY, start.y + padding, end.y + padding);
+      }
+
+      box = {
+        minX,
+        minY,
+        width: maxX - minX,
+        height: maxY - minY,
+      };
+    }
+
     return box;
-  }, [vertices, circles, notablePointsPositions, circleRadii, padding]);
+  }, [vertices, circles, specialLines, notablePointsPositions, circleRadii, padding]);
 
   const viewBox = customViewBox ||
     `${calculatedBox.minX} ${calculatedBox.minY} ${calculatedBox.width} ${calculatedBox.height}`;

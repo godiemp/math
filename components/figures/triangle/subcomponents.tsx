@@ -18,6 +18,7 @@ import {
   angleAtVertex,
   midpoint,
   getStrokeDashArray,
+  altitudeFootPoint,
 } from '@/lib/geometry/triangleUtils';
 import { DEFAULT_COLORS } from './constants';
 
@@ -439,6 +440,7 @@ export function SpecialLine({ vertices, config }: SpecialLineProps) {
   const isSimetral = config.type === 'simetral' || config.type === 'mediatriz';
   const isTransversal = config.type === 'transversal' || config.type === 'mediana';
   const isBisectriz = config.type === 'bisectriz';
+  const isAltura = config.type === 'altura';
 
   const sideIndex = config.toSide ?? config.fromVertex;
   const sideP1 = vertices[(sideIndex + 1) % 3];
@@ -446,6 +448,10 @@ export function SpecialLine({ vertices, config }: SpecialLineProps) {
   const sideMidPoint = midpoint(sideP1, sideP2);
 
   const transversalMidPoint = isTransversal ? end : null;
+
+  // For altura, we need the actual foot point for the right angle marker
+  // (not the extended end point which is used for drawing the full line)
+  const alturaFootPoint = isAltura ? altitudeFootPoint(vertices, config.fromVertex) : null;
 
   const bisectrizVertex = vertices[config.fromVertex];
   const bisectrizP1 = vertices[(config.fromVertex + 1) % 3];
@@ -463,10 +469,10 @@ export function SpecialLine({ vertices, config }: SpecialLineProps) {
         strokeDasharray={dashArray}
         className="dark:stroke-purple-400"
       />
-      {config.showRightAngleMarker && config.type === 'altura' && (
+      {config.showRightAngleMarker && isAltura && alturaFootPoint && (
         <RightAngleMarkerAtPoint
-          point={end}
-          direction1={start}
+          point={alturaFootPoint}
+          direction1={vertices[config.fromVertex]}
           direction2={vertices[(config.fromVertex + 2) % 3]}
           size={8}
         />
