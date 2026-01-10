@@ -416,7 +416,9 @@ export function calculateSpecialLineEndpoints(
         end: altitudeFootPoint(vertices, fromVertex),
       };
 
+    case 'transversal':
     case 'mediana':
+      // Transversal de gravedad (Chilean term) / Median
       return {
         start: vertices[fromVertex],
         end: medianEndpoint(vertices, fromVertex),

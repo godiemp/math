@@ -198,7 +198,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             <div className="bg-emerald-50 dark:bg-emerald-900/30 rounded-lg p-4">
               <TriangleFigure
                 vertices={DEFAULT_VERTICES}
-                specialLines={allLinesOfType('mediana')}
+                specialLines={allLinesOfType('transversal')}
                 notablePoints={[{ type: 'baricentro', animate: true }]}
                 className="mx-auto max-w-xs"
               />
@@ -208,14 +208,14 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
                 <p className="font-semibold text-gray-800 dark:text-white">Construcción:</p>
                 <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  Intersección de las 3 <strong>medianas</strong> (líneas desde cada vértice al punto medio del lado opuesto)
+                  Intersección de las 3 <strong>transversales de gravedad</strong> (líneas desde cada vértice al punto medio del lado opuesto)
                 </p>
               </div>
 
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
                 <p className="font-semibold text-gray-800 dark:text-white">Propiedad clave:</p>
                 <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  Divide cada mediana en razón <strong>2:1</strong> desde el vértice. Es el centro de masa del triángulo.
+                  Divide cada transversal en razón <strong>2:1</strong> desde el vértice. Es el centro de masa del triángulo.
                 </p>
               </div>
 
@@ -314,8 +314,8 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 <div>
                   <p className="font-semibold text-amber-800 dark:text-amber-200">Error común</p>
                   <p className="text-amber-700 dark:text-amber-300 text-sm">
-                    No confundas <strong>mediana</strong> (vértice → punto medio) con <strong>simetral</strong> (perpendicular en el punto medio).
-                    ¡Las medianas dan el baricentro, las simetrales dan el circuncentro!
+                    No confundas <strong>transversal de gravedad</strong> (vértice → punto medio) con <strong>simetral</strong> (perpendicular en el punto medio).
+                    ¡Las transversales dan el baricentro, las simetrales dan el circuncentro!
                   </p>
                 </div>
               </div>
@@ -327,7 +327,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                   <p className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Resumen rápido</p>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="bg-white dark:bg-gray-800 rounded p-2">
-                      <p className="font-bold text-purple-600 dark:text-purple-400">3 Mediatrices →</p>
+                      <p className="font-bold text-purple-600 dark:text-purple-400">3 Simetrales →</p>
                       <p className="text-gray-600 dark:text-gray-300">Circuncentro</p>
                     </div>
                     <div className="bg-white dark:bg-gray-800 rounded p-2">
@@ -335,7 +335,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                       <p className="text-gray-600 dark:text-gray-300">Incentro</p>
                     </div>
                     <div className="bg-white dark:bg-gray-800 rounded p-2">
-                      <p className="font-bold text-emerald-600 dark:text-emerald-400">3 Medianas →</p>
+                      <p className="font-bold text-emerald-600 dark:text-emerald-400">3 Transversales →</p>
                       <p className="text-gray-600 dark:text-gray-300">Baricentro</p>
                     </div>
                     <div className="bg-white dark:bg-gray-800 rounded p-2">

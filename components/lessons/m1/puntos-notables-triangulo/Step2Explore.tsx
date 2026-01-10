@@ -14,7 +14,7 @@ import type {
 
 type Phase = 'intro' | 'circuncentro' | 'incentro' | 'baricentro' | 'ortocentro' | 'compare';
 
-type LineType = 'mediatrices' | 'bisectrices' | 'medianas' | 'alturas';
+type LineType = 'simetrales' | 'bisectrices' | 'transversales' | 'alturas';
 
 interface PhaseConfig {
   id: Phase;
@@ -45,7 +45,7 @@ const PHASES: PhaseConfig[] = [
     title: 'El Circuncentro',
     subtitle: 'Punto 1 de 4',
     description: 'El circuncentro es equidistante de los 3 vértices. Por eso es el centro del círculo circunscrito (que pasa por los 3 vértices).',
-    lines: 'mediatrices',
+    lines: 'simetrales',
     point: 'circuncentro',
     showCircumscribed: true,
     color: 'purple',
@@ -67,10 +67,10 @@ const PHASES: PhaseConfig[] = [
     title: 'El Baricentro',
     subtitle: 'Punto 3 de 4',
     description: 'El baricentro es el centro de gravedad del triángulo. Si recortas el triángulo en cartulina, se equilibraría en este punto.',
-    lines: 'medianas',
+    lines: 'transversales',
     point: 'baricentro',
     color: 'emerald',
-    lineDescription: 'Se construye con las 3 medianas (líneas desde cada vértice al punto medio del lado opuesto)',
+    lineDescription: 'Se construye con las 3 transversales de gravedad (líneas desde cada vértice al punto medio del lado opuesto)',
   },
   {
     id: 'ortocentro',
@@ -99,9 +99,9 @@ function getSpecialLines(lineType: LineType | null): SpecialLineConfig[] {
   if (!lineType) return [];
 
   const lineTypeMap: Record<LineType, SpecialLineConfig['type']> = {
-    mediatrices: 'simetral',
+    simetrales: 'simetral',
     bisectrices: 'bisectriz',
-    medianas: 'mediana',
+    transversales: 'transversal',
     alturas: 'altura',
   };
 

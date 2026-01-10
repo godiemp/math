@@ -115,7 +115,7 @@ const QUESTIONS: ClassifyQuestion[] = [
           strokeWidth="2"
           className="dark:fill-gray-700"
         />
-        {/* Medianas */}
+        {/* Transversales de gravedad */}
         <line x1={TRI.A.x} y1={TRI.A.y} x2={midBC.x} y2={midBC.y} stroke="rgb(16, 185, 129)" strokeWidth="2" />
         <line x1={TRI.B.x} y1={TRI.B.y} x2={midAC.x} y2={midAC.y} stroke="rgb(16, 185, 129)" strokeWidth="2" />
         <line x1={TRI.C.x} y1={TRI.C.y} x2={midAB.x} y2={midAB.y} stroke="rgb(16, 185, 129)" strokeWidth="2" />
@@ -129,7 +129,7 @@ const QUESTIONS: ClassifyQuestion[] = [
       </svg>
     ),
     correctAnswer: 'baricentro',
-    explanation: 'Las medianas (líneas desde cada vértice al punto medio del lado opuesto) se cruzan en el baricentro.',
+    explanation: 'Las transversales de gravedad (líneas desde cada vértice al punto medio del lado opuesto) se cruzan en el baricentro.',
   },
   {
     id: 'q3',
