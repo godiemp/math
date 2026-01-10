@@ -144,14 +144,17 @@ REGLAS IMPORTANTES:
 FORMATO DE MATEMÁTICAS:
 - TODO símbolo matemático DEBE ir entre $...$: $x^2$, $\\frac{1}{2}$, $\\pi$
 - Potencias: $m^2$, fracciones: $\\frac{a}{b}$, raíces: $\\sqrt{x}$
+- Las explicaciones TAMBIÉN deben usar LaTeX para símbolos matemáticos
 
 FORMATO DE RESPUESTA - JSON válido únicamente:
 {
   "questionLatex": "Texto de la pregunta con $matemáticas$",
-  "options": ["opción A", "opción B", "opción C", "opción D"],
+  "options": ["Primera opción sin letra", "Segunda opción", "Tercera opción", "Cuarta opción"],
   "correctAnswer": 0,
-  "explanation": "Explicación paso a paso"
-}`;
+  "explanation": "Explicación paso a paso. Por ejemplo: Para resolver esto, calculamos $x = \\frac{a}{b}$..."
+}
+
+IMPORTANTE: Las opciones NO deben incluir letras (A, B, C, D) al inicio. Solo el contenido.`;
 
   const userPrompt = `## HABILIDAD A EVALUAR:
 Nombre: ${skill.name}
@@ -193,6 +196,13 @@ La pregunta debe ser independiente y más simple que la original.`;
     ) {
       throw new Error('Invalid response structure from AI');
     }
+
+    // Strip any leading letter prefixes (A), B), etc.) from options
+    // The AI sometimes includes these even when instructed not to
+    const cleanedOptions = parsed.options.map((opt: string) =>
+      opt.replace(/^[A-Da-d]\)\s*/, '').trim()
+    );
+    parsed.options = cleanedOptions;
 
     const generatedQuestion: GeneratedScaffoldingQuestion = {
       id: `skill-q-${uuidv4()}`,

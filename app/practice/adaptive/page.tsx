@@ -276,6 +276,7 @@ function ProblemDisplay({
   isGeneratingScaffolding,
   isDecomposingSkills,
   currentSkill,
+  scaffoldingMode,
 }: {
   problem: Question;
   selectedAnswer: number | null;
@@ -291,6 +292,7 @@ function ProblemDisplay({
   isGeneratingScaffolding: boolean;
   isDecomposingSkills: boolean;
   currentSkill?: { name: string; difficulty: string };
+  scaffoldingMode: 'none' | 'active' | 'skill-based';
 }) {
   const questionContent = problem.questionLatex;
   const options = problem.options;
@@ -413,9 +415,11 @@ function ProblemDisplay({
                 <span>Procesando...</span>
               </span>
             ) : isScaffolding && feedback.correct ? (
-              scaffoldingDepth === 1
-                ? 'Volver a pregunta similar →'
-                : 'Siguiente habilidad →'
+              scaffoldingMode === 'skill-based'
+                ? 'Siguiente pregunta →'
+                : scaffoldingDepth === 1
+                  ? 'Volver a pregunta similar →'
+                  : 'Siguiente habilidad →'
             ) : (
               'Siguiente Problema →'
             )}
@@ -653,6 +657,7 @@ function AdaptivePracticeContent() {
                 isGeneratingScaffolding={practice.isGeneratingScaffolding}
                 isDecomposingSkills={practice.isDecomposingSkills}
                 currentSkill={currentSkill}
+                scaffoldingMode={practice.scaffoldingMode}
               />
             )}
           </div>

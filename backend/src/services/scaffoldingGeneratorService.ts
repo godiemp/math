@@ -238,10 +238,12 @@ EJEMPLOS INCORRECTOS:
 FORMATO DE RESPUESTA - JSON válido únicamente:
 {
   "questionLatex": "Texto de la pregunta",
-  "options": ["A", "B", "C", "D"],
+  "options": ["Primera opción sin letra", "Segunda opción", "Tercera opción", "Cuarta opción"],
   "correctAnswer": 0,
-  "explanation": "Explicación paso a paso"
-}`;
+  "explanation": "Explicación paso a paso con $matemáticas$ en LaTeX"
+}
+
+IMPORTANTE: Las opciones NO deben incluir letras (A, B, C, D) al inicio. Solo el contenido.`;
 
   const userPrompt = `## PREGUNTA ORIGINAL:
 ${originalQuestion.questionLatex}
@@ -282,6 +284,13 @@ Genera una pregunta SIMILAR que evalúe los mismos conceptos pero con diferentes
     ) {
       throw new Error('Invalid response structure from AI');
     }
+
+    // Strip any leading letter prefixes (A), B), etc.) from options
+    // The AI sometimes includes these even when instructed not to
+    const cleanedOptions = parsed.options.map((opt: string) =>
+      opt.replace(/^[A-Da-d]\)\s*/, '').trim()
+    );
+    parsed.options = cleanedOptions;
 
     const originalScore = originalQuestion.difficultyScore ?? difficultyLabelToScore(originalQuestion.difficulty);
 
