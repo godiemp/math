@@ -167,7 +167,7 @@ La lucha productiva no es apropiada siempre:
 
 - **El tiempo no alcanza.** Si necesitas cubrir contenido y solo tienes 15 minutos, la instrucción directa puede ser más eficiente.
 
-- **Un estudiante tiene ansiedad matemática severa.** Para estos casos, primero necesitas reconstruir confianza con éxitos pequeños.
+- **Un estudiante tiene ansiedad matemática severa.** Para estos casos, primero necesitas reconstruir confianza con éxitos pequeños. Revisa nuestra guía sobre [cómo manejar la ansiedad matemática](/blog/manejar-ansiedad-matematica-sala-clases).
 
 - **Es procedimiento puro.** Factorizar un polinomio estándar no requiere lucha—requiere práctica. La lucha productiva es para problemas que demandan pensamiento, no para automatización de procedimientos.
 
