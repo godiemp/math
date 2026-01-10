@@ -125,6 +125,14 @@ export const faqSchema = {
         text: "Sí, de acuerdo con la Ley del Consumidor de Chile, tienes derecho a retracto dentro de los 10 días corridos siguientes a la contratación con reembolso del 100% del monto pagado.",
       },
     },
+    {
+      "@type": "Question",
+      name: "¿Tienen licencias para colegios o profesores?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Sí, ofrecemos licencias institucionales para colegios y profesores con precios especiales y panel de seguimiento de estudiantes. Contáctanos directamente en contacto@simplepaes.cl para más información.",
+      },
+    },
   ],
 };
 
@@ -204,5 +212,54 @@ export function createBreadcrumbSchema(
       name: item.name,
       item: item.url,
     })),
+  };
+}
+
+// Product Schema for Pricing page
+export const pricingProductSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "@id": `${SITE_URL}/pricing#product`,
+  name: "SimplePAES Premium",
+  description:
+    "Suscripción premium de matemáticas para enseñanza media con +900 ejercicios, Tutor AI 24/7, y preparación PAES completa.",
+  brand: { "@id": `${SITE_URL}/#organization` },
+  offers: {
+    "@type": "Offer",
+    price: "8000",
+    priceCurrency: "CLP",
+    availability: "https://schema.org/InStock",
+    url: `${SITE_URL}/pricing`,
+    priceValidUntil: new Date(
+      new Date().setFullYear(new Date().getFullYear() + 1)
+    )
+      .toISOString()
+      .split("T")[0],
+    seller: { "@id": `${SITE_URL}/#organization` },
+  },
+  category: "Educational Software",
+  audience: {
+    "@type": "EducationalAudience",
+    educationalRole: "student",
+    audienceType: "Estudiantes de enseñanza media Chile",
+  },
+};
+
+// WebPage Schema generator for legal and static pages
+export function createWebPageSchema(options: {
+  name: string;
+  description: string;
+  url: string;
+  breadcrumbItems: Array<{ name: string; url: string }>;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${options.url}#webpage`,
+    name: options.name,
+    description: options.description,
+    url: options.url,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    breadcrumb: createBreadcrumbSchema(options.breadcrumbItems),
   };
 }
