@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "fumadocs-ui/style.css";
+@import "katex/dist/katex.css";
+
 /* AppleLiquidGlass Design System */
 :root {
   /* Color Roles - Light Mode */
