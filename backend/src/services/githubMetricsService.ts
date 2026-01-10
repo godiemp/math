@@ -41,6 +41,15 @@ interface ProductivityMetrics {
 let metricsCache: { data: ProductivityMetrics; timestamp: number } | null = null;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
+const CHILEAN_TIMEZONE = 'America/Santiago';
+
+/**
+ * Get date string (YYYY-MM-DD) in Chilean timezone
+ */
+function getChileanDateString(date: Date): string {
+  return date.toLocaleDateString('en-CA', { timeZone: CHILEAN_TIMEZONE });
+}
+
 class GitHubMetricsService {
   private static readonly OWNER = 'godiemp';
   private static readonly REPO = 'math';
@@ -95,7 +104,7 @@ class GitHubMetricsService {
   }
 
   /**
-   * Group PRs by day (YYYY-MM-DD format)
+   * Group PRs by day (YYYY-MM-DD format) in Chilean timezone
    * Returns a map of date to count for all days with PRs
    */
   private static buildDailyMap(prs: GitHubPR[]): Map<string, number> {
@@ -103,7 +112,7 @@ class GitHubMetricsService {
 
     for (const pr of prs) {
       if (pr.merged_at) {
-        const date = pr.merged_at.split('T')[0];
+        const date = getChileanDateString(new Date(pr.merged_at));
         dailyMap.set(date, (dailyMap.get(date) || 0) + 1);
       }
     }
@@ -122,16 +131,16 @@ class GitHubMetricsService {
 
   /**
    * Get daily metrics for last 30 days including days with 0 PRs (for chart)
+   * Uses Chilean timezone for day boundaries
    */
   private static getLast30DaysMetrics(dailyMap: Map<string, number>): DailyMetric[] {
     const result: DailyMetric[] = [];
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const todayStr = getChileanDateString(new Date());
 
     for (let i = 0; i < 30; i++) {
-      const date = new Date(today);
+      const date = new Date(todayStr);
       date.setDate(date.getDate() - i);
-      const dateStr = date.toISOString().split('T')[0];
+      const dateStr = getChileanDateString(date);
       result.push({
         date: dateStr,
         count: dailyMap.get(dateStr) || 0,
@@ -177,6 +186,7 @@ class GitHubMetricsService {
   /**
    * Calculate streak for a minimum number of PRs per day
    * Returns current streak (days from today going back) and longest streak ever
+   * Uses Chilean timezone for day boundaries
    */
   private static calculateStreak(dailyMetrics: DailyMetric[], minPRs: number): StreakInfo {
     if (dailyMetrics.length === 0) {
@@ -191,29 +201,32 @@ class GitHubMetricsService {
       }
     }
 
-    // Calculate current streak (starting from today or yesterday)
-    const today = new Date().toISOString().split('T')[0];
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    // Calculate current streak (starting from today or yesterday) in Chilean timezone
+    const today = getChileanDateString(new Date());
+    const yesterdayDate = new Date(today);
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+    const yesterday = getChileanDateString(yesterdayDate);
 
     let currentStreak = 0;
-    let checkDate: Date;
+    let checkDateStr: string;
 
     // Start from today if it qualifies, otherwise from yesterday
     if (qualifyingDates.has(today)) {
-      checkDate = new Date(today);
+      checkDateStr = today;
     } else if (qualifyingDates.has(yesterday)) {
-      checkDate = new Date(yesterday);
+      checkDateStr = yesterday;
     } else {
       // No current streak
-      checkDate = new Date(0); // Will skip the loop
+      checkDateStr = '';
     }
 
     // Count consecutive days going backwards
-    while (true) {
-      const dateStr = checkDate.toISOString().split('T')[0];
-      if (qualifyingDates.has(dateStr)) {
+    while (checkDateStr) {
+      if (qualifyingDates.has(checkDateStr)) {
         currentStreak++;
-        checkDate.setDate(checkDate.getDate() - 1);
+        const prevDate = new Date(checkDateStr);
+        prevDate.setDate(prevDate.getDate() - 1);
+        checkDateStr = getChileanDateString(prevDate);
       } else {
         break;
       }
@@ -274,8 +287,8 @@ class GitHubMetricsService {
       streaks[n] = this.calculateStreak(allDailyMetrics, n);
     }
 
-    // Calculate today's and this week's count
-    const today = new Date().toISOString().split('T')[0];
+    // Calculate today's and this week's count (in Chilean timezone)
+    const today = getChileanDateString(new Date());
     const thisWeek = this.getISOWeek(new Date());
 
     const todayMetric = last30Days.find((d) => d.date === today);
