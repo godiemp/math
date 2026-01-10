@@ -63,96 +63,13 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
       {phase === 'scenario' && (
         <div className="space-y-6 animate-fadeIn">
           {/* Plaza illustration */}
-          <div className="bg-gradient-to-b from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 rounded-xl p-6 border border-slate-300 dark:border-slate-700 shadow-inner">
-            <svg viewBox="0 0 400 320" className="w-full max-w-md mx-auto">
-              <defs>
-                {/* Grass pattern */}
-                <pattern id="grass" patternUnits="userSpaceOnUse" width="10" height="10">
-                  <rect width="10" height="10" fill="rgb(134, 239, 172)" className="dark:fill-emerald-700" />
-                  <circle cx="2" cy="3" r="0.5" fill="rgb(74, 222, 128)" className="dark:fill-emerald-600" />
-                  <circle cx="7" cy="7" r="0.5" fill="rgb(74, 222, 128)" className="dark:fill-emerald-600" />
-                </pattern>
-                {/* Shadow gradient */}
-                <linearGradient id="plazaShadow" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="rgba(0,0,0,0.05)" />
-                  <stop offset="100%" stopColor="rgba(0,0,0,0.15)" />
-                </linearGradient>
-              </defs>
-
-              {/* Ground/context */}
-              <rect x="0" y="0" width="400" height="320" fill="rgb(226, 232, 240)" className="dark:fill-slate-800" />
-
-              {/* Plaza grass area with shadow */}
-              <polygon
-                points="200,50 50,270 350,270"
-                fill="url(#plazaShadow)"
-                transform="translate(3, 3)"
-              />
-              <polygon
-                points="200,50 50,270 350,270"
-                fill="url(#grass)"
-                stroke="rgb(34, 197, 94)"
-                strokeWidth="2"
-                className="dark:stroke-emerald-500"
-              />
-
-              {/* Stone border */}
-              <polygon
-                points="200,50 50,270 350,270"
-                fill="none"
-                stroke="rgb(168, 162, 158)"
-                strokeWidth="6"
-                className="dark:stroke-stone-500"
-              />
-
-              {/* Paths - sandy walkways with borders */}
-              {/* Path shadows/borders first */}
-              <line x1="200" y1="50" x2="200" y2="175" stroke="rgb(161, 98, 7)" strokeWidth="14" strokeLinecap="round" opacity="0.4" className="dark:stroke-amber-800" />
-              <line x1="50" y1="270" x2="155" y2="175" stroke="rgb(161, 98, 7)" strokeWidth="14" strokeLinecap="round" opacity="0.4" className="dark:stroke-amber-800" />
-              <line x1="350" y1="270" x2="245" y2="175" stroke="rgb(161, 98, 7)" strokeWidth="14" strokeLinecap="round" opacity="0.4" className="dark:stroke-amber-800" />
-              {/* Main path surface - warm sandy color */}
-              <line x1="200" y1="50" x2="200" y2="175" stroke="rgb(253, 230, 138)" strokeWidth="10" strokeLinecap="round" className="dark:stroke-amber-200" />
-              <line x1="50" y1="270" x2="155" y2="175" stroke="rgb(253, 230, 138)" strokeWidth="10" strokeLinecap="round" className="dark:stroke-amber-200" />
-              <line x1="350" y1="270" x2="245" y2="175" stroke="rgb(253, 230, 138)" strokeWidth="10" strokeLinecap="round" className="dark:stroke-amber-200" />
-
-              {/* Decorative benches along edges */}
-              <rect x="110" y="155" width="20" height="8" rx="2" fill="rgb(120, 53, 15)" className="dark:fill-amber-900" transform="rotate(-60, 120, 159)" />
-              <rect x="270" y="155" width="20" height="8" rx="2" fill="rgb(120, 53, 15)" className="dark:fill-amber-900" transform="rotate(60, 280, 159)" />
-              <rect x="190" y="245" width="20" height="8" rx="2" fill="rgb(120, 53, 15)" className="dark:fill-amber-900" />
-
-              {/* Trees at corners with shadows */}
-              <g transform="translate(200, 38)">
-                <ellipse cx="3" cy="15" rx="12" ry="4" fill="rgba(0,0,0,0.2)" />
-                <circle cx="0" cy="-5" r="18" fill="rgb(22, 163, 74)" className="dark:fill-green-600" />
-                <circle cx="-8" cy="-2" r="12" fill="rgb(34, 197, 94)" className="dark:fill-green-500" />
-                <circle cx="8" cy="-8" r="10" fill="rgb(74, 222, 128)" className="dark:fill-green-400" />
-                <rect x="-2" y="5" width="4" height="10" fill="rgb(120, 53, 15)" className="dark:fill-amber-900" />
-              </g>
-              <g transform="translate(38, 280)">
-                <ellipse cx="3" cy="5" rx="12" ry="4" fill="rgba(0,0,0,0.2)" />
-                <circle cx="0" cy="-15" r="18" fill="rgb(22, 163, 74)" className="dark:fill-green-600" />
-                <circle cx="-8" cy="-12" r="12" fill="rgb(34, 197, 94)" className="dark:fill-green-500" />
-                <circle cx="8" cy="-18" r="10" fill="rgb(74, 222, 128)" className="dark:fill-green-400" />
-                <rect x="-2" y="-5" width="4" height="10" fill="rgb(120, 53, 15)" className="dark:fill-amber-900" />
-              </g>
-              <g transform="translate(362, 280)">
-                <ellipse cx="-3" cy="5" rx="12" ry="4" fill="rgba(0,0,0,0.2)" />
-                <circle cx="0" cy="-15" r="18" fill="rgb(22, 163, 74)" className="dark:fill-green-600" />
-                <circle cx="8" cy="-12" r="12" fill="rgb(34, 197, 94)" className="dark:fill-green-500" />
-                <circle cx="-8" cy="-18" r="10" fill="rgb(74, 222, 128)" className="dark:fill-green-400" />
-                <rect x="-2" y="-5" width="4" height="10" fill="rgb(120, 53, 15)" className="dark:fill-amber-900" />
-              </g>
-
-              {/* Central fountain area - question mark */}
-              <circle cx="200" cy="175" r="28" fill="rgb(241, 245, 249)" stroke="rgb(148, 163, 184)" strokeWidth="3" className="dark:fill-slate-700 dark:stroke-slate-500" />
-              <circle cx="200" cy="175" r="20" fill="white" stroke="rgb(59, 130, 246)" strokeWidth="2" strokeDasharray="4 2" className="dark:fill-slate-800 dark:stroke-blue-400" />
-              <text x="200" y="182" textAnchor="middle" fontSize="24" fontWeight="bold" fill="rgb(59, 130, 246)" className="dark:fill-blue-400">?</text>
-
-              {/* Small decorative elements */}
-              <circle cx="130" cy="200" r="3" fill="rgb(251, 191, 36)" className="dark:fill-amber-500" />
-              <circle cx="270" cy="200" r="3" fill="rgb(251, 191, 36)" className="dark:fill-amber-500" />
-              <circle cx="200" cy="230" r="3" fill="rgb(251, 191, 36)" className="dark:fill-amber-500" />
-            </svg>
+          <div className="flex justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://math-chile.s3.us-east-1.amazonaws.com/plaza-triangular.png"
+              alt="Plaza triangular con caminos y fuente central"
+              className="w-full max-w-md rounded-xl shadow-lg"
+            />
           </div>
 
           {/* Story text */}
