@@ -15,6 +15,7 @@ import {
   updateClass,
   deleteClass,
   getClassAnalytics,
+  getClassFailedQuestions,
 } from '../controllers/classController';
 import {
   getClassStudents,
@@ -82,6 +83,13 @@ router.delete('/:classId', deleteClass);
  * @access  Private (Teacher)
  */
 router.get('/:classId/analytics', getClassAnalytics);
+
+/**
+ * @route   GET /api/classes/:classId/failed-questions
+ * @desc    Get questions with highest failure rate in a class
+ * @access  Private (Teacher)
+ */
+router.get('/:classId/failed-questions', getClassFailedQuestions);
 
 // ============================================================================
 // CLASS STUDENT ROUTES

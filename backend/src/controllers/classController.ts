@@ -248,3 +248,35 @@ export async function getClassAnalytics(req: Request, res: Response): Promise<vo
     res.status(500).json({ error: 'Failed to fetch class analytics' });
   }
 }
+
+/**
+ * Get failed questions for a class
+ * Returns questions where students have the highest failure rate
+ */
+export async function getClassFailedQuestions(req: Request, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
+
+    const { classId } = req.params;
+
+    if (!classId) {
+      res.status(400).json({ error: 'Class ID is required' });
+      return;
+    }
+
+    const result = await ClassService.getClassFailedQuestions(classId, req.user.userId);
+
+    if (!result) {
+      res.status(404).json({ error: 'Class not found' });
+      return;
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Get class failed questions error:', error);
+    res.status(500).json({ error: 'Failed to fetch failed questions' });
+  }
+}

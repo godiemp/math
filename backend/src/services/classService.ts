@@ -81,6 +81,25 @@ export interface ClassAnalytics {
   }[];
 }
 
+export interface FailedQuestion {
+  questionId: string;
+  questionText: string;
+  topic: string;
+  subject: string;
+  failCount: number;
+  totalAttempts: number;
+  failRate: number;
+  studentsFailed: string[];
+}
+
+export interface ClassFailedQuestionsResult {
+  questions: FailedQuestion[];
+  summary: {
+    totalUniqueQuestionsFailed: number;
+    avgFailRate: number;
+  };
+}
+
 export class ClassService {
   /**
    * Create a new class
@@ -860,5 +879,76 @@ export class ClassService {
     } finally {
       client.release();
     }
+  }
+
+  /**
+   * Get questions where class students have the most failures
+   * Returns questions with >30% fail rate and at least 3 attempts
+   */
+  static async getClassFailedQuestions(
+    classId: string,
+    teacherId: string
+  ): Promise<ClassFailedQuestionsResult | null> {
+    // Verify class belongs to teacher
+    const classCheck = await pool.query(
+      'SELECT id FROM classes WHERE id = $1 AND teacher_id = $2',
+      [classId, teacherId]
+    );
+
+    if (classCheck.rows.length === 0) {
+      return null;
+    }
+
+    const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+
+    // Get failed questions with aggregated stats
+    const result = await pool.query(
+      `SELECT
+         qa.question_id,
+         qa.question AS question_text,
+         qa.topic,
+         qa.subject,
+         COUNT(*) FILTER (WHERE NOT qa.is_correct) as fail_count,
+         COUNT(*) as total_attempts,
+         ROUND(COUNT(*) FILTER (WHERE NOT qa.is_correct)::decimal / NULLIF(COUNT(*), 0), 2) as fail_rate,
+         ARRAY_AGG(DISTINCT u.display_name) FILTER (WHERE NOT qa.is_correct) as students_failed
+       FROM class_enrollments ce
+       JOIN question_attempts qa ON ce.student_id = qa.user_id
+       JOIN users u ON qa.user_id = u.id
+       WHERE ce.class_id = $1 AND ce.status = 'active'
+         AND qa.attempted_at >= $2
+       GROUP BY qa.question_id, qa.question, qa.topic, qa.subject
+       HAVING COUNT(*) >= 3
+         AND COUNT(*) FILTER (WHERE NOT qa.is_correct)::decimal / NULLIF(COUNT(*), 0) >= 0.3
+       ORDER BY fail_rate DESC, fail_count DESC
+       LIMIT 10`,
+      [classId, thirtyDaysAgo]
+    );
+
+    const questions: FailedQuestion[] = result.rows.map((row) => ({
+      questionId: row.question_id,
+      questionText: row.question_text || '',
+      topic: row.topic || '',
+      subject: row.subject || '',
+      failCount: parseInt(row.fail_count) || 0,
+      totalAttempts: parseInt(row.total_attempts) || 0,
+      failRate: parseFloat(row.fail_rate) || 0,
+      studentsFailed: row.students_failed || [],
+    }));
+
+    // Calculate summary stats
+    const totalUniqueQuestionsFailed = questions.length;
+    const avgFailRate =
+      questions.length > 0
+        ? questions.reduce((sum, q) => sum + q.failRate, 0) / questions.length
+        : 0;
+
+    return {
+      questions,
+      summary: {
+        totalUniqueQuestionsFailed,
+        avgFailRate,
+      },
+    };
   }
 }
