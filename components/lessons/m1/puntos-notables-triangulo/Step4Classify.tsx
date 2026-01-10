@@ -4,6 +4,8 @@ import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 import { useMultipleChoice } from '@/hooks/lessons';
+import { TriangleFigure } from '@/components/figures/TriangleFigure';
+import type { SpecialLineConfig, NotablePointConfig, TriangleCircleConfig, LabeledPoint } from '@/lib/types/triangle';
 import {
   ProgressDots,
   FeedbackPanel,
@@ -15,8 +17,13 @@ type NotablePoint = 'circuncentro' | 'incentro' | 'baricentro' | 'ortocentro';
 
 interface ClassifyQuestion {
   id: string;
-  figure: React.ReactNode;
-  description: string;
+  questionType: 'identify-lines' | 'identify-point' | 'identify-property';
+  question: string;
+  hint?: string;
+  vertices: [LabeledPoint, LabeledPoint, LabeledPoint];
+  specialLines?: SpecialLineConfig[];
+  notablePoints?: NotablePointConfig[];
+  circles?: TriangleCircleConfig[];
   correctAnswer: NotablePoint;
   explanation: string;
 }
@@ -28,220 +35,121 @@ const OPTIONS: { id: NotablePoint; label: string; color: string }[] = [
   { id: 'ortocentro', label: 'Ortocentro', color: 'red' },
 ];
 
-// Triangle vertices for SVG figures
-const TRI = { A: { x: 150, y: 30 }, B: { x: 50, y: 220 }, C: { x: 250, y: 220 } };
-const TRI2 = { A: { x: 80, y: 30 }, B: { x: 30, y: 200 }, C: { x: 270, y: 180 } }; // Obtuse
+// Different triangle shapes for variety
+const TRIANGLE_ACUTE: [LabeledPoint, LabeledPoint, LabeledPoint] = [
+  { x: 200, y: 50, label: 'A' },
+  { x: 80, y: 250, label: 'B' },
+  { x: 320, y: 250, label: 'C' },
+];
 
-// Calculate midpoints
-const midAB = { x: (TRI.A.x + TRI.B.x) / 2, y: (TRI.A.y + TRI.B.y) / 2 };
-const midBC = { x: (TRI.B.x + TRI.C.x) / 2, y: (TRI.B.y + TRI.C.y) / 2 };
-const midAC = { x: (TRI.A.x + TRI.C.x) / 2, y: (TRI.A.y + TRI.C.y) / 2 };
+const TRIANGLE_OBTUSE: [LabeledPoint, LabeledPoint, LabeledPoint] = [
+  { x: 100, y: 60, label: 'A' },
+  { x: 50, y: 250, label: 'B' },
+  { x: 350, y: 220, label: 'C' },
+];
 
-// Perpendicular bisector directions (rotate side by 90°)
-const perpAB = { dx: -(TRI.B.y - TRI.A.y) / 5, dy: (TRI.B.x - TRI.A.x) / 5 };
-const perpBC = { dx: -(TRI.C.y - TRI.B.y) / 5, dy: (TRI.C.x - TRI.B.x) / 5 };
-const perpAC = { dx: -(TRI.C.y - TRI.A.y) / 5, dy: (TRI.C.x - TRI.A.x) / 5 };
+const TRIANGLE_RIGHT: [LabeledPoint, LabeledPoint, LabeledPoint] = [
+  { x: 100, y: 60, label: 'A' },
+  { x: 100, y: 260, label: 'B' },
+  { x: 300, y: 260, label: 'C' },
+];
 
-// Circuncentro (approx)
-const circuncentro = { x: 150, y: 115 };
-const incentro = { x: 140, y: 150 };
-const baricentro = { x: 150, y: 157 };
-const ortocentro = { x: 150, y: 80 };
+// Helper to create all 3 lines of a type with markers
+function allLines(type: SpecialLineConfig['type'], showRightAngle = false, showEqual = false): SpecialLineConfig[] {
+  return [
+    { type, fromVertex: 0, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual },
+    { type, fromVertex: 1, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual },
+    { type, fromVertex: 2, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual },
+  ];
+}
 
 const QUESTIONS: ClassifyQuestion[] = [
   {
     id: 'q1',
-    description: '¿Qué punto notable se muestra?',
-    figure: (
-      <svg viewBox="0 0 300 250" className="w-full h-full">
-        {/* Triangle */}
-        <polygon
-          points={`${TRI.A.x},${TRI.A.y} ${TRI.B.x},${TRI.B.y} ${TRI.C.x},${TRI.C.y}`}
-          fill="rgb(243, 244, 246)"
-          stroke="rgb(75, 85, 99)"
-          strokeWidth="2"
-          className="dark:fill-gray-700"
-        />
-        {/* Simetrales (perpendicular bisectors) */}
-        <line
-          x1={midAB.x - perpAB.dx * 4}
-          y1={midAB.y - perpAB.dy * 4}
-          x2={midAB.x + perpAB.dx * 4}
-          y2={midAB.y + perpAB.dy * 4}
-          stroke="rgb(147, 51, 234)"
-          strokeWidth="2"
-          strokeDasharray="6,3"
-        />
-        <line
-          x1={midBC.x - perpBC.dx * 4}
-          y1={midBC.y - perpBC.dy * 4}
-          x2={midBC.x + perpBC.dx * 4}
-          y2={midBC.y + perpBC.dy * 4}
-          stroke="rgb(147, 51, 234)"
-          strokeWidth="2"
-          strokeDasharray="6,3"
-        />
-        <line
-          x1={midAC.x - perpAC.dx * 3}
-          y1={midAC.y - perpAC.dy * 3}
-          x2={midAC.x + perpAC.dx * 3}
-          y2={midAC.y + perpAC.dy * 3}
-          stroke="rgb(147, 51, 234)"
-          strokeWidth="2"
-          strokeDasharray="6,3"
-        />
-        {/* Midpoint markers */}
-        <circle cx={midAB.x} cy={midAB.y} r="4" fill="rgb(147, 51, 234)" />
-        <circle cx={midBC.x} cy={midBC.y} r="4" fill="rgb(147, 51, 234)" />
-        <circle cx={midAC.x} cy={midAC.y} r="4" fill="rgb(147, 51, 234)" />
-        {/* Point */}
-        <circle cx={circuncentro.x} cy={circuncentro.y} r="8" fill="rgb(147, 51, 234)" stroke="white" strokeWidth="2" />
-        <text x={circuncentro.x + 15} y={circuncentro.y + 5} fontSize="14" fill="rgb(147, 51, 234)" fontWeight="bold">?</text>
-      </svg>
-    ),
+    questionType: 'identify-lines',
+    question: 'Estas líneas pasan por el punto medio de cada lado y son perpendiculares a él. ¿Qué punto forman?',
+    hint: 'Observa los ángulos rectos (⊾) y las marcas de división igual en cada lado',
+    vertices: TRIANGLE_ACUTE,
+    specialLines: allLines('simetral', true, true),
+    notablePoints: [{ type: 'circuncentro', animate: true }],
     correctAnswer: 'circuncentro',
-    explanation: 'Las simetrales (perpendiculares por el punto medio de cada lado) se cruzan en el circuncentro.',
+    explanation: 'Las simetrales son perpendiculares que pasan por el punto medio de cada lado. Su intersección es el circuncentro.',
   },
   {
     id: 'q2',
-    description: '¿Qué punto notable se muestra?',
-    figure: (
-      <svg viewBox="0 0 300 250" className="w-full h-full">
-        {/* Triangle */}
-        <polygon
-          points={`${TRI.A.x},${TRI.A.y} ${TRI.B.x},${TRI.B.y} ${TRI.C.x},${TRI.C.y}`}
-          fill="rgb(243, 244, 246)"
-          stroke="rgb(75, 85, 99)"
-          strokeWidth="2"
-          className="dark:fill-gray-700"
-        />
-        {/* Transversales de gravedad */}
-        <line x1={TRI.A.x} y1={TRI.A.y} x2={midBC.x} y2={midBC.y} stroke="rgb(16, 185, 129)" strokeWidth="2" />
-        <line x1={TRI.B.x} y1={TRI.B.y} x2={midAC.x} y2={midAC.y} stroke="rgb(16, 185, 129)" strokeWidth="2" />
-        <line x1={TRI.C.x} y1={TRI.C.y} x2={midAB.x} y2={midAB.y} stroke="rgb(16, 185, 129)" strokeWidth="2" />
-        {/* Midpoint markers */}
-        <circle cx={midAB.x} cy={midAB.y} r="4" fill="rgb(16, 185, 129)" />
-        <circle cx={midBC.x} cy={midBC.y} r="4" fill="rgb(16, 185, 129)" />
-        <circle cx={midAC.x} cy={midAC.y} r="4" fill="rgb(16, 185, 129)" />
-        {/* Point */}
-        <circle cx={baricentro.x} cy={baricentro.y} r="8" fill="rgb(16, 185, 129)" stroke="white" strokeWidth="2" />
-        <text x={baricentro.x + 15} y={baricentro.y + 5} fontSize="14" fill="rgb(16, 185, 129)" fontWeight="bold">?</text>
-      </svg>
-    ),
+    questionType: 'identify-lines',
+    question: 'Estas líneas van desde cada vértice al punto medio del lado opuesto. ¿Qué punto forman?',
+    hint: 'Las marcas de división indican que llegan exactamente al punto medio',
+    vertices: TRIANGLE_ACUTE,
+    specialLines: allLines('transversal', false, true),
+    notablePoints: [{ type: 'baricentro', animate: true }],
     correctAnswer: 'baricentro',
-    explanation: 'Las transversales de gravedad (líneas desde cada vértice al punto medio del lado opuesto) se cruzan en el baricentro.',
+    explanation: 'Las transversales de gravedad van desde cada vértice al punto medio del lado opuesto. Su intersección es el baricentro.',
   },
   {
     id: 'q3',
-    description: '¿Qué punto notable se muestra?',
-    figure: (
-      <svg viewBox="0 0 300 250" className="w-full h-full">
-        {/* Triangle */}
-        <polygon
-          points={`${TRI.A.x},${TRI.A.y} ${TRI.B.x},${TRI.B.y} ${TRI.C.x},${TRI.C.y}`}
-          fill="rgb(243, 244, 246)"
-          stroke="rgb(75, 85, 99)"
-          strokeWidth="2"
-          className="dark:fill-gray-700"
-        />
-        {/* Bisectrices (angle bisectors) - approximated */}
-        <line x1={TRI.A.x} y1={TRI.A.y} x2={incentro.x} y2={220} stroke="rgb(245, 158, 11)" strokeWidth="2" />
-        <line x1={TRI.B.x} y1={TRI.B.y} x2={220} y2={incentro.y} stroke="rgb(245, 158, 11)" strokeWidth="2" />
-        <line x1={TRI.C.x} y1={TRI.C.y} x2={80} y2={incentro.y} stroke="rgb(245, 158, 11)" strokeWidth="2" />
-        {/* Angle arc markers */}
-        <path d={`M ${TRI.A.x - 10} ${TRI.A.y + 15} A 15 15 0 0 1 ${TRI.A.x + 10} ${TRI.A.y + 15}`} fill="none" stroke="rgb(245, 158, 11)" strokeWidth="1.5" />
-        {/* Point */}
-        <circle cx={incentro.x} cy={incentro.y} r="8" fill="rgb(245, 158, 11)" stroke="white" strokeWidth="2" />
-        <text x={incentro.x + 15} y={incentro.y + 5} fontSize="14" fill="rgb(245, 158, 11)" fontWeight="bold">?</text>
-      </svg>
-    ),
+    questionType: 'identify-lines',
+    question: 'Estas líneas dividen cada ángulo del triángulo en dos partes iguales. ¿Qué punto forman?',
+    vertices: TRIANGLE_ACUTE,
+    specialLines: allLines('bisectriz'),
+    notablePoints: [{ type: 'incentro', animate: true }],
     correctAnswer: 'incentro',
-    explanation: 'Las bisectrices (líneas que dividen cada ángulo en dos partes iguales) se cruzan en el incentro.',
+    explanation: 'Las bisectrices dividen cada ángulo en dos partes iguales. Su intersección es el incentro.',
   },
   {
     id: 'q4',
-    description: '¿Qué punto notable se muestra?',
-    figure: (
-      <svg viewBox="0 0 300 250" className="w-full h-full">
-        {/* Triangle */}
-        <polygon
-          points={`${TRI.A.x},${TRI.A.y} ${TRI.B.x},${TRI.B.y} ${TRI.C.x},${TRI.C.y}`}
-          fill="rgb(243, 244, 246)"
-          stroke="rgb(75, 85, 99)"
-          strokeWidth="2"
-          className="dark:fill-gray-700"
-        />
-        {/* Alturas (heights) */}
-        <line x1={TRI.A.x} y1={TRI.A.y} x2={TRI.A.x} y2={220} stroke="rgb(239, 68, 68)" strokeWidth="2" />
-        <line x1={TRI.B.x} y1={TRI.B.y} x2={105} y2={95} stroke="rgb(239, 68, 68)" strokeWidth="2" />
-        <line x1={TRI.C.x} y1={TRI.C.y} x2={195} y2={95} stroke="rgb(239, 68, 68)" strokeWidth="2" />
-        {/* Right angle markers */}
-        <rect x={TRI.A.x} y={212} width="8" height="8" fill="none" stroke="rgb(239, 68, 68)" strokeWidth="1.5" />
-        {/* Point */}
-        <circle cx={ortocentro.x} cy={ortocentro.y} r="8" fill="rgb(239, 68, 68)" stroke="white" strokeWidth="2" />
-        <text x={ortocentro.x + 15} y={ortocentro.y + 5} fontSize="14" fill="rgb(239, 68, 68)" fontWeight="bold">?</text>
-      </svg>
-    ),
+    questionType: 'identify-lines',
+    question: 'Estas líneas son perpendiculares desde cada vértice al lado opuesto. ¿Qué punto forman?',
+    hint: 'Observa los ángulos rectos donde las líneas tocan los lados',
+    vertices: TRIANGLE_ACUTE,
+    specialLines: allLines('altura', true),
+    notablePoints: [{ type: 'ortocentro', animate: true }],
     correctAnswer: 'ortocentro',
-    explanation: 'Las alturas (perpendiculares desde cada vértice al lado opuesto) se cruzan en el ortocentro.',
+    explanation: 'Las alturas son perpendiculares desde cada vértice al lado opuesto. Su intersección es el ortocentro.',
   },
   {
     id: 'q5',
-    description: 'El punto está equidistante de los 3 vértices. ¿Cuál es?',
-    figure: (
-      <svg viewBox="0 0 300 250" className="w-full h-full">
-        {/* Triangle */}
-        <polygon
-          points={`${TRI.A.x},${TRI.A.y} ${TRI.B.x},${TRI.B.y} ${TRI.C.x},${TRI.C.y}`}
-          fill="rgb(243, 244, 246)"
-          stroke="rgb(75, 85, 99)"
-          strokeWidth="2"
-          className="dark:fill-gray-700"
-        />
-        {/* Equal distance lines */}
-        <line x1={circuncentro.x} y1={circuncentro.y} x2={TRI.A.x} y2={TRI.A.y} stroke="rgb(147, 51, 234)" strokeWidth="2" strokeDasharray="4,4" />
-        <line x1={circuncentro.x} y1={circuncentro.y} x2={TRI.B.x} y2={TRI.B.y} stroke="rgb(147, 51, 234)" strokeWidth="2" strokeDasharray="4,4" />
-        <line x1={circuncentro.x} y1={circuncentro.y} x2={TRI.C.x} y2={TRI.C.y} stroke="rgb(147, 51, 234)" strokeWidth="2" strokeDasharray="4,4" />
-        {/* Equal markers */}
-        <text x={110} y={65} fontSize="12" fill="rgb(147, 51, 234)" fontWeight="bold">=</text>
-        <text x={85} y={165} fontSize="12" fill="rgb(147, 51, 234)" fontWeight="bold">=</text>
-        <text x={210} y={165} fontSize="12" fill="rgb(147, 51, 234)" fontWeight="bold">=</text>
-        {/* Point */}
-        <circle cx={circuncentro.x} cy={circuncentro.y} r="8" fill="rgb(147, 51, 234)" stroke="white" strokeWidth="2" />
-        <text x={circuncentro.x + 15} y={circuncentro.y + 5} fontSize="14" fill="rgb(147, 51, 234)" fontWeight="bold">?</text>
-      </svg>
-    ),
+    questionType: 'identify-property',
+    question: 'Este punto es el centro del círculo que pasa por los 3 vértices. ¿Cuál es?',
+    vertices: TRIANGLE_ACUTE,
+    notablePoints: [{ type: 'circuncentro', animate: true }],
+    circles: [{ type: 'circumscribed' }],
     correctAnswer: 'circuncentro',
-    explanation: 'El circuncentro está equidistante de los 3 vértices. Es el centro del círculo circunscrito.',
+    explanation: 'El circuncentro es equidistante de los 3 vértices, por eso es el centro del círculo circunscrito.',
   },
   {
     id: 'q6',
-    description: 'El punto está equidistante de los 3 lados. ¿Cuál es?',
-    figure: (
-      <svg viewBox="0 0 300 250" className="w-full h-full">
-        {/* Triangle */}
-        <polygon
-          points={`${TRI.A.x},${TRI.A.y} ${TRI.B.x},${TRI.B.y} ${TRI.C.x},${TRI.C.y}`}
-          fill="rgb(243, 244, 246)"
-          stroke="rgb(75, 85, 99)"
-          strokeWidth="2"
-          className="dark:fill-gray-700"
-        />
-        {/* Perpendicular distances to each side */}
-        <line x1={incentro.x} y1={incentro.y} x2={incentro.x} y2={220} stroke="rgb(245, 158, 11)" strokeWidth="2" strokeDasharray="4,4" />
-        <line x1={incentro.x} y1={incentro.y} x2={88} y2={137} stroke="rgb(245, 158, 11)" strokeWidth="2" strokeDasharray="4,4" />
-        <line x1={incentro.x} y1={incentro.y} x2={192} y2={137} stroke="rgb(245, 158, 11)" strokeWidth="2" strokeDasharray="4,4" />
-        {/* Equal markers */}
-        <text x={incentro.x + 5} y={185} fontSize="12" fill="rgb(245, 158, 11)" fontWeight="bold">=</text>
-        <text x={105} y={145} fontSize="12" fill="rgb(245, 158, 11)" fontWeight="bold">=</text>
-        <text x={168} y={145} fontSize="12" fill="rgb(245, 158, 11)" fontWeight="bold">=</text>
-        {/* Point */}
-        <circle cx={incentro.x} cy={incentro.y} r="8" fill="rgb(245, 158, 11)" stroke="white" strokeWidth="2" />
-        <text x={incentro.x + 15} y={incentro.y + 5} fontSize="14" fill="rgb(245, 158, 11)" fontWeight="bold">?</text>
-      </svg>
-    ),
+    questionType: 'identify-property',
+    question: 'Este punto es el centro del círculo que toca los 3 lados por dentro. ¿Cuál es?',
+    vertices: TRIANGLE_ACUTE,
+    notablePoints: [{ type: 'incentro', animate: true }],
+    circles: [{ type: 'inscribed' }],
     correctAnswer: 'incentro',
-    explanation: 'El incentro está equidistante de los 3 lados. Es el centro del círculo inscrito.',
+    explanation: 'El incentro es equidistante de los 3 lados, por eso es el centro del círculo inscrito.',
+  },
+  {
+    id: 'q7',
+    questionType: 'identify-point',
+    question: 'En este triángulo obtusángulo, ¿qué punto está FUERA del triángulo?',
+    hint: 'Un ángulo es mayor a 90°',
+    vertices: TRIANGLE_OBTUSE,
+    specialLines: allLines('altura', true),
+    notablePoints: [{ type: 'ortocentro', animate: true }],
+    correctAnswer: 'ortocentro',
+    explanation: 'En triángulos obtusángulos, el ortocentro está fuera del triángulo porque las alturas se encuentran fuera.',
+  },
+  {
+    id: 'q8',
+    questionType: 'identify-point',
+    question: '¿Cuál es el ÚNICO punto que siempre está dentro del triángulo, sin importar su forma?',
+    hint: 'Piensa en el centro de gravedad',
+    vertices: TRIANGLE_OBTUSE,
+    notablePoints: [
+      { type: 'baricentro', animate: true },
+    ],
+    specialLines: allLines('transversal', false, true),
+    correctAnswer: 'baricentro',
+    explanation: 'El baricentro (centro de gravedad) siempre está dentro del triángulo, sin importar si es acutángulo, obtusángulo o rectángulo.',
   },
 ];
 
@@ -249,7 +157,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
   const mc = useMultipleChoice({
     items: QUESTIONS,
     getCorrectAnswer: (item) => item.correctAnswer,
-    passThreshold: 5,
+    passThreshold: 6,
   });
 
   if (!isActive) return null;
@@ -309,7 +217,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           Identifica el Punto
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          Observa las líneas y reconoce el punto notable
+          Observa las líneas y sus características
         </p>
       </div>
 
@@ -335,13 +243,27 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-            <p className="text-gray-700 dark:text-gray-300 text-center mb-4 font-medium">
-              {mc.currentItem.description}
+            <p className="text-gray-800 dark:text-gray-100 text-center mb-2 font-semibold text-lg">
+              {mc.currentItem.question}
             </p>
 
+            {mc.currentItem.hint && (
+              <p className="text-gray-500 dark:text-gray-400 text-center text-sm mb-4 italic">
+                💡 {mc.currentItem.hint}
+              </p>
+            )}
+
             <div className="flex justify-center mb-6">
-              <div className="w-64 h-52 bg-gray-50 dark:bg-gray-700 rounded-lg p-2">
-                {mc.currentItem.figure}
+              <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-3 border border-gray-200 dark:border-gray-600">
+                <TriangleFigure
+                  vertices={mc.currentItem.vertices}
+                  specialLines={mc.currentItem.specialLines}
+                  notablePoints={mc.currentItem.notablePoints}
+                  circles={mc.currentItem.circles}
+                  showGrid={false}
+                  className="max-w-xs mx-auto"
+                  padding={50}
+                />
               </div>
             </div>
 
@@ -391,10 +313,10 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           correctCount={mc.correctCount}
           totalCount={QUESTIONS.length}
           passed={mc.passed}
-          passThreshold={5}
+          passThreshold={6}
           successMessage="¡Excelente!"
           successSubtext="Reconoces bien los puntos notables"
-          failureSubtext={`Necesitas 5 correctas. ¡Inténtalo de nuevo!`}
+          failureSubtext={`Necesitas 6 correctas. ¡Inténtalo de nuevo!`}
           items={QUESTIONS}
           getIsCorrect={(_, i) => mc.answers[i] === QUESTIONS[i].correctAnswer}
           renderItem={(_, i, isCorrect) => (
