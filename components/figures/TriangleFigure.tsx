@@ -19,7 +19,6 @@ import {
   orthocenter,
   inradius,
   circumradius,
-  calculateSpecialLineEndpoints,
 } from '@/lib/geometry/triangleUtils';
 import { cn } from '@/lib/utils';
 import {
@@ -163,19 +162,25 @@ export function TriangleFigure({
     inscribed: inradius(vertices),
   }), [vertices]);
 
-  // Calculate viewBox from vertices (and circles/special lines if present)
+  // Calculate viewBox from vertices (and circles if present)
+  // For special lines that extend beyond the triangle (altura, simetral), we use extra padding
+  const hasExtendedLines = specialLines?.some(
+    (l) => l.type === 'altura' || l.type === 'simetral' || l.type === 'mediatriz'
+  );
+  const effectivePadding = hasExtendedLines ? Math.max(padding, 150) : padding;
+
   const calculatedBox = useMemo(() => {
-    let box = calculateViewBox(vertices, padding);
+    let box = calculateViewBox(vertices, effectivePadding);
 
     // Extend viewBox for circumscribed circle if present
     const hasCircumscribed = circles?.some(c => c.type === 'circumscribed');
     if (hasCircumscribed) {
       const cc = notablePointsPositions.circuncentro;
       const cr = circleRadii.circumscribed;
-      const circleMinX = cc.x - cr - padding;
-      const circleMaxX = cc.x + cr + padding;
-      const circleMinY = cc.y - cr - padding;
-      const circleMaxY = cc.y + cr + padding;
+      const circleMinX = cc.x - cr - effectivePadding;
+      const circleMaxX = cc.x + cr + effectivePadding;
+      const circleMinY = cc.y - cr - effectivePadding;
+      const circleMaxY = cc.y + cr + effectivePadding;
 
       box = {
         minX: Math.min(box.minX, circleMinX),
@@ -185,31 +190,8 @@ export function TriangleFigure({
       };
     }
 
-    // Extend viewBox for special lines (especially alturas which extend beyond the triangle)
-    if (specialLines && specialLines.length > 0) {
-      let minX = box.minX;
-      let minY = box.minY;
-      let maxX = box.minX + box.width;
-      let maxY = box.minY + box.height;
-
-      for (const config of specialLines) {
-        const { start, end } = calculateSpecialLineEndpoints(vertices, config);
-        minX = Math.min(minX, start.x - padding, end.x - padding);
-        minY = Math.min(minY, start.y - padding, end.y - padding);
-        maxX = Math.max(maxX, start.x + padding, end.x + padding);
-        maxY = Math.max(maxY, start.y + padding, end.y + padding);
-      }
-
-      box = {
-        minX,
-        minY,
-        width: maxX - minX,
-        height: maxY - minY,
-      };
-    }
-
     return box;
-  }, [vertices, circles, specialLines, notablePointsPositions, circleRadii, padding]);
+  }, [vertices, circles, notablePointsPositions, circleRadii, effectivePadding]);
 
   const viewBox = customViewBox ||
     `${calculatedBox.minX} ${calculatedBox.minY} ${calculatedBox.width} ${calculatedBox.height}`;
