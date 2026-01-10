@@ -253,14 +253,14 @@ Responde SOLO con el JSON, sin explicaciones adicionales.`;
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o', // Using GPT-4o - fallback while gpt-5.2 issues are resolved
+      model: 'gpt-5.2',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
       temperature: 0.7,
       max_tokens: 1000,
-      response_format: { type: 'json_object' },
+      // Note: response_format removed - GPT-5.2 follows JSON instructions in prompt
     });
 
     const responseContent = completion.choices[0]?.message?.content;
@@ -378,14 +378,14 @@ Genera una pregunta SIMILAR que evalúe los mismos conceptos pero con diferentes
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-5.2',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
       temperature: 0.8,
       max_tokens: 1000,
-      response_format: { type: 'json_object' },
+      // Note: response_format removed - GPT-5.2 follows JSON instructions in prompt
     });
 
     const responseContent = completion.choices[0]?.message?.content;
