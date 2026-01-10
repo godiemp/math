@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ArrowRight, Hammer } from 'lucide-react';
+import { ArrowRight, Hammer, Play, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
 
@@ -14,10 +14,21 @@ const OPTIONS = [
   { id: 'd', text: 'Dibujar líneas al azar hasta acertar', isCorrect: false },
 ];
 
+const ANIMATION_STEPS = [
+  'Tenemos el segmento AB (el tablón)',
+  'Colocamos el compás en A y trazamos un arco',
+  'Sin cambiar la apertura, colocamos el compás en B',
+  'Trazamos otro arco desde B',
+  'Los arcos se cruzan en dos puntos',
+  '¡Unimos los puntos y encontramos el centro!',
+];
+
 export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
   const [phase, setPhase] = useState<Phase>('scenario');
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [animationStep, setAnimationStep] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     if (phase === 'reveal') {
@@ -25,6 +36,21 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
       return () => clearTimeout(timer);
     }
   }, [phase]);
+
+  // Auto-advance animation
+  useEffect(() => {
+    if (!isAnimating || phase !== 'result') return;
+    if (animationStep >= 5) {
+      setIsAnimating(false);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setAnimationStep((s) => s + 1);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [isAnimating, animationStep, phase]);
 
   const handleOptionSelect = (optionId: string) => {
     if (phase !== 'question') return;
@@ -36,6 +62,16 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
     const option = OPTIONS.find((o) => o.id === selectedOption);
     setIsCorrect(option?.isCorrect ?? false);
     setPhase('reveal');
+  };
+
+  const startAnimation = () => {
+    setAnimationStep(0);
+    setIsAnimating(true);
+  };
+
+  const resetAnimation = () => {
+    setAnimationStep(0);
+    setIsAnimating(false);
   };
 
   if (!isActive) return null;
@@ -171,72 +207,167 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
       {phase === 'result' && (
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg space-y-4">
           <div className="text-center">
-            <p className="text-gray-700 dark:text-gray-300 text-lg mb-4">
-              Don Roberto usa una técnica llamada <strong className="text-green-600 dark:text-green-400">mediatriz</strong>:
-              traza dos arcos con el compás que se cruzan, y la línea que pasa por esos puntos divide el tablón exactamente por la mitad.
+            <p className="text-gray-700 dark:text-gray-300 text-lg mb-2">
+              Don Roberto usa una técnica llamada <strong className="text-green-600 dark:text-green-400">mediatriz</strong>.
+            </p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
+              {ANIMATION_STEPS[animationStep]}
             </p>
           </div>
 
-          {/* Visual showing the perpendicular bisector */}
+          {/* Animated compass construction */}
           <div className="flex justify-center">
-            <svg viewBox="0 0 300 180" className="w-full max-w-md">
-              {/* Arc from left - upper */}
-              <path
-                d="M 40 90 A 110 110 0 0 1 150 30"
-                fill="none"
-                stroke="#3B82F6"
-                strokeWidth="2"
-                strokeDasharray="5 3"
-              />
-              {/* Arc from left - lower */}
-              <path
-                d="M 40 90 A 110 110 0 0 0 150 150"
-                fill="none"
-                stroke="#3B82F6"
-                strokeWidth="2"
-                strokeDasharray="5 3"
-              />
+            <svg viewBox="0 0 300 200" className="w-full max-w-md">
+              {/* Background */}
+              <rect width="300" height="200" fill="#f9fafb" className="dark:fill-gray-900" />
 
-              {/* Arc from right - upper */}
-              <path
-                d="M 260 90 A 110 110 0 0 0 150 30"
-                fill="none"
-                stroke="#3B82F6"
-                strokeWidth="2"
-                strokeDasharray="5 3"
-              />
-              {/* Arc from right - lower */}
-              <path
-                d="M 260 90 A 110 110 0 0 1 150 150"
-                fill="none"
-                stroke="#3B82F6"
-                strokeWidth="2"
-                strokeDasharray="5 3"
-              />
+              {/* Plank */}
+              <rect x="30" y="85" width="240" height="30" rx="3" fill="#D2691E" stroke="#8B4513" strokeWidth="2" />
+              <line x1="60" y1="90" x2="60" y2="110" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
+              <line x1="100" y1="88" x2="100" y2="112" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
+              <line x1="140" y1="90" x2="140" y2="110" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
+              <line x1="180" y1="88" x2="180" y2="112" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
+              <line x1="220" y1="90" x2="220" y2="110" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
 
-              {/* Plank - drawn after arcs so it's on top */}
-              <rect x="30" y="75" width="240" height="30" rx="3" fill="#D2691E" stroke="#8B4513" strokeWidth="2" />
-              {/* Wood grain */}
-              <line x1="60" y1="80" x2="60" y2="100" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
-              <line x1="100" y1="78" x2="100" y2="102" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
-              <line x1="140" y1="80" x2="140" y2="100" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
-              <line x1="180" y1="78" x2="180" y2="102" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
-              <line x1="220" y1="80" x2="220" y2="100" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
+              {/* Points A and B */}
+              <circle cx="40" cy="100" r="5" fill="#EF4444" />
+              <circle cx="260" cy="100" r="5" fill="#EF4444" />
+              <text x="40" y="130" textAnchor="middle" className="text-sm font-bold fill-gray-700 dark:fill-gray-300">A</text>
+              <text x="260" y="130" textAnchor="middle" className="text-sm font-bold fill-gray-700 dark:fill-gray-300">B</text>
 
-              {/* Intersection points */}
-              <circle cx="150" cy="30" r="6" fill="#EF4444" stroke="white" strokeWidth="2" />
-              <circle cx="150" cy="150" r="6" fill="#EF4444" stroke="white" strokeWidth="2" />
+              {/* Step 1-2: Arc from A (blue) */}
+              {animationStep >= 1 && (
+                <>
+                  {/* Upper arc from A */}
+                  <path
+                    d="M 100 30 A 120 120 0 0 0 40 100"
+                    fill="none"
+                    stroke="#3B82F6"
+                    strokeWidth="2.5"
+                    className="animate-fadeIn"
+                  />
+                  {/* Lower arc from A */}
+                  <path
+                    d="M 40 100 A 120 120 0 0 0 100 170"
+                    fill="none"
+                    stroke="#3B82F6"
+                    strokeWidth="2.5"
+                    className="animate-fadeIn"
+                  />
+                </>
+              )}
 
-              {/* Perpendicular bisector (mediatriz) */}
-              <line x1="150" y1="30" x2="150" y2="150" stroke="#10B981" strokeWidth="3" strokeDasharray="8 4" />
+              {/* Step 1-2: Compass at A */}
+              {animationStep >= 1 && animationStep < 3 && (
+                <g className="animate-fadeIn">
+                  {/* Compass pivot at A */}
+                  <circle cx="40" cy="100" r="4" fill="#6366F1" stroke="white" strokeWidth="2" />
+                  {/* Compass arm */}
+                  <line x1="40" y1="100" x2="100" y2="30" stroke="#6366F1" strokeWidth="3" strokeLinecap="round" />
+                  {/* Compass tip */}
+                  <circle cx="100" cy="30" r="3" fill="#6366F1" />
+                </g>
+              )}
 
-              {/* Center point on plank */}
-              <circle cx="150" cy="90" r="7" fill="#10B981" stroke="white" strokeWidth="2" />
+              {/* Step 3-4: Arc from B (purple) */}
+              {animationStep >= 3 && (
+                <>
+                  {/* Upper arc from B */}
+                  <path
+                    d="M 260 100 A 120 120 0 0 0 200 30"
+                    fill="none"
+                    stroke="#8B5CF6"
+                    strokeWidth="2.5"
+                    className="animate-fadeIn"
+                  />
+                  {/* Lower arc from B */}
+                  <path
+                    d="M 200 170 A 120 120 0 0 0 260 100"
+                    fill="none"
+                    stroke="#8B5CF6"
+                    strokeWidth="2.5"
+                    className="animate-fadeIn"
+                  />
+                </>
+              )}
 
-              {/* Labels */}
-              <text x="40" y="68" textAnchor="middle" className="text-sm font-bold fill-gray-600 dark:fill-gray-300">A</text>
-              <text x="260" y="68" textAnchor="middle" className="text-sm font-bold fill-gray-600 dark:fill-gray-300">B</text>
+              {/* Step 3-4: Compass at B */}
+              {animationStep >= 2 && animationStep < 5 && (
+                <g className="animate-fadeIn">
+                  {/* Compass pivot at B */}
+                  <circle cx="260" cy="100" r="4" fill="#8B5CF6" stroke="white" strokeWidth="2" />
+                  {/* Compass arm */}
+                  <line x1="260" y1="100" x2="200" y2="30" stroke="#8B5CF6" strokeWidth="3" strokeLinecap="round" />
+                  {/* Compass tip */}
+                  <circle cx="200" cy="30" r="3" fill="#8B5CF6" />
+                </g>
+              )}
+
+              {/* Step 5: Intersection points */}
+              {animationStep >= 4 && (
+                <>
+                  <circle cx="150" cy="30" r="7" fill="#F59E0B" stroke="white" strokeWidth="2" className="animate-fadeIn" />
+                  <circle cx="150" cy="170" r="7" fill="#F59E0B" stroke="white" strokeWidth="2" className="animate-fadeIn" />
+                  <text x="165" y="35" className="text-xs font-bold fill-amber-600">P</text>
+                  <text x="165" y="175" className="text-xs font-bold fill-amber-600">Q</text>
+                </>
+              )}
+
+              {/* Step 6: Mediatriz line */}
+              {animationStep >= 5 && (
+                <>
+                  <line
+                    x1="150"
+                    y1="25"
+                    x2="150"
+                    y2="175"
+                    stroke="#10B981"
+                    strokeWidth="3"
+                    className="animate-fadeIn"
+                  />
+                  {/* Center point */}
+                  <circle cx="150" cy="100" r="8" fill="#10B981" stroke="white" strokeWidth="2" className="animate-fadeIn" />
+                  <text x="165" y="105" className="text-sm font-bold fill-green-600">Centro</text>
+                </>
+              )}
             </svg>
+          </div>
+
+          {/* Animation controls */}
+          <div className="flex justify-center gap-3">
+            <button
+              onClick={resetAnimation}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+            >
+              <RotateCcw size={16} />
+              <span>Reiniciar</span>
+            </button>
+            <button
+              onClick={startAnimation}
+              disabled={isAnimating}
+              className={cn(
+                'flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all',
+                isAnimating
+                  ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              )}
+            >
+              <Play size={16} />
+              <span>{animationStep >= 5 ? 'Ver de nuevo' : 'Ver animación'}</span>
+            </button>
+          </div>
+
+          {/* Progress dots */}
+          <div className="flex justify-center gap-1">
+            {ANIMATION_STEPS.map((_, i) => (
+              <div
+                key={i}
+                className={cn(
+                  'w-2 h-2 rounded-full transition-all',
+                  i === animationStep ? 'bg-blue-500 scale-125' : i < animationStep ? 'bg-blue-400' : 'bg-gray-300 dark:bg-gray-600'
+                )}
+              />
+            ))}
           </div>
 
           <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
