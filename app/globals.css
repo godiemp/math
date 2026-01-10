@@ -1,3 +1,6 @@
+@import "fumadocs-ui/style.css";
+@import "katex/dist/katex.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
