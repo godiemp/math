@@ -117,24 +117,19 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
 
       {!mc.isComplete ? (
         <>
-          <div className="flex items-center justify-between px-2">
-            <div className="text-sm text-gray-600 dark:text-gray-300">
-              Pregunta {mc.currentIndex + 1} de {QUESTIONS.length}
-            </div>
-            <ProgressDots
-              items={QUESTIONS}
-              currentIndex={mc.currentIndex}
-              getStatus={(_, i) =>
-                mc.answers[i] !== null
-                  ? mc.answers[i] === QUESTIONS[i].correctAnswer
-                    ? 'correct'
-                    : 'incorrect'
-                  : i === mc.currentIndex
-                    ? 'current'
-                    : 'pending'
-              }
-            />
-          </div>
+          <ProgressDots
+            items={QUESTIONS}
+            currentIndex={mc.currentIndex}
+            getStatus={(_, i) =>
+              mc.answers[i] !== null
+                ? mc.answers[i] === QUESTIONS[i].correctAnswer
+                  ? 'correct'
+                  : 'incorrect'
+                : i === mc.currentIndex
+                  ? 'current'
+                  : 'pending'
+            }
+          />
 
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <p className="text-gray-800 dark:text-gray-100 text-center mb-6 font-medium text-lg">
