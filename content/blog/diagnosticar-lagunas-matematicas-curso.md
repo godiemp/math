@@ -209,6 +209,10 @@ No intentes implementar todo. Elige uno:
 
 Lo importante no es el método que elijas. Es que empieces a tomar decisiones de enseñanza basadas en datos reales de tus estudiantes, no en intuición ni en promedios de pruebas que no te dicen dónde está el problema.
 
+Una vez que identifies las lagunas, necesitarás estrategias para actuar. Revisa nuestras guías relacionadas:
+- [Cómo apoyar estudiantes con lagunas profundas](/blog/apoyar-estudiantes-lagunas-profundas) - para estudiantes con vacíos de años anteriores
+- [Cómo convertir errores en oportunidades de aprendizaje](/blog/convertir-errores-oportunidades-aprendizaje) - para usar los errores que detectas como herramienta de enseñanza
+
 ---
 
 *Con SimplePAES puedes ver qué temas necesitan refuerzo en tu curso y asignar práctica personalizada—sin agregar horas a tu semana. [Conoce nuestros planes para colegios](https://simplepaes.cl/profesores).*

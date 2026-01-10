@@ -28,7 +28,7 @@ Intentaste enseñar funciones lineales, pero no dominaban operaciones con fracci
 - Los mismos estudiantes que no entienden hoy tampoco entendieron la unidad anterior
 - Cuando preguntas "¿qué no quedó claro?", no saben qué preguntar
 
-**Qué hacer:** Necesitas [diagnosticar específicamente qué prerrequisito falta](/blog/diagnosticar-lagunas-matematicas-curso) antes de re-enseñar. Repetir la misma explicación no va a funcionar si el problema es de hace dos años.
+**Qué hacer:** Necesitas [diagnosticar específicamente qué prerrequisito falta](/blog/diagnosticar-lagunas-matematicas-curso) antes de re-enseñar. Repetir la misma explicación no va a funcionar si el problema es de hace dos años. Si las lagunas son muy profundas, revisa nuestra guía sobre [cómo apoyar estudiantes con lagunas profundas](/blog/apoyar-estudiantes-lagunas-profundas).
 
 ### Causa 2: La explicación no funcionó
 

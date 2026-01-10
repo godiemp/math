@@ -149,6 +149,8 @@ Para más estrategias de [aprendizaje colaborativo estructurado](/blog/aprendiza
 
 **El riesgo:** Si el tutor no sabe bien el tema, refuerza errores. Por eso necesitas [diagnosticar primero](/blog/diagnosticar-lagunas-matematicas-curso) quién realmente domina cada contenido.
 
+Si tienes estudiantes con lagunas muy profundas (de años anteriores, no solo del tema actual), estas estrategias de diferenciación pueden no ser suficientes. Revisa nuestra guía sobre [cómo apoyar estudiantes con lagunas profundas sin detener al resto](/blog/apoyar-estudiantes-lagunas-profundas).
+
 ### 5. Diferenciación asíncrona (fuera de clase)
 
 La clase presencial es para lo que requiere tu presencia: explicar, responder dudas, motivar. La práctica diferenciada puede ocurrir fuera.
