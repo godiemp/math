@@ -410,11 +410,40 @@ export function calculateSpecialLineEndpoints(
   const fromVertex = config.fromVertex;
 
   switch (config.type) {
-    case 'altura':
+    case 'altura': {
+      // For altitudes, we extend the line beyond the foot point to show the orthocenter
+      // This is especially important for obtuse triangles where the orthocenter is outside
+      const foot = altitudeFootPoint(vertices, fromVertex);
+      const vertex = vertices[fromVertex];
+
+      // Direction from vertex to foot (perpendicular to opposite side)
+      const dx = foot.x - vertex.x;
+      const dy = foot.y - vertex.y;
+      const len = Math.sqrt(dx * dx + dy * dy);
+
+      if (len < 0.0001) {
+        // Degenerate case
+        return { start: vertex, end: foot };
+      }
+
+      // Calculate dynamic extension based on triangle size
+      const side0 = distance(vertices[0], vertices[1]);
+      const side1 = distance(vertices[1], vertices[2]);
+      const side2 = distance(vertices[2], vertices[0]);
+      const maxSide = Math.max(side0, side1, side2);
+      // Extend well beyond to ensure orthocenter is visible (1.5x max side from foot)
+      const extension = Math.max(maxSide * 1.5, 150);
+
+      // Normalize direction
+      const dirX = dx / len;
+      const dirY = dy / len;
+
+      // Extend in both directions from the vertex
       return {
-        start: vertices[fromVertex],
-        end: altitudeFootPoint(vertices, fromVertex),
+        start: { x: vertex.x - dirX * extension, y: vertex.y - dirY * extension },
+        end: { x: vertex.x + dirX * extension, y: vertex.y + dirY * extension },
       };
+    }
 
     case 'transversal':
     case 'mediana':
