@@ -510,9 +510,9 @@ test.describe('Adaptive Practice', () => {
 
       await expect(page.getByTestId('subsection-selector')).toBeVisible({ timeout: 10000 });
 
-      // Expand unit and select subsection
-      await page.getByTestId('unit-header-0').click();
-      await expect(page.getByTestId('unit-subsections-0')).toBeVisible();
+      // With only one unit in the mock, the component auto-expands it
+      // So we don't need to click the header - just verify subsections are visible
+      await expect(page.getByTestId('unit-subsections-0')).toBeVisible({ timeout: 5000 });
       await page.getByTestId('subsection-0-0').click();
 
       // Should start practice and show problem
