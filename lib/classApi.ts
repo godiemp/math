@@ -67,6 +67,25 @@ export interface ClassAnalytics {
   }[];
 }
 
+export interface FailedQuestion {
+  questionId: string;
+  questionText: string;
+  topic: string;
+  subject: string;
+  failCount: number;
+  totalAttempts: number;
+  failRate: number;
+  studentsFailed: string[];
+}
+
+export interface ClassFailedQuestionsResult {
+  questions: FailedQuestion[];
+  summary: {
+    totalUniqueQuestionsFailed: number;
+    avgFailRate: number;
+  };
+}
+
 export interface CreateClassData {
   name: string;
   description?: string;
@@ -372,4 +391,22 @@ export async function moveStudentToClass(
     success: response.data?.success || false,
     message: response.data?.message,
   };
+}
+
+/**
+ * Get questions where students have the highest failure rate
+ */
+export async function getClassFailedQuestions(
+  classId: string
+): Promise<ClassFailedQuestionsResult | null> {
+  const response = await api.get<ClassFailedQuestionsResult>(
+    `/api/classes/${classId}/failed-questions`
+  );
+
+  if (response.error) {
+    console.error('Failed to fetch failed questions:', response.error);
+    return null;
+  }
+
+  return response.data || null;
 }

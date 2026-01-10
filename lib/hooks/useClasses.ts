@@ -14,6 +14,7 @@ import {
   getClass,
   getClassStudents,
   getClassAnalytics,
+  getClassFailedQuestions,
   createClass,
   updateClass,
   deleteClass,
@@ -23,6 +24,7 @@ import {
   type TeacherClass,
   type ClassStudent,
   type ClassAnalytics,
+  type ClassFailedQuestionsResult,
   type CreateClassData,
   type UpdateClassData,
 } from '../classApi';
@@ -118,6 +120,31 @@ export function useClassAnalytics(classId: string | null) {
 
   return {
     analytics: data,
+    isLoading,
+    error,
+    refresh: mutate,
+  };
+}
+
+/**
+ * Hook to fetch failed questions for a class
+ */
+export function useClassFailedQuestions(classId: string | null) {
+  const { data, error, isLoading, mutate } = useSWR<ClassFailedQuestionsResult | null>(
+    classId ? `/api/classes/${classId}/failed-questions` : null,
+    async () => {
+      if (!classId) return null;
+      return getClassFailedQuestions(classId);
+    },
+    {
+      dedupingInterval: 60000, // Cache for 1 minute
+      revalidateOnFocus: true,
+      keepPreviousData: true,
+    }
+  );
+
+  return {
+    failedQuestions: data,
     isLoading,
     error,
     refresh: mutate,
@@ -240,6 +267,8 @@ export type {
   TeacherClass,
   ClassStudent,
   ClassAnalytics,
+  ClassFailedQuestionsResult,
+  FailedQuestion,
   CreateClassData,
   UpdateClassData,
   ClassLevel,

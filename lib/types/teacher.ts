@@ -138,3 +138,28 @@ export interface StudentAIRecommendation {
   generatedAt: number;
 }
 
+/**
+ * Question that students in a class frequently get wrong
+ */
+export interface FailedQuestion {
+  questionId: string;
+  questionText: string;
+  topic: string;
+  subject: string;
+  failCount: number;
+  totalAttempts: number;
+  failRate: number;
+  studentsFailed: string[];
+}
+
+/**
+ * Result of fetching failed questions for a class
+ */
+export interface ClassFailedQuestionsResult {
+  questions: FailedQuestion[];
+  summary: {
+    totalUniqueQuestionsFailed: number;
+    avgFailRate: number;
+  };
+}
+

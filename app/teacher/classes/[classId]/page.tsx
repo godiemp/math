@@ -14,6 +14,7 @@ import {
   type ClassStudent,
 } from '@/lib/hooks/useClasses';
 import { createStudentInClass, moveStudentToClass } from '@/lib/classApi';
+import { FailedQuestionsPanel } from '@/components/teacher/FailedQuestionsPanel';
 import { ArrowLeft, Users, TrendingUp, BookOpen, AlertTriangle, UserPlus, X, Search, Trash2, ArrowRightLeft, Copy, Check } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -461,7 +462,7 @@ export default function ClassDetailPage() {
 
   const [sortField, setSortField] = useState<SortField>('accuracy');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
-  const [activeTab, setActiveTab] = useState<'roster' | 'analytics'>('roster');
+  const [activeTab, setActiveTab] = useState<'roster' | 'analytics' | 'errors'>('roster');
   const [showAddModal, setShowAddModal] = useState(false);
   const [removingStudentId, setRemovingStudentId] = useState<string | null>(null);
   const [movingStudent, setMovingStudent] = useState<{ id: string; displayName: string } | null>(null);
@@ -668,7 +669,17 @@ export default function ClassDetailPage() {
                 : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
-            Analíticas
+            Analiticas
+          </button>
+          <button
+            onClick={() => setActiveTab('errors')}
+            className={`px-4 py-2 font-medium transition-colors border-b-2 -mb-px ${
+              activeTab === 'errors'
+                ? 'border-emerald-600 text-emerald-600 dark:border-emerald-400 dark:text-emerald-400'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            Errores Comunes
           </button>
         </div>
 
@@ -990,6 +1001,11 @@ export default function ClassDetailPage() {
               </Card>
             )}
           </div>
+        )}
+
+        {/* Tab Content - Failed Questions */}
+        {activeTab === 'errors' && (
+          <FailedQuestionsPanel classId={classId} />
         )}
       </div>
 
