@@ -24,7 +24,7 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@/.source": ["./.source/server.ts"]
+      "@/.source": ["./.source/index.ts"]
     }
   },
   "include": [
