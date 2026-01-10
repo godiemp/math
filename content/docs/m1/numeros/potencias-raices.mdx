@@ -1,0 +1,365 @@
+---
+title: Potencias y Raíces
+description: Documentación de Potencias y Raíces para PAES M1
+---
+
+# Potencias y Raíces
+
+## Overview
+
+Las potencias y raíces son operaciones fundamentales que extienden la multiplicación y división. Estas herramientas son esenciales para trabajar con números grandes, pequeños y en notación científica.
+
+
+---
+
+## Conceptos Clave
+
+### Potencias
+
+Una potencia es una multiplicación repetida del mismo número.
+
+$$a^n = \underbrace{a \times a \times \cdots \times a}_{n \text{ veces}}$$
+
+**Componentes**:
+- $a$ = base
+- $n$ = exponente
+- $a^n$ = potencia
+
+**Ejemplos**:
+$$2^3 = 2 \times 2 \times 2 = 8$$
+$$5^2 = 5 \times 5 = 25$$
+$$10^4 = 10 \times 10 \times 10 \times 10 = 10\,000$$
+
+### Casos Especiales
+
+#### Exponente 0
+$$a^0 = 1 \quad \text{(para todo } a \neq 0\text{)}$$
+
+**Ejemplos**:
+$$5^0 = 1, \quad 100^0 = 1, \quad (-3)^0 = 1$$
+
+#### Exponente 1
+$$a^1 = a$$
+
+#### Exponente Negativo
+$$a^{-n} = \frac{1}{a^n}$$
+
+**Ejemplos**:
+$$2^{-3} = \frac{1}{2^3} = \frac{1}{8}$$
+$$10^{-2} = \frac{1}{10^2} = \frac{1}{100} = 0.01$$
+
+### Raíces
+
+La raíz es la operación inversa de la potencia.
+
+$$\sqrt[n]{a} = b \quad \Leftrightarrow \quad b^n = a$$
+
+**Raíz Cuadrada** (más común):
+$$\sqrt{a} = \sqrt[2]{a}$$
+
+**Ejemplos**:
+$$\sqrt{9} = 3 \quad \text{porque } 3^2 = 9$$
+$$\sqrt{25} = 5 \quad \text{porque } 5^2 = 25$$
+$$\sqrt[3]{8} = 2 \quad \text{porque } 2^3 = 8$$
+
+---
+
+## Propiedades de las Potencias
+
+### Multiplicación de Potencias con la Misma Base
+
+$$a^m \times a^n = a^{m+n}$$
+
+**Ejemplo**:
+$$2^3 \times 2^4 = 2^{3+4} = 2^7 = 128$$
+
+**Verificación**:
+$$2^3 \times 2^4 = 8 \times 16 = 128 \,\checkmark$$
+
+### División de Potencias con la Misma Base
+
+$$\frac{a^m}{a^n} = a^{m-n}$$
+
+**Ejemplo**:
+$$\frac{5^6}{5^2} = 5^{6-2} = 5^4 = 625$$
+
+### Potencia de una Potencia
+
+$$(a^m)^n = a^{m \times n}$$
+
+**Ejemplo**:
+$$(3^2)^3 = 3^{2 \times 3} = 3^6 = 729$$
+
+### Potencia de un Producto
+
+$$(a \times b)^n = a^n \times b^n$$
+
+**Ejemplo**:
+$$(2 \times 3)^4 = 2^4 \times 3^4 = 16 \times 81 = 1296$$
+
+### Potencia de un Cociente
+
+$$\left(\frac{a}{b}\right)^n = \frac{a^n}{b^n}$$
+
+**Ejemplo**:
+$$\left(\frac{2}{3}\right)^3 = \frac{2^3}{3^3} = \frac{8}{27}$$
+
+---
+
+## Propiedades de las Raíces
+
+### Raíz de un Producto
+
+$$\sqrt[n]{a \times b} = \sqrt[n]{a} \times \sqrt[n]{b}$$
+
+**Ejemplo**:
+$$\sqrt{4 \times 9} = \sqrt{4} \times \sqrt{9} = 2 \times 3 = 6$$
+
+### Raíz de un Cociente
+
+$$\sqrt[n]{\frac{a}{b}} = \frac{\sqrt[n]{a}}{\sqrt[n]{b}}$$
+
+**Ejemplo**:
+$$\sqrt{\frac{16}{25}} = \frac{\sqrt{16}}{\sqrt{25}} = \frac{4}{5}$$
+
+### Potencia de una Raíz
+
+$$\left(\sqrt[n]{a}\right)^m = \sqrt[n]{a^m} = a^{\frac{m}{n}}$$
+
+**Ejemplo**:
+$$\left(\sqrt{4}\right)^3 = 2^3 = 8$$
+
+### Raíz de una Raíz
+
+$$\sqrt[m]{\sqrt[n]{a}} = \sqrt[m \times n]{a}$$
+
+**Ejemplo**:
+$$\sqrt{\sqrt[3]{64}} = \sqrt[2 \times 3]{64} = \sqrt[6]{64} = 2$$
+
+---
+
+## Notación Científica
+
+La notación científica expresa números muy grandes o muy pequeños como:
+
+$$a \times 10^n$$
+
+donde $1 \leq |a| < 10$ y $n$ es un entero.
+
+**Ejemplos**:
+$$300\,000 = 3 \times 10^5$$
+$$0.0045 = 4.5 \times 10^{-3}$$
+$$6.02 \times 10^{23} \text{ (Número de Avogadro)}$$
+
+### Operaciones en Notación Científica
+
+**Multiplicación**:
+$$(a \times 10^m) \times (b \times 10^n) = (a \times b) \times 10^{m+n}$$
+
+**Ejemplo**:
+$$(2 \times 10^3) \times (3 \times 10^4) = 6 \times 10^7$$
+
+**División**:
+$$\frac{a \times 10^m}{b \times 10^n} = \frac{a}{b} \times 10^{m-n}$$
+
+**Ejemplo**:
+$$\frac{8 \times 10^6}{2 \times 10^2} = 4 \times 10^4$$
+
+---
+
+## Ejemplos Tipo PAES
+
+### Ejemplo 1: Propiedades de Potencias
+
+**Pregunta**: ¿Cuál es el valor de $2^3 \times 2^4$?
+
+**Opciones**:
+- A) $2^7$
+- B) $2^{12}$
+- C) $4^7$
+- D) $8^4$
+
+**Solución**:
+$$2^3 \times 2^4 = 2^{3+4} = 2^7 = 128$$
+
+**Respuesta**: A) $2^7$
+
+---
+
+### Ejemplo 2: Exponentes Negativos
+
+**Pregunta**: ¿Cuál es el valor de $3^{-2}$?
+
+**Opciones**:
+- A) $-9$
+- B) $-6$
+- C) $\frac{1}{9}$
+- D) $\frac{1}{6}$
+
+**Solución**:
+$$3^{-2} = \frac{1}{3^2} = \frac{1}{9}$$
+
+**Respuesta**: C) $\frac{1}{9}$
+
+---
+
+### Ejemplo 3: Simplificación
+
+**Pregunta**: Simplifica $\frac{5^8}{5^5}$
+
+**Opciones**:
+- A) $5^3$
+- B) $5^{13}$
+- C) $\frac{1}{5^3}$
+- D) $1$
+
+**Solución**:
+$$\frac{5^8}{5^5} = 5^{8-5} = 5^3 = 125$$
+
+**Respuesta**: A) $5^3$
+
+---
+
+### Ejemplo 4: Raíces
+
+**Pregunta**: ¿Cuál es el valor de $\sqrt{144}$?
+
+**Opciones**:
+- A) 10
+- B) 11
+- C) 12
+- D) 14
+
+**Solución**:
+$$\sqrt{144} = 12 \quad \text{porque } 12^2 = 144$$
+
+**Respuesta**: C) 12
+
+---
+
+### Ejemplo 5: Potencia de Potencia
+
+**Pregunta**: ¿Cuál es el valor de $(2^3)^2$?
+
+**Opciones**:
+- A) $2^5$
+- B) $2^6$
+- C) $4^6$
+- D) $8^2$
+
+**Solución**:
+$$(2^3)^2 = 2^{3 \times 2} = 2^6 = 64$$
+
+**Alternativa**:
+$$(2^3)^2 = 8^2 = 64$$
+
+**Respuesta**: B) $2^6$ (o D) $8^2$, ambas son correctas)
+
+---
+
+## Cuadrados y Cubos Perfectos
+
+### Cuadrados Perfectos Comunes
+
+$$\begin{align}
+1^2 &= 1 & 6^2 &= 36 & 11^2 &= 121\\
+2^2 &= 4 & 7^2 &= 49 & 12^2 &= 144\\
+3^2 &= 9 & 8^2 &= 64 & 13^2 &= 169\\
+4^2 &= 16 & 9^2 &= 81 & 14^2 &= 196\\
+5^2 &= 25 & 10^2 &= 100 & 15^2 &= 225
+\end{align}$$
+
+### Cubos Perfectos Comunes
+
+$$\begin{align}
+1^3 &= 1 & 5^3 &= 125\\
+2^3 &= 8 & 6^3 &= 216\\
+3^3 &= 27 & 7^3 &= 343\\
+4^3 &= 64 & 10^3 &= 1000
+\end{align}$$
+
+---
+
+## Errores Comunes
+
+### ❌ Sumar exponentes al multiplicar bases diferentes
+
+$$\text{❌} \quad 2^3 \times 3^3 = 6^6$$
+$$\text{✓} \quad 2^3 \times 3^3 = (2 \times 3)^3 = 6^3 = 216$$
+
+### ❌ Confundir potencia negativa con resultado negativo
+
+$$\text{❌} \quad 2^{-3} = -8$$
+$$\text{✓} \quad 2^{-3} = \frac{1}{8}$$
+
+### ❌ Multiplicar exponentes en lugar de sumarlos
+
+$$\text{❌} \quad 5^2 \times 5^3 = 5^6$$
+$$\text{✓} \quad 5^2 \times 5^3 = 5^{2+3} = 5^5$$
+
+### ❌ Aplicar mal la potencia de una suma
+
+$$\text{❌} \quad (a + b)^2 = a^2 + b^2$$
+$$\text{✓} \quad (a + b)^2 = a^2 + 2ab + b^2$$
+
+**Ejemplo**:
+$$(3 + 4)^2 = 7^2 = 49$$
+$$3^2 + 4^2 = 9 + 16 = 25 \neq 49$$
+
+---
+
+## Potencias de 10
+
+Las potencias de 10 son especialmente importantes:
+
+$$\begin{align}
+10^{-3} &= 0.001 & \text{(mili-)}\\
+10^{-2} &= 0.01 & \text{(centi-)}\\
+10^{-1} &= 0.1 & \text{(deci-)}\\
+10^0 &= 1\\
+10^1 &= 10 & \text{(deca-)}\\
+10^2 &= 100 & \text{(hecto-)}\\
+10^3 &= 1000 & \text{(kilo-)}\\
+10^6 &= 1\,000\,000 & \text{(mega-)}
+\end{align}$$
+
+---
+
+## Skills Relacionados
+
+Este tema desarrolla las siguientes habilidades PAES:
+
+- `numeros-potencias`: Operaciones con potencias
+- `numeros-raices`: Cálculo de raíces
+- `numeros-notacion-cientifica`: Notación científica
+- `numeros-propiedades`: Propiedades de operaciones
+
+**Competencias**:
+- ✓ Resolver problemas numéricos
+- ✓ Aplicar propiedades algebraicas
+- ✓ Simplificar expresiones
+- ✓ Trabajar con números grandes y pequeños
+
+---
+
+## Recursos Adicionales
+
+### Práctica
+- [Ver preguntas de práctica](/questions/m1/numeros/potencias-raices)
+- [Quiz interactivo](/practice/m1/numeros-potencias-raices)
+
+### Calculadora
+- [Calculadora científica](/calculator?mode=scientific)
+
+### Temas Relacionados
+- ← [Porcentajes](/curriculum/m1/docs/numeros/porcentaje)
+- [Proporcionalidad →](/curriculum/m1/docs/numeros/proporcionalidad)
+
+---
+
+## Referencias
+
+- PAES Competencia M1: Números y Operaciones
+- Nivel de dificultad: Medio
+- Tiempo de estudio recomendado: 2-3 semanas
+- Número de preguntas en banco: ~20
