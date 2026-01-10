@@ -120,6 +120,8 @@ export interface SpecialLineConfig {
   showEqualMarks?: boolean;
   /** Whether to show equal angle marks (arcs indicating equal angles, for bisectriz) */
   showEqualAngleMarks?: boolean;
+  /** Number of tick marks for equal angle marks (1, 2, or 3 - different counts indicate different angle sizes) */
+  equalAngleTickCount?: 1 | 2 | 3;
 }
 
 /**

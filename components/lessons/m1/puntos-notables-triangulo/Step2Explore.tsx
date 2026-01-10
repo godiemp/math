@@ -110,13 +110,17 @@ function getSpecialLines(lineType: LineType | null): SpecialLineConfig[] {
   const showRightAngle = lineType === 'alturas' || lineType === 'simetrales';
   // Add equal division marks for simetrales and transversales
   const showEqualMarks = lineType === 'simetrales' || lineType === 'transversales';
-  // Add equal angle marks for bisectrices
+  // Add equal angle marks for bisectrices (different tick counts show different angle sizes)
   const showEqualAngleMarks = lineType === 'bisectrices';
 
+  // For bisectrices: use different tick counts to show angles are NOT equal to each other
+  // Vertex 0 (top): 1 tick, Vertex 1 (bottom-left): 2 ticks, Vertex 2 (bottom-right): 3 ticks
+  const tickCounts: [1 | 2 | 3, 1 | 2 | 3, 1 | 2 | 3] = [1, 2, 3];
+
   return [
-    { type, fromVertex: 0, showRightAngleMarker: showRightAngle, showEqualMarks, showEqualAngleMarks },
-    { type, fromVertex: 1, showRightAngleMarker: showRightAngle, showEqualMarks, showEqualAngleMarks },
-    { type, fromVertex: 2, showRightAngleMarker: showRightAngle, showEqualMarks, showEqualAngleMarks },
+    { type, fromVertex: 0, showRightAngleMarker: showRightAngle, showEqualMarks, showEqualAngleMarks, equalAngleTickCount: tickCounts[0] },
+    { type, fromVertex: 1, showRightAngleMarker: showRightAngle, showEqualMarks, showEqualAngleMarks, equalAngleTickCount: tickCounts[1] },
+    { type, fromVertex: 2, showRightAngleMarker: showRightAngle, showEqualMarks, showEqualAngleMarks, equalAngleTickCount: tickCounts[2] },
   ];
 }
 

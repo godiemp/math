@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import type {
   LabeledPoint,
   SideConfig,
@@ -289,11 +290,15 @@ interface EqualAngleMarksProps {
   bisectorEnd: LabeledPoint;
   color: string;
   arcRadius?: number;
+  /** Number of tick marks (1, 2, or 3) - different counts indicate different angle sizes */
+  tickCount?: 1 | 2 | 3;
 }
 
 /**
  * Generate equal angle marks for bisectrices
  * Shows two small arcs with tick marks to indicate the angle is divided equally
+ * Different tick counts (1, 2, or 3) indicate that angles at different vertices
+ * are NOT equal to each other, but each vertex's angle IS divided equally by its bisector
  */
 export function EqualAngleMarks({
   vertex,
@@ -302,6 +307,7 @@ export function EqualAngleMarks({
   bisectorEnd,
   color,
   arcRadius = 20,
+  tickCount = 1,
 }: EqualAngleMarksProps) {
   // Calculate angles to each point from vertex
   const angleToP1 = Math.atan2(p1.y - vertex.y, p1.x - vertex.x);
@@ -328,29 +334,20 @@ export function EqualAngleMarks({
     y: vertex.y + Math.sin(angleToP2) * arcRadius,
   };
 
-  // Handle angle wrapping for midpoint calculations
+  // Handle angle wrapping for calculations
   let diff1 = angleToBisector - angleToP1;
   if (Math.abs(diff1) > Math.PI) {
     diff1 = diff1 > 0 ? diff1 - 2 * Math.PI : diff1 + 2 * Math.PI;
   }
-  const correctedMidAngle1 = angleToP1 + diff1 / 2;
 
   let diff2 = angleToP2 - angleToBisector;
   if (Math.abs(diff2) > Math.PI) {
     diff2 = diff2 > 0 ? diff2 - 2 * Math.PI : diff2 + 2 * Math.PI;
   }
-  const correctedMidAngle2 = angleToBisector + diff2 / 2;
 
-  const tick1Pos = {
-    x: vertex.x + Math.cos(correctedMidAngle1) * arcRadius,
-    y: vertex.y + Math.sin(correctedMidAngle1) * arcRadius,
-  };
-  const tick2Pos = {
-    x: vertex.x + Math.cos(correctedMidAngle2) * arcRadius,
-    y: vertex.y + Math.sin(correctedMidAngle2) * arcRadius,
-  };
-
+  // Generate tick positions based on tickCount
   const tickSize = 4;
+  const tickSpacing = 3; // Spacing between multiple ticks
   const largeArcFlag = 0;
 
   // Check sweep direction
@@ -361,6 +358,50 @@ export function EqualAngleMarks({
   const crossProduct2 = (arc2End.x - vertex.x) * (arc2Start.y - vertex.y) -
                         (arc2End.y - vertex.y) * (arc2Start.x - vertex.x);
   const sweepFlag2 = crossProduct2 > 0 ? 1 : 0;
+
+  // Calculate tick mark positions for each arc
+  const generateTicks = (startAngle: number, angleDiff: number, arcNum: 1 | 2) => {
+    const midAngle = startAngle + angleDiff / 2;
+    const ticks: React.ReactElement[] = [];
+
+    // For single tick, place at center
+    // For multiple ticks, spread them perpendicular to the radial direction
+    for (let i = 0; i < tickCount; i++) {
+      const tickPos = {
+        x: vertex.x + Math.cos(midAngle) * arcRadius,
+        y: vertex.y + Math.sin(midAngle) * arcRadius,
+      };
+
+      // Radial direction (outward from vertex)
+      const radialX = (tickPos.x - vertex.x) / arcRadius;
+      const radialY = (tickPos.y - vertex.y) / arcRadius;
+
+      // Tangent direction (perpendicular to radial, along the arc)
+      const tangentX = -radialY;
+      const tangentY = radialX;
+
+      // Offset along tangent for multiple ticks
+      const offset = (i - (tickCount - 1) / 2) * tickSpacing;
+      const offsetX = tickPos.x + tangentX * offset;
+      const offsetY = tickPos.y + tangentY * offset;
+
+      ticks.push(
+        <line
+          key={`tick-${arcNum}-${i}`}
+          x1={offsetX - radialX * tickSize}
+          y1={offsetY - radialY * tickSize}
+          x2={offsetX + radialX * tickSize}
+          y2={offsetY + radialY * tickSize}
+          stroke={color}
+          strokeWidth="2"
+        />
+      );
+    }
+    return ticks;
+  };
+
+  const ticks1 = generateTicks(angleToP1, diff1, 1);
+  const ticks2 = generateTicks(angleToBisector, diff2, 2);
 
   return (
     <g className="dark:stroke-purple-400">
@@ -376,22 +417,8 @@ export function EqualAngleMarks({
         stroke={color}
         strokeWidth="1.5"
       />
-      <line
-        x1={tick1Pos.x - (tick1Pos.x - vertex.x) / arcRadius * tickSize}
-        y1={tick1Pos.y - (tick1Pos.y - vertex.y) / arcRadius * tickSize}
-        x2={tick1Pos.x + (tick1Pos.x - vertex.x) / arcRadius * tickSize}
-        y2={tick1Pos.y + (tick1Pos.y - vertex.y) / arcRadius * tickSize}
-        stroke={color}
-        strokeWidth="2"
-      />
-      <line
-        x1={tick2Pos.x - (tick2Pos.x - vertex.x) / arcRadius * tickSize}
-        y1={tick2Pos.y - (tick2Pos.y - vertex.y) / arcRadius * tickSize}
-        x2={tick2Pos.x + (tick2Pos.x - vertex.x) / arcRadius * tickSize}
-        y2={tick2Pos.y + (tick2Pos.y - vertex.y) / arcRadius * tickSize}
-        stroke={color}
-        strokeWidth="2"
-      />
+      {ticks1}
+      {ticks2}
     </g>
   );
 }
@@ -475,6 +502,7 @@ export function SpecialLine({ vertices, config }: SpecialLineProps) {
           p2={bisectrizP2}
           bisectorEnd={end}
           color={config.color || DEFAULT_COLORS.specialLine}
+          tickCount={config.equalAngleTickCount}
         />
       )}
       {config.showLabel && (

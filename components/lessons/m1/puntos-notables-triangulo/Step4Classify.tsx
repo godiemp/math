@@ -61,10 +61,14 @@ function allLines(
   showEqual = false,
   showEqualAngle = false
 ): SpecialLineConfig[] {
+  // For bisectrices: use different tick counts to show angles are NOT equal to each other
+  // Vertex 0: 1 tick, Vertex 1: 2 ticks, Vertex 2: 3 ticks
+  const tickCounts: [1 | 2 | 3, 1 | 2 | 3, 1 | 2 | 3] = [1, 2, 3];
+
   return [
-    { type, fromVertex: 0, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual, showEqualAngleMarks: showEqualAngle },
-    { type, fromVertex: 1, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual, showEqualAngleMarks: showEqualAngle },
-    { type, fromVertex: 2, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual, showEqualAngleMarks: showEqualAngle },
+    { type, fromVertex: 0, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual, showEqualAngleMarks: showEqualAngle, equalAngleTickCount: tickCounts[0] },
+    { type, fromVertex: 1, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual, showEqualAngleMarks: showEqualAngle, equalAngleTickCount: tickCounts[1] },
+    { type, fromVertex: 2, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual, showEqualAngleMarks: showEqualAngle, equalAngleTickCount: tickCounts[2] },
   ];
 }
 
