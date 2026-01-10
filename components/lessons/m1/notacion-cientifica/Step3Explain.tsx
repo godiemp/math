@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, BookOpen, Lightbulb, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { MathText } from '@/components/math/MathDisplay';
 
 type TabId = 'definition' | 'to-scientific' | 'to-standard' | 'real-world' | 'tips';
 
@@ -25,8 +26,8 @@ const FORMULAS: FormulaTab[] = [
     content: (
       <div className="space-y-4">
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center">
-          <p className="font-mono text-2xl text-gray-800 dark:text-gray-200">
-            a × 10<sup>n</sup>
+          <p className="text-2xl text-gray-800 dark:text-gray-200">
+            <MathText content="$a \times 10^n$" />
           </p>
         </div>
         <div className="grid md:grid-cols-2 gap-4">
@@ -35,23 +36,23 @@ const FORMULAS: FormulaTab[] = [
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Debe ser mayor o igual a 1 y menor que 10
             </p>
-            <p className="font-mono text-blue-600 mt-2">1 ≤ a &lt; 10</p>
+            <p className="text-blue-600 mt-2"><MathText content="$1 \leq a < 10$" /></p>
           </div>
           <div className="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg">
             <p className="font-semibold text-purple-700 dark:text-purple-300 mb-2">Exponente (n):</p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Puede ser positivo, negativo o cero
             </p>
-            <p className="font-mono text-purple-600 mt-2">n ∈ ℤ</p>
+            <p className="text-purple-600 mt-2"><MathText content="$n \in \mathbb{Z}$" /></p>
           </div>
         </div>
         <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
           <p className="font-semibold text-green-700 dark:text-green-300 mb-2">Ejemplos válidos:</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 font-mono text-sm">
-            <span className="bg-white dark:bg-gray-800 p-2 rounded text-center">3.5 × 10⁴</span>
-            <span className="bg-white dark:bg-gray-800 p-2 rounded text-center">1 × 10⁰</span>
-            <span className="bg-white dark:bg-gray-800 p-2 rounded text-center">9.99 × 10⁻²</span>
-            <span className="bg-white dark:bg-gray-800 p-2 rounded text-center">6.02 × 10²³</span>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+            <span className="bg-white dark:bg-gray-800 p-2 rounded text-center"><MathText content="$3,5 \times 10^4$" /></span>
+            <span className="bg-white dark:bg-gray-800 p-2 rounded text-center"><MathText content="$1 \times 10^0$" /></span>
+            <span className="bg-white dark:bg-gray-800 p-2 rounded text-center"><MathText content="$9,99 \times 10^{-2}$" /></span>
+            <span className="bg-white dark:bg-gray-800 p-2 rounded text-center"><MathText content="$6,02 \times 10^{23}$" /></span>
           </div>
         </div>
       </div>
@@ -97,17 +98,17 @@ const FORMULAS: FormulaTab[] = [
           </ol>
         </div>
         <div className="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg">
-          <p className="font-semibold text-purple-700 dark:text-purple-300 mb-3">Ejemplo: 47,500,000</p>
+          <p className="font-semibold text-purple-700 dark:text-purple-300 mb-3">Ejemplo: 47.500.000</p>
           <div className="font-mono text-sm space-y-2 pl-4 border-l-2 border-purple-300">
-            <p>47,500,000 → 4.75 (movimos 7 lugares a la izquierda)</p>
-            <p className="text-purple-600">= 4.75 × 10⁷</p>
+            <p>47.500.000 → 4,75 (movimos 7 lugares a la izquierda)</p>
+            <p className="text-purple-600">= <MathText content="$4,75 \times 10^7$" /></p>
           </div>
         </div>
         <div className="bg-teal-50 dark:bg-teal-900/30 p-4 rounded-lg">
-          <p className="font-semibold text-teal-700 dark:text-teal-300 mb-3">Ejemplo: 0.000089</p>
+          <p className="font-semibold text-teal-700 dark:text-teal-300 mb-3">Ejemplo: 0,000089</p>
           <div className="font-mono text-sm space-y-2 pl-4 border-l-2 border-teal-300">
-            <p>0.000089 → 8.9 (movimos 5 lugares a la derecha)</p>
-            <p className="text-teal-600">= 8.9 × 10⁻⁵</p>
+            <p>0,000089 → 8,9 (movimos 5 lugares a la derecha)</p>
+            <p className="text-teal-600">= <MathText content="$8,9 \times 10^{-5}$" /></p>
           </div>
         </div>
       </div>
@@ -153,19 +154,19 @@ const FORMULAS: FormulaTab[] = [
           </ol>
         </div>
         <div className="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg">
-          <p className="font-semibold text-purple-700 dark:text-purple-300 mb-3">Ejemplo: 6.3 × 10⁵</p>
+          <p className="font-semibold text-purple-700 dark:text-purple-300 mb-3">Ejemplo: <MathText content="$6,3 \times 10^5$" /></p>
           <div className="font-mono text-sm space-y-2 pl-4 border-l-2 border-purple-300">
             <p>Exponente +5 → mover 5 a la derecha</p>
-            <p>6.3 → 6.30000 → 630000</p>
-            <p className="text-purple-600">= 630,000</p>
+            <p>6,3 → 6,30000 → 630000</p>
+            <p className="text-purple-600">= 630.000</p>
           </div>
         </div>
         <div className="bg-teal-50 dark:bg-teal-900/30 p-4 rounded-lg">
-          <p className="font-semibold text-teal-700 dark:text-teal-300 mb-3">Ejemplo: 2.5 × 10⁻⁴</p>
+          <p className="font-semibold text-teal-700 dark:text-teal-300 mb-3">Ejemplo: <MathText content="$2,5 \times 10^{-4}$" /></p>
           <div className="font-mono text-sm space-y-2 pl-4 border-l-2 border-teal-300">
             <p>Exponente -4 → mover 4 a la izquierda</p>
-            <p>2.5 → 0.00025</p>
-            <p className="text-teal-600">= 0.00025</p>
+            <p>2,5 → 0,00025</p>
+            <p className="text-teal-600">= 0,00025</p>
           </div>
         </div>
       </div>
@@ -184,26 +185,26 @@ const FORMULAS: FormulaTab[] = [
             <p className="font-semibold text-purple-700 dark:text-purple-300 mb-2">🌍 Astronomía</p>
             <div className="space-y-2 text-sm">
               <p className="text-gray-600 dark:text-gray-400">Distancia a la Luna:</p>
-              <p className="font-mono">384,400 km = 3.844 × 10⁵ km</p>
+              <p>384.400 km = <MathText content="$3,844 \times 10^5$" /> km</p>
               <p className="text-gray-600 dark:text-gray-400">Distancia al Sol:</p>
-              <p className="font-mono">150,000,000 km = 1.5 × 10⁸ km</p>
+              <p>150.000.000 km = <MathText content="$1,5 \times 10^8$" /> km</p>
             </div>
           </div>
           <div className="bg-teal-50 dark:bg-teal-900/30 p-4 rounded-lg">
             <p className="font-semibold text-teal-700 dark:text-teal-300 mb-2">🔬 Biología</p>
             <div className="space-y-2 text-sm">
               <p className="text-gray-600 dark:text-gray-400">Tamaño de una bacteria:</p>
-              <p className="font-mono">0.000002 m = 2 × 10⁻⁶ m</p>
+              <p>0,000002 m = <MathText content="$2 \times 10^{-6}$" /> m</p>
               <p className="text-gray-600 dark:text-gray-400">Diámetro del ADN:</p>
-              <p className="font-mono">0.000000002 m = 2 × 10⁻⁹ m</p>
+              <p>0,000000002 m = <MathText content="$2 \times 10^{-9}$" /> m</p>
             </div>
           </div>
           <div className="bg-amber-50 dark:bg-amber-900/30 p-4 rounded-lg">
             <p className="font-semibold text-amber-700 dark:text-amber-300 mb-2">⚗️ Química</p>
             <div className="space-y-2 text-sm">
               <p className="text-gray-600 dark:text-gray-400">Número de Avogadro:</p>
-              <p className="font-mono">602,214,076,000,000,000,000,000</p>
-              <p className="font-mono text-amber-600">= 6.02214076 × 10²³</p>
+              <p className="font-mono">602.214.076.000.000.000.000.000</p>
+              <p className="text-amber-600">= <MathText content="$6,02214076 \times 10^{23}$" /></p>
             </div>
           </div>
         </div>
@@ -324,17 +325,17 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
               <h5 className="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Correcto:</h5>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <li>• 5.2 × 10⁴ (coeficiente entre 1 y 10)</li>
-                <li>• 1 × 10⁰ = 1 (forma válida)</li>
-                <li>• 9.99 × 10⁻³ (exponente negativo)</li>
+                <li>• <MathText content="$5,2 \times 10^4$" /> (coeficiente entre 1 y 10)</li>
+                <li>• <MathText content="$1 \times 10^0 = 1$" /> (forma válida)</li>
+                <li>• <MathText content="$9,99 \times 10^{-3}$" /> (exponente negativo)</li>
                 <li>• Número grande → exponente positivo</li>
               </ul>
             </div>
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
               <h5 className="font-semibold text-red-700 dark:text-red-300 mb-2">✗ Errores comunes:</h5>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <li>• 52 × 10³ (52 no está entre 1 y 10)</li>
-                <li>• 0.5 × 10⁴ (0.5 es menor que 1)</li>
+                <li>• <MathText content="$52 \times 10^3$" /> (52 no está entre 1 y 10)</li>
+                <li>• <MathText content="$0,5 \times 10^4$" /> (0,5 es menor que 1)</li>
                 <li>• Confundir signo del exponente</li>
                 <li>• Contar mal las posiciones</li>
               </ul>

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, Lightbulb, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { MathText } from '@/components/math/MathDisplay';
 
 type Phase = 'intro' | 'multiply' | 'divide' | 'power-of-power' | 'pattern';
 type DeductionStep = 0 | 1 | 2 | 3;
@@ -79,17 +80,17 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4 border border-blue-200 dark:border-blue-700">
                 <p className="font-semibold text-blue-700 dark:text-blue-300 mb-2 text-center">Multiplicación</p>
-                <p className="font-mono text-center text-blue-600">aᵐ × aⁿ = ?</p>
+                <div className="text-center text-blue-600"><MathText content="$a^m \\times a^n = ?$" /></div>
                 <p className="text-xs text-green-600 text-center mt-2">✓ Ya lo vimos</p>
               </div>
               <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
                 <p className="font-semibold text-purple-700 dark:text-purple-300 mb-2 text-center">División</p>
-                <p className="font-mono text-center text-purple-600">aᵐ ÷ aⁿ = ?</p>
+                <div className="text-center text-purple-600"><MathText content="$a^m \\div a^n = ?$" /></div>
                 <p className="text-xs text-gray-500 text-center mt-2">Por descubrir</p>
               </div>
               <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-4 border border-green-200 dark:border-green-700">
                 <p className="font-semibold text-green-700 dark:text-green-300 mb-2 text-center">Potencia de Potencia</p>
-                <p className="font-mono text-center text-green-600">(aᵐ)ⁿ = ?</p>
+                <div className="text-center text-green-600"><MathText content="$(a^m)^n = ?$" /></div>
                 <p className="text-xs text-gray-500 text-center mt-2">Por descubrir</p>
               </div>
             </div>
@@ -119,23 +120,23 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               {/* Problema inicial */}
               <div className="text-center">
                 <p className="text-gray-500 dark:text-gray-400 mb-2">¿Cómo simplificamos?</p>
-                <p className="font-mono text-3xl font-bold text-purple-600">
-                  2⁵ ÷ 2³
-                </p>
+                <div className="text-3xl font-bold text-purple-600">
+                  <MathText content="$2^5 \\div 2^3$" />
+                </div>
               </div>
 
               {/* Paso 1: Expandir */}
               {deductionStep >= 1 && (
                 <div className="animate-fadeIn bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
                   <p className="text-sm font-semibold text-purple-700 dark:text-purple-300 mb-2">Paso 1: Expandimos cada potencia</p>
-                  <div className="text-center font-mono">
-                    <p className="text-lg">
-                      <span className="text-purple-600">2⁵</span> ÷ <span className="text-purple-400">2³</span>
-                    </p>
+                  <div className="text-center">
+                    <div className="text-lg">
+                      <MathText content="$\\textcolor{purple}{2^5} \\div \\textcolor{violet}{2^3}$" />
+                    </div>
                     <p className="text-gray-400 my-1">↓</p>
-                    <p className="text-lg">
-                      <span className="text-purple-600">(2 × 2 × 2 × 2 × 2)</span> ÷ <span className="text-purple-400">(2 × 2 × 2)</span>
-                    </p>
+                    <div className="text-lg">
+                      <MathText content="$\\textcolor{purple}{(2 \\times 2 \\times 2 \\times 2 \\times 2)} \\div \\textcolor{violet}{(2 \\times 2 \\times 2)}$" />
+                    </div>
                   </div>
                 </div>
               )}
@@ -144,7 +145,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               {deductionStep >= 2 && (
                 <div className="animate-fadeIn bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
                   <p className="text-sm font-semibold text-purple-700 dark:text-purple-300 mb-2">Paso 2: Simplificamos (cancelamos los factores comunes)</p>
-                  <div className="text-center font-mono">
+                  <div className="text-center">
                     <div className="inline-block">
                       <div className="border-b-2 border-purple-400 pb-1">
                         <span className="line-through text-gray-400">2 × 2 × 2</span> × <span className="text-purple-600 font-bold">2 × 2</span>
@@ -154,9 +155,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                       </div>
                     </div>
                     <p className="text-gray-400 my-2">↓ Cancelamos 3 doses arriba y abajo</p>
-                    <p className="text-xl text-purple-600 font-bold">
-                      = 2 × 2 = 2²
-                    </p>
+                    <div className="text-xl text-purple-600 font-bold">
+                      <MathText content="$= 2 \\times 2 = 2^2$" />
+                    </div>
                   </div>
                 </div>
               )}
@@ -166,14 +167,14 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 <div className="animate-fadeIn bg-green-50 dark:bg-green-900/30 rounded-lg p-4 border border-green-200 dark:border-green-700">
                   <p className="text-sm font-semibold text-green-700 dark:text-green-300 mb-2">Paso 3: Descubrimos el patrón</p>
                   <div className="text-center space-y-3">
-                    <p className="font-mono text-lg">
-                      2⁵ ÷ 2³ = 2<sup>5-3</sup> = <span className="text-green-600 font-bold">2²</span>
-                    </p>
+                    <div className="text-lg">
+                      <MathText content="$2^5 \\div 2^3 = 2^{5-3} = \\textcolor{green}{2^2}$" />
+                    </div>
                     <div className="bg-white dark:bg-gray-800 rounded-lg p-4 mt-4">
                       <p className="text-gray-600 dark:text-gray-400 mb-2">La fórmula general:</p>
-                      <p className="font-mono text-2xl font-bold text-purple-600">
-                        aᵐ ÷ aⁿ = aᵐ⁻ⁿ
-                      </p>
+                      <div className="text-2xl font-bold text-purple-600">
+                        <MathText content="$a^m \\div a^n = a^{m-n}$" />
+                      </div>
                       <p className="text-sm text-gray-500 mt-2">
                         Al dividir potencias con la misma base, <strong>resta los exponentes</strong>
                       </p>
@@ -229,9 +230,9 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               {/* Problema inicial */}
               <div className="text-center">
                 <p className="text-gray-500 dark:text-gray-400 mb-2">¿Cómo simplificamos?</p>
-                <p className="font-mono text-3xl font-bold text-green-600">
-                  (2³)²
-                </p>
+                <div className="text-3xl font-bold text-green-600">
+                  <MathText content="$(2^3)^2$" />
+                </div>
                 <p className="text-sm text-gray-500 mt-2">
                   &quot;Dos al cubo, todo elevado al cuadrado&quot;
                 </p>
@@ -241,10 +242,10 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               {deductionStep >= 1 && (
                 <div className="animate-fadeIn bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
                   <p className="text-sm font-semibold text-green-700 dark:text-green-300 mb-2">Paso 1: ¿Qué significa elevar al cuadrado?</p>
-                  <div className="text-center font-mono">
-                    <p className="text-lg">
-                      (<span className="text-green-600">2³</span>)² = <span className="text-green-600">2³</span> × <span className="text-green-600">2³</span>
-                    </p>
+                  <div className="text-center">
+                    <div className="text-lg">
+                      <MathText content="$(\\textcolor{green}{2^3})^2 = \\textcolor{green}{2^3} \\times \\textcolor{green}{2^3}$" />
+                    </div>
                     <p className="text-sm text-gray-500 mt-2">
                       Elevar al cuadrado = multiplicar por sí mismo
                     </p>
@@ -256,14 +257,14 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
               {deductionStep >= 2 && (
                 <div className="animate-fadeIn bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
                   <p className="text-sm font-semibold text-green-700 dark:text-green-300 mb-2">Paso 2: Aplicamos la propiedad del producto</p>
-                  <div className="text-center font-mono">
-                    <p className="text-lg">
-                      <span className="text-green-600">2³</span> × <span className="text-green-600">2³</span>
-                    </p>
+                  <div className="text-center">
+                    <div className="text-lg">
+                      <MathText content="$\\textcolor{green}{2^3} \\times \\textcolor{green}{2^3}$" />
+                    </div>
                     <p className="text-gray-400 my-1">↓ misma base, sumamos exponentes</p>
-                    <p className="text-lg">
-                      = 2<sup>3+3</sup> = <span className="text-green-600 font-bold">2⁶</span>
-                    </p>
+                    <div className="text-lg">
+                      <MathText content="$= 2^{3+3} = \\textcolor{green}{2^6}$" />
+                    </div>
                   </div>
                 </div>
               )}
@@ -273,17 +274,17 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                 <div className="animate-fadeIn bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 border border-blue-200 dark:border-blue-700">
                   <p className="text-sm font-semibold text-blue-700 dark:text-blue-300 mb-2">Paso 3: Descubrimos el patrón</p>
                   <div className="text-center space-y-3">
-                    <p className="font-mono text-lg">
-                      (2³)² = 2<sup>3×2</sup> = <span className="text-green-600 font-bold">2⁶</span>
-                    </p>
+                    <div className="text-lg">
+                      <MathText content="$(2^3)^2 = 2^{3 \\times 2} = \\textcolor{green}{2^6}$" />
+                    </div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       Nota: 3 + 3 = 6, pero también 3 × 2 = 6
                     </p>
                     <div className="bg-white dark:bg-gray-800 rounded-lg p-4 mt-4">
                       <p className="text-gray-600 dark:text-gray-400 mb-2">La fórmula general:</p>
-                      <p className="font-mono text-2xl font-bold text-green-600">
-                        (aᵐ)ⁿ = aᵐˣⁿ
-                      </p>
+                      <div className="text-2xl font-bold text-green-600">
+                        <MathText content="$(a^m)^n = a^{m \\times n}$" />
+                      </div>
                       <p className="text-sm text-gray-500 mt-2">
                         Al elevar una potencia a otro exponente, <strong>multiplica los exponentes</strong>
                       </p>
@@ -320,7 +321,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             <div className="flex items-start gap-3">
               <Lightbulb className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-amber-800 dark:text-amber-200">
-                <strong>¿Por qué multiplicamos?</strong> Porque (aᵐ)ⁿ significa repetir aᵐ <em>n veces</em>. Al usar la propiedad del producto, sumamos m+m+...+m (n veces) = m×n.
+                <strong>¿Por qué multiplicamos?</strong> Porque <MathText content="$(a^m)^n$" /> significa repetir <MathText content="$a^m$" /> <em>n veces</em>. Al usar la propiedad del producto, sumamos m+m+...+m (n veces) = m×n.
               </p>
             </div>
           </div>
@@ -342,7 +343,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   <div className="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
                   <div className="flex-1">
                     <p className="font-semibold text-blue-800 dark:text-blue-200">Producto de potencias</p>
-                    <p className="font-mono text-lg text-blue-600 my-2">aᵐ × aⁿ = aᵐ⁺ⁿ</p>
+                    <div className="text-lg text-blue-600 my-2"><MathText content="$a^m \\times a^n = a^{m+n}$" /></div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       Suma exponentes (juntamos los factores)
                     </p>
@@ -354,7 +355,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   <div className="bg-purple-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
                   <div className="flex-1">
                     <p className="font-semibold text-purple-800 dark:text-purple-200">Cociente de potencias</p>
-                    <p className="font-mono text-lg text-purple-600 my-2">aᵐ ÷ aⁿ = aᵐ⁻ⁿ</p>
+                    <div className="text-lg text-purple-600 my-2"><MathText content="$a^m \\div a^n = a^{m-n}$" /></div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       Resta exponentes (cancelamos factores)
                     </p>
@@ -366,7 +367,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
                   <div className="bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0">3</div>
                   <div className="flex-1">
                     <p className="font-semibold text-green-800 dark:text-green-200">Potencia de una potencia</p>
-                    <p className="font-mono text-lg text-green-600 my-2">(aᵐ)ⁿ = aᵐˣⁿ</p>
+                    <div className="text-lg text-green-600 my-2"><MathText content="$(a^m)^n = a^{m \\times n}$" /></div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       Multiplica exponentes (repetimos la multiplicación)
                     </p>
@@ -393,7 +394,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             </h4>
             <p className="text-gray-700 dark:text-gray-300">
               Estas propiedades <strong>solo funcionan con la misma base</strong>.
-              No puedes simplificar <span className="font-mono">2³ × 3²</span> porque las bases son diferentes.
+              No puedes simplificar <MathText content="$2^3 \\times 3^2$" /> porque las bases son diferentes.
             </p>
           </div>
 

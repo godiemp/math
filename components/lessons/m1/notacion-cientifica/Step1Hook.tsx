@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { MathText } from '@/components/math/MathDisplay';
 
 interface ScaleItem {
   id: string;
@@ -14,10 +15,10 @@ interface ScaleItem {
 }
 
 const SCALE_ITEMS: ScaleItem[] = [
-  { id: 'universe', name: 'Universo observable', size: '880,000,000,000,000,000,000,000,000 m', emoji: '🌌', color: 'purple' },
-  { id: 'sun', name: 'Distancia al Sol', size: '150,000,000,000 m', emoji: '☀️', color: 'yellow' },
-  { id: 'cell', name: 'Célula humana', size: '0.00001 m', emoji: '🔬', color: 'green' },
-  { id: 'atom', name: 'Átomo de hidrógeno', size: '0.0000000001 m', emoji: '⚛️', color: 'blue' },
+  { id: 'universe', name: 'Universo observable', size: '880.000.000.000.000.000.000.000.000 m', emoji: '🌌', color: 'purple' },
+  { id: 'sun', name: 'Distancia al Sol', size: '150.000.000.000 m', emoji: '☀️', color: 'yellow' },
+  { id: 'cell', name: 'Célula humana', size: '0,00001 m', emoji: '🔬', color: 'green' },
+  { id: 'atom', name: 'Átomo de hidrógeno', size: '0,0000000001 m', emoji: '⚛️', color: 'blue' },
 ];
 
 export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
@@ -164,8 +165,8 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 ¿Sabías que...?
               </p>
               <p className="text-gray-700 dark:text-gray-300">
-                El número <span className="font-mono">150,000,000,000</span> se puede escribir simplemente como{' '}
-                <span className="font-mono font-bold text-purple-700 dark:text-purple-300">1.5 × 10¹¹</span>
+                El número <span className="font-mono">150.000.000.000</span> se puede escribir simplemente como{' '}
+                <span className="font-bold text-purple-700 dark:text-purple-300"><MathText content="$1,5 \times 10^{11}$" /></span>
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                 ¡Vamos a descubrir cómo funciona esta magia matemática!

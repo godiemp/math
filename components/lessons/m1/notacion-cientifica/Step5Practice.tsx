@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, Lightbulb, Check, X, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { MathText } from '@/components/math/MathDisplay';
 
 interface PracticeItem {
   id: string;
@@ -19,47 +20,47 @@ const ITEMS: PracticeItem[] = [
   {
     id: '1',
     type: 'to-scientific',
-    question: 'Convierte 7,200,000 a notación científica:',
-    options: ['7.2 × 10⁵', '7.2 × 10⁶', '72 × 10⁵', '0.72 × 10⁷'],
+    question: 'Convierte 7.200.000 a notación científica:',
+    options: ['$7,2 \\times 10^5$', '$7,2 \\times 10^6$', '$72 \\times 10^5$', '$0,72 \\times 10^7$'],
     correctAnswer: 1,
     hint: 'Mueve la coma hasta que el número esté entre 1 y 10, luego cuenta las posiciones.',
-    explanation: 'Movemos la coma 6 lugares a la izquierda: 7,200,000 → 7.2, por lo que es 7.2 × 10⁶.',
+    explanation: 'Movemos la coma 6 lugares a la izquierda: 7.200.000 → 7,2, por lo que es $7,2 \\times 10^6$.',
   },
   {
     id: '2',
     type: 'to-scientific',
-    question: 'Convierte 0.00045 a notación científica:',
-    options: ['4.5 × 10⁻³', '4.5 × 10⁻⁴', '45 × 10⁻⁵', '4.5 × 10⁴'],
+    question: 'Convierte 0,00045 a notación científica:',
+    options: ['$4,5 \\times 10^{-3}$', '$4,5 \\times 10^{-4}$', '$45 \\times 10^{-5}$', '$4,5 \\times 10^4$'],
     correctAnswer: 1,
     hint: 'Para números pequeños, el exponente será negativo. Cuenta cuántos lugares mueves la coma a la derecha.',
-    explanation: 'Movemos la coma 4 lugares a la derecha: 0.00045 → 4.5, por lo que es 4.5 × 10⁻⁴.',
+    explanation: 'Movemos la coma 4 lugares a la derecha: 0,00045 → 4,5, por lo que es $4,5 \\times 10^{-4}$.',
   },
   {
     id: '3',
     type: 'to-standard',
-    question: 'Convierte 3.6 × 10⁴ a notación estándar:',
-    options: ['360', '3,600', '36,000', '360,000'],
+    question: 'Convierte $3,6 \\times 10^4$ a notación estándar:',
+    options: ['360', '3.600', '36.000', '360.000'],
     correctAnswer: 2,
     hint: 'Exponente positivo +4 significa mover la coma 4 lugares a la derecha.',
-    explanation: 'Movemos la coma 4 lugares a la derecha: 3.6 → 36000, es decir, 36,000.',
+    explanation: 'Movemos la coma 4 lugares a la derecha: 3,6 → 36000, es decir, 36.000.',
   },
   {
     id: '4',
     type: 'to-standard',
-    question: 'Convierte 8.1 × 10⁻³ a notación estándar:',
-    options: ['8,100', '0.81', '0.081', '0.0081'],
+    question: 'Convierte $8,1 \\times 10^{-3}$ a notación estándar:',
+    options: ['8.100', '0,81', '0,081', '0,0081'],
     correctAnswer: 3,
     hint: 'Exponente negativo -3 significa mover la coma 3 lugares a la izquierda.',
-    explanation: 'Movemos la coma 3 lugares a la izquierda: 8.1 → 0.0081.',
+    explanation: 'Movemos la coma 3 lugares a la izquierda: 8,1 → 0,0081.',
   },
   {
     id: '5',
     type: 'to-scientific',
-    question: 'Convierte 925,000,000 a notación científica:',
-    options: ['9.25 × 10⁷', '9.25 × 10⁸', '92.5 × 10⁷', '9.25 × 10⁹'],
+    question: 'Convierte 925.000.000 a notación científica:',
+    options: ['$9,25 \\times 10^7$', '$9,25 \\times 10^8$', '$92,5 \\times 10^7$', '$9,25 \\times 10^9$'],
     correctAnswer: 1,
     hint: 'Cuenta cuidadosamente: el número tiene 9 dígitos en total.',
-    explanation: 'Movemos la coma 8 lugares a la izquierda: 925,000,000 → 9.25, por lo que es 9.25 × 10⁸.',
+    explanation: 'Movemos la coma 8 lugares a la izquierda: 925.000.000 → 9,25, por lo que es $9,25 \\times 10^8$.',
   },
 ];
 
@@ -164,7 +165,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
           {/* Question card */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6 text-center">
-              {item.question}
+              <MathText content={item.question} />
             </h3>
 
             {/* Options grid */}
@@ -175,7 +176,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                   onClick={() => handleSelect(index)}
                   disabled={showFeedback}
                   className={cn(
-                    'p-4 rounded-xl font-mono text-lg font-medium transition-all border-2',
+                    'p-4 rounded-xl text-lg font-medium transition-all border-2',
                     selectedAnswer === index
                       ? showFeedback
                         ? index === item.correctAnswer
@@ -187,7 +188,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                       : 'bg-gray-50 dark:bg-gray-700 border-transparent hover:border-gray-300 dark:hover:border-gray-500'
                   )}
                 >
-                  {option}
+                  <MathText content={option} />
                 </button>
               ))}
             </div>
@@ -237,7 +238,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                       {isCorrect ? '¡Correcto!' : 'No exactamente'}
                     </h4>
                     <p className="text-sm text-gray-700 dark:text-gray-300">
-                      {item.explanation}
+                      <MathText content={item.explanation} />
                     </p>
                   </div>
                 </div>

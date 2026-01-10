@@ -106,27 +106,33 @@ export default function CheckpointQuiz({
               Pregunta {currentQuestion + 1} de {questions.length}
             </div>
             <div className="flex gap-1">
-              {questions.map((_, i) => (
-                <div
-                  key={i}
-                  className={cn(
-                    'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all',
-                    answers[i] !== null
-                      ? answers[i] === questions[i].correctAnswer
-                        ? 'bg-green-500 text-white'
-                        : 'bg-red-500 text-white'
-                      : i === currentQuestion
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-500'
-                  )}
-                >
-                  {answers[i] !== null ? (
-                    answers[i] === questions[i].correctAnswer ? '✓' : '✗'
-                  ) : (
-                    i + 1
-                  )}
-                </div>
-              ))}
+              {questions.map((_, i) => {
+                // Only show result after feedback was shown for that question
+                const questionAnswered = i < currentQuestion || (i === currentQuestion && showFeedback);
+                const wasCorrect = answers[i] === questions[i].correctAnswer;
+
+                return (
+                  <div
+                    key={i}
+                    className={cn(
+                      'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all',
+                      questionAnswered && answers[i] !== null
+                        ? wasCorrect
+                          ? 'bg-green-500 text-white'
+                          : 'bg-red-500 text-white'
+                        : i === currentQuestion
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-200 dark:bg-gray-700 text-gray-500'
+                    )}
+                  >
+                    {questionAnswered && answers[i] !== null ? (
+                      wasCorrect ? '✓' : '✗'
+                    ) : (
+                      i + 1
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 

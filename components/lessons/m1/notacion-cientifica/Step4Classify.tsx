@@ -10,6 +10,7 @@ import {
   ActionButton,
   ResultsSummary,
 } from '@/components/lessons/primitives';
+import { MathText } from '@/components/math/MathDisplay';
 
 interface ClassifyItem {
   id: string;
@@ -21,33 +22,33 @@ interface ClassifyItem {
 const ITEMS: ClassifyItem[] = [
   {
     id: '1',
-    number: '3.5 × 10⁴',
+    number: '$3,5 \\times 10^4$',
     correctAnswer: 'valid',
-    explanation: '¡Correcto! El coeficiente 3.5 está entre 1 y 10, y el exponente es un entero.',
+    explanation: '¡Correcto! El coeficiente 3,5 está entre 1 y 10, y el exponente es un entero.',
   },
   {
     id: '2',
-    number: '15 × 10³',
+    number: '$15 \\times 10^3$',
     correctAnswer: 'invalid-coefficient',
-    explanation: 'El coeficiente 15 es mayor que 10. Debería ser 1.5 × 10⁴.',
+    explanation: 'El coeficiente 15 es mayor que 10. Debería ser $1,5 \\times 10^4$.',
   },
   {
     id: '3',
-    number: '7.02 × 10⁻⁵',
+    number: '$7,02 \\times 10^{-5}$',
     correctAnswer: 'valid',
-    explanation: '¡Correcto! 7.02 está entre 1 y 10, y el exponente negativo es válido.',
+    explanation: '¡Correcto! 7,02 está entre 1 y 10, y el exponente negativo es válido.',
   },
   {
     id: '4',
-    number: '0.8 × 10⁶',
+    number: '$0,8 \\times 10^6$',
     correctAnswer: 'invalid-coefficient',
-    explanation: 'El coeficiente 0.8 es menor que 1. Debería ser 8 × 10⁵.',
+    explanation: 'El coeficiente 0,8 es menor que 1. Debería ser $8 \\times 10^5$.',
   },
   {
     id: '5',
-    number: '9.99 × 10⁻²',
+    number: '$9,99 \\times 10^{-2}$',
     correctAnswer: 'valid',
-    explanation: '¡Correcto! 9.99 está entre 1 y 10 (justo en el límite pero válido).',
+    explanation: '¡Correcto! 9,99 está entre 1 y 10 (justo en el límite pero válido).',
   },
 ];
 
@@ -106,8 +107,8 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                 ¿Esta expresión está en notación científica correcta?
               </p>
-              <p className="text-4xl font-mono font-bold text-gray-900 dark:text-white">
-                {mc.currentItem.number}
+              <p className="text-4xl font-bold text-gray-900 dark:text-white">
+                <MathText content={mc.currentItem.number} />
               </p>
             </div>
 
@@ -191,9 +192,9 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
               ) : (
                 <X className="w-5 h-5 text-red-600 flex-shrink-0" />
               )}
-              <span className="font-mono text-gray-700 dark:text-gray-300">{item.number}</span>
+              <span className="text-gray-700 dark:text-gray-300"><MathText content={item.number} /></span>
               <span className="text-sm text-purple-600 ml-auto">
-                {item.correctAnswer === 'valid' ? '✓ Válida' : '✗ Inválida'}
+                {item.correctAnswer === 'valid' ? 'Válida' : 'Inválida'}
               </span>
             </>
           )}

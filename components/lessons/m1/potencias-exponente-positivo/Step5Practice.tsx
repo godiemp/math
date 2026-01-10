@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, Check, X, Lightbulb, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { MathText } from '@/components/math/MathDisplay';
 
 interface Problem {
   id: string;
@@ -17,43 +18,43 @@ interface Problem {
 const PROBLEMS: Problem[] = [
   {
     id: 'p1',
-    question: '¿Cuánto es 3⁴?',
-    hint: '3⁴ = 3 × 3 × 3 × 3. Primero calcula 3 × 3 = 9, luego 9 × 3 = 27, y finalmente 27 × 3.',
+    question: '¿Cuánto es $3^4$?',
+    hint: '$3^4 = 3 \\times 3 \\times 3 \\times 3$. Primero calcula $3 \\times 3 = 9$, luego $9 \\times 3 = 27$, y finalmente $27 \\times 3$.',
     options: ['12', '81', '27', '64'],
     correctAnswer: 1,
-    explanation: '3⁴ = 3 × 3 × 3 × 3 = 9 × 9 = 81',
+    explanation: '$3^4 = 3 \\times 3 \\times 3 \\times 3 = 9 \\times 9 = 81$',
   },
   {
     id: 'p2',
     question: '¿Cuál potencia es igual a 32?',
-    hint: '32 = 2 × 2 × 2 × 2 × 2. ¿Cuántas veces se multiplica el 2?',
-    options: ['2⁴', '2⁵', '4²', '3²'],
+    hint: '$32 = 2 \\times 2 \\times 2 \\times 2 \\times 2$. ¿Cuántas veces se multiplica el 2?',
+    options: ['$2^4$', '$2^5$', '$4^2$', '$3^2$'],
     correctAnswer: 1,
-    explanation: '2⁵ = 2 × 2 × 2 × 2 × 2 = 32. El 2 se multiplica 5 veces.',
+    explanation: '$2^5 = 2 \\times 2 \\times 2 \\times 2 \\times 2 = 32$. El 2 se multiplica 5 veces.',
   },
   {
     id: 'p3',
     question: 'Si un cubo tiene lados de 3 cm, ¿cuál es su volumen?',
-    hint: 'Volumen de un cubo = lado³ = lado × lado × lado',
+    hint: 'Volumen de un cubo = $\\text{lado}^3$ = lado × lado × lado',
     options: ['9 cm³', '27 cm³', '6 cm³', '12 cm³'],
     correctAnswer: 1,
-    explanation: 'Volumen = 3³ = 3 × 3 × 3 = 27 cm³. Por eso "al cubo" significa exponente 3.',
+    explanation: 'Volumen = $3^3 = 3 \\times 3 \\times 3 = 27$ cm³. Por eso "al cubo" significa exponente 3.',
   },
   {
     id: 'p4',
-    question: '¿Cuál es el valor de 10⁴?',
+    question: '¿Cuál es el valor de $10^4$?',
     hint: 'Con base 10, el exponente indica cuántos ceros tiene el resultado.',
     options: ['40', '1,000', '10,000', '100,000'],
     correctAnswer: 2,
-    explanation: '10⁴ = 10 × 10 × 10 × 10 = 10,000. Exponente 4 = 4 ceros después del 1.',
+    explanation: '$10^4 = 10 \\times 10 \\times 10 \\times 10 = 10{,}000$. Exponente 4 = 4 ceros después del 1.',
   },
   {
     id: 'p5',
     question: '¿Cuál de estas afirmaciones es CORRECTA?',
     hint: 'Recuerda: cualquier número (excepto 0) elevado a 0 es 1, y elevado a 1 es él mismo.',
-    options: ['7⁰ = 0', '5¹ = 1', '8⁰ = 1', '2³ = 6'],
+    options: ['$7^0 = 0$', '$5^1 = 1$', '$8^0 = 1$', '$2^3 = 6$'],
     correctAnswer: 2,
-    explanation: '8⁰ = 1. Cualquier número diferente de 0, elevado a la potencia 0, es igual a 1.',
+    explanation: '$8^0 = 1$. Cualquier número diferente de 0, elevado a la potencia 0, es igual a 1.',
   },
 ];
 
@@ -169,7 +170,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
 
             {/* Question */}
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              {currentProblem.question}
+              <MathText content={currentProblem.question} />
             </h3>
 
             {/* Hint */}
@@ -178,7 +179,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                 <div className="flex items-start gap-2">
                   <Lightbulb className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
                   <p className="text-sm text-amber-800 dark:text-amber-200">
-                    {currentProblem.hint}
+                    <MathText content={currentProblem.hint} />
                   </p>
                 </div>
               </div>
@@ -225,7 +226,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                         String.fromCharCode(65 + index)
                       )}
                     </span>
-                    <span className="text-gray-800 dark:text-gray-200 font-mono">{option}</span>
+                    <span className="text-gray-800 dark:text-gray-200"><MathText content={option} /></span>
                   </div>
                 </button>
               ))}
@@ -256,7 +257,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                     >
                       {isCorrect ? '¡Correcto!' : 'Incorrecto'}
                     </h4>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{currentProblem.explanation}</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300"><MathText content={currentProblem.explanation} /></p>
                   </div>
                 </div>
               </div>
@@ -339,7 +340,7 @@ export default function Step5Practice({ onComplete, isActive }: LessonStepProps)
                   ) : (
                     <X className="w-5 h-5 text-red-600 flex-shrink-0" />
                   )}
-                  <span className="text-sm text-gray-700 dark:text-gray-300">{problem.question}</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300"><MathText content={problem.question} /></span>
                 </div>
               ))}
             </div>

@@ -14,6 +14,59 @@ Numbers lessons focus on **visualization, part-whole relationships, and computat
 
 ---
 
+## LaTeX Reference for Numbers Lessons
+
+**IMPORTANT**: All mathematical expressions MUST use LaTeX via the `MathText` component. See `SKILL.md` for full details.
+
+### Common Numbers LaTeX Patterns
+
+```typescript
+import { MathText } from '@/components/math/MathDisplay';
+
+// Fractions
+<MathText content="$\frac{3}{4}$" />                    // Simple fraction
+<MathText content="$\frac{a+b}{c}$" />                  // Complex numerator
+<MathText content="$\frac{3}{4} + \frac{1}{4} = 1$" />  // Fraction operations
+
+// Powers and Exponents
+<MathText content="$a^n$" />                            // Basic power
+<MathText content="$a^{-n}$" />                         // Negative exponent
+<MathText content="$a^{m+n}$" />                        // Complex exponent
+<MathText content="$10^{23}$" />                        // Scientific notation
+
+// Roots
+<MathText content="$\sqrt{16} = 4$" />                  // Square root
+<MathText content="$\sqrt[3]{8} = 2$" />                // Cube root
+<MathText content="$\sqrt[n]{a}$" />                    // Nth root
+
+// Operations
+<MathText content="$a \times b$" />                     // Multiplication
+<MathText content="$a \div b$" />                       // Division
+<MathText content="$a \cdot b$" />                      // Dot multiplication
+
+// Properties of Powers
+<MathText content="$a^m \times a^n = a^{m+n}$" />       // Product rule
+<MathText content="$a^m \div a^n = a^{m-n}$" />         // Quotient rule
+<MathText content="$(a^m)^n = a^{m \cdot n}$" />        // Power of power
+```
+
+### In Data Structures (Double-Escape Backslashes)
+
+```typescript
+const FORMULAS = [
+  {
+    formula: '$a^m \\times a^n = a^{m+n}$',        // Product
+    example: '$4^3 \\times 4^2 = 4^5$',
+  },
+  {
+    formula: '$\\frac{a}{b} + \\frac{c}{b} = \\frac{a+c}{b}$',  // Fractions
+    example: '$\\frac{1}{5} + \\frac{2}{5} = \\frac{3}{5}$',
+  },
+];
+```
+
+---
+
 ## Hook Patterns for Numbers
 
 ### The "Visual Quantity" Pattern

@@ -1,12 +1,13 @@
 'use client';
 
+import { ReactNode } from 'react';
 import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { colors } from '@/lib/lessons/styles';
 import { MathText } from '@/components/math/MathDisplay';
 
 export interface OptionButtonProps {
-  label: string;
+  label: string | ReactNode;
   index: number;
   isSelected: boolean;
   isCorrect: boolean;
@@ -91,7 +92,7 @@ export function OptionButton({
             isMono && 'font-mono'
           )}
         >
-          {label.includes('$') ? <MathText content={label} /> : label}
+          {typeof label === 'string' ? <MathText content={label} /> : label}
         </span>
       </div>
     </button>

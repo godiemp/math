@@ -3,6 +3,7 @@
 import { ArrowRight } from 'lucide-react';
 import { LessonStepProps } from '@/lib/lessons/types';
 import { useStep1Phase } from '@/hooks/lessons';
+import { MathText } from '@/components/math/MathDisplay';
 import {
   ScenarioCard,
   QuestionPrompt,
@@ -171,7 +172,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                     <span className="text-blue-600">2</span>
                   </p>
                   <p className="text-gray-400 text-sm">↓ multiplicamos 2, cinco veces</p>
-                  <p className="font-mono text-2xl text-green-600 font-bold">2⁵ = 32</p>
+                  <div className="text-2xl text-green-600 font-bold"><MathText content="$2^5 = 32$" /></div>
                 </div>
               </div>
             </div>
@@ -183,12 +184,12 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               </p>
               <div className="flex justify-center gap-2 flex-wrap">
                 {[
-                  { casilla: 1, granos: 1, potencia: '2⁰' },
-                  { casilla: 2, granos: 2, potencia: '2¹' },
-                  { casilla: 3, granos: 4, potencia: '2²' },
-                  { casilla: 4, granos: 8, potencia: '2³' },
-                  { casilla: 5, granos: 16, potencia: '2⁴' },
-                  { casilla: 6, granos: 32, potencia: '2⁵' },
+                  { casilla: 1, granos: 1, potencia: '$2^0$' },
+                  { casilla: 2, granos: 2, potencia: '$2^1$' },
+                  { casilla: 3, granos: 4, potencia: '$2^2$' },
+                  { casilla: 4, granos: 8, potencia: '$2^3$' },
+                  { casilla: 5, granos: 16, potencia: '$2^4$' },
+                  { casilla: 6, granos: 32, potencia: '$2^5$' },
                 ].map((item) => (
                   <div
                     key={item.casilla}
@@ -201,7 +202,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   >
                     <p className="text-xs text-gray-500">Casilla {item.casilla}</p>
                     <p className="font-mono font-bold text-lg">{item.granos}</p>
-                    <p className="font-mono text-xs text-purple-600">{item.potencia}</p>
+                    <span className="text-xs text-purple-600"><MathText content={item.potencia} /></span>
                   </div>
                 ))}
               </div>
@@ -212,11 +213,9 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
             <div className="space-y-4">
               <div className="bg-white dark:bg-gray-800 p-4 rounded-xl text-center">
                 <p className="text-sm mb-2">Cuando multiplicamos un número por sí mismo varias veces:</p>
-                <p className="font-mono text-lg">
-                  <span className="text-blue-600 font-bold">a</span> × <span className="text-blue-600 font-bold">a</span>{' '}
-                  × ... × <span className="text-blue-600 font-bold">a</span> ={' '}
-                  <span className="text-purple-600 font-bold">aⁿ</span>
-                </p>
+                <div className="text-lg">
+                  <MathText content="$\\textcolor{blue}{a} \\times \\textcolor{blue}{a} \\times ... \\times \\textcolor{blue}{a} = \\textcolor{purple}{a^n}$" />
+                </div>
                 <p className="text-xs text-gray-500 mt-1">(n veces)</p>
               </div>
               <div className="bg-amber-50 dark:bg-amber-900/30 p-3 rounded-lg border border-amber-200 dark:border-amber-700">
