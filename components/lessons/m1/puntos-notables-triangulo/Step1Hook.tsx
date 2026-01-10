@@ -72,13 +72,6 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                   <circle cx="2" cy="3" r="0.5" fill="rgb(74, 222, 128)" className="dark:fill-emerald-600" />
                   <circle cx="7" cy="7" r="0.5" fill="rgb(74, 222, 128)" className="dark:fill-emerald-600" />
                 </pattern>
-                {/* Stone path pattern */}
-                <pattern id="stonePath" patternUnits="userSpaceOnUse" width="12" height="12">
-                  <rect width="12" height="12" fill="rgb(214, 211, 209)" className="dark:fill-stone-600" />
-                  <rect x="1" y="1" width="4" height="4" rx="0.5" fill="rgb(168, 162, 158)" className="dark:fill-stone-500" />
-                  <rect x="7" y="1" width="4" height="4" rx="0.5" fill="rgb(168, 162, 158)" className="dark:fill-stone-500" />
-                  <rect x="4" y="7" width="4" height="4" rx="0.5" fill="rgb(168, 162, 158)" className="dark:fill-stone-500" />
-                </pattern>
                 {/* Shadow gradient */}
                 <linearGradient id="plazaShadow" x1="0%" y1="0%" x2="0%" y2="100%">
                   <stop offset="0%" stopColor="rgba(0,0,0,0.05)" />
@@ -112,15 +105,15 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 className="dark:stroke-stone-500"
               />
 
-              {/* Paths - subtle stone walkways */}
-              <line x1="200" y1="50" x2="200" y2="175" stroke="url(#stonePath)" strokeWidth="12" strokeLinecap="round" />
-              <line x1="50" y1="270" x2="155" y2="175" stroke="url(#stonePath)" strokeWidth="12" strokeLinecap="round" />
-              <line x1="350" y1="270" x2="245" y2="175" stroke="url(#stonePath)" strokeWidth="12" strokeLinecap="round" />
-
-              {/* Path borders */}
-              <line x1="200" y1="50" x2="200" y2="175" stroke="rgb(120, 113, 108)" strokeWidth="14" strokeLinecap="round" opacity="0.3" className="dark:stroke-stone-600" />
-              <line x1="50" y1="270" x2="155" y2="175" stroke="rgb(120, 113, 108)" strokeWidth="14" strokeLinecap="round" opacity="0.3" className="dark:stroke-stone-600" />
-              <line x1="350" y1="270" x2="245" y2="175" stroke="rgb(120, 113, 108)" strokeWidth="14" strokeLinecap="round" opacity="0.3" className="dark:stroke-stone-600" />
+              {/* Paths - sandy walkways with borders */}
+              {/* Path shadows/borders first */}
+              <line x1="200" y1="50" x2="200" y2="175" stroke="rgb(161, 98, 7)" strokeWidth="14" strokeLinecap="round" opacity="0.4" className="dark:stroke-amber-800" />
+              <line x1="50" y1="270" x2="155" y2="175" stroke="rgb(161, 98, 7)" strokeWidth="14" strokeLinecap="round" opacity="0.4" className="dark:stroke-amber-800" />
+              <line x1="350" y1="270" x2="245" y2="175" stroke="rgb(161, 98, 7)" strokeWidth="14" strokeLinecap="round" opacity="0.4" className="dark:stroke-amber-800" />
+              {/* Main path surface - warm sandy color */}
+              <line x1="200" y1="50" x2="200" y2="175" stroke="rgb(253, 230, 138)" strokeWidth="10" strokeLinecap="round" className="dark:stroke-amber-200" />
+              <line x1="50" y1="270" x2="155" y2="175" stroke="rgb(253, 230, 138)" strokeWidth="10" strokeLinecap="round" className="dark:stroke-amber-200" />
+              <line x1="350" y1="270" x2="245" y2="175" stroke="rgb(253, 230, 138)" strokeWidth="10" strokeLinecap="round" className="dark:stroke-amber-200" />
 
               {/* Decorative benches along edges */}
               <rect x="110" y="155" width="20" height="8" rx="2" fill="rgb(120, 53, 15)" className="dark:fill-amber-900" transform="rotate(-60, 120, 159)" />
