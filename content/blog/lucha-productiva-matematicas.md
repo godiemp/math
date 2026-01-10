@@ -15,7 +15,9 @@ El problema es distinguir entre lucha productiva (que construye comprensión) y 
 
 ## Qué dice la investigación sobre la lucha productiva
 
-La investigación en educación matemática ha demostrado consistentemente que los estudiantes que enfrentan problemas desafiantes y trabajan a través de la dificultad desarrollan comprensión más profunda que aquellos que reciben instrucción directa inmediata.
+[Manu Kapur](https://www.sciencedirect.com/science/article/abs/pii/S0959475213000789), investigador de la ETH Zurich, revolucionó nuestra comprensión del aprendizaje matemático con su concepto de "productive failure" (fracaso productivo). En una serie de estudios rigurosos, demostró que los estudiantes que intentan resolver problemas antes de recibir instrucción formal superan consistentemente a quienes reciben la instrucción primero—incluso cuando sus intentos iniciales fracasan.
+
+[Kapur (2014)](https://www.sciencedirect.com/science/article/abs/pii/S095947521300055X) comparó dos grupos de estudiantes aprendiendo conceptos matemáticos. Un grupo recibió instrucción directa seguida de práctica. El otro intentó resolver problemas sin instrucción previa y luego recibió explicación. El segundo grupo mostró mejor comprensión conceptual y mejor transferencia a problemas nuevos.
 
 **Hallazgos clave:**
 
@@ -26,7 +28,7 @@ La investigación en educación matemática ha demostrado consistentemente que l
 | Los estudiantes que luchan y luego reciben explicación aprenden más que los que reciben explicación primero | Deja que intenten antes de explicar |
 | La frustración excesiva revierte los beneficios | Hay un límite—no todo sufrimiento es productivo |
 
-El concepto de "productive failure" (fracaso productivo), investigado extensamente, muestra que estudiantes que intentan resolver problemas antes de recibir instrucción formal superan a quienes reciben la instrucción primero—incluso cuando sus intentos iniciales fracasan.
+[Warshauer (2015)](https://www.jstor.org/stable/10.5951/mathteacher.108.5.0344) estudió específicamente la lucha productiva en aulas de matemáticas y encontró que los profesores que sostienen la lucha (resisten el impulso de dar la respuesta) producen estudiantes con mayor perseverancia y comprensión conceptual.
 
 ## Por qué los profesores rescatan demasiado pronto
 
@@ -37,7 +39,7 @@ Intervenir rápido es natural. Hay razones válidas:
 - **Cultura escolar:** "El buen profesor explica bien" (no "el buen profesor deja luchar")
 - **Ansiedad del estudiante:** Sus caras de frustración te incomodan
 
-Pero rescatar demasiado pronto tiene costos ocultos:
+Pero rescatar demasiado pronto tiene costos ocultos. [Stigler y Hiebert (1999)](https://www.amazon.com/Teaching-Gap-Improving-Education-Classroom/dp/1439143137), en su comparación internacional de enseñanza matemática, encontraron que los profesores japoneses sostenían la lucha de los estudiantes mucho más que los estadounidenses—y esto correlacionaba con mejor rendimiento matemático.
 
 | Cuando rescatas... | El estudiante aprende que... |
 |-------------------|------------------------------|
@@ -47,7 +49,7 @@ Pero rescatar demasiado pronto tiene costos ocultos:
 
 ## Cómo distinguir lucha productiva de frustración tóxica
 
-No toda dificultad es igual. Necesitas leer las señales:
+No toda dificultad es igual. [Hiebert y Grouws (2007)](https://www.researchgate.net/publication/238691679_The_Effects_of_Classroom_Mathematics_Teaching_on_Students%27_Learning), en su influyente revisión de investigación sobre enseñanza efectiva de matemáticas, distinguieron entre lucha que construye comprensión y dificultad que la bloquea. Necesitas leer las señales:
 
 ### Señales de lucha productiva (déjalos continuar)
 
@@ -76,7 +78,7 @@ No toda dificultad es igual. Necesitas leer las señales:
 
 ### 1. Normaliza la lucha antes de empezar
 
-Antes de dar un problema desafiante, diles:
+[Dweck (2006)](https://www.amazon.com/Mindset-Psychology-Carol-S-Dweck/dp/0345472322), en su investigación sobre mentalidad de crecimiento, demostró que cómo enmarcamos la dificultad afecta si los estudiantes persisten o se rinden. Antes de dar un problema desafiante, diles:
 
 > "Este problema va a ser difícil. No espero que lo resuelvan de inmediato. Lo importante es que intenten distintas cosas y observen qué pasa."
 
@@ -88,7 +90,7 @@ Esto cambia la expectativa. Ya no es "debería saber esto" sino "esto es difíci
 
 ### 2. Da tiempo suficiente (más del que te parece cómodo)
 
-La investigación sugiere que los profesores típicamente esperan menos de 3 segundos después de hacer una pregunta antes de dar pistas o responder ellos mismos.
+[Rowe (1974)](https://onlinelibrary.wiley.com/doi/abs/10.1002/tea.3660110101) encontró que los profesores típicamente esperan menos de 3 segundos después de hacer una pregunta antes de dar pistas o responder ellos mismos. Con problemas complejos, necesitas mucho más tiempo.
 
 **Experimenta con:**
 - Contar mentalmente hasta 30 antes de intervenir
@@ -97,7 +99,7 @@ La investigación sugiere que los profesores típicamente esperan menos de 3 seg
 
 ### 3. Haz preguntas que guíen sin dar la respuesta
 
-Cuando decides intervenir, usa preguntas que empujen el pensamiento:
+[Franke et al. (2009)](https://psycnet.apa.org/record/2009-06651-010) estudiaron las intervenciones docentes más efectivas durante la resolución de problemas. Encontraron que las preguntas que empujan el pensamiento sin revelar la solución son mucho más efectivas que las pistas directas.
 
 | En vez de decir... | Pregunta... |
 |-------------------|-------------|
@@ -108,7 +110,7 @@ Cuando decides intervenir, usa preguntas que empujen el pensamiento:
 
 ### 4. Estructura el problema para permitir múltiples entradas
 
-Un problema con una sola forma de empezar genera frustración en quienes no ven esa entrada.
+[Boaler (2016)](https://www.amazon.com/Mathematical-Mindsets-Unleashing-Students-Potential/dp/0470894520) enfatiza que los problemas con una sola forma de empezar generan frustración en quienes no ven esa entrada. Los problemas con "low floor, high ceiling" (piso bajo, techo alto) permiten que todos entren pero desafían a todos.
 
 **Ejemplo de problema cerrado (difícil de abordar):**
 > Resuelve: $\frac{2x+1}{3} - \frac{x-2}{4} = 1$
@@ -120,7 +122,7 @@ La segunda versión permite que intenten por ensayo y error (entrada baja) mient
 
 ### 5. Celebra el proceso, no solo la respuesta
 
-Cuando un estudiante finalmente resuelve algo después de luchar:
+[Schoenfeld (1985)](https://www.amazon.com/Mathematical-Problem-Solving-Alan-Schoenfeld/dp/0126288704), en su trabajo seminal sobre resolución de problemas matemáticos, demostró que los expertos dedican más tiempo que los novatos a planificar y monitorear su proceso—no solo a ejecutar procedimientos. Modelar esto cambia lo que los estudiantes valoran.
 
 | En vez de... | Di... |
 |--------------|-------|
@@ -132,7 +134,7 @@ Esto refuerza que el proceso de lucha fue valioso, no solo llegar a la respuesta
 
 ## Qué tipo de problemas generan lucha productiva
 
-No todos los problemas sirven. La lucha productiva requiere:
+No todos los problemas sirven. [Stein et al. (2000)](https://www.jstor.org/stable/749711) clasificaron las tareas matemáticas por nivel de demanda cognitiva y encontraron que solo las tareas de alto nivel generan aprendizaje profundo. La lucha productiva requiere:
 
 ### Características de un buen problema para lucha productiva
 
@@ -163,9 +165,9 @@ La lucha productiva no es apropiada siempre:
 
 ### No la uses cuando...
 
-- **El prerrequisito falta completamente.** Si [no tienen las bases](/blog/mitad-curso-no-entiende), luchar no va a construir conocimiento que no existe.
+- **El prerrequisito falta completamente.** Si [no tienen las bases](/blog/mitad-curso-no-entiende), luchar no va a construir conocimiento que no existe. [Ausubel (1968)](https://psycnet.apa.org/record/1968-35031-000) fue claro: el aprendizaje significativo requiere conocimiento previo al cual anclar lo nuevo.
 
-- **El tiempo no alcanza.** Si necesitas cubrir contenido y solo tienes 15 minutos, la instrucción directa puede ser más eficiente.
+- **El tiempo no alcanza.** Si necesitas cubrir contenido y solo tienes 15 minutos, la instrucción directa puede ser más eficiente. [Kirschner et al. (2006)](https://www.tandfonline.com/doi/abs/10.1207/s15326985ep4102_1) argumentaron que la instrucción guiada es más efectiva para novatos completos.
 
 - **Un estudiante tiene ansiedad matemática severa.** Para estos casos, primero necesitas reconstruir confianza con éxitos pequeños. Revisa nuestra guía sobre [cómo manejar la ansiedad matemática](/blog/manejar-ansiedad-matematica-sala-clases).
 
@@ -182,11 +184,11 @@ El mismo problema genera distintos niveles de lucha en distintos estudiantes. Pu
 | Con dificultades | Mismo problema, con primera pista incluida |
 | Con lagunas serias | Problema más simple que active el mismo concepto |
 
-La clave es que todos experimenten lucha apropiada a su nivel—ni tan fácil que no haya esfuerzo, ni tan difícil que sea imposible.
+La clave, como enfatizó [Vygotsky (1978)](https://www.hup.harvard.edu/catalog.php?isbn=9780674576292) con su zona de desarrollo próximo, es que todos experimenten lucha apropiada a su nivel—ni tan fácil que no haya esfuerzo, ni tan difícil que sea imposible.
 
 ## El rol de la retroalimentación después de la lucha
 
-La lucha sin cierre deja aprendizaje incompleto. Después de que luchan:
+La lucha sin cierre deja aprendizaje incompleto. [Kapur (2014)](https://www.sciencedirect.com/science/article/abs/pii/S095947521300055X) enfatizó que la fase de "consolidación" después del fracaso productivo es crucial. Después de que luchan:
 
 1. **Discusión grupal:** ¿Qué estrategias intentaron? ¿Cuáles funcionaron?
 2. **Formalización:** Ahora que lo exploraron, aquí está la forma organizada de pensarlo
@@ -209,7 +211,7 @@ Sabes que la lucha productiva está funcionando cuando:
 
 ## Por dónde empezar esta semana
 
-No intentes cambiar toda tu práctica de golpe. Elige uno:
+No intentes cambiar toda tu práctica de golpe. [Guskey (2002)](https://uknowledge.uky.edu/edp_facpub/7/) demostró que el cambio docente es gradual. Elige uno:
 
 1. **Si nunca has usado lucha productiva:** En tu próxima clase, da un problema desafiante y espera 5 minutos completos antes de dar cualquier pista. Observa qué pasa.
 

@@ -15,7 +15,9 @@ Esta guía te muestra cómo diseñar colaboración que funcione—basada en inve
 
 ## Qué dice la investigación sobre aprendizaje colaborativo
 
-La investigación reciente ha demostrado consistentemente el impacto positivo del aprendizaje colaborativo en el rendimiento matemático:
+[Johnson y Johnson (2009)](https://psycnet.apa.org/record/2009-06651-017), quienes han estudiado el aprendizaje cooperativo por más de 40 años, sintetizaron décadas de investigación concluyendo que el aprendizaje cooperativo estructurado produce consistentemente mejores resultados que el aprendizaje competitivo o individualista—no solo en rendimiento académico, sino también en motivación y habilidades sociales.
+
+[Rohrbeck et al. (2003)](https://psycnet.apa.org/record/2003-07906-002), en un meta-análisis de 90 estudios sobre aprendizaje asistido por pares, encontraron un tamaño de efecto promedio de 0.59—considerablemente mayor que muchas intervenciones educativas comunes.
 
 | Hallazgo | Implicación |
 |----------|-------------|
@@ -24,7 +26,7 @@ La investigación reciente ha demostrado consistentemente el impacto positivo de
 | La colaboración entre pares desarrolla resolución creativa de problemas | Usa problemas abiertos, no solo ejercicios |
 | La intervención docente durante el trabajo grupal tiene efectos positivos | Circula y guía, no te sientes |
 
-**Un hallazgo clave:** Los estudiantes en colaboración estructurada superan consistentemente a sus pares en clases tradicionales. Pero "estructurada" es la palabra clave.
+[Chi et al. (2014)](https://www.sciencedirect.com/science/article/abs/pii/S0959475213001254) demostraron que la interacción constructiva—donde los estudiantes realmente construyen conocimiento juntos, no solo intercambian información—produce los mayores beneficios de aprendizaje. Pero "estructurada" es la palabra clave.
 
 ## Por qué el trabajo grupal tradicional fracasa
 
@@ -32,31 +34,33 @@ La investigación reciente ha demostrado consistentemente el impacto positivo de
 
 Un estudiante hace todo, los demás copian. Nadie aprende excepto el que ya sabía.
 
-**Causa:** No hay responsabilidad individual. El grupo entrega un producto, pero no se verifica que todos contribuyeron.
+**Causa:** No hay responsabilidad individual. [Johnson y Johnson (1999)](https://psycnet.apa.org/record/2009-06651-005) identificaron la "responsabilidad individual" como uno de los cinco elementos esenciales del aprendizaje cooperativo efectivo. Sin ella, el grupo entrega un producto, pero no se verifica que todos contribuyeron.
 
 ### Problema 2: Los grupos homogéneos
 
 Juntas a los que saben entre ellos y a los que les cuesta entre ellos. Los primeros avanzan rápido y se aburren. Los segundos se estancan sin nadie que los guíe.
 
-**Causa:** Asumes que estar con "pares de nivel similar" es mejor. La investigación dice lo contrario.
+**Causa:** Asumes que estar con "pares de nivel similar" es mejor. [Webb y Palincsar (1996)](https://www.taylorfrancis.com/chapters/edit/10.4324/9780203053874-12/group-processes-classroom-noreen-webb-annemarie-palincsar) encontraron que los grupos heterogéneos benefician tanto a estudiantes de alto rendimiento (que consolidan al explicar) como a los de bajo rendimiento (que reciben explicaciones personalizadas de pares).
 
 ### Problema 3: La tarea no requiere colaboración
 
 Das un ejercicio que uno solo podría resolver. No hay razón para colaborar más allá de "el profesor dijo que trabajáramos en grupo".
 
-**Causa:** Cualquier tarea sirve para trabajo grupal. Falso. Solo algunas tareas se benefician de colaboración.
+**Causa:** No toda tarea sirve para trabajo grupal. [Cohen (1994)](https://www.taylorfrancis.com/books/mono/10.4324/9780203068458/designing-groupwork-elizabeth-cohen) fue clara: la colaboración genuina requiere tareas que ningún estudiante pueda completar fácilmente solo, o que se beneficien significativamente de múltiples perspectivas.
 
 ### Problema 4: Sin estructura de roles
 
 Todos se supone que hacen todo. Nadie hace nada específico. Algunos dominan, otros desaparecen.
 
-**Causa:** Asumes que "trabajen juntos" es instrucción suficiente.
+**Causa:** Asumes que "trabajen juntos" es instrucción suficiente. [Slavin (1995)](https://psycnet.apa.org/record/1995-97216-000) demostró que los métodos de aprendizaje cooperativo estructurado (con roles, responsabilidades, e interdependencia positiva) superan significativamente al trabajo grupal no estructurado.
 
 ## 5 estructuras de colaboración que funcionan
 
 ### 1. Think-Pair-Share (Piensa-Comparte-Discute)
 
 **Qué es:** Los estudiantes piensan individualmente, discuten en parejas, luego comparten con la clase.
+
+[Lyman (1981)](https://eric.ed.gov/?id=ED218119) diseñó esta estructura precisamente para resolver el problema de que solo los estudiantes rápidos participan en discusiones de clase.
 
 **Cómo funciona:**
 1. **Think (2-3 min):** Proyectas un problema. Cada estudiante piensa solo, sin hablar.
@@ -75,6 +79,8 @@ Todos se supone que hacen todo. Nadie hace nada específico. Algunos dominan, ot
 
 **Qué es:** Cada miembro del grupo se especializa en una parte del contenido y luego enseña a los demás.
 
+[Aronson (1978)](https://www.jigsaw.org/) desarrolló esta estructura originalmente para reducir conflictos en escuelas desegregadas, pero probó ser altamente efectiva para el aprendizaje académico.
+
 **Cómo funciona:**
 1. Divides el contenido en 4 partes
 2. Cada grupo tiene 4 miembros, cada uno responsable de una parte
@@ -92,12 +98,14 @@ Todos se supone que hacen todo. Nadie hace nada específico. Algunos dominan, ot
 
 **Por qué funciona:**
 - Todos tienen responsabilidad específica
-- El que enseña aprende más profundamente
+- El que enseña aprende más profundamente—lo que [Chi et al. (1989)](https://www.sciencedirect.com/science/article/abs/pii/0364021389900029) llamaron el "efecto de autoexplicación"
 - Imposible ser polizón—tienes que enseñar tu parte
 
 ### 3. Numbered Heads Together (Cabezas Numeradas)
 
 **Qué es:** Los grupos trabajan juntos, pero cualquier miembro puede ser llamado a responder.
+
+[Kagan (1994)](https://www.kaganonline.com/) desarrolló esta estructura para asegurar responsabilidad individual dentro del trabajo grupal.
 
 **Cómo funciona:**
 1. Grupos de 4, cada miembro numerado del 1 al 4
@@ -123,7 +131,7 @@ Todos se supone que hacen todo. Nadie hace nada específico. Algunos dominan, ot
 3. Cambian roles para el siguiente problema
 
 **Por qué funciona:**
-- El que resuelve verbaliza su pensamiento (metacognición)
+- El que resuelve verbaliza su pensamiento—lo que [Chi et al. (1989)](https://www.sciencedirect.com/science/article/abs/pii/0364021389900029) identificaron como clave para el aprendizaje profundo
 - El que observa aprende a dar retroalimentación útil
 - Ambos roles construyen comprensión
 
@@ -135,6 +143,8 @@ Todos se supone que hacen todo. Nadie hace nada específico. Algunos dominan, ot
 ### 5. Resolución colaborativa de problemas
 
 **Qué es:** Grupos pequeños enfrentan un problema complejo que ninguno resolvería fácilmente solo.
+
+[Barron (2003)](https://www.tandfonline.com/doi/abs/10.1207/S15327809JLS1203_1) estudió qué hace que algunos grupos sean más exitosos que otros en resolución colaborativa de problemas y encontró que la calidad de la interacción—no solo la presencia de estudiantes capaces—predice el éxito.
 
 **Estructura recomendada:**
 1. Grupos de 3-4 (heterogéneos)
@@ -162,7 +172,7 @@ Un estudiante solo podría trabarse. El grupo tiene más recursos para avanzar.
 
 ### Grupos heterogéneos (la opción por defecto)
 
-La investigación favorece grupos con mezcla de niveles. Un estudiante fuerte, dos intermedios, uno con dificultades.
+[Lou et al. (1996)](https://journals.sagepub.com/doi/abs/10.3102/00346543066004423), en un meta-análisis de 66 estudios, encontraron que los grupos heterogéneos producen mejores resultados que los homogéneos, especialmente para estudiantes de bajo rendimiento. Un estudiante fuerte, dos intermedios, uno con dificultades.
 
 **Beneficios:**
 - El estudiante fuerte consolida al explicar
@@ -185,7 +195,7 @@ Pero esto debe ser temporal y por objetivo específico, no la norma.
 
 ### Rotación de grupos
 
-No mantengas los mismos grupos todo el año. Rota cada 2-3 semanas para:
+No mantengas los mismos grupos todo el año. [Webb (2009)](https://www.taylorfrancis.com/chapters/edit/10.4324/9780203879511-26/task-related-verbal-interaction-learning-groups-noreen-webb) encontró que las dinámicas de grupo se cristalizan rápidamente. Rota cada 2-3 semanas para:
 - Evitar dinámicas negativas que se calcifican
 - Exponer a todos a diferentes estilos de pensamiento
 - Prevenir que un estudiante siempre sea "el que no sabe" en su grupo
@@ -201,7 +211,7 @@ No mantengas los mismos grupos todo el año. Rota cada 2-3 semanas para:
 
 ### Lo que SÍ hacer:
 
-**Circular activamente.** Escucha las conversaciones. Identifica conceptos erróneos antes de que se consoliden.
+**Circular activamente.** [Ding et al. (2007)](https://iopscience.iop.org/article/10.1088/0031-9120/42/6/008) encontraron que la frecuencia y calidad de las intervenciones docentes durante el trabajo grupal correlaciona significativamente con el aprendizaje de los estudiantes. Escucha las conversaciones. Identifica conceptos erróneos antes de que se consoliden.
 
 **Hacer preguntas, no dar respuestas:**
 
@@ -211,7 +221,7 @@ No mantengas los mismos grupos todo el año. Rota cada 2-3 semanas para:
 | "No sabemos qué hacer" | "¿Qué información tienen? ¿Qué están buscando?" |
 | "Ya terminamos" | "¿Pueden explicarme por qué funciona este método?" |
 
-**Intervenir cuando hay conceptos erróneos.** La investigación muestra que dejar que grupos refuercen errores es contraproducente. Si escuchas algo fundamentalmente mal, intervén.
+**Intervenir cuando hay conceptos erróneos.** [Webb et al. (2006)](https://www.sciencedirect.com/science/article/abs/pii/S0959475205000666) encontraron que dejar que grupos refuercen errores es contraproducente. Si escuchas algo fundamentalmente mal, intervén.
 
 **Recoger ideas para la discusión final.** Anota qué estrategias usaron diferentes grupos para compartir después.
 
@@ -231,11 +241,11 @@ No mantengas los mismos grupos todo el año. Rota cada 2-3 semanas para:
 
 ### "Algunos estudiantes prefieren trabajar solos"
 
-**Solución:** Reconoce que la colaboración es una habilidad que se aprende. Empieza con parejas (menos intimidante) antes de grupos de 4. Asegura que haya tiempo individual en Think-Pair-Share.
+**Solución:** Reconoce que la colaboración es una habilidad que se aprende. [Cohen (1994)](https://www.taylorfrancis.com/books/mono/10.4324/9780203068458/designing-groupwork-elizabeth-cohen) enfatizó que las normas de colaboración deben enseñarse explícitamente. Empieza con parejas (menos intimidante) antes de grupos de 4. Asegura que haya tiempo individual en Think-Pair-Share.
 
 ### "No tengo tiempo para esto"
 
-**Solución:** La colaboración bien hecha no es "tiempo extra"—reemplaza parte de la instrucción tradicional. Un problema colaborativo de 20 minutos puede producir más aprendizaje que 20 minutos de ejercicios individuales.
+**Solución:** La colaboración bien hecha no es "tiempo extra"—reemplaza parte de la instrucción tradicional. [Hattie (2009)](https://visible-learning.org/) encontró que el aprendizaje cooperativo tiene un tamaño de efecto de 0.42, comparable a muchas otras estrategias instructivas. Un problema colaborativo de 20 minutos puede producir más aprendizaje que 20 minutos de ejercicios individuales.
 
 ## Cómo evaluar aprendizaje colaborativo
 
@@ -249,7 +259,7 @@ No mantengas los mismos grupos todo el año. Rota cada 2-3 semanas para:
 
 ### Mantén responsabilidad individual
 
-Después del trabajo grupal, ten una verificación individual:
+[Johnson y Johnson (2009)](https://psycnet.apa.org/record/2009-06651-017) enfatizan que la responsabilidad individual es esencial—sin ella, no hay garantía de aprendizaje. Después del trabajo grupal, ten una verificación individual:
 - Quiz breve individual
 - Exit ticket con lo que aprendieron
 - Pregunta oral a miembros específicos
