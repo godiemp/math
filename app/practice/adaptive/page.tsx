@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
@@ -8,8 +8,8 @@ import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { UnifiedLatexRenderer } from '@/components/math/MathDisplay';
-import { usePracticeSession } from '@/hooks/usePracticeSession';
-import { useAITutor } from '@/hooks/useAITutor';
+import { useAdaptivePractice } from '@/hooks/useAdaptivePractice';
+import { useChatInput } from '@/hooks/useChatInput';
 import type { Question } from '@/lib/types/core';
 
 // ============================================================================
@@ -25,6 +25,12 @@ interface Topic {
 interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
+}
+
+interface Feedback {
+  correct: boolean;
+  message: string;
+  explanation?: string;
 }
 
 // ============================================================================
@@ -118,20 +124,12 @@ function ChatPanel({
   onSendMessage: (message: string) => void;
   isLoading: boolean;
 }) {
-  const [input, setInput] = useState('');
+  const { input, setInput, handleSubmit, canSubmit } = useChatInput(onSendMessage, isLoading);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (input.trim() && !isLoading) {
-      onSendMessage(input.trim());
-      setInput('');
-    }
-  };
 
   return (
     <div className="flex flex-col h-[500px] bg-white/10 rounded-xl border border-white/20">
@@ -188,13 +186,43 @@ function ChatPanel({
           />
           <button
             type="submit"
-            disabled={!input.trim() || isLoading}
+            disabled={!canSubmit}
             className="px-4 py-2 rounded-lg bg-white/20 text-white font-medium hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Enviar
           </button>
         </div>
       </form>
+    </div>
+  );
+}
+
+// ============================================================================
+// Scaffolding Banner Component
+// ============================================================================
+
+function ScaffoldingBanner({
+  depth,
+  maxDepth,
+}: {
+  depth: number;
+  maxDepth: number;
+}) {
+  return (
+    <div className="mb-4 p-3 bg-amber-500/20 rounded-lg border border-amber-400/30">
+      <div className="flex items-center gap-2">
+        <span className="text-xl">💡</span>
+        <span className="text-amber-200 font-medium">
+          Pregunta de refuerzo {depth > 1 ? `(nivel ${depth} de ${maxDepth})` : ''}
+        </span>
+      </div>
+      <p className="text-amber-200/70 text-sm mt-1">
+        {depth === 1
+          ? 'Esta pregunta te ayudará a consolidar conceptos base.'
+          : depth === 2
+            ? 'Vamos a un concepto más fundamental.'
+            : 'Practiquemos lo más básico primero.'}
+      </p>
     </div>
   );
 }
@@ -209,22 +237,37 @@ function ProblemDisplay({
   onSelectAnswer,
   onSubmit,
   onNext,
+  onProceedToScaffolding,
   feedback,
   showExplanation,
+  isScaffolding,
+  scaffoldingDepth,
+  maxScaffoldingDepth,
+  isGeneratingScaffolding,
 }: {
   problem: Question;
   selectedAnswer: number | null;
   onSelectAnswer: (index: number) => void;
   onSubmit: () => void;
   onNext: () => void;
-  feedback: { correct: boolean; message: string; explanation?: string } | null;
+  onProceedToScaffolding: () => void;
+  feedback: Feedback | null;
   showExplanation: boolean;
+  isScaffolding: boolean;
+  scaffoldingDepth: number;
+  maxScaffoldingDepth: number;
+  isGeneratingScaffolding: boolean;
 }) {
   const questionContent = problem.questionLatex;
   const options = problem.options;
 
   return (
-    <div className="bg-white/10 rounded-xl p-6 border border-white/20">
+    <div className={`bg-white/10 rounded-xl p-6 border ${isScaffolding ? 'border-amber-400/30' : 'border-white/20'}`}>
+      {/* Scaffolding Banner */}
+      {isScaffolding && (
+        <ScaffoldingBanner depth={scaffoldingDepth} maxDepth={maxScaffoldingDepth} />
+      )}
+
       {/* Question */}
       <div className="mb-6">
         <div className="text-lg text-white leading-relaxed">
@@ -293,12 +336,47 @@ function ProblemDisplay({
                 </div>
               </div>
             )}
+
           </div>
+
+          {/* Scaffolding button - show when incorrect and not at max depth */}
+          {!feedback.correct && scaffoldingDepth < maxScaffoldingDepth && (
+            <button
+              onClick={onProceedToScaffolding}
+              disabled={isGeneratingScaffolding}
+              className="w-full py-3 rounded-xl bg-amber-500/20 text-amber-200 font-bold hover:bg-amber-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 mb-3"
+            >
+              {isGeneratingScaffolding ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
+                  <span>Generando pregunta de refuerzo...</span>
+                </>
+              ) : (
+                <>
+                  <span>💡</span>
+                  <span>Practicar concepto base primero</span>
+                </>
+              )}
+            </button>
+          )}
+
           <button
             onClick={onNext}
-            className="w-full py-3 rounded-xl bg-white/20 text-white font-bold hover:bg-white/30 transition-all"
+            disabled={isGeneratingScaffolding}
+            className="w-full py-3 rounded-xl bg-white/20 text-white font-bold hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
-            Siguiente Problema →
+            {isGeneratingScaffolding ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>Generando...</span>
+              </span>
+            ) : isScaffolding && feedback.correct ? (
+              scaffoldingDepth === 1
+                ? 'Volver a pregunta similar →'
+                : 'Subir de nivel →'
+            ) : (
+              'Siguiente Problema →'
+            )}
           </button>
         </div>
       )}
@@ -311,28 +389,7 @@ function ProblemDisplay({
 // ============================================================================
 
 function AdaptivePracticeContent() {
-  const practice = usePracticeSession();
-  const tutor = useAITutor();
-
-  const handleStartPractice = (focus: string) => {
-    tutor.clearMessages();
-    practice.startPractice(focus);
-  };
-
-  const handleSubmitAnswer = () => {
-    practice.submitAnswer(tutor.hasMessages);
-  };
-
-  const handleNextProblem = () => {
-    tutor.clearMessages();
-    practice.nextProblem();
-  };
-
-  const handleSendChatMessage = (message: string) => {
-    if (practice.currentProblem) {
-      tutor.sendMessage(message, practice.currentProblem);
-    }
-  };
+  const practice = useAdaptivePractice();
 
   // Loading state
   if (practice.state === 'loading') {
@@ -375,7 +432,7 @@ function AdaptivePracticeContent() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {DEFAULT_TOPICS.map((topic) => (
-              <TopicCard key={topic.id} topic={topic} onSelect={handleStartPractice} />
+              <TopicCard key={topic.id} topic={topic} onSelect={practice.startPractice} />
             ))}
           </div>
         </div>
@@ -412,10 +469,15 @@ function AdaptivePracticeContent() {
                 problem={practice.currentProblem}
                 selectedAnswer={practice.selectedAnswer}
                 onSelectAnswer={practice.setSelectedAnswer}
-                onSubmit={handleSubmitAnswer}
-                onNext={handleNextProblem}
+                onSubmit={practice.submitAnswer}
+                onNext={practice.nextProblem}
+                onProceedToScaffolding={practice.proceedToScaffolding}
                 feedback={practice.feedback}
                 showExplanation={!practice.feedback?.correct}
+                isScaffolding={practice.scaffoldingMode === 'active'}
+                scaffoldingDepth={practice.scaffoldingDepth}
+                maxScaffoldingDepth={practice.maxScaffoldingDepth}
+                isGeneratingScaffolding={practice.isGeneratingScaffolding}
               />
             )}
           </div>
@@ -423,9 +485,9 @@ function AdaptivePracticeContent() {
           {/* Chat area - 1 column */}
           <div className="lg:col-span-1">
             <ChatPanel
-              messages={tutor.messages}
-              onSendMessage={handleSendChatMessage}
-              isLoading={tutor.isLoading}
+              messages={practice.tutorMessages}
+              onSendMessage={practice.sendChatMessage}
+              isLoading={practice.isTutorLoading}
             />
           </div>
         </div>
