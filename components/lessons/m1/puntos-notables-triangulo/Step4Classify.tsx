@@ -261,7 +261,9 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
                   notablePoints={mc.currentItem.notablePoints}
                   circles={mc.currentItem.circles}
                   showGrid={false}
-                  className="max-w-xs mx-auto"
+                  width={320}
+                  height={280}
+                  className="mx-auto"
                   padding={50}
                 />
               </div>
