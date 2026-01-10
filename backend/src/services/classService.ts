@@ -902,6 +902,7 @@ export class ClassService {
     const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
 
     // Get failed questions with aggregated stats
+    // Uses quiz_attempts table which stores the question text, topic, and subject
     const result = await pool.query(
       `SELECT
          qa.question_id,
@@ -913,7 +914,7 @@ export class ClassService {
          ROUND(COUNT(*) FILTER (WHERE NOT qa.is_correct)::decimal / NULLIF(COUNT(*), 0), 2) as fail_rate,
          ARRAY_AGG(DISTINCT u.display_name) FILTER (WHERE NOT qa.is_correct) as students_failed
        FROM class_enrollments ce
-       JOIN question_attempts qa ON ce.student_id = qa.user_id
+       JOIN quiz_attempts qa ON ce.student_id = qa.user_id
        JOIN users u ON qa.user_id = u.id
        WHERE ce.class_id = $1 AND ce.status = 'active'
          AND qa.attempted_at >= $2
