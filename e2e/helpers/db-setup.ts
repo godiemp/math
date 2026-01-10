@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import { Pool, PoolClient } from 'pg';
 
 const TEST_DB_URL = process.env.TEST_DATABASE_URL ||
   'postgresql://testuser:testpassword@localhost:5433/paes_test';
@@ -9,11 +9,38 @@ export const pool = new Pool({
 });
 
 /**
+ * Apply schema updates that might be missing from migrations
+ * This ensures test database has all required columns
+ */
+async function applySchemaUpdates(client: PoolClient) {
+  // Add has_seen_welcome column if not exists (from migration 005)
+  await client.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS has_seen_welcome BOOLEAN DEFAULT FALSE NOT NULL
+  `).catch(() => {}); // Ignore if column already exists or other errors
+
+  // Add target_level column if not exists (from migration 005)
+  await client.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS target_level VARCHAR(20) DEFAULT 'M1_AND_M2'
+  `).catch(() => {}); // Ignore errors
+
+  // Add paes_exam_target column if not exists (from migration 008)
+  await client.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS paes_exam_target VARCHAR(30)
+  `).catch(() => {}); // Ignore errors
+}
+
+/**
  * Clear all data from test database tables using TRUNCATE for better performance
  */
 export async function clearDatabase() {
   const client = await pool.connect();
   try {
+    // First, apply any missing schema updates
+    await applySchemaUpdates(client);
+
     // Use TRUNCATE CASCADE for much faster clearing (resets sequences and removes all foreign key constraints)
     // This is significantly faster than individual DELETE statements
     await client.query(`

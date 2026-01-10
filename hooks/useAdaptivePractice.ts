@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { usePracticeSession } from './usePracticeSession';
+import { usePracticeSession, type PracticeOptions, type DecomposedSkill } from './usePracticeSession';
 import { useAITutor } from './useAITutor';
 
 /**
@@ -11,12 +11,12 @@ export function useAdaptivePractice() {
   const tutor = useAITutor();
 
   /**
-   * Start practice with a focus topic
+   * Start practice with a focus topic or subsection options
    * Clears tutor messages when starting fresh
    */
-  const handleStartPractice = useCallback((focus: string) => {
+  const handleStartPractice = useCallback((options: PracticeOptions | string) => {
     tutor.clearMessages();
-    practice.startPractice(focus);
+    practice.startPractice(options);
   }, [tutor, practice]);
 
   /**
@@ -46,6 +46,21 @@ export function useAdaptivePractice() {
   }, [tutor, practice]);
 
   /**
+   * Start skill-based scaffolding with selected skills
+   */
+  const handleStartSkillBasedScaffolding = useCallback((skills: DecomposedSkill[]) => {
+    tutor.clearMessages();
+    practice.startSkillBasedScaffolding(skills);
+  }, [tutor, practice]);
+
+  /**
+   * Skip skill selection and continue normally
+   */
+  const handleSkipSkillSelection = useCallback(() => {
+    practice.skipSkillSelection();
+  }, [practice]);
+
+  /**
    * Send a chat message to the AI tutor
    */
   const handleSendChatMessage = useCallback((message: string) => {
@@ -71,12 +86,27 @@ export function useAdaptivePractice() {
     feedback: practice.feedback,
     error: practice.error,
 
+    // Subsection state
+    currentSubsectionCode: practice.currentSubsectionCode,
+    currentSubsectionSkills: practice.currentSubsectionSkills,
+
     // Scaffolding state
     scaffoldingMode: practice.scaffoldingMode,
     scaffoldingQuestion: practice.scaffoldingQuestion,
     scaffoldingDepth: practice.scaffoldingDepth,
     isGeneratingScaffolding: practice.isGeneratingScaffolding,
     maxScaffoldingDepth: practice.maxScaffoldingDepth,
+
+    // Skill-based scaffolding state
+    decomposedSkills: practice.decomposedSkills,
+    selectedSkills: practice.selectedSkills,
+    currentSkillIndex: practice.currentSkillIndex,
+    isDecomposingSkills: practice.isDecomposingSkills,
+
+    // History for timeline
+    scaffoldingHistory: practice.scaffoldingHistory,
+    reviewingEntry: practice.reviewingEntry,
+    setReviewingEntry: practice.setReviewingEntry,
 
     // Tutor state
     tutorMessages: tutor.messages,
@@ -89,6 +119,8 @@ export function useAdaptivePractice() {
     nextProblem: handleNextProblem,
     changeTopic: handleChangeTopic,
     proceedToScaffolding: handleProceedToScaffolding,
+    startSkillBasedScaffolding: handleStartSkillBasedScaffolding,
+    skipSkillSelection: handleSkipSkillSelection,
     sendChatMessage: handleSendChatMessage,
   };
 }
