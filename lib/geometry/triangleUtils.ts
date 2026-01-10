@@ -454,8 +454,9 @@ export function calculateSpecialLineEndpoints(
       };
     }
 
-    case 'mediatriz': {
-      // Perpendicular bisector of a side
+    case 'mediatriz':
+    case 'simetral': {
+      // Perpendicular bisector (simetral) of a side
       // fromVertex determines which side: 0 = side BC (opposite to A), 1 = side AC (opposite to B), 2 = side AB (opposite to C)
       const sideIndex = config.toSide ?? fromVertex;
       // Get the two vertices that form this side (opposite to the fromVertex)
@@ -469,9 +470,9 @@ export function calculateSpecialLineEndpoints(
       const dy = sideP2.y - sideP1.y;
       const perp = normalize({ x: -dy, y: dx });
 
-      // Extend in both directions - use longer length for visibility
-      const sideLength = distance(sideP1, sideP2);
-      const length = Math.max(sideLength * 0.6, 50);
+      // Extend far enough to clearly intersect at circumcenter
+      // Use a large fixed length that will cover most triangle sizes
+      const length = 300;
 
       return {
         start: { x: mid.x - perp.x * length, y: mid.y - perp.y * length },

@@ -62,7 +62,7 @@ const QUESTIONS: ClassifyQuestion[] = [
           strokeWidth="2"
           className="dark:fill-gray-700"
         />
-        {/* Mediatrices (perpendicular bisectors) */}
+        {/* Simetrales (perpendicular bisectors) */}
         <line
           x1={midAB.x - perpAB.dx * 4}
           y1={midAB.y - perpAB.dy * 4}
@@ -100,7 +100,7 @@ const QUESTIONS: ClassifyQuestion[] = [
       </svg>
     ),
     correctAnswer: 'circuncentro',
-    explanation: 'Las mediatrices (perpendiculares por el punto medio de cada lado) se cruzan en el circuncentro.',
+    explanation: 'Las simetrales (perpendiculares por el punto medio de cada lado) se cruzan en el circuncentro.',
   },
   {
     id: 'q2',

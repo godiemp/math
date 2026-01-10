@@ -102,7 +102,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
             <div className="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
               <TriangleFigure
                 vertices={DEFAULT_VERTICES}
-                specialLines={allLinesOfType('mediatriz')}
+                specialLines={allLinesOfType('simetral')}
                 notablePoints={[{ type: 'circuncentro', animate: true }]}
                 circles={[{ type: 'circumscribed' }]}
                 className="mx-auto max-w-xs"
@@ -113,7 +113,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
                 <p className="font-semibold text-gray-800 dark:text-white">Construcción:</p>
                 <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  Intersección de las 3 <strong>mediatrices</strong> (perpendiculares por el punto medio de cada lado)
+                  Intersección de las 3 <strong>simetrales</strong> (perpendiculares por el punto medio de cada lado)
                 </p>
               </div>
 
@@ -314,8 +314,8 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
                 <div>
                   <p className="font-semibold text-amber-800 dark:text-amber-200">Error común</p>
                   <p className="text-amber-700 dark:text-amber-300 text-sm">
-                    No confundas <strong>mediana</strong> (vértice → punto medio) con <strong>mediatriz</strong> (perpendicular en el punto medio).
-                    ¡Las medianas dan el baricentro, las mediatrices dan el circuncentro!
+                    No confundas <strong>mediana</strong> (vértice → punto medio) con <strong>simetral</strong> (perpendicular en el punto medio).
+                    ¡Las medianas dan el baricentro, las simetrales dan el circuncentro!
                   </p>
                 </div>
               </div>

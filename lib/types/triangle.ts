@@ -96,7 +96,8 @@ export type SpecialLineType =
   | 'altura' // Height/altitude - perpendicular from vertex to opposite side
   | 'mediana' // Median - from vertex to midpoint of opposite side
   | 'bisectriz' // Angle bisector - divides angle in two equal parts
-  | 'mediatriz'; // Perpendicular bisector - perpendicular to side at midpoint
+  | 'simetral' // Perpendicular bisector (Chilean term) - perpendicular to side at midpoint
+  | 'mediatriz'; // Perpendicular bisector (alternate term) - same as simetral
 
 /**
  * Configuration for special lines in the triangle

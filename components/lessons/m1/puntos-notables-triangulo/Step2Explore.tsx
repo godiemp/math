@@ -49,7 +49,7 @@ const PHASES: PhaseConfig[] = [
     point: 'circuncentro',
     showCircumscribed: true,
     color: 'purple',
-    lineDescription: 'Se construye con las 3 mediatrices (perpendiculares por el punto medio de cada lado)',
+    lineDescription: 'Se construye con las 3 simetrales (perpendiculares por el punto medio de cada lado)',
   },
   {
     id: 'incentro',
@@ -99,7 +99,7 @@ function getSpecialLines(lineType: LineType | null): SpecialLineConfig[] {
   if (!lineType) return [];
 
   const lineTypeMap: Record<LineType, SpecialLineConfig['type']> = {
-    mediatrices: 'mediatriz',
+    mediatrices: 'simetral',
     bisectrices: 'bisectriz',
     medianas: 'mediana',
     alturas: 'altura',

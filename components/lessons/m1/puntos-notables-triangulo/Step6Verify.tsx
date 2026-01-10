@@ -7,10 +7,10 @@ const QUESTIONS: CheckpointQuestion[] = [
   {
     id: 'q1',
     question: '¿Qué líneas se intersecan para formar el circuncentro?',
-    options: ['Alturas', 'Medianas', 'Mediatrices', 'Bisectrices'],
+    options: ['Alturas', 'Medianas', 'Simetrales', 'Bisectrices'],
     correctAnswer: 2,
     explanation:
-      'Las mediatrices son perpendiculares que pasan por el punto medio de cada lado. Su intersección es el circuncentro.',
+      'Las simetrales son perpendiculares que pasan por el punto medio de cada lado. Su intersección es el circuncentro.',
   },
   {
     id: 'q2',
