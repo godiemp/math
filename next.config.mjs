@@ -29,6 +29,17 @@ const nextConfig = {
   },
   // Instrumentation is enabled by default in Next.js 15
 
+  // Allow external images from S3
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'math-chile.s3.us-east-1.amazonaws.com',
+        pathname: '/**',
+      },
+    ],
+  },
+
   // Proxy API requests to backend - fixes Safari ITP cookie blocking
   async rewrites() {
     const backendUrl = getBackendUrl();
