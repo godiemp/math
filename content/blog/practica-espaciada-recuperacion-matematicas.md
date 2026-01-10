@@ -11,19 +11,19 @@ Enseñaste ecuaciones hace tres semanas. Los estudiantes entendieron. Varios sac
 
 El problema no es tu enseñanza. Es cómo practican—y cuándo.
 
-La ciencia del aprendizaje ha identificado dos técnicas que mejoran dramáticamente la retención a largo plazo: la práctica espaciada y la recuperación activa. Esta guía te muestra cómo aplicarlas en tu aula de matemáticas.
+La ciencia del aprendizaje ha identificado dos técnicas que mejoran dramáticamente la retención a largo plazo: la práctica espaciada y la recuperación activa. Estas no son modas educativas—son de los hallazgos más replicados en la historia de la psicología cognitiva, con más de un siglo de investigación desde los trabajos originales de [Hermann Ebbinghaus (1885)](https://en.wikipedia.org/wiki/Forgetting_curve) sobre la curva del olvido.
 
-## Qué dice la investigación
+## Por qué la práctica masiva no funciona
 
-### El problema de la práctica masiva
+La forma tradicional de practicar es "masiva": estudiar un tema intensamente hasta dominarlo, luego pasar al siguiente. Estudiar para la prueba la noche anterior. Hacer 50 ejercicios del mismo tipo seguidos.
 
-La forma tradicional de practicar es "masiva": estudiar un tema intensamente hasta dominarlo, luego pasar al siguiente.
+El problema: esta práctica produce la *ilusión* de aprendizaje. El estudiante siente que domina el tema porque lo tiene fresco. Pero semanas después, casi todo se evaporó.
 
-**Problema:** Esta práctica produce la ilusión de aprendizaje. El estudiante siente que domina el tema porque lo tiene fresco. Pero semanas después, casi todo se evaporó.
+Un [meta-análisis de Cepeda et al. (2006)](https://psycnet.apa.org/doi/10.1037/0033-2909.132.3.354) que revisó 254 estudios con más de 14,000 participantes encontró que la práctica espaciada es consistentemente superior a la práctica masiva, con efectos que persisten semanas e incluso meses después.
 
-La investigación muestra que la retención a largo plazo es significativamente mayor cuando la práctica se distribuye en el tiempo.
+[Rohrer y Taylor (2006)](https://psycnet.apa.org/doi/10.1007/s11251-006-9015-4) demostraron esto directamente en matemáticas: estudiantes que practicaron problemas de geometría de forma espaciada recordaron **74% más** que los que practicaron de forma masiva, cuando fueron evaluados una semana después.
 
-### La práctica espaciada
+## La práctica espaciada
 
 **Qué es:** Distribuir la práctica de un tema en múltiples sesiones separadas en el tiempo, en vez de concentrarla en una sola sesión.
 
@@ -33,27 +33,13 @@ La investigación muestra que la retención a largo plazo es significativamente 
 | Sensación de dominio inmediato | Sensación de más esfuerzo |
 | Olvido rápido | Retención a largo plazo |
 
-**Por qué funciona:** Cada vez que recuperas algo de la memoria después de un intervalo, fortaleces esa memoria. El esfuerzo de recordar es lo que consolida el aprendizaje.
+**Por qué funciona:** Cada vez que recuperas algo de la memoria después de un intervalo, fortaleces esa memoria. El esfuerzo de recordar—ese momento de "¿cómo era esto?"—es exactamente lo que consolida el aprendizaje.
 
-### La recuperación activa (retrieval practice)
+### Cómo implementarla en el aula
 
-**Qué es:** Intentar recuperar información de la memoria, en vez de simplemente repasarla o releerla.
-
-| Práctica pasiva | Recuperación activa |
-|-----------------|---------------------|
-| Releer los apuntes | Cerrar los apuntes e intentar recordar |
-| Mirar ejemplos resueltos | Intentar resolver sin mirar |
-| "Estudiar" el formulario | Intentar reconstruir las fórmulas de memoria |
-
-**Por qué funciona:** El acto de recuperar fortalece la memoria más que el acto de revisar. Cada intento de recordar, aunque sea difícil, deja una huella más fuerte.
-
-## Cómo aplicar práctica espaciada en el aula
-
-### 1. Revisión acumulativa semanal
+**1. Revisión acumulativa semanal**
 
 Dedica 10-15 minutos cada semana a ejercicios de temas anteriores—no solo del tema actual.
-
-**Ejemplo de estructura semanal:**
 
 | Día | Contenido de práctica |
 |-----|----------------------|
@@ -63,44 +49,48 @@ Dedica 10-15 minutos cada semana a ejercicios de temas anteriores—no solo del 
 | Jueves | Tema nuevo (50%) + tema de hace 1 semana (30%) + tema de hace 1 mes (20%) |
 | Viernes | Mezcla de todo |
 
-### 2. Espiral de contenidos
+**2. Espiral de contenidos**
 
 En vez de enseñar un tema, evaluarlo, y nunca volver a él, diseña tu planificación en espiral:
 
-**Planificación lineal tradicional:**
-> Unidad 1 → Prueba → Unidad 2 → Prueba → Unidad 3 → ...
-
-**Planificación en espiral:**
 > Unidad 1 → Prueba → Unidad 2 + repaso U1 → Prueba → Unidad 3 + repaso U1 y U2 → ...
 
 Esto asegura que los temas anteriores se revisiten regularmente.
 
-### 3. Tareas que incluyen temas anteriores
+**3. Tareas que incluyen temas anteriores**
 
-Cuando [asignas práctica fuera de clase](/blog/como-asignar-practica-paes-efectiva), incluye ejercicios de temas pasados:
+Cuando asignas práctica fuera de clase, incluye ejercicios de temas pasados:
 
-**Tarea típica (solo tema actual):**
-> "Ejercicios 1-15 de sistemas de ecuaciones"
+| Tarea típica | Tarea con espaciado |
+|--------------|---------------------|
+| "Ejercicios 1-15 de sistemas de ecuaciones" | "Ejercicios 1-10 de sistemas + 3 de fracciones + 2 de ecuaciones lineales" |
 
-**Tarea con espaciado:**
-> "Ejercicios 1-10 de sistemas de ecuaciones + 3 ejercicios de fracciones + 2 de ecuaciones lineales"
+## La recuperación activa
 
-## Cómo aplicar recuperación activa en el aula
+**Qué es:** Intentar recuperar información de la memoria, en vez de simplemente repasarla o releerla.
 
-### 1. Quizzes de bajo riesgo frecuentes
+| Práctica pasiva | Recuperación activa |
+|-----------------|---------------------|
+| Releer los apuntes | Cerrar los apuntes e intentar recordar |
+| Mirar ejemplos resueltos | Intentar resolver sin mirar |
+| "Estudiar" el formulario | Intentar reconstruir las fórmulas de memoria |
+
+[Karpicke y Blunt (2011)](https://www.science.org/doi/10.1126/science.1199327), en un estudio publicado en *Science*, demostraron que practicar recuperación produce un **50% más de retención** que técnicas de estudio elaborativo. El efecto se conoce como "testing effect"—cada intento de recordar, aunque sea difícil, deja una huella más fuerte en la memoria.
+
+### Cómo implementarla en el aula
+
+**1. Quizzes de bajo riesgo frecuentes**
 
 La recuperación activa funciona mejor cuando es frecuente y sin consecuencias graves.
 
-**Implementación práctica:**
 - Quiz de 5 minutos al inicio de cada clase
 - 3-5 preguntas de temas anteriores
 - Puede ser sin calificación (el beneficio está en el intento de recordar)
 - Corrección inmediata para que sepan cómo les fue
 
-**Ejemplo:**
 > "Antes de empezar, 3 preguntas rápidas sobre lo que vimos la semana pasada y hace un mes. No es para nota—es para que practiquemos recordar."
 
-### 2. Práctica intercalada (interleaving)
+**2. Práctica intercalada (interleaving)**
 
 En vez de practicar un tipo de problema muchas veces seguidas, mezcla tipos de problemas.
 
@@ -110,36 +100,27 @@ En vez de practicar un tipo de problema muchas veces seguidas, mezcla tipos de p
 | El estudiante sabe qué método usar | El estudiante tiene que decidir qué método usar |
 | Más fácil en el momento | Más difícil, pero mejor retención |
 
-**Por qué funciona:** Parte del aprendizaje es saber cuándo aplicar cada técnica. La práctica en bloque no entrena esa habilidad.
+[Rohrer y Taylor (2007)](https://psycnet.apa.org/doi/10.1007/s11251-006-9015-4) estudiaron esto específicamente en matemáticas: estudiantes que practicaron problemas intercalados superaron significativamente a los que practicaron en bloque. La razón: parte del aprendizaje es saber *cuándo* aplicar cada técnica, no solo *cómo*.
 
-**Cuándo usarla:**
-- Después de que dominen cada tipo de problema individualmente
-- En revisión y preparación para evaluaciones
-- Cuando quieres que discriminen entre métodos
-
-### 3. Flashcards y autointerrogación
+**3. Flashcards bien usadas**
 
 Enseña a tus estudiantes a usar flashcards correctamente:
 
-**Mal uso de flashcards:**
-> Miran la pregunta, dan vuelta, leen la respuesta. Repiten.
+| Mal uso | Buen uso |
+|---------|----------|
+| Miran la pregunta, dan vuelta, leen la respuesta | Miran la pregunta, intentan responder, LUEGO dan vuelta para verificar |
 
-**Buen uso de flashcards:**
-> Miran la pregunta, intentan responder mentalmente o en papel, LUEGO dan vuelta para verificar.
+El poder está en el intento de recordar *antes* de ver la respuesta.
 
-El poder está en el intento de recordar antes de ver la respuesta.
+**4. Exit tickets como recuperación**
 
-### 4. Exit tickets como recuperación
+Los exit tickets pueden servir doble propósito: diagnóstico para ti y recuperación para ellos.
 
-Los [exit tickets](/blog/preguntas-diagnosticas-matematicas-10-minutos) pueden servir doble propósito: diagnóstico para ti y recuperación para ellos.
+| Exit ticket tradicional | Exit ticket con recuperación |
+|------------------------|------------------------------|
+| Pregunta sobre lo que vieron hoy | 1 pregunta de hoy + 1 de la semana pasada + 1 de hace un mes |
 
-**Exit ticket tradicional:**
-> Pregunta sobre lo que vieron hoy
-
-**Exit ticket con recuperación:**
-> 1 pregunta de hoy + 1 pregunta de la semana pasada + 1 pregunta de hace un mes
-
-## La paradoja del esfuerzo: por qué se siente difícil pero funciona
+## La paradoja del esfuerzo
 
 Hay un problema con estas técnicas: se sienten más difíciles que la práctica tradicional.
 
@@ -150,12 +131,13 @@ Hay un problema con estas técnicas: se sienten más difíciles que la práctica
 | Releer | "Esto tiene sentido" | Poco aprendizaje |
 | Recuperación activa | "Me cuesta recordar" | Mucho aprendizaje |
 
-**El problema:** Los estudiantes (y profesores) juzgan que están aprendiendo cuando se siente fácil. Pero la facilidad es señal de que no están aprendiendo mucho.
+Los estudiantes (y profesores) juzgan que están aprendiendo cuando se siente fácil. Pero la facilidad es señal de que no están aprendiendo mucho.
 
 **Qué decirles:**
+
 > "Si te cuesta recordar algo que vimos hace dos semanas, eso es BUENO. Ese esfuerzo de recordar es exactamente lo que fortalece tu memoria. Si fuera fácil, no estarías aprendiendo nada nuevo."
 
-## Cómo implementar esto sin triplicar tu carga
+## Implementación práctica
 
 ### Opción 1: El calentamiento diario (5 minutos)
 
@@ -178,20 +160,6 @@ Esto requiere mínima preparación extra pero asegura espaciado.
 ### Opción 3: Plataforma con práctica adaptativa
 
 Una plataforma que automáticamente incluye revisión espaciada de temas anteriores te ahorra el trabajo de diseñar esto manualmente.
-
-En SimplePAES, el sistema detecta qué temas necesitan refuerzo basándose en el rendimiento pasado y los incluye automáticamente en la práctica. Tú no tienes que seleccionar qué revisar—el algoritmo lo hace basándose en cuándo vieron cada tema y cómo les fue.
-
-## Práctica espaciada vs. diferenciación: cómo combinarlas
-
-Estas técnicas se combinan bien con [la diferenciación de instrucción](/blog/diferenciar-instruccion-matematicas):
-
-| Si el estudiante... | La revisión espaciada debería... |
-|---------------------|----------------------------------|
-| Dominó bien el tema | Espaciar más (revisar cada 2 semanas) |
-| Tuvo dificultades | Espaciar menos (revisar cada semana) |
-| Nunca lo dominó | No es revisión—es [cierre de laguna](/blog/diagnosticar-lagunas-matematicas-curso) |
-
-El espaciado óptimo depende del nivel de dominio inicial.
 
 ## Ejemplo: calendario de práctica para un mes
 
@@ -254,7 +222,7 @@ Los estudiantes pueden resistirse porque:
 
 3. **Si quieres sistematizarlo:** Crea un calendario de qué temas revisar cada semana y síguelo durante un mes. Observa el impacto en evaluaciones acumulativas.
 
-La práctica espaciada y la recuperación activa no son moda educativa. Son de los hallazgos más replicados en la ciencia del aprendizaje. Y pueden transformar cuánto retienen tus estudiantes—sin que trabajes más.
+La práctica espaciada y la recuperación activa pueden transformar cuánto retienen tus estudiantes—sin que trabajes más. Solo requiere cambiar *cuándo* y *cómo* practican, no *cuánto*.
 
 ---
 
