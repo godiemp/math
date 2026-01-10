@@ -142,12 +142,12 @@ async function seedTeacherClassData() {
     }
 
     // ========================================
-    // 3. Create quiz_attempts with errors
+    // 3. Create quiz sessions and attempts
     // ========================================
-    console.log('\n📝 Creating quiz attempts with errors...');
+    console.log('\n📝 Creating quiz sessions and attempts...');
 
-    // Define questions that will have high error rates
-    const failedQuestions = [
+    // Define questions pool for quiz sessions
+    const questionsPool = [
       {
         id: 'seed-q-fracciones-001',
         topic: 'Fracciones',
@@ -193,21 +193,24 @@ async function seedTeacherClassData() {
         correctAnswer: 0,
         explanation: 'Una moneda tiene 2 caras posibles, y solo 1 es "cara", por lo que P(cara) = 1/2.',
       },
-    ];
-
-    // Generate attempts that will result in high error rates (>30%)
-    // Each question needs at least 3 attempts
-    const attemptPatterns = [
-      // Question 1: 5 attempts, 4 wrong (80% error) - very high
-      { questionIndex: 0, attempts: [false, false, false, false, true] },
-      // Question 2: 6 attempts, 4 wrong (67% error) - high
-      { questionIndex: 1, attempts: [false, false, true, false, false, true] },
-      // Question 3: 4 attempts, 2 wrong (50% error) - medium
-      { questionIndex: 2, attempts: [false, true, false, true] },
-      // Question 4: 5 attempts, 2 wrong (40% error) - above threshold
-      { questionIndex: 3, attempts: [true, false, true, false, true] },
-      // Question 5: 3 attempts, 1 wrong (33% error) - just above threshold
-      { questionIndex: 4, attempts: [true, false, true] },
+      {
+        id: 'seed-q-fracciones-002',
+        topic: 'Fracciones',
+        subject: 'números',
+        question: '¿Cuánto es 3/4 - 1/2?',
+        options: JSON.stringify(['1/4', '2/4', '1/2', '3/2']),
+        correctAnswer: 0,
+        explanation: '3/4 - 1/2 = 3/4 - 2/4 = 1/4',
+      },
+      {
+        id: 'seed-q-ecuaciones-002',
+        topic: 'Ecuaciones lineales',
+        subject: 'álgebra',
+        question: 'Si 3x - 6 = 9, ¿cuál es el valor de x?',
+        options: JSON.stringify(['5', '3', '1', '15']),
+        correctAnswer: 0,
+        explanation: '3x = 9 + 6 = 15, entonces x = 5.',
+      },
     ];
 
     const activeStudents = students.filter(s =>
@@ -215,17 +218,105 @@ async function seedTeacherClassData() {
     );
 
     let attemptCount = 0;
+    let sessionCount = 0;
 
-    for (const pattern of attemptPatterns) {
-      const q = failedQuestions[pattern.questionIndex];
+    // Create completed quiz sessions for each active student (lessons)
+    // Each session needs >= 5 questions to count as a completed lesson
+    for (const student of activeStudents) {
+      // Create 2 completed sessions per student
+      for (let sessionNum = 0; sessionNum < 2; sessionNum++) {
+        const sessionId = `seed-session-${student.id}-${sessionNum}`;
+        const daysAgo = Math.floor(Math.random() * 10) + 1;
+        const sessionStartedAt = now - (daysAgo * dayMs);
+        const sessionCompletedAt = sessionStartedAt + (15 * 60 * 1000); // 15 minutes later
 
-      // Distribute attempts among students
+        // Create quiz_session
+        await client.query(
+          `INSERT INTO quiz_sessions (id, user_id, level, started_at, completed_at, ai_conversation, created_at)
+           VALUES ($1, $2, $3, $4, $5, $6, $7)
+           ON CONFLICT (id) DO UPDATE SET completed_at = EXCLUDED.completed_at`,
+          [sessionId, student.id, 'M1', sessionStartedAt, sessionCompletedAt, '[]', sessionStartedAt]
+        );
+        sessionCount++;
+
+        // Create 6 quiz_attempts per session (>= 5 required for "completed lesson")
+        const shuffledQuestions = [...questionsPool].sort(() => Math.random() - 0.5).slice(0, 6);
+
+        for (let qIndex = 0; qIndex < shuffledQuestions.length; qIndex++) {
+          const q = shuffledQuestions[qIndex];
+          // Mix of correct/incorrect: ~60% correct rate
+          const isCorrect = Math.random() < 0.6;
+          const userAnswer = isCorrect ? q.correctAnswer : (q.correctAnswer + 1) % 4;
+          const attemptedAt = sessionStartedAt + (qIndex * 2 * 60 * 1000); // 2 min per question
+
+          await client.query(
+            `INSERT INTO quiz_attempts (
+              user_id, quiz_session_id, question_id, level, topic, subject,
+              question, options, user_answer, correct_answer, is_correct,
+              difficulty, explanation, skills, attempted_at
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+            [
+              student.id,
+              sessionId,
+              `${q.id}-s${sessionNum}-q${qIndex}`,
+              'M1',
+              q.topic,
+              q.subject,
+              q.question,
+              q.options,
+              userAnswer,
+              q.correctAnswer,
+              isCorrect,
+              'medium',
+              q.explanation,
+              JSON.stringify([q.topic.toLowerCase().replace(' ', '-')]),
+              attemptedAt
+            ]
+          );
+          attemptCount++;
+        }
+      }
+    }
+
+    console.log(`✅ Created ${sessionCount} quiz sessions`);
+
+    // Also create standalone attempts with high error rates for "Errores Comunes"
+    console.log('\n📝 Creating additional attempts for error tracking...');
+
+    // These are the questions that will appear in "Errores Comunes"
+    const errorPatterns = [
+      // Question 1: distributed across students with high error rate (80%)
+      { question: questionsPool[0], attempts: [
+        { studentIndex: 0, correct: false },
+        { studentIndex: 1, correct: false },
+        { studentIndex: 2, correct: false },
+        { studentIndex: 0, correct: false },
+        { studentIndex: 1, correct: true },
+      ]},
+      // Question 2: 67% error rate
+      { question: questionsPool[1], attempts: [
+        { studentIndex: 0, correct: false },
+        { studentIndex: 1, correct: false },
+        { studentIndex: 2, correct: true },
+        { studentIndex: 0, correct: false },
+        { studentIndex: 1, correct: false },
+        { studentIndex: 2, correct: true },
+      ]},
+      // Question 3: 50% error rate
+      { question: questionsPool[2], attempts: [
+        { studentIndex: 0, correct: false },
+        { studentIndex: 1, correct: true },
+        { studentIndex: 2, correct: false },
+        { studentIndex: 0, correct: true },
+      ]},
+    ];
+
+    for (const pattern of errorPatterns) {
+      const q = pattern.question;
       for (let i = 0; i < pattern.attempts.length; i++) {
-        const student = activeStudents[i % activeStudents.length];
-        const isCorrect = pattern.attempts[i];
-        const userAnswer = isCorrect ? q.correctAnswer : (q.correctAnswer + 1) % 4;
-
-        // Random time in the last 15 days
+        const attempt = pattern.attempts[i];
+        const student = activeStudents[attempt.studentIndex];
+        const userAnswer = attempt.correct ? q.correctAnswer : (q.correctAnswer + 1) % 4;
         const daysAgo = Math.floor(Math.random() * 15) + 1;
         const attemptedAt = now - (daysAgo * dayMs) + Math.floor(Math.random() * dayMs);
 
@@ -237,7 +328,7 @@ async function seedTeacherClassData() {
           ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
           [
             student.id,
-            q.id,
+            `${q.id}-err-${i}`,
             'M1',
             q.topic,
             q.subject,
@@ -245,7 +336,7 @@ async function seedTeacherClassData() {
             q.options,
             userAnswer,
             q.correctAnswer,
-            isCorrect,
+            attempt.correct,
             'medium',
             q.explanation,
             JSON.stringify([q.topic.toLowerCase().replace(' ', '-')]),
@@ -256,7 +347,7 @@ async function seedTeacherClassData() {
       }
     }
 
-    console.log(`✅ Created ${attemptCount} quiz attempts`);
+    console.log(`✅ Created ${attemptCount} total quiz attempts`);
 
     // ========================================
     // 4. Summary
@@ -269,12 +360,14 @@ async function seedTeacherClassData() {
     console.log(`   - Class: ${className} (ID: ${classId})`);
     console.log(`   - Teacher: ${teacherId}`);
     console.log(`   - Students enrolled: ${students.length}`);
+    console.log(`   - Quiz sessions created: ${sessionCount} (2 per student)`);
     console.log(`   - Quiz attempts created: ${attemptCount}`);
-    console.log(`   - Questions with high error rates: ${failedQuestions.length}`);
-    console.log('\n🔍 To test "Errores Comunes" feature:');
+    console.log(`   - Lessons per student: 2 (6 questions each)`);
+    console.log('\n🔍 To test features:');
     console.log(`   1. Login as teacher (teacher / test123)`);
     console.log(`   2. Go to /teacher/classes/${classId}`);
-    console.log(`   3. Click on "Errores Comunes" tab`);
+    console.log(`   3. "Estudiantes" tab: Should show questions, lessons, and accuracy`);
+    console.log(`   4. "Errores Comunes" tab: Should show high-error questions`);
     console.log('='.repeat(50));
 
   } catch (error) {
