@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import "fumadocs-ui/style.css";
-import "katex/dist/katex.css";
 import { NextAuthProvider } from "@/components/providers/NextAuthProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SWRProvider } from "@/lib/swr-config";
