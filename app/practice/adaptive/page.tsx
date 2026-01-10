@@ -57,11 +57,11 @@ const TOPIC_COLORS: Record<string, string> = {
 };
 
 const DEFAULT_TOPICS: Topic[] = [
-  { id: 'números', name: 'Numeros', type: 'subject' },
-  { id: 'álgebra', name: 'Algebra y Funciones', type: 'subject' },
-  { id: 'geometría', name: 'Geometria', type: 'subject' },
-  { id: 'probabilidad', name: 'Probabilidades y Estadistica', type: 'subject' },
-  { id: 'surprise', name: 'Sorprendeme', type: 'subject' },
+  { id: 'números', name: 'Números', type: 'subject' },
+  { id: 'álgebra', name: 'Álgebra y Funciones', type: 'subject' },
+  { id: 'geometría', name: 'Geometría', type: 'subject' },
+  { id: 'probabilidad', name: 'Probabilidades y Estadística', type: 'subject' },
+  { id: 'surprise', name: 'Sorpréndeme', type: 'subject' },
 ];
 
 // ============================================================================
@@ -551,7 +551,7 @@ function AdaptivePracticeContent() {
           </div>
 
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-bold text-white mb-3">Practica Adaptativa</h1>
+            <h1 className="text-3xl font-bold text-white mb-3">Práctica Adaptativa</h1>
             <p className="text-white/70">
               Elige un tema y practica con ayuda de un tutor AI
             </p>
