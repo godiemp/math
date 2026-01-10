@@ -118,6 +118,8 @@ export interface SpecialLineConfig {
   showRightAngleMarker?: boolean;
   /** Whether to show equal division marks (tick marks indicating equal segments) */
   showEqualMarks?: boolean;
+  /** Whether to show equal angle marks (arcs indicating equal angles, for bisectriz) */
+  showEqualAngleMarks?: boolean;
 }
 
 /**

@@ -28,11 +28,11 @@ interface ClassifyQuestion {
   explanation: string;
 }
 
-const OPTIONS: { id: NotablePoint; label: string; color: string }[] = [
-  { id: 'circuncentro', label: 'Circuncentro', color: 'purple' },
-  { id: 'incentro', label: 'Incentro', color: 'amber' },
-  { id: 'baricentro', label: 'Baricentro', color: 'emerald' },
-  { id: 'ortocentro', label: 'Ortocentro', color: 'red' },
+const OPTIONS: { id: NotablePoint; label: string }[] = [
+  { id: 'circuncentro', label: 'Circuncentro' },
+  { id: 'incentro', label: 'Incentro' },
+  { id: 'baricentro', label: 'Baricentro' },
+  { id: 'ortocentro', label: 'Ortocentro' },
 ];
 
 // Different triangle shapes for variety
@@ -55,11 +55,16 @@ const TRIANGLE_RIGHT: [LabeledPoint, LabeledPoint, LabeledPoint] = [
 ];
 
 // Helper to create all 3 lines of a type with markers
-function allLines(type: SpecialLineConfig['type'], showRightAngle = false, showEqual = false): SpecialLineConfig[] {
+function allLines(
+  type: SpecialLineConfig['type'],
+  showRightAngle = false,
+  showEqual = false,
+  showEqualAngle = false
+): SpecialLineConfig[] {
   return [
-    { type, fromVertex: 0, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual },
-    { type, fromVertex: 1, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual },
-    { type, fromVertex: 2, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual },
+    { type, fromVertex: 0, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual, showEqualAngleMarks: showEqualAngle },
+    { type, fromVertex: 1, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual, showEqualAngleMarks: showEqualAngle },
+    { type, fromVertex: 2, showRightAngleMarker: showRightAngle, showEqualMarks: showEqual, showEqualAngleMarks: showEqualAngle },
   ];
 }
 
@@ -90,9 +95,10 @@ const QUESTIONS: ClassifyQuestion[] = [
     id: 'q3',
     questionType: 'identify-lines',
     question: 'Estas líneas dividen cada ángulo del triángulo en dos partes iguales. ¿Qué punto forman?',
+    hint: 'Observa los arcos con marcas que indican ángulos iguales',
     vertices: TRIANGLE_ACUTE,
-    specialLines: allLines('bisectriz'),
-    notablePoints: [{ type: 'incentro',  }],
+    specialLines: allLines('bisectriz', false, false, true),
+    notablePoints: [{ type: 'incentro' }],
     correctAnswer: 'incentro',
     explanation: 'Las bisectrices dividen cada ángulo en dos partes iguales. Su intersección es el incentro.',
   },
@@ -163,7 +169,6 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
   if (!isActive) return null;
 
   const getOptionStyles = (optionId: NotablePoint) => {
-    const option = OPTIONS.find(o => o.id === optionId)!;
     const isSelected = mc.selectedAnswer === optionId;
     const isCorrectAnswer = mc.currentItem.correctAnswer === optionId;
 
@@ -173,13 +178,7 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
           ? 'bg-green-100 dark:bg-green-900/50 border-green-500'
           : 'bg-red-100 dark:bg-red-900/50 border-red-500';
       }
-      return option.color === 'purple'
-        ? 'bg-purple-100 dark:bg-purple-900/50 border-purple-500'
-        : option.color === 'amber'
-          ? 'bg-amber-100 dark:bg-amber-900/50 border-amber-500'
-          : option.color === 'emerald'
-            ? 'bg-emerald-100 dark:bg-emerald-900/50 border-emerald-500'
-            : 'bg-red-100 dark:bg-red-900/50 border-red-500';
+      return 'bg-blue-100 dark:bg-blue-900/50 border-blue-500';
     }
 
     if (mc.showFeedback && isCorrectAnswer) {
@@ -187,27 +186,6 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
     }
 
     return 'bg-gray-50 dark:bg-gray-700 border-transparent hover:border-gray-300 dark:hover:border-gray-500';
-  };
-
-  const getDotStyles = (optionId: NotablePoint) => {
-    const option = OPTIONS.find(o => o.id === optionId)!;
-    const isSelected = mc.selectedAnswer === optionId;
-    const isCorrectAnswer = mc.currentItem.correctAnswer === optionId;
-
-    if (isSelected && mc.showFeedback) {
-      return isCorrectAnswer ? 'bg-green-500' : 'bg-red-500';
-    }
-    if (mc.showFeedback && isCorrectAnswer) {
-      return 'bg-green-500';
-    }
-
-    return option.color === 'purple'
-      ? 'bg-purple-500'
-      : option.color === 'amber'
-        ? 'bg-amber-500'
-        : option.color === 'emerald'
-          ? 'bg-emerald-500'
-          : 'bg-red-500';
   };
 
   return (
@@ -223,24 +201,19 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
 
       {!mc.isComplete ? (
         <>
-          <div className="flex items-center justify-between px-2">
-            <div className="text-sm text-gray-600 dark:text-gray-300">
-              Pregunta {mc.currentIndex + 1} de {QUESTIONS.length}
-            </div>
-            <ProgressDots
-              items={QUESTIONS}
-              currentIndex={mc.currentIndex}
-              getStatus={(_, i) =>
-                mc.answers[i] !== null
-                  ? mc.answers[i] === QUESTIONS[i].correctAnswer
-                    ? 'correct'
-                    : 'incorrect'
-                  : i === mc.currentIndex
-                    ? 'current'
-                    : 'pending'
-              }
-            />
-          </div>
+          <ProgressDots
+            items={QUESTIONS}
+            currentIndex={mc.currentIndex}
+            getStatus={(_, i) =>
+              mc.answers[i] !== null
+                ? mc.answers[i] === QUESTIONS[i].correctAnswer
+                  ? 'correct'
+                  : 'incorrect'
+                : i === mc.currentIndex
+                  ? 'current'
+                  : 'pending'
+            }
+          />
 
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <p className="text-gray-800 dark:text-gray-100 text-center mb-2 font-semibold text-lg">
@@ -276,11 +249,10 @@ export default function Step4Classify({ onComplete, isActive }: LessonStepProps)
                   onClick={() => mc.select(option.id)}
                   disabled={mc.showFeedback}
                   className={cn(
-                    'p-3 rounded-xl transition-all border-2 flex items-center gap-3',
+                    'p-3 rounded-xl transition-all border-2 text-center',
                     getOptionStyles(option.id)
                   )}
                 >
-                  <div className={cn('w-4 h-4 rounded-full flex-shrink-0', getDotStyles(option.id))} />
                   <span className="font-medium text-gray-800 dark:text-gray-200 text-sm">
                     {option.label}
                   </span>

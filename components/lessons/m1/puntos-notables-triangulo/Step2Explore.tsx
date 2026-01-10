@@ -110,11 +110,13 @@ function getSpecialLines(lineType: LineType | null): SpecialLineConfig[] {
   const showRightAngle = lineType === 'alturas' || lineType === 'simetrales';
   // Add equal division marks for simetrales and transversales
   const showEqualMarks = lineType === 'simetrales' || lineType === 'transversales';
+  // Add equal angle marks for bisectrices
+  const showEqualAngleMarks = lineType === 'bisectrices';
 
   return [
-    { type, fromVertex: 0, showRightAngleMarker: showRightAngle, showEqualMarks },
-    { type, fromVertex: 1, showRightAngleMarker: showRightAngle, showEqualMarks },
-    { type, fromVertex: 2, showRightAngleMarker: showRightAngle, showEqualMarks },
+    { type, fromVertex: 0, showRightAngleMarker: showRightAngle, showEqualMarks, showEqualAngleMarks },
+    { type, fromVertex: 1, showRightAngleMarker: showRightAngle, showEqualMarks, showEqualAngleMarks },
+    { type, fromVertex: 2, showRightAngleMarker: showRightAngle, showEqualMarks, showEqualAngleMarks },
   ];
 }
 
