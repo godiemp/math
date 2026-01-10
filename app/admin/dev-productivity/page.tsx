@@ -40,6 +40,7 @@ interface ProductivityMetrics {
   totalMerged: number;
   todayCount: number;
   thisWeekCount: number;
+  fetchedAt: string;
 }
 
 function DevProductivityContent() {
@@ -89,13 +90,26 @@ function DevProductivityContent() {
   };
 
   const formatDateShort = (dateStr: string) => {
-    const date = new Date(dateStr);
+    // Parse YYYY-MM-DD without timezone conversion issues
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
     return date.toLocaleDateString('es-CL', { month: 'short', day: 'numeric' });
   };
 
   const formatWeekShort = (weekStr: string) => {
     // weekStr is like "2025-W02"
     return weekStr.replace('-W', ' S');
+  };
+
+  const formatFetchedAt = (isoString: string) => {
+    const date = new Date(isoString);
+    return date.toLocaleString('es-CL', {
+      hour: '2-digit',
+      minute: '2-digit',
+      day: 'numeric',
+      month: 'short',
+      timeZone: 'America/Santiago',
+    });
   };
 
   if (isLoading) {
@@ -153,6 +167,11 @@ function DevProductivityContent() {
             </Heading>
             <Text variant="secondary">
               Track your PR merging consistency
+              {metrics.fetchedAt && (
+                <span className="ml-2 text-xs">
+                  · Actualizado: {formatFetchedAt(metrics.fetchedAt)}
+                </span>
+              )}
             </Text>
           </div>
           <Button variant="primary" onClick={fetchMetrics}>

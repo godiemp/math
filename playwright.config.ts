@@ -70,6 +70,7 @@ export default defineConfig({
         '**/admin-*.spec.ts', // Admin tests use admin auth
         '**/teacher-dashboard.spec.ts', // Teacher tests use teacher auth
         '**/teacher-students.spec.ts', // Teacher tests use teacher auth
+        '**/teacher-class-students.spec.ts', // Teacher tests use teacher auth
         '**/teacher-login-redirect.spec.ts', // Login redirect tests - no auth state
       ],
     },
@@ -113,7 +114,7 @@ export default defineConfig({
       },
       dependencies: ['setup'],
       // Only run teacher tests
-      testMatch: ['**/teacher-dashboard.spec.ts', '**/teacher-students.spec.ts'],
+      testMatch: ['**/teacher-dashboard.spec.ts', '**/teacher-students.spec.ts', '**/teacher-class-students.spec.ts'],
     },
 
     // Uncomment to test on more browsers

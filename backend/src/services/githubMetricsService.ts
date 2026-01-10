@@ -34,14 +34,24 @@ interface ProductivityMetrics {
   totalMerged: number;
   todayCount: number;
   thisWeekCount: number;
+  fetchedAt: string;
 }
 
 // Cache to avoid hitting GitHub API too frequently
 let metricsCache: { data: ProductivityMetrics; timestamp: number } | null = null;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
+const CHILEAN_TIMEZONE = 'America/Santiago';
+
+/**
+ * Get date string (YYYY-MM-DD) in Chilean timezone
+ */
+function getChileanDateString(date: Date): string {
+  return date.toLocaleDateString('en-CA', { timeZone: CHILEAN_TIMEZONE });
+}
+
 class GitHubMetricsService {
-  private static readonly OWNER = 'godiemps';
+  private static readonly OWNER = 'godiemp';
   private static readonly REPO = 'math';
   private static readonly token = process.env.GITHUB_TOKEN;
 
@@ -94,22 +104,50 @@ class GitHubMetricsService {
   }
 
   /**
-   * Group PRs by day (YYYY-MM-DD format)
+   * Group PRs by day (YYYY-MM-DD format) in Chilean timezone
+   * Returns a map of date to count for all days with PRs
    */
-  private static calculateDailyMetrics(prs: GitHubPR[]): DailyMetric[] {
+  private static buildDailyMap(prs: GitHubPR[]): Map<string, number> {
     const dailyMap = new Map<string, number>();
 
     for (const pr of prs) {
       if (pr.merged_at) {
-        const date = pr.merged_at.split('T')[0];
+        const date = getChileanDateString(new Date(pr.merged_at));
         dailyMap.set(date, (dailyMap.get(date) || 0) + 1);
       }
     }
 
-    // Sort by date descending
+    return dailyMap;
+  }
+
+  /**
+   * Get daily metrics for all days with PRs (for streak calculation)
+   */
+  private static getAllDailyMetrics(dailyMap: Map<string, number>): DailyMetric[] {
     return Array.from(dailyMap.entries())
       .map(([date, count]) => ({ date, count }))
       .sort((a, b) => b.date.localeCompare(a.date));
+  }
+
+  /**
+   * Get daily metrics for last 30 days including days with 0 PRs (for chart)
+   * Uses Chilean timezone for day boundaries
+   */
+  private static getLast30DaysMetrics(dailyMap: Map<string, number>): DailyMetric[] {
+    const result: DailyMetric[] = [];
+
+    for (let i = 0; i < 30; i++) {
+      // Start from now and subtract days, then get Chilean date
+      const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
+      const dateStr = getChileanDateString(date);
+      result.push({
+        date: dateStr,
+        count: dailyMap.get(dateStr) || 0,
+      });
+    }
+
+    // Already sorted by date descending (most recent first)
+    return result;
   }
 
   /**
@@ -147,6 +185,7 @@ class GitHubMetricsService {
   /**
    * Calculate streak for a minimum number of PRs per day
    * Returns current streak (days from today going back) and longest streak ever
+   * Uses Chilean timezone for day boundaries
    */
   private static calculateStreak(dailyMetrics: DailyMetric[], minPRs: number): StreakInfo {
     if (dailyMetrics.length === 0) {
@@ -161,29 +200,29 @@ class GitHubMetricsService {
       }
     }
 
-    // Calculate current streak (starting from today or yesterday)
-    const today = new Date().toISOString().split('T')[0];
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    // Calculate current streak (starting from today or yesterday) in Chilean timezone
+    const today = getChileanDateString(new Date());
+    const yesterday = getChileanDateString(new Date(Date.now() - 24 * 60 * 60 * 1000));
 
     let currentStreak = 0;
-    let checkDate: Date;
+    let daysBack: number;
 
     // Start from today if it qualifies, otherwise from yesterday
     if (qualifyingDates.has(today)) {
-      checkDate = new Date(today);
+      daysBack = 0;
     } else if (qualifyingDates.has(yesterday)) {
-      checkDate = new Date(yesterday);
+      daysBack = 1;
     } else {
       // No current streak
-      checkDate = new Date(0); // Will skip the loop
+      daysBack = -1;
     }
 
     // Count consecutive days going backwards
-    while (true) {
-      const dateStr = checkDate.toISOString().split('T')[0];
-      if (qualifyingDates.has(dateStr)) {
+    while (daysBack >= 0) {
+      const checkDateStr = getChileanDateString(new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000));
+      if (qualifyingDates.has(checkDateStr)) {
         currentStreak++;
-        checkDate.setDate(checkDate.getDate() - 1);
+        daysBack++;
       } else {
         break;
       }
@@ -229,32 +268,36 @@ class GitHubMetricsService {
     }
 
     const prs = await this.fetchMergedPRs();
-    const daily = this.calculateDailyMetrics(prs);
+    const dailyMap = this.buildDailyMap(prs);
+    const allDailyMetrics = this.getAllDailyMetrics(dailyMap);
+    const last30Days = this.getLast30DaysMetrics(dailyMap);
     const weekly = this.calculateWeeklyMetrics(prs);
 
-    // Find the maximum PRs in a single day to determine streak levels
-    const maxPRsInDay = daily.length > 0 ? Math.max(...daily.map((d) => d.count)) : 0;
+    // Find the maximum PRs in a single day to determine streak levels (max 15)
+    const maxPRsInDay = allDailyMetrics.length > 0 ? Math.max(...allDailyMetrics.map((d) => d.count)) : 0;
+    const maxStreakLevel = Math.min(Math.max(maxPRsInDay, 3), 15);
 
-    // Calculate streaks for 1 through maxPRsInDay
+    // Calculate streaks for 1 through maxStreakLevel (capped at 15)
     const streaks: Record<number, StreakInfo> = {};
-    for (let n = 1; n <= Math.max(maxPRsInDay, 3); n++) {
-      streaks[n] = this.calculateStreak(daily, n);
+    for (let n = 1; n <= maxStreakLevel; n++) {
+      streaks[n] = this.calculateStreak(allDailyMetrics, n);
     }
 
-    // Calculate today's and this week's count
-    const today = new Date().toISOString().split('T')[0];
+    // Calculate today's and this week's count (in Chilean timezone)
+    const today = getChileanDateString(new Date());
     const thisWeek = this.getISOWeek(new Date());
 
-    const todayMetric = daily.find((d) => d.date === today);
+    const todayMetric = last30Days.find((d) => d.date === today);
     const thisWeekMetric = weekly.find((w) => w.week === thisWeek);
 
     const metrics: ProductivityMetrics = {
-      daily: daily.slice(0, 30), // Last 30 days with data
+      daily: last30Days, // Last 30 days including days with 0 PRs
       weekly: weekly.slice(0, 12), // Last 12 weeks with data
       streaks,
       totalMerged: prs.length,
       todayCount: todayMetric?.count || 0,
       thisWeekCount: thisWeekMetric?.count || 0,
+      fetchedAt: new Date().toISOString(),
     };
 
     // Update cache

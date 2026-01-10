@@ -155,17 +155,18 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 ## Geometría (5 OA)
 
-### MA07-OA-10: Ángulos en polígonos ❌
+### MA07-OA-10: Ángulos en polígonos ⚠️
 > Descubrir relaciones que involucran ángulos exteriores o interiores de diferentes polígonos.
 
-**Estado:** ❌ Sin cobertura
+**Estado:** ⚠️ Cobertura parcial
 **Tipo:** No basal
 
-**Nota:** Las lecciones m1-geo-001-b y m1-geo-001-c tratan sobre área, no ángulos. Se necesitan lecciones específicas.
+| Lección | Nivel | Título |
+|---------|-------|--------|
+| m1-geo-001-e | M1 | Ángulos Exteriores de Polígonos |
 
 **Pendiente:**
 - m1-geo-001-d: Ángulos Interiores de Polígonos
-- m1-geo-001-e: Ángulos Exteriores de Polígonos
 
 ---
 
