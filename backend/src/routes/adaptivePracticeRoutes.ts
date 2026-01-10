@@ -14,6 +14,8 @@ import {
 import {
   generateScaffoldingQuestion,
   generateSimilarQuestion,
+  decomposeQuestionSkills,
+  generateSkillQuestion,
 } from '../services/scaffoldingGeneratorService';
 
 const router = Router();
@@ -281,6 +283,71 @@ router.post('/generate-similar', authenticate, async (req, res) => {
 
     res.status(500).json({
       error: 'Error al generar pregunta similar.',
+    });
+  }
+});
+
+/**
+ * POST /api/adaptive/decompose-skills
+ * Decompose a failed question into basic skills the student needs
+ * Body: { failedQuestion: Question, userAnswer: number }
+ */
+router.post('/decompose-skills', authenticate, async (req, res) => {
+  try {
+    const { failedQuestion, userAnswer } = req.body;
+
+    if (!failedQuestion || userAnswer === undefined) {
+      return res.status(400).json({
+        error: 'failedQuestion y userAnswer son requeridos',
+      });
+    }
+
+    const result = await decomposeQuestionSkills(failedQuestion, userAnswer);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Decompose skills error:', error);
+
+    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+
+    let statusCode = 500;
+    let userMessage = 'Error al analizar la pregunta.';
+
+    if (errorMessage.includes('OPENAI_API_KEY')) {
+      statusCode = 503;
+      userMessage = 'El servicio de análisis no está configurado.';
+    } else if (errorMessage.includes('rate limit') || errorMessage.includes('429')) {
+      statusCode = 429;
+      userMessage = 'Demasiadas solicitudes. Espera un momento.';
+    }
+
+    res.status(statusCode).json({ error: userMessage });
+  }
+});
+
+/**
+ * POST /api/adaptive/generate-skill-question
+ * Generate a question targeting a specific skill
+ * Body: { skill: DecomposedSkill, originalQuestion: FailedQuestion }
+ */
+router.post('/generate-skill-question', authenticate, async (req, res) => {
+  try {
+    const { skill, originalQuestion } = req.body;
+
+    if (!skill || !originalQuestion) {
+      return res.status(400).json({
+        error: 'skill y originalQuestion son requeridos',
+      });
+    }
+
+    const result = await generateSkillQuestion(skill, originalQuestion);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Generate skill question error:', error);
+
+    res.status(500).json({
+      error: 'Error al generar pregunta de habilidad.',
     });
   }
 });
