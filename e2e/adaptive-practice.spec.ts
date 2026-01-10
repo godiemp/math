@@ -476,6 +476,35 @@ test.describe('Adaptive Practice', () => {
     });
 
     test('should start practice with selected subsection skills', async ({ page }) => {
+      // Mock thematic units API with skills that match actual questions
+      await page.route('**/api/thematic-units/grouped*', route => {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            level: 'M1',
+            grouped: {
+              'números': [{
+                code: 'M1-NUM-001',
+                name: 'Operaciones en números enteros',
+                level: 'M1',
+                subject: 'números',
+                subsections: [{
+                  code: 'A',
+                  name: 'Jerarquía de operaciones',
+                  primary_skills: ['numeros-jerarquia-operaciones'],
+                }],
+              }],
+              'álgebra': [],
+              'geometría': [],
+              'probabilidad': [],
+            },
+            totalUnits: 1,
+          }),
+        });
+      });
+
       await page.goto('/practice/adaptive', { waitUntil: 'domcontentloaded' });
       await page.getByTestId('topic-subsections-números').click();
 
@@ -767,7 +796,8 @@ test.describe('Adaptive Practice', () => {
 
         // Should show new generated question
         await expect(page.getByTestId('problem-display')).toBeVisible({ timeout: 15000 });
-        await expect(page.getByTestId('problem-question')).toContainText('2 + 2');
+        // Note: LaTeX rendering removes spaces from "2 + 2" -> "2+2"
+        await expect(page.getByTestId('problem-question')).toContainText('2+2');
       }
     });
 
