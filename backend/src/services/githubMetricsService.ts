@@ -34,6 +34,7 @@ interface ProductivityMetrics {
   totalMerged: number;
   todayCount: number;
   thisWeekCount: number;
+  fetchedAt: string;
 }
 
 // Cache to avoid hitting GitHub API too frequently
@@ -287,6 +288,7 @@ class GitHubMetricsService {
       totalMerged: prs.length,
       todayCount: todayMetric?.count || 0,
       thisWeekCount: thisWeekMetric?.count || 0,
+      fetchedAt: new Date().toISOString(),
     };
 
     // Update cache
