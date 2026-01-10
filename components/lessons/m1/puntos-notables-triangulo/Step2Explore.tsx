@@ -119,18 +119,18 @@ function getSpecialLines(lineType: LineType | null): SpecialLineConfig[] {
 }
 
 // Get notable points config for display
-function getNotablePoints(point: NotablePointType | null, isComparePhase: boolean = false, animate: boolean = true): NotablePointConfig[] {
+function getNotablePoints(point: NotablePointType | null, isComparePhase: boolean = false): NotablePointConfig[] {
   // In compare phase, show all 4 notable points
   if (isComparePhase) {
     return [
-      { type: 'circuncentro', animate: false },
-      { type: 'incentro', animate: false },
-      { type: 'baricentro', animate: false },
-      { type: 'ortocentro', animate: false },
+      { type: 'circuncentro' },
+      { type: 'incentro' },
+      { type: 'baricentro' },
+      { type: 'ortocentro' },
     ];
   }
   if (!point) return [];
-  return [{ type: point, animate }];
+  return [{ type: point }];
 }
 
 // Get circles config

@@ -35,8 +35,6 @@ export interface NotablePointConfig {
   label?: string;
   /** Point radius */
   radius?: number;
-  /** Whether to show a pulsing animation */
-  animate?: boolean;
 }
 
 /**

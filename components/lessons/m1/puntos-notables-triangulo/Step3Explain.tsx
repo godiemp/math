@@ -103,7 +103,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <TriangleFigure
                 vertices={DEFAULT_VERTICES}
                 specialLines={allLinesOfType('simetral')}
-                notablePoints={[{ type: 'circuncentro', animate: true }]}
+                notablePoints={[{ type: 'circuncentro',  }]}
                 circles={[{ type: 'circumscribed' }]}
                 className="mx-auto max-w-xs"
               />
@@ -151,7 +151,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <TriangleFigure
                 vertices={DEFAULT_VERTICES}
                 specialLines={allLinesOfType('bisectriz')}
-                notablePoints={[{ type: 'incentro', animate: true }]}
+                notablePoints={[{ type: 'incentro',  }]}
                 circles={[{ type: 'inscribed' }]}
                 className="mx-auto max-w-xs"
               />
@@ -199,7 +199,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <TriangleFigure
                 vertices={DEFAULT_VERTICES}
                 specialLines={allLinesOfType('transversal')}
-                notablePoints={[{ type: 'baricentro', animate: true }]}
+                notablePoints={[{ type: 'baricentro',  }]}
                 className="mx-auto max-w-xs"
               />
             </div>
@@ -246,7 +246,7 @@ export default function Step3Explain({ onComplete, isActive }: LessonStepProps) 
               <TriangleFigure
                 vertices={DEFAULT_VERTICES}
                 specialLines={allLinesOfType('altura', true)}
-                notablePoints={[{ type: 'ortocentro', animate: true }]}
+                notablePoints={[{ type: 'ortocentro',  }]}
                 className="mx-auto max-w-xs"
               />
             </div>

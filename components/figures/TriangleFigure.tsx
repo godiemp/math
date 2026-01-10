@@ -810,19 +810,6 @@ function NotablePoint({ config, position }: NotablePointProps) {
         strokeWidth={2}
         className="dark:stroke-gray-800"
       />
-      {/* Animation ring */}
-      {config.animate && (
-        <circle
-          cx={position.x}
-          cy={position.y}
-          r={radius + 4}
-          fill="none"
-          stroke={color}
-          strokeWidth={2}
-          strokeOpacity={0.4}
-          className="animate-ping"
-        />
-      )}
       {/* Label */}
       {config.showLabel && (
         <text
