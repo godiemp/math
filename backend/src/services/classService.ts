@@ -170,7 +170,7 @@ export class ClassService {
           AVG(CASE WHEN qa.is_correct THEN 1.0 ELSE 0.0 END) as avg_accuracy,
           MAX(qa.attempted_at) as last_activity
         FROM class_enrollments ce
-        JOIN question_attempts qa ON ce.student_id = qa.user_id
+        JOIN quiz_attempts qa ON ce.student_id = qa.user_id
         WHERE ce.status = 'active'
         GROUP BY ce.class_id
       ) stats ON c.id = stats.class_id
@@ -224,7 +224,7 @@ export class ClassService {
           AVG(CASE WHEN qa.is_correct THEN 1.0 ELSE 0.0 END) as avg_accuracy,
           MAX(qa.attempted_at) as last_activity
         FROM class_enrollments ce
-        JOIN question_attempts qa ON ce.student_id = qa.user_id
+        JOIN quiz_attempts qa ON ce.student_id = qa.user_id
         WHERE ce.status = 'active'
         GROUP BY ce.class_id
       ) stats ON c.id = stats.class_id
@@ -442,7 +442,7 @@ export class ClassService {
           COUNT(*) as questions_answered,
           AVG(CASE WHEN is_correct THEN 1.0 ELSE 0.0 END) as accuracy,
           MAX(attempted_at) as last_active
-        FROM question_attempts
+        FROM quiz_attempts
         GROUP BY user_id
       ) stats ON u.id = stats.user_id
       LEFT JOIN (
@@ -508,7 +508,7 @@ export class ClassService {
     const activeResult = await pool.query(
       `SELECT COUNT(DISTINCT ce.student_id) as count
        FROM class_enrollments ce
-       JOIN question_attempts qa ON ce.student_id = qa.user_id
+       JOIN quiz_attempts qa ON ce.student_id = qa.user_id
        WHERE ce.class_id = $1 AND ce.status = 'active' AND qa.attempted_at >= $2`,
       [classId, oneWeekAgo]
     );
@@ -520,7 +520,7 @@ export class ClassService {
          AVG(CASE WHEN qa.is_correct THEN 1.0 ELSE 0.0 END) as avg_accuracy,
          COUNT(*) as total_questions
        FROM class_enrollments ce
-       JOIN question_attempts qa ON ce.student_id = qa.user_id
+       JOIN quiz_attempts qa ON ce.student_id = qa.user_id
        WHERE ce.class_id = $1 AND ce.status = 'active'`,
       [classId]
     );
@@ -534,7 +534,7 @@ export class ClassService {
          AVG(CASE WHEN qa.is_correct THEN 1.0 ELSE 0.0 END) as avg_accuracy,
          COUNT(*) as questions_answered
        FROM class_enrollments ce
-       JOIN question_attempts qa ON ce.student_id = qa.user_id
+       JOIN quiz_attempts qa ON ce.student_id = qa.user_id
        WHERE ce.class_id = $1 AND ce.status = 'active'
        GROUP BY qa.subject
        ORDER BY qa.subject`,
@@ -553,7 +553,7 @@ export class ClassService {
          COUNT(DISTINCT ce.student_id) as students,
          COUNT(*) as questions
        FROM class_enrollments ce
-       JOIN question_attempts qa ON ce.student_id = qa.user_id
+       JOIN quiz_attempts qa ON ce.student_id = qa.user_id
        WHERE ce.class_id = $1 AND ce.status = 'active' AND qa.attempted_at >= $2
        GROUP BY day, DATE_TRUNC('day', TO_TIMESTAMP(qa.attempted_at / 1000))
        ORDER BY DATE_TRUNC('day', TO_TIMESTAMP(qa.attempted_at / 1000))`,
@@ -566,16 +566,16 @@ export class ClassService {
     }));
 
     // Get struggling topics (accuracy < 70%)
+    // Uses quiz_attempts which has the topic column directly
     const strugglingResult = await pool.query(
       `SELECT
-         q.topic,
+         qa.topic,
          AVG(CASE WHEN qa.is_correct THEN 1.0 ELSE 0.0 END) as avg_accuracy,
          COUNT(DISTINCT ce.student_id) as students_count
        FROM class_enrollments ce
-       JOIN question_attempts qa ON ce.student_id = qa.user_id
-       JOIN questions q ON qa.question_id = q.id
+       JOIN quiz_attempts qa ON ce.student_id = qa.user_id
        WHERE ce.class_id = $1 AND ce.status = 'active'
-       GROUP BY q.topic
+       GROUP BY qa.topic
        HAVING AVG(CASE WHEN qa.is_correct THEN 1.0 ELSE 0.0 END) < 0.7
        ORDER BY avg_accuracy ASC
        LIMIT 5`,
