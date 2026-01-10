@@ -470,9 +470,14 @@ export function calculateSpecialLineEndpoints(
       const dy = sideP2.y - sideP1.y;
       const perp = normalize({ x: -dy, y: dx });
 
-      // Extend far enough to clearly intersect at circumcenter
-      // Use a large fixed length that will cover most triangle sizes
-      const length = 300;
+      // Calculate dynamic length based on triangle size
+      // Use the maximum side length as reference, multiplied by a factor to ensure lines extend well beyond the triangle
+      const side0 = distance(vertices[0], vertices[1]);
+      const side1 = distance(vertices[1], vertices[2]);
+      const side2 = distance(vertices[2], vertices[0]);
+      const maxSide = Math.max(side0, side1, side2);
+      // Extend 1.5x the max side length in each direction (total 3x), with a minimum of 150
+      const length = Math.max(maxSide * 1.5, 150);
 
       return {
         start: { x: mid.x - perp.x * length, y: mid.y - perp.y * length },
