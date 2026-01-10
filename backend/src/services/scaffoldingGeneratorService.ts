@@ -253,7 +253,7 @@ Responde SOLO con el JSON, sin explicaciones adicionales.`;
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-5.2', // Using GPT-5.2 for better math reasoning
+      model: 'gpt-4o', // Using GPT-4o - fallback while gpt-5.2 issues are resolved
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
@@ -378,7 +378,7 @@ Genera una pregunta SIMILAR que evalúe los mismos conceptos pero con diferentes
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-5.2',
+      model: 'gpt-4o',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
