@@ -135,11 +135,10 @@ class GitHubMetricsService {
    */
   private static getLast30DaysMetrics(dailyMap: Map<string, number>): DailyMetric[] {
     const result: DailyMetric[] = [];
-    const todayStr = getChileanDateString(new Date());
 
     for (let i = 0; i < 30; i++) {
-      const date = new Date(todayStr);
-      date.setDate(date.getDate() - i);
+      // Start from now and subtract days, then get Chilean date
+      const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
       const dateStr = getChileanDateString(date);
       result.push({
         date: dateStr,
@@ -203,30 +202,27 @@ class GitHubMetricsService {
 
     // Calculate current streak (starting from today or yesterday) in Chilean timezone
     const today = getChileanDateString(new Date());
-    const yesterdayDate = new Date(today);
-    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-    const yesterday = getChileanDateString(yesterdayDate);
+    const yesterday = getChileanDateString(new Date(Date.now() - 24 * 60 * 60 * 1000));
 
     let currentStreak = 0;
-    let checkDateStr: string;
+    let daysBack: number;
 
     // Start from today if it qualifies, otherwise from yesterday
     if (qualifyingDates.has(today)) {
-      checkDateStr = today;
+      daysBack = 0;
     } else if (qualifyingDates.has(yesterday)) {
-      checkDateStr = yesterday;
+      daysBack = 1;
     } else {
       // No current streak
-      checkDateStr = '';
+      daysBack = -1;
     }
 
     // Count consecutive days going backwards
-    while (checkDateStr) {
+    while (daysBack >= 0) {
+      const checkDateStr = getChileanDateString(new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000));
       if (qualifyingDates.has(checkDateStr)) {
         currentStreak++;
-        const prevDate = new Date(checkDateStr);
-        prevDate.setDate(prevDate.getDate() - 1);
-        checkDateStr = getChileanDateString(prevDate);
+        daysBack++;
       } else {
         break;
       }
