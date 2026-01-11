@@ -118,6 +118,7 @@ export function PracticeHeader({
 
           {/* Tutor button */}
           <button
+            data-testid="open-tutor-button"
             onClick={onOpenTutor}
             className="p-2.5 rounded-xl bg-[#0A84FF] hover:bg-[#0A84FF]/90 transition-colors relative"
             title="Abrir tutor AI"

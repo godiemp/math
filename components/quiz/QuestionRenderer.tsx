@@ -155,7 +155,7 @@ export function QuestionRenderer({
             const isSelected = selectedAnswer === index;
             const isCorrectAnswer = index === question.correctAnswer;
 
-            let buttonClass = `w-full text-left ${compact ? 'p-2 text-sm' : 'p-4'} rounded-lg border-2 transition-all flex items-start gap-2 `;
+            let buttonClass = `w-full text-left ${compact ? 'p-2 text-sm' : 'p-4'} rounded-lg border-2 transition-all flex items-start gap-2 ${disabled ? 'cursor-default' : 'cursor-pointer'} `;
 
             if (isAdaptiveMode) {
               // Adaptive mode uses Apple design colors on light card backgrounds
