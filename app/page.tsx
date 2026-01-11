@@ -1,7 +1,8 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useAuth } from '@/contexts/AuthContext';
 import { LandingNav, HeroSection, StatsSection, CTASection } from '@/components/landing';
 import { FeatureSection } from '@/components/landing/FeatureSections/FeatureSection';
@@ -30,7 +31,11 @@ function LandingPageContent() {
 
   const [audience, setAudience] = useState<Audience>(initialAudience);
   const { isAuthenticated, isLoading, user } = useAuth();
+  const { status: sessionStatus } = useSession();
   const router = useRouter();
+
+  // Guard against multiple redirects during hydration
+  const hasRedirected = useRef(false);
 
   // Sync state with URL param changes
   useEffect(() => {
@@ -46,20 +51,28 @@ function LandingPageContent() {
   };
 
   // Redirect authenticated users based on role
+  // Wait for BOTH NextAuth session AND AuthContext to be ready
+  // This prevents race conditions with the middleware
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
+    const isSessionReady = sessionStatus === 'authenticated';
+    const isFullyAuthenticated = !isLoading && isAuthenticated && isSessionReady;
+
+    if (isFullyAuthenticated && !hasRedirected.current) {
+      hasRedirected.current = true;
+
       if (user?.role === 'teacher') {
-        router.push('/teacher');
+        router.replace('/teacher');
       } else if (user?.role === 'admin') {
-        router.push('/admin');
+        router.replace('/admin');
       } else {
-        router.push('/dashboard');
+        router.replace('/dashboard');
       }
     }
-  }, [isAuthenticated, isLoading, router, user?.role]);
+  }, [isAuthenticated, isLoading, sessionStatus, router, user?.role]);
 
   // Don't render landing for authenticated users
-  if (isAuthenticated) {
+  // Also check session status to avoid flicker
+  if (isAuthenticated && sessionStatus === 'authenticated') {
     return null;
   }
 

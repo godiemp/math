@@ -64,6 +64,7 @@ export default defineConfig({
       // Exclude tests that need their own login flow or different auth state
       testIgnore: [
         '**/auth.spec.ts',
+        '**/auth-redirect-loop.spec.ts', // Tests login flows - needs fresh session
         '**/registration.spec.ts',
         '**/colegio-dashboard.spec.ts',
         '**/teacher-student-sync.spec.ts', // Creates own contexts with socket mocking
@@ -86,6 +87,7 @@ export default defineConfig({
       // Run tests that handle their own authentication
       testMatch: [
         '**/auth.spec.ts',
+        '**/auth-redirect-loop.spec.ts', // Tests for auth redirect loop detection
         '**/registration.spec.ts',
         '**/colegio-dashboard.spec.ts',
         '**/teacher-student-sync.spec.ts', // Uses storageState from setup
