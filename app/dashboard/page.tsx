@@ -410,6 +410,22 @@ function DashboardView({
           </Card>
         </div>
 
+        {/* Adaptive Learning Card */}
+        <Card hover className="p-6 mb-8 sm:mb-10 md:mb-12" data-testid="adaptive-learning-card">
+          <div className="text-center">
+            <div className="text-4xl mb-4">🧠</div>
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <Heading level={3} size="sm">
+                Aprendizaje adaptativo
+              </Heading>
+              <Badge variant="info">Próximamente</Badge>
+            </div>
+            <Text size="sm" variant="secondary">
+              Ejercicios personalizados que se adaptan a tu nivel
+            </Text>
+          </div>
+        </Card>
+
         {/* Improvement Notice */}
         <div className="mt-8 sm:mt-10 md:mt-12">
           <Card className="p-3 sm:p-4 md:p-5 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border-amber-200 dark:border-amber-800">

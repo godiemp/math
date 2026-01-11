@@ -602,17 +602,12 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
-    // Migration: Remove assigned_by_teacher_id column (classes are now the only teacher-student link)
+    // Create index for assigned_by_teacher_id if it doesn't exist
     await client.query(`
       DO $$
       BEGIN
-        -- Drop the index first if it exists
-        DROP INDEX IF EXISTS idx_users_assigned_by_teacher;
-
-        -- Drop the column if it exists
-        IF EXISTS (SELECT 1 FROM information_schema.columns
-                  WHERE table_name='users' AND column_name='assigned_by_teacher_id') THEN
-          ALTER TABLE users DROP COLUMN assigned_by_teacher_id;
+        IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_users_assigned_by_teacher') THEN
+          CREATE INDEX idx_users_assigned_by_teacher ON users(assigned_by_teacher_id);
         END IF;
       END $$;
     `);

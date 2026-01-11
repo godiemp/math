@@ -1,42 +1,37 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import type {
   TriangleFigureProps,
   LabeledPoint,
-  SideConfig,
-  AngleConfig,
-  SpecialLineConfig,
   FromAnglesConfigObject,
   FromSidesConfigObject,
 } from '@/lib/types/triangle';
 import {
   trianglePath,
   calculateViewBox,
-  calculateVertexLabelPosition,
-  calculateSideLabelPosition,
-  describeAngleArc,
-  describeRightAngleMarker,
-  calculateSpecialLineEndpoints,
   findRightAngleVertex,
-  angleAtVertex,
-  midpoint,
-  getStrokeDashArray,
   buildTriangleFromAngles,
   buildTriangleFromSides,
+  centroid,
+  incenter,
+  circumcenter,
+  orthocenter,
+  inradius,
+  circumradius,
 } from '@/lib/geometry/triangleUtils';
-
-// Default colors following the design system
-const DEFAULT_COLORS = {
-  fill: 'rgba(59, 130, 246, 0.15)', // blue-500 with opacity
-  stroke: 'rgb(59, 130, 246)', // blue-500
-  angleArc: 'rgb(245, 158, 11)', // amber-500
-  specialLine: 'rgb(168, 85, 247)', // purple-500
-  rightAngle: 'rgb(239, 68, 68)', // red-500
-  grid: 'rgb(229, 231, 235)', // gray-200
-  vertex: 'rgb(17, 24, 39)', // gray-900
-  label: 'rgb(17, 24, 39)', // gray-900
-};
+import { cn } from '@/lib/utils';
+import {
+  DEFAULT_COLORS,
+  VertexLabel,
+  SideLabel,
+  AngleArc,
+  AngleLabel,
+  RightAngleMarker,
+  SpecialLine,
+  NotablePoint,
+  TriangleCircle,
+} from './triangle';
 
 /**
  * TriangleFigure - A comprehensive triangle visualization component
@@ -46,17 +41,26 @@ const DEFAULT_COLORS = {
  * - Side labels and measurements
  * - Interior/exterior angle arcs with labels
  * - Special lines: altura, mediana, bisectriz, mediatriz
+ * - Notable points: circuncentro, incentro, baricentro, ortocentro
+ * - Circumscribed and inscribed circles
+ * - Draggable vertices for interactive exploration
  * - Right angle markers
  * - Optional grid background
  * - Dark mode support
+ * - Standalone or embedded mode (like CircleFigure)
  */
 export function TriangleFigure({
+  standalone = true,
   vertices: verticesProp,
   fromAngles,
   fromSides,
+  draggable = false,
+  onVerticesChange,
   sides,
   angles,
   specialLines,
+  notablePoints,
+  circles,
   showRightAngleMarker,
   rightAngleVertex,
   rightAngleSize = 12,
@@ -75,11 +79,14 @@ export function TriangleFigure({
   vertexRadius = 4,
   ariaLabel,
   className = '',
-  asSvgGroup = false,
-  transform,
 }: TriangleFigureProps) {
-  // Calculate vertices from fromAngles, fromSides, or use provided vertices
-  const vertices = useMemo<[LabeledPoint, LabeledPoint, LabeledPoint]>(() => {
+  // Internal state for draggable vertices
+  const [internalVertices, setInternalVertices] = useState<[LabeledPoint, LabeledPoint, LabeledPoint] | null>(null);
+  const [draggingVertex, setDraggingVertex] = useState<number | null>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  // Calculate initial vertices from fromAngles, fromSides, or use provided vertices
+  const initialVertices = useMemo<[LabeledPoint, LabeledPoint, LabeledPoint]>(() => {
     // Option 1: Build from angles
     if (fromAngles) {
       if (Array.isArray(fromAngles) && typeof fromAngles[0] === 'number') {
@@ -122,10 +129,71 @@ export function TriangleFigure({
     ];
   }, [fromAngles, fromSides, verticesProp]);
 
-  // Calculate viewBox from vertices if not provided
-  const calculatedBox = calculateViewBox(vertices, padding);
-  const viewBox =
-    customViewBox ||
+  // Use internal state for draggable, otherwise use computed vertices
+  const vertices = draggable
+    ? (internalVertices || initialVertices)
+    : initialVertices;
+
+  // Initialize internal vertices when draggable is enabled
+  useEffect(() => {
+    if (draggable && !internalVertices) {
+      setInternalVertices(initialVertices);
+    }
+  }, [draggable, initialVertices, internalVertices]);
+
+  // Notify parent of vertex changes
+  useEffect(() => {
+    if (draggable && internalVertices && onVerticesChange) {
+      onVerticesChange(internalVertices);
+    }
+  }, [draggable, internalVertices, onVerticesChange]);
+
+  // Calculate notable points positions
+  const notablePointsPositions = useMemo(() => ({
+    circuncentro: circumcenter(vertices),
+    incentro: incenter(vertices),
+    baricentro: centroid(vertices),
+    ortocentro: orthocenter(vertices),
+  }), [vertices]);
+
+  // Calculate circle radii
+  const circleRadii = useMemo(() => ({
+    circumscribed: circumradius(vertices),
+    inscribed: inradius(vertices),
+  }), [vertices]);
+
+  // Calculate viewBox from vertices (and circles if present)
+  // For special lines that extend beyond the triangle (altura, simetral), we use extra padding
+  const hasExtendedLines = specialLines?.some(
+    (l) => l.type === 'altura' || l.type === 'simetral' || l.type === 'mediatriz'
+  );
+  const effectivePadding = hasExtendedLines ? Math.max(padding, 150) : padding;
+
+  const calculatedBox = useMemo(() => {
+    let box = calculateViewBox(vertices, effectivePadding);
+
+    // Extend viewBox for circumscribed circle if present
+    const hasCircumscribed = circles?.some(c => c.type === 'circumscribed');
+    if (hasCircumscribed) {
+      const cc = notablePointsPositions.circuncentro;
+      const cr = circleRadii.circumscribed;
+      const circleMinX = cc.x - cr - effectivePadding;
+      const circleMaxX = cc.x + cr + effectivePadding;
+      const circleMinY = cc.y - cr - effectivePadding;
+      const circleMaxY = cc.y + cr + effectivePadding;
+
+      box = {
+        minX: Math.min(box.minX, circleMinX),
+        minY: Math.min(box.minY, circleMinY),
+        width: Math.max(box.minX + box.width, circleMaxX) - Math.min(box.minX, circleMinX),
+        height: Math.max(box.minY + box.height, circleMaxY) - Math.min(box.minY, circleMinY),
+      };
+    }
+
+    return box;
+  }, [vertices, circles, notablePointsPositions, circleRadii, effectivePadding]);
+
+  const viewBox = customViewBox ||
     `${calculatedBox.minX} ${calculatedBox.minY} ${calculatedBox.width} ${calculatedBox.height}`;
 
   // Auto-detect right angle vertex if not specified
@@ -137,11 +205,61 @@ export function TriangleFigure({
   // Parse viewBox for grid calculations
   const [vbMinX, vbMinY, vbWidth, vbHeight] = viewBox.split(' ').map(Number);
 
-  // Inner content shared between svg and g modes
-  const triangleContent = (
+  // Get SVG point from mouse/touch event
+  const getSVGPoint = useCallback((clientX: number, clientY: number) => {
+    if (!svgRef.current) return null;
+    const svg = svgRef.current;
+    const pt = svg.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    const svgP = pt.matrixTransform(svg.getScreenCTM()?.inverse());
+    return { x: svgP.x, y: svgP.y };
+  }, []);
+
+  // Handle pointer down on vertex
+  const handlePointerDown = useCallback((index: number, e: React.PointerEvent) => {
+    if (!draggable) return;
+    e.preventDefault();
+    e.stopPropagation();
+    setDraggingVertex(index);
+    (e.target as Element).setPointerCapture(e.pointerId);
+  }, [draggable]);
+
+  // Handle pointer move - direct movement without damping
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (draggingVertex === null || !draggable) return;
+    const point = getSVGPoint(e.clientX, e.clientY);
+    if (!point) return;
+
+    setInternalVertices(prev => {
+      if (!prev) return prev;
+
+      // Clamp to reasonable bounds to prevent extreme triangles
+      const minCoord = -200;
+      const maxCoord = 600;
+      const clampedX = Math.max(minCoord, Math.min(maxCoord, point.x));
+      const clampedY = Math.max(minCoord, Math.min(maxCoord, point.y));
+
+      const newVertices = [...prev] as [LabeledPoint, LabeledPoint, LabeledPoint];
+      newVertices[draggingVertex] = {
+        ...newVertices[draggingVertex],
+        x: clampedX,
+        y: clampedY,
+      };
+      return newVertices;
+    });
+  }, [draggable, draggingVertex, getSVGPoint]);
+
+  // Handle pointer up
+  const handlePointerUp = useCallback(() => {
+    setDraggingVertex(null);
+  }, []);
+
+  // Content to render (can be in <svg> or <g>)
+  const content = (
     <>
-      {/* Grid background (only when not asSvgGroup) */}
-      {showGrid && !asSvgGroup && (
+      {/* Grid background */}
+      {showGrid && (
         <g className="grid">
           {/* Vertical lines */}
           {Array.from({
@@ -181,6 +299,16 @@ export function TriangleFigure({
           })}
         </g>
       )}
+
+      {/* Circles (rendered behind everything) */}
+      {circles?.map((circleConfig, i) => (
+        <TriangleCircle
+          key={`circle-${i}`}
+          config={circleConfig}
+          notablePointsPositions={notablePointsPositions}
+          circleRadii={circleRadii}
+        />
+      ))}
 
       {/* Special lines (rendered before triangle so they appear behind) */}
       {specialLines?.map((config, i) => (
@@ -232,6 +360,15 @@ export function TriangleFigure({
         );
       })}
 
+      {/* Notable points */}
+      {notablePoints?.map((pointConfig, i) => (
+        <NotablePoint
+          key={`notable-${i}`}
+          config={pointConfig}
+          position={notablePointsPositions[pointConfig.type]}
+        />
+      ))}
+
       {/* Vertex points and labels */}
       {vertices.map((vertex, i) => (
         <g key={`vertex-${i}`}>
@@ -239,13 +376,20 @@ export function TriangleFigure({
             <circle
               cx={vertex.x}
               cy={vertex.y}
-              r={vertexRadius}
-              fill={DEFAULT_COLORS.vertex}
-              className="dark:fill-white"
+              r={draggable ? Math.max(vertexRadius, 10) : vertexRadius}
+              fill={draggingVertex === i ? DEFAULT_COLORS.vertexDragging : DEFAULT_COLORS.vertex}
+              stroke="white"
+              strokeWidth={draggable ? 2 : 0}
+              style={{ cursor: draggable ? 'grab' : 'default' }}
+              onPointerDown={(e) => handlePointerDown(i, e)}
+              className={cn(
+                'dark:fill-white',
+                draggable && 'hover:fill-indigo-500 transition-colors'
+              )}
             />
           )}
           {vertex.label && (
-            <VertexLabel vertex={vertex} vertices={vertices} />
+            <VertexLabel vertex={vertex} vertices={vertices} draggable={draggable} />
           )}
         </g>
       ))}
@@ -265,266 +409,29 @@ export function TriangleFigure({
     </>
   );
 
-  // Render as SVG group for embedding in larger SVGs
-  if (asSvgGroup) {
+  // Standalone mode: wrap in SVG
+  if (standalone) {
     return (
-      <g transform={transform} className={className}>
-        {triangleContent}
-      </g>
+      <svg
+        ref={svgRef}
+        width={width}
+        height={height}
+        viewBox={viewBox}
+        className={cn('max-w-full', className)}
+        onPointerMove={draggable ? handlePointerMove : undefined}
+        onPointerUp={draggable ? handlePointerUp : undefined}
+        onPointerLeave={draggable ? handlePointerUp : undefined}
+        role="img"
+        aria-label={ariaLabel || 'Triangle figure'}
+      >
+        <title>{ariaLabel || 'Triangle figure'}</title>
+        {content}
+      </svg>
     );
   }
 
-  // Render as standalone SVG
-  return (
-    <svg
-      width={width}
-      height={height}
-      viewBox={viewBox}
-      className={`${className}`}
-      role="img"
-      aria-label={ariaLabel || 'Triangle figure'}
-    >
-      <title>{ariaLabel || 'Triangle figure'}</title>
-      {triangleContent}
-    </svg>
-  );
-}
-
-// Sub-components
-
-interface VertexLabelProps {
-  vertex: LabeledPoint;
-  vertices: [LabeledPoint, LabeledPoint, LabeledPoint];
-}
-
-function VertexLabel({ vertex, vertices }: VertexLabelProps) {
-  const pos = calculateVertexLabelPosition(vertex, vertices, 18);
-
-  return (
-    <text
-      x={pos.x}
-      y={pos.y}
-      fill={DEFAULT_COLORS.label}
-      fontSize="14"
-      fontWeight="bold"
-      textAnchor="middle"
-      dominantBaseline="middle"
-      className="dark:fill-white"
-    >
-      {vertex.label}
-    </text>
-  );
-}
-
-interface SideLabelProps {
-  vertices: [LabeledPoint, LabeledPoint, LabeledPoint];
-  sideIndex: 0 | 1 | 2;
-  config: SideConfig;
-}
-
-function SideLabel({ vertices, sideIndex, config }: SideLabelProps) {
-  const p1 = vertices[sideIndex];
-  const p2 = vertices[(sideIndex + 1) % 3];
-  const pos = calculateSideLabelPosition(p1, p2, vertices, config.labelOffset ?? 18);
-
-  // Build label text: prefix + value, or just label/measurement
-  let labelText: string | undefined;
-  if (config.labelPrefix && config.measurement) {
-    // Trigonometry format: "Op: 3" or "Ady: 5.2"
-    labelText = `${config.labelPrefix} ${config.measurement}`;
-  } else if (config.showMeasurement && config.measurement) {
-    labelText = config.measurement;
-  } else {
-    labelText = config.label;
-  }
-
-  if (!labelText) return null;
-
-  // Use labelColor if specified, otherwise fall back to color or default
-  const textColor = config.labelColor || config.color || DEFAULT_COLORS.stroke;
-
-  return (
-    <text
-      x={pos.x}
-      y={pos.y}
-      fill={textColor}
-      fontSize="13"
-      fontWeight="600"
-      textAnchor="middle"
-      dominantBaseline="middle"
-      className="dark:fill-blue-300"
-    >
-      {labelText}
-    </text>
-  );
-}
-
-interface AngleArcProps {
-  vertices: [LabeledPoint, LabeledPoint, LabeledPoint];
-  vertexIndex: 0 | 1 | 2;
-  config: AngleConfig;
-}
-
-function AngleArc({ vertices, vertexIndex, config }: AngleArcProps) {
-  const vertex = vertices[vertexIndex];
-  const p1 = vertices[(vertexIndex + 1) % 3];
-  const p2 = vertices[(vertexIndex + 2) % 3];
-  const arcPath = describeAngleArc(vertex, p1, p2, config.arcRadius || 25);
-
-  return (
-    <path
-      d={arcPath}
-      fill="none"
-      stroke={config.color || DEFAULT_COLORS.angleArc}
-      strokeWidth="2"
-      strokeLinecap="round"
-      className="dark:stroke-amber-400"
-    />
-  );
-}
-
-interface AngleLabelProps {
-  vertices: [LabeledPoint, LabeledPoint, LabeledPoint];
-  vertexIndex: 0 | 1 | 2;
-  config: AngleConfig;
-}
-
-function AngleLabel({ vertices, vertexIndex, config }: AngleLabelProps) {
-  const vertex = vertices[vertexIndex];
-  const p1 = vertices[(vertexIndex + 1) % 3];
-  const p2 = vertices[(vertexIndex + 2) % 3];
-
-  // Calculate midpoint direction for label placement
-  const mid = midpoint(p1, p2);
-  const dx = vertex.x - mid.x;
-  const dy = vertex.y - mid.y;
-  const dist = Math.sqrt(dx * dx + dy * dy);
-
-  // Position label inside the angle, closer to vertex
-  const labelRadius = (config.arcRadius || 25) + 12;
-  const labelX = vertex.x - (dx / dist) * labelRadius;
-  const labelY = vertex.y - (dy / dist) * labelRadius;
-
-  // Determine label text
-  let labelText = config.label;
-  if (config.showDegrees && !labelText) {
-    const angleDegrees = Math.round(angleAtVertex(vertices, vertexIndex));
-    labelText = `${angleDegrees}°`;
-  }
-
-  if (!labelText) return null;
-
-  return (
-    <text
-      x={labelX}
-      y={labelY}
-      fill={config.color || DEFAULT_COLORS.angleArc}
-      fontSize="12"
-      fontWeight="bold"
-      textAnchor="middle"
-      dominantBaseline="middle"
-      className="dark:fill-amber-400"
-    >
-      {labelText}
-    </text>
-  );
-}
-
-interface RightAngleMarkerProps {
-  vertices: [LabeledPoint, LabeledPoint, LabeledPoint];
-  vertexIndex: 0 | 1 | 2;
-  size: number;
-}
-
-function RightAngleMarker({ vertices, vertexIndex, size }: RightAngleMarkerProps) {
-  const vertex = vertices[vertexIndex];
-  const p1 = vertices[(vertexIndex + 1) % 3];
-  const p2 = vertices[(vertexIndex + 2) % 3];
-  const path = describeRightAngleMarker(vertex, p1, p2, size);
-
-  return (
-    <path
-      d={path}
-      fill="none"
-      stroke={DEFAULT_COLORS.rightAngle}
-      strokeWidth="2"
-      strokeLinejoin="miter"
-      className="dark:stroke-red-400"
-    />
-  );
-}
-
-interface SpecialLineProps {
-  vertices: [LabeledPoint, LabeledPoint, LabeledPoint];
-  config: SpecialLineConfig;
-}
-
-function SpecialLine({ vertices, config }: SpecialLineProps) {
-  const { start, end } = calculateSpecialLineEndpoints(vertices, config);
-  const dashArray = getStrokeDashArray(config.strokeStyle || 'dashed');
-
-  return (
-    <g>
-      <line
-        x1={start.x}
-        y1={start.y}
-        x2={end.x}
-        y2={end.y}
-        stroke={config.color || DEFAULT_COLORS.specialLine}
-        strokeWidth="1.5"
-        strokeDasharray={dashArray}
-        className="dark:stroke-purple-400"
-      />
-      {/* Right angle marker at intersection for altura */}
-      {config.showRightAngleMarker && config.type === 'altura' && (
-        <RightAngleMarkerAtPoint
-          point={end}
-          direction1={start}
-          direction2={vertices[(config.fromVertex + 2) % 3]}
-          size={8}
-        />
-      )}
-      {/* Label for the special line */}
-      {config.showLabel && (
-        <text
-          x={(start.x + end.x) / 2 - 15}
-          y={(start.y + end.y) / 2}
-          fill={config.color || DEFAULT_COLORS.specialLine}
-          fontSize="11"
-          fontStyle="italic"
-          className="dark:fill-purple-400"
-        >
-          {config.type}
-        </text>
-      )}
-    </g>
-  );
-}
-
-interface RightAngleMarkerAtPointProps {
-  point: LabeledPoint;
-  direction1: LabeledPoint;
-  direction2: LabeledPoint;
-  size: number;
-}
-
-function RightAngleMarkerAtPoint({
-  point,
-  direction1,
-  direction2,
-  size,
-}: RightAngleMarkerAtPointProps) {
-  const path = describeRightAngleMarker(point, direction1, direction2, size);
-
-  return (
-    <path
-      d={path}
-      fill="none"
-      stroke={DEFAULT_COLORS.specialLine}
-      strokeWidth="1.5"
-      className="dark:stroke-purple-400"
-    />
-  );
+  // Embedded mode: return <g> element for use in another SVG
+  return <g className={className}>{content}</g>;
 }
 
 export default TriangleFigure;

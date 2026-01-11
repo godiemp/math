@@ -25,6 +25,7 @@ export function midpoint(p1: LabeledPoint, p2: LabeledPoint): LabeledPoint {
 
 /**
  * Calculate the centroid (center of mass) of a triangle
+ * Intersection of the three medians
  */
 export function centroid(
   vertices: [LabeledPoint, LabeledPoint, LabeledPoint]
@@ -32,6 +33,113 @@ export function centroid(
   return {
     x: (vertices[0].x + vertices[1].x + vertices[2].x) / 3,
     y: (vertices[0].y + vertices[1].y + vertices[2].y) / 3,
+  };
+}
+
+/**
+ * Calculate the incenter (intersection of angle bisectors)
+ * Equidistant from all three sides
+ * Formula: weighted average by opposite side lengths
+ */
+export function incenter(
+  vertices: [LabeledPoint, LabeledPoint, LabeledPoint]
+): LabeledPoint {
+  const [A, B, C] = vertices;
+  const a = distance(B, C); // side opposite to A
+  const b = distance(A, C); // side opposite to B
+  const c = distance(A, B); // side opposite to C
+  const perimeter = a + b + c;
+
+  return {
+    x: (a * A.x + b * B.x + c * C.x) / perimeter,
+    y: (a * A.y + b * B.y + c * C.y) / perimeter,
+  };
+}
+
+/**
+ * Calculate the area of a triangle using the cross product formula
+ */
+export function triangleArea(
+  vertices: [LabeledPoint, LabeledPoint, LabeledPoint]
+): number {
+  const [A, B, C] = vertices;
+  // Area = |((Bx - Ax)(Cy - Ay) - (Cx - Ax)(By - Ay))| / 2
+  return Math.abs((B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y)) / 2;
+}
+
+/**
+ * Calculate the inradius (radius of inscribed circle)
+ * Formula: Area / semiperimeter
+ */
+export function inradius(
+  vertices: [LabeledPoint, LabeledPoint, LabeledPoint]
+): number {
+  const area = triangleArea(vertices);
+  const [A, B, C] = vertices;
+  const a = distance(B, C);
+  const b = distance(A, C);
+  const c = distance(A, B);
+  const semiperimeter = (a + b + c) / 2;
+
+  return area / semiperimeter;
+}
+
+/**
+ * Calculate the circumcenter (intersection of perpendicular bisectors)
+ * Equidistant from all three vertices
+ */
+export function circumcenter(
+  vertices: [LabeledPoint, LabeledPoint, LabeledPoint]
+): LabeledPoint {
+  const [A, B, C] = vertices;
+
+  // Using the formula based on determinants
+  // The circumcenter is the solution to the system of perpendicular bisector equations
+  const D = 2 * (A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y));
+
+  if (Math.abs(D) < 0.0001) {
+    // Degenerate case (collinear points)
+    return centroid(vertices);
+  }
+
+  const Ax2 = A.x * A.x + A.y * A.y;
+  const Bx2 = B.x * B.x + B.y * B.y;
+  const Cx2 = C.x * C.x + C.y * C.y;
+
+  const ux = (Ax2 * (B.y - C.y) + Bx2 * (C.y - A.y) + Cx2 * (A.y - B.y)) / D;
+  const uy = (Ax2 * (C.x - B.x) + Bx2 * (A.x - C.x) + Cx2 * (B.x - A.x)) / D;
+
+  return { x: ux, y: uy };
+}
+
+/**
+ * Calculate the circumradius (radius of circumscribed circle)
+ * Distance from circumcenter to any vertex
+ */
+export function circumradius(
+  vertices: [LabeledPoint, LabeledPoint, LabeledPoint]
+): number {
+  const cc = circumcenter(vertices);
+  return distance(cc, vertices[0]);
+}
+
+/**
+ * Calculate the orthocenter (intersection of altitudes)
+ * Uses the relationship: O = A + B + C - 2 * circumcenter (in position vectors from origin)
+ * Or equivalently: O = A + B + C - 2G where G would be... no, use direct formula
+ */
+export function orthocenter(
+  vertices: [LabeledPoint, LabeledPoint, LabeledPoint]
+): LabeledPoint {
+  const [A, B, C] = vertices;
+
+  // Using the formula: H = A + B + C - 2*O where O is circumcenter
+  // This is based on the Euler line relationship
+  const cc = circumcenter(vertices);
+
+  return {
+    x: A.x + B.x + C.x - 2 * cc.x,
+    y: A.y + B.y + C.y - 2 * cc.y,
   };
 }
 
@@ -302,13 +410,44 @@ export function calculateSpecialLineEndpoints(
   const fromVertex = config.fromVertex;
 
   switch (config.type) {
-    case 'altura':
-      return {
-        start: vertices[fromVertex],
-        end: altitudeFootPoint(vertices, fromVertex),
-      };
+    case 'altura': {
+      // For altitudes, we extend the line beyond the foot point to show the orthocenter
+      // This is especially important for obtuse triangles where the orthocenter is outside
+      const foot = altitudeFootPoint(vertices, fromVertex);
+      const vertex = vertices[fromVertex];
 
+      // Direction from vertex to foot (perpendicular to opposite side)
+      const dx = foot.x - vertex.x;
+      const dy = foot.y - vertex.y;
+      const len = Math.sqrt(dx * dx + dy * dy);
+
+      if (len < 0.0001) {
+        // Degenerate case
+        return { start: vertex, end: foot };
+      }
+
+      // Calculate dynamic extension based on triangle size
+      const side0 = distance(vertices[0], vertices[1]);
+      const side1 = distance(vertices[1], vertices[2]);
+      const side2 = distance(vertices[2], vertices[0]);
+      const maxSide = Math.max(side0, side1, side2);
+      // Extend well beyond to ensure orthocenter is visible (1.5x max side from foot)
+      const extension = Math.max(maxSide * 1.5, 150);
+
+      // Normalize direction
+      const dirX = dx / len;
+      const dirY = dy / len;
+
+      // Extend in both directions from the vertex
+      return {
+        start: { x: vertex.x - dirX * extension, y: vertex.y - dirY * extension },
+        end: { x: vertex.x + dirX * extension, y: vertex.y + dirY * extension },
+      };
+    }
+
+    case 'transversal':
     case 'mediana':
+      // Transversal de gravedad (Chilean term) / Median
       return {
         start: vertices[fromVertex],
         end: medianEndpoint(vertices, fromVertex),
@@ -346,11 +485,14 @@ export function calculateSpecialLineEndpoints(
       };
     }
 
-    case 'mediatriz': {
-      // Perpendicular bisector of a side
+    case 'mediatriz':
+    case 'simetral': {
+      // Perpendicular bisector (simetral) of a side
+      // fromVertex determines which side: 0 = side BC (opposite to A), 1 = side AC (opposite to B), 2 = side AB (opposite to C)
       const sideIndex = config.toSide ?? fromVertex;
-      const sideP1 = vertices[sideIndex];
-      const sideP2 = vertices[(sideIndex + 1) % 3];
+      // Get the two vertices that form this side (opposite to the fromVertex)
+      const sideP1 = vertices[(sideIndex + 1) % 3];
+      const sideP2 = vertices[(sideIndex + 2) % 3];
 
       const mid = midpoint(sideP1, sideP2);
 
@@ -359,8 +501,14 @@ export function calculateSpecialLineEndpoints(
       const dy = sideP2.y - sideP1.y;
       const perp = normalize({ x: -dy, y: dx });
 
-      // Extend in both directions
-      const length = distance(sideP1, sideP2) * 0.3;
+      // Calculate dynamic length based on triangle size
+      // Use the maximum side length as reference, multiplied by a factor to ensure lines extend well beyond the triangle
+      const side0 = distance(vertices[0], vertices[1]);
+      const side1 = distance(vertices[1], vertices[2]);
+      const side2 = distance(vertices[2], vertices[0]);
+      const maxSide = Math.max(side0, side1, side2);
+      // Extend 1.5x the max side length in each direction (total 3x), with a minimum of 150
+      const length = Math.max(maxSide * 1.5, 150);
 
       return {
         start: { x: mid.x - perp.x * length, y: mid.y - perp.y * length },

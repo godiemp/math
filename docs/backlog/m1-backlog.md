@@ -2,17 +2,17 @@
 
 Lecciones del nivel fundamental de la prueba PAES.
 
-**Última actualización:** 2025-01-06
+**Última actualización:** 2026-01-07
 
 ## Resumen
 
 | Área | Implementadas | Pendientes | Total |
 |------|---------------|------------|-------|
-| Números | 17 | 5 | 22 |
+| Números | 18 | 4 | 22 |
 | Álgebra | 24 | 17 | 41 |
 | Geometría | 8 | 12 | 20 |
 | Probabilidad | 10 | 2 | 12 |
-| **Total** | **59** | **36** | **95** |
+| **Total** | **60** | **35** | **95** |
 
 ---
 
@@ -72,7 +72,7 @@ Lecciones del nivel fundamental de la prueba PAES.
 | Estado | ID | Slug | Título | OA |
 |--------|----|----|--------|-----|
 | ✅ | m1-num-007-a | raices-enesimas | Raíces Enésimas | MA2M-OA-01 |
-| ❌ | m1-num-007-b | propiedades-raices | Propiedades de Raíces | - |
+| ✅ | m1-num-007-b | propiedades-raices | Propiedades de Raíces | MA2M-OA-01 |
 | ❌ | m1-num-007-c | racionalizacion | Racionalización de Denominadores | - |
 
 ### M1-NUM-008: Problemas con potencias y raíces
@@ -134,7 +134,7 @@ Lecciones del nivel fundamental de la prueba PAES.
 | Estado | ID | Slug | Título | OA |
 |--------|----|----|--------|-----|
 | ✅ | m1-alg-006-a | ecuaciones-lineales | Resolución de Ecuaciones Lineales | - |
-| ❌ | m1-alg-006-b | inecuaciones-lineales | Inecuaciones Lineales | - |
+| ✅ | m1-alg-006-b | inecuaciones-lineales | Inecuaciones Lineales | MA07-OA-09 |
 | ❌ | m1-alg-006-c | sistemas-inecuaciones | Sistemas de Inecuaciones | - |
 
 ### M1-ALG-007: Problemas con ecuaciones e inecuaciones
@@ -318,7 +318,6 @@ Lecciones del nivel fundamental de la prueba PAES.
 | m1-alg-013-a | Vértice de la Parábola | Core PAES |
 | m1-alg-013-b | Ceros e Intersecciones | Core PAES |
 | m1-alg-014-a | Problemas de Optimización | Core PAES |
-| m1-alg-006-b | Inecuaciones Lineales | Core PAES |
 | m1-prob-005-b | Permutaciones | Core PAES |
 | m1-prob-005-c | Combinaciones | Core PAES |
 

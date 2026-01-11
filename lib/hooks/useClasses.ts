@@ -14,15 +14,17 @@ import {
   getClass,
   getClassStudents,
   getClassAnalytics,
+  getClassFailedQuestions,
   createClass,
   updateClass,
   deleteClass,
   addStudentsToClass,
   removeStudentFromClass,
-  searchAvailableStudents,
+  getAvailableStudents,
   type TeacherClass,
   type ClassStudent,
   type ClassAnalytics,
+  type ClassFailedQuestionsResult,
   type CreateClassData,
   type UpdateClassData,
 } from '../classApi';
@@ -125,6 +127,31 @@ export function useClassAnalytics(classId: string | null) {
 }
 
 /**
+ * Hook to fetch failed questions for a class
+ */
+export function useClassFailedQuestions(classId: string | null) {
+  const { data, error, isLoading, mutate } = useSWR<ClassFailedQuestionsResult | null>(
+    classId ? `/api/classes/${classId}/failed-questions` : null,
+    async () => {
+      if (!classId) return null;
+      return getClassFailedQuestions(classId);
+    },
+    {
+      dedupingInterval: 60000, // Cache for 1 minute
+      revalidateOnFocus: true,
+      keepPreviousData: true,
+    }
+  );
+
+  return {
+    failedQuestions: data,
+    isLoading,
+    error,
+    refresh: mutate,
+  };
+}
+
+/**
  * Hook for class mutations (create, update, delete)
  */
 export function useClassMutations() {
@@ -165,11 +192,38 @@ export function useClassMutations() {
 }
 
 /**
+ * Hook to fetch all available students for a class (students not already enrolled)
+ */
+export function useAvailableStudents(classId: string | null) {
+  const { data, error, isLoading, mutate } = useSWR<{ id: string; displayName: string; email: string }[]>(
+    classId ? `/api/classes/${classId}/students/available` : null,
+    async () => {
+      if (!classId) return [];
+      return getAvailableStudents(classId);
+    },
+    {
+      dedupingInterval: 10000,
+      revalidateOnFocus: false,
+    }
+  );
+
+  return {
+    students: data || [],
+    isLoading,
+    error,
+    refresh: mutate,
+  };
+}
+
+/**
  * Hook for student enrollment mutations
  */
 export function useStudentEnrollmentMutations(classId: string | null) {
   const { mutate: refreshStudents } = useSWR(
     classId ? `/api/classes/${classId}/students` : null
+  );
+  const { mutate: refreshAvailable } = useSWR(
+    classId ? `/api/classes/${classId}/students/available` : null
   );
   const { mutate: refreshClass } = useSWR(classId ? `/api/classes/${classId}` : null);
   const { mutate: refreshClasses } = useSWR('/api/classes');
@@ -181,6 +235,7 @@ export function useStudentEnrollmentMutations(classId: string | null) {
     if (result.success) {
       // Refresh all related data
       refreshStudents();
+      refreshAvailable();
       refreshClass();
       refreshClasses();
     }
@@ -194,21 +249,16 @@ export function useStudentEnrollmentMutations(classId: string | null) {
     if (result.success) {
       // Refresh all related data
       refreshStudents();
+      refreshAvailable();
       refreshClass();
       refreshClasses();
     }
     return result;
   };
 
-  const searchStudents = async (query: string) => {
-    if (!classId) return [];
-    return searchAvailableStudents(classId, query);
-  };
-
   return {
     addStudents,
     removeStudent,
-    searchStudents,
   };
 }
 
@@ -217,6 +267,8 @@ export type {
   TeacherClass,
   ClassStudent,
   ClassAnalytics,
+  ClassFailedQuestionsResult,
+  FailedQuestion,
   CreateClassData,
   UpdateClassData,
   ClassLevel,

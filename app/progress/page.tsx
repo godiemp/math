@@ -8,7 +8,6 @@ import { ModuleAccessGuard } from '@/components/auth/ModuleAccessGuard';
 import { Button, Card, Badge, Heading, Text, Modal, Navbar, NavbarLink } from '@/components/ui';
 import { MathText, UnifiedLatexRenderer } from '@/components/math/MathDisplay';
 import { SkillsDisplay } from '@/components/analytics/SkillsDisplay';
-import { PaesPredictionCard } from '@/components/analytics/PaesPredictionCard';
 import { KnowledgeDeclarationPanel } from '@/components/progress';
 import { api } from '@/lib/api-client';
 import { isAuthenticated } from '@/lib/auth';
@@ -31,7 +30,7 @@ function ProgressPageContent() {
     currentIndex: number;
   } | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [viewMode, setViewMode] = useState<'overview' | 'quizzes' | 'skills-m1' | 'skills-m2' | 'prediction' | 'knowledge'>('overview');
+  const [viewMode, setViewMode] = useState<'overview' | 'quizzes' | 'skills-m1' | 'skills-m2' | 'knowledge'>('overview');
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -360,16 +359,6 @@ function ProgressPageContent() {
             }`}
           >
             📚 Habilidades M2
-          </button>
-          <button
-            onClick={() => setViewMode('prediction')}
-            className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-[180ms] ${
-              viewMode === 'prediction'
-                ? 'bg-[#0A84FF] text-white'
-                : 'bg-white dark:bg-[#1C1C1E] text-black/60 dark:text-white/70 border border-black/[0.12] dark:border-white/[0.16] hover:border-[#0A84FF]/50'
-            }`}
-          >
-            🎯 Predicción PAES
           </button>
           <button
             onClick={() => setViewMode('knowledge')}
@@ -753,13 +742,6 @@ function ProgressPageContent() {
         {/* Skills M2 View */}
         {viewMode === 'skills-m2' && (
           <SkillsDisplay attempts={m2History} level="M2" />
-        )}
-
-        {/* Prediction View */}
-        {viewMode === 'prediction' && (
-          <div className="max-w-2xl mx-auto">
-            <PaesPredictionCard />
-          </div>
         )}
 
         {/* Knowledge Declaration View */}

@@ -15,12 +15,15 @@ import {
   updateClass,
   deleteClass,
   getClassAnalytics,
+  getClassFailedQuestions,
 } from '../controllers/classController';
 import {
   getClassStudents,
   addStudentsToClass,
   removeStudentFromClass,
-  searchAvailableStudents,
+  getAvailableStudents,
+  createStudentAndEnroll,
+  moveStudent,
 } from '../controllers/classStudentsController';
 
 const router = Router();
@@ -81,6 +84,13 @@ router.delete('/:classId', deleteClass);
  */
 router.get('/:classId/analytics', getClassAnalytics);
 
+/**
+ * @route   GET /api/classes/:classId/failed-questions
+ * @desc    Get questions with highest failure rate in a class
+ * @access  Private (Teacher)
+ */
+router.get('/:classId/failed-questions', getClassFailedQuestions);
+
 // ============================================================================
 // CLASS STUDENT ROUTES
 // ============================================================================
@@ -108,11 +118,26 @@ router.post('/:classId/students', addStudentsToClass);
 router.delete('/:classId/students/:studentId', removeStudentFromClass);
 
 /**
- * @route   GET /api/classes/:classId/students/search
- * @desc    Search for students available to add to a class
- * @query   query - Search term (min 2 characters)
+ * @route   GET /api/classes/:classId/students/available
+ * @desc    Get all students available to add to a class
  * @access  Private (Teacher)
  */
-router.get('/:classId/students/search', searchAvailableStudents);
+router.get('/:classId/students/available', getAvailableStudents);
+
+/**
+ * @route   POST /api/classes/:classId/students/create
+ * @desc    Create a new student and enroll them in the class
+ * @body    { firstName: string, lastName: string }
+ * @access  Private (Teacher)
+ */
+router.post('/:classId/students/create', createStudentAndEnroll);
+
+/**
+ * @route   POST /api/classes/:classId/students/:studentId/move
+ * @desc    Move a student to another class
+ * @body    { targetClassId: string }
+ * @access  Private (Teacher)
+ */
+router.post('/:classId/students/:studentId/move', moveStudent);
 
 export default router;

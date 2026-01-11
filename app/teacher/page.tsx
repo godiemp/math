@@ -36,7 +36,10 @@ export default function TeacherDashboard() {
     <TeacherLayout>
       <div className="space-y-6">
         {/* Welcome Header */}
-        <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-6 text-white">
+        <div
+          data-testid="teacher-welcome-header"
+          className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-6 text-white"
+        >
           <Heading level={1} size="lg" className="text-white mb-2">
             Bienvenido, Profesor
           </Heading>
@@ -64,7 +67,7 @@ export default function TeacherDashboard() {
         {!isLoading && !error && (
           <>
             {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div data-testid="teacher-stats-grid" className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Card
                 className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-800"
                 padding="lg"
@@ -145,7 +148,7 @@ export default function TeacherDashboard() {
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Classes List */}
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2" data-testid="teacher-classes-section">
                 <Card padding="lg">
                   <div className="flex items-center justify-between mb-4">
                     <Heading level={3} size="sm">
@@ -216,7 +219,7 @@ export default function TeacherDashboard() {
               </div>
 
               {/* Quick Actions */}
-              <div>
+              <div data-testid="teacher-quick-actions">
                 <Card padding="lg">
                   <Heading level={3} size="sm" className="mb-4">
                     Acciones Rápidas

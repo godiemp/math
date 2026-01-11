@@ -81,6 +81,25 @@ export interface ClassAnalytics {
   }[];
 }
 
+export interface FailedQuestion {
+  questionId: string;
+  questionText: string;
+  topic: string;
+  subject: string;
+  failCount: number;
+  totalAttempts: number;
+  failRate: number;
+  studentsFailed: string[];
+}
+
+export interface ClassFailedQuestionsResult {
+  questions: FailedQuestion[];
+  summary: {
+    totalUniqueQuestionsFailed: number;
+    avgFailRate: number;
+  };
+}
+
 export class ClassService {
   /**
    * Create a new class
@@ -151,7 +170,7 @@ export class ClassService {
           AVG(CASE WHEN qa.is_correct THEN 1.0 ELSE 0.0 END) as avg_accuracy,
           MAX(qa.attempted_at) as last_activity
         FROM class_enrollments ce
-        JOIN question_attempts qa ON ce.student_id = qa.user_id
+        JOIN quiz_attempts qa ON ce.student_id = qa.user_id
         WHERE ce.status = 'active'
         GROUP BY ce.class_id
       ) stats ON c.id = stats.class_id
@@ -205,7 +224,7 @@ export class ClassService {
           AVG(CASE WHEN qa.is_correct THEN 1.0 ELSE 0.0 END) as avg_accuracy,
           MAX(qa.attempted_at) as last_activity
         FROM class_enrollments ce
-        JOIN question_attempts qa ON ce.student_id = qa.user_id
+        JOIN quiz_attempts qa ON ce.student_id = qa.user_id
         WHERE ce.status = 'active'
         GROUP BY ce.class_id
       ) stats ON c.id = stats.class_id
@@ -423,7 +442,7 @@ export class ClassService {
           COUNT(*) as questions_answered,
           AVG(CASE WHEN is_correct THEN 1.0 ELSE 0.0 END) as accuracy,
           MAX(attempted_at) as last_active
-        FROM question_attempts
+        FROM quiz_attempts
         GROUP BY user_id
       ) stats ON u.id = stats.user_id
       LEFT JOIN (
@@ -489,7 +508,7 @@ export class ClassService {
     const activeResult = await pool.query(
       `SELECT COUNT(DISTINCT ce.student_id) as count
        FROM class_enrollments ce
-       JOIN question_attempts qa ON ce.student_id = qa.user_id
+       JOIN quiz_attempts qa ON ce.student_id = qa.user_id
        WHERE ce.class_id = $1 AND ce.status = 'active' AND qa.attempted_at >= $2`,
       [classId, oneWeekAgo]
     );
@@ -501,7 +520,7 @@ export class ClassService {
          AVG(CASE WHEN qa.is_correct THEN 1.0 ELSE 0.0 END) as avg_accuracy,
          COUNT(*) as total_questions
        FROM class_enrollments ce
-       JOIN question_attempts qa ON ce.student_id = qa.user_id
+       JOIN quiz_attempts qa ON ce.student_id = qa.user_id
        WHERE ce.class_id = $1 AND ce.status = 'active'`,
       [classId]
     );
@@ -515,7 +534,7 @@ export class ClassService {
          AVG(CASE WHEN qa.is_correct THEN 1.0 ELSE 0.0 END) as avg_accuracy,
          COUNT(*) as questions_answered
        FROM class_enrollments ce
-       JOIN question_attempts qa ON ce.student_id = qa.user_id
+       JOIN quiz_attempts qa ON ce.student_id = qa.user_id
        WHERE ce.class_id = $1 AND ce.status = 'active'
        GROUP BY qa.subject
        ORDER BY qa.subject`,
@@ -534,7 +553,7 @@ export class ClassService {
          COUNT(DISTINCT ce.student_id) as students,
          COUNT(*) as questions
        FROM class_enrollments ce
-       JOIN question_attempts qa ON ce.student_id = qa.user_id
+       JOIN quiz_attempts qa ON ce.student_id = qa.user_id
        WHERE ce.class_id = $1 AND ce.status = 'active' AND qa.attempted_at >= $2
        GROUP BY day, DATE_TRUNC('day', TO_TIMESTAMP(qa.attempted_at / 1000))
        ORDER BY DATE_TRUNC('day', TO_TIMESTAMP(qa.attempted_at / 1000))`,
@@ -547,16 +566,16 @@ export class ClassService {
     }));
 
     // Get struggling topics (accuracy < 70%)
+    // Uses quiz_attempts which has the topic column directly
     const strugglingResult = await pool.query(
       `SELECT
-         q.topic,
+         qa.topic,
          AVG(CASE WHEN qa.is_correct THEN 1.0 ELSE 0.0 END) as avg_accuracy,
          COUNT(DISTINCT ce.student_id) as students_count
        FROM class_enrollments ce
-       JOIN question_attempts qa ON ce.student_id = qa.user_id
-       JOIN questions q ON qa.question_id = q.id
+       JOIN quiz_attempts qa ON ce.student_id = qa.user_id
        WHERE ce.class_id = $1 AND ce.status = 'active'
-       GROUP BY q.topic
+       GROUP BY qa.topic
        HAVING AVG(CASE WHEN qa.is_correct THEN 1.0 ELSE 0.0 END) < 0.7
        ORDER BY avg_accuracy ASC
        LIMIT 5`,
@@ -580,13 +599,12 @@ export class ClassService {
   }
 
   /**
-   * Search students available to add to a class
+   * Get all students available to add to a class
    * Returns students who are not already in the class
    */
-  static async searchAvailableStudents(
+  static async getAvailableStudents(
     classId: string,
-    teacherId: string,
-    query: string
+    teacherId: string
   ): Promise<{ id: string; displayName: string; email: string }[]> {
     // Verify class belongs to teacher
     const classCheck = await pool.query(
@@ -598,25 +616,18 @@ export class ClassService {
       return [];
     }
 
-    const searchTerm = `%${query}%`;
-
     const result = await pool.query(
       `SELECT u.id, u.display_name, u.email
        FROM users u
        WHERE u.role = 'student'
          AND u.email_verified = true
-         AND (
-           u.display_name ILIKE $1
-           OR u.email ILIKE $1
-           OR u.username ILIKE $1
-         )
          AND u.id NOT IN (
            SELECT student_id FROM class_enrollments
-           WHERE class_id = $2 AND status = 'active'
+           WHERE class_id = $1 AND status = 'active'
          )
        ORDER BY u.display_name ASC
-       LIMIT 20`,
-      [searchTerm, classId]
+       LIMIT 100`,
+      [classId]
     );
 
     return result.rows.map((row) => ({
@@ -624,5 +635,321 @@ export class ClassService {
       displayName: row.display_name,
       email: row.email,
     }));
+  }
+
+  /**
+   * Create a new student and enroll them in a class in one transaction
+   * Grade level is derived from the class level
+   */
+  static async createStudentAndEnroll(
+    classId: string,
+    teacherId: string,
+    data: { firstName: string; lastName: string }
+  ): Promise<{
+    success: boolean;
+    student?: {
+      id: string;
+      username: string;
+      email: string;
+      displayName: string;
+      gradeLevel: string;
+    };
+    credentials?: {
+      username: string;
+      password: string;
+    };
+    error?: string;
+  }> {
+    const client = await pool.connect();
+
+    try {
+      await client.query('BEGIN');
+
+      // Verify class belongs to teacher and get level
+      const classResult = await client.query(
+        'SELECT id, level FROM classes WHERE id = $1 AND teacher_id = $2 AND is_active = true',
+        [classId, teacherId]
+      );
+
+      if (classResult.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return { success: false, error: 'Class not found or not owned by teacher' };
+      }
+
+      const classLevel = classResult.rows[0].level;
+
+      // Map class level to grade level
+      const levelToGrade: Record<string, string> = {
+        '1-medio': '1-medio',
+        '2-medio': '2-medio',
+        '3-medio': '3-medio',
+        '4-medio': '4-medio',
+        'M1': '1-medio',
+        'M2': '2-medio',
+        'both': '1-medio', // Default to 1-medio for mixed classes
+      };
+      const gradeLevel = levelToGrade[classLevel] || '1-medio';
+
+      // Generate username
+      const normalize = (str: string) =>
+        str
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase()
+          .trim()
+          .replace(/\s+/g, '.')
+          .replace(/[^a-z0-9.]/g, '');
+
+      const normalizedFirst = normalize(data.firstName);
+      const normalizedLast = normalize(data.lastName);
+      let baseUsername = `${normalizedFirst}.${normalizedLast}`.replace(/\.+/g, '.').substring(0, 30);
+
+      // Ensure unique username
+      let username = baseUsername;
+      let counter = 1;
+      while (true) {
+        const existing = await client.query('SELECT id FROM users WHERE username = $1', [username]);
+        if (existing.rows.length === 0) break;
+        username = `${baseUsername}-${counter}`;
+        counter++;
+        if (counter > 100) {
+          await client.query('ROLLBACK');
+          return { success: false, error: 'Unable to generate unique username' };
+        }
+      }
+
+      // Generate password
+      const words = [
+        'Sol', 'Luna', 'Mar', 'Rio', 'Roca', 'Nube', 'Flor', 'Arbol',
+        'Cielo', 'Tierra', 'Viento', 'Agua', 'Fuego', 'Luz', 'Estrella',
+        'Monte', 'Valle', 'Lago', 'Isla', 'Bosque', 'Playa', 'Campo',
+      ];
+      const word1 = words[Math.floor(Math.random() * words.length)];
+      const word2 = words[Math.floor(Math.random() * words.length)];
+      const number = Math.floor(Math.random() * 90) + 10;
+      const password = `${word1}-${word2}-${number}`;
+
+      const bcrypt = require('bcryptjs');
+      const passwordHash = await bcrypt.hash(password, 10);
+
+      // Generate email and display name
+      const email = `${username}@student.simplepaes.cl`;
+      const capitalize = (str: string) =>
+        str.split(' ').map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+      const displayName = `${capitalize(data.firstName)} ${capitalize(data.lastName)}`;
+
+      const now = Date.now();
+      const userId = randomUUID();
+
+      // Create the student
+      await client.query(
+        `INSERT INTO users (
+          id, username, email, password_hash, display_name, role,
+          grade_level, assigned_by_teacher_id,
+          email_verified, created_at, updated_at
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+        [
+          userId,
+          username,
+          email,
+          passwordHash,
+          displayName,
+          'student',
+          gradeLevel,
+          teacherId,
+          true, // Auto-verify teacher-created students
+          now,
+          now,
+        ]
+      );
+
+      // Enroll the student in the class
+      await client.query(
+        `INSERT INTO class_enrollments (class_id, student_id, enrolled_at, enrolled_by, status)
+         VALUES ($1, $2, $3, $4, 'active')`,
+        [classId, userId, now, teacherId]
+      );
+
+      await client.query('COMMIT');
+
+      return {
+        success: true,
+        student: {
+          id: userId,
+          username,
+          email,
+          displayName,
+          gradeLevel,
+        },
+        credentials: {
+          username,
+          password,
+        },
+      };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  /**
+   * Move a student from one class to another
+   */
+  static async moveStudentToClass(
+    sourceClassId: string,
+    targetClassId: string,
+    studentId: string,
+    teacherId: string
+  ): Promise<{
+    success: boolean;
+    message?: string;
+    error?: string;
+  }> {
+    const client = await pool.connect();
+
+    try {
+      await client.query('BEGIN');
+
+      // Verify source class belongs to teacher
+      const sourceClassResult = await client.query(
+        'SELECT id, name FROM classes WHERE id = $1 AND teacher_id = $2',
+        [sourceClassId, teacherId]
+      );
+
+      if (sourceClassResult.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return { success: false, error: 'Source class not found or not owned by teacher' };
+      }
+
+      // Verify target class belongs to teacher
+      const targetClassResult = await client.query(
+        'SELECT id, name FROM classes WHERE id = $1 AND teacher_id = $2 AND is_active = true',
+        [targetClassId, teacherId]
+      );
+
+      if (targetClassResult.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return { success: false, error: 'Target class not found or not owned by teacher' };
+      }
+
+      // Verify student is enrolled in source class
+      const enrollmentResult = await client.query(
+        `SELECT student_id FROM class_enrollments
+         WHERE class_id = $1 AND student_id = $2 AND status = 'active'`,
+        [sourceClassId, studentId]
+      );
+
+      if (enrollmentResult.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return { success: false, error: 'Student not enrolled in source class' };
+      }
+
+      const now = Date.now();
+
+      // Remove from source class (soft delete)
+      await client.query(
+        `UPDATE class_enrollments SET status = 'removed'
+         WHERE class_id = $1 AND student_id = $2`,
+        [sourceClassId, studentId]
+      );
+
+      // Add to target class (upsert in case of previous enrollment)
+      await client.query(
+        `INSERT INTO class_enrollments (class_id, student_id, enrolled_at, enrolled_by, status)
+         VALUES ($1, $2, $3, $4, 'active')
+         ON CONFLICT (class_id, student_id)
+         DO UPDATE SET status = 'active', enrolled_at = $3, enrolled_by = $4`,
+        [targetClassId, studentId, now, teacherId]
+      );
+
+      await client.query('COMMIT');
+
+      const sourceClassName = sourceClassResult.rows[0].name;
+      const targetClassName = targetClassResult.rows[0].name;
+
+      return {
+        success: true,
+        message: `Student moved from "${sourceClassName}" to "${targetClassName}"`,
+      };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  /**
+   * Get questions where class students have the most failures
+   * Returns questions with >30% fail rate and at least 3 attempts
+   */
+  static async getClassFailedQuestions(
+    classId: string,
+    teacherId: string
+  ): Promise<ClassFailedQuestionsResult | null> {
+    // Verify class belongs to teacher
+    const classCheck = await pool.query(
+      'SELECT id FROM classes WHERE id = $1 AND teacher_id = $2',
+      [classId, teacherId]
+    );
+
+    if (classCheck.rows.length === 0) {
+      return null;
+    }
+
+    const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+
+    // Get failed questions with aggregated stats
+    // Uses quiz_attempts table which stores the question text, topic, and subject
+    const result = await pool.query(
+      `SELECT
+         qa.question_id,
+         qa.question AS question_text,
+         qa.topic,
+         qa.subject,
+         COUNT(*) FILTER (WHERE NOT qa.is_correct) as fail_count,
+         COUNT(*) as total_attempts,
+         ROUND(COUNT(*) FILTER (WHERE NOT qa.is_correct)::decimal / NULLIF(COUNT(*), 0), 2) as fail_rate,
+         ARRAY_AGG(DISTINCT u.display_name) FILTER (WHERE NOT qa.is_correct) as students_failed
+       FROM class_enrollments ce
+       JOIN quiz_attempts qa ON ce.student_id = qa.user_id
+       JOIN users u ON qa.user_id = u.id
+       WHERE ce.class_id = $1 AND ce.status = 'active'
+         AND qa.attempted_at >= $2
+       GROUP BY qa.question_id, qa.question, qa.topic, qa.subject
+       HAVING COUNT(*) >= 3
+         AND COUNT(*) FILTER (WHERE NOT qa.is_correct)::decimal / NULLIF(COUNT(*), 0) >= 0.3
+       ORDER BY fail_rate DESC, fail_count DESC
+       LIMIT 10`,
+      [classId, thirtyDaysAgo]
+    );
+
+    const questions: FailedQuestion[] = result.rows.map((row) => ({
+      questionId: row.question_id,
+      questionText: row.question_text || '',
+      topic: row.topic || '',
+      subject: row.subject || '',
+      failCount: parseInt(row.fail_count) || 0,
+      totalAttempts: parseInt(row.total_attempts) || 0,
+      failRate: parseFloat(row.fail_rate) || 0,
+      studentsFailed: row.students_failed || [],
+    }));
+
+    // Calculate summary stats
+    const totalUniqueQuestionsFailed = questions.length;
+    const avgFailRate =
+      questions.length > 0
+        ? questions.reduce((sum, q) => sum + q.failRate, 0) / questions.length
+        : 0;
+
+    return {
+      questions,
+      summary: {
+        totalUniqueQuestionsFailed,
+        avgFailRate,
+      },
+    };
   }
 }

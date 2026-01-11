@@ -1,11 +1,12 @@
-import type { NextConfig } from "next";
+import { createMDX } from 'fumadocs-mdx/next';
 import { withSentryConfig } from "@sentry/nextjs";
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./i18n.ts');
+const withMDX = createMDX();
 
 // Determine backend URL based on environment
-function getBackendUrl(): string {
+function getBackendUrl() {
   if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
   if (process.env.NEXT_PUBLIC_RAILWAY_URL) return process.env.NEXT_PUBLIC_RAILWAY_URL;
 
@@ -19,13 +20,25 @@ function getBackendUrl(): string {
   return 'https://paes-math-backend-production.up.railway.app';
 }
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   /* config options here */
   env: {
     // Expose Vercel's PR ID to the client (available at build time)
     NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID: process.env.VERCEL_GIT_PULL_REQUEST_ID || '',
   },
   // Instrumentation is enabled by default in Next.js 15
+
+  // Allow external images from S3
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'math-chile.s3.us-east-1.amazonaws.com',
+        pathname: '/**',
+      },
+    ],
+  },
 
   // Proxy API requests to backend - fixes Safari ITP cookie blocking
   async rewrites() {
@@ -42,8 +55,9 @@ const nextConfig: NextConfig = {
 };
 
 const configWithIntl = withNextIntl(nextConfig);
+const configWithMDX = withMDX(configWithIntl);
 
-export default withSentryConfig(configWithIntl, {
+export default withSentryConfig(configWithMDX, {
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 

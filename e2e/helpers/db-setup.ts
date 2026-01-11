@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import { Pool, PoolClient } from 'pg';
 
 const TEST_DB_URL = process.env.TEST_DATABASE_URL ||
   'postgresql://testuser:testpassword@localhost:5433/paes_test';
@@ -9,11 +9,38 @@ export const pool = new Pool({
 });
 
 /**
+ * Apply schema updates that might be missing from migrations
+ * This ensures test database has all required columns
+ */
+async function applySchemaUpdates(client: PoolClient) {
+  // Add has_seen_welcome column if not exists (from migration 005)
+  await client.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS has_seen_welcome BOOLEAN DEFAULT FALSE NOT NULL
+  `).catch(() => {}); // Ignore if column already exists or other errors
+
+  // Add target_level column if not exists (from migration 005)
+  await client.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS target_level VARCHAR(20) DEFAULT 'M1_AND_M2'
+  `).catch(() => {}); // Ignore errors
+
+  // Add paes_exam_target column if not exists (from migration 008)
+  await client.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS paes_exam_target VARCHAR(30)
+  `).catch(() => {}); // Ignore errors
+}
+
+/**
  * Clear all data from test database tables using TRUNCATE for better performance
  */
 export async function clearDatabase() {
   const client = await pool.connect();
   try {
+    // First, apply any missing schema updates
+    await applySchemaUpdates(client);
+
     // Use TRUNCATE CASCADE for much faster clearing (resets sequences and removes all foreign key constraints)
     // This is significantly faster than individual DELETE statements
     await client.query(`
@@ -79,9 +106,9 @@ export async function seedTestData() {
     const paesStudentId = 'test-paes-student';
 
     await client.query(
-      `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-      [paesStudentId, 'paes_student', 'paes@test.cl', paesStudentPassword, 'Estudiante PAES', 'student', now, now]
+      `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      [paesStudentId, 'paes_student', 'paes@test.cl', paesStudentPassword, 'Estudiante PAES', 'student', true, now, now]
     );
 
     // Create 1-Medio test student (grade level assigned - school content only)
@@ -89,9 +116,9 @@ export async function seedTestData() {
     const medioStudentId = 'test-1medio-student';
 
     await client.query(
-      `INSERT INTO users (id, username, email, password_hash, display_name, role, grade_level, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-      [medioStudentId, '1medio_student', '1medio@test.cl', medioStudentPassword, 'Estudiante 1° Medio', 'student', '1-medio', now, now]
+      `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, grade_level, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      [medioStudentId, '1medio_student', '1medio@test.cl', medioStudentPassword, 'Estudiante 1° Medio', 'student', true, '1-medio', now, now]
     );
 
     // Create test teacher user for live lesson sync testing
@@ -112,6 +139,16 @@ export async function seedTestData() {
       `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, created_at, updated_at)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
       [syncStudentId, 'syncstudent', 'sync.student@test.com', syncStudentPassword, 'Sync Student', 'student', true, now, now]
+    );
+
+    // Create test student managed by teacher (for teacher students page testing)
+    const managedStudentPassword = await bcrypt.hash('ManagedStudent123!', 10);
+    const managedStudentId = 'test-managed-student';
+
+    await client.query(
+      `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, grade_level, assigned_by_teacher_id, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+      [managedStudentId, 'maria.gonzalez', 'maria.gonzalez@student.simplepaes.cl', managedStudentPassword, 'María González', 'student', true, '1-medio', teacherId, now, now]
     );
 
     // Create a test class for the teacher
@@ -235,6 +272,22 @@ export async function seedTestData() {
       ]
     );
 
+    // Create active subscription for managed student
+    await client.query(
+      `INSERT INTO subscriptions (user_id, plan_id, status, started_at, expires_at, auto_renew, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [
+        managedStudentId,
+        testPlanId,
+        'active',
+        now,
+        now + (365 * 24 * 60 * 60 * 1000), // 1 year from now
+        true,
+        now,
+        now
+      ]
+    );
+
     // Create sample questions
     const questions = [
       {
@@ -329,7 +382,7 @@ export async function seedTestData() {
     );
 
     await client.query('COMMIT');
-    return { adminId, studentId, teacherId, syncStudentId, sessionId, testClassId };
+    return { adminId, studentId, teacherId, syncStudentId, managedStudentId, sessionId, testClassId };
   } catch (error) {
     await client.query('ROLLBACK');
     throw error;

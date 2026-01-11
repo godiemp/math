@@ -67,6 +67,25 @@ export interface ClassAnalytics {
   }[];
 }
 
+export interface FailedQuestion {
+  questionId: string;
+  questionText: string;
+  topic: string;
+  subject: string;
+  failCount: number;
+  totalAttempts: number;
+  failRate: number;
+  studentsFailed: string[];
+}
+
+export interface ClassFailedQuestionsResult {
+  questions: FailedQuestion[];
+  summary: {
+    totalUniqueQuestionsFailed: number;
+    avgFailRate: number;
+  };
+}
+
 export interface CreateClassData {
   name: string;
   description?: string;
@@ -285,20 +304,109 @@ export async function removeStudentFromClass(
 }
 
 /**
- * Search for students available to add to a class
+ * Get all students available to add to a class
  */
-export async function searchAvailableStudents(
-  classId: string,
-  query: string
+export async function getAvailableStudents(
+  classId: string
 ): Promise<{ id: string; displayName: string; email: string }[]> {
   const response = await api.get<SearchStudentsResponse>(
-    `/api/classes/${classId}/students/search?query=${encodeURIComponent(query)}`
+    `/api/classes/${classId}/students/available`
   );
 
   if (response.error) {
-    console.error('Failed to search students:', response.error);
+    console.error('Failed to get available students:', response.error);
     return [];
   }
 
   return response.data?.students || [];
+}
+
+// Response type for create student
+interface CreateStudentResponse {
+  success: boolean;
+  student?: {
+    id: string;
+    username: string;
+    email: string;
+    displayName: string;
+    gradeLevel: string;
+  };
+  credentials?: {
+    username: string;
+    password: string;
+  };
+  error?: string;
+  message?: string;
+}
+
+/**
+ * Create a new student and enroll them in the class
+ */
+export async function createStudentInClass(
+  classId: string,
+  firstName: string,
+  lastName: string
+): Promise<CreateStudentResponse> {
+  const response = await api.post<CreateStudentResponse>(
+    `/api/classes/${classId}/students/create`,
+    { firstName, lastName }
+  );
+
+  if (response.error) {
+    return {
+      success: false,
+      error: response.error.error || 'Failed to create student',
+    };
+  }
+
+  return {
+    success: response.data?.success || false,
+    student: response.data?.student,
+    credentials: response.data?.credentials,
+    message: response.data?.message,
+  };
+}
+
+/**
+ * Move a student from one class to another
+ */
+export async function moveStudentToClass(
+  sourceClassId: string,
+  studentId: string,
+  targetClassId: string
+): Promise<{ success: boolean; message?: string; error?: string }> {
+  const response = await api.post<MessageResponse>(
+    `/api/classes/${sourceClassId}/students/${studentId}/move`,
+    { targetClassId }
+  );
+
+  if (response.error) {
+    return {
+      success: false,
+      error: response.error.error || 'Failed to move student',
+    };
+  }
+
+  return {
+    success: response.data?.success || false,
+    message: response.data?.message,
+  };
+}
+
+/**
+ * Get questions where students have the highest failure rate
+ */
+export async function getClassFailedQuestions(
+  classId: string
+): Promise<ClassFailedQuestionsResult | null> {
+  const response = await api.get<ClassFailedQuestionsResult>(
+    `/api/classes/${classId}/failed-questions`
+  );
+
+  if (response.error) {
+    console.error('Failed to fetch failed questions:', response.error);
+    return null;
+  }
+
+  return response.data || null;
 }

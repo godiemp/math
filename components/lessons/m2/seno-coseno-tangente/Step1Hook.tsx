@@ -63,7 +63,7 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
 
                 {/* Implicit triangle using TriangleFigure as group */}
                 <TriangleFigure
-                  asSvgGroup
+                  standalone={false}
                   vertices={[
                     { x: 60, y: 160 },
                     { x: 290, y: 160 },

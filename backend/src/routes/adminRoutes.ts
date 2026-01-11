@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import { uploadPDF, uploadPDFWithVision, saveQuestions, getQuestions, getUploads, serveImage } from '../controllers/adminController';
+import { getDevProductivity } from '../controllers/devProductivityController';
 import { authenticate, requireAdmin } from '../auth/middleware';
 
 const router = Router();
@@ -54,5 +55,12 @@ router.get('/questions', authenticate, requireAdmin, getQuestions);
  * @access  Private (Admin only)
  */
 router.get('/uploads', authenticate, requireAdmin, getUploads);
+
+/**
+ * @route   GET /api/admin/dev-productivity
+ * @desc    Get developer productivity metrics (PRs merged, streaks)
+ * @access  Private (Admin only)
+ */
+router.get('/dev-productivity', authenticate, requireAdmin, getDevProductivity);
 
 export default router;

@@ -47,7 +47,7 @@ export default function MathDisplay({ latex, displayMode = false, className = ''
         className={`math-display my-2 ${className}`}
         style={{
           display: 'block',
-          textAlign: 'left',
+          textAlign: 'center',
           width: '100%',
           maxWidth: '100%',
         }}

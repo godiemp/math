@@ -1,0 +1,426 @@
+---
+title: Ecuaciones e Inecuaciones
+description: Documentación de Ecuaciones e Inecuaciones para PAES M1
+---
+
+# Ecuaciones e Inecuaciones
+
+## Overview
+
+Las ecuaciones e inecuaciones son herramientas fundamentales para resolver problemas matemáticos. Una ecuación busca valores que hacen verdadera una igualdad, mientras que una inecuación busca rangos de valores.
+
+
+---
+
+## Conceptos Clave
+
+### Ecuación
+
+Una igualdad que contiene una o más incógnitas.
+
+$$2x + 3 = 11$$
+
+**Solución**: Valor(es) de la incógnita que hacen verdadera la ecuación.
+
+### Inecuación
+
+Una desigualdad que contiene una o más incógnitas.
+
+$$2x + 3 < 11$$
+
+**Solución**: Conjunto de valores que satisfacen la desigualdad.
+
+---
+
+## Ecuaciones Lineales
+
+### Forma General
+
+$$ax + b = c$$
+
+donde $a \neq 0$
+
+### Método de Resolución
+
+1. Eliminar paréntesis (distributiva)
+2. Agrupar términos con $x$ a un lado
+3. Agrupar términos constantes al otro lado
+4. Despejar $x$
+
+**Ejemplo**:
+$$3x + 5 = 14$$
+
+$$\begin{align}
+3x + 5 - 5 &= 14 - 5\\
+3x &= 9\\
+\frac{3x}{3} &= \frac{9}{3}\\
+x &= 3
+\end{align}$$
+
+**Verificación**: $3(3) + 5 = 9 + 5 = 14$ ✓
+
+---
+
+## Ecuaciones con Paréntesis
+
+**Ejemplo**:
+$$2(x-3) + 5 = 3x - 1$$
+
+$$\begin{align}
+2x - 6 + 5 &= 3x - 1\\
+2x - 1 &= 3x - 1\\
+2x - 3x &= -1 + 1\\
+-x &= 0\\
+x &= 0
+\end{align}$$
+
+---
+
+## Ecuaciones con Fracciones
+
+**Método 1**: Multiplicar toda la ecuación por el MCM de los denominadores.
+
+**Ejemplo**:
+$$\frac{x}{2} + \frac{x}{3} = 5$$
+
+$$\text{MCM}(2,3) = 6$$
+
+$$\begin{align}
+6 \cdot \frac{x}{2} + 6 \cdot \frac{x}{3} &= 6 \cdot 5\\
+3x + 2x &= 30\\
+5x &= 30\\
+x &= 6
+\end{align}$$
+
+---
+
+## Ecuaciones Cuadráticas
+
+### Forma General
+
+$$ax^2 + bx + c = 0$$
+
+donde $a \neq 0$
+
+### Fórmula Cuadrática
+
+$$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
+
+**Discriminante**: $\Delta = b^2 - 4ac$
+
+- Si $\Delta > 0$: Dos soluciones reales distintas
+- Si $\Delta = 0$: Una solución real (doble)
+- Si $\Delta < 0$: No hay soluciones reales
+
+**Ejemplo**:
+$$x^2 - 5x + 6 = 0$$
+
+$$a = 1, \quad b = -5, \quad c = 6$$
+
+$$\Delta = (-5)^2 - 4(1)(6) = 25 - 24 = 1$$
+
+$$x = \frac{5 \pm \sqrt{1}}{2} = \frac{5 \pm 1}{2}$$
+
+$$x_1 = \frac{5+1}{2} = 3, \quad x_2 = \frac{5-1}{2} = 2$$
+
+### Factorización
+
+Si se puede factorizar:
+$$x^2 - 5x + 6 = (x-2)(x-3) = 0$$
+
+$$x - 2 = 0 \quad \text{o} \quad x - 3 = 0$$
+
+$$x = 2 \quad \text{o} \quad x = 3$$
+
+---
+
+## Inecuaciones Lineales
+
+### Símbolos
+
+- $<$ : menor que
+- $\leq$ : menor o igual que
+- $>$ : mayor que
+- $\geq$ : mayor o igual que
+
+### Propiedades
+
+**Sumar/Restar**: Se puede sumar o restar el mismo número a ambos lados.
+
+$$x + 3 < 7 \quad \Rightarrow \quad x < 4$$
+
+**Multiplicar/Dividir por Positivo**: No cambia el sentido.
+
+$$2x < 6 \quad \Rightarrow \quad x < 3$$
+
+**Multiplicar/Dividir por Negativo**: ⚠️ INVIERTE el sentido.
+
+$$-2x < 6 \quad \Rightarrow \quad x > -3$$
+
+### Ejemplo
+
+$$3x - 5 \geq 7$$
+
+$$\begin{align}
+3x - 5 + 5 &\geq 7 + 5\\
+3x &\geq 12\\
+x &\geq 4
+\end{align}$$
+
+**Solución**: $x \in [4, +\infty)$
+
+**Gráfica**:
+```
+    ←———●═══════════════→
+        4
+```
+
+---
+
+## Representación de Soluciones
+
+### Notación de Intervalos
+
+| Desigualdad | Intervalo | Significado |
+|-------------|-----------|-------------|
+| $x > a$ | $(a, +\infty)$ | Mayor que $a$ |
+| $x \geq a$ | $[a, +\infty)$ | Mayor o igual que $a$ |
+| $x < a$ | $(-\infty, a)$ | Menor que $a$ |
+| $x \leq a$ | $(-\infty, a]$ | Menor o igual que $a$ |
+| $a < x < b$ | $(a, b)$ | Entre $a$ y $b$ |
+| $a \leq x \leq b$ | $[a, b]$ | Entre $a$ y $b$ (inclusivo) |
+
+**Notación**:
+- $[$ o $]$ : incluye el extremo (cerrado)
+- $($ o $)$ : no incluye el extremo (abierto)
+
+---
+
+## Inecuaciones con Valor Absoluto
+
+$$|x| < a \quad \Leftrightarrow \quad -a < x < a$$
+
+$$|x| > a \quad \Leftrightarrow \quad x < -a \text{ o } x > a$$
+
+**Ejemplo**:
+$$|x - 2| < 5$$
+
+$$-5 < x - 2 < 5$$
+
+$$-5 + 2 < x < 5 + 2$$
+
+$$-3 < x < 7$$
+
+**Solución**: $x \in (-3, 7)$
+
+---
+
+## Ejemplos Tipo PAES
+
+### Ejemplo 1: Ecuación Lineal
+
+**Pregunta**: ¿Cuál es la solución de $4x - 7 = 9$?
+
+**Opciones**:
+- A) $x = 2$
+- B) $x = 3$
+- C) $x = 4$
+- D) $x = 5$
+
+**Solución**:
+$$\begin{align}
+4x - 7 &= 9\\
+4x &= 16\\
+x &= 4
+\end{align}$$
+
+**Respuesta**: C) $x = 4$
+
+---
+
+### Ejemplo 2: Ecuación con Paréntesis
+
+**Pregunta**: Resuelve $2(x+3) = 3(x-1)$
+
+**Opciones**:
+- A) $x = 7$
+- B) $x = 8$
+- C) $x = 9$
+- D) $x = 10$
+
+**Solución**:
+$$\begin{align}
+2x + 6 &= 3x - 3\\
+6 + 3 &= 3x - 2x\\
+9 &= x
+\end{align}$$
+
+**Respuesta**: C) $x = 9$
+
+---
+
+### Ejemplo 3: Ecuación Cuadrática
+
+**Pregunta**: ¿Cuáles son las soluciones de $x^2 - 7x + 12 = 0$?
+
+**Opciones**:
+- A) $x = 2$ y $x = 6$
+- B) $x = 3$ y $x = 4$
+- C) $x = 1$ y $x = 12$
+- D) $x = -3$ y $x = -4$
+
+**Solución** (por factorización):
+$$x^2 - 7x + 12 = (x-3)(x-4) = 0$$
+
+$$x = 3 \quad \text{o} \quad x = 4$$
+
+**Respuesta**: B) $x = 3$ y $x = 4$
+
+---
+
+### Ejemplo 4: Inecuación
+
+**Pregunta**: ¿Cuál es la solución de $-3x + 6 > 0$?
+
+**Opciones**:
+- A) $x > 2$
+- B) $x < 2$
+- C) $x > -2$
+- D) $x < -2$
+
+**Solución**:
+$$\begin{align}
+-3x + 6 &> 0\\
+-3x &> -6\\
+x &< 2 \quad \text{(invertir por dividir por negativo)}
+\end{align}$$
+
+**Respuesta**: B) $x < 2$
+
+---
+
+### Ejemplo 5: Aplicación
+
+**Pregunta**: El doble de un número más 5 es igual a 19. ¿Cuál es el número?
+
+**Opciones**:
+- A) 6
+- B) 7
+- C) 8
+- D) 9
+
+**Solución**:
+$$2x + 5 = 19$$
+
+$$\begin{align}
+2x &= 14\\
+x &= 7
+\end{align}$$
+
+**Respuesta**: B) 7
+
+---
+
+## Errores Comunes
+
+### ❌ No invertir al multiplicar/dividir por negativo
+
+$$\text{❌} \quad -2x < 6 \Rightarrow x < -3$$
+$$\text{✓} \quad -2x < 6 \Rightarrow x > -3$$
+
+### ❌ Olvidar cambiar el signo al pasar de lado
+
+$$\text{❌} \quad x - 5 = 3 \Rightarrow x = 3 - 5$$
+$$\text{✓} \quad x - 5 = 3 \Rightarrow x = 3 + 5$$
+
+### ❌ Aplicar mal la fórmula cuadrática
+
+Recordar que es $\pm$ (dos soluciones):
+$$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
+
+### ❌ Confundir intervalos abiertos y cerrados
+
+$$x > 3 \rightarrow (3, +\infty) \quad \text{NO } [3, +\infty)$$
+$$x \geq 3 \rightarrow [3, +\infty)$$
+
+---
+
+## Estrategias de Resolución
+
+### Para Ecuaciones
+
+1. Simplificar ambos lados
+2. Eliminar denominadores (si hay fracciones)
+3. Agrupar términos semejantes
+4. Aislar la variable
+5. Verificar la solución
+
+### Para Inecuaciones
+
+1. Resolver como ecuación
+2. Recordar invertir si se multiplica/divide por negativo
+3. Expresar en notación de intervalo
+4. Graficar en la recta numérica
+
+---
+
+## Aplicaciones
+
+### Problemas de Edades
+
+"María tiene 5 años más que Juan. La suma de sus edades es 25."
+
+$$x + (x+5) = 25$$
+
+### Problemas de Dinero
+
+"El precio con descuento es $80. El descuento fue del 20%."
+
+$$x - 0.20x = 80$$
+
+### Problemas de Distancia
+
+"A 60 km/h llegas en 2 horas menos que a 40 km/h."
+
+$$\frac{d}{40} - \frac{d}{60} = 2$$
+
+---
+
+## Skills Relacionados
+
+Este tema desarrolla las siguientes habilidades PAES:
+
+- `algebra-ecuaciones-lineales`: Resolver ecuaciones lineales
+- `algebra-ecuaciones-cuadraticas`: Resolver ecuaciones cuadráticas
+- `algebra-inecuaciones`: Resolver inecuaciones
+- `modelar-ecuaciones`: Plantear ecuaciones desde problemas
+
+**Competencias**:
+- ✓ Resolver problemas
+- ✓ Modelar situaciones
+- ✓ Aplicar procedimientos algebraicos
+- ✓ Interpretar soluciones
+
+---
+
+## Recursos Adicionales
+
+### Práctica
+- [Ver preguntas de práctica](/questions/m1/algebra/ecuaciones-inecuaciones)
+- [Quiz interactivo](/practice/m1/algebra-ecuaciones)
+
+### Calculadora
+- [Calculadora de ecuaciones](/calculator?mode=equations)
+
+### Temas Relacionados
+- ← [Expresiones Algebraicas](/curriculum/m1/docs/algebra/expresiones-algebraicas)
+- [Sistemas de Ecuaciones →](/curriculum/m1/docs/algebra/sistemas-ecuaciones)
+
+---
+
+## Referencias
+
+- PAES Competencia M1: Álgebra y Funciones
+- Nivel de dificultad: Medio-Alto
+- Tiempo de estudio recomendado: 2-3 semanas
+- Número de preguntas en banco: ~18

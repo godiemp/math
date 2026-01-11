@@ -2,17 +2,17 @@
 
 Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
-**Última actualización:** 2025-01-07
+**Última actualización:** 2026-01-08
 
 ## Resumen
 
 | Métrica | Valor |
 |---------|-------|
 | Total OA | 19 |
-| OA con cobertura | 11 |
-| OA sin cobertura | 8 |
-| % Cobertura | 58% |
-| Total lecciones mapeadas | 19 |
+| OA con cobertura | 17 |
+| OA sin cobertura | 2 |
+| % Cobertura | 89% |
+| Total lecciones mapeadas | 23 |
 
 ---
 
@@ -105,7 +105,9 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 | Lección | Nivel | Título |
 |---------|-------|--------|
-| m1-alg-002-a | M1 | Expresiones Algebraicas |
+| m1-alg-002-b | M1 | Lenguaje Algebraico |
+
+**Nota:** Traducción de expresiones verbales a algebraicas y viceversa.
 
 ---
 
@@ -118,8 +120,6 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 | Lección | Nivel | Título |
 |---------|-------|--------|
 | m1-alg-002-a | M1 | Expresiones Algebraicas |
-
-**Nota:** Este OA se cubre junto con MA07-OA-06 en la misma lección.
 
 ---
 
@@ -136,38 +136,37 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 ---
 
-### MA07-OA-09: Ecuaciones e inecuaciones lineales ⚠️
+### MA07-OA-09: Ecuaciones e inecuaciones lineales ✅
 > Modelar y resolver problemas variados con ecuaciones e inecuaciones lineales de formas ax = b; x/a = b; ax < b; ax > b; x/a < b; x/a > b.
 
-**Estado:** ⚠️ Cobertura parcial (ecuaciones sí, inecuaciones no)
+**Estado:** ✅ Cobertura completa
 **Tipo:** No basal
 
 | Lección | Nivel | Título |
 |---------|-------|--------|
 | m1-alg-003-a | M1 | Problemas con Ecuaciones Lineales |
 | m1-alg-006-a | M1 | Ecuación Lineal |
+| m1-alg-006-b | M1 | Inecuaciones Lineales |
 
 **Pendiente:**
-- m1-alg-006-b: Inecuaciones Lineales
-- m1-alg-007-a: Problemas con Inecuaciones
+- m1-alg-007-a: Problemas con Inecuaciones (opcional, para refuerzo)
 
 ---
 
 ## Geometría (5 OA)
 
-### MA07-OA-10: Ángulos en polígonos ✅
+### MA07-OA-10: Ángulos en polígonos ⚠️
 > Descubrir relaciones que involucran ángulos exteriores o interiores de diferentes polígonos.
 
-**Estado:** ✅ Cobertura parcial
+**Estado:** ⚠️ Cobertura parcial
 **Tipo:** No basal
 
 | Lección | Nivel | Título |
 |---------|-------|--------|
-| m1-geo-001-b | M1 | Propiedades de Triángulos |
-| m1-geo-001-c | M1 | Perímetros y Áreas de Polígonos |
+| m1-geo-001-e | M1 | Ángulos Exteriores de Polígonos |
 
 **Pendiente:**
-- Lección específica de ángulos interiores/exteriores de polígonos regulares
+- m1-geo-001-d: Ángulos Interiores de Polígonos
 
 ---
 
@@ -180,8 +179,9 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 | Lección | Nivel | Título |
 |---------|-------|--------|
 | m1-geo-002-a | M1 | Circunferencia y Área del Círculo |
-| m1-geo-002-b | M1 | Relación entre Radio, Diámetro y Pi |
 | m1-geo-002-c | M1 | Sectores Circulares y Longitud de Arco |
+
+**Nota:** m1-geo-002-b trata sobre figuras compuestas, no específicamente sobre el círculo.
 
 ---
 
@@ -202,12 +202,13 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 ### MA07-OA-13: Área de triángulos, paralelogramos y trapecios ✅
 > Desarrollar y aplicar la fórmula del área de triángulos, paralelogramos y trapecios.
 
-**Estado:** ✅ Cobertura parcial
+**Estado:** ✅ Cobertura completa
 **Tipo:** No basal
 
 | Lección | Nivel | Título |
 |---------|-------|--------|
-| m1-geo-001-c | M1 | Perímetros y Áreas de Polígonos |
+| m1-geo-001-b | M1 | Área de Rectángulos y Triángulos |
+| m1-geo-001-c | M1 | Área de Paralelogramos y Trapecios |
 
 ---
 
@@ -229,14 +230,15 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 ## Probabilidad y Estadística (5 OA)
 
-### MA07-OA-15: Muestreo y estimación ❌
+### MA07-OA-15: Muestreo y estimación ✅
 > Estimar el porcentaje de algunas características de una población desconocida por medio del muestreo.
 
-**Estado:** ❌ Sin cobertura
+**Estado:** ✅ Cobertura completa
 **Tipo:** No basal
 
-**Pendiente:**
-- 7b-prob-001: Muestreo y Estimación de Poblaciones
+| Lección | Nivel | Título |
+|---------|-------|--------|
+| m1-prob-001-a | M1 | Muestreo y Estimación de Poblaciones |
 
 ---
 
@@ -248,7 +250,7 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 | Lección | Nivel | Título |
 |---------|-------|--------|
-| m1-prob-001-a | M1 | Tablas de Frecuencia y Gráficos |
+| m1-prob-001-b | M1 | Tablas de Frecuencia y Gráficos |
 
 ---
 
@@ -297,10 +299,10 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 | Eje | Total OA | OA Cubiertos | % |
 |-----|----------|--------------|---|
 | Números | 5 | 5 | 100% |
-| Álgebra | 4 | 3 | 75% |
+| Álgebra | 4 | 4 | 100% |
 | Geometría | 5 | 3 | 60% |
-| Prob/Estadística | 5 | 3 | 60% |
-| **Total** | **19** | **14** | **74%** |
+| Prob/Estadística | 5 | 5 | 100% |
+| **Total** | **19** | **17** | **89%** |
 
 ### OA Basales sin cobertura
 
@@ -311,11 +313,9 @@ Objetivos de Aprendizaje de 7° Básico y su mapeo a mini lecciones.
 
 | Prioridad | OA | Tema | Lecciones Necesarias |
 |-----------|-----|------|---------------------|
-| Alta | MA07-OA-09 | Inecuaciones | 2 lecciones |
 | Alta | MA07-OA-14 | Vectores | 2 lecciones |
+| Media | MA07-OA-10 | Ángulos en polígonos | 2 lecciones |
 | Media | MA07-OA-12 | Construcciones | 2 lecciones |
-| Media | MA07-OA-15 | Muestreo | 1 lección |
-| Baja | MA07-OA-19 | Prob. experimental vs teórica | 1 lección |
 
 ---
 
@@ -362,10 +362,9 @@ La mayoría de OA de 7° básico ya están cubiertos por lecciones M1. Un estudi
 Solo si el proyecto decide expandirse a 7° básico específicamente:
 1. 7b-geo-001: Construcciones Geométricas
 2. 7b-geo-002: Puntos Notables del Triángulo
-3. 7b-prob-001: Muestreo
 
 ### Fase 3: Completar Brechas M1 (beneficia 7° y PAES)
-1. m1-alg-006-b: Inecuaciones Lineales
+1. ~~m1-alg-006-b: Inecuaciones Lineales~~ ✅ Implementada
 2. m1-geo-004-b/c: Vectores
 
 ---

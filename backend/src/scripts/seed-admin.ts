@@ -386,9 +386,9 @@ async function seedAdmin() {
     } else {
       const paesPasswordHash = await bcrypt.hash(paesStudentPassword, 10);
       await pool.query(
-        `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-        [paesStudentId, paesStudentUsername, paesStudentEmail, paesPasswordHash, paesStudentDisplayName, 'student', now, now]
+        `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+        [paesStudentId, paesStudentUsername, paesStudentEmail, paesPasswordHash, paesStudentDisplayName, 'student', true, now, now]
       );
       console.log(`✅ PAES student created: ${paesStudentUsername} (password: ${paesStudentPassword})`);
     }
@@ -410,9 +410,9 @@ async function seedAdmin() {
     } else {
       const medioPasswordHash = await bcrypt.hash(medioStudentPassword, 10);
       await pool.query(
-        `INSERT INTO users (id, username, email, password_hash, display_name, role, grade_level, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-        [medioStudentId, medioStudentUsername, medioStudentEmail, medioPasswordHash, medioStudentDisplayName, 'student', '1-medio', now, now]
+        `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, grade_level, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+        [medioStudentId, medioStudentUsername, medioStudentEmail, medioPasswordHash, medioStudentDisplayName, 'student', true, '1-medio', now, now]
       );
       console.log(`✅ 1-Medio student created: ${medioStudentUsername} (password: ${medioStudentPassword})`);
     }
@@ -437,9 +437,9 @@ async function seedAdmin() {
       } else {
         const passwordHash = await bcrypt.hash('test123', 10);
         await pool.query(
-          `INSERT INTO users (id, username, email, password_hash, display_name, role, grade_level, created_at, updated_at)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-          [student.id, student.username, student.email, passwordHash, student.displayName, 'student', student.gradeLevel, now, now]
+          `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, grade_level, created_at, updated_at)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+          [student.id, student.username, student.email, passwordHash, student.displayName, 'student', true, student.gradeLevel, now, now]
         );
         console.log(`✅ ${student.gradeLevel} student created: ${student.username} (password: test123)`);
       }
@@ -462,9 +462,9 @@ async function seedAdmin() {
     } else {
       const teacherPasswordHash = await bcrypt.hash(teacherPassword, 10);
       await pool.query(
-        `INSERT INTO users (id, username, email, password_hash, display_name, role, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-        [teacherId, teacherUsername, teacherEmail, teacherPasswordHash, teacherDisplayName, 'teacher', now, now]
+        `INSERT INTO users (id, username, email, password_hash, display_name, role, email_verified, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+        [teacherId, teacherUsername, teacherEmail, teacherPasswordHash, teacherDisplayName, 'teacher', true, now, now]
       );
       console.log(`✅ Teacher created: ${teacherUsername} (password: ${teacherPassword})`);
     }

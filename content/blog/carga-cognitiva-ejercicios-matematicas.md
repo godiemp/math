@@ -9,13 +9,13 @@ published: true
 
 Explicas un problema con tres pasos. El estudiante sigue el primero. Asiente en el segundo. Y cuando llegas al tercero, tiene cara de perdido. No es que no le interese. Es que su memoria de trabajo se llenó.
 
-La teoría de la carga cognitiva explica por qué esto pasa—y cómo diseñar tu enseñanza para evitarlo. Es una de las ideas más útiles que la ciencia del aprendizaje le ha dado a los profesores.
+La teoría de la carga cognitiva, desarrollada por [John Sweller](https://www.sciencedirect.com/science/article/abs/pii/S0364021388800237) a partir de la década de 1980, explica por qué esto pasa—y cómo diseñar tu enseñanza para evitarlo. Es una de las ideas más útiles que la ciencia del aprendizaje le ha dado a los profesores.
 
 ## Qué es la carga cognitiva (y por qué importa)
 
-Tu memoria de trabajo es donde procesas información nueva. Es como un escritorio mental: solo caben unas pocas cosas a la vez. Cuando se llena, el aprendizaje se detiene.
+Tu memoria de trabajo es donde procesas información nueva. [George Miller (1956)](https://psycnet.apa.org/record/1957-02914-001) estableció que su capacidad es limitada—típicamente 7±2 elementos a la vez. Es como un escritorio mental: solo caben unas pocas cosas a la vez. Cuando se llena, el aprendizaje se detiene.
 
-La investigación identifica tres tipos de carga cognitiva:
+[Sweller et al. (2011)](https://www.cambridge.org/core/books/cognitive-load-theory/E2D96D61FCA2279A2FE72D51A04E9C90) refinaron el modelo identificando tres tipos de carga cognitiva:
 
 | Tipo | Qué es | Ejemplo |
 |------|--------|---------|
@@ -27,7 +27,7 @@ La investigación identifica tres tipos de carga cognitiva:
 
 ## Por qué los estudiantes se saturan
 
-La carga cognitiva excesiva ocurre cuando la suma de demandas supera la capacidad de la memoria de trabajo:
+La carga cognitiva excesiva ocurre cuando la suma de demandas supera la capacidad de la memoria de trabajo. [Paas y Van Merriënboer (1994)](https://www.sciencedirect.com/science/article/abs/pii/0959475294900035) demostraron que cuando esto ocurre, el rendimiento cae abruptamente—no hay aprendizaje parcial, simplemente se detiene.
 
 **Escenario típico de sobrecarga:**
 
@@ -45,9 +45,9 @@ Para ti, todo esto es automático. Para un estudiante que lo ve por primera vez,
 
 ### 1. El efecto de ejemplo trabajado
 
-La investigación muestra consistentemente que los estudiantes aprenden más viendo ejemplos completos y paso a paso que intentando resolver problemas similares desde cero.
+[Sweller y Cooper (1985)](https://www.sciencedirect.com/science/article/abs/pii/0010028585900026) descubrieron algo contraintuitivo: los estudiantes que estudian ejemplos resueltos paso a paso aprenden más rápido que los que resuelven problemas desde el principio. Este hallazgo, replicado en decenas de estudios, se conoce como el "worked example effect".
 
-**Por qué funciona:** Un ejemplo trabajado reduce la carga cognitiva porque el estudiante no tiene que buscar qué hacer—puede enfocarse en entender por qué cada paso tiene sentido.
+**Por qué funciona:** Un ejemplo trabajado reduce la carga cognitiva porque el estudiante no tiene que buscar qué hacer—puede enfocarse en entender *por qué* cada paso tiene sentido. [Renkl (2014)](https://www.sciencedirect.com/science/article/abs/pii/B9780123876911000078) demostró que este efecto es particularmente fuerte para estudiantes novatos en matemáticas.
 
 **Cómo aplicarlo:**
 
@@ -62,9 +62,11 @@ La investigación muestra consistentemente que los estudiantes aprenden más vie
 2. Ejemplo con espacios (completan partes)
 3. Problema independiente (hacen todo solos)
 
+Esta progresión, que [Renkl y Atkinson (2003)](https://www.sciencedirect.com/science/article/abs/pii/S0959475203000022) llamaron "fading" (desvanecimiento), produce mejores resultados que saltar directamente a problemas completos.
+
 ### 2. Segmenta la información
 
-El cerebro procesa mejor la información en pedazos pequeños. No expliques todo junto.
+[Mayer (2009)](https://www.cambridge.org/core/books/multimedia-learning/4C81CFB7AD5F7F1D0F27F5E898E2E083), en su teoría del aprendizaje multimedia, demostró que el cerebro procesa mejor la información en pedazos pequeños. No expliques todo junto.
 
 **Ejemplo de sobrecarga (todo junto):**
 > "Para resolver sistemas de ecuaciones por sustitución, primero despeja una variable de una ecuación, luego reemplaza esa expresión en la otra ecuación, resuelves la ecuación resultante, y finalmente sustituyes el valor encontrado en la primera ecuación despejada para encontrar la otra variable."
@@ -79,7 +81,7 @@ El cerebro procesa mejor la información en pedazos pequeños. No expliques todo
 
 ### 3. Elimina información innecesaria
 
-Todo lo que no es esencial para el aprendizaje es ruido que consume memoria de trabajo.
+[Mayer y Moreno (2003)](https://www.sciencedirect.com/science/article/abs/pii/S0749596X02000108) identificaron el "principio de coherencia": todo lo que no es esencial para el aprendizaje es ruido que consume memoria de trabajo.
 
 | Elemento | ¿Necesario? | Alternativa |
 |----------|-------------|-------------|
@@ -98,7 +100,7 @@ El contexto de María, los tomates, y la tía no agregan nada matemático—solo
 
 ### 4. Integra texto y diagramas
 
-Cuando usas una imagen y explicación separadas, el estudiante tiene que ir y venir mentalmente. Esto consume carga cognitiva.
+[Sweller et al. (1990)](https://www.sciencedirect.com/science/article/abs/pii/074959789090015B) documentaron el "efecto de atención dividida": cuando usas una imagen y explicación separadas, el estudiante tiene que ir y venir mentalmente. Esto consume carga cognitiva.
 
 **Mal diseño:**
 - Diagrama en la pizarra
@@ -113,8 +115,6 @@ Esto se llama "principio de contigüidad": la información relacionada debe esta
 
 ### 5. No dividas la atención innecesariamente
 
-El "efecto de atención dividida" ocurre cuando fuerzas al estudiante a procesar múltiples fuentes de información simultáneamente.
-
 **Ejemplo de atención dividida:**
 > "Miren la fórmula en el proyector mientras les explico los pasos en la pizarra."
 
@@ -125,11 +125,11 @@ El estudiante tiene que alternar entre proyector y pizarra, perdiendo el hilo.
 
 ## Cómo ajustar la carga según el nivel del estudiante
 
-Un concepto clave de la investigación: lo que es carga apropiada para un novato puede ser innecesario para un experto.
+Un concepto crucial de la investigación: lo que es carga apropiada para un novato puede ser innecesario para un experto.
 
 ### El efecto de inversión de la expertise
 
-Los ejemplos trabajados ayudan a novatos, pero pueden estorbar a estudiantes avanzados. Cuando ya dominas algo, ver todos los pasos es tedioso y puede incluso interferir.
+[Kalyuga et al. (2003)](https://psycnet.apa.org/record/2003-00017-004) documentaron un fenómeno fascinante: los ejemplos trabajados ayudan a novatos, pero pueden estorbar a estudiantes avanzados. Cuando ya dominas algo, ver todos los pasos es tedioso y puede incluso interferir con tu procesamiento más eficiente.
 
 **Implicación práctica:**
 
@@ -145,7 +145,7 @@ Esto conecta directamente con [cómo diferenciar la instrucción](/blog/diferenc
 
 ### Principio 1: Complejidad progresiva
 
-No saltes de ejemplo a problema complejo. Crea una escalera:
+[Van Merriënboer y Sweller (2005)](https://www.sciencedirect.com/science/article/abs/pii/S0959475204000629) proponen el "principio de secuenciación": no saltes de ejemplo a problema complejo. Crea una escalera:
 
 **Ejemplo para ecuaciones cuadráticas:**
 
@@ -169,7 +169,7 @@ Si un problema requiere 4 habilidades y el estudiante falla, no sabes cuál fall
 
 ### Principio 3: Usa andamiaje que se desvanece
 
-Empieza con mucho apoyo, reduce gradualmente.
+[Renkl y Atkinson (2003)](https://www.sciencedirect.com/science/article/abs/pii/S0959475203000022) demostraron que el andamiaje gradualmente reducido produce mejores resultados que el andamiaje constante o su ausencia total.
 
 **Ejemplo de andamiaje decreciente:**
 
@@ -188,7 +188,7 @@ El apoyo se reduce progresivamente a medida que el estudiante construye automati
 
 ### Principio 4: Intercala con cuidado
 
-La práctica intercalada (mezclar tipos de problemas) es más efectiva para retención a largo plazo que la práctica en bloque. Pero introduce más carga cognitiva.
+[Rohrer y Taylor (2007)](https://link.springer.com/article/10.1007/s11251-007-9015-8) demostraron que la práctica intercalada (mezclar tipos de problemas) es más efectiva para retención a largo plazo que la práctica en bloque. Pero introduce más carga cognitiva.
 
 **Cuándo intercalar:**
 - Cuando ya dominan los procedimientos individuales
@@ -232,7 +232,7 @@ Las plataformas digitales pueden ayudar o empeorar la carga cognitiva:
 
 ### Cómo la tecnología puede reducir carga:
 
-- **Retroalimentación inmediata:** No tienen que mantener la pregunta en memoria mientras esperan tu corrección
+- **Retroalimentación inmediata:** No tienen que mantener la pregunta en memoria mientras esperan tu corrección—lo que [Shute (2008)](https://journals.sagepub.com/doi/10.3102/0034654307313795) identificó como crucial para el aprendizaje
 - **Práctica adaptativa:** Ajusta la dificultad al nivel del estudiante automáticamente
 - **Ejemplos paso a paso:** Disponibles cuando los necesitan, sin interrumpir la clase
 
