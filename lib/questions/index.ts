@@ -50,6 +50,15 @@ export function getQuestionsBySubject(subject: 'números' | 'álgebra' | 'geomet
   });
 }
 
+export function getQuestionsBySkills(skills: string[], level?: 'M1' | 'M2'): Question[] {
+  if (!skills.length) return [];
+  return questions.filter(q => {
+    const levelMatch = !level || q.level === level;
+    const skillMatch = q.skills?.some(skill => skills.includes(skill)) ?? false;
+    return levelMatch && skillMatch;
+  });
+}
+
 export function getQuestionsByIds(questionIds: string[]): Question[] {
   return questionIds
     .map(id => questions.find(q => q.id === id))

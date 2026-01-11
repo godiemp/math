@@ -1,291 +1,44 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
-import { toast } from 'sonner';
 import { Eye, EyeOff } from 'lucide-react';
-import { registerUser, loginUser } from '@/lib/auth';
-import { analytics } from '@/lib/analytics';
 import { useTranslations } from 'next-intl';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuthForm } from '@/hooks/auth/useAuthForm';
 
 interface AuthProps {
   onSuccess: (isNewUser?: boolean) => void;
 }
 
-// Helper to retry API calls on network errors (handles Railway cold starts)
-async function withRetry<T>(
-  fn: () => Promise<T>,
-  isRetryableError: (result: T) => boolean,
-  maxRetries = 2,
-  delayMs = 1000
-): Promise<T> {
-  let lastResult: T;
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    lastResult = await fn();
-    if (!isRetryableError(lastResult)) {
-      return lastResult;
-    }
-    if (attempt < maxRetries) {
-      await new Promise(resolve => setTimeout(resolve, delayMs));
-    }
-  }
-  return lastResult!;
-}
-
 export default function Auth({ onSuccess }: AuthProps) {
   const t = useTranslations('auth');
   const tCommon = useTranslations('common');
-  const router = useRouter();
-  const { refreshSession } = useAuth();
-  const [isLogin, setIsLogin] = useState(true);
-  // Show quick sign-in buttons on vercel.app URLs (excludes simplepaes.cl)
-  const isPreview = typeof window !== 'undefined' && window.location.hostname.includes('vercel.app');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRetrying, setIsRetrying] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
-  // Quick sign-in for preview environments
-  const handleQuickSignIn = async (testUsername: string, testPassword: string) => {
-    setError('');
-    setIsLoading(true);
-    setIsLogin(true);
+  const {
+    // Form state
+    username,
+    setUsername,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    displayName,
+    setDisplayName,
+    acceptedTerms,
+    setAcceptedTerms,
 
-    try {
-      const loginResult = await withRetry(
-        async () => {
-          const result = await loginUser(testUsername, testPassword);
-          if (!result.success && result.error?.includes('Network error')) {
-            setIsRetrying(true);
-          }
-          return result;
-        },
-        (result) => !result.success && Boolean(result.error?.includes('Network error') || result.error?.includes('Unable to connect'))
-      );
-      setIsRetrying(false);
+    // UI state
+    isLogin,
+    isLoading,
+    isRetrying,
+    error,
+    showPassword,
+    setShowPassword,
+    isPreview,
 
-      if (!loginResult.success) {
-        const errorMsg = loginResult.error || t('login.errors.invalidCredentials');
-        setError(errorMsg);
-        return;
-      }
-
-      const result = await signIn('credentials', {
-        user: JSON.stringify(loginResult.user),
-        redirect: false,
-      });
-
-      if (result?.ok) {
-        analytics.track('user_logged_in', {
-          method: 'quick_signin',
-          username: testUsername,
-        });
-        await refreshSession();
-        onSuccess(false);
-      }
-    } catch (err) {
-      setError(tCommon('connectionError'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
-
-    try {
-      if (isLogin) {
-        // Login flow: Call backend directly first (browser receives cookies),
-        // then create NextAuth session with user data
-        if (!username || !password) {
-          const errorMsg = t('login.errors.completeFields');
-          setError(errorMsg);
-          toast.error(errorMsg);
-          setIsLoading(false);
-          return;
-        }
-
-        // Step 1: Call backend directly - browser receives HttpOnly cookies for backend domain
-        // Use retry logic to handle Railway cold starts
-        const loginResult = await withRetry(
-          async () => {
-            const result = await loginUser(username, password);
-            // If network error on first try, show "connecting" message
-            if (!result.success && result.error?.includes('Network error')) {
-              setIsRetrying(true);
-            }
-            return result;
-          },
-          // Only retry on network errors (cold start), not auth errors
-          (result) => !result.success && Boolean(result.error?.includes('Network error') || result.error?.includes('Unable to connect'))
-        );
-        setIsRetrying(false);
-
-        if (!loginResult.success) {
-          const errorMsg = loginResult.error || t('login.errors.invalidCredentials');
-          setError(errorMsg);
-          toast.error(errorMsg);
-          setIsLoading(false);
-          return;
-        }
-
-        // Step 2: Create NextAuth session with pre-authenticated user data
-        // Pass user data instead of credentials to skip server-side backend call
-        const result = await signIn('credentials', {
-          user: JSON.stringify(loginResult.user),
-          redirect: false,
-        });
-
-        if (result?.error) {
-          const errorMsg = t('login.errors.invalidCredentials');
-          setError(errorMsg);
-          toast.error(errorMsg);
-          setIsLoading(false);
-          return;
-        }
-
-        if (result?.ok) {
-          // Track login event
-          analytics.track('user_logged_in', {
-            method: 'password',
-            username: username,
-          });
-
-          toast.success(t('login.success'));
-          // Force NextAuth to refetch the session before notifying success
-          // This ensures useSession() has the updated session data before
-          // the landing page's useEffect tries to redirect
-          await refreshSession();
-          onSuccess(false);
-        }
-      } else {
-        // Register - call backend first, then signIn
-        if (!username || !email || !password || !displayName) {
-          const errorMsg = t('register.errors.completeFields');
-          setError(errorMsg);
-          toast.error(errorMsg);
-          setIsLoading(false);
-          return;
-        }
-
-        // Validate password requirements
-        if (password.length < 8) {
-          const errorMsg = t('register.errors.passwordLength');
-          setError(errorMsg);
-          toast.error(errorMsg);
-          setIsLoading(false);
-          return;
-        }
-
-        // Validate username format (no spaces, special characters, or accents)
-        const usernameRegex = /^[a-zA-Z0-9_]+$/;
-        if (!usernameRegex.test(username)) {
-          const errorMsg = t('register.errors.usernameFormat');
-          setError(errorMsg);
-          toast.error(errorMsg);
-          setIsLoading(false);
-          return;
-        }
-
-        if (username.length > 20) {
-          const errorMsg = t('register.errors.usernameTooLong');
-          setError(errorMsg);
-          toast.error(errorMsg);
-          setIsLoading(false);
-          return;
-        }
-
-        if (!acceptedTerms) {
-          const errorMsg = t('register.errors.acceptTerms');
-          setError(errorMsg);
-          toast.error(errorMsg);
-          setIsLoading(false);
-          return;
-        }
-
-        // Register with backend - use retry logic for Railway cold starts
-        const result = await withRetry(
-          async () => {
-            const res = await registerUser(username, email, password, displayName, acceptedTerms);
-            if (!res.success && res.error?.includes('Network error')) {
-              setIsRetrying(true);
-            }
-            return res;
-          },
-          (res) => !res.success && Boolean(res.error?.includes('Network error') || res.error?.includes('Unable to connect'))
-        );
-        setIsRetrying(false);
-
-        if (result.success && result.user) {
-          // Track registration event
-          analytics.track('user_signed_up', {
-            source: 'organic',
-            method: 'password',
-            username: result.user.username,
-          });
-
-          // Identify user for future events
-          analytics.identify(result.user.id, {
-            email: result.user.email,
-            username: result.user.username,
-            displayName: result.user.displayName,
-            role: result.user.role,
-            subscriptionStatus: result.user.subscription?.status || 'free',
-            currentStreak: 0,
-            longestStreak: 0,
-          });
-
-          // Now sign in with NextAuth to create session using user data
-          // Pass user data instead of credentials to skip server-side backend call
-          // (cookies are already set by registerUser call above)
-          const signInResult = await signIn('credentials', {
-            user: JSON.stringify(result.user),
-            redirect: false,
-          });
-
-          if (signInResult?.ok) {
-            toast.success(t('register.success'));
-            // Force NextAuth to refetch the session before navigation
-            await refreshSession();
-            // Call onSuccess to set redirectPath state, then navigate
-            onSuccess(true);
-            router.push('/dashboard?welcome=true');
-          } else {
-            // Registration succeeded but auto sign-in failed
-            // Don't navigate to dashboard as middleware will redirect back (no session)
-            // Instead, keep user on auth form and let them manually sign in
-            toast.success(t('register.success'));
-            // Switch to login mode so user can manually sign in
-            setIsLogin(true);
-            // Pre-fill username for convenience
-            setUsername(username);
-            setPassword('');
-            setDisplayName('');
-            setEmail('');
-          }
-        } else {
-          const errorMsg = result.error || t('login.errors.registration');
-          setError(errorMsg);
-          toast.error(errorMsg);
-        }
-      }
-    } catch (err) {
-      const errorMsg = tCommon('connectionError');
-      setError(errorMsg);
-      toast.error(errorMsg);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    // Actions
+    handleSubmit,
+    handleQuickSignIn,
+    toggleMode,
+  } = useAuthForm({ onSuccess });
 
   return (
     <div
@@ -321,10 +74,7 @@ export default function Auth({ onSuccess }: AuthProps) {
           {' '}
           <button
             data-testid="auth-toggle-button"
-            onClick={() => {
-              setIsLogin(!isLogin);
-              setError('');
-            }}
+            onClick={toggleMode}
             className="spring-motion"
             style={{
               fontWeight: 500,
@@ -729,7 +479,8 @@ export default function Auth({ onSuccess }: AuthProps) {
                 </span>
                 <div style={{ flex: 1, height: '1px', background: 'var(--color-separator)' }} />
               </div>
-              <div style={{ display: 'flex', gap: 'var(--spacing-4)' }}>
+              {/* Row 1: System accounts */}
+              <div style={{ display: 'flex', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-3)' }}>
                 <button
                   type="button"
                   disabled={isLoading}
@@ -753,6 +504,92 @@ export default function Auth({ onSuccess }: AuthProps) {
                 <button
                   type="button"
                   disabled={isLoading}
+                  onClick={() => handleQuickSignIn('teacher', 'test123')}
+                  className="spring-motion"
+                  style={{
+                    flex: 1,
+                    height: '40px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    color: 'var(--color-label-primary)',
+                    background: 'var(--color-fill)',
+                    border: '1px solid var(--color-separator)',
+                    borderRadius: 'var(--radius-sm)',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    opacity: isLoading ? 0.5 : 1,
+                  }}
+                >
+                  Teacher
+                </button>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleQuickSignIn('admin', 'admin123')}
+                  className="spring-motion"
+                  style={{
+                    flex: 1,
+                    height: '40px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    color: 'var(--color-label-primary)',
+                    background: 'var(--color-fill)',
+                    border: '1px solid var(--color-separator)',
+                    borderRadius: 'var(--radius-sm)',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    opacity: isLoading ? 0.5 : 1,
+                  }}
+                >
+                  Admin
+                </button>
+              </div>
+              {/* Row 2: Basic education */}
+              <div style={{ display: 'flex', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-3)' }}>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleQuickSignIn('7basico_student', 'test123')}
+                  className="spring-motion"
+                  style={{
+                    flex: 1,
+                    height: '40px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    color: 'var(--color-label-primary)',
+                    background: 'var(--color-fill)',
+                    border: '1px solid var(--color-separator)',
+                    borderRadius: 'var(--radius-sm)',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    opacity: isLoading ? 0.5 : 1,
+                  }}
+                >
+                  7° Básico
+                </button>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleQuickSignIn('8basico_student', 'test123')}
+                  className="spring-motion"
+                  style={{
+                    flex: 1,
+                    height: '40px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    color: 'var(--color-label-primary)',
+                    background: 'var(--color-fill)',
+                    border: '1px solid var(--color-separator)',
+                    borderRadius: 'var(--radius-sm)',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    opacity: isLoading ? 0.5 : 1,
+                  }}
+                >
+                  8° Básico
+                </button>
+              </div>
+              {/* Row 3: Secondary education */}
+              <div style={{ display: 'flex', gap: 'var(--spacing-4)' }}>
+                <button
+                  type="button"
+                  disabled={isLoading}
                   onClick={() => handleQuickSignIn('1medio_student', 'test123')}
                   className="spring-motion"
                   style={{
@@ -768,7 +605,67 @@ export default function Auth({ onSuccess }: AuthProps) {
                     opacity: isLoading ? 0.5 : 1,
                   }}
                 >
-                  1° Medio Student
+                  1° Medio
+                </button>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleQuickSignIn('2medio_student', 'test123')}
+                  className="spring-motion"
+                  style={{
+                    flex: 1,
+                    height: '40px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    color: 'var(--color-label-primary)',
+                    background: 'var(--color-fill)',
+                    border: '1px solid var(--color-separator)',
+                    borderRadius: 'var(--radius-sm)',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    opacity: isLoading ? 0.5 : 1,
+                  }}
+                >
+                  2° Medio
+                </button>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleQuickSignIn('3medio_student', 'test123')}
+                  className="spring-motion"
+                  style={{
+                    flex: 1,
+                    height: '40px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    color: 'var(--color-label-primary)',
+                    background: 'var(--color-fill)',
+                    border: '1px solid var(--color-separator)',
+                    borderRadius: 'var(--radius-sm)',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    opacity: isLoading ? 0.5 : 1,
+                  }}
+                >
+                  3° Medio
+                </button>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleQuickSignIn('4medio_student', 'test123')}
+                  className="spring-motion"
+                  style={{
+                    flex: 1,
+                    height: '40px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    color: 'var(--color-label-primary)',
+                    background: 'var(--color-fill)',
+                    border: '1px solid var(--color-separator)',
+                    borderRadius: 'var(--radius-sm)',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    opacity: isLoading ? 0.5 : 1,
+                  }}
+                >
+                  4° Medio
                 </button>
               </div>
             </div>

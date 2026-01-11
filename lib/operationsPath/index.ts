@@ -1,14 +1,13 @@
 /**
  * Operations Practice Path Configuration
  * Defines the progressive path from easiest to hardest operations
- * 130 levels organized in 5 phases, all mapped to PAES M1/M2 thematic units
+ * Levels organized in 4 phases, all mapped to PAES M1/M2 thematic units
  *
  * Phases:
  * - Arithmetic (1-30): Basic number operations
  * - Algebraic (31-70): Equations, expressions, and simplification
- * - Logical (71-90): Comparisons and compound conditions
- * - Structural (91-110): Sets, sequences, and functions
- * - Algorithmic (111-130): Sorting, counting, and transformations
+ * - Logical (71-84): Comparisons and basic conditions
+ * - Structural (85-103): Sets, sequences, and functions
  */
 
 // Re-export types
@@ -25,7 +24,7 @@ import { algorithmicLevels } from './levels/algorithmic';
 import type { OperationLevel, PhaseType } from './types';
 
 /**
- * The complete operations path - 120 progressive levels
+ * The complete operations path - progressive levels
  * All levels are mapped to PAES M1/M2 thematic units
  * Level numbers are automatically assigned based on array position
  */
@@ -85,18 +84,18 @@ export function getPhaseInfo(phase: PhaseType): { name: string; range: string; d
     },
     logical: {
       name: 'Operaciones Lógicas',
-      range: 'Niveles 71-90',
-      description: 'Razonamiento y condiciones'
+      range: 'Niveles 71-84',
+      description: 'Razonamiento y comparaciones'
     },
     structural: {
       name: 'Operaciones Estructurales',
-      range: 'Niveles 91-110',
+      range: 'Niveles 85-103',
       description: 'Conjuntos, secuencias y funciones'
     },
     algorithmic: {
       name: 'Operaciones Algorítmicas',
-      range: 'Niveles 111-130',
-      description: 'Ordenamiento, conteo y transformaciones'
+      range: 'Fase eliminada',
+      description: 'Contenido no aplicable a PAES'
     }
   };
   return phases[phase];

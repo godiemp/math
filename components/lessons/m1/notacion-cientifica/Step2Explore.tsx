@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { ArrowRight, Sparkles, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LessonStepProps } from '@/lib/lessons/types';
+import { useExampleReveal } from '@/hooks/lessons';
 
 interface ConversionExample {
   id: string;
@@ -60,28 +60,21 @@ const EXAMPLES: ConversionExample[] = [
 ];
 
 export default function Step2Explore({ onComplete, isActive }: LessonStepProps) {
-  const [currentExample, setCurrentExample] = useState(0);
-  const [showAnimation, setShowAnimation] = useState(false);
-  const [completedExamples, setCompletedExamples] = useState<string[]>([]);
-
-  const example = EXAMPLES[currentExample];
-
-  const handleShowAnimation = () => {
-    setShowAnimation(true);
-  };
-
-  const handleNextExample = () => {
-    if (!completedExamples.includes(example.id)) {
-      setCompletedExamples([...completedExamples, example.id]);
-    }
-
-    if (currentExample < EXAMPLES.length - 1) {
-      setCurrentExample(currentExample + 1);
-      setShowAnimation(false);
-    }
-  };
-
-  const allCompleted = completedExamples.length >= EXAMPLES.length - 1 && showAnimation;
+  const {
+    example,
+    currentIndex,
+    isRevealed,
+    isLastExample,
+    completedIds,
+    completedCount,
+    reveal,
+    nextExample,
+    complete,
+  } = useExampleReveal({
+    examples: EXAMPLES,
+    getExampleId: (ex) => ex.id,
+    onAllCompleted: onComplete,
+  });
 
   if (!isActive) return null;
 
@@ -104,14 +97,14 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             key={ex.id}
             className={cn(
               'w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all',
-              completedExamples.includes(ex.id)
+              completedIds.has(ex.id)
                 ? 'bg-green-500 text-white'
-                : i === currentExample
+                : i === currentIndex
                 ? 'bg-blue-500 text-white'
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-500'
             )}
           >
-            {completedExamples.includes(ex.id) ? <Check size={18} /> : i + 1}
+            {completedIds.has(ex.id) ? <Check size={18} /> : i + 1}
           </div>
         ))}
       </div>
@@ -139,10 +132,10 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
         </div>
 
         {/* Animation area */}
-        {!showAnimation ? (
+        {!isRevealed ? (
           <div className="flex justify-center">
             <button
-              onClick={handleShowAnimation}
+              onClick={reveal}
               className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
             >
               <Sparkles size={18} />
@@ -215,7 +208,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
       </div>
 
       {/* Pattern summary - shown after all examples */}
-      {completedExamples.length >= 2 && (
+      {completedCount >= 2 && (
         <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 rounded-2xl p-6 border border-indigo-200 dark:border-indigo-800 animate-fadeIn">
           <h3 className="font-bold text-indigo-800 dark:text-indigo-200 mb-4 flex items-center gap-2">
             <Sparkles className="w-5 h-5" />
@@ -243,11 +236,11 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
       )}
 
       {/* Navigation buttons */}
-      {showAnimation && (
+      {isRevealed && (
         <div className="flex justify-center gap-4 animate-fadeIn">
-          {currentExample < EXAMPLES.length - 1 ? (
+          {!isLastExample ? (
             <button
-              onClick={handleNextExample}
+              onClick={nextExample}
               className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
             >
               <span>Siguiente ejemplo</span>
@@ -255,12 +248,7 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             </button>
           ) : (
             <button
-              onClick={() => {
-                if (!completedExamples.includes(example.id)) {
-                  setCompletedExamples([...completedExamples, example.id]);
-                }
-                onComplete();
-              }}
+              onClick={complete}
               className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
             >
               <span>Continuar</span>

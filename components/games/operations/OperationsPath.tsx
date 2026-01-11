@@ -1,17 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Lock, Check, PlayCircle, Trophy, Star, ChevronLeft, ChevronRight, Unlock, BookOpen } from 'lucide-react';
+import { useEffect } from 'react';
+import { Lock, Check, PlayCircle, Trophy, ChevronLeft, ChevronRight, Unlock, BookOpen, X, Search, Home } from 'lucide-react';
+import Link from 'next/link';
 import { getUnitByCode } from '@/lib/thematicUnitsClient';
+import { useOperationsFilter, useOperationsPagination } from './hooks';
+import type { FilterableLevel } from './hooks';
 
-interface OperationLevel {
-  level: number;
-  title: string;
-  description?: string;
-  operationType: string;
-  difficulty: string;
+interface OperationLevel extends FilterableLevel {
   problemsToComplete: number;
-  thematicUnits?: string[];
 }
 
 interface UserProgress {
@@ -35,101 +32,98 @@ interface OperationsPathProps {
   currentPage: number;
   onPageChange: (page: number) => void;
   autoNavigateOnMount?: boolean;
+  problemCount?: number;
+  onProblemCountChange?: (count: number) => void;
 }
 
-const operationTypeColors: { [key: string]: string } = {
+const operationTypeColors: Record<string, string> = {
   // Phase 1: Arithmetic
   addition: 'bg-green-500',
   subtraction: 'bg-blue-500',
   multiplication: 'bg-purple-500',
   division: 'bg-orange-500',
   'mixed-arithmetic': 'bg-gradient-to-r from-green-500 via-blue-500 to-purple-500',
-
   // Phase 2: Algebraic
   'simple-equation': 'bg-indigo-500',
   'expression-evaluation': 'bg-violet-500',
   'simplification': 'bg-purple-600',
-
   // Phase 3: Logical
   'comparison': 'bg-cyan-500',
   'logical-operators': 'bg-teal-500',
   'compound-conditions': 'bg-sky-500',
-
   // Phase 4: Structural
   'sequences': 'bg-pink-500',
   'sets': 'bg-rose-500',
   'functions': 'bg-fuchsia-500',
-
   // Phase 5: Algorithmic
   'sorting': 'bg-amber-500',
   'counting': 'bg-yellow-500',
   'composition': 'bg-lime-500',
 };
 
-const operationTypeIcons: { [key: string]: string } = {
-  // Phase 1: Arithmetic
+const operationTypeIcons: Record<string, string> = {
   addition: '+',
   subtraction: '−',
   multiplication: '×',
   division: '÷',
   'mixed-arithmetic': '⊕',
-
-  // Phase 2: Algebraic
   'simple-equation': 'x',
   'expression-evaluation': 'ƒ',
   'simplification': '≡',
-
-  // Phase 3: Logical
   'comparison': '≶',
   'logical-operators': '∧',
   'compound-conditions': '⊤',
-
-  // Phase 4: Structural
   'sequences': '…',
   'sets': '∪',
   'functions': '→',
-
-  // Phase 5: Algorithmic
   'sorting': '↕',
   'counting': '#',
   'composition': '∘',
 };
 
-const operationTypeNames: { [key: string]: string } = {
-  // Phase 1: Arithmetic
+const operationTypeNames: Record<string, string> = {
   addition: 'Suma',
   subtraction: 'Resta',
   multiplication: 'Multiplicación',
   division: 'División',
   'mixed-arithmetic': 'Aritmética Mixta',
-
-  // Phase 2: Algebraic
   'simple-equation': 'Ecuación Simple',
   'expression-evaluation': 'Evaluación de Expresiones',
   'simplification': 'Simplificación',
-
-  // Phase 3: Logical
   'comparison': 'Comparación',
   'logical-operators': 'Operadores Lógicos',
   'compound-conditions': 'Condiciones Compuestas',
-
-  // Phase 4: Structural
   'sequences': 'Secuencias',
   'sets': 'Conjuntos',
   'functions': 'Funciones',
-
-  // Phase 5: Algorithmic
   'sorting': 'Ordenamiento',
   'counting': 'Conteo',
   'composition': 'Composición',
 };
 
-const difficultyEmojis: { [key: string]: string } = {
+const difficultyEmojis: Record<string, string> = {
   basic: '⭐',
   intermediate: '⭐⭐',
   advanced: '⭐⭐⭐',
   expert: '⭐⭐⭐⭐',
 };
+
+const difficultyNames: Record<string, string> = {
+  basic: 'Básico',
+  intermediate: 'Intermedio',
+  advanced: 'Avanzado',
+  expert: 'Experto',
+};
+
+const phaseNames: Record<string, string> = {
+  arithmetic: 'Aritmética',
+  algebraic: 'Álgebra',
+  logical: 'Lógica',
+  structural: 'Estructural',
+  algorithmic: 'Algorítmico',
+};
+
+const LEVELS_PER_PAGE = 12;
 
 export default function OperationsPath({
   levels,
@@ -139,107 +133,209 @@ export default function OperationsPath({
   currentPage,
   onPageChange,
   autoNavigateOnMount = false,
+  problemCount = 3,
+  onProblemCountChange,
 }: OperationsPathProps) {
-  const LEVELS_PER_PAGE = 12;
   const highestLevel = userProgress?.highestLevelReached || 1;
   const currentLevel = userProgress?.currentLevel || 1;
 
-  // Auto-navigate to current level on mount
-  useEffect(() => {
-    if (autoNavigateOnMount && userProgress) {
-      goToCurrentLevel();
-    }
-  }, [autoNavigateOnMount, userProgress]);
+  // Use filter hook
+  const {
+    state: filterState,
+    filteredLevels,
+    hasActiveFilters,
+    availableFilters,
+    activeFilterCount,
+    actions: filterActions,
+  } = useOperationsFilter(levels);
+
+  // Use pagination hook
+  const {
+    totalPages,
+    startIndex,
+    endIndex,
+    paginationItems,
+    canGoNext,
+    canGoPrevious,
+    goToNextPage,
+    goToPreviousPage,
+    goToPage,
+    goToItemIndex,
+  } = useOperationsPagination({
+    totalItems: filteredLevels.length,
+    itemsPerPage: LEVELS_PER_PAGE,
+    currentPage,
+    onPageChange,
+  });
+
+  const visibleLevels = filteredLevels.slice(startIndex, endIndex) as OperationLevel[];
 
   const getLevelStatus = (level: number): 'locked' | 'available' | 'current' | 'completed' => {
-    // Check if level is individually completed
     const isCompleted = userProgress?.levelStats?.[level]?.completedAt !== undefined;
-
     if (isCompleted) return 'completed';
     if (level === currentLevel) return 'current';
     if (level > highestLevel) return 'locked';
     return 'available';
   };
 
-  // Calculate pages
-  const totalPages = Math.ceil(levels.length / LEVELS_PER_PAGE);
-  const startIndex = currentPage * LEVELS_PER_PAGE;
-  const endIndex = Math.min(startIndex + LEVELS_PER_PAGE, levels.length);
-  const visibleLevels = levels.slice(startIndex, endIndex);
-
-  const goToNextPage = () => {
-    if (currentPage < totalPages - 1) {
-      onPageChange(currentPage + 1);
-    }
-  };
-
-  const goToPreviousPage = () => {
-    if (currentPage > 0) {
-      onPageChange(currentPage - 1);
-    }
-  };
-
   const goToCurrentLevel = () => {
-    const currentLevelIndex = levels.findIndex(l => l.level === currentLevel);
+    const targetLevels = hasActiveFilters ? filteredLevels : levels;
+    const currentLevelIndex = targetLevels.findIndex(l => l.level === currentLevel);
     if (currentLevelIndex !== -1) {
-      onPageChange(Math.floor(currentLevelIndex / LEVELS_PER_PAGE));
+      goToItemIndex(currentLevelIndex);
     }
   };
 
-  // Generate pagination items with ellipsis for large page counts
-  const getPaginationItems = () => {
-    const items: (number | 'ellipsis')[] = [];
-    const maxVisiblePages = 5; // Show max 5 page buttons on mobile/tablet
-
-    if (totalPages <= maxVisiblePages + 2) {
-      // Show all pages if there aren't too many
-      for (let i = 0; i < totalPages; i++) {
-        items.push(i);
-      }
-    } else {
-      // Always show first page
-      items.push(0);
-
-      // Determine range around current page
-      let startPage = Math.max(1, currentPage - 1);
-      let endPage = Math.min(totalPages - 2, currentPage + 1);
-
-      // Adjust range if near start or end
-      if (currentPage <= 2) {
-        endPage = 3;
-      } else if (currentPage >= totalPages - 3) {
-        startPage = totalPages - 4;
-      }
-
-      // Add ellipsis before middle section if needed
-      if (startPage > 1) {
-        items.push('ellipsis');
-      }
-
-      // Add middle pages
-      for (let i = startPage; i <= endPage; i++) {
-        items.push(i);
-      }
-
-      // Add ellipsis after middle section if needed
-      if (endPage < totalPages - 2) {
-        items.push('ellipsis');
-      }
-
-      // Always show last page
-      items.push(totalPages - 1);
-    }
-
-    return items;
+  const handleClearAllFilters = () => {
+    filterActions.clearAllFilters();
+    onPageChange(0);
   };
+
+  // Reset page when filters change
+  useEffect(() => {
+    if (hasActiveFilters) {
+      onPageChange(0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterState.searchQuery, filterState.phaseFilter, filterState.operationFilter]);
+
+  // Auto-navigate to current level on mount
+  useEffect(() => {
+    if (autoNavigateOnMount && userProgress && !hasActiveFilters) {
+      goToCurrentLevel();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoNavigateOnMount, userProgress]);
 
   return (
     <div className="space-y-6">
+      {/* Page Header with Home Button */}
+      <div className="flex items-center gap-4">
+        <Link
+          href="/practice"
+          className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+        >
+          <Home size={18} />
+          <span className="hidden sm:inline">Volver</span>
+        </Link>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+          Operaciones
+        </h1>
+      </div>
+
+      {/* Search and Filters - Inline */}
+      <div className="bg-white rounded-xl p-3 shadow-md">
+        <div className="flex flex-col lg:flex-row gap-3">
+          {/* Search Bar */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input
+              type="text"
+              value={filterState.searchQuery}
+              onChange={(e) => filterActions.setSearchQuery(e.target.value)}
+              placeholder="Buscar (tablas, ecuaciones, decimales...)"
+              className="w-full pl-9 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            />
+            {filterState.searchQuery && (
+              <button
+                onClick={() => filterActions.setSearchQuery('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
+
+          {/* Inline Filters */}
+          <div className="flex gap-2">
+            <select
+              value={filterState.phaseFilter}
+              onChange={(e) => filterActions.setPhaseFilter(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white min-w-[140px]"
+            >
+              <option value="">Todas las fases</option>
+              {availableFilters.phases.map(phase => (
+                <option key={phase} value={phase}>{phaseNames[phase] || phase}</option>
+              ))}
+            </select>
+
+            <select
+              value={filterState.operationFilter}
+              onChange={(e) => filterActions.setOperationFilter(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white min-w-[160px]"
+            >
+              <option value="">Todas las operaciones</option>
+              {availableFilters.operations.map(op => (
+                <option key={op} value={op}>
+                  {operationTypeIcons[op]} {operationTypeNames[op] || op}
+                </option>
+              ))}
+            </select>
+
+            {onProblemCountChange && (
+              <select
+                value={problemCount}
+                onChange={(e) => onProblemCountChange(parseInt(e.target.value, 10))}
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white min-w-[130px]"
+              >
+                <option value={3}>3 problemas</option>
+                <option value={5}>5 problemas</option>
+                <option value={10}>10 problemas</option>
+                <option value={15}>15 problemas</option>
+              </select>
+            )}
+
+            {hasActiveFilters && (
+              <button
+                onClick={handleClearAllFilters}
+                className="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors whitespace-nowrap"
+              >
+                Limpiar
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Active Filters Chips - Only show when filters are active */}
+        {hasActiveFilters && (
+          <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-gray-100">
+            {filterState.searchQuery && (
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                &quot;{filterState.searchQuery}&quot;
+                <button onClick={() => filterActions.setSearchQuery('')} className="hover:text-blue-600">
+                  <X size={14} />
+                </button>
+              </span>
+            )}
+            {filterState.phaseFilter && (
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                {phaseNames[filterState.phaseFilter]}
+                <button onClick={() => filterActions.setPhaseFilter('')} className="hover:text-green-600">
+                  <X size={14} />
+                </button>
+              </span>
+            )}
+            {filterState.operationFilter && (
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
+                {operationTypeNames[filterState.operationFilter]}
+                <button onClick={() => filterActions.setOperationFilter('')} className="hover:text-purple-600">
+                  <X size={14} />
+                </button>
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+
       {/* Header with Navigation and Actions */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-4">
         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-            Niveles {startIndex + 1} - {endIndex}
+            {hasActiveFilters ? (
+              <>Mostrando {filteredLevels.length} nivel{filteredLevels.length !== 1 ? 'es' : ''}</>
+            ) : (
+              <>Niveles {startIndex + 1} - {endIndex}</>
+            )}
           </h2>
           <span className="text-xs sm:text-sm text-gray-500">
             de {levels.length} totales
@@ -247,15 +343,14 @@ export default function OperationsPath({
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          {/* Go to Current Level Button */}
-          <button
-            onClick={goToCurrentLevel}
-            className="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors whitespace-nowrap"
-          >
-            Ir a nivel actual
-          </button>
-
-          {/* Unlock All Levels Button */}
+          {!hasActiveFilters && (
+            <button
+              onClick={goToCurrentLevel}
+              className="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors whitespace-nowrap"
+            >
+              Ir a nivel actual
+            </button>
+          )}
           {onUnlockAllLevels && highestLevel < levels.length && (
             <button
               onClick={onUnlockAllLevels}
@@ -269,97 +364,113 @@ export default function OperationsPath({
         </div>
       </div>
 
+      {/* Empty State */}
+      {filteredLevels.length === 0 && hasActiveFilters && (
+        <div className="text-center py-12 bg-white rounded-xl shadow-md">
+          <Search className="mx-auto text-gray-300 mb-4" size={48} />
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">
+            No se encontraron niveles
+          </h3>
+          <p className="text-gray-500 mb-4">
+            No hay niveles que coincidan con tu búsqueda.
+          </p>
+          <button
+            onClick={handleClearAllFilters}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Limpiar filtros
+          </button>
+        </div>
+      )}
+
       {/* Levels Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {visibleLevels.map((level) => {
-          const status = getLevelStatus(level.level);
-          const colorClass = operationTypeColors[level.operationType] || 'bg-gray-500';
+      {visibleLevels.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {visibleLevels.map((level) => {
+            const status = getLevelStatus(level.level);
+            const colorClass = operationTypeColors[level.operationType] || 'bg-gray-500';
 
-          return (
-            <div
-              key={level.level}
-              onClick={() => status !== 'locked' && onLevelSelect(level.level)}
-              className={`bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all ${
-                status === 'locked' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:scale-102'
-              } ${status === 'current' ? 'ring-2 ring-blue-500' : ''}`}
-            >
-              {/* Level Header */}
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div className={`${colorClass} w-10 h-10 rounded-full flex items-center justify-center text-white font-bold`}>
-                    {level.level}
+            return (
+              <div
+                key={level.level}
+                onClick={() => status !== 'locked' && onLevelSelect(level.level)}
+                className={`bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all ${
+                  status === 'locked' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:scale-102'
+                } ${status === 'current' ? 'ring-2 ring-blue-500' : ''}`}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`${colorClass} w-10 h-10 rounded-full flex items-center justify-center text-white font-bold`}>
+                      {level.level}
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900">{level.title}</h3>
+                      <p className="text-xs text-gray-500">{difficultyEmojis[level.difficulty]}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900">{level.title}</h3>
-                    <p className="text-xs text-gray-500">{difficultyEmojis[level.difficulty]}</p>
-                  </div>
+                  {status === 'completed' && <Check className="text-green-500" size={24} />}
+                  {status === 'current' && <PlayCircle className="text-blue-500" size={24} />}
+                  {status === 'locked' && <Lock className="text-gray-400" size={24} />}
                 </div>
-                {status === 'completed' && <Check className="text-green-500" size={24} />}
-                {status === 'current' && <PlayCircle className="text-blue-500" size={24} />}
-                {status === 'locked' && <Lock className="text-gray-400" size={24} />}
+
+                <p className="text-sm text-gray-600 mb-3">{level.description}</p>
+
+                {level.thematicUnits && level.thematicUnits.length > 0 && (
+                  <div className="mb-3 space-y-1">
+                    <div className="flex items-center gap-1 text-xs font-semibold text-blue-700">
+                      <BookOpen size={12} />
+                      <span>Unidades temáticas:</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {level.thematicUnits.map((unitCode) => {
+                        const unit = getUnitByCode(unitCode);
+                        return (
+                          <span
+                            key={unitCode}
+                            className="inline-block px-2 py-1 text-xs bg-blue-50 text-blue-700 rounded-md border border-blue-200"
+                            title={unitCode}
+                          >
+                            {unit?.name || unitCode}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {(!level.thematicUnits || level.thematicUnits.length === 0) && (
+                  <div className="mb-3 px-2 py-1 bg-amber-50 border border-amber-200 rounded-md">
+                    <p className="text-xs text-amber-700">
+                      ⚠️ Sin unidad temática relacionada
+                    </p>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                  <span>{operationTypeIcons[level.operationType]} {operationTypeNames[level.operationType] || level.operationType}</span>
+                  <span>{problemCount} problemas</span>
+                </div>
               </div>
-
-              {/* Description */}
-              <p className="text-sm text-gray-600 mb-3">{level.description}</p>
-
-              {/* Thematic Units */}
-              {level.thematicUnits && level.thematicUnits.length > 0 && (
-                <div className="mb-3 space-y-1">
-                  <div className="flex items-center gap-1 text-xs font-semibold text-blue-700">
-                    <BookOpen size={12} />
-                    <span>Unidades temáticas:</span>
-                  </div>
-                  <div className="flex flex-wrap gap-1">
-                    {level.thematicUnits.map((unitCode) => {
-                      const unit = getUnitByCode(unitCode);
-                      return (
-                        <span
-                          key={unitCode}
-                          className="inline-block px-2 py-1 text-xs bg-blue-50 text-blue-700 rounded-md border border-blue-200"
-                          title={unitCode}
-                        >
-                          {unit?.name || unitCode}
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* Warning for unmapped operations */}
-              {(!level.thematicUnits || level.thematicUnits.length === 0) && (
-                <div className="mb-3 px-2 py-1 bg-amber-50 border border-amber-200 rounded-md">
-                  <p className="text-xs text-amber-700">
-                    ⚠️ Sin unidad temática relacionada
-                  </p>
-                </div>
-              )}
-
-              {/* Footer */}
-              <div className="flex items-center justify-between text-xs text-gray-500">
-                <span>{operationTypeIcons[level.operationType]} {operationTypeNames[level.operationType] || level.operationType}</span>
-                <span>{level.problemsToComplete} problemas</span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-6">
           <button
             onClick={goToPreviousPage}
-            disabled={currentPage === 0}
+            disabled={!canGoPrevious}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             <ChevronLeft size={20} />
-            <span className="sm:inline">Anterior</span>
+            <span>Anterior</span>
           </button>
 
           <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-center">
-            {getPaginationItems().map((item, index) => {
-              if (item === 'ellipsis') {
+            {paginationItems.map((item, index) => {
+              if (item.type === 'ellipsis') {
                 return (
                   <span key={`ellipsis-${index}`} className="px-2 text-gray-400 text-lg">
                     ...
@@ -368,15 +479,15 @@ export default function OperationsPath({
               }
               return (
                 <button
-                  key={item}
-                  onClick={() => onPageChange(item)}
+                  key={item.value}
+                  onClick={() => goToPage(item.value!)}
                   className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg font-semibold transition-all text-sm sm:text-base ${
-                    currentPage === item
+                    currentPage === item.value
                       ? 'bg-blue-600 text-white'
                       : 'bg-white border-2 border-gray-300 text-gray-700 hover:bg-gray-50'
                   }`}
                 >
-                  {item + 1}
+                  {item.value! + 1}
                 </button>
               );
             })}
@@ -384,10 +495,10 @@ export default function OperationsPath({
 
           <button
             onClick={goToNextPage}
-            disabled={currentPage === totalPages - 1}
+            disabled={!canGoNext}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
-            <span className="sm:inline">Siguiente</span>
+            <span>Siguiente</span>
             <ChevronRight size={20} />
           </button>
         </div>

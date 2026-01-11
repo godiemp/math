@@ -7,7 +7,7 @@
  */
 
 import { Router } from 'express';
-import { register, login, refresh, logout, getCurrentUser } from '../controllers/authController';
+import { register, login, refresh, logout, getCurrentUser, getSocketToken } from '../controllers/authController';
 import {
   handleSendVerification,
   handleVerifyEmail,
@@ -54,6 +54,17 @@ router.post('/logout', logout);
  * @access  Private
  */
 router.get('/me', authenticate, getCurrentUser);
+
+/**
+ * @route   GET /api/auth/socket-token
+ * @desc    Get token for WebSocket authentication
+ * @access  Private
+ *
+ * This endpoint returns the access token for Socket.io authentication.
+ * Needed because REST API uses a proxy (cookies are first-party to Vercel),
+ * while Socket.io connects directly to Railway (different domain).
+ */
+router.get('/socket-token', authenticate, getSocketToken);
 
 /**
  * @route   POST /api/auth/send-verification

@@ -39,6 +39,8 @@ Si no entendiste fracciones en 6°, las operaciones de 7° son confusas. Si 7° 
 
 **El problema:** Nadie vuelve atrás. El currículum avanza, el profesor avanza, los compañeros avanzan. El estudiante con lagunas queda cada vez más atrás, fingiendo que entiende, copiando, sobreviviendo.
 
+Desde la perspectiva del colegio, [comunicar estas lagunas a los apoderados](/blog/comunicar-apoderados-paes-brechas-matematicas) es un desafío que requiere tacto y claridad.
+
 ## Por qué las soluciones tradicionales no funcionan
 
 ### El tutor que no diagnostica

@@ -3,6 +3,13 @@
 import type { Question, QuestionRendererProps } from '@/lib/types';
 import { MathText, BlockMath, InlineMath, SmartLatexRenderer, UnifiedLatexRenderer } from '@/components/math/MathDisplay';
 import { GeometryCanvas, GeometryFigure } from '@/components/math/GeometryCanvas';
+import BarChart from '@/components/lessons/shared/BarChart';
+import PieChart from '@/components/lessons/shared/PieChart';
+import Histogram from '@/components/lessons/shared/Histogram';
+import LineChart from '@/components/lessons/shared/LineChart';
+import ScatterPlot from '@/components/lessons/shared/ScatterPlot';
+import FrequencyTable from '@/components/lessons/shared/FrequencyTable';
+import VennDiagram from '@/components/lessons/shared/VennDiagram';
 
 // Re-export for convenience
 export type { QuestionRendererProps };
@@ -36,13 +43,106 @@ export function QuestionRenderer({
         <SmartLatexRenderer latex={question.questionLatex} displayMode={false} />
       </div>
 
-      {/* Visual Data (Geometry/Graphs) */}
+      {/* Visual Data (Geometry/Graphs/Tables/Diagrams) */}
       {question.visualData && question.visualData.type === 'geometry' && (
         <div className={compact ? 'my-2' : 'my-4'}>
           <GeometryCanvas
             figures={question.visualData.data as GeometryFigure[]}
             width={compact ? 300 : 400}
             height={compact ? 225 : 300}
+          />
+        </div>
+      )}
+
+      {/* Bar Chart */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'bar' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <BarChart
+            data={question.visualData.data.items}
+            showValues={question.visualData.data.showValues ?? true}
+            showLabels={question.visualData.data.showLabels ?? true}
+            height={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Pie Chart */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'pie' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <PieChart
+            data={question.visualData.data.items}
+            showLegend={question.visualData.data.showLegend ?? true}
+            showValues={question.visualData.data.showValues ?? false}
+            showPercentages={question.visualData.data.showPercentages ?? true}
+            size={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Histogram */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'histogram' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <Histogram
+            data={question.visualData.data.items}
+            showFrequencies={question.visualData.data.showFrequencies ?? true}
+            showIntervals={question.visualData.data.showIntervals ?? true}
+            height={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Line Chart */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'line' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <LineChart
+            data={question.visualData.data.items}
+            showValues={question.visualData.data.showValues ?? false}
+            showLabels={question.visualData.data.showLabels ?? true}
+            showYAxis={question.visualData.data.showYAxis ?? true}
+            height={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Scatter Plot */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'scatter' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <ScatterPlot
+            data={question.visualData.data.series ?? question.visualData.data.points}
+            xLabel={question.visualData.data.xLabel}
+            yLabel={question.visualData.data.yLabel}
+            showGrid={question.visualData.data.showGrid ?? true}
+            showTrendLine={question.visualData.data.showTrendLine ?? false}
+            correlationType={question.visualData.data.correlationType}
+            height={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Frequency Table */}
+      {question.visualData?.type === 'table' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <FrequencyTable
+            data={question.visualData.data.items}
+            showTally={question.visualData.data.showTally ?? true}
+            showRelative={question.visualData.data.showRelative ?? false}
+            showPercentage={question.visualData.data.showPercentage ?? false}
+          />
+        </div>
+      )}
+
+      {/* Venn Diagram */}
+      {question.visualData?.type === 'diagram' && question.visualData.data?.diagramType === 'venn' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <VennDiagram
+            mode={question.visualData.data.mode ?? 'overlapping'}
+            labelA={question.visualData.data.labelA}
+            labelB={question.visualData.data.labelB}
+            countA={question.visualData.data.countA}
+            countB={question.visualData.data.countB}
+            countBoth={question.visualData.data.countBoth}
+            showCounts={question.visualData.data.showCounts ?? true}
+            size={compact ? 'sm' : 'md'}
           />
         </div>
       )}
@@ -388,13 +488,106 @@ export function QuestionDisplay({
         size={compact ? 'sm' : 'base'}
       />
 
-      {/* Visual Data (Geometry/Graphs) */}
+      {/* Visual Data (Geometry/Graphs/Tables/Diagrams) */}
       {question.visualData && question.visualData.type === 'geometry' && (
         <div className={compact ? 'my-2' : 'my-4'}>
           <GeometryCanvas
             figures={question.visualData.data as GeometryFigure[]}
             width={compact ? 300 : 400}
             height={compact ? 225 : 300}
+          />
+        </div>
+      )}
+
+      {/* Bar Chart */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'bar' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <BarChart
+            data={question.visualData.data.items}
+            showValues={question.visualData.data.showValues ?? true}
+            showLabels={question.visualData.data.showLabels ?? true}
+            height={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Pie Chart */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'pie' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <PieChart
+            data={question.visualData.data.items}
+            showLegend={question.visualData.data.showLegend ?? true}
+            showValues={question.visualData.data.showValues ?? false}
+            showPercentages={question.visualData.data.showPercentages ?? true}
+            size={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Histogram */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'histogram' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <Histogram
+            data={question.visualData.data.items}
+            showFrequencies={question.visualData.data.showFrequencies ?? true}
+            showIntervals={question.visualData.data.showIntervals ?? true}
+            height={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Line Chart */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'line' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <LineChart
+            data={question.visualData.data.items}
+            showValues={question.visualData.data.showValues ?? false}
+            showLabels={question.visualData.data.showLabels ?? true}
+            showYAxis={question.visualData.data.showYAxis ?? true}
+            height={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Scatter Plot */}
+      {question.visualData?.type === 'graph' && question.visualData.data?.chartType === 'scatter' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <ScatterPlot
+            data={question.visualData.data.series ?? question.visualData.data.points}
+            xLabel={question.visualData.data.xLabel}
+            yLabel={question.visualData.data.yLabel}
+            showGrid={question.visualData.data.showGrid ?? true}
+            showTrendLine={question.visualData.data.showTrendLine ?? false}
+            correlationType={question.visualData.data.correlationType}
+            height={compact ? 'sm' : 'md'}
+          />
+        </div>
+      )}
+
+      {/* Frequency Table */}
+      {question.visualData?.type === 'table' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <FrequencyTable
+            data={question.visualData.data.items}
+            showTally={question.visualData.data.showTally ?? true}
+            showRelative={question.visualData.data.showRelative ?? false}
+            showPercentage={question.visualData.data.showPercentage ?? false}
+          />
+        </div>
+      )}
+
+      {/* Venn Diagram */}
+      {question.visualData?.type === 'diagram' && question.visualData.data?.diagramType === 'venn' && (
+        <div className={compact ? 'my-2' : 'my-4'}>
+          <VennDiagram
+            mode={question.visualData.data.mode ?? 'overlapping'}
+            labelA={question.visualData.data.labelA}
+            labelB={question.visualData.data.labelB}
+            countA={question.visualData.data.countA}
+            countB={question.visualData.data.countB}
+            countBoth={question.visualData.data.countBoth}
+            showCounts={question.visualData.data.showCounts ?? true}
+            size={compact ? 'sm' : 'md'}
           />
         </div>
       )}

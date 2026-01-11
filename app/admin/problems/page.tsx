@@ -21,6 +21,7 @@ function ProblemsExplorerContent() {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [showOnlyWithImages, setShowOnlyWithImages] = useState(false)
+  const [showOnlyWithGraphs, setShowOnlyWithGraphs] = useState(false)
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null)
   const [showSkillsFilter, setShowSkillsFilter] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
@@ -45,17 +46,18 @@ function ProblemsExplorerContent() {
       if (selectedDifficulty !== 'all' && q.difficulty !== selectedDifficulty) return false
       if (selectedSkills.length > 0 && !selectedSkills.every(skill => q.skills?.includes(skill))) return false
       if (showOnlyWithImages && !q.visualData) return false
+      if (showOnlyWithGraphs && q.visualData?.type !== 'graph') return false
       if (searchQuery && !q.questionLatex.toLowerCase().includes(searchQuery.toLowerCase()) &&
           !q.topic.toLowerCase().includes(searchQuery.toLowerCase()) &&
           !q.id.toLowerCase().includes(searchQuery.toLowerCase())) return false
       return true
     })
-  }, [selectedLevel, selectedSubject, selectedDifficulty, selectedSkills, searchQuery, showOnlyWithImages])
+  }, [selectedLevel, selectedSubject, selectedDifficulty, selectedSkills, searchQuery, showOnlyWithImages, showOnlyWithGraphs])
 
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1)
-  }, [selectedLevel, selectedSubject, selectedDifficulty, selectedSkills, searchQuery, showOnlyWithImages])
+  }, [selectedLevel, selectedSubject, selectedDifficulty, selectedSkills, searchQuery, showOnlyWithImages, showOnlyWithGraphs])
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredQuestions.length / itemsPerPage)
@@ -95,11 +97,52 @@ function ProblemsExplorerContent() {
     return pages
   }
 
+  // Modal navigation helpers
+  const currentQuestionIndex = selectedQuestion
+    ? filteredQuestions.findIndex(q => q.id === selectedQuestion.id)
+    : -1
+
+  const canGoPrevious = currentQuestionIndex > 0
+  const canGoNext = currentQuestionIndex >= 0 && currentQuestionIndex < filteredQuestions.length - 1
+
+  const goToPreviousQuestion = () => {
+    if (canGoPrevious) {
+      setSelectedQuestion(filteredQuestions[currentQuestionIndex - 1])
+    }
+  }
+
+  const goToNextQuestion = () => {
+    if (canGoNext) {
+      setSelectedQuestion(filteredQuestions[currentQuestionIndex + 1])
+    }
+  }
+
+  // Keyboard navigation for modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!selectedQuestion) return
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        goToPreviousQuestion()
+      }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        goToNextQuestion()
+      }
+      if (e.key === 'Escape') {
+        setSelectedQuestion(null)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedQuestion, currentQuestionIndex, filteredQuestions])
+
   // Statistics
   const stats = {
     total: questions.length,
     filtered: filteredQuestions.length,
     withImages: questions.filter(q => q.visualData).length,
+    withGraphs: questions.filter(q => q.visualData?.type === 'graph').length,
     byLevel: {
       M1: questions.filter(q => q.level === 'M1').length,
       M2: questions.filter(q => q.level === 'M2').length,
@@ -278,8 +321,8 @@ function ProblemsExplorerContent() {
             </div>
           </div>
 
-          {/* Image Filter Checkbox */}
-          <div className="mt-4">
+          {/* Image and Graph Filter Checkboxes */}
+          <div className="mt-4 flex flex-wrap gap-6">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
@@ -288,7 +331,18 @@ function ProblemsExplorerContent() {
                 className="rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500"
               />
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Solo problemas con imágenes ({stats.withImages} problemas)
+                Solo con imágenes ({stats.withImages})
+              </span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showOnlyWithGraphs}
+                onChange={(e) => setShowOnlyWithGraphs(e.target.checked)}
+                className="rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500"
+              />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Solo con gráficos ({stats.withGraphs})
               </span>
             </label>
           </div>
@@ -364,7 +418,7 @@ function ProblemsExplorerContent() {
           </div>
 
           {/* Clear Filters */}
-          {(selectedLevel !== 'all' || selectedSubject !== 'all' || selectedDifficulty !== 'all' || selectedSkills.length > 0 || searchQuery || showOnlyWithImages) && (
+          {(selectedLevel !== 'all' || selectedSubject !== 'all' || selectedDifficulty !== 'all' || selectedSkills.length > 0 || searchQuery || showOnlyWithImages || showOnlyWithGraphs) && (
             <button
               onClick={() => {
                 setSelectedLevel('all')
@@ -373,6 +427,7 @@ function ProblemsExplorerContent() {
                 setSelectedSkills([])
                 setSearchQuery('')
                 setShowOnlyWithImages(false)
+                setShowOnlyWithGraphs(false)
               }}
               className="mt-4 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
             >
@@ -560,41 +615,75 @@ function ProblemsExplorerContent() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white dark:bg-gray-800 rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
-                {/* Modal Header */}
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                      Detalles del Problema
-                    </h2>
-                    <div className="flex gap-2 flex-wrap">
-                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getLevelColor(selectedQuestion.level)}`}>
-                        {selectedQuestion.level}
-                      </span>
-                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getSubjectColor(selectedQuestion.subject)}`}>
-                        {selectedQuestion.subject}
-                      </span>
-                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getDifficultyColor(selectedQuestion.difficulty)}`}>
-                        {selectedQuestion.difficulty}
-                      </span>
-                    </div>
+                {/* Modal Header with Navigation */}
+                <div className="flex justify-between items-center mb-4">
+                  {/* Navigation Arrows */}
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={goToPreviousQuestion}
+                      disabled={!canGoPrevious}
+                      className={`p-2 rounded-lg transition-colors ${
+                        canGoPrevious
+                          ? 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
+                          : 'text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                      }`}
+                      title="Anterior (←)"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 min-w-[60px] text-center">
+                      {currentQuestionIndex + 1} / {filteredQuestions.length}
+                    </span>
+                    <button
+                      onClick={goToNextQuestion}
+                      disabled={!canGoNext}
+                      className={`p-2 rounded-lg transition-colors ${
+                        canGoNext
+                          ? 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
+                          : 'text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                      }`}
+                      title="Siguiente (→)"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
                   </div>
+
+                  {/* Close Button */}
                   <button
                     onClick={() => setSelectedQuestion(null)}
-                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                    title="Cerrar (Esc)"
                   >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
 
+                {/* Question Info */}
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                    {selectedQuestion.id}
+                  </h2>
+                  <div className="flex gap-2 flex-wrap">
+                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getLevelColor(selectedQuestion.level)}`}>
+                      {selectedQuestion.level}
+                    </span>
+                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getSubjectColor(selectedQuestion.subject)}`}>
+                      {selectedQuestion.subject}
+                    </span>
+                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getDifficultyColor(selectedQuestion.difficulty)}`}>
+                      {selectedQuestion.difficulty}
+                    </span>
+                  </div>
+                </div>
+
                 {/* Modal Content */}
                 <div className="space-y-4">
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ID</h3>
-                    <p className="text-gray-900 dark:text-white font-mono">{selectedQuestion.id}</p>
-                  </div>
-
                   <div>
                     <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tema</h3>
                     <p className="text-gray-900 dark:text-white">{selectedQuestion.topic}</p>

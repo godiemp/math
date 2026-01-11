@@ -2,8 +2,8 @@
 
 export function StatsSection() {
   const stats = [
-    { number: '900+', label: 'ejercicios PAES' },
-    { number: '50+', label: 'mini-lecciones' },
+    { number: '1150+', label: 'ejercicios PAES' },
+    { number: '60+', label: 'mini-lecciones' },
     { number: 'Tutor AI', label: 'disponible 24/7' },
     { number: '500+', label: 'habilidades medidas' },
   ];

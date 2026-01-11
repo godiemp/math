@@ -451,12 +451,13 @@ test.describe('Progress & Analytics Page', () => {
     await expect(page.getByRole('heading', { name: /Competencia Matemática M1/i })).toBeVisible();
     await expect(page.getByRole('heading', { name: /Competencia Matemática M2/i })).toBeVisible();
 
-    // Check for progress information
-    // If questions were answered, stats should be visible, otherwise "Comienza a practicar" message
-    const hasProgressStats = await page.getByText(/Respuestas correctas/i).count();
-    const hasNoDataMessage = await page.getByText(/Comienza a practicar/i).count();
-    // At least one of these should be present (either stats or no-data message)
-    expect(hasProgressStats + hasNoDataMessage).toBeGreaterThan(0);
+    // Check for progress information - wait for either stats or no-data message
+    // The page loads data asynchronously, so we need to wait for the content
+    const progressStatsLocator = page.getByText(/Respuestas correctas/i);
+    const noDataMessageLocator = page.getByText(/Comienza a practicar/i);
+
+    // Wait for either one to be visible (with timeout)
+    await expect(progressStatsLocator.or(noDataMessageLocator).first()).toBeVisible({ timeout: 10000 });
   });
 
   test('should show correct answer/incorrect visual indicators in history', async ({ page }) => {

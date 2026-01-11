@@ -81,12 +81,12 @@ export async function register(req: Request, res: Response): Promise<void> {
     const message = error instanceof Error ? error.message : 'Registration failed';
 
     // Determine status code based on error message
-    if (message.includes('already exists')) {
+    if (message.includes('ya está registrado') || message.includes('already exists')) {
       res.status(409).json({ error: message });
-    } else if (message.includes('required') || message.includes('at least')) {
+    } else if (message.includes('completa todos') || message.includes('required') || message.includes('al menos') || message.includes('at least')) {
       res.status(400).json({ error: message });
     } else {
-      res.status(500).json({ error: 'Registration failed' });
+      res.status(500).json({ error: 'Error al registrarse' });
     }
   }
 }
@@ -135,10 +135,15 @@ export async function login(req: Request, res: Response): Promise<void> {
 
     // Determine status code based on error message
     // Use 400 (not 401) for invalid credentials to avoid triggering token refresh logic in api-client
-    if (message.includes('Invalid credentials') || message.includes('required')) {
+    if (
+      message.includes('no encontrado') ||
+      message.includes('incorrecta') ||
+      message.includes('Invalid credentials') ||
+      message.includes('ingresa tu usuario')
+    ) {
       res.status(400).json({ error: message });
     } else {
-      res.status(500).json({ error: 'Login failed' });
+      res.status(500).json({ error: 'Error al iniciar sesión' });
     }
   }
 }
@@ -154,7 +159,7 @@ export async function refresh(req: Request, res: Response): Promise<void> {
       : req.cookies.refreshToken;
 
     if (!refreshToken) {
-      res.status(401).json({ error: 'No refresh token provided' });
+      res.status(401).json({ error: 'Sesión no encontrada' });
       return;
     }
 
@@ -175,7 +180,7 @@ export async function refresh(req: Request, res: Response): Promise<void> {
     res.json({ message: 'Token refreshed successfully' });
   } catch (error) {
     console.error('Refresh token error:', error);
-    res.status(401).json({ error: 'Invalid refresh token' });
+    res.status(401).json({ error: 'Sesión inválida. Por favor inicia sesión nuevamente' });
   }
 }
 
@@ -203,7 +208,34 @@ export async function logout(req: Request, res: Response): Promise<void> {
     res.clearCookie('accessToken', { path: '/' });
     res.clearCookie('refreshToken', { path: '/' });
 
-    res.status(500).json({ error: 'Logout failed' });
+    res.status(500).json({ error: 'Error al cerrar sesión' });
+  }
+}
+
+/**
+ * Get socket authentication token
+ * Returns the access token for WebSocket connections
+ *
+ * This is needed because:
+ * 1. REST API uses a proxy (/api/backend) - cookies are first-party to Vercel domain
+ * 2. Socket.io connects directly to Railway - different domain, no access to Vercel cookies
+ * 3. This endpoint provides the token so socket.io can use handshake auth
+ */
+export async function getSocketToken(req: Request, res: Response): Promise<void> {
+  try {
+    // Token is already validated by authenticate middleware
+    // Return it for socket.io authentication
+    const accessToken = req.cookies.accessToken;
+
+    if (!accessToken) {
+      res.status(401).json({ error: 'No authentication token found' });
+      return;
+    }
+
+    res.json({ token: accessToken });
+  } catch (error) {
+    console.error('Get socket token error:', error);
+    res.status(500).json({ error: 'Error al obtener token de socket' });
   }
 }
 
@@ -213,14 +245,14 @@ export async function logout(req: Request, res: Response): Promise<void> {
 export async function getCurrentUser(req: Request, res: Response): Promise<void> {
   try {
     if (!req.user) {
-      res.status(401).json({ error: 'Not authenticated' });
+      res.status(401).json({ error: 'No autenticado' });
       return;
     }
 
     const user = await getUserById(req.user.userId);
 
     if (!user) {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json({ error: 'Usuario no encontrado' });
       return;
     }
 
@@ -236,6 +268,6 @@ export async function getCurrentUser(req: Request, res: Response): Promise<void>
     });
   } catch (error) {
     console.error('Get current user error:', error);
-    res.status(500).json({ error: 'Failed to get user info' });
+    res.status(500).json({ error: 'Error al obtener información del usuario' });
   }
 }

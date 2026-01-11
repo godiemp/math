@@ -15,6 +15,9 @@
 /.next/
 /out/
 
+# fumadocs
+# Note: .source/ is committed to git for CI compatibility
+
 # production
 /build
 

@@ -1,13 +1,15 @@
 'use client';
 
+import { ReactNode } from 'react';
 import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { colors } from '@/lib/lessons/styles';
+import { MathText } from '@/components/math/MathDisplay';
 
 export interface FeedbackPanelProps {
   isCorrect: boolean;
   title?: string;
-  explanation: string;
+  explanation: ReactNode;
   className?: string;
 }
 
@@ -45,7 +47,13 @@ export function FeedbackPanel({
           >
             {displayTitle}
           </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300">{explanation}</p>
+          <div className="text-sm text-gray-700 dark:text-gray-300">
+            {typeof explanation === 'string' ? (
+              <MathText content={explanation} />
+            ) : (
+              explanation
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 /**
  * M1 Probabilidad y Estadística thematic units
- * Units: M1-PROB-001 to M1-PROB-005
+ * Units: M1-PROB-001 to M1-PROB-006
  */
 
 import { ThematicUnit } from '../../types';
@@ -153,6 +153,34 @@ export const M1_PROBABILIDAD_UNITS: ThematicUnit[] = [
         code: 'D',
         name: 'Eventos complementarios',
         primary_skills: ['probabilidad-eventos-complementarios'],
+      },
+    ],
+  },
+  {
+    code: 'M1-PROB-006',
+    name: 'Gráficos de dispersión y comprensión del azar',
+    level: 'M1',
+    subject: 'probabilidad',
+    subsections: [
+      {
+        code: 'A',
+        name: 'Gráficos de dispersión (nubes de puntos)',
+        primary_skills: ['estadistica-graficos-dispersion'],
+      },
+      {
+        code: 'B',
+        name: 'Comparación de poblaciones',
+        primary_skills: ['estadistica-comparar-poblaciones'],
+      },
+      {
+        code: 'C',
+        name: 'Comprensión del azar y frecuencia relativa',
+        primary_skills: ['probabilidad-azar', 'estadistica-frecuencia-relativa'],
+      },
+      {
+        code: 'D',
+        name: 'Ley de los grandes números',
+        primary_skills: ['probabilidad-ley-grandes-numeros'],
       },
     ],
   },

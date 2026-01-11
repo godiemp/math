@@ -1,6 +1,6 @@
 ---
 title: "Qué hacer cuando la mitad del curso no entiende"
-description: "Estrategias para cuando el problema es demasiado grande para diferenciación: cuándo parar, cómo re-enseñar, y cómo evitar que vuelva a pasar."
+description: "Estrategias basadas en evidencia para cuando el problema es demasiado grande para diferenciación: cuándo parar, cómo re-enseñar, y cómo evitar que vuelva a pasar."
 date: "2025-12-20"
 author: "SimplePAES"
 tags: ["profesores", "matemáticas", "enseñanza", "educación media", "refuerzo"]
@@ -9,7 +9,7 @@ published: true
 
 Hiciste la pregunta de verificación. Pediste que levantaran la mano los que entendieron. Y la mitad del curso se quedó con las manos abajo. O peor: levantaron la mano, pero cuando diste el ejercicio de práctica, quedó claro que no habían entendido nada.
 
-Ahora tienes un problema. La planificación dice que hoy debías terminar funciones lineales para empezar cuadráticas la próxima semana. Pero si la mitad no entendió lineales, cuadráticas va a ser un desastre. Y si te detienes a re-enseñar, te atrasas. Y si te atrasas, no alcanzas a cubrir el programa. Y si no cubres el programa...
+Ahora tienes un problema. La planificación dice que hoy debías terminar funciones lineales para empezar cuadráticas la próxima semana. Pero si la mitad no entendió lineales, cuadráticas va a ser un desastre. Y si te detienes a re-enseñar, te atrasas. Y si te atrasas, no alcanzas a cubrir el programa.
 
 Conoces el ciclo. Lo has vivido.
 
@@ -17,7 +17,9 @@ Esta guía es para ese momento: cuando la diferenciación no alcanza porque el p
 
 ## Primero: entiende qué pasó
 
-Antes de decidir qué hacer, necesitas entender por qué la mitad no entendió. La causa cambia la solución.
+[David Ausubel](https://www.instructionaldesign.org/theories/subsumption-theory/), uno de los psicólogos educativos más influyentes del siglo XX, lo resumió así: "El factor más importante que influye en el aprendizaje es lo que el estudiante ya sabe. Averígüelo y enséñele en consecuencia."
+
+Antes de decidir qué hacer, necesitas entender *por qué* la mitad no entendió. La causa cambia la solución.
 
 ### Causa 1: Faltaban prerrequisitos
 
@@ -30,9 +32,9 @@ Intentaste enseñar funciones lineales, pero no dominaban operaciones con fracci
 
 **Qué hacer:** Necesitas [diagnosticar específicamente qué prerrequisito falta](/blog/diagnosticar-lagunas-matematicas-curso) antes de re-enseñar. Repetir la misma explicación no va a funcionar si el problema es de hace dos años.
 
-### Causa 2: La explicación no funcionó
+### Causa 2: La explicación no conectó
 
-Explicaste bien, pero solo para un tipo de estudiante. Los que aprenden de otra forma se perdieron.
+Explicaste bien, pero solo para un tipo de estudiante. La investigación de [Richard Lesh](https://www.researchgate.net/publication/247399921_The_Evolution_of_Problem_Representations_in_the_Presence_of_Powerful_Conceptual_Amplifiers) sobre representaciones múltiples muestra que los estudiantes necesitan ver el mismo concepto desde distintos ángulos: verbal, numérico, gráfico, algebraico, contextual.
 
 **Señales:**
 - Los que no entendieron son estudiantes que normalmente entienden otros temas
@@ -43,14 +45,16 @@ Explicaste bien, pero solo para un tipo de estudiante. Los que aprenden de otra 
 
 ### Causa 3: No hubo suficiente práctica guiada
 
-Explicaste, diste un ejemplo, y soltaste. Pero la transición de "ver cómo tú lo haces" a "hacerlo solos" fue muy abrupta. Esto está relacionado con la [carga cognitiva](/blog/carga-cognitiva-ejercicios-matematicas): los estudiantes se saturaron antes de poder practicar.
+Los [Principios de Instrucción de Barak Rosenshine](https://www.aft.org/sites/default/files/Rosenshine.pdf), basados en décadas de investigación en aulas, identifican la práctica guiada como uno de los elementos más efectivos de la enseñanza. El hallazgo clave: "Los profesores más efectivos pasan más tiempo guiando la práctica de los estudiantes" antes de soltarlos a trabajar solos.
+
+Explicaste, diste un ejemplo, y soltaste. Pero la transición de "ver cómo tú lo haces" a "hacerlo solos" fue muy abrupta.
 
 **Señales:**
 - Entendieron tu ejemplo pero no pudieron replicarlo
 - Preguntan "¿qué hago primero?" cuando enfrentan el ejercicio solos
 - Con un poco de ayuda, lo logran
 
-**Qué hacer:** Más práctica guiada antes de soltar. No re-explicar—acompañar. La clave es permitir que trabajen con problemas desafiantes a través de [lucha productiva](/blog/lucha-productiva-matematicas).
+**Qué hacer:** Más práctica guiada antes de soltar. No re-explicar—acompañar.
 
 ### Causa 4: Problema de atención/contexto
 
@@ -95,8 +99,6 @@ Cuando el problema afecta a entre 30-50% del curso, ninguna opción es clarament
 - ¿Qué tan crítico es este contenido para la PAES?
 - ¿Tienes forma de que los afectados practiquen fuera de clase?
 
-Si tienes una plataforma con panel de profesor, puedes seguir avanzando mientras asignas práctica de refuerzo al grupo que lo necesita, y monitoreas si están cerrando la brecha.
-
 ## Cómo re-enseñar (sin repetir lo mismo)
 
 Si decides parar, la peor estrategia es repetir exactamente la misma explicación, solo más lento. Si no funcionó la primera vez, no va a funcionar la segunda.
@@ -113,6 +115,8 @@ Si explicaste algebraicamente, explica con gráficos. Si usaste gráficos, usa t
 | Procedimiento algebraico | Tabla de valores → puntos → recta |
 | Fórmula de pendiente | "¿Cuánto sube por cada hora más?" |
 
+El modelo de representaciones múltiples de Lesh muestra que los estudiantes que pueden moverse fluidamente entre representaciones tienen mejor comprensión conceptual.
+
 ### Estrategia 2: Vuelve al prerrequisito (15 minutos, no una clase)
 
 Si el problema es un prerrequisito, no necesitas re-enseñar toda la unidad anterior. Solo el concepto específico que falta.
@@ -128,9 +132,8 @@ No vuelvas a "ecuaciones de primer grado" como unidad. Haz 15 minutos intensivos
 
 ### Estrategia 3: Práctica masiva guiada
 
-A veces el problema no es comprensión—es falta de automatización. Saben qué hacer, pero les toma tanto esfuerzo que se pierden.
+Rosenshine encontró que los profesores más efectivos hacen la transición de forma muy gradual:
 
-**Cómo funciona:**
 1. Tú haces un ejercicio completo, narrado paso a paso
 2. Tú haces otro, pero ellos te dictan qué hacer
 3. Ellos hacen uno mientras tú circulas y corriges en tiempo real
@@ -139,7 +142,9 @@ A veces el problema no es comprensión—es falta de automatización. Saben qué
 
 Es lento. Pero para contenido crítico, vale la pena.
 
-### Estrategia 4: Peer teaching estructurado
+### Estrategia 4: Aprendizaje entre pares
+
+Un [meta-análisis de Bowman-Perrott et al. (2013)](https://journals.sagepub.com/doi/10.1177/0741932513504710) encontró que el peer tutoring tiene efectos positivos significativos tanto para el tutor como para el tutorado, con un tamaño de efecto moderado a alto (Hedges' g = 0.75).
 
 Si tienes 15 que sí entendieron, úsalos.
 
@@ -148,11 +153,13 @@ Si tienes 15 que sí entendieron, úsalos.
 3. El grupo resuelve ejercicios juntos
 4. Tú circulas atendiendo a los grupos que más les cuesta
 
-**El truco:** Explicar obliga a organizar el conocimiento. El estudiante que explica consolida su propio entendimiento mientras ayuda a los demás.
+[Chi et al. (1994)](https://psycnet.apa.org/doi/10.1037/0022-0663.86.3.465) documentaron el "efecto de explicación": explicar obliga a organizar el conocimiento, detectar lagunas propias, y consolidar la comprensión. El estudiante que explica aprende tanto o más que el que escucha.
 
 ## Cómo evitar que vuelva a pasar
 
-Llegar al momento de "la mitad no entiende" significa que algo falló antes. Para evitarlo:
+Llegar al momento de "la mitad no entiende" significa que algo falló antes. La investigación seminal de [Black & Wiliam (1998)](https://www.rdc.udel.edu/wp-content/uploads/2015/04/InsidesidetheBlackBox.pdf) "Inside the Black Box" demostró que la evaluación formativa—verificación continua durante el aprendizaje—produce algunos de los mayores efectos documentados en educación.
+
+El principio es simple: detectar problemas temprano, cuando son pequeños y manejables.
 
 ### Diagnóstico antes, no después
 
@@ -162,11 +169,11 @@ Antes de empezar una unidad nueva, verifica que los prerrequisitos estén. 5 min
 
 No esperes hasta la prueba para saber si entendieron. Exit tickets, preguntas rápidas, observación mientras practican—todo cuenta.
 
+Black & Wiliam encontraron que la retroalimentación formativa frecuente puede duplicar la velocidad de aprendizaje comparada con la instrucción tradicional.
+
 ### Práctica con feedback inmediato
 
 Si los estudiantes practican y solo se enteran una semana después de que lo hicieron mal, reforzaron el error. La práctica efectiva requiere retroalimentación inmediata.
-
-En SimplePAES, cada ejercicio tiene retroalimentación instantánea que muestra dónde estuvo el error. Tú puedes ver en tu panel de clase qué temas tienen más errores a nivel de curso—antes de que se conviertan en crisis.
 
 ### Ajusta la velocidad al grupo real
 

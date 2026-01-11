@@ -6,8 +6,8 @@ import { Page } from '@playwright/test';
  * at authenticated pages without having to login each time.
  */
 export async function loginAsStudent(page: Page) {
-  // Navigate to login page
-  await page.goto('/');
+  // Navigate to login page (not landing page)
+  await page.goto('/signin');
 
   // Dismiss cookie banner before interacting with the page
   await page.evaluate(() => {
@@ -15,7 +15,7 @@ export async function loginAsStudent(page: Page) {
   });
 
   // Fill in credentials
-  await page.fill('input[type="email"], input[name="email"], input[name="username"]', 'student@test.com');
+  await page.fill('input[name="username"]', 'student@test.com');
   // SECURITY: Updated to use new password that meets security requirements
   await page.fill('input[type="password"]', 'StudentTest123!');
 
@@ -52,4 +52,73 @@ export async function goToDashboard(page: Page) {
 export async function setupAuthenticatedSession(page: Page) {
   await loginAsStudent(page);
   await goToDashboard(page);
+}
+
+/**
+ * Authenticates as a test teacher and navigates to the teacher dashboard.
+ * Used for testing teacher-specific features like live lessons.
+ */
+export async function loginAsTeacher(page: Page) {
+  await page.goto('/signin');
+
+  // Dismiss cookie banner
+  await page.evaluate(() => {
+    localStorage.setItem('cookie-consent', 'accepted');
+  });
+
+  // Fill in teacher credentials
+  await page.fill('input[name="username"]', 'teacher@test.com');
+  await page.fill('input[type="password"]', 'TeacherTest123!');
+
+  // Submit login
+  await page.click('button[type="submit"]');
+
+  // Wait for navigation to teacher dashboard or regular dashboard
+  await page.waitForURL(/\/(teacher|dashboard|$)/, { timeout: 10000 });
+}
+
+/**
+ * Authenticates as a sync student (assigned to test teacher).
+ * Used for testing real-time lesson sync features.
+ */
+export async function loginAsSyncStudent(page: Page) {
+  await page.goto('/signin');
+
+  // Dismiss cookie banner
+  await page.evaluate(() => {
+    localStorage.setItem('cookie-consent', 'accepted');
+  });
+
+  // Fill in sync student credentials
+  await page.fill('input[name="username"]', 'sync.student@test.com');
+  await page.fill('input[type="password"]', 'SyncStudent123!');
+
+  // Submit login
+  await page.click('button[type="submit"]');
+
+  // Wait for navigation to dashboard
+  await page.waitForURL(/\/(dashboard|$)/, { timeout: 10000 });
+}
+
+/**
+ * Authenticates as a test admin and navigates to the admin dashboard.
+ * Used for testing admin-specific features like session management.
+ */
+export async function loginAsAdmin(page: Page) {
+  await page.goto('/signin');
+
+  // Dismiss cookie banner
+  await page.evaluate(() => {
+    localStorage.setItem('cookie-consent', 'accepted');
+  });
+
+  // Fill in admin credentials
+  await page.fill('input[name="username"]', 'admin@test.com');
+  await page.fill('input[type="password"]', 'AdminTest123!');
+
+  // Submit login
+  await page.click('button[type="submit"]');
+
+  // Wait for navigation to admin dashboard or regular dashboard
+  await page.waitForURL(/\/(admin|dashboard)/, { timeout: 10000 });
 }

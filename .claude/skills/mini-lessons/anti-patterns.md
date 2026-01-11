@@ -387,6 +387,9 @@ Run these checks before considering implementation complete:
 
 # Check 6: onComplete called
 # Each step must call onComplete somewhere in JSX
+
+# Check 7: No framer-motion on SVG paths/lines
+# Search for motion.path or motion.line - use plain SVG instead
 ```
 
 ---
@@ -491,6 +494,88 @@ const [phase, setPhase] = useState<Phase>('definition');
 - `minimo-comun-multiplo/Step3Explain.tsx`
 - `maximo-comun-divisor/Step3Explain.tsx`
 - `ecuaciones-lineales/Step3Explain.tsx`
+
+---
+
+## Anti-Pattern 8: Framer-Motion for SVG Path/Line Elements
+
+Using `motion.path` or `motion.line` for SVG animations causes visual glitches because framer-motion doesn't properly interpolate SVG path `d` attributes.
+
+### WRONG (framer-motion on SVG paths)
+
+```typescript
+import { motion } from 'framer-motion';
+
+// Animating SVG path d attribute - CAUSES GLITCHES
+<motion.path
+  d={sectorPath(cx, cy, r, 0, angle)}
+  fill="#5eead4"
+  initial={false}
+  animate={{ d: sectorPath(cx, cy, r, 0, angle) }}
+  transition={{ duration: 0.1 }}
+/>
+
+// Animating SVG line coordinates - ALSO GLITCHY
+<motion.line
+  x1={cx}
+  y1={cy}
+  x2={endX}
+  y2={endY}
+  animate={{ x2: endX, y2: endY }}
+  transition={{ duration: 0.1 }}
+/>
+```
+
+### CORRECT (plain SVG elements with React state)
+
+```typescript
+// Plain SVG elements - React re-renders instantly on state change
+<path
+  d={sectorPath(cx, cy, r, 0, angle)}
+  fill="#5eead4"
+  stroke="#0d9488"
+  strokeWidth="3"
+/>
+
+<line
+  x1={cx}
+  y1={cy}
+  x2={cx + r * Math.cos((angle - 90) * Math.PI / 180)}
+  y2={cy + r * Math.sin((angle - 90) * Math.PI / 180)}
+  stroke="#dc2626"
+  strokeWidth="2"
+/>
+```
+
+### When framer-motion IS appropriate
+
+Framer-motion works well for `motion.div` animations (fade-in, scale, translate):
+
+```typescript
+// GOOD - div animations work fine
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  className="bg-white rounded-xl p-4"
+>
+  Content here
+</motion.div>
+```
+
+### Why plain SVG works better
+
+- React's state-driven re-rendering updates SVG elements **instantly**
+- No animation library needed for slider-controlled SVGs
+- Smoother visual result than trying to interpolate paths
+- Less code and better performance
+
+### Detection Method
+
+1. Search for `motion.path` or `motion.line` in your component
+2. If found animating `d` attribute or coordinates → WRONG
+3. Replace with plain `<path>` or `<line>` elements
+4. `motion.div` for container animations is fine
 
 ---
 

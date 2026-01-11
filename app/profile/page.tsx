@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { Button, Card, Badge, Heading, Text, Navbar, NavbarLink, Modal } from '@/components/ui';
-import { QuizHistoryResponse } from '@/lib/types';
+import { QuizHistoryResponse, PaesExamTarget } from '@/lib/types';
 import { api } from '@/lib/api-client';
 import { useTranslations } from 'next-intl';
 
@@ -46,6 +46,7 @@ function ProfilePageContent() {
     displayName: user?.displayName || '',
     email: user?.email || '',
     targetLevel: user?.targetLevel || 'M1_AND_M2' as 'M1_ONLY' | 'M1_AND_M2',
+    paesExamTarget: user?.paesExamTarget || null as PaesExamTarget | null,
   });
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [editError, setEditError] = useState<string>('');
@@ -90,6 +91,7 @@ function ProfilePageContent() {
         displayName: user.displayName || '',
         email: user.email || '',
         targetLevel: user.targetLevel || 'M1_AND_M2',
+        paesExamTarget: user.paesExamTarget || null,
       });
     }
   }, [user]);
@@ -133,7 +135,15 @@ function ProfilePageContent() {
     setEditError('');
 
     try {
-      const response = await api.put<UpdateProfileResponse>('/api/user/profile', editForm);
+      // Only include paesExamTarget if it has a value (not null)
+      // This prevents errors if the database column doesn't exist yet
+      const payload = {
+        displayName: editForm.displayName,
+        email: editForm.email,
+        targetLevel: editForm.targetLevel,
+        ...(editForm.paesExamTarget && { paesExamTarget: editForm.paesExamTarget }),
+      };
+      const response = await api.put<UpdateProfileResponse>('/api/user/profile', payload);
 
       if (response.error) {
         // API returned an error response
@@ -217,6 +227,15 @@ function ProfilePageContent() {
                   <Text size="sm" variant="secondary">{t('info.targetLevel')}</Text>
                   <Badge variant={user.targetLevel === 'M1_ONLY' ? 'info' : 'success'}>
                     {user.targetLevel === 'M1_ONLY' ? t('onlyM1') : t('m1AndM2')}
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Text size="sm" variant="secondary">{t('info.paesExamTarget')}</Text>
+                  <Badge variant={user.paesExamTarget ? 'info' : 'neutral'}>
+                    {user.paesExamTarget === 'invierno_2026' && t('paesExam.invierno2026')}
+                    {user.paesExamTarget === 'verano_2026' && t('paesExam.verano2026')}
+                    {user.paesExamTarget === 'verano_e_invierno_2026' && t('paesExam.ambas2026')}
+                    {!user.paesExamTarget && t('edit.modal.paesExamNotSelected')}
                   </Badge>
                 </div>
               </div>
@@ -479,6 +498,23 @@ function ProfilePageContent() {
             <Text size="xs" variant="secondary" className="mt-2">
               {t('edit.modal.m1Description')}
             </Text>
+          </div>
+
+          <div>
+            <label htmlFor="paesExamTarget" className="block text-sm font-medium mb-2">
+              {t('edit.modal.paesExamTargetQuestion')}
+            </label>
+            <select
+              id="paesExamTarget"
+              value={editForm.paesExamTarget || ''}
+              onChange={(e) => setEditForm({ ...editForm, paesExamTarget: (e.target.value || null) as PaesExamTarget | null })}
+              className="w-full h-11 px-3 rounded-xl text-[15px] bg-white dark:bg-[#121212] text-black dark:text-white border border-black/[0.12] dark:border-white/[0.16] focus:outline-none focus:ring-3 focus:ring-[#0A84FF]/50 focus:border-[#0A84FF] transition-all duration-[180ms]"
+            >
+              <option value="">{t('edit.modal.paesExamNotSelected')}</option>
+              <option value="invierno_2026">{t('edit.modal.paesInvierno2026')}</option>
+              <option value="verano_2026">{t('edit.modal.paesVerano2026')}</option>
+              <option value="verano_e_invierno_2026">{t('edit.modal.paesAmbas2026')}</option>
+            </select>
           </div>
 
           {editError && (

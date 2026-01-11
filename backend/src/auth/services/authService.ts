@@ -49,6 +49,7 @@ function formatUserResponse(user: UserRecord): UserResponse {
     cookieConsent: user.cookie_consent,
     gradeLevel: user.grade_level,
     assignedByTeacherId: user.assigned_by_teacher_id,
+    paesExamTarget: user.paes_exam_target,
   };
 }
 
@@ -62,7 +63,7 @@ export async function registerUser(
 
   // Validation
   if (!username || !email || !password || !displayName) {
-    throw new Error('All fields are required');
+    throw new Error('Por favor completa todos los campos');
   }
 
   // Password validation - must match Zod schema requirements
@@ -77,7 +78,7 @@ export async function registerUser(
   );
 
   if (existingUser.rows.length > 0) {
-    throw new Error('Username or email already exists');
+    throw new Error('El usuario o email ya está registrado');
   }
 
   // Hash password
@@ -148,7 +149,7 @@ export async function loginUser(data: LoginRequest): Promise<AuthResponse> {
   const { usernameOrEmail, password } = data;
 
   if (!usernameOrEmail || !password) {
-    throw new Error('Username/email and password are required');
+    throw new Error('Por favor ingresa tu usuario y contraseña');
   }
 
   // Find user by username or email
@@ -160,7 +161,7 @@ export async function loginUser(data: LoginRequest): Promise<AuthResponse> {
   );
 
   if (result.rows.length === 0) {
-    throw new Error('Invalid credentials');
+    throw new Error('Usuario o email no encontrado');
   }
 
   const user = result.rows[0];
@@ -169,7 +170,7 @@ export async function loginUser(data: LoginRequest): Promise<AuthResponse> {
   const isValidPassword = await bcrypt.compare(password, user.password_hash);
 
   if (!isValidPassword) {
-    throw new Error('Invalid credentials');
+    throw new Error('Contraseña incorrecta');
   }
 
   // Generate tokens
@@ -196,7 +197,7 @@ export async function loginUser(data: LoginRequest): Promise<AuthResponse> {
  */
 export async function refreshAccessToken(refreshToken: string): Promise<{ accessToken: string }> {
   if (!refreshToken) {
-    throw new Error('Refresh token is required');
+    throw new Error('Token de actualización requerido');
   }
 
   // Verify refresh token
@@ -209,14 +210,14 @@ export async function refreshAccessToken(refreshToken: string): Promise<{ access
   );
 
   if (tokenResult.rows.length === 0) {
-    throw new Error('Invalid refresh token');
+    throw new Error('Sesión inválida. Por favor inicia sesión nuevamente');
   }
 
   const storedToken = tokenResult.rows[0];
 
   // Check if token is expired
   if (storedToken.expires_at < Date.now()) {
-    throw new Error('Refresh token expired');
+    throw new Error('Tu sesión ha expirado. Por favor inicia sesión nuevamente');
   }
 
   // Generate new access token
@@ -237,7 +238,7 @@ export async function refreshAccessToken(refreshToken: string): Promise<{ access
  */
 export async function logoutUser(refreshToken: string): Promise<void> {
   if (!refreshToken) {
-    throw new Error('Refresh token is required');
+    throw new Error('Token de actualización requerido');
   }
 
   // Revoke the refresh token

@@ -7,6 +7,8 @@ import { useTranslations } from 'next-intl';
 
 // Map grade levels to display names
 const GRADE_DISPLAY_NAMES: Record<string, string> = {
+  '7-basico': '7° Básico',
+  '8-basico': '8° Básico',
   '1-medio': '1° Medio',
   '2-medio': '2° Medio',
   '3-medio': '3° Medio',

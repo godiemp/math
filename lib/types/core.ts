@@ -55,7 +55,13 @@ export type UserRole = 'student' | 'admin' | 'teacher';
  * When set, students see only grade-appropriate content (no M1/M2)
  * NULL means PAES student who sees M1/M2 content based on targetLevel
  */
-export type StudentGradeLevel = '1-medio' | '2-medio' | '3-medio' | '4-medio';
+export type StudentGradeLevel = '7-basico' | '8-basico' | '1-medio' | '2-medio' | '3-medio' | '4-medio';
+
+/**
+ * PAES exam target
+ * Which PAES exam(s) the user is preparing for
+ */
+export type PaesExamTarget = 'invierno_2026' | 'verano_2026' | 'verano_e_invierno_2026';
 
 /**
  * Live session status lifecycle
@@ -162,6 +168,8 @@ export interface User {
   hasSeenWelcome?: boolean;
   emailVerified?: boolean;
   cookieConsent?: 'accepted' | 'declined' | null;
+  /** Target PAES exam(s) the user is preparing for */
+  paesExamTarget?: PaesExamTarget | null;
   subscription?: {
     id: number;
     userId: string;

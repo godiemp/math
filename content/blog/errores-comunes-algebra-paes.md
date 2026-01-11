@@ -187,6 +187,8 @@ La mejor defensa contra estos errores tiene dos partes:
 
 Los errores no son señal de que "no eres bueno para matemáticas". Son información sobre qué patrones necesitas practicar más. Cada error que identificas y corriges es un punto que no vas a perder en la PAES.
 
+**Para profesores:** Si quieres aprender a usar estos errores como herramienta de enseñanza en tu clase, revisa nuestra guía sobre [cómo convertir errores en oportunidades de aprendizaje](/blog/convertir-errores-oportunidades-aprendizaje).
+
 Para más errores comunes que cuestan puntos, revisa:
 - [Los 7 errores de números más frecuentes en la PAES](/blog/errores-comunes-numeros-paes)
 - [Los 7 errores de geometría más frecuentes en la PAES](/blog/errores-comunes-geometria-paes)

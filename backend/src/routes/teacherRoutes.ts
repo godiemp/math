@@ -8,7 +8,14 @@
 
 import { Router } from 'express';
 import { authenticate, requireTeacher } from '../auth/middleware';
-import { getStudents, assignGradeLevel, getMyStudents } from '../controllers/teacherController';
+import {
+  getStudents,
+  assignGradeLevel,
+  getMyStudents,
+  createStudent,
+  resetStudentPassword,
+  deleteStudent,
+} from '../controllers/teacherController';
 
 const router = Router();
 
@@ -40,5 +47,27 @@ router.get('/my-students', getMyStudents);
  * @access  Private (Teacher/Admin)
  */
 router.put('/students/:studentId/grade', assignGradeLevel);
+
+/**
+ * @route   POST /api/teacher/students
+ * @desc    Create a new student account linked to this teacher
+ * @body    { firstName: string, lastName: string, gradeLevel: '1-medio' | '2-medio' | '3-medio' | '4-medio' }
+ * @access  Private (Teacher/Admin)
+ */
+router.post('/students', createStudent);
+
+/**
+ * @route   POST /api/teacher/students/:studentId/reset-password
+ * @desc    Reset a student's password
+ * @access  Private (Teacher/Admin)
+ */
+router.post('/students/:studentId/reset-password', resetStudentPassword);
+
+/**
+ * @route   DELETE /api/teacher/students/:studentId
+ * @desc    Delete a student account (only if created by this teacher)
+ * @access  Private (Teacher/Admin)
+ */
+router.delete('/students/:studentId', deleteStudent);
 
 export default router;

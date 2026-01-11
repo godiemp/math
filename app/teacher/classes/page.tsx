@@ -1,11 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import TeacherLayout from '@/components/layout/TeacherLayout';
-import { Card, Heading, Text, Button } from '@/components/ui';
-import { MOCK_CLASSES, TeacherClass, CLASS_LEVEL_LABELS } from '@/lib/types/teacher';
-import { Copy, Check } from 'lucide-react';
+import { Card, Heading, Text, Button, Spinner } from '@/components/ui';
+import { useClasses, type TeacherClass } from '@/lib/hooks/useClasses';
+import { CLASS_LEVEL_LABELS } from '@/lib/types/teacher';
 
 function formatTimeAgo(timestamp: number): string {
   const seconds = Math.floor((Date.now() - timestamp) / 1000);
@@ -20,14 +19,6 @@ function formatTimeAgo(timestamp: number): string {
 
 function ClassCard({ cls }: { cls: TeacherClass }) {
   const router = useRouter();
-  const [copied, setCopied] = useState(false);
-
-  const copyInviteCode = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    navigator.clipboard.writeText(cls.inviteCode);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   return (
     <Card
@@ -40,9 +31,11 @@ function ClassCard({ cls }: { cls: TeacherClass }) {
           <Heading level={3} size="sm" className="mb-1">
             {cls.name}
           </Heading>
-          <Text size="sm" variant="secondary">
-            {cls.schoolName}
-          </Text>
+          {cls.schoolName && (
+            <Text size="sm" variant="secondary">
+              {cls.schoolName}
+            </Text>
+          )}
         </div>
         <span
           className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -51,7 +44,7 @@ function ClassCard({ cls }: { cls: TeacherClass }) {
               : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
           }`}
         >
-          {CLASS_LEVEL_LABELS[cls.level]}
+          {CLASS_LEVEL_LABELS[cls.level] || cls.level}
         </span>
       </div>
 
@@ -62,7 +55,7 @@ function ClassCard({ cls }: { cls: TeacherClass }) {
       )}
 
       {/* Stats Row */}
-      <div className="grid grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-3 gap-4">
         <div className="text-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
           <div className="text-xl font-bold text-gray-900 dark:text-white">
             {cls.studentCount}
@@ -71,39 +64,16 @@ function ClassCard({ cls }: { cls: TeacherClass }) {
         </div>
         <div className="text-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
           <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
-            {Math.round((cls.avgAccuracy || 0) * 100)}%
+            {cls.avgAccuracy ? `${Math.round(cls.avgAccuracy * 100)}%` : '-'}
           </div>
           <div className="text-xs text-gray-500 dark:text-gray-400">Precisión</div>
         </div>
         <div className="text-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
           <div className="text-xl font-bold text-gray-900 dark:text-white">
-            {cls.lastActivity ? formatTimeAgo(cls.lastActivity) : 'N/A'}
+            {cls.lastActivity ? formatTimeAgo(cls.lastActivity) : '-'}
           </div>
           <div className="text-xs text-gray-500 dark:text-gray-400">Actividad</div>
         </div>
-      </div>
-
-      {/* Invite Code */}
-      <div className="flex items-center justify-between p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-800">
-        <div>
-          <Text size="xs" variant="secondary" className="mb-0.5">
-            Código de invitación
-          </Text>
-          <code className="text-lg font-mono font-bold text-emerald-700 dark:text-emerald-400">
-            {cls.inviteCode}
-          </code>
-        </div>
-        <button
-          onClick={copyInviteCode}
-          className="p-2 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors"
-          title="Copiar código"
-        >
-          {copied ? (
-            <Check className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-          ) : (
-            <Copy className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-          )}
-        </button>
       </div>
     </Card>
   );
@@ -111,6 +81,7 @@ function ClassCard({ cls }: { cls: TeacherClass }) {
 
 export default function TeacherClassesPage() {
   const router = useRouter();
+  const { classes, isLoading, error } = useClasses();
 
   return (
     <TeacherLayout>
@@ -133,14 +104,33 @@ export default function TeacherClassesPage() {
           </Button>
         </div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex justify-center py-12">
+            <Spinner size="lg" />
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <Card padding="lg" className="text-center py-12 border-red-200 dark:border-red-800">
+            <Text className="text-red-600 dark:text-red-400">
+              Error al cargar las clases. Por favor, intenta de nuevo.
+            </Text>
+          </Card>
+        )}
+
         {/* Classes Grid */}
-        {MOCK_CLASSES.length > 0 ? (
+        {!isLoading && !error && classes.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {MOCK_CLASSES.map((cls) => (
+            {classes.map((cls) => (
               <ClassCard key={cls.id} cls={cls} />
             ))}
           </div>
-        ) : (
+        )}
+
+        {/* Empty State */}
+        {!isLoading && !error && classes.length === 0 && (
           <Card padding="lg" className="text-center py-12">
             <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-3xl">📚</span>

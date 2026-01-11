@@ -17,7 +17,7 @@ Las preguntas que haces—y cómo las haces—determinan qué tipo de pensamient
 
 ### El problema de las preguntas cerradas
 
-La mayoría de las preguntas en clase de matemáticas son cerradas:
+[Boaler y Brodie (2004)](https://www.youcubed.org/evidence/asking-questions/) analizaron los tipos de preguntas que hacen los profesores de matemáticas y encontraron que la gran mayoría son preguntas cerradas:
 - "¿Cuál es la respuesta?"
 - "¿Cuánto es esto?"
 - "¿Está bien?"
@@ -30,18 +30,27 @@ Estas preguntas:
 
 ### El problema del tiempo de espera
 
-La investigación muestra que los profesores típicamente esperan menos de 3 segundos después de hacer una pregunta antes de dar pistas, reformular, o responder ellos mismos.
+[Mary Budd Rowe (1974)](https://onlinelibrary.wiley.com/doi/abs/10.1002/tea.3660110101) midió el tiempo que los profesores esperan después de hacer una pregunta: típicamente menos de 1 segundo—a veces menos de 3 segundos—antes de dar pistas, reformular, o responder ellos mismos.
 
-**Consecuencia:** Solo los estudiantes que piensan rápido participan. El resto aprende a esperar que alguien más responda.
+Cuando Rowe entrenó a profesores para esperar al menos 3 segundos (lo que llamó "wait time"), los resultados fueron dramáticos:
+
+| Cambio observado | Efecto |
+|-----------------|--------|
+| Respuestas más largas | De 7 a 28 palabras promedio |
+| Más respuestas "no sé" convertidas en intentos | Los estudiantes se atrevían a probar |
+| Participación más diversa | Más voces en la discusión |
+| Calidad de las respuestas | Más elaboradas y razonadas |
+
+**Consecuencia de no esperar:** Solo los estudiantes que piensan rápido participan. El resto aprende a esperar que alguien más responda.
 
 ### El problema del patrón IRE
 
-El patrón más común en aulas:
+[Mehan (1979)](https://www.hup.harvard.edu/catalog.php?isbn=9780674447264) documentó el patrón más común en aulas, que llamó IRE:
 1. **Iniciación:** El profesor pregunta
 2. **Respuesta:** Un estudiante responde
 3. **Evaluación:** El profesor dice si está bien o mal
 
-Este patrón enseña a los estudiantes que su trabajo es adivinar qué tiene el profesor en la cabeza, no pensar por sí mismos.
+Este patrón enseña a los estudiantes que su trabajo es adivinar qué tiene el profesor en la cabeza, no pensar por sí mismos. [Cazden (2001)](https://www.hup.harvard.edu/catalog.php?isbn=9780674010246) en su análisis del discurso en el aula mostró cómo el patrón IRE limita el desarrollo del razonamiento matemático.
 
 ## 5 tipos de preguntas que activan pensamiento
 
@@ -55,7 +64,7 @@ En vez de preguntar por el resultado, pregunta por el proceso.
 | "¿La respuesta es 24?" | "¿Cómo llegaste a esa respuesta?" |
 | "¿Es correcto?" | "¿Cómo podrías verificar si está bien?" |
 
-**Por qué funciona:** Obliga a verbalizar el razonamiento. Incluso si la respuesta es correcta, explicar el proceso consolida el aprendizaje.
+**Por qué funciona:** [Rittle-Johnson y Alibali (1999)](https://www.sciencedirect.com/science/article/abs/pii/S0022096599925236) demostraron que pedir a los estudiantes que expliquen su razonamiento mejora tanto la comprensión conceptual como la procedimental. Verbalizar el proceso consolida el aprendizaje.
 
 **Ejemplo:**
 > Estudiante: "La ecuación da x = 5."
@@ -70,7 +79,7 @@ Pide comparar enfoques, soluciones, o ideas.
 - "¿En qué se parece este problema al que vimos ayer? ¿En qué es diferente?"
 - "¿Qué cambiaría si en vez de 3 fuera -3?"
 
-**Por qué funciona:** Comparar requiere analizar, no solo recordar. Activa conexiones entre ideas.
+**Por qué funciona:** [Silver et al. (2005)](https://www.jstor.org/stable/30034949) analizaron prácticas docentes efectivas en matemáticas y encontraron que comparar múltiples soluciones es una de las estrategias más poderosas para desarrollar comprensión. Comparar requiere analizar, no solo recordar. Activa conexiones entre ideas.
 
 ### 3. Preguntas de predicción
 
@@ -81,7 +90,7 @@ Pide anticipar qué va a pasar antes de calcular.
 - "¿Esta fracción va a ser mayor o menor que 1?"
 - "Si graficamos esta función, ¿hacia arriba o hacia abajo? ¿Cómo lo sabes sin graficar?"
 
-**Por qué funciona:** Predecir requiere entender el concepto, no solo el procedimiento. Si no pueden predecir, probablemente están haciendo matemáticas sin entenderlas.
+**Por qué funciona:** [Kasmer y Kim (2011)](https://www.jstor.org/stable/10.5951/mathteacher.105.5.0342) estudiaron el efecto de las preguntas de predicción y encontraron que fuerzan a los estudiantes a usar comprensión conceptual, no solo procedimientos. Si no pueden predecir, probablemente están haciendo matemáticas sin entenderlas.
 
 ### 4. Preguntas de justificación
 
@@ -92,7 +101,7 @@ Pide que defiendan su respuesta o detecten errores en otras.
 - "Un estudiante de otro curso dijo que la respuesta es 12. ¿Tiene razón? ¿Por qué sí o por qué no?"
 - "¿Siempre funciona ese método, o solo en este caso?"
 
-**Por qué funciona:** Justificar es la esencia del pensamiento matemático. No basta con hacer—hay que poder explicar por qué.
+**Por qué funciona:** [Yackel y Cobb (1996)](https://www.jstor.org/stable/749875) documentaron que las aulas donde los estudiantes justifican regularmente desarrollan lo que llaman "normas sociomatemáticas"—expectativas compartidas de que las afirmaciones matemáticas deben poder defenderse. Justificar es la esencia del pensamiento matemático. No basta con hacer—hay que poder explicar por qué.
 
 ### 5. Preguntas de extensión
 
@@ -104,13 +113,15 @@ Pide ir más allá del problema dado.
 - "¿Hay otros casos donde este método no funcionaría?"
 - "¿Cuántas soluciones puede tener este tipo de ecuación? ¿Siempre tiene solución?"
 
-**Por qué funciona:** Extiende el pensamiento más allá de la repetición. Construye generalización y transferencia.
+**Por qué funciona:** Extiende el pensamiento más allá de la repetición. Construye generalización y transferencia—habilidades críticas que [Lobato (2006)](https://www.jstor.org/stable/30014698) identificó como centrales para el aprendizaje matemático genuino.
 
 ## Cómo hacer mejores preguntas: técnicas específicas
 
 ### Técnica 1: Espera más tiempo
 
 Después de hacer una pregunta, cuenta mentalmente hasta 10 antes de hacer cualquier cosa.
+
+[Tobin (1987)](https://link.springer.com/article/10.1007/BF00872499) replicó y extendió los hallazgos de Rowe, confirmando que aumentar el tiempo de espera a 3-5 segundos tiene efectos medibles y significativos en la participación y calidad de respuestas.
 
 **Lo que pasa cuando esperas:**
 - Más estudiantes levantan la mano
@@ -130,7 +141,7 @@ Cuando un estudiante responde (correcta o incorrectamente), no evalúes inmediat
 | "No" | "Interesante. ¿Puedes explicar tu razonamiento?" |
 | "Casi" | "Dime más sobre cómo llegaste ahí" |
 
-**Por qué funciona:** Normaliza que explicar es parte de responder. Además, a veces descubres que la respuesta "correcta" era una adivinanza, o que la "incorrecta" tiene lógica parcial que puedes rescatar.
+**Por qué funciona:** [Franke et al. (2009)](https://psycnet.apa.org/record/2009-06651-010) estudiaron prácticas docentes efectivas y encontraron que "press for explanation" (presionar por explicación) es una de las técnicas más asociadas con aprendizaje matemático profundo. Además, a veces descubres que la respuesta "correcta" era una adivinanza, o que la "incorrecta" tiene lógica parcial que puedes rescatar.
 
 ### Técnica 3: Rebota la pregunta
 
@@ -140,7 +151,7 @@ Cuando un estudiante pregunta o responde, no la tomes tú—pásala a la clase.
 > Estudiante A: "¿La respuesta es 7?"
 > Profesor (a la clase): "A dice que es 7. ¿Están de acuerdo? ¿Por qué sí o por qué no?"
 
-**Por qué funciona:** Cambia la dinámica de "el profesor valida" a "la clase discute". Los estudiantes aprenden a escucharse entre ellos.
+**Por qué funciona:** [Chapin et al. (2009)](https://www.heinemann.com/products/e04117.aspx) en "Classroom Discussions: Using Math Talk to Help Students Learn" documentaron cómo esta técnica—que llaman "revoicing"—transforma la dinámica de clase de "el profesor valida" a "la clase discute". Los estudiantes aprenden a escucharse entre ellos.
 
 ### Técnica 4: Preguntas escalonadas
 
@@ -153,7 +164,7 @@ Si tu pregunta inicial es muy difícil, ten preguntas intermedias listas.
 > (Algunos responden: sustitución, igualación...)
 > Escalón 2: "¿Cuál de esos métodos sería más fácil aquí? ¿Por qué?"
 
-**Por qué funciona:** Mantiene el nivel alto pero da andamiaje. Es mejor que bajar directamente a "¿cuál es el primer paso?"
+**Por qué funciona:** [Stein et al. (2008)](https://www.nctm.org/store/Products/5-Practices-for-Orchestrating-Productive-Mathematics-Discussions/) llamaron a esto "anticipar"—una de las 5 prácticas para discusiones matemáticas productivas. Mantiene el nivel alto pero da andamiaje. Es mejor que bajar directamente a "¿cuál es el primer paso?"
 
 ### Técnica 5: Preguntas en secuencia
 
@@ -167,7 +178,7 @@ Planifica secuencias de preguntas que construyan hacia una comprensión mayor.
 4. "Si duplicamos el radio, ¿qué pasa con el área?" (Extender)
 5. "¿Por qué el área no se duplica también?" (Profundizar)
 
-Cada pregunta construye sobre la anterior y empuja el pensamiento más lejos.
+Cada pregunta construye sobre la anterior y empuja el pensamiento más lejos. [Smith y Stein (2011)](https://www.nctm.org/store/Products/5-Practices-for-Orchestrating-Productive-Mathematics-Discussions/) enfatizan que las secuencias de preguntas planificadas son mucho más efectivas que las preguntas improvisadas.
 
 ## Preguntas para diferentes momentos de la clase
 
@@ -176,6 +187,8 @@ Cada pregunta construye sobre la anterior y empuja el pensamiento más lejos.
 - "¿Qué recuerdan de lo que vimos la clase pasada?"
 - "¿Qué tiene que ver esto con lo que ya saben?"
 - "¿Dónde han visto esto fuera de la clase?"
+
+Estas preguntas activan conocimiento previo—lo que [Ausubel (1968)](https://psycnet.apa.org/record/1968-35031-000) identificó como el factor más importante en el aprendizaje.
 
 ### Durante la explicación (verificación de comprensión)
 
@@ -201,7 +214,7 @@ Cada pregunta construye sobre la anterior y empuja el pensamiento más lejos.
 
 > "¿Por qué creen que la pendiente es negativa? Bueno, porque la recta baja de izquierda a derecha."
 
-**Solución:** Si nadie responde, reformula o da pistas, pero no respondas tú.
+**Solución:** Si nadie responde, reformula o da pistas, pero no respondas tú. [Rowe (1974)](https://onlinelibrary.wiley.com/doi/abs/10.1002/tea.3660110101) encontró que este error es uno de los más comunes y destructivos para el pensamiento de los estudiantes.
 
 ### Error 2: Preguntas retóricas disfrazadas
 
@@ -215,7 +228,7 @@ Esto no es una pregunta—es una afirmación que espera "sí". No activa pensami
 
 Cuando un estudiante da una respuesta incorrecta y pasas al siguiente buscando la correcta, envías el mensaje de que equivocarse es malo.
 
-**Solución:** Explora el error. "Interesante. ¿Cómo llegaste a eso?" A menudo, el error tiene lógica parcial que vale la pena discutir.
+**Solución:** Explora el error. "Interesante. ¿Cómo llegaste a eso?" [Borasi (1994)](https://www.jstor.org/stable/749503) demostró que los errores pueden ser las oportunidades de aprendizaje más poderosas cuando se exploran en vez de ignorarse. A menudo, el error tiene lógica parcial que vale la pena discutir.
 
 ### Error 4: Solo preguntar a los que levantan la mano
 
@@ -228,7 +241,7 @@ Los mismos 5 estudiantes siempre levantan la mano. Los otros 30 aprenden a no pa
 
 ## Cómo mejorar tus preguntas gradualmente
 
-No intentes cambiar todo a la vez. Elige un foco:
+No intentes cambiar todo a la vez. [Guskey (2002)](https://uknowledge.uky.edu/edp_facpub/7/) demostró que el cambio docente es gradual y requiere ver resultados para consolidarse. Elige un foco:
 
 ### Semana 1: Tiempo de espera
 

@@ -8,6 +8,7 @@ import { Button, Card, Badge, Heading, Text, LoadingScreen, Navbar, Callout } fr
 import { ShareModal } from "@/components/shared/ShareModal";
 import { WelcomeMessage } from "@/components/shared/WelcomeMessage";
 import { ColegioDashboardView } from "@/components/dashboard/ColegioDashboardView";
+import { LiveLessonNotification } from "@/components/lessons/LiveLessonBanner";
 import { Share2 } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { useDashboard } from "@/hooks/useDashboard";
@@ -123,6 +124,11 @@ function DashboardView({
           </Callout>
         )}
 
+        {/* Live Lesson Notification for students with assigned teachers */}
+        <div className="mb-6">
+          <LiveLessonNotification />
+        </div>
+
         {/* Mini Lessons Banner */}
         <Link href="/mini-lessons" className="block mb-8 sm:mb-10 md:mb-12" data-testid="mini-lessons-banner">
           <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
@@ -143,22 +149,6 @@ function DashboardView({
             </div>
           </div>
         </Link>
-
-        {/* Study Buddy - Coming Soon Placeholder */}
-        <Card hover className="p-6 mb-8 sm:mb-10 md:mb-12" data-testid="adaptive-learning-card">
-          <div className="text-center">
-            <div className="text-4xl mb-4">📚</div>
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <Heading level={3} size="sm">
-                Aprendizaje adaptativo
-              </Heading>
-              <Badge variant="info">Próximamente</Badge>
-            </div>
-            <Text size="sm" variant="secondary">
-              Contenido personalizado según tu progreso y objetivos
-            </Text>
-          </div>
-        </Card>
 
         {/* Live Practice Featured Card with gradient */}
         <div className="relative overflow-hidden backdrop-blur-[20px] bg-gradient-to-r from-[#5E5CE6] to-[#0A84FF] dark:from-[#9A99FF] dark:to-[#0A84FF] rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 mb-8 sm:mb-10 md:mb-12 shadow-[0_14px_36px_rgba(0,0,0,0.22)]" data-testid="live-practice-card">
@@ -419,6 +409,22 @@ function DashboardView({
             </div>
           </Card>
         </div>
+
+        {/* Adaptive Learning Card */}
+        <Card hover className="p-6 mb-8 sm:mb-10 md:mb-12" data-testid="adaptive-learning-card">
+          <div className="text-center">
+            <div className="text-4xl mb-4">🧠</div>
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <Heading level={3} size="sm">
+                Aprendizaje adaptativo
+              </Heading>
+              <Badge variant="info">Próximamente</Badge>
+            </div>
+            <Text size="sm" variant="secondary">
+              Ejercicios personalizados que se adaptan a tu nivel
+            </Text>
+          </div>
+        </Card>
 
         {/* Improvement Notice */}
         <div className="mt-8 sm:mt-10 md:mt-12">

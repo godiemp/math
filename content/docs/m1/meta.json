@@ -1,0 +1,26 @@
+{
+  "title": "M1 - Nivel Básico",
+  "pages": [
+    "---Números y Operaciones---",
+    "numeros/enteros-racionales",
+    "numeros/porcentaje",
+    "numeros/potencias-raices",
+    "numeros/proporcionalidad",
+    "---Álgebra y Funciones---",
+    "algebra/expresiones-algebraicas",
+    "algebra/ecuaciones-inecuaciones",
+    "algebra/sistemas-ecuaciones",
+    "algebra/funciones-lineales",
+    "algebra/funciones-cuadraticas",
+    "---Geometría---",
+    "geometria/perimetro-area",
+    "geometria/teorema-pitagoras",
+    "geometria/volumen",
+    "geometria/transformaciones",
+    "---Probabilidad y Estadística---",
+    "probabilidad/tablas-graficos",
+    "probabilidad/tendencia-central",
+    "probabilidad/medidas-posicion",
+    "probabilidad/reglas-probabilidad"
+  ]
+}

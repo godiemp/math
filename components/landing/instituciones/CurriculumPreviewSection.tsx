@@ -5,57 +5,81 @@ import { ChevronDown, ChevronRight, BookOpen } from 'lucide-react';
 
 const levels = [
   {
+    id: 'b7',
+    name: '7° Básico',
+    objectives: [
+      'Comprender adición y sustracción de números enteros',
+      'Multiplicar y dividir fracciones y decimales',
+      'Utilizar proporciones directas e inversas',
+      'Calcular porcentajes en contextos diversos',
+      'Aplicar propiedades del círculo',
+      'Interpretar tablas de frecuencia y gráficos',
+    ],
+  },
+  {
+    id: 'b8',
+    name: '8° Básico',
+    objectives: [
+      'Operar con números enteros y racionales',
+      'Resolver ecuaciones e inecuaciones lineales',
+      'Comprender y graficar funciones lineales y afines',
+      'Aplicar teorema de Pitágoras',
+      'Factorizar expresiones algebraicas',
+      'Calcular probabilidades con principio multiplicativo',
+    ],
+  },
+  {
     id: 'm1',
     name: '1° Medio',
     objectives: [
       'Resolver problemas con potencias de base racional y exponente entero',
-      'Operar con raíces cuadradas y cúbicas',
-      'Modelar situaciones con expresiones algebraicas',
-      'Resolver ecuaciones lineales con una incógnita',
-      'Aplicar teorema de Pitágoras y sus recíprocos',
-      'Calcular probabilidades usando diagrama de árbol',
+      'Desarrollar productos notables',
+      'Resolver sistemas de ecuaciones lineales (2x2)',
+      'Aplicar homotecia y teorema de Tales',
+      'Calcular áreas y volúmenes de conos',
+      'Desarrollar reglas de probabilidad usando diagramas de árbol',
     ],
   },
   {
     id: 'm2',
     name: '2° Medio',
     objectives: [
-      'Operar con números racionales y resolver ecuaciones',
-      'Factorizar expresiones algebraicas',
-      'Resolver sistemas de ecuaciones lineales (2x2)',
-      'Representar funciones lineales y afines',
-      'Aplicar semejanza de triángulos',
-      'Analizar datos con medidas de posición y dispersión',
+      'Operar con números reales, raíces n-ésimas y logaritmos',
+      'Comprender y graficar funciones cuadráticas',
+      'Resolver ecuaciones cuadráticas de distintas formas',
+      'Aplicar razones trigonométricas en triángulos rectángulos',
+      'Calcular probabilidades usando permutaciones y combinaciones',
+      'Comprender porcentaje de cambio e interés compuesto',
     ],
   },
   {
     id: 'm3',
     name: '3° Medio',
     objectives: [
-      'Resolver ecuaciones cuadráticas y analizar discriminante',
-      'Modelar con funciones cuadráticas y analizar sus gráficos',
-      'Aplicar razones trigonométricas en triángulos rectángulos',
-      'Resolver problemas con ley de senos y cosenos',
-      'Calcular probabilidades con regla multiplicativa',
-      'Aplicar distribución normal y binomial',
+      'Operar con números complejos (adición, multiplicación, división)',
+      'Aplicar modelos de funciones exponenciales y logarítmicas',
+      'Modelar fenómenos de crecimiento y decrecimiento',
+      'Resolver problemas de relaciones métricas en la circunferencia',
+      'Analizar datos con medidas de dispersión',
+      'Aplicar probabilidad condicional en toma de decisiones',
     ],
   },
   {
     id: 'm4',
     name: '4° Medio',
     objectives: [
-      'Operar con logaritmos y resolver ecuaciones exponenciales',
-      'Modelar crecimiento y decrecimiento exponencial',
-      'Aplicar muestreo y analizar representatividad',
-      'Calcular intervalos de confianza y margen de error',
-      'Resolver problemas de combinatoria (permutaciones y combinaciones)',
-      'Aplicar probabilidad condicional e independencia',
+      'Tomar decisiones financieras usando porcentajes y tasas de interés',
+      'Aplicar distribución binomial y normal en situaciones de incerteza',
+      'Modelar fenómenos con funciones potencia y trigonométricas',
+      'Resolver problemas de recta y circunferencia en el plano',
+      'Analizar críticamente datos estadísticos',
+      'Fundamentar decisiones en el ámbito económico personal',
     ],
   },
 ];
 
 export function CurriculumPreviewSection() {
-  const [expandedLevel, setExpandedLevel] = useState<string | null>('m1');
+  const [expandedLevel, setExpandedLevel] = useState<string | null>('b7');
 
   return (
     <section className="py-16 px-4">
@@ -78,7 +102,7 @@ export function CurriculumPreviewSection() {
             color: 'var(--color-label-secondary)',
           }}
         >
-          Mini-lecciones alineadas a los OA de 1° a 4° medio
+          Mini-lecciones alineadas a los OA de 7° Básico a 4° Medio
         </p>
 
         <div

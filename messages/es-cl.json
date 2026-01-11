@@ -23,7 +23,9 @@
       "registerFree": "regístrate gratis",
       "errors": {
         "completeFields": "Por favor completa todos los campos",
-        "invalidCredentials": "Error al iniciar sesión",
+        "invalidCredentials": "Usuario o contraseña incorrectos",
+        "userNotFound": "Usuario o email no encontrado",
+        "wrongPassword": "Contraseña incorrecta",
         "generic": "Ocurrió un error. Intenta de nuevo",
         "registration": "Error al registrarse"
       },
@@ -49,6 +51,7 @@
         "acceptTerms": "Debes aceptar los términos y condiciones",
         "usernameFormat": "El usuario solo puede contener letras, números y guiones bajos (sin espacios ni tildes)",
         "usernameTooLong": "El usuario debe tener máximo 20 caracteres",
+        "userAlreadyExists": "El usuario o email ya está registrado",
         "generic": "Error al crear la cuenta"
       },
       "success": "Cuenta creada exitosamente"
@@ -227,8 +230,8 @@
       "backHome": "Volver al Inicio"
     },
     "improvement": {
-      "header": "¡Estamos Mejorando!",
-      "message": "Estamos mejorando los problemas para tener problemas estilo PAES. Hasta ahora tenemos los temarios cubiertos pero no el formato. Pronto tendrás una experiencia más cercana al examen real."
+      "header": "Versión Beta",
+      "message": "Estamos trabajando en agregar más y mejor material. Pronto verás cambios y mejoras en la plataforma."
     },
     "emailVerification": {
       "title": "Email No Verificado",
@@ -788,7 +791,13 @@
       "email": "Email:",
       "role": "Rol:",
       "memberSince": "Miembro desde:",
-      "targetLevel": "Nivel Objetivo:"
+      "targetLevel": "Nivel Objetivo:",
+      "paesExamTarget": "PAES Objetivo:"
+    },
+    "paesExam": {
+      "invierno2026": "Invierno 2026 (junio)",
+      "verano2026": "Verano 2026 (diciembre)",
+      "ambas2026": "Ambas 2026"
     },
     "role": {
       "admin": "Administrador",
@@ -870,6 +879,11 @@
         "m1AndM2Option": "M1 y M2 (carreras científicas/ingeniería)",
         "m1OnlyOption": "Solo M1 (otras carreras)",
         "m1Description": "Si solo necesitas M1, ocultaremos las opciones de práctica de M2",
+        "paesExamTargetQuestion": "¿Para qué PAES te estás preparando?",
+        "paesExamNotSelected": "Sin seleccionar",
+        "paesInvierno2026": "PAES Invierno 2026 (junio)",
+        "paesVerano2026": "PAES Verano 2026 (diciembre)",
+        "paesAmbas2026": "Ambas: Invierno y Verano 2026",
         "cancel": "Cancelar",
         "saving": "Guardando...",
         "saveChanges": "Guardar Cambios"
@@ -942,6 +956,7 @@
       "analytics": "analytics",
       "pmfMetrics": "PMF metrics",
       "aiAnalytics": "AI analytics",
+      "devProductivity": "dev productivity",
       "systemHealth": "system health",
       "users": "users",
       "problems": "problems",
@@ -953,7 +968,8 @@
       "studyBuddyDebug": "study buddy debug",
       "rapidFireDebug": "rapid fire debug",
       "zenDebug": "zen debug",
-      "liveSessionDebug": "live session debug"
+      "liveSessionDebug": "live session debug",
+      "figureDebug": "figure debugger"
     },
     "button": {
       "backToHome": "back to home",

@@ -29,7 +29,7 @@ function LandingPageContent() {
   const initialAudience: Audience = tabParam === 'colegios' ? 'b2b' : 'b2c';
 
   const [audience, setAudience] = useState<Audience>(initialAudience);
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const router = useRouter();
 
   // Sync state with URL param changes
@@ -45,12 +45,18 @@ function LandingPageContent() {
     router.replace(`/?tab=${newTab}`, { scroll: false });
   };
 
-  // Redirect authenticated users to dashboard
+  // Redirect authenticated users based on role
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      router.push('/dashboard');
+      if (user?.role === 'teacher') {
+        router.push('/teacher');
+      } else if (user?.role === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/dashboard');
+      }
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isLoading, router, user?.role]);
 
   // Don't render landing for authenticated users
   if (isAuthenticated) {

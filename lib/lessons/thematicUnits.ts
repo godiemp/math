@@ -73,6 +73,7 @@ export const THEMATIC_UNITS: ThematicUnitSummary[] = [
   { code: 'M1-PROB-003', name: 'Cuartiles, percentiles y diagramas de caja', level: 'M1', subject: 'probabilidad' },
   { code: 'M1-PROB-004', name: 'Probabilidad de eventos', level: 'M1', subject: 'probabilidad' },
   { code: 'M1-PROB-005', name: 'Reglas aditiva y multiplicativa de probabilidad', level: 'M1', subject: 'probabilidad' },
+  { code: 'M1-PROB-006', name: 'Comparación de poblaciones y comprensión del azar', level: 'M1', subject: 'probabilidad' },
 
   // ========================================
   // M2 - NÚMEROS (6 units)
@@ -152,4 +153,11 @@ export function subjectToSlug(subject: Subject): string {
     'probabilidad': 'probabilidad',
   };
   return mapping[subject];
+}
+
+/**
+ * Get a thematic unit by its code
+ */
+export function getUnitByCode(code: string): ThematicUnitSummary | undefined {
+  return THEMATIC_UNITS.find(u => u.code === code);
 }

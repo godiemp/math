@@ -10,7 +10,7 @@ import { Question } from '../../../types';
  * - C: Regla multiplicativa para eventos independientes
  * - D: Eventos complementarios
  *
- * Total: 33 questions
+ * Total: 40 questions
  */
 
 export const m1Prob005Questions: Question[] = [
@@ -331,7 +331,7 @@ export const m1Prob005Questions: Question[] = [
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{Una bolsa tiene 4 verdes y 2 amarillas. Se sacan 2 sin reposición. P(2 verdes)?}',
+    questionLatex: '\\text{En una bolsa hay 4 canicas verdes y 2 canicas amarillas. Una niña saca dos canicas una después de otra sin devolver la primera a la bolsa. Para ganar un premio en la feria del colegio, necesita sacar ambas canicas de color verde. ¿Cuál es la probabilidad de que la niña gane el premio?}',
     options: ['\\frac{1}{5}', '\\frac{2}{5}', '\\frac{4}{9}', '\\frac{2}{15}'],
     correctAnswer: 1,
     explanation: 'P = \\frac{4}{6} \\times \\frac{3}{5} = \\frac{12}{30} = \\frac{2}{5}',
@@ -344,7 +344,7 @@ export const m1Prob005Questions: Question[] = [
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{10 hombres, 15 mujeres. 8H y 6M estudian ingeniería. Si es de ingeniería, P(mujer)?}',
+    questionLatex: '\\text{En una universidad hay 10 hombres y 15 mujeres en el primer año. De ellos, 8 hombres y 6 mujeres estudian ingeniería. Si se selecciona al azar un estudiante de ingeniería para representar a la carrera en una feria vocacional, ¿cuál es la probabilidad de que el seleccionado sea mujer?}',
     options: ['\\frac{3}{7}', '\\frac{2}{5}', '\\frac{6}{25}', '\\frac{1}{2}'],
     correctAnswer: 0,
     explanation: 'P(\\text{mujer}|\\text{ingeniería}) = \\frac{6}{8+6} = \\frac{6}{14} = \\frac{3}{7}',
@@ -357,10 +357,10 @@ export const m1Prob005Questions: Question[] = [
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{Se lanza un dado. Si es par, ¿cuál es la probabilidad de que sea mayor que 4?}',
+    questionLatex: '\\text{En un juego de mesa, un jugador lanza un dado de seis caras. Las reglas indican que si obtiene un número par, puede avanzar casillas adicionales según el valor obtenido. El jugador quiere saber, dado que ya obtuvo un número par, cuál es la probabilidad de que ese número sea mayor que 4. ¿Cuál es esta probabilidad condicional?}',
     options: ['\\frac{1}{6}', '\\frac{1}{3}', '\\frac{1}{2}', '\\frac{2}{3}'],
     correctAnswer: 1,
-    explanation: 'P(>4|\\text{par}) = \\frac{1}{3}',
+    explanation: 'P(>4|\\text{par}) = \\frac{1}{3} \\text{ ya que solo el 6 es par y mayor que 4, de los 3 pares posibles (2,4,6)}',
     difficulty: 'medium',
     difficultyScore: 0.35,
     skills: ['probabilidad-condicional', 'numeros-fracciones']
@@ -370,10 +370,10 @@ export const m1Prob005Questions: Question[] = [
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{100 personas: 40H, 60M. 25H y 35M usan redes. P(usa redes)?}',
+    questionLatex: '\\text{Una encuesta sobre hábitos digitales entrevistó a 100 personas: 40 hombres y 60 mujeres. De los hombres, 25 usan redes sociales diariamente, y de las mujeres, 35 las usan diariamente. Si se selecciona una persona al azar de este grupo, ¿cuál es la probabilidad de que use redes sociales diariamente?}',
     options: ['0.4', '0.5', '0.6', '0.75'],
     correctAnswer: 2,
-    explanation: 'P = \\frac{60}{100} = 0.6',
+    explanation: 'P = \\frac{25 + 35}{100} = \\frac{60}{100} = 0.6',
     difficulty: 'easy',
     difficultyScore: 0.22,
     skills: ['probabilidad-tablas', 'estadistica-tablas', 'numeros-fracciones', 'numeros-decimales', 'numeros-operaciones-basicas']
@@ -383,7 +383,7 @@ export const m1Prob005Questions: Question[] = [
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{50 estudiantes: 30 aprobaron mate, 25 física, 15 ambas. ¿Cuántos ninguna?}',
+    questionLatex: '\\text{En un curso de 50 estudiantes se realizaron exámenes de matemáticas y física. Los resultados mostraron que 30 estudiantes aprobaron matemáticas, 25 aprobaron física y 15 aprobaron ambas asignaturas. El profesor quiere identificar cuántos estudiantes necesitan refuerzo porque no aprobaron ninguna de las dos materias. ¿Cuántos estudiantes no aprobaron ninguna asignatura?}',
     options: ['5', '10', '15', '20'],
     correctAnswer: 1,
     explanation: '\\text{Al menos una} = 30 + 25 - 15 = 40 \\rightarrow \\text{Ninguna} = 50 - 40 = 10',
@@ -396,7 +396,7 @@ export const m1Prob005Questions: Question[] = [
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{200 estudiantes: 120 deportes, 80 música, 40 ambas. ¿Cuántos ninguna?}',
+    questionLatex: '\\text{En un colegio con 200 estudiantes se realizó una encuesta sobre actividades extracurriculares. Los resultados indicaron que 120 estudiantes practican deportes, 80 participan en actividades musicales y 40 hacen ambas actividades. El coordinador necesita saber cuántos estudiantes no participan en ninguna actividad para promover nuevos talleres. ¿Cuántos estudiantes no participan en ninguna actividad?}',
     options: ['20', '40', '60', '80'],
     correctAnswer: 1,
     explanation: '120 + 80 - 40 = 160 \\rightarrow \\text{Ninguna} = 200 - 160 = 40',
@@ -409,10 +409,10 @@ export const m1Prob005Questions: Question[] = [
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{Se lanza una moneda 4 veces. ¿Cuántos resultados posibles?}',
+    questionLatex: '\\text{Un grupo de amigos juega un juego donde lanzan una moneda cuatro veces consecutivas y registran la secuencia de resultados (cara o sello). Para planificar las reglas del juego, necesitan saber cuántas secuencias diferentes son posibles. Por ejemplo, CCSS y CSCS son dos secuencias distintas. ¿Cuántos resultados posibles existen al lanzar una moneda 4 veces?}',
     options: ['4', '8', '16', '32'],
     correctAnswer: 2,
-    explanation: '2^4 = 16 \\text{ resultados posibles}',
+    explanation: '2^4 = 16 \\text{ resultados posibles (cada lanzamiento tiene 2 opciones)}',
     difficulty: 'easy',
     difficultyScore: 0.22,
     skills: ['probabilidad-espacio-muestral', 'probabilidad-conteo', 'numeros-potencias', 'numeros-operaciones-basicas']
@@ -422,10 +422,10 @@ export const m1Prob005Questions: Question[] = [
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{Se lanzan tres dados. ¿Tamaño del espacio muestral?}',
+    questionLatex: '\\text{En un casino se juega un juego donde se lanzan tres dados de seis caras simultáneamente. El jugador gana si la suma de los tres dados supera cierto valor. Un matemático quiere calcular las probabilidades exactas del juego y para eso necesita determinar primero cuántos resultados diferentes son posibles. ¿Cuál es el tamaño del espacio muestral al lanzar tres dados?}',
     options: ['18', '36', '108', '216'],
     correctAnswer: 3,
-    explanation: '6^3 = 6 \\times 6 \\times 6 = 216',
+    explanation: '6^3 = 6 \\times 6 \\times 6 = 216 \\text{ (cada dado tiene 6 resultados posibles)}',
     difficulty: 'easy',
     difficultyScore: 0.28,
     skills: ['probabilidad-espacio-muestral', 'probabilidad-conteo', 'numeros-potencias', 'numeros-operaciones-basicas']
@@ -435,12 +435,110 @@ export const m1Prob005Questions: Question[] = [
     level: 'M1',
     topic: 'Probabilidad y Estadística',
     subject: 'probabilidad',
-    questionLatex: '\\text{¿Probabilidad de al menos una cara al lanzar 4 monedas?}',
+    questionLatex: '\\text{En un juego de apuestas, un jugador lanza cuatro monedas simultáneamente. Para ganar el premio, necesita obtener al menos una cara entre las cuatro monedas (es decir, gana a menos que todas sean sello). El jugador quiere calcular qué tan probable es ganar antes de decidir si participa. ¿Cuál es la probabilidad de obtener al menos una cara al lanzar 4 monedas?}',
     options: ['\\frac{15}{16}', '\\frac{1}{2}', '\\frac{7}{8}', '\\frac{3}{4}'],
     correctAnswer: 0,
     explanation: 'P = 1 - P(\\text{todas sellos}) = 1 - \\left(\\frac{1}{2}\\right)^4 = 1 - \\frac{1}{16} = \\frac{15}{16}',
     difficulty: 'medium',
     difficultyScore: 0.45,
     skills: ['probabilidad-complemento', 'probabilidad-eventos-compuestos', 'numeros-fracciones', 'numeros-potencias', 'numeros-operaciones-basicas']
+  },
+  // ========================================
+  // NUEVAS PREGUNTAS PARA COMPLETAR SUBSECCIONES
+  // ========================================
+  // A. Regla aditiva para eventos mutuamente excluyentes
+  {
+    id: 'm1-prob-005-001',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Al lanzar un dado, ¿cuál es la probabilidad de obtener un 1, 3 o 5?}',
+    options: ['\\frac{1}{6}', '\\frac{1}{3}', '\\frac{1}{2}', '\\frac{2}{3}'],
+    correctAnswer: 2,
+    explanation: 'P(1 \\cup 3 \\cup 5) = P(1) + P(3) + P(5) = \\frac{1}{6} + \\frac{1}{6} + \\frac{1}{6} = \\frac{3}{6} = \\frac{1}{2}',
+    difficulty: 'easy',
+    difficultyScore: 0.22,
+    skills: ['probabilidad-union', 'probabilidad-eventos-excluyentes', 'numeros-fracciones']
+  },
+  {
+    id: 'm1-prob-005-002',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Una urna tiene 4 bolas rojas, 3 azules y 2 verdes. ¿Cuál es la probabilidad de sacar una bola roja o verde?}',
+    options: ['\\frac{4}{9}', '\\frac{2}{3}', '\\frac{6}{9}', '\\frac{5}{9}'],
+    correctAnswer: 1,
+    explanation: 'P(R \\cup V) = P(R) + P(V) = \\frac{4}{9} + \\frac{2}{9} = \\frac{6}{9} = \\frac{2}{3}',
+    difficulty: 'easy',
+    difficultyScore: 0.25,
+    skills: ['probabilidad-union', 'probabilidad-eventos-excluyentes', 'numeros-fracciones']
+  },
+  // B. Regla aditiva general
+  {
+    id: 'm1-prob-005-003',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{En una baraja de 52 cartas, ¿cuál es la probabilidad de sacar una carta roja o una figura (J, Q, K)?}',
+    options: ['\\frac{26}{52}', '\\frac{32}{52}', '\\frac{38}{52}', '\\frac{8}{13}'],
+    correctAnswer: 3,
+    explanation: 'P(R \\cup F) = P(R) + P(F) - P(R \\cap F) = \\frac{26}{52} + \\frac{12}{52} - \\frac{6}{52} = \\frac{32}{52} = \\frac{8}{13}',
+    difficulty: 'medium',
+    difficultyScore: 0.48,
+    skills: ['probabilidad-union', 'probabilidad-regla-aditiva', 'numeros-fracciones']
+  },
+  {
+    id: 'm1-prob-005-004',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Al lanzar un dado, ¿cuál es la probabilidad de obtener un número par o un número menor que 4?}',
+    options: ['\\frac{2}{3}', '\\frac{5}{6}', '\\frac{1}{2}', '\\frac{3}{4}'],
+    correctAnswer: 0,
+    explanation: 'P(\\text{par} \\cup <4) = P(\\text{par}) + P(<4) - P(\\text{par} \\cap <4) = \\frac{3}{6} + \\frac{3}{6} - \\frac{2}{6} = \\frac{4}{6} = \\frac{2}{3}',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
+    skills: ['probabilidad-union', 'probabilidad-regla-aditiva', 'numeros-fracciones']
+  },
+  // C. Regla multiplicativa para eventos independientes
+  {
+    id: 'm1-prob-005-005',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Se lanzan dos dados independientemente. ¿Cuál es la probabilidad de obtener dos números pares?}',
+    options: ['\\frac{1}{4}', '\\frac{1}{3}', '\\frac{1}{2}', '\\frac{1}{6}'],
+    correctAnswer: 0,
+    explanation: 'P(\\text{par}_1 \\cap \\text{par}_2) = P(\\text{par}) \\times P(\\text{par}) = \\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{4}',
+    difficulty: 'easy',
+    difficultyScore: 0.28,
+    skills: ['probabilidad-eventos-independientes', 'probabilidad-regla-multiplicativa', 'numeros-fracciones']
+  },
+  {
+    id: 'm1-prob-005-006',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Una máquina tiene probabilidad 0.9 de funcionar correctamente. Si hay 3 máquinas independientes, ¿cuál es la probabilidad de que todas funcionen?}',
+    options: ['0.729', '0.810', '0.900', '0.270'],
+    correctAnswer: 0,
+    explanation: 'P = 0.9 \\times 0.9 \\times 0.9 = 0.9^3 = 0.729',
+    difficulty: 'medium',
+    difficultyScore: 0.38,
+    skills: ['probabilidad-eventos-independientes', 'probabilidad-regla-multiplicativa', 'numeros-decimales']
+  },
+  // D. Eventos complementarios
+  {
+    id: 'm1-prob-005-007',
+    level: 'M1',
+    topic: 'Probabilidad y Estadística',
+    subject: 'probabilidad',
+    questionLatex: '\\text{Se lanzan 5 monedas. ¿Cuál es la probabilidad de obtener al menos una cara?}',
+    options: ['\\frac{1}{32}', '\\frac{15}{16}', '\\frac{31}{32}', '\\frac{5}{32}'],
+    correctAnswer: 2,
+    explanation: 'P(\\text{al menos 1 cara}) = 1 - P(\\text{todas sellos}) = 1 - \\left(\\frac{1}{2}\\right)^5 = 1 - \\frac{1}{32} = \\frac{31}{32}',
+    difficulty: 'medium',
+    difficultyScore: 0.42,
+    skills: ['probabilidad-complemento', 'probabilidad-eventos-compuestos', 'numeros-fracciones', 'numeros-potencias']
   }
 ];

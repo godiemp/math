@@ -8,7 +8,9 @@ import './instrument';
 // All other imports below
 import * as Sentry from '@sentry/node';
 import express, { Request, Response, NextFunction } from 'express';
+import { createServer } from 'http';
 import cors from 'cors';
+import { initializeWebSocket, closeWebSocket } from './websocket';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
@@ -30,6 +32,7 @@ import abstractProblemsRoutes from './routes/abstractProblemsRoutes';
 import contextProblemsRoutes from './routes/contextProblemsRoutes';
 import thematicUnitsRoutes from './routes/thematicUnitsRoutes';
 import studyBuddyRoutes from './routes/studyBuddyRoutes';
+import diagnosticRoutes from './routes/diagnosticRoutes';
 import learnRoutes from './routes/learnRoutes';
 import paymentRoutes from './routes/paymentRoutes';
 import predictionRoutes from './routes/predictionRoutes';
@@ -37,10 +40,13 @@ import operationsPracticeRoutes from './routes/operationsPracticeRoutes';
 import certificateRoutes from './routes/certificateRoutes';
 import adaptivePracticeRoutes from './routes/adaptivePracticeRoutes';
 import teacherRoutes from './routes/teacherRoutes';
+import classRoutes from './routes/classRoutes';
 import demoAccountRoutes from './routes/demoAccountRoutes';
+import skillTreeRoutes from './routes/skillTreeRoutes';
 import { serveImage } from './controllers/adminController';
 
 const app = express();
+const httpServer = createServer(app);
 const PORT = process.env.PORT || 3001;
 
 // Trust proxy - Railway uses 1 proxy hop to forward the real client IP
@@ -214,13 +220,16 @@ app.use('/api/abstract-problems', abstractProblemsRoutes);
 app.use('/api/context-problems', contextProblemsRoutes);
 app.use('/api/thematic-units', thematicUnitsRoutes);
 app.use('/api/study-buddy', studyBuddyRoutes);
+app.use('/api/diagnostic', diagnosticRoutes);
 app.use('/api/learn', learnRoutes);
 app.use('/api/prediction', predictionRoutes);
 app.use('/api/operations-practice', operationsPracticeRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/adaptive', adaptivePracticeRoutes);
 app.use('/api/teacher', teacherRoutes);
+app.use('/api/classes', classRoutes);
 app.use('/api/admin/demo-accounts', demoAccountRoutes);
+app.use('/api/skill-tree', skillTreeRoutes);
 
 // Public image serving route
 app.get('/api/images/:filename', serveImage);
@@ -240,6 +249,7 @@ console.log('✅ Abstract Problems routes registered at /api/abstract-problems')
 console.log('✅ Context Problems routes registered at /api/context-problems');
 console.log('✅ Thematic Units routes registered at /api/thematic-units');
 console.log('✅ Study Buddy routes registered at /api/study-buddy');
+console.log('✅ Diagnostic routes registered at /api/diagnostic');
 console.log('✅ Learn routes registered at /api/learn');
 console.log('✅ Payment routes registered at /api/payments');
 console.log('✅ Prediction routes registered at /api/prediction');
@@ -247,6 +257,7 @@ console.log('✅ Operations Practice routes registered at /api/operations-practi
 console.log('✅ Certificate routes registered at /api/certificates');
 console.log('✅ Adaptive Practice routes registered at /api/adaptive');
 console.log('✅ Teacher routes registered at /api/teacher');
+console.log('✅ Class routes registered at /api/classes');
 console.log('✅ Demo Account routes registered at /api/admin/demo-accounts');
 
 // 404 handler
@@ -383,8 +394,15 @@ const startServer = async () => {
     // Start session status auto-updater
     startSessionStatusUpdater();
 
+    // Initialize WebSocket server with same CORS config
+    initializeWebSocket(httpServer, {
+      origin: corsOptions.origin,
+      credentials: corsOptions.credentials,
+      methods: corsOptions.methods,
+    });
+
     // Start listening
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
       console.log(`
 ╔════════════════════════════════════════════════════════════╗
 ║                                                            ║
@@ -435,6 +453,7 @@ const startServer = async () => {
 process.on('SIGINT', async () => {
   console.log('\n🛑 Shutting down gracefully...');
   stopSessionStatusUpdater();
+  await closeWebSocket();
   await closeDatabase();
   process.exit(0);
 });
@@ -442,6 +461,7 @@ process.on('SIGINT', async () => {
 process.on('SIGTERM', async () => {
   console.log('\n🛑 Shutting down gracefully...');
   stopSessionStatusUpdater();
+  await closeWebSocket();
   await closeDatabase();
   process.exit(0);
 });

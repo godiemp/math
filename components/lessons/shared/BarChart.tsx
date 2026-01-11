@@ -78,7 +78,35 @@ export default function BarChart({
 
   return (
     <div className={cn('w-full', className)}>
-      {/* Chart area */}
+      {/* Value labels row */}
+      {showValues && (
+        <div className="flex justify-center gap-2 px-4 mb-1">
+          {data.map((item, index) => {
+            const isHighlighted = highlightIndex === index;
+            return (
+              <div
+                key={`value-${item.category}-${index}`}
+                className="flex-1 max-w-16 text-center"
+              >
+                {item.value > 0 && (
+                  <span
+                    className={cn(
+                      'text-xs font-semibold transition-all duration-300',
+                      isHighlighted
+                        ? 'text-amber-600 dark:text-amber-400 scale-110'
+                        : 'text-gray-700 dark:text-gray-300'
+                    )}
+                  >
+                    {getDisplayValue(item.value)}
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Chart area - bars only */}
       <div
         className="flex items-end justify-center gap-2 px-4"
         style={{ height: chartHeight }}
@@ -91,27 +119,13 @@ export default function BarChart({
           return (
             <div
               key={`${item.category}-${index}`}
-              className="flex-1 flex flex-col items-center justify-end h-full max-w-16"
+              className="flex-1 max-w-16 h-full flex items-end"
             >
-              {/* Value label above bar */}
-              {showValues && item.value > 0 && (
-                <span
-                  className={cn(
-                    'text-xs font-semibold mb-1 transition-all duration-300',
-                    isHighlighted
-                      ? 'text-amber-600 dark:text-amber-400 scale-110'
-                      : 'text-gray-700 dark:text-gray-300'
-                  )}
-                >
-                  {getDisplayValue(item.value)}
-                </span>
-              )}
-
               {/* Bar */}
               <div
                 onClick={() => onBarClick?.(index)}
                 className={cn(
-                  'w-full rounded-t-md relative',
+                  'w-full rounded-t-md',
                   animated && 'transition-all duration-500 ease-out',
                   onBarClick && 'cursor-pointer hover:brightness-110',
                   isHighlighted && 'ring-2 ring-amber-400 ring-offset-2'

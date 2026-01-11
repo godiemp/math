@@ -569,11 +569,53 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
+    // ========================================
+    // TEACHER CLASS MANAGEMENT TABLES
+    // ========================================
+
+    // Create classes table - teacher-managed classes/courses
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS classes (
+        id VARCHAR(100) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        teacher_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        level VARCHAR(20) NOT NULL,
+        school_name VARCHAR(255),
+        max_students INTEGER DEFAULT 45,
+        is_active BOOLEAN DEFAULT TRUE,
+        created_at BIGINT NOT NULL,
+        updated_at BIGINT NOT NULL
+      )
+    `);
+
+    // Create class_enrollments table - students enrolled in classes
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS class_enrollments (
+        id SERIAL PRIMARY KEY,
+        class_id VARCHAR(100) NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
+        student_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        enrolled_at BIGINT NOT NULL,
+        enrolled_by VARCHAR(50) REFERENCES users(id),
+        status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'removed')),
+        UNIQUE(class_id, student_id)
+      )
+    `);
+
+    // Create index for assigned_by_teacher_id if it doesn't exist
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_users_assigned_by_teacher') THEN
+          CREATE INDEX idx_users_assigned_by_teacher ON users(assigned_by_teacher_id);
+        END IF;
+      END $$;
+    `);
+
     // Create indexes
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_grade_level ON users(grade_level)');
-    await client.query('CREATE INDEX IF NOT EXISTS idx_users_assigned_by_teacher ON users(assigned_by_teacher_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_is_demo_account ON users(is_demo_account)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_demo_school_rbd ON users(demo_school_rbd)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_users_verification_token ON users(verification_token)');
@@ -638,6 +680,14 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_progressive_questions_situation_id ON progressive_questions(situation_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_progressive_questions_template_id ON progressive_questions(template_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_progressive_questions_builds_on ON progressive_questions(builds_on)');
+
+    // Classes system indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_classes_teacher_id ON classes(teacher_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_classes_level ON classes(level)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_classes_is_active ON classes(is_active)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_class_enrollments_class_id ON class_enrollments(class_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_class_enrollments_student_id ON class_enrollments(student_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_class_enrollments_status ON class_enrollments(status)');
 
     // ========================================
     // ABSTRACT PROBLEMS SYSTEM TABLES
@@ -963,6 +1013,33 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_knowledge_decl_level ON user_knowledge_declarations(level)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_knowledge_decl_type ON user_knowledge_declarations(declaration_type)');
 
+    // ========================================
+    // AI DIAGNOSTIC SESSIONS TABLE
+    // ========================================
+
+    // Create diagnostic_sessions table for AI-powered knowledge diagnosis conversations
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS diagnostic_sessions (
+        id VARCHAR(100) PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        subject VARCHAR(50) NOT NULL CHECK (subject IN ('números', 'álgebra', 'geometría', 'probabilidad')),
+        status VARCHAR(20) NOT NULL CHECK (status IN ('active', 'completed', 'abandoned')),
+        target_level VARCHAR(20) NOT NULL,
+        messages JSONB DEFAULT '[]',
+        inferences JSONB DEFAULT '[]',
+        units_covered VARCHAR(100)[] DEFAULT '{}',
+        started_at BIGINT NOT NULL,
+        completed_at BIGINT,
+        updated_at BIGINT NOT NULL
+      )
+    `);
+
+    // Diagnostic sessions indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_diagnostic_sessions_user_id ON diagnostic_sessions(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_diagnostic_sessions_subject ON diagnostic_sessions(subject)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_diagnostic_sessions_status ON diagnostic_sessions(status)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_diagnostic_sessions_started_at ON diagnostic_sessions(started_at)');
+
     // Create certificates table
     await client.query(`
       CREATE TABLE IF NOT EXISTS certificates (
@@ -1024,6 +1101,31 @@ export const initializeDatabase = async (): Promise<void> => {
     await client.query('CREATE INDEX IF NOT EXISTS idx_certificates_type ON certificates(certificate_type)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_certificates_session_id ON certificates(session_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_certificates_issued_at ON certificates(issued_at)');
+
+    // ========================================
+    // SKILL TREE SYSTEM TABLES
+    // ========================================
+
+    // Create skill_tree_progress table - tracks which skills a user has verified through AI conversation
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS skill_tree_progress (
+        user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        skill_id VARCHAR(50) NOT NULL,
+        verified_at BIGINT,
+        conversation_history JSONB DEFAULT '[]',
+        created_at BIGINT NOT NULL DEFAULT (EXTRACT(EPOCH FROM NOW()) * 1000)::BIGINT,
+        updated_at BIGINT NOT NULL DEFAULT (EXTRACT(EPOCH FROM NOW()) * 1000)::BIGINT,
+        PRIMARY KEY (user_id, skill_id)
+      )
+    `);
+
+    // Skill tree progress indexes
+    await client.query('CREATE INDEX IF NOT EXISTS idx_skill_tree_progress_user_id ON skill_tree_progress(user_id)');
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_skill_tree_progress_verified
+      ON skill_tree_progress(user_id, verified_at)
+      WHERE verified_at IS NOT NULL
+    `);
 
     // Create views - Drop first to allow structure changes (e.g., adding subsection to GROUP BY)
     await client.query('DROP VIEW IF EXISTS active_problems_view CASCADE');
