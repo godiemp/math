@@ -195,14 +195,41 @@ export function QuestionRenderer({
               }
             }
 
+            const letter = String.fromCharCode(65 + index);
+
+            // Badge styling for adaptive mode
+            let badgeClass = 'w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm ';
+            if (isAdaptiveMode) {
+              if (showFeedback) {
+                if (isCorrectAnswer) {
+                  badgeClass += 'bg-[#34C759] text-white';
+                } else if (isSelected && !isCorrectAnswer) {
+                  badgeClass += 'bg-[#FF453A] text-white';
+                } else {
+                  badgeClass += 'bg-black/10 dark:bg-white/10 text-black/60 dark:text-white/60';
+                }
+              } else {
+                if (isSelected) {
+                  badgeClass += 'bg-[#0A84FF] text-white';
+                } else {
+                  badgeClass += 'bg-black/10 dark:bg-white/10 text-black dark:text-white';
+                }
+              }
+            }
+
             return (
               <button
                 key={index}
+                data-testid={isAdaptiveMode ? `option-${letter}` : undefined}
                 onClick={() => onAnswerSelect && onAnswerSelect(index)}
                 disabled={disabled}
                 className={buttonClass}
               >
-                <span className="font-semibold shrink-0">{String.fromCharCode(65 + index)}.</span>
+                {isAdaptiveMode ? (
+                  <span className={badgeClass}>{letter}</span>
+                ) : (
+                  <span className="font-semibold shrink-0">{letter}.</span>
+                )}
                 <span className="flex-1 min-w-0 break-words">
                   <UnifiedLatexRenderer content={option} displayMode={false} />
                 </span>
