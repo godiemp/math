@@ -1,18 +1,17 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import ReactMarkdown from 'react-markdown';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { UnifiedLatexRenderer } from '@/components/math/MathDisplay';
 import { useAdaptivePractice } from '@/hooks/useAdaptivePractice';
-import { useChatInput } from '@/hooks/useChatInput';
 import { SkillSelector } from '@/components/practice/SkillSelector';
-import { ScaffoldingTimeline, ScaffoldingTimelineCompact } from '@/components/practice/ScaffoldingTimeline';
+import { ScaffoldingTimeline } from '@/components/practice/ScaffoldingTimeline';
 import { SubsectionSelector } from '@/components/practice/SubsectionSelector';
+import { PracticeHeader } from '@/components/practice/PracticeHeader';
+import { TutorDrawerContent } from '@/components/practice/TutorDrawerContent';
+import { Drawer } from '@/components/ui';
 import type { Question, Subject } from '@/lib/types/core';
 
 // ============================================================================
@@ -23,11 +22,6 @@ interface Topic {
   id: string;
   name: string;
   type: 'subject' | 'unit';
-}
-
-interface ChatMessage {
-  role: 'user' | 'assistant';
-  content: string;
 }
 
 interface Feedback {
@@ -41,19 +35,19 @@ interface Feedback {
 // ============================================================================
 
 const TOPIC_EMOJIS: Record<string, string> = {
-  'números': '🔢',
-  'álgebra': '📐',
-  'geometría': '📏',
-  'probabilidad': '🎲',
-  'surprise': '🎁',
+  números: '🔢',
+  álgebra: '📐',
+  geometría: '📏',
+  probabilidad: '🎲',
+  surprise: '🎁',
 };
 
 const TOPIC_COLORS: Record<string, string> = {
-  'números': 'from-blue-500 to-cyan-500',
-  'álgebra': 'from-purple-500 to-pink-500',
-  'geometría': 'from-green-500 to-teal-500',
-  'probabilidad': 'from-orange-500 to-yellow-500',
-  'surprise': 'from-gray-500 to-gray-600',
+  números: 'from-blue-500 to-cyan-500',
+  álgebra: 'from-purple-500 to-pink-500',
+  geometría: 'from-green-500 to-teal-500',
+  probabilidad: 'from-orange-500 to-yellow-500',
+  surprise: 'from-gray-500 to-gray-600',
 };
 
 const DEFAULT_TOPICS: Topic[] = [
@@ -63,23 +57,6 @@ const DEFAULT_TOPICS: Topic[] = [
   { id: 'probabilidad', name: 'Probabilidades y Estadística', type: 'subject' },
   { id: 'surprise', name: 'Sorpréndeme', type: 'subject' },
 ];
-
-// ============================================================================
-// Chat Markdown Renderer - for AI responses with LaTeX support
-// ============================================================================
-
-function ChatMarkdownRenderer({ content }: { content: string }) {
-  return (
-    <div className="prose prose-sm prose-invert max-w-none [&>p]:my-1 [&>p]:leading-relaxed">
-      <ReactMarkdown
-        remarkPlugins={[remarkMath]}
-        rehypePlugins={[rehypeKatex]}
-      >
-        {content}
-      </ReactMarkdown>
-    </div>
-  );
-}
 
 // ============================================================================
 // Topic Card Component
@@ -107,7 +84,8 @@ function TopicCard({
       text-white
       transition-all duration-300
       hover:shadow-2xl
-    `}>
+    `}
+    >
       <button
         data-testid={`topic-select-${topic.id}`}
         onClick={() => onSelect(topic.id)}
@@ -135,95 +113,6 @@ function TopicCard({
 }
 
 // ============================================================================
-// Chat Component
-// ============================================================================
-
-function ChatPanel({
-  messages,
-  onSendMessage,
-  isLoading,
-}: {
-  messages: ChatMessage[];
-  onSendMessage: (message: string) => void;
-  isLoading: boolean;
-}) {
-  const { input, setInput, handleSubmit, canSubmit } = useChatInput(onSendMessage, isLoading);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  return (
-    <div data-testid="chat-panel" className="flex flex-col h-[500px] bg-white/10 rounded-xl border border-white/20">
-      <div className="p-3 border-b border-white/20 flex-shrink-0">
-        <h3 className="font-semibold text-white">Tutor AI</h3>
-        <p className="text-xs text-white/60">Pregunta si necesitas ayuda</p>
-      </div>
-
-      <div data-testid="chat-messages" className="flex-1 overflow-y-auto p-3 space-y-3">
-        {messages.length === 0 && (
-          <div data-testid="chat-empty-state" className="text-center text-white/50 text-sm py-4">
-            Escribe tu pregunta o lo que has intentado
-          </div>
-        )}
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            data-testid={`chat-message-${msg.role}`}
-            className={`p-3 rounded-lg text-sm ${
-              msg.role === 'user'
-                ? 'bg-blue-500/30 ml-4'
-                : 'bg-white/20 mr-4'
-            }`}
-          >
-            <div className="text-white">
-              {msg.role === 'user' ? (
-                <span className="whitespace-pre-wrap">{msg.content}</span>
-              ) : (
-                <ChatMarkdownRenderer content={msg.content} />
-              )}
-            </div>
-          </div>
-        ))}
-        {isLoading && (
-          <div data-testid="chat-loading" className="bg-white/20 mr-4 p-3 rounded-lg">
-            <div className="flex items-center gap-2 text-white/70">
-              <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce" />
-              <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-              <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-            </div>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
-
-      <form onSubmit={handleSubmit} className="p-3 border-t border-white/20 flex-shrink-0">
-        <div className="flex gap-2">
-          <input
-            data-testid="chat-input"
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Escribe tu pregunta..."
-            disabled={isLoading}
-            className="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 text-sm focus:outline-none focus:border-white/40"
-          />
-          <button
-            data-testid="chat-send"
-            type="submit"
-            disabled={!canSubmit}
-            className="px-4 py-2 rounded-lg bg-white/20 text-white font-medium hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            Enviar
-          </button>
-        </div>
-      </form>
-    </div>
-  );
-}
-
-// ============================================================================
 // Scaffolding Banner Component
 // ============================================================================
 
@@ -237,21 +126,23 @@ function ScaffoldingBanner({
   currentSkill?: { name: string; difficulty: string };
 }) {
   return (
-    <div className="mb-4 p-3 bg-amber-500/20 rounded-lg border border-amber-400/30">
+    <div className="mb-4 p-3 bg-[#FF9F0A]/10 rounded-xl border border-[#FF9F0A]/20">
       <div className="flex items-center gap-2">
         <span className="text-xl">💡</span>
-        <span className="text-amber-200 font-medium">
-          {currentSkill ? `Practicando: ${currentSkill.name}` : `Pregunta de refuerzo ${depth > 1 ? `(nivel ${depth} de ${maxDepth})` : ''}`}
+        <span className="text-[#FF9F0A] font-medium">
+          {currentSkill
+            ? `Practicando: ${currentSkill.name}`
+            : `Pregunta de refuerzo ${depth > 1 ? `(nivel ${depth} de ${maxDepth})` : ''}`}
         </span>
       </div>
-      <p className="text-amber-200/70 text-sm mt-1">
+      <p className="text-black/60 dark:text-white/60 text-sm mt-1">
         {currentSkill
           ? `Habilidad ${currentSkill.difficulty}`
           : depth === 1
-            ? 'Esta pregunta te ayudara a consolidar conceptos base.'
+            ? 'Esta pregunta te ayudará a consolidar conceptos base.'
             : depth === 2
-              ? 'Vamos a un concepto mas fundamental.'
-              : 'Practiquemos lo mas basico primero.'}
+              ? 'Vamos a un concepto más fundamental.'
+              : 'Practiquemos lo más básico primero.'}
       </p>
     </div>
   );
@@ -298,15 +189,26 @@ function ProblemDisplay({
   const options = problem.options;
 
   return (
-    <div data-testid="problem-display" className={`bg-white/10 rounded-xl p-6 border ${isScaffolding ? 'border-amber-400/30' : 'border-white/20'}`}>
+    <div
+      data-testid="problem-display"
+      className={`bg-white dark:bg-[#1C1C1C] rounded-2xl p-6 border ${
+        isScaffolding
+          ? 'border-[#FF9F0A]/30 ring-2 ring-[#FF9F0A]/10'
+          : 'border-black/[0.08] dark:border-white/[0.08]'
+      } shadow-[0_8px_24px_rgba(0,0,0,0.08)]`}
+    >
       {/* Scaffolding Banner */}
       {isScaffolding && (
-        <ScaffoldingBanner depth={scaffoldingDepth} maxDepth={maxScaffoldingDepth} currentSkill={currentSkill} />
+        <ScaffoldingBanner
+          depth={scaffoldingDepth}
+          maxDepth={maxScaffoldingDepth}
+          currentSkill={currentSkill}
+        />
       )}
 
       {/* Question */}
       <div className="mb-6" data-testid="problem-question">
-        <div className="text-lg text-white leading-relaxed">
+        <div className="text-lg text-black dark:text-white leading-relaxed">
           <UnifiedLatexRenderer content={questionContent} />
         </div>
       </div>
@@ -318,6 +220,7 @@ function ProblemDisplay({
           const isSelected = selectedAnswer === index;
           const isCorrect = feedback?.correct && isSelected;
           const isWrong = feedback && !feedback.correct && isSelected;
+          const isCorrectAnswer = feedback && !feedback.correct && problem.correctAnswer === index;
 
           return (
             <button
@@ -328,20 +231,26 @@ function ProblemDisplay({
               className={`
                 w-full p-4 rounded-xl text-left transition-all
                 flex items-start gap-3
-                ${isCorrect ? 'bg-green-500/30 border-2 border-green-400' : ''}
-                ${isWrong ? 'bg-red-500/30 border-2 border-red-400' : ''}
-                ${isSelected && !feedback ? 'bg-white/30 border-2 border-white/60' : ''}
-                ${!isSelected && !feedback ? 'bg-white/10 border-2 border-transparent hover:bg-white/20 hover:border-white/30' : ''}
+                ${isCorrect ? 'bg-[#34C759]/10 border-2 border-[#34C759]' : ''}
+                ${isWrong ? 'bg-[#FF453A]/10 border-2 border-[#FF453A]' : ''}
+                ${isCorrectAnswer ? 'bg-[#34C759]/10 border-2 border-[#34C759]' : ''}
+                ${isSelected && !feedback ? 'bg-[#0A84FF]/10 border-2 border-[#0A84FF]' : ''}
+                ${!isSelected && !feedback && !isCorrectAnswer ? 'bg-black/[0.02] dark:bg-white/[0.04] border-2 border-transparent hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:border-black/[0.08] dark:hover:border-white/[0.08]' : ''}
                 ${feedback ? 'cursor-default' : 'cursor-pointer'}
               `}
             >
-              <span className={`
-                w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold
-                ${isSelected ? 'bg-white text-gray-900' : 'bg-white/20 text-white'}
-              `}>
+              <span
+                className={`
+                w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm
+                ${isCorrect || isCorrectAnswer ? 'bg-[#34C759] text-white' : ''}
+                ${isWrong ? 'bg-[#FF453A] text-white' : ''}
+                ${isSelected && !feedback ? 'bg-[#0A84FF] text-white' : ''}
+                ${!isSelected && !feedback && !isCorrect && !isWrong && !isCorrectAnswer ? 'bg-black/[0.06] dark:bg-white/[0.1] text-black/60 dark:text-white/60' : ''}
+              `}
+              >
                 {letter}
               </span>
-              <span className="text-white flex-1 pt-1">
+              <span className="text-black dark:text-white flex-1 pt-1">
                 <UnifiedLatexRenderer content={option} />
               </span>
             </button>
@@ -355,21 +264,37 @@ function ProblemDisplay({
           data-testid="submit-answer"
           onClick={onSubmit}
           disabled={selectedAnswer === null}
-          className="w-full py-3 rounded-xl bg-white/20 text-white font-bold hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="w-full py-3 rounded-xl bg-[#0A84FF] text-white font-semibold hover:bg-[#0A84FF]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           Verificar Respuesta
         </button>
       ) : (
         <div data-testid="feedback-section">
-          <div data-testid={feedback.correct ? 'feedback-correct' : 'feedback-incorrect'} className={`p-4 rounded-xl mb-4 ${feedback.correct ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
-            <p className={`font-bold ${feedback.correct ? 'text-green-300' : 'text-red-300'}`}>
+          <div
+            data-testid={feedback.correct ? 'feedback-correct' : 'feedback-incorrect'}
+            className={`p-4 rounded-xl mb-4 ${
+              feedback.correct ? 'bg-[#34C759]/10' : 'bg-[#FF453A]/10'
+            }`}
+          >
+            <p
+              className={`font-bold ${
+                feedback.correct ? 'text-[#34C759]' : 'text-[#FF453A]'
+              }`}
+            >
               {feedback.correct ? '¡Correcto!' : 'Incorrecto'}
             </p>
-            <p className="text-white/80 text-sm mt-1">{feedback.message}</p>
+            <p className="text-black/70 dark:text-white/70 text-sm mt-1">
+              {feedback.message}
+            </p>
             {showExplanation && feedback.explanation && (
-              <div className="mt-3 pt-3 border-t border-white/20" data-testid="explanation">
-                <p className="text-white/60 text-xs mb-1">Explicacion:</p>
-                <div className="text-white/80 text-sm">
+              <div
+                className="mt-3 pt-3 border-t border-black/[0.08] dark:border-white/[0.08]"
+                data-testid="explanation"
+              >
+                <p className="text-black/50 dark:text-white/50 text-xs mb-1">
+                  Explicación:
+                </p>
+                <div className="text-black/80 dark:text-white/80 text-sm">
                   <UnifiedLatexRenderer content={feedback.explanation} />
                 </div>
               </div>
@@ -382,16 +307,16 @@ function ProblemDisplay({
               data-testid="need-help-button"
               onClick={onProceedToScaffolding}
               disabled={isGeneratingScaffolding || isDecomposingSkills}
-              className="w-full py-3 rounded-xl bg-amber-500/20 text-amber-200 font-bold hover:bg-amber-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 mb-3"
+              className="w-full py-3 rounded-xl bg-[#FF9F0A]/10 text-[#FF9F0A] font-semibold hover:bg-[#FF9F0A]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 mb-3 border border-[#FF9F0A]/20"
             >
               {isDecomposingSkills ? (
                 <>
-                  <span className="w-4 h-4 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
+                  <span className="w-4 h-4 border-2 border-[#FF9F0A]/30 border-t-[#FF9F0A] rounded-full animate-spin" />
                   <span>Analizando pregunta...</span>
                 </>
               ) : isGeneratingScaffolding ? (
                 <>
-                  <span className="w-4 h-4 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
+                  <span className="w-4 h-4 border-2 border-[#FF9F0A]/30 border-t-[#FF9F0A] rounded-full animate-spin" />
                   <span>Generando pregunta de refuerzo...</span>
                 </>
               ) : (
@@ -407,11 +332,11 @@ function ProblemDisplay({
             data-testid="next-problem"
             onClick={onNext}
             disabled={isGeneratingScaffolding || isDecomposingSkills}
-            className="w-full py-3 rounded-xl bg-white/20 text-white font-bold hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="w-full py-3 rounded-xl bg-black/[0.04] dark:bg-white/[0.06] text-black dark:text-white font-semibold hover:bg-black/[0.08] dark:hover:bg-white/[0.1] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             {isGeneratingScaffolding || isDecomposingSkills ? (
               <span className="flex items-center justify-center gap-2">
-                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span className="w-4 h-4 border-2 border-black/20 dark:border-white/20 border-t-black dark:border-t-white rounded-full animate-spin" />
                 <span>Procesando...</span>
               </span>
             ) : isScaffolding && feedback.correct ? (
@@ -436,13 +361,18 @@ function ProblemDisplay({
 
 function AnalyzingSkillsLoader() {
   return (
-    <div data-testid="analyzing-skills-loader" className="bg-white rounded-xl shadow-lg p-8 max-w-md mx-auto text-center">
+    <div
+      data-testid="analyzing-skills-loader"
+      className="bg-white dark:bg-[#1C1C1C] rounded-2xl shadow-lg p-8 max-w-md mx-auto text-center border border-black/[0.08] dark:border-white/[0.08]"
+    >
       <div className="w-16 h-16 mx-auto mb-4 relative">
-        <div className="absolute inset-0 border-4 border-blue-200 rounded-full" />
-        <div className="absolute inset-0 border-4 border-blue-500 rounded-full border-t-transparent animate-spin" />
+        <div className="absolute inset-0 border-4 border-[#0A84FF]/20 rounded-full" />
+        <div className="absolute inset-0 border-4 border-[#0A84FF] rounded-full border-t-transparent animate-spin" />
       </div>
-      <h2 className="text-xl font-bold text-gray-900 mb-2">Analizando tu respuesta</h2>
-      <p className="text-gray-600">
+      <h2 className="text-xl font-bold text-black dark:text-white mb-2">
+        Analizando tu respuesta
+      </h2>
+      <p className="text-black/60 dark:text-white/60">
         Identificando las habilidades que necesitas practicar...
       </p>
     </div>
@@ -457,6 +387,8 @@ function AdaptivePracticeContent() {
   const practice = useAdaptivePractice();
   const [showSubsectionSelector, setShowSubsectionSelector] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
+  const [isTutorOpen, setIsTutorOpen] = useState(false);
+  const [isTimelineOpen, setIsTimelineOpen] = useState(false);
 
   const handleShowSubsections = (topicId: string) => {
     setSelectedSubject(topicId as Subject);
@@ -481,10 +413,10 @@ function AdaptivePracticeContent() {
   // Loading state
   if (practice.state === 'loading') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center">
-        <div className="text-center text-white">
-          <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-lg">Cargando problema...</p>
+      <div className="min-h-screen bg-[#F7F7F7] dark:bg-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-black/10 dark:border-white/10 border-t-[#0A84FF] rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-lg text-black dark:text-white">Cargando problema...</p>
         </div>
       </div>
     );
@@ -493,7 +425,7 @@ function AdaptivePracticeContent() {
   // Analyzing skills state
   if (practice.state === 'analyzing-skills') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 py-8 px-4 flex items-center justify-center">
+      <div className="min-h-screen bg-[#F7F7F7] dark:bg-black py-8 px-4 flex items-center justify-center">
         <AnalyzingSkillsLoader />
       </div>
     );
@@ -502,12 +434,12 @@ function AdaptivePracticeContent() {
   // Skill selection state
   if (practice.state === 'selecting-skills') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 py-8 px-4">
+      <div className="min-h-screen bg-[#F7F7F7] dark:bg-black py-8 px-4">
         <div className="max-w-2xl mx-auto">
           <div className="mb-6">
             <button
               onClick={practice.changeTopic}
-              className="text-white/80 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/10 text-sm font-semibold"
+              className="text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-black/[0.04] dark:hover:bg-white/[0.06] text-sm font-semibold"
             >
               ← Volver al inicio
             </button>
@@ -529,7 +461,7 @@ function AdaptivePracticeContent() {
     // Show subsection selector if active
     if (showSubsectionSelector && selectedSubject) {
       return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 py-8 px-4">
+        <div className="min-h-screen bg-[#F7F7F7] dark:bg-black py-8 px-4">
           <div className="max-w-2xl mx-auto">
             <SubsectionSelector
               subject={selectedSubject}
@@ -543,26 +475,28 @@ function AdaptivePracticeContent() {
     }
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 py-8 px-4">
+      <div className="min-h-screen bg-[#F7F7F7] dark:bg-black py-8 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <Link
               href="/dashboard"
-              className="text-white/80 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/10 inline-block text-sm font-semibold"
+              className="text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-black/[0.04] dark:hover:bg-white/[0.06] inline-block text-sm font-semibold"
             >
               ← Volver al Inicio
             </Link>
           </div>
 
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-bold text-white mb-3">Práctica Adaptativa</h1>
-            <p className="text-white/70">
+            <h1 className="text-3xl font-bold text-black dark:text-white mb-3">
+              Práctica Adaptativa
+            </h1>
+            <p className="text-black/60 dark:text-white/60">
               Elige un tema y practica con ayuda de un tutor AI
             </p>
           </div>
 
           {practice.error && (
-            <div className="mb-6 p-4 bg-red-500/20 border border-red-400/50 rounded-xl text-red-200 text-center">
+            <div className="mb-6 p-4 bg-[#FF453A]/10 border border-[#FF453A]/30 rounded-xl text-[#FF453A] text-center">
               {practice.error}
             </div>
           )}
@@ -584,94 +518,84 @@ function AdaptivePracticeContent() {
 
   // Practice mode
   const isInSkillBasedMode = practice.scaffoldingMode === 'skill-based';
-  const currentSkill = isInSkillBasedMode && practice.selectedSkills[practice.currentSkillIndex]
-    ? {
-        name: practice.selectedSkills[practice.currentSkillIndex].name,
-        difficulty: practice.selectedSkills[practice.currentSkillIndex].difficulty,
-      }
-    : undefined;
+  const currentSkill =
+    isInSkillBasedMode && practice.selectedSkills[practice.currentSkillIndex]
+      ? {
+          name: practice.selectedSkills[practice.currentSkillIndex].name,
+          difficulty: practice.selectedSkills[practice.currentSkillIndex].difficulty,
+        }
+      : undefined;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 py-6 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <button
-            onClick={practice.changeTopic}
-            className="text-white/80 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/10 text-sm font-semibold"
-          >
-            ← Cambiar tema
-          </button>
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">{TOPIC_EMOJIS[practice.selectedFocus] || '📚'}</span>
-            <span className="text-white font-medium capitalize">
-              {practice.selectedFocus === 'surprise' ? 'Sorpresa' : practice.selectedFocus}
-            </span>
-            {practice.currentSubsectionCode && (
-              <span className="text-white/60 text-sm ml-2">
-                ({practice.currentSubsectionCode})
-              </span>
-            )}
-          </div>
-        </div>
+    <div className="min-h-screen bg-[#F7F7F7] dark:bg-black">
+      {/* Header */}
+      <PracticeHeader
+        selectedFocus={practice.selectedFocus}
+        currentSubsectionCode={practice.currentSubsectionCode}
+        onChangeTopic={practice.changeTopic}
+        onOpenTutor={() => setIsTutorOpen(true)}
+        onOpenTimeline={() => setIsTimelineOpen(true)}
+        selectedSkills={practice.selectedSkills}
+        currentSkillIndex={practice.currentSkillIndex}
+        scaffoldingMode={practice.scaffoldingMode}
+        tutorHasMessages={practice.tutorMessages.length > 0}
+      />
 
-        {/* Skill-based timeline (mobile - compact) */}
-        {isInSkillBasedMode && (
-          <div className="lg:hidden">
-            <ScaffoldingTimelineCompact
-              selectedSkills={practice.selectedSkills}
-              currentSkillIndex={practice.currentSkillIndex}
-            />
-          </div>
+      {/* Main content - centered */}
+      <main className="max-w-3xl mx-auto px-4 py-6">
+        {practice.currentProblem && (
+          <ProblemDisplay
+            problem={practice.currentProblem}
+            selectedAnswer={practice.selectedAnswer}
+            onSelectAnswer={practice.setSelectedAnswer}
+            onSubmit={practice.submitAnswer}
+            onNext={practice.nextProblem}
+            onProceedToScaffolding={practice.proceedToScaffolding}
+            feedback={practice.feedback}
+            showExplanation={!practice.feedback?.correct}
+            isScaffolding={practice.scaffoldingMode !== 'none'}
+            scaffoldingDepth={practice.scaffoldingDepth}
+            maxScaffoldingDepth={practice.maxScaffoldingDepth}
+            isGeneratingScaffolding={practice.isGeneratingScaffolding}
+            isDecomposingSkills={practice.isDecomposingSkills}
+            currentSkill={currentSkill}
+            scaffoldingMode={practice.scaffoldingMode}
+          />
         )}
+      </main>
 
-        {/* Main content */}
-        <div className={`grid gap-6 ${isInSkillBasedMode ? 'grid-cols-1 lg:grid-cols-4' : 'grid-cols-1 lg:grid-cols-3'}`}>
-          {/* Timeline sidebar (desktop) - only in skill-based mode */}
-          {isInSkillBasedMode && (
-            <div className="hidden lg:block lg:col-span-1">
-              <ScaffoldingTimeline
-                history={practice.scaffoldingHistory}
-                currentSkillIndex={practice.currentSkillIndex}
-                selectedSkills={practice.selectedSkills}
-                onReviewEntry={practice.setReviewingEntry}
-              />
-            </div>
-          )}
+      {/* Tutor AI Drawer (right) */}
+      <Drawer
+        isOpen={isTutorOpen}
+        onClose={() => setIsTutorOpen(false)}
+        side="right"
+        title="Tutor AI"
+        width="md"
+      >
+        <TutorDrawerContent
+          messages={practice.tutorMessages}
+          onSendMessage={practice.sendChatMessage}
+          isLoading={practice.isTutorLoading}
+        />
+      </Drawer>
 
-          {/* Problem area */}
-          <div className={isInSkillBasedMode ? 'lg:col-span-2' : 'lg:col-span-2'}>
-            {practice.currentProblem && (
-              <ProblemDisplay
-                problem={practice.currentProblem}
-                selectedAnswer={practice.selectedAnswer}
-                onSelectAnswer={practice.setSelectedAnswer}
-                onSubmit={practice.submitAnswer}
-                onNext={practice.nextProblem}
-                onProceedToScaffolding={practice.proceedToScaffolding}
-                feedback={practice.feedback}
-                showExplanation={!practice.feedback?.correct}
-                isScaffolding={practice.scaffoldingMode !== 'none'}
-                scaffoldingDepth={practice.scaffoldingDepth}
-                maxScaffoldingDepth={practice.maxScaffoldingDepth}
-                isGeneratingScaffolding={practice.isGeneratingScaffolding}
-                isDecomposingSkills={practice.isDecomposingSkills}
-                currentSkill={currentSkill}
-                scaffoldingMode={practice.scaffoldingMode}
-              />
-            )}
-          </div>
-
-          {/* Chat area */}
-          <div className="lg:col-span-1">
-            <ChatPanel
-              messages={practice.tutorMessages}
-              onSendMessage={practice.sendChatMessage}
-              isLoading={practice.isTutorLoading}
-            />
-          </div>
+      {/* Timeline Drawer (left) */}
+      <Drawer
+        isOpen={isTimelineOpen}
+        onClose={() => setIsTimelineOpen(false)}
+        side="left"
+        title="Ruta de aprendizaje"
+        width="sm"
+      >
+        <div className="p-4">
+          <ScaffoldingTimeline
+            history={practice.scaffoldingHistory}
+            currentSkillIndex={practice.currentSkillIndex}
+            selectedSkills={practice.selectedSkills}
+            onReviewEntry={practice.setReviewingEntry}
+          />
         </div>
-      </div>
+      </Drawer>
     </div>
   );
 }
