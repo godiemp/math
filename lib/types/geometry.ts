@@ -123,6 +123,6 @@ export interface QuestionRendererProps {
   onAnswerSelect?: (answerIndex: number) => void;
   disabled?: boolean;
   compact?: boolean;
-  quizMode?: 'zen' | 'rapidfire';
+  quizMode?: 'zen' | 'rapidfire' | 'adaptive';
   onRequestAIHelp?: () => void;
 }

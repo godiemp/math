@@ -35,11 +35,12 @@ export function QuestionRenderer({
 }: QuestionRendererProps) {
   const isCorrect = selectedAnswer === question.correctAnswer;
   const isZenMode = quizMode === 'zen';
+  const isAdaptiveMode = quizMode === 'adaptive';
 
   return (
     <div className={compact ? 'space-y-2' : 'space-y-4'}>
       {/* Question Text */}
-      <div className={compact ? 'text-base' : 'text-xl font-semibold text-gray-900 dark:text-white'}>
+      <div className={compact ? 'text-base' : `text-xl font-semibold ${isAdaptiveMode ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
         <SmartLatexRenderer latex={question.questionLatex} displayMode={false} />
       </div>
 
@@ -156,7 +157,24 @@ export function QuestionRenderer({
 
             let buttonClass = `w-full text-left ${compact ? 'p-2 text-sm' : 'p-4'} rounded-lg border-2 transition-all flex items-start gap-2 `;
 
-            if (showFeedback) {
+            if (isAdaptiveMode) {
+              // Adaptive mode uses semi-transparent white backgrounds for dark gradient bg
+              if (showFeedback) {
+                if (isCorrectAnswer) {
+                  buttonClass += 'bg-green-500/30 border-green-400 text-white';
+                } else if (isSelected && !isCorrectAnswer) {
+                  buttonClass += 'bg-red-500/30 border-red-400 text-white';
+                } else {
+                  buttonClass += 'bg-white/10 border-transparent text-white/70';
+                }
+              } else {
+                if (isSelected) {
+                  buttonClass += 'bg-white/30 border-white/60 text-white';
+                } else {
+                  buttonClass += 'bg-white/10 border-transparent text-white hover:bg-white/20 hover:border-white/30';
+                }
+              }
+            } else if (showFeedback) {
               if (isCorrectAnswer) {
                 buttonClass += 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-900 dark:text-green-100';
               } else if (isSelected && !isCorrectAnswer) {
@@ -200,20 +218,28 @@ export function QuestionRenderer({
       {(mode === 'with-explanation' || mode === 'full') && showFeedback && (
         <div
           className={`border-l-4 ${compact ? 'p-2 text-sm' : 'p-4'} ${
-            isCorrect
-              ? 'bg-green-50 dark:bg-green-900/20 border-green-500'
-              : isZenMode
-              ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-400'
-              : 'bg-red-50 dark:bg-red-900/20 border-red-500'
+            isAdaptiveMode
+              ? isCorrect
+                ? 'bg-green-500/20 border-green-400'
+                : 'bg-red-500/20 border-red-400'
+              : isCorrect
+                ? 'bg-green-50 dark:bg-green-900/20 border-green-500'
+                : isZenMode
+                  ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-400'
+                  : 'bg-red-50 dark:bg-red-900/20 border-red-500'
           }`}
         >
           <h4
             className={`font-semibold ${compact ? 'text-sm mb-1' : 'mb-2'} ${
-              isCorrect
-                ? 'text-green-900 dark:text-green-100'
-                : isZenMode
-                ? 'text-amber-900 dark:text-amber-100'
-                : 'text-red-900 dark:text-red-100'
+              isAdaptiveMode
+                ? isCorrect
+                  ? 'text-green-200'
+                  : 'text-red-200'
+                : isCorrect
+                  ? 'text-green-900 dark:text-green-100'
+                  : isZenMode
+                    ? 'text-amber-900 dark:text-amber-100'
+                    : 'text-red-900 dark:text-red-100'
             }`}
           >
             {selectedAnswer === null
@@ -224,11 +250,15 @@ export function QuestionRenderer({
           </h4>
           <div
             className={`${
-              isCorrect
-                ? 'text-green-800 dark:text-green-200'
-                : isZenMode
-                ? 'text-amber-800 dark:text-amber-200'
-                : 'text-red-800 dark:text-red-200'
+              isAdaptiveMode
+                ? isCorrect
+                  ? 'text-green-200'
+                  : 'text-red-200'
+                : isCorrect
+                  ? 'text-green-800 dark:text-green-200'
+                  : isZenMode
+                    ? 'text-amber-800 dark:text-amber-200'
+                    : 'text-red-800 dark:text-red-200'
             }`}
           >
             <p className={`font-semibold ${compact ? 'mb-0.5 text-xs' : 'mb-1'}`}>Explicación:</p>
