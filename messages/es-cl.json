@@ -973,7 +973,8 @@
     },
     "button": {
       "backToHome": "back to home",
-      "livePractice": "live practice"
+      "livePractice": "live practice",
+      "logout": "cerrar sesión"
     },
     "header": {
       "livePractice": "live practice"

@@ -2,8 +2,10 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/Button';
 import { useTranslations } from 'next-intl';
+import { logoutUser } from '@/lib/auth';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -91,6 +93,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
     new Set(menuGroupsConfig.map(group => group.nameKey))
   );
+
+  const handleLogout = async () => {
+    await logoutUser();
+    await signOut({ callbackUrl: '/signin' });
+  };
 
   const toggleGroup = (groupName: string) => {
     setExpandedGroups(prev => {
@@ -191,13 +198,20 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </nav>
 
           {/* Bottom Actions */}
-          <div className="p-4 border-t border-gray-200 dark:border-gray-800">
+          <div className="p-4 border-t border-gray-200 dark:border-gray-800 space-y-2">
             <button
               onClick={() => router.push('/')}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
               <span className="text-xl">🏠</span>
               {sidebarOpen && <span className="text-sm">{tButton('backToHome')}</span>}
+            </button>
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+            >
+              <span className="text-xl">🚪</span>
+              {sidebarOpen && <span className="text-sm">{tButton('logout')}</span>}
             </button>
           </div>
         </div>
