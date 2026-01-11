@@ -136,12 +136,18 @@ test.describe('Adaptive Practice', () => {
     const submitButton = page.getByRole('button', { name: /Verificar Respuesta/i });
     await expect(submitButton).toBeVisible({ timeout: 10000 });
 
-    // Check chat panel is visible
+    // Tutor button should be visible
+    await expect(page.getByRole('button', { name: /Abrir tutor AI/i })).toBeVisible();
+
+    // Open the tutor drawer
+    await page.getByRole('button', { name: /Abrir tutor AI/i }).click();
+
+    // Check chat panel content is visible
     await expect(page.getByText('Tutor AI')).toBeVisible();
     await expect(page.getByText('Pregunta si necesitas ayuda')).toBeVisible();
 
     // Check chat input is present
-    const chatInput = page.getByPlaceholder(/Escribe tu pregunta/i);
+    const chatInput = page.getByTestId('chat-input');
     await expect(chatInput).toBeVisible();
   });
 
@@ -164,10 +170,13 @@ test.describe('Adaptive Practice', () => {
         timeout: 10000,
       });
 
+      // Open the tutor drawer
+      await page.getByRole('button', { name: /Abrir tutor AI/i }).click();
+
       // Send a message
-      const chatInput = page.getByPlaceholder(/Escribe tu pregunta/i);
+      const chatInput = page.getByTestId('chat-input');
       await chatInput.fill('No entiendo este problema');
-      await page.getByRole('button', { name: /Enviar/i }).click();
+      await page.getByTestId('chat-send').click();
 
       // Verify user message appears
       await expect(page.getByText('No entiendo este problema')).toBeVisible();
@@ -202,16 +211,19 @@ test.describe('Adaptive Practice', () => {
         timeout: 10000,
       });
 
-      const chatInput = page.getByPlaceholder(/Escribe tu pregunta/i);
+      // Open the tutor drawer
+      await page.getByRole('button', { name: /Abrir tutor AI/i }).click();
+
+      const chatInput = page.getByTestId('chat-input');
 
       // First message
       await chatInput.fill('Ayuda con este problema');
-      await page.getByRole('button', { name: /Enviar/i }).click();
+      await page.getByTestId('chat-send').click();
       await expect(page.getByText('¿Qué tipo de ecuación es esta?')).toBeVisible({ timeout: 10000 });
 
       // Second message
       await chatInput.fill('Es una ecuación lineal');
-      await page.getByRole('button', { name: /Enviar/i }).click();
+      await page.getByTestId('chat-send').click();
       await expect(page.getByText('¿cómo despejarías la variable?')).toBeVisible({ timeout: 10000 });
 
       // Verify both user messages are visible
@@ -234,9 +246,12 @@ test.describe('Adaptive Practice', () => {
       const submitButton = page.getByRole('button', { name: /Verificar Respuesta/i });
       await expect(submitButton).toBeVisible({ timeout: 10000 });
 
+      // Open the tutor drawer
+      await page.getByRole('button', { name: /Abrir tutor AI/i }).click();
+
       // Send a chat message
-      await page.getByPlaceholder(/Escribe tu pregunta/i).fill('Hola');
-      await page.getByRole('button', { name: /Enviar/i }).click();
+      await page.getByTestId('chat-input').fill('Hola');
+      await page.getByTestId('chat-send').click();
       await expect(page.getByText('Pista de prueba')).toBeVisible({ timeout: 10000 });
 
       // Answer question and go to next
@@ -250,7 +265,7 @@ test.describe('Adaptive Practice', () => {
       await page.getByRole('button', { name: /Siguiente Problema/i }).click();
 
       // Verify chat is cleared - empty state text should be visible
-      await expect(page.getByText('Escribe tu pregunta o lo que has intentado')).toBeVisible();
+      await expect(page.getByTestId('chat-empty-state')).toBeVisible();
       await expect(page.getByText('Pista de prueba')).not.toBeVisible();
     });
 
@@ -269,9 +284,12 @@ test.describe('Adaptive Practice', () => {
         timeout: 10000,
       });
 
+      // Open the tutor drawer
+      await page.getByRole('button', { name: /Abrir tutor AI/i }).click();
+
       // Send message
-      await page.getByPlaceholder(/Escribe tu pregunta/i).fill('Ayuda');
-      await page.getByRole('button', { name: /Enviar/i }).click();
+      await page.getByTestId('chat-input').fill('Ayuda');
+      await page.getByTestId('chat-send').click();
 
       // API returns error response (not throw), so hook shows fallback error message
       await expect(page.getByText(/Lo siento, hubo un error/i)).toBeVisible({
@@ -296,8 +314,11 @@ test.describe('Adaptive Practice', () => {
         timeout: 10000,
       });
 
-      await page.getByPlaceholder(/Escribe tu pregunta/i).fill('Test');
-      await page.getByRole('button', { name: /Enviar/i }).click();
+      // Open the tutor drawer
+      await page.getByRole('button', { name: /Abrir tutor AI/i }).click();
+
+      await page.getByTestId('chat-input').fill('Test');
+      await page.getByTestId('chat-send').click();
 
       // Hook handles empty response with fallback message
       await expect(page.getByText(/Lo siento, hubo un error/i)).toBeVisible({ timeout: 10000 });
@@ -349,15 +370,15 @@ test.describe('Adaptive Practice', () => {
 
       // Select first option
       await options.first().click();
-      // Verify first option is selected (has white background on the letter badge)
-      await expect(options.first().locator('span.rounded-full')).toHaveClass(/bg-white/);
+      // Verify first option is selected (has blue background on the letter badge - bg-[#0A84FF])
+      await expect(options.first().locator('span.rounded-full')).toHaveClass(/bg-\[#0A84FF\]/);
 
       // Select second option
       await options.nth(1).click();
       // Verify second option is now selected
-      await expect(options.nth(1).locator('span.rounded-full')).toHaveClass(/bg-white/);
-      // First option should no longer have white background
-      await expect(options.first().locator('span.rounded-full')).not.toHaveClass(/bg-white /);
+      await expect(options.nth(1).locator('span.rounded-full')).toHaveClass(/bg-\[#0A84FF\]/);
+      // First option should no longer have blue background
+      await expect(options.first().locator('span.rounded-full')).not.toHaveClass(/bg-\[#0A84FF\]/);
     });
 
     test('should disable submit button when no answer selected', async ({ page }) => {
@@ -419,13 +440,16 @@ test.describe('Adaptive Practice', () => {
         timeout: 10000,
       });
 
-      const chatInput = page.getByPlaceholder(/Escribe tu pregunta/i);
+      // Open the tutor drawer
+      await page.getByRole('button', { name: /Abrir tutor AI/i }).click();
+
+      const chatInput = page.getByTestId('chat-input');
       await chatInput.fill('Test');
-      await page.getByRole('button', { name: /Enviar/i }).click();
+      await page.getByTestId('chat-send').click();
 
       // Input and button should be disabled during loading
       await expect(chatInput).toBeDisabled();
-      await expect(page.getByRole('button', { name: /Enviar/i })).toBeDisabled();
+      await expect(page.getByTestId('chat-send')).toBeDisabled();
 
       // Wait for response
       await expect(page.getByText('Respuesta tardía')).toBeVisible({ timeout: 10000 });
