@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useAuth } from '@/contexts/AuthContext';
 import { LandingNav, HeroSection, StatsSection, CTASection } from '@/components/landing';
 import { FeatureSection } from '@/components/landing/FeatureSections/FeatureSection';
@@ -30,6 +31,7 @@ function LandingPageContent() {
 
   const [audience, setAudience] = useState<Audience>(initialAudience);
   const { isAuthenticated, isLoading, user } = useAuth();
+  const { status: sessionStatus } = useSession();
   const router = useRouter();
 
   // Guard against multiple redirects during hydration
@@ -49,9 +51,13 @@ function LandingPageContent() {
   };
 
   // Redirect authenticated users based on role
-  // Use ref to prevent multiple redirects during state transitions
+  // Wait for BOTH NextAuth session AND AuthContext to be ready
+  // This prevents race conditions with the middleware
   useEffect(() => {
-    if (!isLoading && isAuthenticated && !hasRedirected.current) {
+    const isSessionReady = sessionStatus === 'authenticated';
+    const isFullyAuthenticated = !isLoading && isAuthenticated && isSessionReady;
+
+    if (isFullyAuthenticated && !hasRedirected.current) {
       hasRedirected.current = true;
 
       if (user?.role === 'teacher') {
@@ -62,10 +68,11 @@ function LandingPageContent() {
         router.replace('/dashboard');
       }
     }
-  }, [isAuthenticated, isLoading, router, user?.role]);
+  }, [isAuthenticated, isLoading, sessionStatus, router, user?.role]);
 
   // Don't render landing for authenticated users
-  if (isAuthenticated) {
+  // Also check session status to avoid flicker
+  if (isAuthenticated && sessionStatus === 'authenticated') {
     return null;
   }
 

@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { useAuth } from "@/contexts/AuthContext";
 import Auth from "@/components/auth/Auth";
 import { useTranslations } from 'next-intl';
@@ -23,6 +24,7 @@ function SearchParamsReader({ onWelcomeParam }: { onWelcomeParam: (hasWelcome: b
 function SignInContent() {
   const t = useTranslations('landing');
   const { isAuthenticated, isLoading, user } = useAuth();
+  const { status: sessionStatus } = useSession();
   const router = useRouter();
   const [redirectPath, setRedirectPath] = useState<string | null>(null);
   const [hasWelcomeParam, setHasWelcomeParam] = useState(false);
@@ -37,8 +39,12 @@ function SignInContent() {
 
   useEffect(() => {
     // Redirect when authenticated based on role
-    // Use ref to prevent multiple redirects during state transitions
-    if (!isLoading && isAuthenticated && !hasRedirected.current) {
+    // Wait for BOTH NextAuth session AND AuthContext to be ready
+    // This prevents race conditions with the middleware
+    const isSessionReady = sessionStatus === 'authenticated';
+    const isFullyAuthenticated = !isLoading && isAuthenticated && isSessionReady;
+
+    if (isFullyAuthenticated && !hasRedirected.current) {
       hasRedirected.current = true;
 
       let targetPath: string;
@@ -56,10 +62,11 @@ function SignInContent() {
       // Use replace to avoid creating browser history entry for redirect
       router.replace(targetPath);
     }
-  }, [isAuthenticated, isLoading, redirectPath, hasWelcomeParam, router, user?.role]);
+  }, [isAuthenticated, isLoading, sessionStatus, redirectPath, hasWelcomeParam, router, user?.role]);
 
   // If authenticated, don't show login (useEffect will redirect to dashboard)
-  if (isAuthenticated) {
+  // Also check session status to avoid flicker
+  if (isAuthenticated && sessionStatus === 'authenticated') {
     return null;
   }
 
