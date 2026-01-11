@@ -229,87 +229,67 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
               <line x1="180" y1="88" x2="180" y2="112" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
               <line x1="220" y1="90" x2="220" y2="110" stroke="#8B4513" strokeWidth="1" opacity="0.4" />
 
-              {/* Points A and B */}
-              <circle cx="40" cy="100" r="5" fill="#EF4444" />
-              <circle cx="260" cy="100" r="5" fill="#EF4444" />
-              <text x="40" y="130" textAnchor="middle" className="text-sm font-bold fill-gray-700 dark:fill-gray-300">A</text>
-              <text x="260" y="130" textAnchor="middle" className="text-sm font-bold fill-gray-700 dark:fill-gray-300">B</text>
+              {/* Points A and B - A at x=50, B at x=250, both at y=100 */}
+              {/* Distance = 200, radius = 130 for nice intersection */}
+              {/* Intersection points: x=150, y = 100 ± sqrt(130² - 100²) = 100 ± 83 → y=17 and y=183 */}
+              <circle cx="50" cy="100" r="5" fill="#EF4444" />
+              <circle cx="250" cy="100" r="5" fill="#EF4444" />
+              <text x="50" y="130" textAnchor="middle" className="text-sm font-bold fill-gray-700 dark:fill-gray-300">A</text>
+              <text x="250" y="130" textAnchor="middle" className="text-sm font-bold fill-gray-700 dark:fill-gray-300">B</text>
 
-              {/* Step 1-2: Arc from A (blue) */}
+              {/* Step 1-2: Arc from A (blue) - passes through P(150,17) and Q(150,183) */}
               {animationStep >= 1 && (
-                <>
-                  {/* Upper arc from A */}
-                  <path
-                    d="M 100 30 A 120 120 0 0 0 40 100"
-                    fill="none"
-                    stroke="#3B82F6"
-                    strokeWidth="2.5"
-                    className="animate-fadeIn"
-                  />
-                  {/* Lower arc from A */}
-                  <path
-                    d="M 40 100 A 120 120 0 0 0 100 170"
-                    fill="none"
-                    stroke="#3B82F6"
-                    strokeWidth="2.5"
-                    className="animate-fadeIn"
-                  />
-                </>
+                <path
+                  d="M 150 17 A 130 130 0 0 0 150 183"
+                  fill="none"
+                  stroke="#3B82F6"
+                  strokeWidth="2.5"
+                  className="animate-fadeIn"
+                />
               )}
 
               {/* Step 1-2: Compass at A */}
               {animationStep >= 1 && animationStep < 3 && (
                 <g className="animate-fadeIn">
                   {/* Compass pivot at A */}
-                  <circle cx="40" cy="100" r="4" fill="#6366F1" stroke="white" strokeWidth="2" />
-                  {/* Compass arm */}
-                  <line x1="40" y1="100" x2="100" y2="30" stroke="#6366F1" strokeWidth="3" strokeLinecap="round" />
+                  <circle cx="50" cy="100" r="4" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                  {/* Compass arm to P */}
+                  <line x1="50" y1="100" x2="150" y2="17" stroke="#3B82F6" strokeWidth="3" strokeLinecap="round" />
                   {/* Compass tip */}
-                  <circle cx="100" cy="30" r="3" fill="#6366F1" />
+                  <circle cx="150" cy="17" r="3" fill="#3B82F6" />
                 </g>
               )}
 
-              {/* Step 3-4: Arc from B (purple) */}
+              {/* Step 3-4: Arc from B (purple) - passes through P(150,17) and Q(150,183) */}
               {animationStep >= 3 && (
-                <>
-                  {/* Upper arc from B */}
-                  <path
-                    d="M 260 100 A 120 120 0 0 0 200 30"
-                    fill="none"
-                    stroke="#8B5CF6"
-                    strokeWidth="2.5"
-                    className="animate-fadeIn"
-                  />
-                  {/* Lower arc from B */}
-                  <path
-                    d="M 200 170 A 120 120 0 0 0 260 100"
-                    fill="none"
-                    stroke="#8B5CF6"
-                    strokeWidth="2.5"
-                    className="animate-fadeIn"
-                  />
-                </>
+                <path
+                  d="M 150 17 A 130 130 0 0 1 150 183"
+                  fill="none"
+                  stroke="#8B5CF6"
+                  strokeWidth="2.5"
+                  className="animate-fadeIn"
+                />
               )}
 
               {/* Step 3-4: Compass at B */}
               {animationStep >= 2 && animationStep < 5 && (
                 <g className="animate-fadeIn">
                   {/* Compass pivot at B */}
-                  <circle cx="260" cy="100" r="4" fill="#8B5CF6" stroke="white" strokeWidth="2" />
-                  {/* Compass arm */}
-                  <line x1="260" y1="100" x2="200" y2="30" stroke="#8B5CF6" strokeWidth="3" strokeLinecap="round" />
+                  <circle cx="250" cy="100" r="4" fill="#8B5CF6" stroke="white" strokeWidth="2" />
+                  {/* Compass arm to P */}
+                  <line x1="250" y1="100" x2="150" y2="17" stroke="#8B5CF6" strokeWidth="3" strokeLinecap="round" />
                   {/* Compass tip */}
-                  <circle cx="200" cy="30" r="3" fill="#8B5CF6" />
+                  <circle cx="150" cy="17" r="3" fill="#8B5CF6" />
                 </g>
               )}
 
-              {/* Step 5: Intersection points */}
+              {/* Step 5: Intersection points - highlighted */}
               {animationStep >= 4 && (
                 <>
-                  <circle cx="150" cy="30" r="7" fill="#F59E0B" stroke="white" strokeWidth="2" className="animate-fadeIn" />
-                  <circle cx="150" cy="170" r="7" fill="#F59E0B" stroke="white" strokeWidth="2" className="animate-fadeIn" />
-                  <text x="165" y="35" className="text-xs font-bold fill-amber-600">P</text>
-                  <text x="165" y="175" className="text-xs font-bold fill-amber-600">Q</text>
+                  <circle cx="150" cy="17" r="8" fill="#F59E0B" stroke="white" strokeWidth="2" className="animate-fadeIn" />
+                  <circle cx="150" cy="183" r="8" fill="#F59E0B" stroke="white" strokeWidth="2" className="animate-fadeIn" />
+                  <text x="165" y="22" className="text-xs font-bold fill-amber-600">P</text>
+                  <text x="165" y="188" className="text-xs font-bold fill-amber-600">Q</text>
                 </>
               )}
 
@@ -318,9 +298,9 @@ export default function Step1Hook({ onComplete, isActive }: LessonStepProps) {
                 <>
                   <line
                     x1="150"
-                    y1="25"
+                    y1="12"
                     x2="150"
-                    y2="175"
+                    y2="188"
                     stroke="#10B981"
                     strokeWidth="3"
                     className="animate-fadeIn"
