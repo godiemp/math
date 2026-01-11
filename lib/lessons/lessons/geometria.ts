@@ -243,4 +243,25 @@ export const GEOMETRIA_LESSONS: Lesson[] = [
       { id: 'verify', type: 'verify', title: 'Checkpoint' },
     ],
   },
+  {
+    id: 'm2-geo-002-a',
+    slug: 'seno-coseno-tangente',
+    title: 'Seno, Coseno y Tangente',
+    description:
+      'Descubre las razones trigonométricas y aprende a usarlas para calcular lados y ángulos en triángulos rectángulos.',
+    level: 'M2',
+    subject: 'geometría',
+    thematicUnit: 'M2-GEO-002',
+    skills: ['trigonometria-seno', 'trigonometria-coseno', 'trigonometria-tangente', 'trigonometria-aplicar'],
+    estimatedMinutes: 18,
+    minEducOA: ['MA2M-OA-03'],
+    steps: [
+      { id: 'hook', type: 'hook', title: 'La Torre Misteriosa' },
+      { id: 'explore', type: 'explore', title: 'Descubre las Razones' },
+      { id: 'explain', type: 'explain', title: 'Las Razones Trigonométricas' },
+      { id: 'classify', type: 'explore', title: '¿Qué Razón Usar?' },
+      { id: 'practice', type: 'practice', title: 'Practica Calculando' },
+      { id: 'verify', type: 'verify', title: 'Checkpoint' },
+    ],
+  },
 ];
