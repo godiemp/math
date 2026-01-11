@@ -9,6 +9,7 @@ import { CircleFigure } from '@/components/figures/CircleFigure';
 import { QuadrilateralFigure } from '@/components/figures/QuadrilateralFigure';
 import { Figure3D } from '@/components/figures/Figure3D';
 import { PolygonFigure } from '@/components/figures/PolygonFigure';
+import { VectorFigure } from '@/components/figures/VectorFigure';
 import {
   buildTriangleFromAngles,
   buildTriangleFromSides,
@@ -91,8 +92,15 @@ import {
   validateQuadrilateral,
 } from '@/lib/geometry/quadrilateralUtils';
 import type { PolygonPreset } from '@/lib/types/polygon';
+import type {
+  VectorConfig,
+  LabeledPoint as VectorLabeledPoint,
+  VectorPreset,
+  VectorAdditionConfig,
+} from '@/lib/types/vector';
+import { vec2Magnitude, vec2Subtract, vec2Angle } from '@/lib/geometry/vectorUtils';
 
-type FigureType = 'triangle' | 'circle' | 'quadrilateral' | 'figure3d' | 'polygon';
+type FigureType = 'triangle' | 'circle' | 'quadrilateral' | 'figure3d' | 'polygon' | 'vector';
 type InputMode = 'vertices' | 'angles' | 'sides';
 
 // Presets for vertices mode
@@ -303,6 +311,102 @@ const POLYGON_PRESETS: PolygonPreset[] = [
     radius: 80,
     showApothem: false,
     showCenter: true,
+  },
+];
+
+// Vector presets (based on MA07-OA-14 curriculum)
+const VECTOR_PRESETS: VectorPreset[] = [
+  {
+    name: 'Punto en el plano',
+    description: 'Un punto con coordenadas P(3, 2)',
+    points: [{ x: 3, y: 2, label: 'P(3, 2)' }],
+    xRange: [-1, 5],
+    yRange: [-1, 4],
+  },
+  {
+    name: 'Puntos en 4 cuadrantes',
+    description: 'Un punto en cada cuadrante',
+    points: [
+      { x: 3, y: 2, label: 'A(3, 2)' },
+      { x: -2, y: 3, label: 'B(-2, 3)' },
+      { x: -3, y: -2, label: 'C(-3, -2)' },
+      { x: 2, y: -3, label: 'D(2, -3)' },
+    ],
+    xRange: [-5, 5],
+    yRange: [-5, 5],
+  },
+  {
+    name: 'Vector desde origen',
+    description: 'Vector v desde el origen',
+    vectors: [{ to: { x: 3, y: 2 }, label: 'v' }],
+    xRange: [-1, 5],
+    yRange: [-1, 4],
+  },
+  {
+    name: 'Vector como desplazamiento',
+    description: 'Vector de un punto a otro',
+    vectors: [{ from: { x: 1, y: 1 }, to: { x: 4, y: 3 }, label: 'v' }],
+    points: [
+      { x: 1, y: 1, label: 'A' },
+      { x: 4, y: 3, label: 'B' },
+    ],
+    xRange: [-1, 6],
+    yRange: [-1, 5],
+  },
+  {
+    name: 'Vector con componentes',
+    description: 'Muestra proyecciones en x e y',
+    vectors: [{ to: { x: 4, y: 3 }, label: 'v' }],
+    showComponents: true,
+    componentConfig: { vectorIndex: 0, showX: true, showY: true, xLabel: 'vₓ', yLabel: 'vᵧ' },
+    xRange: [-1, 6],
+    yRange: [-1, 5],
+  },
+  {
+    name: 'Suma cola-cabeza',
+    description: 'Suma de vectores v + u',
+    vectors: [
+      { to: { x: 3, y: 1 }, label: 'v', color: 'rgb(59, 130, 246)' },
+      { to: { x: 1, y: 3 }, label: 'u', color: 'rgb(16, 185, 129)' },
+    ],
+    addition: {
+      method: 'head-to-tail',
+      vectorIndices: [0, 1],
+      showResultant: true,
+      resultantLabel: 'v + u',
+      showConstruction: true,
+    },
+    xRange: [-1, 6],
+    yRange: [-1, 6],
+  },
+  {
+    name: 'Suma paralelogramo',
+    description: 'Método del paralelogramo',
+    vectors: [
+      { to: { x: 3, y: 1 }, label: 'v', color: 'rgb(59, 130, 246)' },
+      { to: { x: 1, y: 3 }, label: 'u', color: 'rgb(16, 185, 129)' },
+    ],
+    addition: {
+      method: 'parallelogram',
+      vectorIndices: [0, 1],
+      showResultant: true,
+      resultantLabel: 'v + u',
+      showConstruction: true,
+    },
+    xRange: [-1, 6],
+    yRange: [-1, 6],
+  },
+  {
+    name: 'Rectángulo por coordenadas',
+    description: '4 vértices formando un rectángulo',
+    points: [
+      { x: 1, y: 1, label: 'A(1, 1)' },
+      { x: 4, y: 1, label: 'B(4, 1)' },
+      { x: 4, y: 3, label: 'C(4, 3)' },
+      { x: 1, y: 3, label: 'D(1, 3)' },
+    ],
+    xRange: [-1, 6],
+    yRange: [-1, 5],
   },
 ];
 
@@ -655,6 +759,85 @@ function FigureDebugContent() {
       setPolygonApothemEdge(0);
     }
   }, [polygonSides, polygonApothemEdge]);
+
+  // ============================================
+  // VECTOR STATE
+  // ============================================
+  const [vectorConfigs, setVectorConfigs] = useState<VectorConfig[]>([
+    { to: { x: 3, y: 2 }, label: 'v' },
+  ]);
+  const [vectorPoints, setVectorPoints] = useState<VectorLabeledPoint[]>([]);
+  const [vectorXRange, setVectorXRange] = useState<[number, number]>([-5, 5]);
+  const [vectorYRange, setVectorYRange] = useState<[number, number]>([-5, 5]);
+  const [showVectorGrid, setShowVectorGrid] = useState(true);
+  const [showVectorAxes, setShowVectorAxes] = useState(true);
+  const [showVectorTicks, setShowVectorTicks] = useState(true);
+  const [showVectorAxisLabels, setShowVectorAxisLabels] = useState(true);
+  const [showVectorOrigin, setShowVectorOrigin] = useState(true);
+  const [vectorDraggable, setVectorDraggable] = useState(false);
+  const [showVectorComponents, setShowVectorComponents] = useState(false);
+  const [vectorComponentIndex, setVectorComponentIndex] = useState(0);
+  const [showVectorAddition, setShowVectorAddition] = useState(false);
+  const [vectorAdditionMethod, setVectorAdditionMethod] = useState<'parallelogram' | 'head-to-tail'>('head-to-tail');
+
+  // Apply vector preset
+  const applyVectorPreset = useCallback((preset: VectorPreset) => {
+    setVectorConfigs(preset.vectors || []);
+    setVectorPoints(preset.points || []);
+    setVectorXRange(preset.xRange || [-5, 5]);
+    setVectorYRange(preset.yRange || [-5, 5]);
+    setShowVectorComponents(preset.showComponents ?? false);
+    setVectorComponentIndex(preset.componentConfig?.vectorIndex ?? 0);
+    setShowVectorAddition(!!preset.addition);
+    if (preset.addition) {
+      setVectorAdditionMethod(preset.addition.method);
+    }
+  }, []);
+
+  // Add vector
+  const addVector = useCallback(() => {
+    const newIndex = vectorConfigs.length;
+    const newLabel = String.fromCharCode(118 + newIndex); // v, w, x, y, z...
+    setVectorConfigs(prev => [...prev, { to: { x: 2, y: 2 }, label: newLabel }]);
+  }, [vectorConfigs.length]);
+
+  // Remove vector
+  const removeVector = useCallback((index: number) => {
+    setVectorConfigs(prev => prev.filter((_, i) => i !== index));
+    if (vectorComponentIndex >= vectorConfigs.length - 1) {
+      setVectorComponentIndex(Math.max(0, vectorConfigs.length - 2));
+    }
+  }, [vectorConfigs.length, vectorComponentIndex]);
+
+  // Update vector endpoint
+  const updateVectorEndpoint = useCallback((index: number, axis: 'x' | 'y', value: number) => {
+    setVectorConfigs(prev => prev.map((v, i) =>
+      i === index ? { ...v, to: { ...v.to, [axis]: value } } : v
+    ));
+  }, []);
+
+  // Add point
+  const addPoint = useCallback(() => {
+    const newIndex = vectorPoints.length;
+    const newLabel = String.fromCharCode(65 + newIndex); // A, B, C...
+    setVectorPoints(prev => [...prev, { x: 1, y: 1, label: `${newLabel}(1, 1)` }]);
+  }, [vectorPoints.length]);
+
+  // Remove point
+  const removePoint = useCallback((index: number) => {
+    setVectorPoints(prev => prev.filter((_, i) => i !== index));
+  }, []);
+
+  // Update point
+  const updatePoint = useCallback((index: number, axis: 'x' | 'y', value: number) => {
+    setVectorPoints(prev => prev.map((p, i) => {
+      if (i !== index) return p;
+      const newX = axis === 'x' ? value : p.x;
+      const newY = axis === 'y' ? value : p.y;
+      const label = String.fromCharCode(65 + i);
+      return { ...p, [axis]: value, label: `${label}(${newX}, ${newY})` };
+    }));
+  }, []);
 
   // Apply polygon preset
   const applyPolygonPreset = useCallback((preset: PolygonPreset) => {
@@ -1252,14 +1435,83 @@ function FigureDebugContent() {
     return `<PolygonFigure\n  ${propsLines.join('\n  ')}\n/>`;
   }, [polygonSides, polygonRadius, polygonRotation, showPolygonCenter, showPolygonApothem, polygonApothemEdge, showPolygonDiagonals, showPolygonAngles, showPolygonAngleDegrees, showPolygonEdgeLabels, showPolygonGrid]);
 
+  // Generate code snippet for vector
+  const generateVectorCode = useCallback(() => {
+    const propsLines: string[] = [];
+
+    // Vectors
+    if (vectorConfigs.length > 0) {
+      propsLines.push(`vectors={[`);
+      vectorConfigs.forEach((v, i) => {
+        const parts = [];
+        if (v.from) {
+          parts.push(`from: { x: ${v.from.x}, y: ${v.from.y} }`);
+        }
+        parts.push(`to: { x: ${v.to.x}, y: ${v.to.y} }`);
+        if (v.label) parts.push(`label: '${v.label}'`);
+        if (v.color) parts.push(`color: '${v.color}'`);
+        propsLines.push(`  { ${parts.join(', ')} },`);
+      });
+      propsLines.push(`]}`);
+    }
+
+    // Points
+    if (vectorPoints.length > 0) {
+      propsLines.push(`points={[`);
+      vectorPoints.forEach((p) => {
+        const parts = [`x: ${p.x}`, `y: ${p.y}`];
+        if (p.label) parts.push(`label: '${p.label}'`);
+        propsLines.push(`  { ${parts.join(', ')} },`);
+      });
+      propsLines.push(`]}`);
+    }
+
+    // Ranges
+    if (vectorXRange[0] !== -5 || vectorXRange[1] !== 5) {
+      propsLines.push(`xRange={[${vectorXRange[0]}, ${vectorXRange[1]}]}`);
+    }
+    if (vectorYRange[0] !== -5 || vectorYRange[1] !== 5) {
+      propsLines.push(`yRange={[${vectorYRange[0]}, ${vectorYRange[1]}]}`);
+    }
+
+    // Display options
+    if (!showVectorGrid) propsLines.push(`showGrid={false}`);
+    if (!showVectorAxes) propsLines.push(`showAxes={false}`);
+    if (!showVectorTicks) propsLines.push(`showTicks={false}`);
+    if (!showVectorAxisLabels) propsLines.push(`showAxisLabels={false}`);
+    if (!showVectorOrigin) propsLines.push(`showOrigin={false}`);
+    if (vectorDraggable) propsLines.push(`draggable`);
+
+    // Components (projections)
+    if (showVectorComponents && vectorConfigs.length > 0) {
+      propsLines.push(`components={[`);
+      propsLines.push(`  { vectorIndex: ${vectorComponentIndex}, showX: true, showY: true, xLabel: 'vₓ', yLabel: 'vᵧ' },`);
+      propsLines.push(`]}`);
+    }
+
+    // Addition
+    if (showVectorAddition && vectorConfigs.length >= 2) {
+      propsLines.push(`addition={{`);
+      propsLines.push(`  method: '${vectorAdditionMethod}',`);
+      propsLines.push(`  vectorIndices: [0, 1],`);
+      propsLines.push(`  showResultant: true,`);
+      propsLines.push(`  resultantLabel: 'v + u',`);
+      propsLines.push(`  showConstruction: true,`);
+      propsLines.push(`}}`);
+    }
+
+    return `<VectorFigure\n  ${propsLines.join('\n  ')}\n/>`;
+  }, [vectorConfigs, vectorPoints, vectorXRange, vectorYRange, showVectorGrid, showVectorAxes, showVectorTicks, showVectorAxisLabels, showVectorOrigin, vectorDraggable, showVectorComponents, vectorComponentIndex, showVectorAddition, vectorAdditionMethod]);
+
   // Generate code based on figure type
   const generateCode = useCallback(() => {
     if (figureType === 'triangle') return generateTriangleCode();
     if (figureType === 'circle') return generateCircleCode();
     if (figureType === 'quadrilateral') return generateQuadrilateralCode();
     if (figureType === 'figure3d') return generateFigure3DCode();
-    return generatePolygonCode();
-  }, [figureType, generateTriangleCode, generateCircleCode, generateQuadrilateralCode, generateFigure3DCode, generatePolygonCode]);
+    if (figureType === 'polygon') return generatePolygonCode();
+    return generateVectorCode();
+  }, [figureType, generateTriangleCode, generateCircleCode, generateQuadrilateralCode, generateFigure3DCode, generatePolygonCode, generateVectorCode]);
 
   // Copy code to clipboard
   const copyCode = useCallback(() => {
@@ -1334,6 +1586,16 @@ function FigureDebugContent() {
                 }`}
               >
                 Polígono
+              </button>
+              <button
+                onClick={() => setFigureType('vector')}
+                className={`px-4 py-2 text-sm font-medium transition-colors rounded-r-lg ${
+                  figureType === 'vector'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+              >
+                Vector
               </button>
             </div>
           </div>
@@ -1578,6 +1840,25 @@ function FigureDebugContent() {
                 className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
                 padding="md"
                 onClick={() => applyPolygonPreset(preset)}
+              >
+                <div className="text-center">
+                  <Heading level={3} size="xs" className="mb-1">
+                    {preset.name}
+                  </Heading>
+                  <Text size="xs" variant="secondary">
+                    {preset.description}
+                  </Text>
+                </div>
+              </Card>
+            ))}
+            {/* Vector presets */}
+            {figureType === 'vector' && VECTOR_PRESETS.map((preset) => (
+              <Card
+                key={preset.name}
+                hover
+                className="cursor-pointer transition-all hover:ring-2 hover:ring-blue-500"
+                padding="md"
+                onClick={() => applyVectorPreset(preset)}
               >
                 <div className="text-center">
                   <Heading level={3} size="xs" className="mb-1">
@@ -2419,6 +2700,304 @@ function FigureDebugContent() {
                     </div>
                   </div>
                 </Card>
+              </>
+            )}
+
+            {/* ============================================ */}
+            {/* VECTOR CONTROLS */}
+            {/* ============================================ */}
+            {figureType === 'vector' && (
+              <>
+                {/* Vector List */}
+                <Card padding="lg">
+                  <div className="flex items-center justify-between mb-4">
+                    <Heading level={3} size="xs">
+                      Vectores
+                    </Heading>
+                    <Button size="sm" onClick={addVector}>
+                      + Agregar Vector
+                    </Button>
+                  </div>
+                  <div className="space-y-3">
+                    {vectorConfigs.map((v, i) => (
+                      <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <Badge variant="info">{v.label || `v${i}`}</Badge>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">X:</span>
+                          <input
+                            type="number"
+                            value={v.to.x}
+                            onChange={(e) => updateVectorEndpoint(i, 'x', Number(e.target.value))}
+                            className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                          />
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">Y:</span>
+                          <input
+                            type="number"
+                            value={v.to.y}
+                            onChange={(e) => updateVectorEndpoint(i, 'y', Number(e.target.value))}
+                            className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                          />
+                        </div>
+                        <div className="flex-1 text-right text-xs text-gray-500">
+                          |{v.label || `v${i}`}| = {vec2Magnitude(v.to).toFixed(2)}
+                        </div>
+                        {vectorConfigs.length > 1 && (
+                          <button
+                            onClick={() => removeVector(i)}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+
+                {/* Points List */}
+                <Card padding="lg">
+                  <div className="flex items-center justify-between mb-4">
+                    <Heading level={3} size="xs">
+                      Puntos
+                    </Heading>
+                    <Button size="sm" onClick={addPoint}>
+                      + Agregar Punto
+                    </Button>
+                  </div>
+                  {vectorPoints.length === 0 ? (
+                    <Text className="text-sm text-gray-500">No hay puntos agregados</Text>
+                  ) : (
+                    <div className="space-y-3">
+                      {vectorPoints.map((p, i) => (
+                        <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <Badge variant="success">{String.fromCharCode(65 + i)}</Badge>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-gray-600 dark:text-gray-400">X:</span>
+                            <input
+                              type="number"
+                              value={p.x}
+                              onChange={(e) => updatePoint(i, 'x', Number(e.target.value))}
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                            />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-gray-600 dark:text-gray-400">Y:</span>
+                            <input
+                              type="number"
+                              value={p.y}
+                              onChange={(e) => updatePoint(i, 'y', Number(e.target.value))}
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                            />
+                          </div>
+                          <button
+                            onClick={() => removePoint(i)}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </Card>
+
+                {/* Coordinate System */}
+                <Card padding="lg">
+                  <Heading level={3} size="xs" className="mb-4">
+                    Sistema de Coordenadas
+                  </Heading>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm w-20">Rango X:</Text>
+                      <input
+                        type="number"
+                        value={vectorXRange[0]}
+                        onChange={(e) => setVectorXRange([Number(e.target.value), vectorXRange[1]])}
+                        className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                      />
+                      <span className="text-sm">a</span>
+                      <input
+                        type="number"
+                        value={vectorXRange[1]}
+                        onChange={(e) => setVectorXRange([vectorXRange[0], Number(e.target.value)])}
+                        className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                      />
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <Text className="text-sm w-20">Rango Y:</Text>
+                      <input
+                        type="number"
+                        value={vectorYRange[0]}
+                        onChange={(e) => setVectorYRange([Number(e.target.value), vectorYRange[1]])}
+                        className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                      />
+                      <span className="text-sm">a</span>
+                      <input
+                        type="number"
+                        value={vectorYRange[1]}
+                        onChange={(e) => setVectorYRange([vectorYRange[0], Number(e.target.value)])}
+                        className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                      />
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Visual Options */}
+                <Card padding="lg">
+                  <Heading level={3} size="xs" className="mb-4">
+                    Opciones Visuales
+                  </Heading>
+                  <div className="grid grid-cols-2 gap-3">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showVectorGrid}
+                        onChange={(e) => setShowVectorGrid(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Mostrar grid</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showVectorAxes}
+                        onChange={(e) => setShowVectorAxes(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Mostrar ejes</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showVectorTicks}
+                        onChange={(e) => setShowVectorTicks(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Mostrar marcas</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showVectorAxisLabels}
+                        onChange={(e) => setShowVectorAxisLabels(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Labels de ejes</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showVectorOrigin}
+                        onChange={(e) => setShowVectorOrigin(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Mostrar origen</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={vectorDraggable}
+                        onChange={(e) => setVectorDraggable(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Arrastrable</span>
+                    </label>
+                  </div>
+                </Card>
+
+                {/* Vector Features */}
+                <Card padding="lg">
+                  <Heading level={3} size="xs" className="mb-4">
+                    Características de Vectores
+                  </Heading>
+                  <div className="space-y-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showVectorComponents}
+                        onChange={(e) => setShowVectorComponents(e.target.checked)}
+                        className="rounded"
+                        disabled={vectorConfigs.length === 0}
+                      />
+                      <span className="text-sm">Mostrar componentes (proyecciones)</span>
+                    </label>
+                    {showVectorComponents && vectorConfigs.length > 1 && (
+                      <div className="ml-6 flex items-center gap-2">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Vector:</span>
+                        <select
+                          value={vectorComponentIndex}
+                          onChange={(e) => setVectorComponentIndex(Number(e.target.value))}
+                          className="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
+                        >
+                          {vectorConfigs.map((v, i) => (
+                            <option key={i} value={i}>{v.label || `v${i}`}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showVectorAddition}
+                        onChange={(e) => setShowVectorAddition(e.target.checked)}
+                        className="rounded"
+                        disabled={vectorConfigs.length < 2}
+                      />
+                      <span className="text-sm">Mostrar suma de vectores</span>
+                    </label>
+                    {showVectorAddition && vectorConfigs.length >= 2 && (
+                      <div className="ml-6 flex items-center gap-4">
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="radio"
+                            name="additionMethod"
+                            checked={vectorAdditionMethod === 'head-to-tail'}
+                            onChange={() => setVectorAdditionMethod('head-to-tail')}
+                          />
+                          <span className="text-sm">Cola-cabeza</span>
+                        </label>
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="radio"
+                            name="additionMethod"
+                            checked={vectorAdditionMethod === 'parallelogram'}
+                            onChange={() => setVectorAdditionMethod('parallelogram')}
+                          />
+                          <span className="text-sm">Paralelogramo</span>
+                        </label>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+
+                {/* Vector Info */}
+                {vectorConfigs.length > 0 && (
+                  <Card padding="lg">
+                    <Heading level={3} size="xs" className="mb-4">
+                      Información de Vectores
+                    </Heading>
+                    <div className="space-y-3">
+                      {vectorConfigs.map((v, i) => {
+                        const mag = vec2Magnitude(v.to);
+                        const angle = vec2Angle(v.to);
+                        return (
+                          <div key={i} className="text-sm space-y-1">
+                            <div className="font-medium">{v.label || `v${i}`}</div>
+                            <div className="grid grid-cols-2 gap-2 ml-2 text-gray-600 dark:text-gray-400">
+                              <span>Componente x: {v.to.x}</span>
+                              <span>Componente y: {v.to.y}</span>
+                              <span>Magnitud: {mag.toFixed(2)}</span>
+                              <span>Ángulo: {angle.toFixed(1)}°</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </Card>
+                )}
               </>
             )}
 
@@ -3337,6 +3916,38 @@ function FigureDebugContent() {
                       : undefined
                     }
                     showGrid={showPolygonGrid}
+                    width={400}
+                    height={300}
+                  />
+                )}
+                {figureType === 'vector' && (
+                  <VectorFigure
+                    vectors={vectorConfigs}
+                    points={vectorPoints}
+                    xRange={vectorXRange}
+                    yRange={vectorYRange}
+                    showGrid={showVectorGrid}
+                    showAxes={showVectorAxes}
+                    showTicks={showVectorTicks}
+                    showAxisLabels={showVectorAxisLabels}
+                    showOrigin={showVectorOrigin}
+                    draggable={vectorDraggable}
+                    onVectorsChange={setVectorConfigs}
+                    onPointsChange={setVectorPoints}
+                    components={showVectorComponents && vectorConfigs.length > 0
+                      ? [{ vectorIndex: vectorComponentIndex, showX: true, showY: true, xLabel: 'vₓ', yLabel: 'vᵧ' }]
+                      : undefined
+                    }
+                    addition={showVectorAddition && vectorConfigs.length >= 2
+                      ? {
+                          method: vectorAdditionMethod,
+                          vectorIndices: [0, 1],
+                          showResultant: true,
+                          resultantLabel: 'v + u',
+                          showConstruction: true,
+                        }
+                      : undefined
+                    }
                     width={400}
                     height={300}
                   />
