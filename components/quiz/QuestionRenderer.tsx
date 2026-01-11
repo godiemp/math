@@ -35,11 +35,12 @@ export function QuestionRenderer({
 }: QuestionRendererProps) {
   const isCorrect = selectedAnswer === question.correctAnswer;
   const isZenMode = quizMode === 'zen';
+  const isAdaptiveMode = quizMode === 'adaptive';
 
   return (
     <div className={compact ? 'space-y-2' : 'space-y-4'}>
       {/* Question Text */}
-      <div className={compact ? 'text-base' : 'text-xl font-semibold text-gray-900 dark:text-white'}>
+      <div className={compact ? 'text-base' : `text-lg leading-relaxed ${isAdaptiveMode ? 'text-black dark:text-white' : 'text-gray-900 dark:text-white font-semibold'}`}>
         <SmartLatexRenderer latex={question.questionLatex} displayMode={false} />
       </div>
 
@@ -154,9 +155,26 @@ export function QuestionRenderer({
             const isSelected = selectedAnswer === index;
             const isCorrectAnswer = index === question.correctAnswer;
 
-            let buttonClass = `w-full text-left ${compact ? 'p-2 text-sm' : 'p-4'} rounded-lg border-2 transition-all flex items-start gap-2 `;
+            let buttonClass = `w-full text-left ${compact ? 'p-2 text-sm' : 'p-4'} rounded-lg border-2 transition-all flex items-start gap-2 ${disabled ? 'cursor-default' : 'cursor-pointer'} `;
 
-            if (showFeedback) {
+            if (isAdaptiveMode) {
+              // Adaptive mode uses Apple design colors on light card backgrounds
+              if (showFeedback) {
+                if (isCorrectAnswer) {
+                  buttonClass += 'bg-[#34C759]/10 border-[#34C759] text-black dark:text-white';
+                } else if (isSelected && !isCorrectAnswer) {
+                  buttonClass += 'bg-[#FF453A]/10 border-[#FF453A] text-black dark:text-white';
+                } else {
+                  buttonClass += 'bg-black/[0.02] dark:bg-white/[0.04] border-transparent text-black/70 dark:text-white/70';
+                }
+              } else {
+                if (isSelected) {
+                  buttonClass += 'bg-[#0A84FF]/10 border-[#0A84FF] text-black dark:text-white';
+                } else {
+                  buttonClass += 'bg-black/[0.02] dark:bg-white/[0.04] border-transparent text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:border-black/[0.08] dark:hover:border-white/[0.08]';
+                }
+              }
+            } else if (showFeedback) {
               if (isCorrectAnswer) {
                 buttonClass += 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-900 dark:text-green-100';
               } else if (isSelected && !isCorrectAnswer) {
@@ -177,14 +195,41 @@ export function QuestionRenderer({
               }
             }
 
+            const letter = String.fromCharCode(65 + index);
+
+            // Badge styling for adaptive mode
+            let badgeClass = 'w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm ';
+            if (isAdaptiveMode) {
+              if (showFeedback) {
+                if (isCorrectAnswer) {
+                  badgeClass += 'bg-[#34C759] text-white';
+                } else if (isSelected && !isCorrectAnswer) {
+                  badgeClass += 'bg-[#FF453A] text-white';
+                } else {
+                  badgeClass += 'bg-black/10 dark:bg-white/10 text-black/60 dark:text-white/60';
+                }
+              } else {
+                if (isSelected) {
+                  badgeClass += 'bg-[#0A84FF] text-white';
+                } else {
+                  badgeClass += 'bg-black/10 dark:bg-white/10 text-black dark:text-white';
+                }
+              }
+            }
+
             return (
               <button
                 key={index}
+                data-testid={isAdaptiveMode ? `option-${letter}` : undefined}
                 onClick={() => onAnswerSelect && onAnswerSelect(index)}
                 disabled={disabled}
                 className={buttonClass}
               >
-                <span className="font-semibold shrink-0">{String.fromCharCode(65 + index)}.</span>
+                {isAdaptiveMode ? (
+                  <span className={badgeClass}>{letter}</span>
+                ) : (
+                  <span className="font-semibold shrink-0">{letter}.</span>
+                )}
                 <span className="flex-1 min-w-0 break-words">
                   <UnifiedLatexRenderer content={option} displayMode={false} />
                 </span>
@@ -199,21 +244,29 @@ export function QuestionRenderer({
       {/* Explanation (with feedback) */}
       {(mode === 'with-explanation' || mode === 'full') && showFeedback && (
         <div
-          className={`border-l-4 ${compact ? 'p-2 text-sm' : 'p-4'} ${
-            isCorrect
-              ? 'bg-green-50 dark:bg-green-900/20 border-green-500'
-              : isZenMode
-              ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-400'
-              : 'bg-red-50 dark:bg-red-900/20 border-red-500'
+          className={`border-l-4 rounded-lg ${compact ? 'p-2 text-sm' : 'p-4'} ${
+            isAdaptiveMode
+              ? isCorrect
+                ? 'bg-[#34C759]/10 border-[#34C759]'
+                : 'bg-[#FF453A]/10 border-[#FF453A]'
+              : isCorrect
+                ? 'bg-green-50 dark:bg-green-900/20 border-green-500'
+                : isZenMode
+                  ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-400'
+                  : 'bg-red-50 dark:bg-red-900/20 border-red-500'
           }`}
         >
           <h4
             className={`font-semibold ${compact ? 'text-sm mb-1' : 'mb-2'} ${
-              isCorrect
-                ? 'text-green-900 dark:text-green-100'
-                : isZenMode
-                ? 'text-amber-900 dark:text-amber-100'
-                : 'text-red-900 dark:text-red-100'
+              isAdaptiveMode
+                ? isCorrect
+                  ? 'text-[#34C759]'
+                  : 'text-[#FF453A]'
+                : isCorrect
+                  ? 'text-green-900 dark:text-green-100'
+                  : isZenMode
+                    ? 'text-amber-900 dark:text-amber-100'
+                    : 'text-red-900 dark:text-red-100'
             }`}
           >
             {selectedAnswer === null
@@ -224,11 +277,13 @@ export function QuestionRenderer({
           </h4>
           <div
             className={`${
-              isCorrect
-                ? 'text-green-800 dark:text-green-200'
-                : isZenMode
-                ? 'text-amber-800 dark:text-amber-200'
-                : 'text-red-800 dark:text-red-200'
+              isAdaptiveMode
+                ? 'text-black/80 dark:text-white/80'
+                : isCorrect
+                  ? 'text-green-800 dark:text-green-200'
+                  : isZenMode
+                    ? 'text-amber-800 dark:text-amber-200'
+                    : 'text-red-800 dark:text-red-200'
             }`}
           >
             <p className={`font-semibold ${compact ? 'mb-0.5 text-xs' : 'mb-1'}`}>Explicación:</p>
