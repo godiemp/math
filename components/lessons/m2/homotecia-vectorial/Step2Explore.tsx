@@ -185,16 +185,71 @@ export default function Step2Explore({ onComplete, isActive }: LessonStepProps) 
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-            <p className="font-semibold text-gray-800 dark:text-gray-200 mb-2">
-              Con centro en el origen, la fórmula es simple:
-            </p>
-            <p className="font-mono text-xl text-purple-600 dark:text-purple-400">
-              P′ = k · P
-            </p>
-            <p className="text-sm text-gray-500 mt-2">
-              Cada coordenada se multiplica por k
-            </p>
+          {/* Two formulas side by side */}
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center border-2 border-purple-300 dark:border-purple-700">
+              <p className="text-xs text-gray-500 mb-1">Centro en el origen</p>
+              <p className="font-mono text-lg text-purple-600 dark:text-purple-400">
+                P′ = k · P
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                Solo multiplicas coordenadas
+              </p>
+            </div>
+
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center border-2 border-indigo-300 dark:border-indigo-700">
+              <p className="text-xs text-gray-500 mb-1">Centro en cualquier punto C</p>
+              <p className="font-mono text-lg text-indigo-600 dark:text-indigo-400">
+                P′ = C + k · (P − C)
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                Escalas el vector desde C
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Visual comparison with general center */}
+        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 rounded-xl p-4 border border-indigo-200 dark:border-indigo-700">
+          <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 text-center">
+            ¿Y si el centro NO está en el origen?
+          </p>
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            {/* Mini SVG showing general case */}
+            <svg viewBox="0 0 160 120" className="w-40 h-30 flex-shrink-0">
+              {/* Grid */}
+              {[0, 1, 2, 3, 4, 5, 6].map(i => (
+                <line key={`v-${i}`} x1={20 + i * 20} y1={10} x2={20 + i * 20} y2={110} className="stroke-gray-200 dark:stroke-gray-700" strokeWidth="0.5" />
+              ))}
+              {[0, 1, 2, 3, 4, 5].map(i => (
+                <line key={`h-${i}`} x1={20} y1={10 + i * 20} x2={140} y2={10 + i * 20} className="stroke-gray-200 dark:stroke-gray-700" strokeWidth="0.5" />
+              ))}
+              {/* Axes */}
+              <line x1={20} y1={90} x2={140} y2={90} className="stroke-gray-400" strokeWidth="1" />
+              <line x1={40} y1={10} x2={40} y2={110} className="stroke-gray-400" strokeWidth="1" />
+              {/* Center C(1,1) */}
+              <circle cx={60} cy={70} r={5} className="fill-purple-500" />
+              <text x={60} y={85} textAnchor="middle" className="fill-purple-600 text-[7px] font-bold">C(1,1)</text>
+              {/* Original point P(3,2) */}
+              <circle cx={100} cy={50} r={4} className="fill-blue-500" />
+              <text x={108} y={48} className="fill-blue-600 text-[6px] font-bold">P(3,2)</text>
+              {/* Vector from C to P */}
+              <line x1={60} y1={70} x2={100} y2={50} className="stroke-blue-400" strokeWidth="1.5" strokeDasharray="3" />
+              {/* Transformed point P'(5,3) with k=2 */}
+              <circle cx={140} cy={30} r={4} className="fill-green-500" />
+              <text x={130} y={25} className="fill-green-600 text-[6px] font-bold">P′(5,3)</text>
+              {/* Vector from C to P' */}
+              <line x1={60} y1={70} x2={140} y2={30} className="stroke-green-400" strokeWidth="1.5" strokeDasharray="3" />
+            </svg>
+
+            <div className="text-sm text-gray-700 dark:text-gray-300 space-y-2">
+              <p><strong>Ejemplo:</strong> C = (1, 1), P = (3, 2), k = 2</p>
+              <ol className="list-decimal list-inside space-y-1 text-xs">
+                <li>Vector: (P − C) = (3−1, 2−1) = <span className="font-mono">(2, 1)</span></li>
+                <li>Escalar: k · (2, 1) = <span className="font-mono">(4, 2)</span></li>
+                <li>Sumar: C + (4, 2) = (1+4, 1+2) = <span className="font-mono text-green-600 font-bold">(5, 3)</span></li>
+              </ol>
+            </div>
           </div>
         </div>
 
